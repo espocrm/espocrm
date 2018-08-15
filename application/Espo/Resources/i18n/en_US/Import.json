@@ -53,7 +53,8 @@
         "Skip searching for duplicates": "Skip searching for duplicates",
         "Timezone": "Timezone",
         "Remove Import Log": "Remove Import Log",
-        "New Import": "New Import"
+        "New Import": "New Import",
+        "Import Results": "Import Results"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",

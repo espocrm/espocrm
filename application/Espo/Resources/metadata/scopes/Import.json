@@ -1,7 +1,7 @@
 {
     "entity": true,
     "layouts": false,
-    "tab": false,
-    "acl": false,
+    "tab": true,
+    "acl": "boolean",
     "customizable": false
 }

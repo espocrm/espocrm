@@ -162,8 +162,12 @@ Espo.define('views/import/step2', 'view', function (Dep) {
         getFieldList: function () {
             var defs = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
 
+            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
+
             var fieldList = [];
             for (var field in defs) {
+                if (~forbiddenFieldList.indexOf(field)) continue;
+
                 var d = defs[field];
 
                 if (!~this.allowedFieldList.indexOf(field) && (d.disabled || d.importDisabled)) {
@@ -182,10 +186,14 @@ Espo.define('views/import/step2', 'view', function (Dep) {
         getAttributeList: function () {
             var fields = this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
 
+            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
+
             var attributeList = [];
             attributeList.push('id');
 
             for (var field in fields) {
+                if (~forbiddenFieldList.indexOf(field)) continue;
+
                 var d = fields[field];
                 if (!~this.allowedFieldList.indexOf(field) && (((d.disabled) && !d.importNotDisabled) || d.importDisabled)) {
                     continue;

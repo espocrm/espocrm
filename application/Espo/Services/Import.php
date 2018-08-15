@@ -112,23 +112,23 @@ class Import extends \Espo\Services\Record
         $entity->set(array(
             'importedCount' => $importedCount,
             'duplicateCount' => $duplicateCount,
-            'updatedCount' => $updatedCount,
+            'updatedCount' => $updatedCount
         ));
     }
 
     public function findLinkedEntities($id, $link, $params)
     {
         $entity = $this->getRepository()->get($id);
-        $foreignEntityName = $entity->get('entityType');
+        $foreignEntityType = $entity->get('entityType');
 
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
         }
-        if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+        if (!$this->getAcl()->check($foreignEntityType, 'read')) {
             throw new Forbidden();
         }
 
-        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+        $selectParams = $this->getSelectManager($foreignEntityType)->getSelectParams($params, true);
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
@@ -136,7 +136,7 @@ class Import extends \Espo\Services\Record
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
-        $recordService = $this->getRecordService($foreignEntityName);
+        $recordService = $this->getRecordService($foreignEntityType);
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -219,8 +219,11 @@ class Import extends \Espo\Services\Record
             throw new NotFound();
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        if (!$this->getAcl()->check($import, 'delete')) {
+            throw new Forbidden();
+        }
 
+        $pdo = $this->getEntityManager()->getPDO();
 
         $sql = "SELECT * FROM import_entity WHERE import_id = ".$pdo->quote($import->id) . " AND is_imported = 1";
 
@@ -269,6 +272,10 @@ class Import extends \Espo\Services\Record
         $import = $this->getEntityManager()->getEntity('Import', $id);
         if (empty($import)) {
             throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($import, 'delete')) {
+            throw new Forbidden();
         }
 
         $pdo = $this->getEntityManager()->getPDO();
@@ -347,6 +354,10 @@ class Import extends \Espo\Services\Record
                 if (in_array($attribute, $forbiddenAttrbuteList)) {
                     unset($importAttributeList[$i]);
                 }
+            }
+
+            if (!$this->getAclManager()->checkScope($user, $scope, 'create')) {
+                throw new Error('Import: Create is forbidden.');
             }
         }
 

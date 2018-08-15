@@ -38,7 +38,7 @@ class Import extends \Espo\Core\Controllers\Record
 {
     protected function checkControllerAccess()
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->getAcl()->check('Import')) {
             throw new Forbidden();
         }
     }

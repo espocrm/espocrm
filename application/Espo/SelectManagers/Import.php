@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -25,30 +26,18 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/import', 'controllers/record', function (Dep) {
 
-    return Dep.extend({
+namespace Espo\SelectManagers;
 
-        defaultAction: 'index',
+class Import extends \Espo\Core\SelectManagers\Base
+{
 
-        checkAccessGlobal: function () {
-            if (this.getAcl().checkScope('Import')) {
-                return true;
-            }
-            return false;
-        },
-
-        checkAccess: function () {
-            if (this.getAcl().checkScope('Import')) {
-                return true;
-            }
-            return false;
-        },
-
-        index: function () {
-            this.main('views/import/index', null);
+    protected function access(&$result)
+    {
+        if (!$this->getUser()->isAdmin()) {
+            $result['whereClause'][] = [
+                'createdById' => $this->getUser()->id
+            ];
         }
-
-    });
-
-});
+    }
+}

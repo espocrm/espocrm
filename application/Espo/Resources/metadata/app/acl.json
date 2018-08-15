@@ -82,7 +82,8 @@
             "User": {
                 "read": "all",
                 "edit": "no"
-            }
+            },
+            "Import": false
         },
         "fieldLevel": {
         },
@@ -97,7 +98,8 @@
             "User": {
                 "read": "own",
                 "edit": "no"
-            }
+            },
+            "Import": false
         },
         "fieldLevel": {
         },

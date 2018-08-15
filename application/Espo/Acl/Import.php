@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -25,30 +26,28 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/import', 'controllers/record', function (Dep) {
 
-    return Dep.extend({
+namespace Espo\Acl;
 
-        defaultAction: 'index',
+use \Espo\Entities\User as EntityUser;
+use \Espo\ORM\Entity;
 
-        checkAccessGlobal: function () {
-            if (this.getAcl().checkScope('Import')) {
-                return true;
-            }
-            return false;
-        },
+class Import extends \Espo\Core\Acl\Base
+{
 
-        checkAccess: function () {
-            if (this.getAcl().checkScope('Import')) {
-                return true;
-            }
-            return false;
-        },
+    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    {
+        if ($user->isAdmin()) return true;
+        if ($user->id === $entity->get('createdById')) return true;
 
-        index: function () {
-            this.main('views/import/index', null);
-        }
+        return false;
+    }
 
-    });
+    public function checkEntityDelete(EntityUser $user, Entity $entity, $data)
+    {
+        if ($user->isAdmin()) return true;
+        if ($user->id === $entity->get('createdById')) return true;
 
-});
+        return false;
+    }
+}

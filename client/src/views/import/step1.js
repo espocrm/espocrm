@@ -61,18 +61,22 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             var scopes = this.getMetadata().get('scopes');
             for (var scopeName in scopes) {
                 if (scopes[scopeName].importable) {
+                    if (!this.getAcl().checkScope(scopeName, 'create')) continue;
                     list.push(scopeName);
                 }
             }
             list.sort(function (v1, v2) {
                  return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
             }.bind(this));
+
             return list;
         },
 
         data: function () {
+            var entityList = this.getEntityList();
+
             return {
-                entityList: this.getEntityList(),
+                entityList: entityList,
                 currencyList: this.getConfig().get('currencyList'),
                 dateFormatDataList: [
                     {key: "YYYY-MM-DD", value: '2017-12-27'},

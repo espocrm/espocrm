@@ -25,30 +25,30 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/import', 'controllers/record', function (Dep) {
+
+Espo.define('acl/import', 'acl', function (Dep) {
 
     return Dep.extend({
 
-        defaultAction: 'index',
+        checkScope: function (data, action, precise, entityAccessData) {
+            return !!data;
+        },
 
-        checkAccessGlobal: function () {
-            if (this.getAcl().checkScope('Import')) {
+        checkModelRead: function (model, data, precise) {
+            return true;
+        },
+
+        checkIsOwner: function (model) {
+            if (this.getUser().id === model.get('createdById')) {
                 return true;
             }
+
             return false;
         },
 
-        checkAccess: function () {
-            if (this.getAcl().checkScope('Import')) {
-                return true;
-            }
-            return false;
-        },
-
-        index: function () {
-            this.main('views/import/index', null);
+        checkModelDelete: function (model, data, precise) {
+            return true;
         }
 
     });
-
 });

@@ -5,7 +5,7 @@
 	    </div>
 	    <div class="col-lg-5 col-sm-5">
 	        <div class="header-buttons btn-group pull-right">
-	        	<a href="#Import/list" class="btn btn-default">{{translate 'Import' category='scopeNamesPlural'}}</a>
+				<a href="#Import/list" class="btn btn-default">{{translate 'Import Results' scope='Import'}}</a>
 	        </div>
 	    </div>
 	</div>

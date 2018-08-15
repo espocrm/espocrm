@@ -1,8 +1,9 @@
 {
     "controller": "controllers/import",
+    "acl": "acl/import",
     "recordViews": {
-        "list": "import/record/list"
-        "detail": "import/record/detail"
+        "list": "views/import/record/list",
+        "detail": "views/import/record/detail"
     },
     "views": {
     	"list": "views/import/list",
@@ -28,5 +29,6 @@
 	    	}
 	    ]
     },
-    "searchPanelDisabled": true
+    "searchPanelDisabled": true,
+    "iconClass": "fas fa-file-import"
 }
