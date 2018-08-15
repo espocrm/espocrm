@@ -434,7 +434,7 @@ class Import extends \Espo\Services\Record
                 if (count($arr) == 1 && empty($arr[0])) {
                     continue;
                 }
-                $r = $this->importRow($scope, $importAttributeList, $arr, $params);
+                $r = $this->importRow($scope, $importAttributeList, $arr, $params, $user);
                 if (empty($r)) {
                     continue;
                 }
@@ -479,7 +479,7 @@ class Import extends \Espo\Services\Record
         );
     }
 
-    public function importRow($scope, array $importAttributeList, array $row, array $params = array())
+    public function importRow($scope, array $importAttributeList, array $row, array $params = array(), $user)
     {
         $id = null;
         $action = 'create';
@@ -511,6 +511,14 @@ class Import extends \Espo\Services\Record
                 return;
             }
             $entity = $this->getEntityManager()->getRepository($scope)->where($whereClause)->findOne();
+
+            if ($entity) {
+                if (!$user->isAdmin()) {
+                    if (!$this->getAclManager()->checkEntity($user, $entity, 'edit')) {
+                        return;
+                    }
+                }
+            }
             if (!$entity) {
                 if ($action == 'createAndUpdate') {
                     $entity = $this->getEntityManager()->getEntity($scope);
