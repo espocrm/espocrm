@@ -302,15 +302,15 @@ class Import extends \Espo\Services\Record
 
         $params = json_decode(json_encode($data->params), true);
 
-        $importFieldList = $data->importFieldList;
+        $importAttributeList = $data->importAttributeList;
         $attachmentId = $data->attachmentId;
 
         $importId = $data->importId;
 
-        $this->import($entityType, $importFieldList, $attachmentId, $params, $importId);
+        $this->import($entityType, $importAttributeList, $attachmentId, $params, $importId);
     }
 
-    public function import($scope, array $importFieldList, $attachmentId, array $params = array(), $importId = null)
+    public function import($scope, array $importAttributeList, $attachmentId, array $params = array(), $importId = null)
     {
         $delimiter = ',';
         if (!empty($params['fieldDelimiter'])) {
@@ -360,7 +360,7 @@ class Import extends \Espo\Services\Record
                     'entityType' => $scope,
                     'params' => $params,
                     'attachmentId' => $attachmentId,
-                    'importFieldList' => $importFieldList,
+                    'importAttributeList' => $importAttributeList,
                     'importId' => $import->id
                 )
             ));
@@ -393,7 +393,7 @@ class Import extends \Espo\Services\Record
                 if (count($arr) == 1 && empty($arr[0])) {
                     continue;
                 }
-                $r = $this->importRow($scope, $importFieldList, $arr, $params);
+                $r = $this->importRow($scope, $importAttributeList, $arr, $params);
                 if (empty($r)) {
                     continue;
                 }
@@ -438,7 +438,7 @@ class Import extends \Espo\Services\Record
         );
     }
 
-    public function importRow($scope, array $importFieldList, array $row, array $params = array())
+    public function importRow($scope, array $importAttributeList, array $row, array $params = array())
     {
         $id = null;
         $action = 'create';
@@ -446,18 +446,18 @@ class Import extends \Espo\Services\Record
             $action = $params['action'];
         }
 
-        if (empty($importFieldList)) {
+        if (empty($importAttributeList)) {
             return;
         }
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
-            $updateByFieldList = [];
+            $updateByAttributeList = [];
             $whereClause = array();
             if (!empty($params['updateBy']) && is_array($params['updateBy'])) {
                 foreach ($params['updateBy'] as $i) {
-                    if (array_key_exists($i, $importFieldList)) {
-                        $updateByFieldList[] = $importFieldList[$i];
-                        $whereClause[$importFieldList[$i]] = $row[$i];
+                    if (array_key_exists($i, $importAttributeList)) {
+                        $updateByAttributeList[] = $importAttributeList[$i];
+                        $whereClause[$importAttributeList[$i]] = $row[$i];
                     }
                 }
             }
@@ -466,7 +466,7 @@ class Import extends \Espo\Services\Record
         $recordService = $this->getRecordService($scope);
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
-            if (!count($updateByFieldList)) {
+            if (!count($updateByAttributeList)) {
                 return;
             }
             $entity = $this->getEntityManager()->getRepository($scope)->where($whereClause)->findOne();
@@ -495,11 +495,11 @@ class Import extends \Espo\Services\Record
             $entity->set($v);
         }
 
-        $fieldsDefs = $entity->getFields();
+        $attributeDefs = $entity->getAttributes();
         $relDefs = $entity->getRelations();
 
         $phoneFieldList = [];
-        if (!empty($fieldsDefs['phoneNumber']) && !empty($fieldsDefs['phoneNumber']['type']) && $fieldsDefs['phoneNumber']['type'] == 'phone') {
+        if (!empty($attributeDefs['phoneNumber']) && !empty($attributeDefs['phoneNumber']['type']) && $attributeDefs['phoneNumber']['type'] == 'phone') {
             $typeList = $this->getMetadata()->get('entityDefs.' . $scope . '.fields.phoneNumber.typeList', []);
             foreach ($typeList as $type) {
                 $attr = str_replace(' ', '_', ucfirst($type));
@@ -507,24 +507,24 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        foreach ($importFieldList as $i => $field) {
-            if (!empty($field)) {
+        foreach ($importAttributeList as $i => $attribute) {
+            if (!empty($attribute)) {
                 if (!array_key_exists($i, $row)) {
                     continue;
                 }
                 $value = $row[$i];
-                if ($field == 'id') {
+                if ($attribute == 'id') {
                     if ($params['action'] == 'create') {
                         $entity->id = $value;
                     }
                     continue;
                 }
-                if (array_key_exists($field, $fieldsDefs)) {
+                if (array_key_exists($attribute, $attributeDefs)) {
                     if ($value !== '') {
-                        $type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$field}.type");
+                        $type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$attribute}.type");
                         if ($type == 'personName') {
-                            $firstNameAttribute = 'first' . ucfirst($field);
-                            $lastNameAttribute = 'last' . ucfirst($field);
+                            $firstNameAttribute = 'first' . ucfirst($attribute);
+                            $lastNameAttribute = 'last' . ucfirst($attribute);
 
                             $personName = $this->parsePersonName($value, $params['personNameFormat']);
 
@@ -539,19 +539,19 @@ class Import extends \Espo\Services\Record
                             continue;
                         }
 
-                        $entity->set($field, $this->parseValue($entity, $field, $value, $params));
+                        $entity->set($attribute, $this->parseValue($entity, $attribute, $value, $params));
                     }
                 } else {
-                    if (in_array($field, $phoneFieldList) && !empty($value)) {
+                    if (in_array($attribute, $phoneFieldList) && !empty($value)) {
                         $phoneNumberData = $entity->get('phoneNumberData');
                         $isPrimary = false;
                         if (empty($phoneNumberData)) {
                             $phoneNumberData = [];
-                            if (!in_array('phoneNumber', $importFieldList)) {
+                            if (!in_array('phoneNumber', $importAttributeList)) {
                                 $isPrimary = true;
                             }
                         }
-                        $type = str_replace('phoneNumber', '', $field);
+                        $type = str_replace('phoneNumber', '', $attribute);
                         $type = str_replace('_', ' ', $type);
                         $o = new \StdClass();
                         $o->phoneNumber = $value;
@@ -580,20 +580,20 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        foreach ($importFieldList as $i => $field) {
-            if (!array_key_exists($field, $fieldsDefs)) continue;;
-            $defs = $fieldsDefs[$field];
-            $type = $fieldsDefs[$field]['type'];
+        foreach ($importAttributeList as $i => $attribute) {
+            if (!array_key_exists($attribute, $attributeDefs)) continue;;
+            $defs = $attributeDefs[$attribute];
+            $type = $attributeDefs[$attribute]['type'];
 
             if (in_array($type, [Entity::FOREIGN, Entity::VARCHAR]) && !empty($defs['foreign'])) {
                 $relatedEntityIsPerson = is_array($defs['foreign']) && in_array('firstName', $defs['foreign']) && in_array('lastName', $defs['foreign']);
 
                 if ($defs['foreign'] === 'name' || $relatedEntityIsPerson) {
-                    if ($entity->has($field)) {
+                    if ($entity->has($attribute)) {
                         $relation = $defs['relation'];
-                        if ($field == $relation . 'Name' && !$entity->has($relation . 'Id') && array_key_exists($relation, $relDefs)) {
+                        if ($attribute == $relation . 'Name' && !$entity->has($relation . 'Id') && array_key_exists($relation, $relDefs)) {
                             if ($relDefs[$relation]['type'] == Entity::BELONGS_TO) {
-                                $value = $entity->get($field);
+                                $value = $entity->get($attribute);
                                 $scope = $relDefs[$relation]['entity'];
 
                                 if ($relatedEntityIsPerson) {

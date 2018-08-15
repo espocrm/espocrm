@@ -367,13 +367,13 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 return;
             }
 
-            var fields = [];
+            var attributeList = [];
 
             this.mapping.forEach(function (d, i) {
-                fields.push($('#column-' + i).val());
+                attributeList.push($('#column-' + i).val());
             }, this);
 
-            this.formData.fields = fields;
+            this.formData.attributeList = attributeList;
 
             if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
                 var updateBy = [];

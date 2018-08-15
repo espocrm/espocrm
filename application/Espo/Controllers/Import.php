@@ -126,7 +126,7 @@ class Import extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        if (!isset($data->fieldDelimiter)) {
+        if (!isset($data->delimiter)) {
             throw new BadRequest();
         }
 
@@ -166,7 +166,7 @@ class Import extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        if (!isset($data->fields)) {
+        if (!isset($data->attributeList)) {
             throw new BadRequest();
         }
 
@@ -177,7 +177,7 @@ class Import extends \Espo\Core\Controllers\Record
 
         $importParams = array(
             'headerRow' => !empty($data->headerRow),
-            'fieldDelimiter' => $data->fieldDelimiter,
+            'delimiter' => $data->delimiter,
             'textQualifier' => $data->textQualifier,
             'dateFormat' => $data->dateFormat,
             'timeFormat' => $data->timeFormat,
@@ -201,7 +201,7 @@ class Import extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        return $this->getService('Import')->import($data->entityType, $data->fields, $attachmentId, $importParams);
+        return $this->getService('Import')->import($data->entityType, $data->attributeList, $attachmentId, $importParams);
     }
 
     public function postActionUnmarkAsDuplicate($params, $data)
