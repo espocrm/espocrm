@@ -39,28 +39,28 @@ class Currency extends Base
 
         $currencyColumnName = Util::toUnderScore($fieldName);
 
-        $alias = Util::toUnderScore($fieldName) . "_currency_alias";
+        $alias = $fieldName . 'CurrencyRate';
 
-        $d = array(
-            $entityName => array(
-                'fields' => array(
-                    $fieldName => array(
-                        "type" => "float",
-                        "orderBy" => $converedFieldName . " {direction}"
-                    )
-                ),
-            ),
-        );
+        $d = [
+            $entityName => [
+                'fields' => [
+                    $fieldName => [
+                        'type' => 'float',
+                        'orderBy' => $converedFieldName . ' {direction}'
+                    ]
+                ]
+            ]
+        ];
 
         $params = $this->getFieldParams($fieldName);
         if (!empty($params['notStorable'])) {
             $d[$entityName]['fields'][$fieldName]['notStorable'] = true;
         } else {
-            $d[$entityName]['fields'][$fieldName . 'Converted'] = array(
+            $d[$entityName]['fields'][$fieldName . 'Converted'] = [
                 'type' => 'float',
                 'select' => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate" ,
                 'where' =>
-                array (
+                [
                         "=" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate = {value}",
                         ">" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate > {value}",
                         "<" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate < {value}",
@@ -68,11 +68,11 @@ class Currency extends Base
                         "<=" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate <= {value}",
                         "<>" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate <> {value}",
                         "IS NULL" => Util::toUnderScore($entityName) . "." . $currencyColumnName . ' IS NULL',
-                        "IS NOT NULL" => Util::toUnderScore($entityName) . "." . $currencyColumnName . ' IS NOT NULL',
-                ),
+                        "IS NOT NULL" => Util::toUnderScore($entityName) . "." . $currencyColumnName . ' IS NOT NULL'
+                ],
                 'notStorable' => true,
                 'orderBy' => $converedFieldName . " {direction}"
-            );
+            ];
         }
 
         return $d;

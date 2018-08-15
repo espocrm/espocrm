@@ -1130,7 +1130,6 @@ abstract class Base
             if ($isNotValue) {
                 $rightPart = $this->convertComplexExpression($entity, $value);
                 $sql .= " " . $operator . " " . $rightPart;
-
                 return $sql;
             }
 

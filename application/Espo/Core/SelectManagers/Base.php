@@ -1368,19 +1368,19 @@ class Base
                     $arrayValueAlias = 'arrayFilter' . strval(rand(10000, 99999));
                     $arrayAttribute = $attribute;
                     $arrayEntityType = $this->getEntityType();
-                    $alias = lcfirst($arrayEntityType);
+                    $idPart = 'id';
 
                     if (strpos($attribute, '.') > 0) {
                         list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
                         $seed = $this->getSeed();
                         $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
-                        $alias = $arrayAttributeLink;
+                        $idPart = $arrayAttributeLink . '.id';
                     }
 
                     if ($type === 'arrayAnyOf') {
                         if (is_null($value) || !$value && !is_array($value)) break;
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
-                            $arrayValueAlias . '.entityId:' => $alias . '.id',
+                            $arrayValueAlias . '.entityId:' => $idPart,
                             $arrayValueAlias . '.entityType' => $arrayEntityType,
                             $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
@@ -1388,24 +1388,24 @@ class Base
                     } else if ($type === 'arrayNoneOf') {
                         if (is_null($value) || !$value && !is_array($value)) break;
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
-                            $arrayValueAlias . '.entityId:' => $alias . '.id',
+                            $arrayValueAlias . '.entityId:' => $idPart,
                             $arrayValueAlias . '.entityType' => $arrayEntityType,
                             $arrayValueAlias . '.attribute' => $arrayAttribute,
-                            $arrayValueAlias . '.value=' => $value,
+                            $arrayValueAlias . '.value=' => $value
                         ]], $result);
                         $part[$arrayValueAlias . '.id'] = null;
                     } else if ($type === 'arrayIsEmpty') {
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
-                            $arrayValueAlias . '.entityId:' => $alias . '.id',
+                            $arrayValueAlias . '.entityId:' => $idPart,
                             $arrayValueAlias . '.entityType' => $arrayEntityType,
-                            $arrayValueAlias . '.attribute' => $arrayAttribute,
+                            $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
                         $part[$arrayValueAlias . '.id'] = null;
                     } else if ($type === 'arrayIsNotEmpty') {
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
-                            $arrayValueAlias . '.entityId:' => $alias . '.id',
+                            $arrayValueAlias . '.entityId:' => $idPart,
                             $arrayValueAlias . '.entityType' => $arrayEntityType,
-                            $arrayValueAlias . '.attribute' => $arrayAttribute,
+                            $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
                         $part[$arrayValueAlias . '.id!='] = null;
                     }

@@ -18,14 +18,16 @@
             "type": "float",
             "readOnly": true,
             "notStorable": true,
-            "select": "opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100",
+            "select": "opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100",
             "where": {
-                "=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) = {value}",
-                "<": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) < {value}",
-                ">": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) > {value}",
-                "<=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <= {value}",
-                ">=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) >= {value}",
-                "<>": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <> {value}"
+                "=": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) = {value}",
+                "<": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) < {value}",
+                ">": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) > {value}",
+                "<=": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) <= {value}",
+                ">=": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) >= {value}",
+                "<>": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) <> {value}",
+                "IS NULL": "opportunity.amount IS NULL",
+                "IS NOT NULL": "opportunity.amount IS NOT NULL"
             },
             "orderBy": "amountWeightedConverted {direction}",
             "view": "views/fields/currency-converted"

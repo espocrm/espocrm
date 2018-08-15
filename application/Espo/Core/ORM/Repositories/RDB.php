@@ -126,20 +126,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        $defs = $metadata->get('entityDefs.' . $entityType);
+        $defs = $metadata->get(['entityDefs', $entityType]);
 
         foreach ($defs['fields'] as $field => $d) {
             if (isset($d['type']) && $d['type'] == 'currency') {
-                if (!empty($d['notStorable'])) {
-                    continue;
-                }
-                if (empty($params['customJoin'])) {
-                    $params['customJoin'] = '';
-                }
-                $alias = Util::toUnderScore($field) . "_currency_alias";
-                $params['customJoin'] .= "
-                    LEFT JOIN currency AS `{$alias}` ON {$alias}.id = ".Util::toUnderScore($entityType).".".Util::toUnderScore($field)."_currency
-                ";
+                if (!empty($d['notStorable'])) continue;
+                if (empty($params['leftJoins'])) $params['leftJoins'] = [];
+                $alias = $field . 'CurrencyRate';
+
+                $params['leftJoins'][] = ['Currency', $alias, [
+                    $alias . '.id:' => $field . 'Currency'
+                ]];
             }
         }
 
@@ -147,45 +144,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function handleEmailAddressParams(&$params)
     {
-        $entityType = $this->entityType;
-
-        $defs = $this->getEntityManager()->getMetadata()->get($entityType);
+        $defs = $this->getEntityManager()->getMetadata()->get($this->entityType);
         if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
-            if (empty($params['leftJoins'])) {
-                $params['leftJoins'] = array();
-            }
-            if (empty($params['whereClause'])) {
-                $params['whereClause'] = array();
-            }
-            if (empty($params['joinConditions'])) {
-                $params['joinConditions'] = array();
-            }
-            $params['leftJoins'][] = 'emailAddresses';
-            $params['joinConditions']['emailAddresses'] = array(
+            if (empty($params['leftJoins'])) $params['leftJoins'] = [];
+            $params['leftJoins'][] = ['emailAddresses', null, [
                 'primary' => 1
-            );
+            ]];
         }
     }
 
     protected function handlePhoneNumberParams(&$params)
     {
-        $entityType = $this->entityType;
-
-        $defs = $this->getEntityManager()->getMetadata()->get($entityType);
+        $defs = $this->getEntityManager()->getMetadata()->get($this->entityType);
         if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {
-            if (empty($params['leftJoins'])) {
-                $params['leftJoins'] = array();
-            }
-            if (empty($params['whereClause'])) {
-                $params['whereClause'] = array();
-            }
-            if (empty($params['joinConditions'])) {
-                $params['joinConditions'] = array();
-            }
-            $params['leftJoins'][] = 'phoneNumbers';
-            $params['joinConditions']['phoneNumbers'] = array(
+            if (empty($params['leftJoins'])) $params['leftJoins'] = [];
+            $params['leftJoins'][] = ['phoneNumbers', null, [
                 'primary' => 1
-            );
+            ]];
         }
     }
 
