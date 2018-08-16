@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Vytvoriť kategóriu",
+    "Manage Categories": "Spravovať kategórie",
+    "EmailTemplates": "Emailové šablony"
+  },
+  "fields": {
+    "order": "Poradie",
+    "childList": "Podradený zoznam"
+  },
+  "links": {
+    "emailTemplates": "Emailové šablony"
+  }
+}

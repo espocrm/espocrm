@@ -39,7 +39,8 @@
     "EmailAddress": "Dirección de Correo",
     "PhoneNumber": "Teléfono",
     "AuthLogRecord": "Registro en Hist. de Aut.",
-    "AuthFailLogRecord": "Registro en Hist. de Fallos de Aut."
+    "AuthFailLogRecord": "Registro en Hist. de Fallos de Aut.",
+    "EmailTemplateCategory": "Categorías de Formatos de Correo"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -55,7 +56,6 @@
     "Dashboard": "Escritorio",
     "InboundEmail": "Grupo de Cuentas de Correo",
     "Stream": "Seguimiento",
-    "Import": "Importar Resultados",
     "Template": "Plantillas",
     "Job": "Trabajos",
     "EmailFilter": "Filtros de Correo",
@@ -71,11 +71,12 @@
     "UniqueId": "IDs Unicos",
     "LastViewed": "Ultimos Revisados",
     "AuthLogRecord": "Historial de Autorizaciones",
-    "AuthFailLogRecord": "Hist. de Fallos de Aut.\n"
+    "AuthFailLogRecord": "Hist. de Fallos de Aut.\n",
+    "EmailTemplateCategory": "Categorías de Formatos de Correo"
   },
   "labels": {
     "Misc": "Misceláneos",
-    "Merge": "Unir",
+    "Merge": "Generar",
     "None": "(vacío)",
     "Home": "Inicio",
     "by": "por",
@@ -88,7 +89,7 @@
     "Uploading...": "Subiendo...",
     "Sending...": "Enviando...",
     "Merging...": "Fusionando...",
-    "Merged": "Fusionado",
+    "Merged": "Generado",
     "Removed": "Eliminado",
     "Posted": "Publicado",
     "Linked": "Ligado",
@@ -130,7 +131,7 @@
     "Admin": "Administrador",
     "About": "Acerca de EspoCRM",
     "Refresh": "Actualizar",
-    "Remove": "Remover",
+    "Remove": "Eliminar",
     "Options": "Opciones",
     "Username": "Nombre de Usuario",
     "Password": "Contraseña",
@@ -163,7 +164,7 @@
     "Active": "Activo",
     "Inactive": "Inactivo",
     "Write your comment here": "Escriba su comentario aquí",
-    "Post": "Entrada",
+    "Post": "Guardar",
     "Stream": "Seguimiento",
     "Show more": "Mostrar mas",
     "Dashlet Options": "Opciones de Cuadros",
@@ -196,7 +197,6 @@
     "Tree View": "Vista de árbol",
     "Unlink All": "Desligar todo",
     "Print to PDF": "Imprimir PDF",
-    "Default": "Por Omisión",
     "Number": "Número",
     "From": "De",
     "To": "Para",
@@ -232,10 +232,10 @@
     "fieldShouldBefore": "{field} debe estar antes de {otherField}",
     "fieldShouldBeBetween": "{field} debe estar entre {min} y {max}",
     "fieldBadPasswordConfirm": "{field} confirmado de forma incorrecta",
-    "resetPreferencesDone": "Se han restablecido las preferencias por omisión",
+    "resetPreferencesDone": "Se han restablecido las preferencias default",
     "confirmation": "¿Está seguro?",
     "unlinkAllConfirmation": "¿Realmente desea desvincular todos los registros relacionados?",
-    "resetPreferencesConfirmation": "¿Realmente desea restablecer las preferencias por omisión?",
+    "resetPreferencesConfirmation": "¿Realmente desea restablecer las preferencias default?",
     "removeRecordConfirmation": "¿Realmente desea eliminar registros?",
     "unlinkRecordConfirmation": "¿Realmente quiere desligar este registro?",
     "removeSelectedRecordsConfirmation": "¿Realmente desea eliminar los registros seleccionados?",
@@ -277,7 +277,8 @@
     "fieldShouldBeGreater": "{field} no debe ser menor que {value}",
     "fieldIsUploading": "Carga en prograso",
     "streamPostInfo": "Escriba <strong>@username</strong> para indicar los usuarios de esta publicación.\n\nSintaxis disponible para los marcadores:\n`<code>código</code>`\n**<strong>texto en negrita</strong>**\n*<em>texto en itálica</em>*\n~<del>texto eliminado</del>~\n> marcador de bloque\n[texto de la liga](url) ",
-    "erasePersonalDataConfirmation": "¿Realmente desea borrar permanentemente los campos seleccionados?"
+    "erasePersonalDataConfirmation": "¿Realmente desea borrar permanentemente los campos seleccionados?",
+    "massPrintPdfMaxCountError": "No se pueden imprimir mas de {maxCount} registros."
   },
   "boolFilters": {
     "onlyMy": "Sólo míos",
@@ -288,13 +289,14 @@
     "all": "Todos"
   },
   "massActions": {
-    "remove": "Remover",
-    "merge": "Unir",
+    "remove": "Eliminar",
+    "merge": "Generar",
     "massUpdate": "Actualización Masiva",
     "export": "Exportar",
     "follow": "Dar seguimiento",
     "unfollow": "Quitar seguimiento",
-    "convertCurrency": "Convertir Moneda"
+    "convertCurrency": "Convertir Moneda",
+    "printPdf": "Imprimir a PDF"
   },
   "fields": {
     "name": "Nombre",
@@ -325,7 +327,9 @@
     "phoneNumberData": "Datos del Número de Teléfono",
     "ids": "ID's",
     "names": "Nombres",
-    "emailAddressIsOptedOut": "La dirección de correo está Confirmada"
+    "emailAddressIsOptedOut": "La dirección de correo está Confirmada",
+    "targetListIsOptedOut": "Se ha Excluido (De la Lista)",
+    "type": "Tipo"
   },
   "links": {
     "assignedUser": "Usuario Asignado",
@@ -634,7 +638,7 @@
         "dragImageHere": "Arrastre la imagen aquí",
         "selectFromFiles": "Seleccionar desde Archivo",
         "url": "Url de Imagen",
-        "remove": "Remover Imagen"
+        "remove": "Eliminar Imagen"
       },
       "link": {
         "link": "Enlace",

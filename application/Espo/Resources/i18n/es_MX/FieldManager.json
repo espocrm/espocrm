@@ -65,7 +65,7 @@
   "tooltips": {
     "audited": "Las actualizaciones se registrarán en Seguimiento",
     "required": "El campo será obligatorio.  No puede ir vacío.",
-    "default": "Se asignará el valor por omisión al crearlo.",
+    "default": "Se asignará el valor default al crearlo.",
     "min": "Valor mínimo permitido.",
     "max": "Valor máximo permitido.",
     "seeMoreDisabled": "Si no se marca, los textos largos serán recortados.",

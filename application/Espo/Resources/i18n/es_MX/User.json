@@ -4,7 +4,7 @@
     "userName": "Nombre Usuario",
     "title": "Título",
     "isAdmin": "Es Administrador",
-    "defaultTeam": "Equipo por Omisión",
+    "defaultTeam": "Equipo Default",
     "emailAddress": "Correo electrónico",
     "phoneNumber": "Teléfono",
     "portals": "Portales",
@@ -54,7 +54,7 @@
     "Proceed w/o Contact": "Proceder sin Contacto"
   },
   "tooltips": {
-    "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por omisión.",
+    "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo default.",
     "userName": "Letras a-z, números 0-9 y guiones bajos están permitidos",
     "isAdmin": "El usuario administrador puede tener acceso a todo.",
     "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",

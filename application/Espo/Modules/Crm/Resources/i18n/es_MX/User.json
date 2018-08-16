@@ -4,7 +4,7 @@
   },
   "fields": {
     "acceptanceStatus": "Estatus de Aprobación",
-    "acceptanceStatusMeetings": "Estátus de Aceptación (Juntas)",
+    "acceptanceStatusMeetings": "Estatus de Aceptación (Presentaciones)",
     "acceptanceStatusCalls": "Estátus de Aceptación (Llamadas)"
   }
 }

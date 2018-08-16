@@ -7,7 +7,10 @@
     "endDate": "Dátum ukončenia",
     "targetLists": "Cieľové zoznamy",
     "includingActionList": "Vrátane",
-    "excludingActionList": "Vylúčené"
+    "excludingActionList": "Vylúčené",
+    "optedOutCount": "Počet vylúčených z odberu",
+    "targetStatus": "Cieľový stav",
+    "isOptedOut": "Je vylúčený z odberu"
   },
   "links": {
     "accounts": "Účty",
@@ -21,6 +24,10 @@
       "Television": "Televízia",
       "Radio": "Rozhlas",
       "Newsletter": "Novinky"
+    },
+    "targetStatus": {
+      "Opted Out": "Vylúčený z odberu",
+      "Listed": "Zaradený"
     }
   },
   "labels": {

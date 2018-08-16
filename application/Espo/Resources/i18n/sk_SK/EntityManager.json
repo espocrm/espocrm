@@ -31,7 +31,8 @@
     "color": "Farba",
     "kanbanViewMode": "Pohľad Kanban",
     "kanbanStatusIgnoreList": "Ignorované skupiny v pohľade Kanban",
-    "iconClass": "Ikona"
+    "iconClass": "Ikona",
+    "fullTextSearch": "Full-Textové vyhľadávanie"
   },
   "options": {
     "type": {
@@ -60,6 +61,7 @@
     "disabled": "Označte ak nepotrebujete túto entitu vo svojom systéme.",
     "linkAudited": "Vytvorenie súvisiaceho záznamu a zlinkovanie s existujúcim záznamom bude zaznamenané v streame.",
     "linkMultipleField": "Pole \"Link Multiple\" poskytuje šikovný spôsob ako editovať relácie. Nepoužívajte ho ak chcete mať veľké množstvo súvisiacich záznamov (relácií).",
-    "entityType": "Base Plus - má panely a aktivitami, históroiu a s úlohami.\n\nUdalosť - dostupná v kalendári a v paneli aktivít."
+    "entityType": "Base Plus - má panely a aktivitami, históroiu a s úlohami.\n\nUdalosť - dostupná v kalendári a v paneli aktivít.",
+    "fullTextSearch": "Spustenie prestavby je vyžadované"
   }
 }

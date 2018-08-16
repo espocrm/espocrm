@@ -19,7 +19,7 @@
   },
   "options": {
     "mode": {
-      "agendaWeek": "Semana (orden del día)",
+      "agendaWeek": "Semana (agenda)",
       "basicWeek": "Semana",
       "month": "Mes",
       "basicDay": "Día",

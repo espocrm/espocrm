@@ -1,5 +1,6 @@
 {
   "fields": {
-    "futureDays": "Ďalších X dní"
+    "futureDays": "Ďalších X dní",
+    "useLastStage": "Zoskupiť podľa posleného dosiahnutého štádia"
   }
 }

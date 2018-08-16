@@ -15,7 +15,8 @@
     "campaign": "Campaña",
     "originalLead": "Referencia original",
     "amountCurrency": "Importe en Moneda",
-    "contactRole": "Rol del Contacto"
+    "contactRole": "Rol del Contacto",
+    "lastStage": "Última Etapa"
   },
   "links": {
     "contacts": "Contactos",

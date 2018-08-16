@@ -7,7 +7,8 @@
     "panelName": "Názov panela",
     "style": "Štýl",
     "sticked": "Prilepený",
-    "isLarge": "Veľká veľkosť písma"
+    "isLarge": "Veľká veľkosť písma",
+    "dynamicLogicVisible": "Podmienky, ktoré robia panel viditeľný"
   },
   "options": {
     "align": {

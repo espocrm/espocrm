@@ -50,7 +50,7 @@
     "Edit Link": "Editar Enlace",
     "Notifications": "Notificaciones",
     "Jobs": "Trabajos",
-    "Reset to Default": "Restablecer valores por omisión",
+    "Reset to Default": "Restablecer valores default",
     "Email Filters": "Filtros de Correo",
     "Portal Users": "Usuarios",
     "Action History": "Historial",
@@ -111,14 +111,15 @@
     "int": "Entero",
     "number": "Número (auto-incremeto)",
     "jsonArray": "Arreglo Json",
-    "jsonObject": "Objeto Json"
+    "jsonObject": "Objeto Json",
+    "datetime": "Fecha-Hr",
+    "datetimeOptional": "Fecha/Fecha-Hr"
   },
   "fields": {
     "type": "Tipo",
     "name": "Nombre",
     "label": "Etiqueta",
     "required": "Requerido",
-    "default": "Por Omisión",
     "maxLength": "Longitud máxima",
     "options": "Opciones",
     "after": "Posterior al Campo",
@@ -129,7 +130,7 @@
     "max": "Máximo",
     "translation": "Traducción",
     "previewSize": "Tamaño de Vista Previa",
-    "defaultType": "Tipo por Omisión",
+    "defaultType": "Tipo Default",
     "seeMoreDisabled": "Desactivar cortar texto",
     "entityList": "Lista de Entidades",
     "isSorted": "Esta ordenado (alfabeticamente)",
@@ -155,7 +156,8 @@
     "readOnly": "Solo-lectura",
     "noEmptyString": "No se permite el campo vacío",
     "maxFileSize": "Tamaño máximo (Mb)",
-    "isPersonalData": "Son Datos Personales"
+    "isPersonalData": "Son Datos Personales",
+    "useIframe": "Usar iFrame"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
@@ -171,8 +173,6 @@
     "thousandSeparatorEqualsDecimalMark": "El caracter separador de miles no puede ser el mismo que el separador decimal.",
     "userHasNoEmailAddress": "Este usuario no tiene correo de contacto.",
     "newVersionIsAvailable": "Hay una nueva versión disponible de EspoCRM. ({latestVersion}).",
-    "newExtensionVersionIsAvailable": "Hay una nueva versión de {extensionName} disponible. ({latestversion}).",
-    "cronIsNotConfigured": "Las tareas programadas no están funcionando.  Los correos, notificaciones y recordatorios no están operando.  Favor de seguir estas <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instrucciones</a> para configurar el cron job.",
     "uninstallConfirmation": "¿Realmente quiere desinstalar esta extensión?"
   },
   "descriptions": {

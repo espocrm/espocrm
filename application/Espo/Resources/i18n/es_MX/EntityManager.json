@@ -18,8 +18,8 @@
     "linkForeign": "Enlace Foráneo",
     "link": "Enlace",
     "labelForeign": "Etiqueta Foránea",
-    "sortBy": "Campo para Ordenar (por Omisión)",
-    "sortDirection": "Orden por Omisión (dirección)",
+    "sortBy": "Orden Default (campo)",
+    "sortDirection": "Orden Default (dirección)",
     "relationName": "Nombre de la Tabla Intermedia",
     "linkMultipleField": "Ligar Varios Campos",
     "linkMultipleFieldForeign": "Ligar Varios Campos Foráneos",
@@ -31,7 +31,8 @@
     "beforeSaveCustomScript": "Antes de Guardar el Código Personalizado",
     "kanbanViewMode": "Vista por Tarjetas",
     "kanbanStatusIgnoreList": "Grupos ignorados en la vista por Tarjetas",
-    "iconClass": "Icono"
+    "iconClass": "Icono",
+    "fullTextSearch": "Búsqueda por Texto"
   },
   "options": {
     "type": {
@@ -65,6 +66,7 @@
     "disabled": "Verifique si ya no necesita esta entidad en su sistema.",
     "linkAudited": "Se registrará en Seguimiento la creación de registros relacionados y su liga con con registros existentes.",
     "linkMultipleField": "El campo 'Multi-Ligas' es una forma fácil de editar relaciones.  No lo uses si tienes muchos registros.",
-    "entityType": "Base Plus - tiene páneles de Actividades, Historial y Tareas.\n\nEvento - disponible en los páneles de Calendario y Actividades"
+    "entityType": "Base Plus - tiene páneles de Actividades, Historial y Tareas.\n\nEvento - disponible en los páneles de Calendario y Actividades",
+    "fullTextSearch": "Se requiere regenerar"
   }
 }

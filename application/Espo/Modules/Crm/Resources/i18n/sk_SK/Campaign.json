@@ -19,7 +19,12 @@
     "revenue": "Príjem",
     "revenueConverted": "Príjem (konvertovaný)",
     "budget": "Rozpočet",
-    "budgetConverted": "Rozpočet (konvertovaný)"
+    "budgetConverted": "Rozpočet (konvertovaný)",
+    "contactsTemplate": "Šablona kontaktov",
+    "leadsTemplate": "Šablona stôp",
+    "accountsTemplate": "Šablona účtov",
+    "usersTemplate": "Šablona používateľov",
+    "mailMergeOnlyWithAddress": "Preskoč záznamy bez vyplnenej adresy"
   },
   "links": {
     "targetLists": "Cieľové zoznamy",
@@ -30,7 +35,11 @@
     "opportunities": "Príležitosti",
     "campaignLogRecords": "Protokol",
     "massEmails": "Hromadné emaily",
-    "trackingUrls": "Sledovacie URLs"
+    "trackingUrls": "Sledovacie URLs",
+    "contactsTemplate": "Šablona kontaktov",
+    "leadsTemplate": "Šablona stôp",
+    "accountsTemplate": "Šablona účtov",
+    "usersTemplate": "Šablona používateľov"
   },
   "options": {
     "type": {
@@ -57,7 +66,9 @@
     "Email Templates": "Emailové šablóny",
     "Unsubscribe again": "Odhlásiť odber znova",
     "Subscribe again": "Prihlásiť odber znova",
-    "Create Target List": "Vytvoriť cieľový list"
+    "Create Target List": "Vytvoriť cieľový list",
+    "Mail Merge": "Spojenie mailov",
+    "Generate Mail Merge PDF": "Generovanie spojených mailov do PDF"
   },
   "presetFilters": {
     "active": "Aktívny"

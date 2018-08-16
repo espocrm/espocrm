@@ -6,7 +6,8 @@
     "body": "Telo",
     "subject": "Predmet",
     "attachments": "Prílohy",
-    "insertField": "Vlož pole"
+    "insertField": "Vlož pole",
+    "category": "Kategória"
   },
   "labels": {
     "Create EmailTemplate": "Vytvoriť šablónu emailu",

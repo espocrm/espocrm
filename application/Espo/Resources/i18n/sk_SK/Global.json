@@ -38,7 +38,8 @@
     "EmailAddress": "Emailová adresa",
     "PhoneNumber": "Telefónne číslo",
     "AuthLogRecord": "Záznam Auth protokolu",
-    "AuthFailLogRecord": "Záznam Auth chybového protokolu"
+    "AuthFailLogRecord": "Záznam Auth chybového protokolu",
+    "EmailTemplateCategory": "Kategórie emailových šablón"
   },
   "scopeNamesPlural": {
     "Email": "Emaily",
@@ -54,7 +55,6 @@
     "Extension": "Rozšírenia",
     "Dashboard": "Plocha",
     "InboundEmail": "Skupinové emailové účty",
-    "Import": "Výsledky importu",
     "Template": "Šablóny",
     "Job": "Behy",
     "EmailFilter": "Emailové filtre",
@@ -70,7 +70,8 @@
     "UniqueId": "Jedinečné IDs",
     "LastViewed": "Naposledy videné",
     "AuthLogRecord": "Auth protokol",
-    "AuthFailLogRecord": "Auth chybový protokol"
+    "AuthFailLogRecord": "Auth chybový protokol",
+    "EmailTemplateCategory": "Kategórie emailových šablón"
   },
   "labels": {
     "Misc": "Rôzne",
@@ -275,7 +276,8 @@
     "fieldShouldBeGreater": "{field} by nemalo byť menšie ako {value}",
     "fieldIsUploading": "Prebieha nahrávanie",
     "streamPostInfo": "Zapíšte <strong>@username</strong> ak chcete spomenúť používateľa v príspevku.\n\nDostupná markdown syntax:\n`<code>code</code>`\n```<code>viacriadkový kód</code>```\n**<strong>tučný text</strong>**\n*<em>zvýraznený text</em>*\n~~<del>zmazaný text</del>~~\n> citát\n[link text](url)",
-    "erasePersonalDataConfirmation": "Označené polia budú zmazané natrvalo. Ste si istý?"
+    "erasePersonalDataConfirmation": "Označené polia budú zmazané natrvalo. Ste si istý?",
+    "massPrintPdfMaxCountError": "Nedá sa tlačiť viac ako {maxCount}  zázanmov"
   },
   "boolFilters": {
     "onlyMy": "Len moje",
@@ -291,7 +293,8 @@
     "massUpdate": "Hromadná zmena",
     "follow": "Sledovať",
     "unfollow": "Nesledovať",
-    "convertCurrency": "Konvertovať menu"
+    "convertCurrency": "Konvertovať menu",
+    "printPdf": "Tlač do PDF"
   },
   "fields": {
     "name": "Názov",
@@ -320,7 +323,9 @@
     "emailAddressData": "Dáta emailovej adresy",
     "phoneNumberData": "Dáta telefónneho čísla",
     "names": "Názvy",
-    "emailAddressIsOptedOut": "Emailová adresa je odregistrovaná"
+    "emailAddressIsOptedOut": "Emailová adresa je odregistrovaná",
+    "targetListIsOptedOut": "Je vylúčný z odberu (Cieľový zoznam)",
+    "type": "Typ"
   },
   "links": {
     "assignedUser": "Priradený používateľ",

@@ -2,12 +2,15 @@
   "fields": {
     "name": "Nombre",
     "description": "Descripción",
-    "entryCount": "Contador de entrada",
+    "entryCount": "Contador de entradas",
     "campaigns": "Campañas",
     "endDate": "Fecha de Fin",
     "targetLists": "Listas de Objetivos",
     "includingActionList": "Incluyendo",
-    "excludingActionList": "Excluyendo"
+    "excludingActionList": "Excluyendo",
+    "optedOutCount": "Contador de Exclusiones",
+    "targetStatus": "Status del Objetivo",
+    "isOptedOut": "Se ha Excluido"
   },
   "links": {
     "accounts": "Cuentas",
@@ -20,6 +23,10 @@
     "type": {
       "Email": "Correo electrónico",
       "Television": "Televisión"
+    },
+    "targetStatus": {
+      "Opted Out": "Excluido",
+      "Listed": "Listado"
     }
   },
   "labels": {

@@ -99,7 +99,9 @@
     "currencyConverted": "Mena (Konvertovaná)",
     "colorpicker": "Výber farby",
     "jsonArray": "Pole Json",
-    "jsonObject": "Objekt Json"
+    "jsonObject": "Objekt Json",
+    "datetime": "Dátum-Čas",
+    "datetimeOptional": "Dátum/Dátum-Čas"
   },
   "fields": {
     "type": "Typ",
@@ -140,7 +142,8 @@
     "readOnly": "Len na čítanie",
     "noEmptyString": "Prázdny reťazec nie je povolený",
     "maxFileSize": "Max. veľkosť súboru (MB)",
-    "isPersonalData": "Sú osobné dáta"
+    "isPersonalData": "Sú osobné dáta",
+    "useIframe": "Použite Iframe"
   },
   "messages": {
     "selectEntityType": "Vyber typ entity v ľavom menu",
@@ -156,8 +159,6 @@
     "thousandSeparatorEqualsDecimalMark": "Oddeľovač tisícov nemôže byť rovnaký ako oddeľovač desatinných miest.",
     "userHasNoEmailAddress": "Používateľ nemá emailovú adresu.",
     "newVersionIsAvailable": "Je k dispozícii nová verzia EspoCRM {latestVersion}.",
-    "newExtensionVersionIsAvailable": "Je k dispozícii nová verzia {latestVersion} rozšírenia {extensionName}.",
-    "cronIsNotConfigured": "Naplánované behy nebežia. A preto prichádzajúce emaily, upozornenia a pripomienky nefungujú. Prosím prečítajte si <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">inštrukcie</a> ako nastaviť cron job.",
     "uninstallConfirmation": "Ste si istý, že chcete rozšírenie odinštalovať?"
   },
   "descriptions": {

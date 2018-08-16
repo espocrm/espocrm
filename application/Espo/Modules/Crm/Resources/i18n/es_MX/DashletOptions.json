@@ -1,5 +1,6 @@
 {
   "fields": {
-    "futureDays": "Siguientes 'n' Días"
+    "futureDays": "Siguientes 'n' Días",
+    "useLastStage": "Agrupar por la última etapa lograda"
   }
 }

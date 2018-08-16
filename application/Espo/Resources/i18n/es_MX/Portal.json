@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nombre",
     "isActive": "Está Activo",
-    "isDefault": "Es Valor x/Omisión",
+    "isDefault": "Es Default",
     "tabList": "Lista de Tabuladores",
     "quickCreateList": "Crear Lista Rápida",
     "theme": "Tema",
@@ -12,7 +12,7 @@
     "timeFormat": "Formato de Hora",
     "timeZone": "Zona Horaria",
     "weekStart": "Primer Día de la Semana",
-    "defaultCurrency": "Moneda por Omisión",
+    "defaultCurrency": "Moneda Default",
     "customUrl": "URL Personalizado",
     "customId": "ID Personalizado"
   },

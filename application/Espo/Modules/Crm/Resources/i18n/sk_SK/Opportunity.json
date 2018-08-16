@@ -15,7 +15,8 @@
     "campaign": "Kampaň",
     "originalLead": "Pôvodná stopa",
     "amountCurrency": "Mena obnosu",
-    "contactRole": "Rola kontaktu"
+    "contactRole": "Rola kontaktu",
+    "lastStage": "Posledné štádium"
   },
   "links": {
     "contacts": "Kontakty",

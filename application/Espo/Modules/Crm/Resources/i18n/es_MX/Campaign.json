@@ -19,7 +19,12 @@
     "revenue": "Ingresos",
     "revenueConverted": "ingresos (convertido)",
     "budget": "Presupuesto",
-    "budgetConverted": "Presupuesto (convertido)"
+    "budgetConverted": "Presupuesto (convertido)",
+    "contactsTemplate": "Formato de Contactos",
+    "leadsTemplate": "Formato de Referencias",
+    "accountsTemplate": "Formato de Cuentas",
+    "usersTemplate": "Formato de Usuarios",
+    "mailMergeOnlyWithAddress": "Saltar registros sin dirección capturada"
   },
   "links": {
     "targetLists": "Listas de Objetivos",
@@ -30,7 +35,11 @@
     "opportunities": "Oportunidades",
     "campaignLogRecords": "Historial",
     "massEmails": "Correos Masivos",
-    "trackingUrls": "Seguimiento a URLs"
+    "trackingUrls": "Seguimiento a URLs",
+    "contactsTemplate": "Formato de Contactos",
+    "leadsTemplate": "Formato de Referencias",
+    "accountsTemplate": "Formato de Cuentas",
+    "usersTemplate": "Formato de Usuarios"
   },
   "options": {
     "type": {
@@ -57,7 +66,9 @@
     "Email Templates": "Correo Modelo",
     "Unsubscribe again": "Cancelar otra vez la suscripción",
     "Subscribe again": "Volverse a suscribir",
-    "Create Target List": "Crear Lista de Obejtivos"
+    "Create Target List": "Crear Lista de Obejtivos",
+    "Mail Merge": "Generar Correos",
+    "Generate Mail Merge PDF": "Generar PDF para Correos"
   },
   "presetFilters": {
     "active": "Activo"

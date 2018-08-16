@@ -90,7 +90,8 @@
     "tabColorsDisabled": "Zakázať farby záložky",
     "tabIconsDisabled": "Zakázať ikony záložiek",
     "textFilterUseContainsForVarchar": "Použite operátor 'obsahuje' keď filtrujete polia typu varchar",
-    "emailAddressIsOptedOutByDefault": "Označiť adresu ako odregistrovanú"
+    "emailAddressIsOptedOutByDefault": "Označiť adresu ako odregistrovanú",
+    "outboundEmailBccAddress": "BCC adresa na externých klientov"
   },
   "options": {
     "weekStart": {
