@@ -165,7 +165,8 @@
         "maxFileSize": "Max File Size (Mb)",
         "isPersonalData": "Is Personal Data",
         "useIframe": "Use Iframe",
-        "useNumericFormat": "Use Numeric Format"
+        "useNumericFormat": "Use Numeric Format",
+        "strip": "Strip"
     },
     "messages": {
         "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",

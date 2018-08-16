@@ -57,7 +57,8 @@
             "readOnly": true
         },
         "website": {
-            "type": "url"
+            "type": "url",
+            "strip": true
         },
         "address": {
             "type": "address",

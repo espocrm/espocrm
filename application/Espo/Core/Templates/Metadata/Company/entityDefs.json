@@ -9,7 +9,8 @@
             "type": "text"
         },
         "website": {
-            "type": "url"
+            "type": "url",
+            "strip": true
         },
         "emailAddress": {
             "type": "email"

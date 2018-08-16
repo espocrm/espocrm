@@ -7,7 +7,8 @@
             "trim": true
         },
         "website": {
-            "type": "url"
+            "type": "url",
+            "strip": true
         },
         "emailAddress": {
             "type": "email",
