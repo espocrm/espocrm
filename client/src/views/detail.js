@@ -98,6 +98,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                     if (this.getView('header')) {
                         this.getView('header').reRender();
                     }
+                    this.updatePageTitle();
                 }
             }, this);
         },
