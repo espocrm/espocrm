@@ -113,4 +113,12 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         return $this->getRecordService()->massConvertCurrency($data->field, $data->targetCurrency, $params, $data->baseCurrency, $data->currencyRates);
     }
+
+    public function getActionEmailAddressList($params, $data, $request)
+    {
+        if (!$request->get('id')) throw new BadRequest();
+        if (!$this->getAcl()->checkScope($this->name, 'read')) throw new Forbidden();
+
+        return $this->getRecordService()->getEmailAddressList($request->get('id'));
+    }
 }

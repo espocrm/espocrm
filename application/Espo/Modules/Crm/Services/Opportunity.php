@@ -439,4 +439,61 @@ class Opportunity extends \Espo\Services\Record
         }
         return $wonStageList;
     }
+
+    public function getEmailAddressList($id)
+    {
+        $entity = $this->getEntity($id);
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType());
+
+        $list = [];
+        $emailAddressList = [];
+
+        if (!in_array('contacts', $forbiddenFieldList) && $this->getAcl()->checkScope('Contact')) {
+            $contactIdList = $entity->getLinkMultipleIdList('contacts');
+            if (count($contactIdList)) {
+                $contactForbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList('Contact');
+                if (!in_array('emailAddress', $contactForbiddenFieldList)) {
+                    $selectManager = $this->getSelectManagerFactory()->create('Contact');
+                    $selectParams = $selectManager->getEmptySelectParams();
+                    $selectManager->applyAccess($selectParams);
+                    $contactList = $this->getEntityManager()->getRepository('Contact')->select(['id', 'emailAddress', 'name'])->where([
+                        'id' => $contactIdList
+                    ])->find($selectParams);
+
+                    foreach ($contactList as $contact) {
+                        $emailAddress = $contact->get('emailAddress');
+                        if ($emailAddress && !in_array($emailAddress, $emailAddressList)) {
+                            $list[] = (object) [
+                                'emailAddress' => $emailAddress,
+                                'name' => $contact->get('name'),
+                                'entityType' => 'Contact'
+                            ];
+                            $emailAddressList[] = $emailAddress;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (empty($list)) {
+            if (!in_array('account', $forbiddenFieldList) && $this->getAcl()->checkScope('Account')) {
+                if ($entity->get('accountId')) {
+                    $account = $this->getEntityManager()->getEntity('Account', $entity->get('accountId'));
+                    if ($account && $account->get('emailAddress')) {
+                        $emailAddress = $account->get('emailAddress');
+                        if ($this->getAcl()->checkEntity($account)) {
+                            $list[] = (object) [
+                                'emailAddress' => $emailAddress,
+                                'name' => $account->get('name'),
+                                'entityType' => 'Account'
+                            ];
+                            $emailAddressList[] = $emailAddress;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $list;
+    }
 }

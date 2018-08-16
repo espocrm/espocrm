@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,17 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:views/opportunity/record/panels/activities', 'crm:views/record/panels/activities', function (Dep) {
 
-class CaseObj extends \Espo\Core\Controllers\Record
-{
-    protected $name = 'Case';
+    return Dep.extend({
 
-    public function getActionEmailAddressList($params, $data, $request)
-    {
-        if (!$request->get('id')) throw new BadRequest();
-        if (!$this->getAcl()->checkScope($this->name, 'read')) throw new Forbidden();
+        getComposeEmailAttributes: function (scope, data, callback) {
+            data = data || {};
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-        return $this->getRecordService()->getEmailAddressList($request->get('id'));
-    }
-}
+            Dep.prototype.getComposeEmailAttributes.call(this, scope, data, function (attributes) {
+                this.ajaxGetRequest('Opportunity/action/emailAddressList?id=' + this.model.id).then(function (list) {
+                    attributes.to = '';
+                    attributes.cc = '';
+                    attributes.nameHash = {};
+
+                    list.forEach(function (item, i) {
+                        attributes.to += item.emailAddress + ';';
+                        attributes.nameHash[item.emailAddress] = item.name;
+                    });
+                    Espo.Ui.notify(false);
+
+                    callback.call(this, attributes);
+
+                }.bind(this));
+            }.bind(this))
+        }
+    });
+});

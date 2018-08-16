@@ -14,7 +14,7 @@
          {
             "name":"activities",
             "label":"Activities",
-            "view":"crm:views/record/panels/activities",
+            "view":"crm:views/opportunity/record/panels/activities",
             "aclScope": "Activities"
          },
          {
