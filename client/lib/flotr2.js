@@ -2032,7 +2032,7 @@ Graph.prototype = {
         this.lastMousePos = pos;
       }, this));
 
-    } else {
+    } //else { EspoCRM fix
       this.
         observe(this.overlay, 'mousedown', _.bind(this.mouseDownHandler, this)).
         observe(el, 'mousemove', _.bind(this.mouseMoveHandler, this)).
@@ -2040,7 +2040,7 @@ Graph.prototype = {
         observe(el, 'mouseout', function (e) {
           E.fire(el, 'flotr:mouseout', e);
         });
-    }
+    //} EspoCRM fix
   },
 
   /**
