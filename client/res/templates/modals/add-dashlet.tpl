@@ -1,4 +1,4 @@
-<ul class="list-group">
+<ul class="list-group array-add-list-group">
 {{#each dashletList}}
     <li class="list-group-item clearfix">
         {{translate this category="dashlets"}}
