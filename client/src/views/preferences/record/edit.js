@@ -41,11 +41,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             {
                 name: 'cancel',
                 label: 'Cancel',
-            },
-            {
-                name: 'reset',
-                label: 'Reset',
-                style: 'danger'
             }
         ],
 
@@ -86,6 +81,14 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.buttonList.push(
+                {
+                    name: 'reset',
+                    html: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
+                    style: 'danger'
+                }
+            );
 
             if (this.model.get('isPortalUser')) {
                 this.layoutName = 'detailPortal';
