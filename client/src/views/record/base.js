@@ -317,6 +317,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.initDynamicLogic();
         },
 
+        setInitalAttributeValue: function (attribute, value) {
+            this.attributes[attribute] = value;
+        },
+
         checkAttributeIsChanged: function (name) {
             return !_.isEqual(this.attributes[name], this.model.get(name));
         },

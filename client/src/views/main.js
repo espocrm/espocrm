@@ -156,11 +156,11 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         disableMenuItem: function (name) {
-            this.$el.find('.header .header-buttons [data-name="'+name+'"]').addClass('disabled');
+            this.$el.find('.header .header-buttons [data-name="'+name+'"]').addClass('disabled').attr('disabled');
         },
 
         enableMenuItem: function (name) {
-            this.$el.find('.header .header-buttons [data-name="'+name+'"]').removeClass('disabled');
+            this.$el.find('.header .header-buttons [data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
         },
 
         removeMenuItem: function (name, doNotReRender) {

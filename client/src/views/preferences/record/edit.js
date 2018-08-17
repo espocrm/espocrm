@@ -82,13 +82,20 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.buttonList.push(
-                {
-                    name: 'reset',
-                    html: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
-                    style: 'danger'
-                }
-            );
+            this.addButton({
+                name: 'reset',
+                html: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
+                style: 'danger'
+            });
+
+            var forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+
+            if (!~forbiddenEditFieldList.indexOf('dashboardLayout')) {
+                this.addDropdownItem({
+                    name: 'resetDashboard',
+                    html: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
+                });
+            }
 
             if (this.model.get('isPortalUser')) {
                 this.layoutName = 'detailPortal';
@@ -198,6 +205,25 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 }).done(function (data) {
                     Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));
                     this.model.set(data);
+                    for (var attribute in data) {
+                        this.setInitalAttributeValue(attribute, data[attribute]);
+                    }
+                    this.getPreferences().set(this.model.toJSON());
+                    this.getPreferences().trigger('update');
+                }.bind(this));
+            }, this);
+        },
+
+        actionResetDashboard: function () {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
+                this.ajaxPostRequest('Preferences/action/resetDashboard', {
+                    id: this.model.id
+                }).done(function (data) {
+                    Espo.Ui.success(this.translate('Done'));
+                    this.model.set(data);
+                    for (var attribute in data) {
+                        this.setInitalAttributeValue(attribute, data[attribute]);
+                    }
                     this.getPreferences().set(this.model.toJSON());
                     this.getPreferences().trigger('update');
                 }.bind(this));

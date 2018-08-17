@@ -253,6 +253,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        disableActionItems: function () {
+            this.disableButtons();
+        },
+
+        enableActionItems: function () {
+            this.enableButtons();
+        },
+
         hideActionItem: function (name) {
             for (var i in this.buttonList) {
                 if (this.buttonList[i].name == name) {
@@ -1065,12 +1073,36 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.manageAccessDelete();
         },
 
+        addButton: function (o) {
+            var name = o.name;
+            if (!name) return;
+            for (var i in this.buttonList) {
+                if (this.buttonList[i].name == name) {
+                    return;
+                }
+            }
+            this.buttonList.push(o);
+        },
+
+        addDropdownItem: function (o) {
+            var name = o.name;
+            if (!name) return;
+            for (var i in this.dropdownItemList) {
+                if (this.dropdownItemList[i].name == name) {
+                    return;
+                }
+            }
+            this.dropdownItemList.push(o);
+        },
+
         enableButtons: function () {
-            this.$el.find(".button-container button").removeAttr('disabled');
+            this.$el.find(".button-container .action").removeAttr('disabled').removeClass('disabled');
+            this.$el.find(".button-container .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
         },
 
         disableButtons: function () {
-            this.$el.find(".button-container button").attr('disabled', 'disabled');
+            this.$el.find(".button-container .action").attr('disabled', 'disabled').addClass('disabled');
+            this.$el.find(".button-container .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
         },
 
         removeButton: function (name) {

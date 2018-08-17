@@ -66,7 +66,8 @@
                 "doNotFillAssignedUserIfNotRequired": false,
                 "useCustomTabList": false,
                 "tabList": false,
-                "emailUseExternalClient": false
+                "emailUseExternalClient": false,
+                "dashboardLayout": false
             },
             "Call": {
                 "reminders": false
