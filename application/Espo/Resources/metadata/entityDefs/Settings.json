@@ -476,6 +476,9 @@
         "outboundEmailBccAddress": {
             "type": "varchar",
             "trim": true
+        },
+        "cleanupDeletedRecords": {
+            "type": "bool"
         }
     }
 }
