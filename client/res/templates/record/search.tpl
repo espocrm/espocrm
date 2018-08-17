@@ -60,9 +60,9 @@
 </div>
 
 <div class="advanced-filters-bar" style="margin-bottom: 12px;"></div>
-<div class="row advanced-filters hidden">
+<div class="advanced-filters hidden grid-auto-fill-sm">
 {{#each filterDataList}}
-    <div class="filter filter-{{name}} col-sm-4 col-md-3" data-name="{{name}}">
+    <div class="filter filter-{{name}}" data-name="{{name}}">
         {{{var key ../this}}}
     </div>
 {{/each}}

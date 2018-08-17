@@ -705,7 +705,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             var rendered = false;
             if (this.isRendered()) {
                 rendered = true;
-                this.$advancedFiltersPanel.append('<div data-name="'+name+'" class="filter filter-' + name + ' col-sm-4 col-md-3" />');
+                this.$advancedFiltersPanel.append('<div data-name="'+name+'" class="filter filter-' + name + '" />');
             }
 
             this.createView('filter-' + name, 'views/search/filter', {
