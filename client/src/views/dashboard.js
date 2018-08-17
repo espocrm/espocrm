@@ -169,6 +169,14 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             if (this.getUser().get('portalId')) {
                 this.layoutReadOnly = true;
                 this.dashletsReadOnly = true;
+            } else {
+                var forbiddenPreferencesFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+                if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
+                    this.layoutReadOnly = true;
+                }
+                if (~forbiddenPreferencesFieldList.indexOf('dashletsOptions')) {
+                    this.dashletsReadOnly = true;
+                }
             }
 
             this.once('remove', function () {
