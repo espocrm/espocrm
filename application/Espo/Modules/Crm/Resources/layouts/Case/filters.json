@@ -1,13 +1,14 @@
 [
-	"account",
-	"assignedUser",
-	"contact",
-	"createdAt",
-	"createdBy",
-	"number",
-	"modifiedAt",
-	"status",
-	"priority",
-	"description",
-	"teams"
+    "assignedUser",
+    "teams",
+    "createdAt",
+    "createdBy",
+    "modifiedAt",
+    "account",
+    "contact",
+    "number",
+    "modifiedAt",
+    "status",
+    "priority",
+    "description"
 ]

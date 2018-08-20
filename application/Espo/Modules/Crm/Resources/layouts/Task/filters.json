@@ -1,14 +1,14 @@
 [
-	"account",
-	"assignedUser",
-	"createdAt",
+    "assignedUser",
+    "teams",
+    "createdAt",
     "createdBy",
-	"dateCompleted",
-	"dateStart",
-	"dateEnd",
-	"modifiedAt",
-	"status",
-	"parent",
-	"priority",
-    "teams"
+    "modifiedAt",
+    "account",
+    "dateCompleted",
+    "dateStart",
+    "dateEnd",
+    "status",
+    "parent",
+    "priority"
 ]

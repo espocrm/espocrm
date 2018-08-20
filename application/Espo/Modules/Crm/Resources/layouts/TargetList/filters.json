@@ -1,6 +1,6 @@
 [
     "assignedUser",
+    "teams",
     "createdAt",
-    "createdBy",
-    "teams"
+    "createdBy"
 ]

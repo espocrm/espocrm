@@ -1,14 +1,14 @@
 [
-	"account",
 	"assignedUser",
+	"teams",
 	"createdAt",
 	"createdBy",
+	"modifiedAt",
+	"account",
 	"dateStart",
 	"direction",
-	"modifiedAt",
 	"status",
 	"parent",
-	"teams",
 	"users",
 	"contacts",
 	"leads"

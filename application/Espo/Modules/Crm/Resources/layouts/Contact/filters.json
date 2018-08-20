@@ -1,12 +1,13 @@
 [
-	"account",
-    "address",
-	"assignedUser",
-	"createdAt",
-    "createdBy",
-	"emailAddress",
-    "phoneNumber",
-	"title",
+    "assignedUser",
     "teams",
-	"targetLists"
+    "createdAt",
+    "createdBy",
+    "modifiedAt",
+    "account",
+    "address",
+    "emailAddress",
+    "phoneNumber",
+    "title",
+    "targetLists"
 ]

@@ -1,15 +1,16 @@
 [
-	"assignedUser",
-	"billingAddress",
-	"createdAt",
+    "assignedUser",
+    "teams",
+    "createdAt",
     "createdBy",
+    "modifiedAt",
+    "billingAddress",
     "description",
-	"emailAddress",
-	"industry",
+    "emailAddress",
+    "industry",
     "phoneNumber",
     "targetLists",
-	"type",
-    "teams",
+    "type",
     "shippingAddress",
     "website"
 ]

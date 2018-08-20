@@ -1,16 +1,17 @@
 [
+    "assignedUser",
+    "teams",
+    "createdAt",
+    "createdBy",
+    "modifiedAt",
     "account",
     "amountConverted",
     "amountWeightedConverted",
-    "assignedUser",
     "campaign",
-    "createdAt",
-    "createdBy",
     "closeDate",
     "contacts",
     "leadSource",
     "probability",
     "stage",
-    "description",
-    "teams"
+    "description"
 ]

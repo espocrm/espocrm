@@ -1,9 +1,10 @@
 [
-	"type",
-	"status",
-	"endDate",
+    "assignedUser",
+    "teams",
     "createdAt",
     "createdBy",
-    "assignedUser",
-    "teams"
+    "modifiedAt",
+    "type",
+    "status",
+    "endDate"
 ]

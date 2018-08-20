@@ -1,6 +1,7 @@
 [
     "createdAt",
     "createdBy",
+    "modifiedAt",
     "expirationDate",
     "language",
     "type",
