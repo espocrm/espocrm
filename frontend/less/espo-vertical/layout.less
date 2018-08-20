@@ -1,28 +1,23 @@
 #header .navbar-collapse {
-  @media (min-width: @grid-float-breakpoint) {
-    .navbar & {
-      padding-left: 0;
-      padding-right: 0;
+    @media (min-width: @grid-float-breakpoint) {
+        .navbar & {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
-  }
 }
 
-#header ul.tabs li.dropdown {
-
-}
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
-  #header a.minimizer {
-    display: none;
-  }
-
-  #header .navbar ul.nav > li.global-search-container {
-    display: block;
-  }
-
-  #global-search-input {
-      width: 100% !important;
-  }
+    #header a.minimizer {
+        display: none;
+    }
+    #header .navbar ul.nav > li.global-search-container {
+        display: block;
+    }
+    #global-search-input {
+        width: 100% !important;
+    }
 }
 
 body > #header ul.tabs > li > a > span.full-label {
@@ -51,22 +46,22 @@ body > #header ul.tabs > li span.short-label > span {
 }
 
 body > #header ul.tabs > li > a > span.full-label {
-  display: inline;
+    display: inline;
 }
 
 body > #header .navbar-brand span.home-icon {
-  display: none;
+    display: none;
 }
 
 #header .more-icon {
-  display: inline;
+    display: inline;
 }
 
 #header .navbar > .navbar-header > a.navbar-brand {
-  &,
-  &:active {
-    color: @navbar-inverse-link-color;
-  }
+    &,
+    &:active {
+        color: @navbar-inverse-link-color;
+    }
 }
 
 #header .navbar li.tab > a {
@@ -82,253 +77,253 @@ body > #header .navbar-brand span.home-icon {
 
 @media screen and (min-width: @screen-sm-min) {
 
-  #header .nav > li.more > .dropdown-menu {
-    top: 0;
-    left: @navbar-width;
-    padding-top: 0;
-    padding-bottom: 0;
-    position: fixed;
-    border-left-width: 0;
-    border-top-width: 0;
-    overflow-y: hidden;
-  }
-
-  #header ul.tabs {
-    width: @navbar-width;
-    margin-left: -8px;
-    overflow-y: hidden;
-  }
-
-  #header a.minimizer {
-    color: @navbar-inverse-link-color;
-    text-decoration: none;
-    margin-top: 5px;
-    display: inline-block;
-    margin-left: 2px;
-  }
-
-  #header a.minimizer > span.left {
-    display: inline;
-  }
-  #header a.minimizer > span.right {
-    display: none;
-  }
-
-  body.minimized {
-    #header {
-      width: @navbar-minimized-width;
-    }
-
-    #header .nav > li.more > ul.dropdown-menu {
-      left: @navbar-minimized-width;
-    }
-
-    #header .navbar-brand img {
-      display: none;
-    }
-
-    #header a.navbar-brand {
-      position: fixed;
-      top: 0;
-      height: 35px;
-      width: @navbar-minimized-width;
-      padding-top: 8px;
-    }
-
-    #header a.navbar-brand span.home-icon {
-      margin-left: 12px;
-      display: inline;
-      font-size: 14px;
-    }
-
-    #header .navbar-brand img {
-      display: none;
-    }
-
-    #header .navbar-header {
-        width: @navbar-minimized-width;
-        height: 30px;
-    }
-
-    #header a.minimizer > span.left {
-      display: none;
-    }
-    #header a.minimizer > span.right {
-      display: inline;
-    }
-
-    #content {
-      margin-left: @navbar-minimized-width;
-    }
-
-    #footer {
-      margin-left: @navbar-minimized-width;
-    }
-
-    #header .navbar {
-      width: @navbar-minimized-width;
+    #header .nav > li.more > .dropdown-menu {
+        top: 0;
+        left: @navbar-width;
+        padding-top: 0;
+        padding-bottom: 0;
+        position: fixed;
+        border-left-width: 0;
+        border-top-width: 0;
+        overflow-y: hidden;
     }
 
     #header ul.tabs {
-      width: @navbar-minimized-width;
-      margin-top: 5px;
+        width: @navbar-width;
+        margin-left: -8px;
+        overflow-y: hidden;
+    }
+
+    #header a.minimizer {
+        color: @navbar-inverse-link-color;
+        text-decoration: none;
+        margin-top: 5px;
+        display: inline-block;
+        margin-left: 2px;
+    }
+
+    #header a.minimizer > span.left {
+        display: inline;
+    }
+    #header a.minimizer > span.right {
+        display: none;
+    }
+
+    body.minimized {
+        #header {
+            width: @navbar-minimized-width;
+        }
+
+        #header .nav > li.more > ul.dropdown-menu {
+            left: @navbar-minimized-width;
+        }
+
+        #header .navbar-brand img {
+            display: none;
+        }
+
+        #header a.navbar-brand {
+            position: fixed;
+            top: 0;
+            height: 35px;
+            width: @navbar-minimized-width;
+            padding-top: 8px;
+        }
+
+        #header a.navbar-brand span.home-icon {
+            margin-left: 12px;
+            display: inline;
+            font-size: 14px;
+        }
+
+        #header .navbar-brand img {
+            display: none;
+        }
+
+        #header .navbar-header {
+            width: @navbar-minimized-width;
+            height: 30px;
+        }
+
+        #header a.minimizer > span.left {
+            display: none;
+        }
+        #header a.minimizer > span.right {
+            display: inline;
+        }
+
+        #content {
+            margin-left: @navbar-minimized-width;
+        }
+
+        #footer {
+            margin-left: @navbar-minimized-width;
+        }
+
+        #header .navbar {
+            width: @navbar-minimized-width;
+        }
+
+        #header ul.tabs {
+            width: @navbar-minimized-width;
+            margin-top: 5px;
+        }
+
+        #header .navbar-right {
+            margin-left: @navbar-minimized-width;
+            padding-right: @navbar-minimized-width;
+        }
+
+        #header ul.tabs > li > a {
+            padding-left: 10px;
+        }
+
+        #header ul.tabs > li.tab > a {
+            padding-left: 10px - @navbar-color-border-width;
+        }
+
+        #header ul.tabs > li > a > span.short-label {
+            display: inline;
+        }
+
+        #header ul.tabs > li > a > span.short-label > .color-icon {
+            display: none;
+        }
+
+        #header ul.tabs > li > a > span.full-label {
+            display: none;
+        }
+
+        > #header ul.tabs > li > a > span.short-label > .short-label-text {
+            position: relative;
+            left: -1px;
+            visibility: visible;
+        }
+    }
+
+    #header .navbar {
+        top: 0;
+        border-width: 0 0 0 0;
+    }
+
+    #header {
+        width: @navbar-width;
+    }
+
+    #header .navbar-brand img {
+        max-width: @navbar-width - 12px;
+        height: 33px;
+    }
+
+    #header a.navbar-brand {
+        max-width: @navbar-width;
+        height: 35px;
+    }
+
+    #header .navbar-header {
+        width: @navbar-width;
+    }
+
+    #header .navbar-header > a.minimizer {
+        width: 30px;
+        height: 30px;
+        float: right;
+    }
+
+    body > .content {
+        margin-left: @navbar-width;
+    }
+
+    body {
+        padding-top: @tob-bar-height;
+    }
+
+    html, body {
+        height: 100%;
+    }
+
+    body > footer {
+        margin-top: -26x;
+    }
+
+    body > .content {
+        height: auto;
+        min-height: 100%;
+        padding-bottom: 42px;
+    }
+
+    body > footer {
+        clear: both;
+        position: relative;
+        height: 26px;
+        margin-top: -28px;
+    }
+
+    body > footer {
+        margin-left: @navbar-width;
+    }
+
+    #header .navbar {
+        position: fixed;
+        z-index: @zindex-navbar-fixed;
+        width: @navbar-width;
+        margin-bottom: 0px;
+        height: 100%;
+    }
+
+    #header ul.tabs li {
+        float: none;
     }
 
     #header .navbar-right {
-      margin-left: @navbar-minimized-width;
-      padding-right: @navbar-minimized-width;
+        position: fixed;
+        bottom: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: @tob-bar-height;
+        width: 100%;
+        background-color: @top-navbar-bg-color;
+        margin-left: @navbar-width;
+        padding-right: @navbar-width;
     }
 
-    #header ul.tabs > li > a {
-        padding-left: 10px;
+    #header .navbar-right .global-search-container {
+        position: fixed;
+        top: 0;
+        right: 102px;
     }
 
-    #header ul.tabs > li.tab > a {
-        padding-left: 10px - @navbar-color-border-width;
+    #header .navbar-right .global-search-container a.global-searcy-button {
+        padding: 5px 10px;
+        color: @gray-light;
     }
 
-    #header ul.tabs > li > a > span.short-label {
-        display: inline;
+    #header .navbar-right .quick-create-container {
+        position: fixed;
+        top: 0;
+        right: 34px;
+        width: 34px;
     }
 
-    #header ul.tabs > li > a > span.short-label > .color-icon {
-        display: none;
+    #header .navbar-right .menu-container {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 34px;
     }
 
-    #header ul.tabs > li > a > span.full-label {
-        display: none;
+    #header .navbar-right > li > a {
+        color: @gray-light;
+        padding: 5px 10px;
     }
 
-    > #header ul.tabs > li > a > span.short-label > .short-label-text {
-        position: relative;
-        left: -1px;
-        visibility: visible;
+    #header .navbar-right .notifications-badge-container {
+        position: fixed;
+        top: 0;
+        right: 68px;
+        width: 34px;
     }
-  }
-
-  #header .navbar {
-    top: 0;
-    border-width: 0 0 0 0;
-  }
-
-  #header {
-    width: @navbar-width;
-  }
-
-  #header .navbar-brand img {
-    max-width: @navbar-width - 12px;
-    height: 33px;
-  }
-
-  #header a.navbar-brand {
-    max-width: @navbar-width;
-    height: 35px;
-  }
-
-  #header .navbar-header {
-      width: @navbar-width;
-  }
-
-  #header .navbar-header > a.minimizer {
-    width: 30px;
-    height: 30px;
-    float: right;
-  }
-
-  body > .content {
-    margin-left: @navbar-width;
-  }
-
-  body {
-    padding-top: @tob-bar-height;
-  }
-
-  html, body {
-    height: 100%;
-  }
-
-  body > footer {
-    margin-top: -26x;
-  }
-
-  body > .content {
-    height: auto;
-    min-height: 100%;
-    padding-bottom: 42px;
-  }
-
-  body > footer {
-    clear: both;
-    position: relative;
-    height: 26px;
-    margin-top: -28px;
-  }
-
-  body > footer {
-    margin-left: @navbar-width;
-  }
-
-  #header .navbar {
-    position: fixed;
-    z-index: @zindex-navbar-fixed;
-    width: @navbar-width;
-    margin-bottom: 0px;
-    height: 100%;
-  }
-
-  #header ul.tabs li {
-    float: none;
-  }
-
-  #header .navbar-right {
-    position: fixed;
-    bottom: 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: @tob-bar-height;
-    width: 100%;
-    background-color: @top-navbar-bg-color;
-    margin-left: @navbar-width;
-    padding-right: @navbar-width;
-  }
-
-  #header .navbar-right .global-search-container {
-    position: fixed;
-    top: 0;
-    right: 102px;
-  }
-
-  #header .navbar-right .global-search-container a.global-searcy-button {
-      padding: 5px 10px;
-      color: @gray-light;
-  }
-
-  #header .navbar-right .quick-create-container {
-    position: fixed;
-    top: 0;
-    right: 34px;
-    width: 34px;
-  }
-
-  #header .navbar-right .menu-container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 34px;
-  }
-
-  #header .navbar-right > li > a {
-    color: @gray-light;
-    padding: 5px 10px;
-  }
-
-  #header .navbar-right .notifications-badge-container {
-    position: fixed;
-    top: 0;
-    right: 68px;
-    width: 34px;
-  }
 
     #header ul.tabs li > a {
         padding-top: 8px;
@@ -340,19 +335,19 @@ body > #header .navbar-brand span.home-icon {
         padding-left: 10px - @navbar-color-border-width;
     }
 
-  #header .navbar-form {
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
+    #header .navbar-form {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
 
-  #global-search-input {
-    height: @tob-bar-height !important;
-    margin-top: 0 !important;
-  }
+    #global-search-input {
+        height: @tob-bar-height !important;
+        margin-top: 0 !important;
+    }
 
-  #login {
-      margin-left: -@navbar-width;
-  }
+    #login {
+        margin-left: -@navbar-width;
+    }
 }
 
 @media (min-width: @screen-lg-min) {
@@ -363,9 +358,9 @@ body > #header .navbar-brand span.home-icon {
 
 
 body .stick-sub.button-container {
-  width: calc(~"100% - "@navbar-width);
+    width: calc(~"100% - "@navbar-width);
 }
 
 body.minimized .stick-sub.button-container {
-  width: calc(~"100% - "@navbar-minimized-width);
+    width: calc(~"100% - "@navbar-minimized-width);
 }

@@ -1,32 +1,32 @@
 #header .navbar {
-  .navbar-collapse {
-    max-height: @navbar-collapse-max-height;
+    .navbar-collapse {
+        max-height: @navbar-collapse-max-height;
 
-    @media (max-device-width: @screen-xs-min) and (orientation: landscape) {
-      max-height: 200px;
+        @media (max-device-width: @screen-xs-min) and (orientation: landscape) {
+            max-height: 200px;
+        }
     }
-  }
 }
 
 #header .navbar-collapse {
-  @media (min-width: @grid-float-breakpoint) {
-    .navbar & {
-      padding-left: 0;
-      padding-right: 0;
+    @media (min-width: @grid-float-breakpoint) {
+        .navbar & {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
-  }
 }
 
 #header .navbar {
-  position: fixed;
-  right: 0;
-  left: 0;
-  z-index: @zindex-navbar-fixed;
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: @zindex-navbar-fixed;
 }
 
 #header .navbar {
-  top: 0;
-  border-width: 0 0 1px;
+    top: 0;
+    border-width: 0 0 1px;
 }
 
 body {
@@ -54,15 +54,15 @@ body > footer {
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
-  #header .navbar {
-      position: static;
-  }
-  body {
-      padding-top: 0;
-  }
-  #header .navbar ul.nav > li.global-search-container {
-    display: block;
-  }
+    #header .navbar {
+        position: static;
+    }
+    body {
+        padding-top: 0;
+    }
+    #header .navbar ul.nav > li.global-search-container {
+        display: block;
+    }
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
@@ -113,13 +113,13 @@ body > footer {
 }
 
 body > #header ul.tabs span.short-label {
-  display: none;
+    display: none;
 }
 body > #header ul.tabs span.full-label {
-  display: inline;
+    display: inline;
 }
 body > #header .navbar-brand span.home-icon {
-  display: none;
+    display: none;
 }
 
 @media (min-width: @screen-lg-min) {
