@@ -14,6 +14,7 @@
             [{"name":"header","fullWidth":true}],
             [{"name":"body","fullWidth":true}],
             [{"name":"pageOrientation"}, {"name":"pageFormat"}],
+            [{"name":"fontFace"}, false],
             [{"name":"topMargin"}, false],
             [{"name":"leftMargin"}, {"name":"rightMargin"}],
             [{"name":"bottomMargin"}, false],

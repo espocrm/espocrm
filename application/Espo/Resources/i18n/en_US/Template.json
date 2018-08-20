@@ -13,7 +13,8 @@
         "footerPosition": "Footer Position",
         "variables": "Available Placeholders",
         "pageOrientation": "Page Orientation",
-        "pageFormat": "Paper Format"
+        "pageFormat": "Paper Format",
+        "fontFace": "Font"
     },
     "links": {
     },

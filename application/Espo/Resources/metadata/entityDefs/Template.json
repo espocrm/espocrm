@@ -80,6 +80,43 @@
             "type": "enum",
             "options": ["A3", "A4", "A5", "A6", "A7"],
             "default": "A4"
+        },
+        "fontFace": {
+            "type": "enum",
+            "options": [
+                "",
+                "aealarabiya",
+                "aefurat",
+                "cid0cs",
+                "cid0ct",
+                "cid0jp",
+                "cid0kr",
+                "courier",
+                "dejavusans",
+                "dejavusanscondensed",
+                "dejavusansextralight",
+                "dejavusansmono",
+                "dejavuserif",
+                "dejavuserifcondensed",
+                "freemono",
+                "freesans",
+                "freeserif",
+                "helvetica",
+                "hysmyeongjostdmedium",
+                "kozgopromedium",
+                "kozminproregular",
+                "msungstdlight",
+                "pdfacourier",
+                "pdfacourierb",
+                "pdfahelvetica",
+                "pdfasymbol",
+                "pdfatimes",
+                "pdfazapfdingbats",
+                "stsongstdlight",
+                "symbol",
+                "times"
+            ],
+            "default": ""
         }
     },
     "links": {
