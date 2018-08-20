@@ -14,9 +14,10 @@
 {{/if}}
 
 <div class="list-kanban" style="min-width: {{minTableWidthPx}}px">
-    <table>
+    <div class="kanban-head-container">
+    <table class="kanban-head">
         <thead>
-            <tr>
+            <tr class="kanban-row">
                 {{#each groupDataList}}
                 <th data-name="{{name}}" class="group-header">
                     <div>{{label}}</div>
@@ -24,9 +25,13 @@
                 {{/each}}
             </tr>
         </thead>
+    </table>
+    </div>
+    <div class="kanban-columns-container">
+    <table class="kanban-columns">
         {{#unless isEmptyList}}
         <tbody>
-            <tr>
+            <tr class="kanban-row">
                 {{#each groupDataList}}
                 <td class="group-column" data-name="{{name}}">
                     <div>
@@ -45,6 +50,7 @@
         </tbody>
         {{/unless}}
     </table>
+    </div>
 </div>
 
 
