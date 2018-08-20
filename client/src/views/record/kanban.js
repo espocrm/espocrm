@@ -322,6 +322,17 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             }.bind(this));
         },
 
+        getSelectAttributeList: function (callback) {
+            Dep.prototype.getSelectAttributeList.call(this, function (attrubuteList) {
+                if (attrubuteList) {
+                    if (!~attrubuteList.indexOf(this.statusField)) {
+                        attrubuteList.push(this.statusField);
+                    }
+                }
+                callback(attrubuteList);
+            }.bind(this));
+        },
+
         buildRows: function (callback) {
             var groupList = (this.collection.dataAdditional || {}).groupList || [];
 
