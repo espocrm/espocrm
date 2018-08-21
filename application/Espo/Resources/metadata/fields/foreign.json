@@ -13,7 +13,7 @@
          "required": true
       }
    ],
-   "fieldTypeList": ["varchar", "enum", "enumInt", "enumFloat", "int", "float", "website", "date", "datetime", "text", "number"],
+   "fieldTypeList": ["varchar", "enum", "enumInt", "enumFloat", "int", "float", "website", "date", "datetime", "text", "number", "bool"],
    "filter": true,
    "notCreatable": false,
    "fieldDefs": {

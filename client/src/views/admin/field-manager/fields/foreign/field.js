@@ -120,6 +120,8 @@ Espo.define('views/admin/field-manager/fields/foreign/field', 'views/fields/enum
                 this.viewValue = 'views/fields/foreign-text';
             } else if (type == 'number') {
                 this.viewValue = 'views/fields/foreign-varchar';
+            } else if (type == 'bool') {
+                this.viewValue = 'views/fields/foreign-bool';
             } else {
                 this.viewValue = null;
             }
