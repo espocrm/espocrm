@@ -44,7 +44,7 @@ class HasChildren extends Base
                         'notStorable' => true,
                     ),
                     $linkName.'Names' => array(
-                        'type' => 'varchar',
+                        'type' => 'jsonObject',
                         'notStorable' => true,
                     ),
                 ),
