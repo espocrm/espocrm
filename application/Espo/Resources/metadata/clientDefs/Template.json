@@ -21,5 +21,39 @@
                 }
             ]
         }
+    },
+    "dynamicLogic": {
+        "fields": {
+            "body": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "entityType"
+                        }
+                    ]
+                }
+            },
+            "header": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "entityType"
+                        }
+                    ]
+                }
+            },
+            "variables": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "entityType"
+                        }
+                    ]
+                }
+            }
+        }
     }
 }
