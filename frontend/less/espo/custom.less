@@ -2190,6 +2190,7 @@ pre > code {
     }
 }
 
+.grid-auto-fill-xs,
 .grid-auto-fill-sm,
 .grid-auto-fill-md {
     margin-left: ceil((@grid-gutter-width / -2));
@@ -2204,6 +2205,11 @@ pre > code {
     }
 }
 
+.grid-auto-fill-xs {
+    > div {
+         width: 20%;
+    }
+}
 .grid-auto-fill-sm {
     > div {
         width: 25%;
@@ -2216,6 +2222,11 @@ pre > code {
 }
 
 @media screen and (max-width: (@screen-md-min - 1px)) {
+    .grid-auto-fill-xs {
+        > div {
+            width: 25%;
+        }
+    }
     .grid-auto-fill-sm {
         > div {
             width: 33.33333333333333%;
@@ -2229,6 +2240,11 @@ pre > code {
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
+    .grid-auto-fill-xs {
+        > div {
+            width: 50%;
+        }
+    }
     .grid-auto-fill-sm,
     .grid-auto-fill-md {
         > div {
@@ -2238,6 +2254,7 @@ pre > code {
 }
 
 @supports (display: grid) {
+    .grid-auto-fill-xs,
     .grid-auto-fill-sm,
     .grid-auto-fill-md {
         display: grid;
@@ -2256,6 +2273,9 @@ pre > code {
         &::after {
             display: none !important;
         }
+    }
+    .grid-auto-fill-xs {
+        grid-template-columns: repeat(auto-fill, minmax(@grid-column-width-xsmall, 1fr));
     }
     .grid-auto-fill-sm {
         grid-template-columns: repeat(auto-fill, minmax(@grid-column-width-small, 1fr));
