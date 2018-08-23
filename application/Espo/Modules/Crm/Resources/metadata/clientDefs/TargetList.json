@@ -1,76 +1,78 @@
 {
-   "controller": "controllers/record",
-   "boolFilterList": ["onlyMy"],
-   "sidePanels":{
-      "detail":[
-         {
-            "name":"optedOut",
-            "label":"Opted Out",
-            "view":"crm:views/target-list/record/panels/opted-out"
-         }
-      ]
-   },
-   "recordViews": {
-      "detail": "crm:views/target-list/record/detail"
-   },
-   "relationshipPanels": {
-      "contacts": {
-         "actionList": [
+    "controller":"controllers/record",
+    "boolFilterList":[
+        "onlyMy"
+    ],
+    "sidePanels":{
+        "detail":[
             {
-               "label": "Unlink All",
-               "action": "unlinkAllRelated",
-               "acl": "edit",
-               "data": {
-                  "link": "contacts"
-               }
+                "name":"optedOut",
+                "label":"Opted Out",
+                "view":"crm:views/target-list/record/panels/opted-out"
             }
-         ],
-         "rowActionsView": "crm:views/target-list/record/row-actions/default",
-         "view": "crm:views/target-list/record/panels/relationship"
-      },
-      "leads": {
-         "actionList": [
-            {
-               "label": "Unlink All",
-               "action": "unlinkAllRelated",
-               "acl": "edit",
-               "data": {
-                  "link": "leads"
-               }
-            }
-         ],
-         "rowActionsView": "crm:views/target-list/record/row-actions/default",
-         "view": "crm:views/target-list/record/panels/relationship"
-      },
-      "accounts": {
-         "actionList": [
-            {
-               "label": "Unlink All",
-               "action": "unlinkAllRelated",
-               "acl": "edit",
-               "data": {
-                  "link": "accounts"
-               }
-            }
-         ],
-         "rowActionsView": "crm:views/target-list/record/row-actions/default",
-         "view": "crm:views/target-list/record/panels/relationship"
-      },
-      "users": {
-         "create": false,
-         "actionList": [
-            {
-               "label": "Unlink All",
-               "action": "unlinkAllRelated",
-               "acl": "edit",
-               "data": {
-                  "link": "users"
-               }
-            }
-         ],
-         "rowActionsView": "crm:views/target-list/record/row-actions/default",
-         "view": "crm:views/target-list/record/panels/relationship"
-      }
-   },
-   "iconClass": "fas fa-crosshairs"
+        ]
+    },
+    "recordViews":{
+        "detail":"crm:views/target-list/record/detail"
+    },
+    "relationshipPanels":{
+        "contacts":{
+            "actionList":[
+                {
+                    "label":"Unlink All",
+                    "action":"unlinkAllRelated",
+                    "acl":"edit",
+                    "data":{
+                        "link":"contacts"
+                    }
+                }
+            ],
+            "rowActionsView":"crm:views/target-list/record/row-actions/default",
+            "view":"crm:views/target-list/record/panels/relationship"
+        },
+        "leads":{
+            "actionList":[
+                {
+                    "label":"Unlink All",
+                    "action":"unlinkAllRelated",
+                    "acl":"edit",
+                    "data":{
+                        "link":"leads"
+                    }
+                }
+            ],
+            "rowActionsView":"crm:views/target-list/record/row-actions/default",
+            "view":"crm:views/target-list/record/panels/relationship"
+        },
+        "accounts":{
+            "actionList":[
+                {
+                    "label":"Unlink All",
+                    "action":"unlinkAllRelated",
+                    "acl":"edit",
+                    "data":{
+                        "link":"accounts"
+                    }
+                }
+            ],
+            "rowActionsView":"crm:views/target-list/record/row-actions/default",
+            "view":"crm:views/target-list/record/panels/relationship"
+        },
+        "users":{
+            "create":false,
+            "actionList":[
+                {
+                    "label":"Unlink All",
+                    "action":"unlinkAllRelated",
+                    "acl":"edit",
+                    "data":{
+                        "link":"users"
+                    }
+                }
+            ],
+            "rowActionsView":"crm:views/target-list/record/row-actions/default",
+            "view":"crm:views/target-list/record/panels/relationship"
+        }
+    },
+    "iconClass":"fas fa-crosshairs"
 }
