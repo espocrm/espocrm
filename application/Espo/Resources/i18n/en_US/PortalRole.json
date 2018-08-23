@@ -14,6 +14,6 @@
         "Field Level": "Field Level"
     },
     "tooltips": {
-        "exportPermission": "Defines wheter portal users have an ability to export records."
+        "exportPermission": "Defines whether portal users have an ability to export records."
     }
 }

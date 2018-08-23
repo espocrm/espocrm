@@ -18,7 +18,7 @@
         "userPermission": "Allows to restrict an ability for users to view activities, calendar and stream of other users.\n\nall - can view all\n\nteam - can view activities of teammates only\n\nno - can't view",
         "portalPermission": "Defines an access to portal information, ability to post messages to portal users.",
         "groupEmailAccountPermission": "Defines an access to group email accounts, an ability to send emails from group SMTP.",
-        "exportPermission": "Defines wheter users have an ability to export records.",
+        "exportPermission": "Defines whether users have an ability to export records.",
         "dataPrivacyPermission": "Allows to view and erase personal data."
     },
     "labels": {
