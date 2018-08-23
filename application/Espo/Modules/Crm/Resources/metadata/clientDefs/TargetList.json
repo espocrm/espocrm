@@ -74,5 +74,29 @@
             "view":"crm:views/target-list/record/panels/relationship"
         }
     },
+    "dynamicLogic": {
+        "fields": {
+            "entryCount": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+                }
+            },
+            "optedOutCount": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+                }
+            }
+        }
+    },
     "iconClass":"fas fa-crosshairs"
 }
