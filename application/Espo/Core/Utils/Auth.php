@@ -180,6 +180,10 @@ class Auth
             return;
         }
 
+        if (!$user->isAdmin() && $this->getConfig()->get('maintenanceMode')) {
+            throw new \Espo\Core\Exceptions\ServiceUnavailable("Application is in maintenance mode.");
+        }
+
         if (!$user->isActive()) {
             $GLOBALS['log']->info("AUTH: Trying to login as user '".$user->get('userName')."' which is not active.");
             $this->logDenied($authLogRecord, 'INACTIVE_USER');
