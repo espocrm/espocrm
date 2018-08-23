@@ -81,6 +81,11 @@ class Application
         return $this->container;
     }
 
+    protected function getConfig()
+    {
+        return $this->getContainer()->get('config');
+    }
+
     public function run($name = 'default')
     {
         $this->routeHooks();
@@ -134,6 +139,11 @@ class Application
 
     public function runCron()
     {
+        if ($this->getConfig()->get('cronDisabled')) {
+            $GLOBALS['log']->warning("Cron is not run because it's disabled with 'cronDisabled' param.");
+            return;
+        }
+
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
@@ -155,7 +165,7 @@ class Application
 
     public function isInstalled()
     {
-        $config = $this->getContainer()->get('config');
+        $config = $this->getConfig();
 
         if (file_exists($config->getConfigPath()) && $config->get('isInstalled')) {
             return true;
@@ -244,7 +254,7 @@ class Application
 
     protected function getRouteList()
     {
-        $routes = new \Espo\Core\Utils\Route($this->getContainer()->get('config'), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $routes = new \Espo\Core\Utils\Route($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
 
 
         return $routes->getAll();
@@ -252,7 +262,7 @@ class Application
 
     protected function initRoutes()
     {
-        $crudList = array_keys($this->getContainer()->get('config')->get('crud'));
+        $crudList = array_keys($this->getConfig()->get('crud'));
 
         foreach ($this->getRouteList() as $route) {
             $method = strtolower($route['method']);
@@ -273,7 +283,7 @@ class Application
 
     protected function initAutoloads()
     {
-        $autoload = new \Espo\Core\Utils\Autoload($this->getContainer()->get('config'), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $autoload = new \Espo\Core\Utils\Autoload($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
 
         try {
             $autoloadList = $autoload->getAll();
