@@ -38,6 +38,8 @@ Espo.define('date-time', [], function () {
 
         internalDateTimeFormat: 'YYYY-MM-DD HH:mm',
 
+        internalDateTimeFullFormat: 'YYYY-MM-DD HH:mm:ss',
+
         dateFormat: 'MM/DD/YYYY',
 
         timeFormat: 'HH:mm',

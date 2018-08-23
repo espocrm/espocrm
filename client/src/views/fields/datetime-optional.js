@@ -100,8 +100,16 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
             } else {
                 if (date != '') {
                     data[this.nameDate] = this.getDateTime().fromDisplayDate(date);
+                    var dateTimeValue = data[this.nameDate] + ' 00:00:00';
+
+                    dateTimeValue = moment.utc(dateTimeValue)
+                        .tz(this.getConfig().get('timeZone') || 'UTC')
+                        .format(this.getDateTime().internalDateTimeFullFormat);
+
+                    data[this.name] = dateTimeValue;
                 } else {
                     data[this.nameDate] = null;
+                    data[this.name] = null;
                 }
             }
             return data;
