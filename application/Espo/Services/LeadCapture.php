@@ -254,7 +254,7 @@ class LeadCapture extends Record
                 }
             } else {
                 $isAlreadyOptedIn = $this->getEntityManager()->getRepository('Lead')->isRelated($lead, 'targetLists', $leadCapture->get('targetListId'));
-                if ($campaign && !$isAlreadyOptedIn) {
+                if (!$isAlreadyOptedIn) {
                     $toRelateLead = true;
                 }
             }
@@ -277,7 +277,9 @@ class LeadCapture extends Record
 
             if ($toRelateLead) {
                 $this->getEntityManager()->getRepository('Lead')->relate($lead, 'targetLists', $leadCapture->get('targetListId'));
-                $campaingService->logOptedIn($campaign->id, null, $lead);
+                if ($campaign) {
+                    $campaingService->logOptedIn($campaign->id, null, $lead);
+                }
             }
         }
 
