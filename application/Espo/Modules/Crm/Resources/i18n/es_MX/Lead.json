@@ -23,8 +23,8 @@
     "createdContact": "Contacto",
     "createdOpportunity": "Oportunidad",
     "campaign": "Campaña",
-    "targetLists": "Listas de Objetivos",
-    "targetList": "Lista de Objetivos",
+    "targetLists": "Listas de Intereses",
+    "targetList": "Lista de Intereses",
     "industry": "Industria",
     "acceptanceStatus": "Estatus de Aprobación",
     "opportunityAmountCurrency": "Importe de la Oportunidad",
@@ -32,7 +32,7 @@
     "acceptanceStatusCalls": "Estátus de Aceptación (Llamadas)"
   },
   "links": {
-    "targetLists": "Listas de Objetivos",
+    "targetLists": "Listas de Intereses",
     "campaignLogRecords": "Registrar Campaña",
     "campaign": "Campaña",
     "createdAccount": "Cuenta",

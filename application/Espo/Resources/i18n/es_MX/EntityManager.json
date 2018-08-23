@@ -11,7 +11,7 @@
     "type": "Tipo",
     "labelSingular": "Etiqueta en Singular",
     "labelPlural": "Etiqueta en Plural",
-    "stream": "Seguimiento",
+    "stream": "Flujo",
     "label": "Etiqueta",
     "linkType": "Tipo de enlace",
     "entityForeign": "Entidad Foránea",
@@ -60,11 +60,11 @@
     "linkConflict": "Ya existe un enlace con el mismo nombra."
   },
   "tooltips": {
-    "statusField": "Los cambios en este campo serán registrados en seguimiento",
+    "statusField": "Los cambios en este campo serán registrados en su flujo",
     "textFilterFields": "Campos usados por la búsqueda de texto",
-    "stream": "Si la entidad tiene Seguimiento.",
+    "stream": "Si la entidad tiene Flujo.",
     "disabled": "Verifique si ya no necesita esta entidad en su sistema.",
-    "linkAudited": "Se registrará en Seguimiento la creación de registros relacionados y su liga con con registros existentes.",
+    "linkAudited": "La creación de registros relacionados y su liga con con registros existentes se registrará en su flujo.",
     "linkMultipleField": "El campo 'Multi-Ligas' es una forma fácil de editar relaciones.  No lo uses si tienes muchos registros.",
     "entityType": "Base Plus - tiene páneles de Actividades, Historial y Tareas.\n\nEvento - disponible en los páneles de Calendario y Actividades",
     "fullTextSearch": "Se requiere regenerar"

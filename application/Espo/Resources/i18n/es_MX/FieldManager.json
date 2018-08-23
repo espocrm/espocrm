@@ -63,7 +63,7 @@
     }
   },
   "tooltips": {
-    "audited": "Las actualizaciones se registrarán en Seguimiento",
+    "audited": "Las actualizaciones se registrarán en el Flujo",
     "required": "El campo será obligatorio.  No puede ir vacío.",
     "default": "Se asignará el valor default al crearlo.",
     "min": "Valor mínimo permitido.",

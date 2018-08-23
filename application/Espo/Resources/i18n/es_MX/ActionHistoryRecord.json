@@ -3,8 +3,8 @@
     "user": "Usuario",
     "action": "Acción",
     "createdAt": "Fecha",
-    "target": "Objetivo",
-    "targetType": "Tipo de Objetivo",
+    "target": "Interés",
+    "targetType": "Tipo de Interés",
     "authToken": "Clave de Autorización",
     "ipAddress": "Dirección IP",
     "authLogRecord": "Registro en Hist. de Aut."
@@ -12,7 +12,7 @@
   "links": {
     "authToken": "Clave de Autorización",
     "user": "Usuario",
-    "target": "Objetivo",
+    "target": "Interés",
     "authLogRecord": "Registro en Hist. de Aut."
   },
   "presetFilters": {

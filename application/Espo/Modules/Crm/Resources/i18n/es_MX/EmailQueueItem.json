@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nombre",
     "status": "Estátus",
-    "target": "Objetivo",
+    "target": "Interés",
     "sentAt": "Enviado",
     "attemptCount": "Intentos",
     "emailAddress": "Correo Electrónico",
@@ -10,7 +10,7 @@
     "isTest": "Es una prueba"
   },
   "links": {
-    "target": "Objetivo",
+    "target": "Interés",
     "massEmail": "Correo Masivo"
   },
   "options": {

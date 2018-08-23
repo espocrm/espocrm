@@ -14,10 +14,9 @@
   },
   "tooltips": {
     "assignmentPermission": "Permite restringir la habilidad para asignar registros y enviar mensajes a otros usuarios.\n\ntodos - sin restricción\n\nequipo - sólo a sus compañeros\n\nno - sólo a sí mismo",
-    "userPermission": "Permite restringir la capacidad de los usuarios para ver tareas, calendarios y actividades de otros usuarios.\n\ntodos  - pueden ver todo\n\nequipo - pueden ver las actividades de su equipo\n\nno - sólo las propias",
+    "userPermission": "Permite restringir la capacidad de los usuarios para ver tareas, calendarios y el flujo de otros usuarios.\n\ntodos  - pueden ver todo\n\nequipo - pueden ver las actividades de su equipo\n\nno - sólo las propias",
     "portalPermission": "Define un acceso a la información del portal, permitiendo enviar mensajes a los usuarios del portal",
     "groupEmailAccountPermission": "Define el acceso a los grupos de cuentas de corros, la capacida de enviar correos desde grupos SMTP.",
-    "exportPermission": "Define si los usuarios pueden exportar registros.",
     "dataPrivacyPermission": "Permite ver y borrar datos personales."
   },
   "labels": {
@@ -46,7 +45,7 @@
     "read": "Leer",
     "edit": "Editar",
     "delete": "Borrar",
-    "stream": "Seguimiento",
+    "stream": "Flujo",
     "create": "Crear"
   },
   "messages": {

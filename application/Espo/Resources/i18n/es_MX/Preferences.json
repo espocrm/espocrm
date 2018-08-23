@@ -32,7 +32,7 @@
     "autoFollowEntityTypeList": "Seguimiento-automático Global",
     "emailReplyToAllByDefault": "Responder a todos por default",
     "doNotFillAssignedUserIfNotRequired": "No pre-llenar el campo de usuario al crear un registro",
-    "followEntityOnStreamPost": "Seguimiento-automático del registro al publicarlo en Seguimiento",
+    "followEntityOnStreamPost": "Seguimiento-automático del registro al publicarlo en el Flujo",
     "followCreatedEntities": "Seguimiento-automático de los registros creados",
     "followCreatedEntityTypeList": "Seguimiento-automático de los registros de tipos de entidad específicos",
     "emailUseExternalClient": "Use un cliente externo de correo",
@@ -52,9 +52,7 @@
     "Locale": "Localización"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Seguir automáticamente TODOS los nuevos registros (de cualquier usuario) de los tipos de entidad seleccionados.  Así podrá ver información de seguimiento y recibir notificaciones sobre todo lo registrado en el sistema.",
-    "doNotFillAssignedUserIfNotRequired": "El registro creado por el usuario asignado no será llenado con el propio usuario, a menos que el campo sea requerido.",
-    "followCreatedEntities": "Los nuevos registros creados tendrán seguimiento-automático, incluso si son asignados a otro usuario.",
-    "followCreatedEntityTypeList": "Los nuevos registros creados de un tipo de entidad seleccionado tendrán seguimiento-automático, incluso si son asignados a otro usuario."
+    "autoFollowEntityTypeList": "Seguir automáticamente TODOS los nuevos registros (de cualquier usuario) de los tipos de entidad seleccionados.  Así podrá ver información del flujo y recibir notificaciones sobre todo lo registrado en el sistema.",
+    "doNotFillAssignedUserIfNotRequired": "El registro creado por el usuario asignado no será llenado con el propio usuario, a menos que el campo sea requerido."
   }
 }

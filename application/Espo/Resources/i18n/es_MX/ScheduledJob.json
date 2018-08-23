@@ -3,13 +3,13 @@
     "name": "Nombre",
     "status": "Estátus",
     "job": "Trabajo",
-    "scheduling": "Programación"
+    "scheduling": "Agendar"
   },
   "links": {
     "log": "Historial"
   },
   "labels": {
-    "Create ScheduledJob": "Crear Tarea Programada"
+    "Create ScheduledJob": "Crear Tarea Agendada"
   },
   "options": {
     "job": {
@@ -22,10 +22,10 @@
       "CheckNewVersion": "Verificar Nueva Versión"
     },
     "cronSetup": {
-      "linux": "<b>Nota</b>: Agregue esta línea al archivo crontab de su servidor para que ejecute los trabajos programados de EspoCRM:",
-      "mac": "<b>Nota</b>: Agregue esta línea al archivo crontab de su servidor para que ejecute los trabajos programados de EspoCRM:",
+      "linux": "<b>Nota</b>: Agregue esta línea al archivo crontab de su servidor para que ejecute los trabajos agendados de EspoCRM:",
+      "mac": "<b>Nota</b>: Agregue esta línea al archivo crontab de su servidor para que ejecute los trabajos agendados de EspoCRM:",
       "windows": "<b>Nota</b>: Genere un archivo por lotes con los siguientes comandos para ejecutar trabajos programados de EspoCRM mediante el Programador de Tareas de Windows:",
-      "default": "Nota: Agregue este comando a su CronJob (Tarea Programada):"
+      "default": "Nota: Agregue este comando a su CronJob (Tarea Agendada):"
     },
     "status": {
       "Active": "Activo",

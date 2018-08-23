@@ -5,11 +5,11 @@
     "entryCount": "Contador de entradas",
     "campaigns": "Campañas",
     "endDate": "Fecha de Fin",
-    "targetLists": "Listas de Objetivos",
+    "targetLists": "Listas de Intereses",
     "includingActionList": "Incluyendo",
     "excludingActionList": "Excluyendo",
     "optedOutCount": "Contador de Exclusiones",
-    "targetStatus": "Status del Objetivo",
+    "targetStatus": "Status del Interés",
     "isOptedOut": "Se ha Excluido"
   },
   "links": {
@@ -30,7 +30,7 @@
     }
   },
   "labels": {
-    "Create TargetList": "Crear un objetivo de lista",
+    "Create TargetList": "Crear lista de Intereses",
     "Opted Out": "Rechazado",
     "Cancel Opt-Out": "Cancelar Confirmación",
     "Opt-Out": "Confirmar"

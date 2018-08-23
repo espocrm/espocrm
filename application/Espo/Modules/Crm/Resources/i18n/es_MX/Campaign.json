@@ -6,8 +6,8 @@
     "type": "Tipo",
     "startDate": "Fecha de Inicio",
     "endDate": "Fecha de Fin",
-    "targetLists": "Lista de Objetivos",
-    "excludingTargetLists": "Listas de Objetivos Excluidas",
+    "targetLists": "Lista de Intereses",
+    "excludingTargetLists": "Listas de Intereses Excluidas",
     "sentCount": "Enviado",
     "openedCount": "Abierto",
     "clickedCount": "Leídos",
@@ -27,8 +27,8 @@
     "mailMergeOnlyWithAddress": "Saltar registros sin dirección capturada"
   },
   "links": {
-    "targetLists": "Listas de Objetivos",
-    "excludingTargetLists": "Listas de Objetivos Excluidas",
+    "targetLists": "Listas de Intereses",
+    "excludingTargetLists": "Listas de Intereses Excluidas",
     "accounts": "Cuentas",
     "contacts": "Contactos",
     "leads": "Referencias",
@@ -57,7 +57,7 @@
   },
   "labels": {
     "Create Campaign": "Crear Campaña",
-    "Target Lists": "Listas de Objetivos",
+    "Target Lists": "Listas de Intereses",
     "Statistics": "Estadísticas",
     "hard": "duro",
     "soft": "suave",
@@ -78,7 +78,7 @@
     "subscribedAgain": "Usted se ha vuelto a suscribir."
   },
   "tooltips": {
-    "targetLists": "Los objetivos que deben recibir los mensajes.",
-    "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
+    "targetLists": "Intereses que deben recibir mensajes.",
+    "excludingTargetLists": "Los intereses que no deben recibir mensajes."
   }
 }

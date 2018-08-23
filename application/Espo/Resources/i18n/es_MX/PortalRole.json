@@ -10,8 +10,5 @@
   },
   "fields": {
     "exportPermission": "Permisos de Exportación"
-  },
-  "tooltips": {
-    "exportPermission": "Define si los usuarios del portal pueden exportar registros."
   }
 }
