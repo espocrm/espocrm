@@ -781,6 +781,8 @@ class Activities extends \Espo\Core\Services\Base
             'customJoin' => ''
         );
 
+        $selectManager->applyAccess($selectParams);
+
         return $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
     }
 
@@ -825,6 +827,8 @@ class Activities extends \Espo\Core\Services\Base
             ),
             'customJoin' => ''
         );
+
+        $selectManager->applyAccess($selectParams);
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
     }
@@ -876,6 +880,8 @@ class Activities extends \Espo\Core\Services\Base
         } else {
             $selectParams['whereClause'][] = ['assignedUserId' => $userId];
         }
+
+        $selectManager->applyAccess($selectParams);
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Task', $selectParams);
     }
@@ -951,6 +957,8 @@ class Activities extends \Espo\Core\Services\Base
         if ($seed->hasRelation('assignedUsers')) {
             $selectParams['leftJoins'][] = 'assignedUsers';
         }
+
+        $selectManager->applyAccess($selectParams);
 
         return $selectParams;
     }
