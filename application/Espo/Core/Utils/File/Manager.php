@@ -589,7 +589,7 @@ class Manager
             }
         }
 
-        if ($removeWithDir) {
+        if ($removeWithDir && $this->isDirEmpty($dirPath)) {
             $result &= $this->rmdir($dirPath);
         }
 
@@ -908,4 +908,3 @@ class Manager
         return $fullPath;
     }
 }
-
