@@ -56,7 +56,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
             this.header = this.getLanguage().translate('Compose Email');
 
-            if (this.getPreferences().get('emailUseExternalClient')) {
+            if (this.getPreferences().get('emailUseExternalClient') || !this.getAcl().checkScope('Email', 'create')) {
                 var attributes = this.options.attributes || {};
 
                 require('email-helper', function (EmailHelper) {
