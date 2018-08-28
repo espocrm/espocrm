@@ -174,6 +174,8 @@ return array (
     'massPrintPdfMaxCount' => 50,
     'emailKeepParentTeamsEntityList' => ['Case'],
     'recordListMaxSizeLimit' => 200,
+    'noteDeleteThresholdPeriod' => '1 month',
+    'noteEditThresholdPeriod' => '7 days',
     'isInstalled' => false
 );
 
