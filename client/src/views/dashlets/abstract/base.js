@@ -122,17 +122,17 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             {
                 name: 'refresh',
                 label: 'Refresh',
-                iconHtml: '<span class="glyphicon glyphicon-refresh"></span>',
+                iconHtml: '<span class="fas fa-sync-alt"></span>',
             },
             {
                 name: 'options',
                 label: 'Options',
-                iconHtml: '<span class="glyphicon glyphicon-pencil"></span>',
+                iconHtml: '<span class="fas fa-pencil-alt fa-sm"></span>',
             },
             {
                 name: 'remove',
                 label: 'Remove',
-                iconHtml: '<span class="glyphicon glyphicon-remove"></span>',
+                iconHtml: '<span class="fas fa-times"></span>',
             }
         ],
 

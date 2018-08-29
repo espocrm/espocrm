@@ -88,18 +88,26 @@ Espo.define('ui', [], function () {
             var rightPart = '';
             this.buttons.forEach(function (o) {
                 if (o.pullLeft) return;
+                var className = '';
+                if (o.className) {
+                    className = ' ' + o.className;
+                }
                 rightPart +=
                     '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
-                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + className+'" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';
             }, this);
             var leftPart = '';
             this.buttons.forEach(function (o) {
                 if (!o.pullLeft) return;
+                var className = '';
+                if (o.className) {
+                    className = ' ' + o.className;
+                }
                 leftPart +=
                     '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
-                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + className+'" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';
             }, this);

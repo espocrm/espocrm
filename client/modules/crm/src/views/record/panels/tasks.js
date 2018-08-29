@@ -48,7 +48,7 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
                 title: 'Create Task',
                 acl: 'create',
                 aclScope: 'Task',
-                html: '<span class="glyphicon glyphicon-plus"></span>',
+                html: '<span class="fas fa-plus"></span>',
             }
         ],
 

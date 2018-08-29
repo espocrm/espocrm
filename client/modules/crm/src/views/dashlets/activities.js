@@ -115,7 +115,7 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
                     this.actionList.unshift({
                         name: 'createActivity',
                         html: this.translate('Create ' + scope, 'labels', scope),
-                        iconHtml: '<span class="glyphicon glyphicon-plus"></span>',
+                        iconHtml: '<span class="fas fa-plus"></span>',
                         url: '#' + scope + '/create',
                         data: {
                             scope: scope

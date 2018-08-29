@@ -43,7 +43,7 @@ Espo.define('views/dashlets/emails', 'views/dashlets/abstract/record-list', func
                 this.actionList.unshift({
                     name: 'compose',
                     html: this.translate('Compose Email', 'labels', this.scope),
-                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+                    iconHtml: '<span class="fas fa-plus"></span>'
                 });
             }
         },

@@ -97,16 +97,18 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
                 this.buttonList.push({
                     name: 'previous',
-                    html: '<span class="glyphicon glyphicon-chevron-left"></span>',
+                    html: '<span class="fas fa-chevron-left"></span>',
                     title: this.translate('Previous Entry'),
                     pullLeft: true,
+                    className: 'btn-icon',
                     disabled: true
                 });
                 this.buttonList.push({
                     name: 'next',
-                    html: '<span class="glyphicon glyphicon-chevron-right"></span>',
+                    html: '<span class="fas fa-chevron-right"></span>',
                     title: this.translate('Next Entry'),
                     pullLeft: true,
+                    className: 'btn-icon',
                     disabled: true
                 });
                 this.indexOfRecord = this.model.collection.indexOf(this.model);

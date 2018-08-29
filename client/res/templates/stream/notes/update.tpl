@@ -11,7 +11,7 @@
             {{{avatar}}}
         </div>
         <div class="stream-head-text-container">
-            <span class="text-muted message">{{{message}}}</span> <a href="javascript:" data-action="expandDetails"><span class="glyphicon glyphicon-chevron-down"></span></a>
+            <span class="text-muted message">{{{message}}}</span> <a href="javascript:" data-action="expandDetails"><span class="fas fa-chevron-down"></span></a>
         </div>
     </div>
 

@@ -294,7 +294,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             var $container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
             $el.html(this.getHelper().stripTags(name || id) + '&nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
+            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>');
             $container.append($el);
 
             return $el;

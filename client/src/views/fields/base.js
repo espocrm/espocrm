@@ -278,7 +278,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
                 var $a;
                 this.once('after:render', function () {
-                    $a = $('<a href="javascript:" class="text-muted"><span class="glyphicon glyphicon-info-sign"></span></a>');
+                    $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
                     var $label = this.getLabelElement();
                     $label.append(' ');
                     this.getLabelElement().append($a);
@@ -372,7 +372,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         initInlineEdit: function () {
             var $cell = this.getCellElement();
-            var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden"><span class="glyphicon glyphicon-pencil"></span></a>');
+            var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden"><span class="fas fa-pencil-alt fa-sm"></span></a>');
 
             if ($cell.size() == 0) {
                 this.listenToOnce(this, 'after:render', this.initInlineEdit, this);

@@ -5,7 +5,7 @@
     <div class="col-sm-4 col-xs-12">
         <div class="btn-group">
             <button class="btn btn-default" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
-            <button class="btn btn-default" title="{{translate 'Refresh'}}" data-action="refresh"><span class="glyphicon glyphicon-refresh"></span></button>
+            <button class="btn btn-default btn-icon" title="{{translate 'Refresh'}}" data-action="refresh"><span class="fas fa-sync-alt fa-sm"></span></button>
         </div>{{#if calendarTypeSelectEnabled}}<div class="btn-group calendar-type-button-group">
         <div class="btn-group " role="group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="calendar-type-label">{{calendarTypeLabel}}</span> <span class="caret"></span></button>
@@ -13,13 +13,13 @@
                 {{#each calendarTypeDataList}}
                     <li>
                         <a href="javascript:" data-action="toggleCalendarType" data-name="{{type}}">
-                            <span class="glyphicon glyphicon-ok calendar-type-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{label}}
+                            <span class="fas fa-check calendar-type-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{label}}
                         </a>
                     </li>
                 {{/each}}
             </ul>
         </div>
-        <button class="btn btn-default{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}}" data-action="showSharedCalendarOptions" title="{{translate 'Manage Users' scope='Calendar'}}"><span class="glyphicon glyphicon-pencil"></span></button>
+        <button class="btn btn-default{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}} btn-icon" data-action="showSharedCalendarOptions" title="{{translate 'Manage Users' scope='Calendar'}}"><span class="fas fa-pencil-alt fa-sm"></span></button>
         </div>
         {{/if}}
     </div>
@@ -48,7 +48,7 @@
                     {{#each scopeFilterDataList}}
                         <li>
                             <a href="javascript:" data-action="toggleScopeFilter" data-name="{{scope}}">
-                                <span class="glyphicon glyphicon-ok filter-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{translate scope category='scopeNamesPlural'}}
+                                <span class="fas fa-check filter-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{translate scope category='scopeNamesPlural'}}
                             </a>
                         </li>
                     {{/each}}

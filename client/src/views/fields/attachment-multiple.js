@@ -297,7 +297,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         addAttachmentBox: function (name, type, id, link) {
             var $attachments = this.$attachments;
 
-            var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="glyphicon glyphicon-remove"></span></a>';
+            var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="fas fa-times"></span></a>';
 
             var preview = name;
             if (this.showPreviews && id) {

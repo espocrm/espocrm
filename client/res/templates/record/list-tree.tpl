@@ -15,17 +15,17 @@
     {{/if}}
 {{/unless}}
 <div class="list list-expanded">
-    {{#if showEditLink}}
-    <a href="#{{scope}}" class="small pull-right action manage-categories-link" data-action="manageCategories" title="{{translate 'Manage Categories' scope=scope}}"><span class="glyphicon glyphicon-th-list"></span></a>
-    {{/if}}
 
     {{#if hasExpandedToggler}}
-        <a href="javascript:" title="{{translate 'Collapse'}}" class="small pull-right category-expanded-toggle-link action{{#unless isExpanded}} hidden{{/unless}}" data-action="collapse"><span class="glyphicon glyphicon-folder-open"></span></a>
-        <a href="javascript:" title="{{translate 'Expand'}}" class="small pull-right category-expanded-toggle-link action{{#if isExpanded}} hidden{{/if}}" data-action="expand""><span class="glyphicon glyphicon-folder-close"></span></a>
+        <a href="javascript:" title="{{translate 'Collapse'}}" class="small pull-right category-expanded-toggle-link action{{#unless isExpanded}} hidden{{/unless}}" data-action="collapse"><span class="fas fa-folder-open"></span></a>
+        <a href="javascript:" title="{{translate 'Expand'}}" class="small pull-right category-expanded-toggle-link action{{#if isExpanded}} hidden{{/if}}" data-action="expand""><span class="fas fa-folder"></span></a>
+    {{/if}}
+
+    {{#if showEditLink}}
+    <a href="#{{scope}}" class="small pull-right action manage-categories-link" data-action="manageCategories" title="{{translate 'Manage Categories' scope=scope}}"><span class="fas fa-th-list"></span></a>
     {{/if}}
 
     {{#if showRoot}}
-    <span class="small text-primary glyphicon glyphicon-book"></span>
     <a href="#{{scope}}" class="action link{{#if rootIsSelected}} text-bold{{/if}}" data-action="selectRoot">{{rootName}}</a>
     {{/if}}
 
@@ -37,8 +37,8 @@
     {{/each}}
     {{#unless createDisabled}}
     <li class="list-group-item">
-        <div style="margin-left: 2px;">
-            <a href="javascript:" data-action="create" class="action small" title="{{translate 'Add'}}"><span class="glyphicon glyphicon-plus"></span></a>
+        <div>
+            <a href="javascript:" data-action="create" class="action small" title="{{translate 'Add'}}"><span class="fas fa-plus"></span></a>
         </div>
     </li>
     {{/unless}}

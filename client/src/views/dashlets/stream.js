@@ -70,7 +70,7 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
             this.actionList.unshift({
                 name: 'create',
                 html: this.translate('Create Post', 'labels'),
-                iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+                iconHtml: '<span class="fas fa-plus"></span>'
             });
         },
 

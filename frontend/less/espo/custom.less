@@ -490,10 +490,6 @@ ul.dropdown-menu > li.checkbox:last-child {
     padding-right: 2px !important;
 }
 
-.btn-icon > span {
-    margin: 0 20px;
-}
-
 .cell > .field {
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -1832,6 +1828,15 @@ table.table td.cell .complex-text {
     padding: 2px 0;
 }
 
+.list-group-tree {
+    .fa-chevron-down,
+    .fa-chevron-right,
+    .empty-icon {
+        display: inline-block;
+        width: 12px;
+    }
+}
+
 .list-group-side {
     border: 0;
 }
@@ -2042,6 +2047,10 @@ pre > code {
     a.category-expanded-toggle-link {
         margin-left: 8px;
     }
+
+    > .list > .list-group-tree > li {
+        padding-left: 0;
+    }
 }
 
 .folders-container > .list-group-side > .list-group-item,
@@ -2075,10 +2084,6 @@ pre > code {
     > .section:last-child {
         margin-bottom: 0;
     }
-}
-
-.fas, .far {
-    font-size: 16px;
 }
 
 .note-editor .note-toolbar.sticked {
@@ -2188,6 +2193,78 @@ pre > code {
             }
         }
     }
+}
+
+a.field-info > span.fa-info-circle {
+    font-size: 12px;
+    position: relative;
+    top: -1px;
+}
+
+.dropdown-menu-with-icons {
+    li {
+        a {
+            padding-left: 10px;
+        }
+        .fas, .far, .glyphicon, .empty-icon {
+            width: 16px;
+            text-align: center;
+            display: inline-block;
+        }
+        .item-text {
+            padding-left: 8px;
+            position: static;
+        }
+    }
+}
+
+.fas, .far {
+    font-size: 16px;
+}
+
+.fas.fa-sm,
+far.fa-sm,
+.btn-sm .fas,
+.btn-sm .far,
+.small .far,
+.small .fas {
+    font-size: 12px;
+}
+
+.btn-icon {
+    width: 36px;
+    padding-left: 0;
+    padding-right: 0;
+
+    .fa, .fas {
+        position: relative;
+        width: 16px;
+        text-align: center;
+    }
+    .fa-sm {
+        top: -1px;
+    }
+}
+
+.btn-icon.btn-sm {
+    width: 34px;
+
+    .fa, .fas {
+        font-size: 12px;
+        width: 12px;
+    }
+}
+
+.btn.btn-icon-wide  {
+    width: 54px;
+}
+
+.btn.btn-icon-x-wide  {
+    width: 76px;
+}
+
+.btn-icon > .fa-chevron-left {
+    left: -1px;
 }
 
 .grid-auto-fill-xs,

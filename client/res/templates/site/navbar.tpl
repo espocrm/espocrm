@@ -1,6 +1,6 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon glyphicon glyphicon-th-large" title="{{translate 'Home'}}"></span></a>
+        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-th-large" title="{{translate 'Home'}}"></span></a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -30,7 +30,7 @@
             {{/unless}}
             {{/each}}
             <li class="dropdown more">
-                <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon glyphicon-option-horizontal more-icon"></span></a>
+                <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="fas fa-ellipsis-h more-icon"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList}}
                 {{#if isInMore}}
@@ -63,7 +63,7 @@
             </li>
             {{#if enableQuickCreate}}
             <li class="dropdown hidden-xs quick-create-container">
-                <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-plus"></i></a>
+                <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fas fa-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
                     <li class="dropdown-header">{{translate 'Create'}}</li>
                     {{#each quickCreateList}}
@@ -73,7 +73,7 @@
             </li>
             {{/if}}
             <li class="dropdown menu-container">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-bars"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                         {{#unless divider}}
