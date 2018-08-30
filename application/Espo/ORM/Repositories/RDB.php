@@ -141,6 +141,8 @@ class RDB extends \Espo\ORM\Repository
 
     public function save(Entity $entity, array $options = array())
     {
+        $entity->setAsBeingSaved();
+
         if (empty($options['skipBeforeSave']) && empty($options['skipAll'])) {
             $this->beforeSave($entity, $options);
         }
@@ -164,6 +166,8 @@ class RDB extends \Espo\ORM\Repository
                 }
             }
         }
+        $entity->setAsNotBeingSaved();
+
         return $result;
     }
 

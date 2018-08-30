@@ -72,6 +72,8 @@ abstract class Entity implements IEntity
 
     protected $isFetched = false;
 
+    protected $isBeingSaved = false;
+
     public function __construct($defs = array(), EntityManager $entityManager = null)
     {
         if (empty($this->entityType)) {
@@ -486,6 +488,21 @@ abstract class Entity implements IEntity
         $this->resetFetchedValues();
     }
 
+    public function isBeingSaved()
+    {
+        return $this->isBeingSaved;
+    }
+
+    public function setAsBeingSaved()
+    {
+        $this->isBeingSaved = true;
+    }
+
+    public function setAsNotBeingSaved()
+    {
+        $this->isBeingSaved = false;
+    }
+
     public function populateDefaults()
     {
         foreach ($this->fields as $field => $defs) {
@@ -500,4 +517,3 @@ abstract class Entity implements IEntity
         return $this->entityManager;
     }
 }
-
