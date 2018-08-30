@@ -61,10 +61,15 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
         $pdo->query($sql);
     }
 
-    protected function afterSave(Entity $entity, array $options = array())
+    protected function afterSave(Entity $entity, array $options = [])
     {
-        parent::afterSave($entity, $options);
+        $this->processReminderAfterSave($entity, $options);
 
+        parent::afterSave($entity, $options);
+    }
+
+    protected function processReminderAfterSave(Entity $entity, array $options = [])
+    {
         if (
             $entity->isNew() ||
             $entity->isAttributeChanged('assignedUserId') ||
