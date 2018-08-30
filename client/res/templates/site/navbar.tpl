@@ -86,8 +86,8 @@
             </li>
         </ul>
         <a class="minimizer" href="javascript:">
-            <span class="glyphicon glyphicon glyphicon-menu-right right"></span>
-            <span class="glyphicon glyphicon glyphicon-menu-left left"></span>
+            <span class="fas fa-chevron-right right"></span>
+            <span class="fas fa-chevron-left left"></span>
         </a>
     </div>
 </div>
