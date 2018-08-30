@@ -856,7 +856,33 @@ abstract class Base
                     $fieldDefs = $entity->fields[$field];
 
                     $operatorModified = $operator;
-                    if (is_array($value)) {
+
+                    $attributeType = null;
+                    if (!empty($fieldDefs['type'])) {
+                        $attributeType = $fieldDefs['type'];
+                    }
+
+                    if (
+                        is_bool($value)
+                        &&
+                        in_array($operator, ['=', '<>'])
+                        &&
+                        $attributeType == IEntity::BOOL
+                    ) {
+                        if ($value) {
+                            if ($operator === '=') {
+                                $operatorModified = '= TRUE';
+                            } else {
+                                $operatorModified = '= FALSE';
+                            }
+                        } else {
+                            if ($operator === '=') {
+                                $operatorModified = '= FALSE';
+                            } else {
+                                $operatorModified = '= TRUE';
+                            }
+                        }
+                    } else if (is_array($value)) {
                         if ($operator == '=') {
                             $operatorModified = 'IN';
                         } else if ($operator == '<>') {

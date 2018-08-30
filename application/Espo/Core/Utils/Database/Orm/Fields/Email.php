@@ -88,7 +88,16 @@ class Email extends Base
                     $fieldName .'IsOptedOut' => array(
                         'type' => 'bool',
                         'notStorable' => true,
-                        'select' => 'emailAddresses.opt_out'
+                        'select' => 'emailAddresses.opt_out',
+                        'where' => [
+                            '= TRUE' => [
+                                'sql' => 'emailAddresses.opt_out = true AND emailAddresses.opt_out IS NOT NULL'
+                            ],
+                            '= FALSE' => [
+                                'sql' => 'emailAddresses.opt_out = false OR emailAddresses.opt_out IS NULL'
+                            ]
+                        ],
+                        'orderBy' => 'emailAddresses.opt_out {direction}'
                     )
                 ),
                 'relations' => array(
