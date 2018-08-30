@@ -63,7 +63,7 @@
             </li>
             {{#if enableQuickCreate}}
             <li class="dropdown hidden-xs quick-create-container">
-                <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fas fa-plus"></i></a>
+                <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Create'}}"><i class="fas fa-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
                     <li class="dropdown-header">{{translate 'Create'}}</li>
                     {{#each quickCreateList}}
