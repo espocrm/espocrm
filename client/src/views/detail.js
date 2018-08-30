@@ -60,8 +60,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 name: 'follow',
                 label: 'Follow',
                 style: 'default',
-                icon: 'fas fa-share fa-sm',
-                html: '<span class="fas fa-share fa-sm"></span> ' + this.translate('Follow'),
+                html: '<span class="fas fa-arrow-right fa-sm"></span> ' + this.translate('Follow'),
                 action: 'follow'
             }, true);
         },
