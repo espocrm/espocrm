@@ -36,7 +36,7 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
         template: 'modals/image-preview',
 
-        size: 'x-large',
+        size: '',
 
         backdrop: true,
 
@@ -44,7 +44,8 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
             return {
                 name: this.options.name,
                 url: this.getImageUrl(),
-                originalUrl: this.getOriginalImageUrl()
+                originalUrl: this.getOriginalImageUrl(),
+                size: this.size
             };
         },
 
@@ -63,7 +64,9 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
         getImageUrl: function () {
             var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
-            url += '&size=' + this.size;
+            if (this.size) {
+                url += '&size=' + this.size;
+            }
             if (this.getUser().get('portalId')) {
                 url += '&portalId=' + this.getUser().get('portalId');
             }
