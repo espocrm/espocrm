@@ -17,8 +17,8 @@
 <div class="panel panel-default" data-name="{{./this}}">
     <div class="panel-heading clearfix">
         <div class="pull-left" style="margin-right: 10px;">
-            <a href="javascript:" data-action="showCategory" data-name="{{./this}}" class="action"><span class="glyphicon glyphicon-chevron-down"></span></a>
-            <a href="javascript:" data-action="hideCategory" data-name="{{./this}}" class="hidden action"><span class="glyphicon glyphicon-chevron-up"></span></a>
+            <a href="javascript:" data-action="showCategory" data-name="{{./this}}" class="action"><span class="fas fa-chevron-down"></span></a>
+            <a href="javascript:" data-action="hideCategory" data-name="{{./this}}" class="hidden action"><span class="fas fa-chevron-up"></span></a>
         </div>
         <h4 class="panel-title">
             <span class="action" style="cursor: pointer;" data-action="showCategory" data-name="{{./this}}">

@@ -132,7 +132,7 @@
             <ul class="disabled cells clearfix">
                 {{#each disabledFields}}
                     <li class="cell" data-name="{{./this}}">{{translate this scope=../scope category='fields'}}
-                        &nbsp;<a href="javascript:" data-action="removeField" class="remove-field"><i class="glyphicon glyphicon-remove"></i></a>
+                        &nbsp;<a href="javascript:" data-action="removeField" class="remove-field"><i class="fas fa-times"></i></a>
                     </li>
                 {{/each}}
             </ul>
@@ -140,64 +140,12 @@
     </div>
 </div>
 
-<div id="layout-panel-tpl" style="display: none;">
-    <li>
-        <header data-style="<%= style %>" data-name="<%= name %>">
-            <label data-is-custom="<%= isCustomLabel ? 'true' : '' %>"><%= label %></label>&nbsp;
-            <a href="javascript:" data-action="edit-panel-label" class="edit-panel-label"><i class="glyphicon glyphicon-pencil"></i></a>
-            <a href="javascript:" style="float: right;" data-action="removePanel" class="remove-panel"><i class="glyphicon glyphicon-remove"></i></a>
-        </header>
-        <ul class="rows">
-        <%
-            for (var i in rows) {
-                var row = rows[i];
-        %>
-            <li>
-                <div><a href="javascript:" data-action="removeRow" class="remove-row pull-right"><i class="glyphicon glyphicon-remove"></i></a></div>
-                <ul class="cells">
-                <%
-                    for (var j in row) {
-                        if (j == {{columnCount}}) {
-                            break;
-                        }
-                        var cell = row[j];
-                        if (cell !== false) {
-
-                %>
-                        <li class="cell"
-                            data-name="<%= cell.name %>"
-                            data-full-width="<%= cell.fullWidth || '' %>"
-                        ><%= cell.label %>
-                            <a href="javascript:" data-action="removeField" class="remove-field"><i class="glyphicon glyphicon-remove"></i></a>
-                        </li>
-                <%
-                        } else {
-                %>
-                        <li class="empty cell">
-                            <a href="javascript:" data-action="minusCell" class="remove-field"><i class="glyphicon glyphicon-minus"></i></a>
-                        </li>
-                <%
-                        }
-                    }
-                %>
-                </ul>
-            </li>
-        <%
-            }
-        %>
-        </ul>
-        <div>
-            <a href="javascript:" data-action="addRow"><i class="glyphicon glyphicon-plus"></i></a>
-        </div>
-    </li>
-</div>
-
 <div id="layout-row-tpl" style="display: none;">
     <li>
-        <div><a href="javascript:" data-action="removeRow" class="remove-row pull-right"><i class="glyphicon glyphicon-remove"></i></a></div>
+        <div><a href="javascript:" data-action="removeRow" class="remove-row pull-right"><i class="fas fa-times"></i></a></div>
         <ul class="cells">
             <% for (var i = 0; i < {{columnCount}}; i++) { %>
-                <li class="empty cell"><a href="javascript:" data-action="minusCell" class="remove-field"><i class="glyphicon glyphicon-minus"></i></a></li>
+                <li class="empty cell"><a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a></li>
             <% } %>
         </ul>
     </li>

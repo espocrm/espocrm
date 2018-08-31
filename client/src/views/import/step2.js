@@ -307,7 +307,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
             this.notify('Loading...');
             var label = this.translate(name, 'fields', this.scope);
 
-            var removeLink = '<a href="javascript:" class="pull-right" data-action="removeField" data-name="'+name+'"><span class="glyphicon glyphicon-remove"></span></a>';
+            var removeLink = '<a href="javascript:" class="pull-right" data-action="removeField" data-name="'+name+'"><span class="fas fa-times"></span></a>';
 
             var html = '<div class="cell form-group col-sm-3">'+removeLink+'<label class="control-label">' + label + '</label><div class="field" data-name="'+name+'"/></div>';
             $('#default-values-container').append(html);

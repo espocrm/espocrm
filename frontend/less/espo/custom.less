@@ -212,8 +212,9 @@ div.list-kanban > div > table {
             height: 20px;
 
             > span {
-                top: -2px;
+                top: -4px;
                 color: @text-muted;
+                position: relative;
             }
         }
 
@@ -583,6 +584,9 @@ ul.dropdown-menu > li.checkbox:last-child {
 .filter > .form-group .field {
     .link-container {
         font-size: @font-size-small;
+        .fa-times {
+            font-size: 12px;
+        }
     }
     .input-group {
         input {
@@ -1398,19 +1402,27 @@ body > footer > p a:visited {
     overflow-x: hidden;
 }
 
+#header .tab span.color-icon {
+    left: 0;
+    font-size: 75%;
+    top: -2px;
+}
+
 .header-breadcrumbs .color-icon {
-    font-size: 60%;
-    left: -2px;
-    margin-right: -2px;
-    top: -1px;
+    font-size: 44%;
+    left: 0px;
+    margin-right: 2px;
+    top: -4px;
+    position: relative;
 }
 
 span.color-icon {
-    font-size: 70%;
-    top: 0;
-    left: -1px;
-    margin-right: -1px;
+    font-size: 50%;
+    top: -2px;
+    left: 1px;
+    margin-right: 1px;
     display: inline;
+    position: relative;
 }
 
 .message > span.color-icon,
@@ -1419,12 +1431,15 @@ span.color-icon {
 }
 
 #global-search-panel .panel-body .cell > .color-icon {
-    margin-right: 2px;
+    margin-right: 5px;
 }
 
 h4.panel-title span.color-icon {
-    font-size: 70%;
-    left: -2px;
+    font-size: 50%;
+    left: 0px;
+    position: relative;
+    margin-right: 2px;
+    top: -2px;
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
@@ -2223,11 +2238,13 @@ a.field-info > span.fa-info-circle {
 }
 
 .fas.fa-sm,
-far.fa-sm,
+.far.fa-sm,
 .btn-sm .fas,
 .btn-sm .far,
 .small .far,
-.small .fas {
+.small .fas,
+.fas.small,
+.far.small {
     font-size: 12px;
 }
 

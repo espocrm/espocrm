@@ -229,7 +229,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                     this.actionList.unshift({
                         action: 'selectFilter',
-                        html: '<span class="glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span>' + this.translate(item, 'presetFilters', this.scope),
+                        html: '<span class="fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span>' + this.translate(item, 'presetFilters', this.scope),
                         data: {
                             name: item
                         }

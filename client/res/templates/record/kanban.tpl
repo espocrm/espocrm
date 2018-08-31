@@ -41,7 +41,7 @@
                             {{/each}}
                         </div>
                         <div class="show-more">
-                            <a data-action="groupShowMore" data-name="{{name}}" title="{{translate 'Show more'}}" class="{{#unless hasShowMore}}hidden {{/unless}}btn btn-link btn-sm"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                            <a data-action="groupShowMore" data-name="{{name}}" title="{{translate 'Show more'}}" class="{{#unless hasShowMore}}hidden {{/unless}}btn btn-link btn-sm"><span class="fas fa-ellipsis-h fa-sm"></span></a>
                         </div>
                     </div>
                 </td>

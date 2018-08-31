@@ -1,8 +1,8 @@
 <link href="{{basePath}}client/css/gridstack.min.css" rel="stylesheet">
 
 <div class="button-container clearfix">
-    <button class="btn btn-default" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><span class="glyphicon glyphicon-pencil"></span></button>
-    <button class="btn btn-default" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><span class="glyphicon glyphicon-plus"></span></button>
+    <button class="btn btn-default btn-icon" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><span class="fas fa-pencil-alt fa-sm"></span></button>
+    <button class="btn btn-default btn-icon" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><span class="fas fa-plus"></span></button>
 
     {{#ifNotEqual dashboardLayout.length 1}}
     <div class="btn-group pull-right dashboard-tabs">

@@ -10,7 +10,7 @@
                 {{#each filterList}}
                 <button class="btn btn-default{{#ifEqual this ../filter}} active{{/ifEqual}}" data-action="selectFilter" data-name="{{./this}}">{{translate this scope='Note' category='filters'}}</button>
                 {{/each}}
-                <button class="btn btn-default" data-action="refresh" title="{{translate 'checkForNewNotes' category='messages'}}">&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;</button>
+                <button class="btn btn-default" data-action="refresh" title="{{translate 'checkForNewNotes' category='messages'}}">&nbsp;&nbsp;<span class="fas fa-sync"></span>&nbsp;&nbsp;</button>
             </div>
         </div>
     </div>

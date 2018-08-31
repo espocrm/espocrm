@@ -6,7 +6,7 @@
 
             {{#if allowInternalNotes}}
                 <span style="cursor: pointer;" class="internal-mode-switcher{{#if isInternalNoteMode}} enabled{{/if}} action" data-action="switchInternalMode" title="{{translate 'internalPost' category='messages'}}">
-                    <span class="glyphicon glyphicon-lock"></span>
+                    <span class="fas fa-lock"></span>
                 </span>
             {{/if}}
         </div>
@@ -14,7 +14,7 @@
             {{{attachments}}}
         </div>
         <a href="javascript:" class="text-muted pull-right stream-post-info">
-        <span class="glyphicon glyphicon-info-sign"></span>
+        <span class="fas fa-info-circle"></span>
         </a>
     </div>
 </div>

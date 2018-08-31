@@ -39,7 +39,7 @@ Espo.define('crm:views/fields/ico', 'views/fields/base', function (Dep) {
                 icoTpl = '<span class="{iconClass} text-muted action icon" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'"></span>';
             }
 
-            var iconClass = this.getMetadata().get(['clientDefs', this.model.name, 'iconClass']) || 'glyphicon glyphicon-briefcase';
+            var iconClass = this.getMetadata().get(['clientDefs', this.model.name, 'iconClass']) || 'far fa-calendar-times';
 
             tpl = icoTpl.replace('{iconClass}', iconClass);
 

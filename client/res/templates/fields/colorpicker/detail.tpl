@@ -1,1 +1,1 @@
-{{#if isNotEmpty}}<span>{{value}}</span> <span class="color-icon glyphicon glyphicon-tint" style="color: {{value}}"></span>{{else}}{{translate 'None'}}{{/if}}
+{{#if isNotEmpty}}<span>{{value}}</span> <span class="color-icon fas fa-tint" style="color: {{value}}"></span>{{else}}{{translate 'None'}}{{/if}}

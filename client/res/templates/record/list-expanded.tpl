@@ -11,7 +11,8 @@
     {{#if massActionList}}
     <div class="btn-group actions">
         <button type="button" class="btn btn-default btn-sm dropdown-toggle actions-button" data-toggle="dropdown" disabled>
-            &nbsp;<span class="glyphicon glyphicon-list"></span>&nbsp;
+        {{translate 'Actions'}}
+        <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
             {{#each massActionList}}

@@ -24,17 +24,17 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
-Espo.define('Views.Record.ListPagination', 'View', function (Dep) {
+ ************************************************************************/
+Espo.define('views/record/list-pagination', 'view', function (Dep) {
 
     return Dep.extend({
-    
-        template: 'record.list-pagination',
-                
+
+        template: 'record/list-pagination',
+
         data: function () {
             var previous = this.collection.offset > 0;
             var next = this.collection.total - this.collection.offset > this.collection.maxSize;
-            
+
             return {
                 total: this.collection.total,
                 from: this.collection.offset + 1 ,
@@ -42,10 +42,7 @@ Espo.define('Views.Record.ListPagination', 'View', function (Dep) {
                 previous: previous,
                 next: next,
             };
-        },
-        
-        setup: function () {    
-        },
-    });
+        }
 
+    });
 });

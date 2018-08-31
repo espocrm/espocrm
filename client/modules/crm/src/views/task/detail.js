@@ -37,7 +37,7 @@ Espo.define('crm:views/task/detail', 'views/detail', function (Dep) {
                     this.menu.buttons.push({
                         'label': 'Complete',
                         'action': 'setCompletedMain',
-                        'iconHtml': '<span class="glyphicon glyphicon-ok"></span>',
+                        'iconHtml': '<span class="fas fa-check fa-sm"></span>',
                         'acl': 'edit',
                     });
                 }

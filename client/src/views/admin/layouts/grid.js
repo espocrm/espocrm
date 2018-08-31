@@ -58,7 +58,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
         emptyCellTemplate:
                             '<li class="empty disabled cell">' +
-                            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="glyphicon glyphicon-minus"></i></a>' +
+                            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
                             '</li>',
 
         events: _.extend({
