@@ -11,7 +11,7 @@
             {{{avatar}}}
             {{#if isInternal}}
             <div class="internal-badge">
-                <span class="glyphicon glyphicon-lock small" title="{{translate 'internalPostTitle' category='messages'}}"></span>
+                <span class="fas fa-lock small" title="{{translate 'internalPostTitle' category='messages'}}"></span>
             </div>
             {{/if}}
         </div>
