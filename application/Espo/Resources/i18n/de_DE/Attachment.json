@@ -1,5 +1,28 @@
 {
   "insertFromSourceLabels": {
     "Document": "Dokument einfügen"
+  },
+  "fields": {
+    "role": "Rolle",
+    "related": "Verbunden",
+    "file": "Datei",
+    "type": "Typ",
+    "field": "Feld",
+    "sourceId": "Quell-ID",
+    "storage": "Speicher",
+    "size": "Größe (Bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Anhang",
+      "Inline Attachment": "Inline-Anhang",
+      "Import File": "Datei importieren",
+      "Export File": "Datei exportieren",
+      "Mail Merge": "Serienbrief",
+      "Mass Pdf": "Mass PDF"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Waise"
   }
 }

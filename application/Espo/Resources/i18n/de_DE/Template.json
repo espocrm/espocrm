@@ -1,21 +1,35 @@
 {
   "fields": {
-    "name": "Name",
     "body": "Inhalt",
     "entityType": "Entitätstyp",
-    "header": "Kopf",
-    "footer": "Fuß",
+    "header": "Kopfzeile",
+    "footer": "Fußzeile",
     "leftMargin": "Linker Rand",
     "topMargin": "Oberer Rand",
     "rightMargin": "Rechter Rand",
     "bottomMargin": "Unterer Rand",
-    "printFooter": "Fuß drucken",
-    "footerPosition": "Position Fuß"
+    "printFooter": "Fußzeile drucken",
+    "footerPosition": "Fußzeile Position",
+    "variables": "Verfügbare Platzhalter",
+    "pageOrientation": "Seitenausrichtung",
+    "pageFormat": "Papierformat",
+    "fontFace": "Schriftart"
   },
   "labels": {
     "Create Template": "Vorlage erstellen"
   },
   "tooltips": {
-    "footer": "Verwenden Sie den Platzhalter  {pageNumber} um eine Seitennummer zu drucken."
+    "footer": "Verwenden Sie den Platzhalter  {pageNumber} um eine Seitennummer zu drucken.",
+    "variables": "Kopieren und einfügen Sie benötigter Platzhalter in die Kopfzeile, in den Inhalt oder in die Fußzeile."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Hochformat",
+      "Landscape": "Querformat"
+    },
+    "placeholders": {
+      "today": "Heute (Datum)",
+      "now": "Jetzt (Datum-Uhrzeit)"
+    }
   }
 }

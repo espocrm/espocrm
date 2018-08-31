@@ -9,8 +9,6 @@
     "Move to Bottom": "zum Ende"
   },
   "fields": {
-    "name": "Name",
-    "status": "Status",
     "type": "Typ",
     "attachments": "Anhänge",
     "publishDate": "Veröffentlichungsdatum",
@@ -38,9 +36,10 @@
       "Article": "Artikel"
     }
   },
-  "tooltips": {
-  },
   "presetFilters": {
     "published": "Publiziert"
+  },
+  "tooltips": {
+    "portals": "Artikel wird nur in bestimmten Portalen verfügbar sein."
   }
 }

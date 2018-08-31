@@ -1,6 +1,5 @@
 {
   "fields": {
-    "name": "Name",
     "userName": "Benutzername",
     "title": "Funktion",
     "isAdmin": "Ist Admin",
@@ -10,25 +9,25 @@
     "roles": "Rollen",
     "portals": "Portale",
     "portalRoles": "Portal Rollen",
-    "teamRole": "Position",
     "password": "Passwort",
     "currentPassword": "Aktuelles Passwort",
     "passwordConfirm": "Passwort bestätigen",
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
-    "avatar": "Avatar",
     "isActive": "Ist aktiv",
     "isPortalUser": "Ist Portal Benutzer",
     "contact": "Kontakt",
     "accounts": "Firmen",
     "account": "Benutzerkonto (Primär)",
     "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
-    "portal": "Portal",
     "gender": "Geschlecht",
-    "position": "Position im Team"
+    "position": "Position im Team",
+    "ipAddress": "IP Adresse",
+    "passwordPreview": "Passwortvorschau",
+    "isSuperAdmin": "Ist Super-Admin",
+    "lastAccess": "Letzter Zugriff"
   },
   "links": {
-    "teams": "Teams",
     "roles": "Rollen",
     "notes": "Notizen",
     "portals": "Portale",
@@ -50,7 +49,6 @@
     "Email Address": "E-Mail Adresse",
     "External Accounts": "Externe Konten",
     "Email Accounts": "E-Mail Konten",
-    "Portal": "Portal",
     "Create Portal User": "Portalbenutzer erstellen",
     "Proceed w/o Contact": "Weiter mit Kontakt"
   },
@@ -69,7 +67,6 @@
     "accountInfoEmailSubject": "EspoCRM Benutzerzugriffsinfo",
     "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
-    "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
     "passwordChanged": "Das Passwort wurde geändert",
     "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
     "wrongUsernamePasword": "Falscher Benutzername/Passwort",
@@ -78,15 +75,9 @@
     "forbidden": "Verboten, bitte später nochmals versuchen",
     "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
     "passwordChangedByRequest": "Das Passwort wurde geändert",
-    "setupSmtpBefore": "Sie müssen die <a href=\"{url}\">SMTP Einstellungen</a> setzen damit das System Passwörter in E-Mails senden kann."
-  },
-  "options": {
-    "gender": {
-      "": "Nicht gesetzt",
-      "Male": "Männlich",
-      "Female": "Weiblich",
-      "Neutral": "Neutral"
-    }
+    "setupSmtpBefore": "Sie müssen die <a href=\"{url}\">SMTP Einstellungen</a> setzen damit das System Passwörter in E-Mails senden kann.",
+    "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
+    "userNameExists": "Benutzername existiert bereits"
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team"
@@ -94,5 +85,12 @@
   "presetFilters": {
     "active": "Aktiv",
     "activePortal": "Portal Aktiv"
+  },
+  "options": {
+    "gender": {
+      "": "Nicht gesetzt",
+      "Male": "Männlich",
+      "Female": "Weiblich"
+    }
   }
 }

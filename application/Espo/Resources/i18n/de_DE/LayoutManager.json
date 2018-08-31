@@ -1,12 +1,11 @@
 {
   "fields": {
     "width": "Breite (%)",
-    "link": "Link",
     "notSortable": "Nicht sortierbar",
     "align": "Ausrichten",
-    "panelName": "Panel Name",
-    "style": "Style",
-    "sticked": "Gepinnt"
+    "sticked": "Gepinnt",
+    "isLarge": "Große Schriftgröße",
+    "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen"
   },
   "options": {
     "align": {
@@ -17,9 +16,11 @@
       "default": "Standard",
       "success": "Erfolgreich",
       "danger": "Gefahr",
-      "info": "Info",
       "warning": "Warnung",
       "primary": "Primär"
     }
+  },
+  "labels": {
+    "New panel": "Neues Panel"
   }
 }

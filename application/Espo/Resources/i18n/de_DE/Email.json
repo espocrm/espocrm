@@ -1,13 +1,9 @@
 {
   "fields": {
-    "name": "Name",
     "parent": "Bezieht sich auf",
-    "status": "Status",
     "dateSent": "Sendedatum",
     "from": "Von",
     "to": "An",
-    "cc": "CC",
-    "bcc": "BCC",
     "replyTo": "Antwort an",
     "replyToString": "Antwort an (Zeichenkette)",
     "isHtml": "Ist HTML",
@@ -16,7 +12,6 @@
     "attachments": "Anhänge",
     "selectTemplate": "Vorlage wählen",
     "fromEmailAddress": "Absenderadresse",
-    "toEmailAddresses": "An Adresse",
     "emailAddress": "E-Mail Adresse",
     "deliveryDate": "Zustelldatum",
     "account": "Firma",
@@ -26,21 +21,42 @@
     "isRead": "Ist gelesen",
     "isNotRead": "Ungelesen",
     "isImportant": "Ist wichtig",
-    "isReplied": "Beantwortet",
-    "isNotReplied": "Nicht beantwortet",
     "isUsers": "Gehört Benutzer",
     "inTrash": "Im Papierkorb",
-    "sentBy": "Gesendet von (Benutzer)",
+    "name": "Name",
+    "isReplied": "Beantwortet",
+    "isNotReplied": "Nicht beantwortet",
     "folder": "Ordner",
     "inboundEmails": "Gruppenkonten",
     "emailAccounts": "Persönliche Konten",
-    "hasAttachment": "Anhang vorhanden"
+    "hasAttachment": "Anhang vorhanden",
+    "sentBy": "Gesendet von (Benutzer)",
+    "assignedUsers": "Zugewiesene Benutzer",
+    "bodyPlain": "Inhalt (einfach)",
+    "ccEmailAddresses": "CC E-Mail Adressen",
+    "messageId": "Nachricht-ID",
+    "messageIdInternal": "Nachricht-ID (intern)",
+    "folderId": "Ordner-ID",
+    "fromName": "Absendername",
+    "fromString": "Von String",
+    "isSystem": "Ist System",
+    "toEmailAddresses": "An E-Mail Adressen",
+    "bccEmailAddresses": "BCC E-Mail Adressen",
+    "replyToEmailAddresses": "Antwort-an E-Mail Adressen"
   },
   "links": {
     "replied": "Beantwortet",
     "replies": "Antworten",
     "inboundEmails": "Gruppenkonten",
-    "emailAccounts": "Persönliche Konten"
+    "emailAccounts": "Persönliche Konten",
+    "assignedUsers": "Zugewiesene Benutzer",
+    "sentBy": "Gesendet von",
+    "attachments": "Anhänge",
+    "fromEmailAddress": "Von der E-Mail Adresse",
+    "toEmailAddresses": "An E-Mail Adressen",
+    "ccEmailAddresses": "CC E-Mail Adressen",
+    "bccEmailAddresses": "BCC E-Mail Adressen",
+    "replyToEmailAddresses": "Antwort-an E-Mail Adressen"
   },
   "options": {
     "status": {
@@ -84,7 +100,8 @@
     "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
     "emailSent": "E-Mail wurde gesendet",
-    "savedAsDraft": "Als Entwurf gepeichert"
+    "savedAsDraft": "Als Entwurf gepeichert",
+    "confirmInsertTemplate": "Der E-Mail Text wird gelöscht. Möchten Sie die Vorlage wirklich einfügen?"
   },
   "presetFilters": {
     "sent": "Gesendet",

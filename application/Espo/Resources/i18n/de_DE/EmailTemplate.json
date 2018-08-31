@@ -1,25 +1,28 @@
 {
   "fields": {
-    "name": "Name",
-    "status": "Status",
     "isHtml": "Ist HTML",
     "body": "Inhalt",
     "subject": "Betreff",
     "attachments": "Anhänge",
     "insertField": "Feld einfügen",
-    "oneOff": "Ein-Aus"
+    "oneOff": "Ein-Aus",
+    "category": "Kategorie"
   },
   "labels": {
     "Create EmailTemplate": "E-Mail Vorlage erstellen",
-    "Info": "Info"
-  },
-  "messages": {
-    "infoText": "Verfügbare Variablen:\n\n{optOutUrl} &#8211; URL für den Abmeldelink;\n\n{optOutLink} &#8211; ein Abmeldelink."
+    "Available placeholders": "Verfügbare Platzhalter"
   },
   "tooltips": {
     "oneOff": "Überprüfen Sie, ob Sie die Vorlage nur einmal benutzen z.B. für eine Massenaussendung"
   },
   "presetFilters": {
     "actual": "Aktuell"
+  },
+  "messages": {
+    "infoText": "Verfügbare Platzhalter:\n\n{optOutUrl} &#8211; URL für einen Abmeldelink;\n\n{optOutLink} &#8211; ein Abmeldelink."
+  },
+  "placeholderTexts": {
+    "optOutUrl": "URL für einen Abmeldelink\n",
+    "optOutLink": "ein Abmeldelink"
   }
 }

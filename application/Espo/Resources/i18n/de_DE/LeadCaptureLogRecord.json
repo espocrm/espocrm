@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "Nummer",
+    "data": "Daten",
+    "target": "Ziel",
+    "leadCapture": "Erfassung des Interessenten",
+    "createdAt": "Eingegeben bei",
+    "isCreated": "Ist einen Interessenten erstellt"
+  },
+  "links": {
+    "leadCapture": "Erfassung des Interessenten",
+    "target": "Ziel"
+  }
+}

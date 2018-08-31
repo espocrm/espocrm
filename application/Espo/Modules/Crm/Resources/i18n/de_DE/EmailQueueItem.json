@@ -1,7 +1,5 @@
 {
   "fields": {
-    "name": "Name",
-    "status": "Status",
     "target": "Ziel",
     "sentAt": "Sendedatum",
     "attemptCount": "Versuche",
@@ -17,7 +15,8 @@
     "status": {
       "Pending": "Schwebend",
       "Sent": "Gesendet",
-      "Failed": "Fehlgeschlagen"
+      "Failed": "Fehlgeschlagen",
+      "Sending": "Wird gesendet"
     }
   },
   "presetFilters": {

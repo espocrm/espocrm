@@ -8,7 +8,13 @@
     "isDoubleHeight": "Zweifache Höhe",
     "mode": "Modus",
     "enabledScopeList": "Was soll angezeigt werden",
-    "users": "Benutzer"
+    "users": "Benutzer",
+    "entityType": "Entitätstyp",
+    "primaryFilter": "Primärfilter",
+    "boolFilterList": "Zusätzliche Filter",
+    "sortBy": "Reihenfolge (Feld)",
+    "sortDirection": "Reihenfolge (Richtung)",
+    "dateFilter": "Datumsfilter"
   },
   "options": {
     "mode": {
@@ -19,5 +25,8 @@
       "agendaDay": "Tag (Agenda)",
       "timeline": "Zeitachse"
     }
+  },
+  "messages": {
+    "selectEntityType": "Wählen Sie Entitätstyp in Dashlet-Optionen."
   }
 }

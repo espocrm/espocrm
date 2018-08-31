@@ -1,5 +1,10 @@
 {
   "links": {
     "targetLists": "Kontaktlisten"
+  },
+  "fields": {
+    "acceptanceStatus": "Akzeptanzstatus",
+    "acceptanceStatusMeetings": "Akzeptanzstatus (Meetings)",
+    "acceptanceStatusCalls": "Akzeptanzstatus (Anrufe)"
   }
 }

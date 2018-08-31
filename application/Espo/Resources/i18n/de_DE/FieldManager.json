@@ -1,6 +1,8 @@
 {
   "labels": {
-    "Dynamic Logic": "Dynamische Logik"
+    "Dynamic Logic": "Dynamische Logik",
+    "Label": "Bezeichnung",
+    "Type": "Typ"
   },
   "options": {
     "dateTimeDefault": {
@@ -70,6 +72,29 @@
     "maxLength": "Maximal zulässige Textlänge.",
     "before": "Der Datumswert sollte vor dem Datumswert des angegebenen Feldes liegen.",
     "after": "Der Datumswert sollte nach dem Datumswert des angegebenen Feldes liegen.",
-    "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden."
+    "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden.",
+    "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Straße",
+      "city": "Ort",
+      "state": "Bundesland/Kanton",
+      "country": "Land",
+      "postalCode": "PLZ",
+      "map": "Karte"
+    },
+    "personName": {
+      "salutation": "Anrede",
+      "first": "Vorname",
+      "last": "Nachname"
+    },
+    "currency": {
+      "converted": "(Konvertiert)",
+      "currency": "(Währung)"
+    },
+    "datetimeOptional": {
+      "date": "Datum"
+    }
   }
 }

@@ -1,8 +1,6 @@
 {
   "fields": {
-    "name": "Name",
     "parent": "Bezieht sich auf",
-    "status": "Status",
     "dateStart": "Startdatum",
     "dateEnd": "Fällig am",
     "dateStartDate": "Startdatum (ganztägig)",
@@ -13,10 +11,13 @@
     "account": "Firma",
     "dateCompleted": "Datum erledigt",
     "attachments": "Anhänge",
-    "reminders": "Erinnerungen"
+    "reminders": "Erinnerungen",
+    "contact": "Kontakt"
   },
   "links": {
-    "attachments": "Anhänge"
+    "attachments": "Anhänge",
+    "account": "Firma",
+    "contact": "Kontakt"
   },
   "options": {
     "status": {
@@ -28,7 +29,6 @@
     },
     "priority": {
       "Low": "Niedrig",
-      "Normal": "Normal",
       "High": "Hoch",
       "Urgent": "Dringend"
     }
@@ -40,8 +40,8 @@
   "presetFilters": {
     "actual": "Aktuell",
     "completed": "Abgeschlossen",
-    "deferred": "Zurückgestellt",
     "todays": "Heutige",
-    "overdue": "Überfällig"
+    "overdue": "Überfällig",
+    "deferred": "Zurückgestellt"
   }
 }

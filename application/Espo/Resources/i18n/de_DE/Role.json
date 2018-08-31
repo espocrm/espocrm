@@ -1,19 +1,23 @@
 {
   "fields": {
-    "name": "Name",
     "roles": "Rollen",
     "assignmentPermission": "Zuweisungsberechtigung",
     "userPermission": "Benutzerberechtigung",
-    "portalPermission": "Portal Berechtigungen"
+    "portalPermission": "Portal Berechtigungen",
+    "groupEmailAccountPermission": "Gruppen E-Mail Kontoberechtigung",
+    "exportPermission": "Exportberechtigung",
+    "dataPrivacyPermission": "Datenschutz Erlaubnis"
   },
   "links": {
-    "users": "Benutzer",
-    "teams": "Teams"
+    "users": "Benutzer"
   },
   "tooltips": {
     "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen/senden\n\nNein - Kann nur sich selbst zuweisen/senden",
     "userPermission": "Erlaubt Benutzer zu beschränken, die Aktivitäten, Kalendereinträge und Aktivitäten anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen",
-    "portalPermission": "Gibt Zugang zu Portalinformationen, die Möglichkeit Kontakte zu Portalbenutzern zu konvertieren und erlaubt das Senden von Nachrichten an Portalbenutzer"
+    "portalPermission": "Gibt Zugang zu Portalinformationen, die Möglichkeit Kontakte zu Portalbenutzern zu konvertieren und erlaubt das Senden von Nachrichten an Portalbenutzer",
+    "groupEmailAccountPermission": "Definiert einen Zugriff auf Gruppen E-Mail Konten, die Fähigkeit, E-Mails von Gruppe SMTP zu senden.",
+    "dataPrivacyPermission": "Ermöglicht das Anzeigen und Löschen persönlicher Daten.",
+    "exportPermission": "Definiert, ob Benutzer Datensätze exportieren können."
   },
   "labels": {
     "Access": "Berechtigungen",

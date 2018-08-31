@@ -1,7 +1,4 @@
 {
-  "label": {
-    "Field": "Feld"
-  },
   "options": {
     "operators": {
       "equals": "Ist gleich",
@@ -10,7 +7,6 @@
       "lessThan": "Kleiner als",
       "greaterThanOrEquals": "Größer oder gleich",
       "lessThanOrEquals": "Kleiner oder gleich",
-      "in": "In",
       "notIn": "Nicht in",
       "inPast": "Ist in der Vergangenheit",
       "inFuture": "Ist in der Zukunft",
@@ -20,7 +16,12 @@
       "isEmpty": "Ist leer",
       "isNotEmpty": "Ist nicht leer",
       "contains": "Enthält",
-      "notContains": "Enthält nicht"
+      "has": "Enthält",
+      "notContains": "Enthält nicht",
+      "notHas": "Enthält nicht"
     }
+  },
+  "labels": {
+    "Field": "Feld"
   }
 }

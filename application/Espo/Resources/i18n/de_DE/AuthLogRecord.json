@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "username": "Benutzername",
+    "ipAddress": "IP Adresse",
+    "requestTime": "Anforderungszeit",
+    "createdAt": "Angefordert bei",
+    "isDenied": "ist verweigert",
+    "denialReason": "Verweigerungsgrund",
+    "user": "Benutzer",
+    "authToken": "Auth Token erstellt",
+    "requestUrl": "Anforderungs-URL",
+    "requestMethod": "Anforderungsmethode",
+    "authTokenIsActive": "Auth Token ist aktiv"
+  },
+  "links": {
+    "authToken": "Auth Token erstellt",
+    "user": "Benutzer",
+    "actionHistoryRecords": "Aktionsverlauf"
+  },
+  "presetFilters": {
+    "denied": "Verweigert",
+    "accepted": "Akzeptiert"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Ungültige Anmeldeinformationen",
+      "INACTIVE_USER": "Inaktiver Benutzer",
+      "IS_PORTAL_USER": "Portal Benutzer",
+      "IS_NOT_PORTAL_USER": "Kein Portalbenutzer",
+      "USER_IS_NOT_IN_PORTAL": "Der Benutzer ist nicht mit dem Portal verbunden"
+    }
+  }
+}

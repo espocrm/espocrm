@@ -1,9 +1,5 @@
 {
   "fields": {
-    "name": "Name",
-    "logo": "Logo",
-    "companyLogo": "Logo",
-    "url": "URL",
     "portalRoles": "Rollen",
     "isActive": "Ist aktiv",
     "isDefault": "Ist Standard",
@@ -11,7 +7,6 @@
     "quickCreateList": "Liste Schnellerstellung",
     "theme": "Design",
     "language": "Sprache",
-    "dashboardLayout": "Dashboard Layout",
     "dateFormat": "Datumsformat",
     "timeFormat": "Zeitformat",
     "timeZone": "Zeitzone",

@@ -1,6 +1,7 @@
 {
   "layouts": {
     "detailConvert": "Interessent umwandeln",
-    "listForAccount": "Liste (für Firma)"
+    "listForAccount": "Liste (für Firma)",
+    "listForContact": "Liste (für Kontakt)"
   }
 }

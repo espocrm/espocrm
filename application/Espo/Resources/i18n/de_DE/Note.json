@@ -3,14 +3,22 @@
     "post": "Senden",
     "attachments": "Anhänge",
     "targetType": "Ziel",
-    "teams": "Teams",
     "users": "Benutzer",
-    "portals": "Portale"
+    "portals": "Portale",
+    "type": "Typ",
+    "isGlobal": "Ist global",
+    "isInternal": "Ist Intern (für interne Benutzer)",
+    "related": "Verbunden",
+    "createdByGender": "Erstellt von Geschlecht",
+    "data": "Daten",
+    "number": "Nummer"
   },
   "filters": {
     "all": "Alle",
-    "posts": "Posts",
     "updates": "Aktualisierungen"
+  },
+  "messages": {
+    "writeMessage": "Schreiben Sie hier Ihre Nachricht"
   },
   "options": {
     "targetType": {
@@ -19,9 +27,13 @@
       "teams": "An (ein) bestimmte(s) Team(s)",
       "all": "An alle Benutzer",
       "portals": "An alle Portal Benutzer"
+    },
+    "type": {
+      "Post": "Senden"
     }
   },
-  "messages": {
-    "writeMessage": "Schreiben Sie hier Ihre Nachricht"
+  "links": {
+    "superParent": "Super Eltern",
+    "related": "Verbunden"
   }
 }

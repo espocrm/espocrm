@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Neue Kategorie",
+    "Manage Categories": "Kategorien verwalten",
+    "EmailTemplates": "E-Mail Vorlagen"
+  },
+  "fields": {
+    "order": "Reihenfolge",
+    "childList": "Untergeordnete Liste"
+  },
+  "links": {
+    "emailTemplates": "E-Mail Vorlagen"
+  }
+}

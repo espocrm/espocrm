@@ -3,11 +3,9 @@
     "Fields": "Felder",
     "Relationships": "Beziehungen",
     "Schedule": "Geplant",
-    "Log": "Log",
     "Formula": "Formel"
   },
   "fields": {
-    "name": "Name",
     "type": "Typ",
     "labelSingular": "Bezeichnung Einzahl",
     "labelPlural": "Bezeichnung Mehrzahl",
@@ -16,7 +14,6 @@
     "linkType": "Relationstyp",
     "entityForeign": "Fremdentität",
     "linkForeign": "Fremdrelation",
-    "link": "Link",
     "labelForeign": "Fremdbezeichnung",
     "sortBy": "Standardmäßig sortieren nach",
     "sortDirection": "Standardmäßig sortieren in Reihenfolge",
@@ -28,13 +25,16 @@
     "audited": "überprüft",
     "auditedForeign": "fremd geprüft",
     "statusField": "Status Feld",
-    "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script"
+    "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
+    "color": "Farbe",
+    "kanbanViewMode": "Kanban-Ansicht",
+    "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
+    "fullTextSearch": "Volltextsuche"
   },
   "options": {
     "type": {
       "": "Kein(e)",
       "Base": "Basis",
-      "Person": "Person",
       "CategoryTree": "Kategoriebaum",
       "Event": "Ereignis",
       "BasePlus": "Basis Plus",
@@ -64,6 +64,7 @@
     "disabled": "Überprüfen Sie, ob Sie diese Entität nicht in Ihrem System benötigen.",
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
     "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
-    "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\"."
+    "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",
+    "fullTextSearch": "Ausführung der Wiederherstellung ist erforderlich."
   }
 }

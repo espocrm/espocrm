@@ -1,6 +1,5 @@
 {
   "fields": {
-    "name": "Name",
     "account": "Firma",
     "stage": "Verkaufsphase",
     "amount": "Betrag",
@@ -13,7 +12,10 @@
     "amountConverted": "Betrag (umgerechnet)",
     "amountWeightedConverted": "Betrag gewichtet",
     "campaign": "Kampagne",
-    "originalLead": "Ursprünglicher Interessent"
+    "originalLead": "Ursprünglicher Interessent",
+    "amountCurrency": "Währungsbetrag",
+    "contactRole": "Kontaktrolle",
+    "lastStage": "Letzte Verkaufsphase"
   },
   "links": {
     "contacts": "Kontakte",
@@ -25,8 +27,6 @@
     "stage": {
       "Prospecting": "Identifikation",
       "Qualification": "Qualifikation",
-      "Proposal": "Angebot",
-      "Negotiation": "Verhandlung",
       "Needs Analysis": "Bedarfserhebung",
       "Value Proposition": "Richtangebot",
       "Id. Decision Makers": "Identifikation der Entscheider",
@@ -34,7 +34,9 @@
       "Proposal/Price Quote": "Angebot/Kostenvoranschlag",
       "Negotiation/Review": "Verhandlung/Überarbeitung",
       "Closed Won": "Gewonnen",
-      "Closed Lost": "Verloren"
+      "Closed Lost": "Verloren",
+      "Proposal": "Angebot",
+      "Negotiation": "Verhandlung"
     }
   },
   "labels": {

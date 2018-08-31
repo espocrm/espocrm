@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "user": "Benutzer",
+    "action": "Aktion",
+    "createdAt": "Datum",
+    "target": "Ziel",
+    "targetType": "Zieltyp",
+    "ipAddress": "IP-Adresse",
+    "authLogRecord": "Auth Log-Datensatz"
+  },
+  "links": {
+    "user": "Benutzer",
+    "target": "Ziel",
+    "authLogRecord": "Auth Log-Datensatz"
+  },
+  "presetFilters": {
+    "onlyMy": "Nur meine"
+  },
+  "options": {
+    "action": {
+      "read": "Lesen",
+      "update": "Aktualisieren",
+      "delete": "Löschen",
+      "create": "Erstellen"
+    }
+  }
+}

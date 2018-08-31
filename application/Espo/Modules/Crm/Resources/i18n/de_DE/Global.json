@@ -4,7 +4,6 @@
     "contacts": "Kontakte",
     "opportunities": "Verkaufschancen",
     "leads": "Interessenten",
-    "meetings": "Meetings",
     "calls": "Anrufe",
     "tasks": "Aufgaben",
     "emails": "E-Mails",
@@ -21,7 +20,6 @@
     "Lead": "Interessent",
     "Target": "Ziel",
     "Opportunity": "Verkaufschance",
-    "Meeting": "Meeting",
     "Calendar": "Kalender",
     "Call": "Anruf",
     "Task": "Aufgabe",
@@ -32,7 +30,6 @@
     "TargetList": "Kontaktliste",
     "MassEmail": "Massen E-Mails",
     "EmailQueueItem": "E-Mail Warteschlangeneintrag",
-    "CampaignTrackingUrl": "Tracking URL",
     "Activities": "Aktivitäten",
     "KnowledgeBaseArticle": "Wissensbasis Artikel",
     "KnowledgeBaseCategory": "Wissensbasis Kategorie",
@@ -44,7 +41,6 @@
     "Lead": "Interessenten",
     "Target": "Zielkontakte",
     "Opportunity": "Verkaufschancen",
-    "Meeting": "Meetings",
     "Calendar": "Kalender",
     "Call": "Anrufe",
     "Task": "Aufgaben",
@@ -55,7 +51,6 @@
     "TargetList": "Kontaktlisten",
     "MassEmail": "Massen E-Mails",
     "EmailQueueItem": "E-Mail Warteschlangeneinträge",
-    "CampaignTrackingUrl": "Tracking URLs",
     "Activities": "Aktivitäten",
     "KnowledgeBaseArticle": "Wissensbasis",
     "KnowledgeBaseCategory": "Wissensbasis Kategorien",
@@ -111,7 +106,6 @@
   },
   "options": {
     "reminderTypes": {
-      "Popup": "Popup",
       "Email": "E-Mail"
     }
   }

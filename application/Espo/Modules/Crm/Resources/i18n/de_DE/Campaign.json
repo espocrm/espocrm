@@ -1,8 +1,6 @@
 {
   "fields": {
-    "name": "Name",
     "description": "Beschreibung",
-    "status": "Status",
     "type": "Typ",
     "startDate": "Startdatum",
     "endDate": "Enddatum",
@@ -18,8 +16,13 @@
     "leadCreatedCount": "Erstellte Interessenten",
     "revenue": "Umsatz",
     "revenueConverted": "Umsatz (umgerechnet)",
-    "budget": "Budget",
-    "budgetConverted": "Budget (umgerechnet)"
+    "budgetConverted": "Budget (umgerechnet)",
+    "contactsTemplate": "Kontaktvorlage",
+    "leadsTemplate": "Interessentenvorlage",
+    "accountsTemplate": "Kontenvorlage",
+    "usersTemplate": "Benutzervorlage",
+    "mailMergeOnlyWithAddress": "Datensätze ohne gefüllte Adresse überspringen",
+    "optedInCount": "Opt-In gesetzt"
   },
   "links": {
     "targetLists": "Kontaktlisten",
@@ -30,16 +33,15 @@
     "opportunities": "Verkaufschancen",
     "campaignLogRecords": "Protokoll",
     "massEmails": "Massen E-Mails",
-    "trackingUrls": "Tracking URLs"
+    "contactsTemplate": "Kontaktvorlage",
+    "leadsTemplate": "Interessentenvorlage",
+    "accountsTemplate": "Kontenvorlage",
+    "usersTemplate": "Benutzervorlage"
   },
   "options": {
     "type": {
       "Email": "E-Mail",
-      "Web": "Web",
-      "Television": "Fernsehen",
-      "Radio": "Radio",
-      "Newsletter": "Newsletter",
-      "Mail": "Mail"
+      "Television": "Fernsehen"
     },
     "status": {
       "Planning": "Planung",
@@ -59,7 +61,9 @@
     "Email Templates": "E-Mail Vorlagen",
     "Unsubscribe again": "Abmelden",
     "Subscribe again": "Anmelden",
-    "Create Target List": "Interessentenliste erstellen"
+    "Create Target List": "Interessentenliste erstellen",
+    "Mail Merge": "Serienbrief",
+    "Generate Mail Merge PDF": "Serienbrief-PDF generieren"
   },
   "presetFilters": {
     "active": "Aktiv"

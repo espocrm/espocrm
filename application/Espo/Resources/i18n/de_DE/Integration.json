@@ -1,13 +1,8 @@
 {
   "fields": {
     "enabled": "Aktiv",
-    "clientId": "Client ID",
     "clientSecret": "Client Geheimnis",
-    "redirectUri": "Weiterleitungs URI",
-    "apiKey": "API Key"
-  },
-  "titles": {
-    "GoogleMaps": "Google Maps"
+    "redirectUri": "Weiterleitungs URI"
   },
   "messages": {
     "selectIntegration": "Wählen Sie eine Integration aus dem Menü.",

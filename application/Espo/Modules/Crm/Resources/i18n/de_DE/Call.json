@@ -1,8 +1,6 @@
 {
   "fields": {
-    "name": "Name",
     "parent": "Bezieht sich auf",
-    "status": "Status",
     "dateStart": "Startdatum",
     "dateEnd": "Enddatum",
     "direction": "Richtung",

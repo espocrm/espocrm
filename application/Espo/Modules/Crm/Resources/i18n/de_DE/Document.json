@@ -1,11 +1,8 @@
 {
   "labels": {
-    "Create Document": "Dokument erstellen",
-    "Details": "Details"
+    "Create Document": "Dokument erstellen"
   },
   "fields": {
-    "name": "Name",
-    "status": "Status",
     "file": "Datei",
     "type": "Typ",
     "publishDate": "Veröffentlichungsdatum",
@@ -31,8 +28,6 @@
     "type": {
       "": "Kein(e)",
       "Contract": "Vertrag",
-      "NDA": "NDA",
-      "EULA": "EULA",
       "License Agreement": "Lizenzvereinbarung"
     }
   },

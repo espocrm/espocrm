@@ -31,9 +31,6 @@
     "Properties": "Eigenschaften",
     "Header Row": "Kopfzeile",
     "Person Name Format": "Namensformat Person",
-    "John Smith": "John Smith",
-    "Smith John": "Smith John",
-    "Smith, John": "Smith, John",
     "Field Delimiter": "Feldbegrenzer",
     "Date Format": "Datumsformat",
     "Decimal Mark": "Dezimaltrennzeichen",
@@ -48,20 +45,29 @@
     "Single Quote": "Einfaches Hochkomma",
     "Imported": "Importiert",
     "Duplicates": "Duplikate",
-    "Skip searching for duplicates": "Duplikatssuche überspringen"
+    "Skip searching for duplicates": "Duplikatssuche überspringen",
+    "Timezone": "Zeitzone",
+    "Remove Import Log": "Importprotokoll entfernen",
+    "New Import": "Neuer Import",
+    "Import Results": "Importergebnisse"
   },
   "messages": {
     "utf8": "Sollte UTF-8 kodiert sein",
     "duplicatesRemoved": "Duplikate entfernt",
-    "inIdle": "Ausführen im Leerlauf (für große Datenmengen über cron)"
+    "inIdle": "Ausführen im Leerlauf (für große Datenmengen über cron)",
+    "revert": "Dadurch werden alle importierten Datensätze dauerhaft entfernt.",
+    "removeDuplicates": "Dadurch werden alle importierten Datensätze, die als Duplikate erkannt wurden, dauerhaft entfernt.",
+    "confirmRevert": "Dadurch werden alle importierten Datensätze dauerhaft entfernt. Sind Sie sicher?",
+    "confirmRemoveDuplicates": "Dadurch werden alle importierten Datensätze, die als Duplikate erkannt wurden, dauerhaft entfernt. Sind Sie sicher?",
+    "confirmRemoveImportLog": "Dies wird das Importprotokoll entfernen. Alle importierten Datensätze werden beibehalten. Sie können den Import rückgängig nicht machen. Sind Sie sicher?",
+    "removeImportLog": "Dies wird das Importprotokoll entfernen. Alle importierten Datensätze werden beibehalten. Verwenden Sie es, wenn Sie sicher sind, dass der Import in Ordnung ist."
   },
   "fields": {
     "file": "Datei",
     "entityType": "Entitätstyp",
     "imported": "Importierte Datensätze",
     "duplicates": "Doppelte Datensätze",
-    "updated": "Aktualisierte Datensätze",
-    "status": "Status"
+    "updated": "Aktualisierte Datensätze"
   },
   "options": {
     "status": {

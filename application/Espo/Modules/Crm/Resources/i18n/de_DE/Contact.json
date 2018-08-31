@@ -1,6 +1,5 @@
 {
   "fields": {
-    "name": "Name",
     "emailAddress": "E-Mail",
     "title": "Funktion",
     "accountRole": "Funktion",
@@ -16,7 +15,11 @@
     "targetLists": "Kontaktlisten",
     "targetList": "Kontaktliste",
     "portalUser": "Portal Benutzer",
-    "originalLead": "Ursprünglicher Interessent"
+    "originalLead": "Ursprünglicher Interessent",
+    "acceptanceStatus": "Akzeptanzstatus",
+    "accountIsInactive": "Inaktives Konto",
+    "acceptanceStatusMeetings": "Akzeptanzstatus (Meetings)",
+    "acceptanceStatusCalls": "Akzeptanzstatus (Anrufe)"
   },
   "links": {
     "opportunities": "Verkaufschancen",
@@ -29,7 +32,8 @@
     "casesPrimary": "Fälle (Primär)",
     "portalUser": "Portal Benutzer",
     "originalLead": "Ursprünglicher Interessent",
-    "documents": "Dokumente"
+    "documents": "Dokumente",
+    "tasksPrimary": "Aufgaben (erweitert)"
   },
   "labels": {
     "Create Contact": "Kontakt erstellen"
@@ -44,6 +48,7 @@
   },
   "presetFilters": {
     "portalUsers": "Portal Benutzer",
-    "notPortalUsers": "Keine Portal Benutzer"
+    "notPortalUsers": "Keine Portal Benutzer",
+    "accountActive": "Aktiv"
   }
 }

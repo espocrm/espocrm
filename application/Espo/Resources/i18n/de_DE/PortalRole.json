@@ -7,5 +7,11 @@
     "Create PortalRole": "Portal Rolle erstellen",
     "Scope Level": "Berechtigungsumfang",
     "Field Level": "Feldebene"
+  },
+  "fields": {
+    "exportPermission": "Exportberechtigung"
+  },
+  "tooltips": {
+    "exportPermission": "Definiert, ob Portalbenutzer Datensätze exportieren können."
   }
 }

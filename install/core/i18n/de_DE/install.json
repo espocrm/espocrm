@@ -18,18 +18,12 @@
     "twitter": "Twitter",
     "forum": "Forum",
     "Installation Guide": "Installationshandbuch",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
     "Locale": "Lokale Einstellungen",
     "Outbound Email Configuration": "Einstellungen für ausgehende E-Mails",
-    "SMTP": "SMTP",
-    "Start": "Start",
     "Back": "Zurück",
     "Next": "Weiter",
     "Go to EspoCRM": "Zu EspoCRM",
     "Re-check": "Überprüfung wiederholen",
-    "Version": "Version",
     "Test settings": "Verbindung überprüfen",
     "Database Settings Description": "Geben Sie die Verbindungsinformationen für Ihre MySQL Datenbank ein (Hostname, Benutzername und Passwort). Ein abweichender Port kann im Format  localhost:3306 im Hostnamen-Feld definiert werden.",
     "Install": "Installieren",
@@ -41,15 +35,12 @@
     "mysqlVersion": "MySQL Version",
     "dbHostName": "Hostname",
     "dbName": "Datenbankname",
-    "dbUserName": "Datenbankbenutzer",
-    "OK": "OK"
+    "dbUserName": "Datenbankbenutzer"
   },
   "fields": {
     "Choose your language": "Wählen Sie Ihre Sprache",
     "Database Name": "Datenbankname",
     "Host Name": "Hostname",
-    "Port": "Port",
-    "smtpPort": "Port",
     "Database User Name": "Datenbankbenutzer",
     "Database User Password": "Datenbankpasswort",
     "Database driver": "Datenbanktreiber",
@@ -69,7 +60,6 @@
     "Default Currency": "Standardwährung",
     "Currency List": "Währungsliste",
     "Language": "Sprache",
-    "smtpServer": "Server",
     "smtpAuth": "Authentifizierung",
     "smtpSecurity": "Transportsicherheit",
     "smtpUsername": "Benutzername",
@@ -109,25 +99,21 @@
     "mysqlSettingError": "EspoCRM erfordert, dass die MySQL Einstellung \"{NAME}\"  auf {VALUE} gesetzt ist"
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
+    "modRewriteInstruction": {
+      "apache": {
+        "windows": "<br> <pre>1. Finden Sie die httpd.conf Datei (normalerweise in einem Verzeichnis conf, config oder ähnlich)<br>2. Innerhalb der httpd.conf Datei aktivieren Sie die Zeile LoadModule rewrite_module modules/mod_rewrite.so (entfernen Sie das # Zeichen vom Anfang der Zeile)<br>3. Stellen Sie sicher, dass die Zeile ClearModuleList nicht auskommentiert ist, genauso wie die Zeile AddModule mod_rewrite.c. </pre>\n</pre>",
+        "linux": "<br><br>1. Aktivieren Sie mod_rewrite. Dafür führen Sie folgende Kommandos in einem Terminalfenster aus: <pre>{APACHE1}</pre><br>2. Aktivieren Sie .htaccess Unterstützung Ändern oder fügen Sie folgendes Kommando zu Ihrer Apache Konfiguration hinzu (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Anschließend führen Sie dieses Kommando in einem Terminalfenster aus: <pre>{APACHE3}</pre><br>3 Um den RewriteBase Pfad hinzuzufügen, öffnen Sie die Datei {API_PATH}.htaccess und ersetzen Sie die folgende Zeile:<pre>{APACHE4}</pre>zu<pre>{APACHE5}</pre><br> For more information please visit the guideline <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\">Apache server configuration for EspoCRM</a>.<br><br>"
+      },
+      "nginx": {
+        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Weitere Informationen sind in der Dokumentation unter <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a> zu finden.<br><br>",
+        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Weitere Informationen sind in der Dokumentation unter <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a> zu finden.<br><br>"
+      }
     },
     "modRewriteTitle": {
       "apache": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliche Probleme: deaktiviertes \"mod_rewrite\" des Apache Servers, nicht aktivierte .htaccess Unterstützung oder ein RewriteBase Fehler.<br>Führen Sie nur die notwendigen Schritte durch. Nach jedem Schritt prüfen Sie bitte, ob das Problem gelöst ist.",
       "nginx": "API Fehler: EspoCRM API nicht verfügbar.<br>Fügen Sie diesen Code zu Nginx Host Config (innerhalb des \"server\" Blocks) hinzu:",
       "microsoft-iis": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes \"URL Rewrite\". Bitte überprüfen und aktivieren Sie das \"URL Rewrite\" Modul im IIS Server.",
       "default": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes Rewrite Modul. Bitte überprüfen und aktivieren Sie das Rewrite Modul (z.B. mod_rewrite im Apache Server) und die .htaccess Unterstützung."
-    },
-    "modRewriteInstruction": {
-      "apache": {
-        "linux": "<br><br>1. Aktivieren Sie mod_rewrite. Dafür führen Sie folgende Kommandos in einem Terminalfenster aus: <pre>{APACHE1}</pre><br>2. Aktivieren Sie .htaccess Unterstützung Ändern oder fügen Sie folgendes Kommando zu Ihrer Apache Konfiguration hinzu (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Anschließend führen Sie dieses Kommando in einem Terminalfenster aus: <pre>{APACHE3}</pre><br>3 Um den RewriteBase Pfad hinzuzufügen, öffnen Sie die Datei {API_PATH}.htaccess und ersetzen Sie die folgende Zeile:<pre>{APACHE4}</pre>zu<pre>{APACHE5}</pre><br> For more information please visit the guideline <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\">Apache server configuration for EspoCRM</a>.<br><br>",
-        "windows": "<br> <pre>1. Finden Sie die httpd.conf Datei (normalerweise in einem Verzeichnis conf, config oder ähnlich)<br>2. Innerhalb der httpd.conf Datei aktivieren Sie die Zeile LoadModule rewrite_module modules/mod_rewrite.so (entfernen Sie das # Zeichen vom Anfang der Zeile)<br>3. Stellen Sie sicher, dass die Zeile ClearModuleList nicht auskommentiert ist, genauso wie die Zeile AddModule mod_rewrite.c. </pre>\n</pre>"
-      },
-      "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Weitere Informationen sind in der Dokumentation unter <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a> zu finden.<br><br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Weitere Informationen sind in der Dokumentation unter <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a> zu finden.<br><br>"
-      }
     }
   }
 }

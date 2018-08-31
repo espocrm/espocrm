@@ -1,13 +1,13 @@
 {
   "fields": {
-    "name": "Name",
     "roles": "Rollen",
     "positionList": "Positionsbezeichnungen"
   },
   "links": {
     "users": "Benutzer",
     "notes": "Notizen",
-    "roles": "Rollen"
+    "roles": "Rollen",
+    "inboundEmails": "Gruppen E-Mail Konten"
   },
   "tooltips": {
     "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen.",

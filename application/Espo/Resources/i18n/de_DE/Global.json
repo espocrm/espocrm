@@ -2,7 +2,6 @@
   "scopeNames": {
     "Email": "E-Mail",
     "User": "Benutzer",
-    "Team": "Team",
     "Role": "Rolle",
     "EmailTemplate": "E-Mail Vorlage",
     "EmailAccount": "Persönliches E-Mail Konto",
@@ -11,24 +10,38 @@
     "ScheduledJob": "Geplante Aufgabe",
     "ExternalAccount": "Externes Konto",
     "Extension": "Erweiterung",
-    "Dashboard": "Dashboard",
     "InboundEmail": "Gruppen E-Mail Konto",
     "Stream": "Aktivitäten",
-    "Import": "Import",
     "Template": "Vorlage",
-    "Job": "Job",
     "EmailFilter": "E-Mail Filter",
-    "Portal": "Portal",
     "PortalRole": "Portal Rolle",
     "Attachment": "Anhang",
     "EmailFolder": "E-Mail Ordner",
     "PortalUser": "Portal Benutzer",
-    "LastViewed": "Zuletzt Angezeigt"
+    "ScheduledJobLogRecord": "Geplante Aufgabe-Logeintrag",
+    "PasswordChangeRequest": "Anforderung zur Passwortänderung",
+    "ActionHistoryRecord": "Aktionsverlaufseintrag",
+    "UniqueId": "eindeutige ID",
+    "LastViewed": "Zuletzt Angezeigt",
+    "Settings": "Einstellungen",
+    "FieldManager": "Feld Manager",
+    "EntityManager": "Entität Manager",
+    "Export": "Exportieren",
+    "DynamicLogic": "Dynamische Logik",
+    "DashletOptions": "Dashlet Optionen",
+    "Preferences": "Benutzereinstellungen",
+    "EmailAddress": "E-Mail Adresse",
+    "PhoneNumber": "Telefonnummer",
+    "AuthLogRecord": "Auth Log-Datensatz",
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
+    "EmailTemplateCategory": "E-Mail Vorlagenkategorien",
+    "LeadCapture": "Einstiegspunkt der Erfassung des Interessenten",
+    "LeadCaptureLogRecord": "Logeintrag der Erfassung des Interessenten",
+    "ArrayValue": "Array-Wert"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
     "User": "Benutzer",
-    "Team": "Teams",
     "Role": "Rollen",
     "EmailTemplate": "E-Mail Vorlagen",
     "EmailAccount": "Persönliche E-Mail Konten",
@@ -37,19 +50,26 @@
     "ScheduledJob": "Geplante Jobs",
     "ExternalAccount": "Externe Konten",
     "Extension": "Erweiterungen",
-    "Dashboard": "Dashboard",
     "InboundEmail": "Gruppen E-Mail Konten",
     "Stream": "Aktivitäten",
-    "Import": "Importergebnisse",
     "Template": "Vorlagen",
-    "Job": "Jobs",
     "EmailFilter": "E-Mail Filter",
     "Portal": "Portale",
     "PortalRole": "Portal Rollen",
     "Attachment": "Anhänge",
     "EmailFolder": "E-Mail Ordner",
     "PortalUser": "Portal Benutzer",
-    "LastViewed": "Zuletzt Angezeigt"
+    "ScheduledJobLogRecord": "Geplante Aufgabe-Logeinträge",
+    "PasswordChangeRequest": "Anforderungen zur Passwortänderung",
+    "ActionHistoryRecord": "Aktionsverlauf",
+    "UniqueId": "eindeutige IDs",
+    "LastViewed": "Zuletzt Angezeigt",
+    "AuthLogRecord": "Auth-Protokoll",
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll",
+    "EmailTemplateCategory": "E-Mail Vorlagenkategorien",
+    "LeadCapture": "Erfassung des Interessenten",
+    "LeadCaptureLogRecord": "Erfassung des Interessenten Log",
+    "ArrayValue": "Array-Werte"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -93,10 +113,8 @@
     "Create": "Erstellen",
     "create": "erstellen",
     "Overview": "Überblick",
-    "Details": "Details",
     "Add Field": "Feld hinzufügen",
     "Add Dashlet": "Dashlet hinzufügen",
-    "Filter": "Filter",
     "Edit Dashboard": "Dashboard bearbeiten",
     "Add": "Hinzufügen",
     "Add Item": "Eintrag hinzufügen",
@@ -106,7 +124,6 @@
     "Search": "Suchen",
     "Only My": "Nur Meine",
     "Open": "Offen",
-    "Admin": "Admin",
     "About": "Über",
     "Refresh": "Aktualisieren",
     "Remove": "Löschen",
@@ -148,17 +165,14 @@
     "Dashlet Options": "Dashlet Optionen",
     "Full Form": "Komplettes Formular",
     "Insert": "Einfügen",
-    "Person": "Person",
     "First Name": "Vorname",
     "Last Name": "Nachname",
-    "Original": "Original",
     "You": "Sie",
     "you": "Sie",
     "change": "ändern",
     "Change": "Ändern",
     "Primary": "Primär",
     "Save Filter": "Filter speichern",
-    "Administration": "Administration",
     "Run Import": "Import durchführen",
     "Duplicate": "Duplizieren",
     "Notifications": "Benachrichtigungen",
@@ -171,7 +185,6 @@
     "Close": "Schließen",
     "Yes": "Ja",
     "No": "Nein",
-    "Select All Results": "Alle auswählen",
     "Value": "Wert",
     "Current version": "Aktuelle Version",
     "List View": "Listenansicht",
@@ -190,26 +203,30 @@
     "Attach File": "Datei anhängen",
     "Skip": "überspringen",
     "Attribute": "Attribut",
-    "Function": "Funktion"
+    "Function": "Funktion",
+    "Self-Assign": "sich selbst zuweisen",
+    "Self-Assigned": "Selbst zugewiesen",
+    "Return to Application": "Zurück zur Applikation",
+    "Select All Results": "Alle auswählen",
+    "Expand": "Erweitern",
+    "Collapse": "Zusammenfall",
+    "New notifications": "Neue Benachrichtigungen",
+    "Manage Categories": "Kategorien verwalten",
+    "Manage Folders": "Ordner verwalten",
+    "Convert to": "Umgewandelt zu",
+    "View Personal Data": "Persönliche Daten anzeigen",
+    "Personal Data": "Persönliche Daten",
+    "Erase": "Löschen"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
     "posting": "Poste...",
     "confirmLeaveOutMessage": "Sind Sie sicher, dass Sie das Formular verlassen wollen?",
     "notModified": "Sie haben keine Änderungen am Datensatz vorgenommen",
-    "duplicate": "Der Datensatz den Sie erstellen wollen, könnte eine Dublette sein",
-    "dropToAttach": "Anhang hier ablegen",
     "fieldIsRequired": "{field} wird benötigt",
-    "fieldShouldBeEmail": "{field} muss eine gültige E-Mail sein",
-    "fieldShouldBeFloat": "{field} muss eine gültige Fließkomma Zahl sein",
-    "fieldShouldBeInt": "{field} muss eine gültige Ganzzahl sein",
-    "fieldShouldBeDate": "{field} muss ein gültiges Datum sein",
-    "fieldShouldBeDatetime": "{field} muss ein gültiges Datum/Zeit Feld sein",
     "fieldShouldAfter": "{field} muss nach {otherField} sein",
     "fieldShouldBefore": "{field} muss vor {otherField} sein",
     "fieldShouldBeBetween": "{field} muss zwischen {min} und {max} sein",
-    "fieldShouldBeLess": "{field} muss kleiner als {value} sein",
-    "fieldShouldBeGreater": "{field} muss größer als {value} sein",
     "fieldBadPasswordConfirm": "{field} falsch bestätigt",
     "resetPreferencesDone": "Die Einstellungen wurden auf Standardwerte zurückgesetzt",
     "confirmation": "Sind Sie sicher?",
@@ -225,12 +242,13 @@
     "massRemoveResultSingle": "{count} Eintrag wurde gelöscht",
     "noRecordsRemoved": "Es wurden keine Einträge gelöscht",
     "clickToRefresh": "Klicken um zu aktualisieren",
-    "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Notiz hervorzuheben.\n\nVerfügbare Syntax:\n`<code>Code</code>`\n**<strong>fetter Text</strong>**\n*<em>Hervorgehobener Text</em>*\n~<del>Durchgestrichen</del>~\n> blockquote\n[text](url)",
     "writeYourCommentHere": "Notiz hier einfügen",
     "writeMessageToUser": "Nachricht an {user} schreiben",
-    "writeMessageToSelf": "Nachricht auf eigene Pinnwand schreiben",
     "typeAndPressEnter": "Tippen & Enter drücken",
     "checkForNewNotifications": "Nach neuen Benachrichtigungen überprüfen",
+    "duplicate": "Der Datensatz den Sie erstellen wollen, könnte eine Dublette sein",
+    "dropToAttach": "Anhang hier ablegen",
+    "writeMessageToSelf": "Nachricht auf eigene Pinnwand schreiben",
     "checkForNewNotes": "Nach neuen Aktivitäten überprüfen",
     "internalPost": "Beitrag kann nur von internen Benutzern gesehen werden",
     "done": "Fertig",
@@ -241,7 +259,22 @@
     "massFollowResultSingle": "{count} Datensätze wird jetzt gefolgt",
     "massUnfollowResultSingle": "{count} Datensätze wird nicht gefolgt",
     "massFollowZeroResult": "Es wurde keinem Datensatz gefolgt",
-    "massUnfollowZeroResult": "Keinem Datensatz wurd nicht gefolgt"
+    "massUnfollowZeroResult": "Keinem Datensatz wurd nicht gefolgt",
+    "fieldShouldBeEmail": "{field} muss eine gültige E-Mail sein",
+    "fieldShouldBeFloat": "{field} muss eine gültige Fließkomma Zahl sein",
+    "fieldShouldBeInt": "{field} muss eine gültige Ganzzahl sein",
+    "fieldShouldBeDate": "{field} muss ein gültiges Datum sein",
+    "fieldShouldBeDatetime": "{field} muss ein gültiges Datum/Zeit Feld sein",
+    "internalPostTitle": "Beitrag wird nur von internen Benutzern gesehen",
+    "loading": "Lade...",
+    "saving": "Speichere...",
+    "fieldMaxFileSizeError": "Die Datei soll nicht größer als {max} Mb sein",
+    "fieldShouldBeLess": "{field} muss kleiner als {value} sein",
+    "fieldShouldBeGreater": "{field} muss größer als {value} sein",
+    "fieldIsUploading": "Hochladen läuft",
+    "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Notiz hervorzuheben.\n\nVerfügbare Syntax:\n`<code>Code</code>`\n**<strong>fetter Text</strong>**\n*<em>Hervorgehobener Text</em>*\n~<del>Durchgestrichen</del>~\n> blockquote\n[text](url)",
+    "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
+    "massPrintPdfMaxCountError": "Es kann nicht mehr als {maxCount} Datensätze gedruckt werden."
   },
   "boolFilters": {
     "onlyMy": "Nur Meine",
@@ -257,10 +290,11 @@
     "massUpdate": "Massenänderung",
     "export": "Exportieren",
     "follow": "Abonnieren",
-    "unfollow": "nicht gefolgt"
+    "unfollow": "nicht gefolgt",
+    "convertCurrency": "Währung umrechnen",
+    "printPdf": "Als PDF drucken"
   },
   "fields": {
-    "name": "Name",
     "firstName": "Vorname",
     "lastName": "Nachname",
     "salutationName": "Anrede",
@@ -268,7 +302,6 @@
     "assignedUsers": "Zugewiesene Benutzer",
     "emailAddress": "E-Mail",
     "assignedUserName": "Zugewiesener Benutzername",
-    "teams": "Teams",
     "createdAt": "Erstellt am",
     "modifiedAt": "Geändert am",
     "createdBy": "Erstellt von",
@@ -284,22 +317,26 @@
     "order": "Reihenfolge",
     "parent": "Bezieht sich auf",
     "children": "Kinder",
-    "id": "ID"
+    "emailAddressData": "E-Mail-Adressdaten",
+    "phoneNumberData": "Telefonnummer Daten",
+    "names": "Namen",
+    "emailAddressIsOptedOut": "E-Mail-Adresse ist Opt-Out gesetzt",
+    "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
+    "type": "Typ"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
     "createdBy": "Erstellt von",
     "modifiedBy": "Geändert von",
-    "team": "Team",
     "roles": "Rollen",
-    "teams": "Teams",
     "users": "Benutzer",
     "parent": "Bezieht sich auf",
     "children": "Kinder"
   },
   "dashlets": {
     "Stream": "Aktivitäten",
-    "Emails": "Mein Posteingang"
+    "Emails": "Mein Posteingang",
+    "Records": "Datensatzliste"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} wurde Ihnen zugewiesen",
@@ -319,8 +356,6 @@
     "postTargetYou": "{user} hat an Sie geschrieben",
     "postTargetYouAndOthers": "{user} hat an {target} und an Sie geschrieben",
     "postTargetAll": "{user} hat an alle geschrieben",
-    "postTargetSelf": "{user} hat an sich selbst geschrieben",
-    "postTargetSelfAndOthers": "{user} hat an {target} und an siuch selbst geschrieben",
     "mentionInPost": "{user} erwähnte {mentioned} in {entityType} {entity}",
     "mentionYouInPost": "{user} erwähnte Sie in {entityType} {entity}",
     "mentionInPostTarget": "{user} erwähnte {mentioned} in Nachricht",
@@ -331,16 +366,8 @@
     "createThis": "{user} hat {entityType} erstellt",
     "createAssignedThis": "{user} hat {entityType} erstellt und an {assignee} zugewiesen",
     "createAssigned": "{user} hat {entityType} {entity} erstellt und an {assignee} zugewiesen",
-    "createAssignedYou": "{user} hat ihnen die {entityType} {entity} zugewiesen",
-    "createAssignedThisSelf": "{user} erstellt {entityType} mit eigener Zuordnung",
-    "createAssignedSelf": "{user} erstellt {entityType} {entity} mit eigener Zuordnung",
     "assign": "{user} hat {entityType} {entity} an {assignee} zugewiesen",
     "assignThis": "{user} hat {entityType} an {assignee} zugewiesen",
-    "assignYou": "{entityType} {entity} wurde Ihnen zugewiesen",
-    "assignThisVoid": "{user} löst die Zuordnung {entityType}",
-    "assignVoid": "{user} löst die Zuordnung {entityType} {entity}",
-    "assignThisSelf": "{user} hat sich selbst {entityType} zugewiesen",
-    "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen",
     "postThis": "{user} hat notiert",
     "attachThis": "{user} hat hinzugefügt",
     "statusThis": "{user} hat {field} aktualisiert",
@@ -359,13 +386,17 @@
     "emailReceived": "E-Mail empfangen verbunden mit {entityType} {entity}",
     "emailReceivedInitial": "E-Mail empfangen: {entityType} {entity} wurde erstellt",
     "emailSent": "{by} hat eine E-Mail verbunden mit {entityType} {entity} gesendet",
-    "emailSentThis": "{by} hat eine E-Mail gesendet"
-  },
-  "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
-  },
-  "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
+    "emailSentThis": "{by} hat eine E-Mail gesendet",
+    "postTargetSelf": "{user} hat an sich selbst geschrieben",
+    "postTargetSelfAndOthers": "{user} hat an {target} und an siuch selbst geschrieben",
+    "createAssignedYou": "{user} hat ihnen die {entityType} {entity} zugewiesen",
+    "createAssignedThisSelf": "{user} erstellt {entityType} mit eigener Zuordnung",
+    "createAssignedSelf": "{user} erstellt {entityType} {entity} mit eigener Zuordnung",
+    "assignYou": "{entityType} {entity} wurde Ihnen zugewiesen",
+    "assignThisVoid": "{user} löst die Zuordnung {entityType}",
+    "assignVoid": "{user} löst die Zuordnung {entityType} {entity}",
+    "assignThisSelf": "{user} hat sich selbst {entityType} zugewiesen",
+    "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen"
   },
   "lists": {
     "monthNames": [
@@ -428,11 +459,9 @@
     "salutationName": {
       "Mr.": "Herr",
       "Mrs.": "Frau",
-      "Ms.": "Frau",
-      "Dr.": "Dr."
+      "Ms.": "Frau"
     },
     "language": {
-      "af_ZA": "Afrikaans",
       "az_AZ": "Aserbaidschanisch",
       "be_BY": "Weissrussisch",
       "bg_BG": "Bulgarisch",
@@ -456,9 +485,7 @@
       "fr_FR": "Französisch (FR)",
       "ga_IE": "Irisch",
       "gl_ES": "Galizisch",
-      "gn_PY": "Guarani",
       "he_IL": "Hebräisch",
-      "hi_IN": "Hindi",
       "hr_HR": "Kroatisch",
       "hu_HU": "Ungarisch",
       "hy_AM": "Armenisch",
@@ -467,13 +494,11 @@
       "it_IT": "Italienisch",
       "ja_JP": "Japanisch",
       "ka_GE": "Georgisch",
-      "km_KH": "Khmer",
       "ko_KR": "Koreanisch",
       "ku_TR": "Kurdisch",
       "lt_LT": "Litauisch",
       "lv_LV": "Lettisch",
       "mk_MK": "Mazedonisch",
-      "ml_IN": "Malayalam",
       "ms_MY": "Malaiisch",
       "nb_NO": "Norwegisch Bokmál",
       "nn_NO": "Norwegisch Nynorsk",
@@ -495,14 +520,13 @@
       "ta_IN": "Tamilisch",
       "te_IN": "Telugisch",
       "th_TH": "Thailändisch",
-      "tl_PH": "Tagalog",
       "tr_TR": "Tükisch",
       "uk_UA": "Ukrainisch",
-      "ur_PK": "Urdu",
       "vi_VN": "Vietnamesisch",
       "zh_CN": "Chinesisch vereinfacht (CN)",
       "zh_HK": "Chinesisch traditionell (HK)",
-      "zh_TW": "Chinesisch traditionell (TW)"
+      "zh_TW": "Chinesisch traditionell (TW)",
+      "es_MX": "Spanisch (Mexiko)"
     },
     "dateSearchRanges": {
       "on": "Am",
@@ -525,14 +549,19 @@
       "ever": "Jemals",
       "isEmpty": "Ist leer",
       "olderThanXDays": "älter als X Tage",
-      "afterXDays": "nach X Tagen"
+      "afterXDays": "nach X Tagen",
+      "nextMonth": "Nächsten Monat"
     },
     "searchRanges": {
       "is": "Ist",
       "isEmpty": "Ist leer",
       "isNotEmpty": "Ist nicht leer",
-      "isOneOf": "Ist eines(r) von",
-      "isFromTeams": "Ist von Team"
+      "isFromTeams": "Ist von Team",
+      "isOneOf": "Irgendein von",
+      "anyOf": "Irgendein von",
+      "isNot": "Ist nicht",
+      "isNotOneOf": "Keiner von",
+      "noneOf": "Keiner von"
     },
     "varcharSearchRanges": {
       "equals": "Gleich",
@@ -541,8 +570,10 @@
       "endsWith": "Endet mit",
       "contains": "Enthält",
       "isEmpty": "Ist leer",
-      "notEquals": "Nicht gleich",
-      "isNotEmpty": "Ist nicht leer"
+      "isNotEmpty": "Ist nicht leer",
+      "notLike": "Ist nicht wie (%)",
+      "notContains": "Enthält nicht",
+      "notEquals": "Nicht gleich"
     },
     "intSearchRanges": {
       "equals": "Gleich",
@@ -566,7 +597,6 @@
     "phoneNumber": {
       "Mobile": "Telefon Mobil",
       "Office": "Telefon Büro",
-      "Fax": "Fax",
       "Home": "Telefon Privat",
       "Other": "Telefon Andere"
     }
@@ -599,7 +629,6 @@
         "remove": "Grafik entfernen"
       },
       "link": {
-        "link": "Link",
         "insert": "Link einfügen",
         "unlink": "Link entfernen",
         "edit": "Bearbeiten",
@@ -608,10 +637,7 @@
         "openInNewWindow": "In einem neuen Fenster öffnen"
       },
       "video": {
-        "video": "Video",
-        "videoLink": "Video Link",
         "insert": "Video einfügen",
-        "url": "Video URL?",
         "providers": "(YouTube, Vimeo, Vine, Instagram oder DailyMotion)"
       },
       "table": {
@@ -622,7 +648,6 @@
       },
       "style": {
         "style": "Stil",
-        "normal": "Normal",
         "blockquote": "Zitat",
         "pre": "Quellcode",
         "h1": "Überschrift 1",
@@ -674,11 +699,22 @@
       }
     }
   },
+  "streamMessagesMale": {
+    "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
+  },
+  "streamMessagesFemale": {
+    "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
+  },
   "themes": {
-    "Espo": "Espo",
-    "EspoRtl": "Espo (rechtsbündig)",
-    "Sakura": "Sakura",
-    "Violet": "Violet",
-    "Hazyblue": "Hazyblue"
+    "EspoRtl": "Espo (rechtsbündig)"
+  },
+  "durationUnits": {
+    "d": "T",
+    "h": "St",
+    "m": "M",
+    "s": "S"
+  },
+  "listViewModes": {
+    "list": "Liste"
   }
 }

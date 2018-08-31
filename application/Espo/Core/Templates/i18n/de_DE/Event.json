@@ -4,7 +4,6 @@
     "dateStart": "Startdatum",
     "dateEnd": "Enddatum",
     "duration": "Dauer",
-    "status": "Status",
     "reminders": "Erinnerungen"
   },
   "links": {
@@ -20,7 +19,6 @@
   "labels": {
     "Create {entityType}": "{entityTypeTranslated} erstellen",
     "Schedule {entityType}": "{entityTypeTranslated} planen",
-    "Log {entityType}": "Log {entityTypeTranslated}",
     "Set Held": "Auf durchgeführt setzen",
     "Set Not Held": "Auf nicht durchgeführt setzen"
   },
