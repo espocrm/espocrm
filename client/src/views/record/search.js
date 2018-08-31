@@ -54,7 +54,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         viewModeIconClassMap: {
             list: 'fas fa-align-justify',
-            kanban: 'glyphicon glyphicon-equalizer icon-rotate-180'
+            kanban: 'fas fa-grip-horizontal'
         },
 
         data: function () {
