@@ -34,8 +34,7 @@
     "followCreatedEntityTypeList": "Der Benutzer abonniert erstellten Einträge bestimmter Entitätstypen",
     "emailUseExternalClient": "Verwenden einen externen E-Mail-Client",
     "scopeColorsDisabled": "Bereichsfarben deaktivieren",
-    "tabColorsDisabled": "Tabfarben deaktivieren",
-    "Reset Dashboard to Default": "Dashboard auf Standard zurücksetzen"
+    "tabColorsDisabled": "Tabfarben deaktivieren"
   },
   "options": {
     "weekStart": {
@@ -47,7 +46,8 @@
     "Notifications": "Benachrichtigungen",
     "User Interface": "Benutzeroberfläche",
     "Misc": "Verschiedenes",
-    "Locale": "Lokalisierungs-Einstellungen"
+    "Locale": "Lokalisierungs-Einstellungen",
+    "Reset Dashboard to Default": "Dashboard auf Standard zurücksetzen"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Der Benutzer abonniert automatisch alle neuen Einträge der gewählten Entitätstypen, sieht Neuigkeiten in den Aktivitäten und erhält Benachrichtigungen.",

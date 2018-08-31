@@ -36,8 +36,7 @@
     "followCreatedEntityTypeList": "Автоматично підписатись на всі створені записи певного типу сутності",
     "emailUseExternalClient": "Використовуйте зовнішній поштовий клієнт",
     "scopeColorsDisabled": "Вимкнути кольори меж",
-    "tabColorsDisabled": "Вимкнути кольори вкладок",
-    "Reset Dashboard to Default": "Скинути налаштування панелі дашлетів за замовчуванням"
+    "tabColorsDisabled": "Вимкнути кольори вкладок"
   },
   "options": {
     "weekStart": {
@@ -49,7 +48,8 @@
     "Notifications": "Оповіщення",
     "User Interface": "Інтерфейс користувача",
     "Misc": "Різне",
-    "Locale": "Місце дії"
+    "Locale": "Місце дії",
+    "Reset Dashboard to Default": "Скинути налаштування панелі дашлетів за замовчуванням"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Користувач буде автоматично підписаний на всі нові записи із вибраних типів сутностей, бачитиме інформацію у потоці й отримувати сповіщення.",

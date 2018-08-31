@@ -37,8 +37,7 @@
         "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
         "emailUseExternalClient": "Use an external email client",
         "scopeColorsDisabled": "Disable scope colors",
-        "tabColorsDisabled": "Disable tab colors",
-        "Reset Dashboard to Default": "Reset Dashboard to Default"
+        "tabColorsDisabled": "Disable tab colors"
     },
     "links": {
     },
@@ -53,7 +52,8 @@
         "User Interface": "User Interface",
         "SMTP": "SMTP",
         "Misc": "Misc",
-        "Locale": "Locale"
+        "Locale": "Locale",
+        "Reset Dashboard to Default": "Reset Dashboard to Default"
     },
     "tooltips": {
         "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
