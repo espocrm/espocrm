@@ -14,7 +14,8 @@
     "campaign": "Кампанія",
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
-    "originalLead": "Початковий Лід"
+    "originalLead": "Початковий Лід",
+    "contactIsInactive": "Неактивний"
   },
   "links": {
     "contacts": "Контакти",
@@ -88,12 +89,14 @@
       "Support": "Підтримка",
       "Testing, Inspection & Certification": "Тестування, інспектування та сертифікація",
       "Wholesale": "Оптова торгівля",
-      "Water": "Вода"
+      "Water": "Вода",
+      "Travel": "Подорожі"
     }
   },
   "labels": {
     "Create Account": "Створити контрагента",
-    "Copy Billing": "Копія рахунку"
+    "Copy Billing": "Копія рахунку",
+    "Set Primary": "Встановити основним"
   },
   "presetFilters": {
     "recentlyCreated": "Нещодавно Створений"

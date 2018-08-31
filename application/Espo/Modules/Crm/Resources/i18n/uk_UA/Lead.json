@@ -27,7 +27,9 @@
     "targetList": "Цільовий список",
     "industry": "Промисловість",
     "acceptanceStatus": "Ухвалення статусу",
-    "opportunityAmountCurrency": "Валюта суми угоди"
+    "opportunityAmountCurrency": "Валюта суми угоди",
+    "acceptanceStatusMeetings": "Статус підтвердження (Зустрічі)",
+    "acceptanceStatusCalls": "Статус підтвердження (Дзвінки)"
   },
   "links": {
     "targetLists": "Цільові списки",

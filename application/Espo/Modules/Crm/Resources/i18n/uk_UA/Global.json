@@ -100,14 +100,14 @@
     "addressState": "Регіон",
     "billingAddressStreet": "Вулиця",
     "addressStreet": "Вулиця",
-    "billingAddressMap": "Мапа",
-    "addressMap": "Мапа",
+    "billingAddressMap": "Карта",
+    "addressMap": "Карта",
     "shippingAddressCity": "Місто доставки",
     "shippingAddressStreet": "Вулиця доставки",
     "shippingAddressCountry": "Країна доставки",
     "shippingAddressState": "Регіон доставки",
     "shippingAddressPostalCode": "Поштовий код доставки",
-    "shippingAddressMap": "Мапа (доставка)"
+    "shippingAddressMap": "Карта (доставка)"
   },
   "options": {
     "reminderTypes": {

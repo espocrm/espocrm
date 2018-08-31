@@ -9,7 +9,9 @@
     "priority": "Пріоритет",
     "type": "Тип",
     "description": "Опис",
-    "lead": "Лід"
+    "lead": "Лід",
+    "attachments": "Вкладення",
+    "inboundEmail": "Групова поштова скринька"
   },
   "links": {
     "account": "Контрагент",
@@ -20,7 +22,9 @@
     "tasks": "Завдання",
     "emails": "Електронні скриньки",
     "articles": "Статті Бази Знань",
-    "lead": "Лід"
+    "lead": "Лід",
+    "attachments": "Вкладення",
+    "inboundEmail": "Групова поштова скринька"
   },
   "options": {
     "status": {

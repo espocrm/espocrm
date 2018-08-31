@@ -21,5 +21,8 @@
       "notContains": "Не містить",
       "notHas": "Не містить"
     }
+  },
+  "labels": {
+    "Field": "Поле"
   }
 }

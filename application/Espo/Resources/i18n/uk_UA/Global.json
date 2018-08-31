@@ -28,7 +28,25 @@
     "ActionHistoryRecord": "Запис Історії дій",
     "AuthToken": "Токен аутентифікації",
     "UniqueId": "Унікальний ID",
-    "LastViewed": "Останні переглянуті"
+    "LastViewed": "Останні переглянуті",
+    "Settings": "Налаштування",
+    "FieldManager": "Менеджер полів",
+    "Integration": "Інтеграція",
+    "LayoutManager": "Менеджер макетів",
+    "Export": "Експортувати",
+    "DynamicLogic": "Логічність динаміки",
+    "DashletOptions": "Опції дашлету",
+    "Admin": "Адміністратор",
+    "Global": "Глобальний",
+    "Preferences": "Параметри",
+    "EmailAddress": "Поштова скринька",
+    "PhoneNumber": "Номер телефону",
+    "AuthLogRecord": "Запис Логу Аутентифікації",
+    "AuthFailLogRecord": "Запис Збою Логу Аутентифікації",
+    "EmailTemplateCategory": "Категорії шаблонів електронної пошти",
+    "LeadCapture": "Точка входу захопл. ліда",
+    "LeadCaptureLogRecord": "Запис логу захопл. ліда",
+    "ArrayValue": "Значення масиву"
   },
   "scopeNamesPlural": {
     "Email": "Листи",
@@ -58,7 +76,14 @@
     "ActionHistoryRecord": "Історія дій",
     "AuthToken": "Токени аутентифікації",
     "UniqueId": "Унікальні ідентифікатори",
-    "LastViewed": "Останній Розглянутий"
+    "LastViewed": "Останній Розглянутий",
+    "AuthLogRecord": "Лог Аутентифікації",
+    "AuthFailLogRecord": "Збій Логу Аутентифікації",
+    "EmailTemplateCategory": "Категорії шаблонів електронної пошти",
+    "Import": "Імпорт",
+    "LeadCapture": "Захоплення ліда",
+    "LeadCaptureLogRecord": "Лог захопл. ліда",
+    "ArrayValue": "Значення масиву"
   },
   "labels": {
     "Misc": "Різне",
@@ -150,7 +175,7 @@
     "Active": "Активний",
     "Inactive": "Неактивний",
     "Write your comment here": "Залиште свій коментар тут",
-    "Post": "Піблікувати",
+    "Post": "Публікувати",
     "Stream": "Потік",
     "Show more": "Показати більше",
     "Dashlet Options": "Опції дашлету",
@@ -196,7 +221,16 @@
     "Self-Assign": "Особисте доручення",
     "Self-Assigned": "Особисте призначення",
     "Return to Application": "Повернення до додатку",
-    "Select All Results": "Вибрати всі результати"
+    "Select All Results": "Вибрати всі результати",
+    "Expand": "Розгорнути",
+    "Collapse": "Згорнути",
+    "New notifications": "Нові сповіщення",
+    "Manage Categories": "Керування категоріями",
+    "Manage Folders": "Керування папками",
+    "Convert to": "Конвертувати в",
+    "View Personal Data": "Переглянути особисті дані",
+    "Personal Data": "Особисті дані",
+    "Erase": "Стерти"
   },
   "messages": {
     "pleaseWait": "Будь ласка, зачекайте...",
@@ -224,7 +258,7 @@
     "writeYourCommentHere": "Напишіть свій коментар",
     "writeMessageToUser": "Написати користувачу {user}",
     "typeAndPressEnter": "Напишіть і натисніть Enter",
-    "checkForNewNotifications": "Перевірити інформування",
+    "checkForNewNotifications": "Перевірити наявність нових сповіщень",
     "duplicate": "Створений Вами запис був дубльований",
     "dropToAttach": "Відкріпити прикріплення",
     "writeMessageToSelf": "Написати повідомлення в своєму потоці",
@@ -245,9 +279,15 @@
     "fieldShouldBeDate": "{field} має бути дійсною дата",
     "fieldShouldBeDatetime": "{field} має бути дійсним дата/час",
     "internalPostTitle": "Повідомлення бачитимуть тільки внутрішні користувачі",
+    "loading": "Завантаження...",
+    "saving": "Зберігається...",
+    "fieldMaxFileSizeError": "Файл не повинен перевищувати {max} Mb",
     "fieldShouldBeLess": "{field} мусить бути менше ніж {value}",
     "fieldShouldBeGreater": "{field} мусить бути більше ніж {value}",
-    "streamPostInfo": "Тип <strong>@username</strong> для згадування користувачів у дописі.\nПрипустимий синтаксис розмітки:`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[текст](url)"
+    "fieldIsUploading": "Виконується завантаження",
+    "streamPostInfo": "Тип <strong>@username</strong> для згадування користувачів у дописі.\nПрипустимий синтаксис розмітки:`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[текст](url)",
+    "erasePersonalDataConfirmation": "Позначені поля будуть стерті назавжди. Ви впевнені?",
+    "massPrintPdfMaxCountError": "Неможливо роздрукувати більше, ніж {maxCount} записів."
   },
   "boolFilters": {
     "onlyMy": "Тільки моє",
@@ -263,7 +303,9 @@
     "massUpdate": "Масове оновлення",
     "export": "Експортувати",
     "follow": "Підписатися",
-    "unfollow": "Відписатися"
+    "unfollow": "Відписатися",
+    "convertCurrency": "Конвертувати валюту",
+    "printPdf": "Друк в PDF"
   },
   "fields": {
     "name": "Ім'я",
@@ -271,7 +313,7 @@
     "lastName": "Прізвище",
     "salutationName": "Привітання",
     "assignedUser": "Відповідальний",
-    "assignedUsers": "Додані користувачі",
+    "assignedUsers": "Відповідальні користувачі",
     "emailAddress": "Емейл",
     "assignedUserName": "Ім'я призначеного користувача",
     "teams": "Команди",
@@ -283,7 +325,13 @@
     "address": "Адреса",
     "phoneNumber": "Телефон",
     "order": "Сортування",
-    "parent": "Батько"
+    "parent": "Батько",
+    "emailAddressData": "Дані електронної адреси",
+    "phoneNumberData": "Дані номера телефону",
+    "names": "Імена",
+    "emailAddressIsOptedOut": "Електронна адреса не бере участі в розсилці масових повідомлень",
+    "targetListIsOptedOut": "Відмовлено (Цільовий список)",
+    "type": "Тип"
   },
   "links": {
     "assignedUser": "Відповідальний",
@@ -494,7 +542,8 @@
       "vi_VN": "В'єтнамська",
       "zh_CN": "Спрощена китайська (китай)",
       "zh_HK": "Традиційна китайська (Гонконг)",
-      "zh_TW": "Традиційна китайська (Тайвань)"
+      "zh_TW": "Традиційна китайська (Тайвань)",
+      "es_MX": "Іспанська (Мексика)"
     },
     "dateSearchRanges": {
       "on": "На",
@@ -517,7 +566,8 @@
       "ever": "Коли-небудь",
       "isEmpty": "Порожньо",
       "olderThanXDays": "Давніше за Х дні",
-      "afterXDays": "Після Х днів"
+      "afterXDays": "Після Х днів",
+      "nextMonth": "Наступного місяця"
     },
     "searchRanges": {
       "isEmpty": "Пусто",
@@ -531,10 +581,13 @@
     },
     "varcharSearchRanges": {
       "equals": "Дорівнює",
-      "like": "Це довподоби (%)",
+      "like": "є як (%)",
       "endsWith": "Закінчується",
       "isEmpty": "Пусто",
-      "isNotEmpty": "Не пусто"
+      "isNotEmpty": "Не пусто",
+      "notLike": "не є як (%)",
+      "notContains": "Не містить",
+      "notEquals": "Не дорівнює"
     },
     "intSearchRanges": {
       "equals": "Дорівнює",
@@ -666,19 +719,20 @@
       }
     }
   },
-  "themes": {
-    "Sakura": "Сакура",
-    "Violet": "Фіолетовий",
-    "EspoVertical": "Espo бокова панель",
-    "SakuraVertical": "Сакура бокова панель",
-    "VioletVertical": "Фіолет бокова панель",
-    "Hazyblue": "Темно-синій",
-    "HazyblueVertical": "Темно-синій бокова панель"
-  },
   "streamMessagesMale": {
     "postTargetSelfAndOthers": "{user} написав для {target} та себе"
   },
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} відправила повідомлення для {target} та себе"
+  },
+  "durationUnits": {
+    "d": "д",
+    "h": "г",
+    "m": "хв",
+    "s": "с"
+  },
+  "listViewModes": {
+    "list": "Список",
+    "kanban": "Канбан"
   }
 }

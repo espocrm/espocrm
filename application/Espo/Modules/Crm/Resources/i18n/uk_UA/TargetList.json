@@ -7,7 +7,10 @@
     "endDate": "Дата Закінчення",
     "targetLists": "Цільові списки",
     "includingActionList": "Включаючи",
-    "excludingActionList": "Виключаючи"
+    "excludingActionList": "Виключаючи",
+    "optedOutCount": "Кількість користувачів, що зняли підписку",
+    "targetStatus": "Цільовий статус",
+    "isOptedOut": "Відмовлено"
   },
   "links": {
     "accounts": "Контрагенти",
@@ -23,11 +26,15 @@
       "Television": "Телебачення",
       "Radio": "Радіо",
       "Newsletter": "Розсилка"
+    },
+    "targetStatus": {
+      "Opted Out": "Відмовлено",
+      "Listed": "В списку"
     }
   },
   "labels": {
     "Create TargetList": "Створити цільовий список",
-    "Opted Out": "Відмовився",
+    "Opted Out": "Відмовлено",
     "Cancel Opt-Out": "Скасувати відмову",
     "Opt-Out": "Відписати"
   }

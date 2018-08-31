@@ -1,6 +1,7 @@
 {
   "layouts": {
     "detailConvert": "Конвертувати лід",
-    "listForAccount": "Список (для контрагента)"
+    "listForAccount": "Список (для контрагента)",
+    "listForContact": "Список (для контакту)"
   }
 }

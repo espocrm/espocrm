@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "username": "Ім'я користувача",
+    "ipAddress": "IP Адреса",
+    "requestTime": "Час запиту",
+    "createdAt": "Запит здійснено з",
+    "isDenied": "Відмовлено",
+    "denialReason": "Причина відмови",
+    "portal": "Портал",
+    "user": "Користувач",
+    "authToken": "Створений токен аутентифікації",
+    "requestUrl": "URL запиту",
+    "requestMethod": "Метод запиту",
+    "authTokenIsActive": "Токен аутентифікації активний"
+  },
+  "links": {
+    "authToken": "Створений токен аутентифікації",
+    "user": "Користувач",
+    "portal": "Портал",
+    "actionHistoryRecords": "Історія дій"
+  },
+  "presetFilters": {
+    "denied": "Відмовлено",
+    "accepted": "Прийнято"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Недійсні облікові дані",
+      "INACTIVE_USER": "Неактивний користувач",
+      "IS_PORTAL_USER": "Користувач порталу",
+      "IS_NOT_PORTAL_USER": "Не користувач порталу",
+      "USER_IS_NOT_IN_PORTAL": "Користувач не пов'язаний з порталом"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Ім'я",
+    "campaign": "Кампанія",
+    "isActive": "Активний",
+    "subscribeToTargetList": "Підписатися на цільовий список",
+    "subscribeContactToTargetList": "Підписатись на контакт, якщо існує",
+    "targetList": "Цільовий список",
+    "fieldList": "Список полів, щоб передавати",
+    "optInConfirmation": "Подвійне підтвердження підписки",
+    "optInConfirmationEmailTemplate": "Шаблон листа для підтвердження підписки",
+    "optInConfirmationLifetime": "Час підтвердження підписки (години)",
+    "optInConfirmationSuccessMessage": "Текст для показу після підтвердження підписки",
+    "leadSource": "Джерело ліда",
+    "apiKey": "Ключ API",
+    "targetTeam": "Команда",
+    "exampleRequestMethod": "Метод"
+  },
+  "links": {
+    "targetList": "Цільовий список",
+    "campaign": "Кампанія",
+    "optInConfirmationEmailTemplate": "Шаблон листа для підтвердження підписки",
+    "targetTeam": "Команда",
+    "logRecords": "Лоґ"
+  },
+  "labels": {
+    "Create LeadCapture": "Створити точку входу",
+    "Generate New API Key": "Згенерувати новий ключ API",
+    "Request": "Запит",
+    "Confirm Opt-In": "Підтвердити підписку"
+  },
+  "messages": {
+    "generateApiKey": "Створити новий ключ API",
+    "optInConfirmationExpired": "Термін дії посилання на підтвердження підписки закінчився.",
+    "optInIsConfirmed": "Підписку підтверджено."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown підтримується."
+  }
+}

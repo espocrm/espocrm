@@ -14,7 +14,9 @@
     "amountWeightedConverted": "Зважена сума",
     "campaign": "Кампанія",
     "originalLead": "Початковий Лід",
-    "amountCurrency": "Валюта суми"
+    "amountCurrency": "Валюта суми",
+    "contactRole": "Роль контакту",
+    "lastStage": "Остання стадія"
   },
   "links": {
     "contacts": "Контакти",

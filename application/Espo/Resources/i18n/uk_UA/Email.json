@@ -15,7 +15,6 @@
     "attachments": "Вкладення",
     "selectTemplate": "Обрати шаблон",
     "fromEmailAddress": "З адреси",
-    "toEmailAddresses": "На адресу",
     "emailAddress": "Поштова скринька",
     "deliveryDate": "Дата доставки",
     "account": "Контраґент",
@@ -34,13 +33,33 @@
     "inboundEmails": "Група облікових записів",
     "emailAccounts": "Особисті облікові записи",
     "hasAttachment": "Має Вкладення",
-    "sentBy": "Надіслав (Користувач)"
+    "sentBy": "Надіслав (Користувач)",
+    "assignedUsers": "Відповідальні користувачі",
+    "bodyPlain": "Тіло (просте)",
+    "ccEmailAddresses": "CC Електронна адреса",
+    "messageId": "Id повідомлення",
+    "messageIdInternal": "Id повідомлення (внутрішній)",
+    "folderId": "Id папки",
+    "fromName": "Ім'я відправника",
+    "fromString": "Рядок Від",
+    "isSystem": "Системний",
+    "toEmailAddresses": "Електронні адреси отримувачів",
+    "bccEmailAddresses": "BCC Електронні адреси",
+    "replyToEmailAddresses": "Відповідь на адреси"
   },
   "links": {
     "replied": "Відповіли",
     "replies": "Відповіді",
     "inboundEmails": "Група облікових записів",
-    "emailAccounts": "Особисті облікові записи"
+    "emailAccounts": "Особисті облікові записи",
+    "assignedUsers": "Відповідальні користувачі",
+    "sentBy": "Надіслав (Користувач)",
+    "attachments": "Вкладення",
+    "fromEmailAddress": "Електронна адреса відправника",
+    "toEmailAddresses": "Електронні адреси отримувачів",
+    "ccEmailAddresses": "CC Електронні адреси",
+    "bccEmailAddresses": "BCC Електронні адреси",
+    "replyToEmailAddresses": "Відповідь на адреси"
   },
   "options": {
     "status": {
@@ -82,7 +101,8 @@
     "noSmtpSetup": "Не налаштовано SMTP. {link}.",
     "testEmailSent": "Тестового листа було відправлено",
     "emailSent": "Листа було відправлено",
-    "savedAsDraft": "Збережено як чернетку"
+    "savedAsDraft": "Збережено як чернетку",
+    "confirmInsertTemplate": "Тіло електронного листа буде втрачено. Ви впевнені, що хочете вставити шаблон?"
   },
   "presetFilters": {
     "sent": "Відправлено",

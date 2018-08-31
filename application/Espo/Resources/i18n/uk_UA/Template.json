@@ -11,7 +11,10 @@
     "bottomMargin": "Нижнє поле",
     "printFooter": "Друкувати нижній колонтитул",
     "footerPosition": "Положення нижнього колонтитула",
-    "variables": "Наявні наповнювачі"
+    "variables": "Наявні наповнювачі",
+    "pageOrientation": "Орієнтація сторінки",
+    "pageFormat": "Формат паперу",
+    "fontFace": "Шрифт"
   },
   "labels": {
     "Create Template": "Створити шаблон"
@@ -19,5 +22,15 @@
   "tooltips": {
     "footer": "Використати {pageNumber} надрукувати номер сторінки.",
     "variables": "Копювати-вставити потрібний наповнювач для заголовка, тіла або нижнього колонтитула."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Книжкова",
+      "Landscape": "Альбомна"
+    },
+    "placeholders": {
+      "today": "Сьогодні (дата)",
+      "now": "Зараз (дата-час)"
+    }
   }
 }

@@ -6,12 +6,14 @@
     "target": "Ціль",
     "targetType": "Тип цілі",
     "authToken": "Токен аутентифікації",
-    "ipAddress": "IP адреса"
+    "ipAddress": "IP адреса",
+    "authLogRecord": "Запис Логу Аутентифікації"
   },
   "links": {
     "authToken": "Токен аутентифікації",
     "user": "Користувач",
-    "target": "Ціль"
+    "target": "Ціль",
+    "authLogRecord": "Запис Логу Аутентифікації"
   },
   "presetFilters": {
     "onlyMy": "Тільки моє"

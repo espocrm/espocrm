@@ -19,7 +19,8 @@
     "smtpAuth": "SMTP Аутентифікація",
     "smtpSecurity": "SMTP Безпека",
     "smtpUsername": "SMTP Ім'я користувача",
-    "smtpPassword": "SMTP Пароль"
+    "smtpPassword": "SMTP Пароль",
+    "useImap": "Отримувати електронні листи"
   },
   "links": {
     "filters": "Фільтри",

@@ -18,7 +18,8 @@
       "CheckEmailAccounts": "Перевірити особисті емейл-акаунти",
       "SendEmailReminders": "Відправити нагадування емейлом",
       "AuthTokenControl": "Контроль токенів аутентифікації",
-      "SendEmailNotifications": "Надіслати сповіщення на електронну пошту"
+      "SendEmailNotifications": "Надіслати сповіщення на електронну пошту",
+      "CheckNewVersion": "Перевірити наявність нової версії"
     },
     "cronSetup": {
       "linux": "Замітка: Додайте цей рядок до файлу crontab для запуску Планувальника Завдань Espo:",

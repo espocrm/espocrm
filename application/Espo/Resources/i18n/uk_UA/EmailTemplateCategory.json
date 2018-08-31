@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Створити категорію",
+    "Manage Categories": "Керування категоріями",
+    "EmailTemplates": "Шаблони листів"
+  },
+  "fields": {
+    "order": "Сортування"
+  },
+  "links": {
+    "emailTemplates": "Шаблони листів"
+  }
+}

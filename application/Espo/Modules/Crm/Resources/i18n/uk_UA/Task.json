@@ -10,10 +10,13 @@
     "isOverdue": "Прострочено",
     "account": "Контрагент",
     "attachments": "Вкладення",
-    "reminders": "Нагадування"
+    "reminders": "Нагадування",
+    "contact": "Контакт"
   },
   "links": {
-    "attachments": "Вкладення"
+    "attachments": "Вкладення",
+    "account": "Контраґент",
+    "contact": "Контакт"
   },
   "options": {
     "status": {

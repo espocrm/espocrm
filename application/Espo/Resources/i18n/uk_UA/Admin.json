@@ -52,9 +52,13 @@
     "Notifications": "Оповіщення",
     "Jobs": "Робота",
     "Reset to Default": "Скинути",
-    "Email Filters": "Фільтри",
+    "Email Filters": "Фільтри пошти",
     "Portal Users": "Портал користувачів",
-    "Action History": "Історія дій"
+    "Action History": "Історія дій",
+    "Label Manager": "Менеджер міток",
+    "Auth Log": "Лог Аутентифікації",
+    "Lead Capture": "Захоплення ліда",
+    "Attachments": "Вкладення"
   },
   "layouts": {
     "list": "Список",
@@ -67,7 +71,13 @@
     "sidePanelsDetail": "Бічні панелі (Detail)",
     "sidePanelsEdit": "Бічні панелі (Edit)",
     "sidePanelsDetailSmall": "Бічні панелі (Detail Small)",
-    "sidePanelsEditSmall": "Бічні панелі (Edit Small)"
+    "sidePanelsEditSmall": "Бічні панелі (Edit Small)",
+    "detailPortal": "Детальний Вид (Portal)",
+    "detailSmallPortal": "Детальний Вид (Small, Portal)",
+    "listSmallPortal": "Список (Small, Portal)",
+    "listPortal": "Список (Portal)",
+    "relationshipsPortal": "Панелі зв'язків (Portal)",
+    "kanban": "Канбан"
   },
   "fieldTypes": {
     "address": "Адреса",
@@ -80,7 +90,6 @@
     "bool": "Булевий тип",
     "currency": "Валюта",
     "date": "Дата",
-    "datetime": "Дата, час",
     "email": "Емейл",
     "enum": "Список",
     "enumInt": "Список цілі числа",
@@ -93,15 +102,20 @@
     "file": "Файл",
     "image": "Зображення",
     "multiEnum": "Множинний список",
-    "attachmentMultiple": "Кілька прикріплень",
+    "attachmentMultiple": "Кілька вкладень",
     "rangeInt": "Цілочисельний діапазон",
     "rangeFloat": "Дробовочисельний діапазон",
     "rangeCurrency": "Грошовий діопазон",
     "wysiwyg": "Редактор",
     "map": "Карта",
     "currencyConverted": "Валюта (ковертована)",
+    "colorpicker": "Вибір кольору",
     "int": "Ціле число",
-    "number": "Номер"
+    "number": "Номер",
+    "jsonArray": "Масив Json",
+    "jsonObject": "Об'єкт Json",
+    "datetime": "Дата-час",
+    "datetimeOptional": "Дата/Дата-час"
   },
   "fields": {
     "type": "Тип",
@@ -141,7 +155,12 @@
     "dynamicLogicOptions": "Умовні варіанти",
     "probabilityMap": "Стадія імовірності (%)",
     "readOnly": "Виключно читання",
-    "noEmptyString": "Немає вільного рядка"
+    "noEmptyString": "Немає вільного рядка",
+    "maxFileSize": "Максимальний розмір файлу (Mb)",
+    "isPersonalData": "Особисті дані",
+    "useIframe": "Використати Iframe",
+    "useNumericFormat": "Використовувати цифровий формат",
+    "strip": "Стрип"
   },
   "messages": {
     "selectEntityType": "Оберіть тип сутности у лівому меню.",
@@ -155,7 +174,11 @@
     "upgradeDone": "EspoCRM оновлено до версії <strong>{version}</strong>.",
     "upgradeBackup": "Перед оновленням рекомендуємо створити резевну копію файлів EspoCRM та даних",
     "thousandSeparatorEqualsDecimalMark": "Розділювач тисячних не може бути таким самим, як розділювач десяткових.",
-    "userHasNoEmailAddress": "В користувача не вказана адреса електронної скриньки."
+    "userHasNoEmailAddress": "В користувача не вказана адреса електронної скриньки.",
+    "newVersionIsAvailable": "Нова версія EspoCRM {latestVersion} доступна.",
+    "uninstallConfirmation": "Ви впевнені, що хочете видалити розширення?",
+    "cronIsNotConfigured": "Заплановані завдання не працюють. Отже, вхідні електронні листи, сповіщення та нагадування не працюють. Будь ласка, дотримуйтесь інструкцій (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), щоб налаштувати cron job.",
+    "newExtensionVersionIsAvailable": "Нова {extensionName} версія {latestVersion} доступна."
   },
   "descriptions": {
     "settings": "Системні налаштування додатку.",
@@ -183,7 +206,11 @@
     "inboundEmails": "Групувати поштові акаунти IMAP. Імпорт пошти та інтерфейс доступу до звернення через електронну пошту.",
     "portalUsers": "Користувачі порталу.",
     "emailFilters": "Електронні повідомлення, які відповідають вказаному фільтру, імпортуватися не будуть",
-    "actionHistory": "Лоґ дій користуча."
+    "actionHistory": "Лоґ дій користуча.",
+    "labelManager": "Налаштування міток програми.",
+    "authLog": "Історія входу",
+    "leadCapture": "Точки входу API для Web-to-Lead.",
+    "attachments": "Всі вкладені файли зберігаються в системі."
   },
   "options": {
     "previewSize": {

@@ -14,7 +14,8 @@
     "boolFilterList": "Додаткові фільтри",
     "sortBy": "Сортування (поле)",
     "sortDirection": "Сортування (напрямок)",
-    "expandedLayout": "Макет"
+    "expandedLayout": "Макет",
+    "dateFilter": "Фільтр дати"
   },
   "options": {
     "mode": {

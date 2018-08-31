@@ -5,7 +5,7 @@
     "storeSentEmails": "Зберігати надіслані повідомлення",
     "startAt": "Дата початку",
     "fromAddress": "Адреса відправника",
-    "fromName": "Від імені",
+    "fromName": "Ім'я відправника",
     "replyToAddress": "Відповідь на адресу",
     "replyToName": "Відповідь до назви",
     "campaign": "Кампанія",
@@ -13,7 +13,8 @@
     "inboundEmail": "Обліковий запис електронної пошти",
     "targetLists": "Цільові списки",
     "excludingTargetLists": "Виключаючи цільові списки",
-    "optOutEntirely": "Цілковита відмова"
+    "optOutEntirely": "Цілковита відмова",
+    "smtpAccount": "SMTP Акаунт"
   },
   "links": {
     "targetLists": "Цільові списки",
@@ -35,7 +36,10 @@
   },
   "labels": {
     "Create MassEmail": "Створити масову розсилку",
-    "Send Test": "Відправити тест"
+    "Send Test": "Відправити тест",
+    "System SMTP": "Система SMTP",
+    "system": "система",
+    "group": "група"
   },
   "messages": {
     "selectAtLeastOneTarget": "Виберіть принаймні одного отримувача.",
@@ -44,7 +48,8 @@
   "tooltips": {
     "optOutEntirely": "Адреси електронної пошти одержувачів, які зняли підписку, більше не будуть отримувати будь-яких масових повідомлень електронної пошти.",
     "targetLists": "Хто має отримувати повідомлення",
-    "excludingTargetLists": "Хто не має отримувати повідомлень"
+    "excludingTargetLists": "Хто не має отримувати повідомлень",
+    "storeSentEmails": "Електронні листи будуть зберігатися в CRM."
   },
   "presetFilters": {
     "actual": "Актуальні",

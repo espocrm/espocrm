@@ -19,7 +19,13 @@
     "revenue": "Виручка",
     "revenueConverted": "Дохід (в перерахунку)",
     "budget": "Бюджет",
-    "budgetConverted": "Бюджет (конвертований)"
+    "budgetConverted": "Бюджет (конвертований)",
+    "contactsTemplate": "Шаблон контактів",
+    "leadsTemplate": "Шаблон лідів",
+    "accountsTemplate": "Шаблон аккаунтів",
+    "usersTemplate": "Шаблон користувачів",
+    "mailMergeOnlyWithAddress": "Пропустити записи без заповненої адреси",
+    "optedInCount": "Підписаний"
   },
   "links": {
     "targetLists": "Цільові списки",
@@ -30,7 +36,11 @@
     "opportunities": "Угоди",
     "campaignLogRecords": "Лоґ",
     "massEmails": "Масові розсилки",
-    "trackingUrls": "Відстежувані URLs"
+    "trackingUrls": "Відстежувані URLs",
+    "contactsTemplate": "Шаблон контактів",
+    "leadsTemplate": "Шаблон лідів",
+    "accountsTemplate": "Шаблон аккаунтів",
+    "usersTemplate": "Шаблон користувачів"
   },
   "options": {
     "type": {
@@ -59,7 +69,9 @@
     "Email Templates": "Шаблони електронної пошти",
     "Unsubscribe again": "Відписатися знову",
     "Subscribe again": "Підписатися знову",
-    "Create Target List": "Створити Цільовий список"
+    "Create Target List": "Створити Цільовий список",
+    "Mail Merge": "Злиття листів",
+    "Generate Mail Merge PDF": "Згенерувати PDF-злиття"
   },
   "presetFilters": {
     "active": "Активні"

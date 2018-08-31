@@ -9,12 +9,14 @@
     "application": "Додаток",
     "queueItem": "Елемент черги",
     "stringData": "Рядок даних",
-    "stringAdditionalData": "Рядок додаткової інформації"
+    "stringAdditionalData": "Рядок додаткової інформації",
+    "isTest": "Тестовий"
   },
   "links": {
     "queueItem": "Пункт черги",
     "parent": "Батько",
-    "object": "Об'єкт"
+    "object": "Об'єкт",
+    "campaign": "Кампанія"
   },
   "options": {
     "action": {
@@ -23,7 +25,8 @@
       "Opted Out": "Відмовлено",
       "Bounced": "Відшито",
       "Clicked": "Клікнуто",
-      "Lead Created": "Лід створено"
+      "Lead Created": "Лід створено",
+      "Opted In": "Підписаний"
     }
   },
   "labels": {
@@ -35,6 +38,7 @@
     "optedOut": "Відмовлено",
     "bounced": "Відшито",
     "clicked": "Клікнуто",
-    "leadCreated": "Лід створено"
+    "leadCreated": "Лід створено",
+    "optedIn": "Підписаний"
   }
 }

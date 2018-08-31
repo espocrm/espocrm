@@ -15,6 +15,6 @@
     "GoogleMaps": "<p>Отримати ключ доступу до API можна <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">тут</a>.</p>"
   },
   "titles": {
-    "GoogleMaps": "Google Mапи"
+    "GoogleMaps": "Google Карти"
   }
 }
