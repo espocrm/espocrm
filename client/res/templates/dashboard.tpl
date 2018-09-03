@@ -1,4 +1,3 @@
-<link href="{{basePath}}client/css/gridstack.min.css" rel="stylesheet">
 
 <div class="page-header dashboard-header">
     <div class="row">

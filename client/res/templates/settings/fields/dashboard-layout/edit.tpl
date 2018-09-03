@@ -1,4 +1,3 @@
-<link href="{{basePath}}client/css/gridstack.min.css" rel="stylesheet">
 
 <div class="button-container clearfix">
     <button class="btn btn-default btn-icon" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><span class="fas fa-pencil-alt fa-sm"></span></button>

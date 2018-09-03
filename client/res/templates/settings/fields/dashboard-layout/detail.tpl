@@ -1,4 +1,3 @@
-<link href="{{basePath}}client/css/gridstack.min.css" rel="stylesheet">
 
 <div class="button-container clearfix">
     {{#ifNotEqual dashboardLayout.length 1}}
