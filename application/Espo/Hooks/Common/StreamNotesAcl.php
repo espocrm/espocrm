@@ -108,7 +108,7 @@ class StreamNotesAcl extends \Espo\Core\Hooks\Base
                         'relatedId' => null
                     ]
                 ]
-            ])->find();
+            ])->select(['id'])->find();
 
             foreach ($noteList as $note) {
                 if ($teamsAttributeIsChanged) {
