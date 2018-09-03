@@ -46,6 +46,8 @@ class Base implements Injectable
 
     protected $injections = array();
 
+    protected $ownerUserIdAttribute = null;
+
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
@@ -281,5 +283,23 @@ class Base implements Injectable
 
         return false;
     }
-}
 
+    public function getOwnerUserIdAttribute(Entity $entity)
+    {
+        if ($this->ownerUserIdAttribute) {
+            return $this->ownerUserIdAttribute;
+        }
+
+        if ($entity->hasLinkMultipleField('assignedUsers')) {
+            return 'assignedUsersIds';
+        }
+
+        if ($entity->hasAttribute('assignedUserId')) {
+            return 'assignedUserId';
+        }
+
+        if ($entity->hasAttribute('createdById')) {
+            return 'createdById';
+        }
+    }
+}

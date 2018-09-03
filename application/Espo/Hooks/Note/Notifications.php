@@ -40,11 +40,22 @@ class Notifications extends \Espo\Core\Hooks\Base
     protected function init()
     {
         $this->addDependency('serviceFactory');
+        $this->addDependency('container');
     }
 
     protected function getServiceFactory()
     {
         return $this->getInjection('serviceFactory');
+    }
+
+    protected function getInternalAclManager()
+    {
+        return $this->getInjection('container')->get('internalAclManager');
+    }
+
+    protected function getPortalAclManager()
+    {
+        return $this->getInjection('container')->get('portalAclManager');
     }
 
     protected function getMentionedUserIdList($entity)
@@ -60,7 +71,7 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $mentionedUserList;
     }
 
-    protected function getSubscriberIdList($parentType, $parentId, $isInternal = false)
+    protected function getSubscriberList($parentType, $parentId, $isInternal = false)
     {
         $pdo = $this->getEntityManager()->getPDO();
 
@@ -80,15 +91,14 @@ class Notifications extends \Espo\Core\Hooks\Base
                     user.is_portal_user = 0
             ";
         }
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $userIdList = [];
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            if ($this->getUser()->id != $row['userId']) {
-                $userIdList[] = $row['userId'];
-            }
-        }
-        return $userIdList;
+
+        $userList = $this->getEntityManager()->getRepository('User')->where([
+            'isActive' => true
+        ])->select(['id', 'isPortalUser', 'isAdmin'])->find([
+            'customWhere' => "AND user.id IN (".$sql.")"
+        ]);
+
+        return $userList;
     }
 
     public function afterSave(Entity $entity)
@@ -99,13 +109,77 @@ class Notifications extends \Espo\Core\Hooks\Base
             $superParentType = $entity->get('superParentType');
             $superParentId = $entity->get('superParentId');
 
-            $userIdList = [];
+            $notifyUserIdList = [];
 
             if ($parentType && $parentId) {
-				$userIdList = array_merge($userIdList, $this->getSubscriberIdList($parentType, $parentId, $entity->get('isInternal')));
-                if ($superParentType && $superParentId) {
-                    $userIdList = array_merge($userIdList, $this->getSubscriberIdList($superParentType, $superParentId, $entity->get('isInternal')));
+				$userList =  $this->getSubscriberList($parentType, $parentId, $entity->get('isInternal'));
+                $userIdMetList = [];
+                foreach ($userList as $user) {
+                    $userIdMetList[] = $user->id;
                 }
+                if ($superParentType && $superParentId) {
+                    $additionalUserList = $this->getSubscriberList($superParentType, $superParentId, $entity->get('isInternal'));
+                    foreach ($additionalUserList as $user) {
+                        if ($user->isPortal()) continue;
+                        if (in_array($user->id, $userIdMetList)) continue;
+                        $userIdMetList[] = $user->id;
+                        $userList[] = $user;
+                    }
+                }
+
+                if ($entity->get('relatedType')) {
+                    $targetType = $entity->get('relatedType');
+                } else {
+                    $targetType = $parentType;
+                }
+
+                $teamIdList = $entity->getLinkMultipleIdList('teams');
+                $userIdList = $entity->getLinkMultipleIdList('users');
+
+                foreach ($userList as $user) {
+                    if ($user->isAdmin()) {
+                        $notifyUserIdList[] = $user->id;
+                        continue;
+                    }
+
+                    if ($user->isPortal()) {
+                        if ($entity->get('relatedType')) {
+                            continue;
+                        } else {
+                            $notifyUserIdList[] = $user->id;
+                        }
+                        continue;
+                    }
+
+                    $level = $this->getInternalAclManager()->getLevel($user, $targetType, 'read');
+
+                    if ($level === 'all') {
+                        $notifyUserIdList[] = $user->id;
+                        continue;
+                    } else if ($level === 'team') {
+                        if (in_array($user->id, $userIdList)) {
+                            $notifyUserIdList[] = $user->id;
+                            continue;
+                        }
+
+                        if (!empty($teamIdList)) {
+                            $userTeamIdList = $user->getLinkMultipleIdList('teams');
+                            foreach ($teamIdList as $teamId) {
+                                if (in_array($teamId, $userTeamIdList)) {
+                                    $notifyUserIdList[] = $user->id;
+                                    break;
+                                }
+                            }
+                        }
+                        continue;
+                    } else if ($level === 'own') {
+                        if (in_array($user->id, $userIdList)) {
+                            $notifyUserIdList[] = $user->id;
+                            continue;
+                        }
+                    }
+                }
+
             } else {
                 $targetType = $entity->get('targetType');
                 if ($targetType === 'users') {
@@ -113,8 +187,8 @@ class Notifications extends \Espo\Core\Hooks\Base
                     if (is_array($targetUserIdList)) {
                         foreach ($targetUserIdList as $userId) {
                             if ($userId === $this->getUser()->id) continue;
-                            if (in_array($userId, $userIdList)) continue;
-                            $userIdList[] = $userId;
+                            if (in_array($userId, $notifyUserIdList)) continue;
+                            $notifyUserIdList[] = $userId;
                         }
                     }
                 } else if ($targetType === 'teams') {
@@ -130,8 +204,8 @@ class Notifications extends \Espo\Core\Hooks\Base
                             ));
                             foreach ($targetUserList as $user) {
                                 if ($user->id === $this->getUser()->id) continue;
-                                if (in_array($user->id, $userIdList)) continue;
-                                $userIdList[] = $user->id;
+                                if (in_array($user->id, $notifyUserIdList)) continue;
+                                $notifyUserIdList[] = $user->id;
                             }
                         }
                     }
@@ -148,8 +222,8 @@ class Notifications extends \Espo\Core\Hooks\Base
                             ));
                             foreach ($targetUserList as $user) {
                                 if ($user->id === $this->getUser()->id) continue;
-                                if (in_array($user->id, $userIdList)) continue;
-                                $userIdList[] = $user->id;
+                                if (in_array($user->id, $notifyUserIdList)) continue;
+                                $notifyUserIdList[] = $user->id;
                             }
                         }
                     }
@@ -162,22 +236,22 @@ class Notifications extends \Espo\Core\Hooks\Base
                     ));
                     foreach ($targetUserList as $user) {
                         if ($user->id === $this->getUser()->id) continue;
-                        $userIdList[] = $user->id;
+                        $notifyUserIdList[] = $user->id;
                     }
                 }
             }
 
-            $userIdList = array_unique($userIdList);
+            $notifyUserIdList = array_unique($notifyUserIdList);
 
-            foreach ($userIdList as $i => $userId) {
+            foreach ($notifyUserIdList as $i => $userId) {
                 if ($entity->isUserIdNotified($userId)) {
-                    unset($userIdList[$i]);
+                    unset($notifyUserIdList[$i]);
                 }
             }
-            $userIdList = array_values($userIdList);
+            $notifyUserIdList = array_values($notifyUserIdList);
 
-            if (!empty($userIdList)) {
-            	$this->getNotificationService()->notifyAboutNote($userIdList, $entity);
+            if (!empty($notifyUserIdList)) {
+                $this->getNotificationService()->notifyAboutNote($notifyUserIdList, $entity);
             }
         }
     }
@@ -190,4 +264,3 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $this->notificationService;
     }
 }
-

@@ -247,6 +247,14 @@ class Container
         );
     }
 
+    protected function loadInternalAclManager()
+    {
+        $className = $this->getServiceClassName('acl', '\\Espo\\Core\\AclManager');
+        return new $className(
+            $this->get('container')
+        );
+    }
+
     protected function loadAcl()
     {
         $className = $this->getServiceClassName('acl', '\\Espo\\Core\\Acl');

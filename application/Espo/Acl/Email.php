@@ -34,6 +34,7 @@ use \Espo\ORM\Entity;
 
 class Email extends \Espo\Core\Acl\Base
 {
+    protected $ownerUserIdAttribute = 'usersIds';
 
     public function checkEntityRead(EntityUser $user, Entity $entity, $data)
     {
@@ -118,4 +119,3 @@ class Email extends \Espo\Core\Acl\Base
         return false;
     }
 }
-

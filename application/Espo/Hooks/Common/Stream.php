@@ -178,7 +178,7 @@ class Stream extends \Espo\Core\Hooks\Base
         return $userIdList;
     }
 
-    public function afterSave(Entity $entity, array $options = array())
+    public function afterSave(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
 
