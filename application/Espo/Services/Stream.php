@@ -385,12 +385,18 @@ class Stream extends \Espo\Core\Services\Base
                 $selectParamsSubscriptionTeam = $selectParamsSubscription;
                 $selectParamsSubscriptionTeam['distinct'] = true;
                 $selectParamsSubscriptionTeam['leftJoins'][] = 'teams';
+                $selectParamsSubscriptionTeam['leftJoins'][] = 'users';
                 $selectParamsSubscriptionTeam['whereClause'][] = [
                     [
                         'relatedId!=' => null,
                         'relatedType=' => $onlyTeamEntityTypeList
                     ],
-                    'teamsMiddle.teamId' => $teamIdList
+                    [
+                        'OR' => [
+                            'teamsMiddle.teamId' => $teamIdList,
+                            'usersMiddle.userId' => $user->id
+                        ]
+                    ]
                 ];
                 $selectParamsList[] = $selectParamsSubscriptionTeam;
             }
@@ -456,6 +462,7 @@ class Stream extends \Espo\Core\Services\Base
                 $selectParamsSubscriptionTeam = $selectParamsSubscriptionSuper;
                 $selectParamsSubscriptionTeam['distinct'] = true;
                 $selectParamsSubscriptionTeam['leftJoins'][] = 'teams';
+                $selectParamsSubscriptionTeam['leftJoins'][] = 'users';
                 $selectParamsSubscriptionTeam['whereClause'][] = [
                     'OR' => [
                         [
@@ -467,7 +474,12 @@ class Stream extends \Espo\Core\Services\Base
                             'parentType=' => $onlyTeamEntityTypeList
                         ]
                     ],
-                    'teamsMiddle.teamId' => $teamIdList
+                    [
+                        'OR' => [
+                            'teamsMiddle.teamId' => $teamIdList,
+                            'usersMiddle.userId' => $user->id
+                        ]
+                    ]
                 ];
                 $selectParamsList[] = $selectParamsSubscriptionTeam;
             }
@@ -764,7 +776,12 @@ class Stream extends \Espo\Core\Services\Base
                                     'parentType=' => $onlyTeamEntityTypeList
                                 ]
                             ],
-                            'teamsMiddle.teamId' => $this->getUser()->getTeamIdList()
+                            [
+                                'OR' => [
+                                    'teamsMiddle.teamId' => $this->getUser()->getTeamIdList(),
+                                    'usersMiddle.userId' => $this->getUser()->id
+                                ]
+                            ]
                         ],
                         [
                             'OR' => [
