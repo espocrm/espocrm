@@ -1,6 +1,6 @@
 <p>{{assignerUserName}} hat Ihnen {{entityType}} zugewiesen.</p>
 <p><strong>{{name}}</strong></p>
-<p>Débute à: {{dateStart}}</p>
+<p>Beginn: {{dateStart}}</p>
 {{#if parentName}}
 <p>Bezieht sich auf: {{parentName}}</p>
 {{/if}}
