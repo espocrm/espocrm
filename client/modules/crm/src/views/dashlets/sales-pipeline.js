@@ -52,14 +52,6 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
 
         prepareData: function (response) {
             var d = [];
-            /*for (var label in response) {
-                var value = response[label];
-                d.push({
-                    stageTranslated: this.getLanguage().translateOption(label, 'stage', 'Opportunity'),
-                    value: value,
-                    stage: label
-                });
-            }*/
 
             response.dataList.forEach(function (item) {
                 d.push({
