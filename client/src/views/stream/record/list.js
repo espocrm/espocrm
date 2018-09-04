@@ -54,9 +54,9 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
                 noEdit: this.options.noEdit,
                 optionsToPass: ['acl'],
                 name: this.type + '-' + model.name,
-                el: this.options.el + ' li[data-id="' + model.id + '"]'
+                el: this.options.el + ' li[data-id="' + model.id + '"]',
+                setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
             }, callback);
-
         },
 
         buildRows: function (callback) {
@@ -77,12 +77,14 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
                                 callback();
                             }
                             this.wait(false);
+                            this.trigger('after:build-rows');
                         }
                     }.bind(this));
                 }
             } else {
                 if (typeof callback == 'function') {
                     callback();
+                    this.trigger('after:build-rows');
                 }
             }
         },
