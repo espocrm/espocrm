@@ -122,13 +122,24 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                 grid: {
                     color: this.tickColor,
                     verticalLines: false,
-                    outline: 'ew',
+                    outline: '',
                     tickColor: this.tickColor
                 },
                 yaxis: {
                     min: 0,
                     max: this.max + 0.08 * this.max,
-                    showLabels: false
+                    showLabels: true,
+                    color: this.textColor,
+                    tickFormatter: function (value) {
+                        if (value == 0) {
+                            return '';
+                        }
+
+                        if (value % 1 == 0) {
+                            return self.currencySymbol + self.formatNumber(Math.floor(value)).toString();
+                        }
+                        return '';
+                    }
                 },
                 xaxis: {
                     min: 0,
