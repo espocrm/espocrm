@@ -92,12 +92,29 @@ class Opportunity extends \Espo\Services\Record
 
         $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
-        $result = array();
+        $data = [];
         foreach ($rows as $row) {
-            $result[$row[$stageField]] = floatval($row['amount']);
+            $data[$row[$stageField]] = floatval($row['amount']);
         }
 
-        return $result;
+        $dataList = [];
+
+        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        foreach ($stageList as $stage) {
+            if (in_array($stage, $lostStageList)) continue;
+            if (!in_array($stage, $lostStageList) && !isset($data[$stage])) {
+                $data[$stage] = 0.0;
+            }
+
+            $dataList[] = [
+                'stage' => $stage,
+                'value' => $data[$stage]
+            ];
+        }
+
+        return [
+            'dataList' => $dataList
+        ];
     }
 
     public function reportByLeadSource($dateFilter, $dateFrom = null, $dateTo = null)
