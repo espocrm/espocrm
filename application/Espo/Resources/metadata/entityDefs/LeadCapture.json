@@ -84,7 +84,8 @@
         "exampleRequestPayload": {
             "type": "text",
             "notStorable": true,
-            "readOnly": true
+            "readOnly": true,
+            "seeMoreDisabled": true
         },
         "createdAt": {
             "type": "datetime",
