@@ -384,8 +384,8 @@ class Stream extends \Espo\Core\Services\Base
             if (count($onlyTeamEntityTypeList)) {
                 $selectParamsSubscriptionTeam = $selectParamsSubscription;
                 $selectParamsSubscriptionTeam['distinct'] = true;
-                $selectParamsSubscriptionTeam['leftJoins'][] = 'teams';
-                $selectParamsSubscriptionTeam['leftJoins'][] = 'users';
+                $selectParamsSubscriptionTeam['leftJoins'][] = ['noteTeam', 'noteTeam', ['noteTeam.noteId=:' => 'id', 'noteTeam.deleted' => false]];
+                $selectParamsSubscriptionTeam['leftJoins'][] = ['noteUser', 'noteUser', ['noteUser.noteId=:' => 'id', 'noteUser.deleted' => false]];
                 $selectParamsSubscriptionTeam['whereClause'][] = [
                     [
                         'relatedId!=' => null,
@@ -393,8 +393,8 @@ class Stream extends \Espo\Core\Services\Base
                     ],
                     [
                         'OR' => [
-                            'teamsMiddle.teamId' => $teamIdList,
-                            'usersMiddle.userId' => $user->id
+                            'noteTeam.teamId' => $teamIdList,
+                            'noteUser.userId' => $user->id
                         ]
                     ]
                 ];
@@ -404,13 +404,13 @@ class Stream extends \Espo\Core\Services\Base
             if (count($onlyOwnEntityTypeList)) {
                 $selectParamsSubscriptionOwn = $selectParamsSubscription;
                 $selectParamsSubscriptionOwn['distinct'] = true;
-                $selectParamsSubscriptionOwn['leftJoins'][] = 'users';
+                $selectParamsSubscriptionOwn['leftJoins'][] = ['noteUser', 'noteUser', ['noteUser.noteId=:' => 'id', 'noteUser.deleted' => false]];
                 $selectParamsSubscriptionOwn['whereClause'][] = [
                     [
                         'relatedId!=' => null,
                         'relatedType=' => $onlyOwnEntityTypeList
                     ],
-                    'usersMiddle.userId' => $user->id
+                    'noteUser.userId' => $user->id
                 ];
                 $selectParamsList[] = $selectParamsSubscriptionOwn;
             }
@@ -461,8 +461,8 @@ class Stream extends \Espo\Core\Services\Base
             if (count($onlyTeamEntityTypeList)) {
                 $selectParamsSubscriptionTeam = $selectParamsSubscriptionSuper;
                 $selectParamsSubscriptionTeam['distinct'] = true;
-                $selectParamsSubscriptionTeam['leftJoins'][] = 'teams';
-                $selectParamsSubscriptionTeam['leftJoins'][] = 'users';
+                $selectParamsSubscriptionTeam['leftJoins'][] = ['noteTeam', 'noteTeam', ['noteTeam.noteId=:' => 'id', 'noteTeam.deleted' => false]];
+                $selectParamsSubscriptionTeam['leftJoins'][] = ['noteUser', 'noteUser', ['noteUser.noteId=:' => 'id', 'noteUser.deleted' => false]];
                 $selectParamsSubscriptionTeam['whereClause'][] = [
                     'OR' => [
                         [
@@ -476,8 +476,8 @@ class Stream extends \Espo\Core\Services\Base
                     ],
                     [
                         'OR' => [
-                            'teamsMiddle.teamId' => $teamIdList,
-                            'usersMiddle.userId' => $user->id
+                            'noteTeam.teamId' => $teamIdList,
+                            'noteUser.userId' => $user->id
                         ]
                     ]
                 ];
@@ -487,7 +487,7 @@ class Stream extends \Espo\Core\Services\Base
             if (count($onlyOwnEntityTypeList)) {
                 $selectParamsSubscriptionOwn = $selectParamsSubscriptionSuper;
                 $selectParamsSubscriptionOwn['distinct'] = true;
-                $selectParamsSubscriptionOwn['leftJoins'][] = 'users';
+                $selectParamsSubscriptionOwn['leftJoins'][] = ['noteUser', 'noteUser', ['noteUser.noteId=:' => 'id', 'noteUser.deleted' => false]];
                 $selectParamsSubscriptionOwn['whereClause'][] = [
                     'OR' => [
                         [
@@ -499,7 +499,7 @@ class Stream extends \Espo\Core\Services\Base
                             'parentType=' => $onlyOwnEntityTypeList
                         ]
                     ],
-                    'usersMiddle.userId' => $user->id
+                    'noteUser.userId' => $user->id
                 ];
                 $selectParamsList[] = $selectParamsSubscriptionOwn;
             }
