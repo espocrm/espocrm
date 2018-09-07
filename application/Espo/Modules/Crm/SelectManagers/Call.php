@@ -33,13 +33,14 @@ class Call extends \Espo\Core\SelectManagers\Base
 {
     protected function accessOnlyOwn(&$result)
     {
-        $this->addJoin('users', $result);
-        $result['whereClause'][] = array(
-            'OR' => array(
-                'usersMiddle.userId' => $this->getUser()->id,
+        $this->setDistinct(true, $result);
+        $this->addJoin(['users', 'usersAccess'], $result);
+        $result['whereClause'][] = [
+            'OR' => [
+                'usersAccessMiddle.userId' => $this->getUser()->id,
                 'assignedUserId' => $this->getUser()->id
-            )
-        );
+            ]
+        ];
     }
 
     protected function accessOnlyTeam(&$result)
@@ -48,25 +49,25 @@ class Call extends \Espo\Core\SelectManagers\Base
         $this->addLeftJoin(['teams', 'teamsAccess'], $result);
         $this->addLeftJoin(['users', 'usersAccess'], $result);
 
-        $result['whereClause'][] = array(
-            'OR' => array(
-                'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
-                'usersAccess.id' => $this->getUser()->id,
+        $result['whereClause'][] = [
+            'OR' => [
+                'teamsAccessMiddle.teamId' => $this->getUser()->getLinkMultipleIdList('teams'),
+                'usersAccessMiddle.userId' => $this->getUser()->id,
                 'assignedUserId' => $this->getUser()->id
-            )
-        );
+            ]
+        ];
     }
 
     protected function boolFilterOnlyMy(&$result)
     {
-        $this->addJoin('users', $result);
-        $result['whereClause'][] = array(
-            'users.id' => $this->getUser()->id,
-            'OR' => array(
-                'usersMiddle.status!=' => 'Declined',
-                'usersMiddle.status=' => null
-            )
-        );
+        $this->addJoin(['users', 'usersFilterOnlyMy'], $result);
+        $result['whereClause'][] = [
+            'usersFilterOnlyMyMiddle.userId' => $this->getUser()->id,
+            'OR' => [
+                'usersFilterOnlyMyMiddle.status!=' => 'Declined',
+                'usersFilterOnlyMyMiddle.status=' => null
+            ]
+        ];
     }
 
     protected function filterPlanned(&$result)
