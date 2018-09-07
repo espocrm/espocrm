@@ -34,6 +34,8 @@ use \Espo\ORM\Entity;
 
 class Meeting extends \Espo\Core\Acl\Base
 {
+    protected $ownerUserIdAttribute = 'usersIds';
+
     public function checkEntityRead(User $user, Entity $entity, $data)
     {
         if ($this->checkEntity($user, $entity, $data, 'read')) {
