@@ -889,6 +889,10 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function processNoteTeamsUsers(Entity $note, Entity $entity)
     {
+        $note->setAclIsProcessed();
+        $note->set('teamsIds', []);
+        $note->set('usersIds', []);
+
         if ($entity->hasLinkMultipleField('teams') && $entity->has('teamsIds')) {
             $teamIdList = $entity->get('teamsIds');
             if (!empty($teamIdList)) {

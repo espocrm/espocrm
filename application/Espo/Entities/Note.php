@@ -31,6 +31,18 @@ namespace Espo\Entities;
 
 class Note extends \Espo\Core\ORM\Entity
 {
+    private $aclIsProcessed = false;
+
+    public function setAclIsProcessed()
+    {
+        $this->aclIsProcessed = true;
+    }
+
+    public function isAclProcessed()
+    {
+        return $this->aclIsProcessed;
+    }
+
     public function loadAttachments()
     {
         $data = $this->get('data');

@@ -133,10 +133,19 @@ class Notifications extends \Espo\Core\Hooks\Base
                     $targetType = $parentType;
                 }
 
-                $teamIdList = $entity->getLinkMultipleIdList('teams');
-                $userIdList = $entity->getLinkMultipleIdList('users');
+                $skipAclCheck = false;
+                if (!$entity->isAclProcessed()) {
+                    $skipAclCheck = true;
+                } else {
+                    $teamIdList = $entity->getLinkMultipleIdList('teams');
+                    $userIdList = $entity->getLinkMultipleIdList('users');
+                }
 
                 foreach ($userList as $user) {
+                    if ($skipAclCheck) {
+                        $notifyUserIdList[] = $user->id;
+                        continue;
+                    }
                     if ($user->isAdmin()) {
                         $notifyUserIdList[] = $user->id;
                         continue;
