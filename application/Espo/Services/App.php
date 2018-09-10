@@ -261,6 +261,7 @@ class App extends \Espo\Core\Services\Base
         }
     }
 
+    // TODO remove in 5.5.0
     public function jobPopulateArrayValues()
     {
         $scopeList = array_keys($this->getMetadata()->get(['scopes']));
@@ -308,6 +309,77 @@ class App extends \Espo\Core\Services\Base
                     $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute, true);
                 }
             }
+        }
+    }
+
+    // TODO remove in 5.5.0
+    public function jobPopulateNotesTeamUser()
+    {
+        $aclManager = $this->getInjection('container')->get('aclManager');
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Note', [
+            'whereClause' => [
+                'parentId!=' => null,
+                'type=' => ['Relate', 'CreateRelated', 'EmailReceived', 'EmailSent', 'Assign', 'Create'],
+            ],
+            'limit' => 100000,
+            'orderBy' => [['number', 'DESC']]
+        ]);
+        $sth = $this->getEntityManager()->getPdo()->prepare($sql);
+        $sth->execute();
+
+        $i = 0;
+        while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $i++;
+            $note = $this->getEntityManager()->getEntityFactory()->create('Note');
+            $note->set($dataRow);
+            $note->setAsFetched();
+
+            if ($note->get('relatedId') && $note->get('relatedType')) {
+                $targetType = $note->get('relatedType');
+                $targetId = $note->get('relatedId');
+            } else if ($note->get('parentId') && $note->get('parentType')) {
+                $targetType = $note->get('parentType');
+                $targetId = $note->get('parentId');
+            } else {
+                continue;
+            }
+
+            if (!$this->getEntityManager()->hasRepository($targetType)) continue;
+
+            try {
+                $entity = $this->getEntityManager()->getEntity($targetType, $targetId);
+                if (!$entity) continue;
+                $ownerUserIdAttribute = $aclManager->getImplementation($targetType)->getOwnerUserIdAttribute($entity);
+                $toSave = false;
+                if ($ownerUserIdAttribute) {
+                    if ($entity->getAttributeParam($ownerUserIdAttribute, 'isLinkMultipleIdList')) {
+                        $link = $entity->getAttributeParam($ownerUserIdAttribute, 'relation');
+                        $userIdList = $entity->getLinkMultipleIdList($link);
+                    } else {
+                        $userId = $entity->get($ownerUserIdAttribute);
+                        if ($userId) {
+                            $userIdList = [$userId];
+                        } else {
+                            $userIdList = [];
+                        }
+                    }
+                    if (!empty($userIdList)) {
+                        $note->set('usersIds', $userIdList);
+                        $toSave = true;
+                    }
+                }
+                if ($entity->hasLinkMultipleField('teams')) {
+                    $teamIdList = $entity->getLinkMultipleIdList('teams');
+                    if (!empty($teamIdList)) {
+                        $note->set('teamsIds', $teamIdList);
+                        $toSave = true;
+                    }
+                }
+                if ($toSave) {
+                    $this->getEntityManager()->saveEntity($note);
+                }
+            } catch (\Exception $e) {}
         }
     }
 }
