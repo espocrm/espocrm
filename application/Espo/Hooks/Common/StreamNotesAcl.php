@@ -59,6 +59,8 @@ class StreamNotesAcl extends \Espo\Core\Hooks\Base
         if (!empty($options['noStream'])) return;
         if (!empty($options['silent'])) return;
 
+        if (!empty($options['skipStreamNotesAcl'])) return;
+
         if ($entity->isNew()) return;
 
         $entityType = $entity->getEntityType();

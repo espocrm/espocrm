@@ -1328,7 +1328,7 @@ class Record extends \Espo\Core\Services\Base
                 if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity)) {
+                        if ($repository->save($entity, ['massUpdate' => true])) {
                             $idsUpdated[] = $entity->id;
                             $count++;
 
@@ -1366,7 +1366,7 @@ class Record extends \Espo\Core\Services\Base
                 if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity)) {
+                        if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
                             $idsUpdated[] = $entity->id;
                             $count++;
 
