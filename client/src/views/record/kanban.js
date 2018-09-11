@@ -244,6 +244,10 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             var $item = this.$listKanban.find('.item');
             var $list = this.$listKanban.find('.group-column-list');
 
+            $list.find('> .item').on('touchstart', function (e) {
+                e.originalEvent.stopPropagation();
+            }.bind(this));
+
             $list.sortable({
                 connectWith: '.group-column-list',
                 cancel: '.dropdown-menu *',
