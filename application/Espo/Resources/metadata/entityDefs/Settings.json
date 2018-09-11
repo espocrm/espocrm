@@ -478,7 +478,8 @@
             "trim": true
         },
         "cleanupDeletedRecords": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         }
     }
 }
