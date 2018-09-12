@@ -238,7 +238,8 @@
         "Convert to": "Convert to",
         "View Personal Data": "View Personal Data",
         "Personal Data": "Personal Data",
-        "Erase": "Erase"
+        "Erase": "Erase",
+        "Move Over": "Move Over"
     },
     "messages": {
         "pleaseWait": "Please wait...",

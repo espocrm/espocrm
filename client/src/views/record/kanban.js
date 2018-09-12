@@ -50,6 +50,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         itemViewName: 'views/record/kanban-item',
 
+        rowActionsView: 'views/record/row-actions/default-kanban',
+
         minColumnWidthPx: 125,
 
         events: {
@@ -432,7 +434,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                 itemLayout: this.listLayout,
                 rowActionsDisabled: this.rowActionsDisabled,
                 rowActionsView: this.rowActionsView,
-                setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
+                setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
+                statusFieldIsEditable: this.statusFieldIsEditable
             }, callback);
         },
 
@@ -555,6 +558,17 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         getRowContainerHtml: function (id) {
             return '<div class="item" data-id="'+id+'">';
+        },
+
+        actionMoveOver: function (data) {
+            var model = this.collection.get(data.id);
+
+            this.createView('moveOverDialog', 'views/modals/kanban-move-over', {
+                model: model,
+                statusField: this.statusField
+            }, function (view) {
+                view.render();
+            });
         }
 
     });

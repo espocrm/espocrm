@@ -92,7 +92,8 @@ Espo.define('views/record/kanban-item', 'view', function (Dep) {
                 this.createView('itemMenu', this.rowActionsView, {
                     el: this.getSelector() + ' .item-menu-container',
                     model: this.model,
-                    acl: acl
+                    acl: acl,
+                    statusFieldIsEditable: this.options.statusFieldIsEditable
                 });
             }
         }
