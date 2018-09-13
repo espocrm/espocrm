@@ -336,8 +336,8 @@ class Import extends \Espo\Services\Record
     public function import($scope, array $importAttributeList, $attachmentId, array $params = array(), $importId = null, $user = null)
     {
         $delimiter = ',';
-        if (!empty($params['fieldDelimiter'])) {
-            $delimiter = $params['fieldDelimiter'];
+        if (!empty($params['delimiter'])) {
+            $delimiter = $params['delimiter'];
         }
         $enclosure = '"';
         if (!empty($params['textQualifier'])) {
