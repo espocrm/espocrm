@@ -117,6 +117,9 @@ class LeadCapture extends Record
 
     public function generateApiKey()
     {
+        if (!function_exists('random_bytes')) {
+            return \Espo\Core\Utils\Util::generateId();
+        }
         return bin2hex(random_bytes(16));
     }
 
