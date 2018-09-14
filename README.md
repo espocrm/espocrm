@@ -17,9 +17,13 @@ For more information about server configuration see [this article](https://www.e
 
 Documentation for administrators, users and developers is available [here](https://www.espocrm.com/documentation/).
 
-### How to report bug
+### How to report a bug
 
 Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/forum/bug-reports).
+
+### How to install a stable version
+
+[Download](https://www.espocrm.com/download/) the last version. See the [instructions](https://www.espocrm.com/documentation/administration/installation/) about installation.
 
 ### How to get started (for developers)
 
@@ -34,7 +38,7 @@ Now you can build. Build will create compiled css files.
 
 To compose a proper config.php and populate database you can run install by opening `http(s)://{YOUR_CRM_URL}/install` location in a browser. Then open `data/config.php` file and add `isDeveloperMode => true`.
 
-### How to build
+### How to build (for developers)
 
 You need to have nodejs and Grunt CLI installed.
 
