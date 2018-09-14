@@ -18,6 +18,7 @@
          "type": "bool",
          "notStorable": true,
          "layoutDetailDisabled": true,
+         "mergeDisabled": true,
          "customizationDefaultDisabled": true,
          "customizationReadOnlyDisabled": true
       }

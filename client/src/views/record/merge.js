@@ -143,6 +143,9 @@ Espo.define('views/record/merge', 'view', function (Dep) {
             for (var field in fieldsDefs) {
                 var type = fieldsDefs[field].type;
                 if (type === 'linkMultiple') continue;
+                if (fieldsDefs[field].disabled) continue
+                if (fieldsDefs[field].mergeDisabled) continue
+
                 if (fieldManager.isMergeable(type) && !this.models[0].isFieldReadOnly(field)) {
                     var actualAttributeList = fieldManager.getActualAttributeList(type, field);
 
