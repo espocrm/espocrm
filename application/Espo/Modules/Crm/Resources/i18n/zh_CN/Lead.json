@@ -1,7 +1,7 @@
 {
   "labels": {
     "Converted To": "已转换为",
-    "Create Lead": "创建潜在顾客",
+    "Create Lead": "创建潜在用户",
     "Convert": "转换",
     "convert": "转换"
   },
@@ -9,13 +9,13 @@
     "name": "名称",
     "emailAddress": "电子邮件",
     "title": "标题",
-    "website": "网站",
+    "website": "用户网站",
     "phoneNumber": "电话",
-    "accountName": "客户名称",
+    "accountName": "用户名称",
     "doNotCall": "不要电联",
     "address": "地址",
     "status": "状态",
-    "source": "资源",
+    "source": "用户来源",
     "opportunityAmount": "商机金额",
     "opportunityAmountConverted": "商机金额（转换）",
     "description": "描述",
@@ -43,7 +43,7 @@
   },
   "options": {
     "status": {
-      "New": "新",
+      "New": "新建",
       "Assigned": "指派",
       "In Process": "处理中",
       "Converted": "已转换",
@@ -55,7 +55,7 @@
       "Call": "通话",
       "Email": "电子邮件",
       "Existing Customer": "现有客户",
-      "Partner": "伙伴",
+      "Partner": "合作伙伴",
       "Public Relations": "公共关系",
       "Web Site": "网站",
       "Campaign": "营销活动",

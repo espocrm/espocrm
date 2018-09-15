@@ -7,11 +7,18 @@
     "subject": "主题",
     "attachments": "附件",
     "insertField": "插入字段",
-    "oneOff": "一次性"
+    "oneOff": "一次性",
+    "category": "类别"
+  },
+  "links": {
   },
   "labels": {
     "Create EmailTemplate": "创建邮件模板",
-    "Info": "信息"
+    "Info": "信息",
+    "Available placeholders": "可用的占位符"
+  },
+  "messages": {
+    "infoText": "可用变量：\n\n{optOutUrl} &#8211; URL 为一个退订链接;\n\n{optOutLink} &#8211;一个退订链接。"
   },
   "tooltips": {
     "oneOff": "如果此模板你仅用一次则选中此项。例如，批量邮件。"
@@ -19,7 +26,8 @@
   "presetFilters": {
     "actual": "实际"
   },
-  "messages": {
-    "infoText": "可用变量：\n\n{optOutUrl} &#8211; URL 为一个退订链接;\n\n{optOutLink} &#8211;一个退订链接。"
-  }
+  "placeholderTexts": {
+    "optOutUrl": "取消订阅URL链接",
+    "optOutLink": "取消订阅链接"
+    }
 }

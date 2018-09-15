@@ -1,7 +1,8 @@
 {
   "fields": {
     "name": "名称",
-    "emailAddress": "电子邮件地址",
+    "emailAddress": "邮箱地址",
+    "team": "目标团队",
     "status": "状态",
     "assignToUser": "指派给用户",
     "host": "服务器",
@@ -21,29 +22,45 @@
     "targetUserPosition": "目标用户位置",
     "fetchSince": "获取自",
     "addAllTeamUsers": "为所有团队用户",
-    "team": "目标团队",
-    "teams": "团队"
+    "teams": "团队",
+    "sentFolder": "已发送文件夹",
+    "storeSentEmails": "存储已发送的电子邮件",
+    "useImap": "获取电子邮件",
+    "useSmtp": "使用SMTP",
+    "smtpHost": "SMTP服务器",
+    "smtpPort": "SMTP端口",
+    "smtpAuth": "SMTP认证",
+    "smtpSecurity": "SMTP安全",
+    "smtpUsername": "SMTP用户名",
+    "smtpPassword": "SMTP密码",
+    "fromName": "发件人",
+    "smtpIsShared": "SMTP已共享",
+    "smtpIsForMassEmail": "SMTP适用于群发电子邮件"
   },
   "tooltips": {
-    "reply": "通知他们的电子邮件已收到电子邮件发件人。\n\n 只有一个电子邮件会期间的时间，以防止循环一段时间被发送到特定的收件人。",
+    "reply": "通知他们的电子邮件已收到电子邮件发件人。\n\n只有一个电子邮件会期间的时间，以防止循环一段时间被发送到特定的收件人。",
     "createCase": "自动从传入电子邮件创建案例。",
-    "replyToAddress": "指定此邮箱的电子邮件地址，以便响应到这里。",
+    "replyToAddress": "指定此邮箱的邮箱地址，以便响应到这里。",
     "caseDistribution": "如何分配案例，直接指派给用户或团队。",
     "assignToUser": "用户案例将会指派给。",
     "team": "团队案例将会指派给。",
     "teams": "团队电子邮件将会指派给。",
-    "addAllTeamUsers": "电子邮件将出现在指定团队的所有用户的“收件箱”中。",
     "targetUserPosition": "具有指定位置的用户将与案例一起分发。",
-    "monitoredFolders": "多个文件夹用逗号分隔。"
+    "addAllTeamUsers": "电子邮件将出现在指定团队的所有用户的“收件箱”中。",
+    "monitoredFolders": "多个文件夹用逗号分隔。",
+    "smtpIsShared": "如果选中，则用户将能够使用此SMTP发送电子邮件。可用性由角色通过“组电子邮件帐户”权限控制。",
+    "smtpIsForMassEmail": "如果选中，则SMTP将可用于群发电子邮件。",
+    "storeSentEmails": "已发送的电子邮件将存储在IMAP服务器上。"
   },
   "links": {
     "filters": "过滤器",
-    "emails": "邮箱"
+    "emails": "邮箱",
+    "assignToUser": "分配给用户"
   },
   "options": {
     "status": {
-      "Active": "活性",
-      "Inactive": "待用"
+    "Active": "活性",
+    "Inactive": "待用"
     },
     "caseDistribution": {
       "": "没有",

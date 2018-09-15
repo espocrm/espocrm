@@ -1,0 +1,14 @@
+{
+    "labels": {
+      "Create EmailTemplateCategory": "创建分类",
+      "Manage Categories": "管理分类",
+      "EmailTemplates": "邮件模板"
+    },
+    "fields": {
+      "order": "Order",
+      "childList": "Child List"
+    },
+    "links": {
+      "emailTemplates": "邮件模板"
+    }
+}

@@ -2,22 +2,67 @@
   "fields": {
     "name": "名称",
     "body": "正文",
-    "entityType": "实体类型",
-    "header": "标题",
+    "entityType": "类型",
+    "header": "页头",
     "footer": "页脚",
     "leftMargin": "左边距",
-    "topMargin": "顶部margin",
+    "topMargin": "上边距",
     "rightMargin": "右边距",
-    "bottomMargin": "底部边缘",
+    "bottomMargin": "下边距",
     "printFooter": "打印页脚",
     "footerPosition": "页脚位置",
-    "variables": "可用占位符"
+    "variables": "可用的占位符",
+    "pageOrientation": "页面方向",
+    "pageFormat": "页面格式",
+    "fontFace": "字体"
+  },
+  "links": {
   },
   "labels": {
     "Create Template": "创建模板"
   },
+  "options": {
+      "pageOrientation": {
+        "Portrait": "竖向",
+        "Landscape": "横向"
+      },
+      "placeholders": {
+        "today": "今天(date)",
+        "now": "现在(date-time)"
+      },
+      "fontFace": {
+        "aealarabiya": "AlArabiya",
+        "aefurat": "Aefurat",
+        "cid0cs": "CID-0 cs",
+        "cid0ct": "CID-0 ct",
+        "cid0jp": "CID-0 jp",
+        "cid0kr": "CID-0 kr",
+        "courier": "Courier",
+        "dejavusans": "DejaVu Sans",
+        "dejavusanscondensed": "DejaVu Sans Condensed",
+        "dejavusansextralight": "DejaVu Sans ExtraLight",
+        "dejavusansmono": "DejaVu Sans Mono",
+        "dejavuserif": "DejaVu Serif",
+        "dejavuserifcondensed": "DejaVu Serif Condensed",
+        "freemono": "FreeMono",
+        "freesans": "FreeSans",
+        "freeserif": "FreeSerif",
+        "helvetica": "Helvetica",
+        "hysmyeongjostdmedium": "Hysmyeongjostd Medium",
+        "kozgopromedium": "Kozgo Pro Medium",
+        "kozminproregular": "Kozmin Pro Regular",
+        "msungstdlight": "Msung Std Light",
+        "pdfacourier": "PDFA Courier",
+        "pdfahelvetica": "PDFA Helvetica",
+        "pdfasymbol": "PDFA Symbol",
+        "pdfatimes": "PDFA Times",
+        "stsongstdlight": "STSong Std Light",
+        "symbol": "Symbol",
+        "times": "Times"
+      }
+  },
   "tooltips": {
-    "footer": "使用{pageNumber}打印页码。",
-    "variables": "复制粘贴所需的占位符到标题，正文或页脚。"
+      "footer": "使用{pageNumber}打印页码。",
+      "variables": "复制粘贴需要的占位符到页眉，正文或页脚。"
   }
 }

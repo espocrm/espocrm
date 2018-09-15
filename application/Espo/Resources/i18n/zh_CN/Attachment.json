@@ -1,5 +1,28 @@
 {
+  "fields": {
+    "role": "角色",
+    "related": "有关",
+    "file": "File",
+    "type": "类型",
+    "field": "字段",
+    "sourceId": "来源ID",
+    "storage": "存储",
+    "size": "大小(bytes)"
+  },
+  "options": {
+      "role": {
+        "Attachment": "Attachment",
+        "Inline Attachment": "Inline Attachment",
+        "Import File": "导入文件",
+        "Export File": "导出文件",
+        "Mail Merge": "邮件合并",
+        "Mass Pdf": "Mass Pdf"
+      }
+  },
   "insertFromSourceLabels": {
     "Document": "插入文档"
+  },
+  "presetFilters": {
+    "orphan": "Orphan"
   }
 }

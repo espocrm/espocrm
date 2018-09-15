@@ -6,11 +6,12 @@
     "account": "客户",
     "contact": "联系人",
     "contacts": "联系人",
-    "priority": "优先",
+    "priority": "优先级",
     "type": "类型",
     "description": "描述",
     "inboundEmail": "入站邮件",
-    "lead": "潜在顾客"
+    "lead": "潜在用户",
+    "attachments": "附件"
   },
   "links": {
     "inboundEmail": "入站电子邮件",
@@ -22,11 +23,11 @@
     "tasks": "任务",
     "emails": "电子邮件",
     "articles": "知识库文章",
-    "lead": "潜在顾客"
+    "lead": "潜在用户"
   },
   "options": {
     "status": {
-      "New": "新",
+      "New": "新建",
       "Assigned": "已指派",
       "Pending": "待定",
       "Closed": "关闭",

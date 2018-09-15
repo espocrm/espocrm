@@ -20,14 +20,14 @@
     "Update Only": "仅更新",
     "Update by": "更新者",
     "Set as Not Duplicate": "设置为不重复",
-    "File (CSV)": "文件（CSV）",
     "First Row Value": "第一行值",
     "Skip": "跳过",
     "Header Row Value": "标题行值",
     "Field": "字段",
     "What to Import?": "要导入什么？",
     "Entity Type": "实体类型",
-    "What to do?": "做什么？",
+    "File (CSV)": "File(CSV)",
+    "What to do?": "操作",
     "Properties": "属性",
     "Header Row": "标题行",
     "Person Name Format": "人名格式",
@@ -49,12 +49,21 @@
     "Imported": "已导入",
     "Duplicates": "副本",
     "Skip searching for duplicates": "跳过搜索重复项",
-    "Timezone": "时区"
+    "Timezone": "时区",
+    "Remove Import Log": "删除导入日志",
+    "New Import": "新导入",
+    "Import Results": "导入结果"
   },
-  "messages": {
-    "utf8": "应该为 UTF-8 编码",
-    "duplicatesRemoved": "去重",
-    "inIdle": "执行空闲（大数据;通过cron）"
+    "messages": {
+        "utf8": "应该是UTF-8编码",
+        "duplicatesRemoved": "删除重复",
+        "inIdle": "在空闲时执行",
+        "revert": "这将永久删除所有导入的记录。",
+        "removeDuplicates": "这将永久删除所有被识别为重复的导入记录。",
+        "confirmRevert": "这将永久删除所有导入的记录。你确定？",
+        "confirmRemoveDuplicates": "这将永久删除所有被识别为重复的导入记录。你确定？",
+        "confirmRemoveImportLog" : "这将删除导入日志。将保留所有导入的记录。您无法还原导入结果。你确定你？",
+        "removeImportLog": "这将删除导入日志。将保留所有导入的记录。如果您确定导入正常，请使用它。"
   },
   "fields": {
     "file": "文件",

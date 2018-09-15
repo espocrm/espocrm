@@ -7,7 +7,7 @@
   "options": {
     "format": {
       "csv": "CSV",
-      "xlsx": "XLSX (Excel)"
+      "xlsx": "XLSX(Excel)"
     }
   }
 }
