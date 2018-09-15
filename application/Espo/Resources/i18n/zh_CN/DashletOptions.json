@@ -14,7 +14,8 @@
     "boolFilterList": "扩展过滤器",
     "sortBy": "订单（字段）",
     "sortDirection": "订单（方向）",
-    "expandedLayout": "布局"
+    "expandedLayout": "布局",
+    "dateFilter": "日期过滤器"
   },
   "options": {
     "mode": {

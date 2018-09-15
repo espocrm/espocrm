@@ -25,7 +25,7 @@
       "Opted Out": "选择退出",
       "Bounced": "退回",
       "Clicked": "点击",
-      "Lead Created": "已创建的潜在顾客"
+      "Lead Created": "已创建的潜在用户"
     }
   },
   "labels": {
@@ -37,6 +37,6 @@
     "optedOut": "选择退出",
     "bounced": "反弹",
     "clicked": "点击",
-    "leadCreated": "已创建的潜在顾客"
+    "leadCreated": "已创建的潜在用户"
   }
 }

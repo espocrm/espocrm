@@ -6,24 +6,24 @@
   "fields": {
     "name": "名称",
     "status": "状态",
-    "file": "文件",
+    "file": "附件",
     "type": "类型",
     "publishDate": "发布日期",
     "expirationDate": "截止日期",
     "description": "描述",
     "accounts": "账户",
-    "folder": "夹"
+    "folder": "文件夹"
   },
   "links": {
     "accounts": "账户",
     "opportunities": "商机",
     "folder": "夹",
-    "leads": "潜在顾客",
+    "leads": "潜在用户",
     "contacts": "联系人"
   },
   "options": {
     "status": {
-      "Active": "活性",
+      "Active": "激活",
       "Draft": "草案",
       "Expired": "已过期",
       "Canceled": "取消"

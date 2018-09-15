@@ -1,0 +1,23 @@
+version: '3'
+services:
+  nginx:
+   container_name: composer
+   image: hongxiaolu/composer
+   restart: always
+   ports:
+   - 80:80
+   - 443:443
+   volumes:
+   - $PWD:/app
+   - $SSH_AUTH_SOCK:/ssh-auth.sock
+   command: install
+ 
+  mysql:
+   container_name: mysql
+   image: mysql:5.6
+   environment:
+    MYSQL_DATABASE: espocrm
+    MYSQL_ROOT_PASSWORD: 123456
+   ports:
+   - "3306:3306"
+   restart: always

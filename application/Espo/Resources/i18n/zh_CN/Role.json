@@ -4,7 +4,10 @@
     "roles": "角色",
     "assignmentPermission": "分配许可",
     "userPermission": "用户权限",
-    "portalPermission": "门户权限"
+    "portalPermission": "门户权限",
+    "groupEmailAccountPermission": "邮件组账户权限",
+    "exportPermission": "导出权限",
+    "dataPrivacyPermission": "数据隐私权限"
   },
   "links": {
     "users": "用户",
@@ -13,13 +16,16 @@
   "tooltips": {
     "assignmentPermission": "允许限制记录和发布消息分配给其他用户的能力。\n\n所有的 - 没有限制\n\n团队 - 可以分配，只有张贴到队友\n\n否 - 可以分配，只有张贴到自",
     "userPermission": "允许以限制用户查看活动，日历和其他用户的数据流的能力。\n\n所有 - 可以查看所有\n\n团队 - 可以查看队友的活动只\n\n否 - 无法查看",
-    "portalPermission": "Defines an access to portal information, ability to post messages to portal users."
+    "portalPermission": "定义对门户信息的访问，向门户用户发布消息的能力。",
+    "groupEmailAccountPermission": "定义对邮件组帐户的访问权限，即从组SMTP发送电子邮件的功能。",
+    "exportPermission": "定义用户是否具有导出记录的功能。",
+    "dataPrivacyPermission": "允许查看和删除个人数据。"
   },
   "labels": {
     "Access": "访问",
     "Create Role": "创建角色",
     "Scope Level": "范围级别",
-    "Field Level": "场级"
+    "Field Level": "字段级别"
   },
   "options": {
     "accessList": {
@@ -28,12 +34,12 @@
       "disabled": "禁用"
     },
     "levelList": {
-      "all": "所有",
-      "team": "球队",
+      "all": "所有人",
+      "team": "团队",
       "account": "客户",
-      "contact": "联系",
-      "own": "拥有",
-      "no": "没有",
+      "contact": "联系人",
+      "own": "所有者",
+      "no": "无",
       "yes": "是",
       "not-set": "没有设置"
     }
