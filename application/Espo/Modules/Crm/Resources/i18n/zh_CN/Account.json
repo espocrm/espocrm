@@ -14,7 +14,7 @@
     "campaign": "营销活动",
     "targetLists": "目标列表",
     "targetList": "目标列表",
-    "originalLead": "原始潜在顾客",
+    "originalLead": "原始潜在用户",
     "contactIsInactive": "未激活"
   },
   "links": {
@@ -30,13 +30,13 @@
     "campaignLogRecords": "营销活动日志",
     "campaign": "营销活动",
     "portalUsers": "门户网站用户",
-    "originalLead": "原始潜在顾客"
+    "originalLead": "原始潜在用户"
   },
   "options": {
     "type": {
       "Customer": "顾客",
       "Investor": "投资者",
-      "Partner": "伙伴",
+      "Partner": "合作伙伴",
       "Reseller": "经销商"
     },
     "industry": {
@@ -100,7 +100,7 @@
   },
   "presetFilters": {
     "customers": "顾客",
-    "partners": "伙伴",
+    "partners": "合作伙伴",
     "recentlyCreated": "最近已创建的"
   }
 }

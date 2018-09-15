@@ -5,7 +5,7 @@
     "target": "目标",
     "sentAt": "发送日期",
     "attemptCount": "尝试",
-    "emailAddress": "电子邮件地址",
+    "emailAddress": "邮箱地址",
     "massEmail": "群发电子邮件",
     "isTest": "是测试"
   },

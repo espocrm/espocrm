@@ -1,0 +1,42 @@
+{
+    "fields": {
+      "name": "名称",
+      "campaign": "运动",
+      "isActive": "激活",
+      "subscribeToTargetList": "订阅目标列表",
+      "subscribeContactToTargetList": "如果存在，请订阅联系",
+      "targetList": "目标清单",
+      "fieldList": "Payload Fields",
+      "optInConfirmation": "双重选择",
+      "optInConfirmationEmailTemplate": "选择加入确认电子邮件模板",
+      "optInConfirmationLifetime": "选择确认生命周期（小时）",
+      "optInConfirmationSuccessMessage": "选择加入确认后显示的文字",
+      "leadSource": "主要来源",
+      "apiKey": "API Key",
+      "targetTeam": "目标团队",
+      "exampleRequestMethod": "方法",
+      "exampleRequestUrl": "URL",
+      "exampleRequestPayload": "Payload"
+    },
+    "links": {
+      "targetList": "目标清单",
+      "campaign": "Campaign",
+      "optInConfirmationEmailTemplate": "选择加入确认电子邮件模板",
+      "targetTeam": "目标团队",
+      "logRecords": "Log"
+    },
+    "labels": {
+      "Create LeadCapture": "创建入口点",
+      "Generate New API Key": "生成新的API密钥",
+      "Request": "请求",
+      "Confirm Opt-In": "确认选择加入"
+    },
+    "messages": {
+      "generateApiKey": "创建新的API密钥",
+      "optInConfirmationExpired": "选择加入确认链接已过期。",
+      "optInIsConfirmed": "确认选择。"
+    },
+    "tooltips": {
+      "optInConfirmationSuccessMessage": "支持Markdown。"
+    }
+}
