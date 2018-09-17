@@ -1,7 +1,7 @@
 {
     "controller": "controllers/record",
     "views": {
-        "list": "views/list-with-categories"
+        "list": "views/email-template/list"
     },
     "recordViews": {
         "edit": "views/email-template/record/edit",
