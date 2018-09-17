@@ -23,7 +23,7 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 
 ### How to install a stable version
 
-[Download](https://www.espocrm.com/download/) the last version. See the [instructions](https://www.espocrm.com/documentation/administration/installation/) about installation.
+[Download](https://www.espocrm.com/download/) the latest version. See the [instructions](https://www.espocrm.com/documentation/administration/installation/) about installation.
 
 ### How to get started (for developers)
 
