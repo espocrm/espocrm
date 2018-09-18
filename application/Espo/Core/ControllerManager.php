@@ -58,7 +58,7 @@ class ControllerManager
         return $this->metadata;
     }
 
-    public function process($controllerName, $actionName, $params, $data, $request)
+    public function process($controllerName, $actionName, $params, $data, $request, $response)
     {
         $customClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($controllerName);
         if (class_exists($customClassName)) {
@@ -112,13 +112,13 @@ class ControllerManager
         }
 
         if (method_exists($controller, $beforeMethodName)) {
-            $controller->$beforeMethodName($params, $data, $request);
+            $controller->$beforeMethodName($params, $data, $request, $response);
         }
 
-        $result = $controller->$primaryActionMethodName($params, $data, $request);
+        $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
 
         if (method_exists($controller, $afterMethodName)) {
-            $controller->$afterMethodName($params, $data, $request);
+            $controller->$afterMethodName($params, $data, $request, $response);
         }
 
         if (is_array($result) || is_bool($result) || $result instanceof \StdClass) {

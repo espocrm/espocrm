@@ -123,10 +123,23 @@ class LeadCapture extends Record
         return bin2hex(random_bytes(16));
     }
 
+    public function isApiKeyValid($apiKey)
+    {
+        $leadCapture = $this->getEntityManager()->getRepository('LeadCapture')->where([
+            'apiKey' => $apiKey,
+            'isActive' => true
+        ])->findOne();
+
+        if ($leadCapture) return true;
+
+        return false;
+    }
+
     public function leadCapture($apiKey, $data)
     {
         $leadCapture = $this->getEntityManager()->getRepository('LeadCapture')->where([
-            'apiKey' => $apiKey
+            'apiKey' => $apiKey,
+            'isActive' => true
         ])->findOne();
 
         if (!$leadCapture) throw new NotFound('Api key is not valid.');

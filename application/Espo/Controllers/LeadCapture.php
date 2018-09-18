@@ -31,6 +31,7 @@ namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\NotFound;
 
 class LeadCapture extends \Espo\Core\Controllers\Record
 {
@@ -40,6 +41,21 @@ class LeadCapture extends \Espo\Core\Controllers\Record
         if (empty($data)) throw new BadRequest('No payload provided.');
 
         return $this->getRecordService()->leadCapture($params['apiKey'], $data);
+    }
+
+    public function optionsActionLeadCapture($params, $data, $request, $response)
+    {
+        if (empty($params['apiKey'])) throw new BadRequest('No API key provided.');
+
+        if (!$this->getRecordService()->isApiKeyValid($params['apiKey'])) {
+            throw new NotFound();
+        }
+
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST');
+
+        return true;
     }
 
     public function postActionGenerateNewApiKey($params, $data, $request)

@@ -234,7 +234,7 @@ class Application
 
             try {
                 $controllerManager = $this->getContainer()->get('controllerManager');
-                $result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request());
+                $result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
                 $container->get('output')->render($result);
             } catch (\Exception $e) {
                 $container->get('output')->processError($e->getMessage(), $e->getCode(), false, $e);
@@ -266,7 +266,7 @@ class Application
 
         foreach ($this->getRouteList() as $route) {
             $method = strtolower($route['method']);
-            if (!in_array($method, $crudList)) {
+            if (!in_array($method, $crudList) && $method !== 'options') {
                 $GLOBALS['log']->error('Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']');
                 continue;
             }
