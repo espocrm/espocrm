@@ -384,6 +384,8 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $period = '-' . $this->getConfig()->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
         $datetime = new \DateTime('-' . $period);
 
+        $query = $this->getEntityManager()->getQuery();
+
         $scopeList = array_keys($this->getMetadata()->get(['scopes']));
         foreach ($scopeList as $scope) {
             if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
@@ -405,6 +407,36 @@ class Cleanup extends \Espo\Core\Jobs\Base
             foreach ($deletedEntityList as $e) {
                 if (!$e->get('deleted')) continue;
                 $repository->deleteFromDb($e->id);
+
+                foreach ($e->getRelationList() as $relation) {
+                    if ($e->getRelationType($relation) !== 'manyMany') continue;
+                    try {
+                        $relationName = $e->getRelationParam($relation, 'relationName');
+                        $relationTable = $query->toDb($relationName);
+
+                        $midKey = $e->getRelationParam($relation, 'midKeys')[0];
+
+                        $where = [];
+                        $where[$midKey] = $e->id;
+
+                        $conditions = $e->getRelationParam($relation, 'conditions');
+                        if (!empty($conditions)) {
+                            foreach ($conditions as $key => $value) {
+                                $where[$key] = $value;
+                            }
+                        }
+
+                        $partList = [];
+                        foreach ($where as $key => $value) {
+                            $partList[] = $query->toDb($key) . ' = ' . $query->quote($value);
+                        }
+                        if (empty($partList)) continue;
+
+                        $sql = "DELETE FROM `{$relationTable}` WHERE " . implode(' AND ', $partList);
+
+                        $this->getEntityManager()->getPDO()->query($sql);
+                    } catch (\Exception $e) {}
+                }
             }
         }
     }
