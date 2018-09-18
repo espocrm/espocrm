@@ -100,32 +100,31 @@ class Email extends Base
                         'orderBy' => 'emailAddresses.opt_out {direction}'
                     )
                 ),
-                'relations' => array(
-                    'emailAddresses' => array(
+                'relations' => [
+                    'emailAddresses' => [
                         'type' => 'manyMany',
                         'entity' => 'EmailAddress',
                         'relationName' => 'entityEmailAddress',
-                        'midKeys' => array(
-                            'entity_id',
-                            'email_address_id',
-                        ),
-                        'conditions' => array(
-                            'entityType' => $entityName,
-                        ),
-                        'additionalColumns' => array(
-                            'entityType' => array(
+                        'midKeys' => [
+                            'entityId',
+                            'emailAddressId'
+                        ],
+                        'conditions' => [
+                            'entityType' => $entityName
+                        ],
+                        'additionalColumns' => [
+                            'entityType' => [
                                 'type' => 'varchar',
-                                'len' => 100,
-                            ),
-                            'primary' => array(
+                                'len' => 100
+                            ],
+                            'primary' => [
                                 'type' => 'bool',
-                                'default' => false,
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+                                'default' => false
+                            ]
+                        ]
+                    ]
+                ]
+            )
         );
     }
-
 }
