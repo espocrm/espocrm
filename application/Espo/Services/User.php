@@ -337,7 +337,7 @@ class User extends Record
                 throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
             }
         }
-        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin') && $entity->get('isPortalUser')) {
             $portalUserCount = $this->getPortalUserCount();
             if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
                 throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
