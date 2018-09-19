@@ -158,7 +158,8 @@ return array (    'defaultPermissions' =>
         'adminNotifications',
         'adminNotificationsNewVersion',
         'adminNotificationsCronIsNotConfigured',
-        'adminNotificationsNewExtensionVersion'
+        'adminNotificationsNewExtensionVersion',
+        'leadCaptureAllowOrigin'
     ),
     'userItems' =>
     array (

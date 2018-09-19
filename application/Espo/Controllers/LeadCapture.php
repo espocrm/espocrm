@@ -51,8 +51,10 @@ class LeadCapture extends \Espo\Core\Controllers\Record
             throw new NotFound();
         }
 
+        $allowOrigin = $this->getConfig()->get('leadCaptureAllowOrigin', '*');
+
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
-        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Origin', $allowOrigin);
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
 
         return true;
