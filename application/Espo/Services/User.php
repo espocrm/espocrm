@@ -559,6 +559,12 @@ class User extends Record
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
     }
 
+    public function massUpdate($data, array $params)
+    {
+        unset($data->isPortalUser);
+        return parent::massUpdate($data, $params);
+    }
+
     protected function afterMassUpdate(array $idList, $data)
     {
         parent::afterMassUpdate($idList, $data);
