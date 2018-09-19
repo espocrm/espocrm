@@ -47,7 +47,9 @@ class Invitations
 
     protected $ics;
 
-    public function __construct($entityManager, $smtpParams, $mailSender, $config, $fileManager, $dateTime, $number, $language)
+    protected $templateFileManager;
+
+    public function __construct($entityManager, $smtpParams, $mailSender, $config, $fileManager, $dateTime, $number, $language, $templateFileManager)
     {
         $this->entityManager = $entityManager;
         $this->smtpParams = $smtpParams;
@@ -57,6 +59,7 @@ class Invitations
         $this->language = $language;
         $this->number = $number;
         $this->fileManager = $fileManager;
+        $this->templateFileManager = $templateFileManager;
     }
 
     protected function getEntityManager()
@@ -67,24 +70,6 @@ class Invitations
     protected function getConfig()
     {
         return $this->config;
-    }
-
-    protected function getTemplate($name)
-    {
-        $systemLanguage = $this->config->get('language');
-
-        $fileName = "custom/Espo/Custom/Resources/templates/invitation/{$systemLanguage}/{$name}.tpl";
-        if (!file_exists($fileName)) {
-            $fileName = "application/Espo/Modules/Crm/Resources/templates/invitation/{$systemLanguage}/{$name}.tpl";
-        }
-        if (!file_exists($fileName)) {
-            $fileName = "custom/Espo/Custom/Resources/templates/invitation/en_US/{$name}.tpl";
-        }
-        if (!file_exists($fileName)) {
-            $fileName = "application/Espo/Modules/Crm/Resources/templates/invitation/en_US/{$name}.tpl";
-        }
-
-        return file_get_contents($fileName);
     }
 
     public function sendInvitation(Entity $entity, Entity $invitee, $link)
@@ -122,8 +107,9 @@ class Invitations
         $email = $this->getEntityManager()->getEntity('Email');
         $email->set('to', $emailAddress);
 
-        $subjectTpl = $this->getTemplate('subject');
-        $bodyTpl = $this->getTemplate('body');
+        $subjectTpl = $this->templateFileManager->getTemplate('invitation', 'subject', $entity->getEntityType(), 'Crm');
+        $bodyTpl = $this->templateFileManager->getTemplate('invitation', 'body', $entity->getEntityType(), 'Crm');
+
         $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
         $data = array();

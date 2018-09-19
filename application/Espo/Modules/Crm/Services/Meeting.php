@@ -123,6 +123,9 @@ class Meeting extends \Espo\Services\Record
                 $smtpParams['fromName'] = $this->getUser()->get('name');
             }
         }
+
+        $templateFileManager = new \Espo\Core\Utils\TemplateFileManager($this->getConfig(), $this->getMetadata());
+
         return new Invitations(
             $this->getEntityManager(),
             $smtpParams,
@@ -131,7 +134,8 @@ class Meeting extends \Espo\Services\Record
             $this->getInjection('fileManager'),
             $this->getDateTime(),
             $this->getInjection('number'),
-            $this->getLanguage()
+            $this->getLanguage(),
+            $templateFileManager
         );
     }
 
