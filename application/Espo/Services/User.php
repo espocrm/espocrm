@@ -331,7 +331,7 @@ class User extends Record
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin') && !$entity->get('isPortalUser')) {
             $userCount = $this->getInternalUserCount();
             if ($userCount >= $this->getConfig()->get('userLimit')) {
                 throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
