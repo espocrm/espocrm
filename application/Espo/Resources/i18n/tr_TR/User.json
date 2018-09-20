@@ -63,9 +63,6 @@
     "portals": "Bu kullanıcının erişebildiği portallar."
   },
   "messages": {
-    "accountInfoEmailSubject": "Account info",
-    "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Parola Talebini Değiştir",
     "userCantBeEmpty": "Kullanıcı adı boş olamaz.",
     "wrongUsernamePasword": "Yanlış kullanıcı adı / şifre",
     "emailAddressCantBeEmpty": "E-posta Adresi boş olamaz",
@@ -73,8 +70,7 @@
     "forbidden": "Yasak, lütfen daha sonra deneyin",
     "uniqueLinkHasBeenSent": "Benzersiz URL belirtilen e-posta adresine gönderilmiştir.",
     "passwordChangedByRequest": "Şifre değiştirildi.",
-    "setupSmtpBefore": "Sistemin e-postayla şifre gönderebilmesi için <a href=\"{url}\"> SMTP ayarlarını kurmanız </a> gerekir.",
-    "passwordChangeLinkEmailBody": "Bu {link}'i takip ederek şifrenizi değiştirebilirsiniz. Bu benzersiz URL yakın zamanda geçersiz olacaktır."
+    "setupSmtpBefore": "Sistemin e-postayla şifre gönderebilmesi için <a href=\"{url}\"> SMTP ayarlarını kurmanız </a> gerekir."
   },
   "boolFilters": {
     "onlyMyTeam": "Yalnızca Ekibim"

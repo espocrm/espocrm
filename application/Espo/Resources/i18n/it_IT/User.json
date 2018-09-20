@@ -68,9 +68,6 @@
   },
   "messages": {
     "passwordWillBeSent": "La password verrà inviata all'indirizzo email dell'utente.",
-    "accountInfoEmailSubject": "Informazioni di accesso ali utente di EspoCRM",
-    "accountInfoEmailBody": "I tuoi dati di accesso:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Richiesta di cambio password",
     "passwordChanged": "La password è stata modificata",
     "userCantBeEmpty": "Il Nome utente non può essere vuoto",
     "wrongUsernamePasword": "I dati forniti non sono corretti",
@@ -79,8 +76,7 @@
     "forbidden": "Vietato , riprova piu tardi",
     "uniqueLinkHasBeenSent": "L' URL univoco è stato inviato all'indirizzo di posta elettronica specificato .",
     "passwordChangedByRequest": "La password è stata modificata.",
-    "setupSmtpBefore": "È necessario attivare le <a href=\"{url}\">Impostazioni SMTP</a> perchè il sistema sia in grado di mandare le password via email.",
-    "passwordChangeLinkEmailBody": "Puoi modificare la password seguendo questo link {link}. Questo URL univoco scadrà a breve."
+    "setupSmtpBefore": "È necessario attivare le <a href=\"{url}\">Impostazioni SMTP</a> perchè il sistema sia in grado di mandare le password via email."
   },
   "boolFilters": {
     "onlyMyTeam": "Solo per il mio Team"

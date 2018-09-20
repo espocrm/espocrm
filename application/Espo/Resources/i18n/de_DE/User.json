@@ -64,9 +64,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
-    "accountInfoEmailSubject": "EspoCRM Benutzerzugriffsinfo",
-    "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
     "passwordChanged": "Das Passwort wurde geändert",
     "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
     "wrongUsernamePasword": "Falscher Benutzername/Passwort",
@@ -76,7 +73,6 @@
     "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
     "passwordChangedByRequest": "Das Passwort wurde geändert",
     "setupSmtpBefore": "Sie müssen die <a href=\"{url}\">SMTP Einstellungen</a> setzen damit das System Passwörter in E-Mails senden kann.",
-    "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
     "userNameExists": "Benutzername existiert bereits"
   },
   "boolFilters": {

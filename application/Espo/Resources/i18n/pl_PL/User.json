@@ -56,9 +56,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Hasło zostanie wysłane na adres e-mail użytkonika.",
-    "accountInfoEmailSubject": "Informacje o koncie",
-    "accountInfoEmailBody": "Informacje o twoim koncie:\n\nUżytkonik: {userName}\nHasło: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Żądanie zmiany hasła",
     "passwordChanged": "Hasło zostało zmienione",
     "userCantBeEmpty": "Nazwa użytkownika nie może być pusta",
     "wrongUsernamePasword": "Nieprawidłowa nazwa użytkownika/hasło",
@@ -67,8 +64,7 @@
     "forbidden": "Zabronione, proszę spróbować później",
     "uniqueLinkHasBeenSent": "Unikalny adres URL został wysłany na podany adres email.",
     "passwordChangedByRequest": "Hasło zostało zmienione",
-    "setupSmtpBefore": "Musisz skonfigurować <a href=\"{url}\">pocztę wychodzącą</a> aby móc wysyłać hasła na e-mail.",
-    "passwordChangeLinkEmailBody": "Możesz zmienić hasło klikając w link {link}. Ten URL jest unikalny i wkrótce będzie nieważny."
+    "setupSmtpBefore": "Musisz skonfigurować <a href=\"{url}\">pocztę wychodzącą</a> aby móc wysyłać hasła na e-mail."
   },
   "boolFilters": {
     "onlyMyTeam": "Tylko mój zespół"

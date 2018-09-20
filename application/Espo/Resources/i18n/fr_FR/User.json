@@ -68,9 +68,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Les identifiants (y compris le mot de passe) seront envoyés à l'adresse email de l'utilisateur.",
-    "accountInfoEmailSubject": "EspoCRM : vos identifiants de connexion",
-    "accountInfoEmailBody": "Bonjour,\n\nVos identifiants sont les suivants:\n\nNom d'utilisateur: {userName}\nMot de passe: {password}\n\n{siteUrl}\n\n&Agrave; bient&ocirc;t,",
-    "passwordChangeLinkEmailSubject": "Demande de nouveau mot de passe",
     "passwordChanged": "Le mot de passe a été modifié",
     "userCantBeEmpty": "Le nom d'utilisateur ne peut être laissé vide",
     "wrongUsernamePasword": "Mauvaise combinaison nom d'utilisateur/mot de passe",
@@ -79,8 +76,7 @@
     "forbidden": "Erreur, veuillez réessayer plus tard.",
     "uniqueLinkHasBeenSent": "Un lien unique et temporaire a été envoyé à votre adresse email.",
     "passwordChangedByRequest": "Le mot de passe a été modifié.",
-    "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
-    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon."
+    "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email."
   },
   "boolFilters": {
     "onlyMyTeam": "De mon équipe"

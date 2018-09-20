@@ -43,10 +43,6 @@
     },
     "messages": {
         "passwordWillBeSent": "Heslo bude posláno na emailovou adresu uživatele.",
-        "accountInfoEmailSubject": "EspoCRM Informace k uživatelskému přístupu",
-        "accountInfoEmailBody": "Vaše přístupové informace jsou:\n\nPřihlašovací jméno: {userName}\nHeslo: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Požadavek na změnu hesla",
-        "passwordChangeLinkEmailBody": "Můžete změnit Vaše heslo pomocí tohoto odkazu {link}, tato url adresa z bezpečnostních důvodů brzy vyprší.",
         "passwordChanged": "Heslo bylo změněno",
         "userCantBeEmpty": "Uživatelské jméno nemůže být prázdné",
         "wrongUsernamePasword": "Nesprávné uživatelské jmén/heslo",

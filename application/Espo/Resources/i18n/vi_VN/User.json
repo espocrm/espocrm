@@ -25,8 +25,6 @@
     },
     "messages": {
         "passwordWillBeSent": "Mật khẩu sẽ được gửi tới email tài khoản",
-        "accountInfoEmailSubject": "Thông tin tài khoản",
-        "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
         "passwordChanged": "Mật khẩu đã được đổi"
     }
 }

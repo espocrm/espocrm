@@ -68,9 +68,6 @@
   },
   "messages": {
     "passwordWillBeSent": "密码将发送到用户的电子邮件地址。",
-    "accountInfoEmailSubject": "EspoCRM用户访问信息",
-    "accountInfoEmailBody": "您的访问信息：\n\n用户名：{userName}\n密码：{password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "更改密码请求",
     "passwordChanged": "密码已被更改",
     "userCantBeEmpty": "用户名不能为空",
     "wrongUsernamePasword": "用户名/密码错误",
@@ -79,8 +76,7 @@
     "forbidden": "禁止访问，请稍后再试",
     "uniqueLinkHasBeenSent": "唯一网址已发送到指定的电子邮件地址。",
     "passwordChangedByRequest": "密码已被更改。",
-    "setupSmtpBefore": "您需要设置<a href=\"{url}\"> SMTP设置</a>，以使系统能够在电子邮件中发送密码。",
-    "passwordChangeLinkEmailBody": "您可以通过以下链接来更改密码{link}。此唯一网址即将过期。"
+    "setupSmtpBefore": "您需要设置<a href=\"{url}\"> SMTP设置</a>，以使系统能够在电子邮件中发送密码。"
   },
   "boolFilters": {
     "onlyMyTeam": "只有我的团队"

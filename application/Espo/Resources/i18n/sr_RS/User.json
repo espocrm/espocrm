@@ -68,9 +68,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Lozinka će biti poslata na adresu korisnika.",
-    "accountInfoEmailSubject": "EspoCRM Korisnik - podaci za pristup",
-    "accountInfoEmailBody": "Vaši podaci za pristup:\n\nKorisničko ime: {userName} \nLozinka: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Upit za promenu lozinke",
     "passwordChanged": "Lozinka je promenjena",
     "userCantBeEmpty": "Korisničko ime ne može biti prazno",
     "wrongUsernamePasword": "Pogrešno korisničko ime/lozinka",
@@ -79,8 +76,7 @@
     "forbidden": "Zabranjeno, pokušajte kasnije",
     "uniqueLinkHasBeenSent": "Jedinstvena URL adresa je poslata na određenu adresu.",
     "passwordChangedByRequest": "Lozinka je promenjena.",
-    "setupSmtpBefore": "Potrebno je da <a href=\"{url}\">SMTP postavke</a>href=\"{url}\"> budu unete i tačne kako bi lozinka bila poslata.",
-    "passwordChangeLinkEmailBody": "Možete da promenite lozinku prateći ovaj link {link}. Ovaj jedinstveni URL će uskoro isteći."
+    "setupSmtpBefore": "Potrebno je da <a href=\"{url}\">SMTP postavke</a>href=\"{url}\"> budu unete i tačne kako bi lozinka bila poslata."
   },
   "boolFilters": {
     "onlyMyTeam": "Samo moj tim"

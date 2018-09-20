@@ -44,10 +44,6 @@
     },
     "messages": {
         "passwordWillBeSent": "Wachtwoord wordt naar het emailadres van de gebruiker verzonden.",
-        "accountInfoEmailSubject": "Informatie Gebruiker",
-        "accountInfoEmailBody": "Uw gegevens:\n\nGebruikersnaam: {userName}\nWachtwoord: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Verzoek tot Wachtwoord verandering",
-        "passwordChangeLinkEmailBody": "U kunt het wachtwoord veranderen via deze link {link}. Deze unieke link (url) wordt spoedig weer opgeheven.",
         "passwordChanged": "Het wachtwoord is gewijzigd",
         "userCantBeEmpty": "Gebruikersnaam kan niet leeg zijn",
         "wrongUsernamePasword": "Onjuiste gebruikersnaam/wachtwoord",

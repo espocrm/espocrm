@@ -93,6 +93,16 @@ class User extends Record
         return $this->getContainer()->get('fileManager');
     }
 
+    protected function getNumber()
+    {
+        return $this->getContainer()->get('number');
+    }
+
+    protected function getDateTime()
+    {
+        return $this->getContainer()->get('dateTime');
+    }
+
     protected function getContainer()
     {
         return $this->injections['container'];
@@ -192,7 +202,7 @@ class User extends Record
             'url' => $url
         ));
 
-        $this->sendChangePasswordLink($requestId, $emailAddress);
+        $this->sendChangePasswordLink($requestId, $emailAddress, $user);
 
         $this->getEntityManager()->saveEntity($passwordChangeRequest);
 
@@ -387,15 +397,16 @@ class User extends Record
             return;
         }
 
-        $subject = $this->getLanguage()->translate('accountInfoEmailSubject', 'messages', 'User');
-        $body = $this->getLanguage()->translate('accountInfoEmailBody', 'messages', 'User');
-
-        $body = str_replace('{userName}', $user->get('userName'), $body);
-        $body = str_replace('{password}', $password, $body);
+        $templateFileManager = new \Espo\Core\Utils\TemplateFileManager($this->getConfig(), $this->getMetadata());
 
         $siteUrl = $this->getConfig()->getSiteUrl() . '/';
 
+        $data = [];
+
         if ($user->get('isPortalUser')) {
+            $subjectTpl = $templateFileManager->getTemplate('accessInfoPortal', 'subject', 'User');
+            $bodyTpl = $templateFileManager->getTemplate('accessInfoPortal', 'body', 'User');
+
             $urlList = [];
             $portalList = $this->getEntityManager()->getRepository('Portal')->distinct()->join('users')->where(array(
                 'isActive' => true,
@@ -419,16 +430,26 @@ class User extends Record
             if (!count($urlList)) {
                 return;
             }
-            $siteUrl = implode("\n", $urlList);
-        }
-        $body = str_replace('{siteUrl}', $siteUrl, $body);
+            $data['siteUrlList'] = $urlList;
+        } else {
+            $subjectTpl = $templateFileManager->getTemplate('accessInfo', 'subject', 'User');
+            $bodyTpl = $templateFileManager->getTemplate('accessInfo', 'body', 'User');
 
-        $email->set(array(
+            $data['siteUrl'] = $siteUrl;
+        }
+
+        $data['password'] = $password;
+
+        $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->getFileManager(), $this->getDateTime(), $this->getNumber(), null);
+
+        $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
+        $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
+
+        $email->set([
             'subject' => $subject,
             'body' => $body,
-            'isHtml' => false,
             'to' => $emailAddress
-        ));
+        ]);
 
         if ($this->getConfig()->get('smtpServer')) {
             $this->getMailSender()->useGlobal();
@@ -446,7 +467,7 @@ class User extends Record
         $this->getMailSender()->send($email);
     }
 
-    protected function sendChangePasswordLink($requestId, $emailAddress, Entity $user = null)
+    protected function sendChangePasswordLink($requestId, $emailAddress, Entity $user)
     {
         if (empty($emailAddress)) {
             return;
@@ -458,19 +479,25 @@ class User extends Record
             throw new Error("SMTP credentials are not defined.");
         }
 
-        $subject = $this->getLanguage()->translate('passwordChangeLinkEmailSubject', 'messages', 'User');
-        $body = $this->getLanguage()->translate('passwordChangeLinkEmailBody', 'messages', 'User');
+        $templateFileManager = new \Espo\Core\Utils\TemplateFileManager($this->getConfig(), $this->getMetadata());
 
-        $link = $this->getConfig()->get('siteUrl') . '?entryPoint=changePassword&id=' . $requestId;
+        $subjectTpl = $templateFileManager->getTemplate('passwordChangeLink', 'subject', 'User');
+        $bodyTpl = $templateFileManager->getTemplate('passwordChangeLink', 'body', 'User');
 
-        $body = str_replace('{link}', $link, $body);
+        $data = [];
+        $link = $this->getConfig()->getSiteUrl() . '?entryPoint=changePassword&id=' . $requestId;
+        $data['link'] = $link;
 
-        $email->set(array(
+        $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->getFileManager(), $this->getDateTime(), $this->getNumber(), null);
+
+        $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
+        $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
+
+        $email->set([
             'subject' => $subject,
             'body' => $body,
-            'isHtml' => false,
             'to' => $emailAddress
-        ));
+        ]);
 
         if ($this->getConfig()->get('smtpServer')) {
             $this->getMailSender()->useGlobal();

@@ -43,10 +43,6 @@
 	},
     "messages": {
         "passwordWillBeSent": "A senha será enviada para o email do usuário.",
-        "accountInfoEmailSubject": "Informações da Conta",
-        "accountInfoEmailBody": "Informações da sua conta:\n\nUsuário: {userName}\nSenha: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Solicitação para troca da senha",
-        "passwordChangeLinkEmailBody": "Você pode atualizar sua senha usando este link {link}. Esta URL é única e expirará em breve.",
         "passwordChanged": "A senha foi atualizada",
         "userCantBeEmpty": "O nome de usuário deve ser informado",
         "wrongUsernamePasword": "Usuário / senha incorretos",

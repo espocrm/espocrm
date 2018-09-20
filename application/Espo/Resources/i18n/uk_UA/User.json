@@ -70,9 +70,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Пароль буде вислано на поштову адресу користувача",
-    "accountInfoEmailSubject": "Інформація про користувацький доступ EspoCRM",
-    "accountInfoEmailBody": "Ваша інформація про доступ:\n\nІм'я користувача: {userName}\nПароль: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Запит на зміну пароля",
     "passwordChanged": "Пароль було змінено",
     "userCantBeEmpty": "Ім'я користувача не може бути порожнім",
     "wrongUsernamePasword": "Хибне ім'я користувача / пароль",
@@ -82,7 +79,6 @@
     "uniqueLinkHasBeenSent": "Унікальне посилання була відправлена на вказану адресу електронної пошти.",
     "passwordChangedByRequest": "Пароль було змінено.",
     "setupSmtpBefore": "Вам необхідно <a href=\"{url}\">налаштувати SMTP</a>, щоб створити можливість для системи надіслати пароль по електронній пошті.",
-    "passwordChangeLinkEmailBody": "Ви можете змінити свій пароль, перейшовши за цим посиланням {посилання}. Цей унікальний URL швидко сплине.",
     "userNameExists": "Ім'я користувача вже існує"
   },
   "boolFilters": {

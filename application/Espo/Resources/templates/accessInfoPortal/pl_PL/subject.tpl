@@ -1,0 +1,1 @@
+Informacje o koncie

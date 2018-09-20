@@ -68,9 +68,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Heslo bude poslané na používateľov email.",
-    "accountInfoEmailSubject": "Info o používateľskom prístupe EspoCRM",
-    "accountInfoEmailBody": "Vaš prístupové informácie:",
-    "passwordChangeLinkEmailSubject": "Požiadavka na zmenu hesla",
     "passwordChanged": "Heslo bolo zmenené",
     "userCantBeEmpty": "Používateľské meno nesmie byť prázdne",
     "wrongUsernamePasword": "Nesprávne meno/heslo",
@@ -80,7 +77,6 @@
     "uniqueLinkHasBeenSent": "Jedinečná URL bola odoslaná na uvedenú emailovú adresu.",
     "passwordChangedByRequest": "Heslo bolo zmenené.",
     "setupSmtpBefore": "Potrebujete nastaviť <a href=\"{url}\">SMTP nastavenia</a> aby Váš systém bol schopný odoslať heslo v emaile.",
-    "passwordChangeLinkEmailBody": "Svoje heslo môžete zmeniť použitím tohoto odkazu {link}. Táto jedinečná URL čoskoro expiruje.",
     "userNameExists": "Používateľské meno už existuje"
   },
   "boolFilters": {

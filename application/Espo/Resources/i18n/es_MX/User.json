@@ -65,9 +65,6 @@
   },
   "messages": {
     "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
-    "accountInfoEmailSubject": "Información Cuenta",
-    "accountInfoEmailBody": "Información de tu cuenta:\n\nNombre Usuario: {userName}\nContraseña: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Solicitud de Cambio de Contraseña",
     "passwordChanged": "La Contraseña ha sido cambiada",
     "userCantBeEmpty": "El nombre de usuario no puede estar vacío",
     "wrongUsernamePasword": "Nombre de usuario/contraseña incorrectos",
@@ -77,7 +74,6 @@
     "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
     "passwordChangedByRequest": "La contraseña ha sido cambiada.",
     "setupSmtpBefore": "Necesita configurar correctamente su <a href=\"{url}\">Servicio SMTP</a> para que el sistema pueda enviarle su contraseña por correo.",
-    "passwordChangeLinkEmailBody": "Puede cambiar su contraseña siguiendo esta liga {link}.  Esta dirección URL única expirará pronto.",
     "userNameExists": "Ese Usuario ya existe"
   },
   "boolFilters": {

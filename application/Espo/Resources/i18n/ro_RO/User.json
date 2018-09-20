@@ -63,10 +63,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Parola va fi trimisă în email-ul utilizatorului.",
-    "accountInfoEmailSubject": "Informații Acces Utilizator EspoCRM",
-    "accountInfoEmailBody": "Informațiile tale de acces :\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Cerere Schimbare Parolă",
-    "passwordChangeLinkEmailBody": "Vă puteți schimba parola urmând acest link {link}. Această adresă URL unică va expira în curând.",
     "passwordChanged": "Parola a fost schimbată",
     "userCantBeEmpty": "Numele de utilizator nu poate fi necompletat",
     "wrongUsernamePasword": "Nume utilizator/parolă greșit(e).",

@@ -68,9 +68,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Пароль будет выслан на адрес эл. почты пользователя.",
-    "accountInfoEmailSubject": "Информация об учетной записи EspoCRM",
-    "accountInfoEmailBody": "Информация о Вашей учетной записи:\n\nИмя пользователя: {userName}\nПароль: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Запрос смены пароля",
     "passwordChanged": "Пароль был изменен",
     "userCantBeEmpty": "Имя пользователя не может быть пустым",
     "wrongUsernamePasword": "Неверное имя пользователя/пароль",
@@ -79,8 +76,7 @@
     "forbidden": "Запрещено, повторите попытку позже",
     "uniqueLinkHasBeenSent": "Уникальная ссылка была отправлена на указанный адрес эл. почты.",
     "passwordChangedByRequest": "Пароль был изменен.",
-    "setupSmtpBefore": "Вы должны настроить <a href=\"{url}\">SMTP settings</a> чтобы система имела возможность отправлять пароль по электронной почте.",
-    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon."
+    "setupSmtpBefore": "Вы должны настроить <a href=\"{url}\">SMTP settings</a> чтобы система имела возможность отправлять пароль по электронной почте."
   },
   "boolFilters": {
     "onlyMyTeam": "Только моя группа"

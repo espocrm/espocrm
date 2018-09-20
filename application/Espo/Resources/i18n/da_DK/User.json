@@ -68,9 +68,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Kodeord sendes til brugers emailadresse.",
-    "accountInfoEmailSubject": "EspoCRM Info om Brugeradgang.",
-    "accountInfoEmailBody": "Dine Logindetaljer:\n\nBrugernavn: {userName}\nKodeord: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Anmodning om Ændring af Kodeord",
     "passwordChanged": "Kodeordet er ændret",
     "userCantBeEmpty": "Brugernavn kan ikke være tomt.",
     "wrongUsernamePasword": "Forkert brugernavn/kodeord",
@@ -79,8 +76,7 @@
     "forbidden": "Forbudt. Prøv venligst senere.",
     "uniqueLinkHasBeenSent": "Den unikke URL er sendt til den angivne emailadresse.",
     "passwordChangedByRequest": "Kodeordet er ændret.",
-    "setupSmtpBefore": "Det er nødvendigt af udfylde <a href=\"{url}\">SMTP indstillinger</a> for at systemet kan sende kodeordet i en email.",
-    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon."
+    "setupSmtpBefore": "Det er nødvendigt af udfylde <a href=\"{url}\">SMTP indstillinger</a> for at systemet kan sende kodeordet i en email."
   },
   "boolFilters": {
     "onlyMyTeam": "Kun Mit Team"

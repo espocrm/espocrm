@@ -69,9 +69,6 @@
   },
   "messages": {
     "passwordWillBeSent": "Slaptažodis bus išsiųstas vartotojo el. pašto adresu.",
-    "accountInfoEmailSubject": "EspoCRM vartotojo prieigos informacija",
-    "accountInfoEmailBody": "Jūsų prisijungimo informacija:\n\nVartotojo vardas: {userName}\nSlaptažodis: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Slaptažodžio keitimo prašymas",
     "passwordChanged": "Slpatažodis buvo pakeistas",
     "userCantBeEmpty": "Vartotojo vardas negali būti tuščias",
     "wrongUsernamePasword": "Neteisingas prisijungimo vardas/slaptažodis",
