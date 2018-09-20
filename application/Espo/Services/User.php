@@ -331,13 +331,13 @@ class User extends Record
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin') && !$entity->get('isPortalUser')) {
             $userCount = $this->getInternalUserCount();
             if ($userCount >= $this->getConfig()->get('userLimit')) {
                 throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
             }
         }
-        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin') && $entity->get('isPortalUser')) {
             $portalUserCount = $this->getPortalUserCount();
             if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
                 throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
@@ -557,6 +557,12 @@ class User extends Record
     protected function clearRoleCache($id)
     {
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
+    }
+
+    public function massUpdate($data, array $params)
+    {
+        unset($data->isPortalUser);
+        return parent::massUpdate($data, $params);
     }
 
     protected function afterMassUpdate(array $idList, $data)

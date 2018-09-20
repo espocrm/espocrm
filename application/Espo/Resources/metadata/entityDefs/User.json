@@ -51,7 +51,8 @@
             "default": true
         },
         "isPortalUser": {
-            "type": "bool"
+            "type": "bool",
+            "layoutMassUpdateDisabled": true
         },
         "isSuperAdmin": {
             "type": "bool",
