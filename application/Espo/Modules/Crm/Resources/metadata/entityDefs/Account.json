@@ -92,7 +92,7 @@
             "type": "varchar",
             "notStorable": true,
             "disabled": true,
-            "maxLength": 50
+            "maxLength": 100
         },
         "contactIsInactive": {
             "type": "bool",
