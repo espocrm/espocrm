@@ -34,7 +34,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Auth;
 
-class LDAP extends Base
+class LDAP extends Espo
 {
     private $utils;
 
@@ -100,10 +100,17 @@ class LDAP extends Base
      *
      * @return \Espo\Entities\User | null
      */
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
+    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
     {
         if ($authToken) {
             return $this->loginByToken($username, $authToken);
+        }
+
+        if ($isPortal) {
+            $useLdapAuthForPortalUser = $this->getUtils()->getOption('portalUserLdapAuth');
+            if (!$useLdapAuthForPortalUser) {
+                return parent::login($username, $password, $authToken, $isPortal);
+            }
         }
 
         $ldapClient = $this->getLdapClient();
