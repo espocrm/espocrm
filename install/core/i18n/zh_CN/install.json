@@ -18,12 +18,8 @@
     "twitter": "推特",
     "forum": "论坛",
     "Installation Guide": "安装指南",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
     "Locale": "语言环境",
     "Outbound Email Configuration": "出站电子邮件配置",
-    "SMTP": "SMTP",
     "Start": "开始",
     "Back": "上一步",
     "Next": "下一步",
@@ -48,8 +44,8 @@
     "Choose your language": "选择你的语言",
     "Database Name": "数据库名称",
     "Host Name": "主机名",
-    "Port": "港口",
-    "smtpPort": "港口",
+    "Port": "端口",
+    "smtpPort": "端口",
     "Database User Name": "数据库用户名",
     "Database User Password": "数据库用户密码",
     "Database driver": "数据库驱动程序",
@@ -58,20 +54,20 @@
     "smtpPassword": "密码",
     "Confirm Password": "确认你的密码",
     "From Address": "发件人地址",
-    "From Name": "从名称",
+    "From Name": "发件人",
     "Is Shared": "已共享",
     "Date Format": "日期格式",
     "Time Format": "时间格式",
     "Time Zone": "时区",
-    "First Day of Week": "周的第一天",
-    "Thousand Separator": "千分离器",
+    "First Day of Week": "每周始于",
+    "Thousand Separator": "千位分隔符",
     "Decimal Mark": "小数标记",
     "Default Currency": "默认货币",
     "Currency List": "货币列表",
     "Language": "语言",
-    "smtpServer": "服务器",
-    "smtpAuth": "Auth",
-    "smtpSecurity": "安全",
+    "smtpServer": "SMTP服务器",
+    "smtpAuth": "验证",
+    "smtpSecurity": "安全协议",
     "smtpUsername": "用户名",
     "emailAddress": "电子邮件"
   },
@@ -91,9 +87,6 @@
     "Passwords do not match": "密码不匹配",
     "Enable mod_rewrite in Apache server": "在Apache服务器中启用mod_rewrite",
     "checkWritable error": "checkWritable错误",
-    "applySett error": "applySett error",
-    "buildDatabase error": "buildDatabase error",
-    "createUser error": "createUser error",
     "checkAjaxPermission error": "checkAjaxPermission错误",
     "Ajax failed": "Ajax失败",
     "Cannot create user": "无法创建用户",
@@ -109,25 +102,21 @@
     "mysqlSettingError": "EspoCRM需要MySQL设置\"{NAME}\"设置为{VALUE}"
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
-    },
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "结果<前> 1。查找httpd.conf文件（通常你会发现一个名为CONF，配置或类似的规定文件夹中）结果\n2.里面的httpd.conf文件注释行的LoadModule rewrite_module模块/ mod_rewrite.so（从行前面删除井'＃'号）结果\n3.又找到行ClearModuleList下面是注释掉然后查找并确保该行加入AddModule mod_rewrite.c没有被注释掉。\n</ PRE>",
-        "linux": "<br><br>1. 可用 \"mod_重写\". 在终端运行这些指令:<pre>{APACHE1}</pre><br>2. 可用 .htaccess 支持. 添加/编辑服务器配置设置(/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n 后来在一个终端运行此命令:<pre>{APACHE3}</pre><br>3. 尝试添加重写基础路径, 打开一个文件{API_PATH}.htaccess 和替换下面这一行:<pre>{APACHE4}</pre>To<pre>{APACHE5}</pre><br> 获取更多信息请访问指导指南 <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM Apache服务器配置</a>.<br><br>"
-      },
-      "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>"
-      }
-    },
     "modRewriteTitle": {
       "apache": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br> 可能出现的问题: 禁用 \"mod_rewrite\" 在Apache 服务器, 禁用 .分布式配置文件支持或者重写数据问题.<br>仅执行必要操作.完成每一步需确认问题是否被解决.",
       "nginx": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br>将此代码添加入你的网页服务器配置文件(/etc/nginx/sites-available/YOUR_SITE) 在里面 \"服务器\" 部分:",
       "microsoft-iis": "应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.<br>可能出现的问题: 禁用 \"网址重写\". 请核对并启用\"网址重写\" 模块在IIS服务器",
       "default": "应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.<br>可能出现的问题: 禁用重写模块.请在你的服务器核对并启用重写模块 (e.g. mod_重写 在 Apache) 和.htaccess 支持."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br>1. 可用 \"mod_重写\". 在终端运行这些指令:<pre>{APACHE1}</pre><br>2. 可用 .htaccess 支持. 添加/编辑服务器配置设置(/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n 后来在一个终端运行此命令:<pre>{APACHE3}</pre><br>3. 尝试添加重写基础路径, 打开一个文件{API_PATH}.htaccess 和替换下面这一行:<pre>{APACHE4}</pre>To<pre>{APACHE5}</pre><br> 获取更多信息请访问指导指南 <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM Apache服务器配置</a>.<br><br>",
+        "windows": "结果<前> 1。查找httpd.conf文件（通常你会发现一个名为CONF，配置或类似的规定文件夹中）结果\n2.里面的httpd.conf文件注释行的LoadModule rewrite_module模块/ mod_rewrite.so（从行前面删除井'＃'号）结果\n3.又找到行ClearModuleList下面是注释掉然后查找并确保该行加入AddModule mod_rewrite.c没有被注释掉。\n</ PRE>"
+      },
+      "nginx": {
+        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>",
+        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>"
+      }
     }
   }
 }

@@ -6,7 +6,9 @@
     "failedAttempts": "失败尝试",
     "serviceName": "服务",
     "method": "方法",
+    "methodName": "方法",
     "scheduledJob": "计划作业",
+    "scheduledJobJob": "计划工作名称",
     "data": "数据"
   },
   "options": {

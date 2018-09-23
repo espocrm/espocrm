@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "username": "用户名",
+    "ipAddress": "IP地址",
+    "requestTime": "请求时间",
+    "createdAt": "请求时间",
+    "isDenied": "被拒绝",
+    "denialReason": "拒绝原因",
+    "portal": "门户",
+    "user": "用户",
+    "authToken": "身份验证令牌已创建",
+    "requestUrl": "请求URL",
+    "requestMethod": "请求方法",
+    "authTokenIsActive": "身份验证令牌已激活"
+  },
+  "links": {
+    "authToken": "创建身份验证令牌",
+    "user": "用户",
+    "portal": "门户",
+    "actionHistoryRecords": "历史操作"
+  },
+  "presetFilters": {
+    "denied": "禁止",
+    "accepted": "通过"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "无效的证书",
+      "INACTIVE_USER": "未激活用户",
+      "IS_PORTAL_USER": "门户用户",
+      "IS_NOT_PORTAL_USER": "不是门户用户",
+      "USER_IS_NOT_IN_PORTAL": "用户与门户无关"
+    }
+  }
+}

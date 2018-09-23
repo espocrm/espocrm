@@ -8,24 +8,22 @@
     "object": "目的",
     "application": "应用",
     "queueItem": "队列项",
-    "stringData": "String Data",
-    "stringAdditionalData": "字符串附加数据",
-    "isTest": "Is Test"
+    "stringAdditionalData": "字符串附加数据"
   },
   "links": {
     "queueItem": "队列项",
     "parent": "关联",
-    "object": "目的",
-    "campaign": "Campaign"
+    "object": "目的"
   },
   "options": {
     "action": {
       "Sent": "发送",
       "Opened": "开业",
-      "Opted Out": "选择退出",
+      "Opted Out": "取消订阅",
       "Bounced": "退回",
       "Clicked": "点击",
-      "Lead Created": "已创建的潜在顾客"
+      "Lead Created": "已创建的潜在客户",
+      "Opted In": "订阅"
     }
   },
   "labels": {
@@ -37,6 +35,6 @@
     "optedOut": "选择退出",
     "bounced": "反弹",
     "clicked": "点击",
-    "leadCreated": "已创建的潜在顾客"
+    "leadCreated": "已创建的潜在客户"
   }
 }
