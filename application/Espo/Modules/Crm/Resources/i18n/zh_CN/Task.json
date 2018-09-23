@@ -4,7 +4,7 @@
     "parent": "关联",
     "status": "状态",
     "dateStart": "开始日期",
-    "dateEnd": "截止日期",
+    "dateEnd": "结束日期",
     "dateStartDate": "日期开始（全天）",
     "dateEndDate": "日期结束（全天）",
     "priority": "优先级",
@@ -38,10 +38,10 @@
     "Complete": "完成"
   },
   "presetFilters": {
-    "actual": "实际",
+    "actual": "所有",
     "completed": "完成",
+    "deferred": "延期",
     "todays": "今天的",
-    "overdue": "过期",
-    "deferred": "延期"
+    "overdue": "过期"
   }
 }

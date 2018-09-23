@@ -5,25 +5,25 @@
     "subject": "主题",
     "bodyContains": "正文包含",
     "action": "活动",
-    "isGlobal": "是全球的",
+    "isGlobal": "全局",
     "emailFolder": "文件夹"
   },
   "labels": {
     "Create EmailFilter": "创建邮件过滤器",
     "Emails": "邮件"
   },
-  "tooltips": {
-    "from": "邮件正发往指定的地址。如不需要请留空。可以使用通配符*。",
-    "to": "邮件正在发往指定地址。如不需要请留空。可使用通配符 *。",
-    "name": "给过滤器一个描述性名称。",
-    "subject": "使用通配符 *:\n\ntext* - 以 text 开头,\n*text* - 包含 text,\n*text - 以 text 结尾.",
-    "bodyContains": "电子邮件的正文包含任何指定的单词或短语。",
-    "isGlobal": "将此筛选器应用到系统中所有的入站邮件。"
-  },
   "options": {
     "action": {
       "Skip": "忽略",
       "Move to Folder": "放入文件夹"
     }
+  },
+  "tooltips": {
+    "name": "给过滤器一个描述性名称。",
+    "subject": "使用通配符 *:\n\ntext* - 以text开头,\n*text* - 包含text,\n*text - 以text结尾.",
+    "bodyContains": "电子邮件的正文包含任何指定的单词或短语。",
+    "from": "邮件正发往指定的地址,如不需要请留空,可以使用通配符*。",
+    "to": "邮件正在发往指定地址,如不需要请留空,可使用通配符 *。",
+    "isGlobal": "将此筛选器应用到系统中所有的入站邮件。"
   }
 }

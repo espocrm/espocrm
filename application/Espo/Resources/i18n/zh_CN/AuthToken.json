@@ -1,14 +1,14 @@
 {
   "fields": {
     "user": "用户",
-    "ipAddress": "IP 地址",
-    "lastAccess": "最近访问日期",
+    "ipAddress": "IP地址",
+    "lastAccess": "最后访问日期",
     "createdAt": "登录日期",
     "isActive": "已激活",
     "portal": "门户"
   },
   "links": {
-    "actionHistoryRecords": "动作历史"
+    "actionHistoryRecords": "历史操作"
   },
   "presetFilters": {
     "active": "激活",

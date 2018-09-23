@@ -18,7 +18,8 @@
       "CheckEmailAccounts": "检查个人电子邮件帐户",
       "SendEmailReminders": "发送电子邮件提醒",
       "AuthTokenControl": "授权令牌控制",
-      "SendEmailNotifications": "发送邮件通知"
+      "SendEmailNotifications": "发送邮件通知",
+      "CheckNewVersion": "检查新版本"
     },
     "cronSetup": {
       "linux": "注意：将此行添加到crontab文件以运行Espo计划作业：",
@@ -27,11 +28,11 @@
       "default": "注意：将此命令添加到Cron Job（计划任务）："
     },
     "status": {
-      "Active": "活性",
-      "Inactive": "待用"
+      "Active": "激活",
+      "Inactive": "未激活"
     }
   },
   "tooltips": {
-    "scheduling": "crontab 符号。定义任务运行频率。\n\n* / 5 * * * * - 每 5 分钟\n\n0 * / 2 * * * - 每 2 小时\n\n30 1 * * * - 每天的 01:30\n\n0 0 1 * * - 在每月的第一天"
+    "scheduling": "crontab符号。定义任务运行频率。\n\n* / 5 * * * * - 每 5 分钟\n\n0 * / 2 * * * - 每 2 小时\n\n30 1 * * * - 每天的 01:30\n\n0 0 1 * * - 在每月的第一天"
   }
 }
