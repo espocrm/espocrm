@@ -25,7 +25,7 @@
     "Calendar": "日历",
     "Call": "通话",
     "Task": "任务",
-    "Case": "案件",
+    "Case": "工单",
     "Document": "文件",
     "DocumentFolder": "文档文件夹",
     "Campaign": "营销活动",
@@ -90,8 +90,8 @@
     "Tasks": "任务"
   },
   "fields": {
-    "billingAddressCity": "市",
-    "addressCity": "市",
+    "billingAddressCity": "城市",
+    "addressCity": "城市",
     "billingAddressCountry": "国家",
     "addressCountry": "国家",
     "billingAddressPostalCode": "邮政编码",

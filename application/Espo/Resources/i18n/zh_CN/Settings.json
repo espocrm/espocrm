@@ -105,6 +105,11 @@
     "weekStart": {
       "0": "星期日",
       "1": "星期一"
+    },
+    "streamEmailNotificationsTypeList": {
+      "Post": "收到消息",
+      "Status": "状态更新",
+      "EmailReceived": "收到邮件"
     }
   },
   "tooltips": {

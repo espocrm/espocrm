@@ -32,7 +32,7 @@
     "dashboardLayout": "仪表板布局",
     "emailReplyForceHtml": "超文本语言回复邮件",
     "doNotFillAssignedUserIfNotRequired": "不要在创建记录时预先填充指定的用户",
-    "followEntityOnStreamPost": "在信息流发布后自动跟踪记录",
+    "followEntityOnStreamPost": "在信息流发信息后自动跟踪记录",
     "followCreatedEntities": "自动跟踪创建的记录",
     "followCreatedEntityTypeList": "自动跟踪特定功能创建的记录",
     "emailUseExternalClient": "使用外部邮件客户端",

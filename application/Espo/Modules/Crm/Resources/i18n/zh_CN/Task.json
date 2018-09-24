@@ -13,10 +13,13 @@
     "account": "客户",
     "dateCompleted": "完成日期",
     "attachments": "附件",
-    "reminders": "提醒"
+    "reminders": "提醒",
+    "contact": "联系人"
   },
   "links": {
-    "attachments": "附件"
+    "attachments": "附件",
+    "account": "用户",
+    "contact": "联系人"
   },
   "options": {
     "status": {
@@ -41,7 +44,7 @@
     "actual": "所有",
     "completed": "完成",
     "deferred": "延期",
-    "todays": "今天的",
+    "todays": "今天",
     "overdue": "过期"
   }
 }

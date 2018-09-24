@@ -27,7 +27,7 @@
     "isNotRead": "未读",
     "isImportant": "重要",
     "isReplied": "已回复",
-    "isNotReplied": "w未回复",
+    "isNotReplied": "未回复",
     "isUsers": "是用户的",
     "inTrash": "在垃圾箱",
     "sentBy": "发送者",
@@ -99,7 +99,7 @@
     "confirmInsertTemplate": "邮件正文将丢失,您确定要插入模板吗?"
   },
   "presetFilters": {
-    "sent": "发送",
+    "sent": "已发送",
     "archived": "归档",
     "inbox": "收件箱",
     "drafts": "草稿箱",

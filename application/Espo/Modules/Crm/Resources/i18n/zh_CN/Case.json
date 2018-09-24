@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "名称",
-    "number": "号",
+    "number": "编号",
     "status": "状态",
     "account": "客户",
     "contact": "联系人",
