@@ -18,7 +18,9 @@
     "portalUser": "门户网站用户",
     "originalLead": "原始潜在客户",
     "acceptanceStatus": "验收状态",
-    "accountIsInactive": "账户未激活"
+    "accountIsInactive": "账户未激活",
+    "acceptanceStatusMeetings": "接受状态(Meetings)",
+    "acceptanceStatusCalls": "接受状态(Calls)"
   },
   "links": {
     "opportunities": "商机",

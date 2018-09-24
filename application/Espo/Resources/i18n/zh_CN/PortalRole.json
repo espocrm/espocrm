@@ -1,6 +1,12 @@
 {
+  "fields": {
+    "exportPermission": "导出权限"
+  },
   "links": {
     "users": "用户"
+  },
+  "tooltips": {
+    "exportPermission": "门户用户是否具有导出记录的权限"
   },
   "labels": {
     "Access": "访问",
