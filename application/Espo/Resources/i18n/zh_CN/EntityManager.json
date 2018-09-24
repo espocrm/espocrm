@@ -28,16 +28,21 @@
     "audited": "已审核",
     "auditedForeign": "外部审核",
     "statusField": "字段状态",
-    "beforeSaveCustomScript": "在保存自定义脚本之前"
+    "beforeSaveCustomScript": "在保存自定义脚本之前",
+    "color": "颜色",
+    "kanbanViewMode": "预览看板",
+    "kanbanStatusIgnoreList": "看板视图中被忽略的组",
+    "iconClass": "图标",
+    "fullTextSearch": "全文搜索"
   },
   "options": {
     "type": {
       "": "无",
       "Base": "基本",
-      "Person": "人",
+      "Person": "个人",
       "CategoryTree": "类别树",
       "Event": "时间",
-      "BasePlus": "基础加",
+      "BasePlus": "基础增强",
       "Company": "公司"
     },
     "linkType": {
@@ -64,6 +69,7 @@
     "disabled": "检查您的系统中是否不需要此实体。",
     "linkAudited": "在信息流中将记录创建相关记录并链接现有记录。",
     "linkMultipleField": "链接多字段提供了编辑关系的方便的方式。不要使用它，如果你可以有大量的相关记录。",
-    "entityType": "Base Plus  - 具有活动，历史和任务面板。活动 - 在“日历和活动”面板中可用。"
+    "entityType": "Base Plus  - 具有活动，历史和任务面板。活动 - 在“日历和活动”面板中可用。",
+    "fullTextSearch": "需要运行重新构建。"
   }
 }

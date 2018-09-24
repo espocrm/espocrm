@@ -3,6 +3,7 @@
     "name": "名称",
     "description": "描述",
     "entryCount": "条目计数",
+    "optedOutCount": "取消订阅",
     "campaigns": "营销活动",
     "endDate": "结束日期",
     "targetLists": "目标列表",
@@ -12,14 +13,13 @@
   "links": {
     "accounts": "客户",
     "contacts": "联系人",
-    "leads": "潜在顾客",
+    "leads": "潜在客户",
     "campaigns": "营销活动",
     "massEmails": "群发电子邮件"
   },
   "options": {
     "type": {
       "Email": "电子邮件",
-      "Web": "Web",
       "Television": "电视",
       "Radio": "广播",
       "Newsletter": "新闻稿"

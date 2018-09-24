@@ -6,7 +6,9 @@
     "align": "对齐",
     "panelName": "面板名称",
     "style": "样式",
-    "sticked": "已贴"
+    "sticked": "已贴",
+    "isLarge": "大字体",
+    "dynamicLogicVisible": "使面板可见的条件"
   },
   "options": {
     "align": {
@@ -21,5 +23,9 @@
       "warning": "警告",
       "primary": "主要"
     }
+  },
+  "labels": {
+    "New panel": "新的面板",
+    "Layout": "布局"
   }
 }

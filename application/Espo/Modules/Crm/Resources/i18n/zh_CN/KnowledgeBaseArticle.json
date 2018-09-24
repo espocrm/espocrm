@@ -14,7 +14,7 @@
     "type": "类型",
     "attachments": "附件",
     "publishDate": "发布日期",
-    "expirationDate": "截止日期",
+    "expirationDate": "结束日期",
     "description": "描述",
     "body": "身体",
     "categories": "分类",
@@ -22,7 +22,7 @@
     "portals": "门户"
   },
   "links": {
-    "cases": "案例",
+    "cases": "工单",
     "opportunities": "商机",
     "categories": "分类",
     "portals": "门户"
@@ -38,10 +38,10 @@
       "Article": "文章"
     }
   },
-  "presetFilters": {
-    "published": "发布"
-  },
   "tooltips": {
     "portals": "文章仅在特定门户网站上可用。"
+  },
+  "presetFilters": {
+    "published": "发布"
   }
 }

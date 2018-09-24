@@ -10,7 +10,6 @@
     "isGlobal": "全局",
     "isInternal": "内部（用于内部用户）",
     "related": "相关的",
-    "createdByGender": "Created By Gender",
     "data": "数据",
     "number": "数字"
   },
@@ -19,9 +18,6 @@
     "posts": "帖子",
     "updates": "更新"
   },
-  "messages": {
-    "writeMessage": "在这里写信息"
-  },
   "options": {
     "targetType": {
       "self": "给我自己",
@@ -29,6 +25,12 @@
       "teams": "给特殊对",
       "all": "所有内部门户",
       "portals": "给门户用户"
+    },
+    "type": {
+      "Post": "帖子"
     }
+  },
+  "messages": {
+    "writeMessage": "在这里写信息"
   }
 }
