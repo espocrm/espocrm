@@ -2,18 +2,18 @@
   "fields": {
     "name": "名称",
     "emailAddress": "电子邮件地址",
+    "team": "目标团队",
     "status": "状态",
     "assignToUser": "指派给用户",
-    "host": "服务器",
+    "host": "SMTP服务器",
     "username": "用户名",
     "password": "密码",
     "port": "端口",
     "monitoredFolders": "监视文件夹",
     "trashFolder": "垃圾文件夹",
-    "ssl": "SSL",
-    "createCase": "创建案例",
+    "createCase": "创建工单",
     "reply": "自动回复",
-    "caseDistribution": "案例分发",
+    "caseDistribution": "工单分发",
     "replyEmailTemplate": "回复邮件模板",
     "replyFromAddress": "回复发件地址",
     "replyToAddress": "回复收件地址",
@@ -21,29 +21,42 @@
     "targetUserPosition": "目标用户位置",
     "fetchSince": "获取自",
     "addAllTeamUsers": "为所有团队用户",
-    "team": "目标团队",
-    "teams": "团队"
+    "teams": "团队",
+    "useSmtp": "使用SMTP",
+    "smtpHost": "SMTP主机",
+    "smtpPort": "SMTP端口",
+    "smtpAuth": "SMTP验证",
+    "smtpSecurity": "SMTP安全协议",
+    "smtpUsername": "SMTP用户名",
+    "smtpPassword": "SMTP密码",
+    "fromName": "发件人",
+    "smtpIsShared": "共享",
+    "smtpIsForMassEmail": "SMTP可用于大规模电子邮件"
   },
   "tooltips": {
     "reply": "通知他们的电子邮件已收到电子邮件发件人。\n\n 只有一个电子邮件会期间的时间，以防止循环一段时间被发送到特定的收件人。",
-    "createCase": "自动从传入电子邮件创建案例。",
+    "createCase": "自动从传入电子邮件创建工单。",
     "replyToAddress": "指定此邮箱的电子邮件地址，以便响应到这里。",
-    "caseDistribution": "如何分配案例，直接指派给用户或团队。",
-    "assignToUser": "用户案例将会指派给。",
-    "team": "团队案例将会指派给。",
+    "caseDistribution": "如何分配工单，直接指派给用户或团队。",
+    "assignToUser": "用户工单将会指派给。",
+    "team": "团队工单将会指派给。",
     "teams": "团队电子邮件将会指派给。",
+    "targetUserPosition": "具有指定位置的用户将与工单一起分发。",
     "addAllTeamUsers": "电子邮件将出现在指定团队的所有用户的“收件箱”中。",
-    "targetUserPosition": "具有指定位置的用户将与案例一起分发。",
-    "monitoredFolders": "多个文件夹用逗号分隔。"
+    "monitoredFolders": "多个文件夹用逗号分隔。",
+    "smtpIsShared": "如果勾选此选项，用户就可以使用SMTP发送电子邮件。可用性由角色通过组电子邮件帐户权限控制",
+    "smtpIsForMassEmail": "如果勾选的话，SMTP将可用于群发邮件",
+    "storeSentEmails": "发送的电子邮件将存储在IMAP服务器上。"
   },
   "links": {
     "filters": "过滤器",
-    "emails": "邮箱"
+    "emails": "邮箱",
+    "assignToUser": "分配给用户"
   },
   "options": {
     "status": {
-      "Active": "活性",
-      "Inactive": "待用"
+      "Active": "激活",
+      "Inactive": "未激活"
     },
     "caseDistribution": {
       "": "没有",
@@ -54,7 +67,6 @@
   },
   "labels": {
     "Create InboundEmail": "创建电子邮件帐户",
-    "IMAP": "IMAP",
     "Actions": "操作",
     "Main": "主要"
   },

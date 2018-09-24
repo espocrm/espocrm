@@ -1,13 +1,7 @@
 {
   "fields": {
-    "fieldList": "字段列表",
     "exportAllFields": "导出所有字段",
+    "fieldList": "字段列表",
     "format": "格式"
-  },
-  "options": {
-    "format": {
-      "csv": "CSV",
-      "xlsx": "XLSX (Excel)"
-    }
   }
 }

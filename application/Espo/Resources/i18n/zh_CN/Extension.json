@@ -10,6 +10,6 @@
     "Install": "安装"
   },
   "messages": {
-    "uninstalled": "扩展 {name} 已卸载"
+    "uninstalled": "扩展{name}已卸载"
   }
 }

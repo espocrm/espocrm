@@ -1,4 +1,21 @@
 {
+  "fields": {
+    "role": "角色",
+    "related": "相关",
+    "type": "类型",
+    "field": "字段",
+    "sourceId": "源ID",
+    "storage": "存储",
+    "size": "大小(bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "附加",
+      "Import File": "内联附件",
+      "Export File": "导出文件",
+      "Mail Merge": "邮件合并"
+    }
+  },
   "insertFromSourceLabels": {
     "Document": "插入文档"
   }
