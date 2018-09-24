@@ -191,7 +191,7 @@ class LDAP extends Espo
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         $tokenUsername = $user->get('userName');
-        if ($username != $tokenUsername) {
+        if (strtolower($username) != strtolower($tokenUsername)) {
             $GLOBALS['log']->alert('Unauthorized access attempt for user ['.$username.'] from IP ['.$_SERVER['REMOTE_ADDR'].']');
             return null;
         }
