@@ -70,10 +70,6 @@
     },
     "messages": {
         "passwordWillBeSent": "Password will be sent to user's email address.",
-        "accountInfoEmailSubject": "EspoCRM User Access Info",
-        "accountInfoEmailBody": "Your access information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Change Password Request",
-        "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon.",
         "passwordChanged": "Password has been changed",
         "userCantBeEmpty": "Username can not be empty",
         "wrongUsernamePasword": "Wrong username/password",
