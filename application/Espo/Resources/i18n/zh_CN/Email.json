@@ -1,5 +1,6 @@
 {
   "fields": {
+    "name": "命名（主题）",
     "parent": "关联",
     "status": "状态",
     "dateSent": "发送日期",
@@ -9,7 +10,7 @@
     "bcc": "密送",
     "replyTo": "回复",
     "replyToString": "回复（字符串）",
-    "isHtml": "是 HTML",
+    "isHtml": "是HTML",
     "body": "正文",
     "subject": "主题",
     "attachments": "附件",
@@ -25,25 +26,32 @@
     "isRead": "已读",
     "isNotRead": "未读",
     "isImportant": "重要",
+    "isReplied": "已回复",
+    "isNotReplied": "未回复",
     "isUsers": "是用户的",
     "inTrash": "在垃圾箱",
-    "name": "命名（主题）",
-    "isReplied": "已回复",
-    "isNotReplied": "没有被回复",
+    "sentBy": "发送者",
     "folder": "文件夹",
     "inboundEmails": "组帐户",
     "emailAccounts": "个人帐户",
     "hasAttachment": "有附件",
-    "sentBy": "发送者",
-    "assignedUsers": "已指派用户"
+    "assignedUsers": "已指派用户",
+    "ccEmailAddresses": "CC地址",
+    "bccEmailAddresses": "BCC地址",
+    "fromName": "发件人"
   },
   "links": {
     "replied": "已回复",
     "replies": "回复",
-    "inboundEmails": "组帐户",
+    "inboundEmails": "邮件组帐户",
     "emailAccounts": "个人帐户",
     "assignedUsers": "已指派用户",
-    "sentBy": "发送者"
+    "sentBy": "发送者",
+    "attachments": "附件",
+    "fromEmailAddress": "发件人地址",
+    "toEmailAddresses": "收件人地址",
+    "ccEmailAddresses": "CC地址",
+    "bccEmailAddresses": "BCC地址"
   },
   "options": {
     "status": {
@@ -58,7 +66,7 @@
   "labels": {
     "Create Email": "归档邮件",
     "Archive Email": "归档邮件",
-    "Compose": "撰写",
+    "Compose": "写邮件",
     "Reply": "回复",
     "Reply to All": "回复全部",
     "Forward": "转发",
@@ -84,13 +92,14 @@
     "Folders": "文件夹"
   },
   "messages": {
-    "noSmtpSetup": "无 SMTP 设置。{link}。",
+    "noSmtpSetup": "无SMTP设置。{link}。",
     "testEmailSent": "测试邮件已发送",
     "emailSent": "邮件已发送",
-    "savedAsDraft": "保存为草稿"
+    "savedAsDraft": "保存为草稿",
+    "confirmInsertTemplate": "邮件正文将丢失,您确定要插入模板吗?"
   },
   "presetFilters": {
-    "sent": "发送",
+    "sent": "已发送",
     "archived": "归档",
     "inbox": "收件箱",
     "drafts": "草稿箱",

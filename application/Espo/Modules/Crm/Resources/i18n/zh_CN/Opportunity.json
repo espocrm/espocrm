@@ -3,9 +3,9 @@
     "name": "名称",
     "account": "客户",
     "stage": "阶段",
-    "amount": "量",
-    "probability": "概率 %",
-    "leadSource": "潜在顾客源",
+    "amount": "项目预算",
+    "probability": "概率%",
+    "leadSource": "客户来源",
     "doNotCall": "不要电联",
     "closeDate": "关闭日期",
     "contacts": "联系人",
@@ -13,7 +13,7 @@
     "amountConverted": "金额（转换）",
     "amountWeightedConverted": "金额加权",
     "campaign": "营销活动",
-    "originalLead": "原始潜在顾客",
+    "originalLead": "原始潜在客户",
     "amountCurrency": "金额货币",
     "contactRole": "联系人角色"
   },
@@ -21,7 +21,7 @@
     "contacts": "联系人",
     "documents": "文件",
     "campaign": "营销活动运动",
-    "originalLead": "原始潜在顾客"
+    "originalLead": "原始潜在客户"
   },
   "options": {
     "stage": {

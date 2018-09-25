@@ -4,7 +4,7 @@
     "parent": "关联",
     "status": "状态",
     "dateStart": "开始日期",
-    "dateEnd": "截止日期",
+    "dateEnd": "结束日期",
     "dateStartDate": "日期开始（全天）",
     "dateEndDate": "日期结束（全天）",
     "priority": "优先级",
@@ -13,10 +13,13 @@
     "account": "客户",
     "dateCompleted": "完成日期",
     "attachments": "附件",
-    "reminders": "提醒"
+    "reminders": "提醒",
+    "contact": "联系人"
   },
   "links": {
-    "attachments": "附件"
+    "attachments": "附件",
+    "account": "用户",
+    "contact": "联系人"
   },
   "options": {
     "status": {
@@ -38,10 +41,10 @@
     "Complete": "完成"
   },
   "presetFilters": {
-    "actual": "实际",
+    "actual": "所有",
     "completed": "完成",
-    "todays": "今天的",
-    "overdue": "过期",
-    "deferred": "延期"
+    "deferred": "延期",
+    "todays": "今天",
+    "overdue": "过期"
   }
 }

@@ -1,10 +1,10 @@
 {
-  "links": {
-    "targetLists": "目标列表"
-  },
   "fields": {
     "acceptanceStatus": "验收状态",
-    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    "acceptanceStatusMeetings": "接受状态(Meetings)",
+    "acceptanceStatusCalls": "接受状态(Calls)"
+  },
+  "links": {
+    "targetLists": "目标列表"
   }
 }

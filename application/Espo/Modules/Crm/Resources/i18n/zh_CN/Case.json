@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "名称",
-    "number": "号",
+    "number": "编号",
     "status": "状态",
     "account": "客户",
     "contact": "联系人",
@@ -10,7 +10,8 @@
     "type": "类型",
     "description": "描述",
     "inboundEmail": "入站邮件",
-    "lead": "潜在顾客"
+    "lead": "潜在客户",
+    "attachments": "附件"
   },
   "links": {
     "inboundEmail": "入站电子邮件",
@@ -22,11 +23,12 @@
     "tasks": "任务",
     "emails": "电子邮件",
     "articles": "知识库文章",
-    "lead": "潜在顾客"
+    "lead": "潜在客户",
+    "attachments": "附件"
   },
   "options": {
     "status": {
-      "New": "新",
+      "New": "新建",
       "Assigned": "已指派",
       "Pending": "待定",
       "Closed": "关闭",
@@ -46,7 +48,7 @@
     }
   },
   "labels": {
-    "Create Case": "创建案例",
+    "Create Case": "创建工单",
     "Close": "关",
     "Reject": "拒绝",
     "Closed": "关闭",

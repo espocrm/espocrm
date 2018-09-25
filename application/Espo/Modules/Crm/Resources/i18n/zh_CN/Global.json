@@ -3,13 +3,13 @@
     "parent": "父母",
     "contacts": "联系人",
     "opportunities": "商机",
-    "leads": "潜在顾客",
+    "leads": "潜在客户",
     "meetings": "会晤",
     "calls": "通话",
     "tasks": "任务",
     "emails": "电子邮件",
     "accounts": "客户",
-    "cases": "案例",
+    "cases": "工单",
     "documents": "文件",
     "account": "客户",
     "opportunity": "商机",
@@ -18,14 +18,14 @@
   "scopeNames": {
     "Account": "客户",
     "Contact": "联系人",
-    "Lead": "潜在顾客",
+    "Lead": "潜在客户",
     "Target": "目标",
     "Opportunity": "商机",
     "Meeting": "会晤",
     "Calendar": "日历",
     "Call": "通话",
     "Task": "任务",
-    "Case": "案件",
+    "Case": "工单",
     "Document": "文件",
     "DocumentFolder": "文档文件夹",
     "Campaign": "营销活动",
@@ -41,14 +41,14 @@
   "scopeNamesPlural": {
     "Account": "客户",
     "Contact": "联系人",
-    "Lead": "潜在顾客",
+    "Lead": "潜在客户",
     "Target": "目标",
     "Opportunity": "商机",
     "Meeting": "会晤",
     "Calendar": "日历",
     "Call": "通话",
     "Task": "任务",
-    "Case": "案例",
+    "Case": "工单",
     "Document": "文件",
     "DocumentFolder": "文档文件夹",
     "Campaign": "营销活动",
@@ -62,15 +62,15 @@
     "CampaignLogRecord": "营销活动日志记录"
   },
   "dashlets": {
-    "Leads": "我的潜在顾客",
+    "Leads": "我的潜在客户",
     "Opportunities": "我的商机",
     "Tasks": "我的任务",
-    "Cases": "我的案例",
+    "Cases": "我的工单",
     "Calendar": "日历",
     "Calls": "我的通话",
     "Meetings": "我的会晤",
     "OpportunitiesByStage": "商机阶段",
-    "OpportunitiesByLeadSource": "源自潜在顾客的商机",
+    "OpportunitiesByLeadSource": "源自潜在客户的商机",
     "SalesByMonth": "按月销售",
     "SalesPipeline": "销售渠道",
     "Activities": "我的活动"
@@ -90,8 +90,8 @@
     "Tasks": "任务"
   },
   "fields": {
-    "billingAddressCity": "市",
-    "addressCity": "市",
+    "billingAddressCity": "城市",
+    "addressCity": "城市",
     "billingAddressCountry": "国家",
     "addressCountry": "国家",
     "billingAddressPostalCode": "邮政编码",
@@ -111,7 +111,7 @@
   },
   "options": {
     "reminderTypes": {
-      "Popup": "弹出",
+      "Popup": "通知",
       "Email": "电子邮件"
     }
   }
