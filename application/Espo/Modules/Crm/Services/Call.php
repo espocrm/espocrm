@@ -83,4 +83,10 @@ class Call extends Meeting
         $entity->set('phoneNumbersMap', $map);
     }
 
+    protected function afterUpdateEntity(Entity $entity, $data)
+    {
+        parent::afterUpdateEntity($entity, $data);
+        $this->loadPhoneNumbersMapField($entity);
+    }
+
 }
