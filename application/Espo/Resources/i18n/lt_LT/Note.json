@@ -7,7 +7,9 @@
     "users": "Vartotojai",
     "portals": "Portalai",
     "type": "Tipas",
+    "isGlobal": "Yra pasaulis",
     "isInternal": "Yra vidinis (vidiniams vartotojams)",
+    "related": "Susijęs",
     "createdByGender": "Sukurta pagal lytį",
     "data": "Duomenys",
     "number": "Numeris"
@@ -27,6 +29,13 @@
       "teams": "konkrečiai komandai (oms)",
       "all": "visiems vidiniams vartotojams",
       "portals": "konkretiems vartotojams"
+    },
+    "type": {
+      "Post": "Paštas"
     }
+  },
+  "links": {
+    "superParent": "Super tėvų",
+    "related": "Susijęs"
   }
 }

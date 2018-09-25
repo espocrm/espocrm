@@ -28,7 +28,8 @@
     "position": "Pozicija komandoje",
     "ipAddress": "IP Adresss",
     "passwordPreview": "Slaptažodžio peržiūra",
-    "isSuperAdmin": "Yra superadministratorius"
+    "isSuperAdmin": "Yra superadministratorius",
+    "lastAccess": "Paskutinė prieiga"
   },
   "links": {
     "teams": "Komandos",
@@ -77,7 +78,8 @@
     "forbidden": "Draudžiama, prašome pabandyti vėliau",
     "uniqueLinkHasBeenSent": "Unikalus URL buvo išsiųstas nurodytu el. pašto adresu.",
     "passwordChangedByRequest": "Slaptažodis pakeistas.",
-    "setupSmtpBefore": "Jūs turite nustatyti <a href=\"{url}\"> SMTP nustatymus </a>, kad sistema galėtų išsiųsti slaptažodį el. paštu."
+    "setupSmtpBefore": "Jūs turite nustatyti <a href=\"{url}\"> SMTP nustatymus </a>, kad sistema galėtų išsiųsti slaptažodį el. paštu.",
+    "userNameExists": "Toks vartotojas jau sukurtas"
   },
   "boolFilters": {
     "onlyMyTeam": "Tik mano komanda"

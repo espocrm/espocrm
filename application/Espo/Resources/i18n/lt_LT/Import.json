@@ -37,6 +37,7 @@
     "Field Delimiter": "Laukelių atskyrimas",
     "Date Format": "Datos formatas",
     "Decimal Mark": "Dešimtainis ženklas",
+    "Text Qualifier": "Teksto kvalifikacija",
     "Time Format": "Laiko formatas",
     "Currency": "Valiuta",
     "Preview": "Peržiūra",
@@ -48,12 +49,21 @@
     "Imported": "Importuota",
     "Duplicates": "Dublikatai",
     "Skip searching for duplicates": "Praleisti dublikatų paiešką",
-    "Timezone": "Laiko zona"
+    "Timezone": "Laiko zona",
+    "Remove Import Log": "Pašalinti importo žurnalą",
+    "New Import": "Naujas importas",
+    "Import Results": "Importuoti rezultatus"
   },
   "messages": {
     "utf8": "Turėtų būti užkoduotas UTF-8",
     "duplicatesRemoved": "Dublikatai pašalinti",
-    "inIdle": "Vykdyti tuščiąja eiga (dideliems duomenims; per cron)"
+    "inIdle": "Vykdyti tuščiąja eiga (dideliems duomenims; per cron)",
+    "revert": "Tai pašalins visus importuotus įrašus visam laikui.",
+    "removeDuplicates": "Tai visam laikui pašalins visus importuotus įrašus, kurie buvo pripažinti kaip pasikartojantys.",
+    "confirmRevert": "Tai pašalins visus importuotus įrašus visam laikui. Ar tu tuo tikras?",
+    "confirmRemoveDuplicates": "Tai visam laikui pašalins visus importuotus įrašus, kurie buvo pripažinti kaip pasikartojantys. Ar tu tuo tikras?",
+    "confirmRemoveImportLog": "Tai pašalins importo žurnalą. Visi importuoti įrašai bus saugomi. Jūs negalėsite sugrąžinti importo rezultatų. Ar tu esi įsitikinęs?",
+    "removeImportLog": "Tai pašalins importo žurnalą. Visi importuoti įrašai bus saugomi. Naudok jį, jei esate tikri, kad importas yra gerai."
   },
   "fields": {
     "file": "Failas",

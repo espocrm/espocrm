@@ -13,10 +13,13 @@
     "account": "Įmonė",
     "dateCompleted": "Įvykdymo data",
     "attachments": "Prisegtukai",
-    "reminders": "Priminimai"
+    "reminders": "Priminimai",
+    "contact": "kontaktas"
   },
   "links": {
-    "attachments": "Prisegtukai"
+    "attachments": "Prisegtukai",
+    "account": "Paskyra",
+    "contact": "Kontaktai"
   },
   "options": {
     "status": {

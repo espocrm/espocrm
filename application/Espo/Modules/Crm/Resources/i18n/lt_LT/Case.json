@@ -10,7 +10,8 @@
     "type": "Tipas",
     "description": "Aprašymas",
     "lead": "Potencialus klientas",
-    "attachments": "Prisegtukai"
+    "attachments": "Prisegtukai",
+    "inboundEmail": "Grupės el. Pašto sąskaita"
   },
   "links": {
     "account": "Įmonė",
@@ -22,7 +23,8 @@
     "emails": "El. laiška",
     "articles": "Žinių bazės straipsniai",
     "lead": "Potencialus klientas",
-    "attachments": "Prisegtukai"
+    "attachments": "Prisegtukai",
+    "inboundEmail": "Grupės el. Pašto sąskaita"
   },
   "options": {
     "status": {

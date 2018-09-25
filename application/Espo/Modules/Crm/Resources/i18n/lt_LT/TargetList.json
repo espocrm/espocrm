@@ -2,11 +2,15 @@
   "fields": {
     "name": "Vardas",
     "description": "Aprašymas",
+    "entryCount": "Įrašų skaičius",
     "campaigns": "Kampanijos",
     "endDate": "Pabaigos data",
     "targetLists": "Adresatų sarašai",
     "includingActionList": "Įskaitant",
-    "excludingActionList": "Išskyrus"
+    "excludingActionList": "Išskyrus",
+    "optedOutCount": "Pasirinkta suma",
+    "targetStatus": "Tikslo būsena",
+    "isOptedOut": "Yra atmesta"
   },
   "links": {
     "accounts": "Įmonės",
@@ -22,6 +26,10 @@
       "Television": "Televizija",
       "Radio": "Radijas",
       "Newsletter": "Naujienlaiškis"
+    },
+    "targetStatus": {
+      "Opted Out": "Pasirinkta",
+      "Listed": "Sąraše"
     }
   },
   "labels": {

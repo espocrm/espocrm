@@ -14,7 +14,8 @@
     "boolFilterList": "Papildomi filtrai",
     "sortBy": "Rikiavimas (laukelių)",
     "sortDirection": "Rikiavimas kryptis)",
-    "expandedLayout": "Išdėstymas"
+    "expandedLayout": "Išdėstymas",
+    "dateFilter": "Data filtras"
   },
   "options": {
     "mode": {

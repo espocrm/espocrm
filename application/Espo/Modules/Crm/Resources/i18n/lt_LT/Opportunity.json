@@ -13,12 +13,16 @@
     "amountConverted": "Suma (konvertuota)",
     "amountWeightedConverted": "Pasverta suma",
     "campaign": "Kampanija",
-    "amountCurrency": "Valiutos suma"
+    "originalLead": "Originalus švinas",
+    "amountCurrency": "Valiutos suma",
+    "contactRole": "Kontakto vaidmuo",
+    "lastStage": "Paskutinis etapas"
   },
   "links": {
     "contacts": "Kontaktai",
     "documents": "Dokumentai",
-    "campaign": "Kampanija"
+    "campaign": "Kampanija",
+    "originalLead": "Originalus švinas"
   },
   "options": {
     "stage": {

@@ -6,7 +6,8 @@
     "userPermission": "Vartotojo leidimas",
     "portalPermission": "Portalo leidimas",
     "groupEmailAccountPermission": "Grupės el. pašto paskyros leidimas",
-    "exportPermission": "Eksportuoti leidimą"
+    "exportPermission": "Eksportuoti leidimą",
+    "dataPrivacyPermission": "Duomenų privatumo leidimas"
   },
   "links": {
     "users": "Vartotojai",
@@ -17,7 +18,8 @@
     "userPermission": "Leidžia apriboti vartotojų galimybę peržiūrėti kitų vartotojų veiklą, kalendorių ir srautą.\n\nvisi - gali peržiūrėti visus\n\nkomanda - gali matyti tik komandos narių veiklą\n\nNe - negali peržiūrėti",
     "portalPermission": "Nurodo prieigą prie portalo informacijos, galimybė skelbti pranešimus portalo vartotojams.",
     "groupEmailAccountPermission": "Nurodo prieigą prie grupės el. pašto abonementų, galimybę siųsti el. laiškus iš grupės SMTP.",
-    "exportPermission": "Nustato kurie vartotojai turi galimybę eksportuoti įrašus."
+    "dataPrivacyPermission": "Leidžia peržiūrėti ir ištrinti asmens duomenis.",
+    "exportPermission": "Nurodo, ar vartotojai gali eksportuoti įrašus."
   },
   "labels": {
     "Access": "Prieiga",

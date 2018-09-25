@@ -6,7 +6,9 @@
     "align": "Lygiuoti",
     "panelName": "Panelės pavadinimas",
     "style": "Stilius",
-    "sticked": "Prikabinta"
+    "sticked": "Prikabinta",
+    "isLarge": "Didelis šrifto dydis",
+    "dynamicLogicVisible": "Sąlygos, dėl kurių skydas matomas"
   },
   "options": {
     "align": {

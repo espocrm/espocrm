@@ -37,9 +37,16 @@
     "Export": "Eksportuoti",
     "DynamicLogic": "Dinaminė logika",
     "DashletOptions": "Panelio pasirinkimai",
+    "Global": "Pasaulinis",
     "Preferences": "Nustatymai",
     "EmailAddress": "El. pašto adresas",
-    "PhoneNumber": "Telefono numeris"
+    "PhoneNumber": "Telefono numeris",
+    "AuthLogRecord": "Auth žurnalo įrašas",
+    "AuthFailLogRecord": "Atvykti failų žurnalo įrašą",
+    "EmailTemplateCategory": "Laiškų šablonų kategorijos",
+    "LeadCapture": "\"Lead Capture Entry Point\"",
+    "LeadCaptureLogRecord": "Švino surinkimo žurnalo įrašas",
+    "ArrayValue": "Masyvo vertė"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -56,7 +63,6 @@
     "Dashboard": "Prietaisų skydelis",
     "InboundEmail": "Grupės el. pašto paskyros",
     "Stream": "Srautas",
-    "Import": "Importuoti rezultatus",
     "Template": "Šablonai",
     "Job": "Užduotys",
     "EmailFilter": "El. pašto filtrai",
@@ -70,7 +76,14 @@
     "ActionHistoryRecord": "Veiksmų istorija",
     "AuthToken": "Autentikavimo priemonė",
     "UniqueId": "Unikalūs ID",
-    "LastViewed": "Paskutiniai peržiūrėti"
+    "LastViewed": "Paskutiniai peržiūrėti",
+    "AuthLogRecord": "Auth Prisijungti",
+    "AuthFailLogRecord": "Atvykti failų žurnalas",
+    "EmailTemplateCategory": "Laiškų šablonų kategorijos ",
+    "Import": "Importuoti",
+    "LeadCapture": "\"Lead Capture\"",
+    "LeadCaptureLogRecord": "Švino surinkimo žurnalas",
+    "ArrayValue": "Masyvo reikšmės"
   },
   "labels": {
     "Misc": "Įvairūs",
@@ -218,7 +231,12 @@
     "Collapse": "Suskleisti",
     "New notifications": "Nauji pranešimai",
     "Manage Categories": "Tvarkyti kategorijas",
-    "Manage Folders": "Tvarkyti aplankus"
+    "Manage Folders": "Tvarkyti aplankus",
+    "Convert to": "Eksportuoti į",
+    "View Personal Data": "Peržiūrėkite asmeninius duomenis",
+    "Personal Data": "Asmeniniai duomenys",
+    "Erase": "Ištrinti",
+    "Move Over": "Pasitrauk"
   },
   "messages": {
     "pleaseWait": "Prašome palaukti...",
@@ -264,12 +282,19 @@
     "massUnfollowZeroResult": "Nėra nesekamų įrašų",
     "fieldShouldBeEmail": "{laukas} turėtų būti tinkamas el. pašto adresas",
     "fieldShouldBeFloat": "{laukas} turėtų būti tinkamas",
+    "fieldShouldBeInt": "{laukas} turi būti teisingas sveikasis skaičius",
+    "fieldShouldBeDate": "{laukas} turėtų būti galiojanti data",
     "fieldShouldBeDatetime": "{field} turėtų būti teisinga data / laikas",
+    "internalPostTitle": "Paštą mato tik vidiniai vartotojai",
     "loading": "Kraunama...",
     "saving": "Saugoma...",
     "fieldMaxFileSizeError": "Failas neturėtų viršyti {max} Mb",
     "fieldShouldBeLess": "{field} neturėtų būti didesnis nei {value}",
-    "fieldShouldBeGreater": "{field} neturėtų būti mažesnis nei {value}"
+    "fieldShouldBeGreater": "{field} neturėtų būti mažesnis nei {value}",
+    "fieldIsUploading": "Įkėlimas vykdomas",
+    "streamPostInfo": "Įrašykite naudotojo įrašus naudodami <strong> @pavadinimus </ strong>.\n\nGalimas žymėjimo sintaksė:\n`<code> kodas </ code>`\n`` `<code> daugiataškis kodas </ code>` ``\n** <strong> stipraus teksto </ strong> **\n* <em> pabrėžė tekstas </ em> *\n~~ <del> ištrintas tekstas </ del> ~~\n> blockquote\n[nuorodos tekstas] (url)",
+    "erasePersonalDataConfirmation": "Pažymėti laukai bus ištrinti visam laikui. Ar tu tuo tikras?",
+    "massPrintPdfMaxCountError": "Negalima spausdinti daugiau {maxCount} įrašų."
   },
   "boolFilters": {
     "onlyMy": "Tik mano",
@@ -285,7 +310,9 @@
     "massUpdate": "Masinis atnaujinimas",
     "export": "Eksportuoti",
     "follow": "Stebėti",
-    "unfollow": "Nebesekti"
+    "unfollow": "Nebesekti",
+    "convertCurrency": "Pakeisti valiutą",
+    "printPdf": "Spausdinti PDF formatu"
   },
   "fields": {
     "name": "Vardas",
@@ -311,7 +338,14 @@
     "phoneNumberOther": "Telefonas (kitas)",
     "order": "Eilė",
     "parent": "Pagrindinis",
-    "children": "Antrinis"
+    "children": "Antrinis",
+    "emailAddressData": "El. pašto duomenys",
+    "phoneNumberData": "Telefono numerio duomenys",
+    "ids": "ID",
+    "names": "Vardai",
+    "emailAddressIsOptedOut": "El. Pašto adresas yra išjungtas",
+    "targetListIsOptedOut": "Atmetamas (tikslinius sąrašus)",
+    "type": "Įveskite"
   },
   "links": {
     "assignedUser": "Priskirtas darbuotojas",
@@ -493,11 +527,13 @@
     },
     "varcharSearchRanges": {
       "equals": "Lygu",
+      "like": "Yra tarsi (%)",
       "startsWith": "Prasideda",
       "endsWith": "Baigiasi",
       "contains": "Yra",
       "isEmpty": "Yra tuščia",
       "isNotEmpty": "Yra netuščia",
+      "notLike": "Nėra panašus (%)",
       "notContains": "Neturi",
       "notEquals": "Nelygu"
     },
@@ -627,18 +663,28 @@
       }
     }
   },
-  "themes": {
-    "Sakura": "Saura",
-    "EspoRtl": "Iš dešinės į kairę Espo",
-    "EspoVertical": "Espo w / šoninė juosta",
-    "SakuraVertical": "Sakura w / šoninė juosta",
-    "VioletVertical": "Violet w / šoninė juosta",
-    "HazyblueVertical": "SidHazyblue w / šoninė juosta"
-  },
   "streamMessagesMale": {
     "postTargetSelfAndOthers": "{user} paskelbė {target} ir sau"
   },
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} paskelbė {target} ir sau"
+  },
+  "themes": {
+    "EspoRtl": "Iš dešinės į kairę Espo",
+    "Espo": "Klasikinis espo",
+    "Sakura": "Klasikinė Sakura",
+    "EspoVertical": "Vertikali Espo",
+    "SakuraVertical": "Vertikali Sakura",
+    "Violet": "Klasikinis violetinis",
+    "VioletVertical": "Vertikali violetinė",
+    "Hazyblue": "Klasikinis \"Hazyblue\"",
+    "HazyblueVertical": "Vertikalios bangos"
+  },
+  "durationUnits": {
+    "h": "H",
+    "m": "min"
+  },
+  "listViewModes": {
+    "list": "Sąrašas"
   }
 }

@@ -5,8 +5,11 @@
     "data": "Duomenys",
     "campaign": "Kampanija",
     "parent": "Adresatas",
+    "object": "Objektas",
+    "application": "Programėlė",
     "queueItem": "Eilės elementas",
     "stringData": "Eilutės duomenys",
+    "stringAdditionalData": "Papildomų duomenų eilutė",
     "isTest": "Testuojama"
   },
   "links": {
@@ -20,8 +23,10 @@
       "Sent": "Išsiųsta",
       "Opened": "Atverta",
       "Opted Out": "Pasirinkta",
+      "Bounced": "Atmesta",
       "Clicked": "Paspausta",
-      "Lead Created": "Sukurtas potencialus klientas"
+      "Lead Created": "Sukurtas potencialus klientas",
+      "Opted In": "Pasirinkta"
     }
   },
   "labels": {
@@ -31,7 +36,9 @@
     "sent": "Išsiųsta",
     "opened": "Atverta",
     "optedOut": "Pasirinkta",
+    "bounced": "Atmesta",
     "clicked": "Paspausta",
-    "leadCreated": "Sukurtas potencialus klientas"
+    "leadCreated": "Sukurtas potencialus klientas",
+    "optedIn": "Pasirinkta"
   }
 }

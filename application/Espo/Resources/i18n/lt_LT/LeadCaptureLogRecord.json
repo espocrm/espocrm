@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "Numeris",
+    "data": "Duomenys",
+    "target": "Tikslinė",
+    "leadCapture": "\"Lead Capture\"",
+    "createdAt": "Įeina į",
+    "isCreated": "Sukurtas švinas"
+  },
+  "links": {
+    "leadCapture": "\"Lead Capture\"",
+    "target": "Tikslinė"
+  }
+}

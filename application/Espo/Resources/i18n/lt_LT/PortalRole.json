@@ -12,6 +12,6 @@
     "exportPermission": "Eksportuoti leidimą"
   },
   "tooltips": {
-    "exportPermission": "Nustato kurie portalo vartotojai turi galimybę eksportuoti įrašus."
+    "exportPermission": "Nustato, ar portalo naudotojai gali eksportuoti įrašus."
   }
 }

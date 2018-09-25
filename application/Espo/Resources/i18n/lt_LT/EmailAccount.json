@@ -19,7 +19,8 @@
     "smtpAuth": "SMTP autentikavimas",
     "smtpSecurity": "SMTP apsauga",
     "smtpUsername": "SMTP vartotojo vardas",
-    "smtpPassword": "SMTP slaptažodis"
+    "smtpPassword": "SMTP slaptažodis",
+    "useImap": "Tikrinti paštą"
   },
   "links": {
     "filters": "Filtrai",
