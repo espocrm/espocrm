@@ -34,9 +34,12 @@ use Espo\Core\Utils\Config;
 class Installer
 {
     protected $app = null;
+
     protected $language = null;
 
     protected $systemHelper = null;
+
+    protected $databaseHelper = null;
 
     protected $isAuth = false;
 
@@ -74,6 +77,8 @@ class Installer
         $configPath = $this->getConfig()->getConfigPath();
         $this->permissionMap = $this->getConfig()->get('permissionMap');
         $this->permissionMap['writable'][] = $configPath;
+
+        $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->getConfig());
     }
 
     protected function initialize()
@@ -115,6 +120,11 @@ class Installer
     protected function getSystemHelper()
     {
         return $this->systemHelper;
+    }
+
+    protected function getDatabaseHelper()
+    {
+        return $this->databaseHelper;
     }
 
     protected function getFileManager()
@@ -172,6 +182,35 @@ class Installer
         $translated = $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
 
         return $translated;
+    }
+
+    public function getSystemRequirementList($type, $requiredOnly = false, array $additionalData = null)
+    {
+         $systemRequirementManager = new \Espo\Core\Utils\SystemRequirements($this->app->getContainer());
+         return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
+    }
+
+    public function checkDatabaseConnection(array $params, $isCreateDatabase = false)
+    {
+        $databaseHelper = $this->getDatabaseHelper();
+
+        try {
+            $pdo = $this->getDatabaseHelper()->createPdoConnection($params);
+        } catch (\Exception $e) {
+            if ($isCreateDatabase && $e->getCode() == '1049') {
+                $modParams = $params;
+                unset($modParams['dbname']);
+
+                $pdo = $this->getDatabaseHelper()->createPdoConnection($modParams);
+                $pdo->query("CREATE DATABASE IF NOT EXISTS `". $params['dbname'] ."`");
+
+                return $this->checkDatabaseConnection($params, false);
+            }
+
+            throw $e;
+        }
+
+        return true;
     }
 
     /**

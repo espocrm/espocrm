@@ -43,6 +43,11 @@
             "description":"upgrade"
          },
          {
+            "url":"#Admin/systemRequirements",
+            "label":"System Requirements",
+            "description":"systemRequirements"
+         },
+         {
             "url":"#Admin/clearCache",
             "label":"Clear Cache",
             "description":"clearCache"

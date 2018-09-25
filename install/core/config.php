@@ -29,30 +29,6 @@
 
 return [
     'apiPath' => '/api/v1',
-    'requirements' => [
-        'phpVersion' => '5.6',
-        'phpRequires' => [
-            'json',
-            'openssl',
-            'pdo_mysql',
-            'mbstring',
-            'zip',
-            'gd',
-        ],
-        'phpRecommendations' => [
-            'curl',
-            'xml',
-            'exif',
-            'max_execution_time' => 180,
-            'max_input_time' => 180,
-            'memory_limit' => '256M',
-            'post_max_size' => '20M',
-            'upload_max_filesize' => '20M',
-        ],
-        'mysqlVersion' => '5.5.3',
-        'mysqlRequires' => [],
-        'mysqlRecommendations' => [],
-    ],
     'rewriteRules' => [
         'APACHE1' => 'a2enmod rewrite
 service apache2 restart',

@@ -77,6 +77,45 @@ class Helper
     }
 
     /**
+     * Create PDO connection
+     * @param  array $params
+     * @return \Pdo| \PDOException
+     */
+    public function createPdoConnection(array $params = null)
+    {
+        if (!isset($params)) {
+            $params = $this->getConfig()->get('database');
+        }
+
+        $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
+        $port = empty($params['port']) ? '' : ';port=' . $params['port'] . ';';
+        $dbname = empty($params['dbname']) ? '' : ';dbname=' . $params['dbname'];
+
+        $options = array();
+
+        if (isset($params['sslCA'])) {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
+        }
+        if (isset($params['sslCert'])) {
+            $options[PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
+        }
+        if (isset($params['sslKey'])) {
+            $options[PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
+        }
+        if (isset($params['sslCAPath'])) {
+            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
+        }
+        if (isset($params['sslCipher'])) {
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
+        }
+
+        $dsn = $platform . ':host='.$params['host'].$port.$dbname;
+        $dbh = new \PDO($dsn, $params['user'], $params['password'], $options);
+
+        return $dbh;
+    }
+
+    /**
      * Get maximum index length. If $tableName is empty get a value for all database tables
      *
      * @param  string|null $tableName

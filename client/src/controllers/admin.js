@@ -78,6 +78,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             this.main('views/admin/upgrade/index');
         },
 
+        systemRequirements: function (options) {
+            this.main('views/admin/system-requirements/index');
+        },
+
         getSettingsModel: function () {
             var model = this.getConfig().clone();
             model.defs = this.getConfig().defs;

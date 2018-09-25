@@ -108,4 +108,10 @@ class Admin extends \Espo\Core\Controllers\Base
         $adminNotificationManager = new \Espo\Core\Utils\AdminNotificationManager($this->getContainer());
         return $adminNotificationManager->getNotificationList();
     }
+
+    public function actionSystemRequirementList($params)
+    {
+        $systemRequirementManager = new \Espo\Core\Utils\SystemRequirements($this->getContainer());
+        return $systemRequirementManager->getAllRequiredList();
+    }
 }

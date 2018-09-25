@@ -59,7 +59,15 @@
         "Action History": "Action History",
         "Label Manager": "Label Manager",
         "Lead Capture": "Lead Capture",
-        "Attachments": "Attachments"
+        "Attachments": "Attachments",
+        "System Requirements": "System Requirements",
+        "PHP Settings": "PHP Settings",
+        "Database Settings": "Database Settings",
+        "Permissions": "Permissions",
+        "Success": "Success",
+        "Fail": "Fail",
+        "is recommended": "is recommended",
+        "extension is missing": "extension is missing"
     },
     "layouts": {
         "list": "List",
@@ -218,7 +226,8 @@
         "labelManager": "Customize application labels.",
         "authLog": "Login history.",
         "leadCapture": "API entry points for Web-to-Lead.",
-        "attachments": "All file attachments stored in the system."
+        "attachments": "All file attachments stored in the system.",
+        "systemRequirements": "System Requirements for EspoCRM."
     },
     "options": {
         "previewSize": {
@@ -232,5 +241,14 @@
         "and": "AND",
         "or": "OR",
         "not": "NOT"
+    },
+    "systemRequirements": {
+        "requiredPhpVersion": "PHP Version",
+        "requiredMysqlVersion": "MySQL Version",
+        "host": "Host Name",
+        "dbname": "Database Name",
+        "user": "User Name",
+        "writable": "Writable",
+        "readable": "Readable"
     }
 }

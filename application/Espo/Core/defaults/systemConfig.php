@@ -27,8 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array (    'defaultPermissions' =>
-    array (
+return array (
+    'defaultPermissions' => array (
         'dir' => '0775',
         'file' => '0664',
         'user' => '',
@@ -53,7 +53,6 @@ return array (    'defaultPermissions' =>
             'cron.php',
             'rebuild.php',
             'main.html',
-            'reset.html',
         ),
     ),
     'jobMaxPortion' => 15, /** Max number of jobs per one execution. */
@@ -159,7 +158,13 @@ return array (    'defaultPermissions' =>
         'adminNotificationsNewVersion',
         'adminNotificationsCronIsNotConfigured',
         'adminNotificationsNewExtensionVersion',
-        'leadCaptureAllowOrigin'
+        'leadCaptureAllowOrigin',
+        'requiredPhpVersion',
+        'requiredMysqlVersion',
+        'recommendedMysqlParams',
+        'requiredPhpLibs',
+        'recommendedPhpLibs',
+        'recommendedPhpParams',
     ),
     'userItems' =>
     array (
@@ -176,5 +181,28 @@ return array (    'defaultPermissions' =>
     'ldapUserEmailAddressAttribute' => 'mail',
     'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
     'ldapUserObjectClass' => 'person',
-);
+    'requiredPhpVersion' => '5.6.0',
+    'requiredPhpLibs' => [
+        'json',
+        'openssl',
+        'pdo_mysql',
+        'mbstring',
+        'zip',
+        'gd',
+    ],
+    'recommendedPhpLibs' => [
+        'curl',
+        'xml',
+        'exif',
+    ],
+    'recommendedPhpParams' => [
+        'max_execution_time' => 180,
+        'max_input_time' => 180,
+        'memory_limit' => '256M',
+        'post_max_size' => '20M',
+        'upload_max_filesize' => '20M',
+    ],
+    'requiredMysqlVersion' => '5.5.3',
+    'recommendedMysqlParams' => [],
 
+);

@@ -618,9 +618,26 @@ class Util
      *
      * @return boolean
      */
-    static public function arrayKeysExists(array $keys, array $array)
+    public static function arrayKeysExists(array $keys, array $array)
     {
        return !array_diff_key(array_flip($keys), $array);
     }
-}
 
+    public static function convertToByte($value)
+    {
+        $value = trim($value);
+        $last = strtoupper(substr($value, -1));
+
+        switch ( $last )
+        {
+            case 'G':
+            $value = (int) $value * 1024;
+            case 'M':
+            $value = (int) $value * 1024;
+            case 'K':
+            $value = (int) $value * 1024;
+        }
+
+        return $value;
+    }
+}

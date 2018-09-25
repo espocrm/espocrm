@@ -10,34 +10,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {foreach from=$phpConfig key=name item=value}
-                        <tr>
-                            <td class="col-md-4">
-                                {if $langs['labels'][$name] eq ''}
+                    {foreach from=$phpRequirementList key=name item=value}
+                        <tr class="list-row">
+                            <td class="cell col-md-4">
+                                {if $langs['systemRequirements'][$name] eq ''}
                                     {$name}
                                 {else}
-                                   {$langs['labels'][{$name}]}
+                                   {$langs['systemRequirements'][{$name}]}
                                 {/if}
                             </td>
-                            <td class="col-md-4">{$value['current']}</td>
-                            <td class="col-md-4">
-
-                                {if $value['acceptable'] eq true}
-                                    <span class="ok">
-                                        {$langs['labels']['OK']}
-                                    </span>
-                                {else}
-                                    <span class="remark">
-                                        {if $value['isExtension'] eq true}
-                                            {assign var="messageName" value="extension"}
-                                        {else}
-                                            {assign var="messageName" value="option"}
-                                        {/if}
-
-                                        {$langs['messages'][{$messageName}]|replace:'{0}':$value['required']}
-                                    </span>
-                                {/if}
-
+                            <td class="cell col-md-4">{$value['actual']}</td>
+                            <td class="cell col-md-4">
+                                {if $value['acceptable'] eq true} <span class="text-success">{$langs['labels']['Success']}</span> {else} <span class="text-danger">{$langs['labels']['Fail']}
+                                    {if $value['type'] eq 'lib'} ({$langs['labels']['extension is missing']}) {/if}
+                                    {if $value['type'] eq 'param'} ({$value['required']} {$langs['labels']['is recommended']}) {/if}
+                                </span> {/if}
                             </td>
                         </tr>
                     {/foreach}
@@ -51,34 +38,45 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {foreach from=$mysqlConfig key=name item=value}
-                        <tr>
-                            <td class="col-md-4">
-                                {if $langs['labels'][$name] eq ''}
+                    {foreach from=$mysqlRequirementList key=name item=value}
+                        <tr class="list-row">
+                            <td class="cell col-md-4">
+                                {if $langs['systemRequirements'][$name] eq ''}
                                     {$name}
                                 {else}
-                                   {$langs['labels'][{$name}]}
+                                   {$langs['systemRequirements'][{$name}]}
                                 {/if}
                             </td>
-                            <td class="col-md-4">{$value['current']}</td>
-                            <td class="col-md-4">
+                            <td class="cell col-md-4">{$value['actual']}</td>
+                            <td class="cell col-md-4">
+                                {if $value['acceptable'] eq true} <span class="text-success">{$langs['labels']['Success']}</span> {else} <span class="text-danger">{$langs['labels']['Fail']}
+                                    {if $value['type'] eq 'param'} ({$value['required']} {$langs['labels']['is recommended']}) {/if}
+                                </span> {/if}
+                            </td>
+                        </tr>
+                    {/foreach}
+                </tbody>
+            </table>
 
-                                {if $value['acceptable'] eq true}
-                                    <span class="ok">
-                                        {$langs['labels']['OK']}
-                                    </span>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="2">{$langs['labels']['Permission Requirements']}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach from=$permissionRequirementList key=name item=value}
+                        <tr class="list-row">
+                            <td class="cell col-md-4">
+                                {if $langs['systemRequirements'][$name] eq ''}
+                                    {$name}
                                 {else}
-                                    <span class="remark">
-                                        {if $value['isExtension'] eq true}
-                                            {assign var="messageName" value="extension"}
-                                        {else}
-                                            {assign var="messageName" value="option"}
-                                        {/if}
-
-                                        {$langs['messages'][{$messageName}]|replace:'{0}':$value['required']}
-                                    </span>
+                                   {$langs['systemRequirements'][{$name}]}
                                 {/if}
-
+                            </td>
+                            <td class="cell col-md-4">{$langs['systemRequirements'][{$value['type']}]}</td>
+                            <td class="cell col-md-4">
+                                {if $value['acceptable'] eq true} <span class="text-success">{$langs['labels']['Success']}</span> {else} <span class="text-danger">{$langs['labels']['Fail']}</span> {/if}
                             </td>
                         </tr>
                     {/foreach}

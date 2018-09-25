@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,21 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-$phpRequirementList = $installer->getSystemRequirementList('php');
-$smarty->assign('phpRequirementList', $phpRequirementList);
+Espo.define('views/admin/system-requirements/index', 'view', function (Dep) {
 
-$installData = $_SESSION['install'];
-list($host, $port) = explode(':', $installData['host-name']);
+    return Dep.extend({
 
-$dbConfig = array(
-    'host' => $host,
-    'port' => $port,
-    'dbname' => $installData['db-name'],
-    'user' => $installData['db-user-name'],
-    'password' => $installData['db-user-password'],
-);
-$mysqlRequirementList = $installer->getSystemRequirementList('database', false, ['database' => $dbConfig]);
-$smarty->assign('mysqlRequirementList', $mysqlRequirementList);
+        template: 'admin/system-requirements/index',
 
-$permissionRequirementList = $installer->getSystemRequirementList('permission');
-$smarty->assign('permissionRequirementList', $permissionRequirementList);
+        data: function () {
+            return {
+                phpRequirementList: this.requirementList.php,
+                databaseRequirementList: this.requirementList.database,
+                permissionRequirementList: this.requirementList.permission
+            };
+        },
+
+        setup: function () {
+            this.requirementList = [];
+            this.ajaxGetRequest('Admin/action/systemRequirementList').then(function (requirementList) {
+                this.requirementList = requirementList;
+                if (this.isRendered() || this.isBeingRendered()) {
+                    this.reRender();
+                }
+            }.bind(this));
+        },
+    });
+});

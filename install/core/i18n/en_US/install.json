@@ -34,16 +34,21 @@
         "Test settings": "Test Connection",
         "Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306.",
         "Install": "Install",
-        "SetupConfirmation page title": "Recommended Settings",
-        "PHP Configuration": "Recommended PHP settings",
-        "MySQL Configuration": "MySQL Configuration",
+        "SetupConfirmation page title": "System Requirements",
+        "PHP Configuration": "PHP settings",
+        "MySQL Configuration": "Database settings",
+        "Permission Requirements": "Permissions",
         "Configuration Instructions": "Configuration Instructions",
         "phpVersion": "PHP version",
         "mysqlVersion": "MySQL version",
         "dbHostName": "Host Name",
         "dbName": "Database Name",
         "dbUserName": "Database User Name",
-        "OK": "OK"
+        "OK": "OK",
+        "Success": "Success",
+        "Fail": "Fail",
+        "is recommended": "is recommended",
+        "extension is missing": "extension is missing"
     },
     "fields": {
         "Choose your language": "Choose your language",
@@ -133,5 +138,14 @@
                 "windows": ""
             }
         }
+    },
+    "systemRequirements": {
+        "requiredPhpVersion": "PHP Version",
+        "requiredMysqlVersion": "MySQL Version",
+        "host": "Host Name",
+        "dbname": "Database Name",
+        "user": "User Name",
+        "writable": "Writable",
+        "readable": "Readable"
     }
 }
