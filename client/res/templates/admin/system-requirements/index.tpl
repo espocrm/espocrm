@@ -10,10 +10,10 @@
         <tbody>
             {{#each phpRequirementList}}
                 <tr class="list-row">
-                    <td class="cell col-md-4">
+                    <td class="cell col-md-5">
                         {{translate @key scope='Admin' category='systemRequirements'}}
                     </td>
-                    <td class="cell col-md-4">{{actual}}</td>
+                    <td class="cell col-md-3">{{actual}}</td>
                     <td class="cell col-md-4">
                         {{#if acceptable}} <span class="text-success">{{translate 'Success' scope='Admin'}}</span> {{else}} <span class="text-danger">{{translate 'Fail' scope='Admin'}}
                             {{#ifEqual type 'lib'}} ({{translate 'extension is missing' scope='Admin'}}) {{/ifEqual}}
@@ -36,11 +36,11 @@
         <tbody>
             {{#each databaseRequirementList}}
                 <tr class="list-row">
-                    <td class="cell col-md-4">
+                    <td class="cell col-md-5">
                         {{translate @key scope='Admin' category='systemRequirements'}}
                     </td>
-                    <td class="cell col-md-4">{{actual}}</td>
-                    <td class="cell col-md-4">
+                    <td class="cell col-md-3">{{actual}}</td>
+                    <td class="cell col-md-5">
                         {{#if acceptable}} <span class="text-success">{{translate 'Success' scope='Admin'}}</span> {{else}} <span class="text-danger">{{translate 'Fail' scope='Admin'}}
                             {{#ifEqual type 'param'}} ({{required}} {{translate 'is recommended' scope='Admin'}}) {{/ifEqual}}
                         </span> {{/if}}
@@ -61,10 +61,10 @@
         <tbody>
             {{#each permissionRequirementList}}
                 <tr class="list-row">
-                    <td class="cell col-md-4">
+                    <td class="cell col-md-5">
                         {{translate @key scope='Admin' category='systemRequirements'}}
                     </td>
-                    <td class="cell col-md-4">{{translate type scope='Admin' category='systemRequirements'}}</td>
+                    <td class="cell col-md-3">{{translate type scope='Admin' category='systemRequirements'}}</td>
                     <td class="cell col-md-4">
                         {{#if acceptable}} <span class="text-success">{{translate 'Success' scope='Admin'}}</span> {{else}} <span class="text-danger">{{translate 'Fail' scope='Admin'}}</span> {{/if}}
                     </td>
