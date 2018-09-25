@@ -86,7 +86,9 @@ class Call extends Meeting
     protected function afterUpdateEntity(Entity $entity, $data)
     {
         parent::afterUpdateEntity($entity, $data);
-        $this->loadPhoneNumbersMapField($entity);
+        if (isset($data->contactsIds) || isset($data->leadsIds)) {
+            $this->loadPhoneNumbersMapField($entity);
+        }
     }
 
 }
