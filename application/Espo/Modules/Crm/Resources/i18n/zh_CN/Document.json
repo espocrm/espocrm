@@ -9,21 +9,21 @@
     "file": "文件",
     "type": "类型",
     "publishDate": "发布日期",
-    "expirationDate": "截止日期",
+    "expirationDate": "结束日期",
     "description": "描述",
     "accounts": "账户",
-    "folder": "夹"
+    "folder": "文件夹"
   },
   "links": {
     "accounts": "账户",
     "opportunities": "商机",
-    "folder": "夹",
-    "leads": "潜在顾客",
+    "folder": "文件夹",
+    "leads": "潜在客户",
     "contacts": "联系人"
   },
   "options": {
     "status": {
-      "Active": "活性",
+      "Active": "激活",
       "Draft": "草案",
       "Expired": "已过期",
       "Canceled": "取消"
@@ -31,13 +31,11 @@
     "type": {
       "": "没有",
       "Contract": "合同",
-      "NDA": "NDA",
-      "EULA": "EULA",
       "License Agreement": "许可协议"
     }
   },
   "presetFilters": {
-    "active": "活性",
+    "active": "激活",
     "draft": "草案"
   }
 }

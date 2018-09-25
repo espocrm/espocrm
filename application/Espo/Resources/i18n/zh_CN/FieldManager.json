@@ -1,6 +1,9 @@
 {
   "labels": {
-    "Dynamic Logic": "动态逻辑"
+    "Dynamic Logic": "动态逻辑",
+    "Name": "名称",
+    "Label": "标签",
+    "Type": "类型"
   },
   "options": {
     "dateTimeDefault": {
@@ -70,6 +73,17 @@
     "maxLength": "最大可接受的文本长度。",
     "before": "日期值应在指定字段的日期值之前。",
     "after": "日期值应在指定字段的日期值之后。",
-    "readOnly": "用户不能指定字段值。但可以通过公式计算。"
+    "readOnly": "用户不能指定字段值。但可以通过公式计算。",
+    "maxFileSize": "如果为空或0，则没有限制."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "街道",
+      "city": "城市",
+      "state": "省市",
+      "country": "国家",
+      "postalCode": "邮编",
+      "map": "地图"
+    }
   }
 }

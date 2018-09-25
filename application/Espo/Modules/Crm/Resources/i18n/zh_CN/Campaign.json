@@ -15,7 +15,7 @@
     "bouncedCount": "退回",
     "hardBouncedCount": "硬弹跳",
     "softBouncedCount": "软弹跳",
-    "leadCreatedCount": "已创建的潜在顾客",
+    "leadCreatedCount": "已创建的潜在客户",
     "revenue": "收入",
     "revenueConverted": "收入（转换）",
     "budget": "预算",
@@ -26,7 +26,7 @@
     "excludingTargetLists": "剔除目标列表",
     "accounts": "客户",
     "contacts": "联系人",
-    "leads": "潜在顾客",
+    "leads": "潜在客户",
     "opportunities": "商机",
     "campaignLogRecords": "日志",
     "massEmails": "群发电子邮件",
@@ -43,7 +43,7 @@
     },
     "status": {
       "Planning": "规划",
-      "Active": "活性",
+      "Active": "激活",
       "Inactive": "非活动",
       "Complete": "完成"
     }
@@ -62,7 +62,7 @@
     "Create Target List": "创建目标列表"
   },
   "presetFilters": {
-    "active": "活性"
+    "active": "激活"
   },
   "messages": {
     "unsubscribed": "您已取消订阅我们的邮寄名单。",
@@ -70,6 +70,6 @@
   },
   "tooltips": {
     "targetLists": "目标应该接收的消息。",
-    "excludingTargetLists": "目标不应该接收消息。"
+    "excludingTargetLists": "目标不会接收营销活动消息。"
   }
 }

@@ -1,23 +1,20 @@
 {
-  "label": {
-    "Field": "字段"
-  },
   "options": {
     "operators": {
       "equals": "等于",
       "notEquals": "不等于",
       "greaterThan": "大于",
       "lessThan": "少于",
-      "greaterThanOrEquals": "大于或者等于",
+      "greaterThanOrEquals": "大于或等于",
       "lessThanOrEquals": "少于或者等于",
       "in": "在里面",
       "notIn": "不在里面",
-      "inPast": "在过去/很快",
+      "inPast": "过去",
       "inFuture": "今后",
-      "isToday": "是今天",
-      "isTrue": "是正确的",
-      "isFalse": "是错误的",
-      "isEmpty": "为空",
+      "isToday": "今天",
+      "isTrue": "正确",
+      "isFalse": "错误",
+      "isEmpty": "空",
       "isNotEmpty": "不为空",
       "contains": "包含",
       "has": "包含",

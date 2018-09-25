@@ -3,7 +3,7 @@
     "name": "名称",
     "userName": "用户名",
     "title": "标题",
-    "isAdmin": "是管理员",
+    "isAdmin": "管理员",
     "defaultTeam": "默认团队",
     "emailAddress": "电子邮件",
     "phoneNumber": "电话",
@@ -18,16 +18,18 @@
     "newPasswordConfirm": "确认新密码",
     "avatar": "头像",
     "isActive": "活跃",
-    "isPortalUser": "是门户用户",
+    "isPortalUser": "门户用户",
     "contact": "联系人",
     "accounts": "客户",
     "account": "帐户（主要）",
-    "sendAccessInfo": "使用访问信息向用户发送电子邮件",
+    "sendAccessInfo": "通过邮件向用户发送访问信息.",
     "portal": "门户网站",
     "gender": "性别",
     "position": "在队中的位置",
     "ipAddress": "IP地址",
-    "passwordPreview": "密码预览"
+    "passwordPreview": "密码预览",
+    "isSuperAdmin": "超级管理员",
+    "lastAccess": "最后访问"
   },
   "links": {
     "teams": "团队",
@@ -54,12 +56,12 @@
     "Email Accounts": "电子邮件帐户",
     "Portal": "门户",
     "Create Portal User": "创建门户用户",
-    "Proceed w/o Contact": "Proceed w/o Contact"
+    "Proceed w/o Contact": "继续创建联系人"
   },
   "tooltips": {
     "defaultTeam": "默认情况下，此用户创建的所有记录都将与此小组相关。",
-    "userName": "允许使用 a-z，0-9，.，-，@, _",
-    "isAdmin": "管理员用户可以访问一切。",
+    "userName": "允许使用字符: a-z，0-9，.，-，@, _",
+    "isAdmin": "管理员拥有最大权限.",
     "isActive": "如果取消选中则用户将无法登录。",
     "teams": "该用户所属的团队。访问控制级别从团队角色继承。",
     "roles": "其他访问角色。如果用户不属于任何团队，或者需要为此用户专门扩展访问控制级别，请使用此角色。",
@@ -76,14 +78,8 @@
     "forbidden": "禁止访问，请稍后再试",
     "uniqueLinkHasBeenSent": "唯一网址已发送到指定的电子邮件地址。",
     "passwordChangedByRequest": "密码已被更改。",
-    "setupSmtpBefore": "您需要设置<a href=\"{url}\"> SMTP设置</a>，以使系统能够在电子邮件中发送密码。"
-  },
-  "boolFilters": {
-    "onlyMyTeam": "只有我的团队"
-  },
-  "presetFilters": {
-    "active": "活性",
-    "activePortal": "门户活动"
+    "setupSmtpBefore": "您需要配置<a href=\"{url}\"> SMTP服务器</a>，以便系统能够通过电子邮件发送密码信息。",
+    "userNameExists": "用户名已经存在"
   },
   "options": {
     "gender": {
@@ -92,5 +88,12 @@
       "Female": "女士",
       "Neutral": "中立的"
     }
+  },
+  "boolFilters": {
+    "onlyMyTeam": "只有我的团队"
+  },
+  "presetFilters": {
+    "active": "激活",
+    "activePortal": "门户活动"
   }
 }

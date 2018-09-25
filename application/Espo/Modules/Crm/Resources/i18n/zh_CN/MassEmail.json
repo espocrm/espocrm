@@ -3,25 +3,26 @@
     "name": "名称",
     "status": "状态",
     "storeSentEmails": "存储发送的电子邮件",
-    "startAt": "起始日期",
-    "fromAddress": "从地址",
-    "fromName": "从名称",
+    "startAt": "开始日期",
+    "fromAddress": "发件人地址",
+    "fromName": "发件人",
     "replyToAddress": "回复地址",
     "replyToName": "回复名称",
     "campaign": "营销活动",
-    "emailTemplate": "电子邮件模板",
-    "inboundEmail": "电子邮件帐户",
+    "emailTemplate": "邮件模板",
+    "inboundEmail": "邮件帐户",
     "targetLists": "目标列表",
     "excludingTargetLists": "剔除目标列表",
-    "optOutEntirely": "完全选择退出"
+    "optOutEntirely": "完全选择退出",
+    "smtpAccount": "SMTP帐户"
   },
   "links": {
     "targetLists": "目标列表",
     "excludingTargetLists": "排除目标列表",
     "queueItems": "队列项",
     "campaign": "营销活动",
-    "emailTemplate": "电子邮件模板",
-    "inboundEmail": "电子邮件帐户"
+    "emailTemplate": "邮件模板",
+    "inboundEmail": "邮件帐户"
   },
   "options": {
     "status": {
@@ -35,7 +36,10 @@
   },
   "labels": {
     "Create MassEmail": "创建群发电子邮件",
-    "Send Test": "发送测试"
+    "Send Test": "发送测试",
+    "System SMTP": "系统SMTP",
+    "system": "系统",
+    "group": "组"
   },
   "messages": {
     "selectAtLeastOneTarget": "至少选择一个目标。",
@@ -44,10 +48,11 @@
   "tooltips": {
     "optOutEntirely": "已取消订阅的收件人的电子邮件地址将被标记为已停用，他们将不会再收到任何群发电子邮件。",
     "targetLists": "应该接收消息的目标。",
-    "excludingTargetLists": "不应该接收消息的目标。"
+    "excludingTargetLists": "不应该接收消息的目标。",
+    "storeSentEmails": "邮件将存储在CRM中."
   },
   "presetFilters": {
-    "actual": "实际",
+    "actual": "所有",
     "complete": "完成"
   }
 }

@@ -7,20 +7,19 @@
     "password": "密码",
     "port": "端口",
     "monitoredFolders": "监视的文件夹",
-    "ssl": "SSL",
     "fetchSince": "获取从",
     "emailAddress": "邮件地址",
     "sentFolder": "发送文件夹",
     "storeSentEmails": "存储发送的邮件",
     "keepFetchedEmailsUnread": "保持获取的邮件为未读",
     "emailFolder": "放入文件夹",
-    "useSmtp": "使用简单邮件传输协议",
-    "smtpHost": "简单邮件传输协议主机",
-    "smtpPort": "简单邮件传输协议端口",
-    "smtpAuth": "简单邮件传输协议授权",
-    "smtpSecurity": "简单邮件传输协议安全",
-    "smtpUsername": "简单邮件传输协议 用户名",
-    "smtpPassword": "简单邮件传输协议 密码"
+    "useSmtp": "使用SMTP",
+    "smtpHost": "SMTP主机",
+    "smtpPort": "SMTP端口",
+    "smtpAuth": "SMTP授权",
+    "smtpSecurity": "SMTP安全协议",
+    "smtpUsername": "SMTP用户名",
+    "smtpPassword": "SMTP密码"
   },
   "links": {
     "filters": "过滤器",
@@ -34,18 +33,16 @@
   },
   "labels": {
     "Create EmailAccount": "创建邮件帐户",
-    "IMAP": "IMAP",
     "Main": "主要",
     "Test Connection": "测试连接",
-    "Send Test Email": "发送编辑邮件",
-    "SMTP": "简单邮件传输协议"
+    "Send Test Email": "发送编辑邮件"
   },
   "messages": {
-    "couldNotConnectToImap": "无法连接到 IMAP 服务器",
+    "couldNotConnectToImap": "无法连接到IMAP服务器",
     "connectionIsOk": "连接正常"
   },
   "tooltips": {
     "monitoredFolders": "多个文件夹用逗号分隔。\n\n添加 ‘Sent’ 文件夹与外部邮件客户端同步已发邮件。",
-    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
+    "storeSentEmails": "发送的电子邮件将存储在IMAP服务器上,电子邮件地址字段应该与将要发送的电子邮件地址匹配。"
   }
 }

@@ -6,6 +6,9 @@
     "redirectUri": "重定向URI",
     "apiKey": "接口密匙"
   },
+  "titles": {
+    "GoogleMaps": "谷歌地图"
+  },
   "messages": {
     "selectIntegration": "从菜单中选择一个积分。",
     "noIntegrations": "没有集成可用。"
@@ -13,8 +16,5 @@
   "help": {
     "Google": "<p> <b>从Google Developers Console获取OAuth 2.0凭据。</ b> </ p> <p>访问<a href =\"https://console.developers.google.com/project\" > Google Developers Console </a>，以获取Google和EspoCRM应用程序已知的OAuth 2.0凭据，例如客户端ID和客户端密钥。</ p>",
     "GoogleMaps": "<p>获得应用程序界面密匙 <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">here</a>.</p>"
-  },
-  "titles": {
-    "GoogleMaps": "谷歌地图"
   }
 }

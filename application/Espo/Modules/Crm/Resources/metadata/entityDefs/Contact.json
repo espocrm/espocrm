@@ -35,7 +35,7 @@
         },
         "title": {
             "type": "varchar",
-            "maxLength": 50,
+            "maxLength": 100,
             "notStorable": true,
             "select": "accountContact.role",
             "orderBy": "accountContact.role {direction}",
@@ -329,7 +329,7 @@
             "additionalColumns": {
                 "role": {
                     "type": "varchar",
-                    "len": 50
+                    "len": 100
                 },
                 "isInactive": {
                     "type": "bool",

@@ -4,16 +4,22 @@
     "roles": "角色",
     "assignmentPermission": "分配许可",
     "userPermission": "用户权限",
-    "portalPermission": "门户权限"
+    "portalPermission": "门户权限",
+    "groupEmailAccountPermission": "邮件组权限",
+    "exportPermission": "导出权限",
+    "dataPrivacyPermission": "数据隐私权限"
   },
   "links": {
     "users": "用户",
     "teams": "团队"
   },
   "tooltips": {
-    "assignmentPermission": "允许限制记录和发布消息分配给其他用户的能力。\n\n所有的 - 没有限制\n\n团队 - 可以分配，只有张贴到队友\n\n否 - 可以分配，只有张贴到自",
-    "userPermission": "允许以限制用户查看活动，日历和其他用户的数据流的能力。\n\n所有 - 可以查看所有\n\n团队 - 可以查看队友的活动只\n\n否 - 无法查看",
-    "portalPermission": "Defines an access to portal information, ability to post messages to portal users."
+    "assignmentPermission": "允许限制将记录和消息分配给其他用户的能力。\n\n所有的 - 没有限制\n团队 - 只能分配和发信息给队友\n否 - 只能分配和发信息给自己",
+    "userPermission": "允许以限制用户查看活动，日历和其他用户的数据流的能力。\n\n所有 - 可以查看所有\n团队 - 可以查看队友的活动只\n否 - 无法查看",
+    "portalPermission": "对门户信息的访问，可以向门户用户发送消息。",
+    "groupEmailAccountPermission": "对组邮件帐户的访问，从组邮件SMTP发送邮件的能力。",
+    "exportPermission": "用户是否具有导出记录的能力。",
+    "dataPrivacyPermission": "允许查看和删除个人数据。"
   },
   "labels": {
     "Access": "访问",
@@ -23,23 +29,23 @@
   },
   "options": {
     "accessList": {
-      "not-set": "没有设置",
+      "not-set": "未设置",
       "enabled": "启用",
       "disabled": "禁用"
     },
     "levelList": {
-      "all": "所有",
-      "team": "球队",
+      "all": "全部",
+      "team": "团队",
       "account": "客户",
       "contact": "联系",
-      "own": "拥有",
+      "own": "所有者",
       "no": "没有",
       "yes": "是",
-      "not-set": "没有设置"
+      "not-set": "未设置"
     }
   },
   "actions": {
-    "read": "读",
+    "read": "读取",
     "edit": "编辑",
     "delete": "删除",
     "stream": "信息流",

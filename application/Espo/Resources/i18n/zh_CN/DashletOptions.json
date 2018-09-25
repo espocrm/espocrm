@@ -1,20 +1,21 @@
 {
   "fields": {
     "title": "标题",
-    "dateFrom": "起始日期",
+    "dateFrom": "开始日期",
     "dateTo": "结束日期",
     "autorefreshInterval": "自动刷新间隔",
     "displayRecords": "显示记录",
-    "isDoubleHeight": "2 倍高度",
+    "isDoubleHeight": "2倍高度",
     "mode": "模式",
     "enabledScopeList": "显示什么",
     "users": "用户",
-    "entityType": "实体类型",
-    "primaryFilter": "主过滤器",
+    "entityType": "功能类型",
+    "primaryFilter": "主要过滤器",
     "boolFilterList": "扩展过滤器",
     "sortBy": "订单（字段）",
     "sortDirection": "订单（方向）",
-    "expandedLayout": "布局"
+    "expandedLayout": "布局",
+    "dateFilter": "日期过滤器"
   },
   "options": {
     "mode": {

@@ -6,10 +6,12 @@
     "target": "目标",
     "targetType": "目标类型",
     "authToken": "授权令牌",
-    "ipAddress": "IP地址"
+    "ipAddress": "IP地址",
+    "authLogRecord": "身份验证日志记录"
   },
   "links": {
     "authToken": "授权令牌",
+    "authLogRecord": "身份验证日志记录",
     "user": "用户",
     "target": "目标"
   },
@@ -18,7 +20,7 @@
   },
   "options": {
     "action": {
-      "read": "读",
+      "read": "读取",
       "update": "升级",
       "delete": "删除",
       "create": "创建"

@@ -16,23 +16,23 @@
     "targetLists": "目标列表",
     "targetList": "目标列表",
     "portalUser": "门户网站用户",
-    "originalLead": "原始潜在顾客",
+    "originalLead": "原始潜在客户",
     "acceptanceStatus": "验收状态",
     "accountIsInactive": "账户未激活",
-    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    "acceptanceStatusMeetings": "接受状态(Meetings)",
+    "acceptanceStatusCalls": "接受状态(Calls)"
   },
   "links": {
     "opportunities": "商机",
-    "cases": "案例",
+    "cases": "工单",
     "targetLists": "目标列表",
     "campaignLogRecords": "营销活动日志",
     "campaign": "营销活动",
     "account": "帐户（主要）",
     "accounts": "客户",
-    "casesPrimary": "案例（主要）",
+    "casesPrimary": "工单（主要）",
     "portalUser": "门户用户",
-    "originalLead": "原始潜在顾客",
+    "originalLead": "原始潜在客户",
     "documents": "文件"
   },
   "labels": {

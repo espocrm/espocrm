@@ -103,7 +103,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     });
                 }, this);
 
-                this.$element.selectize({
+                var selectizeOptions = {
                     options: data,
                     delimiter: ':,:',
                     labelField: 'label',
@@ -121,7 +121,24 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                             return 0;
                         };
                     }
-                });
+                };
+
+                if (!(this.params.options || []).length) {
+                    selectizeOptions.persist = false;
+                    selectizeOptions.create = function (input) {
+                        return {
+                            value: input,
+                            label: input
+                        }
+                    };
+                    selectizeOptions.render = {
+                        option_create: function (data, escape) {
+                            return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                        }
+                    };
+                }
+
+                this.$element.selectize(selectizeOptions);
 
                 this.$element.on('change', function () {
                     this.trigger('change');

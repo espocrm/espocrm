@@ -1,7 +1,7 @@
 {
   "labels": {
     "Converted To": "已转换为",
-    "Create Lead": "创建潜在顾客",
+    "Create Lead": "创建潜在客户",
     "Convert": "转换",
     "convert": "转换"
   },
@@ -15,9 +15,9 @@
     "doNotCall": "不要电联",
     "address": "地址",
     "status": "状态",
-    "source": "资源",
-    "opportunityAmount": "商机金额",
-    "opportunityAmountConverted": "商机金额（转换）",
+    "source": "客户来源",
+    "opportunityAmount": "项目预算",
+    "opportunityAmountConverted": "项目预算（转换）",
     "description": "描述",
     "createdAccount": "客户",
     "createdContact": "联系人",
@@ -28,8 +28,8 @@
     "industry": "行业",
     "acceptanceStatus": "验收状态",
     "opportunityAmountCurrency": "机会金额货币",
-    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    "acceptanceStatusMeetings": "接受状态(Meetings)",
+    "acceptanceStatusCalls": "接受状态(Calls)"
   },
   "links": {
     "targetLists": "目标列表",
@@ -38,12 +38,12 @@
     "createdAccount": "客户",
     "createdContact": "联系人",
     "createdOpportunity": "商机",
-    "cases": "案例",
+    "cases": "工单",
     "documents": "文件"
   },
   "options": {
     "status": {
-      "New": "新",
+      "New": "新建",
       "Assigned": "指派",
       "In Process": "处理中",
       "Converted": "已转换",
@@ -63,8 +63,8 @@
     }
   },
   "presetFilters": {
-    "active": "活性",
-    "actual": "实际",
+    "active": "激活",
+    "actual": "所有",
     "converted": "已转换"
   }
 }
