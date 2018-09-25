@@ -265,7 +265,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 });
             }, this);
 
-            this.$element.selectize({
+            var selectizeOptions = {
                 options: data,
                 delimiter: ':,:',
                 labelField: 'label',
@@ -283,7 +283,24 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                         return 0;
                     };
                 }
-            });
+            };
+
+            if (!(this.params.options || []).length) {
+                selectizeOptions.persist = false;
+                selectizeOptions.create = function (input) {
+                    return {
+                        value: input,
+                        label: input
+                    }
+                };
+                selectizeOptions.render = {
+                    option_create: function (data, escape) {
+                        return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                };
+            }
+
+            this.$element.selectize(selectizeOptions);
 
             this.$el.find('.selectize-dropdown-content').addClass('small');
 
