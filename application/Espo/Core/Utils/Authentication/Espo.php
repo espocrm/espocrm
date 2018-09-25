@@ -33,7 +33,7 @@ use \Espo\Core\Exceptions\Error;
 
 class Espo extends Base
 {
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
+    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
     {
         if ($authToken) {
             $hash = $authToken->get('hash');
@@ -51,4 +51,3 @@ class Espo extends Base
         return $user;
     }
 }
-

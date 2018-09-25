@@ -133,6 +133,7 @@ return array (    'defaultPermissions' =>
         'ldapAccountFilterFormat',
         'ldapTryUsernameSplit',
         'ldapOptReferrals',
+        'ldapPortalUserLdapAuth',
         'ldapCreateEspoUser',
         'ldapAccountDomainName',
         'ldapAccountDomainNameShort',
@@ -176,5 +177,5 @@ return array (    'defaultPermissions' =>
     'ldapUserEmailAddressAttribute' => 'mail',
     'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
     'ldapUserObjectClass' => 'person',
+    'ldapPortalUserLdapAuth' => false,
 );
-
