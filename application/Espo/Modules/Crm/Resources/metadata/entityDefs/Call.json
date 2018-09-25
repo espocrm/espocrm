@@ -100,7 +100,7 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "view": "crm:views/meeting/fields/contacts",
+            "view": "crm:views/call/fields/contacts",
             "columns": {
                 "status": "acceptanceStatus"
             },
@@ -110,7 +110,7 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "view": "crm:views/meeting/fields/attendees",
+            "view": "crm:views/call/fields/leads",
             "columns": {
                 "status": "acceptanceStatus"
             },
@@ -133,6 +133,11 @@
             "type": "link",
             "readOnly": true,
             "view": "views/fields/user"
+        },
+        "phoneNumbersMap": {
+            "type": "jsonObject",
+            "notStorable": true,
+            "disabled": true
         },
         "assignedUser": {
             "type": "link",
