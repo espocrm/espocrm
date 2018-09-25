@@ -26,7 +26,10 @@
     "targetLists": "Adresatų sarašai",
     "targetList": "Adresatų sarašas",
     "industry": "Pramonės šaka",
-    "acceptanceStatus": "Priėmimo statusas"
+    "acceptanceStatus": "Priėmimo statusas",
+    "opportunityAmountCurrency": "Galimybių suma Valiuta",
+    "acceptanceStatusMeetings": "Priėmimo statusas (susirinkimai)",
+    "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)"
   },
   "links": {
     "targetLists": "Adresatų sarašai",

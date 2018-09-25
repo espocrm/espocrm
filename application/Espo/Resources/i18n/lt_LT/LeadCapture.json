@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "name": "vardas",
+    "campaign": "Kampanija",
+    "isActive": "Yra aktyvus",
+    "subscribeToTargetList": "Prenumeruoti tikslinius sąrašus",
+    "subscribeContactToTargetList": "Prenumeruoti, jei yra",
+    "targetList": "Tikslinis sąrašas",
+    "fieldList": "Išlaidų laukai",
+    "optInConfirmation": "Dvigubas opt-in",
+    "optInConfirmationEmailTemplate": "Atsisakyti patvirtinimo el. Laiško šablono",
+    "optInConfirmationLifetime": "Parinkimo patvirtinimo galiojimo laikas (valandos)",
+    "optInConfirmationSuccessMessage": "Tekstas rodomas po patvirtinimo patvirtinimo",
+    "leadSource": "Švino šaltinis",
+    "apiKey": "API raktas",
+    "targetTeam": "Tikslinė komanda",
+    "exampleRequestMethod": "Metodas",
+    "exampleRequestPayload": "Naudingoji apkrova"
+  },
+  "links": {
+    "targetList": "Tikslinis sąrašas",
+    "campaign": "Kampanija",
+    "optInConfirmationEmailTemplate": "Atsisakyti patvirtinimo el. Laiško šablono",
+    "targetTeam": "Tikslinė komanda",
+    "logRecords": "Prisijungti"
+  },
+  "labels": {
+    "Create LeadCapture": "Sukurkite atvykimo tašką",
+    "Generate New API Key": "Sukurti naują API raktą",
+    "Request": "Prašymas",
+    "Confirm Opt-In": "Patvirtinkite pasirinkimą"
+  },
+  "messages": {
+    "generateApiKey": "Sukurkite naują API raktą",
+    "optInConfirmationExpired": "Prisijungimo patvirtinimo nuoroda baigėsi.",
+    "optInIsConfirmed": "Atsisakymas patvirtintas."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Žymėjimas yra palaikomas."
+  }
+}

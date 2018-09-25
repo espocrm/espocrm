@@ -2,6 +2,7 @@
   "fields": {
     "enabled": "Įjungta",
     "clientId": "Kliento ID",
+    "clientSecret": "Kliento užuomina",
     "redirectUri": "Nukreipti URL",
     "apiKey": "API raktas"
   },

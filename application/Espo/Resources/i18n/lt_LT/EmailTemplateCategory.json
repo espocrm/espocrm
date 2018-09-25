@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Sukurti kategoriją",
+    "Manage Categories": "Maldyti kategorijas",
+    "EmailTemplates": "Laiško šablonas"
+  },
+  "fields": {
+    "order": "Užsakyti",
+    "childList": "Vaikų sąrašas"
+  },
+  "links": {
+    "emailTemplates": "Laiškų šablonai"
+  }
+}

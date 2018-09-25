@@ -1,5 +1,27 @@
 {
   "insertFromSourceLabels": {
     "Document": "Įterpti dokumentą\n"
+  },
+  "fields": {
+    "role": "Vaidmuo",
+    "related": "Susijęs",
+    "file": "Failas",
+    "type": "Įveskite",
+    "field": "Laukas",
+    "sourceId": "Šaltinio ID",
+    "storage": "Sandėliavimas",
+    "size": "Dydis (baitai)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Priedas",
+      "Import File": "Importuoti failą",
+      "Export File": "Eksporto failas",
+      "Mail Merge": "Pašto suliejimo",
+      "Mass Pdf": "Masinis pdf"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Našlaitis"
   }
 }

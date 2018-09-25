@@ -1,1 +1,34 @@
-{}
+{
+  "fields": {
+    "username": "Naudotojo vardas",
+    "ipAddress": "IP adresas",
+    "requestTime": "Užklausos laikas",
+    "createdAt": "Prašoma at",
+    "isDenied": "Yra atmesta",
+    "portal": "Portalas",
+    "user": "Vartotojas",
+    "authToken": "Sukurtas \"Auth Token\"",
+    "requestUrl": "Prašyti URL",
+    "requestMethod": "Prašymo metodas",
+    "authTokenIsActive": "Auth Token yra aktyvus"
+  },
+  "links": {
+    "authToken": "Sukurtas \"Auth Token\"",
+    "user": "Naudotojas",
+    "portal": "Portalas",
+    "actionHistoryRecords": "Veiksmų istorija"
+  },
+  "presetFilters": {
+    "denied": "Atmesta",
+    "accepted": "Priimta"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Netinkami įgaliojimai",
+      "INACTIVE_USER": "Pakviesti naudotoją",
+      "IS_PORTAL_USER": "Portalo naudotojas",
+      "IS_NOT_PORTAL_USER": "Ne portalo naudotojas",
+      "USER_IS_NOT_IN_PORTAL": "Vartotojas nėra susijęs su portalu"
+    }
+  }
+}

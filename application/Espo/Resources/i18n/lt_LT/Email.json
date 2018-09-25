@@ -13,7 +13,6 @@
     "attachments": "Prisegtukai",
     "selectTemplate": "Pasirinkti šabloną",
     "fromEmailAddress": "Nuo adreso",
-    "toEmailAddresses": "Adresui",
     "emailAddress": "El. pašto adresas",
     "deliveryDate": "Pristatymo data",
     "account": "Paskyra",
@@ -34,7 +33,17 @@
     "hasAttachment": "Turi prisegtuką",
     "sentBy": "Išsiųsta",
     "assignedUsers": "Priskirti vartotojai",
-    "bodyPlain": "Tekstas (paprastas)"
+    "bodyPlain": "Tekstas (paprastas)",
+    "ccEmailAddresses": "CC el. Pašto adresai",
+    "messageId": "Pranešimo id",
+    "messageIdInternal": "Pranešimo ID (vidinis)",
+    "folderId": "Aplanko ID",
+    "fromName": "Iš vardo",
+    "fromString": "Iš stygos",
+    "isSystem": "Ar sistema",
+    "toEmailAddresses": "El. Pašto adresai",
+    "bccEmailAddresses": "BCC el. Pašto adresai",
+    "replyToEmailAddresses": "Atsakymas į el. Pašto adresus"
   },
   "links": {
     "replied": "Atsakyta",
@@ -42,7 +51,13 @@
     "inboundEmails": "Grupės paskyros",
     "emailAccounts": "Asmeninės paskyros",
     "assignedUsers": "Priskirti vartotojai",
-    "sentBy": "Išsiųsta"
+    "sentBy": "Išsiųsta",
+    "attachments": "Priedas",
+    "fromEmailAddress": "Nuo el. Pašto adreso",
+    "toEmailAddresses": "El. Pašto adresai",
+    "ccEmailAddresses": "CC el. Pašto adresai",
+    "bccEmailAddresses": "BCC el. Pašto adresai",
+    "replyToEmailAddresses": "Atsakymas į el. Pašto adresus"
   },
   "options": {
     "status": {
@@ -86,7 +101,8 @@
     "noSmtpSetup": "Nėra SMTP nustatymų. {link}.",
     "testEmailSent": "Bandomasis el. laiškas išsiųstas",
     "emailSent": "El. laiškas yra išsiųstas",
-    "savedAsDraft": "Juodraštis šsaugotas"
+    "savedAsDraft": "Juodraštis šsaugotas",
+    "confirmInsertTemplate": "El. Paštas bus prarastas. Ar tikrai norite įterpti šabloną?"
   },
   "presetFilters": {
     "sent": "Išsiųsta",

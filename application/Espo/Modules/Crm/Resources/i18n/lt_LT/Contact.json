@@ -18,7 +18,9 @@
     "portalUser": "Portalo vartotojas",
     "originalLead": "Originalus potencialus klientas",
     "acceptanceStatus": "Priėmimo statusas",
-    "accountIsInactive": "Įmonė neaktyvi"
+    "accountIsInactive": "Įmonė neaktyvi",
+    "acceptanceStatusMeetings": "Priėmimo statusas (susirinkimai)",
+    "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)"
   },
   "links": {
     "opportunities": "Galimybės",
@@ -28,9 +30,11 @@
     "campaign": "Kampanija",
     "account": "Kontaktas (pirminis)",
     "accounts": "Įmonės",
+    "casesPrimary": "Bylos (pirminis)",
     "portalUser": "Portalo vartotojas",
     "originalLead": "Originalus potencialus klientas",
-    "documents": "Dokumentai"
+    "documents": "Dokumentai",
+    "tasksPrimary": "Užduotys (išplėstos)"
   },
   "labels": {
     "Create Contact": "Sukurti kontaktą"

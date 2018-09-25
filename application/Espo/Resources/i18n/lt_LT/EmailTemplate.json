@@ -7,11 +7,13 @@
     "subject": "Tema",
     "attachments": "Prisegtukai",
     "insertField": "Įterpti laukelį",
-    "oneOff": "Vienkartinis"
+    "oneOff": "Vienkartinis",
+    "category": "Kategorija"
   },
   "labels": {
     "Create EmailTemplate": "Sukurti el. pašto laiško šabloną",
-    "Info": "Informacija"
+    "Info": "Informacija",
+    "Available placeholders": "Galimi užpildai"
   },
   "tooltips": {
     "oneOff": "Pažymėkite, jei ketinate naudoti šį šabloną tik vieną kartą. Pavyzdžiui masiniems el. laiškams."
@@ -20,6 +22,10 @@
     "actual": "Esamas"
   },
   "messages": {
-    "infoText": "Galimi kintamieji:\n\n{optOutUrl} - nuoroda \"unsubsbribe\"; URL;\n\n{optOutLink} - atsisakyti prenumeratos nuorodą."
+    "infoText": "Galimi užpildai:\n\n{optOutUrl} & # 8211; \"Unsubsbribe\" nuorodos URL;\n\n{optOutLink} & # 8211; Atsisakyti prenumeratos nuorodą."
+  },
+  "placeholderTexts": {
+    "optOutUrl": "URL nepasirinkto šlamšto nuorodos",
+    "optOutLink": "atsisakyti prenumeratos nuorodą"
   }
 }

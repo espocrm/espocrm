@@ -14,16 +14,25 @@
     "stream": "Srautas",
     "label": "Etiketė",
     "linkType": "Nuorodos tipas",
+    "entityForeign": "Užsienio subjektas",
+    "linkForeign": "Užsienio ryšys",
     "link": "Nuoroda",
+    "labelForeign": "Užsienio etiketė",
     "sortBy": "Numatytas rikiavimas (laukeliai)",
     "sortDirection": "Numatytas rikiavimas (kryptis)",
     "relationName": "Vidurinis lentelės pavadinimas",
     "linkMultipleField": "Susieti kelis laukelius",
+    "linkMultipleFieldForeign": "Užsienio ryšių keli laukai",
     "disabled": "Išjungtas",
+    "textFilterFields": "Teksto filtro laukai",
     "audited": "Patikrinta",
     "auditedForeign": "Patikrinta iš išorės",
     "statusField": "Būsenos laukelis",
-    "beforeSaveCustomScript": "Prieš išsaugant tinkintą tekstą"
+    "beforeSaveCustomScript": "Prieš išsaugant tinkintą tekstą",
+    "color": "Spalva",
+    "kanbanStatusIgnoreList": "Ignoruojamos grupės Kanbanoje",
+    "iconClass": "Piktograma",
+    "fullTextSearch": "Pilna teksto paieška"
   },
   "options": {
     "type": {
@@ -39,7 +48,8 @@
       "manyToMany": "Daugelis-daugeliui",
       "oneToMany": "Vienas-daugeliui",
       "manyToOne": "Daugelis-vienam",
-      "parentToChildren": "Pagrindinis-antriniui"
+      "parentToChildren": "Pagrindinis-antriniui",
+      "childrenToParent": "Vaikai tėvams"
     },
     "sortDirection": {
       "asc": "Didėjančia tvarka",
@@ -47,7 +57,9 @@
     }
   },
   "messages": {
-    "linkAlreadyExists": "Sąsajos pavadinimo konfliktas."
+    "entityCreated": "Įrašas buvo sukurtas",
+    "linkAlreadyExists": "Sąsajos pavadinimo konfliktas.",
+    "linkConflict": "Vardas konfliktas: nuoroda ar laukas su tuo pačiu pavadinimu jau egzistuoja."
   },
   "tooltips": {
     "statusField": "Šio lauko atnaujinimai įrašomi sraute.",
@@ -56,6 +68,7 @@
     "disabled": "Patikrinkite, ar jums nereikia šio objekto sistemoje.",
     "linkAudited": "Susijusio įrašo kūrimas ir susiejimas su esamu įrašu bus registruojamas sraute.",
     "linkMultipleField": "\"Susieti daugelį laukelių\" yra patogus būdas redaguoti sasajas. Nenaudokite to, jei galite turėti daug panašių įrašų.",
-    "entityType": "Bazė plius - rodo \"Veiklos\", \"Istorija\" ir \"Užduotys\" skiltis.\nĮvykis - pasiekiamas skiltyje \"Kalendorius\" ir \"Veiklos\"."
+    "entityType": "Bazė plius - rodo \"Veiklos\", \"Istorija\" ir \"Užduotys\" skiltis.\nĮvykis - pasiekiamas skiltyje \"Kalendorius\" ir \"Veiklos\".",
+    "fullTextSearch": "Reikia atlikti rekonstrukciją."
   }
 }

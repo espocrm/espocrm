@@ -15,7 +15,8 @@
       "CheckEmailAccounts": "Patikrinkite asmenines el. pašto paskyras",
       "SendEmailReminders": "Siųsti priminimus el. paštu",
       "AuthTokenControl": "Autentikavimo žymės kontrolė",
-      "SendEmailNotifications": "Siųsti pranešimus el. paštu"
+      "SendEmailNotifications": "Siųsti pranešimus el. paštu",
+      "CheckNewVersion": "Patikrinkite, ar nėra naujos versijos"
     },
     "cronSetup": {
       "linux": "Pastaba: įtraukite šią eilutę į crontab failą, kad paleistumėte \"Espo Suplanuoti darbai\":",

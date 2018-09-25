@@ -91,7 +91,8 @@
       "last": "Paskutinis"
     },
     "currency": {
-      "converted": "(Konvertuota)"
+      "converted": "(Konvertuota)",
+      "currency": "(Valiuta)"
     },
     "datetimeOptional": {
       "date": "Data"

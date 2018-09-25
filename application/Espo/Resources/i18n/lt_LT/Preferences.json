@@ -23,6 +23,8 @@
     "defaultReminders": "Numatyti priminimai",
     "theme": "Tema",
     "useCustomTabList": "Pritaikytas lentelių sąrašas",
+    "receiveAssignmentEmailNotifications": "El. Laiškų siuntimas perduodant",
+    "receiveMentionEmailNotifications": "El. Pašto pranešimai apie paminimus pranešimuose",
     "receiveStreamEmailNotifications": "Pranešimai el. paštu apie įrašus ir būsenos pasikeitimus",
     "dashboardLayout": "Prietaisų skydelio išdėstymas",
     "emailReplyForceHtml": "Siųsti atsakymą HTML formatu",
@@ -31,7 +33,10 @@
     "doNotFillAssignedUserIfNotRequired": "Neužpildykite priskirto vartotojo įrašų kūrimo metu",
     "followEntityOnStreamPost": "Automatiškai sekti  įrašus, paskelbus \"Sraute\"",
     "followCreatedEntities": "Automatiškai sekti sukurtus įrašus",
-    "followCreatedEntityTypeList": "Automatiškai sekti specialių vedinių tipų sukurtus įrašus"
+    "followCreatedEntityTypeList": "Automatiškai sekti specialių vedinių tipų sukurtus įrašus",
+    "emailUseExternalClient": "Naudokite išorinį el. Pašto klientą",
+    "scopeColorsDisabled": "Išjunkite spalvų apimtį",
+    "tabColorsDisabled": "Išjungti kortelių spalvas"
   },
   "options": {
     "weekStart": {
@@ -42,11 +47,13 @@
   "labels": {
     "Notifications": "Pranešimai",
     "User Interface": "Vartotojo sąsaja",
-    "Misc": "Įvairūs"
+    "Misc": "Įvairūs",
+    "Reset Dashboard to Default": "Iš naujo nustatyti informacijos suvestinę pagal nutylėjimą"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Automatiškai sekti visus naujus sukurtus įrašus (sukurtus bet kurio vartotojo) pasirinktų vedinių tipų, kad galėtumėte matyti sraute esančią informaciją ir gauti pranešimus apie visus sistemos įrašus.",
     "doNotFillAssignedUserIfNotRequired": "Kurdamas įrašą priskirtas vartotojas nebus užpildytas, nebent laukelis yra privalomas.",
-    "followCreatedEntities": "Vartotojai kurdami naujus įrašus bus automatiškai priskirti sekti eigą, net jeigu patys priskirs kitą vartotoją."
+    "followCreatedEntities": "Kuriant naujus įrašus jie bus automatiškai stebimi, net jei jie bus priskirti kitam vartotojui.",
+    "followCreatedEntityTypeList": "Kai kuriate naujus pasirinktų subjektų tipų įrašus, jie bus automatiškai stebimi, net jei jie bus priskirti kitam vartotojui."
   }
 }

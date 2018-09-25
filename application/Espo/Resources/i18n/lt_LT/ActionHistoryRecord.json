@@ -5,12 +5,14 @@
     "createdAt": "Data",
     "target": "Tikslas",
     "targetType": "Adresatų tipas",
-    "ipAddress": "IP Adresss"
+    "ipAddress": "IP Adresss",
+    "authLogRecord": "Auth žurnalo įrašas"
   },
   "links": {
     "authToken": "Autentikavimo žymė",
     "user": "Vartotojas",
-    "target": "Tikslas"
+    "target": "Tikslas",
+    "authLogRecord": "Auth žurnalo įrašas"
   },
   "presetFilters": {
     "onlyMy": "Tik mano"

@@ -19,6 +19,7 @@
   "links": {
     "targetLists": "Adresatų sarašai",
     "excludingTargetLists": "Neįtraukiami sdresatų sarašai",
+    "queueItems": "Eilės elementai",
     "campaign": "Kampanija",
     "emailTemplate": "El. pašto laiško šablonas",
     "inboundEmail": "El. pašto paskyra"
@@ -34,6 +35,7 @@
     }
   },
   "labels": {
+    "Create MassEmail": "Sukurti masinį laišką",
     "Send Test": "Siųsti bandomajį laišką",
     "System SMTP": "Sistema SMTP",
     "system": "sistema",

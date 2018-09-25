@@ -11,12 +11,37 @@
     "bottomMargin": "Apatinė paraštė",
     "printFooter": "Spausdinti poraštę",
     "footerPosition": "Poraštės pozicija",
-    "variables": "Galimi sandoriai"
+    "variables": "Galimi sandoriai",
+    "pageOrientation": "Lapo padėtis",
+    "pageFormat": "Lapo formatas",
+    "fontFace": "Šriftas"
   },
   "labels": {
     "Create Template": "Sukurti šabloną"
   },
   "tooltips": {
-    "footer": "Naudokite {page Number}, jei norite spausdinti puslapio numerį."
+    "footer": "Naudokite {page Number}, jei norite spausdinti puslapio numerį.",
+    "variables": "Kopijavimui reikia įterpti žymeklį į antraštę, kūną arba poraštę."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Stačias",
+      "Landscape": "Gulščias"
+    },
+    "placeholders": {
+      "today": "Šiandien (data)",
+      "now": "Dabar (data-laikas)"
+    },
+    "fontFace": {
+      "aefurat": "Aefuratas",
+      "dejavuserif": "DejaVu Serifas",
+      "freemono": "\"FreeMono\"",
+      "freeserif": "\"FreeSerif\"",
+      "kozgopromedium": "\"Kozgo Pro Medium\"",
+      "kozminproregular": "\"Kozmin Pro Regular\"",
+      "pdfasymbol": "PDFA simbolis",
+      "symbol": "Simbolis",
+      "times": "Laikai"
+    }
   }
 }

@@ -17,6 +17,7 @@
     "replyToAddress": "Atsakyti adresatui",
     "replyFromName": "Atsakyti nuo vardo",
     "targetUserPosition": "Adresato pozicija",
+    "fetchSince": "Išeiti iš",
     "addAllTeamUsers": "Visiems komandos nariams",
     "team": "Adresatų komanda",
     "teams": "Komandos",
@@ -31,7 +32,8 @@
     "smtpPassword": "SMTP slaptažodis",
     "fromName": "Nuo vardo",
     "smtpIsShared": "SMTP yra bendrai naudojamas",
-    "smtpIsForMassEmail": "SMTP yra masinio el. pašto adresas"
+    "smtpIsForMassEmail": "SMTP yra masinio el. pašto adresas",
+    "useImap": "Paimkite el. Laiškus"
   },
   "tooltips": {
     "reply": "Pranešti siuntėjams, kad jų el. Laiškai buvo gauti.\n\n  Tam tikram gavėjui per tam tikrą laikotarpį bus išsiųstas tik vienas el. laiškas, kad būtų išvengta kartojimų.",
@@ -41,6 +43,8 @@
     "assignToUser": "Vartotojo darbai bus priskirti.",
     "team": "Komandos darbai bus priskirti.",
     "teams": "Komandos el. laiškai bus priskirti.",
+    "addAllTeamUsers": "El. Laiškai bus rodomi visų žinomų komandų naudotojų gautuosiuose.",
+    "targetUserPosition": "Vartotojai su nurodyta pozicija bus platinami su atvejais.",
     "monitoredFolders": "Keli aplankai turėtų būti atskirti kableliais.",
     "smtpIsShared": "Jei pažymėsite, vartotojai galės siųsti el. laiškus naudodami šį SMTP. Prieinamumą kontroliuoja Rolės, per leidimą grupės el. Pašto paskyrai.",
     "smtpIsForMassEmail": "Jei pažymėta, SMTP bus prieinamas masiniams el.laiškams.",
@@ -48,7 +52,8 @@
   },
   "links": {
     "filters": "Filtrai",
-    "emails": "El. laiška"
+    "emails": "El. laiška",
+    "assignToUser": "Priskirti vartotoją"
   },
   "options": {
     "status": {

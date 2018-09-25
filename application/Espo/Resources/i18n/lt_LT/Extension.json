@@ -3,7 +3,8 @@
     "name": "Vardas",
     "version": "Versija",
     "description": "Aprašymas",
-    "isInstalled": "Įdiegta"
+    "isInstalled": "Įdiegta",
+    "checkVersionUrl": "Naujų versijų tikrinimo URL"
   },
   "labels": {
     "Uninstall": "Išdiegta",

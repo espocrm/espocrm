@@ -40,5 +40,8 @@
   },
   "presetFilters": {
     "published": "Paskelbta"
+  },
+  "tooltips": {
+    "portals": "Straipsnis bus prieinamas tik nurodytuose portaluose."
   }
 }

@@ -7,7 +7,9 @@
     "serviceName": "Paslauga",
     "methodName": "Metodas",
     "scheduledJob": "Suplanuoti darbai",
-    "data": "Duomenys"
+    "data": "Duomenys",
+    "method": "Metodas (nebetinkamas)",
+    "scheduledJobJob": "Numatytas darbo pavadinimas"
   },
   "options": {
     "status": {

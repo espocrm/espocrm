@@ -3,6 +3,8 @@
     "targetLists": "Adresatų sarašai"
   },
   "fields": {
-    "acceptanceStatus": "Priėmimo statusas"
+    "acceptanceStatus": "Priėmimo statusas",
+    "acceptanceStatusMeetings": "Priėmimo statusas (susirinkimai)",
+    "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)"
   }
 }

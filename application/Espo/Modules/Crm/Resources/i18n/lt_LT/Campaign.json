@@ -13,11 +13,19 @@
     "clickedCount": "Paspausta",
     "optedOutCount": "Pasirinkta",
     "bouncedCount": "Atmesta",
+    "hardBouncedCount": "Griežtai atmestas",
+    "softBouncedCount": "Laikinai atmestas",
     "leadCreatedCount": "Potencialūs klientai sukurti",
     "revenue": "Pajamos",
     "revenueConverted": "Pajamos (konvertuotos)",
     "budget": "Biudžetas",
-    "budgetConverted": "Biudžetas (kovertuotas)"
+    "budgetConverted": "Biudžetas (kovertuotas)",
+    "contactsTemplate": "Kontaktai šablonas",
+    "leadsTemplate": "Pasiunčia šabloną",
+    "accountsTemplate": "Sąskaitų šablonas",
+    "usersTemplate": "Vartotojų šablonas",
+    "mailMergeOnlyWithAddress": "Praleisti įrašus be užpildyto adreso",
+    "optedInCount": "Pasirinkta"
   },
   "links": {
     "targetLists": "Adresatų sąrašai",
@@ -27,7 +35,11 @@
     "leads": "Potencialūs klientai",
     "opportunities": "Galimybės",
     "massEmails": "Masiniai el. laiškai",
-    "trackingUrls": "Stebėjimo URL"
+    "trackingUrls": "Stebėjimo URL",
+    "contactsTemplate": "Kontaktai šablonas",
+    "leadsTemplate": "Pasiunčia šabloną",
+    "accountsTemplate": "Sąskaitų šablonas",
+    "usersTemplate": "Vartotojų šablonas"
   },
   "options": {
     "type": {
@@ -56,7 +68,9 @@
     "Email Templates": "El. laiškų šabonai",
     "Unsubscribe again": "Atsisakyti prenumeratos dar kartą",
     "Subscribe again": "Užsisakyti prenumeratą dar kartą",
-    "Create Target List": "Sukurti adresatų sąrašą"
+    "Create Target List": "Sukurti adresatų sąrašą",
+    "Mail Merge": "Pašto suliejimo",
+    "Generate Mail Merge PDF": "Sukurkite \"Mail Merge PDF\""
   },
   "presetFilters": {
     "active": "Aktyvus"
