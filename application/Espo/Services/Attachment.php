@@ -34,6 +34,7 @@ use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\NotFound;
 
 class Attachment extends Record
 {
@@ -166,5 +167,111 @@ class Attachment extends Record
             $entity->clear('storage');
         }
     }
-}
 
+    public function getCopiedAttachment($id)
+    {
+        $attachment = $this->getEntity($id);
+        if (!$attachment) throw new NotFound();
+
+        $copied = $this->getRepository()->getCopiedAttachment($attachment);
+
+        return $copied;
+    }
+
+    public function getAttachmentFromImageUrl($url)
+    {
+        $attachment = $this->getEntity();
+
+        $data = $this->getImageDataByUrl($url);
+        if (!$data) throw new Error('Attachment::getAttachmentFromImageUrl: Bad image data.');
+
+        $type = $data['type'];
+        $contents = $data['contents'];
+
+        $attachment->set([
+            'name' => $url,
+            'type' => $type,
+            'contents' => $contents,
+            'role' => 'Attachment'
+        ]);
+
+        $this->getRepository()->save($attachment);
+
+        $attachment->clear('contents');
+
+        return $attachment;
+    }
+
+    protected function getImageDataByUrl($url)
+    {
+        $type = null;
+
+        if (function_exists('curl_init')) {
+            $opts = [];
+            $httpHeaders = [];
+            $httpHeaders[] = 'Expect:';
+            $opts[\CURLOPT_URL]  = $url;
+            $opts[\CURLOPT_HTTPHEADER] = $httpHeaders;
+            $opts[\CURLOPT_CONNECTTIMEOUT] = 10;
+            $opts[\CURLOPT_TIMEOUT] = 10;
+            $opts[\CURLOPT_HEADER] = true;
+            $opts[\CURLOPT_BINARYTRANSFER] = true;
+            $opts[\CURLOPT_VERBOSE] = true;
+            $opts[\CURLOPT_SSL_VERIFYPEER] = false;
+            $opts[\CURLOPT_SSL_VERIFYHOST] = 2;
+            $opts[\CURLOPT_RETURNTRANSFER] = true;
+            $opts[\CURLOPT_FOLLOWLOCATION] = true;
+            $opts[\CURLOPT_MAXREDIRS] = 2;
+            $opts[\CURLOPT_IPRESOLVE] = \CURL_IPRESOLVE_V4;
+
+            $ch = curl_init();
+            curl_setopt_array($ch, $opts);
+            $response = curl_exec($ch);
+
+            $headerSize = curl_getinfo($ch, \CURLINFO_HEADER_SIZE);
+
+            $header = substr($response, 0, $headerSize);
+            $body = substr($response, $headerSize);
+
+            $headLineList = explode("\n", $header);
+            foreach ($headLineList as $i => $line) {
+                if ($i === 0) continue;
+                if (strpos(strtolower($line), strtolower('Content-Type:')) === 0) {
+                    $part = trim(substr($line, 13));
+                    if ($part) {
+                        $type = trim(explode(";", $part)[0]);
+                    }
+                }
+            }
+
+            if (!$type) {
+                $extTypeMap = [
+                    'png' => 'image/png',
+                    'jpg' => 'image/jpeg',
+                    'jpeg' => 'image/jpeg',
+                    'gif' => 'image/gif'
+                ];
+
+                $extension = preg_replace('#\?.*#', '', pathinfo($url, \PATHINFO_EXTENSION));
+
+                if (isset($extTypeMap[$extension])) {
+                    $type = $extTypeMap[$extension];
+                }
+            }
+
+            if (!$type) return;
+
+            if (!in_array($type, ['image/png', 'image/jpeg', 'image/gif'])) {
+                return;
+            }
+
+            return [
+                'type' => $type,
+                'contents' => $body
+            ];
+
+            curl_close($ch);
+        }
+        return null;
+    }
+}

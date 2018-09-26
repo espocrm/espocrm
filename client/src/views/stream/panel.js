@@ -37,7 +37,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         postDisabled: false,
 
         events: _.extend({
-            'focus textarea.note': function (e) {
+            'focus textarea[name="post"]': function (e) {
                 this.enablePostingMode();
             },
             'click button.post': function () {
@@ -55,7 +55,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }
 
             },
-            'keypress textarea.note': function (e) {
+            'keypress textarea[name="post"]': function (e) {
                 if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
                     this.post();
                 } else if (e.keyCode == 9) {
@@ -64,10 +64,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                         this.disablePostingMode();
                     }
                 }
-            },
-            'input textarea.note': function (e) {
-                this.controlTextareaHeight();
-            },
+            }
         }, Dep.prototype.events),
 
         data: function () {
@@ -78,26 +75,12 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             return data;
         },
 
-        controlTextareaHeight: function (lastHeight) {
-            var scrollHeight = this.$textarea.prop('scrollHeight');
-            var clientHeight = this.$textarea.prop('clientHeight');
-
-            if (clientHeight === lastHeight) return;
-            if (scrollHeight > clientHeight + 1) {
-                this.$textarea.attr('rows', this.$textarea.prop('rows') + 1);
-                this.controlTextareaHeight(clientHeight);
-            }
-            if (this.$textarea.val().length === 0) {
-                this.$textarea.attr('rows', 1);
-            }
-        },
-
         enablePostingMode: function () {
             this.$el.find('.buttons-panel').removeClass('hide');
 
             if (!this.postingMode) {
                 if (this.$textarea.val() && this.$textarea.val().length) {
-                    this.controlTextareaHeight();
+                    this.getView('postField').controlTextareaHeight();
                 }
                 $('body').on('click.stream-panel', function (e) {
                     var $target = $(e.target);
@@ -169,6 +152,18 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                         attachmentsNames: storedAttachments.names
                     });
                 }
+
+                this.createView('postField', 'views/note/fields/post', {
+                    el: this.getSelector() + ' .textarea-container',
+                    name: 'post',
+                    mode: 'edit',
+                    params: {
+                        required: true,
+                        rows: 1
+                    },
+                    model: this.seed,
+                    placeholderText: this.placeholderText
+                });
                 this.createCollection(function () {
                     this.wait(false);
                 }, this);
@@ -213,7 +208,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            this.$textarea = this.$el.find('textarea.note');
+            this.$textarea = this.$el.find('textarea[name="post"]');
             this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
 

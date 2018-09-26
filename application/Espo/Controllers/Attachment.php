@@ -41,4 +41,18 @@ class Attachment extends \Espo\Core\Controllers\Record
         }
         return parent::actionList($params, $data, $request);
     }
+
+    public function postActionGetAttachmentFromImageUrl($params, $data)
+    {
+        if (empty($data->url)) throw new BadRequest();
+
+        return $this->getRecordService()->getAttachmentFromImageUrl($data->url)->getValueMap();
+    }
+
+    public function postActionGetCopiedAttachment($params, $data)
+    {
+        if (empty($data->id)) throw new BadRequest();
+
+        return $this->getRecordService()->getCopiedAttachment($data->id)->getValueMap();
+    }
 }
