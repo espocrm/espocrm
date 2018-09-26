@@ -35,6 +35,7 @@ use \Espo\Core\Exceptions\Error;
 
 class EmailAddress extends Record
 {
+    const ERASED_PREFIX = 'ERASED:';
 
     protected function findInAddressBookByEntityType($query, $limit, $entityType, &$result)
     {
@@ -67,24 +68,31 @@ class EmailAddress extends Record
         foreach ($collection as $entity) {
             $emailAddress = $entity->get('emailAddress');
 
-            $result[] = array(
+            if ($emailAddress) {
+                if (strpos($emailAddress, self::ERASED_PREFIX) === 0) {
+                    continue;
+                }
+            }
+
+            $result[] = [
                 'emailAddress' => $emailAddress,
                 'entityName' => $entity->get('name'),
                 'entityType' => $entityType,
                 'entityId' => $entity->id
-            );
+            ];
 
             $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
             foreach ($emailAddressData as $d) {
                 if ($emailAddress != $d->emailAddress) {
                     $emailAddress = $d->emailAddress;
-                    $result[] = array(
-                        'emailAddress' => $emailAddress,
-                        'entityName' => $entity->get('name'),
-                        'entityType' => $entityType,
-                        'entityId' => $entity->id
-                    );
-                    break;
+                    if (strpos($emailAddress, $query) === 0 && strpos($emailAddress, self::ERASED_PREFIX) !== 0) {
+                        $result[] = [
+                            'emailAddress' => $emailAddress,
+                            'entityName' => $entity->get('name'),
+                            'entityType' => $entityType,
+                            'entityId' => $entity->id
+                        ];
+                    }
                 }
             }
         }
@@ -125,24 +133,31 @@ class EmailAddress extends Record
         foreach ($collection as $entity) {
             $emailAddress = $entity->get('emailAddress');
 
-            $result[] = array(
+            if ($emailAddress) {
+                if (strpos($emailAddress, self::ERASED_PREFIX) === 0) {
+                    continue;
+                }
+            }
+
+            $result[] = [
                 'emailAddress' => $emailAddress,
                 'entityName' => $entity->get('name'),
                 'entityType' => 'User',
                 'entityId' => $entity->id
-            );
+            ];
 
             $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
             foreach ($emailAddressData as $d) {
                 if ($emailAddress != $d->emailAddress) {
                     $emailAddress = $d->emailAddress;
-                    $result[] = array(
-                        'emailAddress' => $emailAddress,
-                        'entityName' => $entity->get('name'),
-                        'entityType' => 'User',
-                        'entityId' => $entity->id
-                    );
-                    break;
+                    if (strpos($emailAddress, $query) === 0 && strpos($emailAddress, self::ERASED_PREFIX) !== 0) {
+                        $result[] = [
+                            'emailAddress' => $emailAddress,
+                            'entityName' => $entity->get('name'),
+                            'entityType' => 'User',
+                            'entityId' => $entity->id
+                        ];
+                    }
                 }
             }
         }
