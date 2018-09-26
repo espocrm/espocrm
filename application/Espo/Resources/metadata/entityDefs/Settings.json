@@ -209,6 +209,11 @@
             "type": "bool",
             "tooltip": true
         },
+        "ldapPortalUserLdapAuth": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
+        },
         "ldapCreateEspoUser": {
             "type": "bool",
             "default": true,

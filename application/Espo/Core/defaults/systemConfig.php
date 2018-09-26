@@ -134,6 +134,7 @@ return array (
         'ldapAccountFilterFormat',
         'ldapTryUsernameSplit',
         'ldapOptReferrals',
+        'ldapPortalUserLdapAuth',
         'ldapCreateEspoUser',
         'ldapAccountDomainName',
         'ldapAccountDomainNameShort',
@@ -206,5 +207,5 @@ return array (
     ],
     'requiredMysqlVersion' => '5.5.3',
     'recommendedMysqlParams' => [],
-
+    'ldapPortalUserLdapAuth' => false,
 );

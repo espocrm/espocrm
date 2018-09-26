@@ -168,7 +168,7 @@ class Auth
             return;
         }
 
-        $user = $this->authentication->login($username, $password, $authToken);
+        $user = $this->authentication->login($username, $password, $authToken, $this->isPortal());
 
         $authLogRecord = null;
 
