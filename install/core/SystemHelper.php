@@ -140,7 +140,7 @@ class SystemHelper extends \Espo\Core\Utils\System
         }
 
         if (!isset($isFile) && count($permissions) == 1) {
-            return $cd.'find '.$path.' -type d -exec ' . $sudoStr . 'chmod '.$permissions[0].' {} +';
+            return $cd. $sudoStr . 'find '.$path.' -type d -exec ' . $sudoStr . 'chmod '.$permissions[0].' {} +';
         }
 
         $bufPerm = (count($permissions) == 1) ?  array_fill(0, 2, $permissions[0]) : $permissions;
@@ -151,8 +151,8 @@ class SystemHelper extends \Espo\Core\Utils\System
             $commands[] = $this->getCd();
         }
 
-        $commands[] = 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';//.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
-        $commands[] = 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';//.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
+        $commands[] = $sudoStr. 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';//.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
+        $commands[] = $sudoStr . 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';//.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
 
         if (count($permissions) >= 2) {
             return implode(' ' . $this->combineOperator . ' ', $commands);
