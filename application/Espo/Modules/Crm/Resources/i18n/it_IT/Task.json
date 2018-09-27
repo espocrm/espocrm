@@ -10,13 +10,14 @@
     "priority": "Priorita'",
     "description": "Descrizione",
     "isOverdue": "In ritardo",
-    "account": "Account",
     "dateCompleted": "Completato in data",
     "attachments": "Allegati",
-    "reminders": "Promemoria"
+    "reminders": "Promemoria",
+    "contact": "Contatto"
   },
   "links": {
-    "attachments": "Allegato"
+    "attachments": "Allegato",
+    "contact": "Contatto"
   },
   "options": {
     "status": {

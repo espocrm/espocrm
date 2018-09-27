@@ -1,6 +1,9 @@
 {
   "labels": {
-    "Dynamic Logic": "Logica dinamica"
+    "Dynamic Logic": "Logica dinamica",
+    "Name": "Nome",
+    "Label": "Etichetta",
+    "Type": "Tipo"
   },
   "options": {
     "dateTimeDefault": {
@@ -70,6 +73,29 @@
     "maxLength": "Lunghezza massima accettabile del testo.",
     "before": "Il valore della data deve essere precedente al valore della data del campo specificato.",
     "after": "Il valore della data deve essere successivo al valore della data del campo specificato.",
-    "readOnly": "Il valore del campo non può essere specificato dall'utente. Ma può essere calcolato da una formula."
+    "readOnly": "Il valore del campo non può essere specificato dall'utente. Ma può essere calcolato da una formula.",
+    "maxFileSize": "Se vuoto o 0 allora nessun limite."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Via",
+      "city": "Città",
+      "state": "Provincia",
+      "country": "Nazione",
+      "postalCode": "Codice postale",
+      "map": "Mappa"
+    },
+    "personName": {
+      "salutation": "Saluto",
+      "first": "Primo",
+      "last": "Ultimo"
+    },
+    "currency": {
+      "converted": "(Convertito)",
+      "currency": "(Valuta)"
+    },
+    "datetimeOptional": {
+      "date": "Data"
+    }
   }
 }

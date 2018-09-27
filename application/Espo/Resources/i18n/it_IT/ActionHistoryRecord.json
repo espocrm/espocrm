@@ -1,24 +1,15 @@
 {
   "fields": {
-    "user": "User",
-    "action": "Action",
     "createdAt": "Data",
-    "target": "Target",
-    "targetType": "Target Type",
     "authToken": "Token di autenticazione",
-    "ipAddress": "IP Address"
+    "authLogRecord": "Record di log auth"
   },
   "links": {
     "authToken": "Token di autenticazione",
-    "user": "User",
-    "target": "Target"
-  },
-  "presetFilters": {
-    "onlyMy": "Only My"
+    "authLogRecord": "Record di log auth"
   },
   "options": {
     "action": {
-      "read": "Read",
       "update": "Aggiorna",
       "delete": "Elimina",
       "create": "Crea"

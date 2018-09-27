@@ -11,38 +11,30 @@
     "accounts": "Account",
     "cases": "Casi",
     "documents": "Documenti",
-    "account": "Account",
     "opportunity": "Opportunità",
     "contact": "Contatti"
   },
   "scopeNames": {
-    "Account": "Account",
     "Contact": "Contatti",
     "Lead": "Guida",
-    "Target": "Target",
     "Opportunity": "Opportunità",
     "Meeting": "Riunione",
     "Calendar": "Calendario",
     "Call": "Chiamata",
     "Task": "Compito",
     "Case": "Casi",
-    "Document": "Document",
     "DocumentFolder": "Cartella Documenti",
     "Campaign": "Campagna",
     "TargetList": "Lista di destinazione",
     "MassEmail": "Email Massima",
-    "EmailQueueItem": "Email Queue Item",
-    "CampaignTrackingUrl": "Tracking URL",
     "Activities": "Attivià",
     "KnowledgeBaseArticle": "Consocenza di Base degli Aticolo ",
-    "KnowledgeBaseCategory": "Consocenza di Basec della Categoria ",
-    "CampaignLogRecord": "Campaign Log Record"
+    "KnowledgeBaseCategory": "Consocenza di Basec della Categoria "
   },
   "scopeNamesPlural": {
     "Account": "Account",
     "Contact": "Contatti",
     "Lead": "Comando",
-    "Target": "Targets",
     "Opportunity": "Opportunita'",
     "Meeting": "Riunioni",
     "Calendar": "Calendario",
@@ -54,12 +46,9 @@
     "Campaign": "Campagna",
     "TargetList": "Liste di destinazione",
     "MassEmail": "Email Massive",
-    "EmailQueueItem": "Email Queue Items",
-    "CampaignTrackingUrl": "Tracking URLs",
     "Activities": "Attivià",
     "KnowledgeBaseArticle": "Conoscenza di Base",
-    "KnowledgeBaseCategory": "Conoscenza di Base Categorie",
-    "CampaignLogRecord": "Campaign Log Records"
+    "KnowledgeBaseCategory": "Conoscenza di Base Categorie"
   },
   "dashlets": {
     "Leads": "Le mie Guide",
@@ -70,7 +59,6 @@
     "Calls": "Le mie Chiamate",
     "Meetings": "Le mie Riunioni",
     "OpportunitiesByStage": "Opportunità di stage",
-    "OpportunitiesByLeadSource": "Opportunities by Lead Source",
     "SalesByMonth": "Vendite per Mese",
     "SalesPipeline": "Canale di Vendita",
     "Activities": "le mie Attività"
@@ -78,7 +66,6 @@
   "labels": {
     "Create InboundEmail": "Creare Email in entrata",
     "Activities": "Attivià",
-    "History": "History",
     "Attendees": "Partecipanti",
     "Schedule Meeting": "Pianifica Riunione",
     "Schedule Call": "Pianifica chiamata",
@@ -100,19 +87,11 @@
     "addressState": "Provincia",
     "billingAddressStreet": "Strada",
     "addressStreet": "Strada",
-    "billingAddressMap": "Map",
-    "addressMap": "Map",
     "shippingAddressCity": "Citta' (Spedizione)",
     "shippingAddressStreet": "Strada (Spedizione)",
     "shippingAddressCountry": "Nazione (Spedizione)",
     "shippingAddressState": "Stato (Spedizione)",
     "shippingAddressPostalCode": "Codice Postale (Spedizione)",
     "shippingAddressMap": "Mappa (Spedizione)"
-  },
-  "options": {
-    "reminderTypes": {
-      "Popup": "Popup",
-      "Email": "Email"
-    }
   }
 }

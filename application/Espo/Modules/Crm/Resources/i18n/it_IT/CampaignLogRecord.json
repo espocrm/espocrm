@@ -2,30 +2,20 @@
   "fields": {
     "action": "Azione",
     "actionDate": "Data",
-    "data": "Data",
     "campaign": "Campagnia",
-    "parent": "Target",
     "object": "Oggetto",
-    "application": "Applicazione",
-    "queueItem": "Queue Item",
-    "stringData": "String Data",
-    "stringAdditionalData": "String Additional Data",
-    "isTest": "Is Test"
+    "application": "Applicazione"
   },
   "links": {
-    "queueItem": "Queue Item",
-    "parent": "Genitore",
-    "object": "Object",
-    "campaign": "Campaign"
+    "parent": "Genitore"
   },
   "options": {
     "action": {
       "Sent": "Inviato",
       "Opened": "Aperto",
       "Opted Out": "Rinuncia",
-      "Bounced": "Bounced",
       "Clicked": "Cliccato",
-      "Lead Created": "Lead Created"
+      "Opted In": "Iscritto"
     }
   },
   "labels": {
@@ -35,8 +25,6 @@
     "sent": "Inviato",
     "opened": "Aperto",
     "optedOut": "Rinuncia",
-    "bounced": "Bounced",
-    "clicked": "Clicked",
-    "leadCreated": "Lead Created"
+    "optedIn": "Iscritto"
   }
 }

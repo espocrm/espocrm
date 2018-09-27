@@ -10,18 +10,14 @@
     "replyToName": "Rispondi a Nome",
     "campaign": "Campagna",
     "emailTemplate": "Modello Email",
-    "inboundEmail": "Email Account",
     "targetLists": "Liste di destinazione",
     "excludingTargetLists": "Escludi Liste di Destinazione",
-    "optOutEntirely": "Opt-Out Entirely"
+    "smtpAccount": "Account SMTP"
   },
   "links": {
     "targetLists": "Liste di Destinazione",
-    "excludingTargetLists": "Excluding Target Lists",
-    "queueItems": "Queue Items",
     "campaign": "Campagna",
-    "emailTemplate": "Modello Email",
-    "inboundEmail": "Email Account"
+    "emailTemplate": "Modello Email"
   },
   "options": {
     "status": {
@@ -35,7 +31,10 @@
   },
   "labels": {
     "Create MassEmail": "Crea Email Massive",
-    "Send Test": "Invia Test"
+    "Send Test": "Invia Test",
+    "System SMTP": "Sistema SMTP",
+    "system": "Sistema",
+    "group": "Gruppo"
   },
   "messages": {
     "selectAtLeastOneTarget": "Selezionare almeno un destinatario.",
@@ -44,7 +43,8 @@
   "tooltips": {
     "optOutEntirely": "Gli indirizzi email dei destinatari che hanno cancellato l'iscrizione verranno contrassegnati come disabilitati e non riceveranno più alcuna email.",
     "targetLists": "Destinatari che devono ricevere i messaggi.",
-    "excludingTargetLists": "Destinatari che non devono ricevere i messaggi."
+    "excludingTargetLists": "Destinatari che non devono ricevere i messaggi.",
+    "storeSentEmails": "Le email verranno salvate nel CRM"
   },
   "presetFilters": {
     "actual": "Attuale",

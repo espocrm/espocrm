@@ -1,12 +1,13 @@
 {
   "fields": {
     "width": "Larghezza (%)",
-    "link": "Link",
     "notSortable": "Non Ordinabile",
     "align": "Allinea",
     "panelName": "Nome del pannello",
     "style": "Stile",
-    "sticked": "Fissato"
+    "sticked": "Fissato",
+    "isLarge": "Misura carattere grande",
+    "dynamicLogicVisible": "Condizioni che rendono visibile il pannello"
   },
   "options": {
     "align": {
@@ -14,12 +15,14 @@
       "right": "Destra"
     },
     "style": {
-      "default": "Default",
       "success": "Successo",
       "danger": "Pericolo",
-      "info": "Info",
       "warning": "Avvertimento",
       "primary": "Primario"
     }
+  },
+  "labels": {
+    "New panel": "Nuovo Pannello",
+    "Layout": "Struttura"
   }
 }

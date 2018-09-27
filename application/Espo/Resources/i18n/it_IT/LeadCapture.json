@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Nome",
+    "campaign": "MailChimp: ID campagna",
+    "isActive": "È Attivo",
+    "subscribeToTargetList": "Iscriviti alla lista di destinazione",
+    "subscribeContactToTargetList": "Iscriviti contatto se esiste",
+    "targetList": "Lista target",
+    "fieldList": "Campi Carico utile",
+    "optInConfirmation": "Doppia registrazione",
+    "optInConfirmationEmailTemplate": "Modello email di conferma registrazione",
+    "optInConfirmationLifetime": "Durata conferma registrazione durata (ore)",
+    "optInConfirmationSuccessMessage": "Testo da far vedere dopo la conferma di registrazione",
+    "leadSource": "Sorgente lead",
+    "apiKey": "Chiave API",
+    "targetTeam": "Team Target",
+    "exampleRequestMethod": "Metodo",
+    "exampleRequestPayload": "Carico utile"
+  },
+  "links": {
+    "targetList": "LIsta target",
+    "campaign": "Campagna",
+    "optInConfirmationEmailTemplate": "Modello email conferma registrazione",
+    "targetTeam": "Team target"
+  },
+  "labels": {
+    "Create LeadCapture": "Crea punto d'ingresso",
+    "Generate New API Key": "Genera una nuova chiave API",
+    "Request": "Richiesta",
+    "Confirm Opt-In": "L'iscrizione è confermata."
+  },
+  "messages": {
+    "generateApiKey": "Creare nuova API Key",
+    "optInConfirmationExpired": "Link di conferma iscrizione è scaduto.",
+    "optInIsConfirmed": "L'iscrizione è confermata."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown è supportata."
+  }
+}

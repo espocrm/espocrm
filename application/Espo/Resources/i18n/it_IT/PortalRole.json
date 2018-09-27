@@ -7,5 +7,11 @@
     "Create PortalRole": "Crea Ruolo",
     "Scope Level": "Livello Ambito",
     "Field Level": "Livello del Campo"
+  },
+  "fields": {
+    "exportPermission": "Esporta Permessi"
+  },
+  "tooltips": {
+    "exportPermission": "Definisce se gli utenti del portale hanno la possibilità di esportare record."
   }
 }

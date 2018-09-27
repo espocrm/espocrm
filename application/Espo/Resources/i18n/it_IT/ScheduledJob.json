@@ -2,11 +2,7 @@
   "fields": {
     "name": "Nome",
     "status": "Stato",
-    "job": "Job",
     "scheduling": "Programmazione"
-  },
-  "links": {
-    "log": "Log"
   },
   "labels": {
     "Create ScheduledJob": "Crea un Job schedulato"
@@ -18,7 +14,8 @@
       "CheckEmailAccounts": "Controllare account email personale",
       "SendEmailReminders": "Inviare promemoria via email",
       "AuthTokenControl": "Controllo token di autenticazione",
-      "SendEmailNotifications": "Invia notifiche email"
+      "SendEmailNotifications": "Invia notifiche email",
+      "CheckNewVersion": "Controlla nuove versioni"
     },
     "cronSetup": {
       "linux": "Nota: aggiungi questa riga al file crontab per eseguire le attività pianificate di EspoCRM:",
@@ -30,8 +27,5 @@
       "Active": "Attivo",
       "Inactive": "Inattivo"
     }
-  },
-  "tooltips": {
-    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
   }
 }

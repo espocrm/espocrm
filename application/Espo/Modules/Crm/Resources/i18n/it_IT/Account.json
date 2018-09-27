@@ -1,13 +1,11 @@
 {
   "fields": {
     "name": "Nome",
-    "emailAddress": "Email",
     "website": "Sito Web",
     "phoneNumber": "Telefono",
     "billingAddress": "Indirizzo di Fatturazione",
     "shippingAddress": "Indirizzo di Spedizione",
     "description": "Descrizione",
-    "sicCode": "Sic Code",
     "industry": "Azienda",
     "type": "Tipo",
     "contactRole": "Titolo",
@@ -36,7 +34,6 @@
     "type": {
       "Customer": "Cliente",
       "Investor": "Invetitore",
-      "Partner": "Partner",
       "Reseller": "Rivenditore"
     },
     "industry": {
@@ -48,7 +45,6 @@
       "Biotechnology": "Biotecnologie",
       "Building Materials & Equipment": "Materiali da costruzione e attrezzature",
       "Chemical": "Chimico",
-      "Computer": "Computer",
       "Education": "Insegnante",
       "Electronics": "Elettronica",
       "Energy": "Energia",
@@ -64,7 +60,6 @@
       "Real Estate": "Immobiliare",
       "Service": "Servizi",
       "Sports": "Sport",
-      "Software": "Software",
       "Technology": "Technologia",
       "Telecommunications": "Telecommunicazioni",
       "Television": "Televisione",
@@ -82,7 +77,6 @@
       "Mass Media": "Mass media",
       "Mining": "Miniere",
       "Music": "Musica",
-      "Marketing": "Marketing",
       "Petroleum": "Petrolio",
       "Retail": "Vendita al dettaglio",
       "Shipping": "Spedizioni",

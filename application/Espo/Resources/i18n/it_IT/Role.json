@@ -4,16 +4,20 @@
     "roles": "Ruoli",
     "assignmentPermission": "Assegnazione permessi",
     "userPermission": "Autorizzazioni Utente",
-    "portalPermission": "Autorizzazione Portale"
+    "portalPermission": "Autorizzazione Portale",
+    "groupEmailAccountPermission": "Permesso account email di gruppo",
+    "exportPermission": "Esporta Permessi",
+    "dataPrivacyPermission": "Autorizzazione privacy dati"
   },
   "links": {
-    "users": "Utenti",
-    "teams": "Teams"
+    "users": "Utenti"
   },
   "tooltips": {
     "assignmentPermission": "Permette di limitare la possibilità di assegnare record ed inviare messaggi ad altri utenti \n\ntutto - nessuna restrizione\n\nteam - può assegnare e postare solo al proprio team\n\nno - può assegnare e postare solo a sé stesso",
     "userPermission": "Permette di limitare agli utenti la possibilità di visualizzare le attività, il calendario ed il flusso attività, di altri utenti\n\ntutto - tutto visualizzabile\n\nteam - visualizzabili le sole attività del proprio team\n\nno - nulla di visualizzabile",
-    "portalPermission": "Defines an access to portal information, ability to post messages to portal users."
+    "groupEmailAccountPermission": "Definisce un accesso agli account di posta elettronica di gruppo, una possibilità di inviare e-mail dal gruppo SMTP.",
+    "dataPrivacyPermission": "Consente di visualizzare e cancellare i dati personali.",
+    "exportPermission": "Definisce se gli utenti hanno la possibilità di esportare record."
   },
   "labels": {
     "Access": "Accesso",
@@ -29,11 +33,8 @@
     },
     "levelList": {
       "all": "tutti",
-      "team": "team",
-      "account": "account",
       "contact": "contatto",
       "own": "proprio",
-      "no": "no",
       "yes": "si",
       "not-set": "non impostato"
     }
