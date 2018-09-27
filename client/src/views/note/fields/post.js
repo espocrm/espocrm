@@ -171,7 +171,9 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                     }
 
                     this.ajaxPostRequest('Attachment/action/getAttachmentFromImageUrl', {
-                        url: url
+                        url: url,
+                        parentType: 'Note',
+                        field: 'attachments'
                     }).then(function (attachment) {
                         var attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
                         var attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
@@ -205,7 +207,9 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                         }
 
                         this.ajaxPostRequest('Attachment/action/getCopiedAttachment', {
-                            id: id
+                            id: id,
+                            parentType: 'Note',
+                            field: 'attachments'
                         }).then(function (attachment) {
                             var attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
                             var attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});

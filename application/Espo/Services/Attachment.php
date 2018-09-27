@@ -96,21 +96,8 @@ class Attachment extends Record
             }
 
             $fieldType = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
-            if (!$fieldType) {
-                throw new Error("Field '{$field}' does not exist.");
-            }
 
-            if (
-                !$this->getAcl()->checkScope($relatedEntityType, 'create')
-                &&
-                !$this->getAcl()->checkScope($relatedEntityType, 'edit')
-            ) {
-                throw new Forbidden("No access to " . $relatedEntityType . ".");
-            }
-
-            if (in_array($field, $this->getAcl()->getScopeForbiddenFieldList($relatedEntityType, 'edit'))) {
-                throw new Forbidden("No access to field '" . $field . "'.");
-            }
+            $this->checkAttachmentField($relatedEntityType, $field);
 
             $size = mb_strlen($contents, '8bit');
 
@@ -168,19 +155,86 @@ class Attachment extends Record
         }
     }
 
-    public function getCopiedAttachment($id)
+    protected function checkAttachmentField($relatedEntityType, $field)
     {
-        $attachment = $this->getEntity($id);
+        $fieldType = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
+        if (!$fieldType) {
+            throw new Error("Field '{$field}' does not exist.");
+        }
+        if (!in_array($fieldType, $this->attachmentFieldTypeList)) {
+            throw new Error("Field type '{$fieldType}' is not allowed for attachment.");
+        }
+
+        if (
+            !$this->getAcl()->checkScope($relatedEntityType, 'create')
+            &&
+            !$this->getAcl()->checkScope($relatedEntityType, 'edit')
+        ) {
+            throw new Forbidden("No access to " . $relatedEntityType . ".");
+        }
+
+        if (in_array($field, $this->getAcl()->getScopeForbiddenFieldList($relatedEntityType, 'edit'))) {
+            throw new Forbidden("No access to field '" . $field . "'.");
+        }
+    }
+
+    public function getCopiedAttachment($data)
+    {
+        if (empty($data->id)) throw new BadRequest();
+        if (empty($data->field)) throw new BadRequest();
+
+        if (isset($data->parentType)) {
+            $relatedEntityType = $data->parentType;
+        } else if (isset($data->relatedType)) {
+            $relatedEntityType = $data->relatedType;
+        } else {
+            throw new BadRequest();
+        }
+
+        $field = $data->field;
+
+        $this->checkAttachmentField($relatedEntityType, $field);
+
+        $attachment = $this->getEntity($data->id);
         if (!$attachment) throw new NotFound();
 
         $copied = $this->getRepository()->getCopiedAttachment($attachment);
 
+        $attachment = $copied;
+
+        if (isset($data->parentType)) {
+            $attachment->set('parentType', $data->parentType);
+        }
+        if (isset($data->relatedType)) {
+            $attachment->set('relatedType', $data->relatedType);
+        }
+        $attachment->set('field', $field);
+        $attachment->set('role', 'Attachment');
+
+        $this->getRepository()->save($attachment);
+
         return $copied;
     }
 
-    public function getAttachmentFromImageUrl($url)
+    public function getAttachmentFromImageUrl($data)
     {
         $attachment = $this->getEntity();
+
+        if (empty($data->url)) throw new BadRequest();
+        if (empty($data->field)) throw new BadRequest();
+
+        if (isset($data->parentType)) {
+            $relatedEntityType = $data->parentType;
+        } else if (isset($data->relatedType)) {
+            $relatedEntityType = $data->relatedType;
+        } else {
+            throw new BadRequest();
+        }
+
+        $url = $data->url;
+        $field = $data->field;
+
+        $this->checkAttachmentField($relatedEntityType, $field);
 
         $data = $this->getImageDataByUrl($url);
         if (!$data) throw new Error('Attachment::getAttachmentFromImageUrl: Bad image data.');
@@ -188,12 +242,32 @@ class Attachment extends Record
         $type = $data['type'];
         $contents = $data['contents'];
 
+        $size = mb_strlen($contents, '8bit');
+
+        $maxSize = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
+        if (!$maxSize) {
+            $maxSize = $this->getConfig()->get('attachmentUploadMaxSize');
+        }
+        if ($maxSize) {
+            if ($size > $maxSize * 1024 * 1024) {
+                throw new Error("File size should not exceed {$maxSize}Mb.");
+            }
+        }
+
         $attachment->set([
             'name' => $url,
             'type' => $type,
             'contents' => $contents,
             'role' => 'Attachment'
         ]);
+
+        if (isset($data->parentType)) {
+            $attachment->set('parentType', $data->parentType);
+        }
+        if (isset($data->relatedType)) {
+            $attachment->set('relatedType', $data->relatedType);
+        }
+        $attachment->set('field', $field);
 
         $this->getRepository()->save($attachment);
 
