@@ -82,6 +82,34 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
             }
+
+            if ((this.mode == 'edit'  || this.mode == 'search') && this.params.options && this.params.options.length) {
+                this.$element.autocomplete({
+                    minChars: 0,
+                    lookup: this.params.options,
+                    formatResult: function (suggestion) {
+                        return suggestion.value;
+                    },
+                    lookupFilter: function (suggestion, query, queryLowerCase) {
+                        if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
+                            if (suggestion.value.length === queryLowerCase.length) return false;
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                this.$element.on('focus', function () {
+                    if (this.$element.val()) return;
+                    this.$element.autocomplete('onValueChange');
+                }.bind(this));
+                this.once('render', function () {
+                    this.$element.autocomplete('dispose');
+                }, this);
+                this.once('remove', function () {
+                    this.$element.autocomplete('dispose');
+                }, this);
+            }
         },
 
         fetch: function () {
