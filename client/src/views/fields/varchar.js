@@ -122,6 +122,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 this.$element.autocomplete({
                     minChars: 0,
                     lookup: this.params.options,
+                    maxHeight: 200,
                     formatResult: function (suggestion) {
                         return suggestion.value;
                     },

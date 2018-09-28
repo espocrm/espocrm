@@ -305,6 +305,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                     this.$country.autocomplete({
                         minChars: 0,
                         lookup: countryList,
+                        maxHeight: 200,
                         formatResult: function (suggestion) {
                             return suggestion.value;
                         },
