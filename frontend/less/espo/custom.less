@@ -1213,10 +1213,24 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     padding-left: @panel-padding;
 }
 
-.autocomplete-suggestions { border: 1px solid @gray-light; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
-.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
-.autocomplete-selected { background: #F0F0F0; }
-.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-suggestions {
+    border: 1px solid @input-border;
+    background: @white-color;
+    cursor: default;
+    overflow: auto;
+    .box-shadow(0 6px 12px rgba(0,0,0,.175));
+}
+.autocomplete-suggestion {
+    padding: 2px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.autocomplete-selected {
+    background: @main-gray;
+}
+.autocomplete-suggestions strong {
+    font-weight: normal; color: @brand-primary;
+}
 
 label.attach-file-label {
     overflow: hidden;
