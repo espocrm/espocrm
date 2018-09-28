@@ -38,6 +38,41 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains', 'notEquals', 'notLike', 'isEmpty', 'isNotEmpty'],
 
+        setup: function () {
+            this.setupOptions();
+            if (this.options.customOptionList) {
+                this.setOptionList(this.options.customOptionList);
+            }
+        },
+
+        setupOptions: function () {
+        },
+
+        setOptionList: function (optionList) {
+            if (!this.originalOptionList) {
+                this.originalOptionList = this.params.options || [];
+            }
+            this.params.options = Espo.Utils.clone(optionList);
+
+            if (this.mode == 'edit') {
+                if (this.isRendered()) {
+                    this.reRender();
+                }
+            }
+        },
+
+        resetOptionList: function () {
+            if (this.originalOptionList) {
+                this.params.options = Espo.Utils.clone(this.originalOptionList);
+            }
+
+            if (this.mode == 'edit') {
+                if (this.isRendered()) {
+                    this.reRender();
+                }
+            }
+        },
+
         setupSearch: function () {
             this.events = _.extend({
                 'change select.search-type': function (e) {
