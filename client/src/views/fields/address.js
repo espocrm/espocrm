@@ -300,6 +300,37 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                     self.trigger('change');
                 });
 
+                var countryList = this.getConfig().get('addressCountryList') || [];
+                if (countryList.length) {
+                    this.$country.autocomplete({
+                        minChars: 0,
+                        lookup: countryList,
+                        formatResult: function (suggestion) {
+                            return suggestion.value;
+                        },
+                        lookupFilter: function (suggestion, query, queryLowerCase) {
+                            if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
+                                if (suggestion.value.length === queryLowerCase.length) return false;
+                                return true;
+                            }
+                            return false;
+                        },
+                        onSelect: function () {
+                            this.trigger('change');
+                        }.bind(this)
+                    });
+                    this.$country.on('focus', function () {
+                        if (this.$country.val()) return;
+                        this.$country.autocomplete('onValueChange');
+                    }.bind(this));
+                    this.once('render', function () {
+                        this.$country.autocomplete('dispose');
+                    }, this);
+                    this.once('remove', function () {
+                        this.$country.autocomplete('dispose');
+                    }, this);
+                }
+
                 this.$street.on('input', function (e) {
                     var numberOfLines = e.currentTarget.value.split('\n').length;
                     var numberOfRows = this.$street.prop('rows');

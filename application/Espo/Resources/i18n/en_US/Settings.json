@@ -102,7 +102,8 @@
         "tabIconsDisabled": "Disable tab icons",
         "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
         "outboundEmailBccAddress": "BCC address for external clients",
-        "cleanupDeletedRecords": "Clean up deleted records"
+        "cleanupDeletedRecords": "Clean up deleted records",
+        "addressCountryList": "Address Country Autocomplete List"
     },
     "options": {
         "weekStart": {

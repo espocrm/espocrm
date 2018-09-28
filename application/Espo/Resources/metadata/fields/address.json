@@ -22,7 +22,8 @@
       },
       "country":{
          "type":"varchar",
-         "trim": true
+         "trim": true,
+         "view": "views/fields/address-country"
       },
       "postalCode":{
          "type":"varchar",

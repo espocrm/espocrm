@@ -485,6 +485,9 @@
         "cleanupDeletedRecords": {
             "type": "bool",
             "tooltip": true
+        },
+        "addressCountryList": {
+            "type": "multiEnum"
         }
     }
 }
