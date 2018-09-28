@@ -131,7 +131,10 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                             return true;
                         }
                         return false;
-                    }
+                    },
+                    onSelect: function () {
+                        this.trigger('change');
+                    }.bind(this)
                 });
 
                 this.$element.on('focus', function () {
