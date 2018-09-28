@@ -66,6 +66,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         initialAttributes: null,
 
+        VALIDATION_POPOVER_TIMEOUT: 3000,
+
         isRequired: function () {
             return this.params.required;
         },
@@ -563,7 +565,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             this._timeout = setTimeout(function () {
                 $el.popover('destroy');
-            }, 3000);
+            }, this.VALIDATION_POPOVER_TIMEOUT);
         },
 
         validate: function () {
