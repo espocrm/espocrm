@@ -106,6 +106,10 @@ class System
      */
     public function getPhpBin()
     {
+        if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
+            return $_SERVER['PHP_PATH'];
+        }
+
         return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
     }
 
