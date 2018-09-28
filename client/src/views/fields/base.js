@@ -549,13 +549,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 trigger: 'manual'
             }).popover('show');
 
+            var isDestroyed = false;
+
             $el.closest('.field').one('mousedown click', function () {
+                if (isDestroyed) return;
                 $el.popover('destroy');
+                isDestroyed = true;
             });
 
             this.once('render remove', function () {
+                if (isDestroyed) return;
                 if ($el) {
                     $el.popover('destroy');
+                    isDestroyed = true;
                 }
             });
 
@@ -564,7 +570,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             this._timeout = setTimeout(function () {
+                if (isDestroyed) return;
                 $el.popover('destroy');
+                isDestroyed = true;
             }, this.VALIDATION_POPOVER_TIMEOUT);
         },
 
