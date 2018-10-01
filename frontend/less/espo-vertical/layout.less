@@ -47,6 +47,10 @@ body > #header ul.tabs > li span.short-label > span {
 
 body > #header ul.tabs > li > a > span.full-label {
     display: inline;
+    text-overflow: ellipsis;
+    max-width: ~"calc(100% - 50px)";
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 body > #header .navbar-brand span.home-icon {
