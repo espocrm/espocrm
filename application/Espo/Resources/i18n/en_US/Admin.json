@@ -58,6 +58,7 @@
         "Email Filters": "Email Filters",
         "Action History": "Action History",
         "Label Manager": "Label Manager",
+        "Template Manager": "Template Manager",
         "Lead Capture": "Lead Capture",
         "Attachments": "Attachments",
         "System Requirements": "System Requirements",
@@ -224,6 +225,7 @@
         "emailFilters": "Email messages that match the specified filter won't be imported.",
         "actionHistory": "Log of user actions.",
         "labelManager": "Customize application labels.",
+        "templateManager": "Customize notification templates.",
         "authLog": "Login history.",
         "leadCapture": "API entry points for Web-to-Lead.",
         "attachments": "All file attachments stored in the system.",
@@ -250,5 +252,16 @@
         "user": "User Name",
         "writable": "Writable",
         "readable": "Readable"
+    },
+    "templates": {
+        "accessInfo": "Access Info",
+        "accessInfoPortal": "Access Info for Portals",
+        "assignment": "Assignment",
+        "mention": "Mention",
+        "noteEmailRecieved": "Note about Recieved Email",
+        "notePost": "Note about Post",
+        "notePostNoParent": "Note about Post (no Parent)",
+        "noteStatus": "Note about Status Update",
+        "passwordChangeLink": "Password Change Link"
     }
 }

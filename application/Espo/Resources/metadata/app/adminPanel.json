@@ -115,6 +115,11 @@
             "description":"labelManager"
          },
          {
+            "url":"#Admin/templateManager",
+            "label":"Template Manager",
+            "description":"templateManager"
+         },
+         {
             "url":"#Admin/extensions",
             "label":"Extensions",
             "description":"extensions"

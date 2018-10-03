@@ -124,7 +124,7 @@ class Meeting extends \Espo\Services\Record
             }
         }
 
-        $templateFileManager = new \Espo\Core\Utils\TemplateFileManager($this->getConfig(), $this->getMetadata());
+        $templateFileManager = $this->getInjection('container')->get('templateFileManager');
 
         return new Invitations(
             $this->getEntityManager(),

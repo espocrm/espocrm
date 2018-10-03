@@ -397,7 +397,7 @@ class User extends Record
             return;
         }
 
-        $templateFileManager = new \Espo\Core\Utils\TemplateFileManager($this->getConfig(), $this->getMetadata());
+        $templateFileManager = $this->getContainer()->get('templateFileManager');
 
         $siteUrl = $this->getConfig()->getSiteUrl() . '/';
 
@@ -479,7 +479,7 @@ class User extends Record
             throw new Error("SMTP credentials are not defined.");
         }
 
-        $templateFileManager = new \Espo\Core\Utils\TemplateFileManager($this->getConfig(), $this->getMetadata());
+        $templateFileManager = $this->getContainer()->get('templateFileManager');
 
         $subjectTpl = $templateFileManager->getTemplate('passwordChangeLink', 'subject', 'User');
         $bodyTpl = $templateFileManager->getTemplate('passwordChangeLink', 'body', 'User');
