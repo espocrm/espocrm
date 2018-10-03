@@ -225,7 +225,7 @@
         "emailFilters": "Email messages that match the specified filter won't be imported.",
         "actionHistory": "Log of user actions.",
         "labelManager": "Customize application labels.",
-        "templateManager": "Customize notification templates.",
+        "templateManager": "Customize message templates.",
         "authLog": "Login history.",
         "leadCapture": "API entry points for Web-to-Lead.",
         "attachments": "All file attachments stored in the system.",
