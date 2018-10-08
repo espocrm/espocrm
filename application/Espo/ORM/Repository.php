@@ -76,6 +76,11 @@ abstract class Repository
         return $this->entityManager;
     }
 
+    public function getEntityType()
+    {
+        return $this->entityType;
+    }
+
     abstract public function get($id = null);
 
     abstract public function save(Entity $entity);
@@ -90,4 +95,3 @@ abstract class Repository
 
     abstract public function count(array $params);
 }
-
