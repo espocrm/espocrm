@@ -380,6 +380,14 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             this.$el.find('.cell[data-name=' + name+']').css('visibility', 'visible');
         },
 
+        toPlural: function (string) {
+            if (string.slice(-1) == 'y') {
+                return string.substr(0, string.length - 1) + 'ies';
+            } else {
+                return string + 's';
+            }
+        },
+
         afterRender: function () {
             this.getView('name').on('change', function (m) {
                 var name = this.model.get('name');
@@ -387,7 +395,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 name = name.charAt(0).toUpperCase() + name.slice(1);
 
                 this.model.set('labelSingular', name);
-                this.model.set('labelPlural', name + 's') ;
+                this.model.set('labelPlural', this.toPlural(name)) ;
                 if (name) {
                     name = name.replace(/\-/g, ' ').replace(/_/g, ' ').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
                         return g.toUpperCase();
