@@ -2,7 +2,7 @@
     "fields": {
         "name": "Name",
         "emailAddress": "Email",
-        "title": "Title",
+        "title": "Primary Account Title",
         "account": "Account",
         "accounts": "Accounts",
         "phoneNumber": "Phone",
