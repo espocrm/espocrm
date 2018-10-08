@@ -35,6 +35,8 @@ class TemplateFileManager
 
     protected $metadata;
 
+    protected $fileManager;
+
     public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
     {
         $this->config = $config;
