@@ -68,6 +68,8 @@ class Utils
         'userDefaultTeamId' => 'ldapUserDefaultTeamId',
         'userObjectClass' => 'ldapUserObjectClass',
         'portalUserLdapAuth' => 'ldapPortalUserLdapAuth',
+        'portalUserPortalsIds' => 'ldapPortalUserPortalsIds',
+        'portalUserRolesIds' => 'ldapPortalUserRolesIds',
     );
 
     /**
@@ -88,6 +90,8 @@ class Utils
         'userTeamsIds',
         'userDefaultTeamId',
         'portalUserLdapAuth',
+        'portalUserPortalsIds',
+        'portalUserRolesIds',
     );
 
     /**

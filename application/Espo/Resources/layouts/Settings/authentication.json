@@ -20,12 +20,13 @@
             [{"name": "ldapUserLoginFilter", "fullWidth": true}],
             [{"name": "ldapAccountDomainName"}, {"name": "ldapAccountDomainNameShort"}],
             [{"name": "ldapTryUsernameSplit"}, {"name": "ldapOptReferrals"}],
-            [{"name": "ldapPortalUserLdapAuth"}, false],
             [{"name": "ldapCreateEspoUser"}, false],
             [{"name": "ldapUserFirstNameAttribute"}, {"name": "ldapUserLastNameAttribute"}],
             [{"name": "ldapUserTitleAttribute"}, false],
             [{"name": "ldapUserEmailAddressAttribute"}, {"name": "ldapUserPhoneNumberAttribute"}],
-            [{"name": "ldapUserTeams"}, {"name": "ldapUserDefaultTeam"}]
+            [{"name": "ldapUserTeams"}, {"name": "ldapUserDefaultTeam"}],
+            [{"name": "ldapPortalUserLdapAuth"}, false],
+            [{"name": "ldapPortalUserPortals"}, {"name": "ldapPortalUserRoles"}]
         ]
     }
 ]
