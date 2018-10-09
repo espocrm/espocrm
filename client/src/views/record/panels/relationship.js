@@ -42,6 +42,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         fetchOnModelAfterRelate: false,
 
+        noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -68,7 +70,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
-            var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
+            var url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (!this.readOnly && !this.defs.readOnly) {
                 if (!('create' in this.defs)) {
@@ -79,14 +81,28 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+            if (!('view' in this.defs)) {
+                this.defs.view = true;
+            }
+
             this.filterList = this.defs.filterList || this.filterList || null;
 
             if (this.filterList && this.filterList.length) {
                 this.filter = this.getStoredFilter();
             }
 
+            if (this.defs.createDisabled) {
+                this.defs.create = false;
+            }
+            if (this.defs.selectDisabled) {
+                this.defs.select = false;
+            }
+            if (this.defs.viewDisabled) {
+                this.defs.view = false;
+            }
+
             if (this.defs.create) {
-                if (this.getAcl().check(this.scope, 'create') && !~['User', 'Team'].indexOf()) {
+                if (this.getAcl().check(this.scope, 'create') && !~this.noCreateScopeList.indexOf(this.scope)) {
                     this.buttonList.push({
                         title: 'Create',
                         action: this.defs.createAction || 'createRelated',
@@ -99,6 +115,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         }
                     });
                 }
+            }
+
+            if (this.defs.view) {
+                this.actionList.unshift({
+                    label: 'View',
+                    action: this.defs.viewAction || 'viewRelatedList'
+                });
             }
 
             if (this.defs.select) {
@@ -139,6 +162,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+            this.listLayout = listLayout;
+            this.layoutName = layoutName;
+
             var sortBy = this.defs.sortBy || null;
             var asc = this.defs.asc || null;
 
@@ -151,6 +177,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                 }
             }
+
+            this.defaultSortBy = sortBy;
+            this.defaultAsc = asc;
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
@@ -183,7 +212,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     collection.fetch();
                 }, this);
 
-                var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
+                var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'views/record/list';
+                this.listViewName = viewName;
+                this.rowActionsView = this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView);
 
                 this.once('after:render', function () {
                     this.createView('list', viewName, {
@@ -191,7 +222,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         layoutName: layoutName,
                         listLayout: listLayout,
                         checkboxes: false,
-                        rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                        rowActionsView: this.rowActionsView,
                         buttonsDisabled: true,
                         el: this.options.el + ' .list-container',
                         skipBuildRows: true
@@ -253,6 +284,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         setFilter: function (filter) {
+            this.filter = filter;
             this.collection.data.primaryFilter = null;
             if (filter) {
                 this.collection.data.primaryFilter = filter;
@@ -282,6 +314,46 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         actionRefresh: function () {
             this.collection.fetch();
+        },
+
+        actionViewRelatedList: function (data) {
+            var viewName =
+                this.getMetadata().get(['clientDefs', this.model.name, 'relationshipPanels', this.name, 'viewModalView']) ||
+                this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'relatedList']) ||
+                'views/modals/related-list';
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+            this.createView('modalRelatedList', viewName, {
+                model: this.model,
+                panelName: this.panelName,
+                link: this.link,
+                scope: this.scope,
+                defs: this.defs,
+                title: this.title,
+                filterList: this.filterList,
+                filter: this.filter,
+                layoutName: this.layoutName,
+                listLayout: this.listLayout,
+                defaultAsc: this.defaultAsc,
+                defaultSortBy: this.defaultSortBy,
+                url: this.url,
+                listViewName: this.listViewName,
+                createDisabled: !this.defs.create,
+                selectDisabled: !this.defs.select,
+                rowActionsView: this.rowActionsView,
+                panelCollection: this.collection
+            }, function (view) {
+                Espo.Ui.notify(false);
+                view.render();
+
+                this.listenTo(view, 'action', function (action, data, e) {
+                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    if (typeof this[method] == 'function') {
+                        this[method](data, e);
+                        e.preventDefault();
+                    }
+                }, this);
+            });
         },
 
         actionViewRelated: function (data) {
@@ -394,4 +466,3 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
     });
 });
-

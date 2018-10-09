@@ -32,6 +32,8 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
         name: 'tasks',
 
+        scope: 'Task',
+
         template: 'crm:record/panels/tasks',
 
         tabList: ['actual', 'completed'],
@@ -49,6 +51,13 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
                 acl: 'create',
                 aclScope: 'Task',
                 html: '<span class="fas fa-plus"></span>',
+            }
+        ],
+
+        actionList: [
+            {
+                label: 'View',
+                action: 'viewRelatedList'
             }
         ],
 
@@ -109,11 +118,16 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
         },
 
         setup: function () {
-            this.scope = this.model.name;
-
+            this.parentScope = this.model.name;
             this.link = 'tasks';
 
-            if (this.scope == 'Account') {
+            this.defs = {
+                create: true
+            };
+
+            this.url = this.model.name + '/' + this.model.id + '/' + this.link;
+
+            if (this.parentScope == 'Account') {
                 this.link = 'tasksPrimary';
             }
 
@@ -128,8 +142,7 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
         },
 
         afterRender: function () {
-
-            var url = this.model.name + '/' + this.model.id + '/' + this.link;
+            var url = this.url;
 
             if (!this.getAcl().check('Task', 'read')) {
                 this.$el.find('.list-container').html(this.translate('No Access'));
@@ -168,10 +181,14 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
             }, this);
         },
 
+        actionCreateRelated: function () {
+            this.actionCreateTask();
+        },
+
         actionCreateTask: function (data) {
             var self = this;
             var link = this.link;
-            if (this.scope === 'Account') {
+            if (this.parentScope === 'Account') {
                 link = 'tasks';
             }
             var scope = 'Task';
