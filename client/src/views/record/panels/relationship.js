@@ -132,6 +132,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 if (this.defs.selectBoolFilterList) {
                     data.boolFilterList = this.defs.selectBoolFilterList;
                 }
+                data.massSelect = this.defs.massSelect;
 
                 this.actionList.unshift({
                     label: 'Select',

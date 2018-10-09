@@ -319,7 +319,8 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
             p.actionSelectRelated({
                 link: this.link,
                 primaryFilterName: this.defs.selectPrimaryFilterName,
-                boolFilterList: this.defs.selectBoolFilterList
+                boolFilterList: this.defs.selectBoolFilterList,
+                massSelect: this.defs.massSelect
             });
         }
     });
