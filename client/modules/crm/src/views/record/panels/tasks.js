@@ -56,7 +56,7 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
         actionList: [
             {
-                label: 'View',
+                label: 'View List',
                 action: 'viewRelatedList'
             }
         ],

@@ -119,7 +119,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             if (this.defs.view) {
                 this.actionList.unshift({
-                    label: 'View',
+                    label: 'View List',
                     action: this.defs.viewAction || 'viewRelatedList'
                 });
             }
