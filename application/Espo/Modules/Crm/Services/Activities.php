@@ -207,7 +207,7 @@ class Activities extends \Espo\Core\Services\Base
         if ($entity->get('isPortalUser') && $entity->get('contactId')) {
             $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
             if ($contact) {
-                return $this->getActivitiesEmailQuery($contact, $op, $statusList);
+                return $this->getActivitiesEmailQuery($contact, $statusList, $isHistory);
             }
         }
 
@@ -466,7 +466,7 @@ class Activities extends \Espo\Core\Services\Base
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
-        $methodName = 'get' .$scope . 'EmailQuery';
+        $methodName = 'getActivities' .$scope . 'EmailQuery';
         if (method_exists($this, $methodName)) {
             return $this->$methodName($entity, $statusList, $isHistory);
         }
