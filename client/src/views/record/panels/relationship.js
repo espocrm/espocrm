@@ -166,21 +166,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.listLayout = listLayout;
             this.layoutName = layoutName;
 
-            var sortBy = this.defs.sortBy || null;
-            var asc = this.defs.asc || null;
-
-            if (this.defs.orderBy) {
-                sortBy = this.defs.orderBy;
-                asc = true;
-                if (this.defs.orderDirection) {
-                    if (this.defs.orderDirection && (this.defs.orderDirection === true || this.defs.orderDirection.toLowerCase() === 'DESC')) {
-                        asc = false;
-                    }
-                }
-            }
-
-            this.defaultSortBy = sortBy;
-            this.defaultAsc = asc;
+            this.setupSorting();
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
@@ -193,11 +179,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
 
                 collection.url = collection.urlRoot = url;
-                if (sortBy) {
-                    collection.sortBy = sortBy;
+                if (this.defaultSortBy) {
+                    collection.sortBy = this.defaultSortBy;
                 }
-                if (asc) {
-                    collection.asc = asc;
+                if (this.defaultAsc) {
+                    collection.asc = this.defaultAsc;
                 }
                 this.collection = collection;
 
@@ -241,6 +227,24 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }, this);
 
             this.setupFilterActions();
+        },
+
+        setupSorting: function () {
+            var sortBy = this.defs.sortBy || this.sortBy;
+            var asc = this.defs.asc || this.asc;
+
+            if (this.defs.orderBy) {
+                sortBy = this.defs.orderBy;
+                asc = true;
+                if (this.defs.orderDirection) {
+                    if (this.defs.orderDirection && (this.defs.orderDirection === true || this.defs.orderDirection.toLowerCase() === 'DESC')) {
+                        asc = false;
+                    }
+                }
+            }
+
+            this.defaultSortBy = sortBy;
+            this.defaultAsc = asc;
         },
 
         setupListLayout: function () {},
@@ -321,6 +325,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var viewName =
                 this.getMetadata().get(['clientDefs', this.model.name, 'relationshipPanels', this.name, 'viewModalView']) ||
                 this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'relatedList']) ||
+                this.viewModalView ||
                 'views/modals/related-list';
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
@@ -328,21 +333,22 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 model: this.model,
                 panelName: this.panelName,
                 link: this.link,
-                scope: this.scope,
+                scope: data.scope || this.scope,
                 defs: this.defs,
-                title: this.title,
+                title: data.title || this.title,
                 filterList: this.filterList,
                 filter: this.filter,
                 layoutName: this.layoutName,
                 listLayout: this.listLayout,
                 defaultAsc: this.defaultAsc,
                 defaultSortBy: this.defaultSortBy,
-                url: this.url,
+                url: data.url || this.url,
                 listViewName: this.listViewName,
                 createDisabled: !this.defs.create,
                 selectDisabled: !this.defs.select,
                 rowActionsView: this.rowActionsView,
-                panelCollection: this.collection
+                panelCollection: this.collection,
+                filtersDisabled: this.filtersDisabled
             }, function (view) {
                 Espo.Ui.notify(false);
                 view.render();
@@ -353,6 +359,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         this[method](data, e);
                         e.preventDefault();
                     }
+                }, this);
+
+                this.listenToOnce(view, 'close', function () {
+                    this.clearView('modalRelatedList');
                 }, this);
             });
         },

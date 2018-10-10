@@ -464,7 +464,7 @@ abstract class Base
                 $fieldDefs = $entity->fields[$attribute];
             } else {
                 $part = $this->convertComplexExpression($entity, $attribute, $distinct);
-                $arr[] = $part . ' AS `' . $attribute . '`';
+                $arr[] = $part . ' AS `' . $this->sanitizeAlias($attribute) . '`';
                 continue;
             }
 
@@ -554,7 +554,7 @@ abstract class Base
         return implode(' ', $joinsArr);
     }
 
-    protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null) {
+    protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null, $useColumnAlias = false) {
 
         if (!is_null($orderBy)) {
             if (is_array($orderBy)) {
@@ -609,8 +609,11 @@ abstract class Base
                 $orderPart = str_replace('{direction}', $order, $fieldDefs['orderBy']);
                 return "{$orderPart}";
             } else {
-                $fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy);
-
+                if ($useColumnAlias) {
+                    $fieldPath = $this->sanitizeAlias($orderBy);
+                } else {
+                    $fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy);
+                }
                 return "{$fieldPath} " . $order;
             }
         }
@@ -622,7 +625,15 @@ abstract class Base
         if ($orderPart) {
             return "ORDER BY " . $orderPart;
         }
+    }
 
+    public function order($sql, IEntity $entity, $orderBy = null, $order = null, $useColumnAlias = false)
+    {
+        $orderPart = $this->getOrderPart($entity, $orderBy, $order, $useColumnAlias);
+        if ($orderPart) {
+            $sql .= " ORDER BY " . $orderPart;
+        }
+        return $sql;
     }
 
     protected function getFieldPathForOrderBy($entity, $orderBy)

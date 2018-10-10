@@ -281,7 +281,7 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    protected function loadLinkMultipleFieldsForList(Entity $entity, $selectAttributeList)
+    public function loadLinkMultipleFieldsForList(Entity $entity, $selectAttributeList)
     {
         foreach ($selectAttributeList as $attribute) {
             if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {

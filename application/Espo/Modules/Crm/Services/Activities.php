@@ -98,7 +98,7 @@ class Activities extends \Espo\Core\Services\Base
         return in_array($scope, ['Account']) || $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Company';
     }
 
-    protected function getActivitiesUserMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false)
+    protected function getActivitiesUserMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
 
@@ -145,12 +145,14 @@ class Activities extends \Espo\Core\Services\Base
 
         $selectManager->applyAccess($selectParams);
 
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
 
         return $sql;
     }
 
-    protected function getActivitiesUserCallQuery(Entity $entity, array $statusList = [], $isHistory = false)
+    protected function getActivitiesUserCallQuery(Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Call');
 
@@ -197,17 +199,19 @@ class Activities extends \Espo\Core\Services\Base
 
         $selectManager->applyAccess($selectParams);
 
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
 
         return $sql;
     }
 
-    protected function getActivitiesUserEmailQuery(Entity $entity, array $statusList = [], $isHistory = false)
+    protected function getActivitiesUserEmailQuery(Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
     {
         if ($entity->get('isPortalUser') && $entity->get('contactId')) {
             $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
             if ($contact) {
-                return $this->getActivitiesEmailQuery($contact, $statusList, $isHistory);
+                return $this->getActivitiesEmailQuery($contact, $statusList, $isHistory, $additinalSelectParams);
             }
         }
 
@@ -243,19 +247,21 @@ class Activities extends \Espo\Core\Services\Base
 
         $selectManager->applyAccess($selectParams);
 
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
 
         return $sql;
     }
 
-    protected function getActivitiesMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false)
+    protected function getActivitiesMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
     {
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
         $methodName = 'getActivities' . $scope . 'MeetingQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory);
+            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
@@ -318,6 +324,8 @@ class Activities extends \Espo\Core\Services\Base
 
         $selectManager->applyAccess($selectParams);
 
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
 
         if ($this->isPerson($scope)) {
@@ -348,6 +356,8 @@ class Activities extends \Espo\Core\Services\Base
 
                 $selectManager->applyAccess($selectParams);
 
+                $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
                 $sql .= ' UNION ' . $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
             }
         }
@@ -355,14 +365,14 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getActivitiesCallQuery(Entity $entity, array $statusList = [], $isHistory = false)
+    protected function getActivitiesCallQuery(Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
     {
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
         $methodName = 'getActivities' .$scope . 'CallQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory);
+            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Call');
@@ -424,6 +434,8 @@ class Activities extends \Espo\Core\Services\Base
 
         $selectManager->applyAccess($selectParams);
 
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
 
         if ($this->isPerson($scope)) {
@@ -454,6 +466,8 @@ class Activities extends \Espo\Core\Services\Base
 
                 $selectManager->applyAccess($selectParams);
 
+                $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
                 $sql .= ' UNION ' . $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
             }
         }
@@ -461,14 +475,14 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getActivitiesEmailQuery(Entity $entity, array $statusList = [], $isHistory = false)
+    protected function getActivitiesEmailQuery(Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
     {
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
         $methodName = 'getActivities' .$scope . 'EmailQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory);
+            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Email');
@@ -531,6 +545,8 @@ class Activities extends \Espo\Core\Services\Base
 
         $selectManager->applyAccess($selectParams);
 
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
 
         if ($this->isPerson($scope) || $this->isCompany($scope)) {
@@ -550,7 +566,11 @@ class Activities extends \Espo\Core\Services\Base
                 )
             );
             $selectParams['whereClause']['entityEmailAddress2.entityId'] = $id;
+
             $selectManager->applyAccess($selectParams);
+
+            $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
             $sql .= "\n UNION \n" . $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
 
             $selectParams = $baseSelectParams;
@@ -574,6 +594,9 @@ class Activities extends \Espo\Core\Services\Base
             );
             $selectParams['whereClause']['entityEmailAddress1.entityId'] = $id;
             $selectManager->applyAccess($selectParams);
+
+            $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
             $sql .= "\n UNION \n" . $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
         }
 
@@ -666,6 +689,93 @@ class Activities extends \Espo\Core\Services\Base
         }
     }
 
+    public function findActivitiyEntityType($scope, $id, $entityType, $isHistory = false, $params = [])
+    {
+        if (!$this->getAcl()->checkScope($entityType)) {
+            throw new Forbidden();
+        }
+
+        $entity = $this->getEntityManager()->getEntity($scope, $id);
+        if (!$entity) throw new NotFound();
+        $this->accessCheck($entity);
+
+        if (!$this->getMetadata()->get(['scopes', $entityType, 'activity'])) {
+            throw new Error('Entity \'' . $entityType . '\' is not an activity');
+        }
+
+        if (!$isHistory) {
+            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+        } else {
+            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']);
+        }
+
+        $service = $this->getServiceFactory()->create($entityType);
+        $selectManager = $this->getSelectManagerFactory()->create($entityType);
+
+        $selectParams = $selectManager->getSelectParams($params, false, true);
+
+        $selectAttributeList = $service->getSelectAttributeList($params);
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        }
+
+        $offset = $selectParams['offset'];
+        $limit = $selectParams['limit'];
+
+        $order = $selectParams['order'];
+        $orderBy = $selectParams['orderBy'];
+
+        unset($selectParams['offset']);
+        unset($selectParams['limit']);
+        unset($selectParams['order']);
+        unset($selectParams['orderBy']);
+
+        if ($entityType === 'Email') {
+            if ($orderBy === 'dateStart') {
+                $orderBy = 'dateSent';
+            }
+        }
+
+        $sql = $this->getActivitiesQuery($entity, $entityType, $statusList, $isHistory, $selectParams);
+
+        $query = $this->getEntityManager()->getQuery();
+
+        $seed = $this->getEntityManager()->getEntity($entityType);
+
+        $sqlBase = $sql;
+
+        $sql = $query->order($sql, $seed, $orderBy, $order, true);
+
+        $sql = $query->limit($sql, $offset, $limit);
+
+
+        $collection = $this->getEntityManager()->getRepository($entityType)->findByQuery($sql);
+
+        foreach ($collection as $e) {
+            $service->loadAdditionalFieldsForList($e);
+            if (!empty($params['loadAdditionalFields'])) {
+                $service->loadAdditionalFields($e);
+            }
+            if (!empty($selectAttributeList)) {
+                $service->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+            }
+            $service->prepareEntityForOutput($e);
+        }
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $sqlTotal = "SELECT COUNT(*) AS 'count' FROM ({$sqlBase}) AS c";
+        $sth = $pdo->prepare($sqlTotal);
+        $sth->execute();
+        $row = $sth->fetch(\PDO::FETCH_ASSOC);
+        $total = $row['count'];
+
+        return (object) [
+            'total' => $total,
+            'collection' => $collection
+        ];
+    }
+
     public function getActivities($scope, $id, $params = [])
     {
         $entity = $this->getEntityManager()->getEntity($scope, $id);
@@ -693,13 +803,13 @@ class Activities extends \Espo\Core\Services\Base
             if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) continue;
 
             $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
-            $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
+            $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList, false);
         }
 
         return $this->getResultFromQueryParts($parts, $scope, $id, $params);
     }
 
-    public function getHistory($scope, $id, $params)
+    public function getHistory($scope, $id, $params = [])
     {
         $entity = $this->getEntityManager()->getEntity($scope, $id);
         if (!$entity) {
@@ -980,29 +1090,34 @@ class Activities extends \Espo\Core\Services\Base
         return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
     }
 
-    protected function getActivitiesQuery(Entity $entity, $scope, array $statusList = [], $isHistory = false)
+    protected function getActivitiesQuery(Entity $entity, $scope, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
     {
         $serviceName = 'Activities' . $entity->getEntityType();
         if ($this->getServiceFactory()->checkExists($serviceName)) {
             $service = $this->getServiceFactory()->create($serviceName);
             $methodName = 'getActivities' . $scope . 'Query';
             if (method_exists($service, $methodName)) {
-                return $service->$methodName($entity, $statusList, $isHistory);
+                return $service->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
             }
         }
 
         $selectManager = $this->getSelectManagerFactory()->create($scope);
         if (method_exists($selectManager, 'getActivitiesSelectParams')) {
             $selectParams = $selectManager->getActivitiesSelectParams($entity, $statusList, $isHistory);
+
+            $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+
             return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
         }
 
         $methodName = 'getActivities' . $scope . 'Query';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory);
+            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
         }
 
         $selectParams = $this->getActivitiesSelectParams($entity, $scope, $statusList, $isHistory);
+
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
 
         return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
     }

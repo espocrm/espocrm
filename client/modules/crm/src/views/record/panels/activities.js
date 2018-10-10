@@ -42,6 +42,8 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         rowActionsView: 'crm:views/record/row-actions/activities',
 
+        filtersDisabled: true,
+
         actionList: [
             {
                 action: 'composeEmail',
@@ -109,6 +111,9 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             this.actionList = Espo.Utils.cloneDeep(this.actionList);
 
             this.setupActionList();
+            this.setupFinalActionList();
+
+            this.setupSorting();
 
             var actionList = [];
             this.actionList.forEach(function (o) {
@@ -129,6 +134,8 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             if (this.currentTab != 'all') {
                 this.currentScope = this.currentTab;
             }
+
+            this.url = this.serviceName + '/' + this.model.name + '/' + this.model.id + '/' + this.name;
 
             this.seeds = {};
 
@@ -159,6 +166,8 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
         setupActionList: function () {
             this.scopeList.forEach(function (scope) {
                 if (!this.getMetadata().get(['clientDefs', scope, 'activityDefs', this.name + 'Create'])) return;
+
+                if (!this.getAcl().checkScope(scope, 'create')) return;
 
                 var o = {
                     action: 'createActivity',
@@ -192,14 +201,32 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }
                 this.actionList.push(o);
             }, this);
+
+        },
+
+        setupFinalActionList: function () {
+            this.scopeList.forEach(function (scope, i) {
+                if (i === 0 && this.actionList.length) {
+                    this.actionList.push(false);
+                }
+                if (!this.getAcl().checkScope(scope, 'read')) return;
+                var o = {
+                    action: 'viewRelatedList',
+                    html: this.translate('View List') + ' :: ' + this.translate(scope, 'scopeNamesPlural'),
+                    data: {
+                        scope: scope
+                    },
+                    acl: 'read',
+                    aclScope: scope
+                };
+                this.actionList.push(o);
+            }, this);
         },
 
         afterRender: function () {
-            var url = this.serviceName + '/' + this.model.name + '/' + this.model.id + '/' + this.name;
-
             this.collection = new MultiCollection();
             this.collection.seeds = this.seeds;
-            this.collection.url = url;
+            this.collection.url = this.url;
             this.collection.where = [this.currentScope];
             this.collection.sortBy = this.sortBy;
             this.collection.asc = this.asc;
@@ -494,6 +521,13 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }.bind(this)
             });
         },
+
+        actionViewRelatedList: function (data) {
+            data.url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name + '/list/' + data.scope;
+
+            data.title = this.translate(this.defs.label) + ' &raquo ' + this.translate(data.scope, 'scopeNamesPlural');
+
+            Dep.prototype.actionViewRelatedList.call(this, data);
+        }
     });
 });
-

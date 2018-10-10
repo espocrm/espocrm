@@ -121,15 +121,15 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
             this.parentScope = this.model.name;
             this.link = 'tasks';
 
-            this.defs = {
-                create: true
-            };
+            this.defs.create = true;
 
             this.url = this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (this.parentScope == 'Account') {
                 this.link = 'tasksPrimary';
             }
+
+            this.setupSorting();
 
             this.currentTab = this.getStorage().get('state', this.getStorageKey()) || this.defaultTab;
 
@@ -155,8 +155,8 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
                 collection.seeds = this.seeds;
                 collection.url = url;
                 collection.where = this.where;
-                collection.sortBy = this.sortBy;
-                collection.asc = this.asc;
+                collection.sortBy = this.defaultSortBy;
+                collection.asc = this.defaultAsc;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
                 var rowActionsView = 'crm:views/record/row-actions/tasks';

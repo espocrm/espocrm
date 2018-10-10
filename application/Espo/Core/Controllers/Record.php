@@ -138,7 +138,7 @@ class Record extends Base
             $maxSize = $maxSizeLimit;
         }
         if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
         $params = array(
@@ -180,7 +180,7 @@ class Record extends Base
             $maxSize = $maxSizeLimit;
         }
         if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
         $params = array(
@@ -206,19 +206,7 @@ class Record extends Base
 
     protected function fetchListParamsFromRequest(&$params, $request, $data)
     {
-        if ($request->get('primaryFilter')) {
-            $params['primaryFilter'] = $request->get('primaryFilter');
-        }
-        if ($request->get('boolFilterList')) {
-            $params['boolFilterList'] = $request->get('boolFilterList');
-        }
-        if ($request->get('filterList')) {
-            $params['filterList'] = $request->get('filterList');
-        }
-
-        if ($request->get('select')) {
-            $params['select'] = explode(',', $request->get('select'));
-        }
+        \Espo\Core\Utils\ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
     }
 
     public function actionListLinked($params, $data, $request)
@@ -239,7 +227,7 @@ class Record extends Base
             $maxSize = $maxSizeLimit;
         }
         if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
         $params = array(

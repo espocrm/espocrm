@@ -1908,4 +1908,81 @@ class Base
     {
         $this->filterFollowed($result);
     }
+
+    public function mergeSelectParams($selectParams1, $selectParams2)
+    {
+        if (!$selectParams2) {
+            return $selectParams1;
+        }
+        if (!isset($selectParams1['whereClause'])) {
+            $selectParams1['whereClause'] = [];
+        }
+        if (!empty($selectParams2['whereClause'])) {
+            $selectParams1['whereClause'][] = $selectParams2['whereClause'];
+        }
+
+        if (!isset($selectParams1['havingClause'])) {
+            $selectParams1['havingClause'] = [];
+        }
+        if (!empty($selectParams2['havingClause'])) {
+            $selectParams1['havingClause'][] = $selectParams2['havingClause'];
+        }
+
+        if (!empty($selectParams2['leftJoins'])) {
+            foreach ($selectParams2['leftJoins'] as $item) {
+                $this->addLeftJoin($item, $selectParams1);
+            }
+        }
+
+        if (!empty($selectParams2['joins'])) {
+            foreach ($selectParams2['joins'] as $item) {
+                $this->addJoin($item, $selectParams1);
+            }
+        }
+
+        if (isset($selectParams2['select'])) {
+            $selectParams1['select'] = $selectParams2['select'];
+        }
+
+        if (isset($selectParams2['customJoin'])) {
+            if (!isset($selectParams1['customJoin'])) {
+                $selectParams1['customJoin'] = '';
+            }
+            $selectParams1['customJoin'] .= ' ' . $selectParams2['customJoin'];
+        }
+
+        if (isset($selectParams2['customWhere'])) {
+            if (!isset($selectParams1['customWhere'])) {
+                $selectParams1['customWhere'] = '';
+            }
+            $selectParams1['customWhere'] .= ' ' . $selectParams2['customWhere'];
+        }
+
+        if (isset($selectParams2['additionalSelectColumns'])) {
+            if (!isset($selectParams1['additionalSelectColumns'])) {
+                $selectParams1['additionalSelectColumns'] = [];
+            }
+            foreach ($selectParams2['additionalSelectColumns'] as $item) {
+                $selectParams1['additionalSelectColumns'][] = $item;
+            }
+        }
+
+        if (isset($selectParams2['joinConditions'])) {
+            if (!isset($selectParams1['joinConditions'])) {
+                $selectParams1['joinConditions'] = [];
+            }
+            foreach ($selectParams2['joinConditions'] as $key => $item) {
+                $selectParams1['joinConditions'][$key] = $item;
+            }
+        }
+
+        if (isset($selectParams2['orderBy'])) {
+            $selectParams1['orderBy'] = $selectParams2['orderBy'];
+        }
+        if (isset($selectParams2['order'])) {
+            $selectParams1['order'] = $selectParams2['order'];
+        }
+
+        return $selectParams1;
+    }
 }

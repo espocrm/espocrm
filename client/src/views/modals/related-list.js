@@ -32,8 +32,6 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
 
         template: 'modals/related-list',
 
-        createButton: true,
-
         searchPanel: true,
 
         scope: null,
@@ -43,13 +41,6 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
         className: 'dialog dialog-record',
 
         backdrop: true,
-
-        data: function () {
-            return {
-                createButton: this.createButton,
-                createText: this.translate('Create ' + this.scope, 'labels', this.scope)
-            };
-        },
 
         events: {
             'click button[data-action="createRelated"]': function () {
@@ -71,10 +62,6 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
 
         setup: function () {
             this.primaryFilterName = this.options.primaryFilterName || null;
-
-            if ('createButton' in this.options) {
-                this.createButton = this.options.createButton;
-            }
 
             this.buttonList = [
                 {
@@ -209,6 +196,10 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                         filterList.push(item1);
                     }
                 }, this);
+            }
+
+            if (this.options.filtersDisabled) {
+                filterList = [];
             }
 
             if (this.searchPanel) {

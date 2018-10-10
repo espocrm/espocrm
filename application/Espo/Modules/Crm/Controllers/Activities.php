@@ -201,5 +201,61 @@ class Activities extends \Espo\Core\Controllers\Base
             'sortBy' => $sortBy,
         ));
     }
-}
 
+    public function getActionEntityTypeList($params, $data, $request)
+    {
+        if (empty($params['scope'])) throw new BadRequest();
+        if (empty($params['id'])) throw new BadRequest();
+        if (empty($params['name'])) throw new BadRequest();
+        if (empty($params['entityType'])) throw new BadRequest();
+
+        $scope = $params['scope'];
+        $id = $params['id'];
+        $name = $params['name'];
+        $entityType = $params['entityType'];
+
+        if ($name === 'activities') {
+            $isHistory = false;
+        } else  if ($name === 'history') {
+            $isHistory = true;
+        } else {
+            throw new BadRequest();
+        }
+
+        $where = $request->get('where');
+        $offset = $request->get('offset');
+        $maxSize = $request->get('maxSize');
+        $asc = $request->get('asc', 'true') === 'true';
+        $sortBy = $request->get('sortBy');
+        $q = $request->get('q');
+        $textFilter = $request->get('textFilter');
+
+        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', 200);
+        if (empty($maxSize)) {
+            $maxSize = $maxSizeLimit;
+        }
+        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
+            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+        }
+
+        $params = [
+            'where' => $where,
+            'offset' => $offset,
+            'maxSize' => $maxSize,
+            'asc' => $asc,
+            'sortBy' => $sortBy,
+            'textFilter' => $textFilter
+        ];
+
+        \Espo\Core\Utils\ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
+
+        $service = $this->getService('Activities');
+
+        $result = $service->findActivitiyEntityType($scope, $id, $entityType, $isHistory, $params);
+
+        return (object) [
+            'total' => $result->total,
+            'list' => $result->collection->getValueMapList()
+        ];
+    }
+}
