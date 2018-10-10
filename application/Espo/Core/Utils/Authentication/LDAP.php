@@ -64,6 +64,16 @@ class LDAP extends Espo
         'defaultTeamId' => 'userDefaultTeamId',
     );
 
+    /**
+     * User field name => option name
+     *
+     * @var array
+     */
+    protected $portalUserFieldMap = array(
+        'portalsIds' => 'portalUserPortalsIds',
+        'portalRolesIds' => 'portalUserRolesIds',
+    );
+
     public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
     {
         parent::__construct($config, $entityManager, $auth);
@@ -167,7 +177,7 @@ class LDAP extends Espo
         $isCreateUser = $this->getUtils()->getOption('createEspoUser');
         if (!isset($user) && $isCreateUser) {
             $userData = $ldapClient->getEntry($userDn);
-            $user = $this->createUser($userData);
+            $user = $this->createUser($userData, $isPortal);
         }
 
         return $user;
@@ -231,10 +241,11 @@ class LDAP extends Espo
      * Create Espo user with data gets from LDAP server
      *
      * @param  array $userData LDAP entity data
+     * @param  boolean $isPortal Is portal user
      *
      * @return \Espo\Entities\User
      */
-    protected function createUser(array $userData)
+    protected function createUser(array $userData, $isPortal = false)
     {
         $GLOBALS['log']->info('Creating new user ...');
         $data = array();
@@ -253,7 +264,13 @@ class LDAP extends Espo
         }
 
         //set user fields
-        $userFields = $this->loadFields('user');
+        if ($isPortal) {
+            $userFields = $this->loadFields('portalUser');
+            $userFields['isPortalUser'] = true;
+        } else {
+            $userFields = $this->loadFields('user');
+        }
+
         foreach ($userFields as $fieldName => $fieldValue) {
             $data[$fieldName] = $fieldValue;
         }

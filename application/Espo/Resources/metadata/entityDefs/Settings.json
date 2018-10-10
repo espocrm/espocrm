@@ -264,6 +264,16 @@
             "tooltip": true,
             "entity": "Team"
         },
+        "ldapPortalUserPortals": {
+            "type": "linkMultiple",
+            "tooltip": true,
+            "entity": "Portal"
+        },
+        "ldapPortalUserRoles": {
+            "type": "linkMultiple",
+            "tooltip": true,
+            "entity": "PortalRole"
+        },
         "exportDisabled": {
             "type": "bool",
             "default": false
