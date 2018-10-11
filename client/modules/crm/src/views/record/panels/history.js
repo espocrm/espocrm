@@ -73,9 +73,9 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
             });
         },
 
-        isCreateAvailable: function (scope) {
+        /*isCreateAvailable: function (scope) {
             return false;
-        },
+        },*/
 
         getArchiveEmailAttributes: function (scope, data, callback) {
             data = data || {};

@@ -114,6 +114,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
             this.createAvailabilityHash = {};
             this.entityTypeLinkMap = {};
+            this.createEntityTypeStatusMap = {};
 
             this.setupActionList();
             this.setupFinalActionList();
@@ -213,6 +214,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                         o.data.status = statusList[0];
                     }
                 }
+                this.createEntityTypeStatusMap[scope] = o.data.status;
                 this.actionList.push(o);
             }, this);
 
@@ -357,6 +359,10 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         actionCreateRelated: function (data) {
             data.link = this.entityTypeLinkMap[data.scope];
+
+            if (this.createEntityTypeStatusMap[data.scope]) {
+                data.status = this.createEntityTypeStatusMap[data.scope];
+            }
             this.actionCreateActivity(data);
         },
 
