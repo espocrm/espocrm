@@ -52,6 +52,8 @@ class EntityManager
 
     private $reservedWordList = ['__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'for', 'foreach', 'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common'];
 
+    private $linkForbiddenNameList = ['posts', 'stream', 'subscription'];
+
     public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, Container $container = null)
     {
         $this->metadata = $metadata;
@@ -603,6 +605,14 @@ class EntityManager
 
         if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
             throw new Error('Bad link name.');
+        }
+
+        if (in_array($link, $this->linkForbiddenNameList)) {
+            throw new Conflict("Link name '{$link}' is not allowed.");
+        }
+
+        if (in_array($linkForeign, $this->linkForbiddenNameList)) {
+            throw new Conflict("Link name '{$linkForeign}' is not allowed.");
         }
 
         $linkMultipleField = false;

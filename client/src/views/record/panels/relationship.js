@@ -334,8 +334,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             var scope = data.scope || this.scope;
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
-            this.createView('modalRelatedList', viewName, {
+            var options = {
                 model: this.model,
                 panelName: this.panelName,
                 link: this.link,
@@ -345,7 +344,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 filterList: this.filterList,
                 filter: this.filter,
                 layoutName: this.layoutName,
-                listLayout: this.listLayout,
                 defaultAsc: this.defaultAsc,
                 defaultSortBy: this.defaultSortBy,
                 url: data.url || this.url,
@@ -354,8 +352,17 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 selectDisabled: !this.isSelectAvailable(scope),
                 rowActionsView: this.rowActionsView,
                 panelCollection: this.collection,
-                filtersDisabled: this.filtersDisabled
-            }, function (view) {
+                filtersDisabled: this.relatedListFiltersDisabled
+            };
+
+            if (data.viewOptions) {
+                for (var item in data.viewOptions) {
+                    options[item] = data.viewOptions[item];
+                }
+            }
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+            this.createView('modalRelatedList', viewName, options, function (view) {
                 Espo.Ui.notify(false);
                 view.render();
 

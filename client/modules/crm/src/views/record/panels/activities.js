@@ -42,7 +42,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         rowActionsView: 'crm:views/record/row-actions/activities',
 
-        filtersDisabled: true,
+        relatedListFiltersDisabled: true,
 
         actionList: [
             {

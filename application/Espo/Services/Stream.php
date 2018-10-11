@@ -89,6 +89,11 @@ class Stream extends \Espo\Core\Services\Base
         return $this->getInjection('container')->get('fieldManager');
     }
 
+    protected function getSelectMangerFactory()
+    {
+        return $this->getInjection('container')->get('selectManagerFactory');
+    }
+
     protected function getNotificationService()
     {
         if (empty($this->notificationService)) {
@@ -325,6 +330,14 @@ class Stream extends \Espo\Core\Services\Base
 
         $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($user);
         $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($user);
+
+        $additionalSelectParams = null;
+        if (!empty($params['where'])) {
+            $selectManager = $this->getSelectMangerFactory()->create('Note');
+            $additionalSelectParams = $selectManager->getSelectParams([
+                'where' => $params['where']
+            ], false, true);
+        }
 
         $selectParamsList = [];
 
@@ -621,6 +634,12 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
+        if ($additionalSelectParams) {
+            foreach ($selectParamsList as $i => $selectParams) {
+                $selectParamsList[$i] = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
+            }
+        }
+
         $sqlPartList = [];
         foreach ($selectParamsList as $i => $selectParams) {
             if (empty($selectParams['whereClause'])) {
@@ -673,10 +692,10 @@ class Stream extends \Espo\Core\Services\Base
             $total = -2;
         }
 
-        return array(
+        return (object) [
             'total' => $total,
             'collection' => $collection,
-        );
+        ];
     }
 
     public function find($scope, $id, $params = [])
@@ -845,6 +864,16 @@ class Stream extends \Espo\Core\Services\Base
 
         $selectParams['whereClause'] = $where;
 
+        if (!empty($params['where'])) {
+            $selectManager = $this->getSelectMangerFactory()->create('Note');
+            $additionalSelectParams = $selectManager->getSelectParams([
+                'where' => $params['where']
+            ], false, true);
+            $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
+
+            $where = $selectParams['whereClause'];
+        }
+
         $collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
 
         foreach ($collection as $e) {
@@ -873,10 +902,10 @@ class Stream extends \Espo\Core\Services\Base
         $selectParams['where'] = $where;
         $count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
 
-        return array(
+        return (object) [
             'total' => $count,
-            'collection' => $collection,
-        );
+            'collection' => $collection
+        ];
     }
 
     protected function loadAssignedUserName(Entity $entity)

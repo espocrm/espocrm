@@ -300,6 +300,16 @@
         }
     },
     {
+        "route": "/:controller/:id/posts",
+        "method": "get",
+        "params": {
+            "controller": "Stream",
+            "action": "listPosts",
+            "id": ":id",
+            "scope": ":controller"
+        }
+    },
+    {
         "route": "/:controller/:id/subscription",
         "method": "put",
         "params": {

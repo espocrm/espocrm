@@ -122,7 +122,8 @@
     },
     "collection": {
         "sortBy": "number",
-        "asc": false
+        "asc": false,
+        "textFilterFields": ["post"]
     },
     "statusStyles": {
         "Lead": {

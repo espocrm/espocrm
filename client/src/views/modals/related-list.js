@@ -81,7 +81,6 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
             this.filterList = this.options.filterList;
             this.filter = this.options.filter;
             this.layoutName = this.options.layoutName || 'listSmall';
-            this.listLayout = this.options.listLayout;
             this.url = this.options.url;
             this.listViewName = this.options.listViewName;
             this.rowActionsView = this.options.rowActionsView;
@@ -232,7 +231,8 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 layoutName: this.layoutName,
                 searchManager: this.searchManager,
                 buttonsDisabled: true,
-                skipBuildRows: true
+                skipBuildRows: true,
+                model: this.model
             }, function (view) {
                 this.listenToOnce(view, 'select', function (model) {
                     this.trigger('select', model);
