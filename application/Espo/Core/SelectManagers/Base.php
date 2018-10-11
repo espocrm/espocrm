@@ -1962,8 +1962,8 @@ class Base
             if (!isset($selectParams1['additionalSelectColumns'])) {
                 $selectParams1['additionalSelectColumns'] = [];
             }
-            foreach ($selectParams2['additionalSelectColumns'] as $item) {
-                $selectParams1['additionalSelectColumns'][] = $item;
+            foreach ($selectParams2['additionalSelectColumns'] as $key => $item) {
+                $selectParams1['additionalSelectColumns'][$key] = $item;
             }
         }
 
@@ -1981,6 +1981,10 @@ class Base
         }
         if (isset($selectParams2['order'])) {
             $selectParams1['order'] = $selectParams2['order'];
+        }
+
+        if (!empty($selectParams2['distinct'])) {
+            $selectParams1['distinct'] = true;
         }
 
         return $selectParams1;

@@ -129,6 +129,7 @@ class Activities extends \Espo\Core\Services\Base
 
         if ($entity->get('isPortalUser') && $entity->get('contactId')) {
             $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
+            $selectParams['distinct'] = true;
             $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
             $selectParams['whereClause'][] = array(
                 'OR' => $where
@@ -183,6 +184,7 @@ class Activities extends \Espo\Core\Services\Base
 
         if ($entity->get('isPortalUser') && $entity->get('contactId')) {
             $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
+            $selectParams['distinct'] = true;
             $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
             $selectParams['whereClause'][] = array(
                 'OR' => $where
@@ -718,6 +720,8 @@ class Activities extends \Espo\Core\Services\Base
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
         }
+
+        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
 
         $offset = $selectParams['offset'];
         $limit = $selectParams['limit'];

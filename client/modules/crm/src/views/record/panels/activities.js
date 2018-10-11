@@ -110,6 +110,11 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             this.listLayout = Espo.Utils.cloneDeep(this.listLayout);
             this.actionList = Espo.Utils.cloneDeep(this.actionList);
 
+            this.defs.create = true;
+
+            this.createAvailabilityHash = {};
+            this.entityTypeLinkMap = {};
+
             this.setupActionList();
             this.setupFinalActionList();
 
@@ -163,6 +168,10 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             }, this);
         },
 
+        isCreateAvailable: function (scope) {
+            return this.createAvailabilityHash[scope];
+        },
+
         setupActionList: function () {
             this.scopeList.forEach(function (scope) {
                 if (!this.getMetadata().get(['clientDefs', scope, 'activityDefs', this.name + 'Create'])) return;
@@ -180,7 +189,10 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 var link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link'])
                 if (link) {
                     o.data.link = link;
+
+                    this.entityTypeLinkMap[scope] = link;
                     if (!this.model.hasLink(link)) return;
+
                 } else {
                     o.data.scope = scope;
                     if (
@@ -191,6 +203,8 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                         return;
                     }
                 }
+
+                this.createAvailabilityHash[scope] = true;
 
                 o.data = o.data || {};
                 if (!o.data.status) {
@@ -212,7 +226,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 if (!this.getAcl().checkScope(scope, 'read')) return;
                 var o = {
                     action: 'viewRelatedList',
-                    html: this.translate('View List') + ' :: ' + this.translate(scope, 'scopeNamesPlural'),
+                    html: this.translate('View List') + ' &middot; ' + this.translate(scope, 'scopeNamesPlural') + '',
                     data: {
                         scope: scope
                     },
@@ -339,6 +353,11 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         checkParentTypeAvailability: function (scope, parentType) {
             return ~(this.getMetadata().get(['entityDefs', scope, 'fields', 'parent', 'entityList']) || []).indexOf(parentType);
+        },
+
+        actionCreateRelated: function (data) {
+            data.link = this.entityTypeLinkMap[data.scope];
+            this.actionCreateActivity(data);
         },
 
         actionCreateActivity: function (data) {

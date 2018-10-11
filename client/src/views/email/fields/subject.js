@@ -35,9 +35,13 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
             var data = Dep.prototype.data.call(this);
 
             data.isRead = (this.model.get('sentById') === this.getUser().id) || this.model.get('isRead');
-            data.isImportant = this.model.get('isImportant');
-            data.hasAttachment = this.model.get('hasAttachment');
-            data.isReplied = this.model.get('isReplied');
+            data.isImportant = this.model.has('isImportant') && this.model.get('isImportant');
+            data.hasAttachment = this.model.has('hasAttachment') && this.model.get('hasAttachment');
+            data.isReplied = this.model.has('isReplied') && this.model.get('isReplied');
+
+            if (!data.isRead && !this.model.has('isRead')) {
+                data.isRead = true;
+            }
 
             if (!data.isNotEmpty) {
                 if (
@@ -58,7 +62,7 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
         },
 
         getAttributeList: function () {
-            return ['name', 'isRead', 'isImportant'];
+            return ['name', 'isRead', 'isImportant', 'hasAttachment'];
         },
 
         setup: function () {

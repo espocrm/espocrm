@@ -199,7 +199,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     collection.fetch();
                 }, this);
 
-                var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'views/record/list';
+                var viewName =
+                    this.defs.recordListView ||
+                    this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
+                    this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
+                    'views/record/list';
                 this.listViewName = viewName;
                 this.rowActionsView = this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView);
 
@@ -328,12 +332,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.viewModalView ||
                 'views/modals/related-list';
 
+            var scope = data.scope || this.scope;
+
             Espo.Ui.notify(this.translate('loading', 'messages'));
             this.createView('modalRelatedList', viewName, {
                 model: this.model,
                 panelName: this.panelName,
                 link: this.link,
-                scope: data.scope || this.scope,
+                scope: scope,
                 defs: this.defs,
                 title: data.title || this.title,
                 filterList: this.filterList,
@@ -344,8 +350,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 defaultSortBy: this.defaultSortBy,
                 url: data.url || this.url,
                 listViewName: this.listViewName,
-                createDisabled: !this.defs.create,
-                selectDisabled: !this.defs.select,
+                createDisabled: !this.isCreateAvailable(scope),
+                selectDisabled: !this.isSelectAvailable(scope),
                 rowActionsView: this.rowActionsView,
                 panelCollection: this.collection,
                 filtersDisabled: this.filtersDisabled
@@ -365,6 +371,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.clearView('modalRelatedList');
                 }, this);
             });
+        },
+
+        isCreateAvailable: function (scope) {
+            return this.defs.create;
+        },
+
+        isSelectAvailable: function (scope) {
+            return this.defs.select;
         },
 
         actionViewRelated: function (data) {

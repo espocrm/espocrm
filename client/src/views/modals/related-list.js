@@ -91,7 +91,7 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
 
             this.panelCollection = this.options.panelCollection;
 
-            this.listenTo(this.panelCollection, 'update', function () {
+            this.listenTo(this.panelCollection, 'sync', function () {
                 this.collection.fetch();
             }, this)
 
@@ -219,9 +219,11 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
         },
 
         loadList: function () {
-            var viewName = this.listViewName ||
-                           this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
-                           'views/record/list';
+            var viewName =
+                this.listViewName ||
+                this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
+                this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
+                'views/record/list';
 
             this.createView('list', viewName, {
                 collection: this.collection,
@@ -292,7 +294,8 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
             }
 
             p.actionCreateRelated({
-                link: this.link
+                link: this.link,
+                scope: this.scope
             });
         },
 
