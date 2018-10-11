@@ -37,6 +37,10 @@ Espo.define('crm:views/contact/fields/name-for-account', 'views/fields/person-na
                     this.$el.find('a').css('text-decoration', 'line-through');
                 };
             }
+        },
+
+        getAttributeList: function () {
+            return ['name', 'accountIsInactive'];
         }
     });
 
