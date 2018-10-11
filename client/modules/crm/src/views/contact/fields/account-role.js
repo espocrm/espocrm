@@ -44,6 +44,7 @@ Espo.define('crm:views/contact/fields/account-role', 'views/fields/varchar', fun
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
             list.push('title');
+            list.push('accountIsInactive');
             return list;
         },
 
