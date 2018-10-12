@@ -34,9 +34,7 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
         scope: 'Task',
 
-        template: 'crm:record/panels/tasks',
-
-        tabList: ['actual', 'completed'],
+        filterList: ['all', 'actual', 'completed'],
 
         defaultTab: 'actual',
 
@@ -80,46 +78,11 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
             ]
         },
 
-
-        events: _.extend({
-            'click button.tab-switcher': function (e) {
-                var $target = $(e.currentTarget);
-                this.$el.find('button.tab-switcher').removeClass('active');
-                $target.addClass('active');
-
-                this.currentTab = $target.data('tab');
-
-                this.collection.where = this.where = [
-                    {
-                        type: 'primary',
-                        value: this.currentTab
-                    }
-                ];
-
-                this.listenToOnce(this.collection, 'sync', function () {
-                    this.notify(false);
-                }.bind(this));
-                this.notify('Loading...');
-                this.collection.fetch();
-
-                this.getStorage().set('state', this.getStorageKey(), this.currentTab);
-            }
-        }, Dep.prototype.events),
-
-        data: function () {
-            return {
-                currentTab: this.currentTab,
-                tabList: this.tabList
-            };
-        },
-
-        getStorageKey: function () {
-            return 'tasks-' + this.model.name + '-' + this.name;
-        },
-
         setup: function () {
             this.parentScope = this.model.name;
             this.link = 'tasks';
+
+            this.panelName = 'tasksSide';
 
             this.defs.create = true;
 
@@ -131,14 +94,13 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
             this.setupSorting();
 
-            this.currentTab = this.getStorage().get('state', this.getStorageKey()) || this.defaultTab;
+            if (this.filterList && this.filterList.length) {
+                this.filter = this.getStoredFilter();
+            }
 
-            this.where = [
-                {
-                    type: 'primary',
-                    value: this.currentTab
-                }
-            ];
+            this.setupFilterActions();
+
+            this.setupTitle();
         },
 
         afterRender: function () {
@@ -154,10 +116,11 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
                 this.collection = collection;
                 collection.seeds = this.seeds;
                 collection.url = url;
-                collection.where = this.where;
                 collection.sortBy = this.defaultSortBy;
                 collection.asc = this.defaultAsc;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
+                this.setFilter(this.filter);
 
                 var rowActionsView = 'crm:views/record/row-actions/tasks';
 

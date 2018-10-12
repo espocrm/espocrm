@@ -32,8 +32,6 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         name: 'activities',
 
-        template: 'crm:record/panels/activities',
-
         sortBy: 'dateStart',
 
         serviceName: 'Activities',
@@ -68,43 +66,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             ]
         },
 
-        currentScope: false,
-
-        events: _.extend({
-            'click button.scope-switcher': function (e) {
-                var $target = $(e.currentTarget);
-                this.$el.find('button.scope-switcher').removeClass('active');
-                $target.addClass('active');
-                this.currentScope = $target.data('scope') || false;
-
-                this.collection.where = [this.currentScope];
-
-                this.listenToOnce(this.collection, 'sync', function () {
-                    this.notify(false);
-                }, this);
-                this.notify('Loading...');
-                this.collection.fetch();
-
-                this.currentTab = this.currentScope || 'all';
-                this.getStorage().set('state', this.getStorageKey(), this.currentTab);
-            }
-        }, Dep.prototype.events),
-
-        data: function () {
-            return {
-                currentTab: this.currentTab,
-                scopeList: this.scopeList,
-                tabList: this.tabList
-            };
-        },
-
-        getStorageKey: function () {
-            return 'activities-' + this.model.name + '-' + this.name;
-        },
-
         setup: function () {
-            this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'all';
-
             this.scopeList = this.getConfig().get(this.name + 'EntityList') || [];
 
             this.listLayout = Espo.Utils.cloneDeep(this.listLayout);
@@ -137,10 +99,6 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }
             }, this);
 
-            if (this.currentTab != 'all') {
-                this.currentScope = this.currentTab;
-            }
-
             this.url = this.serviceName + '/' + this.model.name + '/' + this.model.id + '/' + this.name;
 
             this.seeds = {};
@@ -160,13 +118,32 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 this.wait(false);
             }
 
-            this.tabList = [];
+            this.filterList = [];
             this.scopeList.forEach(function (item) {
                 if (!this.getAcl().check(item)) return;
                 if (!this.getAcl().check(item, 'read')) return;
                 if (this.getMetadata().get(['scopes', item, 'disabled'])) return;
-                this.tabList.push(item);
+                this.filterList.push(item);
             }, this);
+
+            if (this.filterList.length) {
+                this.filterList.unshift('all');
+            }
+
+            if (this.filterList && this.filterList.length) {
+                this.filter = this.getStoredFilter();
+            }
+
+            this.setupFilterActions();
+
+            this.setupTitle();
+        },
+
+        translateFilter: function (name) {
+            if (name === 'all') {
+                return this.translate(name, 'presetFilters');
+            }
+            return this.translate(name, 'scopeNamesPlural');
         },
 
         isCreateAvailable: function (scope) {
@@ -239,14 +216,23 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             }, this);
         },
 
+        setFilter: function (filter) {
+            this.filter = filter;
+            this.collection.where = null;
+            if (filter && filter !== 'all') {
+                this.collection.where = [this.filter];
+            }
+        },
+
         afterRender: function () {
             this.collection = new MultiCollection();
             this.collection.seeds = this.seeds;
             this.collection.url = this.url;
-            this.collection.where = [this.currentScope];
             this.collection.sortBy = this.sortBy;
             this.collection.asc = this.asc;
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
+            this.setFilter(this.filter);
 
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'views/record/list-expanded', {

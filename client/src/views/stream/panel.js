@@ -117,11 +117,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         setup: function () {
-            this.title = this.translate('Stream');
-
             this.scope = this.model.name;
 
             this.filter = this.getStoredFilter();
+
+            this.setupTitle();
 
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
 
@@ -174,6 +174,16 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     this.wait(false);
                 }, this);
             }, this);
+        },
+
+        setupTitle: function () {
+            this.title = this.translate('Stream');
+
+            this.titleHtml = this.title;
+
+            if (this.filter && this.filter !== 'all') {
+                this.titleHtml += ' &middot; ' + this.translate(this.filter, 'filters', 'Note');
+            }
         },
 
         storeControl: function () {
@@ -415,6 +425,14 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         setupActions: function () {
             this.actionList = [];
+
+            this.actionList.push({
+                action: 'viewPostList',
+                html: this.translate('View List') + ' &middot; ' + this.translate('posts', 'filters', 'Note')
+            });
+
+            this.actionList.push(false);
+
             this.filterList.forEach(function (item) {
                 var selected = false;
                 if (item == 'all') {
@@ -430,13 +448,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     }
                 });
             }, this);
-
-            this.actionList.push(false);
-
-            this.actionList.push({
-                action: 'viewPostList',
-                html: this.translate('View List') + ' &middot; ' + this.translate('posts', 'filters', 'Note')
-            });
         },
 
         actionViewPostList: function () {
@@ -466,31 +477,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         setFilter: function (filter) {
+            this.filter = filter;
             this.collection.data.filter = null;
             if (filter) {
                 this.collection.data.filter = filter;
             }
-        },
-
-        actionSelectFilter: function (data) {
-            var filter = data.name;
-            var filterInternal = filter;
-            if (filter == 'all') {
-                filterInternal = false;
-            }
-            this.storeFilter(filterInternal);
-            this.setFilter(filterInternal);
-
-            this.filterList.forEach(function (item) {
-                var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
-                if (item === filter) {
-                    $el.removeClass('hidden');
-                } else {
-                    $el.addClass('hidden');
-                }
-            }, this);
-            this.collection.reset();
-            this.collection.fetch();
         },
 
         actionRefresh: function () {

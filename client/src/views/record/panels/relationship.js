@@ -56,19 +56,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
-            this.title = this.title || this.translate(this.link, 'links', this.model.name);
-            this.scope = this.scope || this.model.defs.links[this.link].entity;
 
-            if (!this.getConfig().get('scopeColorsDisabled')) {
-                var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-                if (iconHtml) {
-                    if (this.defs.label) {
-                        this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
-                    } else {
-                        this.titleHtml = iconHtml + this.title;
-                    }
-                }
-            }
+            this.scope = this.scope || this.model.defs.links[this.link].entity;
 
             var url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
@@ -90,6 +79,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (this.filterList && this.filterList.length) {
                 this.filter = this.getStoredFilter();
             }
+
+            this.setupTitle();
 
             if (this.defs.createDisabled) {
                 this.defs.create = false;
@@ -233,6 +224,27 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.setupFilterActions();
         },
 
+        setupTitle: function () {
+            this.title = this.title || this.translate(this.link, 'links', this.model.name);
+
+            var iconHtml = '';
+            if (!this.getConfig().get('scopeColorsDisabled')) {
+                iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            }
+
+            this.titleHtml = this.title;
+
+            if (this.defs.label) {
+                this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
+            } else {
+                this.titleHtml = iconHtml + this.title;
+            }
+
+            if (this.filter && this.filter !== 'all') {
+                this.titleHtml += ' &middot; ' + this.translateFilter(this.filter);
+            }
+        },
+
         setupSorting: function () {
             var sortBy = this.defs.sortBy || this.sortBy;
             var asc = this.defs.asc || this.asc;
@@ -257,19 +269,20 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         setupFilterActions: function () {
             if (this.filterList && this.filterList.length) {
-                if (this.actionList.length) {
-                    this.actionList.unshift(false);
-                }
-                this.filterList.slice(0).reverse().forEach(function (item) {
+
+                this.actionList.push(false);
+
+                this.filterList.slice(0).forEach(function (item) {
                     var selected = false;
                     if (item == 'all') {
                         selected = !this.filter;
                     } else {
                         selected = item === this.filter;
                     }
-                    this.actionList.unshift({
+                    var label = this.translateFilter(item);
+                    this.actionList.push({
                         action: 'selectFilter',
-                        html: '<span class="fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span>' + this.translate(item, 'presetFilters', this.scope),
+                        html: '<span class="fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span>' + label,
                         data: {
                             name: item
                         }
@@ -278,13 +291,17 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
         },
 
+        translateFilter: function (name) {
+            return this.translate(name, 'presetFilters', this.scope);
+        },
+
         getStoredFilter: function () {
-            var key = 'panelFilter' + this.scope + '-' + this.panelName;
+            var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
             return this.getStorage().get('state', key) || null;
         },
 
         storeFilter: function (filter) {
-            var key = 'panelFilter' + this.scope + '-' + this.panelName;
+            var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
             if (filter) {
                 this.getStorage().set('state', key, filter);
             } else {
@@ -295,7 +312,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         setFilter: function (filter) {
             this.filter = filter;
             this.collection.data.primaryFilter = null;
-            if (filter) {
+            if (filter && filter !== 'all') {
                 this.collection.data.primaryFilter = filter;
             }
         },
@@ -319,6 +336,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }, this);
             this.collection.reset();
             this.collection.fetch();
+
+            this.setupTitle();
+
+            if (this.isRendered()) {
+                this.$el.closest('.panel').find('> .panel-heading > .panel-title > span').html(this.titleHtml);
+            }
         },
 
         actionRefresh: function () {
@@ -334,6 +357,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             var scope = data.scope || this.scope;
 
+            var filter = this.filter;
+            if (this.relatedListFiltersDisabled) {
+                filter = null;
+            }
+
             var options = {
                 model: this.model,
                 panelName: this.panelName,
@@ -342,7 +370,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 defs: this.defs,
                 title: data.title || this.title,
                 filterList: this.filterList,
-                filter: this.filter,
+                filter: filter,
                 layoutName: this.layoutName,
                 defaultAsc: this.defaultAsc,
                 defaultSortBy: this.defaultSortBy,
