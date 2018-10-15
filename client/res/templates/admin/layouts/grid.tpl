@@ -116,7 +116,6 @@
     <div class="col-md-8">
         <div class="well">
             <header>{{translate 'Layout' scope='LayoutManager'}}</header>
-            <a href="javascript:;" data-action="addPanel">{{translate 'Add Panel' scope='Admin'}}</a>
             <ul class="panels">
             {{#each panelDataList}}
             <li data-number="{{number}}" class="panel-layout">
@@ -124,6 +123,8 @@
             </li>
             {{/each}}
             </ul>
+
+            <div><a href="javascript:;" data-action="addPanel">{{translate 'Add Panel' scope='Admin'}}</a></div>
         </div>
     </div>
     <div class="col-md-4">
