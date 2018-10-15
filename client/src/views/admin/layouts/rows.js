@@ -33,12 +33,8 @@ Espo.define('views/admin/layouts/rows', 'views/admin/layouts/base', function (De
         template: 'admin/layouts/rows',
 
         events: _.extend({
-            'click #layout a[data-action="editField"]': function (e) {
-                var data = {};
-                this.dataAttributeList.forEach(function (attr) {
-                    data[attr] =  $(e.target).closest('li').data(Espo.Utils.toDom(attr))
-                });
-                this.openEditDialog(data);
+            'click a[data-action="editItem"]': function (e) {
+                this.editRow($(e.target).closest('li').data('name'));
             },
         }, Dep.prototype.events),
 
@@ -62,6 +58,22 @@ Espo.define('views/admin/layouts/rows', 'views/admin/layouts/base', function (De
             };
         },
 
+        setup: function () {
+            this.itemsData = {};
+            Dep.prototype.setup.call(this);
+
+            this.on('update-item', function (name, attributes) {
+                console.log(name, attributes);
+                this.itemsData[name] = Espo.Utils.cloneDeep(attributes);
+            }, this);
+        },
+
+        editRow: function (name) {
+            var attributes = Espo.Utils.cloneDeep(this.itemsData[name] || {});
+            attributes.name = name;
+            this.openEditDialog(attributes)
+        },
+
         afterRender: function () {
             $('#layout ul.enabled, #layout ul.disabled').sortable({
                 connectWith: '#layout ul.connected'
@@ -72,14 +84,23 @@ Espo.define('views/admin/layouts/rows', 'views/admin/layouts/base', function (De
             var layout = [];
             $("#layout ul.enabled > li").each(function (i, el) {
                 var o = {};
-                this.dataAttributeList.forEach(function (attr) {
-                    var value = $(el).data(Espo.Utils.toDom(attr)) || null;
+
+                var name = $(el).data('name');
+
+                var attributes = this.itemsData[name] || {};
+                attributes.name = name;
+
+                this.dataAttributeList.forEach(function (attribute) {
+                    var value = attributes[attribute] || null;
                     if (value) {
-                        o[attr] = value;
+                        o[attribute] = value;
                     }
-                });
+                }, this);
+
                 layout.push(o);
             }.bind(this));
+
+
             return layout;
         },
 

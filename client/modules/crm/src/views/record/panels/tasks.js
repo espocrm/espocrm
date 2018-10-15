@@ -42,6 +42,8 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
         asc: false,
 
+        rowActionsView: 'crm:views/record/row-actions/tasks',
+
         buttonList: [
             {
                 action: 'createTask',
@@ -101,47 +103,48 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
             this.setupFilterActions();
 
             this.setupTitle();
-        },
 
-        afterRender: function () {
-            var url = this.url;
-
-            if (!this.getAcl().check('Task', 'read')) {
-                this.$el.find('.list-container').html(this.translate('No Access'));
-                this.$el.find('.button-container').remove();
-                return;
-            };
+            this.wait(true);
 
             this.getCollectionFactory().create('Task', function (collection) {
                 this.collection = collection;
                 collection.seeds = this.seeds;
-                collection.url = url;
+                collection.url = this.url;
                 collection.sortBy = this.defaultSortBy;
                 collection.asc = this.defaultAsc;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
                 this.setFilter(this.filter);
 
-                var rowActionsView = 'crm:views/record/row-actions/tasks';
-
-                this.createView('list', 'views/record/list-expanded', {
-                    el: this.getSelector() + ' > .list-container',
-                    pagination: false,
-                    type: 'listRelationship',
-                    rowActionsView: rowActionsView,
-                    checkboxes: false,
-                    collection: collection,
-                    listLayout: this.listLayout,
-                    skipBuildRows: true
-                }, function (view) {
-                    view.getSelectAttributeList(function (selectAttributeList) {
-                        if (selectAttributeList) {
-                            this.collection.data.select = selectAttributeList.join(',');
-                        }
-                        this.collection.fetch();
-                    }.bind(this));
-                });
+                this.wait(false);
             }, this);
+        },
+
+        afterRender: function () {
+            this.createView('list', 'views/record/list-expanded', {
+                el: this.getSelector() + ' > .list-container',
+                pagination: false,
+                type: 'listRelationship',
+                rowActionsView: this.defs.rowActionsView || this.rowActionsView,
+                checkboxes: false,
+                collection: this.collection,
+                listLayout: this.listLayout,
+                skipBuildRows: true
+            }, function (view) {
+                view.getSelectAttributeList(function (selectAttributeList) {
+                    if (selectAttributeList) {
+                        this.collection.data.select = selectAttributeList.join(',');
+                    }
+
+                    if (!this.disabled) {
+                        this.collection.fetch();
+                    } else {
+                        this.once('show', function () {
+                            this.collection.fetch();
+                        }, this);
+                    }
+                }.bind(this));
+            });
         },
 
         actionCreateRelated: function () {

@@ -30,7 +30,7 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style'],
+        dataAttributeList: ['name', 'style', 'dynamicLogicVisible'],
 
         editable: true,
 
@@ -39,6 +39,10 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
                 type: 'enum',
                 options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
                 translation: 'LayoutManager.options.style'
+            },
+            dynamicLogicVisible: {
+                type: 'base',
+                view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
             },
             name: {
                 readOnly: true
@@ -49,6 +53,9 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.dataAttributesDefs = Espo.Utils.cloneDeep(this.dataAttributesDefs);
+            this.dataAttributesDefs.dynamicLogicVisible.scope = this.scope;
 
             this.wait(true);
             this.loadLayout(function () {
@@ -113,6 +120,8 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
                     for (var i in this.rowLayout) {
                         this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
+
+                        this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);
                     }
 
                     callback();

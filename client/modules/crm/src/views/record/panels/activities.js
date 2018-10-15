@@ -137,6 +137,15 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             this.setupFilterActions();
 
             this.setupTitle();
+
+            this.collection = new MultiCollection();
+            this.collection.seeds = this.seeds;
+            this.collection.url = this.url;
+            this.collection.sortBy = this.sortBy;
+            this.collection.asc = this.asc;
+            this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
+            this.setFilter(this.filter);
         },
 
         translateFilter: function (name) {
@@ -225,15 +234,6 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
         },
 
         afterRender: function () {
-            this.collection = new MultiCollection();
-            this.collection.seeds = this.seeds;
-            this.collection.url = this.url;
-            this.collection.sortBy = this.sortBy;
-            this.collection.asc = this.asc;
-            this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
-
-            this.setFilter(this.filter);
-
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'views/record/list-expanded', {
                     el: this.getSelector() + ' > .list-container',
@@ -253,8 +253,12 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }, this);
             }, this);
 
-            if (!this.defs.hidden) {
+            if (!this.disabled) {
                 this.collection.fetch();
+            } else {
+                this.once('show', function () {
+                    this.collection.fetch();
+                }, this);
             }
         },
 
