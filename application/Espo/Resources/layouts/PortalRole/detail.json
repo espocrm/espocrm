@@ -3,7 +3,17 @@
         "rows": [
             [
                 {"name": "name"},
-                {"name": "exportPermission"}
+                false,
+                false
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "exportPermission"},
+                {"name": "massUpdatePermission"},
+                false
             ]
         ]
     }

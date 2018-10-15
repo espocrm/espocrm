@@ -793,6 +793,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.removeMassAction('export');
             }
 
+            if (this.getAcl().get('massUpdatePermission') !== 'yes') {
+                this.removeMassAction('massUpdate');
+            }
+
             if (
                 !this.massFollowDisabled &&
                 this.getMetadata().get(['scopes', this.entityType, 'stream']) &&

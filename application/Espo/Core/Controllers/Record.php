@@ -325,6 +325,10 @@ class Record extends Base
             throw new BadRequest();
         }
 
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
+            throw new Forbidden();
+        }
+
         $params = array();
         if (property_exists($data, 'where') && !empty($data->byWhere)) {
             $params['where'] = json_decode(json_encode($data->where), true);

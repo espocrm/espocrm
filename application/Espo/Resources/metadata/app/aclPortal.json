@@ -134,10 +134,12 @@
         }
     },
     "valuePermissionList": [
-        "exportPermission"
+        "exportPermission",
+        "massUpdatePermission"
     ],
     "permissionsStrictDefaults": {
-        "exportPermission": "no"
+        "exportPermission": "no",
+        "massUpdatePermission": "no"
     },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,
