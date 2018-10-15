@@ -15,7 +15,7 @@
     }
     #layout ul.panels > li {
         padding: 5px;
-        margin: 5px;
+        margin-bottom: 20px;
         {{#ifEqual columnCount 1}}
 
         {{else}}
