@@ -16,7 +16,7 @@
     #layout ul li {
         list-style: none;
         border: 1px solid #CCC;
-        margin: 5px;
+        margin: 5px 0;
         padding: 5px;
         height: 32px;
     }
