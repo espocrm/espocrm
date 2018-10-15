@@ -35,6 +35,7 @@ Espo.define('views/admin/dynamic-logic/fields/field', 'views/fields/multi-enum',
 
             var filterList = Object.keys(fields).filter(function (field) {
                 var fieldType = fields[field].type || null;
+                if (fields[field].disabled) return;
                 if (!fieldType) return;
 
                 if (!this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType])) return;
