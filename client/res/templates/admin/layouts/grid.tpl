@@ -77,6 +77,7 @@
     }
     #layout header {
         font-weight: bold;
+        margin-bottom: 10px;
     }
     #layout ul.panels > li label {
         display: inline;
