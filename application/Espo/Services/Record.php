@@ -1980,6 +1980,8 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
+
+            $this->processActionHistoryRecord('delete', $source);
         }
 
         if ($hasEmailAddress) {
@@ -2023,6 +2025,8 @@ class Record extends \Espo\Core\Services\Base
 
         $entity->set($attributes);
         $repository->save($entity);
+
+        $this->processActionHistoryRecord('update', $entity);
 
         $this->afterMerge($entity, $sourceList, $attributes);
 
