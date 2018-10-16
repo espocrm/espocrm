@@ -19,9 +19,7 @@
 .panel .panel-heading .btn-default {
     &:active,
     &.active {
-        box-shadow: none;
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
+        .box-shadow(none);
     }
 }
 
@@ -89,9 +87,7 @@ table.table {
 .panel-body .list-container > .list,
 .dashlet-container > .panel,
 .note-editor.panel {
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
+    .box-shadow(none);
 }
 
 @media screen and (min-width: @screen-sm-min) {
@@ -111,24 +107,18 @@ table.table {
 .admin-content iframe,
 .list-kanban > div > table > thead,
 .list-group-panel {
-    -webkit-box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
-    -moz-box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
-    box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
+    .box-shadow(3px 3px 4px rgba(0,0,0,0.13));
 }
 
 #navbar .nav.navbar-nav.navbar-right,
 .stick-sub.button-container,
 #navbar .navbar.navbar-inverse {
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
+    .box-shadow(none);
 }
 
 @media (min-width: @screen-sm-min) {
     .modal-dialog > .modal-content {
-        -webkit-box-shadow: 0 0px 15px rgba(0,0,0,0.35);
-        -moz-box-shadow: 0 0px 15px rgba(0,0,0,0.35);
-        box-shadow: 0 0px 15px rgba(0,0,0,0.35);
+        .box-shadow(0 0px 15px rgba(0,0,0,0.35));
     }
 }
 
