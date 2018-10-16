@@ -1,3 +1,57 @@
+#navbar .navbar {
+    border-bottom-width: 0 !important;
+
+    img.logo {
+        max-height: 100%;
+    }
+
+    .navbar-header a.navbar-brand {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .navbar-brand {
+        padding: 0;
+    }
+
+    .navbar-right {
+        margin-right: -2px !important;
+    }
+
+    .navbar-form.global-search-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    #navbar .navbar {
+        .navbar-form.global-search-container {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .navbar-form.global-search-container > .input-group {
+            margin-left: 14px;
+        }
+
+        .navbar-right {
+            > li {
+                display: inline-block;
+            }
+
+            > li.notifications-badge-container {
+                display: inline-block;
+                float: right;
+            }
+        }
+
+        .navbar-collapse {
+            overflow-x: hidden !important;
+        }
+    }
+}
+
 .btn {
     border-radius: @button-radius;
 }
@@ -352,31 +406,8 @@ table.table > thead th {
     .box-shadow(none);
 }
 
-.navbar-inverse {
-    border-bottom-width: 0 !important;
-}
 
-@media screen and (min-width: @screen-sm-min) {
-    .navbar .navbar-header {
-        width: 181px;
-    }
-}
 
-.navbar .navbar-header a.navbar-brand {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.navbar-brand {
-    padding: 0;
-    width: @logo-width;
-    height: @logo-height;
-}
-
-.navbar img.logo {
-    max-height: 100%;
-    max-width: 100%;
-}
 
 #login.panel .panel-heading {
     border-bottom-width: 0;
@@ -1401,19 +1432,6 @@ body > footer > p a:visited {
     color: @gray;
 }
 
-.navbar-right {
-    margin-right: -2px !important;
-}
-
-.navbar-collapse {
-    overflow-x: hidden !important;
-}
-
-.navbar-form.global-search-container {
-    padding-left: 0;
-    padding-right: 0;
-}
-
 #global-search-panel > .panel > .panel-body {
     max-height: @navbar-panel-body-max-height;
     overflow-y: auto;
@@ -2179,26 +2197,8 @@ pre > code {
         margin-right: 10px;
     }
 
-    .navbar-form.global-search-container {
-        padding-left: 8px;
-        padding-right: 8px;
-    }
-
-    .navbar-form.global-search-container > .input-group {
-        margin-left: 14px;
-    }
-
     #global-search-input {
         width: 100%;
-    }
-
-    #header .navbar-right > li {
-        display: inline-block;
-    }
-
-    #header .navbar-right > li.notifications-badge-container {
-        display: inline-block;
-        float: right;
     }
 
     .search-row .search-right-buttons-group {
