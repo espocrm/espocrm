@@ -220,8 +220,7 @@ Espo.define(
                 this.viewHelper.layoutManager.userId = this.user.id;
 
                 if (this.themeManager.isUserTheme()) {
-                    var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
-                    $('#main-stylesheet').attr('href', stylesheetPath);
+                    this.loadStylesheet();
                 }
 
                 var promiseList = [];
@@ -504,6 +503,13 @@ Espo.define(
             xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
             xhr.send('');
             xhr.abort();
+
+            this.loadStylesheet();
+        },
+
+        loadStylesheet: function () {
+            var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
+            $('#main-stylesheet').attr('href', stylesheetPath);
         },
 
         setCookieAuth: function (username, token) {
