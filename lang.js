@@ -39,7 +39,20 @@ var isWin = /^win/.test(os.platform());
 
 var espoPath = path.dirname(fs.realpathSync(__filename)) + '';
 var resLang = process.argv[2] || 'lang_LANG';
-var poPath = process.argv[3] || espoPath + '/build/' + 'espocrm-' + resLang +'.po';
+
+var poPath = espoPath + '/build/' + 'espocrm-' + resLang +'.po';
+
+var onlyModuleName = null;
+if (process.argv.length > 2) {
+    for (var i in process.argv) {
+        if (~process.argv[i].indexOf('--module=')) {
+            onlyModuleName = process.argv[i].substr(('--module=').length);
+        }
+        if (~process.argv[i].indexOf('--path=')) {
+            poPath = process.argv[i].substr(('--path=').length);
+        }
+    }
+}
 
 var deleteFolderRecursive = function (path) {
     var files = [];
@@ -68,6 +81,10 @@ function Lang (poPath, espoPath) {
     this.currentPath = path.dirname(fs.realpathSync(__filename)) + '/';
 
     this.moduleList = ['Crm'];
+    if (onlyModuleName) {
+        this.moduleList = [onlyModuleName];
+    }
+
     this.baseLanguage = 'en_US';
 
     var dirNames = this.dirNames = {};
@@ -78,12 +95,6 @@ function Lang (poPath, espoPath) {
     var dirs = [coreDir];
     dirNames[coreDir] = 'application/Espo/Resources/i18n/' + resLang + '/';
 
-    this.moduleList.forEach(function (moduleName) {
-        var dir = this.espoPath + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.baseLanguage + '/';
-        dirs.push(dir);
-        dirNames[dir] = 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' + resLang + '/';
-    }, this);
-
     var installDir = this.espoPath + 'install/core/i18n/' + this.baseLanguage + '/';
     dirs.push(installDir);
     dirNames[installDir] = 'install/core/i18n/' + resLang + '/';
@@ -92,6 +103,16 @@ function Lang (poPath, espoPath) {
     var templatesDir = this.espoPath + 'application/Espo/Core/Templates/i18n/' + this.baseLanguage + '/';
     dirs.push(templatesDir);
     dirNames[templatesDir] = 'application/Espo/Core/Templates/i18n/' + resLang + '/';
+
+    if (onlyModuleName) {
+        dirs = [];
+    }
+
+    this.moduleList.forEach(function (moduleName) {
+        var dir = this.espoPath + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.baseLanguage + '/';
+        dirs.push(dir);
+        dirNames[dir] = 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' + resLang + '/';
+    }, this);
 
     this.dirs = dirs;
 };

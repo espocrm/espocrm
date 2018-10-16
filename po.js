@@ -37,8 +37,20 @@ var language = process.argv[2];
 
 var espoPath = path.dirname(fs.realpathSync(__filename)) + '';
 
+var onlyModuleName = null;
+if (process.argv.length > 2) {
+    for (var i in process.argv) {
+        if (~process.argv[i].indexOf('--module=')) {
+            onlyModuleName = process.argv[i].substr(('--module=').length);
+        }
+    }
+}
+
 function PO (espoPath, language) {
     this.moduleList = ['Crm'];
+    if (onlyModuleName) {
+        this.moduleList = [onlyModuleName];
+    }
     this.baseLanguage = 'en_US';
     this.language = language || this.baseLanguage;
 
@@ -56,6 +68,11 @@ function PO (espoPath, language) {
         this.path + 'install/core/i18n/',
         this.path + 'application/Espo/Core/Templates/i18n/'
     ];
+
+    if (onlyModuleName) {
+        dirs = [];
+    }
+
     this.moduleList.forEach(function (moduleName) {
         dirs.push(this.path + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/');
     }, this);
