@@ -207,8 +207,8 @@ Espo.define('views/main', 'view', function (Dep) {
                 }, this);
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().addClass('hidden');
-            this.$el.find('.page-header a.action[data-action="'+name+'"]').addClass('hidden');
+            this.$el.find('.page-header li > .action[data-name="'+name+'"]').parent().addClass('hidden');
+            this.$el.find('.page-header a.action[data-name="'+name+'"]').addClass('hidden');
         },
 
         showHeaderActionItem: function (name) {
@@ -220,11 +220,9 @@ Espo.define('views/main', 'view', function (Dep) {
                 }, this);
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
-            this.$el.find('.page-header a.action[data-action="'+name+'"]').removeClass('hidden');
+            this.$el.find('.page-header li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
+            this.$el.find('.page-header a.action[data-name="'+name+'"]').removeClass('hidden');
         }
 
     });
 });
-
-
