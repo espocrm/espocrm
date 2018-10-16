@@ -1,28 +1,28 @@
 {
-  "label": {
-    "Field": "Field"
-  },
   "options": {
     "operators": {
-      "equals": "Equals",
-      "notEquals": "Not Equals",
-      "greaterThan": "Greater Than",
-      "lessThan": "Less Than",
-      "greaterThanOrEquals": "Greater Than Or Equals",
-      "lessThanOrEquals": "Less Than Or Equals",
-      "in": "In",
-      "notIn": "Not In",
-      "inPast": "In Past",
-      "inFuture": "Is Future",
-      "isToday": "Is Today",
-      "isTrue": "Is True",
-      "isFalse": "Is False",
-      "isEmpty": "Is Empty",
-      "isNotEmpty": "Is Not Empty",
-      "contains": "Contains",
-      "has": "Contains",
-      "notContains": "Not Contains",
-      "notHas": "Not Contains"
+      "equals": "Равняется",
+      "notEquals": "Не равняется",
+      "greaterThan": "Больше чем",
+      "lessThan": "Меньше чем",
+      "greaterThanOrEquals": "Больше чем или равняется",
+      "lessThanOrEquals": "Меньше чем или равняется",
+      "in": "В",
+      "notIn": "Не в",
+      "inPast": "В Прошлом",
+      "inFuture": "В Будущем",
+      "isToday": "Сегодня",
+      "isTrue": "Правда",
+      "isFalse": "Неверно",
+      "isEmpty": "Пусто",
+      "isNotEmpty": "Не пусто",
+      "contains": "Содержит",
+      "has": "Содержит",
+      "notContains": "Не включает в себя",
+      "notHas": "Не включает в себя"
     }
+  },
+  "labels": {
+    "Field": "Поле"
   }
 }

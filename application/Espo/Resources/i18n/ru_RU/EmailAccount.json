@@ -7,24 +7,23 @@
     "password": "Пароль",
     "port": "Порт",
     "monitoredFolders": "Отслеживаемые папки",
-    "ssl": "SSL",
     "fetchSince": "Получить эл. письма начиная с",
     "emailAddress": "Адрес эл. почты",
     "sentFolder": "Папка 'Отправленные'",
     "storeSentEmails": "Сохранять отправленные эл. письма",
     "keepFetchedEmailsUnread": "Оставлять полученные эл. письма непрочитанными",
-    "emailFolder": "Put in Folder",
-    "useSmtp": "Use SMTP",
-    "smtpHost": "SMTP Host",
-    "smtpPort": "SMTP Port",
-    "smtpAuth": "SMTP Auth",
-    "smtpSecurity": "SMTP Security",
-    "smtpUsername": "SMTP Username",
-    "smtpPassword": "SMTP Password"
+    "emailFolder": "Положить в папку",
+    "useSmtp": "Использовать SMTP",
+    "smtpHost": "SMTP Хост",
+    "smtpPort": "SMTP Порт",
+    "smtpSecurity": "SMTP Безопасность",
+    "smtpUsername": "SMTP Имя пользователя",
+    "smtpPassword": "SMTP Пароль",
+    "useImap": "Получать эл. письма"
   },
   "links": {
     "filters": "Фильтры",
-    "emails": "Emails"
+    "emails": "Эл. письма"
   },
   "options": {
     "status": {
@@ -34,11 +33,9 @@
   },
   "labels": {
     "Create EmailAccount": "Создать учетную запись эл. почты",
-    "IMAP": "IMAP",
     "Main": "Основное",
     "Test Connection": "Проверка соединения",
-    "Send Test Email": "Send Test Email",
-    "SMTP": "SMTP"
+    "Send Test Email": "Отправить тестовое эл. письмо"
   },
   "messages": {
     "couldNotConnectToImap": "Не удалось соединиться с IMAP сервером",

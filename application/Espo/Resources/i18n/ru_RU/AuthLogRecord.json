@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "username": "Имя пользователя",
+    "ipAddress": "IP адрес",
+    "requestTime": "Время запроса",
+    "createdAt": "Запрос осуществлен с",
+    "isDenied": "Отказано",
+    "denialReason": "Причина отказа",
+    "portal": "Портал",
+    "user": "Пользователь",
+    "authToken": "Токен аутентификации создан",
+    "requestUrl": "URL запроса",
+    "requestMethod": "Метод запроса",
+    "authTokenIsActive": "Токен аутентификации активен"
+  },
+  "links": {
+    "authToken": "Токен аутентификации создан",
+    "user": "Пользователь",
+    "portal": "Портал",
+    "actionHistoryRecords": "История действий"
+  },
+  "presetFilters": {
+    "denied": "Отказано",
+    "accepted": "Согласен"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Недопустимые учетные данные",
+      "INACTIVE_USER": "Неактивный пользователь",
+      "IS_PORTAL_USER": "Пользователь портала",
+      "IS_NOT_PORTAL_USER": "Не пользователь портала",
+      "USER_IS_NOT_IN_PORTAL": "Пользователь не связан с порталом"
+    }
+  }
+}

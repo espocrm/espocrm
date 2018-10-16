@@ -19,7 +19,7 @@
     "opportunities": "Сделки",
     "folder": "Папка",
     "leads": "Лиды",
-    "contacts": "Contacts"
+    "contacts": "Контакты"
   },
   "options": {
     "status": {
@@ -30,10 +30,8 @@
     },
     "type": {
       "": "Нет",
-      "Contract": "Contract",
-      "NDA": "NDA",
-      "EULA": "EULA",
-      "License Agreement": "License Agreement"
+      "Contract": "Контракт",
+      "License Agreement": "Лицензионное соглашение"
     }
   },
   "presetFilters": {

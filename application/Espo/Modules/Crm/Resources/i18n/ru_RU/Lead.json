@@ -26,8 +26,10 @@
     "targetLists": "Списки целей",
     "targetList": "Список целей",
     "industry": "Вид деятельности",
-    "acceptanceStatus": "Acceptance Status",
-    "opportunityAmountCurrency": "Opportunity Amount Currency"
+    "acceptanceStatus": "Статус принятия",
+    "opportunityAmountCurrency": "Валюта суммы сделки",
+    "acceptanceStatusMeetings": "Статус принятия (Встречи)",
+    "acceptanceStatusCalls": "Статус принятия (Звонки)"
   },
   "links": {
     "targetLists": "Списки целей",

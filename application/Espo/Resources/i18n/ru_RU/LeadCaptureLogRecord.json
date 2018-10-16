@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "Номер",
+    "data": "Данные",
+    "target": "Цель",
+    "leadCapture": "Захват кандидата",
+    "createdAt": "Введен в",
+    "isCreated": "Создан кандидат"
+  },
+  "links": {
+    "leadCapture": "Захват кандидата",
+    "target": "Цель"
+  }
+}

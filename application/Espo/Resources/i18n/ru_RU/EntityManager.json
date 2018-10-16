@@ -2,9 +2,9 @@
   "labels": {
     "Fields": "Поля",
     "Relationships": "Отношения",
-    "Schedule": "Schedule",
-    "Log": "Log",
-    "Formula": "Formula"
+    "Schedule": "График",
+    "Log": "Лог",
+    "Formula": "Формула"
   },
   "fields": {
     "name": "Название",
@@ -13,39 +13,34 @@
     "labelPlural": "Метка (множественное число)",
     "stream": "Лента",
     "label": "Метка",
-    "linkType": "Link Type",
-    "entityForeign": "Foreign Entity",
-    "linkForeign": "Foreign Link",
-    "link": "Link",
-    "labelForeign": "Foreign Label",
+    "linkType": "Тип ссылки",
+    "link": "Ссылка",
     "sortBy": "Сортировка (поле)",
     "sortDirection": "Сортировка (направление)",
-    "relationName": "Middle Table Name",
-    "linkMultipleField": "Link Multiple Field",
-    "linkMultipleFieldForeign": "Foreign Link Multiple Field",
-    "disabled": "Disabled",
-    "textFilterFields": "Text Filter Fields",
-    "audited": "Audited",
-    "auditedForeign": "Foreign Audited",
-    "statusField": "Status Field",
-    "beforeSaveCustomScript": "Before Save Custom Script"
+    "linkMultipleFieldForeign": "Поле Foreign Link Multiple",
+    "disabled": "Отключено",
+    "textFilterFields": "Поля текстовых фильтров",
+    "audited": "Проверено",
+    "statusField": "Поле статуса",
+    "color": "Цвет",
+    "kanbanStatusIgnoreList": "Группы, которые не отражаются в Kanban View",
+    "iconClass": "Значок",
+    "fullTextSearch": "Полнотекстовый поиск"
   },
   "options": {
     "type": {
       "": "Нет",
-      "Base": "Base",
-      "Person": "Person",
-      "CategoryTree": "Category Tree",
-      "Event": "Event",
-      "BasePlus": "Base Plus",
-      "Company": "Company"
+      "Base": "База",
+      "Person": "Личность",
+      "Event": "Событие",
+      "Company": "Компания"
     },
     "linkType": {
-      "manyToMany": "Many-to-Many",
-      "oneToMany": "One-to-Many",
-      "manyToOne": "Many-to-One",
-      "parentToChildren": "Parent-to-Children",
-      "childrenToParent": "Children-to-Parent"
+      "manyToMany": "Многие-ко-многим",
+      "oneToMany": "Один-ко-многим",
+      "manyToOne": "Много-к-одному",
+      "parentToChildren": "Від батька до сина",
+      "childrenToParent": "От сына к отцу"
     },
     "sortDirection": {
       "asc": "По возрастанию",
@@ -58,12 +53,12 @@
     "linkConflict": "Связь (link) с таким названием уже существует."
   },
   "tooltips": {
-    "statusField": "Updates of this field are logged in stream.",
-    "textFilterFields": "Fields used by text search.",
-    "stream": "Whether entity has a Stream.",
-    "disabled": "Check if you don't need this entity in your system.",
-    "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
-    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
-    "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel."
+    "statusField": "Обновления этого поля записываются в ленту.",
+    "textFilterFields": "Поля, используемые для текстового поиска.",
+    "stream": "Есть ли у объекта Лента.",
+    "disabled": "Отметьте, если вам не нужна эта сущность в вашей системе.",
+    "linkAudited": "Создание связанной записи и привязка к существующей записи будет регистрироваться в Ленте.",
+    "linkMultipleField": "Link Multiple field предоставляет удобный способ редактирования отношений. Не используйте его, если у вас может быть большое количество связанных записей.",
+    "fullTextSearch": "Требуется выполнить перестройку."
   }
 }

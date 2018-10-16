@@ -3,7 +3,8 @@
     "name": "Название",
     "version": "Версия",
     "description": "Описание",
-    "isInstalled": "Установлено"
+    "isInstalled": "Установлено",
+    "checkVersionUrl": "URL для проверки наличия новых версий"
   },
   "labels": {
     "Uninstall": "Удалить",

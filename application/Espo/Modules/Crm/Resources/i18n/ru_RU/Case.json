@@ -9,11 +9,11 @@
     "priority": "Приоритет",
     "type": "Тип",
     "description": "Описание",
-    "inboundEmail": "Входящая эл. почта",
-    "lead": "Лид"
+    "lead": "Лид",
+    "attachments": "Вложения",
+    "inboundEmail": "Учетная запись эл. почты группы"
   },
   "links": {
-    "inboundEmail": "Входящая эл. почта",
     "account": "Контрагент",
     "contact": "Контакт (основной)",
     "Contacts": "Контакты",
@@ -22,7 +22,9 @@
     "tasks": "Задачи",
     "emails": "Эл. письма",
     "articles": "Статьи базы знаний",
-    "lead": "Лид"
+    "lead": "Лид",
+    "attachments": "Вложения",
+    "inboundEmail": "Учетная запись эл. почты группы"
   },
   "options": {
     "status": {

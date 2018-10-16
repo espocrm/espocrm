@@ -25,9 +25,11 @@
     "sendAccessInfo": "Отправить пользователю эл. письмо с реквизитами доступа",
     "portal": "Портал",
     "gender": "Пол",
-    "position": "Position in Team",
-    "ipAddress": "IP Address",
-    "passwordPreview": "Password Preview"
+    "position": "Должность в группе",
+    "ipAddress": "IP адрес",
+    "passwordPreview": "Предпросмотр пароля",
+    "isSuperAdmin": "Главный Администратор",
+    "lastAccess": "Последнее подключение"
   },
   "links": {
     "teams": "Группы",
@@ -38,7 +40,7 @@
     "contact": "Контакт",
     "accounts": "Контрагенты",
     "account": "Учетная запись (Основная)",
-    "tasks": "Tasks"
+    "tasks": "Задачи"
   },
   "labels": {
     "Create User": "Создать пользователя",
@@ -54,7 +56,7 @@
     "Email Accounts": "Учетные записи эл. почты",
     "Portal": "Портал",
     "Create Portal User": "Создать пользователя портала",
-    "Proceed w/o Contact": "Proceed w/o Contact"
+    "Proceed w/o Contact": "Продолжить без контакта"
   },
   "tooltips": {
     "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой группе.",
@@ -76,7 +78,8 @@
     "forbidden": "Запрещено, повторите попытку позже",
     "uniqueLinkHasBeenSent": "Уникальная ссылка была отправлена на указанный адрес эл. почты.",
     "passwordChangedByRequest": "Пароль был изменен.",
-    "setupSmtpBefore": "Вы должны настроить <a href=\"{url}\">SMTP settings</a> чтобы система имела возможность отправлять пароль по электронной почте."
+    "setupSmtpBefore": "Вы должны настроить <a href=\"{url}\">SMTP settings</a> чтобы система имела возможность отправлять пароль по электронной почте.",
+    "userNameExists": "Имя пользователя уже существует"
   },
   "boolFilters": {
     "onlyMyTeam": "Только моя группа"

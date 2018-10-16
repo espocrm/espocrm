@@ -3,6 +3,8 @@
     "targetLists": "Списки целей"
   },
   "fields": {
-    "acceptanceStatus": "Acceptance Status"
+    "acceptanceStatus": "Статус принятия",
+    "acceptanceStatusMeetings": "Статус принятия (Встречи)",
+    "acceptanceStatusCalls": "Статус принятия (Звонки)"
   }
 }

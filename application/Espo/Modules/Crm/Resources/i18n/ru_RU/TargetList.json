@@ -6,8 +6,11 @@
     "campaigns": "Кампании",
     "endDate": "Дата окончания",
     "targetLists": "Списки целей",
-    "includingActionList": "Including",
-    "excludingActionList": "Excluding"
+    "includingActionList": "Включая",
+    "excludingActionList": "Исключая",
+    "optedOutCount": "Количество пользователей, которые сняли подписку",
+    "targetStatus": "Статус цели",
+    "isOptedOut": "Отписалось"
   },
   "links": {
     "accounts": "Контрагенты",
@@ -23,6 +26,10 @@
       "Television": "Телевидение",
       "Radio": "Радио",
       "Newsletter": "Информационный бюллетень"
+    },
+    "targetStatus": {
+      "Opted Out": "Отписан",
+      "Listed": "В списке"
     }
   },
   "labels": {

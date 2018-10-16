@@ -13,21 +13,21 @@
     "amountConverted": "Сумма (сконвертированная)",
     "amountWeightedConverted": "Сумма (средневзвешенная)",
     "campaign": "Кампания",
-    "originalLead": "Original Lead",
-    "amountCurrency": "Amount Currency"
+    "originalLead": "Изначальный кандидат",
+    "amountCurrency": "Валюта суммы",
+    "contactRole": "Роль контактов",
+    "lastStage": "Последняя стадия"
   },
   "links": {
     "contacts": "Контакты",
     "documents": "Документы",
     "campaign": "Кампания",
-    "originalLead": "Original Lead"
+    "originalLead": "Изначальный кандидат"
   },
   "options": {
     "stage": {
       "Prospecting": "Привлечение клиента",
       "Qualification": "Оценка возможности",
-      "Proposal": "Предложение",
-      "Negotiation": "Согласование",
       "Needs Analysis": "Требует анализа",
       "Value Proposition": "Выбор предложения/оферты",
       "Id. Decision Makers": "Определение ответственного лица",
@@ -35,7 +35,9 @@
       "Proposal/Price Quote": "Отправлено предложение/оферта",
       "Negotiation/Review": "Согласование/рассмотрение",
       "Closed Won": "Закрыто - Успех",
-      "Closed Lost": "Закрыто - Провал"
+      "Closed Lost": "Закрыто - Провал",
+      "Proposal": "Предложение",
+      "Negotiation": "Согласование"
     }
   },
   "labels": {

@@ -18,21 +18,26 @@
     "smtpPassword": "Пароль",
     "smtpEmailAddress": "Адрес эл. почты",
     "exportDelimiter": "Разделитель полей при экспорте",
-    "autoFollowEntityTypeList": "Автоподписка",
     "signature": "Подпись к эл. письмам",
     "dashboardTabList": "Список вкладок",
     "tabList": "Список вкладок",
     "defaultReminders": "Напоминания по умолчанию.",
     "theme": "Тема",
     "useCustomTabList": "Настраиваемый список вкладок",
-    "emailReplyToAllByDefault": "Email Reply to All by Default",
     "receiveAssignmentEmailNotifications": "Получать оповещения по эл. почте при назначении",
-    "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
-    "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
-    "dashboardLayout": "Dashboard Layout",
-    "emailReplyForceHtml": "Email Reply in HTML",
-    "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required",
-    "followEntityOnStreamPost": "Auto-follow entity after posting in Stream"
+    "receiveMentionEmailNotifications": "Уведомления по эл. почте об упоминаниях в сообщениях",
+    "receiveStreamEmailNotifications": "Уведомления по электронной почте о сообщениях и обновлениях статуса",
+    "dashboardLayout": "Планировка панели виджетов",
+    "emailReplyForceHtml": "Отправить ответ в HTML",
+    "autoFollowEntityTypeList": "Автоподписка",
+    "emailReplyToAllByDefault": "Отправить ответ всем по умолчанию",
+    "doNotFillAssignedUserIfNotRequired": "Не заполнять предварительно назначенного пользователя при создании записи",
+    "followEntityOnStreamPost": "Автоматически подписаться поле публикации в ленте",
+    "followCreatedEntities": "Автоматически подписаться на созданные записи",
+    "followCreatedEntityTypeList": "Автоматически подписаться на созданные записи конкретных типов объектов",
+    "emailUseExternalClient": "Использовать внешний почтовый клиент",
+    "scopeColorsDisabled": "Отключить цвета границ",
+    "tabColorsDisabled": "Отключить цвета вкладок"
   },
   "options": {
     "weekStart": {
@@ -43,11 +48,14 @@
   "labels": {
     "Notifications": "Оповещения",
     "User Interface": "Интерфейс пльзователя",
-    "SMTP": "SMTP",
     "Misc": "Разное",
-    "Locale": "Локаль"
+    "Locale": "Локаль",
+    "Reset Dashboard to Default": "Сбросить настройки панели виджетов по умолчанию"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Пользователь будет автоматически подисан на все новые записи о выбранных типах объектов, будет видеть эту информацию в ленте и получать оповещения."
+    "autoFollowEntityTypeList": "Пользователь будет автоматически подисан на все новые записи о выбранных типах объектов, будет видеть эту информацию в ленте и получать оповещения.",
+    "doNotFillAssignedUserIfNotRequired": "При создании записи поле ответственного пользователя не будет заполнено пользователем, который создал запись, если это поле не обязательно.",
+    "followCreatedEntities": "При создании новых записей они будут автоматически отслеживаться, даже если они назначены другому пользователю.",
+    "followCreatedEntityTypeList": "При создании новых записей выбранных типов объектов они будут отслеживаться автоматически, даже если они назначены другому пользователю."
   }
 }

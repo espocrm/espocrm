@@ -19,7 +19,13 @@
     "revenue": "Доход",
     "revenueConverted": "Доход (сконвертированный)",
     "budget": "Бюджет",
-    "budgetConverted": "Бюджет (сконвертированный)"
+    "budgetConverted": "Бюджет (сконвертированный)",
+    "contactsTemplate": "Шаблон контактов",
+    "leadsTemplate": "Шаблон кандидатов",
+    "accountsTemplate": "Шаблон контрагентов",
+    "usersTemplate": "Шаблон пользователей",
+    "mailMergeOnlyWithAddress": "Пропустить записи без заполненного адреса",
+    "optedInCount": "Подписан"
   },
   "links": {
     "targetLists": "Списки целей",
@@ -30,7 +36,11 @@
     "opportunities": "Сделки",
     "campaignLogRecords": "Журнал",
     "massEmails": "Массовые рассылки эл. писем",
-    "trackingUrls": "Целевые URL-адреса"
+    "trackingUrls": "Целевые URL-адреса",
+    "contactsTemplate": "Шаблон контактов",
+    "leadsTemplate": "Шаблон кандидатов",
+    "accountsTemplate": "Шаблон контрагентов",
+    "usersTemplate": "Шаблон пользователей"
   },
   "options": {
     "type": {
@@ -57,16 +67,18 @@
     "Unsubscribe": "Отписаться",
     "Mass Emails": "Массовые рассылки эл. писем",
     "Email Templates": "Шаблоны эл. писем",
-    "Unsubscribe again": "Unsubscribe again",
-    "Subscribe again": "Subscribe again",
-    "Create Target List": "Create Target List"
+    "Unsubscribe again": "Отписаться снова",
+    "Subscribe again": "Подписаться снова",
+    "Create Target List": "Создать список целей",
+    "Mail Merge": "Слияние писем",
+    "Generate Mail Merge PDF": "Сгенерировать PDF-слияние"
   },
   "presetFilters": {
     "active": "Активна"
   },
   "messages": {
     "unsubscribed": "Вы были удалены из нашего списка рассылки.",
-    "subscribedAgain": "You are subscribed again."
+    "subscribedAgain": "Вы снова подписаны."
   },
   "tooltips": {
     "targetLists": "Цели которые должны получить сообщения.",

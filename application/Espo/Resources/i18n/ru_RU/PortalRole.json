@@ -4,8 +4,12 @@
   },
   "labels": {
     "Access": "Доступ",
-    "Create PortalRole": "Создать роль портала",
-    "Scope Level": "Scope Level",
-    "Field Level": "Field Level"
+    "Create PortalRole": "Создать роль портала"
+  },
+  "fields": {
+    "exportPermission": "Разрешение на экспорт"
+  },
+  "tooltips": {
+    "exportPermission": "Определяет, имеют ли пользователи портала возможность экспортировать записи."
   }
 }

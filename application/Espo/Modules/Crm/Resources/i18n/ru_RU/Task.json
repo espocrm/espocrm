@@ -13,10 +13,13 @@
     "account": "Контрагент",
     "dateCompleted": "Дата завершения",
     "attachments": "Вложения",
-    "reminders": "Reminders"
+    "reminders": "Напоминания",
+    "contact": "Контакт"
   },
   "links": {
-    "attachments": "Вложения"
+    "attachments": "Вложения",
+    "account": "Контрагент",
+    "contact": "Контакт"
   },
   "options": {
     "status": {

@@ -5,9 +5,11 @@
     "attempts": "Осталось попыток",
     "failedAttempts": "Неудачных попыток",
     "serviceName": "Сервис",
-    "method": "Метод",
+    "methodName": "Метод",
     "scheduledJob": "Задание планировщика",
-    "data": "Данные"
+    "data": "Данные",
+    "method": "Метод",
+    "scheduledJobJob": "Название задания"
   },
   "options": {
     "status": {

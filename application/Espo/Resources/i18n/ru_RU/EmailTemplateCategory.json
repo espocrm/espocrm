@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Создать категорию",
+    "Manage Categories": "Управление категориями",
+    "EmailTemplates": "Шаблоны эл. писем"
+  },
+  "fields": {
+    "order": "Порядок"
+  },
+  "links": {
+    "emailTemplates": "Шаблоны эл. писем"
+  }
+}
