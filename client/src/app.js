@@ -406,6 +406,9 @@ Espo.define(
                 var path = null;
                 switch (type) {
                     case 'template':
+                        if (~name.indexOf('.')) {
+                            console.warn(name + ': template name should use slashes for a directory separator.');
+                        }
                         path = 'res/templates/' + name.split('.').join('/') + '.tpl';
                         break;
                     case 'layoutTemplate':
