@@ -210,6 +210,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.once('remove', function () {
                 $(window).off('resize.kanban');
+                $(window).off('scroll.kanban-' + this.cid);
+                $(window).off('resize.kanban-' + this.cid);
             });
 
             if (
@@ -240,6 +242,70 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             if (this.statusFieldIsEditable) {
                 this.initSortable();
             }
+
+            this.initStickableHeader();
+        },
+
+        initStickableHeader: function () {
+            var $container = this.$el.find('.kanban-head-container');
+            var topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
+
+            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+
+            var $middle = this.$el.find('.kanban-columns-container');
+            var $window = $(window);
+
+            var $block = $('<div>').addClass('.kanban-head-paceholder').html('&nbsp;').hide().insertAfter($container);
+
+            $window.off('scroll.kanban-' + this.cid);
+            $window.on('scroll.kanban-' + this.cid, function (e) {
+                cotrolSticking();
+            }.bind(this));
+
+            $window.off('resize.kanban-' + this.cid);
+            $window.on('resize.kanban-' + this.cid, function (e) {
+                cotrolSticking();
+            }.bind(this));
+
+
+            var cotrolSticking = function () {
+                var width = $middle.width();
+
+                if ($(window.document).width() < screenWidthXs) {
+                    $container.removeClass('sticked');
+                    $container.css('width', '');
+                    $block.hide();
+                    $container.show();
+                    return;
+                }
+
+                var stickTop = this.$listKanban.position().top - topBarHeight;
+
+                var edge = $middle.position().top + $middle.outerHeight(true);
+                var scrollTop = $window.scrollTop();
+
+                if (scrollTop < edge) {
+                    if (scrollTop > stickTop) {
+                        $container.css('width', width + 'px');
+
+                        if (!$container.hasClass('sticked')) {
+                            $container.addClass('sticked');
+                            $block.show();
+                        }
+                    } else {
+                        $container.css('width', '');
+                        if ($container.hasClass('sticked')) {
+                            $container.removeClass('sticked');
+                            $block.hide();
+                        }
+                    }
+                    $container.show();
+                } else {
+                    $container.css('width', width + 'px');
+                    $container.hide();
+                    $block.show();
+                }
+            }.bind(this);
         },
 
         initSortable: function () {

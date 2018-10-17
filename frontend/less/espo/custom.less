@@ -318,14 +318,29 @@ div.list-kanban > div > table {
     }
 }
 
-div.list-kanban > div.kanban-columns-container {
-    margin-left: -@padding-base-horizontal;
-    margin-right: -@padding-base-horizontal;
-    > table {
-        border-collapse: separate;
-        border-spacing: @padding-base-horizontal 0;
+.list-kanban {
+    > .kanban-columns-container {
+        margin-left: -@padding-base-horizontal;
+        margin-right: -@padding-base-horizontal;
+        > table {
+            border-collapse: separate;
+            border-spacing: @padding-base-horizontal 0;
+        }
+
+    }
+
+    .kanban-head-paceholder {
+        height: 28px;
+    }
+
+    .kanban-head-container.sticked {
+        position: fixed;
+        top: 0;
+        margin-top: @tob-bar-height;
+        z-index: 4;
     }
 }
+
 
 @supports (display: grid) {
     div.list-kanban > div.kanban-columns-container,
