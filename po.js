@@ -56,7 +56,11 @@ function PO (espoPath, language) {
 
     this.currentPath = path.dirname(fs.realpathSync(__filename)) + '/';
 
-    this.outputFileName = 'espocrm-' + this.language + '.po';
+    this.outputFileName = 'espocrm-' + this.language ;
+    if (onlyModuleName) {
+        this.outputFileName += '-' + onlyModuleName;
+    }
+    this.outputFileName += '.po';
 
     this.path = espoPath;
     if (this.path.substr(-1) != '/') {

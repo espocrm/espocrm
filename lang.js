@@ -40,14 +40,23 @@ var isWin = /^win/.test(os.platform());
 var espoPath = path.dirname(fs.realpathSync(__filename)) + '';
 var resLang = process.argv[2] || 'lang_LANG';
 
-var poPath = espoPath + '/build/' + 'espocrm-' + resLang +'.po';
-
 var onlyModuleName = null;
 if (process.argv.length > 2) {
     for (var i in process.argv) {
         if (~process.argv[i].indexOf('--module=')) {
             onlyModuleName = process.argv[i].substr(('--module=').length);
         }
+    }
+}
+
+var poPath = espoPath + '/build/' + 'espocrm-' + resLang;
+if (onlyModuleName) {
+    poPath += '-' + onlyModuleName;
+}
+poPath += '.po';
+
+if (process.argv.length > 2) {
+    for (var i in process.argv) {
         if (~process.argv[i].indexOf('--path=')) {
             poPath = process.argv[i].substr(('--path=').length);
         }
@@ -94,6 +103,7 @@ function Lang (poPath, espoPath) {
     var coreDir = this.espoPath + 'application/Espo/Resources/i18n/' + this.baseLanguage + '/';
     var dirs = [coreDir];
     dirNames[coreDir] = 'application/Espo/Resources/i18n/' + resLang + '/';
+
 
     var installDir = this.espoPath + 'install/core/i18n/' + this.baseLanguage + '/';
     dirs.push(installDir);
