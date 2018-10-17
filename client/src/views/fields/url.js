@@ -86,7 +86,7 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
 
-            if (this.params.strip) {
+            if (this.params.strip && data[this.name]) {
                 data[this.name] = this.strip(data[this.name]);
             }
             return data;

@@ -159,7 +159,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     value = value.trim();
                 }
             }
-            data[this.name] = value;
+            data[this.name] = value || null;
             return data;
         },
 
