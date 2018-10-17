@@ -37,7 +37,9 @@ Espo.define('crm:views/contact/detail', 'views/detail', function (Dep) {
             },
             'cases': {
                 'accountId': 'accountId',
-                'accountName': 'accountName'
+                'accountName': 'accountName',
+                'id': 'contactId',
+                'name': 'contactName',
             }
         },
 
