@@ -504,10 +504,13 @@ Espo.define(
             xhr.send('');
             xhr.abort();
 
+
             this.loadStylesheet();
         },
 
         loadStylesheet: function () {
+            if (!this.metadata.get(['themes'])) return;
+
             var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
             $('#main-stylesheet').attr('href', stylesheetPath);
         },
