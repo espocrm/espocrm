@@ -17,7 +17,15 @@
         </button>
         <ul class="dropdown-menu">
             {{#each massActionList}}
-            <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
+            {{#if this}}
+            <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../../scope}}</a></li>
+            {{else}}
+            {{#unless @first}}
+            {{#unless @last}}
+            <li class="divider"></li>
+            {{/unless}}
+            {{/unless}}
+            {{/if}}
             {{/each}}
         </ul>
     </div>

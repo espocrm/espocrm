@@ -491,6 +491,12 @@ ul.dropdown-menu > li.checkbox {
     user-select: none;
 }
 
+ul.dropdown-menu {
+    li.divider + li.divider {
+        display: none;
+    }
+}
+
 .dropdown-menu > li > a {
     line-height: @line-height-computed;
 }

@@ -9,7 +9,15 @@
         </button>
         <ul class="dropdown-menu pull-left">
             {{#each dropdownItemList}}
-            <li><a href="javascript:" class="action" data-action="{{name}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../../entityType}}{{/if}}</a></li>
+            {{#if this}}
+            <li><a href="javascript:" class="action" data-action="{{name}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../entityType}}{{/if}}</a></li>
+            {{else}}
+                {{#unless @first}}
+                {{#unless @last}}
+                <li class="divider"></li>
+                {{/unless}}
+                {{/unless}}
+            {{/if}}
             {{/each}}
         </ul>
         {{/if}}

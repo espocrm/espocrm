@@ -1085,6 +1085,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         addDropdownItem: function (o) {
+            if (!o) {
+                this.dropdownItemList.push(false);
+                return;
+            }
             var name = o.name;
             if (!name) return;
             for (var i in this.dropdownItemList) {

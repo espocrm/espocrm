@@ -47,6 +47,8 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.addMenuItem('dropdown', false);
+
             if (this.getAcl().checkScope('EmailAccountScope')) {
                 this.addMenuItem('dropdown', {
                     name: 'reply',
@@ -56,14 +58,14 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
             }
 
             if (this.getUser().isAdmin()) {
-                this.menu.dropdown.push({
+                this.addMenuItem('dropdown', {
                     link: '#InboundEmail',
                     label: 'Inbound Emails'
                 });
             }
 
             this.foldersDisabled = this.foldersDisabled ||
-                                   this.getMetadata().get('scopes.' + this.folderScope + '.disabled') ||
+                                   this.getMetadata().get(['scopes', this.folderScope, 'disabled']) ||
                                    !this.getAcl().checkScope(this.folderScope);
 
             var params = this.options.params || {};

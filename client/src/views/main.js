@@ -130,18 +130,23 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         addMenuItem: function (type, item, toBeginnig, doNotReRender) {
-            item.name = item.name || item.action;
-            var name = item.name;
+            if (item) {
+                item.name = item.name || item.action;
+                var name = item.name;
 
-            var index = -1;
-            this.menu[type].forEach(function (data, i) {
-                if (data.name === name) {
-                    index = i;
-                    return;
+                if (name) {
+                    var index = -1;
+                    this.menu[type].forEach(function (data, i) {
+                        data = data || {};
+                        if (data.name === name) {
+                            index = i;
+                            return;
+                        }
+                    }, this);
+                    if (~index) {
+                        this.menu[type].splice(index, 1);
+                    }
                 }
-            }, this);
-            if (~index) {
-                this.menu[type].splice(index, 1);
             }
 
             var method = 'push';
@@ -155,20 +160,13 @@ Espo.define('views/main', 'view', function (Dep) {
             }
         },
 
-        disableMenuItem: function (name) {
-            this.$el.find('.header .header-buttons [data-name="'+name+'"]').addClass('disabled').attr('disabled');
-        },
-
-        enableMenuItem: function (name) {
-            this.$el.find('.header .header-buttons [data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
-        },
-
         removeMenuItem: function (name, doNotReRender) {
             var index = -1;
             var type = false;
 
             ['actions', 'dropdown', 'buttons'].forEach(function (t) {
                 this.menu[t].forEach(function (item, i) {
+                    item = item || {};
                     if (item.name == name) {
                         index = i;
                         type = t;
@@ -183,6 +181,14 @@ Espo.define('views/main', 'view', function (Dep) {
             if (!doNotReRender && this.isRendered()) {
                 this.getView('header').reRender();
             }
+        },
+
+        disableMenuItem: function (name) {
+            this.$el.find('.header .header-buttons [data-name="'+name+'"]').addClass('disabled').attr('disabled');
+        },
+
+        enableMenuItem: function (name) {
+            this.$el.find('.header .header-buttons [data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
         },
 
         actionNavigateToRoot: function (data, e) {
@@ -201,6 +207,7 @@ Espo.define('views/main', 'view', function (Dep) {
         hideHeaderActionItem: function (name) {
             ['actions', 'dropdown', 'buttons'].forEach(function (t) {
                 this.menu[t].forEach(function (item, i) {
+                    item = item || {};
                     if (item.name == name) {
                         item.hidden = true;
                     }
@@ -214,6 +221,7 @@ Espo.define('views/main', 'view', function (Dep) {
         showHeaderActionItem: function (name) {
             ['actions', 'dropdown', 'buttons'].forEach(function (t) {
                 this.menu[t].forEach(function (item, i) {
+                    item = item || {};
                     if (item.name == name) {
                         item.hidden = false;
                     }
