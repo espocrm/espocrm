@@ -715,7 +715,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         setup: function () {
             if (typeof this.collection === 'undefined') {
-                throw new Error('Collection has not been injected into Record.List view.');
+                throw new Error('Collection has not been injected into views/record/list view.');
             }
 
             this.layoutLoadCallbackList = [];
