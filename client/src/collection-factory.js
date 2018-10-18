@@ -57,6 +57,7 @@
                     });
                     collection.model = seed;
                     collection._user = this.modelFactory.user;
+                    collection.entityType = name;
                     callback.call(context, collection);
                 }.bind(this));
             }.bind(this));

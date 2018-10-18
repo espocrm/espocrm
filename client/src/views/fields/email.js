@@ -299,6 +299,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             };
 
             var scope = this.model.name;
+
             switch (scope) {
                 case 'Account':
                 case 'Lead':
@@ -321,6 +322,13 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                     break;
             }
 
+            if (this.model.collection && this.model.collection.parentModel) {
+                if (this.checkParentTypeAvailability(this.model.collection.parentModel.entityType)) {
+                    attributes.parentType = this.model.collection.parentModel.entityType;
+                    attributes.parentId = this.model.collection.parentModel.id;
+                    attributes.parentName = this.model.collection.parentModel.get('name');
+                }
+            }
 
             if (!attributes.parentId) {
                 if (this.checkParentTypeAvailability(this.model.name)) {
