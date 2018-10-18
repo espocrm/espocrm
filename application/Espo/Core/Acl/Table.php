@@ -182,6 +182,15 @@ class Table
         return 'no';
     }
 
+    public function getHighestLevel($action)
+    {
+        if (in_array($action, $this->booleanActionList)) {
+            return 'yes';
+        } else {
+            return 'all';
+        }
+    }
+
     private function load()
     {
         $valuePermissionLists = (object)[];
