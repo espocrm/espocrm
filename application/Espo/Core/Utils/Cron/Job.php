@@ -145,14 +145,13 @@ class Job
     }
 
     /**
-     * Get Jobs by ScheduledJobId and date
      *
      * @param  string $scheduledJobId
      * @param  string $time
      *
      * @return array
      */
-    public function getJobByScheduledJob($scheduledJobId, $time)
+    public function getJobByScheduledJobIdOnMinute($scheduledJobId, $time)
     {
         $dateObj = new \DateTime($time);
         $timeWithoutSeconds = $dateObj->format('Y-m-d H:i:');
@@ -174,6 +173,16 @@ class Job
         $scheduledJob = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         return $scheduledJob;
+    }
+
+    public function getPendingCountByScheduledJobId($scheduledJobId)
+    {
+        $countPending = $this->getEntityManager()->getRepository('Job')->where([
+            'scheduledJobId' => $scheduledJobId,
+            'status' => CronManager::PENDING
+        ])->count();
+
+        return $countPending;
     }
 
     /**
@@ -273,7 +282,6 @@ class Job
         foreach ($duplicateJobList as $row) {
             if (!empty($row['scheduled_job_id'])) {
 
-                /* no possibility to use limit in update or subqueries */
                 $query = "
                     SELECT id FROM `job`
                     WHERE

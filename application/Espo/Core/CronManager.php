@@ -164,7 +164,6 @@ class CronManager
         $this->getCronJobUtil()->updateFailedJobAttempts();
         $this->createJobsFromScheduledJobs();
         $this->getCronJobUtil()->removePendingJobDuplicates();
-
         $pendingJobList = $this->getCronJobUtil()->getPendingJobList();
 
         foreach ($pendingJobList as $job) {
@@ -294,29 +293,33 @@ class CronManager
     protected function createJobsFromScheduledJobs()
     {
         $activeScheduledJobList = $this->getCronScheduledJobUtil()->getActiveScheduledJobList();
-
         $runningScheduledJobIdList = $this->getCronJobUtil()->getRunningScheduledJobIdList();
 
-        $createdJobIdList = array();
+        $createdJobIdList = [];
         foreach ($activeScheduledJobList as $scheduledJob) {
             $scheduling = $scheduledJob->get('scheduling');
+            $asSoonAsPossible = $scheduling === '* * * * *';
 
-            try {
-                $cronExpression = \Cron\CronExpression::factory($scheduling);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->error('CronManager (ScheduledJob ['.$scheduledJob->id.']): Scheduling string error - '. $e->getMessage() . '.');
-                continue;
+            if ($asSoonAsPossible) {
+                $nextDate = date('Y-m-d H:i:s');
+            } else {
+                try {
+                    $cronExpression = \Cron\CronExpression::factory($scheduling);
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('CronManager (ScheduledJob ['.$scheduledJob->id.']): Scheduling string error - '. $e->getMessage() . '.');
+                    continue;
+                }
+
+                try {
+                    $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('CronManager (ScheduledJob ['.$scheduledJob->id.']): Unsupported CRON expression ['.$scheduling.']');
+                    continue;
+                }
+
+                $existingJob = $this->getCronJobUtil()->getJobByScheduledJobIdOnMinute($scheduledJob->id, $nextDate);
+                if ($existingJob) continue;
             }
-
-            try {
-                $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
-            } catch (\Exception $e) {
-                $GLOBALS['log']->error('CronManager (ScheduledJob ['.$scheduledJob->id.']): Unsupported CRON expression ['.$scheduling.']');
-                continue;
-            }
-
-            $existingJob = $this->getCronJobUtil()->getJobByScheduledJob($scheduledJob->id, $nextDate);
-            if ($existingJob) continue;
 
             $className = $this->getScheduledJobUtil()->get($scheduledJob->get('job'));
             if ($className) {
@@ -331,13 +334,17 @@ class CronManager
                 continue;
             }
 
+            if ($this->getCronJobUtil()->getPendingCountByScheduledJobId($scheduledJob->id) > 0) {
+                continue;
+            }
+
             $jobEntity = $this->getEntityManager()->getEntity('Job');
-            $jobEntity->set(array(
+            $jobEntity->set([
                 'name' => $scheduledJob->get('name'),
                 'status' => self::PENDING,
                 'scheduledJobId' => $scheduledJob->id,
                 'executeTime' => $nextDate
-            ));
+            ]);
             $this->getEntityManager()->saveEntity($jobEntity);
         }
     }
