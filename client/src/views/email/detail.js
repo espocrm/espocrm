@@ -64,14 +64,14 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                             acl: 'edit',
                             aclScope: 'Lead'
                         });
-                        if (this.getConfig().get('b2cMode')) {
-                            this.menu.dropdown.push({
-                                label: 'Create Contact',
-                                action: 'createContact',
-                                acl: 'edit',
-                                aclScope: 'Contact'
-                            });
-                        }
+
+                        this.menu.dropdown.push({
+                            label: 'Create Contact',
+                            action: 'createContact',
+                            acl: 'edit',
+                            aclScope: 'Contact'
+                        });
+
                     }
                 }
 
