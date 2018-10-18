@@ -40,12 +40,16 @@ class ControllerManager
 
     private $container;
 
+    private $controllersHash = null;
+
     public function __construct(\Espo\Core\Container $container)
     {
         $this->container = $container;
 
         $this->config = $this->container->get('config');
         $this->metadata = $this->container->get('metadata');
+
+        $this->controllersHash = (object) [];
     }
 
     protected function getConfig()
@@ -58,7 +62,7 @@ class ControllerManager
         return $this->metadata;
     }
 
-    public function process($controllerName, $actionName, $params, $data, $request, $response)
+    protected function getControllerClassName($controllerName)
     {
         $customClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($controllerName);
         if (class_exists($customClassName)) {
@@ -72,19 +76,40 @@ class ControllerManager
             }
         }
 
-        if ($data && stristr($request->getContentType(), 'application/json')) {
-            $data = json_decode($data);
-        }
-
         if (!class_exists($controllerClassName)) {
             throw new NotFound("Controller '$controllerName' is not found");
         }
 
-        $controller = new $controllerClassName($this->container, $request->getMethod());
+        return $controllerClassName;
+    }
+
+    public function createController($name)
+    {
+        $controllerClassName = $this->getControllerClassName($name);
+        $controller = new $controllerClassName($this->container);
+
+        return $controller;
+    }
+
+    public function getController($name)
+    {
+        if (!property_exists($this->controllersHash, $name)) {
+            $this->controllersHash->$name = $this->createController($name);
+        }
+        return $this->controllersHash->$name;
+    }
+
+    public function processRequest(\Espo\Core\Controllers\Base $controller, $actionName, $params, $data, $request, $response = null)
+    {
+        if ($data && stristr($request->getContentType(), 'application/json')) {
+            $data = json_decode($data);
+        }
 
         if ($actionName == 'index') {
-            $actionName = $controllerClassName::$defaultAction;
+            $actionName = $controller::$defaultAction;
         }
+
+        $requestMethod = $request->getMethod();
 
         $actionNameUcfirst = ucfirst($actionName);
 
@@ -92,7 +117,7 @@ class ControllerManager
         $actionMethodName = 'action' . $actionNameUcfirst;
         $afterMethodName = 'after' . $actionNameUcfirst;
 
-        $fullActionMethodName = strtolower($request->getMethod()) . ucfirst($actionMethodName);
+        $fullActionMethodName = strtolower($requestMethod) . ucfirst($actionMethodName);
 
         if (method_exists($controller, $fullActionMethodName)) {
             $primaryActionMethodName = $fullActionMethodName;
@@ -101,7 +126,7 @@ class ControllerManager
         }
 
         if (!method_exists($controller, $primaryActionMethodName)) {
-            throw new NotFound("Action '$actionName' (".$request->getMethod().") does not exist in controller '$controllerName'");
+            throw new NotFound("Action {$requestMethod} '{$actionName}' does not exist in controller '{$controllerName}'.");
         }
 
         // TODO Remove in 5.1.0
@@ -126,5 +151,11 @@ class ControllerManager
         }
 
         return $result;
+    }
+
+    public function process($controllerName, $actionName, $params, $data, $request, $response)
+    {
+        $controller = $this->getController($controllerName);
+        return $this->processRequest($controller, $actionName, $params, $data, $request, $response);
     }
 }

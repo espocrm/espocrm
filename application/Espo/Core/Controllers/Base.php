@@ -38,17 +38,11 @@ abstract class Base
 
     private $container;
 
-    private $requestMethod;
-
     public static $defaultAction = 'index';
 
-    public function __construct(Container $container, $requestMethod = null)
+    public function __construct(Container $container)
     {
         $this->container = $container;
-
-        if (isset($requestMethod)) {
-            $this->setRequestMethod($requestMethod);
-        }
 
         if (empty($this->name)) {
             $name = get_class($this);
@@ -69,21 +63,6 @@ abstract class Base
     protected function getContainer()
     {
         return $this->container;
-    }
-
-    /**
-     * Get request method name (Uppercase)
-     *
-     * @return string
-     */
-    protected function getRequestMethod()
-    {
-        return $this->requestMethod;
-    }
-
-    protected function setRequestMethod($requestMethod)
-    {
-        $this->requestMethod = strtoupper($requestMethod);
     }
 
     protected function getUser()
