@@ -126,12 +126,12 @@ class ControllerManager
         }
 
         if (!method_exists($controller, $primaryActionMethodName)) {
-            throw new NotFound("Action {$requestMethod} '{$actionName}' does not exist in controller '{$controllerName}'.");
+            throw new NotFound("Action {$requestMethod} '{$actionName}' does not exist in controller '".$controller->getName()."'.");
         }
 
         // TODO Remove in 5.1.0
         if ($data instanceof \stdClass) {
-            if ($this->getMetadata()->get(['app', 'deprecatedControllerActions', $controllerName, $primaryActionMethodName])) {
+            if ($this->getMetadata()->get(['app', 'deprecatedControllerActions', $controller->getName(), $primaryActionMethodName])) {
                 $data = get_object_vars($data);
             }
         }

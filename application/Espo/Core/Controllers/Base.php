@@ -55,6 +55,11 @@ abstract class Base
         $this->checkControllerAccess();
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     protected function checkControllerAccess()
     {
         return;
