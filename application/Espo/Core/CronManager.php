@@ -334,8 +334,16 @@ class CronManager
                 continue;
             }
 
-            if ($this->getCronJobUtil()->getPendingCountByScheduledJobId($scheduledJob->id) > 0) {
-                continue;
+            $pendingCount = $this->getCronJobUtil()->getPendingCountByScheduledJobId($scheduledJob->id);
+
+            if ($asSoonAsPossible) {
+                if ($pendingCount > 0) {
+                    continue;
+                }
+            } else {
+                if ($pendingCount > 1) {
+                    continue;
+                }
             }
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
