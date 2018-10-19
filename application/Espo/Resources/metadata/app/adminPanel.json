@@ -1,208 +1,208 @@
 {
-   "system": {
-      "label": "System",
-      "itemList": [
-         {
-            "url":"#Admin/settings",
-            "label":"Settings",
-            "description":"settings"
-         },
-         {
-            "url":"#Admin/userInterface",
-            "label":"User Interface",
-            "description":"userInterface"
-         },
-         {
-            "url":"#Admin/authentication",
-            "label":"Authentication",
-            "description":"authentication"
-         },
-         {
-            "url":"#ScheduledJob",
-            "label":"Scheduled Jobs",
-            "description":"scheduledJob"
-         },
-         {
-            "url":"#Admin/currency",
-            "label":"Currency",
-            "description":"currency"
-         },
-         {
-            "url":"#Admin/notifications",
-            "label":"Notifications",
-            "description":"notifications"
-         },
-         {
-            "url":"#Admin/integrations",
-            "label":"Integrations",
-            "description":"integrations"
-         },
-         {
-            "url":"#Admin/upgrade",
-            "label":"Upgrade",
-            "description":"upgrade"
-         },
-         {
-            "url":"#Admin/systemRequirements",
-            "label":"System Requirements",
-            "description":"systemRequirements"
-         },
-         {
-            "url":"#Admin/clearCache",
-            "label":"Clear Cache",
-            "description":"clearCache"
-         },
-         {
-            "url":"#Admin/rebuild",
-            "label":"Rebuild",
-            "description":"rebuild"
-         }
-      ],
-      "order": 0
-   },
-   "users":{
-      "label": "Users",
-      "itemList": [
-         {
-            "url":"#User",
-            "label":"Users",
-            "description":"users"
-         },
-         {
-            "url":"#Team",
-            "label":"Teams",
-            "description":"teams"
-         },
-         {
-            "url":"#Role",
-            "label":"Roles",
-            "description":"roles"
-         },
-         {
-            "url":"#Admin/authLog",
-            "label":"Auth Log",
-            "description":"authLog"
-         },
-         {
-            "url":"#Admin/authTokens",
-            "label":"Auth Tokens",
-            "description":"authTokens"
-         },
-         {
-            "url": "#ActionHistoryRecord",
-            "label": "Action History",
-            "description": "actionHistory"
-         }
-      ],
-      "order": 5
-   },
-   "customization":{
-      "label": "Customization",
-      "itemList": [
-         {
-            "url":"#Admin/layouts",
-            "label":"Layout Manager",
-            "description":"layoutManager"
-         },
-         {
-            "url":"#Admin/entityManager",
-            "label":"Entity Manager",
-            "description":"entityManager"
-         },
-         {
-            "url":"#Admin/labelManager",
-            "label":"Label Manager",
-            "description":"labelManager"
-         },
-         {
-            "url":"#Admin/templateManager",
-            "label":"Template Manager",
-            "description":"templateManager"
-         },
-         {
-            "url":"#Admin/extensions",
-            "label":"Extensions",
-            "description":"extensions"
-         }
-      ],
-      "order": 10
-   },
-   "email":{
-      "label": "Email",
-      "itemList": [
-         {
-            "url":"#Admin/outboundEmails",
-            "label":"Outbound Emails",
-            "description":"outboundEmails"
-         },
-         {
-            "url":"#Admin/inboundEmails",
-            "label":"Inbound Emails",
-            "description":"inboundEmails"
-         },
-         {
-            "url":"#InboundEmail",
-            "label":"Group Email Accounts",
-            "description":"groupEmailAccounts"
-         },
-         {
-            "url":"#EmailAccount",
-            "label":"Personal Email Accounts",
-            "description":"personalEmailAccounts"
-         },
-         {
-            "url":"#EmailFilter",
-            "label":"Email Filters",
-            "description":"emailFilters"
-         },
-         {
-            "url":"#EmailTemplate",
-            "label":"Email Templates",
-            "description":"emailTemplates"
-         }
-      ],
-      "order": 15
-   },
-   "portal": {
-      "label": "Portal",
-      "itemList": [
-         {
-            "url":"#Portal",
-            "label":"Portals",
-            "description":"portals"
-         },
-         {
-            "url":"#PortalUser",
-            "label":"Portal Users",
-            "description":"portalUsers"
-         },
-         {
-            "url":"#PortalRole",
-            "label":"Portal Roles",
-            "description":"portalRoles"
-         }
-      ],
-      "order": 20
-   },
-   "data":{
-      "label": "Data",
-      "itemList": [
-         {
-            "url":"#Import",
-            "label":"Import",
-            "description":"import"
-         },
-         {
-            "url":"#LeadCapture",
-            "label":"Lead Capture",
-            "description":"leadCapture"
-         },
-         {
-            "url": "#Attachment",
-            "label": "Attachments",
-            "description": "attachments"
-         }
-      ],
-      "order": 25
-   }
+    "system": {
+        "label": "System",
+        "itemList": [
+            {
+                "url":"#Admin/settings",
+                "label":"Settings",
+                "description":"settings"
+            },
+            {
+                "url":"#Admin/userInterface",
+                "label":"User Interface",
+                "description":"userInterface"
+            },
+            {
+                "url":"#Admin/authentication",
+                "label":"Authentication",
+                "description":"authentication"
+            },
+            {
+                "url":"#ScheduledJob",
+                "label":"Scheduled Jobs",
+                "description":"scheduledJob"
+            },
+            {
+                "url":"#Admin/currency",
+                "label":"Currency",
+                "description":"currency"
+            },
+            {
+                "url":"#Admin/notifications",
+                "label":"Notifications",
+                "description":"notifications"
+            },
+            {
+                "url":"#Admin/integrations",
+                "label":"Integrations",
+                "description":"integrations"
+            },
+            {
+                "url":"#Admin/upgrade",
+                "label":"Upgrade",
+                "description":"upgrade"
+            },
+            {
+                "url":"#Admin/extensions",
+                "label":"Extensions",
+                "description":"extensions"
+            },
+            {
+                "url":"#Admin/systemRequirements",
+                "label":"System Requirements",
+                "description":"systemRequirements"
+            },
+            {
+                "url":"#Admin/clearCache",
+                "label":"Clear Cache",
+                "description":"clearCache"
+            },
+            {
+                "url":"#Admin/rebuild",
+                "label":"Rebuild",
+                "description":"rebuild"
+            }
+        ],
+        "order": 0
+    },
+    "users":{
+        "label": "Users",
+        "itemList": [
+            {
+                "url":"#User",
+                "label":"Users",
+                "description":"users"
+            },
+            {
+                "url":"#Team",
+                "label":"Teams",
+                "description":"teams"
+            },
+            {
+                "url":"#Role",
+                "label":"Roles",
+                "description":"roles"
+            },
+            {
+                "url":"#Admin/authLog",
+                "label":"Auth Log",
+                "description":"authLog"
+            },
+            {
+                "url":"#Admin/authTokens",
+                "label":"Auth Tokens",
+                "description":"authTokens"
+            },
+            {
+                "url": "#ActionHistoryRecord",
+                "label": "Action History",
+                "description": "actionHistory"
+            }
+        ],
+        "order": 5
+    },
+    "customization":{
+        "label": "Customization",
+        "itemList": [
+            {
+                "url":"#Admin/layouts",
+                "label":"Layout Manager",
+                "description":"layoutManager"
+            },
+            {
+                "url":"#Admin/entityManager",
+                "label":"Entity Manager",
+                "description":"entityManager"
+            },
+            {
+                "url":"#Admin/labelManager",
+                "label":"Label Manager",
+                "description":"labelManager"
+            },
+            {
+                "url":"#Admin/templateManager",
+                "label":"Template Manager",
+                "description":"templateManager"
+            }
+        ],
+        "order": 10
+    },
+    "email":{
+        "label": "Email",
+        "itemList": [
+            {
+                "url":"#Admin/outboundEmails",
+                "label":"Outbound Emails",
+                "description":"outboundEmails"
+            },
+            {
+                "url":"#Admin/inboundEmails",
+                "label":"Inbound Emails",
+                "description":"inboundEmails"
+            },
+            {
+                "url":"#InboundEmail",
+                "label":"Group Email Accounts",
+                "description":"groupEmailAccounts"
+            },
+            {
+                "url":"#EmailAccount",
+                "label":"Personal Email Accounts",
+                "description":"personalEmailAccounts"
+            },
+            {
+                "url":"#EmailFilter",
+                "label":"Email Filters",
+                "description":"emailFilters"
+            },
+            {
+                "url":"#EmailTemplate",
+                "label":"Email Templates",
+                "description":"emailTemplates"
+            }
+        ],
+        "order": 15
+    },
+    "portal": {
+        "label": "Portal",
+        "itemList": [
+            {
+                "url":"#Portal",
+                "label":"Portals",
+                "description":"portals"
+            },
+            {
+                "url":"#PortalUser",
+                "label":"Portal Users",
+                "description":"portalUsers"
+            },
+            {
+                "url":"#PortalRole",
+                "label":"Portal Roles",
+                "description":"portalRoles"
+            }
+        ],
+        "order": 20
+    },
+    "data":{
+        "label": "Data",
+        "itemList": [
+            {
+                "url":"#Import",
+                "label":"Import",
+                "description":"import"
+            },
+            {
+                "url":"#LeadCapture",
+                "label":"Lead Capture",
+                "description":"leadCapture"
+            },
+            {
+                "url": "#Attachment",
+                "label": "Attachments",
+                "description": "attachments"
+            }
+        ],
+        "order": 25
+    }
 }
