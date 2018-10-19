@@ -223,4 +223,28 @@ class DateTime
 
         return $dateTime->format($phpFormat);
     }
+
+    public static function isAfterThreshold($value, $period)
+    {
+        if (is_string($value)) {
+            try {
+                $dt = new \DateTime($value);
+            } catch (\Exception $e) {
+                return;
+            }
+        } else if ($value instanceof \DateTime) {
+            $dt = clone $value;
+        } else {
+            return;
+        }
+        $dt->modify($period);
+
+        $dtNow = new \DateTime();
+
+        if ($dtNow->format('U') > $dt->format('U')) {
+            return true;
+        }
+
+        return false;
+    }
 }

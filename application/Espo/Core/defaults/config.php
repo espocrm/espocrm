@@ -168,6 +168,7 @@ return array (
     'currencyDecimalPlaces' => 2,
     'aclStrictMode' => false,
     'aclAllowDeleteCreated' => false,
+    'aclAllowDeleteCreatedThresholdPeriod' => '24 hours',
     'inlineAttachmentUploadMaxSize' => 20,
     'textFilterUseContainsForVarchar' => false,
     'tabColorsDisabled' => false,

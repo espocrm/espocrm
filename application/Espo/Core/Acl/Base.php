@@ -48,6 +48,8 @@ class Base implements Injectable
 
     protected $ownerUserIdAttribute = null;
 
+    protected $allowDeleteCreatedThresholdPeriod = '24 hours';
+
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
@@ -267,15 +269,26 @@ class Base implements Injectable
                     &&
                     $entity->has('createdById') && $entity->get('createdById') == $user->id
                 ) {
+                    $isDeletedAllowed = false;
                     if (!$entity->has('assignedUserId')) {
-                        return true;
+                        $isDeletedAllowed = true;
                     } else {
                         if (!$entity->get('assignedUserId')) {
-                            return true;
+                            $isDeletedAllowed = true;
+                        } else if ($entity->get('assignedUserId') == $entity->get('createdById')) {
+                            $isDeletedAllowed = true;
                         }
-                        if ($entity->get('assignedUserId') == $entity->get('createdById')) {
-                            return true;
+                    }
+
+                    if ($isDeletedAllowed) {
+                        $createdAt = $entity->get('createdAt');
+                        if ($createdAt) {
+                            $deleteThresholdPeriod = $this->getConfig()->get('aclAllowDeleteCreatedThresholdPeriod', $this->allowDeleteCreatedThresholdPeriod);
+                            if (\Espo\Core\Utils\DateTime::isAfterThreshold($createdAt, $deleteThresholdPeriod)) {
+                                return false;
+                            }
                         }
+                        return true;
                     }
                 }
             }
