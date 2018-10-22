@@ -153,7 +153,7 @@ class Base
                 } else {
                     $orderPart = 'DESC';
                 }
-                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . '_eet', $orderPart]];
+                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
                 return;
             } else if ($type === 'enum') {
                 $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
