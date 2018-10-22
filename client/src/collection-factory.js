@@ -47,7 +47,7 @@
                 var asc = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.asc');
                 var sortBy = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.sortBy');
 
-                var className = this.modelFactory.metadata.get('clientDefs.' + name + '.collection') || 'Collection';
+                var className = this.modelFactory.metadata.get('clientDefs.' + name + '.collection') || 'collection';
 
                 Espo.loader.require(className, function (collectionClass) {
                     var collection = new collectionClass(null, {
