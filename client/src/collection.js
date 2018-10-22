@@ -38,8 +38,6 @@ Espo.define('collection', [], function () {
 
         maxSize: 20,
 
-        asc: null, // TODO remove in 5.7
-
         order: null,
 
         orderBy: null,
@@ -61,11 +59,8 @@ Espo.define('collection', [], function () {
             this.orderBy = this.sortBy = options.orderBy || options.sortBy || this.orderBy || this.sortBy;
             this.order = options.order || this.order;
 
-            this.asc = ('asc' in options) ? options.asc : this.asc; // TODO remove in 5.7
-
             this.defaultOrder = this.order;
             this.defaultOrderBy = this.orderBy;
-
 
             this.data = {};
 
@@ -141,17 +136,9 @@ Espo.define('collection', [], function () {
             var options = options || {};
             options.data = _.extend(options.data || {}, this.data);
 
-            if (this.asc === true || this.asc === false) { // TODO remove in 5.7
-                this.order = this.asc ? 'asc' : 'desc';
-            }
-
             this.offset = options.offset || this.offset;
             this.orderBy = options.orderBy || options.sortBy || this.orderBy;
             this.order = options.order || this.order;
-
-            if (options.asc) { // TODO remove in 5.7
-                this.order = 'asc';
-            }
 
             this.where = options.where || this.where;
 
