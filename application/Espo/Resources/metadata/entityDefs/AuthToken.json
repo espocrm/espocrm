@@ -63,8 +63,8 @@
         }
     },
     "collection": {
-        "sortBy": "lastAccess",
-        "asc": false,
+        "orderBy": "lastAccess",
+        "order": "desc",
         "textFilterFields": ["ipAddress", "userName"]
     },
     "indexes": {

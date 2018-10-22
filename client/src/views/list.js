@@ -96,8 +96,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.setupSearchManager();
             }
 
-            this.defaultSortBy = this.collection.sortBy;
-            this.defaultAsc = this.collection.asc;
+            this.defaultOrderBy = this.collection.orderBy;
+            this.defaultOrder = this.collection.order;
 
             this.setupSorting();
 
@@ -233,13 +233,13 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             this.collection.url = this.scope + '/action/listKanban';
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall');
 
-            this.collection.sortBy = this.collection.defaultSortBy;
-            this.collection.asc = this.collection.defaultAsc;
+            this.collection.orderBy = this.collection.defaultOrderBy;
+            this.collection.order = this.collection.defaultOrder;
         },
 
         resetSorting: function () {
-            this.collection.sortBy = this.defaultSortBy;
-            this.collection.asc = this.defaultAsc;
+            this.collection.orderBy = this.defaultOrderBy;
+            this.collection.order = this.defaultOrder;
             this.getStorage().clear('listSorting', this.collection.name);
         },
 
@@ -265,12 +265,13 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         applyStoredSorting: function () {
-            var sortingParams = this.getStorage().get('listSorting', this.collection.name) || {};
-            if ('sortBy' in sortingParams) {
-                this.collection.sortBy = sortingParams.sortBy;
+            var sortingParams = this.getStorage().get('listSorting', this.collection.entityType) || {};
+
+           if ('orderBy' in sortingParams) {
+                this.collection.orderBy = sortingParams.orderBy;
             }
-            if ('asc' in sortingParams) {
-                this.collection.asc = sortingParams.asc;
+            if ('order' in sortingParams) {
+                this.collection.order = sortingParams.order;
             }
         },
 

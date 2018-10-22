@@ -61,8 +61,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('stream', this.getMetadata().get('scopes.' + scope + '.stream') || false);
                 this.model.set('disabled', this.getMetadata().get('scopes.' + scope + '.disabled') || false);
 
-                this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
-                this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
+                this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.orderBy'));
+                this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.order'));
 
                 this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']);
                 this.model.set('fullTextSearch', this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false);

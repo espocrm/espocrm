@@ -72,8 +72,8 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
-        "asc": false,
+        "orderBy": "createdAt",
+        "order": "desc",
         "textFilterFields": ["name", "methodName", "serviceName", "scheduledJobName"]
     },
     "indexes": {

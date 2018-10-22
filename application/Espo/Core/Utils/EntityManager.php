@@ -413,12 +413,15 @@ class EntityManager
         }
 
         if (isset($data['sortBy'])) {
-            $entityDefsData = array(
-                'collection' => array(
-                    'sortBy' => $data['sortBy'],
-                    'asc' => !empty($data['asc'])
-                )
-            );
+            $entityDefsData = [
+                'collection' => [
+                    'orderBy' => $data['sortBy']
+                ]
+            ];
+            if (isset($data['sortDirection'])) {
+                $entityDefsData['collection']['order'] = $data['sortDirection'];
+            }
+
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
         }
 
@@ -1060,6 +1063,8 @@ class EntityManager
         $this->getMetadata()->delete('entityDefs', $scope, [
             'collection.sortBy',
             'collection.asc',
+            'collection.orderBy',
+            'collection.order',
             'collection.textFilterFields'
         ]);
         $this->getMetadata()->save();

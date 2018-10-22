@@ -34,7 +34,7 @@
         }
     },
     "collection": {
-        "sortBy": "remindAt",
-        "asc": false
+        "orderBy": "remindAt",
+        "order": "desc"
     }
 }

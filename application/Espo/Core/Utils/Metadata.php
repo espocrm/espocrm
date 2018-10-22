@@ -309,6 +309,24 @@ class Metadata
         $fieldDefinitionList = Util::objectToArray($data->fields);
 
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
+
+            if (isset($data->entityDefs->$entityType->collection)) {
+
+                $collectionItem = $data->entityDefs->$entityType->collection;
+
+                if (isset($collectionItem->orderBy)) {
+                    $collectionItem->sortBy = $collectionItem->orderBy;
+                } else if (isset($collectionItem->sortBy)) {
+                    $collectionItem->orderBy = $collectionItem->sortBy;
+                }
+
+                if (isset($collectionItem->order)) {
+                     $collectionItem->asc = $collectionItem->order === 'asc' ? true : false;
+                } else if (isset($collectionItem->asc)) {
+                    $collectionItem->order = $collectionItem->asc === true ? 'asc' : 'desc';
+                }
+            }
+
             if (!isset($entityDefsItem->fields)) continue;
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
                 $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList);

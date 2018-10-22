@@ -136,8 +136,11 @@ class Base
 
     protected function order($sortBy, $desc = false, &$result)
     {
-        if (!empty($sortBy)) {
+        if (is_string($desc)) {
+            $desc = $desc === strtolower('desc');
+        }
 
+        if (!empty($sortBy)) {
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
             if (in_array($type, ['link', 'file', 'image'])) {
@@ -423,7 +426,7 @@ class Base
     protected function prepareResult(&$result)
     {
         if (empty($result)) {
-            $result = array();
+            $result = [];
         }
         if (empty($result['joins'])) {
             $result['joins'] = [];
@@ -699,14 +702,26 @@ class Base
 
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        $result = array();
+        $result = [];
         $this->prepareResult($result);
 
-        if (!empty($params['sortBy'])) {
-            if (!array_key_exists('asc', $params)) {
-                $params['asc'] = true;
+        if (!empty($params['orderBy'])) {
+            $isDesc = false;
+            if (isset($params['order'])) {
+                $isDesc = $params['order'] === 'desc';
             }
-            $this->order($params['sortBy'], !$params['asc'], $result);
+            $this->order($params['orderBy'], $isDesc, $result);
+        } else if (!empty($params['sortBy'])) {
+            if (isset($params['order'])) {
+                $isDesc = $params['order'] === 'desc';
+            } else if (isset($params['asc'])) {
+                $isDesc = $params['asc'] !== true;
+            }
+            $this->order($params['sortBy'], $isDesc, $result);
+        } else if (!empty($params['order'])) {
+            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'orderBy']);
+            $isDesc = $params['order'] === 'desc';
+            $this->order($orderBy, $isDesc, $result);
         }
 
         if (!isset($params['offset'])) {

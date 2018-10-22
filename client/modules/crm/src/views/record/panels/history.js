@@ -32,9 +32,9 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
 
         name: 'history',
 
-        sortBy: 'dateStart',
+        orderBy: 'dateStart',
 
-        asc: false,
+        orderDirection: 'desc',
 
         rowActionsView: 'crm:views/record/row-actions/history',
 

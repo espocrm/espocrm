@@ -22,8 +22,8 @@
             }
         },
         "defaults": {
-            "sortBy": "dateEnd",
-            "asc": true,
+            "orderBy": "dateEnd",
+            "order": "asc",
             "displayRecords": 5,
             "expandedLayout": {
                 "rows": [

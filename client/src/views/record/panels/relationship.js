@@ -170,11 +170,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
 
                 collection.url = collection.urlRoot = url;
-                if (this.defaultSortBy) {
-                    collection.sortBy = this.defaultSortBy;
+                if (this.defaultOrderBy) {
+                    collection.orderBy = this.defaultOrderBy;
                 }
-                if (this.defaultAsc) {
-                    collection.asc = this.defaultAsc;
+                if (this.defaultOrder) {
+                    collection.order = this.defaultOrder;
                 }
                 this.collection = collection;
 
@@ -248,21 +248,19 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         setupSorting: function () {
-            var sortBy = this.defs.sortBy || this.sortBy;
-            var asc = this.defs.asc || this.asc;
+            var orderBy = this.defs.orderBy || this.defs.sortBy || this.orderBy;
+            var order = this.defs.orderDirection || this.orderDirection || this.order;
 
-            if (this.defs.orderBy) {
-                sortBy = this.defs.orderBy;
-                asc = true;
-                if (this.defs.orderDirection) {
-                    if (this.defs.orderDirection && (this.defs.orderDirection === true || this.defs.orderDirection.toLowerCase() === 'DESC')) {
-                        asc = false;
-                    }
-                }
+            if ('asc' in this.defs) { // TODO remove in 5.8
+                order = this.defs.asc ? 'asc' : 'desc';
             }
 
-            this.defaultSortBy = sortBy;
-            this.defaultAsc = asc;
+            if (orderBy && !order) {
+                order = 'asc';
+            }
+
+            this.defaultOrderBy = orderBy;
+            this.defaultOrder = order;
         },
 
         setupListLayout: function () {},
@@ -374,8 +372,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 filterList: this.filterList,
                 filter: filter,
                 layoutName: this.layoutName,
-                defaultAsc: this.defaultAsc,
-                defaultSortBy: this.defaultSortBy,
+                defaultOrder: this.defaultOrder,
+                defaultOrderBy: this.defaultOrderBy,
                 url: data.url || this.url,
                 listViewName: this.listViewName,
                 createDisabled: !this.isCreateAvailable(scope),

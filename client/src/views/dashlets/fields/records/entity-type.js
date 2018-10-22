@@ -46,12 +46,12 @@ Espo.define('views/dashlets/fields/records/entity-type', 'views/fields/enum', fu
                 var entityType = this.model.get('entityType');
                 if (entityType) {
                     o.title = this.translate(entityType, 'scopeNamesPlural');
-                    o.sortBy = this.getMetadata().get(['entityDefs', entityType, 'collection', 'sortBy']);
-                    var asc = this.getMetadata().get(['entityDefs', entityType, 'collection', 'asc']);
-                    if (asc) {
-                        o.sortDirection = 'asc';
+                    o.sortBy = this.getMetadata().get(['entityDefs', entityType, 'collection', 'orderBy']);
+                    var order = this.getMetadata().get(['entityDefs', entityType, 'collection', 'order']);
+                    if (order) {
+                        o.sortDirection = order;
                     } else {
-                        o.sortDirection = 'desc';
+                        o.sortDirection = 'asc';
                     }
                     o.expandedLayout = {
                         rows: [[{name: "name", link: true, scope: entityType}]]

@@ -68,8 +68,8 @@
         }
     },
     "collection": {
-        "sortBy": "parent",
-        "asc": true
+        "orderBy": "parent",
+        "order": "asc"
     },
     "additionalTables": {
         "DocumentFolderPath": {

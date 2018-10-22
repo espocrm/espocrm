@@ -322,8 +322,8 @@
         }
     },
     "collection": {
-        "sortBy": "userName",
-        "asc": true,
+        "orderBy": "userName",
+        "order": "asc",
         "textFilterFields": ["name", "userName"]
     }
 }

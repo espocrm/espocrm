@@ -726,8 +726,12 @@ class Activities extends \Espo\Core\Services\Base
         $offset = $selectParams['offset'];
         $limit = $selectParams['limit'];
 
-        $order = $selectParams['order'];
-        $orderBy = $selectParams['orderBy'];
+        $orderBy = null;
+        $order = null;
+        if (!empty($selectParams['orderBy'])) {
+            $order = $selectParams['order'];
+            $orderBy = $selectParams['orderBy'];
+        }
 
         unset($selectParams['offset']);
         unset($selectParams['limit']);
@@ -737,6 +741,7 @@ class Activities extends \Espo\Core\Services\Base
         if ($entityType === 'Email') {
             if ($orderBy === 'dateStart') {
                 $orderBy = 'dateSent';
+                $order = 'desc';
             }
         }
 
@@ -748,7 +753,9 @@ class Activities extends \Espo\Core\Services\Base
 
         $sqlBase = $sql;
 
-        $sql = $query->order($sql, $seed, $orderBy, $order, true);
+        if ($orderBy) {
+            $sql = $query->order($sql, $seed, $orderBy, $order, true);
+        }
 
         $sql = $query->limit($sql, $offset, $limit);
 

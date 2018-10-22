@@ -1664,10 +1664,11 @@ class Record extends \Espo\Core\Services\Base
                 throw new BadRequest();
             }
 
-            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy']);
-            $desc = !$this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'asc']);
+            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'orderBy']);
+            $order = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'order']);
+
             if ($orderBy) {
-                $selectManager->applyOrder($orderBy, $desc, $selectParams);
+                $selectManager->applyOrder($orderBy, $order, $selectParams);
             }
 
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
@@ -2228,8 +2229,8 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            if (!empty($params['sortBy'])) {
-                $sortByField = $params['sortBy'];
+            if (!empty($params['orderBy'])) {
+                $sortByField = $params['orderBy'];
                 $sortByFieldType = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortByField, 'type']);
 
                 if ($sortByFieldType === 'currency') {

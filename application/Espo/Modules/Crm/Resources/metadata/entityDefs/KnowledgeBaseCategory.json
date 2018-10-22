@@ -74,9 +74,9 @@
         }
     },
     "collection": {
-        "sortBy": "parent",
-        "sortByByColumn": "parentId",
-        "asc": true
+        "orderBy": "parent",
+        "orderByColumn": "parentId",
+        "order": "asc"
     },
     "additionalTables": {
         "KnowledgeBaseCategoryPath": {

@@ -125,33 +125,16 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $where = $request->get('where');
-        $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc', 'true') === 'true';
-        $sortBy = $request->get('sortBy');
-        $q = $request->get('q');
-        $textFilter = $request->get('textFilter');
+        $params = [];
+        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
+        if (empty($params['maxSize'])) {
+            $params['maxSize'] = $maxSizeLimit;
         }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
+        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
-
-        $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
-            'textFilter' => $textFilter
-        );
-
-        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findEntities($params);
 
@@ -167,33 +150,16 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $where = $request->get('where');
-        $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc', 'true') === 'true';
-        $sortBy = $request->get('sortBy');
-        $q = $request->get('q');
-        $textFilter = $request->get('textFilter');
+        $params = [];
+        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
+        if (empty($params['maxSize'])) {
+            $params['maxSize'] = $maxSizeLimit;
         }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
+        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
-
-        $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
-            'textFilter' => $textFilter
-        );
-
-        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->getListKanban($params);
 
@@ -214,33 +180,16 @@ class Record extends Base
         $id = $params['id'];
         $link = $params['link'];
 
-        $where = $request->get('where');
-        $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc', 'true') === 'true';
-        $sortBy = $request->get('sortBy');
-        $q = $request->get('q');
-        $textFilter = $request->get('textFilter');
+        $params = [];
+        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
+        if (empty($params['maxSize'])) {
+            $params['maxSize'] = $maxSizeLimit;
         }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
+        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
-
-        $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
-            'textFilter' => $textFilter
-        );
-
-        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
 

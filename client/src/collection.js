@@ -38,9 +38,11 @@ Espo.define('collection', [], function () {
 
         maxSize: 20,
 
-        sortBy: 'id',
+        asc: null, // TODO remove in 5.7
 
-        asc: false,
+        order: null,
+
+        orderBy: null,
 
         where: null,
 
@@ -56,10 +58,15 @@ Espo.define('collection', [], function () {
             this.urlRoot = this.urlRoot || this.name;
             this.url = this.url || this.urlRoot;
 
-            this.sortBy = options.sortBy || this.sortBy;
-            this.defaultSortBy = this.sortBy;
-            this.asc = ('asc' in options) ? options.asc : this.asc;
-            this.defaultAsc = this.asc;
+            this.orderBy = this.sortBy = options.orderBy || options.sortBy || this.orderBy || this.sortBy;
+            this.order = options.order || this.order;
+
+            this.asc = ('asc' in options) ? options.asc : this.asc; // TODO remove in 5.7
+
+            this.defaultOrder = this.order;
+            this.defaultOrderBy = this.orderBy;
+
+
             this.data = {};
 
             Backbone.Collection.prototype.initialize.call(this);
@@ -75,9 +82,16 @@ Espo.define('collection', [], function () {
             Backbone.Collection.prototype.reset.call(this, models, options);
         },
 
-        sort: function (field, asc) {
-            this.sortBy = field;
-            this.asc = asc;
+        sort: function (orderBy, order) {
+            this.orderBy = orderBy;
+
+            if (order === true) {
+                order = 'desc';
+            } else if (order === false) {
+                order = 'asc';
+            }
+            this.order = order || 'asc';
+
             this.fetch();
         },
 
@@ -127,9 +141,18 @@ Espo.define('collection', [], function () {
             var options = options || {};
             options.data = _.extend(options.data || {}, this.data);
 
+            if (this.asc === true || this.asc === false) { // TODO remove in 5.7
+                this.order = this.asc ? 'asc' : 'desc';
+            }
+
             this.offset = options.offset || this.offset;
-            this.sortBy = options.sortBy || this.sortBy;
-            this.asc = options.asc || this.asc;
+            this.orderBy = options.orderBy || options.sortBy || this.orderBy;
+            this.order = options.order || this.order;
+
+            if (options.asc) { // TODO remove in 5.7
+                this.order = 'asc';
+            }
+
             this.where = options.where || this.where;
 
             if (!('maxSize' in options)) {
@@ -139,8 +162,8 @@ Espo.define('collection', [], function () {
             }
 
             options.data.offset = options.more ? this.length + this.lengthCorrection : this.offset;
-            options.data.sortBy = this.sortBy;
-            options.data.asc = this.asc;
+            options.data.orderBy = this.orderBy;
+            options.data.order = this.order;
             options.data.where = this.getWhere();
 
             this.lastXhr = Backbone.Collection.prototype.fetch.call(this, options);

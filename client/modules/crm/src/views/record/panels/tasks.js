@@ -38,9 +38,9 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
         defaultTab: 'actual',
 
-        sortBy: 'createdAt',
+        orderBy: 'createdAt',
 
-        asc: false,
+        orderDirection: 'desc',
 
         rowActionsView: 'crm:views/record/row-actions/tasks',
 
@@ -110,8 +110,8 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
                 this.collection = collection;
                 collection.seeds = this.seeds;
                 collection.url = this.url;
-                collection.sortBy = this.defaultSortBy;
-                collection.asc = this.defaultAsc;
+                collection.orderBy = this.defaultOrderBy;
+                collection.order = this.defaultOrder;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
                 this.setFilter(this.filter);

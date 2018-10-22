@@ -78,8 +78,8 @@
         }
     },
     "collection": {
-        "sortBy": "actionDate",
-        "asc": false
+        "orderBy": "createdAt",
+        "order": "desc"
     },
     "indexes": {
         "actionDate": {

@@ -72,8 +72,8 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
 
             this.scope = this.options.scope || this.scope;
 
-            this.defaultSortBy = this.options.defaultSortBy;
-            this.defaultAsc = this.options.defaultAsc;
+            this.defaultOrderBy = this.options.defaultOrderBy;
+            this.defaultOrder = this.options.defaultOrder;
 
             this.panelName = this.options.panelName;
             this.link = this.options.link;
@@ -147,8 +147,8 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
 
                 this.collection = collection;
 
-                collection.sortBy = this.defaultSortBy;
-                collection.asc = this.defaultAsc;
+                collection.orderBy = this.defaultOrderBy;
+                collection.order = this.defaultOrder;
 
                 this.listenTo(collection, 'change', function (model) {
                     var panelModel = this.panelCollection.get(model.id);
@@ -210,8 +210,8 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                     filterList: filterList
                 }, function (view) {
                     this.listenTo(view, 'reset', function () {
-                        this.collection.sortBy = this.defaultSortBy;
-                        this.collection.asc = this.defaultAsc;
+                        this.collection.orderBy = this.defaultOrderBy;
+                        this.collection.order = this.defaultOrder;
                     }, this);
                 });
             }

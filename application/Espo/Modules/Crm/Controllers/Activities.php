@@ -172,8 +172,8 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
-        $asc = $request->get('asc') === 'true';
-        $sortBy = $request->get('sortBy');
+        $order = $request->get('order');
+        $orderBy = $request->get('orderBy');
         $where = $request->get('where');
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
@@ -193,13 +193,13 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $methodName = 'get' . ucfirst($name);
 
-        return $service->$methodName($entityType, $id, array(
+        return $service->$methodName($entityType, $id, [
             'scope' => $scope,
             'offset' => $offset,
             'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-        ));
+            'order' => $order,
+            'orderBy' => $orderBy,
+        ]);
     }
 
     public function getActionEntityTypeList($params, $data, $request)
@@ -222,32 +222,17 @@ class Activities extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        $where = $request->get('where');
-        $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc', 'true') === 'true';
-        $sortBy = $request->get('sortBy');
-        $q = $request->get('q');
-        $textFilter = $request->get('textFilter');
-
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', 200);
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
-        }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
-        }
-
-        $params = [
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'textFilter' => $textFilter
-        ];
+        $params = [];
 
         \Espo\Core\Utils\ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
+
+        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', 200);
+        if (empty($params['maxSize'])) {
+            $params['maxSize'] = $maxSizeLimit;
+        }
+        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
+            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+        }
 
         $service = $this->getService('Activities');
 

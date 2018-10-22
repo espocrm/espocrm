@@ -33,7 +33,7 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'view
         getActionList: function () {
             var actionList = Dep.prototype.getActionList.call(this);
 
-            if (this.options.acl.edit && this.model.collection && this.model.collection.sortBy == 'order' && this.model.collection.asc) {
+            if (this.options.acl.edit && this.model.collection && this.model.collection.orderBy == 'order' && this.model.collection.order === 'asc') {
                 actionList.push({
                     action: 'moveToTop',
                     label: 'Move to Top',

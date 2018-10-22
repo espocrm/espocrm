@@ -143,8 +143,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
                 this.collection = collection;
 
-                this.defaultSortBy = collection.sortBy;
-                this.defaultAsc = collection.asc;
+                this.defaultOrderBy = collection.orderBy;
+                this.defaultOrder = collection.defaultOrder;
 
                 this.loadSearch();
                 this.wait(true);
@@ -183,8 +183,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     disableSavePreset: true,
                 }, function (view) {
                     this.listenTo(view, 'reset', function () {
-                        this.collection.sortBy = this.defaultSortBy;
-                        this.collection.asc = this.defaultAsc;
+                        this.collection.orderBy = this.defaultOrderBy;
+                        this.collection.order = this.defaultOrder;
                     }, this);
                 });
             }

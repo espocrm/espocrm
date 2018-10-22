@@ -32,11 +32,11 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         name: 'activities',
 
-        sortBy: 'dateStart',
+        orderBy: 'dateStart',
 
         serviceName: 'Activities',
 
-        asc: false,
+        order: 'desc',
 
         rowActionsView: 'crm:views/record/row-actions/activities',
 
@@ -141,8 +141,8 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             this.collection = new MultiCollection();
             this.collection.seeds = this.seeds;
             this.collection.url = this.url;
-            this.collection.sortBy = this.sortBy;
-            this.collection.asc = this.asc;
+            this.collection.orderBy = this.orderBy;
+            this.collection.order = this.order;
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
             this.setFilter(this.filter);

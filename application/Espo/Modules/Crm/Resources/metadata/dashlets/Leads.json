@@ -22,8 +22,8 @@
             }
         },
         "defaults": {
-            "sortBy": "createdAt",
-            "asc": false,
+            "orderBy": "createdAt",
+            "order": "desc",
             "displayRecords": 5,
             "populateAssignedUser": true,
             "expandedLayout": {

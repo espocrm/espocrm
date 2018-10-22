@@ -440,8 +440,8 @@
         }
     },
     "collection": {
-        "sortBy": "dateSent",
-        "asc": false,
+        "orderBy": "dateSent",
+        "order": "desc",
         "textFilterFields": ["name", "bodyPlain", "body"],
         "fullTextSearch": true
     },

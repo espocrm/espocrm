@@ -111,7 +111,7 @@
         }
     },
     "collection": {
-        "sortBy": "order",
-        "asc": true
+        "orderBy": "order",
+        "order": "asc"
     }
 }
