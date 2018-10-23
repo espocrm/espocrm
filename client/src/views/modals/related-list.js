@@ -134,6 +134,11 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 this.header += ' &raquo ';
             }
             this.header += this.options.title || this.getLanguage().translate(this.link, 'links', this.model.name);
+
+            if (this.options.listViewUrl) {
+                this.header += '<a href="'+this.options.listViewUrl+'">'+this.options.listViewUrl+'</a>';
+            }
+
             this.header = iconHtml + this.header;
 
             this.waitForView('list');
