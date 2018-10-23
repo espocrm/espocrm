@@ -87,6 +87,11 @@ Espo.define('collection', [], function () {
             }
             this.order = order || 'asc';
 
+            if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
+                this.asc = this.order === 'asc';
+                this.sortBy = orderBy;
+            }
+
             this.fetch();
         },
 
@@ -152,6 +157,14 @@ Espo.define('collection', [], function () {
             options.data.orderBy = this.orderBy;
             options.data.order = this.order;
             options.data.where = this.getWhere();
+
+            if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
+                options.data.asc = this.asc;
+                options.data.sortBy = this.sortBy;
+
+                delete options.data.orderBy;
+                delete options.data.order;
+            }
 
             this.lastXhr = Backbone.Collection.prototype.fetch.call(this, options);
 
