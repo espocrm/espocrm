@@ -71,6 +71,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
 
             this.hideField('passwordPreview');
             this.listenTo(this.model, 'change:passwordPreview', function (model, value) {
+                value = value || '';
                 if (value.length) {
                     this.showField('passwordPreview');
                 } else {
