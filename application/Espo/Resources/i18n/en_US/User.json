@@ -3,6 +3,7 @@
         "name": "Name",
         "userName": "User Name",
         "title": "Title",
+        "type": "Type",
         "isAdmin": "Is Admin",
         "defaultTeam": "Default Team",
         "emailAddress": "Email",
@@ -87,6 +88,14 @@
             "Male": "Male",
             "Female": "Female",
             "Neutral": "Neutral"
+        },
+        "type": {
+            "regular": "Regular",
+            "admin": "Admin",
+            "portal": "Portal",
+            "system": "System",
+            "super-admin": "Super-Admin",
+            "api": "API"
         }
     },
     "boolFilters": {

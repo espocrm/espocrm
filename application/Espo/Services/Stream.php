@@ -545,7 +545,7 @@ class Stream extends \Espo\Core\Services\Base
             'order' => 'DESC'
         ];
 
-        if (!$user->get('isPortalUser') || $user->get('isAdmin')) {
+        if (!$user->isPortal() || $user->isAdmin()) {
             $selectParamsList[] = [
                 'select' => $select,
                 'leftJoins' => ['createdBy'],
@@ -559,7 +559,7 @@ class Stream extends \Espo\Core\Services\Base
             ];
         }
 
-        if ($user->get('isPortalUser')) {
+        if ($user->isPortal()) {
             $portalIdList = $user->getLinkMultipleIdList('portals');
             $portalIdQuotedList = [];
             foreach ($portalIdList as $portalId) {
@@ -856,7 +856,7 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        if ($this->getUser()->get('isPortalUser')) {
+        if ($this->getUser()->isPortal()) {
             $where[] = [
                 'isInternal' => false
             ];
@@ -1470,7 +1470,7 @@ class Stream extends \Espo\Core\Services\Base
                 continue;
             }
 
-            if (!$user->get('isPortalUser')) {
+            if (!$user->isPortal()) {
                 if (!$this->getAclManager()->check($user, $entity, 'stream')) {
                     $this->unfollowEntity($entity, $user->id);
                     continue;

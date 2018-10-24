@@ -190,13 +190,13 @@ class Auth
             return;
         }
 
-        if (!$user->isAdmin() && !$this->isPortal() && $user->get('isPortalUser')) {
+        if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'.");
             $this->logDenied($authLogRecord, 'IS_PORTAL_USER');
             return;
         }
 
-        if (!$user->isAdmin() && $this->isPortal() && !$user->get('isPortalUser')) {
+        if (!$user->isAdmin() && $this->isPortal() && !$user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user.");
             $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
             return;

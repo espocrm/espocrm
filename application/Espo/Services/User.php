@@ -60,14 +60,16 @@ class User extends Record
         'portalsIds',
         'portalRolesIds',
         'contactId',
-        'accountsIds'
+        'accountsIds',
+        'type'
     ];
 
     protected $mandatorySelectAttributeList = [
         'isPortalUser',
         'isActive',
         'userName',
-        'isAdmin'
+        'isAdmin',
+        'type'
     ];
 
     protected $linkSelectParams = array(
@@ -115,25 +117,13 @@ class User extends Record
         }
 
         $entity = parent::getEntity($id);
-        if ($entity && $entity->get('isSuperAdmin') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($entity && $entity->isSuperAdmin() && !$this->getUser()->isSuperAdmin()) {
+            throw new Forbidden();
+        }
+        if ($entity && $entity->isSystem()) {
             throw new Forbidden();
         }
         return $entity;
-    }
-
-    public function findEntities($params)
-    {
-        if (empty($params['where'])) {
-            $params['where'] = array();
-        }
-        $params['where'][] = array(
-            'type' => 'notEquals',
-            'field' => 'id',
-            'value' => 'system'
-        );
-
-        $result = parent::findEntities($params);
-        return $result;
     }
 
     public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword = null)
@@ -143,7 +133,7 @@ class User extends Record
             throw new NotFound();
         }
 
-        if ($user->get('isSuperAdmin') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($user->isSuperAdmin() && !$this->getUser()->isSuperAdmin()) {
             throw new Forbidden();
         }
 
@@ -255,7 +245,7 @@ class User extends Record
     {
         parent::filterInput($data);
 
-        if (!$this->getUser()->get('isSuperAdmin')) {
+        if (!$this->getUser()->isSuperAdmin()) {
             unset($data->isSuperAdmin);
         }
 
@@ -304,6 +294,7 @@ class User extends Record
         if ($id == $this->getUser()->id) {
             unset($data->isActive);
             unset($data->isPortalUser);
+            unset($data->type);
         }
 
         $user = parent::updateEntity($id, $data);
@@ -321,33 +312,30 @@ class User extends Record
 
     protected function getInternalUserCount()
     {
-        return $this->getEntityManager()->getRepository('User')->where(array(
+        return $this->getEntityManager()->getRepository('User')->where([
             'isActive' => true,
-            'isSuperAdmin' => false,
-            'isPortalUser' => false,
-            'id!=' => 'system'
-        ))->count();
+            'type' => ['admin', 'regular'],
+            'type!=' => 'system'
+        ])->count();
     }
 
     protected function getPortalUserCount()
     {
-        return $this->getEntityManager()->getRepository('User')->where(array(
+        return $this->getEntityManager()->getRepository('User')->where([
             'isActive' => true,
-            'isSuperAdmin' => false,
-            'isPortalUser' => true,
-            'id!=' => 'system'
-        ))->count();
+            'type' => 'portal'
+        ])->count();
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin') && !$entity->get('isPortalUser')) {
+        if ($this->getConfig()->get('userLimit') && !$this->getUser()->isSuperAdmin() && !$entity->isPortal()) {
             $userCount = $this->getInternalUserCount();
             if ($userCount >= $this->getConfig()->get('userLimit')) {
                 throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
             }
         }
-        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin') && $entity->get('isPortalUser')) {
+        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->isSuperAdmin() && $entity->isPortal()) {
             $portalUserCount = $this->getPortalUserCount();
             if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
                 throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
@@ -357,11 +345,11 @@ class User extends Record
 
     protected function beforeUpdateEntity(Entity $user, $data)
     {
-        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($this->getConfig()->get('userLimit') && !$this->getUser()->isSuperAdmin()) {
             if (
-                ($user->get('isActive') && $user->isAttributeChanged('isActive') && !$user->get('isPortalUser'))
+                ($user->get('isActive') && $user->isAttributeChanged('isActive') && !$user->isPortal())
                 ||
-                (!$user->get('isPortalUser') && $user->isAttributeChanged('isPortalUser'))
+                (!$user->isPortal() && $user->isAttributeChanged('type'))
             ) {
                 $userCount = $this->getInternalUserCount();
                 if ($userCount >= $this->getConfig()->get('userLimit')) {
@@ -369,11 +357,11 @@ class User extends Record
                 }
             }
         }
-        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->isSuperAdmin()) {
             if (
-                ($user->get('isActive') && $user->isAttributeChanged('isActive') && $user->get('isPortalUser'))
+                ($user->get('isActive') && $user->isAttributeChanged('isActive') && $user->isPortal())
                 ||
-                ($user->get('isPortalUser') && $user->isAttributeChanged('isPortalUser'))
+                ($user->isPortal() && $user->isAttributeChanged('type'))
             ) {
                 $portalUserCount = $this->getPortalUserCount();
                 if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
@@ -403,7 +391,7 @@ class User extends Record
 
         $data = [];
 
-        if ($user->get('isPortalUser')) {
+        if ($user->isPortal()) {
             $subjectTpl = $templateFileManager->getTemplate('accessInfoPortal', 'subject', 'User');
             $bodyTpl = $templateFileManager->getTemplate('accessInfoPortal', 'body', 'User');
 
@@ -547,24 +535,21 @@ class User extends Record
             if (property_exists($data, 'isActive')) {
                 return false;
             }
-            if (property_exists($data, 'isPortalUser')) {
-                return false;
-            }
-            if (property_exists($data, 'isSuperAdmin')) {
+            if (property_exists($data, 'type')) {
                 return false;
             }
         }
         return true;
     }
 
-    public function afterUpdate(Entity $entity, array $data = array())
+    public function afterUpdate(Entity $entity, array $data = [])
     {
         parent::afterUpdate($entity, $data);
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('isAdmin', $data)) {
+        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('type', $data)) {
             $this->clearRoleCache($entity->id);
         }
 
-        if ($entity->get('isPortalUser') && $entity->get('contactId')) {
+        if ($entity->isPortal() && $entity->get('contactId')) {
             if (array_key_exists('firstName', $data) || array_key_exists('lastName', $data) || array_key_exists('salutationName', $data)) {
                 $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
                 if (array_key_exists('firstName', $data)) {
@@ -588,6 +573,9 @@ class User extends Record
 
     public function massUpdate($data, array $params)
     {
+        unset($data->type);
+        unset($data->isAdmin);
+        unset($data->isSuperAdmin);
         unset($data->isPortalUser);
         return parent::massUpdate($data, $params);
     }
@@ -596,7 +584,7 @@ class User extends Record
     {
         parent::afterMassUpdate($idList, $data);
 
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('isAdmin', $data)) {
+        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('type', $data)) {
             foreach ($idList as $id) {
                 $this->clearRoleCache($id);
             }

@@ -36,86 +36,108 @@ class User extends \Espo\Core\SelectManagers\Base
         parent::access($result);
 
         if (!$this->getUser()->isAdmin()) {
-            $result['whereClause'][] = array(
-                'isActive' => true
-            );
+            $result['whereClause'][] = [
+                'isActive' => true,
+                'type!=' => ['api']
+            ];
         }
         if ($this->getAcl()->get('portalPermission') !== 'yes') {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'OR' => [
-                    ['isPortalUser' => false],
+                    ['type!=' => 'portal'],
                     ['id' => $this->getUser()->id]
                 ]
-            );
+            ];
         }
-        $result['whereClause'][] = array(
-            'isSuperAdmin' => false
-        );
+
+        if (!$this->getUser()->isSuperAdmin()) {
+            $result['whereClause'][] = [
+                'type!=' => 'super-admin'
+            ];
+        }
+
+        $result['whereClause'][] = [
+            'type!=' => 'system'
+        ];
     }
 
     protected function filterActive(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'isActive' => true,
-            'isPortalUser' => false
-        );
+            'type' => ['regular', 'admin']
+        ];
     }
 
     protected function filterActivePortal(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'isActive' => true,
-            'isPortalUser' => true
-        );
+            'type' => 'portal'
+        ];
     }
 
     protected function filterPortal(&$result)
     {
-        $result['whereClause'][] = array(
-            'isPortalUser' => true
-        );
+        $result['whereClause'][] = [
+            'type' => 'portal'
+        ];
+    }
+
+    protected function filterApi(&$result)
+    {
+        $result['whereClause'][] = [
+            'type' => 'api'
+        ];
+    }
+
+    protected function filterActiveApi(&$result)
+    {
+        $result['whereClause'][] = [
+            'isActive' => true,
+            'type' => 'api'
+        ];
     }
 
     protected function filterInternal(&$result)
     {
-        $result['whereClause'][] = array(
-            'isPortalUser' => false
-        );
+        $result['whereClause'][] = [
+            'type!=' => ['portal', 'api', 'system']
+        ];
     }
 
     protected function boolFilterOnlyMyTeam(&$result)
     {
         $this->addJoin('teams', $result);
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
         	'teamsMiddle.teamId' => $this->getUser()->getLinkMultipleIdList('teams')
-        );
+        ];
         $this->setDistinct(true, $result);
     }
 
     protected function accessOnlyOwn(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'id' => $this->getUser()->id
-        );
+        ];
     }
 
     protected function accessPortalOnlyOwn(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'id' => $this->getUser()->id
-        );
+        ];
     }
 
     protected function accessOnlyTeam(&$result)
     {
         $this->setDistinct(true, $result);
         $this->addLeftJoin(['teams', 'teamsAccess'], $result);
-        $result['whereClause'][] = array(
-            'OR' => array(
+        $result['whereClause'][] = [
+            'OR' => [
                 'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
                 'id' => $this->getUser()->id
-            )
-        );
+            ]
+        ];
     }
 }
-

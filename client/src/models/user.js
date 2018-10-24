@@ -32,11 +32,15 @@ Espo.define('models/user', 'model', function (Dep) {
         name: 'User',
 
         isAdmin: function () {
-            return this.get('isAdmin');
+            return this.get('type') == 'admin' || this.get('type') == 'super-admin';
         },
 
         isPortal: function () {
-            return this.get('isPortalUser');
+            return this.get('type') == 'portal';
+        },
+
+        isApi: function () {
+            return this.get('type') == 'api';
         }
     });
 });

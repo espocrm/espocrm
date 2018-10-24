@@ -96,9 +96,9 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     "label": "Teams and Access Control",
                     "name": "accessControl",
                     "rows": [
-                        [{"name":"isActive"}, {"name":"isAdmin"}],
-                        [{"name":"teams"}, {"name":"isPortalUser"}],
-                        [{"name":"roles"}, {"name":"defaultTeam"}]
+                        [{"name":"type"}, {"name":"isActive"}],
+                        [{"name":"teams"}, {"name":"defaultTeam"}],
+                        [{"name":"roles"}, false]
                     ]
                 });
                 layout.push({
@@ -199,5 +199,4 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
         }
 
     });
-
 });

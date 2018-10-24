@@ -41,7 +41,7 @@ Espo.define('controllers/portal-user', 'controllers/record', function (Dep) {
         },
 
         createViewView: function (options, model) {
-            if (!model.get('isPortalUser')) {
+            if (!model.isPortal()) {
                 this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
                 return;
             }

@@ -36,7 +36,7 @@ Espo.define('views/user/fields/name', 'views/fields/person-name', function (Dep)
         data: function () {
             return _.extend({
                 avatar: this.getAvatarHtml(),
-                frontScope: this.model.get('isPortalUser') ? 'PortalUser': 'User'
+                frontScope: this.model.isPortal() ? 'PortalUser': 'User'
             }, Dep.prototype.data.call(this));
         },
 

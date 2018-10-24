@@ -115,7 +115,7 @@ class EmailAddress extends Record
         );
 
         if ($this->getAcl()->get('portalPermission') === 'no') {
-            $whereClause['isPortalUser'] = false;
+            $whereClause['type!='] = 'portal';
         }
 
         $searchParams = array(

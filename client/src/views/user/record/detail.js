@@ -42,7 +42,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             this.setupNonAdminFieldsAccess();
 
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
-                if (!this.model.get('isPortalUser')) {
+                if (!this.model.isPortal()) {
                     this.buttonList.push({
                         name: 'access',
                         label: 'Access',
@@ -74,15 +74,14 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             var nonAdminReadOnlyFieldList = [
                 'userName',
                 'isActive',
-                'isAdmin',
-                'isPortalUser',
                 'teams',
                 'roles',
                 'password',
                 'portals',
                 'portalRoles',
                 'contact',
-                'accounts'
+                'accounts',
+                'type'
             ];
 
             nonAdminReadOnlyFieldList.forEach(function (field) {
@@ -95,30 +94,15 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
         },
 
         setupFieldAppearance: function () {
+
             this.controlFieldAppearance();
             this.listenTo(this.model, 'change', function () {
                 this.controlFieldAppearance();
             }, this);
-
-            var isAdminView = this.getFieldView('isAdmin');
-            if (isAdminView) {
-                this.listenTo(isAdminView, 'change', function () {
-                    if (this.model.get('isAdmin')) {
-                        this.model.set('isPortalUser', false, {silent: true});
-                    }
-                }, this);
-            }
         },
 
         controlFieldAppearance: function () {
-            if (this.model.get('isAdmin')) {
-                this.hideField('isPortalUser');
-            } else {
-                this.showField('isPortalUser');
-            }
-
-            if (this.model.get('isPortalUser')) {
-                this.hideField('isAdmin');
+            if (this.model.get('type') === 'portal') {
                 this.hideField('roles');
                 this.hideField('teams');
                 this.hideField('defaultTeam');
@@ -129,7 +113,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.showPanel('portal');
                 this.hideField('title');
             } else {
-                this.showField('isAdmin');
                 this.showField('roles');
                 this.showField('teams');
                 this.showField('defaultTeam');
@@ -138,7 +121,23 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.hideField('contact');
                 this.hideField('accounts');
                 this.hidePanel('portal');
-                this.showField('title');
+
+                if (this.model.get('type') === 'api') {
+                    this.hideField('title');
+                } else {
+                    this.showField('title');
+                }
+            }
+
+            if (this.model.id === this.getUser().id) {
+                this.setFieldReadOnly('type');
+            } else {
+                if (this.model.get('type') == 'admin' || this.model.get('type') == 'regular') {
+                    this.setFieldNotReadOnly('type');
+                    this.setFieldOptionList('type', ['regular', 'admin']);
+                } else {
+                    this.setFieldReadOnly('type');
+                }
             }
         },
 
@@ -201,9 +200,9 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                         "label": "Teams and Access Control",
                         "name": "accessControl",
                         "rows": [
-                            [{"name":"isActive"}, {"name":"isAdmin"}],
-                            [{"name":"teams"}, {"name":"isPortalUser"}],
-                            [{"name":"roles"}, {"name":"defaultTeam"}]
+                            [{"name":"type"}, {"name":"isActive"}],
+                            [{"name":"teams"}, {"name":"defaultTeam"}],
+                            [{"name":"roles"}, false]
                         ]
                     });
                     layout.push({

@@ -80,6 +80,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.$el.parent();
         },
 
+        isInlineEditMode: function () {
+            return !!this._isInlineEditMode;
+        },
+
         setDisabled: function (locked) {
             this.disabled = true;
             if (locked) {
@@ -128,6 +132,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.readOnlyLocked = true;
             }
             if (this.mode == 'edit') {
+                console.log(this.mode, this.isInlineEditMode());
+                if (this.isInlineEditMode()) {
+                    this.inlineEditClose();
+                    return;
+                }
                 this.setMode('detail');
                 if (this.isRendered()) {
                     this.reRender();
@@ -496,6 +505,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditClose: function (dontReset) {
             this.trigger('inline-edit-off');
+            this._isInlineEditMode = false;
+
             if (this.mode != 'edit') {
                 return;
             }
@@ -523,6 +534,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.once('after:render', function () {
                 this.addInlineEditLinks();
             }, this);
+
+            this._isInlineEditMode = true;
 
             this.reRender(true);
             this.trigger('inline-edit-on');

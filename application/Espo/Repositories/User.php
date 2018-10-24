@@ -36,8 +36,30 @@ use \Espo\Core\Exceptions\Conflict;
 
 class User extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected function beforeSave(Entity $entity, array $options = array())
+    protected function beforeSave(Entity $entity, array $options = [])
     {
+        $entity->clear('isAdmin');
+        $entity->clear('isPortalUser');
+        $entity->clear('isSuperAdmin');
+
+        if ($entity->isAttributeChanged('type')) {
+            $type = $entity->get('type');
+
+            if (in_array($type, ['regular', 'admin', 'portal'])) {
+                $entity->set('isAdmin', false);
+                $entity->set('isPortalUser', false);
+                $entity->set('isSuperAdmin', false);
+
+                if ($type === 'portal') {
+                    $entity->set('isPortalUser', true);
+                } else if ($type === 'admin') {
+                    $entity->set('isAdmin', true);
+                } else if ($type === 'super-admin') {
+                    $entity->set('isSuperAdmin', true);
+                }
+            }
+        }
+
         parent::beforeSave($entity, $options);
 
         if ($entity->isNew()) {
@@ -70,16 +92,14 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
-        if ($entity->has('isAdmin') && $entity->get('isAdmin')) {
-            $entity->set('isPortalUser', false);
+        if ($entity->has('type') && !$entity->isPortal()) {
             $entity->set('portalRolesIds', []);
             $entity->set('portalRolesNames', (object)[]);
             $entity->set('portalsIds', []);
             $entity->set('portalsNames', (object)[]);
         }
 
-        if ($entity->has('isPortalUser') && $entity->get('isPortalUser')) {
-            $entity->set('isAdmin', false);
+        if ($entity->has('type') && $entity->isPortal()) {
             $entity->set('rolesIds', []);
             $entity->set('rolesNames', (object)[]);
             $entity->set('teamsIds', []);

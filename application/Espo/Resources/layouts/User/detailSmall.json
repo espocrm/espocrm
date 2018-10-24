@@ -7,8 +7,7 @@
             [{"name":"emailAddress", "fullWidth": true}],
             [{"name":"phoneNumber", "fullWidth": true}],
             [{"name":"teams", "fullWidth": true}],
-            [{"name":"isAdmin"}, {"name":"isActive"}],
-            [{"name":"isPortalUser"}, false]
+            [{"name":"type"}, {"name":"isActive"}]
         ]
     }
 ]

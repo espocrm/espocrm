@@ -69,12 +69,13 @@ return array (
         'patch' => 'patch',
         'delete' => 'delete',
     ),
-    'systemUser' => array(
+    'systemUserAttributes' => [
         'id' => 'system',
         'userName' => 'system',
         'firstName' => '',
         'lastName' => 'System',
-    ),
+        'type' => 'system',
+    ],
     'systemItems' =>
     array (
         'systemItems',

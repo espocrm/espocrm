@@ -88,7 +88,7 @@ class Notification extends \Espo\Services\Record
 
     public function checkUserNoteAccess(\Espo\Entities\User $user, \Espo\Entities\Note $note)
     {
-        if ($user->get('isPortalUser')) {
+        if ($user->isPortal()) {
             if ($note->get('relatedType')) {
                 if ($note->get('relatedType') === 'Email' && $note->get('parentType') === 'Case') {
                     return true;

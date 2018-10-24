@@ -31,29 +31,39 @@ namespace Espo\Entities;
 
 class User extends \Espo\Core\Entities\Person
 {
-    public function isAdmin()
-    {
-        return $this->get('isAdmin');
-    }
-
-    public function isSystem()
-    {
-        return $this->id === 'system';
-    }
-
     public function isActive()
     {
         return $this->get('isActive');
     }
 
+    public function isAdmin()
+    {
+        return $this->get('type') === 'admin' || $this->isSystem() || $this->isSuperAdmin();
+    }
+
     public function isPortal()
     {
-        return $this->isPortalUser();
+        return $this->get('type') === 'portal';
     }
 
     public function isPortalUser()
     {
-        return $this->get('isPortalUser');
+        return $this->isPortal();
+    }
+
+    public function isApi()
+    {
+        return $this->get('type') === 'api';
+    }
+
+    public function isSystem()
+    {
+        return $this->get('type') === 'system';
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->get('type') === 'super-admin';
     }
 
     public function getTeamIdList()

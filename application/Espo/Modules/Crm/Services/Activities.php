@@ -127,7 +127,7 @@ class Activities extends \Espo\Core\Services\Base
             'usersLeftMiddle.userId' => $entity->id
         );
 
-        if ($entity->get('isPortalUser') && $entity->get('contactId')) {
+        if ($entity->isPortal() && $entity->get('contactId')) {
             $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
             $selectParams['distinct'] = true;
             $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
@@ -182,7 +182,7 @@ class Activities extends \Espo\Core\Services\Base
             'usersLeftMiddle.userId' => $entity->id
         );
 
-        if ($entity->get('isPortalUser') && $entity->get('contactId')) {
+        if ($entity->isPortal() && $entity->get('contactId')) {
             $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
             $selectParams['distinct'] = true;
             $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
@@ -210,7 +210,7 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getActivitiesUserEmailQuery(Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
     {
-        if ($entity->get('isPortalUser') && $entity->get('contactId')) {
+        if ($entity->isPortal() && $entity->get('contactId')) {
             $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
             if ($contact) {
                 return $this->getActivitiesEmailQuery($contact, $statusList, $isHistory, $additinalSelectParams);

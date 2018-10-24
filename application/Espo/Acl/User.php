@@ -44,6 +44,9 @@ class User extends \Espo\Core\Acl\Base
         if (!$user->isAdmin()) {
             return false;
         }
+        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
+            return false;
+        }
         return $this->checkEntity($user, $entity, $data, 'create');
     }
 
@@ -55,6 +58,12 @@ class User extends \Espo\Core\Acl\Base
         if (!$user->isAdmin()) {
             return false;
         }
+        if ($entity->isSystem()) {
+            return false;
+        }
+        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
+            return false;
+        }
         return parent::checkEntityDelete($user, $entity, $data);
     }
 
@@ -63,10 +72,16 @@ class User extends \Espo\Core\Acl\Base
         if ($entity->id === 'system') {
             return false;
         }
+        if ($entity->isSystem()) {
+            return false;
+        }
         if (!$user->isAdmin()) {
             if ($user->id !== $entity->id) {
                 return false;
             }
+        }
+        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
+            return false;
         }
         return $this->checkEntity($user, $entity, $data, 'edit');
     }

@@ -42,7 +42,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                     link: '#Preferences/edit/' + this.getUser().id
                 });
 
-                if (!this.model.get('isPortalUser')) {
+                if (!this.model.isPortal()) {
                     if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
                         this.menu.buttons.push({
                             name: 'emailAccounts',
@@ -65,7 +65,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                 }
             }
 
-            if (this.getAcl().checkScope('Calendar') && !this.model.get('isPortalUser')) {
+            if (this.getAcl().checkScope('Calendar') && !this.model.isPortal()) {
                 var showActivities = this.getAcl().checkUserPermission(this.model);
                 if (!showActivities) {
                     if (this.getAcl().get('userPermission') === 'team') {

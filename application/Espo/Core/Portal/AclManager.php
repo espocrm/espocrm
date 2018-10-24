@@ -264,8 +264,7 @@ class AclManager extends \Espo\Core\AclManager
 
     protected function checkUserIsNotPortal($user)
     {
-        return !$user->get('isPortalUser');
+        return !$user->isPortal();
     }
 
 }
-

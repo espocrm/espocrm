@@ -563,7 +563,7 @@ class Table
 
     protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists)
     {
-        if ($this->getUser()->get('isPortalUser')) {
+        if ($this->getUser()->isPortal()) {
             foreach ($this->getScopeList() as $scope) {
                 $table->$scope = false;
                 unset($fieldTable->$scope);

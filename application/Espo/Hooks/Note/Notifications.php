@@ -88,13 +88,13 @@ class Notifications extends \Espo\Core\Hooks\Base
                 JOIN user ON user.id = subscription.user_id
                 WHERE
                     entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType) . " AND
-                    user.is_portal_user = 0
+                    user.type <> 'portal'
             ";
         }
 
         $userList = $this->getEntityManager()->getRepository('User')->where([
             'isActive' => true
-        ])->select(['id', 'isPortalUser', 'isAdmin'])->find([
+        ])->select(['id', 'type'])->find([
             'customWhere' => "AND user.id IN (".$sql.")"
         ]);
 
@@ -237,12 +237,12 @@ class Notifications extends \Espo\Core\Hooks\Base
                         }
                     }
                 } else if ($targetType === 'all') {
-                    $targetUserList = $this->getEntityManager()->getRepository('User')->find(array(
-                        'whereClause' => array(
+                    $targetUserList = $this->getEntityManager()->getRepository('User')->find([
+                        'whereClause' => [
                             'isActive' => true,
-                            'isPortalUser' => false
-                        )
-                    ));
+                            'type' => ['regular', 'admin']
+                        ]
+                    ]);
                     foreach ($targetUserList as $user) {
                         if ($user->id === $this->getUser()->id) continue;
                         $notifyUserIdList[] = $user->id;
