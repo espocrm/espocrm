@@ -13,10 +13,13 @@
     },
     "defaultSidePanelFieldLists": {
         "detail": [
-            "avatar"
+            "avatar",
+            "createdAt",
+            "lastAccess"
         ],
         "detailSmall": [
-            "avatar"
+            "avatar",
+            "createdAt"
         ],
         "edit": [
             "avatar"
