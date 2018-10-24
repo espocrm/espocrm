@@ -4,7 +4,7 @@
     "createdBy",
     "emailAddress",
     "title",
-    "isAdmin",
+    "type",
     "isActive",
     "position",
     "portals",

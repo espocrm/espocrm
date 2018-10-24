@@ -203,6 +203,8 @@ class Stream extends \Espo\Core\Hooks\Base
                 if (
                     !$this->getUser()->isSystem()
                     &&
+                    !$this->getUser()->isApi()
+                    &&
                     $createdById
                     &&
                     $createdById === $this->getUser()->id

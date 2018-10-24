@@ -61,7 +61,8 @@ class User extends Record
         'portalRolesIds',
         'contactId',
         'accountsIds',
-        'type'
+        'type',
+        'apiKey'
     ];
 
     protected $mandatorySelectAttributeList = [

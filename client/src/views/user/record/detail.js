@@ -50,13 +50,17 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     });
                 }
 
-                if (this.model.id == this.getUser().id) {
+                if (this.model.id == this.getUser().id && !this.model.isApi()) {
                     this.dropdownItemList.push({
                         name: 'changePassword',
                         label: 'Change Password',
                         style: 'default'
                     });
                 }
+            }
+
+            if (this.model.isPortal() || this.model.isApi()) {
+                this.hideActionItem('duplicate');
             }
 
             if (this.model.id == this.getUser().id) {
@@ -124,6 +128,11 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
                 if (this.model.get('type') === 'api') {
                     this.hideField('title');
+                    this.hideField('emailAddress');
+                    this.hideField('phoneNumber');
+                    this.hideField('name');
+                    this.hideField('gender');
+
                 } else {
                     this.showField('title');
                 }

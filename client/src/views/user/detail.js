@@ -101,4 +101,3 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
         },
     });
 });
-

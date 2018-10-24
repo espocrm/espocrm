@@ -43,6 +43,10 @@ Espo.define('controllers/user', 'controllers/record', function (Dep) {
                 this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
                 return;
             }
+            if (model.isApi()) {
+                this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
+                return;
+            }
             Dep.prototype.createViewView.call(this, options, model);
         }
 

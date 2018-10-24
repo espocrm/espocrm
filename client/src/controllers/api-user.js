@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/portal-user', 'controllers/record', function (Dep) {
+Espo.define('controllers/api-user', 'controllers/record', function (Dep) {
 
     return Dep.extend({
 
@@ -35,15 +35,15 @@ Espo.define('controllers/portal-user', 'controllers/record', function (Dep) {
         getCollection: function (callback, context, usePreviouslyFetched) {
             context = context || this;
             Dep.prototype.getCollection.call(this, function (collection) {
-                collection.data.filterList = ['portal'];
+                collection.data.filterList = ['api'];
                 callback.call(context, collection);
             }, context, usePreviouslyFetched);
         },
 
         createViewView: function (options, model) {
-            if (!model.isPortal()) {
-                if (model.isApi()) {
-                    this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
+            if (!model.isApi()) {
+                if (model.isPortal()) {
+                    this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
                     return;
                 }
                 this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
@@ -55,7 +55,7 @@ Espo.define('controllers/portal-user', 'controllers/record', function (Dep) {
         create: function (options) {
             options = options || {};
             options.attributes = options.attributes  || {};
-            options.attributes.type = 'portal';
+            options.attributes.type = 'api';
             Dep.prototype.create.call(this, options);
         }
 

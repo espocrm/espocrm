@@ -545,7 +545,7 @@ class Stream extends \Espo\Core\Services\Base
             'order' => 'DESC'
         ];
 
-        if (!$user->isPortal() || $user->isAdmin()) {
+        if ((!$user->isPortal() || $user->isAdmin()) && !$user->isApi()) {
             $selectParamsList[] = [
                 'select' => $select,
                 'leftJoins' => ['createdBy'],

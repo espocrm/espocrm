@@ -370,6 +370,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) || 'views/modals/edit';
             this.createView('quickEdit', viewName, {
                 scope: this.scope,
+                entityType: this.model.entityType,
                 id: this.id,
                 fullFormDisabled: this.fullFormDisabled
             }, function (view) {

@@ -133,4 +133,19 @@ class User extends \Espo\Core\ORM\Repositories\RDB
         }
         return false;
     }
+
+    public function handleSelectParams(&$params)
+    {
+        parent::handleSelectParams($params);
+        if (array_key_exists('select', $params)) {
+            if (in_array('name', $params['select'])) {
+                $additionalAttributeList = ['userName'];
+                foreach ($additionalAttributeList as $attribute) {
+                    if (!in_array($attribute, $params['select'])) {
+                        $params['select'][] = $attribute;
+                    }
+                }
+            }
+        }
+    }
 }

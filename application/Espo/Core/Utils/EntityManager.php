@@ -54,6 +54,8 @@ class EntityManager
 
     private $linkForbiddenNameList = ['posts', 'stream', 'subscription'];
 
+    private $forbiddenEntityTypeNameList = ['PortalUser', 'ApiUser'];
+
     public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, Container $container = null)
     {
         $this->metadata = $metadata;
@@ -189,6 +191,10 @@ class EntityManager
 
         $serviceFactory = $this->getServiceFactory();
         if ($serviceFactory && $serviceFactory->checKExists($name)) {
+            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
+        }
+
+        if (in_array($name, $this->forbiddenEntityTypeNameList)) {
             throw new Conflict('Entity name \''.$name.'\' is not allowed.');
         }
 

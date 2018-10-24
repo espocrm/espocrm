@@ -41,6 +41,10 @@ Espo.define('models/user', 'model', function (Dep) {
 
         isApi: function () {
             return this.get('type') == 'api';
+        },
+
+        isRegular: function () {
+            return this.get('type') == 'regular';
         }
     });
 });

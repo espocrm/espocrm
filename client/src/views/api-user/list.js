@@ -26,37 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/portal-user', 'controllers/record', function (Dep) {
+Espo.define('views/api-user/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
-        entityType: 'User',
-
-        getCollection: function (callback, context, usePreviouslyFetched) {
-            context = context || this;
-            Dep.prototype.getCollection.call(this, function (collection) {
-                collection.data.filterList = ['portal'];
-                callback.call(context, collection);
-            }, context, usePreviouslyFetched);
+        setup: function () {
+            Dep.prototype.setup.call(this);
         },
 
-        createViewView: function (options, model) {
-            if (!model.isPortal()) {
-                if (model.isApi()) {
-                    this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
-                    return;
-                }
-                this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
-                return;
-            }
-            Dep.prototype.createViewView.call(this, options, model);
-        },
+        actionCreate: function () {
+            var attributes = {
+                type: 'api'
+            };
 
-        create: function (options) {
-            options = options || {};
-            options.attributes = options.attributes  || {};
-            options.attributes.type = 'portal';
-            Dep.prototype.create.call(this, options);
+            var router = this.getRouter();
+            var url = '#' + this.scope + '/create';
+            router.dispatch(this.scope, 'create', {
+                attributes: attributes
+            });
+            router.navigate(url, {trigger: false});
         }
 
     });

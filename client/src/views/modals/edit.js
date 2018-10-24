@@ -89,6 +89,9 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             });
 
             this.scope = this.scope || this.options.scope;
+
+            this.entityType = this.options.entityType || this.scope;
+
             this.id = this.options.id;
 
             if (!this.id) {
@@ -113,7 +116,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
             this.waitForView('edit');
 
-            this.getModelFactory().create(this.scope, function (model) {
+            this.getModelFactory().create(this.entityType, function (model) {
                 if (this.id) {
                     if (this.sourceModel) {
                         model = this.model = this.sourceModel.clone();
