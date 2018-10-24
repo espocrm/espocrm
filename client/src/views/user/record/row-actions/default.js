@@ -26,35 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
+Espo.define('views/user/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 
-        quickEditDisabled: true,
-
-        rowActionsView: 'views/user/record/row-actions/default',
-
-        massActionList: ['remove', 'massUpdate', 'export'],
-
-        checkAllResultMassActionList: ['massUpdate', 'export'],
-
-        setupMassActionItems: function () {
-            Dep.prototype.setupMassActionItems.call(this);
-            if (!this.getUser().isAdmin()) {
-                this.removeMassAction('massUpdate');
-                this.removeMassAction('export');
+        getActionList: function () {
+            var scope = 'User';
+            if (this.model.isPortal()) {
+                scope = 'PortalUser';
+            } else if (this.model.isApi()) {
+                scope = 'ApiUser';
             }
-        },
 
-        getModelScope: function (id) {
-            var model = this.collection.get(id);
-
-            if (model.isPortal()) {
-                return 'PortalUser';
+            var list = [{
+                action: 'quickView',
+                label: 'View',
+                data: {
+                    id: this.model.id,
+                    scope: scope
+                },
+                link: '#' + scope + '/view/' + this.model.id
+            }];
+            if (this.options.acl.edit) {
+                list.push({
+                    action: 'quickEdit',
+                    label: 'Edit',
+                    data: {
+                        id: this.model.id,
+                        scope: scope
+                    },
+                    link: '#' + scope + '/edit/' + this.model.id
+                });
             }
-            return this.scope;
+            return list;
         }
     });
 
 });
-
