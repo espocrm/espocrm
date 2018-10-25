@@ -193,7 +193,11 @@ class Auth
 
         $authentication = $this->getAuthentication($authenticationMethod);
 
-        $user = $authentication->login($username, $password, $authToken, $this->isPortal());
+        $params = [
+            'isPortal' => $this->isPortal()
+        ];
+
+        $user = $authentication->login($username, $password, $authToken, $params, $this->request);
 
         $authLogRecord = null;
 

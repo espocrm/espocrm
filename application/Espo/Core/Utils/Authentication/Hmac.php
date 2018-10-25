@@ -33,7 +33,7 @@ use \Espo\Core\Exceptions\Error;
 
 class Hmac extends Base
 {
-    public function login($username, $password, $authToken = null, $isPortal = null)
+    public function login($username, $password, $authToken = null, $params = [], $request)
     {
         $apiKey = $username;
         $hash = $password;
@@ -52,7 +52,9 @@ class Hmac extends Base
             $secretKey = $apiKeyUtil->getSecretKeyForUserId($user->id);
             if (!$secretKey) return;
 
-            if ($hash === \Espo\Core\Utils\ApiKey::hash($secretKey)) {
+            $string = $request->getMethod() . ' ' . $request->getResourceUri();
+
+            if ($hash === \Espo\Core\Utils\ApiKey::hash($secretKey, $string)) {
                 return $user;
             }
 

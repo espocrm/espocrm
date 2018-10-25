@@ -43,9 +43,9 @@ class ApiKey
         return $this->config;
     }
 
-    public static function hash($secretKey)
+    public static function hash($secretKey, $string = '')
     {
-        return hash_hmac('sha256', '', $secretKey, true);
+        return hash_hmac('sha256', $string, $secretKey, true);
     }
 
     public function getSecretKeyForUserId($id)
