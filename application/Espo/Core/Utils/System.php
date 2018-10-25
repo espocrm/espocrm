@@ -184,24 +184,4 @@ class System
 
         return true;
     }
-
-    public function getMysqlVersion(\PDO $pdoConnection)
-    {
-        return $this->getMysqlParam('version', $pdoConnection);
-    }
-
-    public function getMysqlParam($name, \PDO $pdoConnection)
-    {
-        if (!method_exists($pdoConnection, 'prepare')) {
-            return null;
-        }
-
-        $sth = $pdoConnection->prepare("SHOW VARIABLES LIKE '" . $name . "'");
-        $sth->execute();
-        $res = $sth->fetch(\PDO::FETCH_NUM);
-
-        $version = empty($res[1]) ? null : $res[1];
-
-        return $version;
-    }
 }

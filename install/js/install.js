@@ -415,49 +415,46 @@ InstallScript.prototype.checkSett = function(opt) {
 			var rowDelim = '<br>';
 			if (typeof(data.errors)) {
 				var errors = data.errors;
-				if (typeof(errors.phpVersion) !== 'undefined') {
-					msg += self.getLang('phpVersion', 'messages').replace('{minVersion}', errors.phpVersion) + rowDelim;
-				}
-				if (typeof(errors.mysqlVersion) !== 'undefined') {
-					msg += self.getLang('mysqlVersion', 'messages').replace('{minVersion}', errors.mysqlVersion) + rowDelim;
-				}
 
-				if (typeof(errors.phpRequires) !== 'undefined') {
-					var exts = errors.phpRequires;
-					var len = exts.length;
-					for (var index = 0; index < len; index++) {
-						var temp = self.getLang('The PHP extension was not found...', 'messages');
-						temp = temp.replace('{extName}', exts[index]);
-						msg += temp+rowDelim;
+				Object.keys(errors).forEach(function (errorName) {
+					errorData = errors[errorName];
+
+					switch(errorName) {
+					    case 'phpRequires':
+							var len = errorData.length;
+							for (var index = 0; index < len; index++) {
+								var temp = self.getLang('The PHP extension was not found...', 'messages');
+								temp = temp.replace('{extName}', errorData[index]);
+								msg += temp+rowDelim;
+							}
+					        break;
+
+					    case 'modRewrite':
+					        msg += errorData + rowDelim;
+					        break;
+
+					    case 'dbConnect':
+					        if (typeof(errorData.errorCode) !== 'undefined') {
+								var temp = self.getLang(errorData.errorCode, 'messages');
+								if (temp == errorData.errorCode && typeof(errorData.errorMsg) !== 'undefined') temp = errorData.errorMsg;
+							}
+							else if (typeof(errorData.errorMsg) !== 'undefined') {
+								temp = errorData.errorMsg;
+							}
+							msg += temp+rowDelim;
+					        break;
+
+					    default:
+					        msg += self.getLang(errorName, 'messages').replace('{minVersion}', errorData) + rowDelim;
 					}
-				}
 
-				if (typeof(errors.modRewrite) !== 'undefined') {
-					msg += errors.modRewrite+rowDelim;
-				}
-
-				if (typeof(errors.mysqlSetting) !== 'undefined') {
-					var mysqlSettingErrorMess = self.getLang(errors.mysqlSetting.errorCode, 'messages');
-					mysqlSettingErrorMess = mysqlSettingErrorMess.replace('{NAME}', errors.mysqlSetting.name);
-					mysqlSettingErrorMess = mysqlSettingErrorMess.replace('{VALUE}', errors.mysqlSetting.value);
-					msg += mysqlSettingErrorMess + rowDelim;
-				}
-
-				if (typeof(errors.dbConnect) !== 'undefined') {
-					if (typeof(errors.dbConnect.errorCode) !== 'undefined') {
-						var temp = self.getLang(errors.dbConnect.errorCode, 'messages');
-						if (temp == errors.dbConnect.errorCode && typeof(errors.dbConnect.errorMsg) !== 'undefined') temp = errors.dbConnect.errorMsg;
-					}
-					else if (typeof(errors.dbConnect.errorMsg) !== 'undefined') {
-						temp = errors.dbConnect.errorMsg;
-					}
-					msg += temp+rowDelim;
-				}
+				});
 			}
 
 			if (msg == '') {
 				msg = self.getLang('Some errors occurred!', 'messages');
 			}
+
 			self.showMsg({msg: msg, error: true});
 		}
 

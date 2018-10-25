@@ -34,7 +34,7 @@
     "MySQL Configuration": "MySQL Yapılandırması",
     "Configuration Instructions": "Yapılandırma Talimatları",
     "phpVersion": "PHP sürümü",
-    "mysqlVersion": "MySQL sürümü",
+    "requiredMysqlVersion": "MySQL sürümü",
     "dbHostName": "Sunucu Adı",
     "dbName": "Veritabanı adı",
     "dbUserName": "Veritabanı Kullanıcı Adı",

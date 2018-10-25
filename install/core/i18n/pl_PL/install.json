@@ -28,7 +28,7 @@
     "MySQL Configuration": "Konfiguracja MySQL",
     "Configuration Instructions": "Instrukcje konfiguracji",
     "phpVersion": "Wersja PHP",
-    "mysqlVersion": "Wersja MySQL",
+    "requiredMysqlVersion": "Wersja MySQL",
     "dbName": "Nazwa Bazy Danych",
     "dbUserName": "Nazwa Użytkonika Bazy Danych"
   },
@@ -63,7 +63,8 @@
     "2005": "Nieznany MySQL host",
     "Some errors occurred!": "Wystapiły błędy!",
     "phpVersion": "Wersja PHP nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji PHP {minVersion}",
-    "mysqlVersion": "Wersja MySQL nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji MySQL {minVersion}",
+    "requiredMysqlVersion": "Wersja MySQL nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji MySQL {minVersion}",
+    "requiredMariadbVersion": "Wersja MariaDB nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji MariaDB {minVersion}",
     "All Settings correct": "Wszystkie ustwienia są poprawne",
     "Failed to connect to database": "Błąd połączenia z bazą danych",
     "PHP version": "Wersja PHP",
