@@ -707,6 +707,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (~index) {
                 this.massActionList.splice(index, 1);
             }
+
+            var index = this.checkAllResultMassActionList.indexOf(item);
+            if (~index) {
+                this.checkAllResultMassActionList.splice(index, 1);
+            }
         },
 
         addMassAction: function (item, allResult) {
