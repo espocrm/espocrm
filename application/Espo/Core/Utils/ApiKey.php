@@ -27,29 +27,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
-
-class Espo extends Base
+class ApiKey
 {
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
+    private $config;
+
+    public function __construct(\Espo\Core\Utils\Config $config)
     {
-        if (!$password) return;
+        $this->config = $config;
+    }
 
-        if ($authToken) {
-            $hash = $authToken->get('hash');
-        } else {
-            $hash = $this->getPasswordHash()->hash($password);
+    protected function getConfig()
+    {
+        return $this->config;
+    }
+
+    public static function hash($secretKey)
+    {
+        return hash_hmac('sha256', '', $secretKey, true);
+    }
+
+    public function getSecretKeyForUserId($id)
+    {
+        $apiSecretKeys = $this->getConfig()->get('apiSecretKeys');
+        if (!$apiSecretKeys) return;
+        if (!is_object($apiSecretKeys)) return;
+        if (!isset($apiSecretKeys->$id)) return;
+        return $apiSecretKeys->$id;
+    }
+
+    public function storeSecretKeyForUserId($id, $secretKey)
+    {
+        $apiSecretKeys = $this->getConfig()->get('apiSecretKeys');
+        if (!is_object($apiSecretKeys)) {
+            $apiSecretKeys = (object)[];
         }
+        $apiSecretKeys->$id = $secretKey;
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-                'password' => $hash
-            )
-        ));
+        $this->getConfig()->set('apiSecretKeys', $apiSecretKeys);
+        $this->getConfig()->save();
+    }
 
-        return $user;
+    public function removeSecretKeyForUserId($id)
+    {
+        $apiSecretKeys = $this->getConfig()->get('apiSecretKeys');
+        if (!is_object($apiSecretKeys)) {
+            $apiSecretKeys = (object)[];
+        }
+        unset($apiSecretKeys->$id);
+
+        $this->getConfig()->set('apiSecretKeys', $apiSecretKeys);
+        $this->getConfig()->save();
     }
 }

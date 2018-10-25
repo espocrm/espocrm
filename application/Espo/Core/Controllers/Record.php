@@ -83,6 +83,8 @@ class Record extends Base
 
     public function actionCreate($params, $data, $request)
     {
+        if (!is_object($data)) throw new BadRequest();
+
         if (!$request->isPost()) {
             throw new BadRequest();
         }
@@ -102,6 +104,8 @@ class Record extends Base
 
     public function actionUpdate($params, $data, $request)
     {
+        if (!is_object($data)) throw new BadRequest();
+
         if (!$request->isPut() && !$request->isPatch()) {
             throw new BadRequest();
         }
@@ -215,6 +219,8 @@ class Record extends Base
 
     public function actionExport($params, $data, $request)
     {
+        if (!is_object($data)) throw new BadRequest();
+
         if (!$request->isPost()) {
             throw new BadRequest();
         }

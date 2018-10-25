@@ -27,16 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array (
-    'defaultPermissions' => array (
+return [
+    'defaultPermissions' => [
         'dir' => '0775',
         'file' => '0664',
         'user' => '',
-        'group' => '',
-    ),
-
-    'permissionMap' => array(
-
+        'group' => ''
+    ],
+    'permissionMap' => [
         /** array('0664', '0775') */
         'writable' => [
             'data',
@@ -44,7 +42,6 @@ return array (
             'application/Espo/Modules',
             'client/modules'
         ],
-
         /** array('0644', '0755') */
         'readable' => [
             'api',
@@ -56,7 +53,7 @@ return array (
             'rebuild.php',
             'clear_cache.php'
         ],
-    ),
+    ],
     'jobMaxPortion' => 15, /** Max number of jobs per one execution. */
     'jobPeriod' => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
     'jobPeriodForActiveProcess' => 36000, /** Max execution time (in seconds) allocated for a sinle job with active process. If exceeded then set to Failed.*/
@@ -76,8 +73,7 @@ return array (
         'lastName' => 'System',
         'type' => 'system',
     ],
-    'systemItems' =>
-    array (
+    'systemItems' => [
         'systemItems',
         'adminItems',
         'configPath',
@@ -92,6 +88,7 @@ return array (
         'permissionRules',
         'passwordSalt',
         'cryptKey',
+        'apiSecretKeys',
         'restrictedMode',
         'userLimit',
         'portalUserLimit',
@@ -104,9 +101,8 @@ return array (
         'internalSmtpPassword',
         'internalSmtpSecurity',
         'internalOutboundEmailFromAddress'
-    ),
-    'adminItems' =>
-    array (
+    ],
+    'adminItems' => [
         'devMode',
         'smtpServer',
         'smtpPort',
@@ -173,14 +169,13 @@ return array (
         'requiredPhpLibs',
         'recommendedPhpLibs',
         'recommendedPhpParams',
-    ),
-    'userItems' =>
-    array (
+    ],
+    'userItems' => [
         'outboundEmailFromAddress',
         'outboundEmailFromName',
         'integrations',
         'googleMapsApiKey'
-    ),
+    ],
     'isInstalled' => false,
     'ldapUserNameAttribute' => 'sAMAccountName',
     'ldapUserFirstNameAttribute' => 'givenName',
@@ -213,4 +208,4 @@ return array (
     'requiredMysqlVersion' => '5.5.3',
     'recommendedMysqlParams' => [],
     'ldapPortalUserLdapAuth' => false,
-);
+];

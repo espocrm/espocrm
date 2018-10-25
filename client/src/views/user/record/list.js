@@ -40,6 +40,16 @@ Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
 
         setupMassActionItems: function () {
             Dep.prototype.setupMassActionItems.call(this);
+
+            if (this.scope === 'ApiUser') {
+                this.removeMassAction('massUpdate');
+                this.removeMassAction('export');
+
+                this.layoutName = 'listApi';
+            }
+            if (this.scope === 'PortalUser') {
+                this.layoutName = 'listPortal';
+            }
             if (!this.getUser().isAdmin()) {
                 this.removeMassAction('massUpdate');
                 this.removeMassAction('export');

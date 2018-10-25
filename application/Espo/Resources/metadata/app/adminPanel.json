@@ -97,6 +97,11 @@
                 "url": "#ActionHistoryRecord",
                 "label": "Action History",
                 "description": "actionHistory"
+            },
+            {
+                "url": "#ApiUser",
+                "label": "API Users",
+                "description": "apiUsers"
             }
         ],
         "order": 5

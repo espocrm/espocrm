@@ -33,7 +33,16 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
         setupPanels: function () {
             Dep.prototype.setupPanels.call(this);
 
+            if (this.model.isApi() || this.model.isSystem()) {
+                this.hidePanel('activities');
+                this.hidePanel('history');
+                this.hidePanel('tasks');
+                this.hidePanel('stream');
+                return;
+            }
+
             var showActivities = this.getAcl().checkUserPermission(this.model);
+
             if (!showActivities) {
                 if (this.getAcl().get('userPermission') === 'team') {
                     if (!this.model.has('teamsIds')) {
@@ -66,7 +75,5 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
                 this.hidePanel('tasks');
             }
         }
-
     });
-
 });

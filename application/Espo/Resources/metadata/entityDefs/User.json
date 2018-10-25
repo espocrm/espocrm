@@ -39,8 +39,18 @@
         },
         "apiKey": {
             "type": "varchar",
-            "maxLength": 36,
+            "maxLength": 100,
             "readOnly": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutListDisabled": true
+        },
+        "secretKey": {
+            "type": "varchar",
+            "maxLength": 100,
+            "readOnly": true,
+            "notStorable": true,
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutFiltersDisabled": true,

@@ -32,7 +32,7 @@ Espo.define('models/user', 'model', function (Dep) {
         name: 'User',
 
         isAdmin: function () {
-            return this.get('type') == 'admin' || this.get('type') == 'super-admin';
+            return this.get('type') == 'admin' || this.isSuperAdmin();
         },
 
         isPortal: function () {
@@ -45,6 +45,14 @@ Espo.define('models/user', 'model', function (Dep) {
 
         isRegular: function () {
             return this.get('type') == 'regular';
+        },
+
+        isSystem: function () {
+            return this.get('type') == 'system';
+        },
+
+        isSuperAdmin: function () {
+            return this.get('type') == 'super-admin';
         }
     });
 });

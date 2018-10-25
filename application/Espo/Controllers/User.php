@@ -105,5 +105,12 @@ class User extends \Espo\Core\Controllers\Record
 
         return $this->getService('User')->passwordChangeRequest($userName, $emailAddress, $url);
     }
-}
 
+    public function postActionGenerateNewApiKey($params, $data, $request)
+    {
+        if (empty($data->id)) throw new BadRequest();
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
+    }
+}

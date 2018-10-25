@@ -31,7 +31,8 @@
         "passwordPreview": "Password Preview",
         "isSuperAdmin": "Is Super Admin",
         "lastAccess": "Last Access",
-        "apiKey": "API Key"
+        "apiKey": "API Key",
+        "secretKey": "Secret Key"
     },
     "links": {
         "teams": "Teams",
@@ -58,7 +59,8 @@
         "Email Accounts": "Email Accounts",
         "Portal": "Portal",
         "Create Portal User": "Create Portal User",
-        "Proceed w/o Contact": "Proceed w/o Contact"
+        "Proceed w/o Contact": "Proceed w/o Contact",
+        "Generate New API Key": "Generate New API Key"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",

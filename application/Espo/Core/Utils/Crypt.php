@@ -97,7 +97,6 @@ class Crypt
 
     public function generateKey()
     {
-        return md5(uniqid());
+        return \Espo\Core\Utils\Util::generateKey();
     }
 }
-

@@ -34,15 +34,18 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
             Dep.prototype.setup.call(this);
 
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
-                this.menu.buttons.push({
-                    name: 'preferences',
-                    label: 'Preferences',
-                    style: 'default',
-                    action: "preferences",
-                    link: '#Preferences/edit/' + this.getUser().id
-                });
 
-                if (!this.model.isPortal()) {
+                if (this.model.isRegular() || this.model.isAdmin() || this.model.isPortal()) {
+                    this.menu.buttons.push({
+                        name: 'preferences',
+                        label: 'Preferences',
+                        style: 'default',
+                        action: "preferences",
+                        link: '#Preferences/edit/' + this.getUser().id
+                    });
+                }
+
+                if (this.model.isRegular() || this.model.isAdmin()) {
                     if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
                         this.menu.buttons.push({
                             name: 'emailAccounts',
@@ -65,7 +68,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                 }
             }
 
-            if (this.getAcl().checkScope('Calendar') && !this.model.isPortal()) {
+            if (this.getAcl().checkScope('Calendar') && (this.model.isRegular() || this.model.isAdmin())) {
                 var showActivities = this.getAcl().checkUserPermission(this.model);
                 if (!showActivities) {
                     if (this.getAcl().get('userPermission') === 'team') {

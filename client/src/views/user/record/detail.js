@@ -72,6 +72,17 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             this.setupFieldAppearance();
         },
 
+        setupActionItems: function () {
+            Dep.prototype.setupActionItems.call(this);
+
+            if (this.model.isApi()) {
+                this.addDropdownItem({
+                    'label': 'Generate New API Key',
+                    'name': 'generateNewApiKey'
+                });
+            }
+        },
+
         setupNonAdminFieldsAccess: function () {
             if (this.getUser().isAdmin()) return;
 
@@ -214,12 +225,24 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                             [{"name":"roles"}, false]
                         ]
                     });
+
+                    if (this.model.isPortal()) {
+                        layout.push({
+                            "label": "Portal",
+                            "name": "portal",
+                            "rows": [
+                                [{"name":"portals"}, {"name":"contact"}],
+                                [{"name":"portalRoles"}, {"name":"accounts"}]
+                            ]
+                        });
+                    }
+                }
+
+                if (this.getUser().isAdmin() && this.model.isApi()) {
                     layout.push({
-                        "label": "Portal",
-                        "name": "portal",
+                        "name": "apiKey",
                         "rows": [
-                            [{"name":"portals"}, {"name":"contact"}],
-                            [{"name":"portalRoles"}, {"name":"accounts"}]
+                            [{"name":"apiKey"}, {"name":"secretKey"}]
                         ]
                     });
                 }
@@ -231,7 +254,17 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
                 callback(gridLayout);
             }.bind(this));
-        }
-    });
+        },
 
+        actionGenerateNewApiKey: function () {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
+                this.ajaxPostRequest('User/action/generateNewApiKey', {
+                    id: this.model.id
+                }).then(function (data) {
+                    this.model.set(data);
+                }.bind(this));
+            }.bind(this));
+        }
+
+    });
 });

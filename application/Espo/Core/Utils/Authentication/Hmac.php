@@ -31,24 +31,33 @@ namespace Espo\Core\Utils\Authentication;
 
 use \Espo\Core\Exceptions\Error;
 
-class Espo extends Base
+class Hmac extends Base
 {
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
+    public function login($username, $password, $authToken = null, $isPortal = null)
     {
-        if (!$password) return;
+        $apiKey = $username;
+        $hash = $password;
 
-        if ($authToken) {
-            $hash = $authToken->get('hash');
-        } else {
-            $hash = $this->getPasswordHash()->hash($password);
+        $user = $this->getEntityManager()->getRepository('User')->findOne([
+            'whereClause' => [
+                'type' => 'api',
+                'apiKey' => $apiKey
+            ]
+        ]);
+
+        if (!$user) return;
+
+        if ($user) {
+            $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+            $secretKey = $apiKeyUtil->getSecretKeyForUserId($user->id);
+            if (!$secretKey) return;
+
+            if ($hash === \Espo\Core\Utils\ApiKey::hash($secretKey)) {
+                return $user;
+            }
+
+            return;
         }
-
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-                'password' => $hash
-            )
-        ));
 
         return $user;
     }

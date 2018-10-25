@@ -49,6 +49,13 @@ class User extends Record
 
     protected $internalAttributeList = ['password'];
 
+    protected $readOnlyAttributeList = [
+        'apiKey',
+        'secretKey',
+        'isAdmin',
+        'isSuperAdmin'
+    ];
+
     protected $nonAdminReadOnlyAttributeList = [
         'userName',
         'isActive',
@@ -311,6 +318,48 @@ class User extends Record
         return $user;
     }
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if ($entity->isApi()) {
+            if ($this->getUser()->isAdmin()) {
+                $secretKey = $this->getSecretKeyForUserId($entity->id);
+                $entity->set('secretKey', $secretKey);
+            } else {
+                $entity->clear('apiKey');
+                $entity->clear('secretKey');
+            }
+        }
+    }
+
+    protected function getSecretKeyForUserId($id)
+    {
+        $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+        return $apiKeyUtil->getSecretKeyForUserId($id);
+    }
+
+    public function generateNewApiKeyForEntity($id)
+    {
+        $entity = $this->getEntity($id);
+        if (!$entity) throw new NotFound();
+
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$entity->isApi()) throw new Forbidden();
+
+        $apiKey = \Espo\Core\Utils\Util::generateApiKey();
+        $entity->set('apiKey', $apiKey);
+
+        $secretKey = \Espo\Core\Utils\Util::generateKey();
+        $entity->set('secretKey', $secretKey);
+
+        $this->getEntityManager()->saveEntity($entity);
+
+        $this->prepareEntityForOutput($entity);
+
+        return $entity;
+    }
+
     protected function getInternalUserCount()
     {
         return $this->getEntityManager()->getRepository('User')->where([
@@ -341,6 +390,14 @@ class User extends Record
             if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
                 throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
             }
+        }
+
+        if ($entity->isApi()) {
+            $apiKey = \Espo\Core\Utils\Util::generateApiKey();
+            $entity->set('apiKey', $apiKey);
+
+            $secretKey = \Espo\Core\Utils\Util::generateKey();
+            $entity->set('secretKey', $secretKey);
         }
     }
 

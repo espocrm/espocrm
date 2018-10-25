@@ -38,6 +38,12 @@ class User extends \Espo\Core\ORM\Repositories\RDB
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if ($entity->isNew() && !$entity->has('type')) {
+            if ($entity->get('isPortalUser') && $entity->isAttributeChanged('isPortalUser')) {
+                $entity->set('type', 'portal');
+            }
+        }
+
         $entity->clear('isAdmin');
         $entity->clear('isPortalUser');
         $entity->clear('isSuperAdmin');
@@ -60,6 +66,12 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
+        if ($entity->isApi()) {
+            if ($entity->isAttributeChanged('userName')) {
+                $entity->set('lastName', $entity->get('userName'));
+            }
+        }
+
         parent::beforeSave($entity, $options);
 
         if ($entity->isNew()) {
@@ -68,9 +80,9 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                 throw new Error();
             }
 
-            $user = $this->where(array(
+            $user = $this->where([
                 'userName' => $userName
-            ))->findOne();
+            ])->findOne();
 
             if ($user) {
                 throw new Conflict(json_encode(['reason' => 'userNameExists']));
@@ -106,6 +118,28 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             $entity->set('teamsNames', (object)[]);
             $entity->set('defaultTeamId', null);
             $entity->set('defaultTeamName', null);
+        }
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isApi()) {
+            if ($entity->get('apiKey') && $entity->get('secretKey') && $entity->isAttributeChanged('apiKey')) {
+                $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+                $apiKeyUtil->storeSecretKeyForUserId($entity->id, $entity->get('secretKey'));
+            }
+        }
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        if ($entity->isApi()) {
+            $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+            $apiKeyUtil->removeSecretKeyForUserId($entity->id);
         }
     }
 
