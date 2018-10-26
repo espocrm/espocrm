@@ -348,10 +348,6 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $result = 'fields';
         $this->assertObjectHasAttribute($result, $this->object->getObjects('entityDefs.User'));
 
-        $result = (object) [
-            'type' => 'bool',
-            'tooltip' => true
-        ];
-        $this->assertEquals($result, $this->object->getObjects('entityDefs.User.fields.isAdmin'));
+        $this->assertObjectHasAttribute('type', $this->object->getObjects('entityDefs.User.fields.name'));
     }
 }
