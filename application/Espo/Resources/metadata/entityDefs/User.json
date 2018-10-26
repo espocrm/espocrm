@@ -37,6 +37,15 @@
             "disabled": true,
             "notStorable": true
         },
+        "authMethod": {
+            "type": "enum",
+            "options": ["ApiKey", "Hmac"],
+            "maxLength": 24,
+            "layoutMassUpdateDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutListDisabled": true
+        },
         "apiKey": {
             "type": "varchar",
             "maxLength": 100,

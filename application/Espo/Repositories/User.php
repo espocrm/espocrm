@@ -70,6 +70,13 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             if ($entity->isAttributeChanged('userName')) {
                 $entity->set('lastName', $entity->get('userName'));
             }
+            if ($entity->has('authMethod') && $entity->get('authMethod') !== 'Hmac') {
+                $entity->clear('secretKey');
+            }
+        } else {
+            if ($entity->isAttributeChanged('type')) {
+                $entity->set('authMethod', null);
+            }
         }
 
         parent::beforeSave($entity, $options);
@@ -126,9 +133,19 @@ class User extends \Espo\Core\ORM\Repositories\RDB
         parent::afterSave($entity, $options);
 
         if ($entity->isApi()) {
-            if ($entity->get('apiKey') && $entity->get('secretKey') && $entity->isAttributeChanged('apiKey')) {
+            if (
+                $entity->get('apiKey') && $entity->get('secretKey') &&
+                (
+                    $entity->isAttributeChanged('apiKey') || $entity->isAttributeChanged('authMethod')
+                )
+            ) {
                 $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
                 $apiKeyUtil->storeSecretKeyForUserId($entity->id, $entity->get('secretKey'));
+            }
+
+            if ($entity->isAttributeChanged('authMethod') && $entity->get('authMethod') !== 'Hmac') {
+                $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+                $apiKeyUtil->removeSecretKeyForUserId($entity->id);
             }
         }
     }
@@ -137,7 +154,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::afterRemove($entity, $options);
 
-        if ($entity->isApi()) {
+        if ($entity->isApi() && $entity->get('authMethod') === 'Hmac') {
             $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
             $apiKeyUtil->removeSecretKeyForUserId($entity->id);
         }

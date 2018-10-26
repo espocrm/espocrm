@@ -32,7 +32,8 @@
         "isSuperAdmin": "Is Super Admin",
         "lastAccess": "Last Access",
         "apiKey": "API Key",
-        "secretKey": "Secret Key"
+        "secretKey": "Secret Key",
+        "authMethod": "Authentication Method"
     },
     "links": {
         "teams": "Teams",
@@ -99,6 +100,10 @@
             "system": "System",
             "super-admin": "Super-Admin",
             "api": "API"
+        },
+        "authMethod": {
+            "ApiKey": "API Key",
+            "Hmac": "HMAC"
         }
     },
     "boolFilters": {

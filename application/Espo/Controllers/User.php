@@ -113,4 +113,18 @@ class User extends \Espo\Core\Controllers\Record
 
         return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
     }
+
+    public function actionCreateLink($params, $data, $request)
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        return parent::actionCreateLink($params, $data, $request);
+    }
+
+    public function actionRemoveLink($params, $data, $request)
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        return parent::actionRemoveLink($params, $data, $request);
+    }
 }

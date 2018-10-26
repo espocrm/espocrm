@@ -62,14 +62,24 @@ class User extends Record
         'isAdmin',
         'isPortalUser',
         'teamsIds',
+        'teamsColumns',
+        'teamsNames',
         'rolesIds',
+        'rolesNames',
         'password',
         'portalsIds',
         'portalRolesIds',
         'contactId',
         'accountsIds',
         'type',
-        'apiKey'
+        'apiKey',
+        'secretKey'
+    ];
+
+    protected $onlyAdminAttributeList = [
+        'authMethod',
+        'apiKey',
+        'secretKey'
     ];
 
     protected $mandatorySelectAttributeList = [
@@ -80,13 +90,13 @@ class User extends Record
         'type'
     ];
 
-    protected $linkSelectParams = array(
-        'targetLists' => array(
-            'additionalColumns' => array(
+    protected $linkSelectParams = [
+        'targetLists' => [
+            'additionalColumns' => [
                 'optedOut' => 'isOptedOut'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
     protected function getMailSender()
     {
@@ -258,9 +268,6 @@ class User extends Record
         }
 
         if (!$this->getUser()->isAdmin()) {
-            foreach ($this->nonAdminReadOnlyAttributeList as $attribute) {
-                unset($data->$attribute);
-            }
             if (!$this->getAcl()->checkScope('Team')) {
                 unset($data->defaultTeamId);
             }
@@ -324,8 +331,10 @@ class User extends Record
 
         if ($entity->isApi()) {
             if ($this->getUser()->isAdmin()) {
-                $secretKey = $this->getSecretKeyForUserId($entity->id);
-                $entity->set('secretKey', $secretKey);
+                if ($entity->get('authMethod') === 'Hmac') {
+                    $secretKey = $this->getSecretKeyForUserId($entity->id);
+                    $entity->set('secretKey', $secretKey);
+                }
             } else {
                 $entity->clear('apiKey');
                 $entity->clear('secretKey');
@@ -350,8 +359,10 @@ class User extends Record
         $apiKey = \Espo\Core\Utils\Util::generateApiKey();
         $entity->set('apiKey', $apiKey);
 
-        $secretKey = \Espo\Core\Utils\Util::generateKey();
-        $entity->set('secretKey', $secretKey);
+        if ($entity->get('authMethod') === 'Hmac') {
+            $secretKey = \Espo\Core\Utils\Util::generateKey();
+            $entity->set('secretKey', $secretKey);
+        }
 
         $this->getEntityManager()->saveEntity($entity);
 
@@ -396,18 +407,20 @@ class User extends Record
             $apiKey = \Espo\Core\Utils\Util::generateApiKey();
             $entity->set('apiKey', $apiKey);
 
-            $secretKey = \Espo\Core\Utils\Util::generateKey();
-            $entity->set('secretKey', $secretKey);
+            if ($entity->get('authMethod') === 'Hmac') {
+                $secretKey = \Espo\Core\Utils\Util::generateKey();
+                $entity->set('secretKey', $secretKey);
+            }
         }
     }
 
-    protected function beforeUpdateEntity(Entity $user, $data)
+    protected function beforeUpdateEntity(Entity $entity, $data)
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->isSuperAdmin()) {
             if (
-                ($user->get('isActive') && $user->isAttributeChanged('isActive') && !$user->isPortal())
+                ($entity->get('isActive') && $entity->isAttributeChanged('isActive') && !$entity->isPortal())
                 ||
-                (!$user->isPortal() && $user->isAttributeChanged('type'))
+                (!$entity->isPortal() && $entity->isAttributeChanged('type'))
             ) {
                 $userCount = $this->getInternalUserCount();
                 if ($userCount >= $this->getConfig()->get('userLimit')) {
@@ -417,14 +430,21 @@ class User extends Record
         }
         if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->isSuperAdmin()) {
             if (
-                ($user->get('isActive') && $user->isAttributeChanged('isActive') && $user->isPortal())
+                ($entity->get('isActive') && $entity->isAttributeChanged('isActive') && $entity->isPortal())
                 ||
-                ($user->isPortal() && $user->isAttributeChanged('type'))
+                ($entity->isPortal() && $entity->isAttributeChanged('type'))
             ) {
                 $portalUserCount = $this->getPortalUserCount();
                 if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
                     throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
                 }
+            }
+        }
+
+        if ($entity->isApi()) {
+            if ($entity->isAttributeChanged('authMethod') && $entity->get('authMethod') === 'Hmac') {
+                $secretKey = \Espo\Core\Utils\Util::generateKey();
+                $entity->set('secretKey', $secretKey);
             }
         }
     }

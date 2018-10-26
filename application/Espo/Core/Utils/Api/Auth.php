@@ -58,15 +58,21 @@ class Auth extends \Slim\Middleware
 
         $authenticationMethod = null;
 
-        $hmacAuthorizationHeader = $request->headers('X-Hmac-Authorization');
-
-        if ($hmacAuthorizationHeader) {
-            $authenticationMethod = 'Hmac';
-            list($username, $password) = explode(':', base64_decode($hmacAuthorizationHeader), 2);
+        $espoAuthorizationHeader = $request->headers('Http-Espo-Authorization');
+        if (isset($espoAuthorizationHeader)) {
+            list($username, $password) = explode(':', base64_decode($espoAuthorizationHeader), 2);
         } else {
-            $espoAuthorizationHeader = $request->headers('HTTP_ESPO_AUTHORIZATION');
-            if (isset($espoAuthorizationHeader)) {
-                list($username, $password) = explode(':', base64_decode($espoAuthorizationHeader), 2);
+            $hmacAuthorizationHeader = $request->headers('X-Hmac-Authorization');
+            if ($hmacAuthorizationHeader) {
+                $authenticationMethod = 'Hmac';
+                list($username, $password) = explode(':', base64_decode($hmacAuthorizationHeader), 2);
+            } else {
+                $apiKeyHeader = $request->headers('X-Api-Key');
+                if ($apiKeyHeader) {
+                    $authenticationMethod = 'ApiKey';
+                    $username = $apiKeyHeader;
+                    $password = null;
+                }
             }
         }
 
@@ -78,9 +84,9 @@ class Auth extends \Slim\Middleware
         }
 
         if (!isset($username) && !isset($password)) {
-            $espoCgiAuth = $request->headers('HTTP_ESPO_CGI_AUTH');
+            $espoCgiAuth = $request->headers('Http-Espo-Cgi-Auth');
             if (empty($espoCgiAuth)) {
-                $espoCgiAuth = $request->headers('REDIRECT_HTTP_ESPO_CGI_AUTH');
+                $espoCgiAuth = $request->headers('Redirect-Http-Espo-Cgi-Auth');
             }
             if (!empty($espoCgiAuth)) {
                 list($username, $password) = explode(':' , base64_decode(substr($espoCgiAuth, 6)));
@@ -120,7 +126,7 @@ class Auth extends \Slim\Middleware
             }
         }
 
-        if ($username && $password) {
+        if ($username) {
             try {
                 $isAuthenticated = $this->auth->login($username, $password, $authenticationMethod);
             } catch (\Exception $e) {
@@ -165,9 +171,8 @@ class Auth extends \Slim\Middleware
     {
         $request = $this->app->request();
 
-        $httpXRequestedWith = $request->headers('HTTP_X_REQUESTED_WITH');
-
-        if (isset($httpXRequestedWith) && strtolower($httpXRequestedWith) == 'xmlhttprequest') {
+        $httpXRequestedWith = $request->headers('Http-X-Requested-With');
+        if ($httpXRequestedWith && strtolower($httpXRequestedWith) == 'xmlhttprequest') {
             return true;
         }
 

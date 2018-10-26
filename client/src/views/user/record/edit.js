@@ -161,6 +161,15 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     });
                 }
 
+                if (this.getUser().isAdmin() && this.model.isApi()) {
+                    layout.push({
+                        "name": "auth",
+                        "rows": [
+                            [{"name":"authMethod"}, false]
+                        ]
+                    });
+                }
+
                 var gridLayout = {
                     type: 'record',
                     layout: this.convertDetailLayout(layout),

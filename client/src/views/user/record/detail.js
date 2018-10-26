@@ -75,7 +75,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
 
-            if (this.model.isApi()) {
+            if (this.model.isApi() && this.getUser().isAdmin()) {
                 this.addDropdownItem({
                     'label': 'Generate New API Key',
                     'name': 'generateNewApiKey'
@@ -143,6 +143,12 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     this.hideField('phoneNumber');
                     this.hideField('name');
                     this.hideField('gender');
+
+                    if (this.model.get('authMethod') === 'Hmac') {
+                        this.showField('secretKey');
+                    } else {
+                        this.hideField('secretKey');
+                    }
 
                 } else {
                     this.showField('title');
@@ -240,9 +246,10 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
                 if (this.getUser().isAdmin() && this.model.isApi()) {
                     layout.push({
-                        "name": "apiKey",
+                        "name": "auth",
                         "rows": [
-                            [{"name":"apiKey"}, {"name":"secretKey"}]
+                            [{"name":"authMethod"}, false],
+                            [{"name":"apiKey"}, {"name":"secretKey"}],
                         ]
                     });
                 }
