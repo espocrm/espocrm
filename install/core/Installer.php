@@ -493,7 +493,13 @@ class Installer
 
         foreach ($queries as $query) {
             $sth = $pdo->prepare($query);
-            $result =& $sth->execute();
+
+            try {
+                $result &= $sth->execute();
+            } catch (\Exception $e) {
+                $GLOBALS['log']->warning('Error executing the query: ' . $query);
+            }
+
         }
 
         return $result;
