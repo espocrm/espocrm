@@ -37,10 +37,7 @@ $fields = array(
         'default' => $config->get('database.dbname', ''),
     ),
     'host-name' => array(
-        'default' => $config->get('database.host', ''),
-    ),
-    'port' => array(
-        'default' => $config->get('database.port', ''),
+        'default' => $config->get('database.host', '') . ($config->get('database.port') ? ':' . $config->get('database.port') : ''),
     ),
     'db-user-name' => array(
         'default' => $config->get('database.user', ''),
