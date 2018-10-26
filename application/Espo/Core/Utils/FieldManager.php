@@ -445,30 +445,72 @@ class FieldManager
      */
     protected function prepareFieldDefs($scope, $name, $fieldDefs)
     {
-        $unnecessaryFields = array(
-            'name',
-            'label',
-            'translatedOptions',
-            'dynamicLogicVisible',
-            'dynamicLogicReadOnly',
-            'dynamicLogicRequired',
-            'dynamicLogicOptions',
-        );
+        $additionalParamList = [
+            'type' => [
+                'type' => 'varchar',
+            ],
+            'isCustom' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+            'isPersonalData' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+        ];
 
-        foreach ($unnecessaryFields as $fieldName) {
-            if (isset($fieldDefs[$fieldName])) {
-                unset($fieldDefs[$fieldName]);
+        $fieldDefsByType = $this->getMetadataHelper()->getFieldDefsByType($fieldDefs);
+        if (!isset($fieldDefsByType['params'])) {
+            return $fieldDefs;
+        }
+
+        $filteredFieldDefs = [];
+
+        $params = [];
+        foreach ($fieldDefsByType['params'] as $paramData) {
+            $params[ $paramData['name'] ] = $paramData;
+        }
+        foreach ($additionalParamList as $paramName => $paramValue) {
+            if (!isset($params[$paramName])) {
+                $params[$paramName] = array_merge(['name' => $paramName], $paramValue);
+            }
+        }
+        $permittedParamList = array_keys($params);
+
+        foreach ($fieldDefs as $paramName => $paramValue) {
+            if (!isset($paramValue) || $paramValue === '') {
+                continue;
+            }
+
+            if (in_array($paramName, $permittedParamList)) {
+                switch ($params[$paramName]['type']) {
+                    case 'bool':
+                        $fieldDefsDefaultValue = isset($params[$paramName]['default']) ? $params[$paramName]['default'] : false;
+
+                        if ($fieldDefsDefaultValue !== $paramValue) {
+                            $filteredFieldDefs[$paramName] = $paramValue;
+                        }
+                        break;
+
+                    default:
+                        if (!isset($params[$paramName]['default']) || $params[$paramName]['default'] !== $paramValue) {
+                            $filteredFieldDefs[$paramName] = $paramValue;
+                        }
+                        break;
+                }
             }
         }
 
-        $currentOptionList = array_keys((array) $this->getFieldDefs($scope, $name));
-        foreach ($fieldDefs as $defName => $defValue) {
-            if ( (!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList) ) {
-                unset($fieldDefs[$defName]);
+        $actualFieldDefs = $this->getFieldDefs($scope, $name);
+        if ($actualFieldDefs) {
+            foreach ($actualFieldDefs as $paramName => $paramValue) {
+                if (!array_key_exists($paramName, $filteredFieldDefs)) {
+                    $filteredFieldDefs[$paramName] = $paramValue;
+                }
             }
         }
 
-        return $fieldDefs;
+        return $filteredFieldDefs;
     }
 
     /**
