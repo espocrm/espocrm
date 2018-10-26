@@ -83,8 +83,7 @@
                     "type": "id",
                     "dbType": "int",
                     "len": "11",
-                    "autoincrement": true,
-                    "unique" : true
+                    "autoincrement": true
                 },
                 "ascendorId": {
                     "type": "varchar",
