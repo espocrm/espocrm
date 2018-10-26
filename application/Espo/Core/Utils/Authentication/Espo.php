@@ -46,7 +46,8 @@ class Espo extends Base
         $user = $this->getEntityManager()->getRepository('User')->findOne([
             'whereClause' => [
                 'userName' => $username,
-                'password' => $hash
+                'password' => $hash,
+                'type!=' => ['api', 'system']
             ]
         ]);
 

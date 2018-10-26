@@ -98,6 +98,8 @@ class User extends Record
         ]
     ];
 
+    protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
+
     protected function getMailSender()
     {
         return $this->getContainer()->get('mailSender');
@@ -390,7 +392,10 @@ class User extends Record
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        if ($this->getConfig()->get('userLimit') && !$this->getUser()->isSuperAdmin() && !$entity->isPortal()) {
+        if (
+            $this->getConfig()->get('userLimit') && !$this->getUser()->isSuperAdmin() &&
+            !$entity->isPortal() && !$entity->isApi()
+        ) {
             $userCount = $this->getInternalUserCount();
             if ($userCount >= $this->getConfig()->get('userLimit')) {
                 throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
@@ -412,15 +417,27 @@ class User extends Record
                 $entity->set('secretKey', $secretKey);
             }
         }
+
+        if (!$entity->isSuperAdmin()) {
+            if (
+                $entity->get('type') &&
+                !in_array($entity->get('type'), $this->allowedUserTypeList)
+            ) {
+                throw new Forbidden();
+            }
+        }
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->isSuperAdmin()) {
             if (
-                ($entity->get('isActive') && $entity->isAttributeChanged('isActive') && !$entity->isPortal())
+                (
+                    $entity->get('isActive') && $entity->isAttributeChanged('isActive') &&
+                    !$entity->isPortal() && !$entity->isApi()
+                )
                 ||
-                (!$entity->isPortal() && $entity->isAttributeChanged('type'))
+                (!$entity->isPortal() && !$entity->isApi() && $entity->isAttributeChanged('type'))
             ) {
                 $userCount = $this->getInternalUserCount();
                 if ($userCount >= $this->getConfig()->get('userLimit')) {
@@ -445,6 +462,16 @@ class User extends Record
             if ($entity->isAttributeChanged('authMethod') && $entity->get('authMethod') === 'Hmac') {
                 $secretKey = \Espo\Core\Utils\Util::generateKey();
                 $entity->set('secretKey', $secretKey);
+            }
+        }
+
+        if (!$entity->isSuperAdmin()) {
+            if (
+                $entity->isAttributeChanged('type') &&
+                $entity->get('type') &&
+                !in_array($entity->get('type'), $this->allowedUserTypeList)
+            ) {
+                throw new Forbidden();
             }
         }
     }
