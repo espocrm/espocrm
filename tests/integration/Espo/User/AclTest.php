@@ -197,14 +197,14 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         ];
         $data = [
             'id' => $user1->id,
-            'isAdmin' => 1,
+            'type' => 'admin',
             'teamsIds' => ['id']
         ];
         $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
         $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
         $resultData = json_decode($result);
 
-        $this->assertTrue(!property_exists($resultData, 'isAdmin') || !$resultData->isAdmin);
+        $this->assertTrue(!property_exists($resultData, 'type') || $resultData->type !== 'admin');
         $this->assertTrue(
             !property_exists($resultData, 'teamsIds') || !is_array($resultData->teamsIds) || !in_array('id', $$resultData->teamsIds)
         );

@@ -33,6 +33,7 @@ return array(
             array(
                 'id' => '1',
                 'isAdmin' => true,
+                'type' => 'admin',
                 'userName' => 'admin',
                 'password' => '1',
                 'salutationName' => '',

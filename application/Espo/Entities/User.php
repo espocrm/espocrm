@@ -53,7 +53,7 @@ class User extends \Espo\Core\Entities\Person
 
     public function isRegular()
     {
-        return $this->get('type') === 'regular';
+        return $this->get('type') === 'regular' || ($this->has('type') && !$this->get('type'));
     }
 
     public function isApi()
