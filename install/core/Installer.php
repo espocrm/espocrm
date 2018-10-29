@@ -365,7 +365,7 @@ class Installer
             'userName' => $userName,
             'password' => $this->getPasswordHash()->hash($password),
             'lastName' => 'Admin',
-            'isAdmin' => '1',
+            'type' => 'admin',
         );
 
         $result = $this->createRecord('User', $user);
