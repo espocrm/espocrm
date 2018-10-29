@@ -55,27 +55,27 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                     style: 'danger'
                 }, true);
 
+                this.addMenuItem('dropdown', false);
 
                 if (status == 'Archived' || status == 'Recieved') {
                     if (!this.model.get('parentId')) {
-                        this.menu.dropdown.push({
+                        this.addMenuItem('dropdown', {
                             label: 'Create Lead',
                             action: 'createLead',
                             acl: 'edit',
                             aclScope: 'Lead'
                         });
-                        if (this.getConfig().get('b2cMode')) {
-                            this.menu.dropdown.push({
-                                label: 'Create Contact',
-                                action: 'createContact',
-                                acl: 'edit',
-                                aclScope: 'Contact'
-                            });
-                        }
+
+                        this.addMenuItem('dropdown', {
+                            label: 'Create Contact',
+                            action: 'createContact',
+                            acl: 'edit',
+                            aclScope: 'Contact'
+                        });
                     }
                 }
 
-                this.menu.dropdown.push({
+                this.addMenuItem('dropdown', {
                     label: 'Create Task',
                     action: 'createTask',
                     acl: 'edit',
@@ -83,7 +83,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                 });
 
                 if (this.model.get('parentType') !== 'Case' || !this.model.get('parentId')) {
-                    this.menu.dropdown.push({
+                    this.addMenuItem('dropdown', {
                         label: 'Create Case',
                         action: 'createCase',
                         acl: 'edit',

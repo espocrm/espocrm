@@ -47,4 +47,3 @@ Espo.define('views/preferences/edit', 'views/edit', function (Dep) {
 
     });
 });
-

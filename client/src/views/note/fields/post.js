@@ -44,7 +44,7 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                 if (!text) return;
                 text = text.trim();
                 if (!text) return;
-                this.handlePastedText(text);
+                this.handlePastedText(text, e.originalEvent);
             }
         }, Dep.prototype.events),
 
@@ -154,7 +154,7 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
             return Dep.prototype.validateRequired.call(this);
         },
 
-        handlePastedText: function (text) {
+        handlePastedText: function (text, event) {
             if (/^http(s){0,1}\:\/\//.test(text)) {
                 var imageExtensionList = ['jpg', 'jpeg', 'png', 'gif'];
                 var regExpString = '.+\\.(' + imageExtensionList.join('|') + ')(/?.*){0,1}$';
@@ -171,7 +171,9 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                     }
 
                     this.ajaxPostRequest('Attachment/action/getAttachmentFromImageUrl', {
-                        url: url
+                        url: url,
+                        parentType: 'Note',
+                        field: 'attachments'
                     }).then(function (attachment) {
                         var attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
                         var attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
@@ -205,7 +207,9 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                         }
 
                         this.ajaxPostRequest('Attachment/action/getCopiedAttachment', {
-                            id: id
+                            id: id,
+                            parentType: 'Note',
+                            field: 'attachments'
                         }).then(function (attachment) {
                             var attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
                             var attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
@@ -225,6 +229,28 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                         }.bind(this)).fail(function (xhr) {
                             xhr.errorIsHandled = true;
                         });
+                    }
+                } else if (text.indexOf(siteUrl) === 0) {
+                    if (/\#[A-Z][a-zA-Z0-9]*\/view\/[a-zA-Z0-9]*$/.test(text)) {
+                        var match = /\#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9]*)$/.exec(text)
+                        if (match.length === 3) {
+                            var entityType = match[1];
+                            var id = match[2];
+
+                            event.preventDefault();
+
+                            var cursorStartPosition = this.$element.prop('selectionStart');
+                            var cursorEndPosition = this.$element.prop('selectionEnd');
+                            var text = this.$element.val();
+                            var textBefore = text.substring(0,  cursorStartPosition);
+                            var textAfter  = text.substring(cursorEndPosition, text.length);
+
+                            var textToPaste = '['+entityType+'/'+id+'](#'+entityType+'/view/'+id+')';
+
+                            this.$element.val(textBefore + textToPaste + textAfter);
+
+                            this.controlTextareaHeight();
+                        }
                     }
                 }
             }

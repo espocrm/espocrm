@@ -12,14 +12,15 @@
     "openedCount": "Aperto",
     "clickedCount": "Cliccato",
     "optedOutCount": "Rinuncia",
-    "bouncedCount": "Bounced",
-    "hardBouncedCount": "Hard Bounced",
-    "softBouncedCount": "Soft Bounced",
-    "leadCreatedCount": "Leads Created",
     "revenue": "Entrata",
     "revenueConverted": "Entrata (convertita)",
-    "budget": "Budget",
-    "budgetConverted": "Budget (convertito)"
+    "budgetConverted": "Budget (convertito)",
+    "contactsTemplate": "Modello contatti",
+    "leadsTemplate": "Modello Leads",
+    "accountsTemplate": "Modello di account",
+    "usersTemplate": "Modello utenti",
+    "mailMergeOnlyWithAddress": "Salta record senza indirizzo",
+    "optedInCount": "Iscritto"
   },
   "links": {
     "targetLists": "Liste di destinazione",
@@ -28,18 +29,15 @@
     "contacts": "Contatti",
     "leads": "Comando",
     "opportunities": "Opportunita'",
-    "campaignLogRecords": "Log",
     "massEmails": "Email Massiva",
-    "trackingUrls": "Tracking URLs"
+    "contactsTemplate": "Modello contatti",
+    "leadsTemplate": "Modello Leads",
+    "accountsTemplate": "Modello di account",
+    "usersTemplate": "Modello utenti"
   },
   "options": {
     "type": {
-      "Email": "Email",
-      "Web": "Web",
-      "Television": "Televisione",
-      "Radio": "Radio",
-      "Newsletter": "Newsletter",
-      "Mail": "Mail"
+      "Television": "Televisione"
     },
     "status": {
       "Planning": "Pianificazione",
@@ -49,7 +47,6 @@
     }
   },
   "labels": {
-    "Create Campaign": "Create Campaign",
     "Target Lists": "Liste di destinazione",
     "Statistics": "Statistiche",
     "hard": "duro",
@@ -57,16 +54,15 @@
     "Unsubscribe": "Annulla l'iscrizione",
     "Mass Emails": "Email Massive",
     "Email Templates": "Modelli Email",
-    "Unsubscribe again": "Unsubscribe again",
-    "Subscribe again": "Subscribe again",
-    "Create Target List": "Elenco crea target"
+    "Create Target List": "Elenco crea target",
+    "Mail Merge": "Stampa unione",
+    "Generate Mail Merge PDF": "Genera Stampa unione pdf"
   },
   "presetFilters": {
     "active": "Attivo"
   },
   "messages": {
-    "unsubscribed": "Sei stato rimosso dalla nostra mailing list.",
-    "subscribedAgain": "You are subscribed again."
+    "unsubscribed": "Sei stato rimosso dalla nostra mailing list."
   },
   "tooltips": {
     "targetLists": "Obiettivi che devono ricevere i messaggi .",

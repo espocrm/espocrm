@@ -16,6 +16,7 @@
     "time": "ora",
     "User List": "Elenco utenti",
     "Manage Users": "Gestione Utenti",
-    "View Calendar": "Mostra calendario"
+    "View Calendar": "Mostra calendario",
+    "Create Shared View": "Crea vista condivisa"
   }
 }

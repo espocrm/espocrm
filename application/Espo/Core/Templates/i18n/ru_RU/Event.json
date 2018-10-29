@@ -1,36 +1,35 @@
 {
   "fields": {
-    "parent": "Parent",
-    "dateStart": "Date Start",
-    "dateEnd": "Date End",
-    "duration": "Duration",
-    "status": "Status",
-    "reminders": "Reminders"
+    "parent": "Источник",
+    "dateStart": "Дата начала",
+    "dateEnd": "Дата окончания",
+    "duration": "Длительность",
+    "status": "Статус",
+    "reminders": "Напоминания"
   },
   "links": {
-    "parent": "Parent"
+    "parent": "Источник"
   },
   "options": {
     "status": {
-      "Planned": "Planned",
-      "Held": "Held",
-      "Not Held": "Not Held"
+      "Planned": "Запланировано",
+      "Held": "Состоялось",
+      "Not Held": "Не состоялся"
     }
   },
   "labels": {
     "Create {entityType}": "Создать {entityTypeTranslated}",
-    "Schedule {entityType}": "Schedule {entityTypeTranslated}",
-    "Log {entityType}": "Log {entityTypeTranslated}",
-    "Set Held": "Set Held",
-    "Set Not Held": "Set Not Held"
+    "Schedule {entityType}": "Запланировать {entityTypeTranslated}",
+    "Set Held": "Состоялось",
+    "Set Not Held": "Не состоялось"
   },
   "massActions": {
-    "setHeld": "Set Held",
-    "setNotHeld": "Set Not Held"
+    "setHeld": "Состоялось",
+    "setNotHeld": "Не состоялось"
   },
   "presetFilters": {
     "planned": "Запланировано",
-    "held": "Held",
+    "held": "Состоялся",
     "todays": "Сегодняшние"
   }
 }

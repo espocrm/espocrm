@@ -88,6 +88,7 @@
             },
             "User": {
                 "isAdmin": false,
+                "type": false,
                 "contact": false,
                 "accounts": false,
                 "portalRoles": false,
@@ -134,10 +135,12 @@
         }
     },
     "valuePermissionList": [
-        "exportPermission"
+        "exportPermission",
+        "massUpdatePermission"
     ],
     "permissionsStrictDefaults": {
-        "exportPermission": "no"
+        "exportPermission": "no",
+        "massUpdatePermission": "no"
     },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,

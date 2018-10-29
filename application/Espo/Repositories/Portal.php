@@ -64,6 +64,7 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
             } else {
                 $url .= $entity->id . '/';
             }
+            $entity->set('isDefault', false);
             $entity->setFetched('isDefault', false);
         }
         $entity->set('url', $url);

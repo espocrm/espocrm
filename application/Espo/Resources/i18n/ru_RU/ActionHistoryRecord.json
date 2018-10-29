@@ -1,27 +1,29 @@
 {
   "fields": {
-    "user": "User",
-    "action": "Action",
-    "createdAt": "Date",
-    "target": "Target",
-    "targetType": "Target Type",
-    "authToken": "Auth Token",
-    "ipAddress": "IP Address"
+    "user": "Пользователь",
+    "action": "Действие",
+    "createdAt": "Дата",
+    "target": "Цель",
+    "targetType": "Тип цели",
+    "authToken": "Токен аутентификации",
+    "ipAddress": "IP адрес",
+    "authLogRecord": "Запись Лога Аутентификации"
   },
   "links": {
-    "authToken": "Auth Token",
-    "user": "User",
-    "target": "Target"
+    "authToken": "Токен аутентификации",
+    "user": "Пользователь",
+    "target": "Цель",
+    "authLogRecord": "Запись Лога Аутентификации"
   },
   "presetFilters": {
-    "onlyMy": "Only My"
+    "onlyMy": "Только мои"
   },
   "options": {
     "action": {
-      "read": "Read",
-      "update": "Update",
-      "delete": "Delete",
-      "create": "Create"
+      "read": "Прочитано",
+      "update": "Обновить",
+      "delete": "Удалить",
+      "create": "Создать"
     }
   }
 }

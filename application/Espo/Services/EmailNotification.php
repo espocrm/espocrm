@@ -112,7 +112,7 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         if (!$user) return;
 
-        if ($user->get('isPortalUser')) return;
+        if ($user->isPortal()) return;
 
         $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
         if (!$preferences) return;
@@ -272,9 +272,9 @@ class EmailNotification extends \Espo\Core\Services\Base
         $forPortal = $this->getConfig()->get('portalStreamEmailNotifications');
 
         if ($forInternal && !$forPortal) {
-            $selectParams['whereClause']['user.isPortalUser'] = false;
+            $selectParams['whereClause']['user.type!='] = 'portal';
         } else if (!$forInternal && $forPortal) {
-            $selectParams['whereClause']['user.isPortalUser'] = true;
+            $selectParams['whereClause']['user.type'] = 'portal';
         }
 
         return $selectParams;
@@ -489,7 +489,7 @@ class EmailNotification extends \Espo\Core\Services\Base
 
     protected function getSiteUrl(\Espo\Entities\User $user)
     {
-        if ($user->get('isPortalUser')) {
+        if ($user->isPortal()) {
             if (!array_key_exists($user->id, $this->userIdPortalCacheMap)) {
                 $this->userIdPortalCacheMap[$user->id] = null;
 

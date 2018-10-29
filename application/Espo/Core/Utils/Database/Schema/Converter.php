@@ -373,6 +373,13 @@ class Converter
             }
         }
 
+        $databaseParams = $this->getConfig()->get('database');
+        if (!isset($databaseParams['charset']) || $databaseParams['charset'] == 'utf8mb4') {
+            $dbFieldParams['platformOptions'] = array(
+                'collation' => 'utf8mb4_unicode_ci',
+            );
+        }
+
         switch ($fieldParams['type']) {
             case 'id':
             case 'foreignId':

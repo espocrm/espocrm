@@ -1,5 +1,5 @@
-#header .navbar-collapse {
-    @media (min-width: @grid-float-breakpoint) {
+@media (min-width: @grid-float-breakpoint) {
+    #header .navbar-collapse {
         .navbar & {
             padding-left: 0;
             padding-right: 0;
@@ -7,149 +7,321 @@
     }
 }
 
+@media screen and (min-width: @screen-sm-min) {
+
+    #header {
+        width: @navbar-width;
+    }
+
+    #navbar .navbar {
+        .nav > li.more > .dropdown-menu {
+            top: 0;
+            left: @navbar-width;
+            padding-top: 0;
+            padding-bottom: 0;
+            position: fixed;
+            border-left-width: 0;
+            border-top-width: 0;
+            overflow-y: hidden;
+        }
+
+        ul.tabs {
+            width: @navbar-width;
+            margin-left: -8px;
+            overflow-y: hidden;
+        }
+
+        a.minimizer {
+            color: @navbar-inverse-link-color;
+            text-decoration: none;
+            margin-top: 5px;
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+        a.minimizer > span.left {
+            display: inline;
+        }
+
+        a.minimizer > span.right {
+            display: none;
+        }
+    }
+
+    #navbar {
+        .navbar {
+            top: 0;
+            border-width: 0 0 0 0;
+
+            position: fixed;
+            z-index: @zindex-navbar-fixed;
+            width: @navbar-width;
+            margin-bottom: 0px;
+            height: 100%;
+        }
+
+        .navbar-brand img {
+            max-width: @navbar-width - 12px;
+            height: 33px;
+        }
+
+        a.navbar-brand {
+            max-width: @navbar-width;
+            height: 35px;
+        }
+
+        .navbar-header {
+            width: @navbar-width;
+        }
+
+        .navbar-header > a.minimizer {
+            width: 30px;
+            height: 30px;
+            float: right;
+        }
+
+        .navbar-right {
+            position: fixed;
+            bottom: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: @tob-bar-height;
+            width: 100%;
+            background-color: @top-navbar-bg-color;
+            margin-left: @navbar-width;
+            padding-right: @navbar-width;
+
+            .global-search-container {
+                position: fixed;
+                top: 0;
+                right: 102px;
+            }
+
+            .global-search-container a.global-searcy-button {
+                padding: 5px 10px;
+                color: @gray-light;
+            }
+
+            .quick-create-container {
+                position: fixed;
+                top: 0;
+                right: 34px;
+                width: 34px;
+            }
+
+            .menu-container {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 34px;
+            }
+
+            > li > a {
+                color: @gray-light;
+                padding: 5px 10px;
+            }
+
+            .notifications-badge-container {
+                position: fixed;
+                top: 0;
+                right: 68px;
+                width: 34px;
+            }
+        }
+
+        ul.tabs {
+            li {
+                float: none;
+            }
+
+            li > a {
+                padding-top: 8px;
+                padding-bottom: 8px;
+                padding-left: 10px;
+            }
+
+            li.tab > a {
+                padding-left: 10px - @navbar-color-border-width;
+            }
+        }
+
+        .navbar-form {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+    }
+}
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
-    #header a.minimizer {
-        display: none;
+    #navbar {
+        a.minimizer {
+            display: none;
+        }
+        .navbar ul.nav > li.global-search-container {
+            display: block;
+        }
     }
-    #header .navbar ul.nav > li.global-search-container {
-        display: block;
-    }
+
     #global-search-input {
         width: 100% !important;
     }
 }
 
-body > #header ul.tabs > li > a > span.full-label {
-    position: absolute;
-    margin-left: 28px;
-}
+body {
+    #navbar {
+        ul.tabs {
+            > li > a > span.full-label {
+                position: absolute;
+                margin-left: 28px;
+            }
 
-body > #header ul.tabs > li.more > ul > li > a > span.full-label {
-    padding-left: 28px;
-    position: static;
-}
+            > li.more > ul > li > a > span.full-label {
+                padding-left: 28px;
+                position: static;
+            }
 
-body > #header ul.tabs > li.more > ul > li > a > span.short-label, {
-    position: absolute;
-}
+            > li.more > ul > li > a > span.short-label, {
+                position: absolute;
+            }
 
-body > #header ul.tabs > li > a > span.short-label > .short-label-text {
-    font-weight: bold;
-    visibility: hidden;
-}
+            > li > a > span.short-label > .short-label-text {
+                font-weight: bold;
+                visibility: hidden;
+            }
 
-body > #header ul.tabs > li span.short-label > span {
-    display: inline-block;
-    width: 16px;
-    text-align: center;
-}
+            > li span.short-label > span {
+                display: inline-block;
+                width: 16px;
+                text-align: center;
+            }
 
-body > #header ul.tabs > li > a > span.full-label {
-    display: inline;
-}
+            > li > a > span.full-label {
+                display: inline;
+                text-overflow: ellipsis;
+                max-width: ~"calc(100% - 50px)";
+                overflow: hidden;
+                white-space: nowrap;
+            }
+        }
 
-body > #header .navbar-brand span.home-icon {
-    display: none;
-}
+        .navbar-header {
+            > a.minimizer span {
+                margin-top: 7px;
+                margin-left: 8px;
+            }
+        }
 
-#header .more-icon {
-    display: inline;
-}
+        .navbar-brand span.home-icon {
+            display: none;
+        }
 
-#header .navbar > .navbar-header > a.navbar-brand {
-    &,
-    &:active {
-        color: @navbar-inverse-link-color;
-    }
-}
+        .navbar-header > a.navbar-brand {
+            &,
+            &:active {
+                color: @navbar-inverse-link-color;
+            }
+        }
 
-#header .navbar li.tab > a {
-    border-left-width: @navbar-color-border-width;
-    border-left-style: solid;
-    border-color: transparent;
+        .more-icon {
+            display: inline;
+        }
 
-    > span.full-label {
-        overflow-wrap: break-word;
-        word-wrap: break-word;
+        .navbar li.tab > a {
+            border-left-width: @navbar-color-border-width;
+            border-left-style: solid;
+            border-color: transparent;
+
+            > span.full-label {
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+            }
+        }
     }
 }
 
 @media screen and (min-width: @screen-sm-min) {
-
-    #header .nav > li.more > .dropdown-menu {
-        top: 0;
-        left: @navbar-width;
-        padding-top: 0;
-        padding-bottom: 0;
-        position: fixed;
-        border-left-width: 0;
-        border-top-width: 0;
-        overflow-y: hidden;
-    }
-
-    #header ul.tabs {
-        width: @navbar-width;
-        margin-left: -8px;
-        overflow-y: hidden;
-    }
-
-    #header a.minimizer {
-        color: @navbar-inverse-link-color;
-        text-decoration: none;
-        margin-top: 5px;
-        display: inline-block;
-        margin-left: 4px;
-    }
-
-    #header a.minimizer > span.left {
-        display: inline;
-    }
-    #header a.minimizer > span.right {
-        display: none;
-    }
 
     body.minimized {
         #header {
             width: @navbar-minimized-width;
         }
 
-        #header .nav > li.more > ul.dropdown-menu {
-            left: @navbar-minimized-width;
-        }
+        #navbar {
+            .nav > li.more > ul.dropdown-menu {
+                left: @navbar-minimized-width;
+            }
 
-        #header .navbar-brand img {
-            display: none;
-        }
+            .navbar-brand {
+                position: fixed;
+                top: 0;
+                height: 35px;
+                width: @navbar-minimized-width;
+                padding-top: 8px;
 
-        #header a.navbar-brand {
-            position: fixed;
-            top: 0;
-            height: 35px;
-            width: @navbar-minimized-width;
-            padding-top: 8px;
-        }
+                span.home-icon {
+                    margin-left: 12px;
+                    display: inline;
+                    font-size: 14px;
+                }
 
-        #header a.navbar-brand span.home-icon {
-            margin-left: 12px;
-            display: inline;
-            font-size: 14px;
-        }
+                img {
+                    display: none;
+                }
+            }
 
-        #header .navbar-brand img {
-            display: none;
-        }
+            .navbar-header {
+                width: @navbar-minimized-width;
+                height: 30px;
+            }
 
-        #header .navbar-header {
-            width: @navbar-minimized-width;
-            height: 30px;
-        }
+            a.minimizer > span.left {
+                display: none;
+            }
 
-        #header a.minimizer > span.left {
-            display: none;
-        }
-        #header a.minimizer > span.right {
-            display: inline;
+            a.minimizer > span.right {
+                display: inline;
+            }
+
+            .navbar {
+                width: @navbar-minimized-width;
+            }
+
+            ul.tabs {
+                width: @navbar-minimized-width;
+                margin-top: 5px;
+
+                > li > a {
+                    padding-left: 10px;
+                }
+
+                > li.tab > a {
+                    padding-left: 10px - @navbar-color-border-width;
+                }
+
+                > li > a > span.short-label {
+                    display: inline;
+                }
+
+                > li > a > span.short-label > .color-icon {
+                    display: none;
+                }
+
+                > li > a > span.full-label {
+                    display: none;
+                }
+
+                > li > a > span.short-label > .short-label-text {
+                    position: relative;
+                    left: -1px;
+                    visibility: visible;
+                }
+            }
+
+            .navbar-right {
+                margin-left: @navbar-minimized-width;
+                padding-right: @navbar-minimized-width;
+            }
         }
 
         #content {
@@ -159,75 +331,6 @@ body > #header .navbar-brand span.home-icon {
         #footer {
             margin-left: @navbar-minimized-width;
         }
-
-        #header .navbar {
-            width: @navbar-minimized-width;
-        }
-
-        #header ul.tabs {
-            width: @navbar-minimized-width;
-            margin-top: 5px;
-        }
-
-        #header .navbar-right {
-            margin-left: @navbar-minimized-width;
-            padding-right: @navbar-minimized-width;
-        }
-
-        #header ul.tabs > li > a {
-            padding-left: 10px;
-        }
-
-        #header ul.tabs > li.tab > a {
-            padding-left: 10px - @navbar-color-border-width;
-        }
-
-        #header ul.tabs > li > a > span.short-label {
-            display: inline;
-        }
-
-        #header ul.tabs > li > a > span.short-label > .color-icon {
-            display: none;
-        }
-
-        #header ul.tabs > li > a > span.full-label {
-            display: none;
-        }
-
-        > #header ul.tabs > li > a > span.short-label > .short-label-text {
-            position: relative;
-            left: -1px;
-            visibility: visible;
-        }
-    }
-
-    #header .navbar {
-        top: 0;
-        border-width: 0 0 0 0;
-    }
-
-    #header {
-        width: @navbar-width;
-    }
-
-    #header .navbar-brand img {
-        max-width: @navbar-width - 12px;
-        height: 33px;
-    }
-
-    #header a.navbar-brand {
-        max-width: @navbar-width;
-        height: 35px;
-    }
-
-    #header .navbar-header {
-        width: @navbar-width;
-    }
-
-    #header .navbar-header > a.minimizer {
-        width: 30px;
-        height: 30px;
-        float: right;
     }
 
     body > .content {
@@ -263,83 +366,6 @@ body > #header .navbar-brand span.home-icon {
         margin-left: @navbar-width;
     }
 
-    #header .navbar {
-        position: fixed;
-        z-index: @zindex-navbar-fixed;
-        width: @navbar-width;
-        margin-bottom: 0px;
-        height: 100%;
-    }
-
-    #header ul.tabs li {
-        float: none;
-    }
-
-    #header .navbar-right {
-        position: fixed;
-        bottom: 20px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: @tob-bar-height;
-        width: 100%;
-        background-color: @top-navbar-bg-color;
-        margin-left: @navbar-width;
-        padding-right: @navbar-width;
-    }
-
-    #header .navbar-right .global-search-container {
-        position: fixed;
-        top: 0;
-        right: 102px;
-    }
-
-    #header .navbar-right .global-search-container a.global-searcy-button {
-        padding: 5px 10px;
-        color: @gray-light;
-    }
-
-    #header .navbar-right .quick-create-container {
-        position: fixed;
-        top: 0;
-        right: 34px;
-        width: 34px;
-    }
-
-    #header .navbar-right .menu-container {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 34px;
-    }
-
-    #header .navbar-right > li > a {
-        color: @gray-light;
-        padding: 5px 10px;
-    }
-
-    #header .navbar-right .notifications-badge-container {
-        position: fixed;
-        top: 0;
-        right: 68px;
-        width: 34px;
-    }
-
-    #header ul.tabs li > a {
-        padding-top: 8px;
-        padding-bottom: 8px;
-        padding-left: 10px;
-    }
-
-    #header ul.tabs li.tab > a {
-        padding-left: 10px - @navbar-color-border-width;
-    }
-
-    #header .navbar-form {
-        margin-top: 0px;
-        margin-bottom: 0px;
-    }
-
     #global-search-input {
         height: @tob-bar-height !important;
         margin-top: 0 !important;
@@ -355,7 +381,6 @@ body > #header .navbar-brand span.home-icon {
         max-width: @container-max-width;
     }
 }
-
 
 body .stick-sub.button-container {
     width: calc(~"100% - "@navbar-width);

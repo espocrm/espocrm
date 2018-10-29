@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('MultiCollection', 'Collection', function (Collection) {
+Espo.define('multi-collection', 'collection', function (Collection) {
+
     var MultiCollection = Collection.extend({
 
         /**
@@ -36,9 +37,6 @@ Espo.define('MultiCollection', 'Collection', function (Collection) {
 
         initialize: function (models, options) {
             options = options || {};
-
-            this.sortBy = options.sortBy || this.sortBy;
-            this.asc = ('asc' in options) ? options.asc : this.asc;
 
             this.data = {};
 
@@ -57,5 +55,4 @@ Espo.define('MultiCollection', 'Collection', function (Collection) {
     });
 
     return MultiCollection;
-
 });

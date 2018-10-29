@@ -163,15 +163,11 @@ class DataManager
         }
     }
 
-    /**
-     * Update cache timestamp
-     *
-     * @return bool
-     */
     public function updateCacheTimestamp()
     {
         $this->getContainer()->get('config')->updateCacheTimestamp();
         $this->getContainer()->get('config')->save();
+
         return true;
     }
 
@@ -192,6 +188,12 @@ class DataManager
         }
 
         $config->set('fullTextSearchMinLength', $fullTextSearchMinLength);
+
+        $cryptKey = $config->get('cryptKey');
+        if (!$cryptKey) {
+            $cryptKey = \Espo\Core\Utils\Util::generateKey();
+            $config->set('cryptKey', $cryptKey);
+        }
 
         $config->save();
     }

@@ -4,17 +4,16 @@
     "clientId": "Идентификатор клиента (Client ID)",
     "clientSecret": "Секретный ключ (Client Secret)",
     "redirectUri": "URI перенаправления (Redirect URI)",
-    "apiKey": "API Key"
+    "apiKey": "Ключ API"
   },
   "messages": {
     "selectIntegration": "Выберите интерацию из меню.",
     "noIntegrations": "Нет доступных интергаций."
   },
   "help": {
-    "Google": "<p><b>Получите учетные данные OAuth 2.0 из консоли разработчика Google.</b></p><p>Посетите <a href=\"https://console.developers.google.com/project\">консоль разработчика Google</a> для получения учетных данных OAuth 2.0 таких как Client ID и Client Secret.</p></p>",
-    "GoogleMaps": "<p>Obtain API key <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">here</a>.</p>"
+    "Google": "<p><b>Получите учетные данные OAuth 2.0 из консоли разработчика Google.</b></p><p>Посетите <a href=\"https://console.developers.google.com/project\">консоль разработчика Google</a> для получения учетных данных OAuth 2.0 таких как Client ID и Client Secret.</p></p>"
   },
   "titles": {
-    "GoogleMaps": "Google Maps"
+    "GoogleMaps": "Google Карты"
   }
 }

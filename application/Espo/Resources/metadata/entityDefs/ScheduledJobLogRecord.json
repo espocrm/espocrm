@@ -31,7 +31,7 @@
         }
     },
     "collection": {
-        "sortBy": "executionTime",
-        "asc": false
+        "orderBy": "executionTime",
+        "order": "desc"
     }
 }

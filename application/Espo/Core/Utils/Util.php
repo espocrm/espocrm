@@ -555,6 +555,19 @@ class Util
         return uniqid() . substr(md5(rand()), 0, 4);
     }
 
+    public static function generateApiKey()
+    {
+        if (!function_exists('random_bytes')) {
+            return self::generateId();
+        }
+        return bin2hex(random_bytes(16));
+    }
+
+    public static function generateKey()
+    {
+        return md5(uniqid(rand(), true));
+    }
+
     public static function sanitizeFileName($fileName)
     {
         return preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).])/u", '_', $fileName);

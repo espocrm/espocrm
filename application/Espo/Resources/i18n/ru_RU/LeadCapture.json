@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Имя",
+    "campaign": "Кампания",
+    "isActive": "Активный",
+    "subscribeToTargetList": "Подписаться на список целей",
+    "subscribeContactToTargetList": "Подписаться на контакт, если существует",
+    "targetList": "Список целей",
+    "fieldList": "Список полей, чтобы передавать",
+    "optInConfirmation": "Двойное подтверждение подписки",
+    "optInConfirmationEmailTemplate": "Шаблон письма для подтверждения подписки",
+    "optInConfirmationLifetime": "Время подтверждения подписки (часы)",
+    "optInConfirmationSuccessMessage": "Текст для показа после подтверждения подписки",
+    "leadSource": "Источник кандидата",
+    "apiKey": "Ключ API",
+    "targetTeam": "Группа",
+    "exampleRequestMethod": "Метод"
+  },
+  "links": {
+    "targetList": "Список целей",
+    "campaign": "Кампания",
+    "optInConfirmationEmailTemplate": "Шаблон письма для подтверждения подписки",
+    "targetTeam": "Группа",
+    "logRecords": "Лог"
+  },
+  "labels": {
+    "Create LeadCapture": "Создать точку входа",
+    "Generate New API Key": "Сгенерировать новый ключ API",
+    "Request": "Запрос",
+    "Confirm Opt-In": "Подтвердить подписку"
+  },
+  "messages": {
+    "generateApiKey": "Создать новый ключ API",
+    "optInConfirmationExpired": "Срок действия ссылки в подтверждение подписки истек.",
+    "optInIsConfirmed": "Подписку подтверждено."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown поддерживается."
+  }
+}

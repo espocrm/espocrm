@@ -152,6 +152,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             }, function (view) {
                 view.render();
                 this.listenToOnce(view, 'after:save', function (attributes) {
+                    this.trigger('update-item', name, attributes);
                     var $li = $("#layout ul > li[data-name='" + name + "']");
                     for (var key in attributes) {
                         $li.attr('data-' + key, attributes[key]);

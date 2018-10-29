@@ -67,6 +67,7 @@ Espo.define('model-factory', [], function () {
             Espo.loader.require(className, function (modelClass) {
                 this.seeds[name] = modelClass.extend({
                     name: name,
+                    entityType: name,
                     defs: this.metadata.get('entityDefs.' + name) || {},
                     dateTime: this.dateTime,
                     _user: this.user

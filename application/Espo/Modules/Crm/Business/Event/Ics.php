@@ -176,7 +176,7 @@ class Ics
              "BEGIN:VEVENT\n".
              "DTSTART:".$this->dateToCal($this->startDate)."\n".
              "DTEND:".$this->dateToCal($this->endDate)."\n".
-             "SUMMARY:New ".$this->escapeString($this->summary)."\n".
+             "SUMMARY:".$this->escapeString($this->summary)."\n".
              "LOCATION:".$this->escapeString($this->address)."\n".
              "ORGANIZER;CN=".$this->escapeString($this->who).":MAILTO:" . $this->escapeString($this->email)."\n".
              "DESCRIPTION:".$this->escapeString($this->formatMultiline($this->description))."\n".

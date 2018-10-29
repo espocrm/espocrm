@@ -5,9 +5,10 @@
     "attempts": "Tentativi Left",
     "failedAttempts": "Tentativo fallito",
     "serviceName": "Servizio",
-    "method": "Metodo",
+    "methodName": "Metodo",
     "scheduledJob": "Job Schedulato",
-    "data": "Data"
+    "method": "Metodo",
+    "scheduledJobJob": "Nome lavoro programmato"
   },
   "options": {
     "status": {

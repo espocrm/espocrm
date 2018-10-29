@@ -48,7 +48,9 @@ class EmailAddress extends \Espo\Core\Acl\Base
                 if (!$this->getAclManager()->check($user, $e, 'edit')) {
                     $isFobidden = true;
                     if (
-                        $e->get('isPortalUser') && $excludeEntity->getEntityType() === 'Contact' &&
+                        $e->getEntityType() === 'User' &&
+                        $e->isPortal() &&
+                        $excludeEntity->getEntityType() === 'Contact' &&
                         $e->get('contactId') === $excludeEntity->id
                     ) {
                         $isFobidden = false;

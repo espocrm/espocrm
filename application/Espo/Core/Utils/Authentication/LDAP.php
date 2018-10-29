@@ -110,8 +110,12 @@ class LDAP extends Espo
      *
      * @return \Espo\Entities\User | null
      */
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
+    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $params = [], $request)
     {
+        if (!$password) return;
+
+        $isPortal = !empty($params['isPortal']);
+
         if ($authToken) {
             return $this->loginByToken($username, $authToken);
         }
@@ -226,13 +230,13 @@ class LDAP extends Espo
     {
         $hash = $this->getPasswordHash()->hash($password);
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
+        $user = $this->getEntityManager()->getRepository('User')->findOne([
+            'whereClause' => [
                 'userName' => $username,
                 'password' => $hash,
-                'isAdmin' => 1
-            )
-        ));
+                'type' => ['admin', 'super-admin']
+            ]
+        ]);
 
         return $user;
     }
@@ -266,7 +270,7 @@ class LDAP extends Espo
         //set user fields
         if ($isPortal) {
             $userFields = $this->loadFields('portalUser');
-            $userFields['isPortalUser'] = true;
+            $userFields['type'] = 'portal';
         } else {
             $userFields = $this->loadFields('user');
         }

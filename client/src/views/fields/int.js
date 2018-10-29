@@ -123,9 +123,30 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             }
         },
 
+        getMaxValue: function () {
+            var maxValue = this.model.getFieldParam(this.name, 'max') || null;
+
+            if ('max' in this.params) {
+                maxValue = this.params.max;
+            }
+
+            return maxValue;
+        },
+
+        getMinValue: function () {
+            var minValue = this.model.getFieldParam(this.name, 'min') || null;
+
+            if ('min' in this.params) {
+                minValue = this.params.min;
+            }
+
+            return minValue;
+        },
+
         setupMaxLength: function () {
-            var maxValue = this.model.getFieldParam(this.name, 'max');
-            if (maxValue) {
+            var maxValue = this.getMaxValue();
+
+            if (typeof max !== 'undefined' && max !== null) {
                 maxValue = this.formatNumber(maxValue);
                 this.params.maxLength = maxValue.toString().length;
             }
@@ -147,8 +168,8 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 return false;
             }
 
-            var minValue = this.model.getFieldParam(this.name, 'min');
-            var maxValue = this.model.getFieldParam(this.name, 'max');
+            var minValue = this.getMinValue();
+            var maxValue = this.getMaxValue();
 
             if (minValue !== null && maxValue !== null) {
                 if (value < minValue || value > maxValue ) {

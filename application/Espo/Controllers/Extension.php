@@ -66,7 +66,7 @@ class Extension extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
         if ($this->getConfig()->get('restrictedMode')) {
-            if (!$this->getUser()->get('isSuperAdmin')) {
+            if (!$this->getUser()->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -84,7 +84,7 @@ class Extension extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
         if ($this->getConfig()->get('restrictedMode')) {
-            if (!$this->getUser()->get('isSuperAdmin')) {
+            if (!$this->getUser()->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -120,7 +120,7 @@ class Extension extends \Espo\Core\Controllers\Record
             throw BadRequest();
         }
         if ($this->getConfig()->get('restrictedMode')) {
-            if (!$this->getUser()->get('isSuperAdmin')) {
+            if (!$this->getUser()->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }

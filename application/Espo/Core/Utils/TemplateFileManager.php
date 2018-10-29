@@ -35,10 +35,13 @@ class TemplateFileManager
 
     protected $metadata;
 
-    public function __construct(Config $config, Metadata $metadata)
+    protected $fileManager;
+
+    public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
     {
         $this->config = $config;
         $this->metadata = $metadata;
+        $this->fileManager = $fileManager;
     }
 
     protected function getConfig()
@@ -51,11 +54,40 @@ class TemplateFileManager
         return $this->metadata;
     }
 
+    protected function getFileManager()
+    {
+        return $this->fileManager;
+    }
+
     public function getTemplate($type, $name, $entityType = null, $defaultModuleName = null)
     {
         $fileName = $this->getTemplateFileName($type, $name, $entityType, $defaultModuleName);
 
         return file_get_contents($fileName);
+    }
+
+    public function saveTemplate($type, $name, $contents, $entityType = null)
+    {
+        $language = $this->getConfig()->get('language');
+        if ($entityType) {
+            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        } else {
+            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        }
+
+        $this->getFileManager()->putContents($fileName, $contents);
+    }
+
+    public function resetTemplate($type, $name, $entityType = null)
+    {
+        $language = $this->getConfig()->get('language');
+        if ($entityType) {
+            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        } else {
+            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        }
+
+        $this->getFileManager()->removeFile($fileName);
     }
 
     protected function getTemplateFileName($type, $name, $entityType = null, $defaultModuleName = null)

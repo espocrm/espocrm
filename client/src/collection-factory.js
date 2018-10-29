@@ -43,20 +43,20 @@
             context = context || this;
 
             this.modelFactory.getSeed(name, function (seed) {
+                var orderBy = this.modelFactory.metadata.get(['entityDefs', name, 'collection', 'orderBy']);
+                var order = this.modelFactory.metadata.get(['entityDefs', name, 'collection', 'order']);
 
-                var asc = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.asc');
-                var sortBy = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.sortBy');
-
-                var className = this.modelFactory.metadata.get('clientDefs.' + name + '.collection') || 'Collection';
+                var className = this.modelFactory.metadata.get(['clientDefs', name, 'collection']) || 'collection';
 
                 Espo.loader.require(className, function (collectionClass) {
                     var collection = new collectionClass(null, {
                         name: name,
-                        asc: asc,
-                        sortBy: sortBy
+                        orderBy: orderBy,
+                        order: order
                     });
                     collection.model = seed;
                     collection._user = this.modelFactory.user;
+                    collection.entityType = name;
                     callback.call(context, collection);
                 }.bind(this));
             }.bind(this));
@@ -66,4 +66,3 @@
     return CollectionFactory;
 
 });
-

@@ -3,10 +3,10 @@
     "Create KnowledgeBaseArticle": "Создать статью",
     "Any": "Любой",
     "Send in Email": "Отправить на имейл",
-    "Move Up": "Move Up",
-    "Move Down": "Move Down",
-    "Move to Top": "Move to Top",
-    "Move to Bottom": "Move to Bottom"
+    "Move Up": "Переместить вверх",
+    "Move Down": "Переместить вниз",
+    "Move to Top": "Переместить в начало",
+    "Move to Bottom": "Переместить в нижнюю часть"
   },
   "fields": {
     "name": "Название",
@@ -42,6 +42,6 @@
     "published": "Опубликована"
   },
   "tooltips": {
-    "portals": "Article will be available only in specified portals."
+    "portals": "Статья будет доступна только на определенных порталах."
   }
 }

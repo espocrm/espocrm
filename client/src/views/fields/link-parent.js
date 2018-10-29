@@ -192,7 +192,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+            var url = this.foreignScope + '?orderBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {

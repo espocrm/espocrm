@@ -160,21 +160,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
-        toggleSort: function (field) {
+        toggleSort: function (orderBy) {
             var asc = true;
-            if (field === this.collection.sortBy && this.collection.asc) {
+            if (orderBy === this.collection.orderBy && this.collection.order === 'asc') {
                 asc = false;
             }
+            var order = asc ? 'asc' : 'desc';
+
             this.notify('Please wait...');
             this.collection.once('sync', function () {
                 this.notify(false);
-                this.trigger('sort', {sortBy: field, asc: asc});
+                this.trigger('sort', {orderBy: orderBy, order: order});
             }, this);
+
             var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
             while (this.collection.length > maxSizeLimit) {
                 this.collection.pop();
             }
-            this.collection.sort(field, asc);
+            this.collection.sort(orderBy, order);
             this.deactivate();
         },
 
@@ -704,6 +707,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (~index) {
                 this.massActionList.splice(index, 1);
             }
+
+            var index = this.checkAllResultMassActionList.indexOf(item);
+            if (~index) {
+                this.checkAllResultMassActionList.splice(index, 1);
+            }
         },
 
         addMassAction: function (item, allResult) {
@@ -715,7 +723,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         setup: function () {
             if (typeof this.collection === 'undefined') {
-                throw new Error('Collection has not been injected into Record.List view.');
+                throw new Error('Collection has not been injected into views/record/list view.');
             }
 
             this.layoutLoadCallbackList = [];
@@ -791,6 +799,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.getAcl().get('exportPermission') === 'no'
             ) {
                 this.removeMassAction('export');
+            }
+
+            if (this.getAcl().get('massUpdatePermission') !== 'yes') {
+                this.removeMassAction('massUpdate');
             }
 
             if (
@@ -989,9 +1001,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     item.hasCustomLabel = true;
                 }
                 if (item.sortable) {
-                    item.sorted = this.collection.sortBy === this.listLayout[i].name;
+                    item.sorted = this.collection.orderBy === this.listLayout[i].name;
                     if (item.sorted) {
-                        item.asc = this.collection.asc;
+                        item.asc = this.collection.order === 'asc' ;
                     }
                 }
                 defs.push(item);

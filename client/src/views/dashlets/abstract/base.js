@@ -144,11 +144,13 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
 
         setupButtonList: function () {},
 
+        hasOption: function (key) {
+            return key in this.optionsData;
+        },
+
         getOption: function (key) {
             return this.optionsData[key];
         }
 
     });
 });
-
-

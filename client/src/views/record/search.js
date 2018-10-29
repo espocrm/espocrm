@@ -123,7 +123,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.tryReady();
             }.bind(this));
 
-            this.presetFilterList = (Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.filterList') || [])).filter(function (item) {
+            var filterList = this.options.filterList || this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
+
+            this.presetFilterList = Espo.Utils.clone(filterList).filter(function (item) {
                 if (typeof item === 'string') return true;
                 item = item || {};
                 if (item.inPortalDisabled && this.getUser().isPortal()) return false;

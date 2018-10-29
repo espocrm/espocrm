@@ -134,7 +134,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 $cell = $('<td>').append($select);
                 $row.append($cell);
 
-                var value = d.value;
+                var value = d.value || '';
                 if (value.length > 200) {
                     value = value.substr(0, 200) + '...';
                 }

@@ -261,6 +261,8 @@ Espo.define('ui', [], function () {
                 return this.backdrop == 'static' ? this.$el[0].focus() : this.close();
             }
         }.bind(this));
+
+        $('body > .popover').addClass('hidden');
     };
     Dialog.prototype.hide = function () {
         this.$el.find('.modal-content').addClass('hidden');

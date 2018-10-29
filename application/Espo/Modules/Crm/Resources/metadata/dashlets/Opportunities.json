@@ -22,8 +22,8 @@
             }
         },
         "defaults": {
-            "sortBy": "closeDate",
-            "asc": true,
+            "orderBy": "closeDate",
+            "order": "asc",
             "displayRecords": 5,
             "populateAssignedUser": true,
             "expandedLayout": {

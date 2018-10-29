@@ -2,8 +2,6 @@
   "fields": {
     "post": "Inviare",
     "attachments": "Allegato",
-    "targetType": "Target",
-    "teams": "Teams",
     "users": "Utenti",
     "portals": "Portali",
     "type": "Tipo",
@@ -30,5 +28,9 @@
       "all": "a tutti gli utenti interni",
       "portals": "agli utenti del portale"
     }
+  },
+  "links": {
+    "superParent": "Super genitore",
+    "related": "Relativo"
   }
 }

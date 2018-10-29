@@ -34,7 +34,11 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
 
         dataAttributesDefs: {
             link: {type: 'bool'},
-            width: {type: 'float'},
+            width: {
+                type: 'float',
+                min: 0,
+                max: 100
+            },
             notSortable: {type: 'bool'},
             align: {
                 type: 'enum',
@@ -163,6 +167,8 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
                     }
                 }, this);
                 this.rowLayout[i].label = label;
+
+                this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);
             }
         },
 

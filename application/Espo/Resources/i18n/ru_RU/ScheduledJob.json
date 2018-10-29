@@ -18,7 +18,8 @@
       "CheckEmailAccounts": "Проверка входящей эл. почты пользователей",
       "SendEmailReminders": "Отправка напоминаний по эл. почте",
       "AuthTokenControl": "Контроль за токенами аутентификации",
-      "SendEmailNotifications": "Send Email Notifications"
+      "SendEmailNotifications": "Отправить оповещения на эл. почту",
+      "CheckNewVersion": "Проверить наличие новой версии"
     },
     "cronSetup": {
       "linux": "Заметка: Добавьте эту строку в crontab для запуска планировщика заданий Espo:",

@@ -182,6 +182,15 @@ class Table
         return 'no';
     }
 
+    public function getHighestLevel($action)
+    {
+        if (in_array($action, $this->booleanActionList)) {
+            return 'yes';
+        } else {
+            return 'all';
+        }
+    }
+
     private function load()
     {
         $valuePermissionLists = (object)[];
@@ -554,7 +563,7 @@ class Table
 
     protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists)
     {
-        if ($this->getUser()->get('isPortalUser')) {
+        if ($this->getUser()->isPortal()) {
             foreach ($this->getScopeList() as $scope) {
                 $table->$scope = false;
                 unset($fieldTable->$scope);

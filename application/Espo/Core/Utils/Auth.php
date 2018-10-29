@@ -38,8 +38,6 @@ class Auth
 {
     protected $container;
 
-    protected $authentication;
-
     protected $allowAnyAccess;
 
     const ACCESS_CRM_ONLY = 0;
@@ -60,16 +58,31 @@ class Auth
 
         $this->allowAnyAccess = $allowAnyAccess;
 
-        $authenticationMethod = $this->getConfig()->get('authenticationMethod', 'Espo');
-        $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
-        $this->authentication = new $authenticationClassName($this->getConfig(), $this->getEntityManager(), $this);
-
         $this->request = $container->get('slim')->request();
     }
 
     protected function getContainer()
     {
         return $this->container;
+    }
+
+    protected function getDefaultAuthenticationMethod()
+    {
+        return $this->getConfig()->get('authenticationMethod', 'Espo');
+    }
+
+    protected function getAuthentication($authenticationMethod)
+    {
+        $authenticationMethod = preg_replace('/[^a-zA-Z0-9]+/', '', $authenticationMethod);
+
+        $authenticationClassName = "\\Espo\\Custom\\Core\\Utils\\Authentication\\" . $authenticationMethod;
+        if (!class_exists($authenticationClassName)) {
+            $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
+        }
+
+        $authentication = new $authenticationClassName($this->getConfig(), $this->getEntityManager(), $this);
+
+        return $authentication;
     }
 
     protected function setPortal(Portal $portal)
@@ -119,22 +132,28 @@ class Auth
         $this->getContainer()->setUser($user);
     }
 
-    public function login($username, $password)
+    public function login($username, $password = null, $authenticationMethod = null)
     {
         $isByTokenOnly = false;
-        if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION_BY_TOKEN') === 'true') {
-            $isByTokenOnly = true;
+
+        if (!$authenticationMethod) {
+            if ($this->request->headers->get('Http-Espo-Authorization-By-Token') === 'true') {
+                $isByTokenOnly = true;
+            }
         }
 
         if (!$isByTokenOnly) {
             $this->checkFailedAttemptsLimit($username);
         }
 
-        $authToken = $this->getEntityManager()->getRepository('AuthToken')->where([
-            'token' => $password
-        ])->findOne();
-
+        $authToken = null;
         $authTokenIsFound = false;
+
+        if (!$authenticationMethod) {
+            $authToken = $this->getEntityManager()->getRepository('AuthToken')->where([
+                'token' => $password
+            ])->findOne();
+        }
 
         if ($authToken) {
             $authTokenIsFound = true;
@@ -168,7 +187,17 @@ class Auth
             return;
         }
 
-        $user = $this->authentication->login($username, $password, $authToken, $this->isPortal());
+        if (!$authenticationMethod) {
+            $authenticationMethod = $this->getDefaultAuthenticationMethod();
+        }
+
+        $authentication = $this->getAuthentication($authenticationMethod);
+
+        $params = [
+            'isPortal' => $this->isPortal()
+        ];
+
+        $user = $authentication->login($username, $password, $authToken, $params, $this->request);
 
         $authLogRecord = null;
 
@@ -190,13 +219,13 @@ class Auth
             return;
         }
 
-        if (!$user->isAdmin() && !$this->isPortal() && $user->get('isPortalUser')) {
+        if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'.");
             $this->logDenied($authLogRecord, 'IS_PORTAL_USER');
             return;
         }
 
-        if (!$user->isAdmin() && $this->isPortal() && !$user->get('isPortalUser')) {
+        if (!$user->isAdmin() && $this->isPortal() && !$user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user.");
             $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
             return;
@@ -218,7 +247,7 @@ class Auth
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->setUser($user);
 
-        if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION')) {
+        if ($this->request->headers->get('Http-Espo-Authorization')) {
             if (!$authToken) {
                 $authToken = $this->getEntityManager()->getEntity('AuthToken');
                 $token = $this->generateToken();

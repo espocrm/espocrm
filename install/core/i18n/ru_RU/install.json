@@ -18,12 +18,9 @@
     "twitter": "твиттер",
     "forum": "форум",
     "Installation Guide": "Инструкция по установке",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
+    "admin": "админ",
     "Locale": "Локаль",
     "Outbound Email Configuration": "Настройка исходящей эл. почты",
-    "SMTP": "SMTP",
     "Start": "Начать",
     "Back": "Назад",
     "Next": "Далее",
@@ -33,9 +30,6 @@
     "Test settings": "Проверка соединения",
     "Database Settings Description": "Введите информацию для подключения к базе данных MySQL (имя сервера, имя пользователя и пароль). Вы можете указать порт сервера, например localhost:3306.",
     "Install": "Установить",
-    "SetupConfirmation page title": "Рекомендуемые настройки",
-    "PHP Configuration": "Рекомендуемые настройки PHP",
-    "MySQL Configuration": "Конфигурация MySQL",
     "Configuration Instructions": "Инструкции по конфигурации",
     "phpVersion": "Версия PHP",
     "requiredMysqlVersion": "Версия MySQL",
@@ -110,10 +104,6 @@
     "mysqlSettingError": "Для EspoCRM требуется, чтобы значением \"{NAME}\" являлось {VALUE}"
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
-    },
     "modRewriteInstruction": {
       "apache": {
         "windows": "<br> <pre>1. Найдите файл httpd.conf (как правило, вы можете найти его в папке conf, config или в папке с похожим названием)<br>\n2. Внутри файла httpd.conf раскомментируйте строку LoadModule rewrite_module modules/mod_rewrite.so (удалите знак '#' в начале строки)<br>\n3. Также убедитесь что раскомментирована строка ClearModuleList и что строка AddModule mod_rewrite.c не закомментирована.\n</pre>",

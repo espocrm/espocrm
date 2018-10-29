@@ -24,12 +24,12 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Document.Fields.Name', 'Views.Fields.Varchar', function (Dep) {
+Espo.define('crm:views/document/fields/name', 'views/fields/varchar', function (Dep) {
 
-    return Dep.extend({    
-        
+    return Dep.extend({
+
         setup: function () {
             Dep.prototype.setup.call(this);
             if (this.model.isNew()) {
@@ -38,7 +38,7 @@ Espo.define('Crm:Views.Document.Fields.Name', 'Views.Fields.Varchar', function (
                 }, this);
             }
         },
-    
+
     });
 
 });

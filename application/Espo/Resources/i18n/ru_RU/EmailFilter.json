@@ -4,13 +4,13 @@
     "to": "Кому",
     "subject": "Тема",
     "bodyContains": "Тело письма содержит",
-    "action": "Action",
-    "isGlobal": "Is Global",
-    "emailFolder": "Folder"
+    "action": "Действие",
+    "isGlobal": "Глобальный",
+    "emailFolder": "Папка"
   },
   "labels": {
     "Create EmailFilter": "Создать фильтр эл. почты",
-    "Emails": "Emails"
+    "Emails": "Эл. письма"
   },
   "tooltips": {
     "from": "Письма отправленные с указанного адреса. Оставьте пустым, если не требуется. Можете использовать специальный символ *.",
@@ -18,12 +18,12 @@
     "name": "Просто название фильтра.",
     "subject": "Используйте символ *:\n\nтекст* - начинается с текста,\n*текст* - содержит текст,\n*текст - заканчивается текстом.",
     "bodyContains": "Тело эл. письма содержит любое из указанных слов или фраз.",
-    "isGlobal": "Applies this filter to all emails incoming to system."
+    "isGlobal": "Этот фильтр применяется для всех электронных писем, поступающих в систему."
   },
   "options": {
     "action": {
-      "Skip": "Ignore",
-      "Move to Folder": "Put in Folder"
+      "Skip": "Пропускать",
+      "Move to Folder": "Положить в папку"
     }
   }
 }

@@ -72,8 +72,8 @@
         }
     },
     "collection": {
-        "sortBy": "parent",
-        "asc": true
+        "orderBy": "parent",
+        "order": "asc"
     },
     "indexes": {
         "name": {

@@ -66,6 +66,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         initialAttributes: null,
 
+        VALIDATION_POPOVER_TIMEOUT: 3000,
+
         isRequired: function () {
             return this.params.required;
         },
@@ -76,6 +78,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
          */
         getCellElement: function () {
             return this.$el.parent();
+        },
+
+        isInlineEditMode: function () {
+            return !!this._isInlineEditMode;
         },
 
         setDisabled: function (locked) {
@@ -126,6 +132,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.readOnlyLocked = true;
             }
             if (this.mode == 'edit') {
+                console.log(this.mode, this.isInlineEditMode());
+                if (this.isInlineEditMode()) {
+                    this.inlineEditClose();
+                    return;
+                }
                 this.setMode('detail');
                 if (this.isRendered()) {
                     this.reRender();
@@ -494,6 +505,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditClose: function (dontReset) {
             this.trigger('inline-edit-off');
+            this._isInlineEditMode = false;
+
             if (this.mode != 'edit') {
                 return;
             }
@@ -522,6 +535,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.addInlineEditLinks();
             }, this);
 
+            this._isInlineEditMode = true;
+
             this.reRender(true);
             this.trigger('inline-edit-on');
         },
@@ -547,13 +562,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 trigger: 'manual'
             }).popover('show');
 
+            var isDestroyed = false;
+
             $el.closest('.field').one('mousedown click', function () {
+                if (isDestroyed) return;
                 $el.popover('destroy');
+                isDestroyed = true;
             });
 
             this.once('render remove', function () {
+                if (isDestroyed) return;
                 if ($el) {
                     $el.popover('destroy');
+                    isDestroyed = true;
                 }
             });
 
@@ -562,8 +583,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             this._timeout = setTimeout(function () {
+                if (isDestroyed) return;
                 $el.popover('destroy');
-            }, 3000);
+                isDestroyed = true;
+            }, this.VALIDATION_POPOVER_TIMEOUT);
         },
 
         validate: function () {
@@ -583,7 +606,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         validateRequired: function () {
             if (this.isRequired()) {
-                if (this.model.get(this.name) === '') {
+                if (this.model.get(this.name) === '' || this.model.get(this.name) === null) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg);
                     return true;

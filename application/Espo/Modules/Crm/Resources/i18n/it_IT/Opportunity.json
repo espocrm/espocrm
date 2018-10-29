@@ -1,11 +1,8 @@
 {
   "fields": {
     "name": "Nome",
-    "account": "Account",
-    "stage": "Stage",
     "amount": "Importo",
     "probability": "Probabilità, %",
-    "leadSource": "Lead Source",
     "doNotCall": "Non chiamare",
     "closeDate": "Data di chiusura",
     "contacts": "Contatti",
@@ -13,22 +10,18 @@
     "amountConverted": "Importo (convertito)",
     "amountWeightedConverted": "Importo Ponderato",
     "campaign": "Campagna",
-    "originalLead": "Original Lead",
     "amountCurrency": "Valuta dell'importo",
-    "contactRole": "Ruolo contatto"
+    "contactRole": "Ruolo contatto",
+    "lastStage": "Ultimo Stadio"
   },
   "links": {
     "contacts": "Contatti",
     "documents": "Documentsi",
-    "campaign": "Campagna",
-    "originalLead": "Original Lead"
+    "campaign": "Campagna"
   },
   "options": {
     "stage": {
-      "Prospecting": "Prospecting",
       "Qualification": "Qualifica",
-      "Proposal": "Proposta",
-      "Negotiation": "Negoziazione",
       "Needs Analysis": "Necessita di analisi",
       "Value Proposition": "Proposta di Valore",
       "Id. Decision Makers": "Id. Responsabile",
@@ -36,7 +29,9 @@
       "Proposal/Price Quote": "Proposta / Preventivo",
       "Negotiation/Review": "Negoziazione/Revisione",
       "Closed Won": "Chiuso Positivamente",
-      "Closed Lost": "Chiuso Negativamente"
+      "Closed Lost": "Chiuso Negativamente",
+      "Proposal": "Proposta",
+      "Negotiation": "Negoziazione"
     }
   },
   "labels": {

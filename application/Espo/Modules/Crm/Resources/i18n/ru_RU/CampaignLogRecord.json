@@ -7,14 +7,16 @@
     "parent": "Цель",
     "object": "Объект",
     "application": "Приложение",
-    "queueItem": "Queue Item",
+    "queueItem": "Элемент очереди",
     "stringData": "Строка данных",
-    "stringAdditionalData": "Строка дополнительных данных"
+    "stringAdditionalData": "Строка дополнительных данных",
+    "isTest": "Тестовый"
   },
   "links": {
-    "queueItem": "Queue Item",
+    "queueItem": "Элемент очереди",
     "parent": "Источник",
-    "object": "Объект"
+    "object": "Объект",
+    "campaign": "Кампания"
   },
   "options": {
     "action": {
@@ -23,7 +25,8 @@
       "Opted Out": "Отписалось",
       "Bounced": "Возвратов писем",
       "Clicked": "Проследовало по ссылке",
-      "Lead Created": "Кандидатов создано"
+      "Lead Created": "Кандидатов создано",
+      "Opted In": "Подписан"
     }
   },
   "labels": {
@@ -35,6 +38,7 @@
     "optedOut": "Отписалось",
     "bounced": "Возвратов писем",
     "clicked": "Проследовало по ссылке",
-    "leadCreated": "Кандидатов создано"
+    "leadCreated": "Кандидатов создано",
+    "optedIn": "Подписан"
   }
 }

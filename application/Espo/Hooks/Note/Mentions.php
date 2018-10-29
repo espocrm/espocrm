@@ -120,7 +120,7 @@ class Mentions extends \Espo\Core\Hooks\Base
 
     protected function notifyAboutMention(Entity $entity, \Espo\Entities\User $user, Entity $parent = null)
     {
-        if ($user->get('isPortalUser')) return;
+        if ($user->isPortal()) return;
         if ($parent) {
             if (!$this->getAclManager()->check($user, $parent, 'stream')) return;
         }

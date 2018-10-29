@@ -19,6 +19,10 @@
          "default": true
       },
       {
+         "name": "options",
+         "type": "multiEnum"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },

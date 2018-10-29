@@ -33,20 +33,22 @@ use \Espo\Core\Exceptions\Error;
 
 class Espo extends Base
 {
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
+    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $params = [], $request)
     {
+        if (!$password) return;
+
         if ($authToken) {
             $hash = $authToken->get('hash');
         } else {
             $hash = $this->getPasswordHash()->hash($password);
         }
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
+        $user = $this->getEntityManager()->getRepository('User')->findOne([
+            'whereClause' => [
                 'userName' => $username,
                 'password' => $hash
-            )
-        ));
+            ]
+        ]);
 
         return $user;
     }

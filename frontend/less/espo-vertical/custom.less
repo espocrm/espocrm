@@ -1,3 +1,16 @@
+#navbar {
+    .navbar-header {
+        > a {
+            color: @navbar-inverse-link-color;
+
+            &:hover,
+            &:focus {
+                color: @navbar-inverse-link-hover-color;
+                background-color: @navbar-inverse-link-hover-bg;
+            }
+        }
+    }
+}
 
 .stick-sub {
     margin-top: @tob-bar-height;
@@ -13,30 +26,12 @@
     width: 200px;
 }
 
-#header .navbar-header {
-    > a {
-      color: @navbar-inverse-link-color;
-
-      &:hover,
-      &:focus {
-        color: @navbar-inverse-link-hover-color;
-        background-color: @navbar-inverse-link-hover-bg;
-      }
-    }
-}
-
-#header .navbar-header > a.minimizer span {
-  margin-top: 7px;
-  margin-left: 8px;
-}
-
 @media screen and (min-width: @screen-sm-min) {
     #global-search-panel {
         margin-top: -1px;
     }
     .notifications-badge-container > .notifications-button > .number-badge {
-      top: 3px;
-      left: 22px;
+        top: 3px;
+        left: 22px;
     }
 }
-

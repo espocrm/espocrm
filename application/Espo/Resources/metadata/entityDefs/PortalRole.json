@@ -18,6 +18,13 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList"
+        },
+        "massUpdatePermission": {
+            "type": "enum",
+            "options": ["not-set", "yes", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
         }
     },
     "links": {
@@ -33,7 +40,7 @@
         }
     },
     "collection": {
-        "sortBy": "name",
-        "asc": true
+        "orderBy": "name",
+        "order": "asc"
     }
 }

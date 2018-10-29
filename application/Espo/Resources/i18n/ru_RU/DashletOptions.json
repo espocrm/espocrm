@@ -9,12 +9,13 @@
     "mode": "Режим",
     "enabledScopeList": "Что отображать",
     "users": "Пользователи",
-    "entityType": "Entity Type",
-    "primaryFilter": "Primary Filter",
-    "boolFilterList": "Additional Filters",
-    "sortBy": "Order (field)",
-    "sortDirection": "Order (direction)",
-    "expandedLayout": "Layout"
+    "entityType": "Тип объекта",
+    "primaryFilter": "Первичный фильтр",
+    "boolFilterList": "Дополнительные фильтры",
+    "sortBy": "Сортировка (поле)",
+    "sortDirection": "Сортировка (направление)",
+    "expandedLayout": "Макет",
+    "dateFilter": "Фильтр даты"
   },
   "options": {
     "mode": {
@@ -27,6 +28,6 @@
     }
   },
   "messages": {
-    "selectEntityType": "Select Entity Type in dashlet options."
+    "selectEntityType": "Выберите тип объекта в параметрах панели."
   }
 }

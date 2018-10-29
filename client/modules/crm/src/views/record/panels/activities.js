@@ -32,15 +32,15 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         name: 'activities',
 
-        template: 'crm:record/panels/activities',
-
-        sortBy: 'dateStart',
+        orderBy: 'dateStart',
 
         serviceName: 'Activities',
 
-        asc: false,
+        order: 'desc',
 
         rowActionsView: 'crm:views/record/row-actions/activities',
+
+        relatedListFiltersDisabled: true,
 
         actionList: [
             {
@@ -66,49 +66,22 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             ]
         },
 
-        currentScope: false,
-
-        events: _.extend({
-            'click button.scope-switcher': function (e) {
-                var $target = $(e.currentTarget);
-                this.$el.find('button.scope-switcher').removeClass('active');
-                $target.addClass('active');
-                this.currentScope = $target.data('scope') || false;
-
-                this.collection.where = [this.currentScope];
-
-                this.listenToOnce(this.collection, 'sync', function () {
-                    this.notify(false);
-                }, this);
-                this.notify('Loading...');
-                this.collection.fetch();
-
-                this.currentTab = this.currentScope || 'all';
-                this.getStorage().set('state', this.getStorageKey(), this.currentTab);
-            }
-        }, Dep.prototype.events),
-
-        data: function () {
-            return {
-                currentTab: this.currentTab,
-                scopeList: this.scopeList,
-                tabList: this.tabList
-            };
-        },
-
-        getStorageKey: function () {
-            return 'activities-' + this.model.name + '-' + this.name;
-        },
-
         setup: function () {
-            this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'all';
-
             this.scopeList = this.getConfig().get(this.name + 'EntityList') || [];
 
             this.listLayout = Espo.Utils.cloneDeep(this.listLayout);
             this.actionList = Espo.Utils.cloneDeep(this.actionList);
 
+            this.defs.create = true;
+
+            this.createAvailabilityHash = {};
+            this.entityTypeLinkMap = {};
+            this.createEntityTypeStatusMap = {};
+
             this.setupActionList();
+            this.setupFinalActionList();
+
+            this.setupSorting();
 
             var actionList = [];
             this.actionList.forEach(function (o) {
@@ -126,9 +99,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }
             }, this);
 
-            if (this.currentTab != 'all') {
-                this.currentScope = this.currentTab;
-            }
+            this.url = this.serviceName + '/' + this.model.name + '/' + this.model.id + '/' + this.name;
 
             this.seeds = {};
 
@@ -147,18 +118,52 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 this.wait(false);
             }
 
-            this.tabList = [];
+            this.filterList = [];
             this.scopeList.forEach(function (item) {
                 if (!this.getAcl().check(item)) return;
                 if (!this.getAcl().check(item, 'read')) return;
                 if (this.getMetadata().get(['scopes', item, 'disabled'])) return;
-                this.tabList.push(item);
+                this.filterList.push(item);
             }, this);
+
+            if (this.filterList.length) {
+                this.filterList.unshift('all');
+            }
+
+            if (this.filterList && this.filterList.length) {
+                this.filter = this.getStoredFilter();
+            }
+
+            this.setupFilterActions();
+
+            this.setupTitle();
+
+            this.collection = new MultiCollection();
+            this.collection.seeds = this.seeds;
+            this.collection.url = this.url;
+            this.collection.orderBy = this.orderBy;
+            this.collection.order = this.order;
+            this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
+            this.setFilter(this.filter);
+        },
+
+        translateFilter: function (name) {
+            if (name === 'all') {
+                return this.translate(name, 'presetFilters');
+            }
+            return this.translate(name, 'scopeNamesPlural');
+        },
+
+        isCreateAvailable: function (scope) {
+            return this.createAvailabilityHash[scope];
         },
 
         setupActionList: function () {
             this.scopeList.forEach(function (scope) {
                 if (!this.getMetadata().get(['clientDefs', scope, 'activityDefs', this.name + 'Create'])) return;
+
+                if (!this.getAcl().checkScope(scope, 'create')) return;
 
                 var o = {
                     action: 'createActivity',
@@ -171,7 +176,10 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 var link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link'])
                 if (link) {
                     o.data.link = link;
+
+                    this.entityTypeLinkMap[scope] = link;
                     if (!this.model.hasLink(link)) return;
+
                 } else {
                     o.data.scope = scope;
                     if (
@@ -183,6 +191,8 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                     }
                 }
 
+                this.createAvailabilityHash[scope] = true;
+
                 o.data = o.data || {};
                 if (!o.data.status) {
                     var statusList = this.getMetadata().get(['scopes', scope, this.name + 'StatusList']);
@@ -190,21 +200,40 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                         o.data.status = statusList[0];
                     }
                 }
+                this.createEntityTypeStatusMap[scope] = o.data.status;
+                this.actionList.push(o);
+            }, this);
+
+        },
+
+        setupFinalActionList: function () {
+            this.scopeList.forEach(function (scope, i) {
+                if (i === 0 && this.actionList.length) {
+                    this.actionList.push(false);
+                }
+                if (!this.getAcl().checkScope(scope, 'read')) return;
+                var o = {
+                    action: 'viewRelatedList',
+                    html: this.translate('View List') + ' &middot; ' + this.translate(scope, 'scopeNamesPlural') + '',
+                    data: {
+                        scope: scope
+                    },
+                    acl: 'read',
+                    aclScope: scope
+                };
                 this.actionList.push(o);
             }, this);
         },
 
+        setFilter: function (filter) {
+            this.filter = filter;
+            this.collection.where = null;
+            if (filter && filter !== 'all') {
+                this.collection.where = [this.filter];
+            }
+        },
+
         afterRender: function () {
-            var url = this.serviceName + '/' + this.model.name + '/' + this.model.id + '/' + this.name;
-
-            this.collection = new MultiCollection();
-            this.collection.seeds = this.seeds;
-            this.collection.url = url;
-            this.collection.where = [this.currentScope];
-            this.collection.sortBy = this.sortBy;
-            this.collection.asc = this.asc;
-            this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
-
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'views/record/list-expanded', {
                     el: this.getSelector() + ' > .list-container',
@@ -224,8 +253,12 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }, this);
             }, this);
 
-            if (!this.defs.hidden) {
+            if (!this.disabled) {
                 this.collection.fetch();
+            } else {
+                this.once('show', function () {
+                    this.collection.fetch();
+                }, this);
             }
         },
 
@@ -312,6 +345,15 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         checkParentTypeAvailability: function (scope, parentType) {
             return ~(this.getMetadata().get(['entityDefs', scope, 'fields', 'parent', 'entityList']) || []).indexOf(parentType);
+        },
+
+        actionCreateRelated: function (data) {
+            data.link = this.entityTypeLinkMap[data.scope];
+
+            if (this.createEntityTypeStatusMap[data.scope]) {
+                data.status = this.createEntityTypeStatusMap[data.scope];
+            }
+            this.actionCreateActivity(data);
         },
 
         actionCreateActivity: function (data) {
@@ -494,6 +536,13 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }.bind(this)
             });
         },
+
+        actionViewRelatedList: function (data) {
+            data.url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name + '/list/' + data.scope;
+
+            data.title = this.translate(this.defs.label) + ' &raquo ' + this.translate(data.scope, 'scopeNamesPlural');
+
+            Dep.prototype.actionViewRelatedList.call(this, data);
+        }
     });
 });
-

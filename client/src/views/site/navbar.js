@@ -457,13 +457,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     divider: true
                 },
                 {
-                    link: '#clearCache',
-                    label: this.getLanguage().translate('Clear Local Cache')
-                },
-                {
-                    divider: true
-                },
-                {
                     link: '#About',
                     label: this.getLanguage().translate('About')
                 },

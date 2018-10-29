@@ -32,15 +32,17 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
         name: 'tasks',
 
-        template: 'crm:record/panels/tasks',
+        scope: 'Task',
 
-        tabList: ['actual', 'completed'],
+        filterList: ['all', 'actual', 'completed'],
 
         defaultTab: 'actual',
 
-        sortBy: 'createdAt',
+        orderBy: 'createdAt',
 
-        asc: false,
+        orderDirection: 'desc',
+
+        rowActionsView: 'crm:views/record/row-actions/tasks',
 
         buttonList: [
             {
@@ -49,6 +51,13 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
                 acl: 'create',
                 aclScope: 'Task',
                 html: '<span class="fas fa-plus"></span>',
+            }
+        ],
+
+        actionList: [
+            {
+                label: 'View List',
+                action: 'viewRelatedList'
             }
         ],
 
@@ -71,107 +80,81 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
             ]
         },
 
-
-        events: _.extend({
-            'click button.tab-switcher': function (e) {
-                var $target = $(e.currentTarget);
-                this.$el.find('button.tab-switcher').removeClass('active');
-                $target.addClass('active');
-
-                this.currentTab = $target.data('tab');
-
-                this.collection.where = this.where = [
-                    {
-                        type: 'primary',
-                        value: this.currentTab
-                    }
-                ];
-
-                this.listenToOnce(this.collection, 'sync', function () {
-                    this.notify(false);
-                }.bind(this));
-                this.notify('Loading...');
-                this.collection.fetch();
-
-                this.getStorage().set('state', this.getStorageKey(), this.currentTab);
-            }
-        }, Dep.prototype.events),
-
-        data: function () {
-            return {
-                currentTab: this.currentTab,
-                tabList: this.tabList
-            };
-        },
-
-        getStorageKey: function () {
-            return 'tasks-' + this.model.name + '-' + this.name;
-        },
-
         setup: function () {
-            this.scope = this.model.name;
-
+            this.parentScope = this.model.name;
             this.link = 'tasks';
 
-            if (this.scope == 'Account') {
+            this.panelName = 'tasksSide';
+
+            this.defs.create = true;
+
+            this.url = this.model.name + '/' + this.model.id + '/' + this.link;
+
+            if (this.parentScope == 'Account') {
                 this.link = 'tasksPrimary';
             }
 
-            this.currentTab = this.getStorage().get('state', this.getStorageKey()) || this.defaultTab;
+            this.setupSorting();
 
-            this.where = [
-                {
-                    type: 'primary',
-                    value: this.currentTab
-                }
-            ];
-        },
+            if (this.filterList && this.filterList.length) {
+                this.filter = this.getStoredFilter();
+            }
 
-        afterRender: function () {
+            this.setupFilterActions();
 
-            var url = this.model.name + '/' + this.model.id + '/' + this.link;
+            this.setupTitle();
 
-            if (!this.getAcl().check('Task', 'read')) {
-                this.$el.find('.list-container').html(this.translate('No Access'));
-                this.$el.find('.button-container').remove();
-                return;
-            };
+            this.wait(true);
 
             this.getCollectionFactory().create('Task', function (collection) {
                 this.collection = collection;
                 collection.seeds = this.seeds;
-                collection.url = url;
-                collection.where = this.where;
-                collection.sortBy = this.sortBy;
-                collection.asc = this.asc;
+                collection.url = this.url;
+                collection.orderBy = this.defaultOrderBy;
+                collection.order = this.defaultOrder;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
-                var rowActionsView = 'crm:views/record/row-actions/tasks';
+                this.setFilter(this.filter);
 
-                this.createView('list', 'views/record/list-expanded', {
-                    el: this.getSelector() + ' > .list-container',
-                    pagination: false,
-                    type: 'listRelationship',
-                    rowActionsView: rowActionsView,
-                    checkboxes: false,
-                    collection: collection,
-                    listLayout: this.listLayout,
-                    skipBuildRows: true
-                }, function (view) {
-                    view.getSelectAttributeList(function (selectAttributeList) {
-                        if (selectAttributeList) {
-                            this.collection.data.select = selectAttributeList.join(',');
-                        }
-                        this.collection.fetch();
-                    }.bind(this));
-                });
+                this.wait(false);
             }, this);
+        },
+
+        afterRender: function () {
+            this.createView('list', 'views/record/list-expanded', {
+                el: this.getSelector() + ' > .list-container',
+                pagination: false,
+                type: 'listRelationship',
+                rowActionsView: this.defs.rowActionsView || this.rowActionsView,
+                checkboxes: false,
+                collection: this.collection,
+                listLayout: this.listLayout,
+                skipBuildRows: true
+            }, function (view) {
+                view.getSelectAttributeList(function (selectAttributeList) {
+                    if (selectAttributeList) {
+                        this.collection.data.select = selectAttributeList.join(',');
+                    }
+
+                    if (!this.disabled) {
+                        this.collection.fetch();
+                    } else {
+                        this.once('show', function () {
+                            this.collection.fetch();
+                        }, this);
+                    }
+                }.bind(this));
+            });
+        },
+
+        actionCreateRelated: function () {
+            this.actionCreateTask();
         },
 
         actionCreateTask: function (data) {
             var self = this;
             var link = this.link;
-            if (this.scope === 'Account') {
+            if (this.parentScope === 'Account') {
                 link = 'tasks';
             }
             var scope = 'Task';

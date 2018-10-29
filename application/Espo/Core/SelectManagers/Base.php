@@ -136,8 +136,11 @@ class Base
 
     protected function order($sortBy, $desc = false, &$result)
     {
-        if (!empty($sortBy)) {
+        if (is_string($desc)) {
+            $desc = $desc === strtolower('desc');
+        }
 
+        if (!empty($sortBy)) {
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
             if (in_array($type, ['link', 'file', 'image'])) {
@@ -150,7 +153,7 @@ class Base
                 } else {
                     $orderPart = 'DESC';
                 }
-                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . '_eet', $orderPart]];
+                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
                 return;
             } else if ($type === 'enum') {
                 $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
@@ -423,7 +426,7 @@ class Base
     protected function prepareResult(&$result)
     {
         if (empty($result)) {
-            $result = array();
+            $result = [];
         }
         if (empty($result['joins'])) {
             $result['joins'] = [];
@@ -699,14 +702,26 @@ class Base
 
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        $result = array();
+        $result = [];
         $this->prepareResult($result);
 
-        if (!empty($params['sortBy'])) {
-            if (!array_key_exists('asc', $params)) {
-                $params['asc'] = true;
+        if (!empty($params['orderBy'])) {
+            $isDesc = false;
+            if (isset($params['order'])) {
+                $isDesc = $params['order'] === 'desc';
             }
-            $this->order($params['sortBy'], !$params['asc'], $result);
+            $this->order($params['orderBy'], $isDesc, $result);
+        } else if (!empty($params['sortBy'])) {
+            if (isset($params['order'])) {
+                $isDesc = $params['order'] === 'desc';
+            } else if (isset($params['asc'])) {
+                $isDesc = $params['asc'] !== true;
+            }
+            $this->order($params['sortBy'], $isDesc, $result);
+        } else if (!empty($params['order'])) {
+            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'orderBy']);
+            $isDesc = $params['order'] === 'desc';
+            $this->order($orderBy, $isDesc, $result);
         }
 
         if (!isset($params['offset'])) {
@@ -1907,5 +1922,86 @@ class Base
     protected function boolFilterFollowed(&$result)
     {
         $this->filterFollowed($result);
+    }
+
+    public function mergeSelectParams($selectParams1, $selectParams2)
+    {
+        if (!$selectParams2) {
+            return $selectParams1;
+        }
+        if (!isset($selectParams1['whereClause'])) {
+            $selectParams1['whereClause'] = [];
+        }
+        if (!empty($selectParams2['whereClause'])) {
+            $selectParams1['whereClause'][] = $selectParams2['whereClause'];
+        }
+
+        if (!isset($selectParams1['havingClause'])) {
+            $selectParams1['havingClause'] = [];
+        }
+        if (!empty($selectParams2['havingClause'])) {
+            $selectParams1['havingClause'][] = $selectParams2['havingClause'];
+        }
+
+        if (!empty($selectParams2['leftJoins'])) {
+            foreach ($selectParams2['leftJoins'] as $item) {
+                $this->addLeftJoin($item, $selectParams1);
+            }
+        }
+
+        if (!empty($selectParams2['joins'])) {
+            foreach ($selectParams2['joins'] as $item) {
+                $this->addJoin($item, $selectParams1);
+            }
+        }
+
+        if (isset($selectParams2['select'])) {
+            $selectParams1['select'] = $selectParams2['select'];
+        }
+
+        if (isset($selectParams2['customJoin'])) {
+            if (!isset($selectParams1['customJoin'])) {
+                $selectParams1['customJoin'] = '';
+            }
+            $selectParams1['customJoin'] .= ' ' . $selectParams2['customJoin'];
+        }
+
+        if (isset($selectParams2['customWhere'])) {
+            if (!isset($selectParams1['customWhere'])) {
+                $selectParams1['customWhere'] = '';
+            }
+            $selectParams1['customWhere'] .= ' ' . $selectParams2['customWhere'];
+        }
+
+        if (isset($selectParams2['additionalSelectColumns'])) {
+            if (!isset($selectParams1['additionalSelectColumns'])) {
+                $selectParams1['additionalSelectColumns'] = [];
+            }
+            foreach ($selectParams2['additionalSelectColumns'] as $key => $item) {
+                $selectParams1['additionalSelectColumns'][$key] = $item;
+            }
+        }
+
+        if (isset($selectParams2['joinConditions'])) {
+            if (!isset($selectParams1['joinConditions'])) {
+                $selectParams1['joinConditions'] = [];
+            }
+            foreach ($selectParams2['joinConditions'] as $key => $item) {
+                $selectParams1['joinConditions'][$key] = $item;
+            }
+        }
+
+        if (isset($selectParams2['orderBy'])) {
+            $selectParams1['orderBy'] = $selectParams2['orderBy'];
+        }
+        if (isset($selectParams2['order'])) {
+            $selectParams1['order'] = $selectParams2['order'];
+        }
+
+        if (!empty($selectParams2['distinct'])) {
+            $selectParams1['distinct'] = true;
+        }
+
+        return $selectParams1;
     }
 }

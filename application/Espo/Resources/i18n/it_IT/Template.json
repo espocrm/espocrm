@@ -11,13 +11,31 @@
     "bottomMargin": "Margine Inferiore",
     "printFooter": "Stampa piè di Pagina",
     "footerPosition": "Posizione piè  di pagina",
-    "variables": "Segnaposto disponibili"
+    "variables": "Segnaposto disponibili",
+    "pageOrientation": "Orientamento pagina",
+    "pageFormat": "Formato carta"
   },
   "labels": {
     "Create Template": "Crea Modello"
   },
   "tooltips": {
-    "footer": "Utilizzare {pageNumber} per stampare il numero di pagina .",
-    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
+    "footer": "Utilizzare {pageNumber} per stampare il numero di pagina ."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Ritratto",
+      "Landscape": "Paesaggio"
+    },
+    "placeholders": {
+      "today": "Oggi (Data)",
+      "now": "Ora (data-ora)"
+    },
+    "fontFace": {
+      "aealarabiya": "Al Arabiya",
+      "pdfasymbol": "Simbolo PDFA",
+      "stsongstdlight": "STSong STD Light",
+      "symbol": "Simbolo",
+      "times": "Tempi"
+    }
   }
 }

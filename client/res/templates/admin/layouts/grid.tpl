@@ -14,8 +14,8 @@
         background-color: #FFF;
     }
     #layout ul.panels > li {
-        padding: 5px;
-        margin: 5px;
+        padding: 5px 10px;
+        margin-bottom: 20px;
         {{#ifEqual columnCount 1}}
 
         {{else}}
@@ -31,7 +31,7 @@
     #layout ul.rows > li  {
         list-style: none;
         border: 1px solid #CCC;
-        margin: 5px;
+        margin: 8px 0;
         padding: 5px;
         height: 72px;
     }
@@ -58,6 +58,9 @@
         padding: 5px;
         height: 32px;
     }
+    #layout  ul.cells.disabled > li {
+        margin: 5px 0;
+    }
     #layout ul.rows > li > div {
         width: auto;
     }
@@ -74,6 +77,7 @@
     }
     #layout header {
         font-weight: bold;
+        margin-bottom: 10px;
     }
     #layout ul.panels > li label {
         display: inline;
@@ -116,7 +120,6 @@
     <div class="col-md-8">
         <div class="well">
             <header>{{translate 'Layout' scope='LayoutManager'}}</header>
-            <a href="javascript:;" data-action="addPanel">{{translate 'Add Panel' scope='Admin'}}</a>
             <ul class="panels">
             {{#each panelDataList}}
             <li data-number="{{number}}" class="panel-layout">
@@ -124,6 +127,8 @@
             </li>
             {{/each}}
             </ul>
+
+            <div><a href="javascript:;" data-action="addPanel">{{translate 'Add Panel' scope='Admin'}}</a></div>
         </div>
     </div>
     <div class="col-md-4">

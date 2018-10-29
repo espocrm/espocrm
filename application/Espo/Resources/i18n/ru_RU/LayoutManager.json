@@ -4,9 +4,10 @@
     "link": "Ссылка",
     "notSortable": "Не сортируемый",
     "align": "Выровнять",
-    "panelName": "Panel Name",
-    "style": "Style",
-    "sticked": "Sticked"
+    "panelName": "Название панели",
+    "style": "Стиль",
+    "isLarge": "Большой размер шрифта",
+    "dynamicLogicVisible": "Условия, которые делают панель видимой"
   },
   "options": {
     "align": {
@@ -14,12 +15,16 @@
       "right": "по правому краю"
     },
     "style": {
-      "default": "Default",
-      "success": "Success",
-      "danger": "Danger",
-      "info": "Info",
-      "warning": "Warning",
-      "primary": "Primary"
+      "default": "По умолчанию",
+      "success": "Успех",
+      "danger": "Опасность",
+      "info": "Информация",
+      "warning": "Предупреждение",
+      "primary": "Основной"
     }
+  },
+  "labels": {
+    "New panel": "Новая панель",
+    "Layout": "Макет"
   }
 }

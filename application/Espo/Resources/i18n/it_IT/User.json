@@ -3,31 +3,27 @@
     "name": "Nome",
     "userName": "Nome Utente",
     "title": "Titolo",
-    "isAdmin": "Is Admin",
-    "defaultTeam": "Default Team",
-    "emailAddress": "Email",
     "phoneNumber": "Telefono",
     "roles": "Ruoli",
     "portals": "Portali",
     "portalRoles": "Ruoli Portale",
     "teamRole": "Posizione",
-    "password": "Password",
     "currentPassword": "Password attuale",
     "passwordConfirm": "Conferma password",
     "newPassword": "Nuova password",
     "newPasswordConfirm": "Conferma la nuova password",
-    "avatar": "Avatar",
     "isActive": "È Attivo",
     "isPortalUser": "È il portale per l'utente",
     "contact": "Contatti",
-    "accounts": "Accounts",
     "account": "Account (Primario)",
     "sendAccessInfo": "Invia email all'utente con i dati di accesso",
     "portal": "Portale",
     "gender": "Genere",
     "position": "Posizione nel team",
     "ipAddress": "Indirizzo IP",
-    "passwordPreview": "Mostra password"
+    "passwordPreview": "Mostra password",
+    "isSuperAdmin": "è Super Amministratore",
+    "lastAccess": "Ultimo accesso"
   },
   "links": {
     "teams": "Team",
@@ -36,7 +32,6 @@
     "portals": "Portali",
     "portalRoles": "Ruoli Portale",
     "contact": "Contatti",
-    "accounts": "Accounts",
     "account": "Account (Primario}",
     "tasks": "Compiti"
   },
@@ -51,7 +46,6 @@
     "Password Change Request": "Richiesta di cambio password",
     "Email Address": "Indirizzo Email",
     "External Accounts": "Account Esterni",
-    "Email Accounts": "Email Accounts",
     "Portal": "Portale",
     "Create Portal User": "Crea Utente Portale",
     "Proceed w/o Contact": "Procedi senza contatto"
@@ -76,7 +70,8 @@
     "forbidden": "Vietato , riprova piu tardi",
     "uniqueLinkHasBeenSent": "L' URL univoco è stato inviato all'indirizzo di posta elettronica specificato .",
     "passwordChangedByRequest": "La password è stata modificata.",
-    "setupSmtpBefore": "È necessario attivare le <a href=\"{url}\">Impostazioni SMTP</a> perchè il sistema sia in grado di mandare le password via email."
+    "setupSmtpBefore": "È necessario attivare le <a href=\"{url}\">Impostazioni SMTP</a> perchè il sistema sia in grado di mandare le password via email.",
+    "userNameExists": "Nome utente già esistente"
   },
   "boolFilters": {
     "onlyMyTeam": "Solo per il mio Team"
@@ -89,8 +84,7 @@
     "gender": {
       "": "Non impostato",
       "Male": "Maschio",
-      "Female": "Femmina",
-      "Neutral": "Neutral"
+      "Female": "Femmina"
     }
   }
 }

@@ -69,7 +69,7 @@ class Note extends Record
             if ($preferences && $preferences->get('followEntityOnStreamPost')) {
                 if ($this->getMetadata()->get(['scopes', $entity->get('parentType'), 'stream'])) {
                     $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
-                    if ($parent) {
+                    if ($parent && !$this->getUser()->isSystem() && !$this->getUser()->isApi()) {
                         $this->getServiceFactory()->create('Stream')->followEntity($parent, $this->getUser()->id);
                     }
                 }

@@ -263,6 +263,14 @@ Espo.define('dynamic-logic', [], function () {
 
         makePanelVisibleFalse: function (field) {
             this.recordView.hidePanel(field);
+        },
+
+        addPanelVisibleCondition: function (name, item) {
+            this.defs.panels = this.defs.panels || {};
+            this.defs.panels[name] = {
+                visible: item
+            };
+            this.processPanel(name, 'visible');
         }
 
     });

@@ -76,7 +76,7 @@ class App extends \Espo\Core\Services\Base
         if (!$user->has('teamsIds')) {
             $user->loadLinkMultipleField('teams');
         }
-        if ($user->get('isPortalUser')) {
+        if ($user->isPortal()) {
             $user->loadAccountField();
             $user->loadLinkMultipleField('accounts');
         }

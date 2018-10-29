@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5db717da83f9311ee9e1dca394f565af",
-    "content-hash": "db195203d1f235839b362454341246cb",
+    "hash": "6a0640e0f5e0603fc55bbed741e069ef",
+    "content-hash": "06d06c8778f2fe549244a579ee6d048d",
     "packages": [
         {
             "name": "composer/semver",
@@ -688,30 +688,30 @@
         },
         {
             "name": "php-mime-mail-parser/php-mime-mail-parser",
-            "version": "2.10.0",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mime-mail-parser/php-mime-mail-parser.git",
-                "reference": "ecd4a2ea3f718e620430771a6417405db0b3c93f"
+                "reference": "5f5bdf0f2496f7cd6afc8ec739d328f847da6b25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/ecd4a2ea3f718e620430771a6417405db0b3c93f",
-                "reference": "ecd4a2ea3f718e620430771a6417405db0b3c93f",
+                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/5f5bdf0f2496f7cd6afc8ec739d328f847da6b25",
+                "reference": "5f5bdf0f2496f7cd6afc8ec739d328f847da6b25",
                 "shasum": ""
             },
             "require": {
                 "ext-mailparse": "*",
-                "php": "^5.4.0 || ^7.0"
+                "php": "^5.6.0 || ^7.0"
             },
             "replace": {
                 "exorus/php-mime-mail-parser": "*",
                 "messaged/php-mime-mail-parser": "*"
             },
             "require-dev": {
+                "php-coveralls/php-coveralls": "0.*",
                 "phpunit/php-token-stream": "^1.3.0",
-                "phpunit/phpunit": "^4.0 || ^5.0",
-                "satooshi/php-coveralls": "0.*",
+                "phpunit/phpunit": "^5.7",
                 "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
@@ -756,7 +756,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Fully Tested Mailparse Extension Wrapper for PHP 5.4+",
+            "description": "Fully Tested Mailparse Extension Wrapper for PHP 5.6+",
             "homepage": "https://github.com/php-mime-mail-parser/php-mime-mail-parser",
             "keywords": [
                 "MimeMailParser",
@@ -764,7 +764,7 @@
                 "mailparse",
                 "mime"
             ],
-            "time": "2018-02-27 12:37:36"
+            "time": "2018-09-28 21:56:35"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -1210,12 +1210,12 @@
             "version": "0.4.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zbateson/MailMimeParser.git",
+                "url": "https://github.com/zbateson/mail-mime-parser.git",
                 "reference": "b05f32a1902d4e395384ff64e9f505c23d2714e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/b05f32a1902d4e395384ff64e9f505c23d2714e5",
+                "url": "https://api.github.com/repos/zbateson/mail-mime-parser/zipball/b05f32a1902d4e395384ff64e9f505c23d2714e5",
                 "reference": "b05f32a1902d4e395384ff64e9f505c23d2714e5",
                 "shasum": ""
             },
@@ -1859,7 +1859,8 @@
         "ext-gd": "*",
         "ext-mbstring": "*",
         "ext-xml": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-exif": "*"
     },
     "platform-dev": []
 }

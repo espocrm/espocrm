@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Account.Fields.ShippingAddress', 'Views.Fields.Address', function (Dep) {
+Espo.define('crm:views/account/fields/shipping-address', 'views/fields/address', function (Dep) {
 
     return Dep.extend({
 

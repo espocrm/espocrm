@@ -1,31 +1,24 @@
 {
   "scopeNames": {
-    "Email": "Email",
     "User": "Utente",
-    "Team": "Team",
     "Role": "Ruolo",
     "EmailTemplate": "Modello email",
     "EmailAccount": "Account email personale",
     "EmailAccountScope": "Account email personale",
     "OutboundEmail": "Email in uscita",
     "ScheduledJob": "Job Schedulato",
-    "ExternalAccount": "External Account",
     "Extension": "Estensione",
-    "Dashboard": "Dashboard",
     "InboundEmail": "Gruppo Account Email",
     "Stream": "Flusso attività",
     "Import": "Importa",
     "Template": "Modello",
-    "Job": "Job",
     "EmailFilter": "Filtri Email",
     "Portal": "Portale",
     "PortalRole": "Ruolo Portale",
     "Attachment": "Allegato",
     "EmailFolder": "Casella Email",
     "PortalUser": "Utente portale",
-    "ScheduledJobLogRecord": "Scheduled Job Log Record",
     "PasswordChangeRequest": "Richiesta di cambio password",
-    "ActionHistoryRecord": "Action History Record",
     "AuthToken": "Token di autenticazione",
     "UniqueId": "ID univoco",
     "LastViewed": "Ultima visualizzazione",
@@ -37,16 +30,20 @@
     "Export": "Esporta",
     "DynamicLogic": "Logica dinamica",
     "DashletOptions": "Opzioni dashlet",
-    "Admin": "Admin",
     "Global": "Globale",
     "Preferences": "Preferenze",
     "EmailAddress": "Indirizzo email",
-    "PhoneNumber": "Numero di telefono"
+    "PhoneNumber": "Numero di telefono",
+    "AuthLogRecord": "Autorizzazione log record",
+    "AuthFailLogRecord": "Autorizzazione log record fallita",
+    "EmailTemplateCategory": "Categorie Modelli email",
+    "LeadCapture": "Punto di ingresso cattura lead",
+    "LeadCaptureLogRecord": "Record del registro di acquisizione lead",
+    "ArrayValue": "Valore di matrice"
   },
   "scopeNamesPlural": {
     "Email": "Email",
     "User": "Utenti",
-    "Team": "Teams",
     "Role": "Ruoli",
     "EmailTemplate": "Modelli Email",
     "EmailAccount": "Account email personale",
@@ -55,30 +52,32 @@
     "ScheduledJob": "Jobs schedulati",
     "ExternalAccount": "Account Esterni",
     "Extension": "Estensioni",
-    "Dashboard": "Dashboard",
     "InboundEmail": "Gruppo account email",
     "Stream": "Flusso attività",
-    "Import": "Importa Risultati",
     "Template": "Modelli",
-    "Job": "Jobs",
     "EmailFilter": "Filtri email",
     "Portal": "Portali",
     "PortalRole": "Ruoli Portale",
     "Attachment": "Allegato",
     "EmailFolder": "Caselle Email",
     "PortalUser": "Utenti portale",
-    "ScheduledJobLogRecord": "Scheduled Job Log Records",
     "PasswordChangeRequest": "Richiesta di cambio password",
     "ActionHistoryRecord": "Storico azioni",
     "AuthToken": "Tokens di autenticazione",
     "UniqueId": "ID univoci",
-    "LastViewed": "Ultima visualizzazione"
+    "LastViewed": "Ultima visualizzazione",
+    "AuthLogRecord": "Auth log",
+    "AuthFailLogRecord": "Auth Fail log",
+    "EmailTemplateCategory": "Categorie Modeli Email",
+    "Import": "Importa",
+    "LeadCapture": "Cattura Lead",
+    "LeadCaptureLogRecord": "Log di cattura lead",
+    "ArrayValue": "Valori di matrice"
   },
   "labels": {
     "Misc": "Varie",
     "Merge": "Unire",
     "None": "Nessun",
-    "Home": "Home",
     "by": "di",
     "Saved": "Salvato",
     "Error": "Errore",
@@ -89,8 +88,6 @@
     "Loading...": "Caricamento in corso...",
     "Uploading...": "Caricamento...",
     "Sending...": "Invio...",
-    "Merging...": "Merging...",
-    "Merged": "Merged",
     "Removed": "Rimosso",
     "Posted": "Postato",
     "Linked": "Connesso",
@@ -105,7 +102,6 @@
     "Post cannot be empty": "Il Post puo' essere vuoto",
     "Removing...": "Cancellazione...",
     "Unlinking...": "Disconnessione...",
-    "Posting...": "Posting...",
     "Username can not be empty!": "L'Username non può essere vuota!",
     "Cache is not enabled": "Cache non abilitata",
     "Cache has been cleared": "Cache gia' liberata",
@@ -119,12 +115,7 @@
     "Details": "Dettagli",
     "Add Field": "Aggiungi Campo",
     "Add Dashlet": "Aggiungi Dashlet",
-    "Filter": "Filter",
-    "Edit Dashboard": "Edit Dashboard",
     "Add": "Aggiungi",
-    "Add Item": "Add Item",
-    "Reset": "Reset",
-    "Menu": "Menu",
     "More": "Altro",
     "Search": "Cerca",
     "Only My": "Solo il mio",
@@ -134,10 +125,6 @@
     "Refresh": "Ricaricare",
     "Remove": "Eliminare",
     "Options": "Opzioni",
-    "Username": "Username",
-    "Password": "Password",
-    "Login": "Login",
-    "Log Out": "Log Out",
     "Preferences": "Preferenze",
     "State": "Provincia",
     "Street": "Strada",
@@ -146,26 +133,22 @@
     "PostalCode": "Codici Postale",
     "Followed": "Seguire",
     "Follow": "Segui",
-    "Followers": "Followers",
     "Clear Local Cache": "Cancella la Cache locale",
     "Actions": "Azioni",
     "Delete": "Cancellare",
     "Update": "Aggiorna",
     "Save": "Salvare",
     "Edit": "Modificare",
-    "View": "View",
     "Cancel": "Annullare",
     "Apply": "Applicare",
     "Unlink": "Scollegare",
     "Mass Update": "Aggiornamento Massivo",
     "Export": "Esporta",
     "No Data": "Nessun Dato",
-    "No Access": "No Access",
     "All": "Tutti",
     "Active": "Attivo",
     "Inactive": "Inattivo",
     "Write your comment here": "Scrivi il tuo commento qui",
-    "Post": "Post",
     "Stream": "Flusso attività",
     "Show more": "Mostra altro",
     "Dashlet Options": "Opzioni Dashlet",
@@ -178,9 +161,7 @@
     "You": "Tu",
     "you": "tu",
     "change": "modificare",
-    "Change": "Change",
     "Primary": "Primario",
-    "Save Filter": "Save Filter",
     "Administration": "Amministrazione",
     "Run Import": "Avvia Importazione",
     "Duplicate": "Duplicato",
@@ -192,8 +173,6 @@
     "Yesterday": "Ieri",
     "Submit": "Invio",
     "Close": "Chiuso",
-    "Yes": "Yes",
-    "No": "No",
     "Value": "Valore",
     "Current version": "Versione in uso",
     "List View": "Vista elenco",
@@ -201,7 +180,6 @@
     "Unlink All": "Scollegare tutti",
     "Total": "Totale",
     "Print to PDF": "Stampa in PDF",
-    "Default": "Default",
     "Number": "Numero",
     "From": "Da",
     "To": "A",
@@ -216,7 +194,17 @@
     "Self-Assign": "Autoassegna",
     "Self-Assigned": "Autoassegnato",
     "Return to Application": "Ritorna all'applicazione",
-    "Select All Results": "Seleziona tutti i risultati"
+    "Select All Results": "Seleziona tutti i risultati",
+    "Expand": "Espandi",
+    "Collapse": "Comprimi",
+    "New notifications": "Nuove Notifiche",
+    "Manage Categories": "Gestisci Categorie",
+    "Manage Folders": "Gestisci Cartelle",
+    "Convert to": "Convertire in",
+    "View Personal Data": "Visualizzare i dati personali",
+    "Personal Data": "Dati personali",
+    "Erase": "Cancellare",
+    "Move Over": "Spostarsi"
   },
   "messages": {
     "pleaseWait": "Attendere...",
@@ -227,8 +215,6 @@
     "fieldShouldAfter": "{field} deve essere dopo {otherField}",
     "fieldShouldBefore": "{field} deve essere prima {otherField}",
     "fieldShouldBeBetween": "{field} deve essere compreso tra {min} e {max}",
-    "fieldShouldBeLess": "{field} deve essere minore di {value}",
-    "fieldShouldBeGreater": "{field} deve essere maggiore di {value}",
     "fieldBadPasswordConfirm": "{field} non confermato correttamente",
     "resetPreferencesDone": "Le preferenze sono state ripristinate alle impostazioni predefinite",
     "confirmation": "Sei sicuro?",
@@ -250,7 +236,6 @@
     "checkForNewNotifications": "Verifica la presenza di nuove notifiche",
     "duplicate": "Il record che si sta creando sembra essere un duplicato",
     "dropToAttach": "Rilascia per allegare",
-    "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[text](url)",
     "writeMessageToSelf": "Scrivi un messaggio nel tuo flusso attività",
     "checkForNewNotes": "Controlla aggiornamenti nel flusso attività",
     "internalPost": "Il Messaggio sarà visto solo da utenti interni",
@@ -270,7 +255,14 @@
     "fieldShouldBeDatetime": "{field} deve essere una data/ora valida",
     "internalPostTitle": "Il messaggio è visto solo dagli utenti interni",
     "loading": "Caricamento...",
-    "saving": "Salvataggio..."
+    "saving": "Salvataggio...",
+    "fieldMaxFileSizeError": "Il file non dovrebbe superare {max} Mb",
+    "fieldShouldBeLess": "{field} deve essere minore di {value}",
+    "fieldShouldBeGreater": "{field} deve essere maggiore di {value}",
+    "fieldIsUploading": "Caricamento in corso",
+    "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[text](url)",
+    "erasePersonalDataConfirmation": "I campi controllati verranno cancellati in modo permanente. Sei sicuro?",
+    "massPrintPdfMaxCountError": "Impossibile stampare più record {maxCount}."
   },
   "boolFilters": {
     "onlyMy": "Solo il mio",
@@ -286,7 +278,9 @@
     "massUpdate": "Aggiornamento Massivo",
     "export": "Esporta",
     "follow": "Segui",
-    "unfollow": "Non seguire"
+    "unfollow": "Non seguire",
+    "convertCurrency": "Converti valuta",
+    "printPdf": "Stampa in PDF"
   },
   "fields": {
     "name": "Nome",
@@ -295,7 +289,6 @@
     "salutationName": "Saluto",
     "assignedUser": "Utente assegnato",
     "assignedUsers": "Utenti assegnati",
-    "emailAddress": "Email",
     "assignedUserName": "Nome utente assegnato",
     "teams": "Team",
     "createdAt": "Creato il",
@@ -312,23 +305,24 @@
     "phoneNumberOther": "Telefono (Other)",
     "order": "Ordine",
     "parent": "Genitore",
-    "children": "Children",
-    "id": "ID"
+    "emailAddressData": "Dati dell'indirizzo e-mail",
+    "phoneNumberData": "Dati del numero di telefono",
+    "ids": "ID",
+    "names": "Nomi",
+    "emailAddressIsOptedOut": "L'indirizzo email è stato cancellato",
+    "targetListIsOptedOut": "È stato cancellato (lista target)",
+    "type": "Tipo"
   },
   "links": {
     "assignedUser": "Utente assegnato",
     "createdBy": "Creato da",
     "modifiedBy": "Modificato da",
-    "team": "Team",
     "roles": "Ruoli",
-    "teams": "Teams",
     "users": "Utenti",
-    "parent": "Genitore",
-    "children": "Children"
+    "parent": "Genitore"
   },
   "dashlets": {
     "Stream": "Flusso attività",
-    "Emails": "My Inbox",
     "Records": "Elenco records"
   },
   "notificationMessages": {
@@ -449,86 +443,6 @@
     ]
   },
   "options": {
-    "salutationName": {
-      "Mr.": "Mr.",
-      "Mrs.": "Mrs.",
-      "Ms.": "Ms.",
-      "Dr.": "Dr."
-    },
-    "language": {
-      "af_ZA": "Afrikaans",
-      "az_AZ": "Azerbaijani",
-      "be_BY": "Belarusian",
-      "bg_BG": "Bulgarian",
-      "bn_IN": "Bengali",
-      "bs_BA": "Bosnian",
-      "ca_ES": "Catalan",
-      "cs_CZ": "Czech",
-      "cy_GB": "Welsh",
-      "da_DK": "Danish",
-      "de_DE": "German",
-      "el_GR": "Greek",
-      "en_GB": "English (UK)",
-      "en_US": "English (US)",
-      "es_ES": "Spanish (Spain)",
-      "et_EE": "Estonian",
-      "eu_ES": "Basque",
-      "fa_IR": "Persian",
-      "fi_FI": "Finnish",
-      "fo_FO": "Faroese",
-      "fr_CA": "French (Canada)",
-      "fr_FR": "French (France)",
-      "ga_IE": "Irish",
-      "gl_ES": "Galician",
-      "gn_PY": "Guarani",
-      "he_IL": "Hebrew",
-      "hi_IN": "Hindi",
-      "hr_HR": "Croatian",
-      "hu_HU": "Hungarian",
-      "hy_AM": "Armenian",
-      "id_ID": "Indonesian",
-      "is_IS": "Icelandic",
-      "it_IT": "Italian",
-      "ja_JP": "Japanese",
-      "ka_GE": "Georgian",
-      "km_KH": "Khmer",
-      "ko_KR": "Korean",
-      "ku_TR": "Kurdish",
-      "lt_LT": "Lithuanian",
-      "lv_LV": "Latvian",
-      "mk_MK": "Macedonian",
-      "ml_IN": "Malayalam",
-      "ms_MY": "Malay",
-      "nb_NO": "Norwegian Bokmål",
-      "nn_NO": "Norwegian Nynorsk",
-      "ne_NP": "Nepali",
-      "nl_NL": "Dutch",
-      "pa_IN": "Punjabi",
-      "pl_PL": "Polish",
-      "ps_AF": "Pashto",
-      "pt_BR": "Portuguese (Brazil)",
-      "pt_PT": "Portuguese (Portugal)",
-      "ro_RO": "Romanian",
-      "ru_RU": "Russian",
-      "sk_SK": "Slovak",
-      "sl_SI": "Slovene",
-      "sq_AL": "Albanian",
-      "sr_RS": "Serbian",
-      "sv_SE": "Swedish",
-      "sw_KE": "Swahili",
-      "ta_IN": "Tamil",
-      "te_IN": "Telugu",
-      "th_TH": "Thai",
-      "tl_PH": "Tagalog",
-      "tr_TR": "Turkish",
-      "uk_UA": "Ukrainian",
-      "ur_PK": "Urdu",
-      "vi_VN": "Vietnamese",
-      "zh_CN": "Simplified Chinese (China)",
-      "zh_HK": "Traditional Chinese (Hong Kong)",
-      "zh_TW": "Traditional Chinese (Taiwan)",
-      "es_MX": "Spagnolo (Messico)"
-    },
     "dateSearchRanges": {
       "on": "Attivo",
       "notOn": "Non attivo",
@@ -536,7 +450,6 @@
       "before": "Prima",
       "between": "Fra",
       "today": "Oggi",
-      "past": "Past",
       "future": "Futuro",
       "currentMonth": "Mese in corso",
       "lastMonth": "Ultimo mese",
@@ -550,7 +463,8 @@
       "ever": "Mai",
       "isEmpty": "Vuoto",
       "olderThanXDays": "Più vecchio di X giorni",
-      "afterXDays": "Dopo X giorni"
+      "afterXDays": "Dopo X giorni",
+      "nextMonth": "Prossimo Mese"
     },
     "searchRanges": {
       "is": "È",
@@ -595,11 +509,12 @@
       "0.5": "30 secondi"
     },
     "phoneNumber": {
-      "Mobile": "Mobile",
       "Office": "Ufficio",
-      "Fax": "Fax",
       "Home": "Casa",
       "Other": "Altro"
+    },
+    "language": {
+      "es_MX": "Spagnolo (Messico)"
     }
   },
   "sets": {
@@ -630,7 +545,6 @@
         "remove": "Rimuovi l'Immagine"
       },
       "link": {
-        "link": "Link",
         "insert": "Inserisci link",
         "unlink": "Scollegare",
         "edit": "Modificare",
@@ -639,14 +553,7 @@
         "openInNewWindow": "Apri in una nuova finestra"
       },
       "video": {
-        "video": "Video",
-        "videoLink": "Video Link",
-        "insert": "Inserisici Video",
-        "url": "Video URL?",
-        "providers": "(YouTube, Vimeo, Vine, Instagram, or DailyMotion)"
-      },
-      "table": {
-        "table": "Table"
+        "insert": "Inserisici Video"
       },
       "hr": {
         "insert": "Inserire regola orizzontale"
@@ -654,7 +561,6 @@
       "style": {
         "style": "Stile",
         "normal": "Normale",
-        "blockquote": "Quote",
         "pre": "Codice",
         "h1": "Intestazione 1",
         "h2": "Intestazione 2",
@@ -688,7 +594,6 @@
         "foreground": "Colore del testo",
         "transparent": "Trasparente",
         "setTransparent": "imposta trasparente",
-        "reset": "Reset",
         "resetToDefault": "Riportare alle condizioni originali"
       },
       "shortcut": {
@@ -705,21 +610,17 @@
       }
     }
   },
-  "themes": {
-    "Espo": "Espo",
-    "Sakura": "Sakura",
-    "Violet": "Violet",
-    "EspoRtl": "RTL Espo\n",
-    "EspoVertical": "Espo Vertical",
-    "SakuraVertical": "Sakura Vertical",
-    "VioletVertical": "Violet Vertical",
-    "Hazyblue": "Hazyblue",
-    "HazyblueVertical": "Hazyblue con barra laterale"
-  },
   "streamMessagesMale": {
     "postTargetSelfAndOthers": "{user} ha postato a {target} e se stesso"
   },
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} ha postato a {target} e se stessa"
+  },
+  "themes": {
+    "EspoRtl": "RTL Espo\n",
+    "Espo": "Classic espo"
+  },
+  "listViewModes": {
+    "list": "Lista"
   }
 }

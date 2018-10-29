@@ -16,7 +16,11 @@
                         {{#if this}}
                         <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action{{#if hidden}} hidden{{/if}}" data-panel="{{../../../name}}" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../../../scope}}{{/if}}</a></li>
                         {{else}}
+                        {{#unless @first}}
+                        {{#unless @last}}
                         <li class="divider"></li>
+                        {{/unless}}
+                        {{/unless}}
                         {{/if}}
                         {{/each}}
                     </ul>

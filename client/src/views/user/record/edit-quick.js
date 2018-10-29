@@ -35,8 +35,12 @@ Espo.define('views/user/record/edit-quick', ['views/record/edit-small', 'views/u
         setup: function () {
             Dep.prototype.setup.call(this);
             Detail.prototype.setupNonAdminFieldsAccess.call(this);
+            Detail.prototype.setupFieldAppearance.call(this);
+        },
+
+        controlFieldAppearance: function () {
+            Detail.prototype.controlFieldAppearance.call(this);
         }
 
     });
-
 });

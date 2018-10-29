@@ -1,6 +1,7 @@
 {
     "fields": {
-        "exportPermission": "Export Permission"
+        "exportPermission": "Export Permission",
+        "massUpdatePermission": "Mass Update Permission"
     },
     "links": {
         "users": "Users"
@@ -14,6 +15,7 @@
         "Field Level": "Field Level"
     },
     "tooltips": {
-        "exportPermission": "Defines whether portal users have an ability to export records."
+        "exportPermission": "Defines whether portal users have an ability to export records.",
+        "massUpdatePermission": "Defines whether portal users have an ability to do mass update of records."
     }
 }

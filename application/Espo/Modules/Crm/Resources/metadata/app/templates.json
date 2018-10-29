@@ -1,0 +1,10 @@
+{
+    "invitation": {
+        "scopeList": ["Meeting", "Call"],
+        "module": "Crm"
+    },
+    "reminder": {
+        "scopeList": ["Meeting", "Call", "Task"],
+        "module": "Crm"
+    }
+}

@@ -2,20 +2,15 @@
   "fields": {
     "dateFormat": "Formato Data",
     "timeFormat": "Formato Ora",
-    "timeZone": "Time Zone",
     "weekStart": "Primo giorno della Settimana",
     "thousandSeparator": "Separatore delle migliaia",
     "decimalMark": "Marcatore dei Decimali",
     "defaultCurrency": "Valuta di default",
     "currencyList": "Elenco Valute",
     "language": "Lingua",
-    "smtpServer": "Server",
     "smtpPort": "Porta",
     "smtpAuth": "Autenticato",
     "smtpSecurity": "Sicurezza",
-    "smtpUsername": "Username",
-    "emailAddress": "Email",
-    "smtpPassword": "Password",
     "smtpEmailAddress": "Indirizzo Email",
     "exportDelimiter": "Delimitatore esportazione",
     "signature": "Firma Email",
@@ -29,12 +24,9 @@
     "receiveStreamEmailNotifications": "Notifiche via email per i messaggi e gli aggiornamenti di stato",
     "dashboardLayout": "Layout panoramica",
     "emailReplyForceHtml": "Email di risposta in HTML",
-    "autoFollowEntityTypeList": "Global Auto-Follow",
-    "emailReplyToAllByDefault": "Email Reply to all by default",
-    "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
-    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
-    "followCreatedEntities": "Auto-follow created records",
-    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
+    "emailUseExternalClient": "Utilizzare un client di posta elettronica esterno",
+    "scopeColorsDisabled": "Disabilita campo colori",
+    "tabColorsDisabled": "Disabilita tabella colori"
   },
   "options": {
     "weekStart": {
@@ -45,14 +37,11 @@
   "labels": {
     "Notifications": "Notifica",
     "User Interface": "Interfaccia Utente",
-    "SMTP": "SMTP",
     "Misc": "Varie",
-    "Locale": "Locale"
+    "Reset Dashboard to Default": "Reimposta dashboard su predefinito"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
-    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
-    "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
-    "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
+    "followCreatedEntities": "Quando si creano nuovi record, verranno automaticamente seguiti anche se assegnati a un altro utente.",
+    "followCreatedEntityTypeList": "Quando si creano nuovi record di tipi di entità selezionati, questi verranno seguiti automaticamente anche se assegnati a un altro utente."
   }
 }

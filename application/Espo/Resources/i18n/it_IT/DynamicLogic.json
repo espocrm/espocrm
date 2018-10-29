@@ -1,7 +1,4 @@
 {
-  "label": {
-    "Field": "Campo"
-  },
   "options": {
     "operators": {
       "equals": "Uguale",
@@ -10,7 +7,6 @@
       "lessThan": "Minore di",
       "greaterThanOrEquals": "Maggiore o uguale",
       "lessThanOrEquals": "Minore di o uguale a",
-      "in": "In",
       "notIn": "Non in",
       "inPast": "Nel passato",
       "inFuture": "Futuro",
@@ -24,5 +20,8 @@
       "notContains": "Non contiene",
       "notHas": "Non contiene"
     }
+  },
+  "labels": {
+    "Field": "Campo"
   }
 }

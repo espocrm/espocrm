@@ -92,6 +92,8 @@ Espo.define('views/admin/layouts/mass-update', 'views/admin/layouts/rows', funct
 
                     for (var i in this.rowLayout) {
                         this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
+
+                        this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);
                     }
 
                     callback();
@@ -123,4 +125,3 @@ Espo.define('views/admin/layouts/mass-update', 'views/admin/layouts/rows', funct
 
     });
 });
-

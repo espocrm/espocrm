@@ -121,8 +121,9 @@
         }
     },
     "collection": {
-        "sortBy": "number",
-        "asc": false
+        "orderBy": "number",
+        "order": "desc",
+        "textFilterFields": ["post"]
     },
     "statusStyles": {
         "Lead": {

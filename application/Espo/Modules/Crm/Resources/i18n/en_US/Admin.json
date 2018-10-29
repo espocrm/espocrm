@@ -3,5 +3,9 @@
         "detailConvert": "Convert Lead",
         "listForAccount": "List (for Account)",
         "listForContact": "List (for Contact)"
+    },
+    "templates": {
+        "invitation": "Invitation",
+        "reminder": "Reminder"
     }
 }

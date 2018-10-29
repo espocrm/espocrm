@@ -45,14 +45,16 @@ class Attachment extends \Espo\Core\Controllers\Record
     public function postActionGetAttachmentFromImageUrl($params, $data)
     {
         if (empty($data->url)) throw new BadRequest();
+        if (empty($data->field)) throw new BadRequest('postActionGetAttachmentFromImageUrl: No field specified');
 
-        return $this->getRecordService()->getAttachmentFromImageUrl($data->url)->getValueMap();
+        return $this->getRecordService()->getAttachmentFromImageUrl($data)->getValueMap();
     }
 
     public function postActionGetCopiedAttachment($params, $data)
     {
         if (empty($data->id)) throw new BadRequest();
+        if (empty($data->field)) throw new BadRequest('postActionGetCopiedAttachment copy: No field specified');
 
-        return $this->getRecordService()->getCopiedAttachment($data->id)->getValueMap();
+        return $this->getRecordService()->getCopiedAttachment($data)->getValueMap();
     }
 }

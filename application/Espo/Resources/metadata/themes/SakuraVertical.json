@@ -10,6 +10,7 @@
     "modalFooterAtTheTop": true,
     "modalFullHeight": true,
     "fontSize": 14,
+    "navbarHeight": 30,
     "logo": "client/img/logo-33.png",
     "textColor": "#333",
     "chartGridColor": "#ddd",

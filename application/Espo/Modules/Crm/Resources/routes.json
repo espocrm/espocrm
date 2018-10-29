@@ -17,5 +17,17 @@
             "controller": "Activities",
             "action": "listCalendarEvents"
         }
+    },
+    {
+        "route": "/Activities/:scope/:id/:name/list/:entityType",
+        "method": "get",
+        "params": {
+            "controller": "Activities",
+            "action": "entityTypeList",
+            "scope": ":scope",
+            "id": ":id",
+            "name": ":name",
+            "entityType": ":entityType"
+        }
     }
 ]

@@ -16,7 +16,7 @@
     #layout ul li {
         list-style: none;
         border: 1px solid #CCC;
-        margin: 5px;
+        margin: 5px 0;
         padding: 5px;
         height: 32px;
     }
@@ -73,7 +73,7 @@
                             <label>{{label}}</label>
                         </div>
                         {{#if ../editable}}
-                        <div class="right"><a href="javascript:" data-action="editField" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
+                        <div class="right"><a href="javascript:" data-action="editItem" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
                         {{/if}}
                     </li>
                 {{/each}}
@@ -90,7 +90,7 @@
                             <label>{{label}}</label>
                         </div>
                         {{#if ../editable}}
-                        <div class="right"><a href="javascript:" data-action="editField" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
+                        <div class="right"><a href="javascript:" data-action="editItem" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
                         {{/if}}
                     </li>
                 {{/each}}

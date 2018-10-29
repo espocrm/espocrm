@@ -251,13 +251,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             var scope = this.model.defs['links'][link].entity;
             var foreign = this.model.defs['links'][link].foreign;
 
-            var massRelateEnabled = false;
-            if (foreign) {
-                var foreignType = this.getMetadata().get('entityDefs.' + scope + '.links.' + foreign + '.type');
-                if (foreignType == 'hasMany') {
-                    massRelateEnabled = true;
-                }
-            }
+            var massRelateEnabled = data.massSelect;
 
             var self = this;
             var attributes = {};

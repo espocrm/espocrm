@@ -1,5 +1,5 @@
 [
-    {"name":"name","width":40,"link":true},
-    {"name":"userName"},
-    {"name":"teamRole", "notSortable": true}
+    {"name":"name", "link": true},
+    {"name":"userName", "width": 32},
+    {"name":"teamRole", "notSortable": true, "width": 25}
 ]

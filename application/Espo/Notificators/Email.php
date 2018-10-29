@@ -161,7 +161,7 @@ class Email extends \Espo\Core\Notificators\Base
 
             $user = $this->getEntityManager()->getEntity('User', $userId);
             if (!$user) continue;
-            if ($user->get('isPortalUser')) continue;
+            if ($user->isPortal()) continue;
             if (!$this->getAclManager()->checkScope($user, 'Email')) {
                 continue;
             }
@@ -190,4 +190,3 @@ class Email extends \Espo\Core\Notificators\Base
     }
 
 }
-

@@ -204,8 +204,8 @@
         }
     },
     "collection": {
-        "sortBy": "dateStart",
-        "asc": false
+        "orderBy": "dateStart",
+        "order": "desc"
     },
     "indexes": {
         "dateStartStatus": {

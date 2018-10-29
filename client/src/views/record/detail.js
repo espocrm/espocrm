@@ -1085,6 +1085,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         addDropdownItem: function (o) {
+            if (!o) {
+                this.dropdownItemList.push(false);
+                return;
+            }
             var name = o.name;
             if (!name) return;
             for (var i in this.dropdownItemList) {
@@ -1143,11 +1147,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         panel.name = 'panel-' + p.toString();
                     }
                     if (this.dynamicLogic) {
-                        this.dynamicLogic.defs.panels = this.dynamicLogic.defs.panels || {};
-                        this.dynamicLogic.defs.panels[panel.name] = {
-                            visible: simplifiedLayout[p].dynamicLogicVisible
-                        };
-                        this.dynamicLogic.processPanel(panel.name, 'visible');
+                        this.dynamicLogic.addPanelVisibleCondition(panel.name, simplifiedLayout[p].dynamicLogicVisible);
                     }
                 }
 

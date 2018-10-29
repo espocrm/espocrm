@@ -71,6 +71,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
 
             this.hideField('passwordPreview');
             this.listenTo(this.model, 'change:passwordPreview', function (model, value) {
+                value = value || '';
                 if (value.length) {
                     this.showField('passwordPreview');
                 } else {
@@ -95,9 +96,9 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     "label": "Teams and Access Control",
                     "name": "accessControl",
                     "rows": [
-                        [{"name":"isActive"}, {"name":"isAdmin"}],
-                        [{"name":"teams"}, {"name":"isPortalUser"}],
-                        [{"name":"roles"}, {"name":"defaultTeam"}]
+                        [{"name":"type"}, {"name":"isActive"}],
+                        [{"name":"teams"}, {"name":"defaultTeam"}],
+                        [{"name":"roles"}, false]
                     ]
                 });
                 layout.push({
@@ -109,7 +110,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     ]
                 });
 
-                if (this.type == 'edit' && this.getUser().isAdmin()) {
+                if (this.type == 'edit' && this.getUser().isAdmin() && !this.model.isApi()) {
                     layout.push({
                         label: 'Password',
                         rows: [
@@ -160,6 +161,15 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     });
                 }
 
+                if (this.getUser().isAdmin() && this.model.isApi()) {
+                    layout.push({
+                        "name": "auth",
+                        "rows": [
+                            [{"name":"authMethod"}, false]
+                        ]
+                    });
+                }
+
                 var gridLayout = {
                     type: 'record',
                     layout: this.convertDetailLayout(layout),
@@ -198,5 +208,4 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
         }
 
     });
-
 });

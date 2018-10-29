@@ -164,8 +164,8 @@
         }
     },
     "collection": {
-        "sortBy": "number",
-        "asc": false,
+        "orderBy": "number",
+        "order": "desc",
         "textFilterFields": ["name", "number"]
     },
     "indexes": {

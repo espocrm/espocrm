@@ -177,6 +177,19 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
             });
 
             this.panelList = newList;
+
+            if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
+                var dynamicLogic = this.recordViewObject.dynamicLogic;
+                this.panelList.forEach(function (item) {
+                    if (item.dynamicLogicVisible) {
+                        dynamicLogic.addPanelVisibleCondition(item.name, item.dynamicLogicVisible);
+
+                        if (this.recordHelper.getPanelStateParam(item.name, 'hidden')) {
+                            item.hidden = true;
+                        }
+                    }
+                }, this);
+            }
         },
 
         setupDefaultPanel: function () {
@@ -321,6 +334,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                 if (view) {
                     view.$el.closest('.panel').removeClass('hidden');
                     view.disabled = false;
+                    view.trigger('show');
                 }
                 if (callback) {
                     callback.call(this);
@@ -351,6 +365,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                 if (view) {
                     view.$el.closest('.panel').addClass('hidden');
                     view.disabled = true;
+                    view.trigger('hide');
                 }
                 if (callback) {
                     callback.call(this);

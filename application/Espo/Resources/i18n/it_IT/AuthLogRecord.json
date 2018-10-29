@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "username": "Nome utente",
+    "ipAddress": "Indirizzo IP",
+    "requestTime": "Orario richiesta",
+    "createdAt": "Richiesto a",
+    "isDenied": "Viene negato",
+    "denialReason": "Negazione ragione",
+    "portal": "Portale",
+    "user": "Utente",
+    "authToken": "Token autorizzazione creato",
+    "requestUrl": "Url di richiesta",
+    "requestMethod": "Metodo di richiesta",
+    "authTokenIsActive": "Il token di autorizzazione è attivo"
+  },
+  "links": {
+    "authToken": "Token di autorizzazione creato",
+    "user": "Utente",
+    "portal": "Portale",
+    "actionHistoryRecords": "Cronologia delle azioni"
+  },
+  "presetFilters": {
+    "denied": "Negato",
+    "accepted": "Accettato"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Credenziali non valide",
+      "INACTIVE_USER": "Utente non attivo",
+      "IS_PORTAL_USER": "Utente del portale",
+      "IS_NOT_PORTAL_USER": "Non è un utente del portale",
+      "USER_IS_NOT_IN_PORTAL": "L'utente non è appartenente al portale"
+    }
+  }
+}

@@ -41,11 +41,22 @@ Espo.define('controllers/portal-user', 'controllers/record', function (Dep) {
         },
 
         createViewView: function (options, model) {
-            if (!model.get('isPortalUser')) {
+            if (!model.isPortal()) {
+                if (model.isApi()) {
+                    this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
+                    return;
+                }
                 this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
                 return;
             }
             Dep.prototype.createViewView.call(this, options, model);
+        },
+
+        create: function (options) {
+            options = options || {};
+            options.attributes = options.attributes  || {};
+            options.attributes.type = 'portal';
+            Dep.prototype.create.call(this, options);
         }
 
     });

@@ -2,9 +2,7 @@
   "labels": {
     "Fields": "Campi",
     "Relationships": "Relazioni",
-    "Schedule": "Programma",
-    "Log": "Log",
-    "Formula": "Formula"
+    "Schedule": "Programma"
   },
   "fields": {
     "name": "Nome",
@@ -13,10 +11,8 @@
     "labelPlural": "Etichetta Multipla",
     "stream": "Flusso attività",
     "label": "Etichetta",
-    "linkType": "Link Type",
     "entityForeign": "Entità esterna",
     "linkForeign": "Collegamento Esterno",
-    "link": "Link",
     "labelForeign": "Label Esterna",
     "sortBy": "Impostazione predefinita ( campo)",
     "sortDirection": "Impostazione predefinita ( indirizzo)",
@@ -28,16 +24,19 @@
     "audited": "Controllato",
     "auditedForeign": "Controllato esternamente",
     "statusField": "Campo di stato",
-    "beforeSaveCustomScript": "Prima di salvare lo script personalizzato"
+    "beforeSaveCustomScript": "Prima di salvare lo script personalizzato",
+    "color": "Colore",
+    "kanbanViewMode": "Vista Kanban",
+    "kanbanStatusIgnoreList": "Gruppi ignorati in vista Kanban",
+    "iconClass": "Icona",
+    "fullTextSearch": "Ricerca tutto il testo"
   },
   "options": {
     "type": {
       "": "Nessun",
-      "Base": "Base",
       "Person": "Persone",
       "CategoryTree": "Albero delle Categorie",
       "Event": "Evento",
-      "BasePlus": "Base Plus",
       "Company": "Compagnia"
     },
     "linkType": {
@@ -64,6 +63,7 @@
     "disabled": "Spunta, se non hai bisogno di questa entità nel tuo sistema.",
     "linkAudited": "La creazione di record correlati ed il collegamento con il record esistente verranno registrati nelle attività.",
     "linkMultipleField": "Collegare un campo multiplo è una via pratica per modificare le relazioni. Non utilizzarlo se prevedi un elevato numero di record correlati.",
-    "entityType": "Base Plus - dispone di pannelli Attività, Storia e Compiti.\n\nEvento - disponibile nei pannelli Calendario ed Attività."
+    "entityType": "Base Plus - dispone di pannelli Attività, Storia e Compiti.\n\nEvento - disponibile nei pannelli Calendario ed Attività.",
+    "fullTextSearch": "È necessario eseguire la ricostruzione."
   }
 }

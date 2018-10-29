@@ -83,6 +83,8 @@ class Record extends Base
 
     public function actionCreate($params, $data, $request)
     {
+        if (!is_object($data)) throw new BadRequest();
+
         if (!$request->isPost()) {
             throw new BadRequest();
         }
@@ -102,6 +104,8 @@ class Record extends Base
 
     public function actionUpdate($params, $data, $request)
     {
+        if (!is_object($data)) throw new BadRequest();
+
         if (!$request->isPut() && !$request->isPatch()) {
             throw new BadRequest();
         }
@@ -125,33 +129,16 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $where = $request->get('where');
-        $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc', 'true') === 'true';
-        $sortBy = $request->get('sortBy');
-        $q = $request->get('q');
-        $textFilter = $request->get('textFilter');
+        $params = [];
+        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
+        if (empty($params['maxSize'])) {
+            $params['maxSize'] = $maxSizeLimit;
         }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
+            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
-
-        $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
-            'textFilter' => $textFilter
-        );
-
-        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findEntities($params);
 
@@ -167,33 +154,16 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $where = $request->get('where');
-        $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc', 'true') === 'true';
-        $sortBy = $request->get('sortBy');
-        $q = $request->get('q');
-        $textFilter = $request->get('textFilter');
+        $params = [];
+        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
+        if (empty($params['maxSize'])) {
+            $params['maxSize'] = $maxSizeLimit;
         }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
+            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
-
-        $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
-            'textFilter' => $textFilter
-        );
-
-        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->getListKanban($params);
 
@@ -206,19 +176,7 @@ class Record extends Base
 
     protected function fetchListParamsFromRequest(&$params, $request, $data)
     {
-        if ($request->get('primaryFilter')) {
-            $params['primaryFilter'] = $request->get('primaryFilter');
-        }
-        if ($request->get('boolFilterList')) {
-            $params['boolFilterList'] = $request->get('boolFilterList');
-        }
-        if ($request->get('filterList')) {
-            $params['filterList'] = $request->get('filterList');
-        }
-
-        if ($request->get('select')) {
-            $params['select'] = explode(',', $request->get('select'));
-        }
+        \Espo\Core\Utils\ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
     }
 
     public function actionListLinked($params, $data, $request)
@@ -226,33 +184,16 @@ class Record extends Base
         $id = $params['id'];
         $link = $params['link'];
 
-        $where = $request->get('where');
-        $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc', 'true') === 'true';
-        $sortBy = $request->get('sortBy');
-        $q = $request->get('q');
-        $textFilter = $request->get('textFilter');
+        $params = [];
+        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
+        if (empty($params['maxSize'])) {
+            $params['maxSize'] = $maxSizeLimit;
         }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
+            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
-
-        $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
-            'textFilter' => $textFilter
-        );
-
-        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
 
@@ -278,6 +219,8 @@ class Record extends Base
 
     public function actionExport($params, $data, $request)
     {
+        if (!is_object($data)) throw new BadRequest();
+
         if (!$request->isPost()) {
             throw new BadRequest();
         }
@@ -335,6 +278,10 @@ class Record extends Base
         }
         if (empty($data->attributes)) {
             throw new BadRequest();
+        }
+
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
+            throw new Forbidden();
         }
 
         $params = array();

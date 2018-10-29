@@ -1,22 +1,16 @@
 {
   "fields": {
     "name": "Nome",
-    "emailAddress": "Email",
     "title": "Titolo",
     "accountRole": "Titolo",
-    "account": "Account",
     "accounts": "Account",
     "phoneNumber": "Telefono",
     "accountType": "Tipo di Account",
     "doNotCall": "Non chiamare",
     "address": "Indirizzi",
-    "opportunityRole": "Opportunity Role",
     "description": "Descrizione",
-    "campaign": "Campaign",
     "targetLists": "Liste di destinazione",
     "targetList": "Lista di destinazione",
-    "portalUser": "Portal User",
-    "originalLead": "Original Lead",
     "acceptanceStatus": "Stato accettazione",
     "accountIsInactive": "Account inattivo",
     "acceptanceStatusMeetings": "Stato accettazione (riunioni)",
@@ -32,8 +26,8 @@
     "accounts": "Account",
     "casesPrimary": "Casi (Primario)",
     "portalUser": "Portale Utente",
-    "originalLead": "Original Lead",
-    "documents": "Documenti"
+    "documents": "Documenti",
+    "tasksPrimary": "Attività (espanso)"
   },
   "labels": {
     "Create Contact": "Crea Contatto"
@@ -42,8 +36,7 @@
     "opportunityRole": {
       "": "--Nessun--",
       "Decision Maker": "Responsabile",
-      "Evaluator": "Valutatore",
-      "Influencer": "Influencer"
+      "Evaluator": "Valutatore"
     }
   },
   "presetFilters": {

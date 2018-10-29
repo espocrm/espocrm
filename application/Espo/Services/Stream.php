@@ -89,6 +89,11 @@ class Stream extends \Espo\Core\Services\Base
         return $this->getInjection('container')->get('fieldManager');
     }
 
+    protected function getSelectMangerFactory()
+    {
+        return $this->getInjection('container')->get('selectManagerFactory');
+    }
+
     protected function getNotificationService()
     {
         if (empty($this->notificationService)) {
@@ -326,6 +331,14 @@ class Stream extends \Espo\Core\Services\Base
         $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($user);
         $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($user);
 
+        $additionalSelectParams = null;
+        if (!empty($params['where'])) {
+            $selectManager = $this->getSelectMangerFactory()->create('Note');
+            $additionalSelectParams = $selectManager->getSelectParams([
+                'where' => $params['where']
+            ], false, true);
+        }
+
         $selectParamsList = [];
 
         $selectParamsSubscription = [
@@ -532,7 +545,7 @@ class Stream extends \Espo\Core\Services\Base
             'order' => 'DESC'
         ];
 
-        if (!$user->get('isPortalUser') || $user->get('isAdmin')) {
+        if ((!$user->isPortal() || $user->isAdmin()) && !$user->isApi()) {
             $selectParamsList[] = [
                 'select' => $select,
                 'leftJoins' => ['createdBy'],
@@ -546,7 +559,7 @@ class Stream extends \Espo\Core\Services\Base
             ];
         }
 
-        if ($user->get('isPortalUser')) {
+        if ($user->isPortal()) {
             $portalIdList = $user->getLinkMultipleIdList('portals');
             $portalIdQuotedList = [];
             foreach ($portalIdList as $portalId) {
@@ -621,6 +634,12 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
+        if ($additionalSelectParams) {
+            foreach ($selectParamsList as $i => $selectParams) {
+                $selectParamsList[$i] = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
+            }
+        }
+
         $sqlPartList = [];
         foreach ($selectParamsList as $i => $selectParams) {
             if (empty($selectParams['whereClause'])) {
@@ -673,10 +692,10 @@ class Stream extends \Espo\Core\Services\Base
             $total = -2;
         }
 
-        return array(
+        return (object) [
             'total' => $total,
             'collection' => $collection,
-        );
+        ];
     }
 
     public function find($scope, $id, $params = [])
@@ -837,13 +856,23 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        if ($this->getUser()->get('isPortalUser')) {
+        if ($this->getUser()->isPortal()) {
             $where[] = [
                 'isInternal' => false
             ];
         }
 
         $selectParams['whereClause'] = $where;
+
+        if (!empty($params['where'])) {
+            $selectManager = $this->getSelectMangerFactory()->create('Note');
+            $additionalSelectParams = $selectManager->getSelectParams([
+                'where' => $params['where']
+            ], false, true);
+            $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
+
+            $where = $selectParams['whereClause'];
+        }
 
         $collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
 
@@ -873,10 +902,10 @@ class Stream extends \Espo\Core\Services\Base
         $selectParams['where'] = $where;
         $count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
 
-        return array(
+        return (object) [
             'total' => $count,
-            'collection' => $collection,
-        );
+            'collection' => $collection
+        ];
     }
 
     protected function loadAssignedUserName(Entity $entity)
@@ -1441,7 +1470,7 @@ class Stream extends \Espo\Core\Services\Base
                 continue;
             }
 
-            if (!$user->get('isPortalUser')) {
+            if (!$user->isPortal()) {
                 if (!$this->getAclManager()->check($user, $entity, 'stream')) {
                     $this->unfollowEntity($entity, $user->id);
                     continue;

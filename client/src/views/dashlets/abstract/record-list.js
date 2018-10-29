@@ -85,13 +85,27 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                 }
 
                 this.collection = collection;
-                collection.sortBy = this.getOption('sortBy') || this.collection.sortBy;
-                collection.asc = this.getOption('asc') || this.collection.asc;
+
+                collection.orderBy = this.getOption('orderBy') || this.getOption('sortBy') || this.collection.orderBy;
+
+                if (this.getOption('orderBy')) {
+                    collection.order = 'asc';
+                }
+
+                if (this.hasOption('asc')) {
+                    collection.order = this.getOption('asc') ? 'asc' : false;
+                }
 
                 if (this.getOption('sortDirection') === 'asc') {
-                    collection.asc = true;
+                    collection.order = 'asc';
                 } else if (this.getOption('sortDirection') === 'desc') {
-                    collection.asc = false;
+                    collection.order = 'desc';
+                }
+
+                if (this.getOption('order') === 'asc') {
+                    collection.order = 'order';
+                } else if (this.getOption('order') === 'desc') {
+                    collection.order = 'desc';
                 }
 
                 collection.maxSize = this.getOption('displayRecords');

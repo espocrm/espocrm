@@ -1,81 +1,86 @@
 {
-   "controller": "controllers/email",
-   "acl": "acl/email",
-   "model": "models/email",
-   "views": {
-      "list": "views/email/list",
-      "detail": "views/email/detail"
-   },
-   "recordViews":{
-      "list": "views/email/record/list",
-      "detail": "views/email/record/detail",
-      "edit": "views/email/record/edit",
-      "editQuick":"views/email/record/edit-quick",
-      "detailQuick":"views/email/record/detail-quick",
-      "compose": "views/email/record/compose"
-   },
-   "modalViews": {
-      "detail": "views/email/modals/detail",
-      "compose": "views/modals/compose-email"
-   },
-   "quickCreateModalType": "compose",
-   "menu": {
-      "list": {
-         "buttons": [
-            {
-               "label": "Compose",
-               "action": "composeEmail",
-               "style": "danger",
-               "acl": "create"
-            }
-         ],
-         "dropdown": [
-             {
-               "label": "Archive Email",
-               "link": "#Email/create",
-               "acl": "create"
-             },
-             {
-               "label": "Email Templates",
-               "link": "#EmailTemplate",
-               "acl": "read",
-               "aclScope": "EmailTemplate"
-             },
-             {
-               "label": "Folders",
-               "link": "#EmailFolder"
-             },
-             {
-               "label": "Filters",
-               "link": "#EmailFilter"
-             }
-         ]
-      },
-      "detail": {
-         "dropdown": [
-             {
-               "label": "Reply",
-               "action": "reply",
-               "acl": "read"
-             },
-             {
-               "label": "Reply to All",
-               "action": "replyToAll",
-               "acl": "read"
-             },
-             {
-               "label": "Forward",
-               "action": "forward",
-               "acl": "read"
-             }
-         ]
-      }
-   },
-   "filterList": [
+    "controller":"controllers/email",
+    "acl":"acl/email",
+    "model":"models/email",
+    "views":{
+        "list":"views/email/list",
+        "detail":"views/email/detail"
+    },
+    "recordViews":{
+        "list":"views/email/record/list",
+        "detail":"views/email/record/detail",
+        "edit":"views/email/record/edit",
+        "editQuick":"views/email/record/edit-quick",
+        "detailQuick":"views/email/record/detail-quick",
+        "compose":"views/email/record/compose",
+        "listRelated":"views/email/record/list-related"
+    },
+    "modalViews":{
+        "detail":"views/email/modals/detail",
+        "compose":"views/modals/compose-email"
+    },
+    "quickCreateModalType":"compose",
+    "menu":{
+        "list":{
+            "buttons":[
+                {
+                    "label":"Compose",
+                    "action":"composeEmail",
+                    "style":"danger",
+                    "acl":"create"
+                }
+            ],
+            "dropdown":[
+                {
+                    "label":"Archive Email",
+                    "link":"#Email/create",
+                    "acl":"create"
+                },
+                false,
+                {
+                    "label":"Email Templates",
+                    "link":"#EmailTemplate",
+                    "acl":"read",
+                    "aclScope":"EmailTemplate"
+                },
+                {
+                    "label":"Folders",
+                    "link":"#EmailFolder"
+                },
+                {
+                    "label":"Filters",
+                    "link":"#EmailFilter"
+                }
+            ]
+        },
+        "detail":{
+            "dropdown":[
+                {
+                    "label":"Reply",
+                    "action":"reply",
+                    "acl":"read"
+                },
+                {
+                    "label":"Reply to All",
+                    "action":"replyToAll",
+                    "acl":"read"
+                },
+                {
+                    "label":"Forward",
+                    "action":"forward",
+                    "acl":"read"
+                }
+            ]
+        }
+    },
+    "filterList":[
 
-   ],
-   "defaultFilterData": {
-   },
-   "boolFilterList": [],
-    "iconClass": "fas fa-envelope"
+    ],
+    "defaultFilterData":{
+
+    },
+    "boolFilterList":[
+
+    ],
+    "iconClass":"fas fa-envelope"
 }

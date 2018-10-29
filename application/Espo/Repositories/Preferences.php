@@ -222,7 +222,7 @@ class Preferences extends \Espo\Core\ORM\Repository
         $pdo->query($sql);
 
         $user = $this->getEntityManger()->getEntity('User', $entity->id);
-        if ($user && !$user->get('isPortalUser')) {
+        if ($user && !$user->isPortal()) {
             $this->storeAutoFollowEntityTypeList($entity);
         }
 

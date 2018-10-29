@@ -11,13 +11,26 @@
     "bottomMargin": "Нижний отступ",
     "printFooter": "Отображать подвал",
     "footerPosition": "Положение подвала",
-    "variables": "Available Placeholders"
+    "variables": "Доступные заполнители",
+    "pageOrientation": "Ориентация страницы",
+    "pageFormat": "Формат бумаги",
+    "fontFace": "Шрифт"
   },
   "labels": {
     "Create Template": "Создать шаблон"
   },
   "tooltips": {
     "footer": "Используйте {pageNumber} для отображения номера страницы.",
-    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
+    "variables": "Копировать-вставить нужный заполнитель для заголовка, тела или нижнего колонтитула."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Книжная",
+      "Landscape": "Альбомная"
+    },
+    "placeholders": {
+      "today": "Сегодня (дата)",
+      "now": "Теперь (дата-время)"
+    }
   }
 }

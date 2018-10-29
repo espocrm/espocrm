@@ -2,7 +2,6 @@
   "fields": {
     "name": "Имя",
     "emailAddress": "Адрес эл. почты",
-    "title": "Должность",
     "accountRole": "Должность",
     "account": "Контрагент",
     "accounts": "Контрагенты",
@@ -16,11 +15,14 @@
     "targetLists": "Списки целей",
     "targetList": "Список целей",
     "portalUser": "Пользователь портала",
-    "originalLead": "Original Lead",
-    "acceptanceStatus": "Acceptance Status"
+    "originalLead": "Изначальный кандидат",
+    "acceptanceStatus": "Статус принятия",
+    "accountIsInactive": "Неактивный контрагент",
+    "acceptanceStatusMeetings": "Статус принятия (Встречи)",
+    "acceptanceStatusCalls": "Статус принятия (Звонки)"
   },
   "links": {
-    "opportunities": "Cделки",
+    "opportunities": "Сделки",
     "cases": "Обращения",
     "targetLists": "Списки целей",
     "campaignLogRecords": "Журнал кампании",
@@ -29,8 +31,9 @@
     "accounts": "Контрагенты",
     "casesPrimary": "Обращения (основной)",
     "portalUser": "Пользователь портала",
-    "originalLead": "Original Lead",
-    "documents": "Documents"
+    "originalLead": "Изначальный кандидат",
+    "documents": "Документы",
+    "tasksPrimary": "Задачи (развернуто)"
   },
   "labels": {
     "Create Contact": "Создать контакт"
@@ -45,6 +48,7 @@
   },
   "presetFilters": {
     "portalUsers": "Пользователи порталов",
-    "notPortalUsers": "Не пользователи порталов"
+    "notPortalUsers": "Не пользователи порталов",
+    "accountActive": "Активный"
   }
 }

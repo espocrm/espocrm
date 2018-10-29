@@ -7,22 +7,24 @@
     "endDate": "Data termine",
     "targetLists": "Lista di destinazione",
     "includingActionList": "Include",
-    "excludingActionList": "Esclude"
+    "excludingActionList": "Esclude",
+    "optedOutCount": "Conteggio cancellazioni",
+    "targetStatus": "Stato target",
+    "isOptedOut": "È stato cancellato"
   },
   "links": {
     "accounts": "Account",
     "contacts": "Contatti",
-    "leads": "Leads",
     "campaigns": "Campagne",
     "massEmails": "Mailing massivo"
   },
   "options": {
     "type": {
-      "Email": "Email",
-      "Web": "Web",
-      "Television": "Televisione",
-      "Radio": "Radio",
-      "Newsletter": "Newsletter"
+      "Television": "Televisione"
+    },
+    "targetStatus": {
+      "Opted Out": "Cancellato iscrizione",
+      "Listed": "Elencato"
     }
   },
   "labels": {

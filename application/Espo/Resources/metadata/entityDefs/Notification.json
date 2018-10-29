@@ -52,8 +52,8 @@
         }
     },
     "collection": {
-        "sortBy": "number",
-        "asc": false
+        "orderBy": "number",
+        "order": "desc"
     },
     "indexes": {
         "createdAt": {

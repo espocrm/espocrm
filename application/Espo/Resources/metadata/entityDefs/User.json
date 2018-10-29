@@ -2,7 +2,8 @@
     "fields": {
         "isAdmin": {
             "type": "bool",
-            "tooltip": true
+            "tooltip": true,
+            "disabled": true
         },
         "userName": {
             "type": "varchar",
@@ -14,6 +15,14 @@
         "name": {
             "type": "personName",
             "view": "views/user/fields/name"
+        },
+        "type": {
+            "type": "enum",
+            "options": ["regular", "admin", "portal", "system", "super-admin", "api"],
+            "default": "regular",
+            "maxLength": 24,
+            "index": true,
+            "layoutMassUpdateDisabled": true
         },
         "password": {
             "type": "password",
@@ -27,6 +36,34 @@
             "internal": true,
             "disabled": true,
             "notStorable": true
+        },
+        "authMethod": {
+            "type": "enum",
+            "options": ["ApiKey", "Hmac"],
+            "maxLength": 24,
+            "layoutMassUpdateDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutListDisabled": true
+        },
+        "apiKey": {
+            "type": "varchar",
+            "maxLength": 100,
+            "readOnly": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutListDisabled": true
+        },
+        "secretKey": {
+            "type": "varchar",
+            "maxLength": 100,
+            "readOnly": true,
+            "notStorable": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutListDisabled": true
         },
         "salutationName": {
             "type": "enum",
@@ -52,7 +89,7 @@
         },
         "isPortalUser": {
             "type": "bool",
-            "layoutMassUpdateDisabled": true
+            "disabled": true
         },
         "isSuperAdmin": {
             "type": "bool",
@@ -322,8 +359,8 @@
         }
     },
     "collection": {
-        "sortBy": "userName",
-        "asc": true,
+        "orderBy": "userName",
+        "order": "asc",
         "textFilterFields": ["name", "userName"]
     }
 }

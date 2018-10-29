@@ -1,5 +1,27 @@
 {
   "insertFromSourceLabels": {
     "Document": "Вставить документ"
+  },
+  "fields": {
+    "role": "Роль",
+    "related": "Связанный",
+    "file": "Файл",
+    "type": "Тип",
+    "field": "Поле",
+    "sourceId": "ID Источника",
+    "storage": "Хранилище",
+    "size": "Размер (bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Вложение",
+      "Inline Attachment": "Встроенное вложение",
+      "Import File": "Импортировать файл",
+      "Export File": "Эспортировать файл",
+      "Mail Merge": "Слияние писем"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Сирота"
   }
 }

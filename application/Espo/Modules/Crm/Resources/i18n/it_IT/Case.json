@@ -3,26 +3,23 @@
     "name": "Nome",
     "number": "Numero",
     "status": "Stato",
-    "account": "Account",
     "contact": "Contatti",
     "contacts": "Contatti",
     "priority": "Priorita'",
     "type": "Tipo",
     "description": "Descrizione",
-    "inboundEmail": "Email in entrata",
-    "lead": "Lead"
+    "attachments": "Allegati",
+    "inboundEmail": "Gruppo di account email"
   },
   "links": {
-    "inboundEmail": "Email in entrata",
-    "account": "Account",
     "contact": "Contatto (Primario)",
     "Contacts": "Contatti",
     "meetings": "Riunioni",
     "calls": "Chiamate",
     "tasks": "Compiti",
     "emails": "Email",
-    "articles": "Knowledge Base Articles",
-    "lead": "Lead"
+    "attachments": "Allegati",
+    "inboundEmail": "Gruppo di account email"
   },
   "options": {
     "status": {

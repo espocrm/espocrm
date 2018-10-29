@@ -31,12 +31,12 @@
     "Campaign": "Кампания",
     "TargetList": "Список целей",
     "MassEmail": "Массовая рассылка эл. писем",
-    "EmailQueueItem": "Email Queue Item",
+    "EmailQueueItem": "Элемент очереди эл. почты",
     "CampaignTrackingUrl": "Целевой URL-адрес",
     "Activities": "Действия",
     "KnowledgeBaseArticle": "Статья базы знаний",
     "KnowledgeBaseCategory": "Категория базы знаний",
-    "CampaignLogRecord": "Campaign Log Record"
+    "CampaignLogRecord": "Запись Лога Кампании"
   },
   "scopeNamesPlural": {
     "Account": "Контрагенты",
@@ -54,12 +54,12 @@
     "Campaign": "Кампании",
     "TargetList": "Списки целей",
     "MassEmail": "Массовые рассылки эл. писем",
-    "EmailQueueItem": "Email Queue Items",
+    "EmailQueueItem": "Элементы очереди эл. почты",
     "CampaignTrackingUrl": "Целевые URL-адреса",
     "Activities": "Действия",
     "KnowledgeBaseArticle": "Статьи базы знаний",
     "KnowledgeBaseCategory": "Категории базы знаний",
-    "CampaignLogRecord": "Campaign Log Records"
+    "CampaignLogRecord": "Записи Лога Кампании"
   },
   "dashlets": {
     "Leads": "Мои кандидаты",
@@ -76,7 +76,7 @@
     "Activities": "Мои действия"
   },
   "labels": {
-    "Create InboundEmail": "Create Inbound Email",
+    "Create InboundEmail": "Создать входящую эл. почту",
     "Activities": "Действия",
     "History": "История",
     "Attendees": "Участники",

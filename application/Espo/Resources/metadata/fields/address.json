@@ -22,7 +22,9 @@
       },
       "country":{
          "type":"varchar",
-         "trim": true
+         "trim": true,
+         "view": "views/fields/address-country",
+         "customizationOptionsDisabled": true
       },
       "postalCode":{
          "type":"varchar",
