@@ -27,7 +27,8 @@
       "ids"
    ],
    "notActualFields":[
-      "names"
+      "names",
+      "types"
    ],
    "linkDefs": {
       "type": "hasChildren",

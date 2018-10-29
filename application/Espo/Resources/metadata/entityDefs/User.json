@@ -209,6 +209,7 @@
             "columns": {
                 "role": "userRole"
             },
+            "additionalAttributeList": ["columns"],
             "view": "views/user/fields/teams",
             "default": "javascript: return {teamsIds: []}"
         },
