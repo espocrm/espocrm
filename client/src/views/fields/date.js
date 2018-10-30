@@ -48,6 +48,16 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            if (this.getConfig().get('fiscalYearShift')) {
+                this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
+                if (this.getConfig().get('fiscalYearShift') % 3 != 0) {
+                    this.searchTypeList.push('currentFiscalQuarter');
+                    this.searchTypeList.push('lastFiscalQuarter');
+                }
+                this.searchTypeList.push('currentFiscalYear');
+                this.searchTypeList.push('lastFiscalYear');
+            }
         },
 
         data: function () {

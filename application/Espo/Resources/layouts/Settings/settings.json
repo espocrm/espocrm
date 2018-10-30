@@ -17,7 +17,8 @@
             [{"name": "dateFormat"}, {"name": "weekStart"}],
             [{"name": "timeFormat"},  {"name": "thousandSeparator"}],
             [{"name": "addressFormat"}, {"name": "decimalMark"}],
-            [{"name": "addressPreview"}, {"name": "addressCountryList"}]
+            [{"name": "addressPreview"}, {"name": "addressCountryList"}],
+            [{"name": "fiscalYearShift"},  false]
         ]
     },
     {
