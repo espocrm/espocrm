@@ -331,15 +331,23 @@ class Record extends \Espo\Core\Services\Base
         foreach ($linkDefs as $link => $defs) {
             if (isset($defs['type']) && $defs['type'] == 'belongsTo') {
                 if (!empty($defs['noJoin']) && !empty($defs['entity'])) {
-                    $nameField = $link . 'Name';
-                    $idField = $link . 'Id';
-                    if ($entity->hasAttribute($nameField) && $entity->hasAttribute($idField)) {
-                        $id = $entity->get($idField);
+                    $nameAttribute = $link . 'Name';
+                    $idAttribute = $link . 'Id';
+                    if ($entity->hasAttribute($nameAttribute) && $entity->hasAttribute($idAttribute)) {
+                        $id = $entity->get($idAttribute);
                     }
 
                     $scope = $defs['entity'];
-                    if (!empty($scope) && $foreignEntity = $this->getEntityManager()->getEntity($scope, $id)) {
-                        $entity->set($nameField, $foreignEntity->get('name'));
+                    if (!empty($scope)) {
+                        if ($this->getEntityManager()->hasRepository($scope)) {
+                            $foreignEntity = $this->getEntityManager()->getRepository($scope)
+                                ->select(['id', 'name'])
+                                ->where(['id' => $id])
+                                ->findOne();
+                            if ($foreignEntity) {
+                                $entity->set($nameAttribute, $foreignEntity->get('name'));
+                            }
+                        }
                     }
                 }
             }
