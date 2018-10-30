@@ -336,9 +336,8 @@ class Record extends \Espo\Core\Services\Base
                     if ($entity->hasAttribute($nameAttribute) && $entity->hasAttribute($idAttribute)) {
                         $id = $entity->get($idAttribute);
                     }
-
-                    $scope = $defs['entity'];
-                    if (!empty($scope)) {
+                    if (!empty($defs['entity'])) {
+                        $scope = $defs['entity'];
                         if ($this->getEntityManager()->hasRepository($scope)) {
                             $foreignEntity = $this->getEntityManager()->getRepository($scope)
                                 ->select(['id', 'name'])
@@ -348,6 +347,33 @@ class Record extends \Espo\Core\Services\Base
                                 $entity->set($nameAttribute, $foreignEntity->get('name'));
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    protected function loadEmptyNameLinkFields(Entity $entity)
+    {
+        $linkDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []);
+        foreach ($linkDefs as $link => $defs) {
+            if (!isset($defs['type'])) continue;
+            if ($defs['type'] != 'belongsTo') continue;
+
+            $nameAttribute = $link . 'Name';
+            $idAttribute = $link . 'Id';
+
+            if ($entity->get($idAttribute) && !$entity->get($nameAttribute)) {
+                $id = $entity->get($idAttribute);
+                if (empty($defs['entity'])) continue;
+                $scope = $defs['entity'];
+                if ($this->getEntityManager()->hasRepository($scope)) {
+                    $foreignEntity = $this->getEntityManager()->getRepository($scope)
+                        ->select(['id', 'name'])
+                        ->where(['id' => $id])
+                        ->findOne();
+                    if ($foreignEntity) {
+                        $entity->set($nameAttribute, $foreignEntity->get('name'));
                     }
                 }
             }
@@ -364,6 +390,7 @@ class Record extends \Espo\Core\Services\Base
         $this->loadEmailAddressField($entity);
         $this->loadPhoneNumberField($entity);
         $this->loadNotJoinedLinkFields($entity);
+        $this->loadEmptyNameLinkFields($entity);
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)
