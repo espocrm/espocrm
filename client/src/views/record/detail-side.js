@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail-side', ['view'], function (Dep) {
+Espo.define('views/record/detail-side', 'views/record/panels-container', function (Dep) {
 
     return Dep.extend({
 
@@ -57,33 +57,6 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                     }
                 ]
             }
-        },
-
-        data: function () {
-            return {
-                panelList: this.panelList,
-                scope: this.scope,
-                entityType: this.entityType
-            };
-        },
-
-        events: {
-            'click .action': function (e) {
-                var $target = $(e.currentTarget);
-                var action = $target.data('action');
-                var panel = $target.data('panel');
-                var data = $target.data();
-                if (action) {
-                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                    var d = _.clone(data);
-                    delete d['action'];
-                    delete d['panel'];
-                    var view = this.getView(panel);
-                    if (view && typeof view[method] == 'function') {
-                        view[method].call(view, d);
-                    }
-                }
-            },
         },
 
         init: function () {
@@ -143,6 +116,10 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                     this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
                 }
                 return item;
+            }, this);
+
+            this.panelList.forEach(function (item) {
+                item.actionsViewKey = item.name + 'Actions';
             }, this);
 
             this.wait(true);
@@ -246,138 +223,6 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
             this.panelList.unshift(defaultPanelDefs);
         },
-
-        setupPanelViews: function () {
-            this.panelList.forEach(function (p) {
-                var o = {
-                    model: this.options.model,
-                    el: this.options.el + ' .panel[data-name="' + p.name + '"] > .panel-body',
-                    readOnly: this.readOnly,
-                    inlineEditDisabled: this.inlineEditDisabled,
-                    mode: this.mode,
-                    recordHelper: this.recordHelper,
-                    defs: p,
-                    disabled: p.hidden || false,
-                    recordViewObject: this.recordViewObject
-                };
-                o = _.extend(o, p.options);
-                this.createView(p.name, p.view, o, function (view) {
-                    if ('getButtonList' in view) {
-                        p.buttonList = this.filterActions(view.getButtonList());
-                    }
-                    if ('getActionList' in view) {
-                        p.actionList = this.filterActions(view.getActionList());
-                    }
-                    if (p.label) {
-                        p.title = this.translate(p.label, 'labels', this.scope);
-                    } else {
-                        p.title = view.title;
-                    }
-                    if (view.titleHtml) {
-                        p.titleHtml = view.titleHtml;
-                    }
-                }, this);
-            }, this);
-        },
-
-        getFieldViews: function (withHidden) {
-            var fields = {};
-            this.panelList.forEach(function (p) {
-                var panelView = this.getView(p.name);
-                if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
-                    fields = _.extend(fields, panelView.getFieldViews());
-                }
-            }, this);
-            return fields;
-        },
-
-        getFields: function () {
-            return this.getFieldViews();
-        },
-
-        fetch: function () {
-            var data = {};
-
-            this.panelList.forEach(function (p) {
-                var panelView = this.getView(p.name);
-                if (!panelView.disabled && 'fetch' in panelView) {
-                    data = _.extend(data, panelView.fetch());
-                }
-            }, this);
-            return data;
-        },
-
-        filterActions: function (actions) {
-            var filtered = [];
-            actions.forEach(function (item) {
-                if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
-                    filtered.push(item);
-                }
-            }, this);
-            return filtered;
-        },
-
-        showPanel: function (name, callback) {
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
-
-            var isFound = false;
-            this.panelList.forEach(function (d) {
-                if (d.name == name) {
-                    d.hidden = false;
-                    isFound = true;
-                }
-            }, this);
-            if (!isFound) return;
-
-            if (this.isRendered()) {
-                var view = this.getView(name);
-                if (view) {
-                    view.$el.closest('.panel').removeClass('hidden');
-                    view.disabled = false;
-                    view.trigger('show');
-                }
-                if (callback) {
-                    callback.call(this);
-                }
-            } else {
-                if (callback) {
-                    this.once('after:render', function () {
-                        callback.call(this);
-                    }, this);
-                }
-            }
-        },
-
-        hidePanel: function (name, callback) {
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
-
-            var isFound = false;
-            this.panelList.forEach(function (d) {
-                if (d.name == name) {
-                    d.hidden = true;
-                    isFound = true;
-                }
-            }, this);
-            if (!isFound) return;
-
-            if (this.isRendered()) {
-                var view = this.getView(name);
-                if (view) {
-                    view.$el.closest('.panel').addClass('hidden');
-                    view.disabled = true;
-                    view.trigger('hide');
-                }
-                if (callback) {
-                    callback.call(this);
-                }
-            } else {
-                if (callback) {
-                    this.once('after:render', function () {
-                        callback.call(this);
-                    }, this);
-                }
-            }
-        }
 
     });
 });

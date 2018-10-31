@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
+define('views/record/detail-bottom', 'views/record/panels-container', function (Dep) {
 
     return Dep.extend({
 
@@ -41,95 +41,6 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         readOnly: false,
 
         portalLayoutDisabled: false,
-
-        data: function () {
-            return {
-                panelList: this.panelList,
-                scope: this.scope,
-                entityType: this.entityType
-            };
-        },
-
-        events: {
-            'click .action': function (e) {
-                var $target = $(e.currentTarget);
-                var action = $target.data('action');
-                var panel = $target.data('panel');
-                var data = $target.data();
-                if (action) {
-                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                    var d = _.clone(data);
-                    delete d['action'];
-                    delete d['panel'];
-                    var view = this.getView(panel);
-                    if (view && typeof view[method] == 'function') {
-                        view[method].call(view, d, e);
-                    }
-                }
-            }
-        },
-
-        showPanel: function (name, callback) {
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
-
-            var isFound = false;
-            this.panelList.forEach(function (d) {
-                if (d.name == name) {
-                    d.hidden = false;
-                    isFound = true;
-                }
-            }, this);
-            if (!isFound) return;
-
-            if (this.isRendered()) {
-                var view = this.getView(name);
-                if (view) {
-                    view.$el.closest('.panel').removeClass('hidden');
-                    view.disabled = false;
-                    view.trigger('show');
-                }
-                if (callback) {
-                    callback.call(this);
-                }
-            } else {
-                if (callback) {
-                    this.once('after:render', function () {
-                        callback.call(this);
-                    }, this);
-                }
-            }
-        },
-
-        hidePanel: function (name, callback) {
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
-
-            var isFound = false;
-            this.panelList.forEach(function (d) {
-                if (d.name == name) {
-                    d.hidden = true;
-                    isFound = true;
-                }
-            }, this);
-            if (!isFound) return;
-
-            if (this.isRendered()) {
-                var view = this.getView(name);
-                if (view) {
-                    view.$el.closest('.panel').addClass('hidden');
-                    view.disabled = true;
-                    view.trigger('hide');
-                }
-                if (callback) {
-                    callback.call(this);
-                }
-            } else {
-                if (callback) {
-                    this.once('after:render', function () {
-                        callback.call(this);
-                    }, this);
-                }
-            }
-        },
 
         setupPanels: function () {
             var scope = this.scope;
@@ -163,41 +74,6 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     "order": 2
                 });
             }
-        },
-
-        setupPanelViews: function () {
-            this.panelList.forEach(function (p) {
-                var name = p.name;
-                this.createView(name, p.view, {
-                    model: this.model,
-                    panelName: name,
-                    el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
-                    defs: p,
-                    mode: this.mode,
-                    recordHelper: this.recordHelper,
-                    inlineEditDisabled: this.inlineEditDisabled,
-                    readOnly: this.readOnly,
-                    disabled: p.hidden || false,
-                    recordViewObject: this.recordViewObject
-                }, function (view) {
-                    if ('getActionList' in view) {
-                        p.actionList = this.filterActions(view.getActionList());
-                    }
-                    if ('getButtonList' in view) {
-                        p.buttonList = this.filterActions(view.getButtonList());
-                    }
-
-                    if (view.titleHtml) {
-                        p.titleHtml = view.titleHtml;
-                    } else {
-                        if (p.label) {
-                            p.title = this.translate(p.label, 'labels', this.scope);
-                        } else {
-                            p.title = view.title;
-                        }
-                    }
-                }, this);
-            }, this);
         },
 
         init: function () {
@@ -279,10 +155,18 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     return order1 - order2;
                 });
 
+                this.panelList.forEach(function (item) {
+                    item.actionsViewKey = item.name + 'Actions';
+                }, this);
+
                 this.setupPanelViews();
                 this.wait(false);
 
             }.bind(this));
+        },
+
+        setReadOnly: function () {
+            this.readOnly = true;
         },
 
         loadRelationshipsLayout: function (callback) {
@@ -353,42 +237,5 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 this.panelList.push(p);
             }, this);
         },
-
-        filterActions: function (actions) {
-            var filtered = [];
-            actions.forEach(function (item) {
-                if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
-                    filtered.push(item);
-                }
-            }.bind(this));
-            return filtered;
-        },
-
-        getFieldViews: function (withHidden) {
-            var fields = {};
-            this.panelList.forEach(function (p) {
-                var panelView = this.getView(p.name);
-                if ((!panelView.disabled || withHidden)  && 'getFieldViews' in panelView) {
-                    fields = _.extend(fields, panelView.getFieldViews());
-                }
-            }, this);
-            return fields;
-        },
-
-        getFields: function () {
-            return this.getFieldViews();
-        },
-
-        fetch: function () {
-            var data = {};
-
-            this.panelList.forEach(function (p) {
-                var panelView = this.getView(p.name);
-                if (!panelView.disabled && 'fetch' in panelView) {
-                    data = _.extend(data, panelView.fetch());
-                }
-            }, this);
-            return data;
-        }
     });
 });

@@ -992,12 +992,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             var bottomView = this.getView('bottom');
             if (bottomView && 'setNotReadOnly' in bottomView) {
-                bottomView.setNotReadOnly();
+                bottomView.setNotReadOnly(onlyNotSetAsReadOnly);
             }
 
             var sideView = this.getView('side');
             if (sideView && 'setNotReadOnly' in sideView) {
-                sideView.setNotReadOnly();
+                sideView.setNotReadOnly(onlyNotSetAsReadOnly);
             }
 
             this.getFieldList().forEach(function (field) {
