@@ -43,8 +43,8 @@ define('views/record/panel-actions', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.buttonList = this.options.defs.buttonList;
-            this.actionList = this.options.defs.actionList;
+            this.buttonList = this.options.defs.buttonList || [];
+            this.actionList = this.options.defs.actionList || [];
         },
 
         getButtonList: function () {
