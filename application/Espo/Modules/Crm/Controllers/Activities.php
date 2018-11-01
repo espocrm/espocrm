@@ -74,20 +74,7 @@ class Activities extends \Espo\Core\Controllers\Base
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);
-
-            $resultList = [];
-            foreach ($userIdList as $userId) {
-                try {
-                    $userResultList = $service->getEvents($userId, $from, $to, $scopeList);
-                } catch (\Exception $e) {
-                    continue;
-                }
-                foreach ($userResultList as $item) {
-                    $item['userId'] = $userId;
-                    $resultList[] = $item;
-                }
-            }
-            return $resultList;
+            return $service->getEventsForUsers($userIdList, $from, $to, $scopeList);
         } else {
             if (!$userId) {
                 $userId = $this->getUser()->id;

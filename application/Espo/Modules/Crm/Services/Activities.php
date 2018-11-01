@@ -1178,6 +1178,26 @@ class Activities extends \Espo\Core\Services\Base
         return $selectParams;
     }
 
+    public function getEventsForUsers($userIdList, $from, $to, $scopeList = null)
+    {
+        $resultList = [];
+        foreach ($userIdList as $userId) {
+            try {
+                $userResultList = $this->getEvents($userId, $from, $to, $scopeList);
+            } catch (\Exception $e) {
+                if ($e instanceof Forbidden) {
+                    continue;
+                }
+                throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            }
+            foreach ($userResultList as $item) {
+                $item['userId'] = $userId;
+                $resultList[] = $item;
+            }
+        }
+        return $resultList;
+    }
+
     public function getEventsForTeams($teamIdList, $from, $to, $scopeList = null)
     {
         if ($this->getAcl()->get('userPermission') === 'no') {
