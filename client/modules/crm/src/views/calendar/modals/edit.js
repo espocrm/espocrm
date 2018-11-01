@@ -68,8 +68,10 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
 
         createRecordView: function (model, callback) {
             if (!this.id && !this.dateIsChanged) {
-                this.model.set('dateStart', this.options.dateStart);
-                this.model.set('dateEnd', this.options.dateEnd);
+                if (this.options.dateStart && this.options.dateEnd) {
+                    this.model.set('dateStart', this.options.dateStart);
+                    this.model.set('dateEnd', this.options.dateEnd);
+                }
 
                 if (this.options.allDay) {
                     if (this.options.allDay) {
