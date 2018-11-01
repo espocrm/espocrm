@@ -24,6 +24,14 @@
     }
 }
 
+@media screen and (min-width: @screen-sm-min) {
+    #navbar .navbar {
+        .navbar-body {
+            -webkit-overflow-scrolling: unset;
+        }
+    }
+}
+
 @media screen and (max-width: (@screen-sm-min - 1px)) {
     #navbar .navbar {
         .navbar-form.global-search-container {
