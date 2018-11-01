@@ -336,6 +336,7 @@
                     "default": false
                 }
             },
+            "additionalAttributeList": ["columns"],
             "layoutRelationshipsDisabled": true
         },
         "opportunities": {

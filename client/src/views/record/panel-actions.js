@@ -1,9 +1,8 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -27,36 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-    'entities' => array(
-        'User' => [
-            array(
-                'id' => '1',
-                'isAdmin' => true,
-                'type' => 'admin',
-                'userName' => 'admin',
-                'password' => '1',
-                'salutationName' => '',
-                'firstName' => '',
-                'lastName' => 'Admin',
-                'title' => '',
-                'emailAddress' => 'demo@espocrm.com',
-                'phoneNumberData' => array(
-                    (object) array(
-                        'phoneNumber' => '111',
-                        'primary' => true,
-                        'type' => 'Office',
-                    ),
-                ),
-            ),
-        ],
-        'Portal' => [
-            array(
-                'id' => 'testPortalId',
-                'isActive' => true,
-                'name' => 'Test portal',
-                'customId' => 'test',
-            ),
-        ],
-    ),
-);
+define('views/record/panel-actions', 'view', function (Dep) {
+
+    return Dep.extend({
+
+        template: 'record/panel-actions',
+
+        data: function () {
+            return {
+                defs: this.options.defs,
+                buttonList: this.getButtonList(),
+                actionList: this.getActionList(),
+                entityType: this.options.entityType,
+                scope: this.options.scope
+            };
+        },
+
+        setup: function () {
+            this.buttonList = this.options.defs.buttonList || [];
+            this.actionList = this.options.defs.actionList || [];
+        },
+
+        getButtonList: function () {
+            var list = [];
+            this.buttonList.forEach(function (item) {
+                if (item.hidden) return;
+                list.push(item);
+            }, this);
+            return list;
+        },
+
+        getActionList: function () {
+            var list = [];
+            this.actionList.forEach(function (item) {
+                if (item.hidden) return;
+                list.push(item);
+            }, this);
+            return list;
+        },
+
+    });
+});

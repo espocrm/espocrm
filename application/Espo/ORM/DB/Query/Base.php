@@ -88,6 +88,7 @@ abstract class Base
         'WEEK',
         'WEEK_0',
         'WEEK_1',
+        'QUARTER',
         'DAYOFMONTH',
         'DAYOFWEEK',
         'DAYOFWEEK_NUMBER',
@@ -98,13 +99,38 @@ abstract class Base
         'HOUR',
         'MINUTE_NUMBER',
         'MINUTE',
+        'QUARTER_NUMBER',
         'WEEK_NUMBER',
         'WEEK_NUMBER_0',
         'WEEK_NUMBER_1',
         'LOWER',
         'UPPER',
         'TRIM',
-        'LENGTH'
+        'LENGTH',
+        'YEAR_0',
+        'YEAR_1',
+        'YEAR_2',
+        'YEAR_3',
+        'YEAR_4',
+        'YEAR_5',
+        'YEAR_6',
+        'YEAR_7',
+        'YEAR_8',
+        'YEAR_9',
+        'YEAR_10',
+        'YEAR_11',
+        'QUARTER_0',
+        'QUARTER_1',
+        'QUARTER_2',
+        'QUARTER_3',
+        'QUARTER_4',
+        'QUARTER_5',
+        'QUARTER_6',
+        'QUARTER_7',
+        'QUARTER_8',
+        'QUARTER_9',
+        'QUARTER_10',
+        'QUARTER_11',
     ];
 
     protected $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
@@ -269,6 +295,34 @@ abstract class Base
         if (!in_array($function, $this->functionList)) {
             throw new \Exception("Not allowed function '".$function."'.");
         }
+
+        if (strpos($function, 'YEAR_') === 0) {
+            $fiscalShift = substr($function, 5);
+            if (is_numeric($fiscalShift)) {
+                $fiscalShift = intval($fiscalShift);
+                $fiscalFirstMonth = $fiscalShift + 1;
+
+                return
+                    "CASE WHEN MONTH({$part}) >= {$fiscalFirstMonth} THEN ".
+                    "YEAR({$part}) ".
+                    "ELSE YEAR({$part}) - 1 END";
+            }
+        }
+
+        if (strpos($function, 'QUARTER_') === 0) {
+            $fiscalShift = substr($function, 8);
+            if (is_numeric($fiscalShift)) {
+                $fiscalShift = intval($fiscalShift);
+                $fiscalFirstMonth = $fiscalShift + 1;
+                $fiscalDistractedMonth = 12 - $fiscalFirstMonth;
+
+                return
+                    "CASE WHEN MONTH({$part}) >= {$fiscalFirstMonth} THEN ".
+                    "CONCAT(YEAR({$part}), '_', FLOOR((MONTH({$part}) - {$fiscalFirstMonth}) / 3) + 1) ".
+                    "ELSE CONCAT(YEAR({$part}) - 1, '_', CEIL((MONTH({$part}) + {$fiscalDistractedMonth}) / 3)) END";
+            }
+        }
+
         switch ($function) {
             case 'MONTH':
                 return "DATE_FORMAT({$part}, '%Y-%m')";
@@ -279,6 +333,8 @@ abstract class Base
                 return "CONCAT(YEAR({$part}), '/', WEEK({$part}, 0))";
             case 'WEEK_1':
                 return "CONCAT(YEAR({$part}), '/', WEEK({$part}, 5))";
+            case 'QUARTER':
+                return "CONCAT(YEAR({$part}), '_', QUARTER({$part}))";
             case 'MONTH_NUMBER':
                 $function = 'MONTH';
                 break;
@@ -300,6 +356,9 @@ abstract class Base
                 break;
             case 'MINUTE_NUMBER':
                 $function = 'MINUTE';
+                break;
+            case 'QUARTER_NUMBER':
+                $function = 'QUARTER';
                 break;
             case 'DAYOFWEEK_NUMBER':
                 $function = 'DAYOFWEEK';

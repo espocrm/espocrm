@@ -61,13 +61,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             var url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
-            if (!this.readOnly && !this.defs.readOnly) {
-                if (!('create' in this.defs)) {
-                    this.defs.create = true;
-                }
-                if (!('select' in this.defs)) {
-                    this.defs.select = true;
-                }
+            if (!('create' in this.defs)) {
+                this.defs.create = true;
+            }
+            if (!('select' in this.defs)) {
+                this.defs.select = true;
             }
 
             if (!('view' in this.defs)) {
@@ -98,8 +96,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         title: 'Create',
                         action: this.defs.createAction || 'createRelated',
                         link: this.link,
-                        acl: 'create',
-                        aclScope: this.scope,
+                        acl: 'edit',
                         html: '<span class="fas fa-plus"></span>',
                         data: {
                             link: this.link,
@@ -129,8 +126,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     label: 'Select',
                     action: this.defs.selectAction || 'selectRelated',
                     data: data,
-                    acl: 'edit',
-                    aclScope: this.model.name
+                    acl: 'edit'
                 });
             }
 

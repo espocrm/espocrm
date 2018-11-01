@@ -94,6 +94,7 @@
             "columns": {
                 "status": "acceptanceStatus"
             },
+            "additionalAttributeList": ["columns"],
             "orderBy": "name"
         },
         "contacts": {
@@ -104,6 +105,7 @@
             "columns": {
                 "status": "acceptanceStatus"
             },
+            "additionalAttributeList": ["columns"],
             "orderBy": "name"
         },
         "leads": {
@@ -114,6 +116,7 @@
             "columns": {
                 "status": "acceptanceStatus"
             },
+            "additionalAttributeList": ["columns"],
             "orderBy": "name"
         },
         "createdAt": {

@@ -64,5 +64,6 @@
     "boolFilterList": [],
     "selectDefaultFilters": {
         "filter": "activePortal"
-    }
+    },
+    "iconClass": "far fa-user-circle"
 }

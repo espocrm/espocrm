@@ -1243,6 +1243,49 @@ class Base
                     ];
                     break;
 
+                case 'currentFiscalYear':
+                case 'lastFiscalYear':
+                    $dtToday = new \DateTime();
+                    $dt = new \DateTime();
+                    $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+                    $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+                    if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
+                        $dt->modify('-1 year');
+                    }
+                    if ($type === 'lastFiscalYear') {
+                        $dt->modify('-1 year');
+                    }
+                    $part['AND'] = [
+                        $attribute . '>=' => $dt->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d')
+                    ];
+                    break;
+
+                case 'currentFiscalQuarter':
+                case 'lastFiscalQuarter':
+                    $dtToday = new \DateTime();
+                    $dt = new \DateTime();
+                    $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+                    $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+                    $month = intval($dtToday->format('m'));
+                    $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
+                    if ($quarterShift) {
+                        if ($quarterShift >= 0) {
+                            $dt->add(new \DateInterval('P'.($quarterShift * 3).'M'));
+                        } else {
+                            $quarterShift *= -1;
+                            $dt->sub(new \DateInterval('P'.($quarterShift * 3).'M'));
+                        }
+                    }
+                    if ($type === 'lastFiscalQuarter') {
+                        $dt->modify('-3 months');
+                    }
+                    $part['AND'] = [
+                        $attribute . '>=' => $dt->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d')
+                    ];
+                    break;
+
                 case 'between':
                     if (is_array($value)) {
                         $part['AND'] = [

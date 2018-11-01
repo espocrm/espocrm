@@ -1,9 +1,8 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -27,36 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-    'entities' => array(
-        'User' => [
-            array(
-                'id' => '1',
-                'isAdmin' => true,
-                'type' => 'admin',
-                'userName' => 'admin',
-                'password' => '1',
-                'salutationName' => '',
-                'firstName' => '',
-                'lastName' => 'Admin',
-                'title' => '',
-                'emailAddress' => 'demo@espocrm.com',
-                'phoneNumberData' => array(
-                    (object) array(
-                        'phoneNumber' => '111',
-                        'primary' => true,
-                        'type' => 'Office',
-                    ),
-                ),
-            ),
-        ],
-        'Portal' => [
-            array(
-                'id' => 'testPortalId',
-                'isActive' => true,
-                'name' => 'Test portal',
-                'customId' => 'test',
-            ),
-        ],
-    ),
-);
+Espo.define('views/settings/fields/fiscal-year-shift', 'views/fields/enum-int', function (Dep) {
+
+    return Dep.extend({
+
+        setupOptions: function () {
+            this.params.options = [];
+            this.translatedOptions = {};
+            var monthNameList = this.getLanguage().get('Global', 'lists', 'monthNames') || [];
+            monthNameList.forEach(function (name, i) {
+                this.params.options.push(i);
+                this.translatedOptions[i] = name;
+            }, this);
+        }
+    });
+});

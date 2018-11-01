@@ -2298,6 +2298,19 @@ a.field-info > span.fa-info-circle {
     font-size: 12px;
 }
 
+.icon-is-replied {
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    transform: scaleX(-1);
+    -ms-filter: fliph;
+    filter: fliph;
+
+    &::before {
+        content: "\f064";
+    }
+}
+
 .btn-icon {
     width: 36px;
     padding-left: 0;

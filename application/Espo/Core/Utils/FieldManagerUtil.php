@@ -86,9 +86,35 @@ class FieldManagerUtil
         return $fieldList;
     }
 
+    public function getAdditionalActualAttributeList($scope, $name)
+    {
+        $attributeList = [];
+
+        $list = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'additionalAttributeList']);
+        if (empty($list)) return [];
+
+        $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
+        if (!$type) return [];
+
+        $naming = $this->getMetadata()->get(['fields', $type, 'naming'], 'suffix');
+
+        if ($naming == 'prefix') {
+            foreach ($list as $f) {
+                $attributeList[] = $f . ucfirst($name);
+            }
+        } else {
+            foreach ($list as $f) {
+                $attributeList[] = $name . ucfirst($f);
+            }
+        }
+
+        return $attributeList;
+
+    }
+
     public function getActualAttributeList($scope, $name)
     {
-        return $this->getAttributeListByType($scope, $name, 'actual');
+        return array_merge($this->getAttributeListByType($scope, $name, 'actual'), $this->getAdditionalActualAttributeList($scope, $name));
     }
 
     public function getNotActualAttributeList($scope, $name)

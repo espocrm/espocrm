@@ -172,14 +172,14 @@ class LDAP extends Espo
             }
         }
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
+        $user = $this->getEntityManager()->getRepository('User')->findOne([
+            'whereClause' => [
                 'userName' => $username,
-            ),
-        ));
+                'type!=' => ['api', 'system']
+            ]
+        ]);
 
-        $isCreateUser = $this->getUtils()->getOption('createEspoUser');
-        if (!isset($user) && $isCreateUser) {
+        if (!isset($user) && $this->getUtils()->getOption('createEspoUser')) {
             $userData = $ldapClient->getEntry($userDn);
             $user = $this->createUser($userData, $isPortal);
         }

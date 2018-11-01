@@ -296,7 +296,7 @@ class Tester
         $userData['password'] = $passwordHash->hash($userData['password']);
 
         if ($isPortal) {
-            $userData['isPortalUser'] = true;
+            $userData['type'] = 'portal';
         }
 
         $user = $entityManager->getEntity('User');

@@ -576,7 +576,11 @@
             "ever": "Ever",
             "isEmpty": "Is Empty",
             "olderThanXDays": "Older Than X Days",
-            "afterXDays": "After X Days"
+            "afterXDays": "After X Days",
+            "currentFiscalYear": "Current Fiscal Year",
+            "lastFiscalYear": "Last Fiscal Year",
+            "currentFiscalQuarter": "Current Fiscal Quarter",
+            "lastFiscalQuarter": "Last Fiscal Quarter"
         },
         "searchRanges": {
             "is": "Is",

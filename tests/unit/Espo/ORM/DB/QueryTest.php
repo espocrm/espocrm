@@ -338,6 +338,42 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testGroupBy()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['COUNT:id', 'QUARTER:comment.createdAt'],
+            'groupBy' => ['QUARTER:comment.createdAt']
+        ]);
+        $expectedSql =
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CONCAT(YEAR(comment.created_at), '_', QUARTER(comment.created_at)) AS `QUARTER:comment.createdAt` FROM `comment` " .
+            "WHERE comment.deleted = '0' " .
+            "GROUP BY CONCAT(YEAR(comment.created_at), '_', QUARTER(comment.created_at))";
+        $this->assertEquals($expectedSql, $sql);
+
+
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['COUNT:id', 'YEAR_5:comment.createdAt'],
+            'groupBy' => ['YEAR_5:comment.createdAt']
+        ]);
+        $expectedSql =
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END AS `YEAR_5:comment.createdAt` FROM `comment` " .
+            "WHERE comment.deleted = '0' " .
+            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END";
+        $this->assertEquals($expectedSql, $sql);
+
+
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['COUNT:id', 'QUARTER_4:comment.createdAt'],
+            'groupBy' => ['QUARTER_4:comment.createdAt']
+        ]);
+
+        $expectedSql =
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 7) / 3)) END AS `QUARTER_4:comment.createdAt` FROM `comment` " .
+            "WHERE comment.deleted = '0' " .
+            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 7) / 3)) END";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testOrderBy()
     {
         $sql = $this->query->createSelectQuery('Comment', array(

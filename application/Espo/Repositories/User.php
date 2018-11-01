@@ -44,6 +44,10 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
+        if ($entity->has('type') && !$entity->get('type')) {
+            $entity->set('type', 'regular');
+        }
+
         $entity->clear('isAdmin');
         $entity->clear('isPortalUser');
         $entity->clear('isSuperAdmin');

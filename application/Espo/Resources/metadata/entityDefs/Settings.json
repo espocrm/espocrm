@@ -40,6 +40,11 @@
             "options": [0, 1],
             "default": 0
         },
+        "fiscalYearShift": {
+            "type": "enumInt",
+            "default": 0,
+            "view": "views/settings/fields/fiscal-year-shift"
+        },
         "thousandSeparator": {
             "type": "varchar",
             "default": ",",
