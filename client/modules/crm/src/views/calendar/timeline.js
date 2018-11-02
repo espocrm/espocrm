@@ -818,7 +818,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                         eventList.push(item);
                     }, this);
 
-                    if (userId == this.getUser().id) continue;
+                    if (userId == this.getUser().id && !this.isBusyRangesMode) continue;
 
                     var userBusyRangeList = data[userId].busyRangeList;
                     userBusyRangeList.forEach(function (item) {
