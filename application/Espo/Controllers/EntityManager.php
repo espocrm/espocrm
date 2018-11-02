@@ -90,7 +90,7 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['iconClass'] = $data['iconClass'];
         }
         if (isset($data['fullTextSearch'])) {
-            $params['fullTestSearch'] = $data['fullTextSearch'];
+            $params['fullTextSearch'] = $data['fullTextSearch'];
         }
 
         $params['kanbanViewMode'] = !empty($data['kanbanViewMode']);
