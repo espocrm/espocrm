@@ -860,7 +860,7 @@ class Activities extends \Espo\Core\Services\Base
         return $result;
     }
 
-    protected function getCalendarMeetingQuery($userId, $from, $to)
+    protected function getCalendarMeetingQuery($userId, $from, $to, $skipAcl)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
 
@@ -902,12 +902,14 @@ class Activities extends \Espo\Core\Services\Base
             'customJoin' => ''
         );
 
-        $selectManager->applyAccess($selectParams);
+        if (!$skipAcl) {
+            $selectManager->applyAccess($selectParams);
+        }
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
     }
 
-    protected function getCalendarCallQuery($userId, $from, $to)
+    protected function getCalendarCallQuery($userId, $from, $to, $skipAcl)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Call');
 
@@ -949,12 +951,14 @@ class Activities extends \Espo\Core\Services\Base
             'customJoin' => ''
         );
 
-        $selectManager->applyAccess($selectParams);
+        if (!$skipAcl) {
+            $selectManager->applyAccess($selectParams);
+        }
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
     }
 
-    protected function getCalendarTaskQuery($userId, $from, $to)
+    protected function getCalendarTaskQuery($userId, $from, $to, $skipAcl = false)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Task');
 
@@ -1002,12 +1006,14 @@ class Activities extends \Espo\Core\Services\Base
             $selectParams['whereClause'][] = ['assignedUserId' => $userId];
         }
 
-        $selectManager->applyAccess($selectParams);
+        if (!$skipAcl) {
+            $selectManager->applyAccess($selectParams);
+        }
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Task', $selectParams);
     }
 
-    protected function getCalendarSelectParams($scope, $userId, $from, $to)
+    protected function getCalendarSelectParams($scope, $userId, $from, $to, $skipAcl = false)
     {
         $selectManager = $this->getSelectManagerFactory()->create($scope);
 
@@ -1079,25 +1085,27 @@ class Activities extends \Espo\Core\Services\Base
             $selectParams['leftJoins'][] = 'assignedUsers';
         }
 
-        $selectManager->applyAccess($selectParams);
+        if (!$skipAcl) {
+            $selectManager->applyAccess($selectParams);
+        }
 
         return $selectParams;
     }
 
-    protected function getCalendarQuery($scope, $userId, $from, $to)
+    protected function getCalendarQuery($scope, $userId, $from, $to, $skipAcl = false)
     {
         $selectManager = $this->getSelectManagerFactory()->create($scope);
         if (method_exists($selectManager, 'getCalendarSelectParams')) {
-            $selectParams = $selectManager->getCalendarSelectParams($userId, $from, $to);
+            $selectParams = $selectManager->getCalendarSelectParams($userId, $from, $to, $skipAcl);
             return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
         }
 
         $methodName = 'getCalendar' . $scope . 'Query';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($userId, $from, $to);
+            return $this->$methodName($userId, $from, $to, $skipAcl);
         }
 
-        $selectParams = $this->getCalendarSelectParams($scope, $userId, $from, $to);
+        $selectParams = $this->getCalendarSelectParams($scope, $userId, $from, $to, $skipAcl);
         return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
     }
 
@@ -1178,7 +1186,35 @@ class Activities extends \Espo\Core\Services\Base
         return $selectParams;
     }
 
+    public function getUsersTimeline($userIdList, $from, $to, $scopeList = null)
+    {
+        $resultData = (object) [];
+        foreach ($userIdList as $userId) {
+            $userData = (object) [
+                'eventList' => [],
+                'busyRangeList' => []
+            ];
+            try {
+                $userData->eventList = $this->getEventList($userId, $from, $to, $scopeList);
+                $userData->busyRangeList = $this->getBusyRangeList($userId, $from, $to, $scopeList);
+            } catch (\Exception $e) {
+                if ($e instanceof Forbidden) {
+                    continue;
+                }
+                throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            }
+
+            $resultData->$userId = $userData;
+        }
+        return $resultData;
+    }
+
     public function getEventsForUsers($userIdList, $from, $to, $scopeList = null)
+    {
+        return $this->getUsersEventList($userIdList, $from, $to, $scopeList);
+    }
+
+    public function getUsersEventList($userIdList, $from, $to, $scopeList = null)
     {
         $resultList = [];
         foreach ($userIdList as $userId) {
@@ -1199,6 +1235,11 @@ class Activities extends \Espo\Core\Services\Base
     }
 
     public function getEventsForTeams($teamIdList, $from, $to, $scopeList = null)
+    {
+        return $this->getTeamsEventList($teamIdList, $from, $to, $scopeList);
+    }
+
+    public function getTeamsEventList($teamIdList, $from, $to, $scopeList = null)
     {
         if ($this->getAcl()->get('userPermission') === 'no') {
             throw new Forbidden("User Permission not allowing to view calendars of other users.");
@@ -1226,10 +1267,9 @@ class Activities extends \Espo\Core\Services\Base
             $userNames->{$user->id} = $user->get('name');
         }
 
-
         $eventList = [];
         foreach ($userIdList as $userId) {
-            $userEventList = $this->getEvents($userId, $from, $to, $scopeList);
+            $userEventList = $this->getEventList($userId, $from, $to, $scopeList);
             foreach ($userEventList as $event) {
                 foreach ($eventList as &$e) {
                     if ($e['scope'] == $event['scope'] && $e['id'] == $event['id']) {
@@ -1255,7 +1295,84 @@ class Activities extends \Espo\Core\Services\Base
         return $eventList;
     }
 
-    public function getEvents($userId, $from, $to, $scopeList = null)
+    public function getBusyRangeList($userId, $from, $to, $scopeList = null)
+    {
+        $rangeList = [];
+
+        $eventList = $this->getEventList($userId, $from, $to, $scopeList, true);
+
+        foreach ($eventList as $i => $item) {
+            $eventList[$i] = (object) $item;
+        }
+        foreach ($eventList as $event) {
+            if (empty($event->dateStart) || empty($event->dateEnd)) continue;
+            try {
+                $start = new \DateTime($event->dateStart);
+                $end = new \DateTime($event->dateEnd);
+
+
+                foreach ($rangeList as &$range) {
+                    if (
+                        $start->getTimestamp() < $range->start->getTimestamp()
+                        &&
+                        $end->getTimestamp() > $range->end->getTimestamp()
+                    ) {
+                        $range->dateStart = $event->dateStart;
+                        $range->start = $start;
+                        $range->dateEnd = $event->dateEnd;
+                        $range->end = $end;
+                        continue 2;
+                    }
+
+                    if (
+                        $start->getTimestamp() < $range->start->getTimestamp()
+                        &&
+                        $end->getTimestamp() > $range->start->getTimestamp()
+                    ) {
+                        $range->dateStart = $event->dateStart;
+                        $range->start = $start;
+                        if ($end->getTimestamp() > $range->end->getTimestamp()) {
+                            $range->dateEnd = $event->dateEnd;
+                            $range->end = $end;
+                        }
+                        continue 2;
+                    }
+
+                    if (
+                        $start->getTimestamp() < $range->end->getTimestamp()
+                        &&
+                        $end->getTimestamp() > $range->end->getTimestamp()
+                    ) {
+                        $range->dateEnd = $event->dateEnd;
+                        $range->end = $end;
+                        if ($start->getTimestamp() < $range->start->getTimestamp()) {
+                            $range->dateStart = $event->dateStart;
+                            $range->start = $start;
+                        }
+                        continue 2;
+                    }
+                }
+
+                $busyItem = (object) [
+                    'dateStart' => $event->dateStart,
+                    'dateEnd' => $event->dateEnd,
+                    'start' => $start,
+                    'end' => $end
+                ];
+
+                $rangeList[] = $busyItem;
+            } catch (\Exception $e) {}
+        }
+
+        foreach ($rangeList as &$item) {
+            unset($item->start);
+            unset($item->end);
+        }
+
+        return $rangeList;
+    }
+
+    public function getEventList($userId, $from, $to, $scopeList = null, $skipAcl = false)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
@@ -1278,8 +1395,8 @@ class Activities extends \Espo\Core\Services\Base
                 continue;
             }
             if ($this->getAcl()->checkScope($scope)) {
-                if ($this->getMetadata()->get('scopes.' . $scope . '.calendar')) {
-                    $sqlPartList[] = $this->getCalendarQuery($scope, $userId, $from, $to);
+                if ($this->getMetadata()->get(['scopes', $scope, 'calendar'])) {
+                    $sqlPartList[] = $this->getCalendarQuery($scope, $userId, $from, $to, $skipAcl);
                 }
             }
         }
@@ -1292,9 +1409,14 @@ class Activities extends \Espo\Core\Services\Base
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        return $rows;
+        return $rowList;
+    }
+
+    public function getEvents($userId, $from, $to, $scopeList = null, $skipAcl = false)
+    {
+        return $this->getEventList($userId, $from, $to, $scopeList, $skipAcl);
     }
 
     public function removeReminder($id)

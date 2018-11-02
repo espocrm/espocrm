@@ -317,18 +317,29 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         convertEvent: function (o) {
             var userId = o.userId || this.userList[0].id || this.getUser().id;
 
-            var event = {
-                content: o.name,
-                title: o.name,
-                id: userId + '-' + o.scope + '-' + o.id,
-                group: userId,
-                'record-id': o.id,
-                scope: o.scope,
-                status: o.status,
-                'date-start': o.dateStart,
-                'date-end': o.dateEnd,
-                type: 'range'
-            };
+            var event;
+            if (o.isBusyRange) {
+                var event = {
+                    className: 'busy',
+                    group: userId,
+                    'date-start': o.dateStart,
+                    'date-end': o.dateEnd,
+                    type: 'background'
+                };
+            } else {
+                event = {
+                    content: o.name,
+                    title: o.name,
+                    id: userId + '-' + o.scope + '-' + o.id,
+                    group: userId,
+                    'record-id': o.id,
+                    scope: o.scope,
+                    status: o.status,
+                    'date-start': o.dateStart,
+                    'date-end': o.dateEnd,
+                    type: 'range'
+                };
+            }
 
             this.eventAttributes.forEach(function (attr) {
                 event[attr] = o[attr];
@@ -346,6 +357,10 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 } else {
                     event.end = moment.tz(o.dateEndDate, this.getDateTime().getTimeZone());
                 }
+            }
+
+            if (o.isBusyRange) {
+                return event;
             }
 
             if (~this.allDayScopeList.indexOf(o.scope)) {
@@ -405,8 +420,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         convertEventList: function (list) {
             var resultList = [];
-            list.forEach(function (o) {
-                var event = this.convertEvent(o);
+            list.forEach(function (iten) {
+                var event = this.convertEvent(iten);
                 if (!event) return;
                 resultList.push(event);
             }, this);
@@ -778,7 +793,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             var fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
             var toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
 
-            var url = 'Activities?from=' + fromString + '&to=' + toString;
+            var url = 'Timeline?from=' + fromString + '&to=' + toString;
             var userIdList = this.userList.map(function (user) {
                 return user.id
             }, this);
@@ -794,9 +809,27 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             this.ajaxGetRequest(url).then(function (data) {
                 this.fetchedStart = from.clone();
                 this.fetchedEnd = to.clone();
+                var eventList = [];
 
-                var eventList = this.convertEventList(data);
-                callback(eventList);
+                for (var userId in data) {
+                    var userEventList = data[userId].eventList;
+                    userEventList.forEach(function (item) {
+                        item.userId = userId;
+                        eventList.push(item);
+                    }, this);
+
+                    if (userId == this.getUser().id) continue;
+
+                    var userBusyRangeList = data[userId].busyRangeList;
+                    userBusyRangeList.forEach(function (item) {
+                        item.userId = userId;
+                        item.isBusyRange = true;
+                        eventList.push(item);
+                    }, this);
+                }
+
+                var convertedEventList = this.convertEventList(eventList);
+                callback(convertedEventList);
                 this.notify(false);
             }.bind(this));
         },
