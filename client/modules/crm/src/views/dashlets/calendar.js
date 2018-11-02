@@ -104,7 +104,8 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
             this.actionList.unshift({
                 name: 'viewCalendar',
                 html: this.translate('View Calendar', 'labels', 'Calendar'),
-                url: '#Calendar'
+                url: '#Calendar',
+                iconHtml: '<span class="far fa-calendar-alt"></span>'
             });
         },
 
