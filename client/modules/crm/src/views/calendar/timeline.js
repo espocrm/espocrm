@@ -186,12 +186,12 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             }
 
             if (this.options.calendarType) {
-                this.calendarType = 'shared';
+                this.calendarType = this.options.calendarType;
             } else {
                 if (this.options.userId) {
                     this.calendarType = 'single';
                 } else {
-                    this.calendarType = this.getStorage().get('calendar', 'timelineType') || 'single';
+                    this.calendarType = this.getStorage().get('calendar', 'timelineType') || 'shared';
                 }
             }
 
