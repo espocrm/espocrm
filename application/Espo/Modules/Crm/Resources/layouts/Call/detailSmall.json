@@ -6,6 +6,7 @@
 			[{"name":"status"}, {"name":"direction"}],
 			[{"name":"dateStart", "fullWidth": true}],
 			[{"name":"duration", "fullWidth": true}],
+			[{"name":"dateEnd", "fullWidth": true}],
 			[{"name":"parent", "fullWidth": true}],
 			[{"name":"reminders", "fullWidth": true}],
 			[{"name":"description", "fullWidth": true}]
