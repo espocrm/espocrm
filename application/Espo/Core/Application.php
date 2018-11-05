@@ -151,6 +151,50 @@ class Application
         $cronManager->run();
     }
 
+    public function runDaemon()
+    {
+        $maxProcessNumber = $this->getConfig()->get('daemonMaxProcessNumber');
+        $interval = $this->getConfig()->get('daemonInterval');
+        $timeout = $this->getConfig()->get('daemonProcessTimeout');
+
+        if (!$maxProcessNumber || !$interval) {
+            $GLOBALS['log']->error("Daemon config params are not set.");
+            return;
+        }
+
+        $processList = [];
+        while (true) {
+            $toSkip = false;
+            $runningCount = 0;
+            foreach ($processList as $i => $process) {
+                if ($process->isRunning()) {
+                    $runningCount++;
+                } else if ($process->isRunning()) {
+                    unset($processList[$i]);
+                }
+            }
+            $processList = array_values($processList);
+            if (count($runningCount) >= $maxProcessNumber) {
+                $toSkip = true;
+            }
+            if (!$toSkip) {
+                $process = new \Symfony\Component\Process\Process(['php', 'cron.php']);
+                $process->setTimeout($timeout);
+                $process->run();
+            }
+            sleep($interval);
+        }
+    }
+
+    public function runJob($id)
+    {
+        $auth = $this->createAuth();
+        $auth->useNoAuth();
+
+        $cronManager = new \Espo\Core\CronManager($this->container);
+        $cronManager->runJobById($id);
+    }
+
     public function runRebuild()
     {
         $dataManager = $this->getContainer()->get('dataManager');

@@ -7,7 +7,7 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Pending", "Running", "Success", "Failed"],
+            "options": ["Pending", "Ready", "Running", "Success", "Failed"],
             "default": "Pending"
         },
         "executeTime": {

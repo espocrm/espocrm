@@ -4,7 +4,7 @@
     "homepage": "https://github.com/espocrm/espocrm.git",
     "license": "GPL-3.0-only",
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.1.0",
         "ext-pdo_mysql": "*",
         "ext-openssl": "*",
         "ext-json": "*",
@@ -29,7 +29,9 @@
         "php-mime-mail-parser/php-mime-mail-parser": "3.*",
         "zbateson/mail-mime-parser": "0.4.*",
         "phpoffice/phpexcel": "^1.8",
-        "phpoffice/phpspreadsheet": "^1.1"
+        "phpoffice/phpspreadsheet": "^1.1",
+        "spatie/async": "0.0.4",
+        "symfony/process": "4.1.7"
     },
     "autoload": {
         "psr-0": {

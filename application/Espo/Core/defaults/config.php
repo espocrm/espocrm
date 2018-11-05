@@ -179,4 +179,3 @@ return array (
     'noteEditThresholdPeriod' => '7 days',
     'isInstalled' => false
 );
-
