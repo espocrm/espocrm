@@ -37,4 +37,3 @@ include "bootstrap.php";
 
 $app = new \Espo\Core\Application();
 $app->runCron();
-
