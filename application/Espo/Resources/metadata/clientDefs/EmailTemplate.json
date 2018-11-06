@@ -43,5 +43,5 @@
     "filterList": [
         "actual"
     ],
-    "placeholderList": ["optOutUrl", "optOutLink"]
+    "placeholderList": ["today", "now", "optOutUrl", "optOutLink"]
 }
