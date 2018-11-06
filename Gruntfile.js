@@ -171,6 +171,7 @@ module.exports = function (grunt) {
                     'html/**',
                     'bootstrap.php',
                     'cron.php',
+                    'daemon.php',
                     'rebuild.php',
                     'clear_cache.php',
                     'upgrade.php',
