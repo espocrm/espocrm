@@ -27,8 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array (
-    'database' => array (
+return [
+    'database' => [
         'driver' => 'pdo_mysql',
         'host' => 'localhost',
         'port' => '',
@@ -36,7 +36,7 @@ return array (
         'dbname' => '',
         'user' => '',
         'password' => '',
-    ),
+    ],
     'useCache' => true,
     'recordsPerPage' => 20,
     'recordsPerPageSmall' => 5,
@@ -91,21 +91,19 @@ return array (
         'zh_CN'
     ],
     'language' => 'en_US',
-    'logger' =>
-    array (
+    'logger' => [
         'path' => 'data/logs/espo.log',
         'level' => 'WARNING', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
         'rotation' => true,
         'maxFileNumber' => 30,
-    ),
+    ],
     'authenticationMethod' => 'Espo',
-    'globalSearchEntityList' =>
-    array (
+    'globalSearchEntityList' => [
         'Account',
         'Contact',
         'Lead',
         'Opportunity',
-    ),
+    ],
     'tabList' => ["Account", "Contact", "Lead", "Opportunity", "Case", "Email", "Calendar", "Meeting", "Call", "Task", "_delimiter_", "Document", "Campaign", "KnowledgeBaseArticle", "Stream", "User"],
     'quickCreateList' => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Email"],
     'exportDisabled' => false,
@@ -179,4 +177,4 @@ return array (
     'noteDeleteThresholdPeriod' => '1 month',
     'noteEditThresholdPeriod' => '7 days',
     'isInstalled' => false
-);
+];

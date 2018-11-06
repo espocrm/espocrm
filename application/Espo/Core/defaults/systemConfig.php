@@ -64,13 +64,13 @@ return [
     'daemonMaxProcessNumber' => 5, /** Max number of cron processes run simultaneously. */
     'daemonInterval' => 10, /** Interval between process runs in seconds. */
     'daemonProcessTimeout' => 36000,
-    'crud' => array(
+    'crud' => [
         'get' => 'read',
         'post' => 'create',
         'put' => 'update',
         'patch' => 'patch',
         'delete' => 'delete',
-    ),
+    ],
     'systemUserAttributes' => [
         'id' => 'system',
         'userName' => 'system',
