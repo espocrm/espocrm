@@ -28,9 +28,12 @@
  ************************************************************************/
 
 namespace Espo\Core;
+
 use \PDO;
 use Espo\Core\Utils\Json;
+
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
 
 class CronManager
 {
@@ -48,7 +51,11 @@ class CronManager
 
     private $cronScheduledJobUtil;
 
+    private $useProcessPool = false;
+
     const PENDING = 'Pending';
+
+    const READY = 'Ready';
 
     const RUNNING = 'Running';
 
@@ -70,6 +77,14 @@ class CronManager
         $this->scheduledJobUtil = $this->container->get('scheduledJob');
         $this->cronJobUtil = new \Espo\Core\Utils\Cron\Job($this->config, $this->entityManager);
         $this->cronScheduledJobUtil = new \Espo\Core\Utils\Cron\ScheduledJob($this->config, $this->entityManager);
+
+        if ($this->getConfig()->get('jobRunInParallel')) {
+            if (\Spatie\Async\Pool::isSupported()) {
+                $this->useProcessPool = true;
+            } else {
+                $GLOBALS['log']->warning("CronManager: useProcessPool requires pcntl and posix extensions.");
+            }
+        }
     }
 
     protected function getContainer()
@@ -146,6 +161,16 @@ class CronManager
         return false;
     }
 
+    protected function useProcessPool()
+    {
+        return $this->useProcessPool;
+    }
+
+    public function setUseProcessPool($useProcessPool)
+    {
+        $this->useProcessPool = $useProcessPool;
+    }
+
     /**
      * Run Cron
      *
@@ -166,6 +191,13 @@ class CronManager
         $this->getCronJobUtil()->removePendingJobDuplicates();
         $pendingJobList = $this->getCronJobUtil()->getPendingJobList();
 
+        if ($this->useProcessPool()) {
+            $pool = \Spatie\Async\Pool::create()
+                ->autoload(getcwd() . '/vendor/autoload.php')
+                ->concurrency($this->getConfig()->get('jobPoolConcurrencyNumber'))
+                ->timeout($this->getConfig()->get('jobPeriodForActiveProcess'));
+        }
+
         foreach ($pendingJobList as $job) {
             $skip = false;
             $this->getEntityManager()->getPdo()->query('LOCK TABLES `job` WRITE');
@@ -183,39 +215,76 @@ class CronManager
                 $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
                 continue;
             }
+            if ($this->useProcessPool()) {
+                $job->set('status', self::READY);
+            } else {
+                $job->set('status', self::RUNNING);
+                $job->set('pid', \Espo\Core\Utils\System::getPid());
+            }
 
-            $job->set('status', self::RUNNING);
-            $job->set('pid', $this->getCronJobUtil()->getPid());
             $this->getEntityManager()->saveEntity($job);
             $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
 
-            $isSuccess = true;
-            $skipLog = false;
-
-            try {
-                if ($job->get('scheduledJobId')) {
-                    $this->runScheduledJob($job);
-                } else {
-                    $this->runService($job);
-                }
-            } catch (\Exception $e) {
-                $isSuccess = false;
-                if ($e->getCode() === -1) {
-                    $job->set('attempts', 0);
-                    $skipLog = true;
-                } else {
-                    $GLOBALS['log']->error('CronManager: Failed job running, job ['.$job->id.']. Error Details: '.$e->getMessage());
-                }
+            if ($this->useProcessPool()) {
+                $task = new \Espo\Core\Utils\Cron\JobTask($job->id);
+                $pool->add($task);
+            } else {
+                $this->runJob($job);
             }
+        }
 
-            $status = $isSuccess ? self::SUCCESS : self::FAILED;
+        if ($this->useProcessPool()) {
+            $pool->wait();
+        }
+    }
 
-            $job->set('status', $status);
-            $this->getEntityManager()->saveEntity($job);
+    public function runJobById($id)
+    {
+        if (empty($id)) throw new Error();
 
-            if ($job->get('scheduledJobId') && !$skipLog) {
-                $this->getCronScheduledJobUtil()->addLogRecord($job->get('scheduledJobId'), $status, null, $job->get('targetId'), $job->get('targetType'));
+        $job = $this->getEntityManager()->getEntity('Job', $id);
+
+        if (!$job) throw new Error("Job {$id} not found.");
+
+        if ($job->get('status') !== self::READY) {
+            throw new Error("Can't run job {$id} with no status Ready.");
+        }
+
+        $job->set('status', self::RUNNING);
+        $job->set('pid', \Espo\Core\Utils\System::getPid());
+        $this->getEntityManager()->saveEntity($job);
+
+        $this->runJob($job);
+    }
+
+    public function runJob($job)
+    {
+        $isSuccess = true;
+        $skipLog = false;
+
+        try {
+            if ($job->get('scheduledJobId')) {
+                $this->runScheduledJob($job);
+            } else {
+                $this->runService($job);
             }
+        } catch (\Exception $e) {
+            $isSuccess = false;
+            if ($e->getCode() === -1) {
+                $job->set('attempts', 0);
+                $skipLog = true;
+            } else {
+                $GLOBALS['log']->error('CronManager: Failed job running, job ['.$job->id.']. Error Details: '.$e->getMessage());
+            }
+        }
+
+        $status = $isSuccess ? self::SUCCESS : self::FAILED;
+
+        $job->set('status', $status);
+        $this->getEntityManager()->saveEntity($job);
+
+        if ($job->get('scheduledJobId') && !$skipLog) {
+            $this->getCronScheduledJobUtil()->addLogRecord($job->get('scheduledJobId'), $status, null, $job->get('targetId'), $job->get('targetType'));
         }
     }
 

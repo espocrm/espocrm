@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "action": "اقدام",
+    "actionDate": "تاریخ",
+    "data": "داده ها",
+    "campaign": "کمپین",
+    "parent": "هدف",
+    "object": "موضوع",
+    "queueItem": "آیتم صف",
+    "stringData": "رشته داده",
+    "stringAdditionalData": "رشته داده اضافی",
+    "isTest": "تست است"
+  },
+  "links": {
+    "queueItem": "آیتم صف",
+    "parent": "پدر",
+    "object": "ابژه",
+    "campaign": "کمپین"
+  },
+  "options": {
+    "action": {
+      "Sent": "ارسال شد",
+      "Opened": "باز شده",
+      "Clicked": "کلیک کرد",
+      "Lead Created": "ایجاد لید(سرنخ فروش)"
+    }
+  },
+  "labels": {
+    "All": "همه"
+  },
+  "presetFilters": {
+    "sent": "ارسال شد",
+    "opened": "باز شده",
+    "clicked": "کلیک کرد",
+    "leadCreated": "ایجاد لید"
+  }
+}

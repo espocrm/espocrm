@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "نام",
+    "account": "حساب",
+    "stage": "مرحله",
+    "amount": "مقدار",
+    "probability": "احتمال٪",
+    "leadSource": "منبع لید",
+    "doNotCall": "تماس نگیر",
+    "closeDate": "تاریخ بستن",
+    "contacts": "مخاطب ها",
+    "description": "توضیحات",
+    "campaign": "کمپین",
+    "originalLead": "لید اصلی",
+    "amountCurrency": "مقدار پول",
+    "contactRole": "نقش مخاطب"
+  },
+  "links": {
+    "contacts": "مخاطب ها",
+    "documents": "اسناد",
+    "campaign": "کمپین",
+    "originalLead": "لید اصلی"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "اکتشاف",
+      "Qualification": "شرایط",
+      "Needs Analysis": "تجزیه و تحلیل نیازها",
+      "Value Proposition": "ارزش پیشنهادی",
+      "Id. Decision Makers": "شناسه. تصمیم گیرندگان",
+      "Perception Analysis": "تحلیل ادراک",
+      "Proposal/Price Quote": "نقل قول پروپوزال / قیمت",
+      "Negotiation/Review": "مذاکره / مرور",
+      "Proposal": "پروپوزال",
+      "Negotiation": "مذاکره"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "ایجاد فرصت"
+  },
+  "presetFilters": {
+    "open": "باز",
+    "won": "برد",
+    "lost": "باخت"
+  }
+}

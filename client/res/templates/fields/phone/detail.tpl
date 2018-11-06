@@ -3,7 +3,7 @@
         <div>
             {{#if ../doNotCall}}<s>{{/if}}
             {{#unless erased}}
-            <a href="tel:{{phoneNumber}}" data-phone-number="{{phoneNumber}}" data-action="dial">
+            <a href="tel:{{valueForLink}}" data-phone-number="{{valueForLink}}" data-action="dial">
             {{/unless}}
             {{phoneNumber}}
             {{#unless erased}}
@@ -17,7 +17,7 @@
     {{/each}}
 {{else}}
     {{#if value}}
-    {{#if doNotCall}}<s>{{/if}}<a href="tel:{{value}}" data-phone-number="{{value}}" data-action="dial">{{value}}</a>{{#if ../doNotCall}}</s>{{/if}}
+    {{#if doNotCall}}<s>{{/if}}<a href="tel:{{valueForLink}}" data-phone-number="{{valueForLink}}" data-action="dial">{{value}}</a>{{#if ../doNotCall}}</s>{{/if}}
     {{else}}
         {{#if valueIsSet}}{{{translate 'None'}}}{{else}}...{{/if}}
     {{/if}}

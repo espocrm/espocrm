@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "enabled": "فعال کردن",
+    "clientId": "شنایه کلایت",
+    "clientSecret": "کلاینت امن",
+    "redirectUri": "تغییر مسیر URI",
+    "apiKey": "کلید API"
+  },
+  "messages": {
+    "selectIntegration": "یکسان سازی را از منو را انتخاب کنید",
+    "noIntegrations": "هیچ یکپارچگی در دسترس نیست"
+  },
+  "titles": {
+    "GoogleMaps": "نقشه‌ی گوگل"
+  }
+}

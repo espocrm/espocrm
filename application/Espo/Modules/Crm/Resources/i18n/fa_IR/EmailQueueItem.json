@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "target": "هدف",
+    "sentAt": "تاریخ ارسال",
+    "attemptCount": "تلاش‌ها",
+    "emailAddress": "آدرس ایمیل",
+    "massEmail": "ایمیل انبوه",
+    "isTest": "تست است"
+  },
+  "links": {
+    "target": "هدف",
+    "massEmail": "ایمیل انبوه"
+  },
+  "options": {
+    "status": {
+      "Pending": "در حال بررسی",
+      "Sent": "ارسال شد",
+      "Failed": "ناموفق",
+      "Sending": "در حال ارسال"
+    }
+  },
+  "presetFilters": {
+    "pending": "در حال بررسی",
+    "sent": "ارسال شد",
+    "failed": "ناموفق"
+  }
+}

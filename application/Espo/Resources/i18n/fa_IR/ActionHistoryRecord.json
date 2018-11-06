@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "user": "کاربر",
+    "action": "عمل",
+    "createdAt": "تاریخ",
+    "target": "هدف",
+    "targetType": "نوع هدف"
+  },
+  "links": {
+    "user": "کاربر",
+    "target": "هدف"
+  },
+  "presetFilters": {
+    "onlyMy": "فقط من"
+  },
+  "options": {
+    "action": {
+      "read": "خواندن",
+      "update": "به‌روز رسانی",
+      "delete": "حذف",
+      "create": "ايجاد كردن"
+    }
+  }
+}

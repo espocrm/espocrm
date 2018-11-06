@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "dateFormat": "فرمت تاریخ",
+    "timeFormat": "فرمت زمان",
+    "timeZone": "منطقه زمانی",
+    "weekStart": "اولین روز هفته",
+    "thousandSeparator": "جداکننده هزار",
+    "decimalMark": "مشخصه اعشار",
+    "defaultCurrency": "ارز پیش فرض",
+    "currencyList": "فهرست ارز",
+    "language": "زبان",
+    "smtpServer": "سرور",
+    "smtpPort": "پورت",
+    "smtpSecurity": "امنیت",
+    "smtpUsername": "کاربر",
+    "emailAddress": "ایمیل",
+    "smtpPassword": "پسورد",
+    "smtpEmailAddress": "ایمیل آدرس",
+    "exportDelimiter": "جداکننده Export",
+    "signature": "امضای ایمیل",
+    "dashboardTabList": "لیست Tabها",
+    "tabList": "لیست Tabها",
+    "defaultReminders": "یادآوری های پیش فرض",
+    "theme": "تم",
+    "useCustomTabList": "لیست تب سفارشی",
+    "emailReplyToAllByDefault": "پاسخ به همه ایمیل ها به صورت پیشفرض",
+    "followEntityOnStreamPost": "دنبال کردن خودکار رکورد ها بعد از ",
+    "followCreatedEntities": "پیگیری ایجاد شده به صورت خودکار",
+    "followCreatedEntityTypeList": "پیگیری خودکار رکورد ها از انواع موجودیت های خاص"
+  },
+  "options": {
+    "weekStart": {
+      "0": "یکشنبه",
+      "1": "دوشنبه"
+    }
+  },
+  "labels": {
+    "Notifications": "اعلان ها",
+    "User Interface": "رابط کاربری",
+    "Misc": "درهم",
+    "Locale": "محلی"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "به صورت خودکار همه رکوردهای جدید (ایجاد شده توسط هر کاربر) از انواع موجودیت انتخاب شده را دنبال کنید. برای دیدن اطلاعات در جریان و دریافت اطلاعیه ها در مورد تمام سوابق در سیستم."
+  }
+}

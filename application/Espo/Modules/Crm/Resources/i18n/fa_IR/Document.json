@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create Document": "ایجاد سند",
+    "Details": "جزئیات"
+  },
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "file": "فایل",
+    "type": "نوع",
+    "publishDate": "تاریخ انتشار",
+    "expirationDate": "تاریخ انقضا",
+    "description": "توضیحات",
+    "accounts": "حساب ها",
+    "folder": "پوشه"
+  },
+  "links": {
+    "accounts": "حساب ها",
+    "opportunities": "فرصت ها",
+    "folder": "پوشه",
+    "leads": "لید ها",
+    "contacts": "مخاطب ها"
+  },
+  "options": {
+    "status": {
+      "Active": "فعال",
+      "Draft": "پیش نویس",
+      "Expired": "منقضی شده",
+      "Canceled": "لغو شد"
+    },
+    "type": {
+      "": "هیچ کدام",
+      "Contract": "قرارداد",
+      "NDA": "NDA(قرارداد محرمانگی)",
+      "EULA": "EULA(توافقنامه مجوز کاربر نهایی)",
+      "License Agreement": "توافقنامه مجوز"
+    }
+  },
+  "presetFilters": {
+    "active": "فعال",
+    "draft": "پیش نویس"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "کاربر",
+    "ipAddress": "آدرس آی‌پی",
+    "lastAccess": "تاریخ دسترسی تاریخ",
+    "createdAt": "تاریخ ورود",
+    "isActive": "فعال است",
+    "portal": "پورتال"
+  },
+  "links": {
+    "actionHistoryRecords": "سابقه فعالیت"
+  },
+  "presetFilters": {
+    "active": "فعال",
+    "inactive": "غیرفعال"
+  },
+  "labels": {
+    "Set Inactive": "غیرفعال کردن"
+  },
+  "massActions": {
+    "setInactive": "غیرفعال کردن"
+  }
+}

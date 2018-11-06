@@ -153,7 +153,7 @@ class ControllerManager
         return $result;
     }
 
-    public function process($controllerName, $actionName, $params, $data, $request, $response)
+    public function process($controllerName, $actionName, $params, $data, $request, $response = null)
     {
         $controller = $this->getController($controllerName);
         return $this->processRequest($controller, $actionName, $params, $data, $request, $response);

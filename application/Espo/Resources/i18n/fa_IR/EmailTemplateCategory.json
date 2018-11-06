@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "ایجاد دسته",
+    "Manage Categories": "مدیریت دسته بندی ها",
+    "EmailTemplates": "قالب های ایمیل"
+  },
+  "fields": {
+    "order": "سفارش"
+  },
+  "links": {
+    "emailTemplates": "قالب های ایمیل"
+  }
+}

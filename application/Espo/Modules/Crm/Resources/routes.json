@@ -19,6 +19,14 @@
         }
     },
     {
+        "route": "/Timeline",
+        "method": "get",
+        "params": {
+            "controller": "Activities",
+            "action": "getTimeline"
+        }
+    },
+    {
         "route": "/Activities/:scope/:id/:name/list/:entityType",
         "method": "get",
         "params": {

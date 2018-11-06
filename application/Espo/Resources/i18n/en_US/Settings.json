@@ -106,7 +106,13 @@
         "outboundEmailBccAddress": "BCC address for external clients",
         "cleanupDeletedRecords": "Clean up deleted records",
         "addressCountryList": "Address Country Autocomplete List",
-        "fiscalYearShift": "Fiscal Year Start"
+        "fiscalYearShift": "Fiscal Year Start",
+        "jobRunInParallel": "Jobs Run in Parallel",
+        "jobMaxPortion": "Jobs Max Portion",
+        "jobPoolConcurrencyNumber": "Jobs Pool Concurrency Number",
+        "daemonInterval": "Daemon Interval",
+        "daemonMaxProcessNumber": "Daemon Max Process Number",
+        "daemonProcessTimeout": "Daemon Process Timeout"
     },
     "options": {
         "weekStart": {
@@ -164,7 +170,13 @@
         "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records. Users will receive email notifications only for specified entity types.",
         "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
         "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
-        "cleanupDeletedRecords": "Removed records will be deleted from database after a while."
+        "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
+        "jobRunInParallel": "Jobs will be executed in parallel processes.",
+        "jobPoolConcurrencyNumber": "Max number of processes run simultaneously.",
+        "jobMaxPortion": "Max number of jobs processed per one execution.",
+        "daemonInterval": "Interval between process cron runs in seconds.",
+        "daemonMaxProcessNumber": "Max number of cron processes run simultaneously.",
+        "daemonProcessTimeout": "Max execution time (in seconds) allocated for a sinle cron process."
     },
     "labels": {
         "System": "System",

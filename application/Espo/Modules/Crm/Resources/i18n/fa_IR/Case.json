@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "نام",
+    "number": "شماره",
+    "status": "وضعیت",
+    "account": "حساب",
+    "contact": "تماس",
+    "contacts": "مخاطب ها",
+    "priority": "اولویت",
+    "type": "نوع",
+    "description": "توضیحات",
+    "lead": "لید",
+    "attachments": "پیوست‌ها",
+    "inboundEmail": "حساب ایمیل گروهی"
+  },
+  "links": {
+    "account": "حساب",
+    "contact": "تماس (اولیه)",
+    "Contacts": "مخاطب ها",
+    "meetings": "جلسات",
+    "calls": "تماس گرفتن",
+    "tasks": "وظایف",
+    "emails": "ایمیل ها",
+    "articles": "مقالات پایگاه دانش",
+    "lead": "لید",
+    "attachments": "پیوست‌ها",
+    "inboundEmail": "حساب ایمیل گروهی"
+  },
+  "options": {
+    "status": {
+      "New": "جدید",
+      "Assigned": "اختصاص داده",
+      "Pending": "در حال بررسی",
+      "Closed": "بسته شده",
+      "Rejected": "عدم پذیرش",
+      "Duplicate": "تکراری"
+    },
+    "priority": {
+      "Low": "کم",
+      "Normal": "معمولی",
+      "High": "زیاد",
+      "Urgent": "ضروری"
+    },
+    "type": {
+      "Question": "سوال",
+      "Incident": "حادثه",
+      "Problem": "مسئله"
+    }
+  },
+  "labels": {
+    "Create Case": "ایجاد کیس",
+    "Close": "بستن",
+    "Reject": "رد کردن",
+    "Closed": "بسته شده",
+    "Rejected": "رد"
+  },
+  "presetFilters": {
+    "open": "باز",
+    "closed": "بسته شده"
+  }
+}

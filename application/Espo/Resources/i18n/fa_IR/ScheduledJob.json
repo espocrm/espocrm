@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "job": "کار"
+  },
+  "links": {
+    "log": "لاگ"
+  },
+  "labels": {
+    "Create ScheduledJob": "ایجاد کار برنامه ریزی شده"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "پاک کردن",
+      "CheckInboundEmails": "حساب های ایمیل گروهی را بررسی کنید",
+      "CheckEmailAccounts": "بررسی حسابهای ایمیل شخصی",
+      "SendEmailReminders": "ارسال ایمیل یادآوری",
+      "CheckNewVersion": "بررسی برای ورژن جدید"
+    },
+    "cronSetup": {
+      "linux": "توجه: این خط را به فایل crontab اضافه کنید تا G-crm Scheduled Jobs را اجرا کنید:",
+      "mac": "توجه: این خط را به فایل crontab اضافه کنید تا G-crm Scheduled Jobs را اجرا کنید:",
+      "windows": "نکته: یک فایل دسته ای با دستورات زیر برای اجرای برنامه های G-crm Scheduled با استفاده از وظایف برنامه ریزی شده ویندوز ایجاد کنید:"
+    },
+    "status": {
+      "Active": "فعال",
+      "Inactive": "غیرفعال"
+    }
+  }
+}

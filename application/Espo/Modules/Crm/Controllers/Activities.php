@@ -69,32 +69,58 @@ class Activities extends \Espo\Core\Controllers\Base
 
         if ($teamIdList) {
             $teamIdList = explode(',', $teamIdList);
-            return $userResultList = $service->getEventsForTeams($teamIdList, $from, $to, $scopeList);
+            return $userResultList = $service->getTeamsEventList($teamIdList, $from, $to, $scopeList);
         }
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);
-
-            $resultList = [];
-            foreach ($userIdList as $userId) {
-                try {
-                    $userResultList = $service->getEvents($userId, $from, $to, $scopeList);
-                } catch (\Exception $e) {
-                    continue;
-                }
-                foreach ($userResultList as $item) {
-                    $item['userId'] = $userId;
-                    $resultList[] = $item;
-                }
-            }
-            return $resultList;
+            return $service->getUsersEventList($userIdList, $from, $to, $scopeList);
         } else {
             if (!$userId) {
                 $userId = $this->getUser()->id;
             }
         }
 
-        return $service->getEvents($userId, $from, $to, $scopeList);
+        return $service->getEventList($userId, $from, $to, $scopeList);
+    }
+
+    public function getActionGetTimeline($params, $data, $request)
+    {
+        if (!$this->getAcl()->check('Calendar')) {
+            throw new Forbidden();
+        }
+
+        $from = $request->get('from');
+        $to = $request->get('to');
+
+        if (empty($from) || empty($to)) {
+            throw new BadRequest();
+        }
+
+        if (strtotime($to) - strtotime($from) > $this->maxCalendarRange * 24 * 3600) {
+            throw new Forbidden('Too long range.');
+        }
+
+        $service = $this->getService('Activities');
+
+        $scopeList = null;
+        if ($request->get('scopeList') !== null) {
+            $scopeList = explode(',', $request->get('scopeList'));
+        }
+
+        $userId = $request->get('userId');
+        $userIdList = $request->get('userIdList');
+
+        if ($userIdList) {
+            $userIdList = explode(',', $userIdList);
+        } else {
+            $userIdList = [];
+        }
+        if ($userId) {
+            $userIdList[] = $userId;
+        }
+
+        return $service->getUsersTimeline($userIdList, $from, $to, $scopeList);
     }
 
     public function actionListUpcoming($params, $data, $request)

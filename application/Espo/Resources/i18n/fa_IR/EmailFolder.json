@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "رد کردن اعلان ها"
+  },
+  "labels": {
+    "Create EmailFolder": "ایجاد پوشه",
+    "Manage Folders": "مدیریت پوشه ها",
+    "Emails": "ایمیل ها"
+  }
+}

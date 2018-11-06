@@ -58,14 +58,19 @@ return [
     'jobPeriod' => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
     'jobPeriodForActiveProcess' => 36000, /** Max execution time (in seconds) allocated for a sinle job with active process. If exceeded then set to Failed.*/
     'jobRerunAttemptNumber' => 1, /** Number of attempts to re-run failed jobs. */
-    'cronMinInterval' => 4, /** Min interval (in seconds) between two cron runs. */
-    'crud' => array(
+    'jobRunInParallel' => false, /** Jobs will be executed in parallel processes. */
+    'jobPoolConcurrencyNumber' => 8, /** Max number of processes run simultaneously. */
+    'cronMinInterval' => 2, /** Min interval (in seconds) between two cron runs. */
+    'daemonMaxProcessNumber' => 5, /** Max number of cron processes run simultaneously. */
+    'daemonInterval' => 10, /** Interval between process runs in seconds. */
+    'daemonProcessTimeout' => 36000,
+    'crud' => [
         'get' => 'read',
         'post' => 'create',
         'put' => 'update',
         'patch' => 'patch',
         'delete' => 'delete',
-    ),
+    ],
     'systemUserAttributes' => [
         'id' => 'system',
         'userName' => 'system',
@@ -76,6 +81,7 @@ return [
     'systemItems' => [
         'systemItems',
         'adminItems',
+        'superAdminItems',
         'configPath',
         'cachePath',
         'database',
@@ -113,7 +119,13 @@ return [
         'jobMaxPortion',
         'jobPeriod',
         'jobRerunAttemptNumber',
+        'jobRunInParallel',
+        'jobPoolConcurrencyNumber',
+        'jobPeriodForActiveProcess',
         'cronMinInterval',
+        'daemonInterval',
+        'daemonProcessTimeout',
+        'daemonMaxProcessNumber',
         'authenticationMethod',
         'adminPanelIframeUrl',
         'ldapHost',
@@ -169,6 +181,19 @@ return [
         'requiredPhpLibs',
         'recommendedPhpLibs',
         'recommendedPhpParams',
+    ],
+    'superAdminItems' => [
+        'jobMaxPortion',
+        'jobPeriod',
+        'jobRerunAttemptNumber',
+        'jobRunInParallel',
+        'jobPoolConcurrencyNumber',
+        'jobPeriodForActiveProcess',
+        'cronMinInterval',
+        'daemonInterval',
+        'daemonProcessTimeout',
+        'daemonMaxProcessNumber',
+        'adminPanelIframeUrl',
     ],
     'userItems' => [
         'outboundEmailFromAddress',

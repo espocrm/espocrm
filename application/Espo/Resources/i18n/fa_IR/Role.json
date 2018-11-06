@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "نام",
+    "roles": "نقش ها",
+    "assignmentPermission": "مجوز تخصیص",
+    "userPermission": "مجوز کاربر",
+    "portalPermission": "پورتال مجوز",
+    "groupEmailAccountPermission": "اجازه دسترسی به حساب ایمیل گروهی",
+    "dataPrivacyPermission": "اجازه دسترسی به داده ها"
+  },
+  "links": {
+    "users": "کاربران",
+    "teams": "تیم ها"
+  },
+  "labels": {
+    "Access": "دسترسی",
+    "Create Role": "ایجاد نقش",
+    "Scope Level": "سطح دسترسی",
+    "Field Level": "پیدا کردن سطح"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "تنظیم نشده",
+      "enabled": "فعال شده است",
+      "disabled": "غیر فعال"
+    },
+    "levelList": {
+      "all": "همه",
+      "team": "تیم",
+      "account": "حساب",
+      "contact": "تماس",
+      "own": "خود",
+      "no": "نه",
+      "yes": "بله",
+      "not-set": "تنظیم نشده"
+    }
+  },
+  "actions": {
+    "read": "خواندن",
+    "edit": "ویرایش",
+    "delete": "حذف",
+    "stream": "جریان",
+    "create": "ایجاد"
+  },
+  "messages": {
+    "changesAfterClearCache": "همه تغییرات در یک کنترل دسترسی پس از کش شدن پاک می شود."
+  },
+  "tooltips": {
+    "portalPermission": "دسترسی به اطلاعات پورتال، قابلیت ارسال پیغام به کاربران پورتال را مشخص می کند.",
+    "groupEmailAccountPermission": "دسترسی به حساب های ایمیل گروهی، توانایی ارسال ایمیل از SMTP گروه را تعیین می کند.",
+    "dataPrivacyPermission": "اجازه برای مشاهده و پاک کردن اطلاعات شخصی."
+  }
+}

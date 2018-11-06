@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "name": "نام",
+    "entityType": "نوع موجودیت",
+    "header": "سرتیتر",
+    "footer": "پاورقی",
+    "leftMargin": "حاشیه چپ",
+    "topMargin": "حاشیه بالا",
+    "rightMargin": "حاشیه راست",
+    "bottomMargin": "حاشیه پایین",
+    "footerPosition": "چاپ پاورقی",
+    "variables": "متغیرهایی موجود",
+    "pageOrientation": "جهت صفحه",
+    "pageFormat": "قطع کاغذ"
+  },
+  "labels": {
+    "Create Template": "ایجاد الگو"
+  },
+  "tooltips": {
+    "footer": "از شماره {pageNumber} برای چاپ شماره صفحه استفاده کنید."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "پرتره",
+      "Landscape": "دورنما"
+    },
+    "placeholders": {
+      "today": "امروز (تاریخ)",
+      "now": "اکنون (تاریخ-زمان)"
+    }
+  }
+}

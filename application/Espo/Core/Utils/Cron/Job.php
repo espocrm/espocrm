@@ -109,7 +109,7 @@ class Job
     {
         $where = [
             'scheduledJobId' => $scheduledJobId,
-            'status' => CronManager::RUNNING
+            'status' => [CronManager::RUNNING, CronManager::READY]
         ];
         if ($targetId && $targetType) {
             $where['targetId'] = $targetId;
@@ -127,7 +127,7 @@ class Job
         $query = "
             SELECT scheduled_job_id FROM job
             WHERE
-                `status` = 'Running' AND
+                (`status` = 'Running' OR `status` = 'Ready') AND
                 scheduled_job_id IS NOT NULL AND
                 target_id IS NULL AND
                 deleted = 0
@@ -205,7 +205,7 @@ class Job
         $select = "
             SELECT id, scheduled_job_id, execute_time, target_id, target_type, pid FROM `job`
             WHERE
-            `status` = '" . CronManager::RUNNING ."' AND execute_time < '".date('Y-m-d H:i:s', $time)."'
+            (`status` = '" . CronManager::RUNNING ."' OR `status` = '" . CronManager::READY ."') AND execute_time < '".date('Y-m-d H:i:s', $time)."'
         ";
         $sth = $pdo->prepare($select);
         $sth->execute();
@@ -356,10 +356,5 @@ class Job
                 $pdo->prepare($update)->execute();
             }
         }
-    }
-
-    public function getPid()
-    {
-        return System::getPid();
     }
 }

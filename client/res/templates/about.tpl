@@ -80,7 +80,8 @@
                                 <li>Doctrine (DBAL)</li>
                                 <li>Slim</li>
                                 <li>Cron Expression Parser by Michael Dowling</li>
-                                <li>Zendframework (Mail, Ldap)</li>
+                                <li>Zend Framework Mail</li>
+                                <li>Zend Framework LDAP</li>
                                 <li>Monolog</li>
                                 <li>Identicon by Don Park</li>
                                 <li>php-semver by Lars Vierbergen</li>
@@ -88,6 +89,8 @@
                                 <li>Lightncandy by Zordius</li>
                                 <li>php-mime-mail-parser by Vincent Dauce</li>
                                 <li>MailMimeParser by Zaahid Bateson</li>
+                                <li>Symphony The Process</li>
+                                <li>Async by Spatie</li>
                             </ul>
                         </section>
                     </div>

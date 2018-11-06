@@ -1,0 +1,67 @@
+{
+  "labels": {
+    "Fields": "فیلدها",
+    "Relationships": "روابط",
+    "Schedule": "زمان‌بندی",
+    "Log": "لاگ",
+    "Formula": "فرمول"
+  },
+  "fields": {
+    "name": "نام",
+    "type": "نوع",
+    "labelSingular": "برچسب انحصاری",
+    "labelPlural": "برچسب چند",
+    "stream": "جریان",
+    "label": "برچسب",
+    "linkType": "نوع لینک",
+    "entityForeign": "موجودیت خارجی",
+    "linkForeign": "لینک خارجی",
+    "link": "لینک",
+    "labelForeign": "برچسب خارجی",
+    "sortBy": "ترتیب پیش فرض (فیلد)",
+    "sortDirection": "پیش فرض (جهت)",
+    "relationName": "نام جدول میانی",
+    "disabled": "معلول",
+    "textFilterFields": "فیلد های فیلتر متن",
+    "audited": "حسابرسی شده",
+    "auditedForeign": "حسابرسی خارجی",
+    "statusField": "فیلد وضعیت",
+    "beforeSaveCustomScript": "بدنه ایمیل شامل هر یک از کلمات یا عبارات مشخص شده است.",
+    "color": "رنگ",
+    "kanbanViewMode": "نمایش کانبان",
+    "kanbanStatusIgnoreList": "گروه های نادیده گرفته شده در نمای کانبان",
+    "iconClass": "آیکون",
+    "fullTextSearch": "متن کامل جستجو"
+  },
+  "options": {
+    "type": {
+      "": "هیچ یک",
+      "Base": "پایه",
+      "Person": "شخص",
+      "CategoryTree": "دسته بندی",
+      "Event": "رویداد",
+      "Company": "کمپانی"
+    },
+    "linkType": {
+      "manyToMany": "چند به چند",
+      "oneToMany": "یک به چند",
+      "manyToOne": "چند به یک"
+    },
+    "sortDirection": {
+      "asc": "صعودی",
+      "desc": "نزولی"
+    }
+  },
+  "messages": {
+    "entityCreated": "موجودیت ایجاد شده است ",
+    "linkAlreadyExists": "نام لینک درگیر",
+    "linkConflict": "نام لینک درگیر:لینک یا فیلد با همین نام وجود دارد"
+  },
+  "tooltips": {
+    "statusField": "به روز رسانی این فیلد وارد جریان می شود.",
+    "textFilterFields": "زمینه های مورد استفاده در جستجوی متن",
+    "stream": "آیا موجودیت دارای جریان است",
+    "disabled": "بررسی کنید که آیا این موجودیت در سیستم شما نیازی ندارد؟",
+    "fullTextSearch": "انجام بازسازی ضروری است"
+  }
+}

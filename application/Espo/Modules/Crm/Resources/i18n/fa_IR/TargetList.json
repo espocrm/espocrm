@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "name": "نام",
+    "description": "توضیحات",
+    "entryCount": "تعداد ورودی",
+    "campaigns": "کمپین ها",
+    "endDate": "تاریخ پایان",
+    "targetLists": "لیست های هدف",
+    "includingActionList": "شامل",
+    "excludingActionList": "یادآوری ها",
+    "targetStatus": "وضعیت هدف"
+  },
+  "links": {
+    "accounts": "حساب ها",
+    "contacts": "مخاطب ها",
+    "leads": "لید ها",
+    "campaigns": "کمپین ها",
+    "massEmails": "ایمیل های انبوه"
+  },
+  "options": {
+    "type": {
+      "Email": "ایمیل",
+      "Web": "وب",
+      "Television": "تلوزیون",
+      "Radio": "رادیو",
+      "Newsletter": "خبرنامه"
+    },
+    "targetStatus": {
+      "Listed": "لیست بده"
+    }
+  },
+  "labels": {
+    "Create TargetList": "ایجاد لیست هدف"
+  }
+}

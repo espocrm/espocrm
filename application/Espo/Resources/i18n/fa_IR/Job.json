@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "status": "وضعیت",
+    "executeTime": "اجرا کردن",
+    "failedAttempts": "تلاش های ناموفق",
+    "serviceName": "سرویس",
+    "methodName": "روش",
+    "data": "داده ها"
+  },
+  "options": {
+    "status": {
+      "Pending": "در انتظار",
+      "Success": "موفقیت",
+      "Running": "در حال اجرا",
+      "Failed": "فیلد"
+    }
+  }
+}

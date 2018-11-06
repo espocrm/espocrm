@@ -503,6 +503,32 @@
         },
         "addressCountryList": {
             "type": "multiEnum"
+        },
+        "jobRunInParallel": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "jobMaxPortion": {
+            "type": "int",
+            "tooltip": true
+        },
+        "jobPoolConcurrencyNumber": {
+            "type": "int",
+            "tooltip": true,
+            "min": 1
+        },
+        "daemonInterval": {
+            "type": "int",
+            "tooltip": true
+        },
+        "daemonMaxProcessNumber": {
+            "type": "int",
+            "tooltip": true,
+            "min": 1
+        },
+        "daemonProcessTimeout": {
+            "type": "int",
+            "tooltip": true
         }
     }
 }

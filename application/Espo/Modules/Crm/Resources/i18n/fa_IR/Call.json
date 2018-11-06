@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "dateStart": "تاریخ شروع",
+    "dateEnd": "تاریخ پایان",
+    "direction": "جهت",
+    "duration": "مدت زمان",
+    "description": "شرح",
+    "users": "کاربران",
+    "contacts": "مخاطب ها",
+    "leads": "لیدها(سرنخ های فروش)",
+    "reminders": "یادآوری ها",
+    "account": "حساب",
+    "acceptanceStatus": "وضعیت پذیرش"
+  },
+  "options": {
+    "status": {
+      "Planned": "برنامه ریزی شده",
+      "Held": "برگزار شد",
+      "Not Held": "برگزار نشد"
+    },
+    "acceptanceStatus": {
+      "None": "هیچکدام",
+      "Accepted": "پذیرش",
+      "Declined": "عدم پذیرش",
+      "Tentative": "پیش بینی شده"
+    }
+  },
+  "massActions": {
+    "setHeld": "تنظیم برگذاری",
+    "setNotHeld": "تنظیم عدم برگذاری"
+  },
+  "labels": {
+    "Create Call": "ایجاد تماس",
+    "Set Held": "تنظیم برگذاری",
+    "Set Not Held": "تنظیم عدم برگذاری",
+    "Send Invitations": "ارسال دعوت نامه ها"
+  },
+  "presetFilters": {
+    "planned": "برنامه ریزی شده",
+    "held": "برگزار شد",
+    "todays": "امروزه"
+  }
+}
