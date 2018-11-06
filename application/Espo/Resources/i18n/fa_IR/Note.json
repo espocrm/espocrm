@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "attachments": "پیوست ها",
+    "targetType": "هدف",
+    "teams": "تیم ها",
+    "users": "کاربران",
+    "portals": "پرتال ها",
+    "type": "نوع",
+    "isGlobal": "جهانی است",
+    "isInternal": "آیا داخلی است (برای کاربران داخلی)",
+    "related": "مرتبط",
+    "createdByGender": "ایجاد شده توسط جنسیت",
+    "data": "اطلاعات",
+    "number": "شماره"
+  },
+  "filters": {
+    "all": "همه",
+    "updates": "آپدیت ها"
+  },
+  "messages": {
+    "writeMessage": "پیام خود را اینجا بنویسید"
+  },
+  "options": {
+    "targetType": {
+      "self": "به خودم",
+      "users": "به کاربر(های) معین",
+      "teams": "به تیم(های) معین",
+      "all": "به تمام کاربران داخلی"
+    }
+  },
+  "links": {
+    "superParent": "آدم",
+    "related": "مرتبط"
+  }
+}

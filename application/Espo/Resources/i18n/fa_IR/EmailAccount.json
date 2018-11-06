@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "host": "هاست",
+    "username": "نام کاربری",
+    "password": "پسورد",
+    "port": "پورت",
+    "monitoredFolders": "پوشه های نظارت شده",
+    "fetchSince": "دریافت از زمان",
+    "emailAddress": "آدرس ایمیل",
+    "sentFolder": "ارسال پوشه",
+    "storeSentEmails": "ذخیره ایمیل های ارسالی",
+    "keepFetchedEmailsUnread": "نگهداری تمامی ایمیل های دریافتی به صورت خوانده نشده",
+    "emailFolder": "قرار دادن در پوشه",
+    "useSmtp": "آیا نهاد دارای جریان است"
+  },
+  "links": {
+    "filters": "فیلترها",
+    "emails": "ایمیل ها"
+  },
+  "options": {
+    "status": {
+      "Active": "فعال",
+      "Inactive": "غیر فعال"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "ایجاد حساب ایمیل",
+    "Main": "اصلی",
+    "Test Connection": "اتصال تست",
+    "Send Test Email": "ارسال ایمیل تست"
+  },
+  "messages": {
+    "couldNotConnectToImap": "نمی توانم به سرور IMAP وصل شوم",
+    "connectionIsOk": "ارتباط برقرار می باشد"
+  },
+  "tooltips": {
+    "storeSentEmails": "ایمیل های ارسال شده در سرور IMAP ذخیره خواهند شد. فیلد آدرس ایمیل باید مطابق با آدرس ایمیل از ارسال شود."
+  }
+}

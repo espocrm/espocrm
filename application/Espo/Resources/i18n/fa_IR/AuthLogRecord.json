@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "username": "نام کاربری",
+    "ipAddress": "آدرس IP",
+    "requestTime": "زمان درخواست",
+    "createdAt": "درخواست شده در",
+    "isDenied": "رد شده است",
+    "denialReason": "دلیل ردکردن",
+    "portal": "پورتال",
+    "user": "کاربر",
+    "requestUrl": "درخواست URL",
+    "requestMethod": "روش درخواست"
+  },
+  "links": {
+    "user": "کاربر",
+    "portal": "پورتال",
+    "actionHistoryRecords": "سابقه فعالیت"
+  },
+  "presetFilters": {
+    "denied": "رد شده",
+    "accepted": "پذیرفته شده"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "مجوز دسترسی نامعتبر",
+      "INACTIVE_USER": "کاربر غیرفعال",
+      "IS_PORTAL_USER": "کاربر پورتال",
+      "IS_NOT_PORTAL_USER": "کاربر پورتال نیست",
+      "USER_IS_NOT_IN_PORTAL": "کاربر به پورتال مرتبط نیست"
+    }
+  }
+}

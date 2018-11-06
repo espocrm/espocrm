@@ -72,6 +72,7 @@ return array (
         'es_ES',
         'hr_HR',
         'hu_HU',
+        'fa_IR',
         'fr_FR',
         'id_ID',
         'it_IT',

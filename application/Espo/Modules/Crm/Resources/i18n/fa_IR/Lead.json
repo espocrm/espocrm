@@ -1,0 +1,68 @@
+{
+  "labels": {
+    "Converted To": "تبدیل به",
+    "Create Lead": "تبدیل لید",
+    "Convert": "تبدیل",
+    "convert": "تبدیل"
+  },
+  "fields": {
+    "name": "نام",
+    "emailAddress": "ایمیل",
+    "title": "عنوان",
+    "website": "وب سایت",
+    "phoneNumber": "تلفن",
+    "accountName": "نام حساب",
+    "doNotCall": "تماس نگیر",
+    "address": "آدرس",
+    "status": "وضعیت",
+    "source": "منبع",
+    "opportunityAmount": "مقدار فرصت",
+    "opportunityAmountConverted": "مقدار فرصت (تبدیل شده)",
+    "description": "توضیحات",
+    "createdAccount": "حساب",
+    "createdContact": "مخاطب",
+    "createdOpportunity": "فرصت",
+    "campaign": "کمپین",
+    "targetLists": "لیست های هدف",
+    "targetList": "لیست هدف",
+    "industry": "صنعت",
+    "acceptanceStatus": "وضعیت پذیرش",
+    "opportunityAmountCurrency": "فرصت مقدار ارز",
+    "acceptanceStatusMeetings": "وضعیت پذیرش (جلسات)",
+    "acceptanceStatusCalls": "وضعیت پذیرش (تماس ها)"
+  },
+  "links": {
+    "targetLists": "لیست های هدف",
+    "campaignLogRecords": "لاگ کمپین",
+    "campaign": "کمپین",
+    "createdAccount": "حساب",
+    "createdContact": "مخاطب",
+    "createdOpportunity": "فرصت",
+    "documents": "اسناد"
+  },
+  "options": {
+    "status": {
+      "New": "جدید",
+      "Assigned": "اختصاص داده",
+      "In Process": "در فرایند",
+      "Converted": "تبدیل شده",
+      "Recycled": "بازیافت",
+      "Dead": "مرده"
+    },
+    "source": {
+      "": "هیچ کدام",
+      "Call": "تماس",
+      "Email": "ایمیل",
+      "Existing Customer": "مشتری موجود",
+      "Public Relations": "روابط عمومی",
+      "Web Site": "وب سایت",
+      "Campaign": "کمپین",
+      "Other": "دیگر"
+    }
+  },
+  "presetFilters": {
+    "active": "فعال",
+    "actual": "حقیقی",
+    "converted": "تبدیل شده"
+  }
+}

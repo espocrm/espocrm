@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "dateStart": "تاریخ شروع",
+    "dateEnd": "تاریخ پایان",
+    "duration": "مدت زمان",
+    "description": "توضیحات",
+    "users": "کاربران",
+    "contacts": "مخاطب ها",
+    "leads": "لیدها",
+    "reminders": "یادآوری ها",
+    "account": "حساب",
+    "acceptanceStatus": "وضعیت پذیرش"
+  },
+  "options": {
+    "status": {
+      "Planned": "برنامه ریزی شده",
+      "Held": "برگذار شده",
+      "Not Held": "برگذار نشده"
+    },
+    "acceptanceStatus": {
+      "None": "هیچ کدام",
+      "Accepted": "پذیرفته شده",
+      "Declined": "نپذیرفتن",
+      "Tentative": "پیش بینی شده"
+    }
+  },
+  "massActions": {
+    "setHeld": "تنظیم برگذاری",
+    "setNotHeld": "تنظیم عدم برگذاری"
+  },
+  "labels": {
+    "Create Meeting": "ایجاد جلسه",
+    "Set Held": "تنظیم برگذاری",
+    "Set Not Held": "تنظیم عدم برگذاری",
+    "Send Invitations": "ارسال دعوت نامه ها",
+    "on time": "به موقع",
+    "before": "قبل"
+  },
+  "presetFilters": {
+    "planned": "برنامه ریزی شده",
+    "held": "برگذاری",
+    "todays": "امروزه"
+  },
+  "messages": {
+    "nothingHasBeenSent": "چیزی ارسال نشده"
+  }
+}

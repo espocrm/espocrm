@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "ایجاد پوشه سند",
+    "Manage Categories": "مدیریت پوشه ها",
+    "Documents": "اسناد"
+  },
+  "links": {
+    "documents": "اسناد"
+  }
+}

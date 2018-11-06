@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "name": "نام",
+    "description": "توضیحات",
+    "status": "وضعیت",
+    "type": "نوع",
+    "startDate": "تاریخ شروع",
+    "endDate": "تاریخ پایان",
+    "targetLists": "لیست های هدف",
+    "excludingTargetLists": "به غیر از لیست هدف",
+    "sentCount": "ارسال شد",
+    "clickedCount": "کلیک کرد",
+    "leadCreatedCount": "ایجاد لید ها(سرنخ فروش)",
+    "revenue": "درآمد",
+    "revenueConverted": "درآمد (تبدیل شده)",
+    "budget": "بودجه",
+    "budgetConverted": "بودجه (تبدیل شده)",
+    "contactsTemplate": "الگوی تماسها",
+    "leadsTemplate": "الگوی لیدها",
+    "accountsTemplate": "قالب حساب‌ها",
+    "usersTemplate": "الگو کاربرها",
+    "mailMergeOnlyWithAddress": "رد کردن رکوردها w/oفیلد آدرس"
+  },
+  "links": {
+    "targetLists": "لیست های هدف",
+    "excludingTargetLists": "به غیر از لیست هدف",
+    "accounts": "حساب ها",
+    "contacts": "مخاطب ها",
+    "leads": "لیدها",
+    "opportunities": "فرصت ها",
+    "massEmails": "ایمیل های انبوه",
+    "trackingUrls": "URL های ردیابی",
+    "contactsTemplate": "الگو تماس ها",
+    "leadsTemplate": "الگوی لیدها",
+    "accountsTemplate": "قالب حساب",
+    "usersTemplate": "الگو کاربر"
+  },
+  "options": {
+    "type": {
+      "Email": "ایمیل",
+      "Web": "وب",
+      "Television": "تلویزیون",
+      "Radio": "رادیو",
+      "Newsletter": "خبرنامه"
+    },
+    "status": {
+      "Planning": "برنامه ریزی",
+      "Active": "فعال",
+      "Inactive": "غیرفعال",
+      "Complete": "تکمیل"
+    }
+  },
+  "labels": {
+    "Create Campaign": "ایجاد کمپین",
+    "Target Lists": "لیست های هدف",
+    "Statistics": "آمار",
+    "hard": "سخت",
+    "soft": "نرم",
+    "Unsubscribe": "لغو اشتراک",
+    "Mass Emails": "ایمیل های انبوه",
+    "Email Templates": "قالب های ایمیل",
+    "Unsubscribe again": "لغو اشتراک مجدد",
+    "Subscribe again": "دوباره مشترک شوید",
+    "Create Target List": "ایجاد لیست هدف",
+    "Mail Merge": "ادغام ایمیل",
+    "Generate Mail Merge PDF": "ایجاد ایمیل ادغام PDF"
+  },
+  "presetFilters": {
+    "active": "فعال"
+  },
+  "messages": {
+    "unsubscribed": "شما از لیست ایمیل ما لغو شده اید.",
+    "subscribedAgain": "شما مجددا مشترک شده اید."
+  },
+  "tooltips": {
+    "targetLists": "اهدافی که باید پیام ها را دریافت کنند",
+    "excludingTargetLists": "اهداف که نباید پیام ها را دریافت کنند"
+  }
+}

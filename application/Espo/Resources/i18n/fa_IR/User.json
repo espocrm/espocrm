@@ -1,0 +1,96 @@
+{
+  "fields": {
+    "name": "نام",
+    "userName": "نام کاربری",
+    "title": "عنوان",
+    "isAdmin": "ادمین هست",
+    "defaultTeam": "تیم پیشفرض",
+    "emailAddress": "ایمیل",
+    "phoneNumber": "تلفن",
+    "roles": "نقش ها",
+    "portals": "پورتال ها",
+    "portalRoles": "نقش های پورتال",
+    "teamRole": "موقعیت",
+    "password": "پسورد",
+    "currentPassword": "رمز عبور فعلی",
+    "passwordConfirm": "رمز عبور را تأیید کنید",
+    "newPassword": "رمز عبور جدید",
+    "newPasswordConfirm": "تأیید رمز جدید",
+    "avatar": "آواتار",
+    "isActive": "فعال است",
+    "isPortalUser": "آیا کاربر پورتال است",
+    "contact": "تماس",
+    "accounts": "حساب ها",
+    "account": "حساب (اولیه)",
+    "sendAccessInfo": "ارسال ایمیل با دسترسی به اطلاعات کاربر",
+    "portal": "پورتال",
+    "gender": "جنسيت",
+    "position": "موقعیت در تیم",
+    "passwordPreview": "پیش‌نمایش کلمه عبور",
+    "isSuperAdmin": "سوپر ادمین است",
+    "lastAccess": "آخرین دسترسی"
+  },
+  "links": {
+    "teams": "تیم ها",
+    "roles": "نقش ها",
+    "notes": "یادداشت ها",
+    "portals": "پورتال ها",
+    "portalRoles": "نقش های پورتال",
+    "contact": "تماس",
+    "accounts": "حساب ها",
+    "account": "حساب (اولیه)",
+    "tasks": "وظایف"
+  },
+  "labels": {
+    "Create User": "ساخت کاربر",
+    "Generate": "ساختن",
+    "Access": "دسترسی",
+    "Change Password": "تغییر رمز عبور",
+    "Teams and Access Control": "تیم ها و کنترل دسترسی",
+    "Forgot Password?": "رمز عبور فراموش شده",
+    "Password Change Request": "درخواست تغییر رمز عبور",
+    "Email Address": "آدرس ایمیل",
+    "External Accounts": "حساب های خارجی",
+    "Email Accounts": "حسابهای ایمیل",
+    "Portal": "پورتال",
+    "Create Portal User": "ایجاد پورتال کاربر",
+    "Proceed w/o Contact": "ادامه W / O تماس با"
+  },
+  "tooltips": {
+    "defaultTeam": "تمام رکورد های ایجاد شده توسط این کاربر به طور پیش فرض به این تیم مربوط می شود.",
+    "isAdmin": "کاربر ادمین می تواند به همه چیز دسترسی پیدا کند.",
+    "isActive": "در صورت عدم بررسی، کاربر نمیتواند وارد شود",
+    "teams": "تیم هایی که این کاربر متعلق به آن است سطح کنترل دسترسی از نقش های تیم به ارث رسیده است.",
+    "roles": "نقش های اضافی دسترسی. اگر کاربر به هیچ تیمی تعلق ندارد یا شما باید سطح کنترل دسترسی منحصرا برای این کاربر را گسترش دهید از این استفاده کنید.",
+    "portalRoles": "نقش های پورتال اضافی.از آن برای گسترش سطح کنترل دسترسی منحصرا برای این کاربر استفاده کنید.",
+    "portals": "پورتال هایی که این کاربر به آن دسترسی دارد"
+  },
+  "messages": {
+    "passwordWillBeSent": "رمز عبور به آدرس ایمیل کاربر ارسال می شود.",
+    "passwordChanged": "رمز عبور تغییر کرده است",
+    "userCantBeEmpty": "نام کاربری نمیتواند خالی باشد",
+    "wrongUsernamePasword": "نام کاربری / کلمه عبور اشتباه است",
+    "emailAddressCantBeEmpty": "آدرس ایمیل نمی تواند خالی باشد",
+    "userNameEmailAddressNotFound": "نام کاربری / آدرس ایمیل یافت نشد",
+    "forbidden": "ممنوع است، لطفا بعدا امتحان کنید",
+    "uniqueLinkHasBeenSent": "URL منحصر به فرد به آدرس ایمیل مشخص شده ارسال شده است.",
+    "passwordChangedByRequest": "رمز عبور تغییر کرده است.",
+    "setupSmtpBefore": "شما باید <a href=\"{url}\"> تنظیمات SMTP </a> را تنظیم کنید تا سیستم قادر به ارسال رمز عبور در ایمیل باشد.",
+    "userNameExists": "نام کاربری قبلا وجود داشته"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "فقط تیم من"
+  },
+  "presetFilters": {
+    "active": "فعال",
+    "activePortal": "پورتال فعال"
+  },
+  "options": {
+    "gender": {
+      "": "تنظیم نشده",
+      "Male": "آقا",
+      "Female": "خانم",
+      "Neutral": "خنثی"
+    }
+  }
+}

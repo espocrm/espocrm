@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "نام",
+    "emailAddress": "ایمیل",
+    "accountRole": "عنوان",
+    "account": "حساب",
+    "accounts": "حساب ها",
+    "phoneNumber": "تلفن",
+    "accountType": "نوع حساب",
+    "doNotCall": "زنگ نزن",
+    "address": "آدرس",
+    "opportunityRole": "نقش فرصت",
+    "description": "توضیحات",
+    "campaign": "کمپین",
+    "targetLists": "لیست های هدف",
+    "targetList": "لیست هدف",
+    "portalUser": "کاربر پورتال",
+    "originalLead": "لید اصلی",
+    "acceptanceStatus": "وضعیت پذیرش",
+    "accountIsInactive": "حساب غیر فعال",
+    "acceptanceStatusMeetings": "وضعیت پذیرش (جلسه)",
+    "acceptanceStatusCalls": "وضعیت پذیرش (تماس)"
+  },
+  "links": {
+    "opportunities": "فرصت ها",
+    "targetLists": "لیست های هدف",
+    "campaignLogRecords": "لاگ کمپین",
+    "campaign": "کمپین",
+    "account": "حساب (اولیه)",
+    "accounts": "حساب ها",
+    "portalUser": "کاربر پورتال",
+    "originalLead": "لید اصلی",
+    "documents": "اسناد"
+  },
+  "labels": {
+    "Create Contact": "ایجاد تماس با"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--هیچ کدام--",
+      "Decision Maker": "تصمیم ساز",
+      "Evaluator": "ارزیاب",
+      "Influencer": "اینفلوئنسر"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "کاربران پورتال",
+    "notPortalUsers": "کاربران پورتال نیستند",
+    "accountActive": "فعال"
+  }
+}

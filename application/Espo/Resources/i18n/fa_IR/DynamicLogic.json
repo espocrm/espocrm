@@ -1,0 +1,26 @@
+{
+  "options": {
+    "operators": {
+      "equals": "برابر است با",
+      "notEquals": "برابر نیست با",
+      "greaterThan": "بزرگ‌تر از",
+      "lessThan": "کوچک‌تر از",
+      "greaterThanOrEquals": "بزرگ‌تر یا مساوی",
+      "lessThanOrEquals": "کوچک‌تر یا مساوی",
+      "in": "در",
+      "notIn": "نبودن در",
+      "inPast": "در گذشته",
+      "inFuture": "آینده است",
+      "isToday": "امروز است",
+      "isTrue": "صحیح است",
+      "isFalse": "منفی است",
+      "isEmpty": "خالی است",
+      "isNotEmpty": "خالی نیست",
+      "notContains": "شامل نمی شود",
+      "notHas": "شامل نمی شود"
+    }
+  },
+  "labels": {
+    "Field": "فیلد"
+  }
+}

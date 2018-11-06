@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "month": "ماه",
+    "week": "هفته",
+    "agendaWeek": "هفته",
+    "day": "روز",
+    "agendaDay": "روز",
+    "timeline": "گاهشمار"
+  },
+  "labels": {
+    "Today": "امروز",
+    "Create": "ايجاد كردن",
+    "Shared": "به اشتراک گذاشته شده",
+    "Add User": "افزودن کاربر",
+    "current": "فعلی",
+    "time": "زمان",
+    "User List": "فهرست کاربران",
+    "Manage Users": "مدیریت کاربران",
+    "View Calendar": "مشاهده‌ی تقویم",
+    "Create Shared View": "ایجاد نمایه اشتراکی"
+  }
+}

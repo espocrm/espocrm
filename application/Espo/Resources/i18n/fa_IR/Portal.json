@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "name": "نام",
+    "logo": "لوگو",
+    "companyLogo": "لوگو",
+    "portalRoles": "نقشها",
+    "isActive": "فعال است",
+    "isDefault": "پیشفرض",
+    "quickCreateList": "فهرست سریع ایجاد کنید",
+    "theme": "تم",
+    "language": "زبان",
+    "dashboardLayout": "چیدمان داشبورد",
+    "dateFormat": "فرمت تاریخ",
+    "timeFormat": "فرمت زمان",
+    "timeZone": "منطقه زمانی",
+    "weekStart": "اولین روز هفته",
+    "defaultCurrency": "ارز پیش فرض",
+    "customUrl": "URL سفارشی"
+  },
+  "links": {
+    "users": "کاربران",
+    "portalRoles": "نقشها",
+    "notes": "یادداشت"
+  },
+  "tooltips": {
+    "portalRoles": " نقش های پورتال مشخص شده برای همه کاربران این پورتال اعمال خواهد شد."
+  },
+  "labels": {
+    "Create Portal": "ایجاد پورتال",
+    "User Interface": "رابط کاربری",
+    "General": "عمومی",
+    "Settings": "تنظیمات"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "title": "عنوان",
+    "dateFrom": "تاریخ از",
+    "dateTo": "تاریخ به",
+    "displayRecords": "نمایش سوابق",
+    "isDoubleHeight": "ارتفاع 2x",
+    "mode": "حالت",
+    "enabledScopeList": "چه چیزی باید نمایش داده شود",
+    "users": "کاربران",
+    "entityType": "نوع موجودیت",
+    "primaryFilter": "فیلتر اولیه",
+    "boolFilterList": "فیلترهای اضافی",
+    "sortBy": "سفارش (فیلد)",
+    "sortDirection": "سفارش (جهت)",
+    "expandedLayout": "طرح",
+    "dateFilter": "فیلتر تاریخ"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "هفته (دستور کار)",
+      "basicWeek": "هفته",
+      "month": "ماه",
+      "basicDay": "روز",
+      "agendaDay": "روز (دستور کار)",
+      "timeline": "گاهشمار"
+    }
+  },
+  "messages": {
+    "selectEntityType": "انتخاب نوع موجودیت در گزینه های dashlet ."
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "labels": {
+    "Dynamic Logic": "منطق پویا",
+    "Name": "نام",
+    "Label": "برچسب",
+    "Type": "نوع"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "هیچ یک",
+      "javascript: return this.dateTime.getNow(1);": "حالا",
+      "javascript: return this.dateTime.getNow(5);": "حالا(5دقیقه)",
+      "javascript: return this.dateTime.getNow(15);": "حالا(15دقیقه)",
+      "javascript: return this.dateTime.getNow(30);": "حالا(30دقیقه)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 ساعت",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 روز",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 روز",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 روز",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 روز",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 روز",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 روز",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 هفته"
+    },
+    "dateDefault": {
+      "": "هیچ کدام",
+      "javascript: return this.dateTime.getToday();": "امروز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 روز",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 هفته",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 هفته",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 هفته",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 ماه",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 سال"
+    }
+  },
+  "tooltips": {
+    "audited": "به روز رسانی های در جریان لاگ می شوند",
+    "required": "پر کردن فیلد الزامی خواهد بود. نخواهد توانست خالی گذاشته شود.",
+    "min": "مقدار حداقل قابل قبول",
+    "max": "حداکثر مقدار قابل قبول",
+    "seeMoreDisabled": "اگر چک نشده باشد، متن های طولانی کوتاه می شوند.",
+    "lengthOfCut": "چقدر طول می کشد تا متن قبل از آن بریده شود.",
+    "maxLength": "حداکثر طول متن قابل قبول",
+    "before": "مقدار تاریخ باید قبل از مقدار تاریخ فیلد مشخص شده باشد.",
+    "after": "مقدار تاریخ باید بعد از مقدار تاریخ فیلد مشخص شده باشد.",
+    "readOnly": "مقدار فیلد توسط کاربر مشخص نمی شود. اما می توان با فرمول محاسبه کرد.",
+    "maxFileSize": "اگر خالی باشد یا 0، هیچ محدودیتی وجود ندارد"
+  },
+  "fieldParts": {
+    "address": {
+      "street": "خیابان",
+      "city": "شهر",
+      "state": "استان",
+      "country": "کشور",
+      "postalCode": "کد پستی",
+      "map": "نقشه"
+    },
+    "personName": {
+      "salutation": "احترامات",
+      "first": "نخست",
+      "last": "آخر"
+    },
+    "currency": {
+      "converted": "(تبدیل شده)",
+      "currency": "(واحد پول)"
+    },
+    "datetimeOptional": {
+      "date": "تاریخ"
+    }
+  }
+}

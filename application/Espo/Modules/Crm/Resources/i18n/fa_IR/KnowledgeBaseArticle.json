@@ -1,0 +1,46 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "ایجاد مقاله",
+    "Any": "هر کدام",
+    "Send in Email": "ارسال در ایمیل",
+    "Move Up": "حرکت به بالا",
+    "Move Down": "حرکت به پایین",
+    "Move to Top": "انتقال به بالا",
+    "Move to Bottom": "انتقال به پایین"
+  },
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "type": "نوع",
+    "attachments": "پیوست ها",
+    "publishDate": "تاریخ انتشار",
+    "expirationDate": "تاریخ انقضا",
+    "description": "توضیحات",
+    "body": "بدنه",
+    "categories": "دسته بندی ها",
+    "language": "زبان",
+    "portals": "پورتال ها"
+  },
+  "links": {
+    "opportunities": "فرصت ها",
+    "categories": "دسته بندی ها",
+    "portals": "پورتال ها"
+  },
+  "options": {
+    "status": {
+      "In Review": "در بازبینی",
+      "Draft": "پیش نویس",
+      "Archived": "آرشیو شده",
+      "Published": "منتشر شده"
+    },
+    "type": {
+      "Article": "مقاله"
+    }
+  },
+  "presetFilters": {
+    "published": "منتشر شده"
+  },
+  "tooltips": {
+    "portals": "مقاله تنها در پورتال های مشخص در دسترس خواهد بود."
+  }
+}

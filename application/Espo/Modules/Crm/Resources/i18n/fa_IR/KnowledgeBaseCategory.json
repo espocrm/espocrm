@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "ایجاد طبقه بندی",
+    "Manage Categories": "مدیریت طبقه بندی ها",
+    "Articles": "مقالات"
+  },
+  "links": {
+    "articles": "مقالات"
+  }
+}

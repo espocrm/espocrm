@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "width": "عرض (٪)",
+    "notSortable": "قابل مرتب شدن نیست",
+    "align": "هماهنگ کردن",
+    "style": "سبک",
+    "sticked": "چسبیده",
+    "isLarge": "اندازه فونت بزرگ",
+    "dynamicLogicVisible": "شرایط ساخت پانل قابل مشاهده است"
+  },
+  "options": {
+    "align": {
+      "left": "چپ",
+      "right": "راست"
+    },
+    "style": {
+      "default": "پیش‌فرض",
+      "success": "موفقیت",
+      "danger": "خطر",
+      "info": "اطلاعات",
+      "warning": "هشدار",
+      "primary": "اولیه"
+    }
+  },
+  "labels": {
+    "New panel": "پانل جدید"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "آدرس"
+  },
+  "links": {
+    "meetings": "جلسات",
+    "calls": "تماس ها",
+    "tasks": "وظایف"
+  },
+  "labels": {
+    "Create {entityType}": "ایجاد {entityTypeTranslated}"
+  }
+}

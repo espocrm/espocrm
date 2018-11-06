@@ -1,0 +1,63 @@
+{
+  "fields": {
+    "name": "نام",
+    "emailAddress": "آدرس ایمیل",
+    "status": "وضعیت",
+    "assignToUser": "اختصاص به کاربر",
+    "username": "نام کاربری",
+    "password": "پسورد",
+    "port": "پورت",
+    "monitoredFolders": "پوشه های نظارت شده",
+    "trashFolder": "پوشه سطل زباله",
+    "createCase": "ایجاد مورد",
+    "reply": "پاسخ خودکار",
+    "caseDistribution": "توزیع مورد",
+    "replyEmailTemplate": "قالب ایمیل پاسخ",
+    "replyFromAddress": "پاسخ از آدرس",
+    "replyToAddress": "پاسخ به آدرس",
+    "replyFromName": "پاسخ از نام",
+    "targetUserPosition": "موقعیت کاربر هدف",
+    "addAllTeamUsers": "برای همه کاربران تیم",
+    "team": "تیم هدف",
+    "teams": "تیم ها",
+    "sentFolder": "ارسال پوشه",
+    "storeSentEmails": "ذخیره‌ی ایمیل‌های ارسال شده",
+    "useSmtp": "استفاده از SMTP",
+    "fromName": "از نام",
+    "smtpIsShared": "SMTP به اشتراک گذاشته می شود",
+    "smtpIsForMassEmail": "SMTP برای Mass Email است"
+  },
+  "tooltips": {
+    "createCase": "به طور خودکار از ایمیل های دریافتی ایجاد کنید",
+    "replyToAddress": "آدرس ایمیل این صندوق پستی را برای ارسال پاسخ ارسال کنید.",
+    "caseDistribution": "چگونگی تخصیص موارد. به طور مستقیم به کاربر اختصاص داده شود  یا در تیم",
+    "assignToUser": "مواردی که به کاربر اختصاص خواهد یافت",
+    "monitoredFolders": "پوشه های چندگانه باید با کاما جدا شوند.",
+    "smtpIsShared": "در صورت بررسی، کاربران قادر خواهند بود ایمیل ها را با استفاده از این SMTP ارسال کنند. دسترسی توسط رول ها از طریق اجازه دسترسی به حساب ایمیل گروه کنترل می شود.",
+    "smtpIsForMassEmail": "اگر SMTPچک شود، برای Mass Email در دسترس خواهد بود.",
+    "storeSentEmails": "ایمیل های ارسال شده در سرور IMAP ذخیره خواهند شد."
+  },
+  "links": {
+    "filters": "فیلترها",
+    "emails": "ایمیل‌ها",
+    "assignToUser": "تخصیص به کاربر"
+  },
+  "options": {
+    "status": {
+      "Active": "فعال",
+      "Inactive": "غیر فعال"
+    },
+    "caseDistribution": {
+      "Direct-Assignment": "هبچ کدام",
+      "Least-Busy": "کمترین فعالیت"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "ایجاد حساب ایمیل",
+    "Actions": "اقدامات",
+    "Main": "اصلی"
+  },
+  "messages": {
+    "couldNotConnectToImap": "نمی توانم به سرور IMAP وصل شوم"
+  }
+}

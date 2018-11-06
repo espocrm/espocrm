@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "parent": "پدر",
+    "dateStart": "تاریخ شروع",
+    "dateEnd": "تاریخ پایان",
+    "duration": "مدت زمان",
+    "status": "وضعیت",
+    "reminders": "یادآوری ها"
+  },
+  "links": {
+    "parent": "پدر"
+  },
+  "options": {
+    "status": {
+      "Planned": "برنامه ریزی شده",
+      "Held": "برگزار شد",
+      "Not Held": "برگزار نشد"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "ایجاد {entityTypeTranslated}",
+    "Set Held": "تنظیم برگذاری",
+    "Set Not Held": "تنظیم عدم برگذاری"
+  },
+  "massActions": {
+    "setHeld": "تنظیم برگذاری",
+    "setNotHeld": "تنظیم عدم برگذاری"
+  },
+  "presetFilters": {
+    "planned": "برنامه ریزی شده",
+    "held": "برگزار شد",
+    "todays": "امروزه"
+  }
+}

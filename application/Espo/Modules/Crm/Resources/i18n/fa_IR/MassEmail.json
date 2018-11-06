@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "startAt": "تاریخ شروع",
+    "fromAddress": "از آدرس",
+    "fromName": "از نام",
+    "replyToAddress": "پاسخ به آدرس",
+    "replyToName": "پاسخ به نام",
+    "campaign": "کمپین",
+    "emailTemplate": "قالب ایمیل",
+    "inboundEmail": "حساب ایمیل",
+    "targetLists": "لیست های هدف",
+    "excludingTargetLists": "به غیر از لیست هدف"
+  },
+  "links": {
+    "targetLists": "لیست های هدف",
+    "excludingTargetLists": "به غیر از لیست هدف",
+    "queueItems": "آیتم صف",
+    "campaign": "کمپین",
+    "emailTemplate": "قالب ایمیل",
+    "inboundEmail": "حساب ایمیل"
+  },
+  "options": {
+    "status": {
+      "Draft": "پیش نویس",
+      "Pending": "در حال بررسی",
+      "In Process": "در فرایند",
+      "Complete": "تکمیل",
+      "Canceled": "لغو شد",
+      "Failed": "ناموفق"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "ایجاد ایمیل انبوه",
+    "Send Test": "ارسال تست",
+    "system": "سیستم",
+    "group": "گروه"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "حداقل یک هدف را انتخاب کنید.",
+    "testSent": "تست ایمیل (ها) قرار است فرستاده شود"
+  },
+  "tooltips": {
+    "optOutEntirely": "آدرس های ایمیل گیرندگان که لغو اشتراک را علامت گذاری کرده اند و دیگر ایمیل های انبوه دریافت نمی کنند به عنوان حذف شده.",
+    "targetLists": "اهداف که باید پیام ها را دریافت کنند",
+    "excludingTargetLists": "اهدافی که نباید پیام ها را دریافت کنند",
+    "storeSentEmails": "ایمیل ها در CRM ذخیره خواهند شد."
+  },
+  "presetFilters": {
+    "actual": "حقیقی",
+    "complete": "تکمیل"
+  }
+}

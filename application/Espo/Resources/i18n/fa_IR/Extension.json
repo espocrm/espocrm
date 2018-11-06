@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "نام",
+    "version": "ورژن",
+    "description": "توضیحات",
+    "isInstalled": "نصب شد"
+  },
+  "labels": {
+    "Uninstall": "لغو نصب",
+    "Install": "نصب"
+  },
+  "messages": {
+    "uninstalled": "افزونه {نام} حذف شده است"
+  }
+}

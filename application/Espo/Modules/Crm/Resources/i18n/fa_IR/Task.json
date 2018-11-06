@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "نام",
+    "parent": "پدر",
+    "status": "وضعیت",
+    "dateStart": "تاریخ شروع",
+    "dateEnd": "موعد مقرر",
+    "dateStartDate": "تاریخ شروع (تمام روز)",
+    "dateEndDate": "پایان تاریخ (تمام روز)",
+    "priority": "اولویت",
+    "description": "توضیحات",
+    "isOverdue": "عقب افتاده است",
+    "account": "حساب",
+    "dateCompleted": "تاریخ تکمیل شده است",
+    "attachments": "پیوست ها",
+    "reminders": "یاداوری ها",
+    "contact": "مخاطب"
+  },
+  "links": {
+    "attachments": "پیوست ها",
+    "account": "حساب",
+    "contact": "مخاطب"
+  },
+  "options": {
+    "status": {
+      "Not Started": "شروع نشده",
+      "Started": "آغاز شده",
+      "Completed": "تکمیل شده",
+      "Canceled": "لغو شد",
+      "Deferred": "معوق"
+    },
+    "priority": {
+      "Low": "کم",
+      "Normal": "معمولی",
+      "High": "بالا",
+      "Urgent": "فوری"
+    }
+  },
+  "labels": {
+    "Create Task": "ایجاد وظیفه",
+    "Complete": "تکمیل"
+  },
+  "presetFilters": {
+    "actual": "واقعی",
+    "completed": "تکمیل شده",
+    "todays": "امروزه",
+    "overdue": "عقب افتاده",
+    "deferred": "تعلیق شده"
+  }
+}

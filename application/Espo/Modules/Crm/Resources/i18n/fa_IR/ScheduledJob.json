@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "ارسال ایمیل های انبوه",
+      "ControlKnowledgeBaseArticleStatus": "کنترل وضعیت پایگاه دانش"
+    }
+  }
+}

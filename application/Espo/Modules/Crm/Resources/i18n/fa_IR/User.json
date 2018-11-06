@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "لیست های هدف"
+  },
+  "fields": {
+    "acceptanceStatus": "وضعیت پذیرش",
+    "acceptanceStatusMeetings": "وضعیت پذیرش (جلسات)",
+    "acceptanceStatusCalls": "وضعیت پذیرش (تماس ها)"
+  }
+}

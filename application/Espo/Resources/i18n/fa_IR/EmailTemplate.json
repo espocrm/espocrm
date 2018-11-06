@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "وضعیت",
+    "isHtml": "HTML هست",
+    "body": "بدنه",
+    "subject": "موضوع",
+    "attachments": "پیوست ها",
+    "insertField": "درج فیلد",
+    "category": "دسته بندی"
+  },
+  "labels": {
+    "Create EmailTemplate": "ایجاد قالب ایمیل",
+    "Info": "اطلاعات",
+    "Available placeholders": "متغیرهایی موجود"
+  },
+  "tooltips": {
+    "oneOff": "بررسی کنید که آیا فقط یک بار از این الگو استفاده می کنید؟ به عنوان مثال. برای ایمیل انبوه."
+  },
+  "presetFilters": {
+    "actual": "واقعی"
+  },
+  "placeholderTexts": {
+    "optOutUrl": "نشانی اینترنتی برای پیوند لغو اشتراک"
+  }
+}
