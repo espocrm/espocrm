@@ -238,6 +238,20 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
+        jobsSettings: function () {
+            var model = this.getSettingsModel();
+
+            model.once('sync', function () {
+                model.id = '1';
+                this.main('views/settings/edit', {
+                    model: model,
+                    headerTemplate: 'admin/settings/headers/jobs-settings',
+                    recordView: 'views/admin/jobs-settings'
+                });
+            }, this);
+            model.fetch();
+        },
+
         integrations: function (options) {
             var integration = options.name || null;
 

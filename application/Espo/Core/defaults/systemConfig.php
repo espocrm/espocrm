@@ -59,10 +59,10 @@ return [
     'jobPeriodForActiveProcess' => 36000, /** Max execution time (in seconds) allocated for a sinle job with active process. If exceeded then set to Failed.*/
     'jobRerunAttemptNumber' => 1, /** Number of attempts to re-run failed jobs. */
     'jobRunInParallel' => false, /** Jobs will be executed in parallel processes. */
-    'jobPoolConcurrency' => 8, /** Max number of processes run simultaneously. */
-    'cronMinInterval' => 4, /** Min interval (in seconds) between two cron runs. */
-    'daemonMaxProcessNumber' => 5,
-    'daemonInterval' => 10, /** Interval between cron process runs in seconds. */
+    'jobPoolConcurrencyNumber' => 8, /** Max number of processes run simultaneously. */
+    'cronMinInterval' => 2, /** Min interval (in seconds) between two cron runs. */
+    'daemonMaxProcessNumber' => 5, /** Max number of cron processes run simultaneously. */
+    'daemonInterval' => 10, /** Interval between process runs in seconds. */
     'daemonProcessTimeout' => 36000,
     'crud' => array(
         'get' => 'read',
@@ -118,10 +118,13 @@ return [
         'jobMaxPortion',
         'jobPeriod',
         'jobRerunAttemptNumber',
-        'jobUseThreads',
+        'jobRunInParallel',
+        'jobPoolConcurrencyNumber',
+        'jobPeriodForActiveProcess',
         'cronMinInterval',
         'daemonInterval',
-        'daemonMaxThreadNumber',
+        'daemonProcessTimeout',
+        'daemonMaxProcessNumber',
         'authenticationMethod',
         'adminPanelIframeUrl',
         'ldapHost',

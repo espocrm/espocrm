@@ -1,0 +1,14 @@
+[
+    {
+        "rows": [
+            [{"name": "jobRunInParallel"}, {"name": "jobMaxPortion"}],
+            [{"name": "jobPoolConcurrencyNumber"}, false]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "daemonInterval"}, {"name": "daemonMaxProcessNumber"}],
+            [{"name": "daemonProcessTimeout"}, false]
+        ]
+    }
+]

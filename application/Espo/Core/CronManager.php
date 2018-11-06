@@ -194,7 +194,7 @@ class CronManager
         if ($this->useProcessPool()) {
             $pool = \Spatie\Async\Pool::create()
                 ->autoload(getcwd() . '/vendor/autoload.php')
-                ->concurrency($this->getConfig()->get('jobPoolConcurrency'))
+                ->concurrency($this->getConfig()->get('jobPoolConcurrencyNumber'))
                 ->timeout($this->getConfig()->get('jobPeriodForActiveProcess'));
         }
 
