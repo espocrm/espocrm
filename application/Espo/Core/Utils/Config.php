@@ -261,7 +261,7 @@ class Config
         $data = $this->loadConfig();
 
         $restrictedConfig = $data;
-        foreach($this->getRestrictItems($isAdmin) as $name) {
+        foreach ($this->getRestrictedItemList($isAdmin) as $name) {
             if (isset($restrictedConfig[$name])) {
                 unset($restrictedConfig[$name]);
             }
@@ -279,7 +279,7 @@ class Config
      */
     public function setData($data, $isAdmin = null)
     {
-        $restrictItems = $this->getRestrictItems($isAdmin);
+        $restrictItems = $this->getRestrictedItemList($isAdmin);
 
         if (is_object($data)) {
             $data = get_object_vars($data);
@@ -303,9 +303,9 @@ class Config
      */
     public function updateCacheTimestamp($onlyValue = false)
     {
-        $timestamp = array(
-            $this->cacheTimestamp => time(),
-        );
+        $timestamp = [
+            $this->cacheTimestamp => time()
+        ];
 
         if ($onlyValue) {
             return $timestamp;
@@ -315,11 +315,9 @@ class Config
     }
 
     /**
-     * Get admin items
-     *
      * @return object
      */
-    protected function getRestrictItems($onlySystemItems = null)
+    protected function getRestrictedItemList($onlySystemItems = null)
     {
         $data = $this->loadConfig();
 
@@ -338,6 +336,21 @@ class Config
         return array_merge($this->adminItems, $data['userItems']);
     }
 
+    public function getAdminOnlyItemList()
+    {
+        return $this->get('adminItems', []);
+    }
+
+    public function getSuperAdminOnlyItemList()
+    {
+        return $this->get('superAdminItems', []);
+    }
+
+    public function getSystemOnlyItemList()
+    {
+        return $this->get('systemItems', []);
+    }
+
 
     /**
      * Check if an item is allowed to get and save
@@ -348,7 +361,7 @@ class Config
      */
     protected function isAllowed($name, $isAdmin = false)
     {
-        if (in_array($name, $this->getRestrictItems($isAdmin))) {
+        if (in_array($name, $this->getRestrictedItemList($isAdmin))) {
             return false;
         }
 

@@ -81,6 +81,7 @@ return [
     'systemItems' => [
         'systemItems',
         'adminItems',
+        'superAdminItems',
         'configPath',
         'cachePath',
         'database',
@@ -180,6 +181,19 @@ return [
         'requiredPhpLibs',
         'recommendedPhpLibs',
         'recommendedPhpParams',
+    ],
+    'superAdminItems' => [
+        'jobMaxPortion',
+        'jobPeriod',
+        'jobRerunAttemptNumber',
+        'jobRunInParallel',
+        'jobPoolConcurrencyNumber',
+        'jobPeriodForActiveProcess',
+        'cronMinInterval',
+        'daemonInterval',
+        'daemonProcessTimeout',
+        'daemonMaxProcessNumber',
+        'adminPanelIframeUrl',
     ],
     'userItems' => [
         'outboundEmailFromAddress',

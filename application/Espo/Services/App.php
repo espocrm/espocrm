@@ -119,7 +119,8 @@ class App extends \Espo\Core\Services\Base
             'language' => $language,
             'appParams' => [
                 'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
-                'templateEntityTypeList' => $this->getTemplateEntityTypeList()
+                'templateEntityTypeList' => $this->getTemplateEntityTypeList(),
+                'isRestrictedMode' => $this->getConfig()->get('restrictedMode')
             ]
         ];
     }
