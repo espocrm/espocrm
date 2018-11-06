@@ -247,6 +247,14 @@ class EmailTemplate extends Record
             }
         }
 
+        $replaceData = [];
+        $replaceData['today'] = $this->getDateTime()->getTodayString();
+        $replaceData['now'] = $this->getDateTime()->getNowString();
+
+        foreach ($replaceData as $key => $value) {
+            $text = str_replace('{' . $key . '}', $value, $text);
+        }
+
         return $text;
     }
 }
