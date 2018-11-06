@@ -164,7 +164,7 @@ abstract class Base
             throw new Error('Another installation process is currently running.');
         }
 
-        $this->processId = uniqid('', true);
+        $this->processId = Util::generateId();
 
         return $this->processId;
     }
