@@ -381,7 +381,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
     protected function cleanupDeletedRecords()
     {
         if (!$this->getConfig()->get('cleanupDeletedRecords')) return;
-        $period = '-' . $this->getConfig()->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
+        $period = '-' . $this->getConfig()->get('cleanupDeletedRecordsPeriod', $this->cleanupDeletedRecordsPeriod);
         $datetime = new \DateTime('-' . $period);
 
         $query = $this->getEntityManager()->getQuery();
