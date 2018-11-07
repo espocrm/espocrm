@@ -278,7 +278,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     var label = this.translateFilter(item);
                     this.actionList.push({
                         action: 'selectFilter',
-                        html: '<span class="fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span>' + label,
+                        html: '<span class="check-icon fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span>' + '<div>' + label + '</div>',
                         data: {
                             name: item
                         }
