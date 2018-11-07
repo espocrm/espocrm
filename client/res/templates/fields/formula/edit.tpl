@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-md-10 col-sm-10 col-xs-12">
-        <div id="{{containerId}}">{{{value}}}</div>
+        <div id="{{containerId}}">{{value}}</div>
     </div>
     <div class="col-md-2 col-sm-2 col-xs-12">
         <div class="button-container">
