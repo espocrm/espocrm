@@ -15,5 +15,20 @@
     },
     "jobWithTargetList": [
         "CheckEmailAccounts"
-    ]
+    ],
+    "dynamicLogic":{
+        "fields":{
+            "job": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type":"isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+
+                }
+            }
+        }
+    }
 }
