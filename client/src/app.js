@@ -263,7 +263,8 @@ Espo.define(
         },
 
         initRouter: function () {
-            this.router = new Router();
+            var routes = this.metadata.get(['app', 'clientRoutes']) || {};
+            this.router = new Router({routes: routes});
             this.viewHelper.router = this.router;
             this.baseController.setRouter(this.router);
             this.router.confirmLeaveOutMessage = this.language.translate('confirmLeaveOutMessage', 'messages');

@@ -29,6 +29,49 @@ Espo.define('router', [], function () {
 
     var Router = Backbone.Router.extend({
 
+        routeList: [
+            {
+                route: "clearCache",
+                resolution: "clearCache"
+            },
+            {
+                route: ":controller/view/:id/:options",
+                resolution: "view"
+            },
+            {
+                route: ":controller/view/:id",
+                resolution: "view"
+            },
+            {
+                route: ":controller/edit/:id/:options",
+                resolution: "edit"
+            },
+            {
+                route: ":controller/edit/:id",
+                resolution: "edit"
+            },
+            {
+                route: ":controller/create",
+                resolution: "create"
+            },
+            {
+                route: ":controller/:action/:options",
+                resolution: "action"
+            },
+            {
+                route: ":controller/:action",
+                resolution: "action"
+            },
+            {
+                route: ":controller",
+                resolution: "defaultAction"
+            },
+            {
+                route: "*actions",
+                resolution: "home"
+            }
+        ],
+
         routes: {
             "clearCache": "clearCache",
             ":controller/view/:id/:options": "view",
@@ -40,6 +83,33 @@ Espo.define('router', [], function () {
             ":controller/:action": "action",
             ":controller": "defaultAction",
             "*actions": "home",
+        },
+
+        _bindRoutes: function() {},
+
+        setupRoutes: function () {
+            if (this.options.routes) {
+                var routeList = [];
+                Object.keys(this.options.routes).forEach(function (route) {
+                    var item = this.options.routes[route];
+                    routeList.push({
+                        route: route,
+                        resolution: item.resolution,
+                        order: item.order || 0
+                    });
+                }, this);
+                routeList = routeList.sort(function (v1, v2) {
+                    return v1.order > v2.order;
+                });
+
+                this.routeList = Espo.Utils.clone(this.routeList);
+                routeList.forEach(function (item) {
+                    this.routeList.push(item);
+                }, this);
+            }
+            this.routeList.reverse().forEach(function (item) {
+                this.route(item.route, item.resolution);
+            }, this);
         },
 
         _last: null,
@@ -54,7 +124,10 @@ Espo.define('router', [], function () {
 
         confirmLeaveOutCancelText: 'No',
 
-        initialize: function () {
+        initialize: function (options) {
+            this.options = options || {};
+            this.setupRoutes();
+
             this.history = [];
 
             var detectBackOrForward = function(onBack, onForward) {
