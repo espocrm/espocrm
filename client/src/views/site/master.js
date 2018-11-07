@@ -75,5 +75,3 @@ Espo.define('views/site/master', 'view', function (Dep) {
         },
     });
 });
-
-

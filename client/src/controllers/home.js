@@ -31,17 +31,6 @@ Espo.define('controllers/home', 'controller', function (Dep) {
 
         index: function () {
             this.main('views/home', null);
-        },
-
-        search: function (text) {
-            $.ajax({
-                url: 'search',
-                type: 'GET',
-                data: {
-                    text: text
-                },
-            });
-        },
+        }
     });
 });
-

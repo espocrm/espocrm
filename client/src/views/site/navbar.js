@@ -461,12 +461,10 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     label: this.getLanguage().translate('About')
                 },
                 {
-                    link: '#logout',
+                    action: 'logout',
                     label: this.getLanguage().translate('Log Out')
                 }
             ]);
-
-
 
             return list;
         },
@@ -481,6 +479,11 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 });
                 view.render();
             });
+        },
+
+        actionLogout: function () {
+            this.getRouter().dispatch(null, 'logout');
+            this.getRouter().navigate('', {trigger: false});
         },
 
         actionShowLastViewed: function () {
@@ -503,5 +506,3 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
     });
 
 });
-
-

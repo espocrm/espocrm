@@ -30,9 +30,7 @@ Espo.define('router', [], function () {
     var Router = Backbone.Router.extend({
 
         routes: {
-            "logout": "logout",
             "clearCache": "clearCache",
-            "search/:text": "search",
             ":controller/view/:id/:options": "view",
             ":controller/view/:id": "view",
             ":controller/edit/:id/:options": "edit",
@@ -191,10 +189,6 @@ Espo.define('router', [], function () {
 
         home: function () {
             this.dispatch('Home', null);
-        },
-
-        search: function (text) {
-            this.dispatch('Home', 'search', text);
         },
 
         logout: function () {
