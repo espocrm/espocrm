@@ -127,7 +127,11 @@ class Tester
 
             if (isset($this->userName)) {
                 $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
-                $auth->login($this->userName, $this->password);
+
+                $isAuthenticated = $auth->login($this->userName, $this->password);
+                if (!$isAuthenticated) {
+                    $auth->useNoAuth();
+                }
             } else {
                 $auth->useNoAuth();
             }
@@ -214,15 +218,35 @@ class Tester
 
     protected function loadData()
     {
+        $applyChanges = false;
+
         if (!empty($this->params['pathToFiles'])) {
             $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
-            $this->clearVars();
-            $this->getApplication()->runRebuild();
+            $applyChanges = true;
         }
 
         if (!empty($this->params['dataFile'])) {
             $this->getDataLoader()->loadData($this->params['dataFile']);
+            $applyChanges = true;
         }
+
+        if (!empty($this->params['initData'])) {
+            $this->getDataLoader()->setData($this->params['initData']);
+            $applyChanges = true;
+        }
+
+        if ($applyChanges) {
+            $this->clearVars();
+            $this->getApplication()->runRebuild();
+        }
+    }
+
+    public function setData(array $data)
+    {
+        $this->getDataLoader()->setData($data);
+
+        $this->clearVars();
+        $this->getApplication()->runRebuild();
     }
 
     public function clearCache()

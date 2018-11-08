@@ -65,6 +65,8 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
     protected $portalId = null;
 
+    protected $initData = null;
+
     protected function createApplication($clearCache = true)
     {
         return $this->espoTester->getApplication(true, $clearCache);
@@ -116,9 +118,10 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         $this->beforeSetUp();
 
         $params = array(
+            'className' => get_class($this),
             'dataFile' => $this->dataFile,
             'pathToFiles' => $this->pathToFiles,
-            'className' => get_class($this),
+            'initData' => $this->initData,
         );
 
         $this->espoTester = new Tester($params);
@@ -179,5 +182,10 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         $slimEnvironment = \Slim\Environment::mock($envParams);
 
         return new \Slim\Http\Request($slimEnvironment);
+    }
+
+    protected function setData(array $data)
+    {
+        $this->espoTester->setData($data);
     }
 }
