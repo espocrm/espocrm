@@ -743,6 +743,8 @@ class Record extends \Espo\Core\Services\Base
         $this->filterInput($data);
         $this->handleInput($data);
 
+        unset($data->id);
+
         unset($data->modifiedById);
         unset($data->modifiedByName);
         unset($data->modifiedAt);
@@ -793,6 +795,8 @@ class Record extends \Espo\Core\Services\Base
 
         $this->filterInput($data);
         $this->handleInput($data);
+
+        unset($data->id);
 
         unset($data->modifiedById);
         unset($data->modifiedByName);
