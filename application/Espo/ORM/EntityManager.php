@@ -40,20 +40,20 @@ class EntityManager
 
     protected $repositoryFactory;
 
-    protected $mappers = array();
+    protected $mappers = [];
 
     protected $metadata;
 
-    protected $repositoryHash = array();
+    protected $repositoryHash = [];
 
-    protected $params = array();
+    protected $params = [];
 
     protected $query;
 
-    protected $driverPlatformMap = array(
+    protected $driverPlatformMap = [
         'pdo_mysql' => 'Mysql',
         'mysqli' => 'Mysql',
-    );
+    ];
 
     public function __construct($params)
     {
@@ -137,7 +137,7 @@ class EntityManager
 
         $platform = strtolower($params['platform']);
 
-        $options = array();
+        $options = [];
         if (isset($params['sslCA'])) {
             $options[\PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
         }
@@ -158,37 +158,44 @@ class EntityManager
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
-    public function getEntity($name, $id = null)
+    public function getEntity($entityType, $id = null)
     {
-        if (!$this->hasRepository($name)) {
-            throw new Error("ORM: Repository '{$name}' does not exist.");
+        if (!$this->hasRepository($entityType)) {
+            throw new Error("ORM: Repository '{$entityType}' does not exist.");
         }
 
-        return $this->getRepository($name)->get($id);
+        return $this->getRepository($entityType)->get($id);
     }
 
-    public function saveEntity(Entity $entity, array $options = array())
+    public function saveEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
         return $this->getRepository($entityType)->save($entity, $options);
     }
 
-    public function removeEntity(Entity $entity, array $options = array())
+    public function removeEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
         return $this->getRepository($entityType)->remove($entity, $options);
     }
 
-    public function getRepository($name)
+    public function createEntity($entityType, $data, array $options = [])
     {
-        if (!$this->hasRepository($name)) {
+        $entity = $this->getEntity($entityType);
+        $entity->set($data);
+        return $this->saveEntity($entity, $options);
+    }
+
+    public function getRepository($entityType)
+    {
+        if (!$this->hasRepository($entityType)) {
             // TODO Throw error
         }
 
-        if (empty($this->repositoryHash[$name])) {
-            $this->repositoryHash[$name] = $this->repositoryFactory->create($name);
+        if (empty($this->repositoryHash[$entityType])) {
+            $this->repositoryHash[$entityType] = $this->repositoryFactory->create($entityType);
         }
-        return $this->repositoryHash[$name];
+        return $this->repositoryHash[$entityType];
     }
 
     public function setMetadata(array $data)
@@ -196,9 +203,9 @@ class EntityManager
         $this->metadata->setData($data);
     }
 
-    public function hasRepository($name)
+    public function hasRepository($entityType)
     {
-        return $this->getMetadata()->has($name);
+        return $this->getMetadata()->has($entityType);
     }
 
     public function getMetadata()
@@ -229,9 +236,9 @@ class EntityManager
         return $name;
     }
 
-    public function createCollection($entityName, $data = array())
+    public function createCollection($entityType, $data = [])
     {
-        $seed = $this->getEntity($entityName);
+        $seed = $this->getEntity($entityType);
         $collection = new EntityCollection($data, $seed, $this->entityFactory);
         return $collection;
     }
@@ -245,4 +252,3 @@ class EntityManager
     {
     }
 }
-

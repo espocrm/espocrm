@@ -471,12 +471,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager = $app->getContainer()->get('entityManager');
 
-        $meeting = $entityManager->getEntity('Meeting');
-        $meeting->set([
+        $meeting = $entityManager->createEntity('Meeting', [
             'id' => 'testMeetingId',
             'teamsIds' => ['testTeamId']
         ]);
-        $entityManager->saveEntity($meeting);
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
