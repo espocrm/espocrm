@@ -30,6 +30,8 @@ Espo.define('views/email/modals/body-plain', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
+        backdrop: true,
+
         _template: '<div class="field" data-name="body-plain">{{{bodyPlain}}}</div>',
 
         setup: function () {
