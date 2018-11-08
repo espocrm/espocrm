@@ -23,6 +23,16 @@
     }
 }
 
+.btn-default > .fa,
+.btn-default > .fas {
+    color: @gray-soft;
+}
+
+.btn-default.disabled > .fa,
+.btn-default.disabled > .fas {
+    color: @gray-light;
+}
+
 .panel-heading {
     border-bottom-width: 0;
 }
@@ -32,16 +42,16 @@
     border-color: @btn-default-border;
 }
 
-.panel .panel-heading .btn-default {
+.panel > .panel-heading > .btn-group > .btn {
     background-color: @panel-default-heading-bg;
     border-color: @panel-default-heading-bg;
 }
 
-.panel .panel-heading .open .btn {
+.panel > .panel-heading .open .btn {
     border-color: transparent;
 }
 
-.panel .panel-heading .btn-default {
+.panel > .panel-heading .btn-default {
     &:active,
     &.active {
         .box-shadow(none);

@@ -1145,6 +1145,10 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -13px;
 }
 
+.panel > .panel-heading > .btn-group > .btn {
+    color: @gray-soft;
+}
+
 .dashboard-header .dashboard-buttons {
     margin-left: 10px;
 }
@@ -1157,10 +1161,6 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 .panel.dashlet > .panel-heading > .panel-title {
     cursor: default;
-}
-
-.panel.dashlet > .panel-heading > .btn-group .btn-link {
-    color: @text-color;
 }
 
 .panel.dashlet > .panel-heading > .btn-group > .btn + .dropdown-toggle {
@@ -2351,6 +2351,11 @@ a.field-info > span.fa-info-circle {
         font-size: 12px;
         width: 12px;
     }
+}
+
+.btn > .fa-ellipsis-v {
+    position: relative;
+    top: 1px;
 }
 
 .btn.btn-icon-wide  {

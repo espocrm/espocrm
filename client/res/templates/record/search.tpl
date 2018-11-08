@@ -29,7 +29,7 @@
             </div>
             {{#unless textFilterDisabled}}<input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}" tabindex="1">{{/unless}}
             <div class="input-group-btn">
-                <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide" data-action="search">
+                <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide" data-action="search" title="{{translate 'Search'}}">
                     <span class="fa fa-search"></span>
                 </button>
             </div>
@@ -37,11 +37,11 @@
     </div>
     <div class="form-group col-md-6 col-sm-5">
         <div class="btn-group search-right-buttons-group">
-            <button type="button" class="btn btn-default" data-action="reset">
-                <span class="fas fa-redo-alt fa-sm"></span>&nbsp;{{translate 'Reset'}}
+            <button type="button" class="btn btn-default btn-icon-x-wide" data-action="reset" title="{{translate 'Reset'}}">
+                <span class="fas fa-redo-alt"></span>
             </button>
-            <button type="button" class="btn btn-default dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1">
-                {{translate 'Add Field'}} <span class="caret"></span>
+            <button type="button" class="btn btn-default btn-icon-wide dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1" title="{{translate 'Add Field'}}">
+                <span class="fas fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu pull-right filter-list">
                 {{#each advancedFields}}

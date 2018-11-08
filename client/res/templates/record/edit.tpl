@@ -5,7 +5,7 @@
         {{#each buttonList}}{{button name scope=../../entityType label=label style=style html=html}}{{/each}}
         {{#if dropdownItemList}}
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="caret wide"></span>
+            <span class="fas fa-ellipsis-h"></span>
         </button>
         <ul class="dropdown-menu pull-left">
             {{#each dropdownItemList}}
