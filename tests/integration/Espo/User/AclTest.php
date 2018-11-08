@@ -77,20 +77,6 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $result = $controllerManager->process('Account', 'create', $params, $data, $request);
     }
 
-    ///**
-    // * @expectedException \Exception
-    // * @expectedExceptionCode 403
-    // */
-    /*public function testUserAccess()
-    {
-        $this->testCreateUserWithRole();
-        $this->auth('tester');
-
-        $this->sendRequest('POST', 'Account', array(
-            'name' => 'Test Account',
-        ));
-    }*/
-
     /**
      * @expectedException \Espo\Core\Exceptions\Forbidden
      */
@@ -130,20 +116,6 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this->createRequest('POST', $params, array('CONTENT_TYPE' => 'application/json'));
         $result = $controllerManager->process('Account', 'create', $params, $data, $request);
     }
-
-    ///**
-    // * @expectedException \Exception
-    // * @expectedExceptionCode 403
-    // */
-    /*public function testPortalUserAccess()
-    {
-        $this->testCreatePortalUserWithRole();
-        $this->auth('tester', null, 'testPortalId');
-
-        $this->sendRequest('POST', 'Account', array(
-            'name' => 'Test Account',
-        ));
-    }*/
 
     public function testUserAccessEditOwn1()
     {
@@ -241,5 +213,275 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         } catch (\Exception $e) {};
 
         $this->assertNull($result);
+    }
+
+    protected function prepareTestUser()
+    {
+        $app = $this->createApplication();
+
+        $entityManager = $app->getContainer()->get('entityManager');
+
+        $team = $entityManager->getEntity('Team');
+        $team->set('id', 'testTeamId');
+        $entityManager->saveEntity($team);
+
+        $team = $entityManager->getEntity('Team');
+        $team->set('id', 'testOtherTeamId');
+        $entityManager->saveEntity($team);
+
+        $this->createUser(
+            [
+                'id' => 'testUserId',
+                'userName' => 'test',
+                'lastName' => 'test',
+                'teamsIds' => ['testTeamId']
+            ],
+            [
+                'assignmentPermission' => 'team',
+                'data' => [
+                    'Account' => false,
+                    'Lead' => [
+                        'create' => 'no',
+                        'read' => 'own',
+                        'edit' => 'own',
+                        'delete' => 'no'
+                    ],
+                    'Meeting' => [
+                        'create' => 'yes',
+                        'read' => 'team',
+                        'edit' => 'own',
+                        'delete' => 'own'
+                    ]
+                ]
+            ]
+        );
+    }
+
+    public function testUserAccessCreateNo1()
+    {
+        $this->prepareTestUser();
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Account');
+
+        $e = $service->createEntity((object)['name' => 'Test']);
+    }
+
+    public function testUserAccessCreateNo2()
+    {
+        $this->prepareTestUser();
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Lead');
+
+        $e = $service->createEntity((object)['lastName' => 'Test']);
+    }
+
+    public function testUserAccessAclStrictCreateNo()
+    {
+        $app = $this->createApplication();
+        $config = $app->getContainer()->get('config');
+        $config->set('aclStrictMode', true);
+        $config->save();
+
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication(true);
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Case');
+
+        $e = $service->createEntity((object)['name' => 'Test']);
+    }
+
+    public function testUserAccessAclStrictCreateYes()
+    {
+        $app = $this->createApplication();
+        $config = $app->getContainer()->get('config');
+        $config->set('aclStrictMode', true);
+        $config->save();
+
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication(true);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+
+        $e = $service->createEntity((object)['name' => 'Test', 'assignedUserId' => 'testUserId']);
+
+        $this->assertNotNull($e);
+    }
+
+    public function testUserAccessCreateAssignedPermissionNo1()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $service->createEntity((object)['name' => 'Test']);
+    }
+
+    public function testUserAccessCreateAssignedPermissionNo2()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $service->createEntity((object)[
+            'name' => 'Test',
+            'assignedUserId' => 'testUserId',
+            'teamsIds' => ['testOtherTeamId']
+        ]);
+    }
+
+    public function testUserAccessCreateAssignedPermissionYes()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+
+        $e = $service->createEntity((object)[
+            'name' => 'Test',
+            'assignedUserId' => 'testUserId',
+            'teamsIds' => ['testTeamId']
+        ]);
+
+        $this->assertNotNull($e);
+    }
+
+    public function testUserAccessReadNo1()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $entityManager = $app->getContainer()->get('entityManager');
+
+        $lead = $entityManager->getEntity('Lead');
+        $lead->set([
+            'id' => 'testLeadId'
+        ]);
+        $entityManager->saveEntity($lead);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Lead');
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $service->getEntity('testLeadId');
+    }
+
+    public function testUserAccessReadNo2()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $entityManager = $app->getContainer()->get('entityManager');
+
+        $meeting = $entityManager->getEntity('Meeting');
+        $meeting->set([
+            'id' => 'testMeetingId',
+            'teamsIds' => ['testOtherTeamId']
+        ]);
+        $entityManager->saveEntity($meeting);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $service->getEntity('testMeetingId');
+    }
+
+    public function testUserAccessReadYes1()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $entityManager = $app->getContainer()->get('entityManager');
+
+        $lead = $entityManager->getEntity('Lead');
+        $lead->set([
+            'id' => 'testLeadId',
+            'assignedUserId' => 'testUserId'
+        ]);
+        $entityManager->saveEntity($lead);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Lead');
+
+        $e = $service->getEntity('testLeadId');
+
+        $this->assertNotNull($e);
+    }
+
+    public function testUserAccessReadYes2()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $entityManager = $app->getContainer()->get('entityManager');
+
+        $meeting = $entityManager->getEntity('Meeting');
+        $meeting->set([
+            'id' => 'testMeetingId',
+            'teamsIds' => ['testTeamId']
+        ]);
+        $entityManager->saveEntity($meeting);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+
+        $e = $service->getEntity('testMeetingId');
+
+        $this->assertNotNull($e);
+    }
+
+    public function testUserAccessEditNo1()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $entityManager = $app->getContainer()->get('entityManager');
+
+        $meeting = $entityManager->getEntity('Meeting');
+        $meeting->set([
+            'id' => 'testMeetingId',
+            'teamsIds' => ['testTeamId']
+        ]);
+        $entityManager->saveEntity($meeting);
+
+        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $service->updateEntity('testMeetingId', (object) []);
     }
 }
