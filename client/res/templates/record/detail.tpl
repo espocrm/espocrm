@@ -5,7 +5,7 @@
             {{#each buttonList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
             {{#if dropdownItemList}}
             <button type="button" class="btn btn-default dropdown-toggle dropdown-item-list-button{{#if dropdownItemListEmpty}} hidden{{/if}}" data-toggle="dropdown">
-                <span class="caret"></span>
+                <span class="caret wide"></span>
             </button>
             <ul class="dropdown-menu pull-left">
                 {{#each dropdownItemList}}
@@ -40,7 +40,7 @@
         {{#each buttonEditList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
         {{#if dropdownEditItemList}}
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
+            <span class="caret wide"></span>
         </button>
         <ul class="dropdown-menu pull-left">
             {{#each dropdownEditItemList}}

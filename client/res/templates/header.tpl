@@ -27,7 +27,7 @@
             {{#if items.dropdown}}
                 <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
+                    <span class="fas fa-ellipsis-h"></span>
                 </button>
                 <ul class="dropdown-menu pull-right">
                     {{#each items.dropdown}}
