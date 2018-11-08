@@ -40,7 +40,7 @@ Espo.define('crm:views/document/fields/file', 'views/fields/file', function (Dep
                     return false;
                 }
 
-                return '<a title="'+name+'" href="'+this.getBasePath()+'?entryPoint=download&id=' + id + '" target="_BLANK"><span class="glyphicon glyphicon-paperclip small"></span></a>';
+                return '<a title="'+name+'" href="'+this.getBasePath()+'?entryPoint=download&id=' + id + '" target="_BLANK"><span class="fas fa-paperclip small"></span></a>';
             } else {
                 return Dep.prototype.getValueForDisplay.call(this);
             }

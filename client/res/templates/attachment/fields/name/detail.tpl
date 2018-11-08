@@ -1,2 +1,2 @@
 
-<span class="glyphicon glyphicon-paperclip small"></span> <a href="{{url}}">{{{value}}}</a>
+<span class="fas fa-paperclip small"></span> <a href="{{url}}">{{{value}}}</a>

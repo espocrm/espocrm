@@ -3,7 +3,7 @@
         {{#unless uploadFromFileSystemDisabled}}
         <div class="pull-left">
             <label class="attach-file-label" title="{{translate 'Attach File'}}">
-                <span class="btn btn-default btn-icon"><span class="glyphicon glyphicon-paperclip"></span></span>
+                <span class="btn btn-default btn-icon"><span class="fas fa-paperclip"></span></span>
                 <input type="file" class="file pull-right" multiple>
             </label>
         </div>
