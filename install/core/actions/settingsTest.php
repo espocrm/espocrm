@@ -84,17 +84,17 @@ if ($result['success'] && !empty($_REQUEST['dbName']) && !empty($_REQUEST['hostN
         $databaseRequiredList = $installer->getSystemRequirementList('database', true, ['database' => $databaseParams]);
 
         foreach ($databaseRequiredList as $name => $details) {
-            if (!$details['acceptable']) {
+            if (!$details['acceptable']) {            
 
                 switch ($details['type']) {
                     case 'version':
                         $result['success'] = false;
-                        $result['errors']['mysqlVersion'] = $details['required'];
+                        $result['errors'][$name] = $details['required'];
                         break;
 
                     default:
                         $result['success'] = false;
-                        $result['errors']['mysqlRequires'][] = $name;
+                        $result['errors'][$name][] = $name;
                         break;
                 }
             }

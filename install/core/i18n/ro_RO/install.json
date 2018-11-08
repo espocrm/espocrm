@@ -31,7 +31,7 @@
     "MySQL Configuration": "Configurare MySQL",
     "Configuration Instructions": "Instrucțiuni de Configurare",
     "phpVersion": "Versiune PHP",
-    "mysqlVersion": "Versiune MySQL",
+    "requiredMysqlVersion": "Versiune MySQL",
     "dbHostName": "Numele Server-ului",
     "dbName": "Numele Bazei de Date",
     "dbUserName": "Nume Utilizator Bază de Date"
@@ -70,7 +70,8 @@
     "Bad init Permission": "Permisiunea a fost refuzată pentru directorul \"{*}\". Vă rugăm să setați 775 pentru \"{*}\" sau doar să executați această comandă în terminal <pre><b>{C}</b></pre>\n\\ Încercați: {CSU} \"",
     "Some errors occurred!": "Am apărut erori!",
     "phpVersion": "Versiunea dumneavoastră de PHP nu este acceptată de EspoCRM, vă rugăm să vă actualizați măcar la versiunea PHP {minVersion}",
-    "mysqlVersion": "Versiunea dumneavoastră de MySQL nu este acceptată de EspoCRM, vă rugăm să vă actualizați măcar la versiunea MySQL {minVersion}",
+    "requiredMysqlVersion": "Versiunea dumneavoastră de MySQL nu este acceptată de EspoCRM, vă rugăm să vă actualizați măcar la versiunea MySQL {minVersion}",
+    "requiredMariadbVersion": "Versiunea dumneavoastră de MariaDB nu este acceptată de EspoCRM, vă rugăm să vă actualizați măcar la versiunea MariaDB {minVersion}",
     "The PHP extension was not found...": "Eroare PHP: Extensie <b>{extName}</b> nu a fost găsit.",
     "All Settings correct": "Toate setarile sunt corecte",
     "Failed to connect to database": "Nu s-a reușit conectarea la Baza de Date",

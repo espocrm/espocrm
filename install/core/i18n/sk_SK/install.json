@@ -32,7 +32,7 @@
     "MySQL Configuration": "Konfigurácia MySQL",
     "Configuration Instructions": "Konfiguračné inštrukcie",
     "phpVersion": "Verzia PHP",
-    "mysqlVersion": "Verzia MySQL",
+    "requiredMysqlVersion": "Verzia MySQL",
     "dbHostName": "Názov servera",
     "dbName": "Názov databázy",
     "dbUserName": "Meno používateľa databázy"
@@ -70,7 +70,8 @@
     "Bad init Permission": "Prístup odmietnutý pre adresár \"{*}\" . Prosím nastavte 775 pre \"{*}\" alebo spustite tento príkaz v terminále <pre><b>{C}</b></pre>\n\tOperácia je zakázaná? Skúste tento: {CSU}",
     "Some errors occurred!": "Vyskytli sa nejaké chyby!",
     "phpVersion": "Vaša verzia PHP nie je podporovaná EspoCRM, prosím nainštalujte PHP minimálne verziu {minVersion} ",
-    "mysqlVersion": "Vaša verzia MySQL nie je podporovaná EspoCRM, prosím nainštalujte minimálne verziu {minVersion}",
+    "requiredMysqlVersion": "Vaša verzia MySQL nie je podporovaná EspoCRM, prosím nainštalujte minimálne verziu {minVersion}",
+    "requiredMariadbVersion": "Vaša verzia MariaDB nie je podporovaná EspoCRM, prosím nainštalujte minimálne verziu {minVersion}",
     "The PHP extension was not found...": "Chyba PHP: Rozširenie <b>{extName}</b> sa nenašlo.",
     "All Settings correct": "Všetky nastavenia sú správne",
     "Failed to connect to database": "Zlyhalo spojenie s databázou",

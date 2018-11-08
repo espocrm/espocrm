@@ -64,10 +64,17 @@ class DataLoader
             return;
         }
 
-        $fullData = include($dataFile);
+        $data = include($dataFile);
+        $this->handleData($data);
+    }
 
-        //sort $fullData ???
+    public function setData(array $data)
+    {
+        $this->handleData($data);
+    }
 
+    protected function handleData(array $fullData)
+    {
         foreach ($fullData as $type => $data) {
             $methodName = 'load' . ucfirst($type);
             if (!method_exists($this, $methodName)) {

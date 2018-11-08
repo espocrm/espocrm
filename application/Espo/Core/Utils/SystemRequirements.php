@@ -126,13 +126,24 @@ class SystemRequirements
      */
     protected function getDatabaseRequiredList($requiredOnly, array $additionalData = null)
     {
+        $databaseTypeName = 'Mysql';
+
+        $databaseHelper =  $this->getDatabaseHelper();
+        $databaseParams = isset($additionalData['database']) ? $additionalData['database'] : null;
+        $dbalConnection = $databaseHelper->createDbalConnection($databaseParams);
+        if ($dbalConnection) {
+            $databaseHelper->setDbalConnection($dbalConnection);
+            $databaseType = $databaseHelper->getDatabaseType();
+            $databaseTypeName = ucfirst(strtolower($databaseType));
+        }
+
         $requiredList = [
-            'requiredMysqlVersion',
+            'required' . $databaseTypeName . 'Version',
         ];
 
         if (!$requiredOnly) {
             $requiredList = array_merge($requiredList, [
-                'recommendedMysqlParams',
+                'recommended' . $databaseTypeName . 'Params',
                 'connection',
             ]);
         }
@@ -240,16 +251,18 @@ class SystemRequirements
     {
         $list = [];
 
-        $databaseParams = isset($additionalData['database']) ? $additionalData['database'] : null;
+        $databaseHelper = $this->getDatabaseHelper();
 
-        $pdo = $this->getDatabaseHelper()->createPdoConnection($databaseParams);
+        $databaseParams = isset($additionalData['database']) ? $additionalData['database'] : null;
+        $pdo = $databaseHelper->createPdoConnection($databaseParams);
         if (!$pdo) {
             $type = 'connection';
         }
 
         switch ($type) {
             case 'requiredMysqlVersion':
-                $actualVersion = $this->getSystemHelper()->getMysqlVersion($pdo);
+            case 'requiredMariadbVersion':
+                $actualVersion = $databaseHelper->getPdoDatabaseVersion($pdo);
                 $requiredVersion = $data;
 
                 $acceptable = true;
@@ -266,9 +279,10 @@ class SystemRequirements
                 break;
 
             case 'recommendedMysqlParams':
+            case 'recommendedMariadbParams':
                 foreach ($data as $name => $value) {
                     $requiredValue = $value;
-                    $actualValue = $this->getSystemHelper()->getMysqlParam($name, $pdo);
+                    $actualValue = $databaseHelper->getPdoDatabaseParam($name, $pdo);
 
                     $acceptable = false;
 

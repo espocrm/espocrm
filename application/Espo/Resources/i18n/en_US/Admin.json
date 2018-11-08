@@ -249,6 +249,7 @@
     "systemRequirements": {
         "requiredPhpVersion": "PHP Version",
         "requiredMysqlVersion": "MySQL Version",
+        "requiredMariadbVersion": "MariaDB version",
         "host": "Host Name",
         "dbname": "Database Name",
         "user": "User Name",

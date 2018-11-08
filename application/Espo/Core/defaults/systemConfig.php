@@ -232,5 +232,7 @@ return [
     ],
     'requiredMysqlVersion' => '5.5.3',
     'recommendedMysqlParams' => [],
+    'requiredMariadbVersion' => '5.5.3',
+    'recommendedMariadbParams' => [],
     'ldapPortalUserLdapAuth' => false,
 ];

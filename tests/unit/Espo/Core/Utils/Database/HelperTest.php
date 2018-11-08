@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Utils;
+namespace tests\unit\Espo\Core\Utils\Database;
 
 use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\Util;
@@ -96,19 +96,19 @@ class HelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2000, $this->object->getTableMaxIndexLength('table_name', 2000));
     }
 
-    public function testGetMysqlVersion()
+    public function testGetDatabaseVersion()
     {
         $this->initDatabaseHelper(null);
 
-        $this->assertNull($this->reflection->invokeMethod('getMysqlVersion'));
+        $this->assertNull($this->reflection->invokeMethod('getDatabaseVersion'));
     }
 
-    public function testGetMysqlEngine()
+    public function testGetTableEngine()
     {
         $this->initDatabaseHelper(null);
 
-        $this->assertNull($this->reflection->invokeMethod('getMysqlEngine'));
-        $this->assertEquals('InnoDB', $this->reflection->invokeMethod('getMysqlEngine', array(null, 'InnoDB')));
+        $this->assertNull($this->reflection->invokeMethod('getTableEngine'));
+        $this->assertEquals('InnoDB', $this->reflection->invokeMethod('getTableEngine', array(null, 'InnoDB')));
     }
 
     public function testIsSupportsFulltext()
@@ -120,5 +120,13 @@ class HelperTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->object->isSupportsFulltext('table_name', true));
         $this->assertFalse($this->object->isTableSupportsFulltext('table_name'));
         $this->assertTrue($this->object->isTableSupportsFulltext('table_name', true));
+    }
+
+    public function testGetDatabaseType()
+    {
+        $this->initDatabaseHelper(null);
+
+        $this->assertEquals('MySQL', $this->object->getDatabaseType());
+        $this->assertEquals('MariaDB', $this->object->getDatabaseType('MariaDB'));
     }
 }

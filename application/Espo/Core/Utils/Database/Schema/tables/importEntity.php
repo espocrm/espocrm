@@ -36,7 +36,6 @@ return array(
                 'dbType' => 'int',
                 'len' => '11',
                 'autoincrement' => true,
-                'unique' => true
             ),
             'entityId' => array(
                 'type' => 'varchar',

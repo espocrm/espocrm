@@ -56,24 +56,38 @@ class Helper
     public function getDbalConnection()
     {
         if (!isset($this->connection)) {
-            if (!$this->getConfig()) {
-                return null;
-            }
-
-            $connectionParams = $this->getConfig()->get('database');
-
-            if (empty($connectionParams['dbname']) || empty($connectionParams['user'])) {
-                return null;
-            }
-
-            $connectionParams['driverClass'] = $this->drivers[ $connectionParams['driver'] ];
-            unset($connectionParams['driver']);
-
-            $dbalConfig = new \Doctrine\DBAL\Configuration();
-            $this->connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $dbalConfig);
+            $this->connection = $this->createDbalConnection();
         }
 
         return $this->connection;
+    }
+
+    public function setDbalConnection($dbalConnection)
+    {
+        $this->connection = $dbalConnection;
+    }
+
+    public function createDbalConnection(array $params = null)
+    {
+        if (!isset($params)) {
+            $config = $this->getConfig();
+            if ($config) {
+                $params = $config->get('database');
+            }
+        }
+
+        $params['driver'] = isset($params['driver']) ? $params['driver'] : 'pdo_mysql';
+
+        if (empty($params['dbname']) || empty($params['user'])) {
+            return null;
+        }
+
+        $params['driverClass'] = $this->drivers[ $params['driver'] ];
+        unset($params['driver']);
+
+        $dbalConfig = new \Doctrine\DBAL\Configuration();
+
+        return \Doctrine\DBAL\DriverManager::getConnection($params, $dbalConfig);
     }
 
     /**
@@ -88,7 +102,7 @@ class Helper
         }
 
         $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
-        $port = empty($params['port']) ? '' : ';port=' . $params['port'] . ';';
+        $port = empty($params['port']) ? '' : ';port=' . $params['port'];
         $dbname = empty($params['dbname']) ? '' : ';dbname=' . $params['dbname'];
 
         $options = array();
@@ -124,20 +138,20 @@ class Helper
      */
     public function getMaxIndexLength($tableName = null, $default = 1000)
     {
-        $mysqlEngine = $this->getMysqlEngine($tableName);
-        if (!$mysqlEngine) {
+        $tableEngine = $this->getTableEngine($tableName);
+        if (!$tableEngine) {
             return $default;
         }
 
-        switch ($mysqlEngine) {
+        switch ($tableEngine) {
             case 'InnoDB':
-                $mysqlVersion = $this->getMysqlVersion();
+                $version = $this->getDatabaseVersion();
 
-                if (version_compare($mysqlVersion, '10.0.0') >= 0) {
+                if (version_compare($version, '10.0.0') >= 0) {
                     return 767; //InnoDB, MariaDB
                 }
 
-                if (version_compare($mysqlVersion, '5.7.0') >= 0) {
+                if (version_compare($version, '5.7.0') >= 0) {
                     return 3072; //InnoDB, MySQL 5.7+
                 }
 
@@ -153,7 +167,26 @@ class Helper
         return $this->getMaxIndexLength($tableName, $default);
     }
 
-    protected function getMysqlVersion()
+    /**
+     * Get database type (MySQL, MariaDB)
+     * @return string
+     */
+    public function getDatabaseType($default = 'MySQL')
+    {
+        $connection = $this->getDbalConnection();
+        if (!$connection) {
+            return $default;
+        }
+
+        $version = $this->getDatabaseVersion();
+        if (preg_match('/mariadb/i', $version)) {
+            return 'MariaDB';
+        }
+
+        return $default;
+    }
+
+    protected function getDatabaseVersion()
     {
         $connection = $this->getDbalConnection();
         if (!$connection) {
@@ -170,7 +203,7 @@ class Helper
      *
      * @return string
      */
-    protected function getMysqlEngine($tableName = null, $default = null)
+    protected function getTableEngine($tableName = null, $default = null)
     {
         $connection = $this->getDbalConnection();
         if (!$connection) {
@@ -200,16 +233,16 @@ class Helper
      */
     public function isSupportsFulltext($tableName = null, $default = false)
     {
-        $mysqlEngine = $this->getMysqlEngine($tableName);
-        if (!$mysqlEngine) {
+        $tableEngine = $this->getTableEngine($tableName);
+        if (!$tableEngine) {
             return $default;
         }
 
-        switch ($mysqlEngine) {
+        switch ($tableEngine) {
             case 'InnoDB':
-                $mysqlVersion = $this->getMysqlVersion();
+                $version = $this->getDatabaseVersion();
 
-                if (version_compare($mysqlVersion, '5.6.4') >= 0) {
+                if (version_compare($version, '5.6.4') >= 0) {
                     return true; //InnoDB, MySQL 5.6.4+
                 }
 
@@ -223,5 +256,25 @@ class Helper
     public function isTableSupportsFulltext($tableName, $default = false)
     {
         return $this->isSupportsFulltext($tableName, $default);
+    }
+
+    public function getPdoDatabaseParam($name, \PDO $pdoConnection)
+    {
+        if (!method_exists($pdoConnection, 'prepare')) {
+            return null;
+        }
+
+        $sth = $pdoConnection->prepare("SHOW VARIABLES LIKE '" . $name . "'");
+        $sth->execute();
+        $res = $sth->fetch(\PDO::FETCH_NUM);
+
+        $version = empty($res[1]) ? null : $res[1];
+
+        return $version;
+    }
+
+    public function getPdoDatabaseVersion(\PDO $pdoConnection)
+    {
+        return $this->getPdoDatabaseParam('version', $pdoConnection);
     }
 }

@@ -31,7 +31,7 @@
     "MySQL Configuration": "MySQL konfiguracija",
     "Configuration Instructions": "Upute za podešavanja",
     "phpVersion": "PHP verzija",
-    "mysqlVersion": "MySQL verzija",
+    "requiredMysqlVersion": "MySQL verzija",
     "dbHostName": "Ime hosta",
     "dbName": "Ime baze",
     "dbUserName": "Baza Korisničko ime"
@@ -71,7 +71,8 @@
     "Bad init Permission": "Pristup odbijen za \"{*} \" direktorij. Molimo postavite 775 za \"{*} \" ili jednostavno pokrenite ovu komandu u terminalu<pre><b>{C}</b></pre> Operacija nije dozvoljena? Pokušajte ovo: {CSU}",
     "Some errors occurred!": "Neke greške su se desile!",
     "phpVersion": "Vaša PHP verzija nije podržana od strane EspoCRM, molimo nadogradite PHP na najmanje {minVersion}",
-    "mysqlVersion": "Vaša MySQL verzija nije podržana od strane EspoCRM, molimo nadogradite na najmanje {minVersion}",
+    "requiredMysqlVersion": "Vaša MySQL verzija nije podržana od strane EspoCRM, molimo nadogradite na najmanje {minVersion}",
+    "requiredMariadbVersion": "Vaša MariaDB verzija nije podržana od strane EspoCRM, molimo nadogradite na najmanje {minVersion}",
     "The PHP extension was not found...": "PHP greška: Ekstenzija <b>{extName}</b> nije pronađena.",
     "All Settings correct": "Sva podešavanja su ispravna",
     "Failed to connect to database": "Neuspjelo povezivanje sa bazom podataka",
