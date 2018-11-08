@@ -183,7 +183,8 @@ class EntityManager
     {
         $entity = $this->getEntity($entityType);
         $entity->set($data);
-        return $this->saveEntity($entity, $options);
+        $this->saveEntity($entity, $options);
+        return $entity;
     }
 
     public function getRepository($entityType)
