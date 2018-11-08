@@ -32,6 +32,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         type: 'wysiwyg',
 
+        listTemplate: 'fields/wysiwyg/detail',
+
         detailTemplate: 'fields/wysiwyg/detail',
 
         editTemplate: 'fields/wysiwyg/edit',
@@ -179,7 +181,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 }
             }
 
-            if (this.mode == 'detail') {
+            if (this.mode == 'detail' || this.mode == 'list') {
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                     if (!this.useIframe) {
                         this.$element = this.$el.find('.html-container');
