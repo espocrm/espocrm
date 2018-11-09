@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Nome",
-    "title": "Titolo",
     "accountRole": "Titolo",
     "accounts": "Account",
     "phoneNumber": "Telefono",

@@ -3,7 +3,6 @@
     "parent": "Genitore",
     "contacts": "Contatti",
     "opportunities": "Opportunita'",
-    "leads": "Comando",
     "meetings": "Riunioni",
     "calls": "Chiamate",
     "tasks": "Compiti",
@@ -16,7 +15,6 @@
   },
   "scopeNames": {
     "Contact": "Contatti",
-    "Lead": "Guida",
     "Opportunity": "Opportunità",
     "Meeting": "Riunione",
     "Calendar": "Calendario",
@@ -34,7 +32,6 @@
   "scopeNamesPlural": {
     "Account": "Account",
     "Contact": "Contatti",
-    "Lead": "Comando",
     "Opportunity": "Opportunita'",
     "Meeting": "Riunioni",
     "Calendar": "Calendario",
@@ -51,7 +48,7 @@
     "KnowledgeBaseCategory": "Conoscenza di Base Categorie"
   },
   "dashlets": {
-    "Leads": "Le mie Guide",
+    "Leads": "I miei Lead",
     "Opportunities": "Le mie Opportunità",
     "Tasks": "I miei Compiti",
     "Cases": "I miei Casi",
