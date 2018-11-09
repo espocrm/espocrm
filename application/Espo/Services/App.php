@@ -131,11 +131,11 @@ class App extends \Espo\Core\Services\Base
         $emailAddressList = [];
         foreach ($user->get('emailAddresses') as $emailAddress) {
             if ($emailAddress->get('invalid')) continue;
-            if ($user->get('emailAddrses') === $emailAddress->get('name')) continue;
+            if ($user->get('emailAddress') === $emailAddress->get('name')) continue;
             $emailAddressList[] = $emailAddress->get('name');
         }
-        if ($user->get('emailAddrses')) {
-            array_unshift($emailAddressList, $user->get('emailAddrses'));
+        if ($user->get('emailAddress')) {
+            array_unshift($emailAddressList, $user->get('emailAddress'));
         }
 
         $entityManager = $this->getEntityManager();
