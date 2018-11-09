@@ -72,9 +72,13 @@ Espo.define('ui', [], function () {
 
         this.contents = '';
         if (this.header) {
-            this.contents += '<header class="modal-header">' +
+            var headerClassName = '';
+            if (this.options.fixedHeaderHeight) {
+                headerClassName = ' fixed-height';
+            }
+            this.contents += '<header class="modal-header'+headerClassName+'">' +
                              ((this.closeButton) ? '<a href="javascript:" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></a>' : '') +
-                             '<h4 class="modal-title">' + this.header + '</h4>' +
+                             '<h4 class="modal-title"><span class="modal-title-text">' + this.header + '</span></h4>' +
                              '</header>';
         }
 

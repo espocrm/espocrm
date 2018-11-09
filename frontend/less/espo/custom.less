@@ -538,19 +538,48 @@ ul.dropdown-menu > li.checkbox:last-child {
     padding: 0 6px;
 }
 
+.modal-header.fixed-height {
+    height: 40px;
+    max-height: 40px;
+    overflow: hidden;
+
+    .modal-title {
+        width: ~"calc(100% - 20px)";
+        > .modal-title-text {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+        }
+    }
+}
+
 .modal-header a {
     color: @text-color;
 }
 
-.list-buttons-container > div {
-    float: left;
-    margin-right: @panel-padding;
+.list-buttons-container .sticked-bar {
+    position: fixed;
+    background-color: @body-bg;
+    z-index: 1000;
+}
+
+.modal-dialog .modal-body .list-buttons-container .sticked-bar {
+    top: 94px !important;
+    width: 100% !important;
+    right: 0 !important;
+    left: unset;
+}
+
+.list-buttons-container > .actions {
+    min-height: 33px;
 }
 
 .list-buttons-container > div.total-count {
     margin-right: 0px;
     float: right;
-    padding: 6px 0;
+    padding: 7px 0;
 }
 
 .list-container .pagination {

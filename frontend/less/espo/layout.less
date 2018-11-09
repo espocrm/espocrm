@@ -135,3 +135,19 @@ body > footer {
         max-width: @container-max-width;
     }
 }
+
+body .list-buttons-container .sticked-bar {
+    width: 100%;
+    left: 0;
+    top: @navbar-height;
+    padding-left: @container-padding;
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    body .list-buttons-container .sticked-bar,
+    body.minimized .list-buttons-container .sticked-bar {
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
+}

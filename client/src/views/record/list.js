@@ -73,6 +73,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         portalLayoutDisabled: false,
 
+        dropdownItemList: [],
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -147,7 +149,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {
                 this.selectAllResult();
             },
-            'click .actions a.mass-action': function (e) {
+            'click .actions-menu a.mass-action': function (e) {
                 $el = $(e.currentTarget);
                 var action = $el.data('action');
 
@@ -181,14 +183,111 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.deactivate();
         },
 
+        initStickedBar: function () {
+            var $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
+            var $middle = this.$el.find('> .list');
+            var $window = $(window);
+            var $scrollable = $window;
+
+            this.on('render', function () {
+                this.$stickedBar = null;
+            }, this);
+
+            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+
+            function getOffsetTop (element) {
+                var offsetTop = 0;
+                do {
+                    if (element.classList.contains('modal-body')) break;
+                    if (!isNaN(element.offsetTop)) {
+                        offsetTop += element.offsetTop;
+                    }
+                } while (element = element.offsetParent);
+                return offsetTop;
+            }
+
+            var top;
+
+
+            if (this.$el.closest('.modal-body').size()) {
+                $scrollable = this.$el.closest('.modal-body');
+                top = 0;
+            } else {
+                top = getOffsetTop(this.getParentView().$el.get(0));
+                if ($(window.document).width() < screenWidthXs) {
+                    top = 0;
+                }
+            }
+
+            top += this.$el.find('.actions-button').height();
+
+            var topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
+
+            $scrollable.off('scroll.list-' + this.cid);
+            $scrollable.on('scroll.list-' + this.cid, function (e) {
+                cotrolSticking();
+            }.bind(this));
+
+            $window.off('resize.list-' + this.cid);
+            $window.on('resize.list-' + this.cid, function (e) {
+                cotrolSticking();
+            }.bind(this));
+
+            this.on('check', function () {
+                if (this.checkedList.length === 0) return;
+                cotrolSticking();
+            }, this);
+
+            this.once('remove', function () {
+                $scrollable.off('scroll.list-' + this.cid);
+                $window.off('resize.list-' + this.cid);
+            });
+
+            var cotrolSticking = function () {
+                if (this.checkedList.length === 0) return;
+
+                var middleTop = getOffsetTop($middle.get(0));
+
+                var stickTop = middleTop - top;
+                var edge = middleTop + $middle.outerHeight(true);
+                var scrollTop = $scrollable.scrollTop();
+
+                if (scrollTop < edge) {
+                    if (scrollTop > stickTop) {
+                        $stickedBar.removeClass('hidden');
+                    } else {
+                        $stickedBar.addClass('hidden');
+                    }
+                } else {
+                    $stickedBar.removeClass('hidden');
+                }
+            }.bind(this);
+        },
+
+        showActions: function () {
+            this.$el.find('.actions-button').removeClass('hidden');
+
+            if (!this.options.stickedBarDisabled && !this.stickedBarDisabled && this.massActionList.length) {
+                if (!this.$stickedBar) {
+                    this.initStickedBar();
+                }
+            }
+        },
+
+        hideActions: function () {
+            this.$el.find('.actions-button').addClass('hidden');
+
+            if (this.$stickedBar) {
+                this.$stickedBar.addClass('hidden');
+            }
+        },
+
         selectAllHandler: function (isChecked) {
             this.checkedList = [];
 
-            var $actionsButton = this.$el.find('.actions-button');
-
             if (isChecked) {
                 this.$el.find('input.record-checkbox').prop('checked', true);
-                $actionsButton.removeAttr('disabled');
+                this.showActions();
                 this.collection.models.forEach(function (model) {
                     this.checkedList.push(model.id);
                 }, this);
@@ -198,7 +297,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.unselectAllResult();
                 }
                 this.$el.find('input.record-checkbox').prop('checked', false);
-                $actionsButton.attr('disabled', true);
+                this.hideActions();
                 this.$el.find('.list > table tbody tr').removeClass('active');
             }
 
@@ -242,11 +341,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
         allResultIsChecked: false,
 
         data: function () {
-
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
+
             return {
                 scope: this.scope,
+                entityType: this.entityType,
                 header: this.header,
                 headerDefs: this._getHeaderDefs(),
                 paginationEnabled: this.pagination,
@@ -259,11 +359,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled),
+                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || (this.dropdownItemList.length && !this.buttonsDisabled),
                 bottomBar: paginationBottom,
                 checkAllResultDisabled: this.checkAllResultDisabled,
                 buttonList: this.buttonList,
-                displayTotalCount: this.displayTotalCount && this.collection.total > 0
+                dropdownItemList: this.dropdownItemList,
+                displayTotalCount: this.displayTotalCount && this.collection.total > 0,
+                displayActionsButtonGroup: this.checkboxes || this.massActionList || this.buttonList.length || this.dropdownItemList.length,
             };
         },
 
@@ -294,6 +396,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.rowActionsDisabled = this.options.rowActionsDisabled || this.rowActionsDisabled;
 
+            this.dropdownItemList = Espo.Utils.cloneDeep(this.options.dropdownItemList || this.dropdownItemList);
+
             if ('buttonsDisabled' in this.options) {
                 this.buttonsDisabled = this.options.buttonsDisabled;
             }
@@ -315,12 +419,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.massActionList.forEach(function(item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().addClass('hidden');
+                    this.$el.find('div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]').parent().addClass('hidden');
                 }
             }, this);
 
             if (this.checkAllResultMassActionList.length) {
-                this.$el.find('.actions-button').removeAttr('disabled');
+                this.showActions();
             }
 
             this.$el.find('.list > table tbody tr').removeClass('active');
@@ -337,7 +441,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.massActionList.forEach(function(item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().removeClass('hidden');
+                    this.$el.find('div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]').parent().removeClass('hidden');
                 }
             }, this);
         },
@@ -1106,9 +1210,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         handleAfterCheck: function (isSilent) {
             if (this.checkedList.length) {
-                this.$el.find('.actions-button').removeAttr('disabled');
+                this.showActions();
             } else {
-                this.$el.find('.actions-button').attr('disabled', true);
+                this.hideActions();
             }
 
             if (this.checkedList.length == this.collection.models.length) {

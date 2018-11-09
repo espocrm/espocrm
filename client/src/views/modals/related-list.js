@@ -42,6 +42,8 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
 
         backdrop: true,
 
+        fixedHeaderHeight: true,
+
         events: {
             'click button[data-action="createRelated"]': function () {
                 this.actionCreateRelated();
