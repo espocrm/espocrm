@@ -40,10 +40,11 @@
             <button type="button" class="btn btn-default btn-icon-x-wide" data-action="reset" title="{{translate 'Reset'}}">
                 <span class="fas fa-redo-alt"></span>
             </button>
-            <button type="button" class="btn btn-default btn-icon-wide dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1" title="{{translate 'Add Field'}}">
+            <button type="button" class="btn btn-default btn-icon-wide dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1">
                 <span class="fas fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu pull-right filter-list">
+                <li class="dropdown-header">{{translate 'Add Field'}}</li>
                 {{#each advancedFields}}
                     <li data-name="{{name}}" class="{{#if checked}}hide{{/if}}"><a href="javascript:" class="add-filter" data-action="addFilter" data-name="{{name}}">{{translate name scope=../entityType category='fields'}}</a></li>
                 {{/each}}
