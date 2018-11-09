@@ -219,7 +219,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
 
-            top += this.$el.find('.actions-button').height();
+            top += this.$el.find('.list-buttons-container').height();
 
             var topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
 
