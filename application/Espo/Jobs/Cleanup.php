@@ -76,7 +76,10 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $pdo = $this->getEntityManager()->getPDO();
 
         $query = "DELETE FROM `job` WHERE DATE(modified_at) < ".$pdo->quote($this->getCleanupJobFromDate())." AND status <> 'Pending'";
+        $sth = $pdo->prepare($query);
+        $sth->execute();
 
+        $query = "DELETE FROM `job` WHERE DATE(modified_at) < ".$pdo->quote($this->getCleanupJobFromDate())." AND status = 'Pending' AND deleted = 1";
         $sth = $pdo->prepare($query);
         $sth->execute();
     }
