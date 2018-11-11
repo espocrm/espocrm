@@ -121,7 +121,7 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            if (this.$el.children().size() === 0) {
+            if (this.$el.children().length === 0) {
                 this.$el.parent().addClass('hidden');
             }
         },

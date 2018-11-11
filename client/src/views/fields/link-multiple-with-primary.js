@@ -160,15 +160,15 @@ Espo.define('views/fields/link-multiple-with-primary', 'views/fields/link-multip
 
         managePrimaryButton: function () {
             var $primary = this.$el.find('button[data-action="switchPrimary"]');
-            if ($primary.size() > 1) {
+            if ($primary.length > 1) {
                 $primary.removeClass('hidden');
             } else {
                 $primary.addClass('hidden');
             }
 
-            if ($primary.filter('.active').size() == 0) {
+            if ($primary.filter('.active').length == 0) {
                 var $first = $primary.first();
-                if ($first.size()) {
+                if ($first.length) {
                     $first.addClass('active').children().removeClass('text-muted');
                     this.setPrimaryId($first.data('id'));
                 }

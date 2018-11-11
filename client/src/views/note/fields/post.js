@@ -138,7 +138,7 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                 });
 
                 this.once('remove', function () {
-                    if (this.$element.size()) {
+                    if (this.$element.length) {
                         this.$element.textcomplete('destroy');
                     }
                 }, this);

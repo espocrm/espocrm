@@ -155,7 +155,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
 
             'click [data-action="removeEmailAddress"]': function (e) {
                 var $block = $(e.currentTarget).closest('div.email-address-block');
-                if ($block.parent().children().size() == 1) {
+                if ($block.parent().children().length == 1) {
                     $block.find('input.email-address').val('');
                 } else {
                     this.removeEmailAddressBlock($block);
@@ -168,7 +168,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 var $block = $input.closest('div.email-address-block');
 
                 if ($input.val() == '') {
-                    if ($block.parent().children().size() == 1) {
+                    if ($block.parent().children().length == 1) {
                         $block.find('input.email-address').val('');
                     } else {
                         this.removeEmailAddressBlock($block);
@@ -273,7 +273,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 }
             });
 
-            if (c == $input.size()) {
+            if (c == $input.length) {
                 this.$el.find('[data-action="addEmailAddress"]').removeClass('disabled').removeAttr('disabled');
             } else {
                 this.$el.find('[data-action="addEmailAddress"]').addClass('disabled').attr('disabled', 'disabled');
@@ -283,7 +283,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
         manageButtonsVisibility: function () {
             var $primary = this.$el.find('button[data-property-type="primary"]');
             var $remove = this.$el.find('button[data-action="removeEmailAddress"]');
-            if ($primary.size() > 1) {
+            if ($primary.length > 1) {
                 $primary.removeClass('hidden');
                 $remove.removeClass('hidden');
             } else {
@@ -387,7 +387,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
 
             var $list = this.$el.find('div.email-address-block');
 
-            if ($list.size()) {
+            if ($list.length) {
                 $list.each(function (i, d) {
                     var row = {};
                     var $d = $(d);

@@ -154,7 +154,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
          * {jQuery}
          */
         getLabelElement: function () {
-            if (!this.$label || !this.$label.size()) {
+            if (!this.$label || !this.$label.length) {
                 this.$label = this.$el.parent().children('label');
             }
             return this.$label;
@@ -351,7 +351,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             var $label = this.getLabelElement();
             var $sign = $label.find('span.required-sign');
 
-            if ($label.size() && !$sign.size()) {
+            if ($label.length && !$sign.length) {
                 $text = $label.find('span.label-text');
                 $('<span class="required-sign"> *</span>').insertAfter($text);
                 $sign = $label.find('span.required-sign');
@@ -385,7 +385,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             var $cell = this.getCellElement();
             var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden"><span class="fas fa-pencil-alt fa-sm"></span></a>');
 
-            if ($cell.size() == 0) {
+            if ($cell.length == 0) {
                 this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
                 return;
             }
@@ -552,7 +552,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $el = $(target);
             }
 
-            if (!$el.size() && this.$element) {
+            if (!$el.length && this.$element) {
                 $el = this.$element;
             }
             $el.popover({

@@ -89,7 +89,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
             this.$editor = this.$el.find('#' + this.containerId);
 
-            if (this.$editor.size() && (this.mode === 'edit' || this.mode == 'detail')) {
+            if (this.$editor.length && (this.mode === 'edit' || this.mode == 'detail')) {
                 this.$editor
                     .css('height', this.height + 'px')
                     .css('fontSize', '14px');

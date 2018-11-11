@@ -374,7 +374,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 options.height = this.height;
             } else {
                 var $scrollable = this.$el.closest('.modal-body');
-                if (!$scrollable.size()) {
+                if (!$scrollable.length) {
                     $scrollable = $(window);
                 }
                 this.$scrollable = $scrollable;

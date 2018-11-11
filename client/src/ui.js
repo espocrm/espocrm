@@ -229,7 +229,7 @@ Espo.define('ui', [], function () {
         var $body = $(document.body);
 
         this.$el.on('hidden.bs.modal', function (e) {
-            if ($('.modal:visible').size() > 0) {
+            if ($('.modal:visible').length > 0) {
                 $body.addClass('modal-open');
             }
         });
@@ -244,14 +244,14 @@ Espo.define('ui', [], function () {
 
         var $modalBackdrop = $('.modal-backdrop');
         $modalBackdrop.each(function (i, el) {
-            if (i < $modalBackdrop.size() - 1) {
+            if (i < $modalBackdrop.length - 1) {
                 $(el).addClass('hidden');
             }
         }.bind(this));
 
         var $modalConainer = $('.modal-container');
         $modalConainer.each(function (i, el) {
-            if (i < $modalConainer.size() - 1) {
+            if (i < $modalConainer.length - 1) {
                 $(el).addClass('overlaid');
             }
         }.bind(this));
@@ -276,7 +276,7 @@ Espo.define('ui', [], function () {
         $modalBackdrop.last().removeClass('hidden');
 
         var $modalConainer = $('.modal-container');
-        $($modalConainer.get($modalConainer.size() - 2)).removeClass('overlaid');
+        $($modalConainer.get($modalConainer.length - 2)).removeClass('overlaid');
 
         this.$el.modal('hide');
         $(this).trigger('dialog:close');

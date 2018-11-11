@@ -184,7 +184,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
             var width = Math.floor((containerWidth - dashletChartLegendBoxWidth * number) / number);
 
-            var columnNumber = this.$legendContainer.find('> table tr:first-child > td').size() / 2;
+            var columnNumber = this.$legendContainer.find('> table tr:first-child > td').length / 2;
 
             var tableWidth = (width + dashletChartLegendBoxWidth) * columnNumber;
 
@@ -215,7 +215,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                 this.adjustContainer();
 
                 setTimeout(function () {
-                    if (!this.$container.size() || !this.$container.is(":visible")) return;
+                    if (!this.$container.length || !this.$container.is(":visible")) return;
                     this.draw();
                 }.bind(this), 1);
             });
