@@ -185,6 +185,10 @@ class EntityManager
             throw new Conflict('Entity \''.$name.'\' already exists.');
         }
 
+        if ($this->getMetadata()->get(['clientDefs.', $name])) {
+            throw new Conflict('Entity \''.$name.'\' already exists.');
+        }
+
         if ($this->checkControllerExists($name)) {
             throw new Conflict('Entity name \''.$name.'\' is not allowed.');
         }
