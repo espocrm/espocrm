@@ -59,7 +59,7 @@ Espo.define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function 
             ];
 
             this.on('remove', function () {
-                if (this.$img.size()) {
+                if (this.$img.length) {
                     this.$img.cropper('destroy');
                     this.$img.parent().empty();
                 }

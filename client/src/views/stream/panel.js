@@ -187,7 +187,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         storeControl: function () {
-            if (this.$textarea && this.$textarea.size()) {
+            if (this.$textarea && this.$textarea.length) {
                 var text = this.$textarea.val();
                 if (text.length) {
                     this.getSessionStorage().set(this.storageTextKey, text);
@@ -327,7 +327,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }]);
 
                 this.once('remove', function () {
-                    if (this.$textarea.size()) {
+                    if (this.$textarea.length) {
                         this.$textarea.textcomplete('destroy');
                     }
                 }, this);

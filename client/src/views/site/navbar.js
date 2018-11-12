@@ -188,14 +188,14 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 });
 
                 var hideOneTab = function () {
-                    var count = $tabs.children().size();
+                    var count = $tabs.children().length;
                     if (count <= 1) return;
                     var $one = $tabs.children().eq(count - 2);
                     $one.prependTo($more);
                 };
                 var unhideOneTab = function () {
                     var $one = $more.children().eq(0);
-                    if ($one.size()) {
+                    if ($one.length) {
                         $one.insertBefore($moreDropdown);
                     }
                 };
@@ -242,7 +242,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                         }
                     }
 
-                    if ($more.children().size() > 0) {
+                    if ($more.children().length > 0) {
                         $moreDropdown.removeClass('hidden');
                     }
                 }.bind(this);
@@ -265,7 +265,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                 };
 
-                if ($navbar.height() <= navbarNeededHeight && $more.children().size() === 0) {
+                if ($navbar.height() <= navbarNeededHeight && $more.children().length === 0) {
                     $more.parent().addClass('hidden');
                 }
 
@@ -278,7 +278,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                 var $more = $tabs.find('li.more > ul');
 
-                if ($more.children().size() === 0) {
+                if ($more.children().length === 0) {
                     $more.parent().addClass('hidden');
                 }
 

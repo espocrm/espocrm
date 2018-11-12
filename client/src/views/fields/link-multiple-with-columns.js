@@ -282,7 +282,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
             if (this.mode == 'edit') {
                 columnFormElementJQList.forEach(function ($column) {
                     var fetch = function ($target) {
-                        if (!$target || !$target.size()) return;
+                        if (!$target || !$target.length) return;
                         var column = $target.data('column');
                         var value = $target.val().toString().trim();
                         var id = $target.data('id');

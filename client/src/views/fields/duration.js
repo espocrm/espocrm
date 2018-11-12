@@ -220,7 +220,7 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
                         return $(el).val() >= seconds;
                     }).first();
 
-                    if ($found.size()) {
+                    if ($found.length) {
                         if ($found.val() != seconds) {
                             $o.insertBefore($found);
                         };

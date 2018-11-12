@@ -185,7 +185,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             if (!this.postingMode) {
                 $('body').off('click.stream-create-post');
                 $('body').on('click.stream-create-post', function (e) {
-                    if ($.contains(window.document.body, e.target) && !$.contains(this.$el.get(0), e.target) && !$(e.target).closest('.modal-dialog').size()) {
+                    if ($.contains(window.document.body, e.target) && !$.contains(this.$el.get(0), e.target) && !$(e.target).closest('.modal-dialog').length) {
                         if (this.getFieldView('post') && this.getFieldView('post').$element.val() == '') {
                             if (!(this.model.get('attachmentsIds') || []).length) {
                                 this.disablePostingMode();

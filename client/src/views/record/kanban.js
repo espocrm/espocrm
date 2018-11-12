@@ -584,7 +584,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             var $item = this.$el.find('.item[data-id="'+id+'"]');
             var $column = this.$el.find('.group-column[data-name="'+group+'"] .group-column-list');
 
-            if ($column.size()) {
+            if ($column.length) {
                 $column.prepend($item);
             } else {
                 $item.remove();

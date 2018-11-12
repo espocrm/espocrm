@@ -209,7 +209,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var top;
 
 
-            if (this.$el.closest('.modal-body').size()) {
+            if (this.$el.closest('.modal-body').length) {
                 $scrollable = this.$el.closest('.modal-body');
                 top = 0;
             } else {
@@ -1176,7 +1176,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         checkRecord: function (id, $target, isSilent) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
 
-            if (!$target.size()) return;
+            if (!$target.length) return;
 
             $target.get(0).checked = true;
 

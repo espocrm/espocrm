@@ -462,7 +462,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         updateAddFilterButton: function () {
             var $ul = this.$el.find('ul.filter-list');
-            if ($ul.children().not('.hide').size() == 0) {
+            if ($ul.children().not('.hide').length == 0) {
                 this.$el.find('button.add-filter-button').addClass('disabled');
             } else {
                 this.$el.find('button.add-filter-button').removeClass('disabled');
