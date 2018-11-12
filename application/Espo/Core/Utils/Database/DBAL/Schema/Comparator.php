@@ -113,6 +113,18 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
 
         $changedProperties = array_merge($changedProperties, $diffKeys);
 
+        /** Espo: do not change a field length while changing other parameters */
+        if (!empty($changedProperties) && !in_array('length', $changedProperties) && $column1->getType() instanceof \Doctrine\DBAL\Types\StringType) {
+            $length1 = $column1->getLength() ?: 255;
+            $length2 = $column2->getLength() ?: 255;
+
+            if ($length1 > $length2) {
+                $changedProperties[] = 'length';
+                $column2->setLength($length1);
+            }
+        }
+        /** Espo: end */
+
         return $changedProperties;
     }
 
