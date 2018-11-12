@@ -1,3 +1,4 @@
 {
-   "controller": "controllers/dashboard"
+   "controller": "controllers/dashboard",
+   "iconClass": "fas fa-th-large"
 }
