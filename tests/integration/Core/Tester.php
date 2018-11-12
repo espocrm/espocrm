@@ -127,11 +127,7 @@ class Tester
 
             if (isset($this->userName)) {
                 $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
-
-                $isAuthenticated = $auth->login($this->userName, $this->password);
-                if (!$isAuthenticated) {
-                    $auth->useNoAuth();
-                }
+                $auth->login($this->userName, $this->password);
             } else {
                 $auth->useNoAuth();
             }
