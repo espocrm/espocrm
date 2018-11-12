@@ -56,7 +56,14 @@
     "Label Manager": "Gestione etichetta",
     "Auth Log": "Auth log",
     "Lead Capture": "Cattura Lead",
-    "Attachments": "Allegati"
+    "Attachments": "Allegati",
+    "API Users": "API Utenti",
+    "PHP Settings": "Impostazioni PHP",
+    "Database Settings": "Impostazioni Database",
+    "Permissions": "Permessi",
+    "Success": "Successo",
+    "Fail": "Fallito",
+    "is recommended": "E' raccomandato"
   },
   "layouts": {
     "list": "Elenco",

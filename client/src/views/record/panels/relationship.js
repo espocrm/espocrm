@@ -105,13 +105,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
-            if (this.defs.view) {
-                this.actionList.unshift({
-                    label: 'View List',
-                    action: this.defs.viewAction || 'viewRelatedList'
-                });
-            }
-
             if (this.defs.select) {
                 var data = {link: this.link};
                 if (this.defs.selectPrimaryFilterName) {
@@ -127,6 +120,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     action: this.defs.selectAction || 'selectRelated',
                     data: data,
                     acl: 'edit'
+                });
+            }
+
+            if (this.defs.view) {
+                this.actionList.unshift({
+                    label: 'View List',
+                    action: this.defs.viewAction || 'viewRelatedList'
                 });
             }
 

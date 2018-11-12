@@ -104,7 +104,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
 
-            if (this.$el.find('ul.filter-list li:not(.hidden)').size() == 0) {
+            if (this.$el.find('ul.filter-list li:not(.hidden)').length == 0) {
                 this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
             }
 

@@ -140,7 +140,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var count = 0;
 
                 var isEmpty = false;
-                if ($ul.children('li:not(.empty)').size() == 0) {
+                if ($ul.children('li:not(.empty)').length == 0) {
                     isEmpty = true;
                 }
 

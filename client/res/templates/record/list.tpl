@@ -8,14 +8,41 @@
     </div>
     {{/if}}
 
-    {{#if checkboxes}}
-    {{#if massActionList}}
+    {{#if displayActionsButtonGroup}}
     <div class="btn-group actions">
-        <button type="button" class="btn btn-default dropdown-toggle actions-button" data-toggle="dropdown" disabled>
+        {{#if massActionList}}
+        <button type="button" class="btn btn-default dropdown-toggle actions-button hidden" data-toggle="dropdown">
         {{translate 'Actions'}}
         <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        {{/if}}
+        {{#if buttonList.length}}
+        {{#each buttonList}}
+            {{button name scope=../../scope label=label style=style hidden=hidden}}
+        {{/each}}
+        {{/if}}
+        <div class="btn-group">
+            {{#if dropdownItemList.length}}
+            <button type="button" class="btn btn-default dropdown-toggle dropdown-item-list-button" data-toggle="dropdown">
+                <span class="fas fa-ellipsis-h"></span>
+            </button>
+            <ul class="dropdown-menu pull-left">
+                {{#each dropdownItemList}}
+                {{#if this}}
+                <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../entityType}}{{/if}}</a></li>
+                {{else}}
+                    {{#unless @first}}
+                    {{#unless @last}}
+                    <li class="divider"></li>
+                    {{/unless}}
+                    {{/unless}}
+                {{/if}}
+                {{/each}}
+            </ul>
+            {{/if}}
+        </div>
+        {{#if massActionList}}
+        <ul class="dropdown-menu actions-menu">
             {{#each massActionList}}
             {{#if this}}
             <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../../scope}}</a></li>
@@ -28,8 +55,30 @@
             {{/if}}
             {{/each}}
         </ul>
+        {{/if}}
     </div>
-    {{/if}}
+
+    <div class="sticked-bar hidden">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle actions-button hidden" data-toggle="dropdown">
+            {{translate 'Actions'}}
+            <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu actions-menu">
+                {{#each massActionList}}
+                {{#if this}}
+                <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../../scope}}</a></li>
+                {{else}}
+                {{#unless @first}}
+                {{#unless @last}}
+                <li class="divider"></li>
+                {{/unless}}
+                {{/unless}}
+                {{/if}}
+                {{/each}}
+            </ul>
+        </div>
+    </div>
     {{/if}}
 
     {{#if displayTotalCount}}
@@ -37,10 +86,6 @@
         {{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span>
         </div>
     {{/if}}
-
-    {{#each buttonList}}
-        {{button name scope=../../scope label=label style=style}}
-    {{/each}}
 </div>
 {{/if}}
 

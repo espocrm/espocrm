@@ -1,1 +1,1 @@
-{{#if value}}<span class="glyphicon glyphicon-paperclip small"></span>{{/if}}
+{{#if value}}<span class="fas fa-paperclip small"></span>{{/if}}

@@ -375,7 +375,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     var fieldObj = {};
                     this.fieldActionList.forEach(function (action) {
                         var $select = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="'+action+'"]');
-                        if (!$select.size()) return;
+                        if (!$select.length) return;
                         fieldObj[action] = $select.val();
                     }, this);
                     scopeObj[field] = fieldObj;

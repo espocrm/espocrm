@@ -79,7 +79,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     var AttachmentButton = function (context) {
                         var ui = $.summernote.ui;
                         var button = ui.button({
-                            contents: '<i class="glyphicon glyphicon-paperclip"></i>',
+                            contents: '<i class="fas fa-paperclip"></i>',
                             tooltip: this.translate('Attach File'),
                             click: function () {
                                 this.attachFile();
@@ -374,7 +374,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 options.height = this.height;
             } else {
                 var $scrollable = this.$el.closest('.modal-body');
-                if (!$scrollable.size()) {
+                if (!$scrollable.length) {
                     $scrollable = $(window);
                 }
                 this.$scrollable = $scrollable;

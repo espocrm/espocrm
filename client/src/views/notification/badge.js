@@ -97,7 +97,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.runCheckUpdates(true);
 
             this.$popupContainer = $('#popup-notifications-container');
-            if (!$(this.$popupContainer).size()) {
+            if (!$(this.$popupContainer).length) {
                 this.$popupContainer = $('<div>').attr('id', 'popup-notifications-container').addClass('hidden').appendTo('body');
             }
 
@@ -275,7 +275,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             $document = $(document);
             $document.on('mouseup.notification', function (e) {
                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                    if (!$(e.target).closest('div.modal-dialog').size()) {
+                    if (!$(e.target).closest('div.modal-dialog').length) {
                         this.closeNotifications();
                     }
                 }

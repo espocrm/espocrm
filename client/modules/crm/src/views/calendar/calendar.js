@@ -457,7 +457,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         getCalculatedHeight: function () {
-            if (this.$container && this.$container.size()) {
+            if (this.$container && this.$container.length) {
                 return this.$container.height();
             }
             var height = $(window).height();
@@ -727,7 +727,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             setTimeout(function () {
                 $calendar.fullCalendar(options);
                 this.updateDate();
-                if (this.$container && this.$container.size()) {
+                if (this.$container && this.$container.length) {
                     this.adjustSize();
                 }
             }.bind(this), 150);

@@ -28,6 +28,11 @@
     color: @gray-soft;
 }
 
+.btn-default > .fa.text-muted,
+.btn-default > .fas.text-muted {
+    color: @gray-light;
+}
+
 .btn-default.disabled > .fa,
 .btn-default.disabled > .fas {
     color: @gray-light;
@@ -37,9 +42,9 @@
     border-bottom-width: 0;
 }
 
-.panel-default.note-editor .panel-heading .btn-default {
-    background-color: @btn-default-bg;
-    border-color: @btn-default-border;
+.panel-default.note-editor > .panel-heading .btn-default {
+    background-color: @btn-default-bg !important;
+    border-color: @btn-default-border !important;
 }
 
 .panel > .panel-heading > .btn-group > .btn {

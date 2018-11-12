@@ -151,6 +151,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                     footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
                     fullHeight: this.getThemeManager().getParam('modalFullHeight'),
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
+                    fixedHeaderHeight: this.fixedHeaderHeight,
                     onRemove: function () {
                         this.onDialogClose();
                     }.bind(this)
@@ -265,4 +266,3 @@ Espo.define('views/modal', 'view', function (Dep) {
         },
     });
 });
-

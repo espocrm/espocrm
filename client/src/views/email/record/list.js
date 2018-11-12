@@ -34,11 +34,10 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
 
         massActionList: ['remove', 'massUpdate'],
 
-        buttonList: [
+        dropdownItemList: [
             {
                 name: 'markAllAsRead',
-                label: 'Mark all as read',
-                style: 'default'
+                label: 'Mark all as read'
             }
         ],
 

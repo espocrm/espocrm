@@ -182,7 +182,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
             if (this.mode == 'edit') {
                 if ($role) {
                     var fetch = function ($target) {
-                        if (!$target || !$target.size()) return;
+                        if (!$target || !$target.length) return;
 
                         var value = $target.val().toString().trim();
                         var id = $target.data('id');

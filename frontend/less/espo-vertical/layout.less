@@ -389,3 +389,25 @@ body .stick-sub.button-container {
 body.minimized .stick-sub.button-container {
     width: calc(~"100% - "@navbar-minimized-width);
 }
+
+
+body .list-buttons-container .sticked-bar {
+    width: calc(~"100% - "@navbar-width);
+    left: @navbar-width;
+    top: @tob-bar-height;
+    padding-left: @container-padding;
+}
+
+body.minimized .list-buttons-container .sticked-bar {
+    width: calc(~"100% - "@navbar-minimized-width);
+    left: @navbar-minimized-width;
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    body .list-buttons-container .sticked-bar,
+    body.minimized .list-buttons-container .sticked-bar {
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
+}
