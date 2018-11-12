@@ -208,7 +208,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var top;
 
-
             if (this.$el.closest('.modal-body').length) {
                 $scrollable = this.$el.closest('.modal-body');
                 top = 0;
@@ -234,7 +233,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }.bind(this));
 
             this.on('check', function () {
-                if (this.checkedList.length === 0) return;
+                if (this.checkedList.length === 0 && !this.allResultIsChecked) return;
                 cotrolSticking();
             }, this);
 
@@ -244,7 +243,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
 
             var cotrolSticking = function () {
-                if (this.checkedList.length === 0) return;
+                if (this.checkedList.length === 0 && !this.allResultIsChecked) return;
 
                 var middleTop = getOffsetTop($middle.get(0));
 
