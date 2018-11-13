@@ -30,6 +30,10 @@ Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', fun
 
     return Dep.extend({
 
+        getAttributeList: function () {
+            return [this.name, 'inboundEmailId'];
+        },
+
         setupOptions: function () {
             Dep.prototype.setupOptions.call(this);
 
@@ -59,10 +63,14 @@ Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', fun
 
         getValueForDisplay: function () {
             if (!this.model.has(this.name)) {
-                if (this.model.get('inboundEmailId')) {
-                    return 'inboundEmail:' + this.model.get('inboundEmailId');
+                if (this.model.has('inboundEmailId')) {
+                    if (this.model.get('inboundEmailId')) {
+                        return 'inboundEmail:' + this.model.get('inboundEmailId');
+                    } else {
+                        return 'system';
+                    }
                 } else {
-                    return 'system';
+                    return '...';
                 }
             }
 
