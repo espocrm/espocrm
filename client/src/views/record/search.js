@@ -257,7 +257,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 var name = $target.data('name');
                 this.advanced[name] = {};
 
-                $target.closest('li').addClass('hide');
+                $target.closest('li').addClass('hidden');
 
                 this.presetName = this.primary;
 
@@ -275,7 +275,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 var $target = $(e.currentTarget);
                 var name = $target.data('name');
 
-                this.$el.find('ul.filter-list li[data-name="' + name + '"]').removeClass('hide');
+                this.$el.find('ul.filter-list li[data-name="' + name + '"]').removeClass('hidden');
                 var container = this.getView('filter-' + name).$el.closest('div.filter');
                 this.clearView('filter-' + name);
                 container.remove();
@@ -462,7 +462,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         updateAddFilterButton: function () {
             var $ul = this.$el.find('ul.filter-list');
-            if ($ul.children().not('.hide').length == 0) {
+            if ($ul.children().not('.hidden').not('.dropdown-header').length == 0) {
                 this.$el.find('button.add-filter-button').addClass('disabled');
             } else {
                 this.$el.find('button.add-filter-button').removeClass('disabled');
