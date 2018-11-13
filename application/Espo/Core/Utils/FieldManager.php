@@ -447,16 +447,20 @@ class FieldManager
     {
         $additionalParamList = [
             'type' => [
-                'type' => 'varchar',
+                'type' => 'varchar'
             ],
             'isCustom' => [
                 'type' => 'bool',
-                'default' => false,
+                'default' => false
             ],
             'isPersonalData' => [
                 'type' => 'bool',
-                'default' => false,
+                'default' => false
             ],
+            'inlineEditDisabled' => [
+                'type' => 'bool',
+                'default' => false
+            ]
         ];
 
         $fieldDefsByType = $this->getMetadataHelper()->getFieldDefsByType($fieldDefs);

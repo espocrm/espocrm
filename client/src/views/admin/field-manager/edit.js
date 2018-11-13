@@ -152,6 +152,11 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         });
                     }
 
+                    this.paramList.push({
+                        name: 'inlineEditDisabled',
+                        type: 'bool'
+                    });
+
                     this.paramList.forEach(function (o) {
                         this.model.defs.fields[o.name] = o;
                     }, this);
@@ -177,6 +182,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     if (this.hasPersonalData) {
                         this.createFieldView('bool', 'isPersonalData', null, {});
                     }
+
+                    this.createFieldView('bool', 'inlineEditDisabled', null, {});
 
                     this.createFieldView('text', 'tooltipText', null, {
                         trim: true,

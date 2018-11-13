@@ -232,6 +232,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }
             }, this);
 
+            var additionaParamList = ['inlineEditDisabled'];
+
+            additionaParamList.forEach(function (item) {
+                this.params[item] = this.model.getFieldParam(this.name, item) || null;
+            }, this);
+
             this.mode = this.options.mode || this.mode;
 
             this.readOnly = this.readOnly || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
