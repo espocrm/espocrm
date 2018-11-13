@@ -16,6 +16,11 @@
     margin-top: @tob-bar-height;
 }
 
+.side-menu-backdrop {
+    background-color: @modal-backdrop-bg;
+    opacity: .5;
+}
+
 .alert {
     height: @tob-bar-height;
 }
@@ -23,7 +28,7 @@
 #global-search-input {
     border: 1px solid @top-navbar-bg-color;
     font-size: 13px;
-    width: 200px;
+    width: 250px;
 }
 
 @media screen and (min-width: @screen-sm-min) {
@@ -33,5 +38,14 @@
     .notifications-badge-container > .notifications-button > .number-badge {
         top: 3px;
         left: 22px;
+    }
+
+    .navbar-nav.navbar-right > .open {
+        > a,
+        > a:hover,
+        > a:active,
+        > a:focus {
+            background-color: darken(@gray-lighter, 10%);
+        }
     }
 }

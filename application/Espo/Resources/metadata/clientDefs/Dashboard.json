@@ -1,3 +1,4 @@
 {
-   "controller": "Controllers.Dashboard"
+   "controller": "controllers/dashboard",
+   "iconClass": "fas fa-th-large"
 }

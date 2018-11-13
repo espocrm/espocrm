@@ -40,11 +40,9 @@ class LastViewed extends \Espo\Core\Services\Base
         $this->addDependency('metadata');
     }
 
-    public function get()
+    public function getList($params)
     {
-        $entityManager = $this->getInjection('entityManager');
-
-        $maxSize = $this->getConfig()->get('lastViewedCount', 20);
+        $repository = $this->getEntityManager()->getRepository('ActionHistoryRecord');
 
         $actionHistoryRecordService = $this->getInjection('serviceFactory')->create('ActionHistoryRecord');
 
@@ -54,25 +52,32 @@ class LastViewed extends \Espo\Core\Services\Base
             return !empty($scopes[$item]['object']);
         });
 
-        $collection = $this->getEntityManager()->getRepository('ActionHistoryRecord')->where(array(
-            'userId' => $this->getUser()->id,
-            'action' => 'read',
-            'targetType' => $targetTypeList
-        ))->order(3, true)->limit(0, $maxSize)->select([
-            'targetId', 'targetType', 'MAX:number'
-        ])->groupBy([
-            'targetId', 'targetType'
-        ])->find();
+        $offset = $params['offset'];
+        $maxSize = $params['maxSize'];
+
+        $selectParams = [
+            'whereClause' => [
+                'userId' => $this->getUser()->id,
+                'action' => 'read',
+                'targetType' => $targetTypeList
+            ],
+            'orderBy' => [[4, true]],
+            'select' => ['id', 'targetId', 'targetType', 'MAX:number', ['MAX:createdAt', 'createdAt']],
+            'groupBy' => ['targetId', 'targetType']
+        ];
+
+        $collection = $repository->limit($offset, $maxSize)->find($selectParams);
+
+        $total = $repository->count($selectParams);
 
         foreach ($collection as $i => $entity) {
             $actionHistoryRecordService->loadParentNameFields($entity);
-            $entity->id = $i;
         }
 
-        return array(
-            'total' => count($collection),
+        return (object) [
+            'total' => $total,
             'collection' => $collection
-        );
+        ];
     }
 }
 

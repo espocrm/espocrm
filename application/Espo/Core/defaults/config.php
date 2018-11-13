@@ -159,7 +159,6 @@ return [
     'calendarEntityList' => ['Meeting', 'Call', 'Task'],
     'activitiesEntityList' => ['Meeting', 'Call'],
     'historyEntityList' => ['Meeting', 'Call', 'Email'],
-    'lastViewedCount' => 20,
     'cleanupJobPeriod' => '1 month',
     'cleanupActionHistoryPeriod' => '15 days',
     'cleanupAuthTokenPeriod' => '1 month',

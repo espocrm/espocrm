@@ -16,11 +16,23 @@
 
     .navbar-right {
         margin-right: -2px !important;
+
+        > li > a {
+            text-align: center;
+        }
     }
 
     .navbar-form.global-search-container {
         padding-left: 0;
         padding-right: 0;
+    }
+
+    .navbar-toggle {
+        float: left;
+        text-align: center;
+        width: 38px;
+        margin: 0;
+        color: @navbar-inverse-link-color;
     }
 }
 
@@ -34,6 +46,9 @@
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
     #navbar .navbar {
+
+        min-height: @navbar-height-xsmall;
+
         .navbar-form.global-search-container {
             padding-left: 8px;
             padding-right: 8px;
@@ -56,6 +71,14 @@
 
         .navbar-collapse {
             overflow-x: hidden !important;
+        }
+
+        .navbar-brand {
+            height: @navbar-height-xsmall;
+
+            > img.logo {
+                height: @navbar-logo-height-xsmall;
+            }
         }
     }
 }
@@ -2307,7 +2330,8 @@ pre > code {
     }
 
     #nav-menu-dropdown {
-        width: 46px;
+        width: 39px;
+        text-align: center;
     }
 }
 
@@ -2401,6 +2425,11 @@ a.field-info > span.fa-info-circle {
 
 .btn-icon > .fa-chevron-left {
     left: -1px;
+}
+
+.btn-default > .fa-sm.fa-rss {
+    position: relative;
+    top: -1px;
 }
 
 .grid-auto-fill-xs,

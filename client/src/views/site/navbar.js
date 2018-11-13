@@ -51,9 +51,17 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             'click .navbar-collapse.in a.nav-link': function (e) {
                 var $a = $(e.currentTarget);
                 var href = $a.attr('href');
-                if (href && href != '#') {
+                if (href) {
                     this.$el.find('.navbar-collapse.in').collapse('hide');
                 }
+            },
+            'click a.nav-link': function (e) {
+                if (this.isSideMenuOpened) {
+                    this.closeSideMenu();
+                }
+            },
+            'click a.navbar-brand.nav-link': function (e) {
+                this.$el.find('.navbar-collapse.in').collapse('hide');
             },
             'click a[data-action="quick-create"]': function (e) {
                 e.preventDefault();
@@ -62,6 +70,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             },
             'click a.minimizer': function () {
                 this.switchMinimizer();
+            },
+            'click a.side-menu-button': function () {
+                this.switchSideMenu();
             },
             'click a.action': function (e) {
                 var $el = $(e.currentTarget);
@@ -76,9 +87,50 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             }
         },
 
+        isMinimized: function () {
+            return this.$body.hasClass('minimized');
+        },
+
+        switchSideMenu: function () {
+            if (!this.isMinimized()) return;
+
+            if (this.isSideMenuOpened) {
+                this.closeSideMenu();
+            } else {
+                this.openSideMenu();
+            }
+        },
+
+        openSideMenu: function () {
+            this.isSideMenuOpened = true;
+            this.$body.addClass('side-menu-opened');
+
+            this.$sideMenuBackdrop = $('<div>').addClass('side-menu-backdrop');
+            this.$sideMenuBackdrop.click(function () {
+                this.closeSideMenu();
+            }.bind(this));
+            this.$sideMenuBackdrop.appendTo(this.$body);
+
+            this.$sideMenuBackdrop2 = $('<div>').addClass('side-menu-backdrop');
+            this.$sideMenuBackdrop2.click(function () {
+                this.closeSideMenu();
+            }.bind(this));
+            this.$sideMenuBackdrop2.appendTo(this.$navbarRightContainer);
+        },
+
+        closeSideMenu: function () {
+            this.isSideMenuOpened = false;
+            this.$body.removeClass('side-menu-opened');
+            this.$sideMenuBackdrop.remove();
+            this.$sideMenuBackdrop2.remove();
+        },
+
         switchMinimizer: function () {
-            var $body = $('body');
-            if ($body.hasClass('minimized')) {
+            var $body = this.$body;
+            if (this.isMinimized()) {
+                if (this.isSideMenuOpened) {
+                    this.closeSideMenu();
+                }
                 $body.removeClass('minimized');
                 this.getStorage().set('state', 'siteLayoutState', 'expanded');
             } else {
@@ -102,7 +154,12 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         getTabList: function () {
             var tabList = this.getPreferences().get('useCustomTabList') ? this.getPreferences().get('tabList') : this.getConfig().get('tabList');
-            return tabList || [];
+            tabList = Espo.Utils.clone(tabList || []);
+
+            if (this.getThemeManager().getParam('navbarIsVertical')) {
+                tabList.unshift('Home');
+            }
+            return tabList;
         },
 
         getQuickCreateList: function () {
@@ -142,9 +199,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 el: this.options.el + ' .notifications-badge-container'
             });
 
-
             this.setupGlobalSearch();
-
 
             this.setupTabDefsList();
 
@@ -311,9 +366,15 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         afterRender: function () {
+            this.$body = $('body');
+
             this.selectTab(this.getRouter().getLast().controller);
 
             var layoutState = this.getStorage().get('state', 'siteLayoutState');
+            if (!layoutState) {
+                layoutState = $(window).width() > 1280 ? 'expanded' : 'collapsed';
+            }
+
             var layoutMinimized = false;
             if (layoutState === 'collapsed') {
                 layoutMinimized = true;
@@ -324,6 +385,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 $body.addClass('minimized');
             }
             this.$navbar = this.$el.find('> .navbar');
+            this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
 
             if (this.getThemeManager().getParam('navbarIsVertical')) {
                 var process = function () {
@@ -366,7 +428,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             if (this.currentTab != name) {
                 this.$el.find('ul.tabs li.active').removeClass('active');
                 if (name) {
-                    this.$el.find('ul.tabs  li[data-name="' + name + '"]').addClass('active');
+                    this.$el.find('ul.tabs li[data-name="' + name + '"]').addClass('active');
                 }
                 this.currentTab = name;
             }
@@ -387,7 +449,18 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     moreIsMet = true;
                     return;
                 }
-                var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
+
+                var label;
+                var link;
+
+                if (tab == 'Home') {
+                    label = this.getLanguage().translate(tab);
+                    link = '#';
+                } else {
+                    label = this.getLanguage().translate(tab, 'scopeNamesPlural');
+                    link = '#' + tab;
+                }
+
                 var color = null;
                 if (!colorsDisabled) {
                     var color = this.getMetadata().get(['clientDefs', tab, 'color']);
@@ -401,7 +474,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
 
                 var o = {
-                    link: '#' + tab,
+                    link: link,
                     label: label,
                     shortLabel: shortLabel,
                     name: tab,

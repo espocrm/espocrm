@@ -62,7 +62,7 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
             this.waitForView('list');
 
             this.getCollectionFactory().create(this.scope, function (collection) {
-                collection.maxSize = this.getConfig().get('lastViewedCount') || 20;
+                collection.maxSize = this.getConfig().get('recordsPerPage');
                 this.collection = collection;
 
                 collection.url = 'LastViewed';
@@ -100,4 +100,3 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
         },
     });
 });
-

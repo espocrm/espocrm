@@ -9,146 +9,207 @@
 
 @media screen and (min-width: @screen-sm-min) {
 
-    #header {
-        width: @navbar-width;
-    }
-
-    #navbar .navbar {
-        .nav > li.more > .dropdown-menu {
-            top: 0;
-            left: @navbar-width;
-            padding-top: 0;
-            padding-bottom: 0;
-            position: fixed;
-            border-left-width: 0;
-            border-top-width: 0;
-            overflow-y: hidden;
-        }
-
-        ul.tabs {
-            width: @navbar-width;
-            margin-left: -8px;
-            overflow-y: hidden;
-        }
-
-        a.minimizer {
-            color: @navbar-inverse-link-color;
-            text-decoration: none;
-            margin-top: 5px;
-            display: inline-block;
-            margin-left: 4px;
-        }
-
-        a.minimizer > span.left {
-            display: inline;
-        }
-
-        a.minimizer > span.right {
-            display: none;
-        }
-    }
-
-    #navbar {
-        .navbar {
-            top: 0;
-            border-width: 0 0 0 0;
-
-            position: fixed;
-            z-index: @zindex-navbar-fixed;
-            width: @navbar-width;
-            margin-bottom: 0px;
-            height: 100%;
-        }
-
-        .navbar-brand img {
-            max-width: @navbar-width - 12px;
-            height: 33px;
-        }
-
-        a.navbar-brand {
-            max-width: @navbar-width;
-            height: 35px;
-        }
-
-        .navbar-header {
+    body,
+    body.minimized.side-menu-opened {
+        #header {
             width: @navbar-width;
         }
 
-        .navbar-header > a.minimizer {
-            width: 30px;
-            height: 30px;
-            float: right;
-        }
+        #navbar .navbar {
 
-        .navbar-right {
-            position: fixed;
-            bottom: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: @tob-bar-height;
-            width: 100%;
-            background-color: @top-navbar-bg-color;
-            margin-left: @navbar-width;
-            padding-right: @navbar-width;
-
-            .global-search-container {
-                position: fixed;
+            .nav > li.more > .dropdown-menu {
                 top: 0;
-                right: 102px;
-            }
-
-            .global-search-container a.global-searcy-button {
-                padding: 5px 10px;
-                color: @gray-light;
-            }
-
-            .quick-create-container {
+                left: @navbar-width;
+                padding-top: 0;
+                padding-bottom: 0;
                 position: fixed;
-                top: 0;
-                right: 34px;
-                width: 34px;
+                border-left-width: 0;
+                border-top-width: 0;
+                overflow-y: hidden;
             }
 
-            .menu-container {
-                position: fixed;
-                top: 0;
-                right: 0;
-                width: 34px;
+            ul.tabs {
+                width: @navbar-width;
+                margin-left: -8px;
+                overflow-y: hidden;
             }
 
-            > li > a {
-                color: @gray-light;
-                padding: 5px 10px;
+            a.minimizer {
+                color: @navbar-inverse-link-color;
+                text-decoration: none;
+                margin-top: 5px;
+                display: inline-block;
+                margin-left: 4px;
             }
 
-            .notifications-badge-container {
-                position: fixed;
-                top: 0;
-                right: 68px;
-                width: 34px;
-            }
-        }
-
-        ul.tabs {
-            li {
-                float: none;
+            a.minimizer > span.left {
+                display: inline;
             }
 
-            li > a {
+            a.minimizer > span.right {
+                display: none;
+            }
+
+            a.side-menu-button {
+                width: 38px;
                 padding-top: 8px;
                 padding-bottom: 8px;
-                padding-left: 10px;
+                text-align: center;
+                display: none;
+                > span {
+                    width: 16px;
+                    text-align: center;
+                }
             }
 
-            li.tab > a {
-                padding-left: 10px - @navbar-color-border-width;
+            .side-menu-backdrop {
+                z-index: 1200;
+                position: fixed;
+                bottom: 20px;
+                top: 0;
+                left: 0;
+                height: @tob-bar-height;
+                width: 100%;
+                margin-left: @navbar-width;
             }
         }
 
-        .navbar-form {
-            margin-top: 0px;
-            margin-bottom: 0px;
+        #navbar {
+            .navbar {
+                top: 0;
+                border-width: 0 0 0 0;
+
+                position: fixed;
+                z-index: @zindex-navbar-fixed;
+                width: @navbar-width;
+                margin-bottom: 0px;
+                height: 100%;
+            }
+
+            .navbar-brand img {
+                max-width: @navbar-width - 38px;
+                height: 35px;
+            }
+
+            a.navbar-brand {
+                max-width: @navbar-width - 38px;
+                height: 35px;
+                float: right;
+            }
+
+            .navbar-header {
+                width: @navbar-width;
+            }
+
+            .navbar-header > a.minimizer {
+                width: 30px;
+                height: 30px;
+                float: right;
+            }
+
+            .navbar-right {
+                position: fixed;
+                bottom: 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: @tob-bar-height;
+                width: 100%;
+                background-color: @top-navbar-bg-color;
+                margin-left: @navbar-width;
+                padding-right: @navbar-width;
+
+                .global-search-container {
+                    position: fixed;
+                    top: 0;
+                    right: 102px;
+                }
+
+                .global-search-container a.global-searcy-button {
+                    padding: 5px 10px;
+                    color: @gray-light;
+                }
+
+                .quick-create-container {
+                    position: fixed;
+                    top: 0;
+                    right: 34px;
+                    width: 34px;
+                }
+
+                .menu-container {
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    width: 34px;
+                }
+
+                > li > a {
+                    color: @gray-light;
+                    padding: 5px 10px;
+                }
+
+                .notifications-badge-container {
+                    position: fixed;
+                    top: 0;
+                    right: 68px;
+                    width: 34px;
+                }
+            }
+
+            ul.tabs {
+                li {
+                    float: none;
+                }
+
+                li > a {
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    padding-left: 10px;
+                }
+
+                li.tab > a {
+                    padding-left: 10px - @navbar-color-border-width;
+                }
+            }
+
+            .navbar-form {
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+        }
+    }
+
+    body.minimized.side-menu-opened {
+        #navbar > .navbar {
+
+            z-index: 2150 !important;
+
+            a.minimizer > span.left {
+                display: none;
+            }
+
+            a.minimizer > span.right {
+                display: inline;
+            }
+
+            ul.tabs {
+                > li > a > span.full-label {
+                    display: inline;
+                }
+            }
+
+            .navbar-brand img {
+                display: inline;
+            }
+
+            a.side-menu-button {
+                display: inline-block;
+            }
+
+            .dropdown-menu {
+                z-index: 2000;
+            }
         }
     }
 }
@@ -160,6 +221,9 @@
         }
         .navbar ul.nav > li.global-search-container {
             display: block;
+        }
+        .side-menu-button {
+            display: none;
         }
     }
 
@@ -212,10 +276,6 @@ body {
             }
         }
 
-        .navbar-brand span.home-icon {
-            display: none;
-        }
-
         .navbar-header > a.navbar-brand {
             &,
             &:active {
@@ -253,26 +313,18 @@ body {
             }
 
             .navbar-brand {
-                position: fixed;
-                top: 0;
-                height: 35px;
-                width: @navbar-minimized-width;
-                padding-top: 8px;
-
-                span.home-icon {
-                    margin-left: 12px;
-                    display: inline;
-                    font-size: 14px;
-                }
-
                 img {
                     display: none;
                 }
             }
 
+            a.side-menu-button {
+                display: inline-block;
+            }
+
             .navbar-header {
                 width: @navbar-minimized-width;
-                height: 30px;
+                height: 35px;
             }
 
             a.minimizer > span.left {
@@ -289,7 +341,6 @@ body {
 
             ul.tabs {
                 width: @navbar-minimized-width;
-                margin-top: 5px;
 
                 > li > a {
                     padding-left: 10px;
@@ -330,6 +381,16 @@ body {
 
         #footer {
             margin-left: @navbar-minimized-width;
+        }
+
+        > .side-menu-backdrop {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 2140;
+            height: 100%;
+            margin-left: @navbar-width;
         }
     }
 
@@ -390,7 +451,6 @@ body.minimized .stick-sub.button-container {
     width: calc(~"100% - "@navbar-minimized-width);
 }
 
-
 body .list-buttons-container .sticked-bar {
     width: calc(~"100% - "@navbar-width);
     left: @navbar-width;
@@ -410,4 +470,5 @@ body.minimized .list-buttons-container .sticked-bar {
         top: 0;
         left: 0;
     }
+
 }

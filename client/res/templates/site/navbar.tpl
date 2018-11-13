@@ -1,11 +1,10 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-th-large" title="{{translate 'Home'}}"></span></a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <span class="fas fa-bars"></span>
         </button>
+        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"></span></a>
+        <a href="javascript:" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
     <div class="collapse navbar-collapse navbar-body">
@@ -54,6 +53,7 @@
                 </ul>
             </li>
         </ul>
+        <div class="navbar-right-container">
         <ul class="nav navbar-nav navbar-right">
             <li class="nav navbar-nav navbar-form global-search-container">
                 {{{globalSearch}}}
@@ -73,7 +73,7 @@
             </li>
             {{/if}}
             <li class="dropdown menu-container">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-bars"></span></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-ellipsis-v"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                         {{#unless divider}}
@@ -85,6 +85,7 @@
                 </ul>
             </li>
         </ul>
+        </div>
         <a class="minimizer" href="javascript:">
             <span class="fas fa-chevron-right right"></span>
             <span class="fas fa-chevron-left left"></span>
