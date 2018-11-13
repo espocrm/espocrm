@@ -71,7 +71,7 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
             var $time = this.$time;
 
             $time.timepicker({
-                step: 30,
+                step: this.params.minuteStep || 30,
                 scrollDefaultNow: true,
                 timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
                 noneOption: [{
