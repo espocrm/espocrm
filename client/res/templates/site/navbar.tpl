@@ -1,12 +1,10 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
+            <span class="fas fa-bars"></span>
+        </button>
         <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"></span></a>
         <a href="javascript:" class="side-menu-button"><span class="fas fa-bars"></span></a>
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
     </div>
 
     <div class="collapse navbar-collapse navbar-body">

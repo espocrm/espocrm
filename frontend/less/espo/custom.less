@@ -26,6 +26,14 @@
         padding-left: 0;
         padding-right: 0;
     }
+
+    .navbar-toggle {
+        float: left;
+        text-align: center;
+        width: 38px;
+        margin: 0;
+        color: @navbar-inverse-link-color;
+    }
 }
 
 @media screen and (min-width: @screen-sm-min) {
@@ -38,6 +46,9 @@
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
     #navbar .navbar {
+
+        min-height: @navbar-height-xsmall;
+
         .navbar-form.global-search-container {
             padding-left: 8px;
             padding-right: 8px;
@@ -60,6 +71,14 @@
 
         .navbar-collapse {
             overflow-x: hidden !important;
+        }
+
+        .navbar-brand {
+            height: @navbar-height-xsmall;
+
+            > img.logo {
+                height: @navbar-logo-height-xsmall;
+            }
         }
     }
 }
@@ -2311,7 +2330,8 @@ pre > code {
     }
 
     #nav-menu-dropdown {
-        width: 46px;
+        width: 39px;
+        text-align: center;
     }
 }
 
