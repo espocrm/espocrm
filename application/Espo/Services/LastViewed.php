@@ -66,13 +66,18 @@ class LastViewed extends \Espo\Core\Services\Base
             'groupBy' => ['targetId', 'targetType']
         ];
 
-        $collection = $repository->limit($offset, $maxSize)->find($selectParams);
-
-        $total = $repository->count($selectParams);
+        $collection = $repository->limit($offset, $params['maxSize'] + 1)->find($selectParams);
 
         foreach ($collection as $i => $entity) {
             $actionHistoryRecordService->loadParentNameFields($entity);
             $entity->set('id', \Espo\Core\Utils\Util::generateId());
+        }
+
+        if ($maxSize && count($collection) > $maxSize) {
+            $total = -1;
+            unset($collection[count($collection) - 1]);
+        } else {
+            $total = -2;
         }
 
         return (object) [
