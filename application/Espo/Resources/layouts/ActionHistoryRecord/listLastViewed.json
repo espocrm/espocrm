@@ -1,4 +1,5 @@
 [
     {"name":"targetType", "notSortable": true, "width": 22},
-    {"name":"target", "notSortable": true}
+    {"name":"target", "notSortable": true},
+    {"name":"createdAt", "notSortable": true, "width": 16}
 ]
