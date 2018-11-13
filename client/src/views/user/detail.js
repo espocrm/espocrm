@@ -36,7 +36,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
 
                 if (this.model.isRegular() || this.model.isAdmin() || this.model.isPortal()) {
-                    this.menu.buttons.push({
+                    this.addMenuItem('dropdown', {
                         name: 'preferences',
                         label: 'Preferences',
                         style: 'default',
@@ -47,7 +47,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
 
                 if (this.model.isRegular() || this.model.isAdmin()) {
                     if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
-                        this.menu.buttons.push({
+                        this.addMenuItem('dropdown', {
                             name: 'emailAccounts',
                             label: "Email Accounts",
                             style: 'default',
