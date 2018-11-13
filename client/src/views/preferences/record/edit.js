@@ -82,7 +82,7 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.addButton({
+            this.addDropdownItem({
                 name: 'reset',
                 html: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
                 style: 'danger'
