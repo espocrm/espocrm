@@ -34,6 +34,10 @@ use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
 
 class MySqlSchemaManager extends \Doctrine\DBAL\Schema\MySqlSchemaManager
 {
+    /* Espo: default value for MariaDB 10.2.7+ */
+    protected $mariaDb1027;
+    /* Espo: end */
+
     public function createSchema()
     {
         $sequences = array();
@@ -141,4 +145,131 @@ class MySqlSchemaManager extends \Doctrine\DBAL\Schema\MySqlSchemaManager
 
         return $indexes;
     }
+
+    protected function _getPortableTableColumnDefinition($tableColumn)
+    {
+        $tableColumn = array_change_key_case($tableColumn, CASE_LOWER);
+
+        $dbType = strtolower($tableColumn['type']);
+        $dbType = strtok($dbType, '(), ');
+        if (isset($tableColumn['length'])) {
+            $length = $tableColumn['length'];
+        } else {
+            $length = strtok('(), ');
+        }
+
+        $fixed = null;
+
+        if ( ! isset($tableColumn['name'])) {
+            $tableColumn['name'] = '';
+        }
+
+        $scale = null;
+        $precision = null;
+
+        $type = $this->_platform->getDoctrineTypeMapping($dbType);
+
+        // In cases where not connected to a database DESCRIBE $table does not return 'Comment'
+        if (isset($tableColumn['comment'])) {
+            $type = $this->extractDoctrineTypeFromComment($tableColumn['comment'], $type);
+            $tableColumn['comment'] = $this->removeDoctrineTypeFromComment($tableColumn['comment'], $type);
+        }
+
+        switch ($dbType) {
+            case 'char':
+                $fixed = true;
+                break;
+            case 'float':
+            case 'double':
+            case 'real':
+            case 'numeric':
+            case 'decimal':
+                if(preg_match('([A-Za-z]+\(([0-9]+)\,([0-9]+)\))', $tableColumn['type'], $match)) {
+                    $precision = $match[1];
+                    $scale = $match[2];
+                    $length = null;
+                }
+                break;
+            case 'tinyint':
+            case 'smallint':
+            case 'mediumint':
+            case 'int':
+            case 'integer':
+            case 'bigint':
+            case 'tinyblob':
+            case 'mediumblob':
+            case 'longblob':
+            case 'blob':
+            case 'year':
+                $length = null;
+                break;
+        }
+
+        $length = ((int) $length == 0) ? null : (int) $length;
+
+        /* Espo: default value for MariaDB 10.2.7+ */
+        $columnDefault = isset($tableColumn['default']) ? $tableColumn['default'] : null;
+        if ($this->isMariaDb1027()) {
+            $columnDefault = $this->getMariaDb1027ColumnDefault($this->_platform, $columnDefault);
+        }
+        /* Espo: end */
+
+        $options = array(
+            'length'        => $length,
+            'unsigned'      => (bool) (strpos($tableColumn['type'], 'unsigned') !== false),
+            'fixed'         => (bool) $fixed,
+            'default'       => /* Espo: default value for MariaDB 10.2.7+ */ $columnDefault /* Espo: end */,
+            'notnull'       => (bool) ($tableColumn['null'] != 'YES'),
+            'scale'         => null,
+            'precision'     => null,
+            'autoincrement' => (bool) (strpos($tableColumn['extra'], 'auto_increment') !== false),
+            'comment'       => (isset($tableColumn['comment'])) ? $tableColumn['comment'] : null
+        );
+
+        if ($scale !== null && $precision !== null) {
+            $options['scale'] = $scale;
+            $options['precision'] = $precision;
+        }
+
+        return new Column($tableColumn['field'], \Doctrine\DBAL\Types\Type::getType($type), $options);
+    }
+
+    /* Espo: default value for MariaDB 10.2.7+ */
+    protected function isMariaDb1027()
+    {
+        if (!isset($this->mariaDb1027)) {
+            $version = $this->_conn->fetchColumn("select version()");
+
+            $this->mariaDb1027 = false;
+            if (preg_match('/mariadb/i', $version) && version_compare($version, '10.2.7') >= 0) {
+                $this->mariaDb1027 = true;
+            }
+        }
+
+        return $this->mariaDb1027;
+    }
+
+    private function getMariaDb1027ColumnDefault($platform, $columnDefault)
+    {
+        if ($columnDefault === 'NULL' || $columnDefault === null) {
+            return null;
+        }
+        if ($columnDefault[0] === "'") {
+            return stripslashes(
+                str_replace("''", "'",
+                    preg_replace('/^\'(.*)\'$/', '$1', $columnDefault)
+                )
+            );
+        }
+        switch ($columnDefault) {
+            case 'current_timestamp()':
+                return $platform->getCurrentTimestampSQL();
+            case 'curdate()':
+                return $platform->getCurrentDateSQL();
+            case 'curtime()':
+                return $platform->getCurrentTimeSQL();
+        }
+        return $columnDefault;
+    }
+    /* Espo: end */
 }
