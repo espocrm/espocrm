@@ -62,7 +62,7 @@ class LastViewed extends \Espo\Core\Services\Base
                 'targetType' => $targetTypeList
             ],
             'orderBy' => [[4, true]],
-            'select' => ['id', 'targetId', 'targetType', 'MAX:number', ['MAX:createdAt', 'createdAt']],
+            'select' => ['targetId', 'targetType', 'MAX:number', ['MAX:createdAt', 'createdAt']],
             'groupBy' => ['targetId', 'targetType']
         ];
 
@@ -72,6 +72,7 @@ class LastViewed extends \Espo\Core\Services\Base
 
         foreach ($collection as $i => $entity) {
             $actionHistoryRecordService->loadParentNameFields($entity);
+            $entity->set('id', \Espo\Core\Utils\Util::generateId());
         }
 
         return (object) [
