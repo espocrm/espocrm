@@ -176,7 +176,7 @@
         "jobMaxPortion": "Max number of jobs processed per one execution.",
         "daemonInterval": "Interval between process cron runs in seconds.",
         "daemonMaxProcessNumber": "Max number of cron processes run simultaneously.",
-        "daemonProcessTimeout": "Max execution time (in seconds) allocated for a sinle cron process."
+        "daemonProcessTimeout": "Max execution time (in seconds) allocated for a single cron process."
     },
     "labels": {
         "System": "System",
