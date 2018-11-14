@@ -119,7 +119,6 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
                 if (data.isCut) {
                     data.cutHeight = this.cutHeight;
-                    console.log(data.cutHeight);
                 }
             }
 
