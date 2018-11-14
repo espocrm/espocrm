@@ -81,7 +81,8 @@ Espo.define('views/modals/select-records-with-categories', ['views/modals/select
                         showRoot: true,
                         rootName: this.translate(this.scope, 'scopeNamesPlural'),
                         buttonsDisabled: true,
-                        checkboxes: false
+                        checkboxes: false,
+                        isExpanded: this.isExpanded
                     }, function (view) {
                         if (this.isRendered()) {
                             view.render();

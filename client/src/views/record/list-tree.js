@@ -78,6 +78,9 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
 
             if (this.level == 0 && this.options.hasExpandedToggler) {
                 data.hasExpandedToggler = true;
+            }
+
+            if (this.level == 0) {
                 data.isExpanded = this.isExpanded;
             }
 

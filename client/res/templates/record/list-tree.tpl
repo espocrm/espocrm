@@ -39,7 +39,7 @@
     {{/if}}
 
     {{#if showRoot}}
-    <a href="#{{scope}}" class="action link{{#if rootIsSelected}} text-bold{{/if}}" data-action="selectRoot">{{rootName}}</a>
+    <a href="#{{scope}}" class="action link{{#if rootIsSelected}} text-bold{{/if}}" data-action="selectRoot">{{rootName}}{{#if isExpanded}} <span class="fas fa-level-down-alt fa-sm"></span>{{/if}}</a>
     {{/if}}
 
     <ul class="list-group list-group-tree list-group-no-border">
