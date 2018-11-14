@@ -15,14 +15,27 @@
     {{/if}}
 {{/unless}}
 <div class="list list-expanded">
-
-    {{#if hasExpandedToggler}}
-        <a href="javascript:" title="{{translate 'Collapse'}}" class="small pull-right category-expanded-toggle-link action{{#unless isExpanded}} hidden{{/unless}}" data-action="collapse"><span class="fas fa-folder-open"></span></a>
-        <a href="javascript:" title="{{translate 'Expand'}}" class="small pull-right category-expanded-toggle-link action{{#if isExpanded}} hidden{{/if}}" data-action="expand""><span class="fas fa-folder"></span></a>
-    {{/if}}
-
-    {{#if showEditLink}}
-    <a href="#{{scope}}" class="small pull-right action manage-categories-link" data-action="manageCategories" title="{{translate 'Manage Categories' scope=scope}}"><span class="fas fa-th-list"></span></a>
+    {{#if showRootMenu}}
+    <div class="btn-group pull-right">
+        <a href="javascript:" class="small dropdown-toggle btn-link" data-toggle="dropdown">
+            <span class="fas fa-ellipsis-h"></span>
+        </a>
+        <ul class="dropdown-menu">
+            {{#if hasExpandedToggler}}
+            <li class="{{#unless isExpanded}}hidden{{/unless}}">
+                <a href="javascript:" class="category-expanded-toggle-link action" data-action="collapse">{{translate 'Collapse'}}</a>
+            </li>
+            <li class="{{#if isExpanded}}hidden{{/if}}">
+                <a href="javascript:" class="category-expanded-toggle-link action" data-action="expand"">{{translate 'Expand'}}</a>
+            </li>
+            {{/if}}
+            {{#if showEditLink}}
+            <li>
+                <a href="#{{scope}}" class="action manage-categories-link" data-action="manageCategories">{{translate 'Manage Categories' scope=scope}}</a>
+            </li>
+            {{/if}}
+        </ul>
+    </div>
     {{/if}}
 
     {{#if showRoot}}

@@ -81,6 +81,10 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
                 data.isExpanded = this.isExpanded;
             }
 
+            if (data.hasExpandedToggler || this.showEditLink) {
+                data.showRootMenu = true;
+            }
+
             return data;
         },
 
@@ -268,4 +272,3 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
 
     });
 });
-
