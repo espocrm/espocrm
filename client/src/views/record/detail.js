@@ -121,16 +121,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         events: {
             'click .button-container .action': function (e) {
-                var $target = $(e.currentTarget);
-                var action = $target.data('action');
-                var data = $target.data();
-                if (action) {
-                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                    if (typeof this[method] == 'function') {
-                        this[method].call(this, data, e);
-                        e.preventDefault();
-                    }
-                }
+                Espo.Utils.handleAction(this, e);
             }
         },
 

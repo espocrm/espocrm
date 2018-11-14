@@ -137,14 +137,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.selectAllHandler(e.currentTarget.checked);
             },
             'click .action': function (e) {
-                var $el = $(e.currentTarget);
-                var action = $el.data('action');
-                var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                if (typeof this[method] == 'function') {
-                    var data = $el.data();
-                    this[method](data, e);
-                    e.preventDefault();
-                }
+                Espo.Utils.handleAction(this, e);
             },
             'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {
                 this.selectAllResult();

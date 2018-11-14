@@ -30,6 +30,25 @@ Espo.define('utils', [], function () {
 
     var Utils = Espo.utils = Espo.Utils = {
 
+        handleAction: function (viewObject, e) {
+            var $target = $(e.currentTarget);
+            var action = $target.data('action');
+            if (action) {
+                var data = $target.data();
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                if (typeof viewObject[method] == 'function') {
+                    viewObject[method].call(viewObject, data, e);
+                    e.preventDefault();
+                } else if (data.handler) {
+                    e.preventDefault();
+                    require(data.handler, function (Handler) {
+                        var handler = new Handler(viewObject);
+                        handler[method].call(handler, data, e);
+                    });
+                }
+            }
+        },
+
         checkActionAccess: function (acl, obj, item, isPrecise) {
             var hasAccess = true;
             if (item.acl) {
@@ -257,4 +276,3 @@ Espo.define('utils', [], function () {
     return Utils;
 
 });
-
