@@ -25,11 +25,10 @@
          "min": 1
       },
       {
-         "name": "lengthOfCut",
+         "name": "cutHeight",
          "type": "int",
-         "default": 400,
-         "min": 1,
-         "tooltip": true
+         "default": 200,
+         "min": 1
       },
       {
          "name":"readOnly",

@@ -1770,6 +1770,25 @@ stream-head-text-container .span {
     cursor: default;
 }
 
+.complex-text-container.cut {
+    position: relative;
+
+    overflow: hidden;
+
+    > .complex-text {
+
+        &::before {
+            content: " ";
+            width: 100%;
+            height: 50px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to bottom, transparent, @white-color);
+        }
+    }
+}
+
 .complex-text a {
     word-wrap: break-word;
 }

@@ -151,6 +151,7 @@
         "noEmptyString": "Empty string value is not allowed",
         "defaultType": "Default Type",
         "seeMoreDisabled": "Disable Text Cut",
+        "cutHeight": "Cut Height (px)",
         "entityList": "Entity List",
         "isSorted": "Is Sorted (alphabetically)",
         "audited": "Audited",
