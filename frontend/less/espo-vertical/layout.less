@@ -94,7 +94,6 @@
             a.navbar-brand {
                 max-width: @navbar-width - 38px;
                 height: 35px;
-                float: right;
             }
 
             .navbar-header {
@@ -199,8 +198,12 @@
                 }
             }
 
-            .navbar-brand img {
-                display: inline;
+            a.navbar-brand {
+                float: right;
+
+                img {
+                    display: inline;
+                }
             }
 
             a.side-menu-button {
