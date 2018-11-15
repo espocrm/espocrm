@@ -36,6 +36,8 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 {
     function setUp()
     {
+        $GLOBALS['log'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
+
         $entityManager = $this->entityManager = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
         $config = $this->config = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
 
