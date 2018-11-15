@@ -84,7 +84,7 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $this->notifatorsHash[$entityType];
     }
 
-    public function afterSave(Entity $entity, array $options = array())
+    public function afterSave(Entity $entity, array $options = [])
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;
@@ -95,12 +95,12 @@ class Notifications extends \Espo\Core\Hooks\Base
         if (!$this->checkHasStream($entityType) || $entity->hasLinkMultipleField('assignedUsers')) {
             if (in_array($entityType, $this->getConfig()->get('assignmentNotificationsEntityList', []))) {
                 $notificator = $this->getNotificator($entityType);
-                $notificator->process($entity);
+                $notificator->process($entity, $options);
             }
         }
     }
 
-    public function beforeRemove(Entity $entity, array $options = array())
+    public function beforeRemove(Entity $entity, array $options = [])
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;

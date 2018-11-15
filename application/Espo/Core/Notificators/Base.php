@@ -90,7 +90,7 @@ class Base implements Injectable
         return $this->injections['user'];
     }
 
-    public function process(Entity $entity)
+    public function process(Entity $entity, array $options = [])
     {
         if ($entity->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $entity->getLinkMultipleIdList('assignedUsers');

@@ -154,6 +154,7 @@ class Importer
         }
 
         if ($duplicate = $this->findDuplicate($email)) {
+            $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
             $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
             return $duplicate;
         }
@@ -283,6 +284,7 @@ class Importer
 
         if ($duplicate = $this->findDuplicate($email)) {
             $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+            $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
             $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
             return $duplicate;
         }

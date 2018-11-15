@@ -214,16 +214,14 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             $entity->setDummyMessageId();
         }
 
-        $eaRepository = $this->getEntityManager()->getRepository('EmailAddress');
-
-        if ($entity->has('attachmentsIds')) {
-            $attachmentsIds = $entity->get('attachmentsIds');
-            if (!empty($attachmentsIds)) {
-                $entity->set('hasAttachment', true);
-            }
-        }
-
         if (empty($options['isDuplicate'])) {
+            if ($entity->has('attachmentsIds')) {
+                $attachmentsIds = $entity->get('attachmentsIds');
+                if (!empty($attachmentsIds)) {
+                    $entity->set('hasAttachment', true);
+                }
+            }
+
             if ($entity->has('from') || $entity->has('to') || $entity->has('cc') || $entity->has('bcc') || $entity->has('replyTo')) {
                 if (!$entity->has('usersIds')) {
                     $entity->loadLinkMultipleField('users');
@@ -232,7 +230,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 if ($entity->has('from')) {
                     $from = trim($entity->get('from'));
                     if (!empty($from)) {
-                        $ids = $eaRepository->getIds([$from]);
+                        $ids = $this->getEntityManager()->getRepository('EmailAddress')->getIds([$from]);
                         if (!empty($ids)) {
                             $entity->set('fromEmailAddressId', $ids[0]);
                             $this->addUserByEmailAddressId($entity, $ids[0], true);
@@ -271,32 +269,34 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
         parent::beforeSave($entity, $options);
 
-        if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
-            $entity->addLinkMultipleId('users', $entity->get('createdById'));
-            $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
-        }
+        if (empty($options['isDuplicate'])) {
+            if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
+                $entity->addLinkMultipleId('users', $entity->get('createdById'));
+                $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
+            }
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
-            $entity->set('accountId', null);
-        }
+            if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
+                $entity->set('accountId', null);
+            }
 
-        $parentId = $entity->get('parentId');
-        $parentType = $entity->get('parentType');
-        if ($parentId && $parentType) {
-            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-            if ($parent) {
-                $accountId = null;
-                if ($parent->getEntityType() == 'Account') {
-                    $accountId = $parent->id;
-                }
-                if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
-                    $accountId = $parent->get('accountId');
-                }
-                if ($accountId) {
-                    $account = $this->getEntityManager()->getEntity('Account', $accountId);
-                    if ($account) {
-                        $entity->set('accountId', $accountId);
-                        $entity->set('accountName', $account->get('name'));
+            $parentId = $entity->get('parentId');
+            $parentType = $entity->get('parentType');
+            if ($parentId && $parentType) {
+                $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+                if ($parent) {
+                    $accountId = null;
+                    if ($parent->getEntityType() == 'Account') {
+                        $accountId = $parent->id;
+                    }
+                    if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
+                        $accountId = $parent->get('accountId');
+                    }
+                    if ($accountId) {
+                        $account = $this->getEntityManager()->getEntity('Account', $accountId);
+                        if ($account) {
+                            $entity->set('accountId', $accountId);
+                            $entity->set('accountName', $account->get('name'));
+                        }
                     }
                 }
             }
@@ -331,7 +331,8 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
-        if (!$entity->isNew()) {
+
+        if (!$entity->isNew() && empty($options['isDuplicate'])) {
             if ($entity->get('parentType') && $entity->get('parentId') && $entity->isAttributeChanged('parentId')) {
                 $replyList = $this->findRelated($entity, 'replies');
                 foreach ($replyList as $reply) {
@@ -348,6 +349,8 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
 
         if (
+            empty($options['isDuplicate'])
+            &&
             ($entity->get('status') === 'Archived' || $entity->get('status') === 'Sent')
             &&
             ($entity->isAttributeChanged('status') || $entity->isNew())
