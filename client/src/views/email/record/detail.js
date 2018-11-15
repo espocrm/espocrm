@@ -72,11 +72,18 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 }
             }, this);
 
-            if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
-                this.dropdownItemList.push({
-                    'label': 'Show Plain Text',
-                    'name': 'showBodyPlain'
-                });
+            this.addDropdownItem({
+                label: 'Show Plain Text',
+                name: 'showBodyPlain',
+                hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
+            });
+
+            if (!(this.model.get('isHtml') && this.model.get('bodyPlain'))) {
+                this.listenToOnce(this.model, 'sync', function () {
+                    if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
+                        this.showActionItem('showBodyPlain');
+                    }
+                }, this);
             }
 
             if (this.model.get('isUsers')) {
