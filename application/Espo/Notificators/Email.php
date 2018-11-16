@@ -58,7 +58,7 @@ class Email extends \Espo\Core\Notificators\Base
 
     public function process(Entity $entity, array $options = [])
     {
-        if ($entity->get('status') !== 'Archived' && $entity->get('status') !== 'Sent') {
+        if (!in_array($entity->get('status'), ['Archived', 'Sent', 'Being Imported'])) {
             return;
         }
 
