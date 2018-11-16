@@ -36,7 +36,7 @@ class EmailFilterManager
 {
     private $entityManager;
 
-    private $data = array();
+    private $data = [];
 
     protected $filtersMatcher = null;
 
@@ -61,10 +61,10 @@ class EmailFilterManager
     public function getMatchingFilter(Email $email, $userId)
     {
         if (!array_key_exists($userId, $this->data)) {
-            $emailFilterList = $this->getEntityManager()->getRepository('EmailFilter')->where(array(
+            $emailFilterList = $this->getEntityManager()->getRepository('EmailFilter')->where([
                 'parentId' => $userId,
                 'parentType' => 'User'
-            ))->order('LIST:action:Skip;Move to Folder')->find();
+            ])->order('LIST:action:Skip;Move to Folder')->find();
             $this->data[$userId] = $emailFilterList;
         }
         foreach ($this->data[$userId] as $emailFilter) {
@@ -74,5 +74,3 @@ class EmailFilterManager
         }
     }
 }
-
-

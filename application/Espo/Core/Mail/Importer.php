@@ -314,9 +314,11 @@ class Importer
                 'name' => $email->get('name'),
                 'dateSent' => $email->get('dateSent'),
                 'body' => $email->get('body'),
-                'bodyPlain' => $email->get('name'),
+                'bodyPlain' => $email->get('bodyPlain'),
                 'parentType' => $email->get('parentType'),
-                'parentId' => $email->get('parentId')
+                'parentId' => $email->get('parentId'),
+                'isHtml' => $email->get('isHtml'),
+                'messageId' => $email->get('messageId')
             ]);
             $this->getEntityManager()->getRepository('Email')->fillAccount($duplicate);
 
@@ -420,7 +422,7 @@ class Importer
     protected function findDuplicate(Entity $email)
     {
         if ($email->get('messageId')) {
-            $duplicate = $this->getEntityManager()->getRepository('Email')->select(['id'])->where([
+            $duplicate = $this->getEntityManager()->getRepository('Email')->select(['id', 'status'])->where([
                 'messageId' => $email->get('messageId')
             ])->findOne(['skipAdditionalSelectParams' => true]);
             if ($duplicate) {
@@ -431,6 +433,11 @@ class Importer
 
     protected function processDuplicate(Entity $duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList)
     {
+        if ($duplicate->get('status') == 'Archived') {
+            $this->getEntityManager()->getRepository('Email')->loadFromField($duplicate);
+            $this->getEntityManager()->getRepository('Email')->loadToField($duplicate);
+        }
+
         $duplicate->loadLinkMultipleField('users');
         $fetchedUserIdList = $duplicate->getLinkMultipleIdList('users');
         $duplicate->setLinkMultipleIdList('users', []);
@@ -454,7 +461,7 @@ class Importer
                 if (!in_array($uId, $fetchedUserIdList)) {
                     $duplicate->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
                 } else {
-                    $this->getEntityManager()->getRepository()->updateRelation($duplicate, 'users', $uId, [
+                    $this->getEntityManager()->getRepository('Email')->updateRelation($duplicate, 'users', $uId, [
                         'folderId' => $folderId
                     ]);
                 }
