@@ -31,9 +31,9 @@ namespace Espo\Core;
 
 abstract class Injectable implements \Espo\Core\Interfaces\Injectable
 {
-    protected $dependencyList = array();
+    protected $dependencyList = [];
 
-    protected $injections = array();
+    protected $injections = [];
 
     public function inject($name, $object)
     {

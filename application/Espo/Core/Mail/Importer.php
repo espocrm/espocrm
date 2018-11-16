@@ -42,11 +42,14 @@ class Importer
 
     private $filtersMatcher;
 
-    public function __construct($entityManager, $config)
+    private $notificator = null;
+
+    public function __construct($entityManager, $config, $notificator = null)
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->filtersMatcher = new FiltersMatcher();
+        $this->notificator = $notificator;
     }
 
     protected function getEntityManager()
@@ -62,6 +65,11 @@ class Importer
     protected function getFiltersMatcher()
     {
         return $this->filtersMatcher;
+    }
+
+    protected function getNotificator()
+    {
+        return $this->notificator;
     }
 
     public function importMessage($parserType = 'ZendMail', $message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null)
@@ -153,10 +161,14 @@ class Importer
             }
         }
 
+        $duplicate = null;
+
         if ($duplicate = $this->findDuplicate($email)) {
-            $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
-            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
-            return $duplicate;
+            if ($duplicate->get('status') != 'Being Imported') {
+                $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
+                $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+                return $duplicate;
+            }
         }
 
         if ($parser->checkMessageAttribute($message, 'date')) {
@@ -280,11 +292,34 @@ class Importer
             }
         }
 
-        $this->getEntityManager()->getPdo()->query('LOCK TABLES `email` WRITE');
+        if (!$duplicate) {
+            $this->lockEmailTable();
+            if ($duplicate = $this->findDuplicate($email)) {
+                $this->unlockTables();
+                if ($duplicate->get('status') != 'Being Imported') {
+                    $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
+                    $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+                    return $duplicate;
+                }
+            }
+        }
 
-        if ($duplicate = $this->findDuplicate($email)) {
-            $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
-            $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
+        if ($duplicate) {
+            $duplicate->set([
+                'from' => $email->get('from'),
+                'to' => $email->get('to'),
+                'cc' => $email->get('cc'),
+                'bcc' => $email->get('bcc'),
+                'replyTo' => $email->get('replyTo'),
+                'name' => $email->get('name'),
+                'dateSent' => $email->get('dateSent'),
+                'body' => $email->get('body'),
+                'bodyPlain' => $email->get('name'),
+                'parentType' => $email->get('parentType'),
+                'parentId' => $email->get('parentId')
+            ]);
+            $this->getEntityManager()->getRepository('Email')->fillAccount($duplicate);
+
             $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
             return $duplicate;
         }
@@ -292,13 +327,14 @@ class Importer
         if (!$email->get('messageId')) {
             $email->setDummyMessageId();
         }
+        $email->set('status', 'Being Imported');
 
         $this->getEntityManager()->saveEntity($email, [
             'skipAll' => true,
             'keepNew' => true
         ]);
 
-        $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+        $this->unlockTables();
 
         if ($parentFound) {
             $parentType = $email->get('parentType');
@@ -317,6 +353,8 @@ class Importer
             }
         }
 
+        $email->set('status', 'Archived');
+
         $this->getEntityManager()->saveEntity($email, [
             'isBeingImported' => true
         ]);
@@ -330,6 +368,16 @@ class Importer
         }
 
         return $email;
+    }
+
+    protected function lockEmailTable()
+    {
+        $this->getEntityManager()->getPdo()->query('LOCK TABLES `email` WRITE');
+    }
+
+    protected function unlockTables()
+    {
+        $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
     }
 
     protected function findParent(Entity $email, $emailAddress)
@@ -415,12 +463,23 @@ class Importer
 
         $duplicate->set('isBeingImported', true);
 
-        $this->getEntityManager()->saveEntity($duplicate, [
+        $this->getEntityManager()->getRepository('Email')->applyUsersFilters($duplicate);
+
+        $this->getEntityManager()->getRepository('Email')->processLinkMultipleFieldSave($duplicate, 'users', [
             'skipLinkMultipleRemove' => true,
-            'skipLinkMultipleUpdate' => true,
-            'isBeingImported' => true,
-            'isDuplicate' => true
+            'skipLinkMultipleUpdate' => true
         ]);
+
+        $this->getEntityManager()->getRepository('Email')->processLinkMultipleFieldSave($duplicate, 'assignedUsers', [
+            'skipLinkMultipleRemove' => true,
+            'skipLinkMultipleUpdate' => true
+        ]);
+
+        if ($notificator = $this->getNotificator()) {
+            $notificator->process($duplicate, [
+                'isBeingImported' => true
+            ]);
+        }
 
         if (!empty($teamsIdList)) {
             foreach ($teamsIdList as $teamId) {

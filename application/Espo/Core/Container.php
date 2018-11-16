@@ -32,7 +32,7 @@ namespace Espo\Core;
 class Container
 {
 
-    private $data = array();
+    private $data = [];
 
 
     /**
@@ -219,6 +219,13 @@ class Container
             $this->get('metadata'),
             $this->get('config'),
             $this->get('injectableFactory')
+        );
+    }
+
+    protected function loadNotificatorFactory()
+    {
+        return new \Espo\Core\NotificatorFactory(
+            $this
         );
     }
 

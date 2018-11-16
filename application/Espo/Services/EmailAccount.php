@@ -47,6 +47,7 @@ class EmailAccount extends Record
     {
         parent::init();
         $this->addDependency('crypt');
+        $this->addDependency('notificatorFactory');
     }
 
     protected function getCrypt()
@@ -176,7 +177,9 @@ class EmailAccount extends Record
             throw new Error("Email Account {$emailAccount->id} is not active.");
         }
 
-        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig());
+        $notificator = $this->getInjection('notificatorFactory')->create('Email');
+
+        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig(), $notificator);
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 

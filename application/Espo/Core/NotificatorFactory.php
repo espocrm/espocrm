@@ -31,38 +31,28 @@ namespace Espo\Core;
 
 use \Espo\Core\Exceptions\Error;
 
-class InjectableFactory
+use \Espo\Core\Utils\Util;
+use \Espo\Core\InjectableFactory;
+
+class NotificatorFactory extends InjectableFactory
 {
-    private $container;
-
-    public function __construct(Container $container)
+    public function create($entityType)
     {
-        $this->container = $container;
-    }
+        $normalizedName = Util::normilizeClassName($entityType);
 
-    public function createByClassName($className)
-    {
-        if (class_exists($className)) {
-            $service = new $className();
-            if (!($service instanceof \Espo\Core\Interfaces\Injectable)) {
-                throw new Error("Class '$className' is not instance of Injectable interface");
+        $className = '\\Espo\\Custom\\Notificators\\' . $normalizedName;
+        if (!class_exists($className)) {
+            $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
+            if ($moduleName) {
+                $className = '\\Espo\\Modules\\' . $moduleName . '\\Notificators\\' . $normalizedName;
+            } else {
+                $className = '\\Espo\\Notificators\\' . $normalizedName;
             }
-            $dependencyList = $service->getDependencyList();
-            foreach ($dependencyList as $name) {
-                $service->inject($name, $this->container->get($name));
+            if (!class_exists($className)) {
+                $className = '\\Espo\\Core\\Notificators\\Base';
             }
-            return $service;
         }
-        throw new Error("Class '$className' does not exist");
-    }
 
-    protected function getMetadata()
-    {
-        return $this->getContainer()->get('metadata');
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
+        return $this->createByClassName($className);
     }
 }

@@ -76,6 +76,7 @@ class InboundEmail extends \Espo\Services\Record
 
         $this->addDependency('mailSender');
         $this->addDependency('crypt');
+        $this->addDependency('notificatorFactory');
     }
 
     protected function getMailSender()
@@ -159,7 +160,9 @@ class InboundEmail extends \Espo\Services\Record
             throw new Error("Group Email Account {$emailAccount->id} is not active.");
         }
 
-        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig());
+        $notificator = $this->getInjection('notificatorFactory')->create('Email');
+
+        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig(), $notificator);
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 

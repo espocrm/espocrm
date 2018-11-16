@@ -275,30 +275,8 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
             }
 
-            if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
-                $entity->set('accountId', null);
-            }
-
-            $parentId = $entity->get('parentId');
-            $parentType = $entity->get('parentType');
-            if ($parentId && $parentType) {
-                $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-                if ($parent) {
-                    $accountId = null;
-                    if ($parent->getEntityType() == 'Account') {
-                        $accountId = $parent->id;
-                    }
-                    if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
-                        $accountId = $parent->get('accountId');
-                    }
-                    if ($accountId) {
-                        $account = $this->getEntityManager()->getEntity('Account', $accountId);
-                        if ($account) {
-                            $entity->set('accountId', $accountId);
-                            $entity->set('accountName', $account->get('name'));
-                        }
-                    }
-                }
+            if ($entity->isNew() || $entity->isAttributeChanged('parentId')) {
+                $this->fillAccount($entity);
             }
         }
 
@@ -311,17 +289,51 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     $this->loadToField($entity);
                 }
             }
-            foreach ($entity->getLinkMultipleIdList('users') as $userId) {
-                $filter = $this->getEmailFilterManager()->getMatchingFilter($entity, $userId);
-                if ($filter) {
-                    $action = $filter->get('action');
-                    if ($action === 'Skip') {
-                        $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
-                    } else if ($action === 'Move to Folder') {
-                        $folderId = $filter->get('emailFolderId');
-                        if ($folderId) {
-                            $entity->setLinkMultipleColumn('users', 'folderId', $userId, $folderId);
-                        }
+            $this->applyUsersFilters($entity);
+        }
+    }
+
+    public function fillAccount(Entity $entity)
+    {
+        if (!$entity->isNew()) {
+            $entity->set('accountId', null);
+        }
+
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
+        if ($parentId && $parentType) {
+            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+            if ($parent) {
+                $accountId = null;
+                if ($parent->getEntityType() == 'Account') {
+                    $accountId = $parent->id;
+                }
+                if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
+                    $accountId = $parent->get('accountId');
+                }
+                if ($accountId) {
+                    $account = $this->getEntityManager()->getEntity('Account', $accountId);
+                    if ($account) {
+                        $entity->set('accountId', $accountId);
+                        $entity->set('accountName', $account->get('name'));
+                    }
+                }
+            }
+        }
+    }
+
+    public function applyUsersFilters(Entity $entity)
+    {
+        foreach ($entity->getLinkMultipleIdList('users') as $userId) {
+            $filter = $this->getEmailFilterManager()->getMatchingFilter($entity, $userId);
+            if ($filter) {
+                $action = $filter->get('action');
+                if ($action === 'Skip') {
+                    $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
+                } else if ($action === 'Move to Folder') {
+                    $folderId = $filter->get('emailFolderId');
+                    if ($folderId) {
+                        $entity->setLinkMultipleColumn('users', 'folderId', $userId, $folderId);
                     }
                 }
             }

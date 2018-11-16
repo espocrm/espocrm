@@ -47,6 +47,11 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $this->getContainer()->get('serviceFactory');
     }
 
+    protected function getNotificatorFactory()
+    {
+        return $this->getContainer()->get('notificatorFactory');
+    }
+
     protected function checkHasStream($entityType)
     {
         if (!array_key_exists($entityType, $this->hasStreamCache)) {
@@ -58,27 +63,7 @@ class Notifications extends \Espo\Core\Hooks\Base
     protected function getNotificator($entityType)
     {
         if (empty($this->notifatorsHash[$entityType])) {
-            $normalizedName = Util::normilizeClassName($entityType);
-
-            $className = '\\Espo\\Custom\\Notificators\\' . $normalizedName;
-            if (!class_exists($className)) {
-                $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
-                if ($moduleName) {
-                    $className = '\\Espo\\Modules\\' . $moduleName . '\\Notificators\\' . $normalizedName;
-                } else {
-                    $className = '\\Espo\\Notificators\\' . $normalizedName;
-                }
-                if (!class_exists($className)) {
-                    $className = '\\Espo\\Core\\Notificators\\Base';
-                }
-            }
-
-            $notificator = new $className();
-            $dependencies = $notificator->getDependencyList();
-            foreach ($dependencies as $name) {
-                $notificator->inject($name, $this->getContainer()->get($name));
-            }
-
+            $notificator = $this->getNotificatorFactory()->create($entityType);
             $this->notifatorsHash[$entityType] = $notificator;
         }
         return $this->notifatorsHash[$entityType];
@@ -150,6 +135,4 @@ class Notifications extends \Espo\Core\Hooks\Base
         }
         return $this->streamService;
     }
-
 }
-

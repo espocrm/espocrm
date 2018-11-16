@@ -454,6 +454,134 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    public function processLinkMultipleFieldSave(Entity $entity, $link, array $options = [])
+    {
+        $name = $link;
+
+        $idListAttribute = $link . 'Ids';
+        $columnsAttribute = $link . 'Columns';
+
+        if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
+            return;
+        }
+
+        $skipCreate = false;
+        $skipRemove = false;
+        $skipUpdate = false;
+        if (!empty($options['skipLinkMultipleCreate'])) $skipCreate = true;
+        if (!empty($options['skipLinkMultipleRemove'])) $skipRemove = true;
+        if (!empty($options['skipLinkMultipleUpdate'])) $skipUpdate = true;
+
+        if ($entity->isNew()) {
+            $skipRemove = true;
+        }
+
+        if ($entity->has($idListAttribute)) {
+            $specifiedIdList = $entity->get($idListAttribute);
+        } else if ($entity->has($columnsAttribute)) {
+            $skipRemove = true;
+            $specifiedIdList = [];
+            foreach ($entity->get($columnsAttribute) as $id => $d) {
+                $specifiedIdList[] = $id;
+            }
+        } else {
+            return;
+        }
+
+        if (!is_array($specifiedIdList)) return;
+
+        $toRemoveIdList = [];
+        $existingIdList = [];
+        $toUpdateIdList = [];
+        $toCreateIdList = [];
+        $existingColumnsData = (object)[];
+
+        $defs = [];
+        $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.columns");
+        if (!empty($columns)) {
+            $columnData = $entity->get($columnsAttribute);
+            $defs['additionalColumns'] = $columns;
+        }
+
+        $foreignEntityList = $entity->get($name, $defs);
+        if ($foreignEntityList) {
+            foreach ($foreignEntityList as $foreignEntity) {
+                $existingIdList[] = $foreignEntity->id;
+                if (!empty($columns)) {
+                    $data = (object)[];
+                    foreach ($columns as $columnName => $columnField) {
+                        $foreignId = $foreignEntity->id;
+                        $data->$columnName = $foreignEntity->get($columnField);
+                    }
+                    $existingColumnsData->$foreignId = $data;
+                    if (!$entity->isNew()) {
+                        $entity->setFetched($columnsAttribute, $existingColumnsData);
+                    }
+                }
+            }
+        }
+
+        if (!$entity->isNew()) {
+            if ($entity->has($idListAttribute) && !$entity->hasFetched($idListAttribute)) {
+                $entity->setFetched($idListAttribute, $existingIdList);
+            }
+            if ($entity->has($columnsAttribute) && !empty($columns)) {
+                $entity->setFetched($columnsAttribute, $existingColumnsData);
+            }
+        }
+
+        foreach ($existingIdList as $id) {
+            if (!in_array($id, $specifiedIdList)) {
+                if (!$skipRemove) {
+                    $toRemoveIdList[] = $id;
+                }
+            } else {
+                if (!$skipUpdate && !empty($columns)) {
+                    foreach ($columns as $columnName => $columnField) {
+                        if (isset($columnData->$id) && is_object($columnData->$id)) {
+                            if (
+                                property_exists($columnData->$id, $columnName)
+                                &&
+                                (
+                                    !property_exists($existingColumnsData->$id, $columnName)
+                                    ||
+                                    $columnData->$id->$columnName !== $existingColumnsData->$id->$columnName
+                                )
+                            ) {
+                                $toUpdateIdList[] = $id;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!$skipCreate) {
+            foreach ($specifiedIdList as $id) {
+                if (!in_array($id, $existingIdList)) {
+                    $toCreateIdList[] = $id;
+                }
+            }
+        }
+
+        foreach ($toCreateIdList as $id) {
+            $data = null;
+            if (!empty($columns) && isset($columnData->$id)) {
+                $data = $columnData->$id;
+            }
+            $this->relate($entity, $name, $id, $data);
+        }
+
+        foreach ($toRemoveIdList as $id) {
+            $this->unrelate($entity, $name, $id);
+        }
+
+        foreach ($toUpdateIdList as $id) {
+            $data = $columnData->$id;
+            $this->updateRelation($entity, $name, $id, $data);
+        }
+    }
+
     protected function processSpecifiedRelationsSave(Entity $entity, array $options = [])
     {
         $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
@@ -461,128 +589,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (in_array($defs['type'], $relationTypeList)) {
                 $idListAttribute = $name . 'Ids';
                 $columnsAttribute = $name . 'Columns';
-
                 if ($entity->has($idListAttribute) || $entity->has($columnsAttribute)) {
-                    if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
-                        continue;
-                    }
-
-                    $skipCreate = false;
-                    $skipRemove = false;
-                    $skipUpdate = false;
-                    if (!empty($options['skipLinkMultipleCreate'])) $skipCreate = true;
-                    if (!empty($options['skipLinkMultipleRemove'])) $skipRemove = true;
-                    if (!empty($options['skipLinkMultipleUpdate'])) $skipUpdate = true;
-
-                    if ($entity->isNew()) {
-                        $skipRemove = true;
-                    }
-
-                    if ($entity->has($idListAttribute)) {
-                        $specifiedIdList = $entity->get($idListAttribute);
-                    } else if ($entity->has($columnsAttribute)) {
-                        $skipRemove = true;
-                        $specifiedIdList = [];
-                        foreach ($entity->get($columnsAttribute) as $id => $d) {
-                            $specifiedIdList[] = $id;
-                        }
-                    } else {
-                        continue;
-                    }
-
-                    if (!is_array($specifiedIdList)) continue;
-
-                    $toRemoveIdList = [];
-                    $existingIdList = [];
-                    $toUpdateIdList = [];
-                    $toCreateIdList = [];
-                    $existingColumnsData = (object)[];
-
-                    $defs = [];
-                    $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.columns");
-                    if (!empty($columns)) {
-                        $columnData = $entity->get($columnsAttribute);
-                        $defs['additionalColumns'] = $columns;
-                    }
-
-                    $foreignEntityList = $entity->get($name, $defs);
-                    if ($foreignEntityList) {
-                        foreach ($foreignEntityList as $foreignEntity) {
-                            $existingIdList[] = $foreignEntity->id;
-                            if (!empty($columns)) {
-                                $data = (object)[];
-                                foreach ($columns as $columnName => $columnField) {
-                                    $foreignId = $foreignEntity->id;
-                                    $data->$columnName = $foreignEntity->get($columnField);
-                                }
-                                $existingColumnsData->$foreignId = $data;
-                                if (!$entity->isNew()) {
-                                    $entity->setFetched($columnsAttribute, $existingColumnsData);
-                                }
-                            }
-                        }
-                    }
-
-                    if (!$entity->isNew()) {
-                        if ($entity->has($idListAttribute) && !$entity->hasFetched($idListAttribute)) {
-                            $entity->setFetched($idListAttribute, $existingIdList);
-                        }
-                        if ($entity->has($columnsAttribute) && !empty($columns)) {
-                            $entity->setFetched($columnsAttribute, $existingColumnsData);
-                        }
-                    }
-
-                    foreach ($existingIdList as $id) {
-                        if (!in_array($id, $specifiedIdList)) {
-                            if (!$skipRemove) {
-                                $toRemoveIdList[] = $id;
-                            }
-                        } else {
-                            if (!$skipUpdate && !empty($columns)) {
-                                foreach ($columns as $columnName => $columnField) {
-                                    if (isset($columnData->$id) && is_object($columnData->$id)) {
-                                        if (
-                                            property_exists($columnData->$id, $columnName)
-                                            &&
-                                            (
-                                                !property_exists($existingColumnsData->$id, $columnName)
-                                                ||
-                                                $columnData->$id->$columnName !== $existingColumnsData->$id->$columnName
-                                            )
-                                        ) {
-                                            $toUpdateIdList[] = $id;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (!$skipCreate) {
-                        foreach ($specifiedIdList as $id) {
-                            if (!in_array($id, $existingIdList)) {
-                                $toCreateIdList[] = $id;
-                            }
-                        }
-                    }
-
-                    foreach ($toCreateIdList as $id) {
-                        $data = null;
-                        if (!empty($columns) && isset($columnData->$id)) {
-                            $data = $columnData->$id;
-                        }
-                        $this->relate($entity, $name, $id, $data);
-                    }
-
-                    foreach ($toRemoveIdList as $id) {
-                        $this->unrelate($entity, $name, $id);
-                    }
-
-                    foreach ($toUpdateIdList as $id) {
-                        $data = $columnData->$id;
-                        $this->updateRelation($entity, $name, $id, $data);
-                    }
-
+                    $this->processLinkMultipleFieldSave($entity, $name, $options);
                 }
             } else if ($defs['type'] === $entity::HAS_ONE) {
                 if (empty($defs['entity']) || empty($defs['foreignKey'])) continue;
