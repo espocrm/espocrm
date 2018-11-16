@@ -218,7 +218,7 @@ class Tester
 
         if (!empty($this->params['pathToFiles'])) {
             $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
-            $applyChanges = true;
+            $this->getApplication(true, true)->runRebuild();
         }
 
         if (!empty($this->params['dataFile'])) {
@@ -232,17 +232,14 @@ class Tester
         }
 
         if ($applyChanges) {
-            $this->clearVars();
-            $this->getApplication()->runRebuild();
+            $this->getApplication(true, true)->runRebuild();
         }
     }
 
     public function setData(array $data)
     {
         $this->getDataLoader()->setData($data);
-
-        $this->clearVars();
-        $this->getApplication()->runRebuild();
+        $this->getApplication(true, true)->runRebuild();
     }
 
     public function clearCache()
