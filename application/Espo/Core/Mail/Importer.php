@@ -318,7 +318,9 @@ class Importer
                 'parentType' => $email->get('parentType'),
                 'parentId' => $email->get('parentId'),
                 'isHtml' => $email->get('isHtml'),
-                'messageId' => $email->get('messageId')
+                'messageId' => $email->get('messageId'),
+                'fromString' => $email->get('fromString'),
+                'replyToString' => $email->get('replyToString'),
             ]);
             $this->getEntityManager()->getRepository('Email')->fillAccount($duplicate);
 
