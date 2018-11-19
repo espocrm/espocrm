@@ -74,12 +74,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             this.layoutName = this.options.layoutName || this.layoutName;
 
-            if (!this.removeDisabled) {
-                this.addRemoveButton();
-            }
+            this.setupRecordButtons();
 
-            if (!this.editDisabled) {
-                this.addEditButton();
+            if (this.model) {
+                this.controlRecordButtonsVisibility();
             }
 
             if (!this.fullFormDisabled) {
@@ -131,7 +129,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     this.listenToOnce(this.model, 'sync', function () {
                         this.createRecordView();
                     }, this);
-                    this.model.fetch();
+                    this.model.fetch().then(function () {
+                        this.controlRecordButtonsVisibility();
+                    }.bind(this));
                 } else {
                     this.model = this.sourceModel.clone();
                     this.model.collection = this.sourceModel.collection;
@@ -141,7 +141,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     }, this);
 
                     this.once('after:render', function () {
-                        this.model.fetch();
+                        this.model.fetch().then(function () {
+                        this.controlRecordButtonsVisibility();
+                    }.bind(this));
                     }, this);
                     this.createRecordView();
                 }
@@ -150,6 +152,31 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             this.listenToOnce(this.getRouter(), 'routed', function () {
                 this.remove();
             }, this);
+        },
+
+        setupRecordButtons: function () {
+            if (!this.removeDisabled) {
+                this.addRemoveButton();
+            }
+
+            if (!this.editDisabled) {
+                this.addEditButton();
+            }
+        },
+
+        controlRecordButtonsVisibility: function () {
+            console.log(this.model.get('teamsIds'));
+            if (this.getAcl().check(this.model, 'edit')) {
+                this.showButton('edit');
+            } else {
+                this.hideButton('edit');
+            }
+
+            if (this.getAcl().check(this.model, 'delete')) {
+                this.showButton('remove');
+            } else {
+                this.hideButton('remove');
+            }
         },
 
         addEditButton: function () {
@@ -322,7 +349,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }, this);
 
             this.once('after:render', function () {
-                this.model.fetch();
+                this.model.fetch().then(function () {
+                    this.controlRecordButtonsVisibility();
+                }.bind(this));
             }, this);
 
             this.createRecordView(function () {
