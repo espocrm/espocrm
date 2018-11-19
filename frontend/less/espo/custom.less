@@ -1010,6 +1010,45 @@ section {
     }
 }
 
+.panel {
+    > .panel-heading {
+
+        .btn {
+            background-color: @panel-default-heading-bg;
+            border-color: @panel-default-heading-bg;
+        }
+
+        .open .btn {
+            border-color: transparent;
+        }
+
+        .btn-default {
+            &:active,
+            &.active {
+                .box-shadow(none);
+            }
+        }
+
+        .btn-group .dropdown-toggle,
+        .btn-group.open .dropdown-toggle
+        {
+            &,
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        .btn-group .dropdown-toggle.btn-default,
+        .btn-group.open .dropdown-toggle.btn-default {
+            &,
+            &:focus {
+                background-color: @panel-default-heading-bg;
+                border-color: @panel-default-heading-bg;
+            }
+        }
+    }
+}
+
 .record {
     .panel-warning {
         > .panel-heading {
