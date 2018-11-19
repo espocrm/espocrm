@@ -366,7 +366,8 @@ class Importer
         foreach ($inlineAttachmentList as $attachment) {
             $attachment->set([
                 'relatedId' => $email->id,
-                'relatedType' => 'Email'
+                'relatedType' => 'Email',
+                'field' => 'body'
             ]);
             $this->getEntityManager()->saveEntity($attachment);
         }

@@ -42,7 +42,7 @@ class Attachment extends Record
 
     protected $attachmentFieldTypeList = ['file', 'image', 'attachmentMultiple'];
 
-    protected $inlineAttachmentFieldTypeList = ['text', 'wysiwyg'];
+    protected $inlineAttachmentFieldTypeList = ['wysiwyg'];
 
     public function upload($fileData)
     {
@@ -95,16 +95,15 @@ class Attachment extends Record
                 throw new BadRequest("Params 'field' and 'parentType' not passed along with 'file'.");
             }
 
-            $fieldType = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
+            if (!$role || !in_array($role, ['Attachment', 'Inline Attachment'])) {
+                throw new BadRequest("Not supported attachment 'role'.");
+            }
 
-            $this->checkAttachmentField($relatedEntityType, $field);
+            $this->checkAttachmentField($relatedEntityType, $field, $role);
 
             $size = mb_strlen($contents, '8bit');
 
             if ($role === 'Attachment') {
-                if (!in_array($fieldType, $this->attachmentFieldTypeList)) {
-                    throw new Error("Field type '{$fieldType}' is not allowed for attachment.");
-                }
                 $maxSize = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
                 if (!$maxSize) {
                     $maxSize = $this->getConfig()->get('attachmentUploadMaxSize');
@@ -116,9 +115,7 @@ class Attachment extends Record
                 }
 
             } else if ($role === 'Inline Attachment') {
-                if (!in_array($fieldType, $this->inlineAttachmentFieldTypeList)) {
-                    throw new Error("Field '{$field}' is not allowed to have inline attachment.");
-                }
+
                 $inlineAttachmentUploadMaxSize = $this->getConfig()->get('inlineAttachmentUploadMaxSize');
                 if ($inlineAttachmentUploadMaxSize) {
                     if ($size > $inlineAttachmentUploadMaxSize * 1024 * 1024) {
@@ -155,14 +152,16 @@ class Attachment extends Record
         }
     }
 
-    protected function checkAttachmentField($relatedEntityType, $field)
+    protected function checkAttachmentField($relatedEntityType, $field, $role = 'Attachment')
     {
         $fieldType = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
         if (!$fieldType) {
             throw new Error("Field '{$field}' does not exist.");
         }
-        if (!in_array($fieldType, $this->attachmentFieldTypeList)) {
-            throw new Error("Field type '{$fieldType}' is not allowed for attachment.");
+
+        $attachmentFieldTypeListParam = lcfirst(str_replace(' ', '', $role)) . 'FieldTypeList';
+        if (!in_array($fieldType, $this->$attachmentFieldTypeListParam)) {
+            throw new Error("Field type '{$fieldType}' is not allowed for {$role}.");
         }
 
         if (
