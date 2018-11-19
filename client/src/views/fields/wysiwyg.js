@@ -91,14 +91,18 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 }
             }
 
-            this.listenTo(this.model, 'change:isHtml', function (model) {
-                if (this.mode == 'edit') {
+            this.listenTo(this.model, 'change:isHtml', function (model, value, o) {
+                if (o.ui && this.mode == 'edit') {
                     if (this.isRendered()) {
                         if (!model.has('isHtml') || model.get('isHtml')) {
-        		            var value = this.plainToHtml(this.model.get(this.name));
-        		            this.model.set(this.name, value);
+                            var value = this.plainToHtml(this.model.get(this.name));
+                            if (this.lastHtmlValue && this.model.get(this.name) === this.htmlToPlain(this.lastHtmlValue)) {
+                                value = this.lastHtmlValue;
+                            }
+                            this.model.set(this.name, value);
                             this.enableWysiwygMode();
                         } else {
+                            this.lastHtmlValue = this.model.get(this.name);
         		            var value = this.htmlToPlain(this.model.get(this.name));
         		            this.model.set(this.name, value);
                             this.disableWysiwygMode();
@@ -110,7 +114,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                         this.reRender();
                     }
                 }
-            }.bind(this));
+            }, this);
 
             this.once('remove', function () {
                 if (this.$summernote) {
