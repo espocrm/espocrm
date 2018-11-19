@@ -9,6 +9,14 @@
 
 @media screen and (min-width: @screen-sm-min) {
 
+    body {
+        #navbar .navbar {
+            .navbar-header {
+                display: flex;
+            }
+        }
+    }
+
     body,
     body.minimized.side-menu-opened {
         #header {
@@ -98,6 +106,7 @@
 
             .navbar-header {
                 width: @navbar-width;
+                display: block;
             }
 
             .navbar-header > a.minimizer {
