@@ -37,7 +37,13 @@ Espo.define('views/settings/fields/thousand-separator', 'views/fields/varchar', 
                 this.showValidationMessage(msg);
                 return true;
             }
+        },
 
+        fetch: function () {
+            var data = {};
+            var value = this.$element.val();
+            data[this.name] = value || '';
+            return data;
         }
 
     });
