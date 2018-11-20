@@ -32,7 +32,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         type: 'linkParent',
 
-        listTemplate: 'fields/link/list',
+        listTemplate: 'fields/link-parent/list',
 
         detailTemplate: 'fields/link-parent/detail',
 
@@ -64,7 +64,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 nameValue = this.translate(this.model.get(this.typeName), 'scopeNames');
             }
             var iconHtml = null;
-            if (this.mode === 'detail' && this.foreignScope) {
+            if ((this.mode == 'detail' || this.mode == 'list' && this.displayScopeColorInListMode) && this.foreignScope) {
                 iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
             }
             return _.extend({

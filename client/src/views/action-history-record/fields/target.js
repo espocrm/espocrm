@@ -30,6 +30,8 @@ Espo.define('views/action-history-record/fields/target', 'views/fields/link-pare
 
     return Dep.extend({
 
+        displayScopeColorInListMode: true,
+
         ignoreScopeList: ['Preferences', 'ExternalAccount', 'Notification', 'Note', 'ArrayValue'],
 
         setup: function () {
