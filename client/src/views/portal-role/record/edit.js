@@ -32,5 +32,7 @@ Espo.define('views/portal-role/record/edit', 'views/role/record/edit', function 
 
        tableView: 'views/portal-role/record/table',
 
+       stickButtonsContainerAllTheWay: true,
+
     });
 });

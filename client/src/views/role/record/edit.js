@@ -38,9 +38,7 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
 
         columnCount: 3,
 
-        events: _.extend({
-
-        }, Dep.prototype.events),
+        stickButtonsContainerAllTheWay: true,
 
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);

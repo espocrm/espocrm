@@ -40,6 +40,8 @@ Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
 
         columnCount: 3,
 
+        stickButtonsContainerAllTheWay: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
             this.createView('extra', this.tableView, {
@@ -49,5 +51,3 @@ Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
         },
     });
 });
-
-

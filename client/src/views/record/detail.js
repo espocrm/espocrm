@@ -345,7 +345,35 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         afterRender: function () {
-            var $container = this.$el.find('.detail-button-container');
+            this.initStickableButtonsContainer();
+            this.initFieldsControlBehaviour();
+        },
+
+        initFieldsControlBehaviour: function () {
+            var fields = this.getFieldViews();
+
+            var fieldInEditMode = null;
+            for (var field in fields) {
+                var fieldView = fields[field];
+                this.listenTo(fieldView, 'edit', function (view) {
+                    if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
+                        fieldInEditMode.inlineEditClose();
+                    }
+                    fieldInEditMode = view;
+                }, this);
+
+                this.listenTo(fieldView, 'inline-edit-on', function () {
+                    this.inlineEditModeIsOn = true;
+                }, this);
+                this.listenTo(fieldView, 'inline-edit-off', function () {
+                    this.inlineEditModeIsOn = false;
+                    this.setIsNotChanged();
+                }, this);
+            }
+        },
+
+        initStickableButtonsContainer: function () {
+           var $container = this.$el.find('.detail-button-container');
 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
             var blockHeight = this.getThemeManager().getParam('blockHeight') || 21;
@@ -368,7 +396,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 var edge = $middle.position().top + $middle.outerHeight(true);
                 var scrollTop = $window.scrollTop();
 
-                if (scrollTop < edge) {
+                if (scrollTop < edge || this.stickButtonsContainerAllTheWay) {
                     if (scrollTop > stickTop) {
                         if (!$container.hasClass('stick-sub')) {
                             $container.addClass('stick-sub');
@@ -398,27 +426,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     $block.show();
                 }
             }.bind(this));
-
-            var fields = this.getFieldViews();
-
-            var fieldInEditMode = null;
-            for (var field in fields) {
-                var fieldView = fields[field];
-                this.listenTo(fieldView, 'edit', function (view) {
-                    if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
-                        fieldInEditMode.inlineEditClose();
-                    }
-                    fieldInEditMode = view;
-                }, this);
-
-                this.listenTo(fieldView, 'inline-edit-on', function () {
-                    this.inlineEditModeIsOn = true;
-                }, this);
-                this.listenTo(fieldView, 'inline-edit-off', function () {
-                    this.inlineEditModeIsOn = false;
-                    this.setIsNotChanged();
-                }, this);
-            }
         },
 
         fetch: function () {

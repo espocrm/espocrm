@@ -32,5 +32,7 @@ Espo.define('views/portal-role/record/detail', 'views/role/record/detail', funct
 
         tableView: 'views/portal-role/record/table',
 
+        stickButtonsContainerAllTheWay: true,
+
     });
 });
