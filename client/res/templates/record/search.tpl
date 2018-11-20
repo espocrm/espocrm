@@ -53,7 +53,7 @@
         {{#if hasViewModeSwitcher}}
         <div class="btn-group view-mode-switcher-buttons-group">
             {{#each viewModeDataList}}
-            <button type="button" data-name="{{name}}" data-action="switchViewMode" class="btn btn-sm btn-icon btn-icon btn-default{{#ifEqual name ../viewMode}} active{{/ifEqual}}" title="{{title}}"><span class="{{iconClass}}"></span></button>
+            <button type="button" data-name="{{name}}" data-action="switchViewMode" class="btn btn-icon btn-icon btn-default{{#ifEqual name ../viewMode}} active{{/ifEqual}}" title="{{title}}"><span class="{{iconClass}}"></span></button>
             {{/each}}
         </div>
         {{/if}}
