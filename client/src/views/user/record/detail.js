@@ -41,17 +41,19 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
             this.setupNonAdminFieldsAccess();
 
-            if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
+            if (this.getUser().isAdmin()) {
                 if (!this.model.isPortal()) {
-                    this.buttonList.push({
+                    this.addButton({
                         name: 'access',
                         label: 'Access',
                         style: 'default'
                     });
                 }
+            }
 
+            if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
                 if (this.model.id == this.getUser().id && !this.model.isApi()) {
-                    this.dropdownItemList.push({
+                    this.addDropdownItem({
                         name: 'changePassword',
                         label: 'Change Password',
                         style: 'default'
