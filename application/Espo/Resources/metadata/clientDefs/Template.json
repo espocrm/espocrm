@@ -55,5 +55,6 @@
                 }
             }
         }
-    }
+    },
+    "iconClass": "fas fa-file-pdf"
 }
