@@ -75,6 +75,11 @@ class Htmlizer
         return $this->entityManager;
     }
 
+    protected function getMetadata()
+    {
+        return $this->metadata;
+    }
+
     protected function format($value)
     {
         if (is_float($value)) {
@@ -99,6 +104,15 @@ class Htmlizer
 
         if ($this->getAcl()) {
             $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+        }
+
+        $relationList = $entity->getRelationList();
+
+        foreach ($relationList as $relation) {
+            if (!$entity->hasLinkMultipleField($relation)) continue;
+
+            $collection = $entity->getLinkMultipleCollection($relation);
+            $data[$relation] = $collection;
         }
 
         foreach ($data as $key => $value) {

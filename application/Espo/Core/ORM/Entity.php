@@ -33,12 +33,22 @@ class Entity extends \Espo\ORM\Entity
 {
     public function hasLinkMultipleField($field)
     {
-        return $this->hasAttribute($field . 'Ids');
+        return
+            $this->hasRelation($field) &&
+            $this->getAttributeParam($field . 'Ids', 'isLinkMultipleIdList');
     }
 
     public function hasLinkField($field)
     {
-        return $this->hasAttribute($field . 'Id');
+        return $this->hasAttribute($field . 'Id') && $this->hasRelation($field);
+    }
+
+    public function hasLinkParentField($field)
+    {
+        return
+            $this->hasAttributeType($field . 'Type') == 'foreignType' &&
+            $this->hasAttribute($field . 'Id') &&
+            $this->hasRelation($field);
     }
 
     public function loadParentNameField($field)
@@ -64,14 +74,27 @@ class Entity extends \Espo\ORM\Entity
         }
     }
 
-    public function loadLinkMultipleField($field, $columns = null)
+    public function getLinkMultipleCollection($field)
     {
-        if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) return;
+        if (!$this->hasLinkMultipleField($field)) return;
 
-        $defs = array();
-        if (!empty($columns)) {
-            $defs['additionalColumns'] = $columns;
+        $defs = $this->getRelationSelectParams($field);
+
+        $columnAttribute = $field . 'Columns';
+        if ($this->hasAttribute($columnAttribute) && $this->getAttributeParam($columnAttribute, 'columns')) {
+            $defs['additionalColumns'] = $this->getAttributeParam($columnAttribute, 'columns');
         }
+
+        $collection = $this->get($field, $defs);
+
+        return $collection;
+    }
+
+    protected function getRelationSelectParams($link)
+    {
+        $field = $link;
+
+        $defs = [];
 
         $idsAttribute = $field . 'Ids';
 
@@ -101,6 +124,19 @@ class Entity extends \Espo\ORM\Entity
                     }
                 }
             }
+        }
+
+        return $defs;
+    }
+
+    public function loadLinkMultipleField($field, $columns = null)
+    {
+        if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) return;
+
+        $defs = $this->getRelationSelectParams($field);
+
+        if (!empty($columns)) {
+            $defs['additionalColumns'] = $columns;
         }
 
         $defs['select'] = ['id', 'name'];
@@ -135,6 +171,8 @@ class Entity extends \Espo\ORM\Entity
                 }
             }
         }
+
+        $idsAttribute = $field . 'Ids';
 
         $this->set($idsAttribute, $ids);
         if (!$this->isNew() && !$this->hasFetched($idsAttribute)) {
@@ -301,4 +339,3 @@ class Entity extends \Espo\ORM\Entity
         return false;
     }
 }
-

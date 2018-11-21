@@ -71,6 +71,7 @@ class LinkMultiple extends Base
             $data[$entityName]['fields'][$fieldName . 'Columns'] = [
                 'type' => 'jsonObject',
                 'notStorable' => true,
+                'columns' => $columns
             ];
         }
 

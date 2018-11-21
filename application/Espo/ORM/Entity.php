@@ -137,7 +137,7 @@ abstract class Entity implements IEntity
         }
     }
 
-    public function get($name, $params = array())
+    public function get($name, $params = [])
     {
         if ($name == 'id') {
             return $this->id;
