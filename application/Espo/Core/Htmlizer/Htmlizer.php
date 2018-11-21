@@ -91,32 +91,47 @@ class Htmlizer
     {
         $data = $entity->toArray();
 
-        $fieldDefs = $entity->getFields();
-        $fieldList = array_keys($fieldDefs);
+        $attributeDefs = $entity->getAttributes();
+        $attributeList = array_keys($attributeDefs);
 
         $forbidenAttributeList = [];
+        $skipAttributeList = [];
 
         if ($this->getAcl()) {
             $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
         }
 
+        foreach ($data as $key => $value) {
+            if ($value instanceof \Espo\ORM\EntityCollection) {
+                $skipAttributeList[] = $key;
+                $collection = $value;
+                $list = [];
+                foreach ($collection as $item) {
+                    $list[] = $this->getDataFromEntity($item, $skipLinks);
+                }
+                $data[$key] = $list;
+            }
+        }
 
-        foreach ($fieldList as $field) {
-            if (in_array($field, $forbidenAttributeList)) continue;
+        foreach ($attributeList as $attribute) {
+            if (in_array($attribute, $forbidenAttributeList)) continue;
 
-            $type = $entity->getAttributeType($field);
+            if (in_array($attribute, $skipAttributeList)) continue;
+
+            $type = $entity->getAttributeType($attribute);
 
             if ($type == Entity::DATETIME) {
-                if (!empty($data[$field])) {
-                    $data[$field] = $this->dateTime->convertSystemDateTime($data[$field]);
+                if (!empty($data[$attribute])) {
+                    $data[$attribute] = $this->dateTime->convertSystemDateTime($data[$attribute]);
                 }
             } else if ($type == Entity::DATE) {
-                if (!empty($data[$field])) {
-                    $data[$field] = $this->dateTime->convertSystemDate($data[$field]);
+                if (!empty($data[$attribute])) {
+                    $data[$attribute] = $this->dateTime->convertSystemDate($data[$attribute]);
                 }
             } else if ($type == Entity::JSON_ARRAY) {
-                if (!empty($data[$field])) {
-                    $list = $data[$field];
+                if (!empty($data[$attribute])) {
+                    $list = $data[$attribute];
+
                     $newList = [];
                     foreach ($list as $item) {
                         $v = $item;
@@ -133,36 +148,36 @@ class Htmlizer
 
                         $newList[] = $v;
                     }
-                    $data[$field] = $newList;
+                    $data[$attribute] = $newList;
                 }
             } else if ($type == Entity::JSON_OBJECT) {
-                if (!empty($data[$field])) {
-                    $value = $data[$field];
+                if (!empty($data[$attribute])) {
+                    $value = $data[$attribute];
                     if ($value instanceof \StdClass) {
-                        $data[$field] = json_decode(json_encode($value, \JSON_PRESERVE_ZERO_FRACTION), true);
+                        $data[$attribute] = json_decode(json_encode($value, \JSON_PRESERVE_ZERO_FRACTION), true);
                     }
-                    foreach ($data[$field] as $k => $w) {
+                    foreach ($data[$attribute] as $k => $w) {
                         $keyRaw = $k . '_RAW';
-                        $data[$field][$keyRaw] = $data[$field][$k];
-                        $data[$field][$k] = $this->format($data[$field][$k]);
+                        $data[$attribute][$keyRaw] = $data[$attribute][$k];
+                        $data[$attribute][$k] = $this->format($data[$attribute][$k]);
                     }
                 }
             } else if ($type === Entity::PASSWORD) {
-                unset($data[$field]);
+                unset($data[$attribute]);
             }
 
-            if (array_key_exists($field, $data)) {
-                $keyRaw = $field . '_RAW';
-                $data[$keyRaw] = $data[$field];
+            if (array_key_exists($attribute, $data)) {
+                $keyRaw = $attribute . '_RAW';
+                $data[$keyRaw] = $data[$attribute];
 
-                $fieldType = $this->getFieldType($entity->getEntityType(), $field);
+                $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
                 if ($fieldType === 'enum') {
                     if ($this->language) {
-                        $data[$field] = $this->language->translateOption($data[$field], $field, $entity->getEntityType());
+                        $data[$attribute] = $this->language->translateOption($data[$attribute], $attribute, $entity->getEntityType());
                     }
                 }
 
-                $data[$field] = $this->format($data[$field]);
+                $data[$attribute] = $this->format($data[$attribute]);
             }
         }
 
