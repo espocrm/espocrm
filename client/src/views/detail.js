@@ -93,7 +93,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             });
 
             this.listenTo(this.model, 'sync', function (model) {
-                if (model.hasChanged('name')) {
+                if (model && model.hasChanged('name')) {
                     if (this.getView('header')) {
                         this.getView('header').reRender();
                     }
