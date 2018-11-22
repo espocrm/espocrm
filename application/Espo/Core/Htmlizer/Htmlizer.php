@@ -92,7 +92,7 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(Entity $entity, $skipLinks = false)
+    protected function getDataFromEntity(Entity $entity, $skipLinks = false, $level = 0)
     {
         $data = $entity->toArray();
 
@@ -108,11 +108,13 @@ class Htmlizer
 
         $relationList = $entity->getRelationList();
 
-        foreach ($relationList as $relation) {
-            if (!$entity->hasLinkMultipleField($relation)) continue;
+        if (!$skipLinks && $level === 0) {
+            foreach ($relationList as $relation) {
+                if (!$entity->hasLinkMultipleField($relation)) continue;
 
-            $collection = $entity->getLinkMultipleCollection($relation);
-            $data[$relation] = $collection;
+                $collection = $entity->getLinkMultipleCollection($relation);
+                $data[$relation] = $collection;
+            }
         }
 
         foreach ($data as $key => $value) {
@@ -121,7 +123,7 @@ class Htmlizer
                 $collection = $value;
                 $list = [];
                 foreach ($collection as $item) {
-                    $list[] = $this->getDataFromEntity($item, $skipLinks);
+                    $list[] = $this->getDataFromEntity($item, $skipLinks, $level + 1);
                 }
                 $data[$key] = $list;
             }
@@ -209,7 +211,7 @@ class Htmlizer
                         if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
                     }
 
-                    $data[$relation] = $this->getDataFromEntity($relatedEntity, true);
+                    $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);
                 }
             }
         }
@@ -217,7 +219,7 @@ class Htmlizer
         return $data;
     }
 
-    public function render(Entity $entity, $template, $id = null, $additionalData = array(), $skipLinks = false)
+    public function render(Entity $entity, $template, $id = null, $additionalData = [], $skipLinks = false)
     {
         $code = \LightnCandy::compile($template, [
             'flags' => \LightnCandy::FLAG_HANDLEBARSJS,
