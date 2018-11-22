@@ -132,7 +132,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.readOnlyLocked = true;
             }
             if (this.mode == 'edit') {
-                console.log(this.mode, this.isInlineEditMode());
                 if (this.isInlineEditMode()) {
                     this.inlineEditClose();
                     return;
