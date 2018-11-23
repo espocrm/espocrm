@@ -445,15 +445,20 @@ class Importer
         $fetchedUserIdList = $duplicate->getLinkMultipleIdList('users');
         $duplicate->setLinkMultipleIdList('users', []);
 
+        $processNoteAcl = false;
+
         if ($assignedUserId) {
             if (!in_array($assignedUserId, $fetchedUserIdList)) {
+                $processNoteAcl = true;
                 $duplicate->addLinkMultipleId('users', $assignedUserId);
             }
             $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
         }
+
         if (!empty($userIdList)) {
             foreach ($userIdList as $uId) {
                 if (!in_array($uId, $fetchedUserIdList)) {
+                    $processNoteAcl = true;
                     $duplicate->addLinkMultipleId('users', $uId);
                 }
             }
@@ -491,10 +496,24 @@ class Importer
             ]);
         }
 
+        $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
+
         if (!empty($teamsIdList)) {
             foreach ($teamsIdList as $teamId) {
-                $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
+                if (!in_array($teamId, $fetchedTeamIdList)) {
+                    $processNoteAcl = true;
+                    $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
+                }
             }
+        }
+
+        if ($duplicate->get('parentType') && $processNoteAcl) {
+            $noteAclQueueItem = $this->getEntityManager()->getEntity('NoteAclQueueItem');
+            $noteAclQueueItem->set([
+                'targetType' => 'Email',
+                'targetId' => $duplicate->id
+            ]);
+            $this->getEntityManager()->saveEntity($noteAclQueueItem);
         }
     }
 }

@@ -73,6 +73,8 @@ class Notifications extends \Espo\Core\Hooks\Base
 
     protected function getSubscriberList($parentType, $parentId, $isInternal = false)
     {
+        if (!$this->getMetadata()->get(['scopes', $parentType, 'stream'])) return [];
+
         $pdo = $this->getEntityManager()->getPDO();
 
         if (!$isInternal) {
@@ -101,9 +103,9 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $userList;
     }
 
-    public function afterSave(Entity $entity)
+    public function afterSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew()) {
+        if ($entity->isNew() || !empty($options['forceProcessNotifications'])) {
             $parentType = $entity->get('parentType');
             $parentId = $entity->get('parentId');
             $superParentType = $entity->get('superParentType');
@@ -255,6 +257,20 @@ class Notifications extends \Espo\Core\Hooks\Base
             foreach ($notifyUserIdList as $i => $userId) {
                 if ($entity->isUserIdNotified($userId)) {
                     unset($notifyUserIdList[$i]);
+                    continue;
+                }
+                if (!$entity->isNew()) {
+                    if (
+                        $this->getEntityManager()->getRepository('Notification')->select(['id'])->where([
+                            'type' => 'Note',
+                            'relatedType' => 'Note',
+                            'relatedId' => $entity->id,
+                            'userId' => $userId
+                        ])->findOne()
+                    ) {
+                        unset($notifyUserIdList[$i]);
+                        continue;
+                    }
                 }
             }
             $notifyUserIdList = array_values($notifyUserIdList);

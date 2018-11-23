@@ -27,47 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\Common;
+namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class StreamNotesAcl extends \Espo\Core\Hooks\Base
+class NoteAclQueue extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected $noteService = null;
+    protected $hooksDisabled = true;
 
-    public static $order = 10;
+    protected $processFieldsAfterSaveDisabled = true;
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('serviceFactory');
-        $this->addDependency('aclManager');
-    }
+    protected $processFieldsBeforeSaveDisabled = true;
 
-    protected function getServiceFactory()
-    {
-        return $this->getInjection('serviceFactory');
-    }
-
-    protected function getAclManager()
-    {
-        return $this->getInjection('aclManager');
-    }
-
-    public function afterSave(Entity $entity, array $options = [])
-    {
-        if (!empty($options['noStream'])) return;
-        if (!empty($options['silent'])) return;
-        if (!empty($options['skipStreamNotesAcl'])) return;
-
-        if ($entity->isNew()) return;
-
-        if (!$this->noteService) {
-            $this->noteService = $this->getServiceFactory()->create('Note');
-        }
-
-        $forceProcessNoteNotifications = !empty($options['forceProcessNoteNotifications']);
-
-        $this->noteService->processNoteAcl($entity, $forceProcessNoteNotifications);
-    }
+    protected $processFieldsAfterRemoveDisabled = true;
 }

@@ -342,7 +342,12 @@ class InboundEmail extends \Espo\Services\Record
                         $this->getEntityManager()->getRepository('InboundEmail')->relate($emailAccount, 'emails', $email);
 
                         if ($emailAccount->get('createCase')) {
-                            $this->createCase($emailAccount, $email);
+                            if ($email->isFetched()) {
+                                $email = $this->getEntityManager()->getEntity('Email', $email->id);
+                            }
+                            if ($email) {
+                                $this->createCase($emailAccount, $email);
+                            }
                         } else {
                             if ($emailAccount->get('reply')) {
                                 $user = $this->getEntityManager()->getEntity('User', $userId);
@@ -381,7 +386,7 @@ class InboundEmail extends \Espo\Services\Record
             $fetchData->lastDate->$folder = $lastDate;
             $emailAccount->set('fetchData', $fetchData);
 
-            $this->getEntityManager()->saveEntity($emailAccount, array('silent' => true));
+            $this->getEntityManager()->saveEntity($emailAccount, ['silent' => true]);
         }
 
         $storage->close();
@@ -412,11 +417,41 @@ class InboundEmail extends \Espo\Services\Record
         }
     }
 
+    protected function processCaseToEmailFields($case, $email)
+    {
+        $userIdList = [];
+
+        if ($case->hasLinkMultipleField('assignedUsers')) {
+            $userIdList = $case->getLinkMultipleIdList('assignedUsers');
+        } else {
+            $assignedUserId = $case->get('assignedUserId');
+            if ($assignedUserId) {
+                $userIdList[] = $assignedUserId;
+            }
+        }
+
+        foreach ($userIdList as $userId) {
+            $email->addLinkMultipleId('users', $userId);
+        }
+
+        $teamIdList = $case->getLinkMultipleIdList('teams');
+
+        foreach ($teamIdList as $teamId) {
+            $email->addLinkMultipleId('teams', $teamId);
+        }
+
+        $this->getEntityManager()->saveEntity($email, [
+            'skipLinkMultipleRemove' => true,
+            'skipLinkMultipleUpdate' => true
+        ]);
+    }
+
     protected function createCase($inboundEmail, $email)
     {
         if ($email->get('parentType') == 'Case' && $email->get('parentId')) {
             $case = $this->getEntityManager()->getEntity('Case', $email->get('parentId'));
             if ($case) {
+                $this->processCaseToEmailFields($case, $email);
                 if (!$email->isFetched()) {
                     $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
                 }
@@ -426,25 +461,25 @@ class InboundEmail extends \Espo\Services\Record
 
         if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
             $caseNumber = $m[1];
-            $case = $this->getEntityManager()->getRepository('Case')->where(array(
+            $case = $this->getEntityManager()->getRepository('Case')->where([
                 'number' => $caseNumber
-            ))->findOne();
+            ])->findOne();
             if ($case) {
                 $email->set('parentType', 'Case');
                 $email->set('parentId', $case->id);
-                $this->getEntityManager()->saveEntity($email);
+                $this->processCaseToEmailFields($case, $email);
                 if (!$email->isFetched()) {
                     $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
                 }
             }
         } else {
-            $params = array(
+            $params = [
                 'caseDistribution' => $inboundEmail->get('caseDistribution'),
                 'teamId' => $inboundEmail->get('teamId'),
                 'userId' => $inboundEmail->get('assignToUserId'),
                 'targetUserPosition' => $inboundEmail->get('targetUserPosition'),
                 'inboundEmailId' => $inboundEmail->id
-            );
+            ];
             $case = $this->emailToCase($email, $params);
             $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
             $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email, true);
@@ -488,7 +523,7 @@ class InboundEmail extends \Espo\Services\Record
         }
     }
 
-    protected function emailToCase(\Espo\Entities\Email $email, array $params = array())
+    protected function emailToCase(\Espo\Entities\Email $email, array $params = [])
     {
         $case = $this->getEntityManager()->getEntity('Case');
         $case->populateDefaults();
@@ -508,7 +543,7 @@ class InboundEmail extends \Espo\Services\Record
             $teamId = $params['teamId'];
         }
         if ($teamId) {
-            $case->set('teamsIds', array($teamId));
+            $case->set('teamsIds', [$teamId]);
         }
 
         $caseDistribution = '';
@@ -575,7 +610,11 @@ class InboundEmail extends \Espo\Services\Record
 
         $email->set('parentType', 'Case');
         $email->set('parentId', $case->id);
-        $this->getEntityManager()->saveEntity($email);
+
+        $this->getEntityManager()->saveEntity($email, [
+            'skipLinkMultipleRemove' => true,
+            'skipLinkMultipleUpdate' => true
+        ]);
 
         $case = $this->getEntityManager()->getEntity('Case', $case->id);
 
@@ -594,11 +633,11 @@ class InboundEmail extends \Espo\Services\Record
 
         $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($email->get('from'));
 
-        $sent = $this->getEntityManager()->getRepository('Email')->where(array(
+        $sent = $this->getEntityManager()->getRepository('Email')->where([
             'toEmailAddresses.id' => $emailAddress->id,
             'dateSent>' => $threshold,
             'status' => 'Sent'
-        ))->join('toEmailAddresses')->findOne();
+        ])->join('toEmailAddresses')->findOne();
 
         if ($sent) {
             return false;
@@ -664,7 +703,7 @@ class InboundEmail extends \Espo\Services\Record
                         $sender->useSmtp($smtpParams);
                     }
                 }
-                $senderParams = array();
+                $senderParams = [];
                 if ($inboundEmail->get('fromName')) {
                     $senderParams['fromName'] = $inboundEmail->get('fromName');
                 }
@@ -689,7 +728,7 @@ class InboundEmail extends \Espo\Services\Record
 
     protected function getSmtpParamsFromInboundEmail(\Espo\Entities\InboundEmail $emailAccount)
     {
-        $smtpParams = array();
+        $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
         if ($smtpParams['server']) {
             $smtpParams['port'] = $emailAccount->get('smtpPort');

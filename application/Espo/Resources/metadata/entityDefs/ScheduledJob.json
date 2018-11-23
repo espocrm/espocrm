@@ -89,6 +89,11 @@
             "name": "Check for New Versions of Installed Extensions",
             "isSystem": true,
             "scheduling": "25 5 * * *"
+        },
+        "ProcessNoteAclQueue": {
+            "name": "Process Note Acl Queue",
+            "isSystem": true,
+            "scheduling": "* * * * *"
         }
     }
 }

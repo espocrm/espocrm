@@ -37,6 +37,8 @@ use Espo\ORM\Entity;
 
 class Note extends Record
 {
+    protected $noteNotificationPeriod = '1 hour';
+
     public function getEntity($id = null)
     {
         $entity = parent::getEntity($id);
@@ -209,5 +211,127 @@ class Note extends Record
             throw new Forbidden();
         }
         return parant::unlinkEntity($id, $link, $foreignId);
+    }
+
+    public function processNoteAclQueue()
+    {
+        $dt = new \DateTime();
+        $dt->modify('-5 seconds');
+        $from = $dt->format('Y-m-d H:i:s');
+
+        $itemList = $this->getEntityManager()->getRepository('NoteAclQueueItem')->where([
+            'createdAt<' => $from
+        ])->order('number')->find();
+
+        foreach ($itemList as $item) {
+            $targetType = $item->get('targetType');
+            $targetId = $item->get('targetId');
+            if ($targetType && $targetId && $this->getEntityManager()->hasRepository($targetType)) {
+                $entity = $this->getEntityManager()->getEntity($targetType, $targetId);
+                if ($entity) {
+                    $this->processNoteAcl($entity, true);
+                }
+            }
+
+            $this->getEntityManager()->getRepository('NoteAclQueueItem')->deleteFromDb($item->id);
+        }
+    }
+
+    public function processNoteAcl(Entity $entity, $forceProcessNoteNotifications = false)
+    {
+        $entityType = $entity->getEntityType();
+
+        if (in_array($entityType, ['Note', 'User', 'Team', 'Role', 'Portal', 'PortalRole'])) return;
+
+        if (!$this->getMetadata()->get(['scopes', $entityType, 'acl'])) return;
+        if (!$this->getMetadata()->get(['scopes', $entityType, 'object'])) return;
+
+        $ownerUserIdAttribute = $this->getAclManager()->getImplementation($entityType)->getOwnerUserIdAttribute($entity);
+
+        $usersAttributeIsChanged = false;
+        $teamsAttributeIsChanged = false;
+
+        if ($ownerUserIdAttribute) {
+            if ($entity->isAttributeChanged($ownerUserIdAttribute)) {
+                $usersAttributeIsChanged = true;
+            }
+
+            if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
+                if ($entity->getAttributeParam($ownerUserIdAttribute, 'isLinkMultipleIdList')) {
+                    $userLink = $entity->getAttributeParam($ownerUserIdAttribute, 'relation');
+                    $userIdList = $entity->getLinkMultipleIdList($userLink);
+                } else {
+                    $userId = $entity->get($ownerUserIdAttribute);
+                    if ($userId) {
+                        $userIdList = [$userId];
+                    } else {
+                        $userIdList = [];
+                    }
+                }
+            }
+        }
+
+        if ($entity->hasLinkMultipleField('teams')) {
+            if ($entity->isAttributeChanged('teamsIds')) {
+                $teamsAttributeIsChanged = true;
+            }
+            if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
+                $teamIdList = $entity->getLinkMultipleIdList('teams');
+            }
+        }
+
+        if ($usersAttributeIsChanged || $teamsAttributeIsChanged || $forceProcessNoteNotifications) {
+            $noteList = $this->getEntityManager()->getRepository('Note')->where([
+                'OR' => [
+                    [
+                        'relatedId' => $entity->id,
+                        'relatedType' => $entityType
+                    ],
+                    [
+                        'parentId' => $entity->id,
+                        'parentType' => $entityType,
+                        'superParentId!=' => null,
+                        'relatedId' => null
+                    ]
+                ]
+            ])->select([
+                'id',
+                'parentType',
+                'parentId',
+                'superParentType',
+                'superParentId',
+                'isInternal',
+                'relatedType',
+                'relatedId',
+                'createdAt'
+            ])->find();
+
+            $noteOptions = [];
+            if (!empty($forceProcessNoteNotifications)) {
+                $noteOptions['forceProcessNotifications'] = true;
+            }
+
+            $period = '-' . $this->getConfig()->get('noteNotificationPeriod', $this->noteNotificationPeriod);
+            $threshold = new \DateTime();
+            $threshold->modify($period);
+
+            foreach ($noteList as $note) {
+                if (!$entity->isNew()) {
+                    try {
+                        $createdAtDt = new \DateTime($note->get('createdAt'));
+                        if ($createdAtDt->getTimestamp() < $threshold->getTimestamp()) {
+                            continue;
+                        }
+                    } catch (\Exception $e) {};
+                }
+                if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
+                    $note->set('teamsIds', $teamIdList);
+                }
+                if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
+                    $note->set('usersIds', $userIdList);
+                }
+                $this->getEntityManager()->saveEntity($note, $noteOptions);
+            }
+        }
     }
 }
