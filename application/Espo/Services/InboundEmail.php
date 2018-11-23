@@ -529,6 +529,30 @@ class InboundEmail extends \Espo\Services\Record
         $case->populateDefaults();
         $case->set('name', $email->get('name'));
 
+        $bodyPlain = $email->getBodyPlain();
+
+        if (trim(preg_replace('/\s+/', '', $bodyPlain)) === '') {
+            $bodyPlain = '';
+        }
+
+        if ($bodyPlain) {
+            $case->set('description', $bodyPlain);
+        }
+
+        $attachmentIdList = $email->getLinkMultipleIdList('attachments');
+        $copiedAttachmentIdList = [];
+
+        foreach ($attachmentIdList as $attachmentId) {
+            $attachment = $this->getEntityManager()->getRepository('Attachment')->get($attachmentId);
+            if (!$attachment) continue;
+            $copiedAttachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+            $copiedAttachmentIdList[] = $copiedAttachment->id;
+        }
+
+        if (count($copiedAttachmentIdList)) {
+            $case->setLinkMultipleIdList('attachments', $copiedAttachmentIdList);
+        }
+
         $userId = null;
         if (!empty($params['userId'])) {
             $userId = $params['userId'];
