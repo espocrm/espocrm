@@ -70,7 +70,7 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
 
         cancel: function () {
             if (this.isChanged) {
-                this.model.set(this.attributes);
+                this.resetModelChanges();
             }
             this.setIsNotChanged();
             this.exit('cancel');
