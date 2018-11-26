@@ -457,6 +457,10 @@ class FieldManager
                 'type' => 'bool',
                 'default' => false
             ],
+            'tooltip' => [
+                'type' => 'bool',
+                'default' => false
+            ],
             'inlineEditDisabled' => [
                 'type' => 'bool',
                 'default' => false
