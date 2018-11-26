@@ -62,6 +62,10 @@ class Email extends Record
         'parentType', 'parentId', 'parentName', 'teamsIds', 'teamsNames', 'assignedUserId', 'assignedUserName'
     ];
 
+    protected $nonAdminReadOnlyLinkList = ['users'];
+
+    protected $onlyAdminLinkList = ['users'];
+
     protected $mandatorySelectAttributeList = [
         'name',
         'createdById',

@@ -75,7 +75,13 @@ class Record extends \Espo\Core\Services\Base
 
     protected $nonAdminReadOnlyAttributeList = [];
 
+    protected $internalLinkList = [];
+
     protected $readOnlyLinkList = [];
+
+    protected $nonAdminReadOnlyLinkList = [];
+
+    protected $onlyAdminLinkList = [];
 
     protected $linkSelectParams = [];
 
@@ -1152,6 +1158,14 @@ class Record extends \Espo\Core\Services\Base
             throw new Error();
         }
 
+        if (in_array($link, $this->internalLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+            throw new Forbidden();
+        }
+
         $methodName = 'findLinkedEntities' . ucfirst($link);
         if (method_exists($this, $methodName)) {
             return $this->$methodName($id, $params);
@@ -1235,6 +1249,18 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        if (in_array($link, $this->internalLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+            throw new Forbidden();
+        }
+
         $entity = $this->getRepository()->get($id);
         if (!$entity) {
             throw new NotFound();
@@ -1275,6 +1301,18 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        if (in_array($link, $this->internalLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+            throw new Forbidden();
+        }
+
         $entity = $this->getRepository()->get($id);
         if (!$entity) {
             throw new NotFound();
@@ -1309,6 +1347,22 @@ class Record extends \Espo\Core\Services\Base
     {
         if (empty($id) || empty($link)) {
             throw new BadRequest;
+        }
+
+        if (in_array($link, $this->readOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (in_array($link, $this->internalLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+            throw new Forbidden();
         }
 
         $entity = $this->getRepository()->get($id);
