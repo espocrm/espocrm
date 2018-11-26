@@ -59,7 +59,17 @@
     "Label Manager": "Etikečių tvarkyklė",
     "Auth Log": "Auth Prisijungti",
     "Lead Capture": "\"Lead Capture\"",
-    "Attachments": "Priedai"
+    "Attachments": "Priedai",
+    "API Users": "API Vartotojai",
+    "Template Manager": "Šablonų tvarkyklė",
+    "System Requirements": "Sistemos reikalavima\n",
+    "PHP Settings": "PHP nustatymai",
+    "Database Settings": "Duomenų bazės nustatymai",
+    "Permissions": "Teisės",
+    "Success": "Pavyko",
+    "Fail": "Nepavyko",
+    "is recommended": "rekomenduojama",
+    "extension is missing": "trūksta plėtinio"
   },
   "layouts": {
     "list": "Sąrašas",
@@ -209,7 +219,10 @@
     "labelManager": "Prisitaikykite aplikacijų etiketes",
     "authLog": "Prisijungimo istorija.",
     "leadCapture": "API prisijungimo taškai \"Web-to-Lead\".",
-    "attachments": "Visi failo priedai, saugomi sistemoje."
+    "attachments": "Visi failo priedai, saugomi sistemoje.",
+    "templateManager": "Koreguoti pranešimų šablonus.",
+    "systemRequirements": "EspoCRM sistemos reikalavimai",
+    "apiUsers": "Atskirti naudotojus integracijos tikslais."
   },
   "options": {
     "previewSize": {
@@ -223,5 +236,25 @@
     "and": "IR",
     "or": "ARBA",
     "not": "NE"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "PHP versija",
+    "requiredMysqlVersion": "MySQL versija",
+    "host": "Serverio pavadinimas",
+    "dbname": "Duomenų bazės pavadinimas",
+    "user": "Naudotojo vardas",
+    "writable": "Įrašoma",
+    "readable": "Skaitoma"
+  },
+  "templates": {
+    "accessInfo": "Priegos informacija",
+    "accessInfoPortal": "Prieiga prie informacijos portalams",
+    "assignment": "Priskyrimai",
+    "mention": "Paminėti",
+    "noteEmailRecieved": "Pranešimas apie gautą el. laišką",
+    "notePost": "Pranešimas apie įrašą",
+    "notePostNoParent": "Pranešimas apie įrašą (be susijusių)",
+    "noteStatus": "Pranešimas apie statuso atnaujinimą",
+    "passwordChangeLink": "Slaptažodžio keitimo nuoroda"
   }
 }

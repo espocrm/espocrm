@@ -96,7 +96,12 @@
     "emailAddressIsOptedOutByDefault": "Pažymėkite naujus el. Pašto adresus kaip pasirinktą",
     "outboundEmailBccAddress": "BCC adresas išoriniams klientams",
     "adminNotificationsNewExtensionVersion": "Rodyti pranešimą, kai yra prieinamos naujos plėtinių versijos",
-    "cleanupDeletedRecords": "Išvalyti ištrintus įrašus"
+    "cleanupDeletedRecords": "Išvalyti ištrintus įrašus",
+    "ldapPortalUserLdapAuth": "Naudokite LDAP autentifikavimą portalo naudotojams",
+    "ldapPortalUserPortals": "Numatytieji portalai portalų naudotojui",
+    "ldapPortalUserRoles": "Numatytos rolės portalo naudotojui",
+    "addressCountryList": "Adreso šalies automatinio užbaigimo sąrašas",
+    "fiscalYearShift": "Fiskalinių metų pradžia"
   },
   "options": {
     "weekStart": {
@@ -147,7 +152,10 @@
     "streamEmailNotificationsEntityList": "Siųskite el. Paštu pranešimus apie srauto atnaujinimus pagal įrašus. Vartotojai gaus pranešimus elektroniniu paštu tik tam tikro tipo subjektams.",
     "authTokenPreventConcurrent": "Vartotojai negalės vienu metu prisijungti prie kelių įrenginių.",
     "emailAddressIsOptedOutByDefault": "Kuriant naują įrašą elektroninio pašto prenumerata bus pažymėta kaip pasirinkta.",
-    "cleanupDeletedRecords": "Ištrinti įrašai bus ištrinti iš duomenų bazės po kurio laiko."
+    "cleanupDeletedRecords": "Ištrinti įrašai bus ištrinti iš duomenų bazės po kurio laiko.",
+    "ldapPortalUserLdapAuth": "Leisti portalo naudotojams naudoti LDAP autentifikavimą vietoje Espo autentifikavimo.",
+    "ldapPortalUserPortals": "Pagrindinis portalas sukurtam naudotojui",
+    "ldapPortalUserRoles": "Pagrindinės rolės sukurtam portalo naudotojui"
   },
   "labels": {
     "System": "Sistema",

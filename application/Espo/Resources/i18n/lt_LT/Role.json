@@ -7,7 +7,8 @@
     "portalPermission": "Portalo leidimas",
     "groupEmailAccountPermission": "Grupės el. pašto paskyros leidimas",
     "exportPermission": "Eksportuoti leidimą",
-    "dataPrivacyPermission": "Duomenų privatumo leidimas"
+    "dataPrivacyPermission": "Duomenų privatumo leidimas",
+    "massUpdatePermission": "Masinio atnaujinimo teisė"
   },
   "links": {
     "users": "Vartotojai",
@@ -19,7 +20,8 @@
     "portalPermission": "Nurodo prieigą prie portalo informacijos, galimybė skelbti pranešimus portalo vartotojams.",
     "groupEmailAccountPermission": "Nurodo prieigą prie grupės el. pašto abonementų, galimybę siųsti el. laiškus iš grupės SMTP.",
     "dataPrivacyPermission": "Leidžia peržiūrėti ir ištrinti asmens duomenis.",
-    "exportPermission": "Nurodo, ar vartotojai gali eksportuoti įrašus."
+    "exportPermission": "Nurodo, ar vartotojai gali eksportuoti įrašus.",
+    "massUpdatePermission": "Nurodo, ar vartotojai gali atlikti masinius įrašų atnaujinimus."
   },
   "labels": {
     "Access": "Prieiga",

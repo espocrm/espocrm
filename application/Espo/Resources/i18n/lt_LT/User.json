@@ -29,7 +29,11 @@
     "ipAddress": "IP Adresss",
     "passwordPreview": "Slaptažodžio peržiūra",
     "isSuperAdmin": "Yra superadministratorius",
-    "lastAccess": "Paskutinė prieiga"
+    "lastAccess": "Paskutinė prieiga",
+    "type": "Tipas",
+    "apiKey": "API raktas",
+    "secretKey": "Saugos raktas",
+    "authMethod": "Prisijungimo būdai"
   },
   "links": {
     "teams": "Komandos",
@@ -56,7 +60,8 @@
     "Email Accounts": "El. pašto paskyros",
     "Portal": "Portalas",
     "Create Portal User": "Sukurti portalo vartotoją",
-    "Proceed w/o Contact": "Pereiti prie kontaktų"
+    "Proceed w/o Contact": "Pereiti prie kontaktų",
+    "Generate New API Key": "Sugeneruoti naują API raktą"
   },
   "tooltips": {
     "defaultTeam": "Visi šio naudotojo sukurti įrašai bus susiję su šia komanda pagal nutylėjimą.",
@@ -94,6 +99,16 @@
       "Male": "Vyras",
       "Female": "Moteris",
       "Neutral": "Neutrali lytis"
+    },
+    "type": {
+      "regular": "Nuolatinis",
+      "admin": "Administratorius",
+      "portal": "Portalas",
+      "system": "Sistema",
+      "super-admin": "Super-Administratorius"
+    },
+    "authMethod": {
+      "ApiKey": "API raktas"
     }
   }
 }

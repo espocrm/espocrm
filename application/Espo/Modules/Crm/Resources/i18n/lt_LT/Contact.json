@@ -2,7 +2,6 @@
   "fields": {
     "name": "Vardas",
     "emailAddress": "El. paštas",
-    "title": "Pavadinimas",
     "accountRole": "Pavadinimas",
     "account": "Įmonė",
     "accounts": "Įmonės",
@@ -20,7 +19,8 @@
     "acceptanceStatus": "Priėmimo statusas",
     "accountIsInactive": "Įmonė neaktyvi",
     "acceptanceStatusMeetings": "Priėmimo statusas (susirinkimai)",
-    "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)"
+    "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)",
+    "title": "Pagrindinė paskyros antraštė"
   },
   "links": {
     "opportunities": "Galimybės",

@@ -9,9 +9,11 @@
     "Field Level": "Laukelio lygis"
   },
   "fields": {
-    "exportPermission": "Eksportuoti leidimą"
+    "exportPermission": "Eksportuoti leidimą",
+    "massUpdatePermission": "Masinio atnaujinimo teisės"
   },
   "tooltips": {
-    "exportPermission": "Nustato, ar portalo naudotojai gali eksportuoti įrašus."
+    "exportPermission": "Nustato, ar portalo naudotojai gali eksportuoti įrašus.",
+    "massUpdatePermission": "Nurodo, ar portalo naudotojai turi galimybę atlikti masinius įrašų atnaujinimus."
   }
 }

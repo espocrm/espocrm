@@ -46,7 +46,8 @@
     "EmailTemplateCategory": "Laiškų šablonų kategorijos",
     "LeadCapture": "\"Lead Capture Entry Point\"",
     "LeadCaptureLogRecord": "Švino surinkimo žurnalo įrašas",
-    "ArrayValue": "Masyvo vertė"
+    "ArrayValue": "Masyvo vertė",
+    "ApiUser": "API naudotojas"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -83,7 +84,8 @@
     "Import": "Importuoti",
     "LeadCapture": "\"Lead Capture\"",
     "LeadCaptureLogRecord": "Švino surinkimo žurnalas",
-    "ArrayValue": "Masyvo reikšmės"
+    "ArrayValue": "Masyvo reikšmės",
+    "ApiUser": "API naudotojai"
   },
   "labels": {
     "Misc": "Įvairūs",
@@ -512,7 +514,11 @@
       "isEmpty": "Yra tuščia",
       "olderThanXDays": "Senesni nei X dienos/ų",
       "afterXDays": "Po X dienų",
-      "nextMonth": "Kitas mėnuo"
+      "nextMonth": "Kitas mėnuo",
+      "currentFiscalYear": "Dabartiniai fiskaliniai metai",
+      "lastFiscalYear": "Praeiti fiskaliniai metai",
+      "currentFiscalQuarter": "Dabartinis fiskalinis ketvirtis",
+      "lastFiscalQuarter": "Paskutinis fiskalinis ketvirtis"
     },
     "searchRanges": {
       "is": "Yra",

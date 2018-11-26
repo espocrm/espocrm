@@ -28,16 +28,21 @@
     "Test settings": "Patikrinti ryšį",
     "Database Settings Description": "Įveskite MySQL duomeno bazės prisijungimo informaciją (kompiuterio pavadinim?, vartotojo vardą ir slaptažodį). Galite nurodyti serverio prievadą, skirtą kompiuterio pavadinimui, pvz., Localhost: 3306.",
     "Install": "Diegimas",
-    "SetupConfirmation page title": "Rekomenduojami nustatymai",
-    "PHP Configuration": "Rekomenduojami PHP nustatymai",
-    "MySQL Configuration": "MySQL konfigūracija",
     "Configuration Instructions": "Konfigūracijos instrukcijos",
     "phpVersion": "PHP versija",
     "requiredMysqlVersion": "MySQL versija",
     "dbHostName": "Serverio pavadinimas",
     "dbName": "Duomenų bazės pavadinimas",
     "dbUserName": "Duomenų bazės vartotojo vardas",
-    "OK": "Gerai"
+    "OK": "Gerai",
+    "SetupConfirmation page title": "Sistemos reikalavimai",
+    "PHP Configuration": "PHP nustatymai",
+    "MySQL Configuration": "Duomenų bazės nustatymai",
+    "Permission Requirements": "Teisės",
+    "Success": "Pavyko",
+    "Fail": "Nepavyko",
+    "is recommended": "rekomenduojama",
+    "extension is missing": "trūksta plėtinio"
   },
   "fields": {
     "Choose your language": "Pasirinkite kalb?",
@@ -76,8 +81,7 @@
     "Bad init Permission": "Leidimas nesuteiktas \"{*}\" katalogui. Prašome nustatyti 775 teises \"{*}\" arba tiesiog paleiskite šią komandą į terminalą <pre> <b> (C) </ b> </ pre>\nOperacija neleidžiama? Išbandykite šį: {CSU}",
     "Some errors occurred!": "Įvyko kelios klaidos!",
     "phpVersion": "EspoCRM nepalaiko jūsų PHP versijos, bent jau atnaujinkite iki PHP {minVersion}",
-    "requiredMysqlVersion": "Jūsų MySQL versija nepalaikoma EspoCRM, prašome atnaujinti bent iki MySQL (minVersion)",
-    "requiredMariadbVersion": "Jūsų MariaDB versija nepalaikoma EspoCRM, prašome atnaujinti bent iki MariaDB (minVersion)",
+    "requiredMysqlVersion": "Jūsų \"MySQL\" versija nepalaikoma EspoCRM, prašome atnaujinti bent iki \"MySQL\" (minVersion)",
     "The PHP extension was not found...": "PHP klaida: plėtinys <b> {extName} </ b> nerastas.",
     "All Settings correct": "Visi nustatymai yra teisingi",
     "Failed to connect to database": "Nepavyko prisijungti prie duomenų bazės",
@@ -90,7 +94,6 @@
     "buildDatabase error": "Kuriamos duomenų bazės klaida",
     "createUser error": "createUser klaida",
     "checkAjaxPermission error": "checkAjaxPermission klaida",
-    "Ajax failed": "Ajax nepavyko",
     "Cannot create user": "Negalima sukurti vartotojo",
     "Permission denied": "Leidimas nesuteiktas",
     "Permission denied to": "Leidimas nesuteiktas",
@@ -120,5 +123,14 @@
       "microsoft-iis": "API Klaida: EspoCRM API nepasiekiamas. <br> Galima problema: išjungta \"URL Rewrite\". Patikrinkite ir įjunkite \"URL Rewrite\" modulį IIS serveryje",
       "default": "API Klaida: EspoCRM API nepasiekiamas. <br> Galima problema: neįgalintas Rewrite Module. Patikrinkite ir įjunkite \"Rewrite Module\" savo serveryje (pvz., Mod_rewrite \"Apache\") ir .htaccess palaikymą."
     }
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "PHP versija",
+    "requiredMysqlVersion": "MySQL versija",
+    "host": "Serverio pavadinimas",
+    "dbname": "Duomenų bazės pavadinimas",
+    "user": "naudotojo vardas",
+    "writable": "Įrašymo",
+    "readable": "Skaitymo"
   }
 }
