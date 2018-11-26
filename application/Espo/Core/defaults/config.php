@@ -77,6 +77,7 @@ return [
         'id_ID',
         'it_IT',
         'lt_LT',
+        'lv_LV',
         'nb_NO',
         'nl_NL',
         'tr_TR',

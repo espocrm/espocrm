@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Nosūtīt masveida e-pastu",
+      "ControlKnowledgeBaseArticleStatus": "Pārbaudīt zināšanu bāzes raksta statusu"
+    }
+  }
+}

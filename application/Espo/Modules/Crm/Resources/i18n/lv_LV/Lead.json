@@ -1,0 +1,70 @@
+{
+  "labels": {
+    "Converted To": "Konvertēts uz",
+    "Create Lead": "Izveidot potenciālo klientu",
+    "Convert": "Konvertēt",
+    "convert": "Konvertēt"
+  },
+  "fields": {
+    "name": "Vārds",
+    "emailAddress": "E-pasts",
+    "title": "Nosaukums",
+    "website": "Vietne",
+    "phoneNumber": "Tālrunis",
+    "accountName": "Konta nosaukums",
+    "doNotCall": "Nezvanīt",
+    "address": "Adrese",
+    "status": "statuss",
+    "source": "Avots",
+    "opportunityAmount": "Iespēju summa",
+    "opportunityAmountConverted": "Iespēju summa (konvertēts)",
+    "description": "Apraksts",
+    "createdAccount": "Konts",
+    "createdContact": "Kontakts",
+    "createdOpportunity": "Iespēja",
+    "campaign": "Kampaņa",
+    "targetLists": "Mērķa adresātu saraksti",
+    "targetList": "Mērķa adresātu saraksts",
+    "industry": "Nozare",
+    "acceptanceStatus": "Akcepta statuss",
+    "opportunityAmountCurrency": "Iespēju summas valūta",
+    "acceptanceStatusMeetings": "Akcepta statuss (tikšanās)",
+    "acceptanceStatusCalls": "Akcepta statuss (zvani)"
+  },
+  "links": {
+    "targetLists": "Mērķa adresātu saraksti",
+    "campaignLogRecords": "Kampaņas reģistrs",
+    "campaign": "Kampaņa",
+    "createdAccount": "Konts",
+    "createdContact": "Kontakts",
+    "createdOpportunity": "Iespēja",
+    "cases": "Lietas",
+    "documents": "Dokumenti"
+  },
+  "options": {
+    "status": {
+      "New": "Jaunie",
+      "Assigned": "Piešķirtie",
+      "In Process": "Procesā",
+      "Converted": "Konvertēts",
+      "Recycled": "Nosūtīts uz atkritni",
+      "Dead": "Norakstīts"
+    },
+    "source": {
+      "": "Nav",
+      "Call": "Zvanīt",
+      "Email": "E-pasts",
+      "Existing Customer": "Esošs klients",
+      "Partner": "Partneris",
+      "Public Relations": "Sabiedriskās attiecības",
+      "Web Site": "Vietne",
+      "Campaign": "Kampaņa",
+      "Other": "Cits"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktīvs",
+    "actual": "Faktiskais",
+    "converted": "Konvertēts"
+  }
+}

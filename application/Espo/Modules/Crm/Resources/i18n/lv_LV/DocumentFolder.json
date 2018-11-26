@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Izveidot dokumentu mapi",
+    "Manage Categories": "Pārvaldīt mapes",
+    "Documents": "Dokumenti"
+  },
+  "links": {
+    "documents": "Dokumenti"
+  }
+}

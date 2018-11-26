@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "Norēķinu adrese",
+    "shippingAddress": "Piegādes adrese",
+    "website": "Vietne"
+  },
+  "links": {
+    "meetings": "Tikšanās",
+    "calls": "Zvani",
+    "tasks": "Uzdevumi"
+  },
+  "labels": {
+    "Create {entityType}": "Izveidot {entityTypeTranslated}"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "labels": {
+    "Create Document": "Izveidot dokumentu",
+    "Details": "Detalizējums"
+  },
+  "fields": {
+    "name": "Vārds",
+    "status": "Statuss",
+    "file": "Fails",
+    "type": "Tips",
+    "publishDate": "Publicēšanas datums",
+    "expirationDate": "Beigu datums",
+    "description": "Apraksts",
+    "accounts": "Konti",
+    "folder": "Mape"
+  },
+  "links": {
+    "accounts": "Konti",
+    "opportunities": "Iespējas",
+    "folder": "Mape",
+    "leads": "Potenciālais klients",
+    "contacts": "Kontakti"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktīvs",
+      "Draft": "Melnraksts",
+      "Expired": "Derīgums beidzies",
+      "Canceled": "Atcelts"
+    },
+    "type": {
+      "": "Nav",
+      "Contract": "Līgums",
+      "NDA": "NDA (konfidencialitātes līgums)",
+      "License Agreement": "Licences līgums"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktīvs",
+    "draft": "Melnraksts"
+  }
+}

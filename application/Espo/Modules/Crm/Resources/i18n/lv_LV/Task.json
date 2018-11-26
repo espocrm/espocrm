@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "parent": "Primārais elements",
+    "status": "Statuss",
+    "dateStart": "Sākuma datums",
+    "dateEnd": "Termiņš",
+    "dateStartDate": "Sākuma datums (visa diena)",
+    "dateEndDate": "Beigu datums (visa diena)",
+    "priority": "Prioritāte",
+    "description": "Apraksts",
+    "isOverdue": "Nokavēts",
+    "account": "Konts",
+    "dateCompleted": "Pabeigšanas datums",
+    "attachments": "Pielikumi",
+    "reminders": "Atgādinājumi",
+    "contact": "Kontakts"
+  },
+  "links": {
+    "attachments": "Pielikumi",
+    "account": "Konts",
+    "contact": "Kontakts"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Nav sākts",
+      "Started": "Sākts",
+      "Completed": "Pabeigts",
+      "Canceled": "Atcelts",
+      "Deferred": "Atlikts"
+    },
+    "priority": {
+      "Low": "Zema",
+      "Normal": "Normāla",
+      "High": "Augsta",
+      "Urgent": "Steidzams"
+    }
+  },
+  "labels": {
+    "Create Task": "Izveidot uzdevumu",
+    "Complete": "Pabeigts"
+  },
+  "presetFilters": {
+    "actual": "Faktiskais",
+    "completed": "Pabeigts",
+    "todays": "Šīsdienas",
+    "overdue": "Nokavēts",
+    "deferred": "Atlikts"
+  }
+}

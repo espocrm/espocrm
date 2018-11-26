@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "roles": "Lomas",
+    "positionList": "Amatu saraksts"
+  },
+  "links": {
+    "users": "Lietotāji",
+    "notes": "Piezīmes",
+    "roles": "Lomas",
+    "inboundEmails": "Grupas e-pasta konti"
+  },
+  "tooltips": {
+    "roles": "Piekļuves lomas. Šīs grupas lietotāji iegūs piekļuves kontroles līmeni no atlasītajām lomām.",
+    "positionList": "Šajā grupā pieejamie amati. Piem., pārdevējs, pārvaldnieks."
+  },
+  "labels": {
+    "Create Team": "Izveidot grupu"
+  }
+}

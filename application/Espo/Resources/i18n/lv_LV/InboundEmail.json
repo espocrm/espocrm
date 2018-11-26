@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "name": "Vārds, uzvārds",
+    "emailAddress": "E-pasta adrese",
+    "status": "Statuss",
+    "assignToUser": "Piešķirt lietotājam",
+    "host": "Resursdators",
+    "username": "Lietotājvārds",
+    "password": "Parole",
+    "port": "Ports",
+    "monitoredFolders": "Pārraudzītās mapes",
+    "trashFolder": "Atkritnes mape",
+    "createCase": "Izveidot lietu",
+    "reply": "Automātiskā atbilde",
+    "caseDistribution": "Lietu sadale",
+    "replyEmailTemplate": "Atbildes e-pasta veidne",
+    "replyFromAddress": "Atbildēt no adreses",
+    "replyToAddress": "Atbildēt uz adresi",
+    "replyFromName": "Atbildēt kā",
+    "targetUserPosition": "Mērķa lietotāja amats",
+    "fetchSince": "Ienest, sākot ar",
+    "addAllTeamUsers": "Visiem grupas lietotājiem",
+    "team": "Mērķa adresātu grupa",
+    "teams": "Grupas",
+    "sentFolder": "Nosūtīto ziņojumu mape",
+    "storeSentEmails": "Uzglabāt nosūtītos e-pastus",
+    "useSmtp": "Lietot SMTP",
+    "smtpHost": "SMTP resursdators",
+    "smtpPort": "SMTP ports",
+    "smtpAuth": "SMTP autentifikācija",
+    "smtpSecurity": "SMTP drošība",
+    "smtpUsername": "SMTP lietotājvārds",
+    "smtpPassword": "SMTP parole",
+    "fromName": "Kā vārdā",
+    "smtpIsShared": "SMTP ir kopīgots",
+    "smtpIsForMassEmail": "SMTP ir paredzēts masveida e-pastam",
+    "useImap": "Ienest e-pastus"
+  },
+  "tooltips": {
+    "reply": "Paziņot e-pasta nosūtītājiem, ka e-pasts ir saņemts.\n\nLai novērstu ieciklošanos, noteiktam lietotājam zināmā periodā iespējams nosūtīt tikai vienu e-pastu.",
+    "createCase": "Automātiski izveidot lietu no ienākošajiem e-pastiem.",
+    "replyToAddress": "Noteikt šīs pastkastes e-pasta adresi, lai atbildes ienāktu šeit.",
+    "caseDistribution": "Norāda, kā lieta tiks piešķirta. Piešķirt tieši lietotājam vai piešķirt grupas ietvaros.",
+    "assignToUser": "Kam tiks piešķirtas lietotāja lietas.",
+    "team": "Kam tiks piešķirtas grupas lietas.",
+    "teams": "Kam tiks piešķirti grupas e-pasti.",
+    "addAllTeamUsers": "E-pasti būs redzami visu norādīto grupu lietotāju iesūtnēs.",
+    "targetUserPosition": "Lietotāji ar norādīto amatu tiks sadalīti ar lietām.",
+    "monitoredFolders": "Vairākas mapes cita no citas jāatdala ar komatu.",
+    "smtpIsShared": "Ja būs atzīmēta šī izvēle, lietotāji varēs nosūtīt e-pastus, izmantojot šo SMTP. Pieejamību kontrolēs lomas ar grupas e-pasta konta atļaujas starpniecību.",
+    "smtpIsForMassEmail": "Ja būs atzīmēta šī izvēle, masveida e-pastiem būs pieejams SMTP",
+    "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī."
+  },
+  "links": {
+    "filters": "Filtri",
+    "emails": "E-pasti",
+    "assignToUser": "Piešķirt lietotājam"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktīvs",
+      "Inactive": "Neaktīvs"
+    },
+    "caseDistribution": {
+      "": "Nav",
+      "Direct-Assignment": "Tiešā piešķiršana",
+      "Round-Robin": "Apļa sistēma",
+      "Least-Busy": "Vismazāk aizņemtais"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Izveidot e-pasta kontu",
+    "Actions": "Darbības",
+    "Main": "Galvenais"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nav savienojuma ar IMAP serveri"
+  }
+}

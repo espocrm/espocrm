@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "Skaits",
+    "data": "Dati",
+    "target": "Mērķa adresāti",
+    "leadCapture": "Potenciālā klienta tvērums",
+    "createdAt": "Ievadīšanas laiks",
+    "isCreated": "Ir potenciālā klienta ieraksts, kas izveidots"
+  },
+  "links": {
+    "leadCapture": "Potenciālā klienta tvērums",
+    "target": "Mērķa adresāti"
+  }
+}

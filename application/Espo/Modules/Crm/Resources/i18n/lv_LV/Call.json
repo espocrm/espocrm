@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "parent": "Primārais",
+    "status": "Statuss",
+    "dateStart": "Sākuma datums",
+    "dateEnd": "Beigu datums",
+    "direction": "Virziens",
+    "duration": "Ilgums",
+    "description": "Apraksts",
+    "users": "Lietotāji",
+    "contacts": "Kontakti",
+    "leads": "Potenciālie klienti",
+    "reminders": "Atgādinājumi",
+    "account": "Konts",
+    "acceptanceStatus": "Akcepta statuss"
+  },
+  "options": {
+    "status": {
+      "Planned": "Ieplānota",
+      "Held": "Notikusi",
+      "Not Held": "Nenotikusi"
+    },
+    "direction": {
+      "Outbound": "Izejošais",
+      "Inbound": "Ienākošais"
+    },
+    "acceptanceStatus": {
+      "None": "Nav",
+      "Accepted": "Pieņemts",
+      "Declined": "Noraidīts",
+      "Tentative": "Varbūtējs"
+    }
+  },
+  "massActions": {
+    "setHeld": "Iestatīt kā notikušu",
+    "setNotHeld": "Iestatīt kā nenotikušu"
+  },
+  "labels": {
+    "Create Call": "Izveidot visus",
+    "Set Held": "Iestatīt kā notikušu",
+    "Set Not Held": "Iestatīt kā nenotikušu",
+    "Send Invitations": "Nosūtīt uzaicinājumus"
+  },
+  "presetFilters": {
+    "planned": "Plānota",
+    "held": "Notikusi",
+    "todays": "Šodien"
+  }
+}

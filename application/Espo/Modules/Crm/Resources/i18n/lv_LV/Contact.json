@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "Vārds, uzvārds",
+    "emailAddress": "E-pasts",
+    "accountRole": "Amats",
+    "account": "Konts",
+    "accounts": "Konti",
+    "phoneNumber": "Tālrunis",
+    "accountType": "Konts tips",
+    "doNotCall": "Nezvanīt",
+    "address": "Adrese",
+    "opportunityRole": "Iespējas loma",
+    "description": "Apraksts",
+    "campaign": "Kampaņa",
+    "targetLists": "Mērķa adresātu saraksti",
+    "targetList": "Mērķa adresātu saraksts",
+    "portalUser": "Portāla lietotājs",
+    "originalLead": "Potenciālā klienta oriģinālais ieraksts",
+    "acceptanceStatus": "Akcepta statuss",
+    "accountIsInactive": "Konts neaktīvs",
+    "acceptanceStatusMeetings": "Akcepta statuss (tikšanās)",
+    "acceptanceStatusCalls": "Akcepta statuss (zvani)",
+    "title": "Galvenā konta sadaļa"
+  },
+  "links": {
+    "opportunities": "Iespējas",
+    "cases": "Lietas",
+    "targetLists": "Mērķa saraksts",
+    "campaignLogRecords": "Kampaņas reģistrs",
+    "campaign": "Kampaņa",
+    "account": "Konts (primārais)",
+    "accounts": "Konti",
+    "casesPrimary": "Lietas (primārais)",
+    "portalUser": "Portāla lietotājs",
+    "originalLead": "Potenciālā klienta oriģinālais ieraksts",
+    "documents": "Dokumenti",
+    "tasksPrimary": "Uzdevumi (izvērsts)"
+  },
+  "labels": {
+    "Create Contact": "Izveidot kontaktu"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Nav--",
+      "Decision Maker": "Lēmumu pieņēmējs",
+      "Evaluator": "Vērtētājs",
+      "Influencer": "Padomnieks"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Portāla lietotāji",
+    "notPortalUsers": "Nav portāla lietotāji",
+    "accountActive": "Aktīvs"
+  }
+}

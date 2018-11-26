@@ -1,0 +1,74 @@
+{
+  "labels": {
+    "Fields": "Lauki",
+    "Relationships": "Relācijas",
+    "Schedule": "Grafiks",
+    "Log": "Reģistrs"
+  },
+  "fields": {
+    "name": "Nosaukums/vārds",
+    "type": "Tips",
+    "labelSingular": "Etiķete vienskaitlī",
+    "labelPlural": "Etiķete daudzskaitlī",
+    "stream": "Straumēšana",
+    "label": "Etiķete",
+    "linkType": "Saites tips",
+    "entityForeign": "Ārējā vienība",
+    "linkForeign": "Ārējā saite",
+    "link": "Saite",
+    "labelForeign": "Ārējā etiķete",
+    "sortBy": "Noklusējuma pasūtījums (lauks)",
+    "sortDirection": "Noklusējuma pasūtījums (virziens)",
+    "relationName": "Vidējais tabulas nosaukums",
+    "linkMultipleField": "Saites lauku kopa",
+    "linkMultipleFieldForeign": "Ārējās saites lauku kopa",
+    "disabled": "Nav atļauts",
+    "textFilterFields": "Teksta filtra lauki",
+    "audited": "Auditēts",
+    "auditedForeign": "Ārējais auditētais",
+    "statusField": "statusa lauks",
+    "beforeSaveCustomScript": "Pirms pielāgotā skripta saglabāšanas",
+    "color": "Krāsa",
+    "kanbanViewMode": "\"Kanban\" skatījums",
+    "kanbanStatusIgnoreList": "Ignorētās grupas \"Kanban\" skatījumā",
+    "iconClass": "Ikona",
+    "fullTextSearch": "Pilna teksta meklēšana"
+  },
+  "options": {
+    "type": {
+      "": "Nav",
+      "Base": "Pamats",
+      "Person": "Persona",
+      "CategoryTree": "Kategoriju koks",
+      "Event": "Notikums",
+      "BasePlus": "Pamats un vēl",
+      "Company": "Uzņēmums"
+    },
+    "linkType": {
+      "manyToMany": "Daudzi pret daudziem",
+      "oneToMany": "Viens pret daudziem",
+      "manyToOne": "Daudzi pret vienu",
+      "parentToChildren": "Primārais pret sekundāro",
+      "childrenToParent": "Sekundārais pret primāro"
+    },
+    "sortDirection": {
+      "asc": "Augošā secībā",
+      "desc": "Dilstošā secībā"
+    }
+  },
+  "messages": {
+    "entityCreated": "Vienība ir izveidota",
+    "linkAlreadyExists": "Saišu nosaukumu konflikts.",
+    "linkConflict": "Nosaukumu konflikts: saite vai lauks ar šādu nosaukumu jau pastāv."
+  },
+  "tooltips": {
+    "statusField": "Šī lauka atjauninājumi ir reģistrēti straumēšanā.",
+    "textFilterFields": "Teksta meklēšanā lietotie lauki.",
+    "stream": "Vai vienībai ir straumēšana.",
+    "disabled": "Atzīmējiet, ka šī vienība jūsu sistēmā nav nepieciešama.",
+    "linkAudited": "Saistītā ieraksta izveide un sasaistīšana ar esošu ierakstu tiks reģistrēta straumēšanā.",
+    "linkMultipleField": "Lauku kopa sasaiste ir ērts veids, kā rediģēt relācijas . Nelietojiet to, ja iespējams liels saistīto ierakstu skaits.",
+    "entityType": "Pamats un vēl - ietver paneļus aktivitātēm, vēsturei un uzdevumiem.\n\nNotikums - pieejams kalendāra un aktivitāšu panelī.",
+    "fullTextSearch": "Atkārtotas izveides izpildīšana ir obligāta."
+  }
+}

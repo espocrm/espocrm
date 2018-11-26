@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Izlaist paziņojumus"
+  },
+  "labels": {
+    "Create EmailFolder": "Izveidot mapi",
+    "Manage Folders": "Pārvaldīt mapes",
+    "Emails": "E-pasti"
+  }
+}

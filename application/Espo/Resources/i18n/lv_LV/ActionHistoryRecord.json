@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "user": "Lietotājs",
+    "action": "Darbība",
+    "createdAt": "Datums",
+    "target": "Mērķa adresāti",
+    "targetType": "Mērķa adresātu tips",
+    "authToken": "Autentifikācijas tokens",
+    "ipAddress": "IP adrese",
+    "authLogRecord": "Autentifikācijas reģistra ieraksts"
+  },
+  "links": {
+    "authToken": "Autentifikācijas tokens",
+    "user": "Lietotājs",
+    "target": "Mērķa adresāti",
+    "authLogRecord": "Autentifikācijas reģistra ieraksts"
+  },
+  "presetFilters": {
+    "onlyMy": "Tikai mani"
+  },
+  "options": {
+    "action": {
+      "read": "Izlasīt",
+      "update": "Atjaunināt",
+      "delete": "Izdzēst",
+      "create": "Izveidot"
+    }
+  }
+}

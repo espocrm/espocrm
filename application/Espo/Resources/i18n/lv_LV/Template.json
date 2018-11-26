@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "body": "Pamatteksts",
+    "entityType": "Vienību tips",
+    "header": "Virsraksts",
+    "footer": "Kājene",
+    "leftMargin": "Kreisā piemale",
+    "topMargin": "Augšējā piemale",
+    "rightMargin": "Labā piemale",
+    "bottomMargin": "Apakšējā piemale",
+    "printFooter": "Drukāt kājenes tekstu",
+    "footerPosition": "Kājenes novietojums",
+    "variables": "Pieejamie vietturi",
+    "pageOrientation": "Lappuses orientācija",
+    "pageFormat": "Papīra formāts",
+    "fontFace": "Fonts"
+  },
+  "labels": {
+    "Create Template": "Izveidot veidni"
+  },
+  "tooltips": {
+    "footer": "Drukājot lappuses numuru, izmantot {pageNumber}.",
+    "variables": "Kopēt un ielīmēt nepieciešamo vietturi virsrakstā, pamattekstā vai kājenē."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Portrets",
+      "Landscape": "Ainava"
+    },
+    "placeholders": {
+      "today": "Šodien (datums)",
+      "now": "Tagad (datums-laiks)"
+    },
+    "fontFace": {
+      "aealarabiya": "\"AlArabiya\"",
+      "aefurat": "\"Aefurat\"",
+      "cid0cs": "\"CID-0 cs\"",
+      "cid0ct": "\"CID-0 ct\"",
+      "cid0jp": "\"CID-0 jp\"",
+      "cid0kr": "\"CID-0 kr\"",
+      "courier": "\"Courier\"",
+      "dejavusans": "\"DejaVu Sans\"",
+      "dejavusanscondensed": "\"DejaVu Sans Condensed\"",
+      "dejavusansextralight": "\"DejaVu Sans ExtraLight\"",
+      "dejavusansmono": "\"DejaVu Sans Mono\"",
+      "dejavuserif": "\"DejaVu Serif\"",
+      "freemono": "\"FreeMono\"",
+      "freesans": "\"FreeSans\"",
+      "freeserif": "\"FreeSerif\"",
+      "helvetica": "\"Helvetica\"",
+      "hysmyeongjostdmedium": "\"Hysmyeongjostd Medium\"",
+      "kozgopromedium": "\"Kozgo Pro Medium\"",
+      "kozminproregular": "\"Kozmin Pro Regular\"",
+      "msungstdlight": "\"Msung Std Light\"",
+      "pdfacourier": "\"PDFA Courier\"",
+      "pdfahelvetica": "\"PDFA Helvetica\"",
+      "pdfasymbol": "\"PDFA Symbol\"",
+      "pdfatimes": "\"PDFA Times\"",
+      "stsongstdlight": "\"STSong Std Light\"",
+      "symbol": "\"Symbol\"",
+      "times": "\"Times\"",
+      "dejavuserifcondensed": "\"DejaVu Serif Condensed\""
+    }
+  }
+}

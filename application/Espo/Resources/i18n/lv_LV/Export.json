@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "fieldList": "Lauku saraksts",
+    "exportAllFields": "Eksportēt visus laukus",
+    "format": "Formāts"
+  },
+  "options": {
+    "format": {
+      "xlsx": "XLSX (\"Excel\")"
+    }
+  }
+}

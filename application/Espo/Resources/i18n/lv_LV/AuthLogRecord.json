@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "username": "Lietotājvārds",
+    "ipAddress": "IP adrese",
+    "requestTime": "Pieprasījuma laiks",
+    "createdAt": "Pieprasīts ",
+    "isDenied": "Noraidīts",
+    "denialReason": "Noraidījuma iemesls",
+    "portal": "Portāls",
+    "user": "Lietotājs",
+    "authToken": "Autentifikācijas tokens izveidots",
+    "requestUrl": "Pieprasījuma vietrādis URL",
+    "requestMethod": "Pieprasījuma metode",
+    "authTokenIsActive": "Autentifikācijas tokens ir aktīvs"
+  },
+  "links": {
+    "authToken": "Autentifikācijas tokens ir izveidots",
+    "user": "Lietotājs",
+    "portal": "Portāls",
+    "actionHistoryRecords": "Darbību vēsture"
+  },
+  "presetFilters": {
+    "denied": "Noraidīts",
+    "accepted": "Akceptēts"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Nederīgi akreditācijas dati",
+      "INACTIVE_USER": "Neaktīvs lietotājs",
+      "IS_PORTAL_USER": "Portāla lietotājs",
+      "IS_NOT_PORTAL_USER": "Nav portāla lietotājs",
+      "USER_IS_NOT_IN_PORTAL": "Lietotājs nav saistīts ar portālu"
+    }
+  }
+}

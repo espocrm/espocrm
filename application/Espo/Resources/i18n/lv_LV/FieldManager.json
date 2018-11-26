@@ -1,0 +1,101 @@
+{
+  "labels": {
+    "Dynamic Logic": "Dinamiskā loģika",
+    "Name": "Vārds/nosaukums",
+    "Label": "Etiķete",
+    "Type": "Tips"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Nav",
+      "javascript: return this.dateTime.getNow(1);": "Tagad",
+      "javascript: return this.dateTime.getNow(5);": "Tagad (5 m)",
+      "javascript: return this.dateTime.getNow(15);": "Tagad (15 m)",
+      "javascript: return this.dateTime.getNow(30);": "Tagad (30 m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 stunda",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 stundas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 diena",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dienas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dienas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dienas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dienas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dienas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 nedēļa"
+    },
+    "dateDefault": {
+      "": "Nav",
+      "javascript: return this.dateTime.getToday();": "Šodien",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 diena",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dienas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 nedēļa",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 nedēļas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 nedēļas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 mēnesis",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mēneši",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 gads"
+    }
+  },
+  "tooltips": {
+    "audited": "Atjauninājumi tiks reģistrēti straumēšanā.",
+    "required": "Lauks būs obligāts, to nedrīkst atstāt tukšu.",
+    "default": "Pēc izveidošanas vērtība tiks iestatīta pēc noklusējuma.",
+    "min": "Min. pieņemamā vērtība.",
+    "max": "Maks. pieņemamā vērtība.",
+    "seeMoreDisabled": "Neatzīmējot šo izvēli, gari teksti tiks īsināti.",
+    "lengthOfCut": "Cik garš drīkst būt teksts pirms izgriešanas.",
+    "maxLength": "Maks. pieņemamais teksta garums.",
+    "before": "Datuma vērtībai jābūt pirms norādītā lauka datuma vērtības.",
+    "after": "Datums vērtībai jābūt pēc norādītā lauka datuma vērtības.",
+    "readOnly": "Lietotājs nevar norādīt lauka vērtību. Taču to iespējams aprēķināt pēc formulas.",
+    "maxFileSize": "If tukšs vai 0, tad limita nav."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Iela, mājas un dzīvokļa numurs",
+      "city": "Pilsēta",
+      "state": "Novads",
+      "country": "Valsts",
+      "postalCode": "Pasta indekss",
+      "map": "Karte"
+    },
+    "personName": {
+      "salutation": "Uzruna",
+      "first": "Pirmais",
+      "last": "Pēdējais"
+    },
+    "currency": {
+      "converted": "(Konvertēts)",
+      "currency": "(Valūta)"
+    },
+    "datetimeOptional": {
+      "date": "Datums"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "status": "statuss",
+    "executeTime": "Izpildīt",
+    "attempts": "Palikušie mēģinājumi",
+    "failedAttempts": "Neizdevušies mēģinājumi",
+    "serviceName": "Pakalpojums",
+    "methodName": "Metode",
+    "scheduledJob": "Ieplānotais darbs",
+    "data": "Dati",
+    "method": "Metode (novecojis)",
+    "scheduledJobJob": "Ieplānotā darba nosaukums"
+  },
+  "options": {
+    "status": {
+      "Pending": "Tiek gaidīts",
+      "Success": "Veiksmīgi izpildīts",
+      "Running": "Tiek izpildīts",
+      "Failed": "Neizdevās"
+    }
+  }
+}

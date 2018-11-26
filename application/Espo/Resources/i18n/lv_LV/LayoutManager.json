@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "width": "Platums (%)",
+    "link": "Saite",
+    "notSortable": "Nevar kārtot",
+    "align": "Līdzināt",
+    "panelName": "Paneļa nosaukums",
+    "style": "Stils",
+    "sticked": "Nostiprināts",
+    "isLarge": "Liels šrifta izmērs",
+    "dynamicLogicVisible": "Nosacījumi, lai panelis kļūtu redzams"
+  },
+  "options": {
+    "align": {
+      "left": "Pa kreisi",
+      "right": "Pa labi"
+    },
+    "style": {
+      "default": "Noklusējuma",
+      "success": "Izpildīts",
+      "danger": "Bīstamība",
+      "info": "Informācija",
+      "warning": "Brīdinājums",
+      "primary": "Primārais"
+    }
+  },
+  "labels": {
+    "New panel": "Jauns panelis",
+    "Layout": "Izkārtojums"
+  }
+}

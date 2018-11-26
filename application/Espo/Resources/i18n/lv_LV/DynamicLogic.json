@@ -1,0 +1,28 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Vienāds ar",
+      "notEquals": "Nav vienāds ar",
+      "greaterThan": "Lielāks nekā",
+      "lessThan": "Mazāks nekā",
+      "greaterThanOrEquals": "Lielāks vai vienāds ar",
+      "lessThanOrEquals": "Mazāks vai Vienāds ar",
+      "in": "Ietilpst",
+      "notIn": "Nav",
+      "inPast": "Pagātnē",
+      "inFuture": "Ir nākotne",
+      "isToday": "Ir šodiena",
+      "isTrue": "Ir patiess",
+      "isFalse": "Ir aplams",
+      "isEmpty": "Ir tukšs",
+      "isNotEmpty": "Nav tukšs",
+      "contains": "Satur",
+      "has": "Satur",
+      "notContains": "Nesatur",
+      "notHas": "Nesatur"
+    }
+  },
+  "labels": {
+    "Field": "Lauks"
+  }
+}

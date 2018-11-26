@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "name": "Vārds/nosaukums",
+    "campaign": "Kampaņa",
+    "isActive": "Ir aktīvs",
+    "subscribeToTargetList": "Abonēt mērķa sarakstu",
+    "subscribeContactToTargetList": "Abonēt kontaktu, ja tāds pastāv",
+    "targetList": "Mērķa saraksts",
+    "fieldList": "Lietderīgās slodzes lauki",
+    "optInConfirmation": "Dubultā piekrišana",
+    "optInConfirmationEmailTemplate": "Izvēlēšanās apstiprinājuma e-pasta veidne",
+    "optInConfirmationLifetime": "Izvēlēšanās apstiprinājuma mūžs (stundās)",
+    "optInConfirmationSuccessMessage": "Pēc izvēlēšanās apstiprinājuma rādāmais teksts",
+    "leadSource": "Potenciālā klienta avots",
+    "apiKey": "API atslēga",
+    "targetTeam": "Mērķa adresātu grupa",
+    "exampleRequestMethod": "Metode",
+    "exampleRequestUrl": "Vietrādis URL",
+    "exampleRequestPayload": "Lietderīgā slodze"
+  },
+  "links": {
+    "targetList": "Mērķa adresātu saraksts",
+    "campaign": "Kampaņa",
+    "optInConfirmationEmailTemplate": "Izvēlēšanās apstiprinājuma e-pasta veidne",
+    "targetTeam": "Mērķa adresātu grupa",
+    "logRecords": "Reģistrs"
+  },
+  "labels": {
+    "Create LeadCapture": "Izveidot ieejas punktu",
+    "Generate New API Key": "Ģenerēt jaunu API atslēgu",
+    "Request": "Pieprasīt",
+    "Confirm Opt-In": "Apstiprināt izvēlēšanos"
+  },
+  "messages": {
+    "generateApiKey": "Izveidot jaunu API atslēgu",
+    "optInConfirmationExpired": "Izvēlēšanās apstiprinājuma saites derīgums ir beidzies.",
+    "optInIsConfirmed": "Izvēlēšanās ir apstiprināta."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Tiek atbalstīts \"Markdown\"."
+  }
+}

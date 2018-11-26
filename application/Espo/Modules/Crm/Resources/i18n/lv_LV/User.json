@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Mērķa adresātu saraksts"
+  },
+  "fields": {
+    "acceptanceStatus": "Akcepta statuss",
+    "acceptanceStatusMeetings": "Akcepta statuss (tikšanās)",
+    "acceptanceStatusCalls": "Akcepta statuss (zvani)"
+  }
+}

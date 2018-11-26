@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "status": "Statuss",
+    "target": "Mērķa adresāts",
+    "sentAt": "Datums nosūtīts",
+    "attemptCount": "Mēģinājumi",
+    "emailAddress": "E-pasta adrese",
+    "massEmail": "Masveida e-pasts",
+    "isTest": "Ir tests"
+  },
+  "links": {
+    "target": "Mērķa adresāts",
+    "massEmail": "Masveida e-pasts"
+  },
+  "options": {
+    "status": {
+      "Pending": "Gaidīšanā",
+      "Sent": "Nosūtīts",
+      "Failed": "Neizdevās",
+      "Sending": "Tiek nosūtīts"
+    }
+  },
+  "presetFilters": {
+    "pending": "Gaidīšanā",
+    "sent": "Nosūtīts",
+    "failed": "Neizdevās"
+  }
+}

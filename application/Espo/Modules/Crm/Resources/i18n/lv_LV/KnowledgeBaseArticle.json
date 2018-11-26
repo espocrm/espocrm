@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Izveidot rakstu",
+    "Any": "Jebkurš",
+    "Send in Email": "Nosūtīt e-pastā",
+    "Move Up": "Pārvietot uz augšu",
+    "Move Down": "Pārvietot uz leju",
+    "Move to Top": "Pārvietot uz sākumu",
+    "Move to Bottom": "Pārvietot uz beigām"
+  },
+  "fields": {
+    "name": "Vārds",
+    "status": "Statuss",
+    "type": "Tips",
+    "attachments": "Pielikumi",
+    "publishDate": "Publicēšanas datums",
+    "expirationDate": "Beigu datums",
+    "description": "Apraksts",
+    "body": "Pamatteksts",
+    "categories": "Kategorijas",
+    "language": "Valoda",
+    "portals": "Portāli"
+  },
+  "links": {
+    "cases": "Lietas",
+    "opportunities": "Iespējas",
+    "categories": "Kategorijas",
+    "portals": "Portāli"
+  },
+  "options": {
+    "status": {
+      "In Review": "Pārskatīšanā",
+      "Draft": "Melnraksts",
+      "Archived": "Arhivēts",
+      "Published": "Publicēts"
+    },
+    "type": {
+      "Article": "Raksts"
+    }
+  },
+  "presetFilters": {
+    "published": "Publicēts"
+  },
+  "tooltips": {
+    "portals": "Raksts būs pieejams tikai norādītajos portālos."
+  }
+}

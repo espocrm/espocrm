@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "Vārds/nosaukums",
+    "number": "Numurs",
+    "status": "Statuss",
+    "account": "Konts",
+    "contact": "Kontakts",
+    "contacts": "Kontakti",
+    "priority": "Prioritāte",
+    "type": "Tips",
+    "description": "Apraksts",
+    "lead": "Potenciālais klients",
+    "attachments": "Pielikumi",
+    "inboundEmail": "Grupas e-pasta konts"
+  },
+  "links": {
+    "account": "Konts",
+    "contact": "Kontakts (primārais)",
+    "Contacts": "Kontakti",
+    "meetings": "Tikšanās",
+    "calls": "Zvani",
+    "tasks": "Uzdevumi",
+    "emails": "E-pasti",
+    "articles": "Zināšanu bāzes raksti",
+    "lead": "Potenciālie klienti",
+    "attachments": "Pielikumi",
+    "inboundEmail": "Grupas e-pasta konts"
+  },
+  "options": {
+    "status": {
+      "New": "Jaunie",
+      "Assigned": "Piešķirtie",
+      "Pending": "Gaidīšanā",
+      "Closed": "Aizvērtie",
+      "Rejected": "Noraidītie",
+      "Duplicate": "Dublēt"
+    },
+    "priority": {
+      "Low": "Zema",
+      "Normal": "Normāla",
+      "High": "Augsta",
+      "Urgent": "Steidzams"
+    },
+    "type": {
+      "Question": "Jautājums",
+      "Incident": "Incidents",
+      "Problem": "Problēma"
+    }
+  },
+  "labels": {
+    "Create Case": "Izveidot lietu",
+    "Close": "Aizvērt",
+    "Reject": "Noraidīt",
+    "Closed": "Aizvērtie",
+    "Rejected": "Noraidītie"
+  },
+  "presetFilters": {
+    "open": "Atvērt",
+    "closed": "Aizvērtie"
+  }
+}

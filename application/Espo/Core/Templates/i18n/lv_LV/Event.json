@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "parent": "Primārais elements",
+    "dateStart": "Sākuma datums",
+    "dateEnd": "Beigu datums",
+    "duration": "Ilgums",
+    "status": "Statuss",
+    "reminders": "Atgādinājumi"
+  },
+  "links": {
+    "parent": "Primārais elements"
+  },
+  "options": {
+    "status": {
+      "Planned": "Plānots",
+      "Held": "Noticis",
+      "Not Held": "Nenoticis"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Izveidot {entityTypeTranslated}",
+    "Schedule {entityType}": "Ieplānot {entityTypeTranslated}",
+    "Log {entityType}": "Reģistrēt {entityTypeTranslated}",
+    "Set Held": "Iestatīt kā notikušu",
+    "Set Not Held": "Iestatīt kā nenotikušu"
+  },
+  "massActions": {
+    "setHeld": "Iestatīt kā notikušu",
+    "setNotHeld": "Iestatīt kā nenotikušu"
+  },
+  "presetFilters": {
+    "planned": "Ieplānots",
+    "held": "Noticis",
+    "todays": "Šodienas"
+  }
+}

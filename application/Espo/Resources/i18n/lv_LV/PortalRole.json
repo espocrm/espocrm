@@ -1,0 +1,19 @@
+{
+  "links": {
+    "users": "Lietotāji"
+  },
+  "labels": {
+    "Access": "Piekļuve",
+    "Create PortalRole": "Izveidot lomu portālā",
+    "Scope Level": "Tvēruma līmenis",
+    "Field Level": "Lauka līmenis"
+  },
+  "fields": {
+    "exportPermission": "Eksportēt atļauju",
+    "massUpdatePermission": "Masu atjaunināšanas atļauja"
+  },
+  "tooltips": {
+    "exportPermission": "Nosaka, vai portāla lietotāji var eksportēt ierakstus.",
+    "massUpdatePermission": "Nosaka, vai portāla lietotājiem ir iespēja veikt ierakstu masveida atjaunināšanu."
+  }
+}

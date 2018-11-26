@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Izveidot kategoriju",
+    "Manage Categories": "Pārvaldīt kategorijas",
+    "Articles": "Raksti"
+  },
+  "links": {
+    "articles": "Raksti"
+  }
+}

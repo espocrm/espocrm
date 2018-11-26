@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "name": "Nosaukums/vārds",
+    "version": "Versija",
+    "description": "Apraksts",
+    "isInstalled": "Instalētie",
+    "checkVersionUrl": "Vietrādis URL jauno versiju esamības pārbaudei"
+  },
+  "labels": {
+    "Uninstall": "Atinstalēt",
+    "Install": "Instalēt"
+  },
+  "messages": {
+    "uninstalled": "Paplašinājums {name} jau ir atinstalēts"
+  }
+}

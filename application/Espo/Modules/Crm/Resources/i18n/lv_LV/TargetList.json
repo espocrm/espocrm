@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "description": "Apraksts",
+    "entryCount": "Ierakstu skaits",
+    "campaigns": "Kampaņas",
+    "endDate": "Beigu datums",
+    "targetLists": "Mērķa adresātu saraksts",
+    "includingActionList": "Ieskaitot",
+    "excludingActionList": "Neieskaitot",
+    "optedOutCount": "Neizvēlētais adrešu skaits",
+    "targetStatus": "Mērķa adresāta statuss",
+    "isOptedOut": "Nav izvēlēts"
+  },
+  "links": {
+    "accounts": "Konti",
+    "contacts": "Kontakti",
+    "leads": "Potenciālie klienti",
+    "campaigns": "Kampaņas",
+    "massEmails": "Masveida e-pasti"
+  },
+  "options": {
+    "type": {
+      "Email": "E-pasts",
+      "Web": "Vietne",
+      "Television": "Televīzija",
+      "Newsletter": "Biļetens"
+    },
+    "targetStatus": {
+      "Opted Out": "Neizvēlēts ",
+      "Listed": "Iekļauts sarakstā"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Izveidot mērķa adresātu sarakstu",
+    "Opted Out": "Nav izvēlēts",
+    "Cancel Opt-Out": "Atcelt neizvēlētos",
+    "Opt-Out": "Neizvēlēties"
+  }
+}

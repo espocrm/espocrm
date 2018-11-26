@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "month": "Mēnesis",
+    "week": "Nedēļa",
+    "agendaWeek": "Nedēļa",
+    "day": "Diena",
+    "agendaDay": "Diena",
+    "timeline": "Laika grafiks"
+  },
+  "labels": {
+    "Today": "Šodien",
+    "Create": "Izveidot",
+    "Shared": "Kopīgots",
+    "Add User": "Pievienot lietotāju",
+    "current": "Pašreizējais",
+    "time": "Laiks",
+    "User List": "Lietotāju saraksts",
+    "Manage Users": "Pārvaldīt lietotājus",
+    "View Calendar": "Skatīt kalendāru",
+    "Create Shared View": "Izveidot kopīgoto skatījumu"
+  }
+}

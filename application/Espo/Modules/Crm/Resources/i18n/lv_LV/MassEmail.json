@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "status": "Statuss",
+    "storeSentEmails": "Uzglabāt nosūtītos e-pastus",
+    "startAt": "Datums no",
+    "fromAddress": "No adreses",
+    "fromName": "Sūtītāja vārds",
+    "replyToAddress": "Atbildēt uz adresi",
+    "replyToName": "Atbildēt vārdam",
+    "campaign": "Kampaņa",
+    "emailTemplate": "E-pasta veidne",
+    "inboundEmail": "E-pasta konts",
+    "targetLists": "Mērķa adresātu saraksts",
+    "excludingTargetLists": "Neiekļaujamo mērķa adresātu saraksts",
+    "optOutEntirely": "Neizvēlēties nevienu",
+    "smtpAccount": "SMTP konts"
+  },
+  "links": {
+    "targetLists": "Mērķa adresātu saraksts",
+    "excludingTargetLists": "Neiekļaujamo mērķa adresātu saraksts",
+    "queueItems": "Likt vienumus rindā",
+    "campaign": "Kampaņa",
+    "emailTemplate": "E-pasta veidne",
+    "inboundEmail": "E-pasta konts"
+  },
+  "options": {
+    "status": {
+      "Draft": "Melnraksts",
+      "Pending": "Gaidīšanā",
+      "In Process": "Procesā",
+      "Complete": "Pabeigts",
+      "Canceled": "Atcelts",
+      "Failed": "Neizdevās"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Izveidot masveida e-pastu",
+    "Send Test": "Nosūtīt testu",
+    "System SMTP": "Sistēmas SMTP",
+    "system": "sistēma",
+    "group": "grupa"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Atlasīt vismaz vienu mērķa adresātu.",
+    "testSent": "Testa e-pastu(s) paredzēts nosūtīt"
+  },
+  "tooltips": {
+    "optOutEntirely": "Atrakstījušos saņēmēju e-pasta adreses tiks atzīmētas kā neizvēlētās un uz tām masveida e-pasti vairs netiks sūtīti.",
+    "targetLists": "Mērķa adresāti, kam jāsaņem ziņojumi.",
+    "excludingTargetLists": "Mērķa adresāti, kam nav jāsaņem ziņojumi.",
+    "storeSentEmails": "E-pasti tiks uzglabāti CRM sistēmā."
+  },
+  "presetFilters": {
+    "actual": "Faktiskais",
+    "complete": "Pabeigts"
+  }
+}

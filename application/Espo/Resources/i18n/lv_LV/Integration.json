@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "Atļauts",
+    "clientId": "Klienta ID",
+    "clientSecret": "Klienta noslēpums",
+    "redirectUri": "Novirzīšanas URI",
+    "apiKey": "API atslēga"
+  },
+  "messages": {
+    "selectIntegration": "Atlasīt integrāciju no izvēlnes.",
+    "noIntegrations": "Neviena integrācija nav pieejama."
+  },
+  "help": {
+    "Google": "<p><b>Iegūt \"OAuth 2.0\" akreditācijas datus no \"Google\" izstrādātāju konsoles.</b></p><p>Apmeklējiet <a href=\"https://console.developers.google.com/project\">\"Google\" izstrādātāju konsoli</a>, lai iegūtu \"OAuth 2.0\" akreditācijas datus, piem., klienta ID un klienta noslēpumu, kas ir zināmi gan \"Google\", gan \"EspoCRM\" lietotnēm.</p>",
+    "GoogleMaps": "<p>Iegūt API atslēgu <a href=\"https://izstrādātājas.google.com/maps/documentation/javascript/get-api-key\">here</a>.</p>"
+  },
+  "titles": {
+    "GoogleMaps": "\"Google Maps\""
+  }
+}

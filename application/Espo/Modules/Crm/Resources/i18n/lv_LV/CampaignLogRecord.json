@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "action": "Darbība",
+    "actionDate": "Datums",
+    "data": "Dati",
+    "campaign": "Kampaņa",
+    "parent": "Mērķa adresāti",
+    "object": "Objekts",
+    "application": "Lietotnes",
+    "queueItem": "Ielikt vienumu rindā",
+    "stringData": "Virknes dati",
+    "stringAdditionalData": "Virknes papildu dati",
+    "isTest": "Ir tests"
+  },
+  "links": {
+    "queueItem": "Ielikt vienumu rindā",
+    "parent": "Primārais elements",
+    "object": "Objekts",
+    "campaign": "Kampaņa"
+  },
+  "options": {
+    "action": {
+      "Sent": "Nosūtīts",
+      "Opened": "Atvērts",
+      "Opted Out": "Neizvēlētais",
+      "Bounced": "Nepiegādāts",
+      "Clicked": "Noklikšķināts",
+      "Lead Created": "Potenciālais klients izveidots",
+      "Opted In": "Izvēlēts"
+    }
+  },
+  "labels": {
+    "All": "Visi"
+  },
+  "presetFilters": {
+    "sent": "Nosūtītie",
+    "opened": "Atvērtie",
+    "optedOut": "Neizvēlētie",
+    "bounced": "Nepiegādātie",
+    "clicked": "Noklikšķinātie",
+    "leadCreated": "Potenciālais klients izveidots",
+    "optedIn": "Izvēlēts"
+  }
+}

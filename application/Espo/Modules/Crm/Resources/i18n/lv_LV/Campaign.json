@@ -1,0 +1,86 @@
+{
+  "fields": {
+    "name": "Nosaukums",
+    "description": "Apraksts",
+    "status": "Statuss",
+    "type": "Tips",
+    "startDate": "Sākuma datums",
+    "endDate": "Beigu datums",
+    "targetLists": "Mērķa saraksts",
+    "excludingTargetLists": "Neiekļaujamo lietotāju mērķa saraksts",
+    "sentCount": "Nosūtīts",
+    "openedCount": "Atvērts",
+    "clickedCount": "Noklikšķināts",
+    "optedOutCount": "Neizvēlēts",
+    "bouncedCount": "Nepiegādāts",
+    "hardBouncedCount": "Nepiegādāts, jo adrese nepastāv",
+    "softBouncedCount": "Nepiegādāts, bet adrese pastāv ",
+    "leadCreatedCount": "Potenciālie klienti izveidoti",
+    "revenue": "Ieņēmumi",
+    "revenueConverted": "Ieņēmumi (konvertēti)",
+    "budget": "Budžets",
+    "budgetConverted": "Budžets (konvertēts)",
+    "contactsTemplate": "Kontaktu veidne",
+    "leadsTemplate": "Potenciālo klientu veidne",
+    "accountsTemplate": "Kontu veidne",
+    "usersTemplate": "Lietotāju veidne",
+    "mailMergeOnlyWithAddress": "Izlaist ierakstus bez aizpildītas adreses",
+    "optedInCount": "Izvēlēts"
+  },
+  "links": {
+    "targetLists": "Mērķa saraksts",
+    "excludingTargetLists": "Neiekļaujamo mērķa adresātu saraksts",
+    "accounts": "Konti",
+    "contacts": "Kontakti",
+    "leads": "Potenciālais klients",
+    "opportunities": "Iespējas",
+    "campaignLogRecords": "Reģistrs",
+    "massEmails": "Masveida e-pasti",
+    "trackingUrls": "Sekojamie vietrāži URL",
+    "contactsTemplate": "Kontaktu veidne",
+    "leadsTemplate": "Potenciālo klientu veidne",
+    "accountsTemplate": "Kontu veidne",
+    "usersTemplate": "Lietotāju veidne"
+  },
+  "options": {
+    "type": {
+      "Email": "E-pasts",
+      "Web": "Vietne",
+      "Television": "Televīzija",
+      "Newsletter": "Biļetens",
+      "Mail": "Pasts"
+    },
+    "status": {
+      "Planning": "Plānošana",
+      "Active": "Aktīvs",
+      "Inactive": "Neaktīvs",
+      "Complete": "Pabeigts"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Izveidot kampaņu",
+    "Target Lists": "Mērķa saraksts",
+    "Statistics": "Statistika",
+    "hard": "stingrā",
+    "soft": "nestingrā",
+    "Unsubscribe": "Atrakstīties",
+    "Mass Emails": "Masveida e-pasti",
+    "Email Templates": "E-pasta veidnes",
+    "Unsubscribe again": "Atcelt abonēšanu vēlreiz",
+    "Subscribe again": "Abonēt vēlreiz",
+    "Create Target List": "Izveidot mērķa adresātu sarakstu",
+    "Mail Merge": "E-pasta sapludināšana",
+    "Generate Mail Merge PDF": "Izveidot e-pasta sapludināšanu PDF failā"
+  },
+  "presetFilters": {
+    "active": "Aktīvs"
+  },
+  "messages": {
+    "unsubscribed": "Jūsu e-pasts tika izņemts no sūtījumu adresātu saraksta.",
+    "subscribedAgain": "Abonēšana veikta no jauna"
+  },
+  "tooltips": {
+    "targetLists": "Mērķa adresāti, kuriem nav jāsaņem ziņojumi.",
+    "excludingTargetLists": "Mērķa adresāti, kuriem nav jāsaņem ziņojumi."
+  }
+}

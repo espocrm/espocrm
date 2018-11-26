@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Izveidot kategoriju",
+    "Manage Categories": "Pārvaldīt kategorijas",
+    "EmailTemplates": "E-pasta veidnes"
+  },
+  "fields": {
+    "order": "Secība",
+    "childList": "Apakšsaraksts"
+  },
+  "links": {
+    "emailTemplates": "E-pasta veidnes"
+  }
+}

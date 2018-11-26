@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Nosaukums",
+    "status": "Statuss",
+    "host": "Resursdators",
+    "username": "Lietotājvārds",
+    "password": "Parole",
+    "port": "Ports",
+    "monitoredFolders": "Pārraudzītās mapes",
+    "fetchSince": "Ienest, sākot ar",
+    "emailAddress": "E-pasta adrese",
+    "sentFolder": "Nosūtīto e-pastu mape",
+    "storeSentEmails": "Uzkrāt nosūtītos e-pastus",
+    "keepFetchedEmailsUnread": "Ienestos e-pastus norādīt kā neizlasītos",
+    "emailFolder": "Ielikt mapē",
+    "useSmtp": "Lietot SMTP",
+    "smtpHost": "SMTP resursdators",
+    "smtpPort": "SMTP port",
+    "smtpAuth": "SMTP autentifikācija",
+    "smtpSecurity": "SMTP drošība",
+    "smtpUsername": "SMTP lietotājvārds",
+    "smtpPassword": "SMTP parole",
+    "useImap": "Ienest e-pastus"
+  },
+  "links": {
+    "filters": "Filtri",
+    "emails": "E-pasti"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktīvs",
+      "Inactive": "Neaktīvs"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Izveidot e-pasta kontu",
+    "Main": "Galvenais",
+    "Test Connection": "Testa savienojums",
+    "Send Test Email": "Nosūtīt testa e-pastu"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nevarēja savienoties ar IMAP serveri",
+    "connectionIsOk": "Savienojums izveidots"
+  },
+  "tooltips": {
+    "monitoredFolders": "Vairākas mapes cita no citas jāatdala ar komatu.\n\nJūs varat pievienot \"nosūtīto ziņojumu\" mapi, lai sinhronizētu e-pastus, kas nosūtīti no ārējā e-pasta klienta.",
+    "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī. E-pasta adreses laukam jāatbilst adresei, no kurienes e-pasti tiks nosūtīti."
+  }
+}

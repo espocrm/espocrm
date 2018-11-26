@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "Lietotājs",
+    "ipAddress": "IP adrese",
+    "lastAccess": "Pēdējās piekļuves datums",
+    "createdAt": "Pieteikšanās datums",
+    "isActive": "Ir aktīvs",
+    "portal": "Portāls"
+  },
+  "links": {
+    "actionHistoryRecords": "Darbību vēsture"
+  },
+  "presetFilters": {
+    "active": "Aktīvs",
+    "inactive": "Neaktīvs"
+  },
+  "labels": {
+    "Set Inactive": "Iestatīt kā aktīvu"
+  },
+  "massActions": {
+    "setInactive": "Iestatīt kā neaktīvu"
+  }
+}

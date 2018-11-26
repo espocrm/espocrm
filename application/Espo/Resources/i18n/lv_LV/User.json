@@ -1,0 +1,111 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "userName": "Lietotājvārds",
+    "title": "Nosaukums",
+    "isAdmin": "Ir administrators",
+    "defaultTeam": "Noklusējuma grupa",
+    "emailAddress": "E-pasts",
+    "phoneNumber": "Tālrunis",
+    "roles": "Lomas",
+    "portals": "Portāli",
+    "portalRoles": "Lomas portālos",
+    "teamRole": "Amats",
+    "password": "Parole",
+    "currentPassword": "Pašreizējā parole",
+    "passwordConfirm": "Apstiprināt paroli",
+    "newPassword": "Jaunā parole",
+    "newPasswordConfirm": "Apstiprināt jauno paroli",
+    "avatar": "Avatārs",
+    "isActive": "Ir aktīvs",
+    "isPortalUser": "Ir portāla lietotājs",
+    "contact": "Kontakts",
+    "accounts": "Konti",
+    "account": "Konts (primārais)",
+    "sendAccessInfo": "Nosūtīt e-pastu ar piekļuves informāciju lietotājam",
+    "portal": "Portāls",
+    "gender": "Dzimums",
+    "position": "Amats grupā",
+    "ipAddress": "IP adrese",
+    "passwordPreview": "Paroles priekšskatījums",
+    "isSuperAdmin": "Ir galvenais administrators",
+    "lastAccess": "Pēdējā piekļuve",
+    "type": "Tips",
+    "apiKey": "API atslēga",
+    "authMethod": "Autentifikācijas metode"
+  },
+  "links": {
+    "teams": "Grupas",
+    "roles": "Lomas",
+    "notes": "Piezīmes",
+    "portals": "Portāli",
+    "portalRoles": "Lomas portālos",
+    "contact": "Kontakts",
+    "accounts": "Konti",
+    "account": "Konts (primārais)",
+    "tasks": "Uzdevumi"
+  },
+  "labels": {
+    "Create User": "Izveidot lietotāju",
+    "Generate": "Ģenerēt",
+    "Access": "Piekļuve",
+    "Change Password": "Mainīt paroli",
+    "Teams and Access Control": "Grupas un piekļuves kontrole",
+    "Forgot Password?": "Vai aizmirsāt paroli?",
+    "Password Change Request": "Paroles maiņas pieprasījums",
+    "Email Address": "E-pasta adrese",
+    "External Accounts": "Ārējie konti",
+    "Email Accounts": "E-pasta konti",
+    "Portal": "Portāls",
+    "Create Portal User": "Izveidot portāla lietotāju",
+    "Proceed w/o Contact": "Turpināt bez kontakta",
+    "Generate New API Key": "Izveidot jaunu API atslēgu"
+  },
+  "tooltips": {
+    "defaultTeam": "Visus šī lietotāja izveidotie ieraksti pēc noklusējuma tiks sasaistīti ar šo grupu.",
+    "userName": "Ir atļauti burti a-z, cipari 0-9, punkti, defises, @-zīmes un pasvītras.",
+    "isAdmin": "Administratori var piekļūt visam.",
+    "isActive": "Ja nebūs atzīmēta šī izvēle, lietotājs nevarēs pieslēgties.",
+    "teams": "Grupas, kurām lietotājs pieder. Piekļuves kontrole līmenis ir pārmantots no grupas lomas.",
+    "roles": "Papildu piekļuves lomas. Izmantojiet šo izvēli, ja lietotājs nepieder nevienai grupai vai nepieciešams paaugstināt piekļuves kontroles līmeni vienīgi šim lietotājam.",
+    "portalRoles": "Papildu lomas portālos. Izmantojiet šo izvēli, lai paplašinātu piekļuves kontroles līmeni vienīgi šim lietotājam.",
+    "portals": "Portāli, kuriem šis lietotājs var piekļūt."
+  },
+  "messages": {
+    "passwordWillBeSent": "Parole tiks nosūtīta uz lietotāja e-pasta adresi.",
+    "passwordChanged": "Parole ir nomainīta",
+    "userCantBeEmpty": "Lietotājvārds nedrīkst būt tukšs",
+    "wrongUsernamePasword": "Nepareizs lietotājvārds/parole",
+    "emailAddressCantBeEmpty": "E-pasta adrese nedrīkst būt tukša",
+    "userNameEmailAddressNotFound": "Lietotājvārds/e-pasta adrese nav atrasta",
+    "forbidden": "Aizliegts, lūdzu, mēģiniet vēlāk",
+    "uniqueLinkHasBeenSent": "Unikālais vietrādis URL nosūtīts uz norādīto e-pasta adresi.",
+    "passwordChangedByRequest": "Parole nomainīta.",
+    "setupSmtpBefore": "Lai sistēma varētu sūtīt paroli uz e-pastu, nepieciešams veikt <a href=\"{url}\">SMTP iestatījumus</a>.",
+    "userNameExists": "Šāds lietotājvārds jau pastāv"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Tikai manai grupai"
+  },
+  "presetFilters": {
+    "active": "Aktīvs",
+    "activePortal": "Portāls ir aktīvs"
+  },
+  "options": {
+    "gender": {
+      "": "Nav iestatīts",
+      "Male": "Vīrietis",
+      "Female": "Sieviete",
+      "Neutral": "Neitrāls"
+    },
+    "type": {
+      "regular": "Regulāra",
+      "admin": "Administrators",
+      "portal": "Portāls",
+      "system": "Sistēma"
+    },
+    "authMethod": {
+      "ApiKey": "API atslēga"
+    }
+  }
+}

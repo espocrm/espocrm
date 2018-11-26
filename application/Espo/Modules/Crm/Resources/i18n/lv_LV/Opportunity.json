@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "account": "Konts",
+    "stage": "Posms",
+    "amount": "Summa",
+    "probability": "Varbūtība, %",
+    "leadSource": "Potenciālo klientu avots",
+    "doNotCall": "Nezvanīt",
+    "closeDate": "Slēgšanas datums",
+    "contacts": "Kontakti",
+    "description": "Apraksts",
+    "amountConverted": "Summa (konvertēta)",
+    "amountWeightedConverted": "Summas īpatsvars",
+    "campaign": "Kampaņa",
+    "originalLead": "Potenciālā klienta oriģinālais ieraksts",
+    "amountCurrency": "Summas valūta",
+    "contactRole": "Kontaktpersonas loma",
+    "lastStage": "Jaunākais posms"
+  },
+  "links": {
+    "contacts": "Kontakti",
+    "documents": "Dokumenti",
+    "campaign": "Kampaņa",
+    "originalLead": "Potenciālā klienta oriģinālais ieraksts"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Paredzēšana",
+      "Qualification": "Iespēju novērtēšana",
+      "Needs Analysis": "Nepieciešama analīze",
+      "Value Proposition": "Vērtības piedāvājums",
+      "Id. Decision Makers": "Id. Lēmumu pieņēmēji",
+      "Perception Analysis": "Novērtējuma analīze",
+      "Proposal/Price Quote": "Piedāvājums/Cenas piedāvājums",
+      "Negotiation/Review": "Sarunas/Pārskatīšanā",
+      "Closed Won": "Aizvērti iegūtie",
+      "Closed Lost": "Aizvērti zaudētie",
+      "Proposal": "Piedāvājums",
+      "Negotiation": "Saskaņošana"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Izveidot Iespēju"
+  },
+  "presetFilters": {
+    "open": "Atvērt",
+    "won": "Iegūtie",
+    "lost": "Zaudētie"
+  }
+}

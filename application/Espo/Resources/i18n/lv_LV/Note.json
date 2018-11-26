@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "post": "Publicējums",
+    "attachments": "Pielikumi",
+    "targetType": "Mērķa",
+    "teams": "Grupas",
+    "users": "Lietotāji",
+    "portals": "Portāli",
+    "type": "Tips",
+    "isGlobal": "Ir globāls",
+    "isInternal": "Ir iekšējs (iekšējiem lietotājiem)",
+    "related": "Saistīts",
+    "createdByGender": "Izveidotāja dzimums",
+    "data": "Dati",
+    "number": "Numurs"
+  },
+  "filters": {
+    "all": "Visi",
+    "posts": "Publicējumi",
+    "updates": "Atjauninājumi"
+  },
+  "messages": {
+    "writeMessage": "Šeit ierakstiet ziņojumu"
+  },
+  "options": {
+    "targetType": {
+      "self": "man pašam",
+      "users": "noteiktam (-iem) lietotājam(-iem)",
+      "teams": "noteiktai (-ām) grupai (-ām)",
+      "all": "visiem iekšējiem lietotājiem",
+      "portals": "portāla lietotājiem"
+    },
+    "type": {
+      "Post": "Publicējums"
+    }
+  },
+  "links": {
+    "superParent": "Galvenais primārais elements",
+    "related": "Saistīts"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "No",
+    "to": "Līdz",
+    "subject": "Tēma",
+    "bodyContains": "Pamatteksts satur",
+    "action": "Darbība",
+    "isGlobal": "Ir globāls",
+    "emailFolder": "Mape"
+  },
+  "labels": {
+    "Create EmailFilter": "Izveidot e-pasta filtru",
+    "Emails": "E-pasti"
+  },
+  "tooltips": {
+    "from": "E-pasti tiek sūtīti no norādītās adreses. Ja nav nepieciešams, atstājiet neaizpildītu. Varat izmantot aizstājējzīmi *.",
+    "to": "E-pasti tiek sūtīti uz norādīto adresi. Ja nav nepieciešams, atstājiet neaizpildītu. Varat izmantot aizstājējzīmi *.",
+    "name": "Dot filtriem aprakstošo nosaukumu.",
+    "subject": "Lietot a aizstājējzīmi *:\n\nteksts* - sākas ar tekstu,\n*teksts* - satur tekstu,\n*teksts -beidzas ar tekstu.",
+    "bodyContains": "E-pasta pamatteksts satur jebkuru no norādītajiem vārdiem vai frāzēm",
+    "isGlobal": "Attiecina šo filtru uz visiem sistēmā ienākošajiem e-pastiem."
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignorēt",
+      "Move to Folder": "Ielikt mapē"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "Ievietot dokumentu"
+  },
+  "fields": {
+    "role": "Loma",
+    "related": "Saistīts",
+    "file": "Fails",
+    "type": "Tips",
+    "field": "Lauks",
+    "sourceId": "Avota ID",
+    "storage": "Krātuve",
+    "size": "Lielums (baitos)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Pielikums",
+      "Inline Attachment": "Iekļautais pielikums",
+      "Import File": "Importēt failu",
+      "Export File": "Eksportēt failu",
+      "Mail Merge": "E-pasta sapludināšana",
+      "Mass Pdf": "Masveida PDF"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Bārenis"
+  }
+}

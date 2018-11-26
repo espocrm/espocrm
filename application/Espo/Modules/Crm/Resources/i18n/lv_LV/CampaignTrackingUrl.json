@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "Vietrādis URL",
+    "urlToUse": "Vietrāža URL vietā ievietojamais kods",
+    "campaign": "Kampaņa"
+  },
+  "links": {
+    "campaign": "Kampaņa"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Izveidot sekošanas vietrādi URL"
+  }
+}

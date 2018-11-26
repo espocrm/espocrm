@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "status": "Statuss",
+    "job": "Darbs",
+    "scheduling": "Ieplānošana"
+  },
+  "links": {
+    "log": "Reģistrs"
+  },
+  "labels": {
+    "Create ScheduledJob": "Izveidot ieplānoto darbu"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Tīrīšana",
+      "CheckInboundEmails": "Pārbaudīt grupas e-pasta kontus",
+      "CheckEmailAccounts": "Pārbaudīt personiskos e-pasta kontus",
+      "SendEmailReminders": "Nosūtīt atgādinājumus pa e-pastu ",
+      "AuthTokenControl": "Autentifikācijas tokenu vadība",
+      "SendEmailNotifications": "Nosūtīt e-pasta paziņojumus",
+      "CheckNewVersion": "Pārbaudīt, vai ir jauna versija"
+    },
+    "cronSetup": {
+      "linux": "Piezīme: lai izpildītu \"Espo\" ieplānotos darbus, pievienojiet uzdevumu plānotāja ciļņa failam šo rindu: ",
+      "mac": "Piezīme: lai izpildītu \"Espo\" ieplānotos darbus, pievienojiet uzdevumu plānotāja ciļņa failam šo rindu: ",
+      "windows": "Piezīme: lai izpildītu \"Espo\" ieplānotos darbus, izmantojot \"Windows\" ieplānotos uzdevumus, izveidojiet pakešfailu ar šādām komandām:",
+      "default": "Piezīme: pievienojiet uzdevumu plānotāja darbam (ieplānotajiem uzdevumiem) šo komandu:"
+    },
+    "status": {
+      "Active": "Aktīvs",
+      "Inactive": "Neaktīvs"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Uzdevumu plānotāja ciļņa notācija. Nosaka darbu izpildes biežumu.\n\n*/5 * * * * - ik pēc 5 minūtēm\n\n0 */2 * * * - ik pēc 2 stundām\n\n30 1 * * * - vienu reizi dienā plkst. 01:30\n\n0 0 1 * * - mēneša pirmajā dienā"
+  }
+}

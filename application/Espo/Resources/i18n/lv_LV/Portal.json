@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Vārds",
+    "logo": "Logotips",
+    "companyLogo": "Logotips",
+    "url": "Vietrādis URL",
+    "portalRoles": "Lomas",
+    "isActive": "Ir aktīvs",
+    "isDefault": "Ir pēc noklusējuma",
+    "tabList": "Ciļņu saraksts",
+    "quickCreateList": "Ātrās izveides saraksts",
+    "theme": "Tēma",
+    "language": "Valoda",
+    "dashboardLayout": "Infopaneļa izkārtojums",
+    "dateFormat": "Datuma formāts",
+    "timeFormat": "Laika formāts",
+    "timeZone": "Laika zona",
+    "weekStart": "Pirmā nedēļas diena",
+    "defaultCurrency": "Noklusējuma valūta",
+    "customUrl": "Pielāgotais vietrādis URL",
+    "customId": "Pielāgots ID"
+  },
+  "links": {
+    "users": "Lietotāji",
+    "portalRoles": "Lomas",
+    "notes": "Piezīmes"
+  },
+  "tooltips": {
+    "portalRoles": "Norādītais portāls tiks attiecināts uz visiem šī portāla lietotājiem."
+  },
+  "labels": {
+    "Create Portal": "Izveidot portālu",
+    "User Interface": "Lietotāja saskarne",
+    "General": "Vispārīgi",
+    "Settings": "Iestatījumi"
+  }
+}

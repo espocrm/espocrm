@@ -1,0 +1,11 @@
+{
+  "layouts": {
+    "detailConvert": "Konvertēt potenciālo klientu",
+    "listForAccount": "Saraksts (kontam)",
+    "listForContact": "Saraksts (kontaktiem)"
+  },
+  "templates": {
+    "invitation": "Ielūgums",
+    "reminder": "Atgādinājums"
+  }
+}

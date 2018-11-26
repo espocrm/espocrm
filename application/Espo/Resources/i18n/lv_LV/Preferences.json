@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "dateFormat": "Datuma formāts",
+    "timeFormat": "Laika formāts",
+    "timeZone": "Laika zona",
+    "weekStart": "Pirmā nedēļas diena",
+    "thousandSeparator": "Tūkstošu atdalītājs",
+    "decimalMark": "Decimālzīme",
+    "defaultCurrency": "Noklusējuma valūta",
+    "currencyList": "Valūtu saraksts",
+    "language": "Valoda",
+    "smtpServer": "Serveris",
+    "smtpPort": "Ports",
+    "smtpAuth": "Autentifikācija",
+    "smtpSecurity": "Drošība",
+    "smtpUsername": "Lietotājvārds",
+    "emailAddress": "E-pasts",
+    "smtpPassword": "Parole",
+    "smtpEmailAddress": "E-pasta adrese",
+    "exportDelimiter": "Eksportēšanas norobežotājs",
+    "signature": "E-pasta paraksts",
+    "dashboardTabList": "Ciļņu saraksts",
+    "tabList": "Ciļņu saraksts",
+    "defaultReminders": "Noklusējuma atgādinājumi",
+    "theme": "Tēma",
+    "useCustomTabList": "Pielāgots ciļņu saraksts",
+    "receiveAssignmentEmailNotifications": "E-pasta paziņojumi pēc piešķiršanas",
+    "receiveMentionEmailNotifications": "E-pasta paziņojumi par pieminējumiem publicējumos",
+    "receiveStreamEmailNotifications": "E-pasta paziņojumi par publicējumiem un statusa atjauninājumiem",
+    "dashboardLayout": "Infopaneļa izkārtojums",
+    "emailReplyForceHtml": "E-pasta atbildes HTML formātā",
+    "autoFollowEntityTypeList": "Globāla automātiskā sekošana",
+    "emailReplyToAllByDefault": "E-pasta funkcija \"atbildēt visiem\" pēc noklusējuma",
+    "doNotFillAssignedUserIfNotRequired": "Izveidojot ierakstu, neveiciet iepriekšējo aizpildīšanu ziņām par piešķirto lietotāju",
+    "followEntityOnStreamPost": "Pēc publicēšanas straumēšanā automātiski sekot ierakstam",
+    "followCreatedEntities": "Automātiski sekot izveidotajiem ierakstiem",
+    "followCreatedEntityTypeList": "Automātiski sekot izveidotajiem ierakstiem par noteiktiem vienību tipiem",
+    "emailUseExternalClient": "Lietot ārējā e-pasta klientu",
+    "scopeColorsDisabled": "Izslēgt tvēruma krāsas",
+    "tabColorsDisabled": "Izslēgt ciļņa krāsas"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Svētdiena",
+      "1": "Pirmdiena"
+    }
+  },
+  "labels": {
+    "Notifications": "Paziņojumi",
+    "User Interface": "Lietotāja saskarne",
+    "Misc": "Dažādi",
+    "Locale": "Lokalizācija",
+    "Reset Dashboard to Default": "Atjaunot infopaneļa noklusējuma iestatījumus"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Automātiski sekot VISIEM jaunajiem (jebkura lietotāja izveidotajiem) ierakstiem par noteiktiem atlasīto vienību tipiem. Šādi varēsiet skatīt informāciju straumēšanā un saņemt paziņojumus par visiem ierakstiem sistēmā.",
+    "doNotFillAssignedUserIfNotRequired": "Izveidojot ierakstu, kā piešķirtie lietotāji netiks norādīti pašu lietotāji, izņemot gadījumus, kad šis lauks būs obligāti aizpildāms.",
+    "followCreatedEntities": "Izveidojot jaunus ierakstus, tiem tiks automātiski sekots, pat ja tie būs piešķirti citam lietotājam.",
+    "followCreatedEntityTypeList": "Izveidojot jaunus ierakstus no atlasītajiem vienību tipiem, tiem tiks automātiski sekots, pat ja tie būs piešķirti citam lietotājam."
+  }
+}

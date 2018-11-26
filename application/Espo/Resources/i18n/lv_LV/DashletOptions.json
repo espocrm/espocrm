@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "title": "Amats",
+    "dateFrom": "Datums no",
+    "dateTo": "Datums līdz",
+    "autorefreshInterval": "Autoatsvaidzes intervāls",
+    "displayRecords": "Rādīt ierakstus",
+    "isDoubleHeight": "Augstums 2x",
+    "mode": "Režīms",
+    "enabledScopeList": "Ko rādīt",
+    "users": "Lietotāji",
+    "entityType": "Vienību tips",
+    "primaryFilter": "Primārais filtrs",
+    "boolFilterList": "Papildu filtri",
+    "sortBy": "Kārtot (lauks)",
+    "sortDirection": "Kārtot (virziens)",
+    "expandedLayout": "Izkārtojums",
+    "dateFilter": "Datumu filtrs"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Nedēļa (dienas kārtība)",
+      "basicWeek": "Nedēļa",
+      "month": "Mēnesis",
+      "basicDay": "Diena",
+      "agendaDay": "Diena (dienas kārtība)",
+      "timeline": "Laika grafiks"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Atlasīt vienības tipu minipaneļa opcijās."
+  }
+}

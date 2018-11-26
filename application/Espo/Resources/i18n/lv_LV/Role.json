@@ -1,0 +1,59 @@
+{
+  "fields": {
+    "name": "Vārds/nosaukums",
+    "roles": "Lomas",
+    "assignmentPermission": "Piešķiršanas atļauja",
+    "userPermission": "Lietotāja atļauja",
+    "portalPermission": "Portāla atļauja",
+    "groupEmailAccountPermission": "Grupas e-pasta konta atļauja",
+    "exportPermission": "Eksportēt atļauju",
+    "dataPrivacyPermission": "Datu privātuma atļauja",
+    "massUpdatePermission": "Masu atjaunināšanas atļauja"
+  },
+  "links": {
+    "users": "Lietotāji",
+    "teams": "Grupas"
+  },
+  "tooltips": {
+    "assignmentPermission": "Ļauj ierobežot iespēju piešķirt ierakstus un publicējamos ziņojumus citiem lietotājiem.\n\nVisi - bez ierobežojumiem\n\nGrupa - iespējams piešķirt un publicēt tikai pie grupas biedriem\n\nNeviens - iespējams piešķirt un publicēt tikai pie sevis",
+    "userPermission": "Ļauj ierobežot iespēju lietotājiem skatīt citu lietotāju darbības, kalendāru un straumēšanu.\n\nVisi - iespējams skatīt visus\n\nGrupa - iespējams skatīt tikai grupas biedru darbības\n\nNeviens  - nav iespējams skatīt nevienam",
+    "portalPermission": "Nosaka piekļuvi portāla informācijai, iespēju publicēt ziņojumus portāla lietotājiem.",
+    "groupEmailAccountPermission": "Nosaka piekļuvi grupas e-pasta kontiem un iespēju nosūtīt e-pastus no grupas SMTP.",
+    "dataPrivacyPermission": "Ļauj skatīt un dzēst personas datus.",
+    "exportPermission": "Nosaka, vai lietotāji var eksportēt ierakstus.",
+    "massUpdatePermission": "Nosaka, vai lietotāji spēj veikt ierakstu masveida atjaunināšanu."
+  },
+  "labels": {
+    "Access": "Piekļuve",
+    "Create Role": "Izveidot lomu",
+    "Scope Level": "Tvēruma līmenis",
+    "Field Level": "Lauka līmenis"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nav iestatīts",
+      "enabled": "atļauts",
+      "disabled": "nav atļauts"
+    },
+    "levelList": {
+      "all": "visi",
+      "team": "grupa",
+      "account": "konts",
+      "contact": "kontakts",
+      "own": "savs",
+      "no": "nē",
+      "yes": "jā",
+      "not-set": "nav iestatīts"
+    }
+  },
+  "actions": {
+    "read": "Izlasīt",
+    "edit": "Rediģēt",
+    "delete": "Izdzēst",
+    "stream": "Straumēt",
+    "create": "Izveidot"
+  },
+  "messages": {
+    "changesAfterClearCache": "Visas piekļuves vadības izmaiņas stāsies spēkā pēc kešatmiņas notīrīšanas."
+  }
+}
