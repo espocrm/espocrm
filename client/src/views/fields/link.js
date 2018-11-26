@@ -185,10 +185,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchData.oneOfIdList = this.searchParams.oneOfIdList || [];
-            this.searchData.oneOfNameHash = this.searchParams.oneOfNameHash || {};
-            this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.idValue || this.searchParams.value;
-            this.searchData.nameValue = this.getSearchParamsData().nameValue ||  this.searchParams.valueName;
+            this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList || this.searchParams.oneOfIdList || [];
+            this.searchData.oneOfNameHash = this.getSearchParamsData().oneOfNameHash || this.searchParams.oneOfNameHash || {};
+
+            if (~['is', 'isNot', 'equals'].indexOf(this.getSearchType())) {
+                this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.idValue || this.searchParams.value;
+                this.searchData.nameValue = this.getSearchParamsData().nameValue || this.searchParams.nameValue || this.searchParams.valueName;
+            }
 
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -420,7 +423,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             if (type == 'isEmpty') {
                 var data = {
                     type: 'isNull',
-                    field: this.idName,
+                    attribute: this.idName,
                     data: {
                         type: type
                     }
@@ -429,7 +432,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             } else if (type == 'isNotEmpty') {
                 var data = {
                     type: 'isNotNull',
-                    field: this.idName,
+                    attribute: this.idName,
                     data: {
                         type: type
                     }
@@ -438,12 +441,12 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             } else if (type == 'isOneOf') {
                 var data = {
                     type: 'in',
-                    field: this.idName,
+                    attribute: this.idName,
                     value: this.searchData.oneOfIdList,
-                    oneOfIdList: this.searchData.oneOfIdList,
-                    oneOfNameHash: this.searchData.oneOfNameHash,
                     data: {
-                        type: type
+                        type: type,
+                        oneOfIdList: this.searchData.oneOfIdList,
+                        oneOfNameHash: this.searchData.oneOfNameHash
                     }
                 };
                 return data;
@@ -461,23 +464,22 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             attribute: this.idName
                         }
                     ],
-                    field: this.idName,
-                    oneOfIdList: this.searchData.oneOfIdList,
-                    oneOfNameHash: this.searchData.oneOfNameHash,
                     data: {
-                        type: type
+                        type: type,
+                        oneOfIdList: this.searchData.oneOfIdList,
+                        oneOfNameHash: this.searchData.oneOfNameHash
                     }
                 };
                 return data;
             } else if (type == 'isNotOneOfAndIsNotEmpty') {
                 var data = {
                     type: 'notIn',
-                    field: this.idName,
+                    attribute: this.idName,
                     value: this.searchData.oneOfIdList,
-                    oneOfIdList: this.searchData.oneOfIdList,
-                    oneOfNameHash: this.searchData.oneOfNameHash,
                     data: {
-                        type: type
+                        type: type,
+                        oneOfIdList: this.searchData.oneOfIdList,
+                        oneOfNameHash: this.searchData.oneOfNameHash
                     }
                 };
                 return data;
@@ -499,7 +501,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             attribute: this.idName
                         }
                     ],
-                    field: this.idName,
                     data: {
                         type: type,
                         idValue: value,
@@ -514,7 +515,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'notEquals',
-                    field: this.idName,
+                    attribute: this.idName,
                     value: value,
                     data: {
                         type: type,
@@ -530,7 +531,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'equals',
-                    field: this.idName,
+                    attribute: this.idName,
                     value: value,
                     data: {
                         type: type,
@@ -548,4 +549,3 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
     });
 });
-

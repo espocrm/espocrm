@@ -52,10 +52,13 @@ Espo.define('crm:views/opportunity/detail', 'views/detail', function (Dep) {
                 'account': function () {
                     if (this.model.get('accountId')) {
                         return {
-                            field: 'accountId',
+                            attribute: 'accountId',
                             type: 'equals',
                             value: this.model.get('accountId'),
-                            valueName: this.model.get('accountName')
+                            data: {
+                                type: 'is',
+                                nameValue: this.model.get('accountName')
+                            }
                         };
                     }
                 },
@@ -70,14 +73,14 @@ Espo.define('crm:views/opportunity/detail', 'views/detail', function (Dep) {
                             field: 'accounts',
                             type: 'linkedWith',
                             value: [accountId],
-                            nameHash: nameHash
+                            data: {
+                                nameHash: nameHash
+                            }
                         };
                     }
                 },
-
             },
         },
 
     });
 });
-

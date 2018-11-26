@@ -35,9 +35,12 @@ Espo.define('crm:views/lead/fields/created-opportunity', 'views/fields/link', fu
                 return {
                     'account': {
                         type: 'equals',
-                        field: 'accountId',
+                        attribute: 'accountId',
                         value: this.model.get('createdAccountId'),
-                        valueName: this.model.get('createdAccountName')
+                        data: {
+                            type: 'is',
+                            nameValue: this.model.get('createdAccountName')
+                        }
                     }
                 };
             }

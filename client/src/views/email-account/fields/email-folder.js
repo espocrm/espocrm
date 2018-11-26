@@ -39,9 +39,12 @@ Espo.define('views/email-account/fields/email-folder', 'views/fields/link', func
                     return {
                         assignedUser: {
                             type: 'equals',
-                            field: 'assignedUserId',
+                            attribute: 'assignedUserId',
                             value: this.model.get('assignedUserId'),
-                            valueName: this.model.get('assignedUserName')
+                            data: {
+                                type: 'is',
+                                nameValue: this.model.get('assignedUserName')
+                            }
                         }
                     };
                 }

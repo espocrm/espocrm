@@ -35,9 +35,12 @@ Espo.define('crm:views/opportunity/fields/contacts', 'views/fields/link-multiple
                 return {
                     'account': {
                         type: 'equals',
-                        field: 'accountId',
+                        attribute: 'accountId',
                         value: this.model.get('accountId'),
-                        valueName: this.model.get('accountName'),
+                        data: {
+                            type: 'is',
+                            nameValue: this.model.get('accountName')
+                        }
                     }
                 };
             }

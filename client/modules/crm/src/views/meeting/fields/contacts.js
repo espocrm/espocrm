@@ -35,9 +35,12 @@ Espo.define('crm:views/meeting/fields/contacts', 'crm:views/meeting/fields/atten
                 return {
                     'account': {
                         type: 'equals',
-                        field: 'accountId',
+                        attribute: 'accountId',
                         value: this.model.get('parentId'),
-                        valueName: this.model.get('parentName'),
+                        data: {
+                            type: 'is',
+                            nameValue: this.model.get('parentName')
+                        }
                     }
                 };
             }
