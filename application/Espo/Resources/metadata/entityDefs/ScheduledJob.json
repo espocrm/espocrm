@@ -93,7 +93,7 @@
         "ProcessNoteAclQueue": {
             "name": "Process Note Acl Queue",
             "isSystem": true,
-            "scheduling": "* * * * *"
+            "scheduling": "*/1 * * * *"
         }
     }
 }
