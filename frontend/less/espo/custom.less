@@ -237,7 +237,7 @@ div.list-kanban > div > table {
     width: 100%;
     table-layout: fixed;
 
-    th {
+    th.group-header {
         font-weight: normal;
 
         color: @white-color;
@@ -271,14 +271,80 @@ div.list-kanban > div > table {
 
         > div:after {
             left: ~"calc(100% - 10px)";
-            z-index: 1;
             border-color: transparent transparent transparent @white-color;
+            background-color: @gray-light;
         }
 
         > div:before {
             left: ~"calc(100% - 12px)";
             z-index: 2;
             border-color: transparent transparent transparent @gray-light;
+        }
+    }
+
+    th.group-header:last-child {
+        > div:after {
+            background-color: transparent;
+        }
+    }
+
+    th.group-header.group-header-success {
+        background-color: @brand-success;
+        > div:before {
+            border-color: transparent transparent transparent @brand-success;
+        }
+    }
+    th.group-header.group-header-before-success {
+        > div:after {
+            background-color: @brand-success;
+        }
+    }
+
+    th.group-header.group-header-primary {
+        background-color: @brand-primary;
+        > div:before {
+            border-color: transparent transparent transparent @brand-primary;
+        }
+    }
+    th.group-header.group-header-before-primary {
+        > div:after {
+            background-color: @brand-primary;
+        }
+    }
+
+    th.group-header.group-header-danger {
+        background-color: @brand-danger;
+        > div:before {
+            border-color: transparent transparent transparent @brand-danger;
+        }
+    }
+    th.group-header.group-header-before-danger {
+        > div:after {
+            background-color: @brand-danger;
+        }
+    }
+
+    th.group-header.group-header-warning {
+        background-color: @brand-warning;
+        > div:before {
+            border-color: transparent transparent transparent @brand-warning;
+        }
+    }
+    th.group-header.group-header-before-warning {
+        > div:after {
+            background-color: @brand-warning;
+        }
+    }
+
+    th.group-header.group-header-info {
+        background-color: @brand-info;
+        > div:before {
+            border-color: transparent transparent transparent @brand-info;
+        }
+    }
+    th.group-header.group-header-before-info {
+        > div:after {
+            background-color: @brand-info;
         }
     }
 
@@ -1051,18 +1117,22 @@ section {
 
 .record {
     .panel-warning {
+        border-color: @panel-warning-bg;
         > .panel-heading {
-            background-color: @state-warning-border;
+            background-color: @panel-warning-bg;
+            border-color: @panel-warning-bg;
+            .btn,
             .btn-warning {
                 color: @panel-warning-text;
-                background-color: @state-warning-border;
-                border-color: @state-warning-border;
+                background-color: @panel-warning-bg;
+                border-color: @panel-warning-bg;
             }
         }
     }
     .panel-danger {
         > .panel-heading {
             background-color: @state-danger-border;
+            .btn,
             .btn-danger {
                 color: @panel-danger-text;
                 background-color: @state-danger-border;
@@ -1075,6 +1145,8 @@ section {
         > .panel-heading {
             color: @panel-info-text;
             background-color: @state-info-bg;
+            border-color: @state-info-bg;
+            .btn,
             .btn-info {
                 color: @panel-info-text;
                 background-color: @state-info-bg;
@@ -1085,10 +1157,22 @@ section {
     .panel-success {
         > .panel-heading {
             background-color: @state-success-border;
+            .btn,
             .btn-success {
                 color: @panel-success-text;
                 background-color: @state-success-border;
                 border-color: @state-success-border;
+            }
+        }
+    }
+    .panel-primary {
+        > .panel-heading {
+            background-color: @panel-primary-border;
+            .btn,
+            .btn-primary {
+                color: @panel-primary-text;
+                background-color: @panel-primary-border;
+                border-color: @panel-primary-border;
             }
         }
     }
@@ -1239,7 +1323,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -13px;
 }
 
-.panel > .panel-heading > .btn-group > .btn {
+.panel > .panel-heading .btn {
     color: @gray-soft;
 }
 

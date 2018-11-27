@@ -448,13 +448,20 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                         });
                     }, this);
 
+                    var nextStyle = null;
+                    if (i < groupList.length - 1) {
+                        nextStyle = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'style', groupList[i + 1].name]);
+                    }
+
                     var o = {
                         name: item.name,
                         label: this.getLanguage().translateOption(item.name, this.statusField, this.scope),
                         dataList: itemDataList,
                         collection: collection,
                         isLast: i === groupList.length - 1,
-                        hasShowMore: collection.total > collection.length || collection.total == -1
+                        hasShowMore: collection.total > collection.length || collection.total == -1,
+                        style: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'style', item.name]),
+                        nextStyle: nextStyle
                     };
 
                     this.groupDataList.push(o);

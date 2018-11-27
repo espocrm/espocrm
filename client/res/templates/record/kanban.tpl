@@ -19,7 +19,7 @@
         <thead>
             <tr class="kanban-row">
                 {{#each groupDataList}}
-                <th data-name="{{name}}" class="group-header">
+                <th data-name="{{name}}" class="group-header{{#if style}} group-header-{{style}}{{/if}}{{#if nextStyle}} group-header-before-{{nextStyle}}{{/if}}">
                     <div><span class="kanban-group-label">{{label}}</span></div>
                 </th>
                 {{/each}}

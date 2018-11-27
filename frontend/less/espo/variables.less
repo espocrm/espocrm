@@ -53,9 +53,26 @@
 
 @brand-primary: #5184B0;
 @brand-danger: #CF605D;
-@brand-info: #8DB9E8;
+@brand-info: #a595c9;
 @brand-success: #87C956;
 @brand-warning: #EF990E;
+
+@state-info-bg: #e5ddf8;
+@state-info-text: #756c88;
+
+@state-warning-bg: #fcf8e3;
+@state-warning-text: #9E7328;
+
+@state-success-bg: lighten(@brand-success, 31%);
+@state-success-text: darken(@brand-success, 18%);
+
+@state-danger-text: #a94442;
+@state-danger-bg: #f2dede;
+@state-danger-border: darken(spin(@state-danger-bg, -10), 5%);
+
+@panel-warning-bg: #efda97;
+
+@panel-primary-border: lighten(@brand-primary, 12%);
 
 @gray-light: #999;
 @main-gray: #E8ECED;
@@ -77,9 +94,6 @@
 @btn-info-border: @btn-info-bg;
 @btn-warning-border: @btn-warning-bg;
 
-@state-info-bg: @brand-info;
-@state-warning-text: #9E7328;
-
 @navbar-inverse-color: @gray-light;
 @navbar-inverse-bg: #4A6492;
 @navbar-inverse-border: transparent;
@@ -93,6 +107,8 @@
 @navbar-inverse-toggle-hover-bg: darken(@navbar-inverse-bg, 10%);
 
 @white-color: #fafbfc;
+
+@panel-primary-text: @white-color;
 
 @gray-soft: lighten(@gray-base, 39.0%);
 
