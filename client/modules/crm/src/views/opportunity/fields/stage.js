@@ -26,26 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/fields/stage', 'views/fields/enum', function (Dep) {
+Espo.define('crm:views/opportunity/fields/stage', 'views/fields/enum-styled', function (Dep) {
 
     return Dep.extend({
 
         listTemplate: 'fields/enum-styled/detail',
 
         detailTemplate: 'fields/enum-styled/detail',
-
-        data: function () {
-            var style = 'default';
-            var stage = this.model.get('stage');
-            if (stage == 'Closed Won') {
-                style = 'success';
-            } else if (stage == 'Closed Lost') {
-                style = 'danger';
-            }
-            return _.extend({
-                style: style,
-            }, Dep.prototype.data.call(this));
-        },
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -58,7 +45,5 @@ Espo.define('crm:views/opportunity/fields/stage', 'views/fields/enum', function 
                 }, this);
             }
         }
-
     });
-
 });

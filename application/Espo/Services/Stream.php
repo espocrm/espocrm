@@ -1085,31 +1085,41 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $statusFields = $this->getStatusFields();
-
         if (!empty($statusFields[$entityType])) {
             $field = $statusFields[$entityType];
             $value = $entity->get($field);
             if (!empty($value)) {
-                $statusStyles = $this->getStatusStyles();
-                $style = 'default';
-                if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
-                    $style = $statusStyles[$entityType][$value];
-                } else {
-                    if (in_array($value, $this->successDefaultStyleList)) {
-                        $style = 'success';
-                    } else if (in_array($value, $this->dangerDefaultStyleList)) {
-                        $style = 'danger';
-                    }
-                }
                 $data['statusValue'] = $value;
                 $data['statusField'] = $field;
-                $data['statusStyle'] = $style;
+                $data['statusStyle'] = $this->getStatusStyle($entityType, $field, $value);
             }
         }
 
         $note->set('data', $data);
 
         $this->getEntityManager()->saveEntity($note);
+    }
+
+    protected function getStatusStyle($entityType, $field, $value)
+    {
+        $style = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'style', $value]);
+        if ($style) {
+            return $style;
+        }
+
+        $statusStyles = $this->getStatusStyles();
+        $style = 'default';
+        if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
+            $style = $statusStyles[$entityType][$value];
+        } else {
+            if (in_array($value, $this->successDefaultStyleList)) {
+                $style = 'success';
+            } else if (in_array($value, $this->dangerDefaultStyleList)) {
+                $style = 'danger';
+            }
+        }
+
+        return $style;
     }
 
     public function noteCreateRelated(Entity $entity, $parentType, $parentId)
@@ -1183,27 +1193,16 @@ class Stream extends \Espo\Core\Services\Base
             $this->processNoteTeamsUsers($note, $entity);
         }
 
-        $style = 'default';
         $entityType = $entity->getEntityType();
         $value = $entity->get($field);
 
-        $statusStyles = $this->getStatusStyles();
+        $style = $this->getStatusStyle($entityType, $field, $value);
 
-        if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
-            $style = $statusStyles[$entityType][$value];
-        } else {
-            if (in_array($value, $this->successDefaultStyleList)) {
-                $style = 'success';
-            } else if (in_array($value, $this->dangerDefaultStyleList)) {
-                $style = 'danger';
-            }
-        }
-
-        $note->set('data', array(
+        $note->set('data', [
             'field' => $field,
             'value' => $value,
-            'style' => $style,
-        ));
+            'style' => $style
+        ]);
 
         $this->getEntityManager()->saveEntity($note);
     }

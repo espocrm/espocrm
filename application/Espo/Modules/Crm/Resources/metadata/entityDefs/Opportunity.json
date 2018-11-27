@@ -58,6 +58,10 @@
                 "Closed Won": 100,
                 "Closed Lost": 0
             },
+            "style": {
+                "Closed Won": "success",
+                "Closed Lost": "danger"
+            },
             "fieldManagerAdditionalParamList": [
                 {
                     "name": "probabilityMap",
