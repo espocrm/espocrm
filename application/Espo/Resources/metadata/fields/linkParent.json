@@ -8,7 +8,7 @@
       {
          "name":"entityList",
          "type":"multiEnum",
-         "view": "Admin.FieldManager.Fields.EntityList"
+         "view": "views/admin/field-manager/fields/entity-list"
       },
       {
          "name":"audited",
