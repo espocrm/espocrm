@@ -43,10 +43,10 @@ Espo.define('views/fields/link-one', 'views/fields/link', function (Dep) {
                     type: 'linkedWith',
                     field: this.name,
                     value: this.searchData.oneOfIdList,
-                    oneOfIdList: this.searchData.oneOfIdList,
-                    oneOfNameHash: this.searchData.oneOfNameHash,
                     data: {
-                        type: type
+                        type: type,
+                        oneOfIdList: this.searchData.oneOfIdList,
+                        oneOfNameHash: this.searchData.oneOfNameHash
                     }
                 };
                 return data;
@@ -59,9 +59,9 @@ Espo.define('views/fields/link-one', 'views/fields/link', function (Dep) {
                     type: 'linkedWith',
                     field: this.name,
                     value: value,
-                    valueName: this.$el.find('[name="' + this.nameName + '"]').val(),
                     data: {
-                        type: type
+                        type: type,
+                        nameValue: this.$el.find('[name="' + this.nameName + '"]').val()
                     }
                 };
                 return data;

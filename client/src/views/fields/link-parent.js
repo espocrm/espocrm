@@ -160,6 +160,12 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
+            var type = this.getSearchParamsData().type;
+            if (type === 'is' || !type) {
+                this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.valueId;
+                this.searchData.nameValue = this.getSearchParamsData().nameValue || this.searchParams.valueName;
+                this.searchData.typeValue = this.getSearchParamsData().typeValue || this.searchParams.valueType;
+            }
 
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -356,31 +362,30 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if (entityId) {
                 data = {
                     type: 'and',
-                    field: this.idName,
-
+                    attribute: this.idName,
                     value: [
                         {
                             type: 'equals',
                             field: this.idName,
-                            value: entityId,
+                            value: entityId
                         },
                         {
                             type: 'equals',
                             field: this.typeName,
-                            value: entityType,
+                            value: entityType
                         }
                     ],
-                    valueId: entityId,
-                    valueName: entityName,
-                    valueType: entityType,
                     data: {
-                        type: 'is'
+                        type: 'is',
+                        idValue: entityId,
+                        nameValue: entityName,
+                        typeValue: entityType
                     }
                 };
             } else {
                 data = {
                     type: 'and',
-                    field: this.idName,
+                    attribute: this.idName,
                     value: [
                         {
                             type: 'isNotNull',
@@ -389,12 +394,12 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         {
                             type: 'equals',
                             field: this.typeName,
-                            value: entityType,
+                            value: entityType
                         }
                     ],
-                    valueType: entityType,
                     data: {
-                        type: 'is'
+                        type: 'is',
+                        typeValue: entityType
                     }
                 };
             }
@@ -406,5 +411,3 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         }
     });
 });
-
-
