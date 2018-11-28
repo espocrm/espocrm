@@ -776,8 +776,8 @@ class InboundEmail extends \Espo\Services\Record
         if (preg_match('/permanent[ ]*[error|failure]/', $content)) {
             $isHard = true;
         }
-        if (preg_match('/X-QueueItemId: [a-z0-9\-]*/', $content, $m)) {
-            $arr = preg_split('/X-QueueItemId: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
+        if (preg_match('/X-Queue-Item-Id: [a-z0-9\-]*/', $content, $m)) {
+            $arr = preg_split('/X-Queue-Item-Id: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
 
             $queueItemId = $arr[0];
             if (!$queueItemId) return;

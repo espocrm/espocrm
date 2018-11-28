@@ -51,7 +51,7 @@ class MassEmail extends \Espo\Services\Record
     {
         parent::init();
         $this->addDependency('container');
-        $this->addDependency('language');
+        $this->addDependency('defaultLanguage');
     }
 
     protected function getMailSender()
@@ -61,7 +61,7 @@ class MassEmail extends \Espo\Services\Record
 
     protected function getLanguage()
     {
-        return $this->getInjection('language');
+        return $this->getInjection('defaultLanguage');
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
@@ -384,13 +384,15 @@ class MassEmail extends \Espo\Services\Record
             }
         }
 
+        $trackImageAlt = $this->getLanguage()->translate('Campaign', 'scopeNames');
+
         $trackOpenedUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
-        $trackOpenedHtml = '<img alt="Email Campaign" width="1" height="1" border="0" src="'.$trackOpenedUrl.'">';
+        $trackOpenedHtml = '<img alt="'.$trackImageAlt.'" width="1" height="1" border="0" src="'.$trackOpenedUrl.'">';
 
         if ($massEmail->get('campaignId')) {
             if ($emailData['isHtml']) {
                 if ($massEmail->get('campaignId')) {
-                    $body .= $trackOpenedHtml;
+                    $body .= '<br>' . $trackOpenedHtml;
                 }
             }
         }

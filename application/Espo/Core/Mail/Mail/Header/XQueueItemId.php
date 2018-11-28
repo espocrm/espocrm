@@ -47,7 +47,7 @@ use Zend\Mime\Mime;
 
 class XQueueItemId implements Header\HeaderInterface
 {
-    protected $fieldName = 'X-QueueItemId';
+    protected $fieldName = 'X-Queue-Item-Id';
 
     protected $id = null;
 
@@ -57,7 +57,7 @@ class XQueueItemId implements Header\HeaderInterface
         $value = Header\HeaderWrap::mimeDecodeValue($value);
 
         if (strtolower($name) !== 'x-queue-item-id') {
-            throw new Header\Exception\InvalidArgumentException('Invalid header line for Message-ID string');
+            throw new Header\Exception\InvalidArgumentException('Invalid header line for x-queue-item-id string');
         }
 
         $header = new static();
