@@ -135,7 +135,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             }
             attributes.emailId = this.model.id;
 
-            var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.detail') || 'views/modals/edit';
+            var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
@@ -175,7 +175,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             attributes.name = this.model.get('name');
             attributes.description = this.model.get('bodyPlain') || '';
 
-            var viewName = this.getMetadata().get('clientDefs.Case.modalViews.detail') || 'views/modals/edit';
+            var viewName = this.getMetadata().get('clientDefs.Case.modalViews.edit') || 'views/modals/edit';
 
             Espo.Ui.notify(this.translate('loading', 'messsages'));
 
@@ -218,7 +218,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
 
             attributes.name = this.translate('Email', 'scopeNames') + ': ' + this.model.get('name');
 
-            var viewName = this.getMetadata().get('clientDefs.Task.modalViews.detail') || 'views/modals/edit';
+            var viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
@@ -267,7 +267,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             }
             attributes.emailId = this.model.id;
 
-            var viewName = this.getMetadata().get('clientDefs.Contact.modalViews.detail') || 'views/modals/edit';
+            var viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
