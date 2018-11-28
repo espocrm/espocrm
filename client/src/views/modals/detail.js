@@ -165,7 +165,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         controlRecordButtonsVisibility: function () {
-            console.log(this.model.get('teamsIds'));
             if (this.getAcl().check(this.model, 'edit')) {
                 this.showButton('edit');
             } else {
