@@ -13,7 +13,6 @@
             "type": "enum",
             "options": ["New", "Assigned", "Pending", "Closed", "Rejected", "Duplicate"],
             "default": "New",
-            "view": "views/fields/enum-styled",
             "style": {
                 "Closed": "success",
                 "Duplicate": "danger",

@@ -26,13 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/fields/stage', 'views/fields/enum-styled', function (Dep) {
+Espo.define('crm:views/opportunity/fields/stage', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
-
-        listTemplate: 'fields/enum-styled/detail',
-
-        detailTemplate: 'fields/enum-styled/detail',
 
         setup: function () {
             Dep.prototype.setup.call(this);

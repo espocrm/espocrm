@@ -50,6 +50,11 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
             var value = this.model.get(this.name);
+
+            if (this.isReadMode() && this.styleMap && (value || value === '')) {
+                data.style = this.styleMap[value] || 'default';
+            }
+
             if (
                 value !== null
                 &&
@@ -69,6 +74,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     this.params.options = this.model[methodName].call(this.model);
                 }
             }
+
+            this.styleMap = this.model.getFieldParam(this.name, 'style') || {};
 
             this.setupOptions();
 

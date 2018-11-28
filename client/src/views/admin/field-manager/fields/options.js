@@ -50,13 +50,13 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
 
             translatedValue = translatedValue.replace(/"/g, '&quot;');
 
-            var valueInternal = valueSanitized.replace(/"/g, '-quote-');
+            var valueInternal = valueSanitized.replace(/"/g, '&quot;');
 
             var html = '' +
             '<div class="list-group-item link-with-role form-inline" data-value="' + valueInternal + '">' +
-                '<div class="pull-left" style="width: 92%; display: inline-block;">' +
+                '<div class="pull-left item-content" style="width: 92%; display: inline-block;">' +
                     '<input name="translatedValue" data-value="' + valueInternal + '" class="role form-control input-sm pull-right" value="'+translatedValue+'">' +
-                    '<div>' + valueSanitized + '</div>' +
+                    '<div class="item-text">' + valueSanitized + '</div>' +
                 '</div>' +
                 '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
                     '<a href="javascript:" class="pull-right" data-value="' + valueInternal + '" data-action="removeValue"><span class="fas fa-times"></a>' +
@@ -78,7 +78,7 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
             data.translatedOptions = {};
             (data[this.name] || []).forEach(function (value) {
                 var valueSanitized = this.getHelper().stripTags(value);
-                var valueInternal = valueSanitized.replace(/"/g, '-quote-');
+                var valueInternal = valueSanitized.replace(/"/g, '\\"');
                 var translatedValue = this.$el.find('input[name="translatedValue"][data-value="'+valueInternal+'"]').val() || value;
 
                 translatedValue = translatedValue.toString();

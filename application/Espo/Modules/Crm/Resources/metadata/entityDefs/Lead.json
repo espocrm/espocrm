@@ -28,7 +28,6 @@
             "type": "enum",
             "options": ["New", "Assigned", "In Process", "Converted", "Recycled", "Dead"],
             "default": "New",
-            "view": "views/fields/enum-styled",
             "style": {
                 "Converted": "success",
                 "Recycled": "danger",

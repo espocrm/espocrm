@@ -202,6 +202,26 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.model.get(this.name);
         },
 
+        isReadMode: function () {
+            return this.mode === 'list' || this.mode === 'detail' || this.mode === 'listLink';
+        },
+
+        isListMode: function () {
+            return this.mode === 'list' || this.mode === 'listLink';
+        },
+
+        isDetailMode: function () {
+            return this.mode === 'detail';
+        },
+
+        isEditMode: function () {
+            return this.mode === 'edit';
+        },
+
+        isSearchMode: function () {
+            return this.mode === 'search';
+        },
+
         setMode: function (mode) {
             this.mode = mode;
             var property = mode + 'Template';

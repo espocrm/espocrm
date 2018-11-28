@@ -8,7 +8,6 @@
         "status": {
             "type": "enum",
             "options": ["Not Started", "Started", "Completed", "Canceled", "Deferred"],
-            "view": "views/fields/enum-styled",
             "style": {
                 "Completed": "success"
             },

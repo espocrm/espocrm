@@ -312,6 +312,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             var selected = [];
             this.$el.find('.list-group .list-group-item').each(function (i, el) {
                 var value = $(el).data('value').toString();
+
+                
                 selected.push(value);
             });
             this.selected = selected;

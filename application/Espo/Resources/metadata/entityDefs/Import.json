@@ -10,7 +10,6 @@
             "type": "enum",
             "options": ["In Process", "Complete", "Failed"],
             "readOnly": true,
-            "view": "views/fields/enum-styled",
             "style": {
                 "Complete": "success",
                 "Failed": "danger"
