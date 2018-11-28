@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ecef27207089d736defa12613a2e7102",
-    "content-hash": "6a7ab1e25c048f4144772e60140d0982",
+    "hash": "b43a170ce5c65fe81c22f7328903b867",
+    "content-hash": "2a76f446cc8dc8be6ce65e19ec6b1ede",
     "packages": [
         {
             "name": "composer/semver",
@@ -1159,6 +1159,65 @@
             "time": "2018-01-29 15:09:29"
         },
         {
+            "name": "symfony/polyfill-mbstring",
+            "version": "v1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-mbstring.git",
+                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/c79c051f5b3a46be09205c73b80b346e4153e494",
+                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for the Mbstring extension",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "mbstring",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2018-09-21 13:07:52"
+        },
+        {
             "name": "symfony/process",
             "version": "v4.1.7",
             "source": {
@@ -1317,6 +1376,52 @@
                 "qrcode"
             ],
             "time": "2018-02-24 11:48:20"
+        },
+        {
+            "name": "true/punycode",
+            "version": "v2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/true/php-punycode.git",
+                "reference": "a4d0c11a36dd7f4e7cd7096076cab6d3378a071e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/true/php-punycode/zipball/a4d0c11a36dd7f4e7cd7096076cab6d3378a071e",
+                "reference": "a4d0c11a36dd7f4e7cd7096076cab6d3378a071e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/polyfill-mbstring": "^1.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.7",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TrueBV\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Renan Gonçalves",
+                    "email": "renan.saddam@gmail.com"
+                }
+            ],
+            "description": "A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)",
+            "homepage": "https://github.com/true/php-punycode",
+            "keywords": [
+                "idna",
+                "punycode"
+            ],
+            "time": "2016-11-16 10:37:54"
         },
         {
             "name": "yzalis/identicon",
@@ -1626,40 +1731,47 @@
         },
         {
             "name": "zendframework/zend-mail",
-            "version": "2.5.2",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-mail.git",
-                "reference": "68b1357c6389d476d80c050a75bf3091e873202c"
+                "reference": "d7beb63d5f7144a21ac100072c453e63860cdab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-mail/zipball/68b1357c6389d476d80c050a75bf3091e873202c",
-                "reference": "68b1357c6389d476d80c050a75bf3091e873202c",
+                "url": "https://api.github.com/repos/zendframework/zend-mail/zipball/d7beb63d5f7144a21ac100072c453e63860cdab8",
+                "reference": "d7beb63d5f7144a21ac100072c453e63860cdab8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5",
-                "zendframework/zend-crypt": "~2.5",
-                "zendframework/zend-loader": "~2.5",
-                "zendframework/zend-mime": "~2.5",
-                "zendframework/zend-stdlib": "~2.5",
-                "zendframework/zend-validator": "~2.5"
+                "ext-iconv": "*",
+                "php": "^5.6 || ^7.0",
+                "true/punycode": "^2.1",
+                "zendframework/zend-loader": "^2.5",
+                "zendframework/zend-mime": "^2.5",
+                "zendframework/zend-stdlib": "^2.7 || ^3.0",
+                "zendframework/zend-validator": "^2.10.2"
             },
             "require-dev": {
-                "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "~4.0",
-                "zendframework/zend-config": "~2.5",
-                "zendframework/zend-servicemanager": "~2.5"
+                "phpunit/phpunit": "^5.7.25 || ^6.4.4 || ^7.1.4",
+                "zendframework/zend-coding-standard": "~1.0.0",
+                "zendframework/zend-config": "^2.6",
+                "zendframework/zend-crypt": "^2.6 || ^3.0",
+                "zendframework/zend-servicemanager": "^2.7.10 || ^3.3.1"
             },
             "suggest": {
-                "zendframework/zend-servicemanager": "Zend\\ServiceManager component"
+                "zendframework/zend-crypt": "Crammd5 support in SMTP Auth",
+                "zendframework/zend-servicemanager": "^2.7.10 || ^3.3.1 when using SMTP to deliver messages"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev",
-                    "dev-develop": "2.6-dev"
+                    "dev-master": "2.10.x-dev",
+                    "dev-develop": "2.11.x-dev"
+                },
+                "zf": {
+                    "component": "Zend\\Mail",
+                    "config-provider": "Zend\\Mail\\ConfigProvider"
                 }
             },
             "autoload": {
@@ -1671,13 +1783,13 @@
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "provides generalized functionality to compose and send both text and MIME-compliant multipart e-mail messages",
-            "homepage": "https://github.com/zendframework/zend-mail",
+            "description": "Provides generalized functionality to compose and send both text and MIME-compliant multipart e-mail messages",
             "keywords": [
+                "ZendFramework",
                 "mail",
-                "zf2"
+                "zf"
             ],
-            "time": "2015-09-10 18:21:00"
+            "time": "2018-06-07 13:37:07"
         },
         {
             "name": "zendframework/zend-math",
@@ -1780,23 +1892,24 @@
         },
         {
             "name": "zendframework/zend-servicemanager",
-            "version": "2.6.0",
+            "version": "2.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-servicemanager.git",
-                "reference": "1dc33f23bd0a7f4d8ba743b915fae523d356027a"
+                "reference": "99ec9ed5d0f15aed9876433c74c2709eb933d4c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-servicemanager/zipball/1dc33f23bd0a7f4d8ba743b915fae523d356027a",
-                "reference": "1dc33f23bd0a7f4d8ba743b915fae523d356027a",
+                "url": "https://api.github.com/repos/zendframework/zend-servicemanager/zipball/99ec9ed5d0f15aed9876433c74c2709eb933d4c7",
+                "reference": "99ec9ed5d0f15aed9876433c74c2709eb933d4c7",
                 "shasum": ""
             },
             "require": {
                 "container-interop/container-interop": "~1.0",
-                "php": ">=5.5"
+                "php": "^5.5 || ^7.0"
             },
             "require-dev": {
+                "athletic/athletic": "dev-master",
                 "fabpot/php-cs-fixer": "1.7.*",
                 "phpunit/phpunit": "~4.0",
                 "zendframework/zend-di": "~2.5",
@@ -1809,8 +1922,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev",
-                    "dev-develop": "2.7-dev"
+                    "dev-master": "2.7-dev",
+                    "dev-develop": "3.0-dev"
                 }
             },
             "autoload": {
@@ -1827,7 +1940,7 @@
                 "servicemanager",
                 "zf2"
             ],
-            "time": "2015-07-23 21:49:08"
+            "time": "2018-06-22 14:49:54"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -1890,27 +2003,27 @@
         },
         {
             "name": "zendframework/zend-validator",
-            "version": "2.8.1",
+            "version": "2.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-validator.git",
-                "reference": "8ec9f57a717dd37340308aa632f148a2c2be1cfc"
+                "reference": "38109ed7d8e46cfa71bccbe7e6ca80cdd035f8c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-validator/zipball/8ec9f57a717dd37340308aa632f148a2c2be1cfc",
-                "reference": "8ec9f57a717dd37340308aa632f148a2c2be1cfc",
+                "url": "https://api.github.com/repos/zendframework/zend-validator/zipball/38109ed7d8e46cfa71bccbe7e6ca80cdd035f8c9",
+                "reference": "38109ed7d8e46cfa71bccbe7e6ca80cdd035f8c9",
                 "shasum": ""
             },
             "require": {
                 "container-interop/container-interop": "^1.1",
-                "php": "^5.5 || ^7.0",
-                "zendframework/zend-stdlib": "^2.7 || ^3.0"
+                "php": "^5.6 || ^7.0",
+                "zendframework/zend-stdlib": "^2.7.6 || ^3.1"
             },
             "require-dev": {
-                "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "^4.0",
+                "phpunit/phpunit": "^6.0.8 || ^5.7.15",
                 "zendframework/zend-cache": "^2.6.1",
+                "zendframework/zend-coding-standard": "~1.0.0",
                 "zendframework/zend-config": "^2.6",
                 "zendframework/zend-db": "^2.7",
                 "zendframework/zend-filter": "^2.6",
@@ -1918,24 +2031,24 @@
                 "zendframework/zend-i18n": "^2.6",
                 "zendframework/zend-math": "^2.6",
                 "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
-                "zendframework/zend-session": "^2.6.2",
+                "zendframework/zend-session": "^2.8",
                 "zendframework/zend-uri": "^2.5"
             },
             "suggest": {
-                "zendframework/zend-db": "Zend\\Db component",
+                "zendframework/zend-db": "Zend\\Db component, required by the (No)RecordExists validator",
                 "zendframework/zend-filter": "Zend\\Filter component, required by the Digits validator",
-                "zendframework/zend-i18n": "Zend\\I18n component to allow translation of validation error messages as well as to use the various Date validators",
+                "zendframework/zend-i18n": "Zend\\I18n component to allow translation of validation error messages",
                 "zendframework/zend-i18n-resources": "Translations of validator messages",
-                "zendframework/zend-math": "Zend\\Math component",
+                "zendframework/zend-math": "Zend\\Math component, required by the Csrf validator",
                 "zendframework/zend-servicemanager": "Zend\\ServiceManager component to allow using the ValidatorPluginManager and validator chains",
-                "zendframework/zend-session": "Zend\\Session component",
+                "zendframework/zend-session": "Zend\\Session component, ^2.8; required by the Csrf validator",
                 "zendframework/zend-uri": "Zend\\Uri component, required by the Uri and Sitemap\\Loc validators"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev",
-                    "dev-develop": "2.9-dev"
+                    "dev-master": "2.10.x-dev",
+                    "dev-develop": "2.11.x-dev"
                 },
                 "zf": {
                     "component": "Zend\\Validator",
@@ -1957,7 +2070,7 @@
                 "validator",
                 "zf2"
             ],
-            "time": "2016-06-23 13:44:31"
+            "time": "2018-02-01 17:05:33"
         },
         {
             "name": "zordius/lightncandy",
