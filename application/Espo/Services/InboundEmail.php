@@ -249,11 +249,11 @@ class InboundEmail extends \Espo\Services\Record
         $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserName;
         $parser = new $parserClassName($this->getEntityManager());
 
-        $portionLimit = $this->getConfig()->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
-
         $monitoredFoldersArr = explode(',', $monitoredFolders);
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
+
+            $portionLimit = $this->getConfig()->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
 
             try {
                 $storage->selectFolder($folder);
@@ -271,12 +271,20 @@ class InboundEmail extends \Espo\Services\Record
                 $lastDate = $fetchData->lastDate->$folder;
             }
 
+            $previousLastUID = $lastUID;
+
             if (!empty($lastUID)) {
                 $ids = $storage->getIdsFromUID($lastUID);
             } else {
+                $fetchSince = $emailAccount->get('fetchSince');
+                if ($lastDate) {
+                    $fetchSince = $lastDate;
+                    $portionLimit = 0;
+                }
+
                 $dt = null;
                 try {
-                    $dt = new \DateTime($emailAccount->get('fetchSince'));
+                    $dt = new \DateTime($fetchSince);
                 } catch (\Exception $e) {}
 
                 if ($dt) {
@@ -382,8 +390,13 @@ class InboundEmail extends \Espo\Services\Record
                 $k++;
             }
 
-            $fetchData->lastUID->$folder = $lastUID;
             $fetchData->lastDate->$folder = $lastDate;
+            $fetchData->lastUID->$folder = $lastUID;
+
+            if ($previousLastUID && count($ids) && $previousLastUID >= $lastUID) {
+                unset($fetchData->lastUID->$folder);
+            }
+
             $emailAccount->set('fetchData', $fetchData);
 
             $this->getEntityManager()->saveEntity($emailAccount, ['silent' => true]);
