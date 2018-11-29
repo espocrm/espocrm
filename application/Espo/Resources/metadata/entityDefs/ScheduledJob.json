@@ -89,6 +89,11 @@
             "name": "Check for New Versions of Installed Extensions",
             "isSystem": true,
             "scheduling": "25 5 * * *"
+        },
+        "ProcessJobQueueQ1": {
+            "name": "Process Job Queue Q1",
+            "isSystem": true,
+            "scheduling": "*/1 * * * *"
         }
     }
 }

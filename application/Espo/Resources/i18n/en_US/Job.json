@@ -2,6 +2,7 @@
     "fields": {
         "status": "Status",
         "executeTime": "Execute At",
+        "executedAt": "Executed At",
         "attempts": "Attempts Left",
         "failedAttempts": "Failed Attempts",
         "serviceName": "Service",
@@ -11,7 +12,8 @@
         "scheduledJobJob": "Scheduled Job Name",
         "data": "Data",
         "targetType": "Target Type",
-        "targetId": "Target ID"
+        "targetId": "Target ID",
+        "queue": "Queue"
     },
     "options": {
         "status": {

@@ -520,7 +520,8 @@ class Importer
                     'targetType' => 'Email',
                     'targetId' => $duplicate->id
                 ],
-                'executeAt' => $executeAt
+                'executeAt' => $executeAt,
+                'queue' => 'q1'
             ]);
             $this->getEntityManager()->saveEntity($job);
         }

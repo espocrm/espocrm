@@ -1,5 +1,7 @@
 [
+    "status",
     "createdAt",
     "executeTime",
-    "status"
+    "executedAt",
+    "queue"
 ]

@@ -87,17 +87,18 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
     protected function createJob(Entity $entity, $userId)
     {
         $job = $this->getEntityManager()->getEntity('Job');
-        $job->set(array(
+        $job->set([
             'serviceName' => 'EmailNotification',
             'methodName' => 'notifyAboutAssignmentJob',
-            'data' => json_encode(array(
+            'data' => [
                 'userId' => $userId,
                 'assignerUserId' => $this->getUser()->id,
                 'entityId' => $entity->id,
                 'entityType' => $entity->getEntityType()
-            )),
+            ],
             'executeTime' => date('Y-m-d H:i:s'),
-        ));
+            'queue' => 'q1'
+        ]);
         $this->getEntityManager()->saveEntity($job);
     }
 }

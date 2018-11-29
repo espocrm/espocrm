@@ -189,9 +189,25 @@ class CronManager
         $this->getCronJobUtil()->updateFailedJobAttempts();
         $this->createJobsFromScheduledJobs();
         $this->getCronJobUtil()->removePendingJobDuplicates();
-        $pendingJobList = $this->getCronJobUtil()->getPendingJobList();
 
-        if ($this->useProcessPool()) {
+        $this->processPendingJobs();
+    }
+
+    public function processPendingJobs($queue = null, $limit = null, $poolDisabled = false, $noLock = false)
+    {
+        if (is_null($limit)) {
+            $limit = intval($this->getConfig()->get('jobMaxPortion', 0));
+        }
+
+        $pendingJobList = $this->getCronJobUtil()->getPendingJobList($queue, $limit);
+
+        $useProcessPool = $this->useProcessPool();
+
+        if ($poolDisabled) {
+            $useProcessPool = false;
+        }
+
+        if ($useProcessPool) {
             $pool = \Spatie\Async\Pool::create()
                 ->autoload(getcwd() . '/vendor/autoload.php')
                 ->concurrency($this->getConfig()->get('jobPoolConcurrencyNumber'))
@@ -200,8 +216,8 @@ class CronManager
 
         foreach ($pendingJobList as $job) {
             $skip = false;
-            $this->getEntityManager()->getPdo()->query('LOCK TABLES `job` WRITE');
-            if ($this->getCronJobUtil()->isJobPending($job->id)) {
+            if (!$noLock) $this->lockJobTable();
+            if ($noLock || $this->getCronJobUtil()->isJobPending($job->id)) {
                 if ($job->get('scheduledJobId')) {
                     if ($this->getCronJobUtil()->isScheduledJobRunning($job->get('scheduledJobId'), $job->get('targetId'), $job->get('targetType'))) {
                         $skip = true;
@@ -212,10 +228,10 @@ class CronManager
             }
 
             if ($skip) {
-                $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+                if (!$noLock) $this->unlockTables();
                 continue;
             }
-            if ($this->useProcessPool()) {
+            if ($useProcessPool) {
                 $job->set('status', self::READY);
             } else {
                 $job->set('status', self::RUNNING);
@@ -223,9 +239,9 @@ class CronManager
             }
 
             $this->getEntityManager()->saveEntity($job);
-            $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+            if (!$noLock) $this->unlockTables();
 
-            if ($this->useProcessPool()) {
+            if ($useProcessPool) {
                 $task = new \Espo\Core\Utils\Cron\JobTask($job->id);
                 $pool->add($task);
             } else {
@@ -233,9 +249,19 @@ class CronManager
             }
         }
 
-        if ($this->useProcessPool()) {
+        if ($useProcessPool) {
             $pool->wait();
         }
+    }
+
+    protected function lockJobTable()
+    {
+        $this->getEntityManager()->getPdo()->query('LOCK TABLES `job` WRITE');
+    }
+
+    protected function unlockTables()
+    {
+        $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
     }
 
     public function runJobById($id)
@@ -281,6 +307,11 @@ class CronManager
         $status = $isSuccess ? self::SUCCESS : self::FAILED;
 
         $job->set('status', $status);
+
+        if ($isSuccess) {
+            $job->set('executedAt', date('Y-m-d H:i:s'));
+        }
+
         $this->getEntityManager()->saveEntity($job);
 
         if ($job->get('scheduledJobId') && !$skipLog) {

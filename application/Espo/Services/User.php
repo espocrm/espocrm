@@ -225,14 +225,15 @@ class User extends Record
 
         $job = $this->getEntityManager()->getEntity('Job');
 
-        $job->set(array(
+        $job->set([
             'serviceName' => 'User',
             'methodName' => 'removeChangePasswordRequestJob',
             'data' => [
                 'id' => $passwordChangeRequest->id
             ],
-            'executeTime' => $dt->format('Y-m-d H:i:s')
-        ));
+            'executeTime' => $dt->format('Y-m-d H:i:s'),
+            'queue' => 'q1'
+        ]);
 
         $this->getEntityManager()->saveEntity($job);
 

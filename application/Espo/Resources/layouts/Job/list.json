@@ -1,7 +1,7 @@
 [
-    {"name":"name", "width": 30},
-    {"name":"status"},
-    {"name":"executeTime"},
-    {"name":"attempts", "width": 10},
-    {"name":"createdAt", "align": "right", "width": 15}
+    {"name":"name"},
+    {"name":"status", "width": 14},
+    {"name":"executeTime", "width": 14},
+    {"name":"queue", "width": 10},
+    {"name":"createdAt", "align": "right", "width": 14}
 ]

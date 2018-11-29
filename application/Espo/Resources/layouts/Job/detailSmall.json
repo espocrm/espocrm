@@ -3,9 +3,15 @@
         "label":"",
         "rows":[
             [{"name":"name"}, {"name": "status"}],
-            [{"name":"executeTime"}, {"name": "attempts"}],
-            [{"name":"createdAt"}, {"name": "failedAttempts"}],
-            [{"name":"modifiedAt"}, false]
+            [{"name":"queue"}, false]
+        ]
+    },
+    {
+        "label":"",
+        "rows":[
+            [{"name":"executeTime"}, {"name": "createdAt"}],
+            [{"name":"executedAt"}, {"name": "modifiedAt"}],
+            [{"name":"attempts"}, {"name": "failedAttempts"}]
         ]
     },
     {

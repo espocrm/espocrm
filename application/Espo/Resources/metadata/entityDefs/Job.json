@@ -8,7 +8,13 @@
         "status": {
             "type": "enum",
             "options": ["Pending", "Ready", "Running", "Success", "Failed"],
-            "default": "Pending"
+            "default": "Pending",
+            "style": {
+                "Success": "success",
+                "Failed": "danger",
+                "Running": "warning",
+                "Ready": "warning"
+            }
         },
         "executeTime": {
             "type": "datetime",
@@ -38,6 +44,14 @@
             "type": "foreign",
             "link": "scheduledJob",
             "field": "job"
+        },
+        "queue": {
+            "type": "varchar",
+            "maxLength": 36,
+            "default": null
+        },
+        "executedAt": {
+            "type": "datetime"
         },
         "pid": {
             "type": "int"

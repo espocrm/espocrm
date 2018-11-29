@@ -74,10 +74,8 @@ class Job
         ])->findOne();
     }
 
-    public function getPendingJobList()
+    public function getPendingJobList($queue = null, $limit = 0)
     {
-        $limit = intval($this->getConfig()->get('jobMaxPortion', 0));
-
         $selectParams = [
             'select' => [
                 'id',
@@ -89,11 +87,13 @@ class Job
                 'methodName',
                 'method', // TODO remove deprecated
                 'serviceName',
-                'data'
+                'data',
+                'queue'
             ],
             'whereClause' => [
                 'status' => CronManager::PENDING,
-                'executeTime<=' => date('Y-m-d H:i:s')
+                'executeTime<=' => date('Y-m-d H:i:s'),
+                'queue' => $queue
             ],
             'orderBy' => 'executeTime'
         ];
