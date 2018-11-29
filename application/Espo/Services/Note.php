@@ -213,27 +213,16 @@ class Note extends Record
         return parant::unlinkEntity($id, $link, $foreignId);
     }
 
-    public function processNoteAclQueue()
+    public function processNoteAclJob($data)
     {
-        $dt = new \DateTime();
-        $dt->modify('-5 seconds');
-        $from = $dt->format('Y-m-d H:i:s');
+        $targetType = $data->targetType;
+        $targetId = $data->targetId;
 
-        $itemList = $this->getEntityManager()->getRepository('NoteAclQueueItem')->where([
-            'createdAt<' => $from
-        ])->order('number')->find();
-
-        foreach ($itemList as $item) {
-            $targetType = $item->get('targetType');
-            $targetId = $item->get('targetId');
-            if ($targetType && $targetId && $this->getEntityManager()->hasRepository($targetType)) {
-                $entity = $this->getEntityManager()->getEntity($targetType, $targetId);
-                if ($entity) {
-                    $this->processNoteAcl($entity, true);
-                }
+        if ($targetType && $targetId && $this->getEntityManager()->hasRepository($targetType)) {
+            $entity = $this->getEntityManager()->getEntity($targetType, $targetId);
+            if ($entity) {
+                $this->processNoteAcl($entity, true);
             }
-
-            $this->getEntityManager()->getRepository('NoteAclQueueItem')->deleteFromDb($item->id);
         }
     }
 

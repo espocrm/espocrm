@@ -48,8 +48,7 @@
         "AuthFailLogRecord": "Auth Fail Log Record",
         "LeadCapture": "Lead Capture Entry Point",
         "LeadCaptureLogRecord": "Lead Capture Log Record",
-        "ArrayValue": "Array Value",
-        "NoteAclQueueItem": "Note Acl Queue Item"
+        "ArrayValue": "Array Value"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -87,8 +86,7 @@
         "AuthFailLogRecord": "Auth Fail Log",
         "LeadCapture": "Lead Capture",
         "LeadCaptureLogRecord": "Lead Capture Log",
-        "ArrayValue": "Array Values",
-        "NoteAclQueueItem": "Note Acl Queue"
+        "ArrayValue": "Array Values"
     },
     "labels": {
         "Misc": "Misc",

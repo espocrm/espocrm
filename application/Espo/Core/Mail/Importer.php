@@ -508,12 +508,21 @@ class Importer
         }
 
         if ($duplicate->get('parentType') && $processNoteAcl) {
-            $noteAclQueueItem = $this->getEntityManager()->getEntity('NoteAclQueueItem');
-            $noteAclQueueItem->set([
-                'targetType' => 'Email',
-                'targetId' => $duplicate->id
+            $dt = new \DateTime();
+            $dt->modify('+5 seconds');
+            $executeAt = $dt->format('Y-m-d H:i:s');
+
+            $job = $this->getEntityManager()->getEntity('Job');
+            $job->set([
+                'serviceName' => 'Note',
+                'methodName' => 'processNoteAclJob',
+                'data' => [
+                    'targetType' => 'Email',
+                    'targetId' => $duplicate->id
+                ],
+                'executeAt' => $executeAt
             ]);
-            $this->getEntityManager()->saveEntity($noteAclQueueItem);
+            $this->getEntityManager()->saveEntity($job);
         }
     }
 }
