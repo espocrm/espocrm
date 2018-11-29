@@ -9,7 +9,9 @@
         "methodName": "Method",
         "scheduledJob": "Scheduled Job",
         "scheduledJobJob": "Scheduled Job Name",
-        "data": "Data"
+        "data": "Data",
+        "targetType": "Target Type",
+        "targetId": "Target ID"
     },
     "options": {
         "status": {

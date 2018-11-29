@@ -14,7 +14,8 @@
         "list": "views/scheduled-job/list"
     },
     "jobWithTargetList": [
-        "CheckEmailAccounts"
+        "CheckEmailAccounts",
+        "CheckInboundEmails"
     ],
     "dynamicLogic":{
         "fields":{

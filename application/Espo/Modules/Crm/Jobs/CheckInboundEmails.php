@@ -29,26 +29,72 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\CronManager;
+
+use \Espo\Core\Exceptions\Error;
 
 class CheckInboundEmails extends \Espo\Core\Jobs\Base
 {
-    public function run()
+    public function run($data, $targetId)
     {
+        if (!$targetId) {
+            throw new Error();
+        }
+
         $service = $this->getServiceFactory()->create('InboundEmail');
-        $collection = $this->getEntityManager()->getRepository('InboundEmail')->where(array(
+        $entity = $this->getEntityManager()->getEntity('InboundEmail', $targetId);
+
+        if (!$entity) {
+            throw new Error("Job CheckInboundEmails '".$targetId."': InboundEmail does not exist.", -1);
+        }
+
+        if ($entity->get('status') !== 'Active') {
+            throw new Error("Job CheckInboundEmails '".$targetId."': InboundEmail is not active.", -1);
+        }
+
+        try {
+            $service->fetchFromMailServer($entity);
+        } catch (\Exception $e) {
+            throw new Error('Job CheckInboundEmails '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+        return true;
+    }
+
+    public function prepare($scheduledJob, $executeTime)
+    {
+        $collection = $this->getEntityManager()->getRepository('InboundEmail')->where([
             'status' => 'Active',
             'useImap' => true
-        ))->find();
+        ])->find();
+
         foreach ($collection as $entity) {
-            try {
-                $service->fetchFromMailServer($entity);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->error('Job CheckInboundEmails '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
-            }
+            $running = $this->getEntityManager()->getRepository('Job')->where([
+                'scheduledJobId' => $scheduledJob->id,
+                'status' => [CronManager::RUNNING, CronManager::READY],
+                'targetType' => 'InboundEmail',
+                'targetId' => $entity->id
+            ])->findOne();
+            if ($running) continue;
+
+            $countPending = $this->getEntityManager()->getRepository('Job')->where([
+                'scheduledJobId' => $scheduledJob->id,
+                'status' => CronManager::PENDING,
+                'targetType' => 'InboundEmail',
+                'targetId' => $entity->id
+            ])->count();
+            if ($countPending > 1) continue;
+
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name' => $scheduledJob->get('name'),
+                'scheduledJobId' => $scheduledJob->id,
+                'executeTime' => $executeTime,
+                'targetType' => 'InboundEmail',
+                'targetId' => $entity->id
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
         }
 
         return true;
     }
 }
-

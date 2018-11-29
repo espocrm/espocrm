@@ -11,8 +11,8 @@
     {
         "label":"",
         "rows":[
-            [{"name":"scheduledJob"}, false],
-            [{"name":"serviceName"}, false],
+            [{"name":"scheduledJob"}, {"name":"targetType"}],
+            [{"name":"serviceName"}, {"name":"targetId"}],
             [{"name":"methodName"}, false],
             [{"name": "data", "fullWidth": true}]
         ]

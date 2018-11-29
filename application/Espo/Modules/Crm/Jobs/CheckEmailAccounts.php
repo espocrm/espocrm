@@ -46,7 +46,7 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
 
         if (!$entity) {
             throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount does not exist.", -1);
-        };
+        }
 
         if ($entity->get('status') !== 'Active') {
             throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount is not active.", -1);
@@ -71,7 +71,7 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
         foreach ($collection as $entity) {
             $running = $this->getEntityManager()->getRepository('Job')->where([
                 'scheduledJobId' => $scheduledJob->id,
-                'status' => CronManager::RUNNING,
+                'status' => [CronManager::RUNNING, CronManager::READY],
                 'targetType' => 'EmailAccount',
                 'targetId' => $entity->id
             ])->findOne();
