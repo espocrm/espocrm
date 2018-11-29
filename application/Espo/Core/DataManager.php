@@ -130,18 +130,21 @@ class DataManager
         $metadata = $this->getContainer()->get('metadata');
         $entityManager = $this->getContainer()->get('entityManager');
 
-        $jobs = $metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], array());
+        $jobs = $metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], []);
+
+        $systemJobNameList = [];
 
         foreach ($jobs as $jobName => $defs) {
             if ($jobName && !empty($defs['isSystem']) && !empty($defs['scheduling'])) {
+                $systemJobNameList[] = $jobName;
                 if (!$entityManager->getRepository('ScheduledJob')->where(array(
                     'job' => $jobName,
                     'status' => 'Active',
                     'scheduling' => $defs['scheduling']
                 ))->findOne()) {
-                    $job = $entityManager->getRepository('ScheduledJob')->where(array(
+                    $job = $entityManager->getRepository('ScheduledJob')->where([
                         'job' => $jobName
-                    ))->findOne();
+                    ])->findOne();
                     if ($job) {
                         $entityManager->removeEntity($job);
                     }
@@ -150,15 +153,25 @@ class DataManager
                         $name = $defs['name'];
                     }
                     $job = $entityManager->getEntity('ScheduledJob');
-                    $job->set(array(
+                    $job->set([
                         'job' => $jobName,
                         'status' => 'Active',
                         'scheduling' => $defs['scheduling'],
                         'isInternal' => true,
                         'name' => $name
-                    ));
+                    ]);
                     $entityManager->saveEntity($job);
                 }
+            }
+        }
+
+        $internalScheduledJobList = $entityManager->getRepository('ScheduledJob')->where([
+            'isInternal' => true
+        ])->find();
+        foreach ($internalScheduledJobList as $scheduledJob) {
+            $jobName = $scheduledJob->get('job');
+            if (!in_array($jobName, $systemJobNameList)) {
+                $entityManager->getRepository('ScheduledJob')->deleteFromDb($scheduledJob->id);
             }
         }
     }
