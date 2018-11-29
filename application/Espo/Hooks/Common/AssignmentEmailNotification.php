@@ -97,7 +97,7 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
                 'entityType' => $entity->getEntityType()
             ],
             'executeTime' => date('Y-m-d H:i:s'),
-            'queue' => 'q1'
+            'queue' => 'e0'
         ]);
         $this->getEntityManager()->saveEntity($job);
     }

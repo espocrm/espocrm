@@ -90,10 +90,20 @@
             "isSystem": true,
             "scheduling": "25 5 * * *"
         },
+        "ProcessJobQueueQ0": {
+            "name": "Process Job Queue q0",
+            "isSystem": true,
+            "scheduling": "* * * * *"
+        },
         "ProcessJobQueueQ1": {
-            "name": "Process Job Queue Q1",
+            "name": "Process Job Queue q1",
             "isSystem": true,
             "scheduling": "*/1 * * * *"
+        },
+        "ProcessJobQueueE0": {
+            "name": "Process Job Queue e0",
+            "isSystem": true,
+            "scheduling": "* * * * *"
         }
     }
 }
