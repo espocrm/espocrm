@@ -1,6 +1,7 @@
 [
     "username",
     "ipAddress",
+    "authenticationMethod",
     "createdAt",
     "portal",
     "requestUrl",

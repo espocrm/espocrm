@@ -202,7 +202,7 @@ class Auth
         $authLogRecord = null;
 
         if (!$authTokenIsFound) {
-            $authLogRecord = $this->createAuthLogRecord($username, $user);
+            $authLogRecord = $this->createAuthLogRecord($username, $user, $authenticationMethod);
         }
 
         if (!$user) {
@@ -342,7 +342,7 @@ class Auth
         }
     }
 
-    protected function createAuthLogRecord($username, $user)
+    protected function createAuthLogRecord($username, $user, $authenticationMethod = null)
     {
         if ($username === '**logout') return;
 
@@ -353,7 +353,8 @@ class Auth
             'ipAddress' => $_SERVER['REMOTE_ADDR'],
             'requestTime' => $_SERVER['REQUEST_TIME_FLOAT'],
             'requestMethod' => $this->request->getMethod(),
-            'requestUrl' => $this->request->getUrl() . $this->request->getPath()
+            'requestUrl' => $this->request->getUrl() . $this->request->getPath(),
+            'authenticationMethod' => $authenticationMethod
         ]);
 
         if ($this->isPortal()) {

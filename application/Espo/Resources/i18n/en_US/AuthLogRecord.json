@@ -11,7 +11,8 @@
         "authToken": "Auth Token Created",
         "requestUrl": "Request URL",
         "requestMethod": "Request Method",
-        "authTokenIsActive": "Auth Token is Active"
+        "authTokenIsActive": "Auth Token is Active",
+        "authenticationMethod": "Authentication Method"
     },
     "links": {
         "authToken": "Auth Token Created",
