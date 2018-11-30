@@ -20,15 +20,15 @@
             "type": "datetime",
             "required": true
         },
+        "number": {
+            "type": "autoincrement",
+            "index": true,
+            "dbType": "bigint"
+        },
         "serviceName": {
             "type": "varchar",
             "required": true,
             "maxLength": 100
-        },
-        "method": {
-            "type": "varchar",
-            "required": true,
-            "maxLength":100
         },
         "methodName": {
             "type": "varchar",
@@ -86,7 +86,7 @@
         }
     },
     "collection": {
-        "orderBy": "createdAt",
+        "orderBy": "number",
         "order": "desc",
         "textFilterFields": ["name", "methodName", "serviceName", "scheduledJobName"]
     },

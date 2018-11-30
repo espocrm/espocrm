@@ -85,17 +85,15 @@ class Job
                 'targetId',
                 'targetType',
                 'methodName',
-                'method', // TODO remove deprecated
                 'serviceName',
-                'data',
-                'queue'
+                'data'
             ],
             'whereClause' => [
                 'status' => CronManager::PENDING,
                 'executeTime<=' => date('Y-m-d H:i:s'),
                 'queue' => $queue
             ],
-            'orderBy' => 'executeTime'
+            'orderBy' => 'number'
         ];
         if ($limit) {
             $selectParams['offset'] = 0;

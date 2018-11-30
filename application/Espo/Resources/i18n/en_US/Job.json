@@ -13,6 +13,7 @@
         "data": "Data",
         "targetType": "Target Type",
         "targetId": "Target ID",
+        "number": "Number",
         "queue": "Queue"
     },
     "options": {

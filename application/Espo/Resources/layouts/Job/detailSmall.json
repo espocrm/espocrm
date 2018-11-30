@@ -3,7 +3,7 @@
         "label":"",
         "rows":[
             [{"name":"name"}, {"name": "status"}],
-            [{"name":"queue"}, false]
+            [{"name":"queue"}, {"name":"number"}]
         ]
     },
     {

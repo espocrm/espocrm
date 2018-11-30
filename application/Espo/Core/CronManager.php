@@ -367,12 +367,6 @@ class CronManager
         $methodNameDeprecated = $job->get('method');
         $methodName = $job->get('methodName');
 
-        $isDeprecated = false;
-        if (!$methodName) {
-            $isDeprecated = true;
-            $methodName = $methodNameDeprecated;
-        }
-
         if (!$methodName) {
             throw new Error('Job with empty methodName.');
         }
@@ -382,10 +376,6 @@ class CronManager
         }
 
         $data = $job->get('data');
-
-        if ($isDeprecated) {
-            $data = Json::decode(Json::encode($data), true);
-        }
 
         $service->$methodName($data, $job->get('targetId'), $job->get('targetType'));
     }

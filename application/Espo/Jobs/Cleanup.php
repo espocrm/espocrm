@@ -33,7 +33,7 @@ use \Espo\Core\Exceptions;
 
 class Cleanup extends \Espo\Core\Jobs\Base
 {
-    protected $cleanupJobPeriod = '1 month';
+    protected $cleanupJobPeriod = '10 days';
 
     protected $cleanupActionHistoryPeriod = '15 days';
 
