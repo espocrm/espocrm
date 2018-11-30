@@ -653,4 +653,57 @@ class Util
 
         return $value;
     }
+
+    public static function areValuesEqual($v1, $v2, $isUnordered = false)
+    {
+        if (is_array($v1) && is_array($v2)) {
+            if ($isUnordered) {
+                sort($v1);
+                sort($v2);
+            }
+            if ($v1 != $v2) {
+                return false;
+            }
+            foreach ($v1 as $i => $itemValue) {
+                if (is_object($v1[$i]) && is_object($v2[$i])) {
+                    if (!self::areValuesEqual($v1[$i], $v2[$i])) {
+                        return false;
+                    }
+                    continue;
+                }
+                if ($v1[$i] !== $v2[$i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        if (is_object($v1) && is_object($v2)) {
+            if ($v1 != $v2) {
+                return false;
+            }
+            $a1 = get_object_vars($v1);
+            $a2 = get_object_vars($v2);
+            foreach ($v1 as $key => $itemValue) {
+                if (is_object($a1[$key]) && is_object($a2[$key])) {
+                    if (!self::areValuesEqual($a1[$key], $a2[$key])) {
+                        return false;
+                    }
+                    continue;
+                }
+                if (is_array($a1[$key]) && is_array($a2[$key])) {
+                    if (!self::areValuesEqual($a1[$key], $a2[$key])) {
+                        return false;
+                    }
+                    continue;
+                }
+                if ($a1[$key] !== $a2[$key]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return $v1 === $v2;
+    }
 }
