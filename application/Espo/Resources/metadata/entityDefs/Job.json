@@ -22,8 +22,7 @@
         },
         "number": {
             "type": "autoincrement",
-            "index": true,
-            "dbType": "bigint"
+            "index": true
         },
         "serviceName": {
             "type": "varchar",
