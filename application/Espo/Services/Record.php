@@ -341,6 +341,8 @@ class Record extends \Espo\Core\Services\Base
                     $idAttribute = $link . 'Id';
                     if ($entity->hasAttribute($nameAttribute) && $entity->hasAttribute($idAttribute)) {
                         $id = $entity->get($idAttribute);
+                    } else {
+                        continue;
                     }
                     if (!empty($defs['entity'])) {
                         $scope = $defs['entity'];
