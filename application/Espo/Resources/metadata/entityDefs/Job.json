@@ -21,8 +21,13 @@
             "required": true
         },
         "number": {
-            "type": "autoincrement",
-            "index": true
+            "type": "int",
+            "index": true,
+            "readOnly": true,
+            "view": "views/fields/autoincrement",
+            "dbType": "bigint",
+            "unique": true,
+            "autoincrement": true
         },
         "serviceName": {
             "type": "varchar",
