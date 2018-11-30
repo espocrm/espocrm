@@ -424,7 +424,7 @@ class FieldManager
 
     protected function getCustomFieldDefs($scope, $name)
     {
-        $customDefs = $this->getMetadata()->getCustom('entityDefs', $scope);
+        $customDefs = $this->getMetadata()->getCustom('entityDefs', $scope, (object) []);
 
         if (isset($customDefs->fields->$name)) {
             return (array) $customDefs->fields->$name;
@@ -433,16 +433,24 @@ class FieldManager
 
     protected function saveCustomdDefs($scope, $newDefs)
     {
-        $customDefs = $this->getMetadata()->getCustom('entityDefs', $scope);
+        $customDefs = $this->getMetadata()->getCustom('entityDefs', $scope, (object) []);
 
         if (isset($newDefs->fields)) {
             foreach ($newDefs->fields as $name => $defs) {
+                if (!isset($customDefs->fields)) {
+                    $customDefs->fields = new \StdClass();
+                }
+
                 $customDefs->fields->$name = $defs;
             }
         }
 
         if (isset($newDefs->links)) {
             foreach ($newDefs->links as $name => $defs) {
+                if (!isset($customDefs->links)) {
+                    $customDefs->links = new \StdClass();
+                }
+
                 $customDefs->links->$name = $defs;
             }
         }
