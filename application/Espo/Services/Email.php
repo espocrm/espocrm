@@ -73,7 +73,6 @@ class Email extends Record
         'fromString',
         'fromEmailAddressId',
         'fromEmailAddressName',
-        'fromName',
         'parentId',
         'parentType',
         'isHtml',
@@ -595,6 +594,21 @@ class Email extends Record
         return $fromName;
     }
 
+    static public function parseFromAddress($string)
+    {
+        $fromAddress = '';
+        if ($string) {
+            if (stripos($string, '<') !== false) {
+                if (preg_match('/<(.*)>/', $string, $matches)) {
+                    $fromAddress = trim($matches[1]);
+                }
+            } else {
+                $fromAddress = $string;
+            }
+        }
+        return $fromAddress;
+    }
+
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         parent::loadAdditionalFieldsForList($entity);
@@ -629,7 +643,7 @@ class Email extends Record
                 if ($person) {
                     $entity->set('personStringData', $person->get('name'));
                 } else {
-                    $fromName = self::parseFromName($entity->get('fromString'));
+                    $fromName = $entity->get('fromName');
                     if (!empty($fromName)) {
                         $entity->set('personStringData', $fromName);
                     } else {
