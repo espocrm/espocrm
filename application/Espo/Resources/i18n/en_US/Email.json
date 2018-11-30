@@ -10,6 +10,7 @@
         "bcc": "BCC",
         "replyTo": "Reply To",
         "replyToString": "Reply To (String)",
+        "personStringData": "Person String Data",
         "isHtml": "Is Html",
         "body": "Body",
         "bodyPlain": "Body (Plain)",
