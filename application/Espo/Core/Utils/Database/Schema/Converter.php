@@ -408,6 +408,7 @@ class Converter
         if ($fieldParams['type'] != 'id' && isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
             $dbFieldParams['unique'] = true;
             $dbFieldParams['notnull'] = true;
+            $dbFieldParams['unsigned'] = true;
         }
 
         if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {

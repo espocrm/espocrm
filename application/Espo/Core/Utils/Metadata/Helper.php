@@ -70,9 +70,7 @@ class Helper
             $fieldDef = array('type' => $fieldDef);
         }
 
-        if (isset($fieldDef['dbType'])) {
-            return $this->getMetadata()->get('fields.'.$fieldDef['dbType']);
-        } else if (isset($fieldDef['type'])) {
+        if (isset($fieldDef['type'])) {
             return $this->getMetadata()->get('fields.'.$fieldDef['type']);
         }
 
