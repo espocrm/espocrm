@@ -48,8 +48,8 @@
         "folderId": "Folder Id",
         "fromName": "From Name",
         "fromString": "From String",
+        "fromAddress": "From Address",
         "isSystem": "Is System"
-
     },
     "links": {
         "replied": "Replied",

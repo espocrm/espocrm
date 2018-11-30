@@ -46,6 +46,30 @@ class Email extends \Espo\Core\ORM\Entity
         return $this->has('name');
     }
 
+    protected function _hasFromName()
+    {
+        return $this->has('fromString');
+    }
+
+    protected function _getFromName()
+    {
+        if (!$this->has('fromString')) return null;
+
+        return \Espo\Services\Email::parseFromName($this->get('fromString'));
+    }
+
+    protected function _hasFromAddress()
+    {
+        return $this->has('fromString');
+    }
+
+    protected function _getFromAddress()
+    {
+        if (!$this->has('fromString')) return null;
+
+        return \Espo\Services\Email::parseFromAddress($this->get('fromString'));
+    }
+
     protected function _setIsRead($value)
     {
         $this->setValue('isRead', $value !== false);

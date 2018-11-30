@@ -14,7 +14,18 @@
             "trim": true
         },
         "fromName": {
-            "type": "varchar"
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true,
+            "textFilterDisabled": true,
+            "layoutFiltersDisabled": true
+        },
+        "fromAddress": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true,
+            "textFilterDisabled": true,
+            "layoutFiltersDisabled": true
         },
         "fromString": {
             "type": "varchar"

@@ -176,7 +176,10 @@ class Sender
             } else {
                 $fromName = $config->get('outboundEmailFromName');
             }
+
             $message->addFrom(trim($email->get('from')), $fromName);
+
+            $fromAddress = trim($email->get('from'));
         } else {
             if (!empty($params['fromAddress'])) {
                 $fromAddress = $params['fromAddress'];
@@ -194,11 +197,15 @@ class Sender
             }
 
             $message->addFrom($fromAddress, $fromName);
-        }
 
-        if (!$email->get('from')) {
             $email->set('from', $fromAddress);
         }
+
+        $fromString = '<' . $fromAddress . '>';
+        if ($fromName) {
+            $fromString = $fromName . ' ' . $fromString;
+        }
+        $email->set('fromString', $fromString);
 
         $sender = new \Zend\Mail\Header\Sender();
         $sender->setAddress($email->get('from'));
