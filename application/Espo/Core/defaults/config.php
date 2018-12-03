@@ -176,5 +176,6 @@ return [
     'recordListMaxSizeLimit' => 200,
     'noteDeleteThresholdPeriod' => '1 month',
     'noteEditThresholdPeriod' => '7 days',
+    'emailForceUseExternalClient' => false,
     'isInstalled' => false
 ];

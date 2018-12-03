@@ -350,7 +350,11 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 attributes.nameHash[emailAddress] = this.model.get('name');
             }
 
-            if (this.getPreferences().get('emailUseExternalClient') || !this.getAcl().checkScope('Email', 'create')) {
+            if (
+                this.getConfig().get('emailForceUseExternalClient') ||
+                this.getPreferences().get('emailUseExternalClient') ||
+                !this.getAcl().checkScope('Email', 'create')
+            ) {
                 require('email-helper', function (EmailHelper) {
                     var emailHelper = new EmailHelper();
                     var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
