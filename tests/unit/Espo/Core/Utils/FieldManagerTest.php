@@ -39,14 +39,14 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-
     protected function setUp()
     {
-        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
+        $this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
-        $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
-        $this->objects['language'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
-        $this->objects['baseLanguage'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
+        $this->objects['metadata'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->objects['language'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Language')->disableOriginalConstructor()->getMock();
+        $this->objects['baseLanguage'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Language')->disableOriginalConstructor()->getMock();
+        $this->objects['metadataHelper'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata\\Helper')->disableOriginalConstructor()->getMock();
 
         $map = array(
             array('baseLanguage', $this->objects['baseLanguage']),
@@ -62,6 +62,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         $this->object = new \Espo\Core\Utils\FieldManager($this->objects['container']);
 
         $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection->setProperty('metadataHelper', $this->objects['metadataHelper']);
     }
 
     protected function tearDown()
@@ -88,53 +89,87 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateCoreField()
     {
-        $this->objects['metadata']
-            ->expects($this->once())
-            ->method('set')
-            ->will($this->returnValue(true));
-
-        $this->objects['language']
-            ->expects($this->once())
-            ->method('save')
-            ->will($this->returnValue(true));
-
-        $existData = array(
-            "type" => "varchar",
-            "maxLength" => 50,
-            "label" => "Name",
-        );
-
         $data = array(
             "type" => "varchar",
             "maxLength" => 100,
             "label" => "Modified Name",
         );
 
+        $existingData = array(
+            "type" => "varchar",
+            "maxLength" => 50,
+            "label" => "Name",
+        );
+
         $map = array(
-            ['entityDefs.Account.fields.name', null, $existData],
-            [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $existData['type']],
+            ['entityDefs.Account.fields.name', null, $existingData],
+            [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $existingData['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
         );
+
+        $this->objects['language']
+            ->expects($this->once())
+            ->method('save')
+            ->will($this->returnValue(true));
 
         $this->objects['metadata']
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
 
+        $this->objects['metadataHelper']
+            ->expects($this->once())
+            ->method('getFieldDefsByType')
+            ->will($this->returnValue(json_decode('{
+               "params":[
+                  {
+                     "name":"required",
+                     "type":"bool",
+                     "default":false
+                  },
+                  {
+                     "name":"default",
+                     "type":"varchar"
+                  },
+                  {
+                     "name":"maxLength",
+                     "type":"int"
+                  },
+                  {
+                     "name":"trim",
+                     "type":"bool",
+                     "default": true
+                  },
+                  {
+                     "name": "options",
+                     "type": "multiEnum"
+                  },
+                  {
+                     "name":"audited",
+                     "type":"bool"
+                  },
+                  {
+                     "name":"readOnly",
+                     "type":"bool"
+                  }
+               ],
+               "filter": true,
+               "personalData": true,
+               "textFilter": true,
+               "fullTextSearch": true
+            }', true)));
+
+        $this->objects['metadata']
+            ->expects($this->exactly(2))
+            ->method('getCustom')
+            ->will($this->returnValue((object) []));
+
         $this->object->update('Account', 'name', $data);
     }
 
     public function testUpdateCoreFieldWithNoChanges()
     {
-        $this->objects['metadata']
-            ->expects($this->never())
-            ->method('set');
-
-        $this->objects['language']
-            ->expects($this->once())
-            ->method('save');
-
         $data = array(
             "type" => "varchar",
             "maxLength" => 50,
@@ -149,14 +184,69 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->objects['metadata']
+            ->expects($this->never())
+            ->method('set');
+
+        $this->objects['language']
+            ->expects($this->once())
+            ->method('save');
+
+        $this->objects['metadataHelper']
+            ->expects($this->once())
+            ->method('getFieldDefsByType')
+            ->will($this->returnValue(json_decode('{
+               "params":[
+                  {
+                     "name":"required",
+                     "type":"bool",
+                     "default":false
+                  },
+                  {
+                     "name":"default",
+                     "type":"varchar"
+                  },
+                  {
+                     "name":"maxLength",
+                     "type":"int"
+                  },
+                  {
+                     "name":"trim",
+                     "type":"bool",
+                     "default": true
+                  },
+                  {
+                     "name": "options",
+                     "type": "multiEnum"
+                  },
+                  {
+                     "name":"audited",
+                     "type":"bool"
+                  },
+                  {
+                     "name":"readOnly",
+                     "type":"bool"
+                  }
+               ],
+               "filter": true,
+               "personalData": true,
+               "textFilter": true,
+               "fullTextSearch": true
+            }', true)));
+
+        $this->objects['metadata']
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
 
+        $this->objects['metadata']
+            ->expects($this->exactly(2))
+            ->method('getCustom')
+            ->will($this->returnValue((object) []));
+
         $this->object->update('Account', 'name', $data);
     }
 
-    public function testUpdateCustomFieldIsNotChanged()
+    public function dddtestUpdateCustomFieldIsNotChanged()
     {
         $data = array(
             "type" => "varchar",
@@ -181,6 +271,11 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             ->expects($this->never())
             ->method('set')
             ->will($this->returnValue(true));
+
+        $this->objects['metadata']
+            ->expects($this->exactly(1))
+            ->method('getCustom')
+            ->will($this->returnValue((object) []));
 
         $this->assertTrue($this->object->update('CustomEntity', 'varName', $data));
     }
@@ -208,8 +303,50 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->objects['metadata']
             ->expects($this->once())
-            ->method('set')
+            ->method('saveCustom')
             ->will($this->returnValue(true));
+
+        $this->objects['metadataHelper']
+            ->expects($this->once())
+            ->method('getFieldDefsByType')
+            ->will($this->returnValue(json_decode('{
+               "params":[
+                  {
+                     "name":"required",
+                     "type":"bool",
+                     "default":false
+                  },
+                  {
+                     "name":"default",
+                     "type":"varchar"
+                  },
+                  {
+                     "name":"maxLength",
+                     "type":"int"
+                  },
+                  {
+                     "name":"trim",
+                     "type":"bool",
+                     "default": true
+                  },
+                  {
+                     "name": "options",
+                     "type": "multiEnum"
+                  },
+                  {
+                     "name":"audited",
+                     "type":"bool"
+                  },
+                  {
+                     "name":"readOnly",
+                     "type":"bool"
+                  }
+               ],
+               "filter": true,
+               "personalData": true,
+               "textFilter": true,
+               "fullTextSearch": true
+            }', true)));
 
         $data = array(
             "type" => "varchar",
@@ -217,6 +354,11 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             "required" => true,
             "isCustom" => true,
         );
+
+        $this->objects['metadata']
+            ->expects($this->exactly(2))
+            ->method('getCustom')
+            ->will($this->returnValue((object) []));
 
         $this->object->update('CustomEntity', 'varName', $data);
     }
@@ -251,9 +393,9 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             "maxLength" => "50",
         );
 
-        $result = array(
-            'fields' => array(
-                'fielName' => array(
+        $result = (object) array(
+            'fields' => (object) array(
+                'fielName' => (object) array(
                     "type" => "varchar",
                     "maxLength" => "50",
                 ),
