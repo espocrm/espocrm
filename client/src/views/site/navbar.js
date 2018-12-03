@@ -229,7 +229,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             var $window = $(window);
 
             var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
-            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 0;
+            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 73;
 
             var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
 
@@ -372,7 +372,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             var layoutState = this.getStorage().get('state', 'siteLayoutState');
             if (!layoutState) {
-                layoutState = $(window).width() > 1280 ? 'expanded' : 'collapsed';
+                layoutState = $(window).width() > 1320 ? 'expanded' : 'collapsed';
             }
 
             var layoutMinimized = false;

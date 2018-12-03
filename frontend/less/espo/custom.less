@@ -5,11 +5,6 @@
         max-height: 100%;
     }
 
-    .navbar-header a.navbar-brand {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
     .navbar-brand {
         padding: 0;
     }
@@ -79,6 +74,19 @@
             > img.logo {
                 height: @navbar-logo-height-xsmall;
             }
+        }
+
+        ul.tabs {
+            li > a {
+                padding-top: 9px;
+                padding-bottom: 9px;
+            }
+        }
+
+        .navbar-toggle {
+            padding-top: 9px;
+            padding-bottom: 9px;
+            border: 0;
         }
     }
 }
