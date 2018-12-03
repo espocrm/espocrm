@@ -47,7 +47,6 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
         },
 
         setup: function () {
-
             this.wait(true);
             this.getCollectionFactory().create('GlobalSearch', function (collection) {
                 this.collection = collection;
@@ -61,7 +60,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
             this.$input = this.$el.find('#global-search-input');
         },
 
-        runSearch: function (text) {
+        runSearch: function () {
             var text = this.$input.val().trim();
             if (text != '' && text.length >= 2) {
                 text = text;
@@ -97,7 +96,11 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
                 }
             }.bind(this));
             $document.on('click.global-search', function (e) {
-                if (e.target.tagName == 'A' && $(e.target).data('action') != 'showMore') {
+                if (
+                    e.target.tagName == 'A' &&
+                    $(e.target).data('action') != 'showMore' &&
+                    !$(e.target).hasClass('global-search-button')
+                ) {
                     setTimeout(function () {
                         this.closePanel();
                     }.bind(this), 100);
