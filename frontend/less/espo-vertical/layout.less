@@ -1,3 +1,13 @@
+#navbar .navbar {
+    .navbar-collapse {
+        #global-search-input {
+            width: 260px;
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+    }
+}
+
 @media (min-width: @grid-float-breakpoint) {
     #header .navbar-collapse {
         .navbar & {
@@ -141,8 +151,7 @@
                     right: 102px;
                 }
 
-                .global-search-container a.global-searcy-button {
-                    padding: 5px 10px;
+                .global-search-container a.global-search-button {
                     color: @gray-light;
                 }
 
@@ -509,4 +518,9 @@ body.minimized .list-buttons-container .sticked-bar {
         left: 0;
     }
 
+    #navbar .navbar {
+        #global-search-input {
+            width: 100%;
+        }
+    }
 }

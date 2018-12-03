@@ -225,143 +225,153 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             }
         },
 
-        adjust: function () {
-            var $window = $(window);
-
-            var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
-            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 73;
-
+        adjustHorizontal: function () {
             var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
 
-            if (!navbarIsVertical) {
-                var $tabs = this.$el.find('ul.tabs');
-                var $moreDropdown = $tabs.find('li.more');
-                var $more = $tabs.find('li.more > ul');
+            var $window = $(window);
 
-                $window.on('resize.navbar', function() {
+            var $tabs = this.$el.find('ul.tabs');
+            var $moreDropdown = $tabs.find('li.more');
+            var $more = $tabs.find('li.more > ul');
+
+            $window.on('resize.navbar', function() {
+                updateWidth();
+            });
+
+            var hideOneTab = function () {
+                var count = $tabs.children().length;
+                if (count <= 1) return;
+                var $one = $tabs.children().eq(count - 2);
+                $one.prependTo($more);
+            };
+            var unhideOneTab = function () {
+                var $one = $more.children().eq(0);
+                if ($one.length) {
+                    $one.insertBefore($moreDropdown);
+                }
+            };
+
+            var tabCount = this.tabList.length;
+            var $navbar = $('#navbar .navbar');
+            var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 43) + 1;
+
+            $moreDd = $('#nav-more-tabs-dropdown');
+            $moreLi = $moreDd.closest('li');
+
+            var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 556;
+
+            var updateWidth = function () {
+                var windowWidth = $(window.document).width();
+                var windowWidth = window.innerWidth;
+                var moreWidth = $moreLi.width();
+
+                $more.children('li.not-in-more').each(function (i, li) {
+                    unhideOneTab();
+                });
+
+                if (windowWidth < smallScreenWidth) {
+                    return;
+                }
+
+                $more.parent().addClass('hidden');
+
+                var headerWidth = this.$el.width();
+
+                var maxWidth = headerWidth - navbarBaseWidth - moreWidth;
+                var width = $tabs.width();
+
+                var i = 0;
+                while (width > maxWidth) {
+                    hideOneTab();
+                    width = $tabs.width();
+                    i++;
+                    if (i >= tabCount) {
+                        setTimeout(function () {
+                            updateWidth();
+                        }, 100);
+                        break;
+                    }
+                }
+
+                if ($more.children().length > 0) {
+                    $moreDropdown.removeClass('hidden');
+                }
+            }.bind(this);
+
+            var processUpdateWidth = function (isRecursive) {
+                if ($navbar.height() > navbarNeededHeight) {
                     updateWidth();
-                });
-
-                var hideOneTab = function () {
-                    var count = $tabs.children().length;
-                    if (count <= 1) return;
-                    var $one = $tabs.children().eq(count - 2);
-                    $one.prependTo($more);
-                };
-                var unhideOneTab = function () {
-                    var $one = $more.children().eq(0);
-                    if ($one.length) {
-                        $one.insertBefore($moreDropdown);
-                    }
-                };
-
-                var tabCount = this.tabList.length;
-                var $navbar = $('#navbar .navbar');
-                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 43) + 1;
-
-                $moreDd = $('#nav-more-tabs-dropdown');
-                $moreLi = $moreDd.closest('li');
-
-                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 516;
-
-                var updateWidth = function () {
-                    var windowWidth = $(window.document).width();
-                    var windowWidth = window.innerWidth;
-                    var moreWidth = $moreLi.width();
-
-                    $more.children('li.not-in-more').each(function (i, li) {
-                        unhideOneTab();
-                    });
-
-                    if (windowWidth < smallScreenWidth) {
-                        return;
-                    }
-
-                    $more.parent().addClass('hidden');
-
-                    var headerWidth = this.$el.width();
-
-                    var maxWidth = headerWidth - navbarBaseWidth - moreWidth;
-                    var width = $tabs.width();
-
-                    var i = 0;
-                    while (width > maxWidth) {
-                        hideOneTab();
-                        width = $tabs.width();
-                        i++;
-                        if (i >= tabCount) {
-                            setTimeout(function () {
-                                updateWidth();
-                            }, 100);
-                            break;
-                        }
-                    }
-
-                    if ($more.children().length > 0) {
-                        $moreDropdown.removeClass('hidden');
-                    }
-                }.bind(this);
-
-                var processUpdateWidth = function (isRecursive) {
-                    if ($navbar.height() > navbarNeededHeight) {
-                        updateWidth();
+                    setTimeout(function () {
+                        processUpdateWidth(true);
+                    }, 200);
+                } else {
+                    if (!isRecursive) {
                         setTimeout(function () {
                             processUpdateWidth(true);
-                        }, 200);
-                    } else {
-                        if (!isRecursive) {
-                            setTimeout(function () {
-                                processUpdateWidth(true);
-                            }, 10);
-                        }
-                        setTimeout(function () {
-                            processUpdateWidth(true);
-                        }, 1000);
+                        }, 10);
                     }
-                };
-
-                if ($navbar.height() <= navbarNeededHeight && $more.children().length === 0) {
-                    $more.parent().addClass('hidden');
+                    setTimeout(function () {
+                        processUpdateWidth(true);
+                    }, 1000);
                 }
+            };
 
-                processUpdateWidth();
+            if ($navbar.height() <= navbarNeededHeight && $more.children().length === 0) {
+                $more.parent().addClass('hidden');
+            }
 
-            } else {
-                var $tabs = this.$el.find('ul.tabs');
+            processUpdateWidth();
+        },
 
-                var minHeight = $tabs.height() + navbarStaticItemsHeight;
+        adjustVertical: function () {
+            var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
+            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 73;
 
-                var $more = $tabs.find('li.more > ul');
+            var $window = $(window);
 
-                if ($more.children().length === 0) {
-                    $more.parent().addClass('hidden');
+            var $tabs = this.$el.find('ul.tabs');
+
+            var minHeight = $tabs.height() + navbarStaticItemsHeight;
+
+            var $more = $tabs.find('li.more > ul');
+
+            if ($more.children().length === 0) {
+                $more.parent().addClass('hidden');
+            }
+
+            $('body').css('minHeight', minHeight + 'px');
+
+            $window.on('scroll.navbar', function () {
+                $tabs.scrollTop($window.scrollTop());
+                $more.scrollTop($window.scrollTop());
+            }.bind(this));
+
+            var updateSizeForVertical = function () {
+                var windowHeight = window.innerHeight;
+                var windowWidth = window.innerWidth;
+
+                if (windowWidth < smallScreenWidth) {
+                    $tabs.css('height', 'auto');
+                    $more.css('max-height', '');
+                } else {
+                    $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
+                    $more.css('max-height', windowHeight + 'px');
                 }
+            }.bind(this);
 
-                $('body').css('minHeight', minHeight + 'px');
-
-                $window.on('scroll.navbar', function () {
-                    $tabs.scrollTop($window.scrollTop());
-                    $more.scrollTop($window.scrollTop());
-                }.bind(this));
-
-                var updateSizeForVertical = function () {
-                    var windowHeight = window.innerHeight;
-                    var windowWidth = window.innerWidth;
-
-                    if (windowWidth < smallScreenWidth) {
-                        $tabs.css('height', 'auto');
-                        $more.css('max-height', '');
-                    } else {
-                        $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
-                        $more.css('max-height', windowHeight + 'px');
-                    }
-
-                }.bind(this);
-
-                $(window).on('resize.navbar', function() {
-                    updateSizeForVertical();
-                });
+            $(window).on('resize.navbar', function() {
                 updateSizeForVertical();
+            });
+            updateSizeForVertical();
+        },
+
+        adjust: function () {
+            var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
+
+            if (!navbarIsVertical) {
+                this.adjustHorizontal();
+            } else {
+                this.adjustVertical();
             }
         },
 
