@@ -269,6 +269,7 @@ class EmailAccount extends Record
             }
 
             $previousLastUID = $lastUID;
+            $previousLastDate = $lastDate;
 
             if (!empty($lastUID) && !$forceByDate) {
                 $idList = $storage->getIdsFromUID($lastUID);
@@ -373,6 +374,11 @@ class EmailAccount extends Record
                 }
 
                 $k++;
+            }
+
+            if ($forceByDate) {
+                $nowDt = new \DateTime();
+                $lastDate = $nowDt->format('Y-m-d H:i:s');
             }
 
             $fetchData->lastDate->$folder = $lastDate;

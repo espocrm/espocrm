@@ -281,6 +281,7 @@ class InboundEmail extends \Espo\Services\Record
             }
 
             $previousLastUID = $lastUID;
+            $previousLastDate = $lastDate;
 
             if (!empty($lastUID) && !$forceByDate) {
                 $idList = $storage->getIdsFromUID($lastUID);
@@ -403,6 +404,11 @@ class InboundEmail extends \Espo\Services\Record
                 }
 
                 $k++;
+            }
+
+            if ($forceByDate) {
+                $nowDt = new \DateTime();
+                $lastDate = $nowDt->format('Y-m-d H:i:s');
             }
 
             $fetchData->lastDate->$folder = $lastDate;
