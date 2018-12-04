@@ -102,7 +102,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $map = array(
-            ['entityDefs.Account.fields.name', null, $existingData],
+            ['entityDefs.Account.fields.name', [], $existingData],
             [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $existingData['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
@@ -177,7 +177,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $map = array(
-            ['entityDefs.Account.fields.name', null, $data],
+            ['entityDefs.Account.fields.name', [], $data],
             [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
@@ -255,7 +255,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $map = array(
-            ['entityDefs.CustomEntity.fields.varName', null, $data],
+            ['entityDefs.CustomEntity.fields.varName', [], $data],
             ['entityDefs.CustomEntity.fields.varName.type', null, $data['type']],
             [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
             ['fields.varchar', null, null],
@@ -289,7 +289,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $map = array(
-            ['entityDefs.CustomEntity.fields.varName', null, $data],
+            ['entityDefs.CustomEntity.fields.varName', [], $data],
             ['entityDefs.CustomEntity.fields.varName.type', null, $data['type']],
             [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
             ['fields.varchar', null, null],
