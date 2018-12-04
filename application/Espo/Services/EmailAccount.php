@@ -210,17 +210,21 @@ class EmailAccount extends Record
 
         $fetchData = $emailAccount->get('fetchData');
         if (empty($fetchData)) {
-            $fetchData = new \StdClass();
+            $fetchData = (object) [];
         }
         $fetchData = clone $fetchData;
         if (!property_exists($fetchData, 'lastUID')) {
-            $fetchData->lastUID = new \StdClass();
+            $fetchData->lastUID = (object) [];
         }
         if (!property_exists($fetchData, 'lastDate')) {
-            $fetchData->lastDate = new \StdClass();
+            $fetchData->lastDate = (object) [];
+        }
+        if (!property_exists($fetchData, 'byDate')) {
+            $fetchData->byDate = (object) [];
         }
         $fetchData->lastUID = clone $fetchData->lastUID;
         $fetchData->lastDate = clone $fetchData->lastDate;
+        $fetchData->byDate = clone $fetchData->byDate;
 
         $storage = $this->getStorage($emailAccount);
 
@@ -235,9 +239,9 @@ class EmailAccount extends Record
         }
 
         $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserName;
-        $parser = new $parserClassName($this->getEntityManager());
 
         $monitoredFoldersArr = explode(',', $monitoredFolders);
+
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
 
@@ -258,16 +262,20 @@ class EmailAccount extends Record
             if (!empty($fetchData->lastDate->$folder)) {
                 $lastDate = $fetchData->lastDate->$folder;
             }
+            $forceByDate = !empty($fetchData->byDate->$folder);
+
+            if ($forceByDate) {
+                $portionLimit = 0;
+            }
 
             $previousLastUID = $lastUID;
 
-            if (!empty($lastUID)) {
-                $ids = $storage->getIdsFromUID($lastUID);
+            if (!empty($lastUID) && !$forceByDate) {
+                $idList = $storage->getIdsFromUID($lastUID);
             } else {
                 $fetchSince = $emailAccount->get('fetchSince');
                 if ($lastDate) {
                     $fetchSince = $lastDate;
-                    $portionLimit = 0;
                 }
 
                 $dt = null;
@@ -276,22 +284,27 @@ class EmailAccount extends Record
                 } catch (\Exception $e) {}
 
                 if ($dt) {
-                    $ids = $storage->getIdsFromDate($dt->format('d-M-Y'));
+                    $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
                 } else {
                     return false;
                 }
             }
 
-            if ((count($ids) == 1) && !empty($lastUID)) {
-                if ($storage->getUniqueId($ids[0]) == $lastUID) {
+            if ((count($idList) == 1) && !empty($lastUID)) {
+                if ($storage->getUniqueId($idList[0]) == $lastUID) {
                     continue;
                 }
             }
 
             $k = 0;
-            foreach ($ids as $i => $id) {
-                if ($k == count($ids) - 1) {
+            foreach ($idList as $i => $id) {
+                if ($k == count($idList) - 1) {
                     $lastUID = $storage->getUniqueId($id);
+                }
+
+                if ($forceByDate && $previousLastUID) {
+                    $uid = $storage->getUniqueId($id);
+                    if ($uid <= $previousLastUID) continue;
                 }
 
                 $fetchOnlyHeader = false;
@@ -310,6 +323,7 @@ class EmailAccount extends Record
                 $message = null;
                 $email = null;
                 try {
+                    $parser = new $parserClassName($this->getEntityManager());
                     $message = new \Espo\Core\Mail\MessageWrapper($storage, $id, $parser);
 
                     if ($message->isFetched() && $emailAccount->get('keepFetchedEmailsUnread')) {
@@ -336,7 +350,7 @@ class EmailAccount extends Record
                     }
                 }
 
-                if ($k == count($ids) - 1) {
+                if ($k === count($idList) - 1 || $k === $portionLimit - 1) {
                     $lastUID = $storage->getUniqueId($id);
 
                     if ($email && $email->get('dateSent')) {
@@ -346,24 +360,38 @@ class EmailAccount extends Record
                         } catch (\Exception $e) {}
 
                         if ($dt) {
+                            $nowDt = new \DateTime();
+                            if ($dt->getTimestamp() >= $nowDt->getTimestamp()) {
+                                $dt = $nowDt;
+                            }
                             $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                             $lastDate = $dateSent;
                         }
                     }
-                }
 
-                if ($k == $portionLimit - 1) {
-                    $lastUID = $storage->getUniqueId($id);
                     break;
                 }
+
                 $k++;
             }
 
             $fetchData->lastDate->$folder = $lastDate;
             $fetchData->lastUID->$folder = $lastUID;
 
-            if ($previousLastUID && count($ids) && $previousLastUID >= $lastUID) {
-                unset($fetchData->lastUID->$folder);
+            if ($forceByDate) {
+                if ($previousLastUID) {
+                    $idList = $storage->getIdsFromUID($previousLastUID);
+                    if (count($idList)) {
+                        $uid1 = $storage->getUniqueId($idList[0]);
+                        if ($uid1 && $uid1 > $previousLastUID) {
+                            unset($fetchData->byDate->$folder);
+                        }
+                    }
+                }
+            } else {
+                if ($previousLastUID && count($idList) && $previousLastUID >= $lastUID) {
+                     $fetchData->byDate->$folder = true;
+                }
             }
 
             $emailAccount->set('fetchData', $fetchData);

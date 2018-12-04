@@ -51,10 +51,19 @@
             width: 44px;
         }
     }
+
+    #global-search-input {
+        width: 195px;
+        height: 33px;
+        padding-bottom: 4px;
+        padding-top: 4px;
+    }
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
+
     #navbar .navbar {
+
         position: static;
 
         ul.nav > li.global-search-container {
@@ -65,6 +74,14 @@
             border-right-width: @navbar-color-border-width;
             border-right-style: solid;
             border-color: transparent;
+        }
+
+        #global-search-input {
+            width: 100%;
+        }
+
+        .global-search-button {
+            height: 33px;
         }
     }
 }

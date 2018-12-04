@@ -1,6 +1,7 @@
 [
     {"name":"name", "link": true},
-    {"name":"userName", "width": 22},
-    {"name":"emailAddress", "width": 22},
+    {"name":"userName", "width": 20},
+    {"name":"title", "width": 18},
+    {"name":"emailAddress", "width": 20},
     {"name":"isActive", "width": 10}
 ]

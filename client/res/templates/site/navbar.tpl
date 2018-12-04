@@ -3,7 +3,7 @@
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
             <span class="fas fa-bars"></span>
         </button>
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"></span></a>
+        <div class="navbar-logo-container"><a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"></span></a></div>
         <a href="javascript:" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
