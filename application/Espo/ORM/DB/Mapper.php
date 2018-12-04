@@ -564,9 +564,12 @@ abstract class Mapper implements IMapper
 
                         $sql = $this->composeInsertQuery($relTable, $fieldsPart, $valuesPart);
 
+                        $sql .= " ON DUPLICATE KEY UPDATE deleted = '0'";
+
                         if ($this->pdo->query($sql)) {
                             return true;
                         }
+
                     } else {
                         $setPart = 'deleted = 0';
 
