@@ -417,9 +417,9 @@ class FieldManager
         $this->getBaseLanguage()->delete($scope, 'options', $name);
     }
 
-    protected function getFieldDefs($scope, $name)
+    protected function getFieldDefs($scope, $name, $default = null)
     {
-        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.fields.'.$name);
+        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.fields.'.$name, $default);
     }
 
     protected function getCustomFieldDefs($scope, $name)
@@ -519,7 +519,7 @@ class FieldManager
         }
 
         $actualCustomFieldDefs = $this->getCustomFieldDefs($scope, $name);
-        $actualFieldDefs = $this->getFieldDefs($scope, $name);
+        $actualFieldDefs = $this->getFieldDefs($scope, $name, []);
         $permittedParamList = array_keys($params);
 
         $filteredFieldDefs = $actualCustomFieldDefs ? $actualCustomFieldDefs : [];
