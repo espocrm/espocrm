@@ -291,6 +291,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         }.bind(this)
                     });
 
+                    this.$elementName.attr('autocomplete', 'espo-' + this.name);
+
                     this.once('render', function () {
                         $elementName.autocomplete('dispose');
                     }, this);
@@ -331,6 +333,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                 $elementOneOf.val('');
                             }.bind(this)
                         });
+
+                        $elementOneOf.attr('autocomplete', 'espo-' + this.name);
 
 
                         this.once('render', function () {

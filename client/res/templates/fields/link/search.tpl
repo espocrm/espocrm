@@ -3,7 +3,7 @@
 </select>
 <div class="primary">
 	<div class="input-group">
-	    <input class="form-control input-sm" type="text" name="{{nameName}}" value="{{searchData.nameValue}}" autocomplete="off" placeholder="{{translate 'Select'}}">
+	    <input class="form-control input-sm" type="text" name="{{nameName}}" value="{{searchData.nameValue}}" autocomplete="espo-{{name}}" placeholder="{{translate 'Select'}}">
 	    <span class="input-group-btn">
 	        <button type="button" class="btn btn-sm btn-default btn-icon" data-action="selectLink" tabindex="-1" title="{{translate 'Select'}}"><i class="fas fa-angle-up"></i></button>
 	        <button type="button" class="btn btn-sm btn-default btn-icon" data-action="clearLink" tabindex="-1"><i class="fas fa-times"></i></button>
@@ -17,7 +17,7 @@
     </div>
 
     <div class="input-group add-team">
-        <input class="form-control input-sm element-one-of" type="text" name="" value="" autocomplete="off" placeholder="{{translate 'Select'}}">
+        <input class="form-control input-sm element-one-of" type="text" name="" value="" autocomplete="espo-{{name}}" placeholder="{{translate 'Select'}}">
         <span class="input-group-btn">
             <button data-action="selectLinkOneOf" class="btn btn-default btn-sm btn-icon" type="button" tabindex="-1" title="{{translate 'Select'}}"><span class="fas fa-angle-up"></span></button>
         </span>

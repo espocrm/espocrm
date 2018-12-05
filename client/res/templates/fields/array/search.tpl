@@ -3,5 +3,5 @@
     {{options searchTypeList searchType field='searchRanges'}}
 </select>
 <div class="input-container">
-    <input name="{{name}}" type="text">
+    <input name="{{name}}" type="text" autocomplete="espo-off">
 </div>

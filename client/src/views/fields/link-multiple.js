@@ -220,6 +220,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                             this.$element.val('');
                         }.bind(this)
                     });
+                    this.$element.attr('autocomplete', 'espo-' + this.name);
 
 
                     this.once('render', function () {

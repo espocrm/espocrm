@@ -2,7 +2,7 @@
 <div>
 {{#each emailAddressData}}
     <div class="input-group email-address-block">
-        <input type="email" class="form-control email-address" value="{{emailAddress}}" autocomplete="off">
+        <input type="email" class="form-control email-address" value="{{emailAddress}}" autocomplete="espo-{{../name}}">
         <span class="input-group-btn">
             <button class="btn btn-default btn-icon email-property{{#if primary}} active{{/if}} hidden" type="button" tabindex="-1" data-action="switchEmailProperty" data-property-type="primary" data-toggle="tooltip" data-placement="top" title="{{translate 'Primary' scope='EmailAddress'}}">
                 <span class="fas fa-star fa-sm{{#unless primary}} text-muted{{/unless}}"></span>

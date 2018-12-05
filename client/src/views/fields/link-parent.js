@@ -276,6 +276,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                             }, this);
                         }.bind(this)
                     });
+                    this.$elementName.attr('autocomplete', 'espo-' + this.name);
                 }
 
                 var $elementName = this.$elementName;

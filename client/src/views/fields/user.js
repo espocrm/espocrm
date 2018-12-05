@@ -120,6 +120,8 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                     }.bind(this)
                 });
 
+                $elemeneTeams.attr('autocomplete', 'espo-' + this.name);
+
 
                 this.once('render', function () {
                     $elemeneTeams.autocomplete('dispose');
