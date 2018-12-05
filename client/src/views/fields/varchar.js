@@ -137,6 +137,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                         this.trigger('change');
                     }.bind(this)
                 });
+                this.$element.attr('autocomplete', 'espo-' + this.name);
 
                 this.$element.on('focus', function () {
                     if (this.$element.val()) return;

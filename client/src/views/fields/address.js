@@ -330,6 +330,8 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                     this.once('remove', function () {
                         this.$country.autocomplete('dispose');
                     }, this);
+
+                    this.$country.attr('autocomplete', 'espo-country');
                 }
 
                 this.$street.on('input', function (e) {
