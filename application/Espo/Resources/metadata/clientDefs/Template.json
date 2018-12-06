@@ -43,16 +43,6 @@
                         }
                     ]
                 }
-            },
-            "variables": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "entityType"
-                        }
-                    ]
-                }
             }
         }
     },
