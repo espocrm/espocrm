@@ -262,6 +262,18 @@ class Converter
                     case 'bool':
                         $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
                         break;
+
+                    //todo: remove the types from ORM Metadata. Types are deprecated.
+                    case 'email':
+                    case 'phone':
+                        break;
+
+                    default:
+                        $constName = strtoupper(Util::toUnderScore($fieldParams['type']));
+                        if (!defined('\\Espo\\ORM\\Entity::' . $constName)) {
+                            $fieldParams['type'] = $this->defaultFieldType;
+                        }
+                        break;
                 }
             }
         }
