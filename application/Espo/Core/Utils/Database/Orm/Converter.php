@@ -426,6 +426,10 @@ class Converter
             $fieldParams = Util::merge($fieldParams, $fieldTypeMetadata['fieldDefs']);
         }
 
+        if ($fieldParams['type'] == 'base' && isset($fieldParams['dbType'])) {
+            $fieldParams['notStorable'] = false;
+        }
+
         /** check if need to skipOrmDefs this field in ORM metadata */
         if (!empty($fieldTypeMetadata['skipOrmDefs']) || !empty($fieldParams['skipOrmDefs'])) {
             return false;
