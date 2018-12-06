@@ -67,9 +67,9 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
-                this.$salutation = this.$el.find('[name="' + this.salutationField + '"]');
-                this.$first = this.$el.find('[name="' + this.firstField + '"]');
-                this.$last = this.$el.find('[name="' + this.lastField + '"]');
+                this.$salutation = this.$el.find('[data-name="' + this.salutationField + '"]');
+                this.$first = this.$el.find('[data-name="' + this.firstField + '"]');
+                this.$last = this.$el.find('[data-name="' + this.lastField + '"]');
 
                 this.$salutation.on('change', function () {
                     this.trigger('change');
@@ -90,7 +90,7 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === '') {
                         var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name));
-                        this.showValidationMessage(msg, '[name="'+name+'"]');
+                        this.showValidationMessage(msg, '[data-name="'+name+'"]');
                         return true;
                     }
                 }
@@ -99,7 +99,7 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             if (isRequired) {
                 if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
-                    this.showValidationMessage(msg, '[name="'+this.lastField+'"]');
+                    this.showValidationMessage(msg, '[data-name="'+this.lastField+'"]');
                     return true;
                 }
             }

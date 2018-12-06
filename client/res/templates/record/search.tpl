@@ -23,11 +23,11 @@
                     {{/if}}
 
                     {{#each boolFilterList}}
-                        <li class="checkbox"><label><input type="checkbox" data-role="boolFilterCheckbox" name="{{./this}}" {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}> {{translate this scope=../entityType category='boolFilters'}}</label></li>
+                        <li class="checkbox"><label><input type="checkbox" data-role="boolFilterCheckbox" data-name="{{./this}}" {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}> {{translate this scope=../entityType category='boolFilters'}}</label></li>
                     {{/each}}
                 </ul>
             </div>
-            {{#unless textFilterDisabled}}<input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}" tabindex="1" autocomplete="espo-text-search">{{/unless}}
+            {{#unless textFilterDisabled}}<input type="text" class="form-control text-filter" data-name="textFilter" value="{{textFilter}}" tabindex="1" autocomplete="espo-text-search">{{/unless}}
             <div class="input-group-btn">
                 <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide" data-action="search" title="{{translate 'Search'}}">
                     <span class="fa fa-search"></span>
@@ -68,4 +68,3 @@
     </div>
 {{/each}}
 </div>
-

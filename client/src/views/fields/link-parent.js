@@ -151,7 +151,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     this.trigger('change');
                 });
 
-                this.events['change select[name="' + this.typeName + '"]'] = function (e) {
+                this.events['change select[data-name="'+this.typeName+'"]'] = function (e) {
                     this.foreignScope = e.currentTarget.value;
                     this.$elementName.val('');
                     this.$elementId.val('');
@@ -213,9 +213,9 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
-                this.$elementId = this.$el.find('input[name="' + this.idName + '"]');
-                this.$elementName = this.$el.find('input[name="' + this.nameName + '"]');
-                this.$elementType = this.$el.find('select[name="' + this.typeName + '"]');
+                this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
+                this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
+                this.$elementType = this.$el.find('select[data-name="' + this.typeName + '"]');
 
                 this.$elementName.on('change', function () {
                     if (this.$elementName.val() == '') {

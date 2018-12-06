@@ -165,7 +165,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         },
 
         fetchSearch: function () {
-            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
+            var type = this.fetchSearchType() || 'startsWith';
 
             var data;
 
@@ -232,4 +232,3 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
     });
 });
-

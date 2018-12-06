@@ -231,8 +231,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
-                this.$elementId = this.$el.find('input[name="' + this.idName + '"]');
-                this.$elementName = this.$el.find('input[name="' + this.nameName + '"]');
+                this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
+                this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
 
                 this.$elementName.on('change', function () {
                     if (this.$elementName.val() == '') {
@@ -414,15 +414,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         fetch: function () {
             var data = {};
-            data[this.nameName] = this.$el.find('[name="'+this.nameName+'"]').val() || null;
-            data[this.idName] = this.$el.find('[name="'+this.idName+'"]').val() || null;
+            data[this.nameName] = this.$el.find('[data-name="'+this.nameName+'"]').val() || null;
+            data[this.idName] = this.$el.find('[data-name="'+this.idName+'"]').val() || null;
 
             return data;
         },
 
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
-            var value = this.$el.find('[name="' + this.idName + '"]').val();
+            var value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
             if (type == 'isEmpty') {
                 var data = {
@@ -491,7 +491,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 if (!value) {
                     return false;
                 }
-                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
+                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'or',
                     value: [
@@ -516,7 +516,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 if (!value) {
                     return false;
                 }
-                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
+                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'notEquals',
                     attribute: this.idName,
@@ -532,7 +532,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 if (!value) {
                     return false;
                 }
-                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
+                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'equals',
                     attribute: this.idName,

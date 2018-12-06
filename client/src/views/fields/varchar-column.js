@@ -33,7 +33,7 @@ Espo.define('views/fields/varchar-column', 'views/fields/varchar', function (Dep
         searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'isEmpty', 'isNotEmpty'],
 
         fetchSearch: function () {
-            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
+            var type = this.fetchSearchType() || 'startsWith';
 
             var data;
 

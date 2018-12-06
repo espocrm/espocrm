@@ -278,11 +278,11 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             var self = this;
 
             if (this.mode == 'edit') {
-                this.$street = this.$el.find('[name="' + this.streetField + '"]');
-                this.$postalCode = this.$el.find('[name="' + this.postalCodeField + '"]');
-                this.$state = this.$el.find('[name="' + this.stateField + '"]');
-                this.$city = this.$el.find('[name="' + this.cityField + '"]');
-                this.$country = this.$el.find('[name="' + this.countryField + '"]');
+                this.$street = this.$el.find('[data-name="' + this.streetField + '"]');
+                this.$postalCode = this.$el.find('[data-name="' + this.postalCodeField + '"]');
+                this.$state = this.$el.find('[data-name="' + this.stateField + '"]');
+                this.$city = this.$el.find('[data-name="' + this.cityField + '"]');
+                this.$country = this.$el.find('[data-name="' + this.countryField + '"]');
 
                 this.$street.on('change', function () {
                     self.trigger('change');
@@ -369,7 +369,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === '') {
                         var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name));
-                        this.showValidationMessage(msg, '[name="'+name+'"]');
+                        this.showValidationMessage(msg, '[data-name="'+name+'"]');
                         return true;
                     }
                 }
@@ -403,7 +403,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
         },
 
         fetchSearch: function () {
-            var value = this.$el.find('[name="'+this.name+'"]').val().toString().trim();
+            var value = this.$el.find('input.main-element').val().toString().trim();
             if (value) {
                 var data = {
                     type: 'or',

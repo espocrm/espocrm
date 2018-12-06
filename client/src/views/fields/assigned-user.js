@@ -50,4 +50,3 @@ Espo.define('views/fields/assigned-user', 'views/fields/user-with-avatar', funct
 
     });
 });
-

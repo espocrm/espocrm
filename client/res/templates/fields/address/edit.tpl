@@ -1,13 +1,13 @@
-<textarea class="form-control auto-height" name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}" autocomplete="espo-street">{{streetValue}}</textarea>
+<textarea class="form-control auto-height" data-name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}" autocomplete="espo-street">{{streetValue}}</textarea>
 <div class="row">
     <div class="col-sm-4 col-xs-4">
-        <input type="text" class="form-control" name="{{name}}City" value="{{cityValue}}" placeholder="{{translate 'City'}}" autocomplete="espo-city">
+        <input type="text" class="form-control" data-name="{{name}}City" value="{{cityValue}}" placeholder="{{translate 'City'}}" autocomplete="espo-city">
     </div>
     <div class="col-sm-4 col-xs-4">
-        <input type="text" class="form-control" name="{{name}}State" value="{{stateValue}}" placeholder="{{translate 'State'}}" autocomplete="espo-state">
+        <input type="text" class="form-control" data-name="{{name}}State" value="{{stateValue}}" placeholder="{{translate 'State'}}" autocomplete="espo-state">
     </div>
     <div class="col-sm-4 col-xs-4">
-        <input type="text" class="form-control" name="{{name}}PostalCode" value="{{postalCodeValue}}" placeholder="{{translate 'PostalCode'}}" autocomplete="espo-postalCode">
+        <input type="text" class="form-control" data-name="{{name}}PostalCode" value="{{postalCodeValue}}" placeholder="{{translate 'PostalCode'}}" autocomplete="espo-postalCode">
     </div>
 </div>
-<input type="text" class="form-control" name="{{name}}Country" value="{{countryValue}}" placeholder="{{translate 'Country'}}" autocomplete="espo-country">
+<input type="text" class="form-control" data-name="{{name}}Country" value="{{countryValue}}" placeholder="{{translate 'Country'}}" autocomplete="espo-country">

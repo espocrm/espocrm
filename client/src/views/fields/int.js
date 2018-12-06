@@ -109,7 +109,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         handleSearchType: function (type) {
             var $additionalInput = this.$el.find('input.additional');
-            var $input = this.$el.find('input[name="'+this.name+'"]');
+            var $input = this.$el.find('input[data-name="'+this.name+'"]');
 
             if (type === 'between') {
                 $additionalInput.removeClass('hidden');
@@ -223,7 +223,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         fetch: function () {
-            var value = this.$el.find('[name="'+this.name+'"]').val();
+            var value = this.$element.val();
             value = this.parse(value);
             var data = {};
             data[this.name] = value;
@@ -232,7 +232,9 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         fetchSearch: function () {
             var value = this.parse(this.$element.val());
-            var type = this.$el.find('[name="'+this.name+'-type"]').val();
+
+            var type = this.fetchSearchType();
+
             var data;
 
             if (isNaN(value)) {
@@ -240,7 +242,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             }
 
             if (type === 'between') {
-                var valueTo = this.parse(this.$el.find('[name="' + this.name + '-additional"]').val());
+                var valueTo = this.parse(this.$el.find('input.additional').val());
                 if (isNaN(valueTo)) {
                     return false;
                 }
@@ -276,4 +278,3 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
     });
 });
-

@@ -64,7 +64,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         afterRender: function () {
             if (this.mode == 'edit') {
-                var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
+                var $element = this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
                 var data = [];
 
@@ -178,5 +178,3 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
     });
 });
-
-
