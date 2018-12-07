@@ -48,8 +48,6 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         foreignScopeList: null,
 
-        AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
-
         autocompleteDisabled: false,
 
         selectRecordsView: 'views/modals/select-records',
@@ -197,8 +195,15 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             this.forceSelectAllAttributes;
         },
 
+        getAutocompleteMaxCount: function () {
+            if (this.autocompleteMaxCount) {
+                return this.autocompleteMaxCount;
+            }
+            return this.getConfig().get('recordsPerPage');
+        },
+
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?orderBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+            var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {
