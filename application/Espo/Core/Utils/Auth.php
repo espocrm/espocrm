@@ -225,14 +225,14 @@ class Auth
             return;
         }
 
-        if (!$user->isAdmin() && $this->isPortal() && !$user->isPortal()) {
+        if ($this->isPortal() && !$user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user.");
             $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
             return;
         }
 
         if ($this->isPortal()) {
-            if (!$user->isAdmin() && !$this->getEntityManager()->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
+            if (!$this->getEntityManager()->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
                 $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is portal user but does not belongs to portal.");
                 $this->logDenied($authLogRecord, 'USER_IS_NOT_IN_PORTAL');
                 return;
