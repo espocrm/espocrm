@@ -92,11 +92,12 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                 var $elemeneTeams = this.$el.find('input.element-teams');
                 $elemeneTeams.autocomplete({
                     serviceUrl: function (q) {
-                        return 'Team?orderBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+                        return 'Team?orderBy=name&maxCount=' + this.getAutocompleteMaxCount();
                     }.bind(this),
                     minChars: 1,
+                    triggerSelectOnValidInput: false,
                     paramName: 'q',
-                       formatResult: function (suggestion) {
+                    formatResult: function (suggestion) {
                         return suggestion.name;
                     },
                     transformResult: function (response) {

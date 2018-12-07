@@ -203,7 +203,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
+            var url = this.$elementType.val() + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {
@@ -255,6 +255,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         minChars: 1,
                         paramName: 'q',
+                        triggerSelectOnValidInput: false,
                         formatResult: function (suggestion) {
                             return suggestion.name;
                         },
