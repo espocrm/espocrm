@@ -36,6 +36,7 @@
         "authMethod": "Authentication Method"
     },
     "links": {
+        "defaultTeam": "Default Team",
         "teams": "Teams",
         "roles": "Roles",
         "notes": "Notes",
