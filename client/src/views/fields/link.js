@@ -315,7 +315,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }.bind(this),
                             minChars: 1,
                             paramName: 'q',
-                               formatResult: function (suggestion) {
+                            formatResult: function (suggestion) {
                                 return suggestion.name;
                             },
                             transformResult: function (response) {

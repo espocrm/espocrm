@@ -227,7 +227,6 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     });
                     this.$element.attr('autocomplete', 'espo-' + this.name);
 
-
                     this.once('render', function () {
                         $element.autocomplete('dispose');
                     }, this);
