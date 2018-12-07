@@ -37,7 +37,7 @@ Espo.define('crm:views/task/fields/date-end', 'views/fields/datetime-optional', 
         data: function () {
             var data = Dep.prototype.data.call(this);
 
-            if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
+            if (this.model.get('status') && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
                 if (this.mode == 'list' || this.mode == 'detail') {
                     if (!this.isDate()) {
                         var value = this.model.get(this.name);
@@ -77,4 +77,3 @@ Espo.define('crm:views/task/fields/date-end', 'views/fields/datetime-optional', 
 
     });
 });
-
