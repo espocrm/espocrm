@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "password": {
+            "internal": true
+        },
+        "smtpPassword": {
+            "internal": true
+        },
+        "fetchData": {
+            "readOnly": true
+        }
+    }
+}

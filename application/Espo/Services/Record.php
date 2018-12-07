@@ -42,7 +42,7 @@ use \Espo\Core\Utils\Util;
 
 class Record extends \Espo\Core\Services\Base
 {
-    protected $dependencies = array(
+    protected $dependencies = [
         'entityManager',
         'user',
         'metadata',
@@ -55,7 +55,7 @@ class Record extends \Espo\Core\Services\Base
         'fileStorageManager',
         'injectableFactory',
         'fieldManagerUtil'
-    );
+    ];
 
     protected $getEntityBeforeUpdate = false;
 
@@ -65,7 +65,9 @@ class Record extends \Espo\Core\Services\Base
 
     private $streamService;
 
-    protected $notFilteringAttributeList =[]; // TODO maybe remove it
+    protected $notFilteringAttributeList = []; // TODO maybe remove it
+
+    protected $forbiddenAttributeList = [];
 
     protected $internalAttributeList = [];
 
@@ -74,6 +76,8 @@ class Record extends \Espo\Core\Services\Base
     protected $readOnlyAttributeList = [];
 
     protected $nonAdminReadOnlyAttributeList = [];
+
+    protected $forbiddenLinkList = [];
 
     protected $internalLinkList = [];
 
@@ -130,6 +134,45 @@ class Record extends \Espo\Core\Services\Base
             }
         }
         $this->entityName = $this->entityType;
+    }
+
+    public function prepare()
+    {
+        parent::prepare();
+
+        $aclManager = $this->getInjection('aclManager');
+
+        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'forbidden') as $item) {
+            if (!in_array($item, $this->forbiddenAttributeList)) $this->forbiddenAttributeList[] = $item;
+        }
+        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'internal') as $item) {
+            if (!in_array($item, $this->internalAttributeList)) $this->internalAttributeList[] = $item;
+        }
+        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'onlyAdmin') as $item) {
+            if (!in_array($item, $this->onlyAdminAttributeList)) $this->onlyAdminAttributeList[] = $item;
+        }
+        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'readOnly') as $item) {
+            if (!in_array($item, $this->readOnlyAttributeList)) $this->readOnlyAttributeList[] = $item;
+        }
+        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'nonAdminReadOnly') as $item) {
+            if (!in_array($item, $this->nonAdminReadOnlyAttributeList)) $this->nonAdminReadOnlyAttributeList[] = $item;
+        }
+
+        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'forbidden') as $item) {
+            if (!in_array($item, $this->forbiddenLinkList)) $this->forbiddenLinkList[] = $item;
+        }
+        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'internal') as $item) {
+            if (!in_array($item, $this->internalLinkList)) $this->internalLinkList[] = $item;
+        }
+        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'onlyAdmin') as $item) {
+            if (!in_array($item, $this->onlyAdminLinkList)) $this->onlyAdminLinkList[] = $item;
+        }
+        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'readOnly') as $item) {
+            if (!in_array($item, $this->readOnlyLinkList)) $this->readOnlyLinkList[] = $item;
+        }
+        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'nonAdminReadOnly') as $item) {
+            if (!in_array($item, $this->nonAdminReadOnlyLinkList)) $this->nonAdminReadOnlyLinkList[] = $item;
+        }
     }
 
     public function setEntityType($entityType)
@@ -668,6 +711,10 @@ class Record extends \Espo\Core\Services\Base
             unset($data->$attribute);
         }
 
+        foreach ($this->forbiddenAttributeList as $attribute) {
+            unset($data->$attribute);
+        }
+
         foreach ($data as $key => $value) {
             $data->$key = $this->filterInputAttribute($key, $data->$key);
         }
@@ -1160,6 +1207,10 @@ class Record extends \Espo\Core\Services\Base
             throw new Error();
         }
 
+        if (in_array($link, $this->forbiddenLinkList)) {
+            throw new Forbidden();
+        }
+
         if (in_array($link, $this->internalLinkList)) {
             throw new Forbidden();
         }
@@ -1247,11 +1298,11 @@ class Record extends \Espo\Core\Services\Base
             throw new BadRequest;
         }
 
-        if (in_array($link, $this->readOnlyLinkList)) {
+        if (in_array($link, $this->forbiddenLinkList)) {
             throw new Forbidden();
         }
 
-        if (in_array($link, $this->internalLinkList)) {
+        if (in_array($link, $this->readOnlyLinkList)) {
             throw new Forbidden();
         }
 
@@ -1307,6 +1358,10 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        if (in_array($link, $this->forbiddenLinkList)) {
+            throw new Forbidden();
+        }
+
         if (!$this->getUser()->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
             throw new Forbidden();
         }
@@ -1351,11 +1406,11 @@ class Record extends \Espo\Core\Services\Base
             throw new BadRequest;
         }
 
-        if (in_array($link, $this->readOnlyLinkList)) {
+        if (in_array($link, $this->forbiddenLinkList)) {
             throw new Forbidden();
         }
 
-        if (in_array($link, $this->internalLinkList)) {
+        if (in_array($link, $this->readOnlyLinkList)) {
             throw new Forbidden();
         }
 
@@ -1707,8 +1762,12 @@ class Record extends \Espo\Core\Services\Base
             return false;
         }
 
+        if (in_array($attribute, $this->forbiddenAttributeList)) {
+            return false;
+        }
+
         if (!$this->getUser()->isAdmin() && in_array($attribute, $this->onlyAdminAttributeList)) {
-            return true;
+            return false;
         }
 
         if (!$isExportAllFields) {
@@ -1975,6 +2034,9 @@ class Record extends \Espo\Core\Services\Base
     public function prepareEntityForOutput(Entity $entity)
     {
         foreach ($this->internalAttributeList as $attribute) {
+            $entity->clear($attribute);
+        }
+        foreach ($this->forbiddenAttributeList as $attribute) {
             $entity->clear($attribute);
         }
         if (!$this->getUser()->isAdmin()) {

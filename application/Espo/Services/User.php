@@ -47,41 +47,6 @@ class User extends Record
         $this->addDependency('container');
     }
 
-    protected $internalAttributeList = ['password'];
-
-    protected $readOnlyAttributeList = [
-        'apiKey',
-        'secretKey',
-        'isAdmin',
-        'isSuperAdmin'
-    ];
-
-    protected $nonAdminReadOnlyAttributeList = [
-        'userName',
-        'isActive',
-        'isAdmin',
-        'isPortalUser',
-        'teamsIds',
-        'teamsColumns',
-        'teamsNames',
-        'rolesIds',
-        'rolesNames',
-        'password',
-        'portalsIds',
-        'portalRolesIds',
-        'contactId',
-        'accountsIds',
-        'type',
-        'apiKey',
-        'secretKey'
-    ];
-
-    protected $onlyAdminAttributeList = [
-        'authMethod',
-        'apiKey',
-        'secretKey'
-    ];
-
     protected $mandatorySelectAttributeList = [
         'isPortalUser',
         'isActive',

@@ -55,6 +55,10 @@ abstract class Base implements Injectable
     {
     }
 
+    public function prepare()
+    {
+    }
+
     protected function getInjection($name)
     {
         return $this->injections[$name];

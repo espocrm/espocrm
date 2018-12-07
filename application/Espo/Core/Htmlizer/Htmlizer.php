@@ -99,11 +99,19 @@ class Htmlizer
         $attributeDefs = $entity->getAttributes();
         $attributeList = array_keys($attributeDefs);
 
-        $forbidenAttributeList = [];
+        $forbiddenAttributeList = [];
         $skipAttributeList = [];
+        $forbiddenLinkList = [];
 
         if ($this->getAcl()) {
-            $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+            $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+
+            $forbiddenAttributeList = array_merge(
+                $forbiddenAttributeList,
+                $this->getAcl()->getScopeRestrictedAttributeList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin'])
+            );
+
+            $forbiddenLinkList = $this->getAcl()->getScopeRestrictedLinkList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']);
         }
 
         $relationList = $entity->getRelationList();
@@ -130,9 +138,14 @@ class Htmlizer
         }
 
         foreach ($attributeList as $attribute) {
-            if (in_array($attribute, $forbidenAttributeList)) continue;
-
-            if (in_array($attribute, $skipAttributeList)) continue;
+            if (in_array($attribute, $forbiddenAttributeList)) {
+                unset($data[$attribute]);
+                continue;
+            }
+            if (in_array($attribute, $skipAttributeList)) {
+                unset($data[$attribute]);
+                continue;
+            }
 
             $type = $entity->getAttributeType($attribute);
 
@@ -200,6 +213,7 @@ class Htmlizer
         if (!$skipLinks) {
             $relationDefs = $entity->getRelations();
             foreach ($entity->getRelationList() as $relation) {
+                if (in_array($relation, $forbiddenLinkList)) continue;
                 if (
                     !empty($relationDefs[$relation]['type'])
                     &&
