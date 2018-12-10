@@ -144,6 +144,9 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     }, this);
                 });
                 this.addActionHandler('clearLink', function () {
+                    if (this.foreignScopeList.length) {
+                        this.$elementType.val(this.foreignScopeList[0]);
+                    }
                     this.$elementName.val('');
                     this.$elementId.val('');
                     this.trigger('change');
@@ -203,7 +206,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function () {
-            var url = this.$elementType.val() + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
+            var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {
