@@ -555,13 +555,14 @@ class User extends Record
         $email->set([
             'subject' => $subject,
             'body' => $body,
-            'to' => $emailAddress
+            'to' => $emailAddress,
+            'isSystem' => true
         ]);
 
         if ($this->getConfig()->get('smtpServer')) {
             $this->getMailSender()->useGlobal();
         } else {
-            $this->getMailSender()->useSmtp(array(
+            $this->getMailSender()->useSmtp([
                 'server' => $this->getConfig()->get('internalSmtpServer'),
                 'port' => $this->getConfig()->get('internalSmtpPort'),
                 'auth' => $this->getConfig()->get('internalSmtpAuth'),
@@ -569,7 +570,7 @@ class User extends Record
                 'password' => $this->getConfig()->get('internalSmtpPassword'),
                 'security' => $this->getConfig()->get('internalSmtpSecurity'),
                 'fromAddress' => $this->getConfig()->get('internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
-            ));
+            ]);
         }
 
         $this->getMailSender()->send($email);
