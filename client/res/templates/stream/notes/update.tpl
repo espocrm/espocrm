@@ -16,12 +16,13 @@
     </div>
 
     <div class="hidden details stream-details-container">
-        <span>
+        <ul>
             {{#each fieldsArr}}
-                {{translate field category='fields' scope=../parentType}}: {{{var was ../this}}} &raquo; {{{var became ../this}}}
-                <br>
+            <li>
+                <span>{{translate field category='fields' scope=../parentType}}</span> <span class="text-soft">&raquo;</span> </span> <span class="inline-block-child-div">{{{var was ../this}}}</span> <span class="text-soft">&rarr;</span> <span class="inline-block-child-div">{{{var became ../this}}}</span>
+            </li>
             {{/each}}
-        </span>
+        </ul>
     </div>
 
     <div class="stream-date-container">

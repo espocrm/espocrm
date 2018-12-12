@@ -1916,6 +1916,20 @@ stream-head-text-container .span {
     padding: 2px 0 5px 26px;
 }
 
+.stream-details-container > ul {
+    padding-left: 0px;
+    list-style-type: none;
+
+
+    > li {
+        margin-bottom: 4px;
+    }
+
+    > li:last-child {
+        margin-bottom: 0;
+    }
+}
+
 .link-container .list-group-item {
     padding: @padding-base-vertical @padding-base-horizontal;
     line-height: @line-height-computed;
@@ -2399,6 +2413,10 @@ code {
 
 pre > code {
     font-style: normal;
+}
+
+.inline-block-child-div > div {
+    display: inline-block;
 }
 
 .table-admin-panel tr > td:first-child {
