@@ -15,6 +15,10 @@
          "name":"defaultType",
          "type":"varchar",
          "default": "Mobile"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "notActualFields":[
