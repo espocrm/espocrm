@@ -3,4 +3,4 @@
 <p>Nom d'utilisateur: {{userName}}</p>
 <p>Mot de passe: {{password}}</p>
 
-<p>{{siteUrl}}</p>
+<p><a href="{{siteUrl}}">{{siteUrl}}</a></p>

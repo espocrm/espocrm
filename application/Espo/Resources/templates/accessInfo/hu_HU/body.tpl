@@ -3,4 +3,4 @@
 <p>Felhasználónév: {{userName}}</p>
 <p>Jelszó: {{password}}</p>
 
-<p>{{siteUrl}}</p>
+<p><a href="{{siteUrl}}">{{siteUrl}}</a></p>

@@ -3,4 +3,4 @@
 <p>Имя пользователя: {{userName}}</p>
 <p>Пароль: {{password}}</p>
 
-<p>{{siteUrl}}</p>
+<p><a href="{{siteUrl}}">{{siteUrl}}</a></p>
