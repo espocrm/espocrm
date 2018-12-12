@@ -53,6 +53,15 @@ class CronManager
 
     private $useProcessPool = false;
 
+    private $asSoonAsPossibleSchedulingList = [
+        '*',
+        '* *',
+        '* * *',
+        '* * * *',
+        '* * * * *',
+        '* * * * * *'
+    ];
+
     const PENDING = 'Pending';
 
     const READY = 'Ready';
@@ -388,7 +397,7 @@ class CronManager
         $createdJobIdList = [];
         foreach ($activeScheduledJobList as $scheduledJob) {
             $scheduling = $scheduledJob->get('scheduling');
-            $asSoonAsPossible = $scheduling === '* * * * *';
+            $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
 
             if ($asSoonAsPossible) {
                 $nextDate = date('Y-m-d H:i:s');
