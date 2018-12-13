@@ -226,12 +226,7 @@ class Job
 
         if (!count($failedJobList)) return;
 
-        $jobIdList = [];
-        foreach ($failedJobList as $job) {
-            $jobIdList[] = $job->id;
-        }
-
-        $this->markJobListFailed($jobIdList);
+        $this->markJobListFailed($failedJobList);
 
         foreach ($failedJobList as $job) {
             if ($job->get('scheduledJobId')) {
@@ -311,7 +306,7 @@ class Job
 
         $quotedIdList = [];
         foreach ($jobIdList as $id) {
-            $quotedIdList[] = $pdo->quote($id);
+            $quotedIdList[] = $this->getEntityManager()->getPDO()->quote($id);
         }
 
         $sql = "
