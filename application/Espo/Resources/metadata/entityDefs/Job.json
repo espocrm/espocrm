@@ -54,6 +54,9 @@
             "maxLength": 36,
             "default": null
         },
+        "startedAt": {
+            "type": "datetime"
+        },
         "executedAt": {
             "type": "datetime"
         },

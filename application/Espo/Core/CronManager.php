@@ -194,7 +194,7 @@ class CronManager
 
         $this->setLastRunTime(time());
 
-        $this->getCronJobUtil()->markFailedJobs();
+        $this->getCronJobUtil()->markJobsFailed();
         $this->getCronJobUtil()->updateFailedJobAttempts();
         $this->createJobsFromScheduledJobs();
         $this->getCronJobUtil()->removePendingJobDuplicates();
@@ -240,6 +240,9 @@ class CronManager
                 if (!$noLock) $this->unlockTables();
                 continue;
             }
+
+            $job->set('startedAt', date('Y-m-d H:i:s'));
+
             if ($useProcessPool) {
                 $job->set('status', self::READY);
             } else {
@@ -283,6 +286,10 @@ class CronManager
 
         if ($job->get('status') !== self::READY) {
             throw new Error("Can't run job {$id} with no status Ready.");
+        }
+
+        if (!$job->get('startedAt')) {
+            $job->set('startedAt', date('Y-m-d H:i:s'));
         }
 
         $job->set('status', self::RUNNING);
