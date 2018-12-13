@@ -310,7 +310,7 @@ class Job
         }
 
         $quotedIdList = [];
-        foreach ($idList as $id) {
+        foreach ($jobIdList as $id) {
             $quotedIdList[] = $pdo->quote($id);
         }
 
