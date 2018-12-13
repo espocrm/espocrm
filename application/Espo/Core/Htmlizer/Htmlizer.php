@@ -143,7 +143,6 @@ class Htmlizer
                 continue;
             }
             if (in_array($attribute, $skipAttributeList)) {
-                unset($data[$attribute]);
                 continue;
             }
 
