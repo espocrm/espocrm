@@ -123,7 +123,7 @@ class LDAP extends Espo
         if ($isPortal) {
             $useLdapAuthForPortalUser = $this->getUtils()->getOption('portalUserLdapAuth');
             if (!$useLdapAuthForPortalUser) {
-                return parent::login($username, $password, $authToken, $isPortal);
+                return parent::login($username, $password, $authToken, $params, $request);
             }
         }
 
