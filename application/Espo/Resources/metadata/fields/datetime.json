@@ -50,6 +50,11 @@
          "name":"useNumericFormat"
       },
       {
+         "type": "bool",
+         "name": "hasSeconds",
+         "hidden": true
+      },
+      {
          "type": "enumInt",
          "name": "minuteStep",
          "options": [30, 15, 10, 5, 1]

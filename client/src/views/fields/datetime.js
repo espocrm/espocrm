@@ -73,6 +73,12 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                     return this.getDateTime().toDisplayDateTime(value);
                 }
 
+                var timeFormat = this.getDateTime().timeFormat;
+
+                if (this.params.hasSeconds) {
+                    timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
+                }
+
                 var d = this.getDateTime().toMoment(value);
                 var now = moment().tz(this.getDateTime().timeZone || 'UTC');
                 var dt = now.clone().startOf('day');
@@ -84,19 +90,19 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                 };
 
                 if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
-                    return this.translate('Today') + ' ' + d.format(this.getDateTime().timeFormat);
+                    return this.translate('Today') + ' ' + d.format(timeFormat);
                 } else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
-                    return this.translate('Tomorrow') + ' ' + d.format(this.getDateTime().timeFormat);
+                    return this.translate('Tomorrow') + ' ' + d.format(timeFormat);
                 } else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
-                    return this.translate('Yesterday') + ' ' + d.format(this.getDateTime().timeFormat);
+                    return this.translate('Yesterday') + ' ' + d.format(timeFormat);
                 }
 
                 var readableFormat = this.getDateTime().getReadableDateFormat();
 
                 if (d.format('YYYY') == now.format('YYYY')) {
-                    return d.format(readableFormat) + ' ' + d.format(this.getDateTime().timeFormat);
+                    return d.format(readableFormat) + ' ' + d.format(timeFormat);
                 } else {
-                    return d.format(readableFormat + ', YYYY') + ' ' + d.format(this.getDateTime().timeFormat);
+                    return d.format(readableFormat + ', YYYY') + ' ' + d.format(timeFormat);
                 }
             }
 
