@@ -59,16 +59,15 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $backupPath = $this->getPath('backupPath');
         if (file_exists($backupPath)) {
-
             /* copy core files */
             if (!$this->copyFiles()) {
                 $this->throwErrorAndRemovePackage('Cannot copy files.');
             }
+        }
 
-            /* remove extension files, saved in fileList */
-            if (!$this->deleteFiles('delete', true)) {
-                $this->throwErrorAndRemovePackage('Permission denied to delete files.');
-            }
+        /* remove extension files, saved in fileList */
+        if (!$this->deleteFiles('delete', true)) {
+            $this->throwErrorAndRemovePackage('Permission denied to delete files.');
         }
 
         if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
@@ -84,14 +83,14 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->afterRunAction();
 
-        $this->clearCache();
-
         /* delete backup files */
         $this->deletePackageFiles();
 
         $this->finalize();
 
         $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: end run.');
+
+        $this->clearCache();
     }
 
     protected function restoreFiles()
