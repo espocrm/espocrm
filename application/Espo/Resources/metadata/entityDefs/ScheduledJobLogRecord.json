@@ -6,8 +6,13 @@
              "readOnly": true
         },
         "status": {
-            "type": "varchar",
-             "readOnly": true
+            "type": "enum",
+            "readOnly": true,
+            "options": ["Success", "Failed"],
+            "style": {
+                "Success": "success",
+                "Failed": "danger"
+            }
         },
         "executionTime": {
             "type": "datetime",
