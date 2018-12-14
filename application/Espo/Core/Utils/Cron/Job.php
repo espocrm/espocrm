@@ -43,7 +43,7 @@ class Job
 
     private $cronScheduledJob;
 
-    const RUNNING_THRESHOLD_PERIOD = 60;
+    const ENDED_PROCESS_PERIOD = 600;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
@@ -196,7 +196,7 @@ class Job
     {
         if (!System::isPosixSupported()) return;
 
-        $timeThreshold = time() - self::RUNNING_THRESHOLD_PERIOD;
+        $timeThreshold = time() - $this->getConfig()->get('jobPeriodForEndedProcess', self::ENDED_PROCESS_PERIOD);
         $dateTimeThreshold = date('Y-m-d H:i:s', $timeThreshold);
 
         $runningJobList = $this->getEntityManager()->getRepository('Job')->select([
