@@ -217,6 +217,7 @@ return [
         'mbstring',
         'zip',
         'gd',
+        'iconv'
     ],
     'recommendedPhpLibs' => [
         'curl',
