@@ -43,7 +43,9 @@ class Job
 
     private $cronScheduledJob;
 
-    const ENDED_PROCESS_PERIOD = 600;
+    const NOT_EXISTING_PROCESS_PERIOD = 300;
+
+    const READY_NOT_STARTED_PERIOD = 60;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
@@ -187,16 +189,15 @@ class Job
 
     public function markJobsFailed()
     {
-        $this->markJobsFailedByEndedProcesses();
+        $this->markJobsFailedByNotExistingProcesses();
+        $this->markJobsFailedReadyNotStarted();
         $this->markJobsFailedByPeriod(true);
         $this->markJobsFailedByPeriod();
     }
 
-    protected function markJobsFailedByEndedProcesses()
+    protected function markJobsFailedByNotExistingProcesses()
     {
-        if (!System::isPosixSupported()) return;
-
-        $timeThreshold = time() - $this->getConfig()->get('jobPeriodForEndedProcess', self::ENDED_PROCESS_PERIOD);
+        $timeThreshold = time() - $this->getConfig()->get('jobPeriodForNotExistingProcess', self::NOT_EXISTING_PROCESS_PERIOD);
         $dateTimeThreshold = date('Y-m-d H:i:s', $timeThreshold);
 
         $runningJobList = $this->getEntityManager()->getRepository('Job')->select([
@@ -208,13 +209,8 @@ class Job
             'pid',
             'startedAt'
         ])->where([
-            [
-                'OR' => [
-                    ['status' => CronManager::RUNNING],
-                    ['status' => CronManager::READY]
-                ],
-                'startedAt<' => $dateTimeThreshold
-            ]
+            'status' => CronManager::RUNNING,
+            'startedAt<' => $dateTimeThreshold
         ])->find();
 
         $failedJobList = [];
@@ -224,21 +220,28 @@ class Job
             }
         }
 
-        if (!count($failedJobList)) return;
+        $this->markJobListFailed($failedJobList);
+    }
+
+    protected function markJobsFailedReadyNotStarted()
+    {
+        $timeThreshold = time() - $this->getConfig()->get('jobPeriodForReadyNotStarted', SELF::READY_NOT_STARTED_PERIOD);
+        $dateTimeThreshold = date('Y-m-d H:i:s', $timeThreshold);
+
+        $failedJobList = $this->getEntityManager()->getRepository('Job')->select([
+            'id',
+            'scheduledJobId',
+            'executeTime',
+            'targetId',
+            'targetType',
+            'pid',
+            'startedAt'
+        ])->where([
+            'status' => CronManager::READY,
+            'startedAt<' => $dateTimeThreshold
+        ])->find();
 
         $this->markJobListFailed($failedJobList);
-
-        foreach ($failedJobList as $job) {
-            if ($job->get('scheduledJobId')) {
-                $this->getCronScheduledJob()->addLogRecord(
-                    $job->get('scheduledJobId'),
-                    CronManager::FAILED,
-                    $job->get('startedAt'),
-                    $job->get('targetId'),
-                    $job->get('targetType')
-                );
-            }
-        }
     }
 
     protected function markJobsFailedByPeriod($isForActiveProcesses = false)
@@ -260,13 +263,8 @@ class Job
             'pid',
             'startedAt'
         ])->where([
-            [
-                'OR' => [
-                    ['status' => CronManager::RUNNING],
-                    ['status' => CronManager::READY]
-                ],
-                'executeTime<' => $dateTimeThreshold
-            ]
+            'status' => CronManager::RUNNING,
+            'executeTime<' => $dateTimeThreshold
         ])->find();
 
         $failedJobList = [];
@@ -280,25 +278,13 @@ class Job
             }
         }
 
-        if (!count($failedJobList)) return;
-
         $this->markJobListFailed($failedJobList);
-
-        foreach ($failedJobList as $job) {
-            if ($job->get('scheduledJobId')) {
-                $this->getCronScheduledJob()->addLogRecord(
-                    $job->get('scheduledJobId'),
-                    CronManager::FAILED,
-                    $job->get('startedAt'),
-                    $job->get('targetId'),
-                    $job->get('targetType')
-                );
-            }
-        }
     }
 
     protected function markJobListFailed($jobList)
     {
+        if (!count($jobList)) return;
+
         $jobIdList = [];
         foreach ($jobList as $job) {
             $jobIdList[] = $job->id;
@@ -316,6 +302,18 @@ class Job
         ";
 
         $this->getEntityManager()->getPDO()->query($sql);
+
+        foreach ($jobList as $job) {
+            if ($job->get('scheduledJobId')) {
+                $this->getCronScheduledJob()->addLogRecord(
+                    $job->get('scheduledJobId'),
+                    CronManager::FAILED,
+                    $job->get('startedAt'),
+                    $job->get('targetId'),
+                    $job->get('targetType')
+                );
+            }
+        }
     }
 
     /**
