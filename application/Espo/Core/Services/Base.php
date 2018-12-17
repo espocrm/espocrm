@@ -37,6 +37,7 @@ abstract class Base implements Injectable
         'config',
         'entityManager',
         'user',
+        'serviceFactory'
     );
 
     protected $injections = array();
@@ -95,5 +96,9 @@ abstract class Base implements Injectable
     {
         return $this->getInjection('user');
     }
-}
 
+    protected function getServiceFactory()
+    {
+        return $this->getInjection('serviceFactory');
+    }
+}

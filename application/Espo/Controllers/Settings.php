@@ -35,23 +35,12 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class Settings extends \Espo\Core\Controllers\Base
 {
+
     protected function getConfigData()
     {
-        if ($this->getUser()->id == 'system') {
-            $data = $this->getConfig()->getData();
-        } else {
-            $data = $this->getConfig()->getData($this->getUser()->isAdmin());
-        }
+        $data = $this->getServiceFactory()->create('Settings')->getConfigData();
 
-        $fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
-
-        foreach ($fieldDefs as $field => $d) {
-            if ($d['type'] === 'password') {
-                unset($data[$field]);
-            }
-        }
-
-        $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
+        $data->jsLibs = $this->getMetadata()->get('app.jsLibs');
 
         return $data;
     }
@@ -76,41 +65,7 @@ class Settings extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        $ignoreItemList = [];
-
-        $systemOnlyItemList = $this->getConfig()->getSystemOnlyItemList();
-        foreach ($systemOnlyItemList as $item) {
-            $ignoreItemList[] = $item;
-        }
-
-        if ($this->getConfig()->get('restrictedMode') && !$this->getUser()->isSuperAdmin()) {
-            $superAdminOnlyItemList = $this->getConfig()->getSuperAdminOnlyItemList();
-            foreach ($superAdminOnlyItemList as $item) {
-                $ignoreItemList[] = $item;
-            }
-        }
-
-        foreach ($ignoreItemList as $item) {
-            unset($data->$item);
-        }
-
-        if (
-            (isset($data->useCache) && $data->useCache !== $this->getConfig()->get('useCache'))
-            ||
-            (isset($data->aclStrictMode) && $data->aclStrictMode !== $this->getConfig()->get('aclStrictMode'))
-        ) {
-            $this->getContainer()->get('dataManager')->clearCache();
-        }
-
-        $this->getConfig()->setData($data, $this->getUser()->isAdmin());
-        $result = $this->getConfig()->save();
-        if ($result === false) {
-            throw new Error('Cannot save settings');
-        }
-
-        if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
-            $this->getContainer()->get('dataManager')->rebuildDatabase([]);
-        }
+        $this->getServiceFactory()->create('Settings')->setConfigData($data);
 
         return $this->getConfigData();
     }

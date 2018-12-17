@@ -447,7 +447,8 @@
             "view": "views/settings/fields/history-entity-list"
         },
         "googleMapsApiKey": {
-            "type": "varchar"
+            "type": "varchar",
+            "onlyUser": true
         },
         "massEmailDisableMandatoryOptOutLink": {
             "type": "bool"

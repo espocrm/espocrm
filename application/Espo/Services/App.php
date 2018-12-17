@@ -72,6 +72,8 @@ class App extends \Espo\Core\Services\Base
         $preferencesData = $this->getPreferences()->getValueMap();
         unset($preferencesData->smtpPassword);
 
+        $settingsService = $this->getServiceFactory()->create('Settings');
+
         $user = $this->getUser();
         if (!$user->has('teamsIds')) {
             $user->loadLinkMultipleField('teams');
@@ -85,25 +87,7 @@ class App extends \Espo\Core\Services\Base
 
         $userData->emailAddressList = $this->getEmailAddressList();
 
-        $settings = (object)[];
-        foreach ($this->getConfig()->get('userItems') as $item) {
-            $settings->$item = $this->getConfig()->get($item);
-        }
-
-        if ($this->getUser()->isAdmin()) {
-            foreach ($this->getConfig()->get('adminItems') as $item) {
-                if ($this->getConfig()->has($item)) {
-                    $settings->$item = $this->getConfig()->get($item);
-                }
-            }
-        }
-
-        $settingsFieldDefs = $this->getInjection('metadata')->get('entityDefs.Settings.fields', []);
-        foreach ($settingsFieldDefs as $field => $d) {
-            if ($d['type'] === 'password') {
-                unset($settings->$field);
-            }
-        }
+        $settings = $this->getServiceFactory()->create('Settings')->getConfigData();
 
         unset($userData->authTokenId);
         unset($userData->password);

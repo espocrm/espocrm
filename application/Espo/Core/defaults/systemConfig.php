@@ -200,7 +200,6 @@ return [
         'outboundEmailFromName',
         'outboundEmailBccAddress',
         'integrations',
-        'googleMapsApiKey'
     ],
     'isInstalled' => false,
     'ldapUserNameAttribute' => 'sAMAccountName',
