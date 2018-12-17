@@ -251,6 +251,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 order = this.defs.asc ? 'asc' : 'desc';
             }
 
+            if (!orderBy) {
+                orderBy = this.getMetadata().get(['entityDefs', this.scope, 'collection', 'orderBy']);
+                order = this.getMetadata().get(['entityDefs', this.scope, 'collection', 'order'])
+            }
+
             if (orderBy && !order) {
                 order = 'asc';
             }
