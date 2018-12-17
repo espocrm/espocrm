@@ -365,16 +365,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             updateSizeForVertical();
         },
 
-        adjust: function () {
-            var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
-
-            if (!navbarIsVertical) {
-                this.adjustHorizontal();
-            } else {
-                this.adjustVertical();
-            }
-        },
-
         afterRender: function () {
             this.$body = $('body');
 
@@ -397,6 +387,16 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             this.$navbar = this.$el.find('> .navbar');
             this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
 
+            var handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
+            if (handlerClassName) {
+                require(handlerClassName, function (Handler) {
+                    var handler = new Handler(this);
+                    handler.process();
+                }.bind(this));
+            }
+
+            if (this.getThemeManager().getParam('skipDefaultNavbarAdjustment')) return;
+
             if (this.getThemeManager().getParam('navbarIsVertical')) {
                 var process = function () {
                     if (this.$navbar.height() < $(window).height() / 2) {
@@ -407,11 +407,11 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                     if (this.getThemeManager().isUserTheme()) {
                         setTimeout(function () {
-                            this.adjust();
+                            this.adjustVertical();
                         }.bind(this), 10);
                         return;
                     }
-                    this.adjust();
+                    this.adjustVertical();
                 }.bind(this);
                 process();
             } else {
@@ -424,11 +424,11 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                     if (this.getThemeManager().isUserTheme()) {
                         setTimeout(function () {
-                            this.adjust();
+                            this.adjustHorizontal();
                         }.bind(this), 10);
                         return;
                     }
-                    this.adjust();
+                    this.adjustHorizontal();
                 }.bind(this);
                 process();
             }
