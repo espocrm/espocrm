@@ -198,6 +198,7 @@ return [
     'userItems' => [
         'outboundEmailFromAddress',
         'outboundEmailFromName',
+        'outboundEmailBccAddress',
         'integrations',
         'googleMapsApiKey'
     ],
