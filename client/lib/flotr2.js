@@ -5164,6 +5164,17 @@ Flotr.addPlugin('hit', {
 
     // Default
     } else {
+
+      // EspoCRM fix start
+      if (n.mouse.autoPositionHorizontal) {
+        if (n.xaxis.d2p(n.x) > this.plotWidth / 3) {
+          p = 'w';
+        } else {
+          p = 'e';
+        }
+      }
+      // EspoCRM fix end
+
       pos += 'top:';
       if (/n/.test(p)) pos += (oTop - m + top + n.yaxis.d2p(n.y) - size.height);
       else             pos += (oTop + m + top + n.yaxis.d2p(n.y));
