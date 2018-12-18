@@ -88,11 +88,11 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
             this.defs.create = true;
 
-            this.url = this.model.name + '/' + this.model.id + '/' + this.link;
-
             if (this.parentScope == 'Account') {
                 this.link = 'tasksPrimary';
             }
+
+            this.url = this.model.name + '/' + this.model.id + '/' + this.link;
 
             this.setupSorting();
 
