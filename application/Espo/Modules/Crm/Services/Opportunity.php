@@ -229,6 +229,12 @@ class Opportunity extends \Espo\Services\Record
             $result[$row['stage']] = floatval($row['amount']);
         }
 
+        foreach ($options as $stage) {
+            if (in_array($stage, $stageIgnoreList)) continue;
+            if (array_key_exists($stage, $result)) continue;
+            $result[$stage] = 0.0;
+        }
+
         return $result;
     }
 
