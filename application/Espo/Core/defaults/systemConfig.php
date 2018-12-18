@@ -222,6 +222,7 @@ return [
     'recommendedPhpLibs' => [
         'curl',
         'xml',
+        'xmlwriter',
         'exif',
     ],
     'recommendedPhpParams' => [
