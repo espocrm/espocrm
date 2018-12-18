@@ -18,7 +18,7 @@
             },
             "dateFilter": {
                 "type": "enum",
-                "options": ["currentYear", "currentQuarter", "currentMonth", "ever", "between"],
+                "options": ["currentYear", "currentQuarter", "currentMonth", "currentFiscalYear", "currentFiscalQuarter", "ever", "between"],
                 "default": "currentYear",
                 "translation": "Global.options.dateSearchRanges"
             },

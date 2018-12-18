@@ -291,7 +291,7 @@ class Opportunity extends \Espo\Services\Record
 
         if ($dt && $dtTo) {
             $interval = new \DateInterval('P1M');
-            while ($dt->getTimestamp() <= $dtTo->getTimestamp()) {
+            while ($dt->getTimestamp() < $dtTo->getTimestamp()) {
                 $month = $dt->format('Y-m');
                 if (!array_key_exists($month, $result)) {
                     $result[$month] = 0;
@@ -350,6 +350,37 @@ class Opportunity extends \Espo\Services\Record
                 return [
                     $dt->modify('first day of this month')->format('Y-m-d'),
                     $dt->add(new \DateInterval('P1M'))->format('Y-m-d')
+                ];
+            case 'currentFiscalYear':
+                $dtToday = new \DateTime();
+                $dt = new \DateTime();
+                $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+                $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+                if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
+                    $dt->modify('-1 year');
+                }
+                return [
+                    $dt->format('Y-m-d'),
+                    $dt->add(new \DateInterval('P1Y'))->format('Y-m-d')
+                ];
+            case 'currentFiscalQuarter':
+                $dtToday = new \DateTime();
+                $dt = new \DateTime();
+                $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+                $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+                $month = intval($dtToday->format('m'));
+                $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
+                if ($quarterShift) {
+                    if ($quarterShift >= 0) {
+                        $dt->add(new \DateInterval('P'.($quarterShift * 3).'M'));
+                    } else {
+                        $quarterShift *= -1;
+                        $dt->sub(new \DateInterval('P'.($quarterShift * 3).'M'));
+                    }
+                }
+                return [
+                    $dt->format('Y-m-d'),
+                    $dt->add(new \DateInterval('P3M'))->format('Y-m-d')
                 ];
         }
         return [0, 0];
