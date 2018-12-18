@@ -5167,7 +5167,7 @@ Flotr.addPlugin('hit', {
 
       // EspoCRM fix start
       if (n.mouse.autoPositionHorizontal) {
-        if (n.xaxis.d2p(n.x) > this.plotWidth / 3) {
+        if (n.xaxis.d2p(n.x) > this.plotWidth * 2 / 3) {
           p = 'w';
         } else {
           p = 'e';
