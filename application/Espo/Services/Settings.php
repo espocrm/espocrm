@@ -158,7 +158,13 @@ class Settings extends \Espo\Core\Services\Base
     {
         if ($this->getUser()->isSystem()) return;
 
-        if (!$this->getAcl()->checkScope('Email', 'create')) {
+        if ($this->getUser()->isAdmin()) return;
+
+        if (
+            !$this->getAcl()->checkScope('Email', 'create')
+            ||
+            !$this->getConfig()->get('outboundEmailIsShared')
+        ) {
             unset($data->outboundEmailFromAddress);
             unset($data->outboundEmailFromName);
             unset($data->outboundEmailBccAddress);
