@@ -6,15 +6,15 @@
             "trim": true
         },
         "body": {
-            "type": "text",
+            "type": "wysiwyg",
             "view": "views/fields/wysiwyg"
         },
         "header": {
-            "type": "text",
+            "type": "wysiwyg",
             "view": "views/fields/wysiwyg"
         },
         "footer": {
-            "type": "text",
+            "type": "wysiwyg",
             "view": "views/fields/wysiwyg",
             "tooltip": true
         },
