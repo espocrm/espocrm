@@ -74,17 +74,21 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                 }
 
                 if (this.options.allDay) {
-                    if (this.options.allDay) {
-                        var allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || [];
-                        if (~allDayScopeList.indexOf(this.scope)) {
-                            this.model.set('dateStart', null);
-                            this.model.set('dateEnd', null);
-                            this.model.set('dateStartDate', null);
-                            this.model.set('dateEndDate', this.options.dateEndDate);
-                            if (this.options.dateEndDate !== this.options.dateStartDate) {
-                                this.model.set('dateStartDate', this.options.dateStartDate)
-                            }
+                    var allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || [];
+                    if (~allDayScopeList.indexOf(this.scope)) {
+                        this.model.set('dateStart', null);
+                        this.model.set('dateEnd', null);
+                        this.model.set('dateStartDate', null);
+                        this.model.set('dateEndDate', this.options.dateEndDate);
+                        if (this.options.dateEndDate !== this.options.dateStartDate) {
+                            this.model.set('dateStartDate', this.options.dateStartDate)
                         }
+                    } else if (this.getMetadata().get(['entityDefs', this.scope, 'fields', 'dateStartDate'])) {
+                        this.model.set('dateStart', null);
+                        this.model.set('dateEnd', null);
+                        this.model.set('dateStartDate', this.options.dateStartDate);
+                        this.model.set('dateEndDate', this.options.dateEndDate);
+                        this.model.set('isAllDay', true);
                     }
                 }
             }

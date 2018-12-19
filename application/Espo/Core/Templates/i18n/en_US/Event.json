@@ -5,7 +5,10 @@
         "dateEnd": "Date End",
         "duration": "Duration",
         "status": "Status",
-        "reminders": "Reminders"
+        "reminders": "Reminders",
+        "dateStartDate": "Date Start (all day)",
+        "dateEndDate": "Date End (all day)",
+        "isAllDay": "Is All-Day"
     },
     "links": {
         "parent": "Parent"

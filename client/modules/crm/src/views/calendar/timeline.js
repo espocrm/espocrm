@@ -359,6 +359,10 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 }
             }
 
+            if (o.dateStartDate && !~this.allDayScopeList.indexOf(o.scope)) {
+                event.end = event.end.clone().add(1, 'days');
+            }
+
             if (o.isBusyRange) {
                 return event;
             }

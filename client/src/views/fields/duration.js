@@ -51,6 +51,16 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
                 this.seconds = this.model.getFieldParam(this.name, 'default') || 0;
             }
 
+            if (this.model.get('isAllDay')) {
+                var startDate = this.model.get(this.startField + 'Date');
+                var endDate = this.model.get(this.endField + 'Date');
+                if (startDate && endDate) {
+                    this.seconds = moment(endDate).unix() - moment(startDate).unix();
+                    return;
+                }
+
+            }
+
             if (start && end) {
                 this.seconds = moment(this.model.get(this.endField)).unix() - moment(this.model.get(this.startField)).unix();
             } else {
@@ -71,7 +81,7 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
                 var durationOptions = '';
                 var options = this.defaultOptions = _.clone(this.model.getFieldParam(this.name, 'options'));
 
-                if (options.indexOf(this.seconds) == -1) {
+                if (!this.model.get('isAllDay') && options.indexOf(this.seconds) == -1) {
                     options.push(this.seconds);
                 }
                 options.sort(function (a, b) {
@@ -175,6 +185,25 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
             }
         },
 
+        _getDateEndDate: function () {
+            var seconds = this.seconds;
+            var start = this.model.get(this.startField + 'Date');
+
+            if (!start) {
+                return;
+            }
+
+            var endUnix;
+            var end;
+            if (seconds) {
+                endUnix = moment.utc(start).unix() + seconds;
+                end = moment.unix(endUnix).utc().format(this.getDateTime().internalDateFormat);
+            } else {
+                end = start;
+            }
+            return end;
+        },
+
         _getDateEnd: function () {
             var seconds = this.seconds;
             var start = this.model.get(this.startField);
@@ -195,6 +224,14 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
         },
 
         updateDateEnd: function () {
+            if (this.model.get('isAllDay')) {
+                var end = this._getDateEndDate();
+                setTimeout(function () {
+                    this.model.set(this.endField + 'Date', end, {updatedByDuration: true});
+                }.bind(this), 1);
+                return;
+            }
+
             var end = this._getDateEnd();
 
             setTimeout(function () {

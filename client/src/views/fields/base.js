@@ -534,6 +534,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }.bind(this));
         },
 
+        setIsInlineEditMode: function (value) {
+            this._isInlineEditMode = value;
+        },
+
         inlineEditClose: function (dontReset) {
             this.trigger('inline-edit-off');
             this._isInlineEditMode = false;

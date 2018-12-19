@@ -1,5 +1,5 @@
 <p>Objet: {{name}}</p>
-<p>Débute à: {{dateStart}}</p>
+<p>Débute à: {{#if isAllDay}}{{dateStartDate}}{{else}}{{dateStart}}{{/if}}</p>
 {{#if isUser}}
     {{#if description}}
     <p>{{{description}}}</p>

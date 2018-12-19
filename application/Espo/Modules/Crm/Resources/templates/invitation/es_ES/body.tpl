@@ -1,5 +1,5 @@
 <p>Asunto: {{name}}</p>
-<p>Comienzo: {{dateStart}}</p>
+<p>Comienzo: {{#if isAllDay}}{{dateStartDate}}{{else}}{{dateStart}}{{/if}}</p>
 {{#if isUser}}
     {{#if description}}
     <p>{{{description}}}</p>

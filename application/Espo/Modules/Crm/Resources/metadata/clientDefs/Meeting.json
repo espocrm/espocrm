@@ -97,6 +97,16 @@
                         }
                     ]
                 }
+            },
+            "duration": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type":"isFalse",
+                            "attribute": "isAllDay"
+                        }
+                    ]
+                }
             }
         }
     },

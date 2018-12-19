@@ -70,7 +70,7 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
         initTimepicker: function () {
             var $time = this.$time;
 
-            $time.timepicker({
+            var o = {
                 step: this.params.minuteStep || 30,
                 scrollDefaultNow: true,
                 timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
@@ -78,7 +78,13 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
                     label: this.noneOption,
                     value: this.noneOption,
                 }]
-            });
+            };
+
+            if (this.emptyTimeInInlineEditDisabled && this.isInlineEditMode() || this.noneOptionIsHidden) {
+                delete o.noneOption;
+            }
+
+            $time.timepicker(o);
             $time.parent().find('button.time-picker-btn').on('click', function () {
                 $time.timepicker('show');
             });
@@ -122,7 +128,13 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
                 var value = this.model.get(this.name) || this.model.get(this.nameDate);
                 var otherValue = this.model.get(field) || this.model.get(fieldDate);
                 if (value && otherValue) {
-                    if (moment(value).unix() <= moment(otherValue).unix()) {
+                    var isNotValid = false;
+                    if (this.validateAfterAllowSameDay && this.model.get(this.nameDate)) {
+                        isNotValid = moment(value).unix() < moment(otherValue).unix();
+                    } else {
+                        isNotValid = moment(value).unix() <= moment(otherValue).unix();
+                    }
+                    if (isNotValid) {
                         var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.getLabelText())
                                                                                 .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
@@ -162,4 +174,3 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
 
     });
 });
-

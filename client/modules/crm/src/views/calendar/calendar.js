@@ -405,6 +405,15 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 return;
             }
 
+            if (event.dateStartDate && event.dateEndDate) {
+                event.allDay = true;
+                event.allDayCopy = event.allDay;
+                if (!notInitial) {
+                    event.end.add(1, 'days')
+                }
+                return;
+            }
+
             if (!event.start || !event.end) {
                 event.allDay = true;
                 if (event.end) {
@@ -607,13 +616,6 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                         }
                     }
                     var eventCloned = Espo.Utils.clone(event);
-
-                    var dateStart = this.convertTime(event.start) || null;
-
-                    var dateEnd = null;
-                    if (event.duration) {
-                        dateEnd = this.convertTime(event.start.clone().add(event.duration, 's')) || null;
-                    }
 
                     var attributes = {};
 

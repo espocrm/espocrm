@@ -872,8 +872,8 @@ class Activities extends \Espo\Core\Services\Base
                 ['dateStart', 'dateStart'],
                 ['dateEnd', 'dateEnd'],
                 'status',
-                ['VALUE:', 'dateStartDate'],
-                ['VALUE:', 'dateEndDate'],
+                ['dateStartDate', 'dateStartDate'],
+                ['dateEndDate', 'dateEndDate'],
                 'parentType',
                 'parentId',
                 'createdAt'

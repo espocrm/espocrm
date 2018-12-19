@@ -1,5 +1,5 @@
 <p>Назва: {{name}}</p>
-<p>Початок: {{dateStart}}</p>
+<p>Початок: {{#if isAllDay}}{{dateStartDate}}{{else}}{{dateStart}}{{/if}}</p>
 {{#if isUser}}
     {{#if description}}
     <p>{{{description}}}</p>

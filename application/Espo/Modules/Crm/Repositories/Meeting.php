@@ -34,7 +34,7 @@ use Espo\Core\Utils\Util;
 
 class Meeting extends \Espo\Core\Repositories\Event
 {
-    protected function beforeSave(Entity $entity, array $options = array())
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
             $entity->set('accountId', null);
@@ -91,25 +91,6 @@ class Meeting extends \Espo\Core\Repositories\Event
                 $account = $this->getEntityManager()->getRepository('Account')->select(['id', 'name'])->get($entity->get('accountId'));
                 if ($account) {
                     $entity->set('accountName', $account->get('name'));
-                }
-            }
-        }
-
-        if (!$entity->isNew()) {
-            if ($entity->isAttributeChanged('dateStart') && $entity->isAttributeChanged('dateStart') && !$entity->isAttributeChanged('dateEnd')) {
-                $dateEndPrevious = $entity->getFetched('dateEnd');
-                $dateStartPrevious = $entity->getFetched('dateStart');
-                if ($dateStartPrevious && $dateEndPrevious) {
-                    $dtStart = new \DateTime($dateStartPrevious);
-                    $dtEnd = new \DateTime($dateEndPrevious);
-                    $dt = new \DateTime($entity->get('dateStart'));
-
-                    if ($dtStart && $dtEnd && $dt) {
-                        $duration = ($dtEnd->getTimestamp() - $dtStart->getTimestamp());
-                        $dt->modify('+' . $duration . ' seconds');
-                        $dateEnd = $dt->format('Y-m-d H:i:s');
-                        $entity->set('dateEnd', $dateEnd);
-                    }
                 }
             }
         }

@@ -15,15 +15,24 @@
             "audited": true
         },
         "dateStart": {
-            "type": "datetime",
+            "type": "datetimeOptional",
+            "view": "crm:views/meeting/fields/date-start",
             "required": true,
             "default": "javascript: return this.dateTime.getNow(15);",
             "audited": true
         },
         "dateEnd": {
-            "type": "datetime",
+            "type": "datetimeOptional",
+            "view": "crm:views/meeting/fields/date-end",
             "required": true,
             "after": "dateStart"
+        },
+        "isAllDay": {
+            "type": "bool",
+            "readOnly": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true
         },
         "duration": {
             "type": "duration",

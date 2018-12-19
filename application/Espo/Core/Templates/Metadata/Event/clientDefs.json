@@ -19,5 +19,19 @@
         {
             "name":"todays"
         }
-    ]
+    ],
+    "dynamicLogic":{
+        "fields":{
+            "duration": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type":"isFalse",
+                            "attribute": "isAllDay"
+                        }
+                    ]
+                }
+            }
+        }
+    }
 }
