@@ -9,7 +9,7 @@
                 </button>
                 <ul class="dropdown-menu pull-left filter-menu">
 
-                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset"><div>{{translate 'All'}}</div></a></li>
+                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset"><div>{{translate 'all' category='presetFilters' scope=entityType}}</div></a></li>
                     {{#each presetFilterList}}
                     <li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset"><div>{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../entityType}}{{/if}}</div></a></li>
                     {{/each}}
