@@ -854,10 +854,12 @@ class Base
             case 'today':
                 $where['type'] = 'between';
                 $dt->setTime(0, 0, 0);
+                $dc = clone $dt;
+                $dc->modify('+1 day -1 second');
                 $dt->setTimezone(new \DateTimeZone('UTC'));
+                $dc->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
-                $dt->modify('+1 day -1 second');
-                $to = $dt->format($format);
+                $to = $dc->format($format);
                 $where['value'] = [$from, $to];
                 break;
             case 'past':
@@ -942,12 +944,13 @@ class Base
                 break;
             case 'on':
                 $where['type'] = 'between';
-
                 $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dc = clone $dt;
+                $dc->modify('+1 day -1 second');
                 $dt->setTimezone(new \DateTimeZone('UTC'));
+                $dc->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
-                $dt->modify('+1 day -1 second');
-                $to = $dt->format($format);
+                $to = $dc->format($format);
                 $where['value'] = [$from, $to];
                 break;
             case 'before':
@@ -959,6 +962,7 @@ class Base
             case 'after':
                 $where['type'] = 'after';
                 $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dt->modify('+1 day -1 second');
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
                 break;
@@ -971,7 +975,7 @@ class Base
 
                     $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
-                    $dt->modify('-1 second');
+                    $dt->modify('+1 day -1 second');
                     $to = $dt->format($format);
 
                     $where['value'] = [$from, $to];
