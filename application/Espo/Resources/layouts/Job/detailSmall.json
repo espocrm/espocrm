@@ -10,8 +10,10 @@
         "label":"",
         "rows":[
             [{"name":"executeTime"}, {"name": "createdAt"}],
-            [{"name":"executedAt"}, {"name": "modifiedAt"}],
-            [{"name":"attempts"}, {"name": "failedAttempts"}]
+            [{"name":"startedAt"}, {"name": "modifiedAt"}],
+            [{"name":"executedAt"}, false],
+            [{"name":"attempts"}, false],
+            [{"name":"failedAttempts"}, false]
         ]
     },
     {

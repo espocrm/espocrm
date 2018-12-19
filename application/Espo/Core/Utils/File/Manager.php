@@ -466,6 +466,9 @@ class Manager
 
             if (file_exists($sourceFile) && is_file($sourceFile)) {
                 $res &= copy($sourceFile, $destFile);
+                if (function_exists('opcache_invalidate')) {
+                    opcache_invalidate($destFile);
+                }
             }
         }
 
@@ -558,6 +561,9 @@ class Manager
             }
 
             if (file_exists($filePath) && is_file($filePath)) {
+                if (function_exists('opcache_invalidate')) {
+                    opcache_invalidate($filePath, true);
+                }
                 $result &= unlink($filePath);
             }
         }

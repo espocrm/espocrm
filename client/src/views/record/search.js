@@ -241,12 +241,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         events: {
-            'keypress input[name="textFilter"]': function (e) {
+            'keypress input[data-name="textFilter"]': function (e) {
                 if (e.keyCode == 13) {
                     this.search();
                 }
             },
-            'focus input[name="textFilter"]': function (e) {
+            'focus input[data-name="textFilter"]': function (e) {
                 e.currentTarget.select();
             },
             'click button[data-action="search"]': function (e) {
@@ -728,12 +728,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         fetch: function () {
-            this.textFilter = (this.$el.find('input[name="textFilter"]').val() || '').trim();
+            this.textFilter = (this.$el.find('input[data-name="textFilter"]').val() || '').trim();
 
             this.bool = {};
 
             this.boolFilterList.forEach(function (name) {
-                this.bool[name] = this.$el.find('input[name="' + name + '"]').prop('checked');
+                this.bool[name] = this.$el.find('input[data-name="' + name + '"][data-role="boolFilterCheckbox"]').prop('checked');
             }, this);
 
             for (var field in this.advanced) {

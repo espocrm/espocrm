@@ -33,7 +33,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
         template: 'global-search/global-search',
 
         events: {
-            'keypress #global-search-input': function (e) {
+            'keypress input.global-search-input': function (e) {
                 if (e.keyCode == 13) {
                     this.runSearch();
                 }
@@ -41,7 +41,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
             'click [data-action="search"]': function () {
                 this.runSearch();
             },
-            'focus #global-search-input': function (e) {
+            'focus input.global-search-input': function (e) {
                 e.currentTarget.select();
             }
         },
@@ -57,7 +57,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            this.$input = this.$el.find('#global-search-input');
+            this.$input = this.$el.find('input.global-search-input');
         },
 
         runSearch: function () {

@@ -38,6 +38,7 @@ class Phone extends Base
                 'fields' => array(
                     $fieldName => array(
                         'select' => 'phoneNumbers.name',
+                        'fieldType' => 'phone',
                         'where' =>
                         array (
                             'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (

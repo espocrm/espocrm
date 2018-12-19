@@ -36,7 +36,7 @@ Espo.define('views/fields/link-one', 'views/fields/link', function (Dep) {
 
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
-            var value = this.$el.find('[name="' + this.idName + '"]').val();
+            var value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
             if (type == 'isOneOf') {
                 var data = {
@@ -61,7 +61,7 @@ Espo.define('views/fields/link-one', 'views/fields/link', function (Dep) {
                     value: value,
                     data: {
                         type: type,
-                        nameValue: this.$el.find('[name="' + this.nameName + '"]').val()
+                        nameValue: this.$el.find('[data-name="' + this.nameName + '"]').val()
                     }
                 };
                 return data;
@@ -70,4 +70,3 @@ Espo.define('views/fields/link-one', 'views/fields/link', function (Dep) {
 
     });
 });
-

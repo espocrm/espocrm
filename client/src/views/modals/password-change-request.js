@@ -52,22 +52,24 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
         },
 
         actionSubmit: function () {
-            var $userName = this.$el.find('input[name="userName"]');
+            var $userName = this.$el.find('input[name="username"]');
             var $emailAddress = this.$el.find('input[name="emailAddress"]');
-
-            $userName.popover('destroy');
-            $emailAddress.popover('destroy');
 
             var userName = $userName.val();
             var emailAddress = $emailAddress.val();
 
+
             var isValid = true;
+
             if (userName == '') {
                 isValid = false;
 
                 var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
 
+                this.isPopoverUserNameDestroyed = false;
+
                 $userName.popover({
+                    container: 'body',
                     placement: 'bottom',
                     content: message,
                     trigger: 'manual',
@@ -78,17 +80,21 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
 
                 $userName.one('mousedown click', function () {
                     $cellUserName.removeClass('has-error');
+                    if (this.isPopoverUserNameDestroyed) return;
                     $userName.popover('destroy');
-                });
+                    this.isPopoverUserNameDestroyed = true;
+                }.bind(this));
             }
 
-            var isValid = true;
             if (emailAddress == '') {
                 isValid = false;
 
                 var message = this.getLanguage().translate('emailAddressCantBeEmpty', 'messages', 'User');
 
+                this.isPopoverEmailAddressDestroyed = false;
+
                 $emailAddress.popover({
+                    container: 'body',
                     placement: 'bottom',
                     content: message,
                     trigger: 'manual',
@@ -99,8 +105,10 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
 
                 $emailAddress.one('mousedown click', function () {
                     $cellEmailAddress.removeClass('has-error');
+                    if (this.isPopoverEmailAddressDestroyed) return;
                     $emailAddress.popover('destroy');
-                });
+                    this.isPopoverEmailAddressDestroyed = true;
+                }.bind(this));
             }
 
             if (!isValid) return;
@@ -146,4 +154,3 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
 
     });
 });
-

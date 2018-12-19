@@ -3,4 +3,4 @@
 <p>Přihlašovací jméno: {{userName}}</p>
 <p>Heslo: {{password}}</p>
 
-<p>{{siteUrl}}</p>
+<p><a href="{{siteUrl}}">{{siteUrl}}</a></p>

@@ -438,7 +438,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initElement: function () {
-            this.$element = this.$el.find('[name="' + this.name + '"]');
+            this.$element = this.$el.find('[data-name="' + this.name + '"]');
+            if (!this.$element.length) {
+                this.$element = this.$el.find('[name="' + this.name + '"]');
+            }
+            if (!this.$element.length) {
+                this.$element = this.$el.find('.main-element');
+            }
             if (this.mode == 'edit') {
                 this.$element.on('change', function () {
                     this.trigger('change');
@@ -664,6 +670,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
             return false;
         },
+
+        fetchSearchType: function () {
+            return this.$el.find('select.search-type').val();
+        },
+
     });
 });
-

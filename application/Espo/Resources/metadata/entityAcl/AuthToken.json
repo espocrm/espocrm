@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "hash": {
+            "internal": true,
+            "readOnly": true
+        },
+        "token": {
+            "internal": true,
+            "readOnly": true
+        },
+        "portal": {
+            "readOnly": true
+        },
+        "user": {
+            "readOnly": true
+        },
+        "ipAddress": {
+            "readOnly": true
+        },
+        "lastAccess": {
+            "readOnly": true
+        },
+        "createdAt": {
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "readOnly": true
+        }
+    }
+}

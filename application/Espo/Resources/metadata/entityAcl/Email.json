@@ -1,0 +1,12 @@
+{
+    "fields": {
+        "users": {
+            "readOnly": true
+        }
+    },
+    "links": {
+        "users": {
+            "onlyAdmin": true
+        }
+    }
+}

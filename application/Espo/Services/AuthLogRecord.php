@@ -41,16 +41,4 @@ class AuthLogRecord extends Record
 
     protected $forceSelectAllAttributes = true;
 
-    protected $readOnlyAttributeList = [
-        "username",
-        "portalId",
-        "userId",
-        "authTokenId",
-        "ipAddress",
-        "isDenied",
-        "denialReason",
-        "microtime",
-        "requestUrl",
-        "requestMethod"
-    ];
 }

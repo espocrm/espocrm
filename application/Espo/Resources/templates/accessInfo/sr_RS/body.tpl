@@ -3,4 +3,4 @@
 <p>Korisničko ime: {{userName}}</p>
 <p>Lozinka: {{password}}</p>
 
-<p>{{siteUrl}}</p>
+<p><a href="{{siteUrl}}">{{siteUrl}}</a></p>

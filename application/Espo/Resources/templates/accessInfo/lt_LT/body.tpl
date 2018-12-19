@@ -3,4 +3,4 @@
 <p>Vartotojo vardas: {{userName}}</p>
 <p>Slaptažodis: {{password}}</p>
 
-<p>{{siteUrl}}</p>
+<p><a href="{{siteUrl}}">{{siteUrl}}</a></p>

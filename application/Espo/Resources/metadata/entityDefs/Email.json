@@ -150,7 +150,8 @@
             "type": "varchar",
             "maxLength": 255,
             "readOnly": true,
-            "index": true
+            "index": true,
+            "textFilterDisabled": true
         },
         "messageIdInternal": {
             "type": "varchar",

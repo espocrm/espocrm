@@ -160,7 +160,7 @@ Espo.define('date-time', [], function () {
         },
 
         toMoment: function (string) {
-            var m = moment.utc(string, this.internalDateTimeFormat);
+            var m = moment.utc(string, this.internalDateTimeFullFormat);
             if (this.timeZone) {
                 m = m.tz(this.timeZone);
             }
@@ -261,4 +261,3 @@ Espo.define('date-time', [], function () {
     return DateTime;
 
 });
-

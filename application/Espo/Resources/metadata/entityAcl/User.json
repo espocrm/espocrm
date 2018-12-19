@@ -1,0 +1,67 @@
+{
+    "fields": {
+        "userName": {
+            "nonAdminReadOnly": true
+        },
+        "apiKey": {
+            "onlyAdmin": true,
+            "readOnly": true,
+            "nonAdminReadOnly": true
+        },
+        "password": {
+            "internal": true,
+            "nonAdminReadOnly": true
+        },
+        "authMethod": {
+            "onlyAdmin": true
+        },
+        "secretKey": {
+            "readOnly": true,
+            "onlyAdmin": true
+        },
+        "isAdmin": {
+            "readOnly": true
+        },
+        "isSuperAdmin": {
+            "readOnly": true
+        },
+        "isActive": {
+            "nonAdminReadOnly": true
+        },
+        "isPortalUser": {
+            "nonAdminReadOnly": true
+        },
+        "teams": {
+            "nonAdminReadOnly": true
+        },
+        "roles": {
+            "nonAdminReadOnly": true
+        },
+        "portals": {
+            "nonAdminReadOnly": true
+        },
+        "portalRoles": {
+            "nonAdminReadOnly": true
+        },
+        "contact": {
+            "nonAdminReadOnly": true
+        },
+        "accounts": {
+            "nonAdminReadOnly": true
+        },
+        "type": {
+            "nonAdminReadOnly": true
+        }
+    },
+    "links": {
+        "teams": {
+            "nonAdminReadOnly": true
+        },
+        "roles": {
+            "onlyAdmin": true
+        },
+        "preferences": {
+            "onlyAdmin": true
+        }
+    }
+}

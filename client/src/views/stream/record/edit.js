@@ -117,10 +117,10 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.seed = this.model.clone();
 
             if (this.options.interactiveMode) {
-                this.events['focus textarea[name="post"]'] = function (e) {
+                this.events['focus textarea[data-name="post"]'] = function (e) {
                     this.enablePostingMode();
                 };
-                this.events['keypress textarea[name="post"]'] = function (e) {
+                this.events['keypress textarea[data-name="post"]'] = function (e) {
                     if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
                         this.post();
                     } else if (e.keyCode == 9) {

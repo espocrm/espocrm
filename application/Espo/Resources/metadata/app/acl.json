@@ -73,7 +73,11 @@
             },
             "User": {
                 "password": false,
-                "passwordConfirm": false
+                "passwordConfirm": false,
+                "authMethod": false,
+                "apiKey": false,
+                "secretKey": false,
+                "token": false
             }
         }
     },

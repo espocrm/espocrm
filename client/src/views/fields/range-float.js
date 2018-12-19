@@ -38,7 +38,7 @@ Espo.define('views/fields/range-float', ['views/fields/range-int', 'views/fields
             var validate = function (name) {
                 if (isNaN(this.model.get(name))) {
                     var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
-                    this.showValidationMessage(msg, '[name="'+name+'"]');
+                    this.showValidationMessage(msg, '[data-name="'+name+'"]');
                     return true;
                 }
             }.bind(this);

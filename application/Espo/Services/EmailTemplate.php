@@ -154,13 +154,13 @@ class EmailTemplate extends Record
             }
         }
 
-        return array(
+        return [
             'subject' => $subject,
             'body' => $body,
             'attachmentsIds' => $attachmentsIds,
             'attachmentsNames' => $attachmentsNames,
             'isHtml' => $emailTemplate->get('isHtml')
-        );
+        ];
     }
 
     public function parse($id, array $params = array(), $copyAttachments = false)
@@ -179,8 +179,16 @@ class EmailTemplate extends Record
 
         if ($skipAcl) {
             $forbiddenAttributeList = [];
+            $forbiddenLinkList = [];
         } else {
             $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+
+            $forbiddenAttributeList = array_merge(
+                $forbiddenAttributeList,
+                $this->getAcl()->getScopeRestrictedAttributeList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin'])
+            );
+
+            $forbiddenLinkList = $this->getAcl()->getScopeRestrictedLinkList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']);
         }
 
         foreach ($fieldList as $field) {
@@ -231,6 +239,7 @@ class EmailTemplate extends Record
         if (!$skipLinks) {
             $relationDefs = $entity->getRelations();
             foreach ($entity->getRelationList() as $relation) {
+                if (in_array($relation, $forbiddenLinkList)) continue;
                 if (
                     !empty($relationDefs[$relation]['type'])
                     &&

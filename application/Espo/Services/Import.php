@@ -548,7 +548,11 @@ class Import extends \Espo\Services\Record
         $relDefs = $entity->getRelations();
 
         $phoneFieldList = [];
-        if (!empty($attributeDefs['phoneNumber']) && !empty($attributeDefs['phoneNumber']['type']) && $attributeDefs['phoneNumber']['type'] == 'phone') {
+        if (
+            $entity->hasAttribute('phoneNumber')
+            &&
+            $entity->getAttributeParam('phoneNumber', 'fieldType') === 'phone'
+        ) {
             $typeList = $this->getMetadata()->get('entityDefs.' . $scope . '.fields.phoneNumber.typeList', []);
             foreach ($typeList as $type) {
                 $attr = str_replace(' ', '_', ucfirst($type));

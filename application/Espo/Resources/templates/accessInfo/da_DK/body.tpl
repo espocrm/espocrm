@@ -3,4 +3,4 @@
 <p>Brugernavn: {{userName}}</p>
 <p>Kodeord: {{password}}</p>
 
-<p>{{siteUrl}}</p>
+<p><a href="{{siteUrl}}">{{siteUrl}}</a></p>

@@ -126,11 +126,23 @@ class Utils
 
     public static function dropTables(array $options)
     {
-        $db = new \PDO('mysql:dbname='.$options['dbname'].';host='.$options['host'], $options['user'], $options['password']);
+        $pdo = static::createPdoConnection($options);
 
-        $result = $db->query("show tables");
+        $result = $pdo->query("show tables");
         while ($row = $result->fetch(\PDO::FETCH_NUM)) {
-            $db->query("DROP TABLE IF EXISTS `".$row[0]."`;");
+            $pdo->query("DROP TABLE IF EXISTS `".$row[0]."`;");
         }
+    }
+
+    public static function createPdoConnection(array $params)
+    {
+        $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
+        $port = empty($params['port']) ? '' : ';port=' . $params['port'];
+        $dbname = empty($params['dbname']) ? '' : ';dbname=' . $params['dbname'];
+
+        $dsn = $platform . ':host='.$params['host'].$port.$dbname;
+        $dbh = new \PDO($dsn, $params['user'], $params['password']);
+
+        return $dbh;
     }
 }

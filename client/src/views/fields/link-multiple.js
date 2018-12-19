@@ -48,8 +48,6 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         foreignScope: null,
 
-        AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
-
         autocompleteDisabled: false,
 
         selectRecordsView: 'views/modals/select-records',
@@ -170,8 +168,15 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }, this.events || {});
         },
 
+        getAutocompleteMaxCount: function () {
+            if (this.autocompleteMaxCount) {
+                return this.autocompleteMaxCount;
+            }
+            return this.getConfig().get('recordsPerPage');
+        },
+
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?orderBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+            var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {
@@ -197,6 +202,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         minChars: 1,
                         paramName: 'q',
+                        triggerSelectOnValidInput: false,
                         formatResult: function (suggestion) {
                             return suggestion.name;
                         },
@@ -220,7 +226,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                             this.$element.val('');
                         }.bind(this)
                     });
-
+                    this.$element.attr('autocomplete', 'espo-' + this.name);
 
                     this.once('render', function () {
                         $element.autocomplete('dispose');

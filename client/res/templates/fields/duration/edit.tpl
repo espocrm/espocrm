@@ -1,4 +1,3 @@
-<select name="{{name}}" class="form-control main-element"> 
+<select data-name="{{name}}" class="form-control main-element">
     {{{durationOptions}}}
 </select>
-

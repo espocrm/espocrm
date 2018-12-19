@@ -44,10 +44,10 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
         },
 
         events: {
-            'change [name="variables"]': function () {
-                var attribute = this.$el.find('[name="variables"]').val();
+            'change [data-name="variables"]': function () {
+                var attribute = this.$el.find('[data-name="variables"]').val();
 
-                var $copy = this.$el.find('[name="copy"]');
+                var $copy = this.$el.find('[data-name="copy"]');
                 if (attribute !== '') {
                     if (this.textVariables[attribute]) {
                         $copy.val('{{{' + attribute + '}}}');

@@ -109,14 +109,18 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $this->afterRunAction();
 
-        $this->clearCache();
+        $this->finalize();
 
         /* delete unziped files */
         $this->deletePackageFiles();
 
-        $this->finalize();
+        if ($this->getManifestParam('skipBackup')) {
+            $this->getFileManager()->removeInDir($this->getPath('backupPath'), true);
+        }
 
         $GLOBALS['log']->debug('Installation process ['.$processId.']: end run.');
+
+        $this->clearCache();
     }
 
     protected function restoreFiles()

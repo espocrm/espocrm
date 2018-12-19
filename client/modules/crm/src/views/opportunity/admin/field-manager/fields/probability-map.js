@@ -54,7 +54,7 @@ Espo.define('crm:views/opportunity/admin/field-manager/fields/probability-map', 
             };
 
             (this.model.get('options') || []).forEach(function (item) {
-                data.probabilityMap[item] = parseInt(this.$el.find('input[name="'+item+'"]').val());
+                data.probabilityMap[item] = parseInt(this.$el.find('input[data-name="'+item+'"]').val());
 
             }, this);
 

@@ -47,41 +47,6 @@ class User extends Record
         $this->addDependency('container');
     }
 
-    protected $internalAttributeList = ['password'];
-
-    protected $readOnlyAttributeList = [
-        'apiKey',
-        'secretKey',
-        'isAdmin',
-        'isSuperAdmin'
-    ];
-
-    protected $nonAdminReadOnlyAttributeList = [
-        'userName',
-        'isActive',
-        'isAdmin',
-        'isPortalUser',
-        'teamsIds',
-        'teamsColumns',
-        'teamsNames',
-        'rolesIds',
-        'rolesNames',
-        'password',
-        'portalsIds',
-        'portalRolesIds',
-        'contactId',
-        'accountsIds',
-        'type',
-        'apiKey',
-        'secretKey'
-    ];
-
-    protected $onlyAdminAttributeList = [
-        'authMethod',
-        'apiKey',
-        'secretKey'
-    ];
-
     protected $mandatorySelectAttributeList = [
         'isPortalUser',
         'isActive',
@@ -590,13 +555,14 @@ class User extends Record
         $email->set([
             'subject' => $subject,
             'body' => $body,
-            'to' => $emailAddress
+            'to' => $emailAddress,
+            'isSystem' => true
         ]);
 
         if ($this->getConfig()->get('smtpServer')) {
             $this->getMailSender()->useGlobal();
         } else {
-            $this->getMailSender()->useSmtp(array(
+            $this->getMailSender()->useSmtp([
                 'server' => $this->getConfig()->get('internalSmtpServer'),
                 'port' => $this->getConfig()->get('internalSmtpPort'),
                 'auth' => $this->getConfig()->get('internalSmtpAuth'),
@@ -604,7 +570,7 @@ class User extends Record
                 'password' => $this->getConfig()->get('internalSmtpPassword'),
                 'security' => $this->getConfig()->get('internalSmtpSecurity'),
                 'fromAddress' => $this->getConfig()->get('internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
-            ));
+            ]);
         }
 
         $this->getMailSender()->send($email);

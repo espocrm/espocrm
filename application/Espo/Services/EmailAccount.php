@@ -37,10 +37,6 @@ use \Zend\Mail\Storage;
 
 class EmailAccount extends Record
 {
-    protected $internalAttributeList = ['password', 'smtpPassword'];
-
-    protected $readOnlyAttributeList = ['fetchData'];
-
     const PORTION_LIMIT = 10;
 
     protected function init()

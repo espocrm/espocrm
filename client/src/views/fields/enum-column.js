@@ -33,7 +33,7 @@ Espo.define('views/fields/enum-column', 'views/fields/enum', function (Dep) {
         searchTypeList: ['anyOf', 'noneOf'],
 
         fetchSearch: function () {
-            var type = this.$el.find('[name="'+this.name+'-type"]').val();
+            var type = this.fetchSearchType();
 
             var list = this.$element.val().split(':,:');
             if (list.length === 1 && list[0] == '') {
@@ -93,4 +93,3 @@ Espo.define('views/fields/enum-column', 'views/fields/enum', function (Dep) {
 
     });
 });
-
