@@ -126,12 +126,6 @@ Espo.define('view', [], function () {
             }
         },
 
-        getStorage: function () {
-            if (this._helper) {
-                return this._helper.storage;
-            }
-        },
-
         getDateTime: function () {
             if (this._helper) {
                 return this._helper.dateTime;
