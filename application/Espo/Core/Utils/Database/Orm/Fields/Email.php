@@ -38,6 +38,7 @@ class Email extends Base
                 'fields' => array(
                     $fieldName => array(
                         'select' => 'emailAddresses.name',
+                        'fieldType' => 'email',
                         'where' =>
                         array (
                             'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (

@@ -55,7 +55,7 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
             var html = '' +
             '<div class="list-group-item link-with-role form-inline" data-value="' + valueInternal + '">' +
                 '<div class="pull-left item-content" style="width: 92%; display: inline-block;">' +
-                    '<input name="translatedValue" data-value="' + valueInternal + '" class="role form-control input-sm pull-right" value="'+translatedValue+'">' +
+                    '<input data-name="translatedValue" data-value="' + valueInternal + '" class="role form-control input-sm pull-right" value="'+translatedValue+'">' +
                     '<div class="item-text">' + valueSanitized + '</div>' +
                 '</div>' +
                 '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
@@ -79,7 +79,7 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
             (data[this.name] || []).forEach(function (value) {
                 var valueSanitized = this.getHelper().stripTags(value);
                 var valueInternal = valueSanitized.replace(/"/g, '\\"');
-                var translatedValue = this.$el.find('input[name="translatedValue"][data-value="'+valueInternal+'"]').val() || value;
+                var translatedValue = this.$el.find('input[data-name="translatedValue"][data-value="'+valueInternal+'"]').val() || value;
 
                 translatedValue = translatedValue.toString();
 

@@ -18,7 +18,8 @@
         },
         "executeTime": {
             "type": "datetime",
-            "required": true
+            "required": true,
+            "hasSeconds": true
         },
         "number": {
             "type": "int",
@@ -54,8 +55,13 @@
             "maxLength": 36,
             "default": null
         },
+        "startedAt": {
+            "type": "datetime",
+            "hasSeconds": true
+        },
         "executedAt": {
-            "type": "datetime"
+            "type": "datetime",
+            "hasSeconds": true
         },
         "pid": {
             "type": "int"
@@ -76,11 +82,13 @@
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "hasSeconds": true
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "hasSeconds": true
         }
     },
     "links": {

@@ -1,9 +1,9 @@
 {{#if list.length}}
-    <select name="{{name}}" class="form-control main-element">
+    <select data-name="{{name}}" class="form-control main-element">
     {{#each list}}
         <option value="{{./this}}">{{./this}}</optopn>
-    {{/each}}    
+    {{/each}}
 </select>
 {{else}}
-    {{{noSmtpMessage}}}    
+    {{{noSmtpMessage}}}
 {{/if}}

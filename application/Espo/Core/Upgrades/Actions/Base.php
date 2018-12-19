@@ -583,6 +583,17 @@ abstract class Base
         return true;
     }
 
+    protected function getManifestParam($name, $default = null)
+    {
+        $manifest = $this->getManifest();
+
+        if (array_key_exists($name, $manifest)) {
+            return $manifest[$name];
+        }
+
+        return $default;
+    }
+
     /**
      * Unzip a package archieve
      *

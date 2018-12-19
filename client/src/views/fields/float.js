@@ -90,7 +90,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
         },
 
         fetch: function () {
-            var value = this.$el.find('[name="'+this.name+'"]').val();
+            var value = this.$element.val();
             value = this.parse(value);
 
             var data = {};
@@ -99,4 +99,3 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
         },
     });
 });
-

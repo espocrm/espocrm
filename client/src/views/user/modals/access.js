@@ -73,7 +73,7 @@ Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
                         delete scopeData[field];
                     }
 
-                    if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'readOnly'])) {
+                    if (scopeData[field] && this.getMetadata().get(['entityDefs', scope, 'fields', field, 'readOnly'])) {
                         if (scopeData[field].edit === 'no' && scopeData[field].read === 'yes') {
                             delete scopeData[field];
                         }

@@ -1,1 +1,1 @@
-<p>Você pode atualizar sua senha usando este link {{link}}. Esta URL é única e expirará em breve.</p>
+<p>Você pode atualizar sua senha usando este link <a href="{{link}}">{{link}}</a>. Esta URL é única e expirará em breve.</p>

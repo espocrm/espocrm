@@ -133,5 +133,19 @@ class Acl
     {
         return $this->getAclManager()->checkAssignmentPermission($this->getUser(), $target);
     }
-}
 
+    public function getScopeRestrictedFieldList($scope, $type)
+    {
+        return $this->getAclManager()->getScopeRestrictedFieldList($scope, $type);
+    }
+
+    public function getScopeRestrictedAttributeList($scope, $type)
+    {
+        return $this->getAclManager()->getScopeRestrictedAttributeList($scope, $type);
+    }
+
+    public function getScopeRestrictedLinkList($scope, $type)
+    {
+        return $this->getAclManager()->getScopeRestrictedLinkList($scope, $type);
+    }
+}

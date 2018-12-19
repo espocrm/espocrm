@@ -93,8 +93,8 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
-                this.$from = this.$el.find('[name="' + this.fromField + '"]');
-                this.$to = this.$el.find('[name="' + this.toField + '"]');
+                this.$from = this.$el.find('[data-name="' + this.fromField + '"]');
+                this.$to = this.$el.find('[data-name="' + this.toField + '"]');
 
                 this.$from.on('change', function () {
                     this.trigger('change');
@@ -110,7 +110,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === null) {
                         var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
-                        this.showValidationMessage(msg, '[name="'+name+'"]');
+                        this.showValidationMessage(msg, '[data-name="'+name+'"]');
                         return true;
                     }
                 }
@@ -126,7 +126,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             var validate = function (name) {
                 if (isNaN(this.model.get(name))) {
                     var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
-                    this.showValidationMessage(msg, '[name="'+name+'"]');
+                    this.showValidationMessage(msg, '[data-name="'+name+'"]');
                     return true;
                 }
             }.bind(this);
@@ -153,7 +153,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
                         var msg = this.translate('fieldShouldBeBetween', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name))
                                                                                     .replace('{min}', minValue)
                                                                                     .replace('{max}', maxValue);
-                        this.showValidationMessage(msg, '[name="'+name+'"]');
+                        this.showValidationMessage(msg, '[data-name="'+name+'"]');
                         return true;
                     }
                 } else {
@@ -161,14 +161,14 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
                         if (value < minValue) {
                             var msg = this.translate('fieldShouldBeLess', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name))
                                                                                      .replace('{value}', minValue);
-                            this.showValidationMessage(msg, '[name="'+name+'"]');
+                            this.showValidationMessage(msg, '[data-name="'+name+'"]');
                             return true;
                         }
                     } else if (maxValue !== null) {
                         if (value > maxValue) {
                             var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name))
                                                                                         .replace('{value}', maxValue);
-                            this.showValidationMessage(msg, '[name="'+name+'"]');
+                            this.showValidationMessage(msg, '[data-name="'+name+'"]');
                             return true;
                         }
                     }
@@ -190,7 +190,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
                     var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.translate(this.toField, 'fields', this.model.name))
                                                                             .replace('{value}', this.translate(this.fromField, 'fields', this.model.name));
 
-                    this.showValidationMessage(msg, '[name="'+this.fromField+'"]');
+                    this.showValidationMessage(msg, '[data-name="'+this.fromField+'"]');
                     return true;
                 }
             }

@@ -91,6 +91,10 @@
     }
 }
 
+.text-primary {
+    color: @state-primary-text;
+}
+
 .text-soft {
     color: @gray-soft;
 }
@@ -544,7 +548,7 @@ table.table > thead th {
     max-width: 100%;
 }
 
-#global-search-input {
+input.global-search-input {
     padding-right: 10px;
 }
 
@@ -690,6 +694,23 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .list-container .pagination {
     margin: 0;
+}
+
+.radio-container {
+    > label {
+        margin-right: 8px;
+        margin-bottom: 0;
+        font-weight: normal;
+        font-size: 15px;
+        height: 20px;
+
+        input[type="radio"] {
+            vertical-align: middle;
+            margin-top: -3px;
+        }
+    }
+    margin-bottom: 10px;
+    user-select: none;
 }
 
 .floated-row > div  {
@@ -1745,7 +1766,7 @@ body > footer > p a:visited {
     top: -2px;
 }
 
-.header-breadcrumbs .color-icon {
+.header-breadcrumbs .fas.color-icon {
     font-size: 44%;
     left: 0px;
     margin-right: 2px;
@@ -1753,7 +1774,7 @@ body > footer > p a:visited {
     position: relative;
 }
 
-span.color-icon {
+span.fas.color-icon {
     font-size: 50%;
     top: -2px;
     left: 1px;
@@ -1762,16 +1783,11 @@ span.color-icon {
     position: relative;
 }
 
-.message > span.color-icon,
-.field span.color-icon {
-
-}
-
 #global-search-panel .panel-body .cell > .color-icon {
     margin-right: 5px;
 }
 
-h4.panel-title span.color-icon {
+h4.panel-title span.fas.color-icon {
     font-size: 50%;
     left: 0px;
     position: relative;
@@ -1898,6 +1914,20 @@ stream-head-text-container .span {
 .stream-subject-container,
 {
     padding: 2px 0 5px 26px;
+}
+
+.stream-details-container > ul {
+    padding-left: 0px;
+    list-style-type: none;
+
+
+    > li {
+        margin-bottom: 4px;
+    }
+
+    > li:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .link-container .list-group-item {
@@ -2385,6 +2415,10 @@ pre > code {
     font-style: normal;
 }
 
+.inline-block-child-div > div {
+    display: inline-block;
+}
+
 .table-admin-panel tr > td:first-child {
     width: 200px;
 }
@@ -2418,7 +2452,7 @@ pre > code {
 }
 
 .folders-container > .list-group-side > .list-group-item,
-.categories-container > .list-expanded,
+.categories-container div.root-item,
 .categories-container .list-group-tree > .list-group-item > .cell {
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -2503,7 +2537,7 @@ pre > code {
         margin-right: 10px;
     }
 
-    #global-search-input {
+    input.global-search-input {
         width: 100%;
     }
 

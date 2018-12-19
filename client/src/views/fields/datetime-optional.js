@@ -87,8 +87,8 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
         fetch: function () {
             var data = {};
 
-            var date = this.$el.find('[name="' + this.name + '"]').val();
-            var time = this.$el.find('[name="' + this.name + '-time"]').val();
+            var date = this.$date.val();
+            var time = this.$time.val();
 
             var value = null;
             if (time != this.noneOption && time != '') {

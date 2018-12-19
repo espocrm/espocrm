@@ -41,7 +41,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         layoutName: null,
 
         events: _.extend({
-            'focus textarea[name="post"]': function (e) {
+            'focus textarea[data-name="post"]': function (e) {
                 this.enablePostingMode();
             },
             'click button.post': function () {
@@ -59,7 +59,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }
 
             },
-            'keypress textarea[name="post"]': function (e) {
+            'keypress textarea[data-name="post"]': function (e) {
                 if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
                     this.post();
                 } else if (e.keyCode == 9) {
@@ -224,7 +224,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            this.$textarea = this.$el.find('textarea[name="post"]');
+            this.$textarea = this.$el.find('textarea[data-name="post"]');
             this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
 

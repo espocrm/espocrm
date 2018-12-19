@@ -199,8 +199,8 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
                     return a.localeCompare(b);
                 }, this);
 
-                var $entityType = this.$entityType = this.$el.find('[name="entityType"]');
-                var $field = this.$field = this.$el.find('[name="field"]');
+                var $entityType = this.$entityType = this.$el.find('[data-name="entityType"]');
+                var $field = this.$field = this.$el.find('[data-name="field"]');
 
                 $entityType.on('change', function () {
                     this.changeEntityType();

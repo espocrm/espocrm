@@ -30,7 +30,7 @@
         "zbateson/mail-mime-parser": "0.4.*",
         "phpoffice/phpexcel": "^1.8",
         "phpoffice/phpspreadsheet": "^1.1",
-        "spatie/async": "0.0.4",
+        "spatie/async": "dev-for-espocrm",
         "symfony/process": "4.1.7"
     },
     "autoload": {
@@ -39,5 +39,11 @@
             "tests": "",
             "Espo\\Custom": "custom/"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/yurikuzn/async.git"
+        }
+    ]
 }

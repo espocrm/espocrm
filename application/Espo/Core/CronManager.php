@@ -53,6 +53,15 @@ class CronManager
 
     private $useProcessPool = false;
 
+    private $asSoonAsPossibleSchedulingList = [
+        '*',
+        '* *',
+        '* * *',
+        '* * * *',
+        '* * * * *',
+        '* * * * * *'
+    ];
+
     const PENDING = 'Pending';
 
     const READY = 'Ready';
@@ -185,7 +194,7 @@ class CronManager
 
         $this->setLastRunTime(time());
 
-        $this->getCronJobUtil()->markFailedJobs();
+        $this->getCronJobUtil()->markJobsFailed();
         $this->getCronJobUtil()->updateFailedJobAttempts();
         $this->createJobsFromScheduledJobs();
         $this->getCronJobUtil()->removePendingJobDuplicates();
@@ -231,6 +240,9 @@ class CronManager
                 if (!$noLock) $this->unlockTables();
                 continue;
             }
+
+            $job->set('startedAt', date('Y-m-d H:i:s'));
+
             if ($useProcessPool) {
                 $job->set('status', self::READY);
             } else {
@@ -274,6 +286,10 @@ class CronManager
 
         if ($job->get('status') !== self::READY) {
             throw new Error("Can't run job {$id} with no status Ready.");
+        }
+
+        if (!$job->get('startedAt')) {
+            $job->set('startedAt', date('Y-m-d H:i:s'));
         }
 
         $job->set('status', self::RUNNING);
@@ -388,7 +404,7 @@ class CronManager
         $createdJobIdList = [];
         foreach ($activeScheduledJobList as $scheduledJob) {
             $scheduling = $scheduledJob->get('scheduling');
-            $asSoonAsPossible = $scheduling === '* * * * *';
+            $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
 
             if ($asSoonAsPossible) {
                 $nextDate = date('Y-m-d H:i:s');

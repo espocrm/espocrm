@@ -50,7 +50,7 @@ class ControllerUtil
         }
 
         if ($request->get('q')) {
-            $params['q'] = $request->get('q');
+            $params['q'] = trim($request->get('q'));
         }
         if ($request->get('textFilter')) {
             $params['textFilter'] = $request->get('textFilter');

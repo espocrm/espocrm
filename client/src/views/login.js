@@ -76,21 +76,27 @@ Espo.define('views/login', 'view', function (Dep) {
                 var $submit = this.$el.find('#btn-login');
 
                 if (userName == '') {
+
+                    this.isPopoverDestroyed = false;
                     var $el = $("#field-userName");
 
                     var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
+
                     $el.popover({
                         placement: 'bottom',
+                        container: 'body',
                         content: message,
                         trigger: 'manual',
                     }).popover('show');
 
                     var $cell = $el.closest('.form-group');
                     $cell.addClass('has-error');
-                    this.$el.one('mousedown click', function () {
+                    $el.one('mousedown click', function () {
                         $cell.removeClass('has-error');
+                        if (this.isPopoverDestroyed) return;
                         $el.popover('destroy');
-                    });
+                        this.isPopoverDestroyed = true;
+                    }.bind(this));
                     return;
                 }
 

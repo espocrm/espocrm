@@ -4,5 +4,5 @@
 <p>Password: {{password}}</p>
 
 {{#each siteUrlList}}
-<p>{{./this}}</p>
+<p><a href="{{./this}}">{{./this}}</a></p>
 {{/each}}

@@ -223,8 +223,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         },
 
         fetchSearch: function () {
-
-            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
+            var type = this.fetchSearchType() || 'startsWith';
 
             var data;
 

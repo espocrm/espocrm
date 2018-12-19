@@ -48,8 +48,6 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         foreignScopeList: null,
 
-        AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
-
         autocompleteDisabled: false,
 
         selectRecordsView: 'views/modals/select-records',
@@ -146,12 +144,15 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     }, this);
                 });
                 this.addActionHandler('clearLink', function () {
+                    if (this.foreignScopeList.length) {
+                        this.$elementType.val(this.foreignScopeList[0]);
+                    }
                     this.$elementName.val('');
                     this.$elementId.val('');
                     this.trigger('change');
                 });
 
-                this.events['change select[name="' + this.typeName + '"]'] = function (e) {
+                this.events['change select[data-name="'+this.typeName+'"]'] = function (e) {
                     this.foreignScope = e.currentTarget.value;
                     this.$elementName.val('');
                     this.$elementId.val('');
@@ -197,8 +198,15 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             this.forceSelectAllAttributes;
         },
 
+        getAutocompleteMaxCount: function () {
+            if (this.autocompleteMaxCount) {
+                return this.autocompleteMaxCount;
+            }
+            return this.getConfig().get('recordsPerPage');
+        },
+
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?orderBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+            var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {
@@ -213,9 +221,9 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
-                this.$elementId = this.$el.find('input[name="' + this.idName + '"]');
-                this.$elementName = this.$el.find('input[name="' + this.nameName + '"]');
-                this.$elementType = this.$el.find('select[name="' + this.typeName + '"]');
+                this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
+                this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
+                this.$elementType = this.$el.find('select[data-name="' + this.typeName + '"]');
 
                 this.$elementName.on('change', function () {
                     if (this.$elementName.val() == '') {
@@ -250,6 +258,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         minChars: 1,
                         paramName: 'q',
+                        triggerSelectOnValidInput: false,
                         formatResult: function (suggestion) {
                             return suggestion.name;
                         },
@@ -276,6 +285,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                             }, this);
                         }.bind(this)
                     });
+                    this.$elementName.attr('autocomplete', 'espo-' + this.name);
                 }
 
                 var $elementName = this.$elementName;

@@ -1,3 +1,2 @@
 
-<input name="{{name}}" type="text">
-
+<input data-name="{{name}}" type="text">

@@ -46,8 +46,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         foreignScope: null,
 
-        AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
-
         selectRecordsView: 'views/modals/select-records',
 
         autocompleteDisabled: false,
@@ -215,8 +213,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             }
         },
 
+        getAutocompleteMaxCount: function () {
+            if (this.autocompleteMaxCount) {
+                return this.autocompleteMaxCount;
+            }
+            return this.getConfig().get('recordsPerPage');
+        },
+
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?orderBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+            var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {
@@ -231,8 +236,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
-                this.$elementId = this.$el.find('input[name="' + this.idName + '"]');
-                this.$elementName = this.$el.find('input[name="' + this.nameName + '"]');
+                this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
+                this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
 
                 this.$elementName.on('change', function () {
                     if (this.$elementName.val() == '') {
@@ -263,6 +268,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         paramName: 'q',
                         minChars: 1,
+                        triggerSelectOnValidInput: false,
                         autoSelectFirst: true,
                            formatResult: function (suggestion) {
                             return suggestion.name;
@@ -291,6 +297,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         }.bind(this)
                     });
 
+                    this.$elementName.attr('autocomplete', 'espo-' + this.name);
+
                     this.once('render', function () {
                         $elementName.autocomplete('dispose');
                     }, this);
@@ -308,7 +316,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }.bind(this),
                             minChars: 1,
                             paramName: 'q',
-                               formatResult: function (suggestion) {
+                            formatResult: function (suggestion) {
                                 return suggestion.name;
                             },
                             transformResult: function (response) {
@@ -331,6 +339,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                 $elementOneOf.val('');
                             }.bind(this)
                         });
+
+                        $elementOneOf.attr('autocomplete', 'espo-' + this.name);
 
 
                         this.once('render', function () {
@@ -410,15 +420,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         fetch: function () {
             var data = {};
-            data[this.nameName] = this.$el.find('[name="'+this.nameName+'"]').val() || null;
-            data[this.idName] = this.$el.find('[name="'+this.idName+'"]').val() || null;
+            data[this.nameName] = this.$el.find('[data-name="'+this.nameName+'"]').val() || null;
+            data[this.idName] = this.$el.find('[data-name="'+this.idName+'"]').val() || null;
 
             return data;
         },
 
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
-            var value = this.$el.find('[name="' + this.idName + '"]').val();
+            var value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
             if (type == 'isEmpty') {
                 var data = {
@@ -487,7 +497,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 if (!value) {
                     return false;
                 }
-                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
+                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'or',
                     value: [
@@ -512,7 +522,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 if (!value) {
                     return false;
                 }
-                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
+                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'notEquals',
                     attribute: this.idName,
@@ -528,7 +538,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 if (!value) {
                     return false;
                 }
-                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
+                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'equals',
                     attribute: this.idName,

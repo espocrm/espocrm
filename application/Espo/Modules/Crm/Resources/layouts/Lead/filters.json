@@ -5,13 +5,14 @@
     "createdBy",
     "modifiedAt",
     "address",
+    "accountName",
     "campaign",
     "emailAddress",
+    "phoneNumber",
     "status",
     "source",
     "opportunityAmountConverted",
     "industry",
-    "phoneNumber",
     "targetLists",
     "createdAccount"
 ]

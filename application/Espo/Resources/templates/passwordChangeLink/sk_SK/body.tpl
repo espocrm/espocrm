@@ -1,1 +1,1 @@
-<p>Svoje heslo môžete zmeniť použitím tohoto odkazu {{link}}. Táto jedinečná URL čoskoro expiruje.</p>
+<p>Svoje heslo môžete zmeniť použitím tohoto odkazu <a href="{{link}}">{{link}}</a>. Táto jedinečná URL čoskoro expiruje.</p>

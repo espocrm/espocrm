@@ -108,9 +108,11 @@ class ServiceFactory
             foreach ($dependencies as $name) {
                 $service->inject($name, $this->container->get($name));
             }
+            if (method_exists($service, 'prepare')) {
+                $service->prepare();
+            }
             return $service;
         }
         throw new Error("Class '$className' does not exist.");
     }
 }
-

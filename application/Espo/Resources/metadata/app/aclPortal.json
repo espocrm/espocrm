@@ -87,6 +87,11 @@
                 "emailAccounts": false
             },
             "User": {
+                "password": false,
+                "authMethod": false,
+                "apiKey": false,
+                "secretKey": false,
+                "token": false,
                 "isAdmin": false,
                 "type": false,
                 "contact": false,

@@ -58,7 +58,7 @@ Espo.define('views/fields/range-currency', 'views/fields/range-float', function 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
-                this.$currency = this.$el.find('[name="' + this.currencyField + '"]');
+                this.$currency = this.$el.find('[data-name="' + this.currencyField + '"]');
             }
         },
 
