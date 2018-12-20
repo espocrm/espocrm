@@ -56,6 +56,10 @@
             "type": "enum",
             "notStorable": true,
             "options": ["None", "Accepted", "Tentative", "Declined"],
+            "style": {
+                "Accepted": "success",
+                "Declined": "danger"
+            },
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
             "where": {
