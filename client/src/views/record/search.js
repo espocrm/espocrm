@@ -523,7 +523,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             this.$el.find('ul.filter-menu a.preset span').remove();
 
-            var filterLabel = this.translate('All');
+            var filterLabel = this.translate('all', 'presetFilters', this.entityType);
             var filterStyle = 'default';
 
             if (!presetName && primary) {

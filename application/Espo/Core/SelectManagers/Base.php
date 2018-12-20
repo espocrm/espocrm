@@ -854,10 +854,12 @@ class Base
             case 'today':
                 $where['type'] = 'between';
                 $dt->setTime(0, 0, 0);
+                $dtTo = clone $dt;
+                $dtTo->modify('+1 day -1 second');
                 $dt->setTimezone(new \DateTimeZone('UTC'));
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
-                $dt->modify('+1 day -1 second');
-                $to = $dt->format($format);
+                $to = $dtTo->format($format);
                 $where['value'] = [$from, $to];
                 break;
             case 'past':
@@ -942,12 +944,13 @@ class Base
                 break;
             case 'on':
                 $where['type'] = 'between';
-
                 $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dtTo = clone $dt;
+                $dtTo->modify('+1 day -1 second');
                 $dt->setTimezone(new \DateTimeZone('UTC'));
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
-                $dt->modify('+1 day -1 second');
-                $to = $dt->format($format);
+                $to = $dtTo->format($format);
                 $where['value'] = [$from, $to];
                 break;
             case 'before':

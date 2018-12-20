@@ -52,6 +52,12 @@ The build will be created in the `build` directory.
 
 Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
 
+Branches:
+
+* hotfix/* – an upcoming maintenance release; fixes should be pushed to this branch;
+* master – an upcoming minor or major release; new features should be pushed to this branch;
+* stable – a last stable release.
+
 ### How to make a translation
 
 Build po file with command:
