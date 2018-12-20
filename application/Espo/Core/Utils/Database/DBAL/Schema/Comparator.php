@@ -28,12 +28,11 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\Schema;
-use Doctrine\DBAL\Schema\Column;
 
+use Doctrine\DBAL\Schema\Column;
 
 class Comparator extends \Doctrine\DBAL\Schema\Comparator
 {
-
     public function diffColumn(Column $column1, Column $column2)
     {
         $changedProperties = array();
@@ -77,6 +76,15 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
 
             if ($column1->getFixed() != $column2->getFixed()) {
                 $changedProperties[] = 'fixed';
+            }
+        }
+
+        if ($column1->getType() instanceof \Doctrine\DBAL\Types\TextType) {
+            $length1 = $column1->getLength() ?: 16777215/* mediumtext length*/;
+            $length2 = $column2->getLength() ?: 16777215;
+
+            if ($length2 > $length1) {
+                $changedProperties[] = 'length';
             }
         }
 

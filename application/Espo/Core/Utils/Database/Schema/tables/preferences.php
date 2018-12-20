@@ -47,7 +47,7 @@ return [
             ],
             'data' => [
                 'type' => 'text',
-                'dbType' => 'longtext',
+                'len' => 16777216,
             ]
         ]
     ],
