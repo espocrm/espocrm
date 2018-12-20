@@ -1042,8 +1042,6 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if ($seed->hasRelation('assignedUsers')) {
-            $selectManager->setDistinct(true, $selectParams);
-            $selectManager->addLeftJoin(['assignedUsers', 'assignedUsers'], $selectParams);
             $wherePart['assignedUsersMiddle.userId'] = $userId;
         }
 
@@ -1082,6 +1080,7 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if ($seed->hasRelation('assignedUsers')) {
+            $selectManager->setDistinct(true, $selectParams);
             $selectParams['leftJoins'][] = 'assignedUsers';
         }
 
