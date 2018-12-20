@@ -35,15 +35,45 @@
         display: none;
     }
 
-    .more-icon {
-        display: inline;
-    }
 
-    ul.tabs span.short-label {
-        display: none;
-    }
-    ul.tabs span.full-label {
-        display: inline;
+    ul.tabs {
+
+        span.full-label {
+            display: inline;
+        }
+
+        span.short-label > span {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+        }
+
+        .more-icon {
+            display: inline;
+        }
+
+        > li.more {
+            > ul > li > a {
+                padding-top: 9px;
+                padding-bottom: 9px;
+                height: 37px;
+
+                > span.full-label {
+                    padding-left: 30px;
+                    position: static;
+                }
+
+                > span.short-label {
+                    position: absolute;
+                }
+            }
+        }
+
+        > li span.short-label {
+            > span.short-label-text {
+                display: none;
+            }
+        }
     }
 
     .navbar-right {
@@ -76,6 +106,18 @@
             border-color: transparent;
         }
 
+        ul.tabs {
+            > li a > span.full-label {
+                position: static;
+                padding-left: 30px;
+                position: static;
+            }
+
+            > li a > span.short-label {
+                position: absolute;
+            }
+        }
+
         input.global-search-input {
             width: 100%;
         }
@@ -87,7 +129,26 @@
 }
 
 @media screen and (min-width: @screen-sm-min) {
+
     #navbar .navbar {
+
+        max-height: @navbar-height;
+        overflow: hidden;
+
+        ul.tabs {
+            > li > a > span.short-label {
+                display: block;
+                float: left;
+                position: relative;
+                left: -4px;
+                margin-right: 4px;
+            }
+
+            li.more > li > a {
+                padding-left: 10px;
+            }
+        }
+
         .more-icon {
             top: 1px;
             position: relative;
@@ -108,7 +169,7 @@
             border-left-width: @navbar-color-border-width;
             border-left-style: solid;
             border-color: transparent;
-            padding-left: 20px - @navbar-color-border-width;
+            padding-left: 15px - @navbar-color-border-width;
         }
     }
 }

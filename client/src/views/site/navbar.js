@@ -251,17 +251,27 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
             };
 
-            var tabCount = this.tabList.length;
             var $navbar = $('#navbar .navbar');
-            var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 43) + 1;
+
+            if (window.innerWidth >= smallScreenWidth) {
+                $tabs.children('li').each(function (i, li) {
+                    hideOneTab();
+                });
+                $navbar.css('max-height', 'unset');
+                $navbar.css('overflow', 'visible');
+            }
+
+            var navbarHeight = this.getThemeManager().getParam('navbarHeight') || 43;
+            var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 556;
+
+            var tabCount = this.tabList.length;
+
+            var navbarNeededHeight = navbarHeight + 1;
 
             $moreDd = $('#nav-more-tabs-dropdown');
             $moreLi = $moreDd.closest('li');
 
-            var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 556;
-
             var updateWidth = function () {
-                var windowWidth = $(window.document).width();
                 var windowWidth = window.innerWidth;
                 var moreWidth = $moreLi.width();
 
@@ -272,6 +282,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 if (windowWidth < smallScreenWidth) {
                     return;
                 }
+
+                $navbar.css('max-height', navbarHeight + 'px');
+                $navbar.css('overflow', 'hidden');
 
                 $more.parent().addClass('hidden');
 
@@ -293,6 +306,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                 }
 
+                $navbar.css('max-height', 'unset');
+                $navbar.css('overflow', 'visible');
+
                 if ($more.children().length > 0) {
                     $moreDropdown.removeClass('hidden');
                 }
@@ -306,6 +322,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }, 200);
                 } else {
                     if (!isRecursive) {
+                        updateWidth();
                         setTimeout(function () {
                             processUpdateWidth(true);
                         }, 10);
