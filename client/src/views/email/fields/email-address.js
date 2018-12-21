@@ -29,6 +29,13 @@ Espo.define('views/email/fields/email-address', ['views/fields/base'], function 
 
     return Dep.extend({
 
+        getAutocompleteMaxCount: function () {
+            if (this.autocompleteMaxCount) {
+                return this.autocompleteMaxCount;
+            }
+            return this.getConfig().get('recordsPerPage');
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -37,7 +44,7 @@ Espo.define('views/email/fields/email-address', ['views/fields/base'], function 
             if (this.mode == 'search') {
                 this.$input.autocomplete({
                     serviceUrl: function (q) {
-                        return 'EmailAddress/action/searchInAddressBook?limit=5';
+                        return 'EmailAddress/action/searchInAddressBook?maxSize=' + this.getAutocompleteMaxCount();
                     }.bind(this),
                     paramName: 'q',
                     minChars: 1,

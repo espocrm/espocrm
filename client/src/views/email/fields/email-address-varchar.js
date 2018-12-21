@@ -87,6 +87,13 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             }
         },
 
+        getAutocompleteMaxCount: function () {
+            if (this.autocompleteMaxCount) {
+                return this.autocompleteMaxCount;
+            }
+            return this.getConfig().get('recordsPerPage');
+        },
+
         parseNameFromStringAddress: function (s) {
             return From.prototype.parseNameFromStringAddress.call(this, s);
         },
@@ -143,7 +150,7 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
 
                 this.$input.autocomplete({
                     serviceUrl: function (q) {
-                        return 'EmailAddress/action/searchInAddressBook?limit=5';
+                        return 'EmailAddress/action/searchInAddressBook?maxSize=' + this.getAutocompleteMaxCount();
                     }.bind(this),
                     paramName: 'q',
                     minChars: 1,

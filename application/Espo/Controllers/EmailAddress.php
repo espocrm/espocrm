@@ -42,11 +42,10 @@ class EmailAddress extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
         $q = $request->get('q');
-        $limit = intval($request->get('limit'));
-        if (empty($limit) || $limit > 30) {
-            $limit = 5;
+        $maxSize = intval($request->get('maxSize'));
+        if (empty($maxSize) || $maxSize > 50) {
+            $maxSize = $this->getConfig()->get('recordsPerPage', 20);
         }
-        return $this->getRecordService()->searchInAddressBook($q, $limit);
+        return $this->getRecordService()->searchInAddressBook($q, $maxSize);
     }
 }
-
