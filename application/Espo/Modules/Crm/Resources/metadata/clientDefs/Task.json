@@ -31,12 +31,17 @@
                             "type": "and",
                             "value": [
                                 {
-                                    "type": "isNotEmpty",
-                                    "attribute": "dateEnd"
-                                },
-                                {
-                                    "type": "isEmpty",
-                                    "attribute": "dateEndDate"
+                                    "type": "or",
+                                    "value": [
+                                        {
+                                            "type": "isNotEmpty",
+                                            "attribute": "dateEnd"
+                                        },
+                                         {
+                                            "type": "isNotEmpty",
+                                            "attribute": "dateEndDate"
+                                        }
+                                    ]
                                 },
                                 {
                                     "type": "notEquals",
