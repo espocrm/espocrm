@@ -150,7 +150,7 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
 
                 this.$input.autocomplete({
                     serviceUrl: function (q) {
-                        return 'EmailAddress/action/searchInAddressBook?maxSize=' + this.getAutocompleteMaxCount();
+                        return 'EmailAddress/action/searchInAddressBook?onlyActual=true&maxSize=' + this.getAutocompleteMaxCount();
                     }.bind(this),
                     paramName: 'q',
                     minChars: 1,

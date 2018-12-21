@@ -46,6 +46,9 @@ class EmailAddress extends \Espo\Core\Controllers\Record
         if (empty($maxSize) || $maxSize > 50) {
             $maxSize = $this->getConfig()->get('recordsPerPage', 20);
         }
-        return $this->getRecordService()->searchInAddressBook($q, $maxSize);
+
+        $onlyActual = $request->get('onlyActual') === 'true';
+
+        return $this->getRecordService()->searchInAddressBook($q, $maxSize, $onlyActual);
     }
 }

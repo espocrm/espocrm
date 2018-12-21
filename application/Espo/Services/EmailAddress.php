@@ -37,7 +37,7 @@ class EmailAddress extends Record
 {
     const ERASED_PREFIX = 'ERASED:';
 
-    protected function findInAddressBookByEntityType($query, $limit, $entityType, &$result)
+    protected function findInAddressBookByEntityType($query, $limit, $entityType, &$result, $onlyActual = false)
     {
         $whereClause = [
             'OR' => [
@@ -53,114 +53,80 @@ class EmailAddress extends Record
             ]
         ];
 
-        $searchParams = [
+        $selectParams = [
             'whereClause' => $whereClause,
             'orderBy' => 'name',
             'limit' => $limit
         ];
 
+        $handleSelectParamsMethodName = 'handleSelectParams' . $entityType;
+        if (method_exists($this, $handleSelectParamsMethodName)) {
+            $this->$handleSelectParamsMethodName($query, $selectParams);
+        }
+
         $selectManager = $this->getSelectManagerFactory()->create($entityType);
+        $selectManager->applyAccess($selectParams);
 
-        $selectManager->applyAccess($searchParams);
-
-        $collection = $this->getEntityManager()->getRepository($entityType)->find($searchParams);
+        $collection = $this->getEntityManager()->getRepository($entityType)->find($selectParams);
 
         foreach ($collection as $entity) {
             $emailAddress = $entity->get('emailAddress');
+            $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
+
+            $skipPrimaryEmailAddress = false;
 
             if ($emailAddress) {
-                if (strpos($emailAddress, self::ERASED_PREFIX) === 0) {
-                    continue;
+                if (strpos($emailAddress, self::ERASED_PREFIX) === 0) $skipPrimaryEmailAddress = true;
+
+                if ($onlyActual) {
+                    if ($entity->get('emailAddressIsOptedOut')) $skipPrimaryEmailAddress = true;
+
+                    foreach ($emailAddressData as $item) {
+                        if ($emailAddress !== $item->emailAddress) continue;
+                        if (!empty($item->invalid)) $skipPrimaryEmailAddress = true;
+                    }
                 }
             }
 
-            $result[] = [
-                'emailAddress' => $emailAddress,
-                'entityName' => $entity->get('name'),
-                'entityType' => $entityType,
-                'entityId' => $entity->id
-            ];
+            if (!$skipPrimaryEmailAddress) {
+                $result[] = [
+                    'emailAddress' => $emailAddress,
+                    'entityName' => $entity->get('name'),
+                    'entityType' => $entityType,
+                    'entityId' => $entity->id
+                ];
+            }
 
-            $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
-            foreach ($emailAddressData as $d) {
-                if ($emailAddress != $d->emailAddress) {
-                    $emailAddress = $d->emailAddress;
-                    if (strpos($emailAddress, $query) === 0 && strpos($emailAddress, self::ERASED_PREFIX) !== 0) {
-                        $result[] = [
-                            'emailAddress' => $emailAddress,
-                            'entityName' => $entity->get('name'),
-                            'entityType' => $entityType,
-                            'entityId' => $entity->id
-                        ];
-                    }
+            foreach ($emailAddressData as $item) {
+                if ($emailAddress === $item->emailAddress) continue;
+
+                if (strpos($item->emailAddress, self::ERASED_PREFIX) === 0) continue;
+
+                if ($onlyActual) {
+                    if (!empty($item->invalid)) continue;
+                    if (!empty($item->optOut)) continue;
                 }
+
+                $result[] = [
+                    'emailAddress' => $item->emailAddress,
+                    'entityName' => $entity->get('name'),
+                    'entityType' => $entityType,
+                    'entityId' => $entity->id
+                ];
             }
         }
     }
 
-    protected function findInAddressBookUsers($query, $limit, &$result)
+    protected function handleSelectParamsUser($query, &$selectParams)
     {
-        $whereClause = [
-            'OR' => [
-                [
-                    'name*' => $query . '%'
-                ],
-                [
-                    'emailAddress*' => $query . '%'
-                ]
-            ],
-            [
-                'emailAddress!=' => null
-            ]
-        ];
-
         if ($this->getAcl()->get('portalPermission') === 'no') {
-            $whereClause['type!='] = 'portal';
-        }
-
-        $searchParams = [
-            'whereClause' => $whereClause,
-            'orderBy' => 'name',
-            'limit' => $limit
-        ];
-
-        $selectManager = $this->getSelectManagerFactory()->create('User');
-
-        $selectManager->applyAccess($searchParams);
-
-        $collection = $this->getEntityManager()->getRepository('User')->find($searchParams);
-
-        foreach ($collection as $entity) {
-            $emailAddress = $entity->get('emailAddress');
-
-            if ($emailAddress) {
-                if (strpos($emailAddress, self::ERASED_PREFIX) === 0) {
-                    continue;
-                }
-            }
-
-            $result[] = [
-                'emailAddress' => $emailAddress,
-                'entityName' => $entity->get('name'),
-                'entityType' => 'User',
-                'entityId' => $entity->id
+            $selectParams['whereClause'][] = [
+                'type!=' => 'portal'
             ];
-
-            $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
-            foreach ($emailAddressData as $d) {
-                if ($emailAddress != $d->emailAddress) {
-                    $emailAddress = $d->emailAddress;
-                    if (strpos($emailAddress, $query) === 0 && strpos($emailAddress, self::ERASED_PREFIX) !== 0) {
-                        $result[] = [
-                            'emailAddress' => $emailAddress,
-                            'entityName' => $entity->get('name'),
-                            'entityType' => 'User',
-                            'entityId' => $entity->id
-                        ];
-                    }
-                }
-            }
         }
+        $selectParams['whereClause'][] = [
+            'type!=' => ['api', 'system', 'super-admin']
+        ];
     }
 
     protected function findInInboundEmail($query, $limit, &$result)
@@ -188,24 +154,24 @@ class EmailAddress extends Record
         }
     }
 
-    public function searchInAddressBook($query, $limit)
+    public function searchInAddressBook($query, $limit, $onlyActual = false)
     {
         $result = [];
 
-        $this->findInAddressBookUsers($query, $limit, $result);
+        $this->findInAddressBookByEntityType($query, $limit, 'User', $result, $onlyActual);
         if ($this->getAcl()->checkScope('Contact')) {
-            $this->findInAddressBookByEntityType($query, $limit, 'Contact', $result);
+            $this->findInAddressBookByEntityType($query, $limit, 'Contact', $result, $onlyActual);
         }
         if ($this->getAcl()->checkScope('Lead')) {
-            $this->findInAddressBookByEntityType($query, $limit, 'Lead', $result);
+            $this->findInAddressBookByEntityType($query, $limit, 'Lead', $result, $onlyActual);
         }
         if ($this->getAcl()->checkScope('Account')) {
-            $this->findInAddressBookByEntityType($query, $limit, 'Account', $result);
+            $this->findInAddressBookByEntityType($query, $limit, 'Account', $result, $onlyActual);
         }
         $this->findInInboundEmail($query, $limit, $result);
         foreach ($this->getHavingEmailAddressEntityTypeList() as $entityType) {
             if ($this->getAcl()->checkScope($entityType)) {
-                $this->findInAddressBookByEntityType($query, $limit, $entityType, $result);
+                $this->findInAddressBookByEntityType($query, $limit, $entityType, $result, $onlyActual);
             }
         }
 
@@ -219,6 +185,19 @@ class EmailAddress extends Record
             }
             $finalResult[] = $item;
         }
+
+        usort($finalResult, function ($item1, $item2) use ($query) {
+            if (strpos($query, '@') === false) return 0;
+
+            $p1 = strpos($item1['emailAddress'], $query);
+            $p2 = strpos($item2['emailAddress'], $query);
+
+            if ($p1 === 0 && $p2 !== 0) return -1;
+            if ($p1 !== 0 && $p2 !== 0) return 0;
+            if ($p1 !== 0 && $p2 === 0) return 1;
+
+            return 0;
+        });
 
         return $finalResult;
     }
