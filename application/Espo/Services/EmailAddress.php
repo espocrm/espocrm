@@ -39,25 +39,25 @@ class EmailAddress extends Record
 
     protected function findInAddressBookByEntityType($query, $limit, $entityType, &$result)
     {
-        $whereClause = array(
-            'OR' => array(
-                array(
+        $whereClause = [
+            'OR' => [
+                [
                     'name*' => $query . '%'
-                ),
-                array(
+                ],
+                [
                     'emailAddress*' => $query . '%'
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'emailAddress!=' => null
-            )
-        );
+            ]
+        ];
 
-        $searchParams = array(
+        $searchParams = [
             'whereClause' => $whereClause,
             'orderBy' => 'name',
             'limit' => $limit
-        );
+        ];
 
         $selectManager = $this->getSelectManagerFactory()->create($entityType);
 
@@ -100,29 +100,29 @@ class EmailAddress extends Record
 
     protected function findInAddressBookUsers($query, $limit, &$result)
     {
-        $whereClause = array(
-            'OR' => array(
-                array(
+        $whereClause = [
+            'OR' => [
+                [
                     'name*' => $query . '%'
-                ),
-                array(
+                ],
+                [
                     'emailAddress*' => $query . '%'
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'emailAddress!=' => null
-            )
-        );
+            ]
+        ];
 
         if ($this->getAcl()->get('portalPermission') === 'no') {
             $whereClause['type!='] = 'portal';
         }
 
-        $searchParams = array(
+        $searchParams = [
             'whereClause' => $whereClause,
             'orderBy' => 'name',
             'limit' => $limit
-        );
+        ];
 
         $selectManager = $this->getSelectManagerFactory()->create('User');
 
@@ -209,18 +209,18 @@ class EmailAddress extends Record
             }
         }
 
-        $final = array();
+        $finalResult = [];
 
-        foreach ($result as $r) {
-            foreach ($final as $f) {
-                if ($f['emailAddress'] == $r['emailAddress']) {
+        foreach ($result as $item) {
+            foreach ($finalResult as $item1) {
+                if ($item['emailAddress'] == $item1['emailAddress']) {
                     continue 2;
                 }
             }
-            $final[] = $r;
+            $finalResult[] = $item;
         }
 
-        return $final;
+        return $finalResult;
     }
 
     protected function getHavingEmailAddressEntityTypeList()
@@ -234,6 +234,4 @@ class EmailAddress extends Record
         }
         return $list;
     }
-
 }
-
