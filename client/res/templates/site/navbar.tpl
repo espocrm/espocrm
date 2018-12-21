@@ -13,7 +13,6 @@
             {{#unless isInMore}}
             <li data-name="{{name}}" class="not-in-more tab">
                 <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
-                    <span class="full-label">{{label}}</span>
                     <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
                         {{#if iconClass}}
                         <span class="{{iconClass}}"></span>
@@ -24,6 +23,7 @@
                         <span class="short-label-text">{{shortLabel}}</span>
                         {{/if}}
                     </span>
+                    <span class="full-label">{{label}}</span>
                 </a>
             </li>
             {{/unless}}

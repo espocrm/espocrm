@@ -277,9 +277,8 @@
 body {
     #navbar {
         ul.tabs {
-            > li > a > span.full-label {
-                position: absolute;
-                margin-left: 30px;
+            > li > a {
+                height: 37px
             }
 
             > li.more > ul > li > a > span.full-label {
@@ -287,7 +286,17 @@ body {
                 position: static;
             }
 
-            > li.more > ul > li > a > span.short-label, {
+            > li a > span.full-label {
+                position: static;
+                padding-left: 30px;
+                position: static;
+            }
+
+            > li a > span.short-label {
+                position: absolute;
+            }
+
+            > li.more > ul > li > a > span.short-label {
                 position: absolute;
             }
 
@@ -303,9 +312,9 @@ body {
             }
 
             > li > a > span.full-label {
-                display: inline;
+                display: inline-block;
                 text-overflow: ellipsis;
-                max-width: ~"calc(100% - 50px)";
+                max-width: ~"calc(100%)";
                 overflow: hidden;
                 white-space: nowrap;
             }

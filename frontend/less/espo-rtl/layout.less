@@ -1,0 +1,46 @@
+#navbar .navbar {
+    ul.tabs {
+        > li.more {
+            > ul > li > a {
+                > span.full-label {
+                    padding-left: 30px;
+                    padding-right: 30px;
+                    position: static;
+                }
+
+            }
+        }
+    }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+
+    #navbar .navbar {
+
+        ul.tabs {
+            > li > a > span.short-label {
+                float: right;
+                right: -4px;
+                left: 0;
+                margin-left: 4px;
+                margin-right: 0;
+            }
+
+            li.more > li > a {
+                padding-right: 10px;
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    #navbar .navbar {
+        ul.tabs {
+            > li a > span.full-label {
+                padding-right: 30px;
+                padding-left: 0;
+            }
+        }
+    }
+}
