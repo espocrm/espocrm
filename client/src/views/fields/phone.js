@@ -38,7 +38,7 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
         listTemplate: 'fields/phone/list',
 
-        validations: ['required'],
+        validations: ['required', 'phoneData'],
 
         validateRequired: function () {
             if (this.isRequired()) {
@@ -47,6 +47,30 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                     this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input');
                     return true;
                 }
+            }
+        },
+
+        validatePhoneData: function () {
+            var data = this.model.get(this.dataFieldName);
+            if (!data || !data.length) return;
+
+            var numberList = [];
+
+            var notValid = false;
+            data.forEach(function (row, i) {
+                var number = row.phoneNumber;
+                var numberClean = String(number).replace(/[\s\+]/g, '');
+
+                if (~numberList.indexOf(numberClean)) {
+                    var msg = this.translate('fieldValueDuplicate', 'messages').replace('{field}', this.getLabelText());
+                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1).toString() + ') input');
+                    notValid = true;
+                    return;
+                }
+                numberList.push(numberClean);
+            }, this);
+            if (notValid) {
+                return true;
             }
         },
 

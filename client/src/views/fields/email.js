@@ -42,20 +42,33 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
 
         validateEmailData: function () {
             var data = this.model.get(this.dataFieldName);
-            if (data && data.length) {
-                var re = /\S+@+\S+/;
-                var notValid = false;
-                data.forEach(function (row, i) {
-                    var emailAddress = row.emailAddress;
-                    if (!re.test(emailAddress) && emailAddress.indexOf(this.erasedPlaceholder) !== 0) {
-                        var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
-                        this.showValidationMessage(msg, 'div.email-address-block:nth-child(' + (i + 1).toString() + ') input');
-                        notValid = true;
-                    }
-                }, this);
-                if (notValid) {
-                    return true;
+            if (!data || !data.length) return;
+
+            var addressList = [];
+
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            var notValid = false;
+
+            data.forEach(function (row, i) {
+                var address = row.emailAddress;
+                var addressLowerCase = String(address).toLowerCase();
+                if (!re.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
+                    var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
+                    this.showValidationMessage(msg, 'div.email-address-block:nth-child(' + (i + 1).toString() + ') input');
+                    notValid = true;
+                    return;
                 }
+                if (~addressList.indexOf(addressLowerCase)) {
+                    var msg = this.translate('fieldValueDuplicate', 'messages').replace('{field}', this.getLabelText());
+                    this.showValidationMessage(msg, 'div.email-address-block:nth-child(' + (i + 1).toString() + ') input');
+                    notValid = true;
+                    return;
+                }
+                addressList.push(addressLowerCase);
+            }, this);
+            if (notValid) {
+                return true;
             }
         },
 
