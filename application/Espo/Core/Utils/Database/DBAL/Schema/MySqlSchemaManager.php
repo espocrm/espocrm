@@ -203,6 +203,15 @@ class MySqlSchemaManager extends \Doctrine\DBAL\Schema\MySqlSchemaManager
             case 'year':
                 $length = null;
                 break;
+
+            /* Espo: fix a problem of changing text field type */
+            case 'tinytext':
+            case 'text':
+            case 'mediumtext':
+            case 'longtext':
+                $length = $this->_platform->getClobTypeLength($dbType);
+                break;
+            /* Espo: end */
         }
 
         $length = ((int) $length == 0) ? null : (int) $length;
