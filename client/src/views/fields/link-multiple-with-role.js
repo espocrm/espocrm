@@ -80,7 +80,9 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 role = '';
             }
             if (role != '') {
-                roleHtml = '<span class="text-muted small"> &#187; ' +
+                var style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', this.roleField, 'style', role]) || 'muted';
+                roleHtml = '<span class="text-muted small"> &#187; </span>' +
+                '<span class="text-'+style+' small">' +
                 this.getHelper().stripTags(this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope)) +
                 '</span>';
             }

@@ -265,6 +265,7 @@
         "fieldShouldBeGreater": "{field} shouldn't be less then {value}",
         "fieldBadPasswordConfirm": "{field} not confirmed properly",
         "fieldMaxFileSizeError": "File should not exceed {max} Mb",
+        "fieldValueDuplicate": "Duplicate value",
         "fieldIsUploading": "Uploading in progress",
         "resetPreferencesDone": "Preferences has been reset to defaults",
         "confirmation": "Are you sure?",

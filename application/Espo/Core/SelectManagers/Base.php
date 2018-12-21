@@ -962,6 +962,7 @@ class Base
             case 'after':
                 $where['type'] = 'after';
                 $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dt->modify('+1 day -1 second');
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
                 break;

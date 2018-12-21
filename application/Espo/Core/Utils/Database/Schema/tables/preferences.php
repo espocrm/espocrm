@@ -27,29 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
+return [
 
-    'unset' => array(
+    'unset' => [
         '__APPEND__',
-        'Preferences'
-    ),
+        'Preferences',
+    ],
     'unsetIgnore' => [
         '__APPEND__',
         ['Preferences', 'fields', 'id'],
-        ['Preferences', 'fields', 'data']
+        ['Preferences', 'fields', 'data'],
     ],
-    'Preferences' => array(
-        'fields' => array(
-            'id' => array(
+    'Preferences' => [
+        'fields' => [
+            'id' => [
                 'dbType' => 'varchar',
                 'len' => 24,
-                'type' => 'id'
-            ),
-            'data' => array(
-                'type' => 'text'
-            )
-        )
-    )
-
-);
-
+                'type' => 'id',
+            ],
+            'data' => [
+                'type' => 'text',
+                'len' => 16777216,
+            ]
+        ]
+    ],
+];
