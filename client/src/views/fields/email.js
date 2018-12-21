@@ -242,6 +242,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                     paramName: 'q',
                     minChars: 1,
                     autoSelectFirst: true,
+                    triggerSelectOnValidInput: false,
                     formatResult: function (suggestion) {
                         return suggestion.name + ' &#60;' + suggestion.id + '&#62;';
                     },

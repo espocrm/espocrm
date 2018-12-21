@@ -155,6 +155,7 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                     paramName: 'q',
                     minChars: 1,
                     autoSelectFirst: true,
+                    triggerSelectOnValidInput: false,
                     formatResult: function (suggestion) {
                         return suggestion.name + ' &#60;' + suggestion.id + '&#62;';
                     },
