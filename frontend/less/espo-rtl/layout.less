@@ -32,6 +32,10 @@
             }
         }
     }
+
+    .search-container .view-mode-switcher-buttons-group {
+        float: left !important;
+    }
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
@@ -42,5 +46,30 @@
                 padding-left: 0;
             }
         }
+    }
+}
+
+div.list-kanban > div > table {
+
+    th.group-header {
+
+        > div {
+            padding-left: 0;
+            padding-right: @table-cell-padding;
+        }
+
+        > div:before,
+        > div:after {
+            content: none;
+        }
+    }
+}
+
+.kanban-row {
+    .item-menu-container.pull-right {
+        float: left !important;
+        left: -9px;
+        margin-left: -10px;
+        margin-right: 0;
     }
 }
