@@ -566,6 +566,14 @@ abstract class Mapper implements IMapper
 
                         $sql .= " ON DUPLICATE KEY UPDATE deleted = '0'";
 
+                        if (!empty($data) && is_array($data)) {
+                            $setArr = [];
+                            foreach ($data as $column => $value) {
+                                $setArr[] = $this->toDb($column) . " = " . $this->quote($value);
+                            }
+                            $sql .= ', ' . implode(', ', $setArr);
+                        }
+
                         if ($this->pdo->query($sql)) {
                             return true;
                         }
