@@ -1876,12 +1876,28 @@ h4.panel-title span.fas.color-icon {
 
 .label {
     padding: .09em .5em .2em;
+    position: relative;
+    top: -1px;
 }
 
-.label-lg {
+.label-md {
     font-weight: normal;
     font-size: 100%;
-    padding: 1px 7px 2px;
+    padding: @label-padding-medium;
+    top: 0;
+}
+
+.label-sm {
+    font-weight: normal;
+    font-size: 75%;
+    padding: @label-padding-small;
+}
+
+.small .label-md,
+.label-lg.small {
+    font-size: 75%;
+    padding: @label-padding-small;
+    top: -1px;
 }
 
 .expanded-row {
