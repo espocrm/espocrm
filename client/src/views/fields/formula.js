@@ -36,7 +36,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
         height: 300,
 
-        maxLineDetailCount: 40,
+        maxLineDetailCount: 80,
 
         maxLineEditCount: 200,
 
