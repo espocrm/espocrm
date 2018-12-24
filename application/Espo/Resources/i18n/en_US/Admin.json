@@ -179,7 +179,8 @@
         "useNumericFormat": "Use Numeric Format",
         "strip": "Strip",
         "minuteStep": "Minutes Step",
-        "inlineEditDisabled": "Disable Inline Edit"
+        "inlineEditDisabled": "Disable Inline Edit",
+        "displayAsLabel": "Display as Label"
     },
     "messages": {
         "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
