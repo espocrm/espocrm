@@ -64,7 +64,7 @@ class EmailFilterManager
             $emailFilterList = $this->getEntityManager()->getRepository('EmailFilter')->where([
                 'parentId' => $userId,
                 'parentType' => 'User'
-            ])->order('LIST:action:Skip;Move to Folder')->find();
+            ])->order('LIST:action:Skip,Move to Folder')->find();
             $this->data[$userId] = $emailFilterList;
         }
         foreach ($this->data[$userId] as $emailFilter) {
