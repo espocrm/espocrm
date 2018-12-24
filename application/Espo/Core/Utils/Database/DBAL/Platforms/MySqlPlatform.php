@@ -38,6 +38,10 @@ use Doctrine\DBAL\Schema\Column;
 
 class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
 {
+    /* Espo */
+    const LENGTH_LIMIT_LONGTEXT = 4294967295;
+    /* Espo: end */
+
     public function getAlterTableSQL(TableDiff $diff)
     {
         $columnSql = array();
@@ -452,6 +456,29 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
 
         return 'MEDIUMTEXT';
     }
+
+    /* Espo: fix a problem of changing text field type */
+    public function getClobTypeLength($type)
+    {
+        switch ($type) {
+            case 'tinytext':
+                return static::LENGTH_LIMIT_TINYTEXT;
+                break;
+
+            case 'text':
+                return static::LENGTH_LIMIT_TEXT;
+                break;
+
+            case 'mediumtext':
+                return static::LENGTH_LIMIT_MEDIUMTEXT;
+                break;
+
+            case 'longtext':
+                return static::LENGTH_LIMIT_LONGTEXT;
+                break;
+        }
+    }
+    /* Espo: end */
 
     public function getColumnDeclarationListSQL(array $fields)
     {
