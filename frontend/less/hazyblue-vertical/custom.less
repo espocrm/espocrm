@@ -111,6 +111,22 @@ table.table {
     border-top-width: 1px;
 }
 
+.side {
+    > .panel.sticked:first-child {
+        border-top-width: 0;
+    }
+
+    .panel.hidden + .panel.sticked {
+        border-top-width: 0;
+    }
+}
+
+.bottom {
+    .panel.hidden + .panel.sticked {
+        border-top-width: 0;
+    }
+}
+
 .list-container .list-buttons-container {
     margin-bottom: @padding-base-horizontal;
 }

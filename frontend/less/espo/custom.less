@@ -1842,7 +1842,6 @@ h4.panel-title span.fas.color-icon {
     margin-bottom: 0;
 }
 
-.panel.sticked,
 .panel.sticked {
     margin-top: -1 * @line-height-computed;
     border-top-width: 0;
@@ -1853,6 +1852,22 @@ h4.panel-title span.fas.color-icon {
                 border-top-width: 0;
             }
         }
+    }
+}
+
+.side {
+    > .panel.sticked:first-child {
+        margin-top: 0;
+    }
+
+    .panel.hidden + .panel.sticked {
+        margin-top: 0;
+    }
+}
+
+.bottom {
+    .panel.hidden + .panel.sticked {
+        margin-top: 0;
     }
 }
 
