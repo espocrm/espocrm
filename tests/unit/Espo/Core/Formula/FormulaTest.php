@@ -610,6 +610,45 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($actual);
     }
 
+    function testStringTest()
+    {
+        $item = json_decode('
+            {
+                "type": "string\\\\test",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "TestHelloMan"
+                    },
+                    {
+                        "type": "value",
+                        "value": "/hello/i"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertTrue($actual);
+
+        $item = json_decode('
+            {
+                "type": "string\\\\test",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "TestHelloMan"
+                    },
+                    {
+                        "type": "value",
+                        "value": "/Nope/i"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertFalse($actual);
+    }
+
     function testSummationAndDivision()
     {
         $item = json_decode('
