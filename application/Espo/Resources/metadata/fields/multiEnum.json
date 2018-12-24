@@ -16,6 +16,10 @@
          "hidden": true
       },
       {
+         "name": "allowCustomOptions",
+         "type": "bool"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },

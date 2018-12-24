@@ -180,6 +180,7 @@
         "strip": "Strip",
         "minuteStep": "Minutes Step",
         "inlineEditDisabled": "Disable Inline Edit",
+        "allowCustomOptions": "Allow Custom Options",
         "displayAsLabel": "Display as Label"
     },
     "messages": {
