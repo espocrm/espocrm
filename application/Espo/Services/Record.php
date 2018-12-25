@@ -1247,7 +1247,7 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true, true);
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
