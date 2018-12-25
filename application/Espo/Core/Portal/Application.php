@@ -96,9 +96,12 @@ class Application extends \Espo\Core\Application
 
     public function runClient()
     {
-        $this->getContainer()->get('clientManager')->display(null, 'html/portal.html', array(
-            'portalId' => $this->getPortal()->id
-        ));
+        $this->getContainer()->get('clientManager')->display(null, null, [
+            'portalId' => $this->getPortal()->id,
+            'applicationId' => $this->getPortal()->id,
+            'apiUrl' => 'api/v1/portal-access/' . $this->getPortal()->id,
+            'appClientClassName' => 'app-portal'
+        ]);
         exit;
     }
 }

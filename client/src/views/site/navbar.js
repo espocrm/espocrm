@@ -149,7 +149,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             if (!companyLogoId) {
                 return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.png');
             }
-            return this.getBasePath() + '?entryPoint=LogoImage&t=' + companyLogoId;
+            return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
         },
 
         getTabList: function () {
