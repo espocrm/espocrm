@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>{{applicationName}}</title>
-        <script type="text/javascript" src="{{basePath}}client/espo.min.js?r={{cacheTimestamp}}" data-base-path="{{basePath}}"></script>
+{{scriptsHtml}}
         <link href="{{basePath}}{{stylesheet}}?r={{cacheTimestamp}}" rel="stylesheet" id='main-stylesheet'>
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
@@ -15,12 +15,14 @@
         <link rel="shortcut icon" href="{{basePath}}client/img/favicon.ico" type="image/x-icon">
         <script type="text/javascript">
             $(function () {
-                Espo.loader.cacheTimestamp = {{cacheTimestamp}};
-                Espo.require('app', function (App) {
+                Espo.loader.cacheTimestamp = {{loaderCacheTimestamp}};
+                Espo.require('{{appClientClassName}}', function (App) {
                     var app = new App({
+                        id: '{{applicationId}}',
                         useCache: {{useCache}},
                         cacheTimestamp: {{cacheTimestamp}},
-                        basePath: '{{basePath}}'
+                        basePath: '{{basePath}}',
+                        url: '{{apiUrl}}'
                     }, function (app) {
                         {{runScript}}
                     });
@@ -31,7 +33,7 @@
     <body>
         <div class="container content"></div>
         <footer>
-            <p class="credit small">&copy; 2018 <a href="http://www.espocrm.com" title="Powered by EspoCRM" alt="Visit official EspoCRM website">EspoCRM</a></p>
+            <p class="credit small">&copy; 2018 <a href="https://www.espocrm.com" title="Powered by EspoCRM" alt="Visit official EspoCRM website">EspoCRM</a></p>
         </footer>
     </body>
 </html>

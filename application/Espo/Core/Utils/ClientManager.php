@@ -37,11 +37,35 @@ class ClientManager
 
     protected $mainHtmlFilePath = 'html/main.html';
 
-    protected $htmlFilePathForDeveloperMode = 'frontend/html/main.html';
-
     protected $runScript = "app.start();";
 
     protected $basePath = '';
+
+    protected $jsFileList = [
+        'client/espo.min.js'
+    ];
+
+    protected $developerModeJsFileList = [
+        'client/lib/jquery-2.1.4.min.js',
+        'client/lib/underscore-min.js',
+        'client/lib/es6-promise.min.js',
+        'client/lib/backbone-min.js',
+        'client/lib/handlebars.js',
+        'client/lib/base64.js',
+        'client/lib/jquery-ui.min.js',
+        'client/lib/jquery.ui.touch-punch.min.js',
+        'client/lib/moment.min.js',
+        'client/lib/moment-timezone-with-data.min.js',
+        'client/lib/jquery.timepicker.min.js',
+        'client/lib/jquery.autocomplete.js',
+        'client/lib/bootstrap.min.js',
+        'client/lib/bootstrap-datepicker.js',
+        'client/lib/bull.js',
+        'client/lib/marked.min.js',
+        'client/src/loader.js',
+        'client/src/utils.js',
+        'client/src/exceptions.js',
+    ];
 
     public function __construct(Config $config, ThemeManager $themeManager)
     {
@@ -77,7 +101,7 @@ class ClientManager
         return $this->getConfig()->get('cacheTimestamp', 0);
     }
 
-    public function display($runScript = null, $htmlFilePath = null, $vars = array())
+    public function display($runScript = null, $htmlFilePath = null, $vars = [])
     {
         if (is_null($runScript)) {
             $runScript = $this->runScript;
@@ -88,24 +112,48 @@ class ClientManager
 
         $isDeveloperMode = $this->getConfig()->get('isDeveloperMode');
 
+        $cacheTimestamp = $this->getCacheTimestamp();
+
         if ($isDeveloperMode) {
-            if (file_exists('frontend/' . $htmlFilePath)) {
-                $htmlFilePath = 'frontend/' . $htmlFilePath;
-            }
+            $useCache = $this->getConfig()->get('useCacheInDeveloperMode');
+            $jsFileList = $this->developerModeJsFileList;
+            $loaderCacheTimestamp = 'null';
+        } else {
+            $useCache = $this->getConfig()->get('useCache');
+            $jsFileList = $this->jsFileList;
+            $loaderCacheTimestamp = $cacheTimestamp;
         }
 
+        $scriptsHtml = '';
+        foreach ($jsFileList as $jsFile) {
+            $src = $this->basePath . $jsFile . '?r=' . $cacheTimestamp;
+            $scriptsHtml .= '        ' .
+            '<script type="text/javascript" src="'.$src.'" data-base-path="'.$this->basePath.'"></script>' . "\n";
+        }
+
+        $data = [
+            'applicationId' => 'espocrm-application-id',
+            'apiUrl' => 'api/v1',
+            'applicationName' => $this->getConfig()->get('applicationName', 'EspoCRM'),
+            'cacheTimestamp' => $cacheTimestamp,
+            'loaderCacheTimestamp' => $loaderCacheTimestamp,
+            'stylesheet' => $this->getThemeManager()->getStylesheet(),
+            'runScript' => $runScript,
+            'basePath' => $this->basePath,
+            'useCache' => $useCache ? 'true' : 'false',
+            'appClientClassName' => 'app',
+            'scriptsHtml' => $scriptsHtml
+        ];
+
         $html = file_get_contents($htmlFilePath);
+
         foreach ($vars as $key => $value) {
             $html = str_replace('{{'.$key.'}}', $value, $html);
         }
-        $html = str_replace('{{applicationName}}', $this->getConfig()->get('applicationName', 'EspoCRM'), $html);
-        $html = str_replace('{{cacheTimestamp}}', $this->getCacheTimestamp(), $html);
-        $html = str_replace('{{useCache}}', $this->getConfig()->get('useCache') ? 'true' : 'false', $html);
-        $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);
-        $html = str_replace('{{runScript}}', $runScript , $html);
-        $html = str_replace('{{basePath}}', $this->basePath , $html);
-        if ($isDeveloperMode) {
-            $html = str_replace('{{useCacheInDeveloperMode}}', $this->getConfig()->get('useCacheInDeveloperMode') ? 'true' : 'false', $html);
+
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $vars)) continue;
+            $html = str_replace('{{'.$key.'}}', $value, $html);
         }
 
         echo $html;

@@ -95,7 +95,7 @@ class Record extends Base
 
         $service = $this->getRecordService();
 
-        if ($entity = $service->create($data)) {
+        if ($entity = $service->createEntity($data)) {
             return $entity->getValueMap();
         }
 
@@ -116,7 +116,7 @@ class Record extends Base
 
         $id = $params['id'];
 
-        if ($entity = $this->getRecordService()->update($id, $data)) {
+        if ($entity = $this->getRecordService()->updateEntity($id, $data)) {
             return $entity->getValueMap();
         }
 
@@ -140,7 +140,7 @@ class Record extends Base
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
-        $result = $this->getRecordService()->find($params);
+        $result = $this->getRecordService()->findEntities($params);
 
         return array(
             'total' => $result['total'],
@@ -195,7 +195,7 @@ class Record extends Base
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
-        $result = $this->getRecordService()->findLinked($id, $link, $params);
+        $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
 
         return array(
             'total' => $result['total'],
@@ -211,7 +211,7 @@ class Record extends Base
 
         $id = $params['id'];
 
-        if ($this->getRecordService()->delete($id)) {
+        if ($this->getRecordService()->deleteEntity($id)) {
             return true;
         }
         throw new Error();
@@ -363,7 +363,7 @@ class Record extends Base
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if ($this->getRecordService()->link($id, $link, $foreignId)) {
+                if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
                     $result = true;
                 }
             }
@@ -400,7 +400,7 @@ class Record extends Base
 
         $result = false;
         foreach ($foreignIdList as $foreignId) {
-            if ($this->getRecordService()->unlink($id, $link, $foreignId)) {
+            if ($this->getRecordService()->unlinkEntity($id, $link, $foreignId)) {
                 $result = $result || true;
             }
         }
