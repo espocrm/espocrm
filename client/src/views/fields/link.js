@@ -391,9 +391,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
             var index = this.searchData.oneOfIdList.indexOf(id);
             if (index > -1) {
-                this.searchParams.oneOfIdList.splice(index, 1);
+                this.searchData.oneOfIdList.splice(index, 1);
             }
-            delete this.searchParams.oneOfNameHash[id];
+            delete this.searchData.oneOfNameHash[id];
         },
 
         addLinkOneOf: function (id, name) {
