@@ -225,6 +225,8 @@ class Base
         $whereClause = $this->convertWhere($where, false, $result);
 
         $result['whereClause'] = array_merge($result['whereClause'], $whereClause);
+
+        $this->applyLeftJoinsFromWhere($where, $result);
     }
 
     public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false, &$result = null)
@@ -2050,5 +2052,39 @@ class Base
         }
 
         return $selectParams1;
+    }
+
+    protected function applyLeftJoinsFromWhere($where, &$result)
+    {
+        if (!is_array($where)) return;
+
+        foreach ($where as $item) {
+            $this->applyLeftJoinsFromWhereItem($item, $result);
+        }
+    }
+
+    protected function applyLeftJoinsFromWhereItem($item, &$result)
+    {
+        if (!empty($item['type'])) {
+            if (in_array($item['type'], ['or', 'and', 'not', 'having'])) {
+                if (!array_key_exists('value', $item) || !is_array($item['value'])) return;
+                foreach ($item['value'] as $listItem) {
+                    $this->applyLeftJoinsFromWhereItem($listItem, $result);
+                }
+                return;
+            }
+        }
+
+        $attibute = null;
+        if (!empty($item['attribute'])) $attibute = $item['attribute'];
+        if (!$attibute) return;
+
+        $attributeType = $this->getSeed()->getAttributeType($attibute);
+        if ($attributeType === 'foreign') {
+            $relation = $this->getSeed()->getAttributeParam($attibute, 'relation');
+            if ($relation) {
+                $this->addLeftJoin($relation, $result);
+            }
+        }
     }
 }

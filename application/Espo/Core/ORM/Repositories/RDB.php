@@ -474,6 +474,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($entity->isNew()) {
             $skipRemove = true;
+            $skipUpdate = true;
         }
 
         if ($entity->has($idListAttribute)) {
@@ -503,19 +504,21 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $defs['additionalColumns'] = $columns;
         }
 
-        $foreignEntityList = $entity->get($name, $defs);
-        if ($foreignEntityList) {
-            foreach ($foreignEntityList as $foreignEntity) {
-                $existingIdList[] = $foreignEntity->id;
-                if (!empty($columns)) {
-                    $data = (object)[];
-                    foreach ($columns as $columnName => $columnField) {
-                        $foreignId = $foreignEntity->id;
-                        $data->$columnName = $foreignEntity->get($columnField);
-                    }
-                    $existingColumnsData->$foreignId = $data;
-                    if (!$entity->isNew()) {
-                        $entity->setFetched($columnsAttribute, $existingColumnsData);
+        if (!$skipRemove && !$skipUpdate) {
+            $foreignEntityList = $entity->get($name, $defs);
+            if ($foreignEntityList) {
+                foreach ($foreignEntityList as $foreignEntity) {
+                    $existingIdList[] = $foreignEntity->id;
+                    if (!empty($columns)) {
+                        $data = (object)[];
+                        foreach ($columns as $columnName => $columnField) {
+                            $foreignId = $foreignEntity->id;
+                            $data->$columnName = $foreignEntity->get($columnField);
+                        }
+                        $existingColumnsData->$foreignId = $data;
+                        if (!$entity->isNew()) {
+                            $entity->setFetched($columnsAttribute, $existingColumnsData);
+                        }
                     }
                 }
             }

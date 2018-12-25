@@ -30,6 +30,10 @@
          "hidden": true
       },
       {
+         "name":"displayAsLabel",
+         "type":"bool"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },

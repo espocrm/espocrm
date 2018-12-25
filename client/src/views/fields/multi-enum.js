@@ -123,7 +123,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     }
                 };
 
-                if (!(this.params.options || []).length) {
+                if (this.allowCustomOptions) {
                     selectizeOptions.persist = false;
                     selectizeOptions.create = function (input) {
                         return {

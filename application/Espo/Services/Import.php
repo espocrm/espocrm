@@ -116,7 +116,7 @@ class Import extends \Espo\Services\Record
         ));
     }
 
-    public function findLinkedEntities($id, $link, $params)
+    public function findLinked($id, $link, $params)
     {
         $entity = $this->getRepository()->get($id);
         $foreignEntityType = $entity->get('entityType');
@@ -145,10 +145,10 @@ class Import extends \Espo\Services\Record
 
         $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
 
-        return array(
+        return [
             'total' => $total,
             'collection' => $collection
-        );
+        ];
     }
 
     protected function readCsvString(&$string, $CSV_SEPARATOR = ';', $CSV_ENCLOSURE = '"', $CSV_LINEBREAK = "\n")

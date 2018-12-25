@@ -607,7 +607,7 @@ ul.dropdown-menu > li.checkbox {
     margin-left: 0;
     margin-top: 0;
     margin-bottom: 0;
-    padding: 3px 0 3px 20px;
+    padding: 4px 0 4px 20px;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -621,6 +621,11 @@ ul.dropdown-menu {
     li.divider + li.divider {
         display: none;
     }
+}
+
+ul.dropdown-menu > li > a {
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .dropdown-menu > li > a {
@@ -1837,7 +1842,6 @@ h4.panel-title span.fas.color-icon {
     margin-bottom: 0;
 }
 
-.panel.sticked,
 .panel.sticked {
     margin-top: -1 * @line-height-computed;
     border-top-width: 0;
@@ -1851,8 +1855,49 @@ h4.panel-title span.fas.color-icon {
     }
 }
 
+.side {
+    > .panel.sticked:first-child {
+        margin-top: 0;
+        border-top-width: @panel-border-width;
+    }
+
+    .panel.hidden + .panel.sticked {
+        margin-top: 0;
+        border-top-width: @panel-border-width;
+    }
+}
+
+.bottom {
+    .panel.hidden + .panel.sticked {
+        margin-top: 0;
+        border-top-width: @panel-border-width;
+    }
+}
+
 .label {
     padding: .09em .5em .2em;
+    position: relative;
+    top: -1px;
+}
+
+.label-md {
+    font-weight: normal;
+    font-size: 100%;
+    padding: @label-padding-medium;
+    top: 0;
+}
+
+.label-sm {
+    font-weight: normal;
+    font-size: 75%;
+    padding: @label-padding-small;
+}
+
+.small .label-md,
+.label-lg.small {
+    font-size: 75%;
+    padding: @label-padding-small;
+    top: -1px;
 }
 
 .expanded-row {

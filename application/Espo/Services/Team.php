@@ -51,10 +51,10 @@ class Team extends Record
         return $this->getInjection('fileManager');
     }
 
-    public function afterUpdate(Entity $entity, array $data = array())
+    public function afterUpdateEntity(Entity $entity, $data)
     {
-        parent::afterUpdate($entity, $data);
-        if (array_key_exists('rolesIds', $data)) {
+        parent::afterUpdateEntity($entity, $data);
+        if (property_exists($data, 'rolesIds')) {
             $this->clearRolesCache();
         }
     }
@@ -64,9 +64,9 @@ class Team extends Record
         $this->getFileManager()->removeInDir('data/cache/application/acl');
     }
 
-    public function linkEntity($id, $link, $foreignId)
+    public function link($id, $link, $foreignId)
     {
-        $result = parent::linkEntity($id, $link, $foreignId);
+        $result = parent::link($id, $link, $foreignId);
 
         if ($link === 'users') {
             $this->getFileManager()->removeFile('data/cache/application/acl/' . $foreignId . '.php');
@@ -75,9 +75,9 @@ class Team extends Record
         return $result;
     }
 
-    public function unlinkEntity($id, $link, $foreignId)
+    public function unlink($id, $link, $foreignId)
     {
-        $result = parent::unlinkEntity($id, $link, $foreignId);
+        $result = parent::unlink($id, $link, $foreignId);
 
         if ($link === 'users') {
             $this->getFileManager()->removeFile('data/cache/application/acl/' . $foreignId . '.php');
@@ -86,9 +86,9 @@ class Team extends Record
         return $result;
     }
 
-    public function linkEntityMass($id, $link, $where, $selectData = null)
+    public function linkMass($id, $link, $where, $selectData = null)
     {
-        $result = parent::linkEntityMass($id, $link, $where, $selectData);
+        $result = parent::linkMass($id, $link, $where, $selectData);
 
         if ($link === 'users') {
             $this->getFileManager()->removeInDir('data/cache/application/acl');

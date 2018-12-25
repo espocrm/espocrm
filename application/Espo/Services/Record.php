@@ -789,6 +789,11 @@ class Record extends \Espo\Core\Services\Base
 
     public function createEntity($data)
     {
+        return $this->create($data);
+    }
+
+    public function create($data)
+    {
         if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
             throw new Forbidden();
         }
@@ -841,6 +846,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function updateEntity($id, $data)
+    {
+        return $this->update($id, $data);
+    }
+
+    public function update($id, $data)
     {
         unset($data->deleted);
 
@@ -904,62 +914,25 @@ class Record extends \Espo\Core\Services\Base
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-
-        $this->beforeCreate($entity, get_object_vars($data)); // TODO remove in 5.1.0
     }
 
     protected function afterCreateEntity(Entity $entity, $data)
     {
-        $this->afterCreate($entity, get_object_vars($data)); // TODO remove in 5.1.0
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
-         $this->beforeUpdate($entity, get_object_vars($data)); // TODO remove in 5.1.0
     }
 
     protected function afterUpdateEntity(Entity $entity, $data)
     {
-        $this->afterUpdate($entity, get_object_vars($data)); // TODO remove in 5.1.0
     }
 
     protected function beforeDeleteEntity(Entity $entity)
     {
-        $this->beforeDelete($entity); // TODO remove in 5.1.0
     }
 
     protected function afterDeleteEntity(Entity $entity)
-    {
-        $this->afterDelete($entity); // TODO remove in 5.1.0
-    }
-
-    /** Deprecated */
-    protected function beforeCreate(Entity $entity, array $data = array())
-    {
-    }
-
-    /** Deprecated */
-    protected function afterCreate(Entity $entity, array $data = array())
-    {
-    }
-
-    /** Deprecated */
-    protected function beforeUpdate(Entity $entity, array $data = array())
-    {
-    }
-
-    /** Deprecated */
-    protected function afterUpdate(Entity $entity, array $data = array())
-    {
-    }
-
-    /** Deprecated */
-    protected function beforeDelete(Entity $entity)
-    {
-    }
-
-    /** Deprecated */
-    protected function afterDelete(Entity $entity)
     {
     }
 
@@ -967,11 +940,16 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
-    protected function afterMassRemove(array $idList)
+    protected function afterMassDelete(array $idList)
     {
     }
 
     public function deleteEntity($id)
+    {
+        return $this->delete($id);
+    }
+
+    public function delete($id)
     {
         if (empty($id)) {
             throw new BadRequest();
@@ -1007,6 +985,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function findEntities($params)
+    {
+        return $this->find($params);
+    }
+
+    public function find($params)
     {
         $disableCount = false;
         if (
@@ -1060,10 +1043,10 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return array(
+        return [
             'total' => $total,
             'collection' => $collection,
-        );
+        ];
     }
 
     public function getListKanban($params)
@@ -1196,6 +1179,11 @@ class Record extends \Espo\Core\Services\Base
 
     public function findLinkedEntities($id, $link, $params)
     {
+        return $this->findLinked($id, $link, $params);
+    }
+
+    public function findLinked($id, $link, $params)
+    {
         $entity = $this->getRepository()->get($id);
         if (!$entity) {
             throw new NotFound();
@@ -1217,6 +1205,11 @@ class Record extends \Espo\Core\Services\Base
 
         if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
+        }
+
+        $methodName = 'findLinked' . ucfirst($link);
+        if ($link !== 'entities' && method_exists($this, $methodName)) {
+            return $this->$methodName($id, $params);
         }
 
         $methodName = 'findLinkedEntities' . ucfirst($link);
@@ -1247,7 +1240,7 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true, true);
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
@@ -1286,13 +1279,18 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return array(
+        return [
             'total' => $total,
             'collection' => $collection
-        );
+        ];
     }
 
     public function linkEntity($id, $link, $foreignId)
+    {
+        return $this->link($id, $link, $foreignId);
+    }
+
+    public function link($id, $link, $foreignId)
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
@@ -1345,6 +1343,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function unlinkEntity($id, $link, $foreignId)
+    {
+        return $this->unlink($id, $link, $foreignId);
+    }
+
+    public function unlink($id, $link, $foreignId)
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
@@ -1401,6 +1404,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
+    {
+        return $this->linkMass($id, $link, $where, $selectData);
+    }
+
+    public function linkMass($id, $link, $where, $selectData = null)
     {
         if (empty($id) || empty($link)) {
             throw new BadRequest;
@@ -1544,17 +1552,17 @@ class Record extends \Espo\Core\Services\Base
 
             $this->afterMassUpdate($idsUpdated, $data);
 
-            return array(
+            return [
                 'count' => $count
-            );
+            ];
         }
 
         $this->afterMassUpdate($idsUpdated, $data);
 
-        return array(
+        return [
             'count' => $count,
             'ids' => $idsUpdated
-        );
+        ];
     }
 
     protected function checkEntityForMassRemove(Entity $entity)
@@ -1568,6 +1576,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function massRemove(array $params)
+    {
+        return $this->massDelete();
+    }
+
+    public function massDelete(array $params)
     {
         $idsRemoved = array();
         $repository = $this->getRepository();
@@ -1624,19 +1637,19 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->afterMassRemove($idsRemoved);
+            $this->afterMassDelete($idsRemoved);
 
-            return array(
+            return [
                 'count' => $count
-            );
+            ];
         }
 
-        $this->afterMassRemove($idsRemoved);
+        $this->afterMassDelete($idsRemoved);
 
-        return array(
+        return [
             'count' => $count,
             'ids' => $idsRemoved
-        );
+        ];
     }
 
     public function follow($id, $userId = null)
@@ -1691,10 +1704,10 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return array(
+        return [
             'ids' => $resultIdList,
             'count' => count($resultIdList)
-        );
+        ];
     }
 
     public function massUnfollow(array $params, $userId = null)
@@ -1719,10 +1732,10 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return array(
+        return [
             'ids' => $resultIdList,
             'count' => count($resultIdList)
-        );
+        ];
     }
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
@@ -1816,18 +1829,18 @@ class Record extends \Espo\Core\Services\Base
             $selectManager = $this->getSelectManager($this->getEntityType());
             if (array_key_exists('ids', $params)) {
                 $ids = $params['ids'];
-                $where = array(
-                    array(
+                $where = [
+                    [
                         'type' => 'in',
                         'field' => 'id',
                         'value' => $ids
-                    )
-                );
-                $selectParams = $selectManager->getSelectParams(array('where' => $where), true, true);
+                    ]
+                ];
+                $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
             } else if (array_key_exists('where', $params)) {
                 $where = $params['where'];
 
-                $p = array();
+                $p = [];
                 $p['where'] = $where;
                 if (!empty($params['selectData']) && is_array($params['selectData'])) {
                     foreach ($params['selectData'] as $k => $v) {
@@ -1853,7 +1866,7 @@ class Record extends \Espo\Core\Services\Base
             $sth->execute();
         }
 
-        $arr = array();
+        $dataList = [];
 
         $attributeListToSkip = [
             'deleted'
@@ -1928,12 +1941,12 @@ class Record extends \Espo\Core\Services\Base
                 if (method_exists($exportObj, 'loadAdditionalFields')) {
                     $exportObj->loadAdditionalFields($entity, $fieldList);
                 }
-                $row = array();
+                $row = [];
                 foreach ($attributeList as $attribute) {
                     $value = $this->getAttributeFromEntityForExport($entity, $attribute);
                     $row[$attribute] = $value;
                 }
-                $arr[] = $row;
+                $dataList[] = $row;
             }
         } else {
             while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -1945,12 +1958,12 @@ class Record extends \Espo\Core\Services\Base
                 if (method_exists($exportObj, 'loadAdditionalFields')) {
                     $exportObj->loadAdditionalFields($entity, $fieldList);
                 }
-                $row = array();
+                $row = [];
                 foreach ($attributeList as $attribute) {
                     $value = $this->getAttributeFromEntityForExport($entity, $attribute);
                     $row[$attribute] = $value;
                 }
-                $arr[] = $row;
+                $dataList[] = $row;
             }
         }
 
@@ -1972,16 +1985,16 @@ class Record extends \Espo\Core\Services\Base
             $fileName = "Export_{$this->entityType}." . $fileExtension;
         }
 
-        $exportParams = array(
+        $exportParams = [
             'attributeList' => $attributeList,
             'fileName ' => $fileName
-        );
+        ];
 
         $exportParams['fieldList'] = $fieldList;
         if (array_key_exists('exportName', $params)) {
             $exportParams['exportName'] = $params['exportName'];
         }
-        $contents = $exportObj->process($this->entityType, $exportParams, $arr);
+        $contents = $exportObj->process($this->entityType, $exportParams, $dataList);
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);
@@ -2252,10 +2265,10 @@ class Record extends \Espo\Core\Services\Base
             $total = -2;
         }
 
-        return array(
+        return [
             'total' => $total,
             'list' => $list
-        );
+        ];
     }
 
     public function getDuplicateAttributes($id)

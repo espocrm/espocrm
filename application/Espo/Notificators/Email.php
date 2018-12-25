@@ -145,7 +145,7 @@ class Email extends \Espo\Core\Notificators\Base
             if ($userIdFrom === $userId) continue;
             if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) continue;
 
-            if ($entity->get('isBeingImported')) {
+            if (!empty($options['isBeingImported'])) {
                 $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);
                 if ($folderId) {
                     if (

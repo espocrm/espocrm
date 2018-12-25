@@ -27,50 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Core\Formula\Functions\StringGroup;
 
-use \Espo\Core\ORM\EntityManager;
-use \Espo\Entities\Email;
+use \Espo\Core\Exceptions\Error;
 
-class EmailFilterManager
+class TestType extends \Espo\Core\Formula\Functions\Base
 {
-    private $entityManager;
-
-    private $data = [];
-
-    protected $filtersMatcher = null;
-
-    public function __construct(EntityManager $entityManager)
+    public function process(\StdClass $item)
     {
-        $this->entityManager = $entityManager;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    protected function getFiltersMatcher()
-    {
-        if (!$this->filtersMatcher) {
-            $this->filtersMatcher = new \Espo\Core\Mail\FiltersMatcher();
+        if (!property_exists($item, 'value') || !is_array($item->value)) {
+            throw new Error('Value for \'String\\Test\' item is not an array.');
         }
-        return $this->filtersMatcher;
-    }
+        if (count($item->value) < 2) {
+            throw new Error('Bad arguments passed to \'String\\Test\'.');
+        }
+        $string = $this->evaluate($item->value[0]);
+        $regexp = $this->evaluate($item->value[1]);
 
-    public function getMatchingFilter(Email $email, $userId)
-    {
-        if (!array_key_exists($userId, $this->data)) {
-            $emailFilterList = $this->getEntityManager()->getRepository('EmailFilter')->where([
-                'parentId' => $userId,
-                'parentType' => 'User'
-            ])->order('LIST:action:Skip,Move to Folder')->find();
-            $this->data[$userId] = $emailFilterList;
+        if (!is_string($string)) {
+            return false;
         }
-        foreach ($this->data[$userId] as $emailFilter) {
-            if ($this->getFiltersMatcher()->match($email, $emailFilter)) {
-                return $emailFilter;
-            }
+        if (!is_string($regexp)) {
+            return false;
         }
+
+        return !!preg_match($regexp, $string);
     }
 }

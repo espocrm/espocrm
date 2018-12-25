@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-class JsonArrayType extends \Doctrine\DBAL\Types\JsonArrayType
+class JsonArrayType extends \Doctrine\DBAL\Types\TextType
 {
     const JSON_ARRAY = 'jsonArray';
 

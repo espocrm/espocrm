@@ -57,7 +57,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 itemHtmlList: itemHtmlList,
                 isEmpty: (this.selected || []).length === 0,
                 valueIsSet: this.model.has(this.name),
-                maxItemLength: this.maxItemLength
+                maxItemLength: this.maxItemLength,
+                allowCustomOptions: this.allowCustomOptions
             }, Dep.prototype.data.call(this));
         },
 
@@ -116,6 +117,10 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList, true);
+            }
+
+            if (this.params.allowCustomOptions || !this.params.options) {
+                this.allowCustomOptions = true;
             }
         },
 
@@ -217,7 +222,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 this.$list = this.$el.find('.list-group');
                 var $select = this.$select = this.$el.find('.select');
 
-                if (!this.params.options) {
+                if (this.allowCustomOptions) {
                     $select.on('keypress', function (e) {
                         if (e.keyCode == 13) {
                             var value = $select.val().toString();
@@ -285,7 +290,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 }
             };
 
-            if (!(this.params.options || []).length) {
+            if (this.allowCustomOptions) {
                 selectizeOptions.persist = false;
                 selectizeOptions.create = function (input) {
                     return {
