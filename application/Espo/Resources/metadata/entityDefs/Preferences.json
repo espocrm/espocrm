@@ -120,7 +120,7 @@
             "tooltip": true
         },
         "signature": {
-            "type": "text",
+            "type": "wysiwyg",
             "view": "views/fields/wysiwyg"
         },
         "defaultReminders": {

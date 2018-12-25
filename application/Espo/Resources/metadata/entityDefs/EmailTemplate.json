@@ -9,7 +9,7 @@
             "type": "varchar"
         },
         "body": {
-            "type": "text",
+            "type": "wysiwyg",
             "view": "views/fields/wysiwyg",
             "useIframe": true
         },
