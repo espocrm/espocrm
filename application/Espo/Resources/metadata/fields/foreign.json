@@ -11,6 +11,11 @@
          "type":"varchar",
          "view": "views/admin/field-manager/fields/foreign/field",
          "required": true
+      },
+      {
+         "name": "view",
+         "type":"varchar",
+         "hidden": true
       }
    ],
    "fieldTypeList": ["varchar", "enum", "enumInt", "enumFloat", "int", "float", "website", "date", "datetime", "text", "number", "bool"],
