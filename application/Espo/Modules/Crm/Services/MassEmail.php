@@ -548,7 +548,7 @@ class MassEmail extends \Espo\Services\Record
         return $this->campaignService;
     }
 
-    protected function findLinkedEntitiesQueueItems($id, $params)
+    protected function findLinkedQueueItems($id, $params)
     {
         $link = 'queueItems';
 

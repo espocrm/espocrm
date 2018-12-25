@@ -106,7 +106,6 @@ class TargetList extends \Espo\Services\Record
     {
         $count = 0;
 
-
         $count += $this->getEntityManager()->getRepository('Contact')->join(['targetLists'])->where([
             'targetListsMiddle.targetListId' => $entity->id,
             'targetListsMiddle.optedOut' => 1
@@ -130,14 +129,14 @@ class TargetList extends \Espo\Services\Record
         $entity->set('optedOutCount', $count);
     }
 
-    protected function afterCreate(Entity $entity, array $data = array())
+    protected function afterCreateEntity(Entity $entity, $data)
     {
-        if (array_key_exists('sourceCampaignId', $data) && !empty($data['includingActionList'])) {
+        if (property_exists($data, 'sourceCampaignId') && !empty($data->includingActionList)) {
             $excludingActionList = [];
-            if (!empty($data['excludingActionList'])) {
-                $excludingActionList = $data['excludingActionList'];
+            if (!empty($data->excludingActionList)) {
+                $excludingActionList = $data->excludingActionList;
             }
-            $this->populateFromCampaignLog($entity, $data['sourceCampaignId'], $data['includingActionList'], $excludingActionList);
+            $this->populateFromCampaignLog($entity, $data->sourceCampaignId, $data->includingActionList, $excludingActionList);
         }
     }
 
@@ -244,7 +243,7 @@ class TargetList extends \Espo\Services\Record
         }
     }
 
-    protected function findLinkedEntitiesOptedOut($id, $params)
+    protected function findLinkedOptedOut($id, $params)
     {
         $pdo = $this->getEntityManager()->getPDO();
         $query = $this->getEntityManager()->getQuery();
@@ -411,4 +410,3 @@ class TargetList extends \Espo\Services\Record
         }
     }
 }
-

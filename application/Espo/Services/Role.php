@@ -41,15 +41,15 @@ class Role extends Record
 
     protected $forceSelectAllAttributes = true;
 
-    public function afterCreate(Entity $entity, array $data = array())
+    public function afterCreateEntity(Entity $entity, $data)
     {
-        parent::afterCreate($entity, $data);
+        parent::afterCreateEntity($entity, $data);
         $this->clearRolesCache();
     }
 
-    public function afterUpdate(Entity $entity, array $data = array())
+    public function afterUpdateEntity(Entity $entity, $data)
     {
-        parent::afterUpdate($entity, $data);
+        parent::afterUpdateEntity($entity, $data);
         $this->clearRolesCache();
     }
 
@@ -58,4 +58,3 @@ class Role extends Record
         $this->getInjection('fileManager')->removeInDir('data/cache/application/acl');
     }
 }
-

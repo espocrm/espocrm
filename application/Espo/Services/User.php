@@ -614,24 +614,25 @@ class User extends Record
         return true;
     }
 
-    public function afterUpdate(Entity $entity, array $data = [])
+    public function afterUpdateEntity(Entity $entity, $data)
     {
-        parent::afterUpdate($entity, $data);
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('type', $data)) {
+        parent::afterUpdateEntity($entity, $data);
+
+        if (property_exists($data, 'rolesIds') || property_exists($data, 'teamsIds') || property_exists($data, 'type')) {
             $this->clearRoleCache($entity->id);
         }
 
         if ($entity->isPortal() && $entity->get('contactId')) {
-            if (array_key_exists('firstName', $data) || array_key_exists('lastName', $data) || array_key_exists('salutationName', $data)) {
+            if (property_exists($data, 'firstName') || property_exists($data, 'lastName') || property_exists($data, 'salutationName')) {
                 $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
-                if (array_key_exists('firstName', $data)) {
-                    $contact->set('firstName', $data['firstName']);
+                if (property_exists($data, 'firstName')) {
+                    $contact->set('firstName', $data->firstName);
                 }
                 if (array_key_exists('lastName', $data)) {
-                    $contact->set('lastName', $data['lastName']);
+                    $contact->set('lastName', $data->lastName);
                 }
-                if (array_key_exists('salutationName', $data)) {
-                    $contact->set('salutationName', $data['salutationName']);
+                if (property_exists($data, 'salutationName')) {
+                    $contact->set('salutationName', $data->salutationName);
                 }
                 $this->getEntityManager()->saveEntity($contact);
             }

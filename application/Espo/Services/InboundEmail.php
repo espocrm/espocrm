@@ -59,13 +59,6 @@ class InboundEmail extends \Espo\Services\Record
         return $entity;
     }
 
-    public function findEntities($params)
-    {
-        $result = parent::findEntities($params);
-
-        return $result;
-    }
-
     protected function init()
     {
         parent::init();

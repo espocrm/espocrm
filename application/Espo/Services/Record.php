@@ -789,6 +789,11 @@ class Record extends \Espo\Core\Services\Base
 
     public function createEntity($data)
     {
+        return $this->create($data);
+    }
+
+    public function create($data)
+    {
         if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
             throw new Forbidden();
         }
@@ -841,6 +846,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function updateEntity($id, $data)
+    {
+        return $this->update($id, $data);
+    }
+
+    public function update($id, $data)
     {
         unset($data->deleted);
 
@@ -904,62 +914,25 @@ class Record extends \Espo\Core\Services\Base
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-
-        $this->beforeCreate($entity, get_object_vars($data)); // TODO remove in 5.1.0
     }
 
     protected function afterCreateEntity(Entity $entity, $data)
     {
-        $this->afterCreate($entity, get_object_vars($data)); // TODO remove in 5.1.0
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
-         $this->beforeUpdate($entity, get_object_vars($data)); // TODO remove in 5.1.0
     }
 
     protected function afterUpdateEntity(Entity $entity, $data)
     {
-        $this->afterUpdate($entity, get_object_vars($data)); // TODO remove in 5.1.0
     }
 
     protected function beforeDeleteEntity(Entity $entity)
     {
-        $this->beforeDelete($entity); // TODO remove in 5.1.0
     }
 
     protected function afterDeleteEntity(Entity $entity)
-    {
-        $this->afterDelete($entity); // TODO remove in 5.1.0
-    }
-
-    /** Deprecated */
-    protected function beforeCreate(Entity $entity, array $data = array())
-    {
-    }
-
-    /** Deprecated */
-    protected function afterCreate(Entity $entity, array $data = array())
-    {
-    }
-
-    /** Deprecated */
-    protected function beforeUpdate(Entity $entity, array $data = array())
-    {
-    }
-
-    /** Deprecated */
-    protected function afterUpdate(Entity $entity, array $data = array())
-    {
-    }
-
-    /** Deprecated */
-    protected function beforeDelete(Entity $entity)
-    {
-    }
-
-    /** Deprecated */
-    protected function afterDelete(Entity $entity)
     {
     }
 
@@ -967,11 +940,16 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
-    protected function afterMassRemove(array $idList)
+    protected function afterMassDelete(array $idList)
     {
     }
 
     public function deleteEntity($id)
+    {
+        return $this->delete($id);
+    }
+
+    public function delete($id)
     {
         if (empty($id)) {
             throw new BadRequest();
@@ -1007,6 +985,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function findEntities($params)
+    {
+        return $this->find($params);
+    }
+
+    public function find($params)
     {
         $disableCount = false;
         if (
@@ -1196,6 +1179,11 @@ class Record extends \Espo\Core\Services\Base
 
     public function findLinkedEntities($id, $link, $params)
     {
+        return $this->findLinked($id, $link, $params);
+    }
+
+    public function findLinked($id, $link, $params)
+    {
         $entity = $this->getRepository()->get($id);
         if (!$entity) {
             throw new NotFound();
@@ -1217,6 +1205,11 @@ class Record extends \Espo\Core\Services\Base
 
         if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
+        }
+
+        $methodName = 'findLinked' . ucfirst($link);
+        if ($link !== 'entities' && method_exists($this, $methodName)) {
+            return $this->$methodName($id, $params);
         }
 
         $methodName = 'findLinkedEntities' . ucfirst($link);
@@ -1294,6 +1287,11 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntity($id, $link, $foreignId)
     {
+        return $this->link($id, $link, $foreignId);
+    }
+
+    public function link($id, $link, $foreignId)
+    {
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
         }
@@ -1345,6 +1343,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function unlinkEntity($id, $link, $foreignId)
+    {
+        return $this->unlink($id, $link, $foreignId);
+    }
+
+    public function unlink($id, $link, $foreignId)
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
@@ -1401,6 +1404,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
+    {
+        return $this->linkMass($id, $link, $where, $selectData);
+    }
+
+    public function linkMass($id, $link, $where, $selectData = null)
     {
         if (empty($id) || empty($link)) {
             throw new BadRequest;
@@ -1569,6 +1577,11 @@ class Record extends \Espo\Core\Services\Base
 
     public function massRemove(array $params)
     {
+        return $this->massDelete();
+    }
+
+    public function massDelete(array $params)
+    {
         $idsRemoved = array();
         $repository = $this->getRepository();
 
@@ -1624,14 +1637,14 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->afterMassRemove($idsRemoved);
+            $this->afterMassDelete($idsRemoved);
 
             return [
                 'count' => $count
             ];
         }
 
-        $this->afterMassRemove($idsRemoved);
+        $this->afterMassDelete($idsRemoved);
 
         return [
             'count' => $count,
