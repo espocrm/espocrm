@@ -1060,10 +1060,10 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return array(
+        return [
             'total' => $total,
             'collection' => $collection,
-        );
+        ];
     }
 
     public function getListKanban($params)
@@ -1286,10 +1286,10 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return array(
+        return [
             'total' => $total,
             'collection' => $collection
-        );
+        ];
     }
 
     public function linkEntity($id, $link, $foreignId)
@@ -1544,17 +1544,17 @@ class Record extends \Espo\Core\Services\Base
 
             $this->afterMassUpdate($idsUpdated, $data);
 
-            return array(
+            return [
                 'count' => $count
-            );
+            ];
         }
 
         $this->afterMassUpdate($idsUpdated, $data);
 
-        return array(
+        return [
             'count' => $count,
             'ids' => $idsUpdated
-        );
+        ];
     }
 
     protected function checkEntityForMassRemove(Entity $entity)
@@ -1626,17 +1626,17 @@ class Record extends \Espo\Core\Services\Base
 
             $this->afterMassRemove($idsRemoved);
 
-            return array(
+            return [
                 'count' => $count
-            );
+            ];
         }
 
         $this->afterMassRemove($idsRemoved);
 
-        return array(
+        return [
             'count' => $count,
             'ids' => $idsRemoved
-        );
+        ];
     }
 
     public function follow($id, $userId = null)
@@ -1691,10 +1691,10 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return array(
+        return [
             'ids' => $resultIdList,
             'count' => count($resultIdList)
-        );
+        ];
     }
 
     public function massUnfollow(array $params, $userId = null)
@@ -1719,10 +1719,10 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return array(
+        return [
             'ids' => $resultIdList,
             'count' => count($resultIdList)
-        );
+        ];
     }
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
@@ -1816,18 +1816,18 @@ class Record extends \Espo\Core\Services\Base
             $selectManager = $this->getSelectManager($this->getEntityType());
             if (array_key_exists('ids', $params)) {
                 $ids = $params['ids'];
-                $where = array(
-                    array(
+                $where = [
+                    [
                         'type' => 'in',
                         'field' => 'id',
                         'value' => $ids
-                    )
-                );
-                $selectParams = $selectManager->getSelectParams(array('where' => $where), true, true);
+                    ]
+                ];
+                $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
             } else if (array_key_exists('where', $params)) {
                 $where = $params['where'];
 
-                $p = array();
+                $p = [];
                 $p['where'] = $where;
                 if (!empty($params['selectData']) && is_array($params['selectData'])) {
                     foreach ($params['selectData'] as $k => $v) {
@@ -1853,7 +1853,7 @@ class Record extends \Espo\Core\Services\Base
             $sth->execute();
         }
 
-        $arr = array();
+        $dataList = [];
 
         $attributeListToSkip = [
             'deleted'
@@ -1928,12 +1928,12 @@ class Record extends \Espo\Core\Services\Base
                 if (method_exists($exportObj, 'loadAdditionalFields')) {
                     $exportObj->loadAdditionalFields($entity, $fieldList);
                 }
-                $row = array();
+                $row = [];
                 foreach ($attributeList as $attribute) {
                     $value = $this->getAttributeFromEntityForExport($entity, $attribute);
                     $row[$attribute] = $value;
                 }
-                $arr[] = $row;
+                $dataList[] = $row;
             }
         } else {
             while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -1945,12 +1945,12 @@ class Record extends \Espo\Core\Services\Base
                 if (method_exists($exportObj, 'loadAdditionalFields')) {
                     $exportObj->loadAdditionalFields($entity, $fieldList);
                 }
-                $row = array();
+                $row = [];
                 foreach ($attributeList as $attribute) {
                     $value = $this->getAttributeFromEntityForExport($entity, $attribute);
                     $row[$attribute] = $value;
                 }
-                $arr[] = $row;
+                $dataList[] = $row;
             }
         }
 
@@ -1972,16 +1972,16 @@ class Record extends \Espo\Core\Services\Base
             $fileName = "Export_{$this->entityType}." . $fileExtension;
         }
 
-        $exportParams = array(
+        $exportParams = [
             'attributeList' => $attributeList,
             'fileName ' => $fileName
-        );
+        ];
 
         $exportParams['fieldList'] = $fieldList;
         if (array_key_exists('exportName', $params)) {
             $exportParams['exportName'] = $params['exportName'];
         }
-        $contents = $exportObj->process($this->entityType, $exportParams, $arr);
+        $contents = $exportObj->process($this->entityType, $exportParams, $dataList);
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);
@@ -2252,10 +2252,10 @@ class Record extends \Espo\Core\Services\Base
             $total = -2;
         }
 
-        return array(
+        return [
             'total' => $total,
             'list' => $list
-        );
+        ];
     }
 
     public function getDuplicateAttributes($id)
