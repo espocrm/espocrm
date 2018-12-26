@@ -38,6 +38,10 @@ class LogoImage extends Image
 {
     public static $authRequired = false;
 
+    protected $allowedRelatedTypeList = ['Settings', 'Portal'];
+
+    protected $allowedFieldList = ['companyLogo'];
+
     public function run()
     {
         $this->imageSizes['small-logo'] = array(181, 44);

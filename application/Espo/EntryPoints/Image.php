@@ -55,6 +55,9 @@ class Image extends \Espo\Core\EntryPoints\Base
         'xx-large' => array(1024, 1024),
     );
 
+    protected $allowedRelatedTypeList = null;
+
+    protected $allowedFieldList = null;
 
     public function run()
     {
@@ -95,6 +98,18 @@ class Image extends \Espo\Core\EntryPoints\Base
 
         if (!in_array($fileType, $this->allowedFileTypes)) {
             throw new Error();
+        }
+
+        if ($this->allowedRelatedTypeList) {
+            if (!in_array($attachment->get('relatedType'), $this->allowedRelatedTypeList)) {
+                throw new NotFound();
+            }
+        }
+
+        if ($this->allowedFieldList) {
+            if (!in_array($attachment->get('field'), $this->allowedFieldList)) {
+                throw new NotFound();
+            }
         }
 
         if (!empty($size)) {
