@@ -65,7 +65,7 @@ class Attachment extends Record
         return $attachment;
     }
 
-    public function createEntity($data)
+    public function create($data)
     {
         if (!empty($data->file)) {
             $arr = explode(',', $data->file);
@@ -127,7 +127,7 @@ class Attachment extends Record
             }
         }
 
-        $entity = parent::createEntity($data);
+        $entity = parent::create($data);
 
         if (!empty($data->file)) {
             $entity->clear('contents');

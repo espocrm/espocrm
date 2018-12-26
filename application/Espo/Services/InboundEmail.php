@@ -41,24 +41,6 @@ class InboundEmail extends \Espo\Services\Record
 
     const PORTION_LIMIT = 20;
 
-    public function createEntity($data)
-    {
-        $entity = parent::createEntity($data);
-        return $entity;
-    }
-
-    public function getEntity($id = null)
-    {
-        $entity = parent::getEntity($id);
-        return $entity;
-    }
-
-    public function updateEntity($id, $data)
-    {
-        $entity = parent::updateEntity($id, $data);
-        return $entity;
-    }
-
     protected function init()
     {
         parent::init();

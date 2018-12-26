@@ -242,7 +242,7 @@ class User extends Record
         }
     }
 
-    public function createEntity($data)
+    public function create($data)
     {
         $newPassword = null;
         if (property_exists($data, 'password')) {
@@ -250,7 +250,7 @@ class User extends Record
             $data->password = $this->hashPassword($data->password);
         }
 
-        $user = parent::createEntity($data);
+        $user = parent::create($data);
 
         if (!is_null($newPassword) && !empty($data->sendAccessInfo)) {
             if ($user->isActive()) {
@@ -263,7 +263,7 @@ class User extends Record
         return $user;
     }
 
-    public function updateEntity($id, $data)
+    public function update($id, $data)
     {
         if ($id == 'system') {
             throw new Forbidden();
@@ -280,7 +280,7 @@ class User extends Record
             unset($data->type);
         }
 
-        $user = parent::updateEntity($id, $data);
+        $user = parent::update($id, $data);
 
         if (!is_null($newPassword)) {
             try {
@@ -576,7 +576,7 @@ class User extends Record
         $this->getMailSender()->send($email);
     }
 
-    public function deleteEntity($id)
+    public function delete($id)
     {
         if ($id == 'system') {
             throw new Forbidden();
@@ -584,7 +584,7 @@ class User extends Record
         if ($id == $this->getUser()->id) {
             throw new Forbidden();
         }
-        return parent::deleteEntity($id);
+        return parent::delete($id);
     }
 
     protected function checkEntityForMassRemove(Entity $entity)

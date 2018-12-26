@@ -261,7 +261,12 @@ class Record extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($historyRecord);
     }
 
-    public function readEntity($id)
+    public function readEntity($id) //TODO Remove in 5.8
+    {
+        return $this->read($id);
+    }
+
+    public function read($id)
     {
         if (empty($id)) {
             throw new Error();
@@ -787,7 +792,7 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function createEntity($data)
+    public function createEntity($data) //TODO Remove in 5.8
     {
         return $this->create($data);
     }
@@ -845,7 +850,7 @@ class Record extends \Espo\Core\Services\Base
         throw new Error();
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity($id, $data) //TODO Remove in 5.8
     {
         return $this->update($id, $data);
     }
@@ -944,7 +949,7 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
-    public function deleteEntity($id)
+    public function deleteEntity($id)  //TODO Remove in 5.8
     {
         return $this->delete($id);
     }
@@ -1285,7 +1290,7 @@ class Record extends \Espo\Core\Services\Base
         ];
     }
 
-    public function linkEntity($id, $link, $foreignId)
+    public function linkEntity($id, $link, $foreignId) //TODO Remove in 5.8
     {
         return $this->link($id, $link, $foreignId);
     }
@@ -1342,7 +1347,7 @@ class Record extends \Espo\Core\Services\Base
         return true;
     }
 
-    public function unlinkEntity($id, $link, $foreignId)
+    public function unlinkEntity($id, $link, $foreignId) //TODO Remove in 5.8
     {
         return $this->unlink($id, $link, $foreignId);
     }
@@ -1403,7 +1408,7 @@ class Record extends \Espo\Core\Services\Base
         return true;
     }
 
-    public function linkEntityMass($id, $link, $where, $selectData = null)
+    public function linkEntityMass($id, $link, $where, $selectData = null) //TODO Remove in 5.8
     {
         return $this->linkMass($id, $link, $where, $selectData);
     }
@@ -2238,7 +2243,7 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
-    protected function findLinkedEntitiesFollowers($id, $params)
+    protected function findLinkedFollowers($id, $params)
     {
         $maxSize = 0;
 
