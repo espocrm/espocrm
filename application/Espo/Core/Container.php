@@ -378,7 +378,8 @@ class Container
     {
         return new \Espo\Core\Utils\ClientManager(
             $this->get('config'),
-            $this->get('themeManager')
+            $this->get('themeManager'),
+            $this->get('metadata')
         );
     }
 
