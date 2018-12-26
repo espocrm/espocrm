@@ -76,7 +76,7 @@ class Image extends \Espo\Core\EntryPoints\Base
             $size = $_GET['size'];
         }
 
-        $this->show($id, $size);
+        $this->show($id, $size, false);
     }
 
     protected function show($id, $size, $disableAccessCheck = false)
@@ -204,7 +204,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         switch ($fileType) {
             case 'image/jpeg':
                 $sourceImage = imagecreatefromjpeg($filePath);
-                imagecopyresampled ($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
                 break;
             case 'image/png':
                 $sourceImage = imagecreatefrompng($filePath);
@@ -231,14 +231,21 @@ class Image extends \Espo\Core\EntryPoints\Base
         return $targetImage;
     }
 
-    protected function fixOrientation($targetImage, $filePath)
+    protected function getOrientation($filePath)
     {
+        $orientation = 0;
         if (function_exists('exif_read_data')) {
             $orientation = @exif_read_data($filePath)['Orientation'];
-            if ($orientation) {
-                $angle = array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[$orientation];
-                $targetImage = imagerotate($targetImage, $angle, 0);
-            }
+        }
+        return $orientation;
+    }
+
+    protected function fixOrientation($targetImage, $filePath)
+    {
+        $orientation = $this->getOrientation($filePath);
+        if ($orientation) {
+            $angle = array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[$orientation];
+            $targetImage = imagerotate($targetImage, $angle, 0);
         }
 
         return $targetImage;
