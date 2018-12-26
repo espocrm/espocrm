@@ -212,6 +212,11 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             this.fetch(function (data) {
                 this.chartData = this.prepareData(data);
 
+                if (this.isNoData()) {
+                    this.showNoData();
+                    return;
+                }
+
                 this.adjustContainer();
 
                 setTimeout(function () {
@@ -219,6 +224,10 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                     this.draw();
                 }.bind(this), 1);
             });
+        },
+
+        isNoData: function () {
+            return false;
         },
 
         url: function () {},
@@ -239,6 +248,30 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
         getDateFilter: function () {
             return this.getOption('dateFilter') || 'currentYear';
+        },
+
+        showNoData: function () {
+            var fontSize = this.getThemeManager().getParam('fontSize') || 14;
+            this.$container.empty();
+            var textFontSize = fontSize * 1.2;
+
+            var $text = $('<span>').html(this.translate('No Data')).addClass('text-muted');
+
+            var $div = $('<div>').css('text-align', 'center')
+                                 .css('font-size', textFontSize + 'px')
+                                 .css('display', 'table')
+                                 .css('width', '100%')
+                                 .css('height', '100%');
+
+            $text
+                .css('display', 'table-cell')
+                .css('vertical-align', 'middle')
+                .css('padding-bottom', fontSize * 1.5 + 'px');
+
+
+            $div.append($text);
+
+            this.$container.append($div);
         }
 
     });

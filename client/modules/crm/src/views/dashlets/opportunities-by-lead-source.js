@@ -53,6 +53,10 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
             return data;
         },
 
+        isNoData: function () {
+            return !this.chartData.length;
+        },
+
         setupDefaultOptions: function () {
             this.defaultOptions['dateFrom'] = this.defaultOptions['dateFrom'] || moment().format('YYYY') + '-01-01';
             this.defaultOptions['dateTo'] = this.defaultOptions['dateTo'] || moment().format('YYYY') + '-12-31';
