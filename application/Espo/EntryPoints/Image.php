@@ -42,6 +42,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         'image/jpeg',
         'image/png',
         'image/gif',
+        'image/webp',
     ];
 
     protected $imageSizes = [
@@ -134,6 +135,9 @@ class Image extends \Espo\Core\EntryPoints\Base
                         case 'image/gif':
                             imagegif($targetImage);
                             break;
+                        case 'image/webp':
+                            imagewebp($targetImage);
+                            break;
                     }
                     $contents = ob_get_contents();
                     ob_end_clean();
@@ -212,6 +216,10 @@ class Image extends \Espo\Core\EntryPoints\Base
                 break;
             case 'image/gif':
                 $sourceImage = imagecreatefromgif($filePath);
+                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+                break;
+            case 'image/webp':
+                $sourceImage = imagecreatefromwebp($filePath);
                 imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
                 break;
         }

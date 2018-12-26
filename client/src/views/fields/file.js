@@ -46,6 +46,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             'image/jpeg',
             'image/png',
             'image/gif',
+            'image/webp',
         ],
 
         defaultType: false,
@@ -247,11 +248,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             name = Handlebars.Utils.escapeExpression(name);
             var preview = name;
 
-            switch (type) {
-                case 'image/png':
-                case 'image/jpeg':
-                case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '" class="image-preview"></a>';
+            if (~this.previewTypeList.indexOf(type)) {
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '" class="image-preview"></a>';
             }
             return preview;
         },
@@ -260,11 +258,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             name = Handlebars.Utils.escapeExpression(name);
             var preview = name;
 
-            switch (type) {
-                case 'image/png':
-                case 'image/jpeg':
-                case 'image/gif':
-                    preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
+            if (~this.previewTypeList.indexOf(type)) {
+                preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
             }
 
             return preview;

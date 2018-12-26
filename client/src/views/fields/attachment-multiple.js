@@ -56,6 +56,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             'image/jpeg',
             'image/png',
             'image/gif',
+            'image/webp',
         ],
 
         validations: ['ready', 'required'],
@@ -284,11 +285,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
             var preview = name;
 
-            switch (type) {
-                case 'image/png':
-                case 'image/jpeg':
-                case 'image/gif':
-                    preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
+            if (~this.previewTypeList.indexOf(type)) {
+                preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
             }
 
             return preview;
@@ -490,11 +488,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         isTypeIsImage: function (type) {
-            switch (type) {
-                case 'image/png':
-                case 'image/jpeg':
-                case 'image/gif':
-                    return true;
+            if (~this.previewTypeList.indexOf(type)) {
+                return true;
             }
             return false
         },

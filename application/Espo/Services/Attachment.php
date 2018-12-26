@@ -44,6 +44,13 @@ class Attachment extends Record
 
     protected $inlineAttachmentFieldTypeList = ['wysiwyg'];
 
+    protected $imageTypeList = [
+        'image/png',
+        'image/jpeg',
+        'image/gif',
+        'image/webp',
+    ];
+
     public function upload($fileData)
     {
         if (!$this->getAcl()->checkScope('Attachment', 'create')) {
@@ -322,7 +329,8 @@ class Attachment extends Record
                     'png' => 'image/png',
                     'jpg' => 'image/jpeg',
                     'jpeg' => 'image/jpeg',
-                    'gif' => 'image/gif'
+                    'gif' => 'image/gif',
+                    'webp' => 'image/webp',
                 ];
 
                 $extension = preg_replace('#\?.*#', '', pathinfo($url, \PATHINFO_EXTENSION));
@@ -334,7 +342,7 @@ class Attachment extends Record
 
             if (!$type) return;
 
-            if (!in_array($type, ['image/png', 'image/jpeg', 'image/gif'])) {
+            if (!in_array($type, $this->imageTypeList)) {
                 return;
             }
 
