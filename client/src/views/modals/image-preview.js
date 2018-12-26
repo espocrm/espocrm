@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/image-preview', ['views/modal', 'lib!client/lib/exif-js.js'], function (Dep) {
+Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep) {
 
     return Dep.extend({
 

@@ -38,5 +38,10 @@
         "path": "client/lib/bootstrap-colorpicker.js",
         "exportsTo": "$",
         "exportsAs": "colorpicker"
+    },
+    "exif": {
+        "path": "client/lib/exif-js.js",
+        "exportsTo": "window",
+        "exportsAs": "EXIF"
     }
 }
