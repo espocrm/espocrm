@@ -38,22 +38,22 @@ class Image extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = true;
 
-    protected $allowedFileTypes = array(
+    protected $allowedFileTypes = [
         'image/jpeg',
         'image/png',
         'image/gif',
-    );
+    ];
 
-    protected $imageSizes = array(
-        'xxx-small' => array(18, 18),
-        'xx-small' => array(32, 32),
-        'x-small' => array(64, 64),
-        'small' => array(128, 128),
-        'medium' => array(256, 256),
-        'large' => array(512, 512),
-        'x-large' => array(864, 864),
-        'xx-large' => array(1024, 1024),
-    );
+    protected $imageSizes = [
+        'xxx-small' => [18, 18],
+        'xx-small' => [32, 32],
+        'x-small' => [64, 64],
+        'small' => [128, 128],
+        'medium' => [256, 256],
+        'large' => [512, 512],
+        'x-large' => [864, 864],
+        'xx-large' => [1024, 1024],
+    ];
 
     protected $fixOrientationFileTypeList = [
         'image/jpeg',
