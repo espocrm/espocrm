@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
+Espo.define('views/modals/image-preview', ['views/modal', 'lib!client/lib/exif-js.js'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,6 +39,16 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
         size: '',
 
         backdrop: true,
+
+        transformClassList: [
+            'transform-flip',
+            'transform-rotate-180',
+            'transform-flip-and-rotate-180',
+            'transform-flip-and-rotate-270',
+            'transform-rotate-90',
+            'transform-flip-and-rotate-90',
+            'transform-rotate-270',
+        ],
 
         data: function () {
             return {
@@ -81,9 +91,46 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
             return url;
         },
 
+        onImageLoad: function () {
+            console.log(1);
+        },
+
         afterRender: function () {
             $container = this.$el.find('.image-container');
-            $img = this.$el.find('.image-container img');
+            $img = this.$img = this.$el.find('.image-container img');
+
+            $img.on('load', function () {
+                var self = this;
+                EXIF.getData($img.get(0), function () {
+                    var orientation = EXIF.getTag(this, 'Orientation');
+                    switch (orientation) {
+                        case 2:
+                            $img.addClass('transform-flip');
+                            break;
+                        case 3:
+                            $img.addClass('transform-rotate-180');
+                            break;
+                        case 4:
+                            $img.addClass('transform-rotate-180');
+                            $img.addClass('transform-flip');
+                            break;
+                        case 5:
+                            $img.addClass('transform-rotate-270');
+                            $img.addClass('transform-flip');
+                            break;
+                        case 6:
+                            $img.addClass('transform-rotate-90');
+                            break;
+                        case 7:
+                            $img.addClass('transform-rotate-90');
+                            $img.addClass('transform-flip');
+                            break;
+                        case 8:
+                            $img.addClass('transform-rotate-270');
+                            break;
+                    }
+                });
+            }.bind(this));
 
             if (this.navigationEnabled) {
                 $img.css('cursor', 'pointer');
@@ -108,6 +155,11 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
         },
 
         switchToNext: function () {
+
+            this.transformClassList.forEach(function (item) {
+                this.$img.removeClass(item);
+            }, this);
+
             var index = -1;
             this.imageList.forEach(function (d, i) {
                 if (d.id === this.options.id) {
@@ -127,4 +179,3 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
     });
 });
-
