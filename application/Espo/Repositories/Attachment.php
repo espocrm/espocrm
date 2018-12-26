@@ -35,11 +35,34 @@ use Espo\Core\Utils\Util;
 
 class Attachment extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected $imageTypeList = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+    ];
+
+    protected $imageThumbList = [
+        'xxx-small',
+        'xx-small',
+        'x-small',
+        'small',
+        'medium',
+        'large',
+        'x-large',
+        'xx-large',
+    ];
+
     protected function init()
     {
         parent::init();
         $this->addDependency('container');
         $this->addDependency('config');
+    }
+
+    protected function getFileManager()
+    {
+        return $this->getInjection('container')->get('fileManager');
     }
 
     protected function getFileStorageManager()
@@ -106,6 +129,20 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
         if ($duplicateCount === 0) {
             $this->getFileStorageManager()->unlink($entity);
+
+            if (in_array($entity->get('type'), $this->imageTypeList)) {
+                $this->removeImageThumbs($entity);
+            }
+        }
+    }
+
+    public function removeImageThumbs($entity)
+    {
+        foreach ($this->imageThumbList as $suffix) {
+            $filePath = "data/upload/thumbs/".$entity->getSourceId()."_{$suffix}";
+            if ($this->getFileManager()->isFile($filePath)) {
+                $this->getFileManager()->removeFile($filePath);
+            }
         }
     }
 
