@@ -55,6 +55,10 @@ class Image extends \Espo\Core\EntryPoints\Base
         'xx-large' => array(1024, 1024),
     );
 
+    protected $fixOrientationFileTypeList = [
+        'image/jpeg',
+    ];
+
     protected $allowedRelatedTypeList = null;
 
     protected $allowedFieldList = null;
@@ -212,8 +216,21 @@ class Image extends \Espo\Core\EntryPoints\Base
                 break;
         }
 
+        if (in_array($fileType, $this->fixOrientationFileTypeList)) {
+            $targetImage = $this->fixOrientation($targetImage, $filePath);
+        }
+
+        return $targetImage;
+    }
+
+    protected function fixOrientation($targetImage, $filePath)
+    {
         if (function_exists('exif_read_data')) {
-            $targetImage = imagerotate($targetImage, array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[@exif_read_data($filePath)['Orientation'] ?: 0], 0);
+            $orientation = @exif_read_data($filePath)['Orientation'];
+            if ($orientation) {
+                $angle = array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[$orientation];
+                $targetImage = imagerotate($targetImage, $angle, 0);
+            }
         }
 
         return $targetImage;
