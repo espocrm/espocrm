@@ -69,6 +69,7 @@
                             <li>vis.js by Almende B.V.</li>
                             <li>Ace</li>
                             <li>Marked by Christopher Jeffrey</li>
+                            <li>Exif.js by Jacob Seidelin</li>
                         </ul>
                         </section>
                     </div>
