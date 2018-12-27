@@ -6,7 +6,7 @@
         },
         {
             "name": "ifThen",
-            "insertText": "ifThenElse(CONDITION, CONSEQUENT)"
+            "insertText": "ifThen(CONDITION, CONSEQUENT)"
         },
         {
             "name": "string\\concatenate",
@@ -17,8 +17,28 @@
             "insertText": "string\\substring(STRING, START, LENGTH)"
         },
         {
+            "name": "string\\contains",
+            "insertText": "string\\contains(STRING, NEEDLE)"
+        },
+        {
+            "name": "string\\test",
+            "insertText": "string\\test(STRING, REGULAR_EXPRESSION)"
+        },
+        {
+            "name": "string\\length",
+            "insertText": "string\\length(STRING)"
+        },
+        {
             "name": "string\\trim",
             "insertText": "string\\trim(STRING)"
+        },
+        {
+            "name": "string\\lowerCase",
+            "insertText": "string\\lowerCase(STRING)"
+        },
+        {
+            "name": "string\\upperCase",
+            "insertText": "string\\upperCase(STRING)"
         },
         {
             "name": "datetime\\today",
@@ -31,6 +51,30 @@
         {
             "name": "datetime\\format",
             "insertText": "datetime\\format(VALUE)"
+        },
+        {
+            "name": "datetime\\date",
+            "insertText": "datetime\\date(VALUE)"
+        },
+        {
+            "name": "datetime\\month",
+            "insertText": "datetime\\month(VALUE)"
+        },
+        {
+            "name": "datetime\\year",
+            "insertText": "datetime\\year(VALUE)"
+        },
+        {
+            "name": "datetime\\hour",
+            "insertText": "datetime\\hour(VALUE)"
+        },
+        {
+            "name": "datetime\\minute",
+            "insertText": "datetime\\minute(VALUE)"
+        },
+        {
+            "name": "datetime\\dayOfWeek",
+            "insertText": "datetime\\dayOfWeek(VALUE)"
         },
         {
             "name": "datetime\\addMinutes",
@@ -73,6 +117,14 @@
             "insertText": "number\\round(VALUE, PRECISION)"
         },
         {
+            "name": "number\\floor",
+            "insertText": "number\\floor(VALUE)"
+        },
+        {
+            "name": "number\\ceil",
+            "insertText": "number\\ceil(VALUE)"
+        },
+        {
             "name": "entity\\isNew",
             "insertText": "entity\\isNew()"
         },
@@ -107,6 +159,14 @@
         {
             "name": "entity\\isRelated",
             "insertText": "entity\\isRelated(LINK, ID)"
+        },
+        {
+            "name": "entity\\sumRelated",
+            "insertText": "entity\\sumRelated(LINK, FIELD, FILTER)"
+        },
+        {
+            "name": "entity\\countRelated",
+            "insertText": "entity\\countRelated(LINK, FILTER)"
         },
         {
             "name": "env\\userAttribute",
