@@ -334,19 +334,34 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                     this.$country.attr('autocomplete', 'espo-country');
                 }
 
+                this.controlStreetTextareaHeight();
                 this.$street.on('input', function (e) {
-                    var numberOfLines = e.currentTarget.value.split('\n').length;
-                    var numberOfRows = this.$street.prop('rows');
-
-                    if (numberOfRows < numberOfLines) {
-                        this.$street.prop('rows', numberOfLines);
-                    } else if (numberOfRows > numberOfLines) {
-                        this.$street.prop('rows', numberOfLines);
-                    }
+                    this.controlStreetTextareaHeight();
                 }.bind(this));
 
                 var numberOfLines = this.$street.val().split('\n').length;
                 this.$street.prop('rows', numberOfLines);
+            }
+        },
+
+        controlStreetTextareaHeight: function (lastHeight) {
+            var scrollHeight = this.$street.prop('scrollHeight');
+            var clientHeight = this.$street.prop('clientHeight');
+
+            if (typeof lastHeight === 'undefined' && clientHeight === 0) {
+                setTimeout(this.controlStreetTextareaHeight.bind(this), 10);
+                return;
+            }
+
+            if (clientHeight === lastHeight) return;
+
+            if (scrollHeight > clientHeight + 1) {
+                var rows = this.$street.prop('rows');
+                this.$street.attr('rows', rows + 1);
+                this.controlStreetTextareaHeight(clientHeight);
+            }
+            if (this.$street.val().length === 0) {
+                this.$street.attr('rows', 1);
             }
         },
 
