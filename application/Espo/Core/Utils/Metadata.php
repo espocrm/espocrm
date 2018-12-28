@@ -66,7 +66,8 @@ class Metadata
     protected $frontendHiddenPathList = [
         ['app', 'formula', 'functionClassNameMap'],
         ['app', 'fileStorage', 'implementationClassNameMap'],
-        ['app', 'emailNotifications', 'handlerClassNameMap']
+        ['app', 'emailNotifications', 'handlerClassNameMap'],
+        ['app', 'client'],
     ];
 
     /**

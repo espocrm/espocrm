@@ -52,6 +52,10 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
             return 0;
         },
 
+        isNoData: function () {
+            return !this.monthList.length;
+        },
+
         prepareData: function (response) {
             var monthList = this.monthList = response.keyList;
 

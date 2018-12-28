@@ -38,23 +38,31 @@ class Image extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = true;
 
-    protected $allowedFileTypes = array(
+    protected $allowedFileTypes = [
         'image/jpeg',
         'image/png',
         'image/gif',
-    );
+        'image/webp',
+    ];
 
-    protected $imageSizes = array(
-        'xxx-small' => array(18, 18),
-        'xx-small' => array(32, 32),
-        'x-small' => array(64, 64),
-        'small' => array(128, 128),
-        'medium' => array(256, 256),
-        'large' => array(512, 512),
-        'x-large' => array(864, 864),
-        'xx-large' => array(1024, 1024),
-    );
+    protected $imageSizes = [
+        'xxx-small' => [18, 18],
+        'xx-small' => [32, 32],
+        'x-small' => [64, 64],
+        'small' => [128, 128],
+        'medium' => [256, 256],
+        'large' => [512, 512],
+        'x-large' => [864, 864],
+        'xx-large' => [1024, 1024],
+    ];
 
+    protected $fixOrientationFileTypeList = [
+        'image/jpeg',
+    ];
+
+    protected $allowedRelatedTypeList = null;
+
+    protected $allowedFieldList = null;
 
     public function run()
     {
@@ -68,7 +76,7 @@ class Image extends \Espo\Core\EntryPoints\Base
             $size = $_GET['size'];
         }
 
-        $this->show($id, $size);
+        $this->show($id, $size, false);
     }
 
     protected function show($id, $size, $disableAccessCheck = false)
@@ -97,6 +105,18 @@ class Image extends \Espo\Core\EntryPoints\Base
             throw new Error();
         }
 
+        if ($this->allowedRelatedTypeList) {
+            if (!in_array($attachment->get('relatedType'), $this->allowedRelatedTypeList)) {
+                throw new NotFound();
+            }
+        }
+
+        if ($this->allowedFieldList) {
+            if (!in_array($attachment->get('field'), $this->allowedFieldList)) {
+                throw new NotFound();
+            }
+        }
+
         if (!empty($size)) {
             if (!empty($this->imageSizes[$size])) {
                 $thumbFilePath = "data/upload/thumbs/{$sourceId}_{$size}";
@@ -114,6 +134,9 @@ class Image extends \Espo\Core\EntryPoints\Base
                             break;
                         case 'image/gif':
                             imagegif($targetImage);
+                            break;
+                        case 'image/webp':
+                            imagewebp($targetImage);
                             break;
                     }
                     $contents = ob_get_contents();
@@ -181,7 +204,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         switch ($fileType) {
             case 'image/jpeg':
                 $sourceImage = imagecreatefromjpeg($filePath);
-                imagecopyresampled ($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
                 break;
             case 'image/png':
                 $sourceImage = imagecreatefrompng($filePath);
@@ -195,10 +218,34 @@ class Image extends \Espo\Core\EntryPoints\Base
                 $sourceImage = imagecreatefromgif($filePath);
                 imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
                 break;
+            case 'image/webp':
+                $sourceImage = imagecreatefromwebp($filePath);
+                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+                break;
         }
 
+        if (in_array($fileType, $this->fixOrientationFileTypeList)) {
+            $targetImage = $this->fixOrientation($targetImage, $filePath);
+        }
+
+        return $targetImage;
+    }
+
+    protected function getOrientation($filePath)
+    {
+        $orientation = 0;
         if (function_exists('exif_read_data')) {
-            $targetImage = imagerotate($targetImage, array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[@exif_read_data($filePath)['Orientation'] ?: 0], 0);
+            $orientation = @exif_read_data($filePath)['Orientation'];
+        }
+        return $orientation;
+    }
+
+    protected function fixOrientation($targetImage, $filePath)
+    {
+        $orientation = $this->getOrientation($filePath);
+        if ($orientation) {
+            $angle = array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[$orientation];
+            $targetImage = imagerotate($targetImage, $angle, 0);
         }
 
         return $targetImage;

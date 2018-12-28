@@ -35,42 +35,19 @@ class ClientManager
 
     private $config;
 
+    private $metadata;
+
     protected $mainHtmlFilePath = 'html/main.html';
 
     protected $runScript = "app.start();";
 
     protected $basePath = '';
 
-    protected $jsFileList = [
-        'client/espo.min.js'
-    ];
-
-    protected $developerModeJsFileList = [
-        'client/lib/jquery-2.1.4.min.js',
-        'client/lib/underscore-min.js',
-        'client/lib/es6-promise.min.js',
-        'client/lib/backbone-min.js',
-        'client/lib/handlebars.js',
-        'client/lib/base64.js',
-        'client/lib/jquery-ui.min.js',
-        'client/lib/jquery.ui.touch-punch.min.js',
-        'client/lib/moment.min.js',
-        'client/lib/moment-timezone-with-data.min.js',
-        'client/lib/jquery.timepicker.min.js',
-        'client/lib/jquery.autocomplete.js',
-        'client/lib/bootstrap.min.js',
-        'client/lib/bootstrap-datepicker.js',
-        'client/lib/bull.js',
-        'client/lib/marked.min.js',
-        'client/src/loader.js',
-        'client/src/utils.js',
-        'client/src/exceptions.js',
-    ];
-
-    public function __construct(Config $config, ThemeManager $themeManager)
+    public function __construct(Config $config, ThemeManager $themeManager, Metadata $metadata)
     {
         $this->config = $config;
         $this->themeManager = $themeManager;
+        $this->metadata = $metadata;
     }
 
     protected function getThemeManager()
@@ -81,6 +58,11 @@ class ClientManager
     protected function getConfig()
     {
         return $this->config;
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
     }
 
     public function setBasePath($basePath)
@@ -116,11 +98,11 @@ class ClientManager
 
         if ($isDeveloperMode) {
             $useCache = $this->getConfig()->get('useCacheInDeveloperMode');
-            $jsFileList = $this->developerModeJsFileList;
+            $jsFileList = $this->getMetadata()->get(['app', 'client', 'developerModeScriptList']);
             $loaderCacheTimestamp = 'null';
         } else {
             $useCache = $this->getConfig()->get('useCache');
-            $jsFileList = $this->jsFileList;
+            $jsFileList = $this->getMetadata()->get(['app', 'client', 'scriptList']);
             $loaderCacheTimestamp = $cacheTimestamp;
         }
 

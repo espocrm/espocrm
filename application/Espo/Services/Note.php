@@ -48,7 +48,7 @@ class Note extends Record
         return $entity;
     }
 
-    public function createEntity($data)
+    public function create($data)
     {
         if (!empty($data->parentType) && !empty($data->parentId)) {
             $entity = $this->getEntityManager()->getEntity($data->parentType, $data->parentId);
@@ -59,7 +59,7 @@ class Note extends Record
             }
         }
 
-        return parent::createEntity($data);
+        return parent::create($data);
     }
 
     protected function afterCreateEntity(Entity $entity, $data)
@@ -197,20 +197,20 @@ class Note extends Record
         return true;
     }
 
-    public function linkEntity($id, $link, $foreignId)
+    public function link($id, $link, $foreignId)
     {
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
         }
-        return parant::linkEntity($id, $link, $foreignId);
+        return parant::link($id, $link, $foreignId);
     }
 
-    public function unlinkEntity($id, $link, $foreignId)
+    public function unlink($id, $link, $foreignId)
     {
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
         }
-        return parant::unlinkEntity($id, $link, $foreignId);
+        return parant::unlink($id, $link, $foreignId);
     }
 
     public function processNoteAclJob($data)

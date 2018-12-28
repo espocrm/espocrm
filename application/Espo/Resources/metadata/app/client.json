@@ -1,0 +1,26 @@
+{
+    "scriptList": [
+        "client/espo.min.js"
+    ],
+    "developerModeScriptList": [
+        "client/lib/jquery-2.1.4.min.js",
+        "client/lib/underscore-min.js",
+        "client/lib/es6-promise.min.js",
+        "client/lib/backbone-min.js",
+        "client/lib/handlebars.js",
+        "client/lib/base64.js",
+        "client/lib/jquery-ui.min.js",
+        "client/lib/jquery.ui.touch-punch.min.js",
+        "client/lib/moment.min.js",
+        "client/lib/moment-timezone-with-data.min.js",
+        "client/lib/jquery.timepicker.min.js",
+        "client/lib/jquery.autocomplete.js",
+        "client/lib/bootstrap.min.js",
+        "client/lib/bootstrap-datepicker.js",
+        "client/lib/bull.js",
+        "client/lib/marked.min.js",
+        "client/src/loader.js",
+        "client/src/utils.js",
+        "client/src/exceptions.js"
+    ]
+}

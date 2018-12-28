@@ -262,9 +262,9 @@ class Email extends Record
         return $this->streamService;
     }
 
-    public function createEntity($data)
+    public function create($data)
     {
-        $entity = parent::createEntity($data);
+        $entity = parent::create($data);
 
         if ($entity && $entity->get('status') == 'Sending') {
             $this->send($entity);

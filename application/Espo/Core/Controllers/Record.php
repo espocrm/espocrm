@@ -67,7 +67,7 @@ class Record extends Base
     public function actionRead($params, $data, $request)
     {
         $id = $params['id'];
-        $entity = $this->getRecordService()->readEntity($id);
+        $entity = $this->getRecordService()->read($id);
 
         if (empty($entity)) {
             throw new NotFound();
@@ -95,7 +95,7 @@ class Record extends Base
 
         $service = $this->getRecordService();
 
-        if ($entity = $service->createEntity($data)) {
+        if ($entity = $service->create($data)) {
             return $entity->getValueMap();
         }
 
@@ -116,7 +116,7 @@ class Record extends Base
 
         $id = $params['id'];
 
-        if ($entity = $this->getRecordService()->updateEntity($id, $data)) {
+        if ($entity = $this->getRecordService()->update($id, $data)) {
             return $entity->getValueMap();
         }
 
@@ -140,12 +140,12 @@ class Record extends Base
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
-        $result = $this->getRecordService()->findEntities($params);
+        $result = $this->getRecordService()->find($params);
 
-        return array(
+        return [
             'total' => $result['total'],
             'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
-        );
+        ];
     }
 
     public function getActionListKanban($params, $data, $request)
@@ -195,7 +195,7 @@ class Record extends Base
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
-        $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
+        $result = $this->getRecordService()->findLinked($id, $link, $params);
 
         return array(
             'total' => $result['total'],
@@ -211,7 +211,7 @@ class Record extends Base
 
         $id = $params['id'];
 
-        if ($this->getRecordService()->deleteEntity($id)) {
+        if ($this->getRecordService()->delete($id)) {
             return true;
         }
         throw new Error();
@@ -262,9 +262,9 @@ class Record extends Base
             $params['format'] = $data->format;
         }
 
-        return array(
+        return [
             'id' => $this->getRecordService()->export($params)
-        );
+        ];
     }
 
     public function actionMassUpdate($params, $data, $request)
@@ -363,7 +363,7 @@ class Record extends Base
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
+                if ($this->getRecordService()->link($id, $link, $foreignId)) {
                     $result = true;
                 }
             }
@@ -400,7 +400,7 @@ class Record extends Base
 
         $result = false;
         foreach ($foreignIdList as $foreignId) {
-            if ($this->getRecordService()->unlinkEntity($id, $link, $foreignId)) {
+            if ($this->getRecordService()->unlink($id, $link, $foreignId)) {
                 $result = $result || true;
             }
         }
