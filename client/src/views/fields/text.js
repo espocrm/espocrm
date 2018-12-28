@@ -181,7 +181,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'detail' || this.mode === 'list') {
+            if (this.isReadMode()) {
                 $(window).off('resize.see-more-' + this.cid);
 
                 this.$textContainer = this.$el.find('> .complex-text-container');
@@ -190,6 +190,10 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
                 if (this.isCut()) {
                     this.controlSeeMore();
+                    if (this.model.get(this.name) && this.$text.height() === 0) {
+                        this.$textContainer.addClass('cut');
+                        setTimeout(this.controlSeeMore.bind(this), 50);
+                    }
 
                     $(window).on('resize.see-more-' + this.cid, function () {
                         this.controlSeeMore();
