@@ -1128,7 +1128,7 @@ abstract class Base
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
-    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array())
+    protected function getJoins(IEntity $entity, array $joins, $isLeft = false, $joinConditions = array())
     {
         $joinSqlList = [];
         foreach ($joins as $item) {
@@ -1154,7 +1154,7 @@ abstract class Base
             foreach ($itemConditions as $left => $right) {
                 $conditions[$left] = $right;
             }
-            if ($sql = $this->getJoin($entity, $relationName, $left, $conditions, $alias)) {
+            if ($sql = $this->getJoin($entity, $relationName, $isLeft, $conditions, $alias)) {
                 $joinSqlList[] = $sql;
             }
         }
@@ -1235,9 +1235,9 @@ abstract class Base
         }
     }
 
-    protected function getJoin(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null)
+    protected function getJoin(IEntity $entity, $name, $isLeft = false, $conditions = [], $alias = null)
     {
-        $prefix = ($left) ? 'LEFT ' : '';
+        $prefix = ($isLeft) ? 'LEFT ' : '';
 
         if (!$entity->hasRelation($name)) {
             if (!$alias) {
