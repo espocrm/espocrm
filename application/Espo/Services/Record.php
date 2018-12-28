@@ -318,6 +318,8 @@ class Record extends \Espo\Core\Services\Base
         if ($this->getUser()->isPortal()) return;
         if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) return;
 
+        if (!$this->getAcl()->check($entity, 'stream')) return;
+
         $data = $this->getStreamService()->getEntityFollowers($entity, 0, self::FOLLOWERS_LIMIT);
         if ($data) {
             $entity->set('followersIds', $data['idList']);
@@ -1676,10 +1678,6 @@ class Record extends \Espo\Core\Services\Base
     {
         $entity = $this->getRepository()->get($id);
 
-        if (!$this->getAcl()->check($entity, 'read')) {
-            throw new Forbidden();
-        }
-
         if (empty($userId)) {
             $userId = $this->getUser()->id;
         }
@@ -1729,7 +1727,7 @@ class Record extends \Espo\Core\Services\Base
             $idList = $params['ids'];
             foreach ($idList as $id) {
                 $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'stream')) {
+                if ($entity) {
                     if ($streamService->unfollowEntity($entity, $userId)) {
                         $resultIdList[] = $entity->id;
                     }
