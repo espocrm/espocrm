@@ -4,13 +4,14 @@
     "createdAt",
     "createdBy",
     "modifiedAt",
-    "billingAddress",
+    "type",
+    "industry",
     "description",
     "emailAddress",
-    "industry",
     "phoneNumber",
     "targetLists",
-    "type",
+    "billingAddressCountry",
+    "billingAddress",
     "shippingAddress",
     "website"
 ]
