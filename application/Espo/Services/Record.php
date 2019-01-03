@@ -1327,6 +1327,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        $methodName = 'link' . ucfirst($link);
+        if ($link !== 'entity' && method_exists($this, $methodName)) {
+            return $this->$methodName($id, $foreignId);
+        }
+
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
         if (!$foreignEntityType) {
             throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
@@ -1388,6 +1393,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        $methodName = 'unlink' . ucfirst($link);
+        if ($link !== 'entity' && method_exists($this, $methodName)) {
+            return $this->$methodName($id, $foreignId);
+        }
+
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
         if (!$foreignEntityType) {
             throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
@@ -1443,6 +1453,11 @@ class Record extends \Espo\Core\Services\Base
         }
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
+        }
+
+        $methodName = 'linkMass' . ucfirst($link);
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($id, $where, $selectData);
         }
 
         $entityType = $entity->getEntityType();
