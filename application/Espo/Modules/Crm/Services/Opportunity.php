@@ -311,7 +311,7 @@ class Opportunity extends \Espo\Services\Record
 
         $today = new \DateTime();
 
-        $endPosition = count($keyList) - 1;
+        $endPosition = count($keyList);
         for ($i = count($keyList) - 1; $i >= 0; $i--) {
             $key = $keyList[$i];
             $dt = new \DateTime($key . '-01');
