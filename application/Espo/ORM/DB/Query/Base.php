@@ -367,7 +367,6 @@ abstract class Base
         if ($distinct) {
             $idPart = $this->toDb($entityType) . ".id";
             switch ($function) {
-                case 'SUM':
                 case 'COUNT':
                     return $function . "({$part}) * COUNT(DISTINCT {$idPart}) / COUNT({$idPart})";
             }
