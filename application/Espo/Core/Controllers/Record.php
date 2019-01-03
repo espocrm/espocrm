@@ -349,7 +349,7 @@ class Record extends Base
                 $selectData = json_decode(json_encode($data->selectData), true);
             }
 
-            return $this->getRecordService()->linkMass($id, $link, $where, $selectData);
+            return $this->getRecordService()->massLink($id, $link, $where, $selectData);
         } else {
             $foreignIdList = array();
             if (isset($data->id)) {
