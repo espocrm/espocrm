@@ -135,6 +135,13 @@
             return fieldNames;
         },
 
+        getScopeFieldAttributeList: function (scope, field) {
+            var type = this.metadata.get(['entityDefs', scope, 'fields', field, 'type']);
+            if (!type) return [];
+
+            return this.getAttributeList(type, field);
+        },
+
         getAttributeList: function (fieldType, fieldName) {
             return _.union(this.getActualAttributeList(fieldType, fieldName), this.getNotActualAttributeList(fieldType, fieldName));
         },

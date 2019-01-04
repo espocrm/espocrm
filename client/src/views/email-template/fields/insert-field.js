@@ -82,6 +82,14 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
                         var foreignScope = links[link].entity;
                         if (!foreignScope) return;
 
+                        if (
+                            this.getMetadata().get(['entityAcl', scope, 'links', link, 'onlyAdmin'])
+                            ||
+                            this.getMetadata().get(['entityAcl', scope, 'links', link, 'forbidden'])
+                            ||
+                            this.getMetadata().get(['entityAcl', scope, 'links', link, 'internal'])
+                        ) return;
+
                         var attributeList = this.getScopeAttributeList(foreignScope);
 
                         attributeList.forEach(function (item) {
@@ -117,6 +125,14 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
                 if (fieldType === 'map') return;
                 if (fieldType === 'linkMultiple') return;
                 if (fieldType === 'attachmentMultiple') return;
+
+                if (
+                    this.getMetadata().get(['entityAcl', scope, 'fields', field, 'onlyAdmin'])
+                    ||
+                    this.getMetadata().get(['entityAcl', scope, 'fields', field, 'forbidden'])
+                    ||
+                    this.getMetadata().get(['entityAcl', scope, 'fields', field, 'internal'])
+                ) return;
 
                 var fieldAttributeList = this.getFieldManager().getAttributeList(fieldType, field);
 
