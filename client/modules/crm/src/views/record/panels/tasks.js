@@ -199,6 +199,13 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
                     this.collection.fetch();
                 }.bind(this)
             });
+        },
+
+        actionViewRelatedList: function (data) {
+            data.viewOptions = data.viewOptions || {};
+            data.viewOptions.massUnlinkDisabled = true;
+
+            Dep.prototype.actionViewRelatedList.call(this, data);
         }
 
     });

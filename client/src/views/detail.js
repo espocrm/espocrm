@@ -245,11 +245,11 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         actionSelectRelated: function (data) {
             var link = data.link;
 
-            if (!this.model.defs['links'][link]) {
+            if (!data.foreignEntityType && !this.model.defs['links'][link]) {
                 throw new Error('Link ' + link + ' does not exist.');
             }
-            var scope = this.model.defs['links'][link].entity;
-            var foreign = this.model.defs['links'][link].foreign;
+
+            var scope = data.foreignEntityType || this.model.defs['links'][link].entity;
 
             var massRelateEnabled = data.massSelect;
 

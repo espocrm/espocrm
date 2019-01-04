@@ -79,7 +79,7 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
 
             this.panelName = this.options.panelName;
             this.link = this.options.link;
-            this.defs = this.options.defs;
+            this.defs = this.options.defs || {};
             this.filterList = this.options.filterList;
             this.filter = this.options.filter;
             this.layoutName = this.options.layoutName || 'listSmall';
@@ -90,11 +90,18 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
             this.createDisabled = this.options.createDisabled || this.createDisabled;
             this.selectDisabled = this.options.selectDisabled || this.selectDisabled;
 
+            this.massUnlinkDisabled = this.options.massUnlinkDisabled || this.massUnlinkDisabled;
+
+            this.massActionRemoveDisabled = this.options.massActionRemoveDisabled || this.massActionRemoveDisabled;
+            this.massActionMassUpdateDisabled = this.options.massActionMassUpdateDisabled || this.massActionMassUpdateDisabled;
+
             this.panelCollection = this.options.panelCollection;
 
-            this.listenTo(this.panelCollection, 'sync', function () {
-                this.collection.fetch();
-            }, this)
+            if (this.panelCollection) {
+                this.listenTo(this.panelCollection, 'sync', function () {
+                    this.collection.fetch();
+                }, this)
+            }
 
             if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
                 this.createDisabled = true;
@@ -109,6 +116,15 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                     this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
                 ) {
                     this.createDisabled = true;
+                }
+            }
+
+            if (!this.massUnlinkDisabled) {
+                if (this.defs.massUnlinkDisabled || this.defs.unlinkDisabled) {
+                    this.massUnlinkDisabled = true;
+                }
+                if (!this.getAcl().check(this.model, 'edit')) {
+                    this.massUnlinkDisabled = true;
                 }
             }
 
@@ -159,12 +175,14 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 collection.orderBy = this.defaultOrderBy;
                 collection.order = this.defaultOrder;
 
-                this.listenTo(collection, 'change', function (model) {
-                    var panelModel = this.panelCollection.get(model.id);
-                    if (panelModel) {
-                        panelModel.set(model.attributes);
-                    }
-                }, this);
+                if (this.panelCollection) {
+                    this.listenTo(collection, 'change', function (model) {
+                        var panelModel = this.panelCollection.get(model.id);
+                        if (panelModel) {
+                            panelModel.set(model.attributes);
+                        }
+                    }, this);
+                }
 
                 this.loadSearch();
                 this.wait(true);
@@ -241,7 +259,13 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 searchManager: this.searchManager,
                 buttonsDisabled: true,
                 skipBuildRows: true,
-                model: this.model
+                model: this.model,
+                unlinkMassAction: !this.massUnlinkDisabled,
+                massActionRemoveDisabled: this.massActionRemoveDisabled,
+                massActionMassUpdateDisabled: this.massActionMassUpdateDisabled,
+                rowActionsOptions: {
+                    unlinkDisabled: this.defs.unlinkDisabled
+                }
             }, function (view) {
                 this.listenToOnce(view, 'select', function (model) {
                     this.trigger('select', model);

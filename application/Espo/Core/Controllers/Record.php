@@ -142,9 +142,16 @@ class Record extends Base
 
         $result = $this->getRecordService()->find($params);
 
+        if (is_array($result)) {
+            return [
+                'total' => $result['total'],
+                'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
+            ];
+        }
+
         return [
-            'total' => $result['total'],
-            'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
+            'total' => $result->total,
+            'list' => isset($result->collection) ? $result->collection->getValueMapList() : $result->list
         ];
     }
 
@@ -197,10 +204,17 @@ class Record extends Base
 
         $result = $this->getRecordService()->findLinked($id, $link, $params);
 
-        return array(
-            'total' => $result['total'],
-            'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
-        );
+        if (is_array($result)) {
+            return [
+                'total' => $result['total'],
+                'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
+            ];
+        }
+
+        return (object) [
+            'total' => $result->total,
+            'list' => isset($result->collection) ? $result->collection->getValueMapList() : $result->list
+        ];
     }
 
     public function actionDelete($params, $data, $request)

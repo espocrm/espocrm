@@ -15,8 +15,9 @@
     "createDisabled": true,
     "relationshipPanels": {
         "actionHistoryRecords": {
-            "create": false,
-            "select": false,
+            "createDisabled": true,
+            "selectDisabled": true,
+            "unlinkDisabled": true,
             "rowActionsView": "views/record/row-actions/relationship-view-only"
         }
     }

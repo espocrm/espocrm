@@ -16,7 +16,8 @@
 	    		"label": "Imported",
 	    		"view": "views/import/record/panels/imported",
                 "createDisabled": true,
-                "selectDisabled": true
+                "selectDisabled": true,
+                "unlinkDisabled": true
 	    	},
 	    	{
 	    		"name": "duplicates",
@@ -24,14 +25,16 @@
 	    		"view": "views/import/record/panels/duplicates",
                 "rowActionsView": "views/import/record/row-actions/duplicates",
                 "createDisabled": true,
-                "selectDisabled": true
+                "selectDisabled": true,
+                "unlinkDisabled": true
 	    	},
 	    	{
 	    		"name": "updated",
 	    		"label": "Updated",
 	    		"view": "views/import/record/panels/updated",
                 "createDisabled": true,
-                "selectDisabled": true
+                "selectDisabled": true,
+                "unlinkDisabled": true
 	    	}
 	    ]
     },

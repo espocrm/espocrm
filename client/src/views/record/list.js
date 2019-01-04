@@ -798,6 +798,22 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        massActionUnlink: function () {
+            this.confirm({
+                message: this.translate('unlinkSelectedRecordsConfirmation', 'messages'),
+                confirmText: this.translate('Unlink')
+            }, function () {
+                this.notify('Unlinking...');
+                Espo.Ajax.deleteRequest(this.collection.url, {
+                    ids: this.checkedList
+                }).then(function () {
+                    this.notify('Unlinked', 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:unrelate');
+                }.bind(this));
+            }, this);
+        },
+
         removeMassAction: function (item) {
             var index = this.massActionList.indexOf(item);
             if (~index) {
@@ -810,10 +826,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
-        addMassAction: function (item, allResult) {
-            this.massActionList.push(item);
+        addMassAction: function (item, allResult, toBeginning) {
+            var method = toBeginning ? 'unshift' : 'push';
+            this.massActionList[method](item);
             if (allResult) {
-                this.checkAllResultMassActionList.push(item);
+                this.checkAllResultMassActionList[method](item);
             }
         },
 
@@ -918,7 +935,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.addMassAction('printPdf');
             }
 
+            if (this.options.unlinkMassAction && this.collection) {
+                this.addMassAction('unlink', false, true);
+            }
+
             this.setupMassActionItems();
+
+            Espo.Utils.clone(this.massActionList).forEach(function (item) {
+                var propName = 'massAction' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
+                if (this[propName] || this.options[propName]) {
+                    this.removeMassAction(item);
+                }
+            }, this);
 
             if (this.selectable) {
                 this.events['click .list a.link'] = function (e) {
@@ -1219,16 +1247,21 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getRowActionsDefs: function () {
+            var options = {
+                defs: {
+                    params: {}
+                }
+            };
+            if (this.options.rowActionsOptions) {
+                for (var item in this.options.rowActionsOptions) {
+                    options[item] = this.options.rowActionsOptions[item];
+                }
+            }
             return {
                 columnName: 'buttons',
                 name: 'buttonsField',
                 view: this.rowActionsView,
-                options: {
-                    defs: {
-                        params: {
-                        }
-                    }
-                }
+                options: options
             };
         },
 

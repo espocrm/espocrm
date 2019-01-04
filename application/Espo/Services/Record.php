@@ -1425,6 +1425,38 @@ class Record extends \Espo\Core\Services\Base
         return $this->massLink($id, $link, $where, $selectData);
     }
 
+    public function linkFollowers($id, $foreignId)
+    {
+        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) throw new NotFound();
+
+        $entity = $this->getRepository()->get($id);
+        if (!$entity) throw new NotFound();
+        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+        if (!$this->getAcl()->check($entity, 'stream')) throw new Forbidden();
+
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        $this->getStreamService()->followEntity($entity, $foreignId);
+
+        return true;
+    }
+
+    public function unlinkFollowers($id, $foreignId)
+    {
+        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) throw new NotFound();
+
+        $entity = $this->getRepository()->get($id);
+        if (!$entity) throw new NotFound();
+        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+        if (!$this->getAcl()->check($entity, 'stream')) throw new Forbidden();
+
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        $this->getStreamService()->unfollowEntity($entity, $foreignId);
+
+        return true;
+    }
+
     public function massLink($id, $link, $where, $selectData = null)
     {
         if (empty($id) || empty($link)) {
@@ -2258,35 +2290,15 @@ class Record extends \Espo\Core\Services\Base
 
     protected function findLinkedFollowers($id, $params)
     {
-        $maxSize = 0;
-
-        $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+        $entity = $this->getRepository()->get($id);
         if (!$entity) {
             throw new NotFound();
         }
-
-        $data = $this->getStreamService()->getEntityFollowers($entity, $params['offset'], $params['maxSize']);
-
-        $list = [];
-
-        foreach ($data['idList'] as $id) {
-            $list[] = array(
-                'id' => $id,
-                'name' => $data['nameMap']->$id
-            );
+        if (!$this->getAcl()->check($entity, 'read')) {
+            throw new Forbidden();
         }
 
-        if ($maxSize && count($list) > $maxSize) {
-            $total = -1;
-            unset($list[count($list) - 1]);
-        } else {
-            $total = -2;
-        }
-
-        return [
-            'total' => $total,
-            'list' => $list
-        ];
+        return $this->getStreamService()->findEntityFollowers($entity, $params);
     }
 
     public function getDuplicateAttributes($id)

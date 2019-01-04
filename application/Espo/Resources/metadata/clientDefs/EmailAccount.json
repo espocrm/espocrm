@@ -38,12 +38,14 @@
     "relationshipPanels": {
         "filters": {
             "select": false,
-            "rowActionsView": "views/record/row-actions/relationship-edit-and-remove"
+            "rowActionsView": "views/record/row-actions/relationship-edit-and-remove",
+            "unlinkDisabled": true
         },
         "emails": {
             "select": false,
             "create": false,
-            "rowActionsView": "views/record/row-actions/remove-only"
+            "rowActionsView": "views/record/row-actions/remove-only",
+            "unlinkDisabled": true
         }
     }
 }

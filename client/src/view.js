@@ -215,6 +215,13 @@ Espo.define('view', [], function () {
             return this.ajaxRequest(url, 'GET', data, options);
         },
 
+        ajaxDeleteRequest: function (url, data, options) {
+            if (data) {
+                data = JSON.stringify(data);
+            }
+            return this.ajaxRequest(url, 'DELETE', data, options);
+        },
+
         confirm: function (o, callback, context) {
             var confirmStyle = null;
             if (typeof o === 'string' || o instanceof String) {

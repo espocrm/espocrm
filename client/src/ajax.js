@@ -74,6 +74,13 @@ Espo.define('ajax', [], function () {
             return Ajax.request(url, 'PUT', data, options);
         },
 
+        deleteRequest: function (url, data, options) {
+            if (data) {
+                data = JSON.stringify(data);
+            }
+            return Ajax.request(url, 'DELETE', data, options);
+        },
+
         getRequest: function (url, data, options) {
             return Ajax.request(url, 'GET', data, options);
         }

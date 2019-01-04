@@ -1321,6 +1321,50 @@ class Stream extends \Espo\Core\Services\Base
         return $idList;
     }
 
+    public function findEntityFollowers(Entity $entity, $params)
+    {
+        $selectAttributeList = $this->getServiceFactory()->create('User')->getSelectAttributeList($params);
+
+        $selectManager = $this->getSelectMangerFactory()->create('User');
+
+        $selectParams = $selectManager->getSelectParams($params, true, true);
+
+        if (empty($params['orderBy'])) {
+            $selectParams['orderBy'] = [
+                ['LIST:id:' . $this->getUser()->id, 'DESC'],
+                ['name']
+            ];
+        }
+
+        $selectManager->addJoin([
+            'Subscription',
+            'subscription',
+            [
+                'subscription.userId=:' => 'user.id',
+                'subscription.entityId' => $entity->id,
+                'subscription.entityType' => $entity->getEntityType()
+            ]
+        ], $selectParams);
+
+        $selectManager->applyFilter('active', $selectParams);
+
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        }
+
+        $query = $this->getEntityManager()->getQuery();
+        $selectParams['t'] = true;
+        $sql = $query->createSelectQuery('User', $selectParams);
+
+        $collection = $this->getEntityManager()->getRepository('User')->find($selectParams);
+        $total = $this->getEntityManager()->getRepository('User')->count($selectParams);
+
+        return (object) [
+            'total' => $total,
+            'collection' => $collection
+        ];
+    }
+
     public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
     {
         $query = $this->getEntityManager()->getQuery();
@@ -1330,32 +1374,37 @@ class Stream extends \Espo\Core\Services\Base
             $limit = 200;
         }
 
-        $sql = $query->createSelectQuery('User', array(
+        $sql = $query->createSelectQuery('User', [
             'select' => ['id', 'name'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    subscription.user_id = user.id AND
-                    subscription.entity_id = ".$query->quote($entity->id)." AND
-                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
-            ",
+            'joins' => [
+                [
+                    'Subscription',
+                    'subscription',
+                    [
+                        'subscription.userId=:' => 'user.id',
+                        'subscription.entityId' => $entity->id,
+                        'subscription.entityType' => $entity->getEntityType()
+                    ]
+                ]
+            ],
             'offset' => $offset,
             'limit' => $limit,
-            'whereClause' => array(
+            'whereClause' => [
                 'isActive' => true
-            ),
+            ],
             'orderBy' => [
                 ['LIST:id:' . $this->getUser()->id, 'DESC'],
                 ['name']
             ]
-        ));
+        ]);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
 
-        $data = array(
+        $data = [
             'idList' => [],
-            'nameMap' => new \StdClass()
-        );
+            'nameMap' => (object) []
+        ];
 
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $id = $row['id'];
@@ -1364,7 +1413,6 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         return $data;
-
     }
 
     protected function getOnlyTeamEntityTypeList(\Espo\Entities\User $user)

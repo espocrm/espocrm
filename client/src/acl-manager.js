@@ -93,6 +93,13 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             return this.data[name] || null;
         },
 
+        getLevel: function (scope, action) {
+            if (!(scope in this.data.table)) return;
+            if (!(action in this.data.table[scope])) return;
+
+            return this.data.table[scope][action];
+        },
+
         clear: function () {
             this.setEmpty();
         },

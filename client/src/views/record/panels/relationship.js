@@ -205,7 +205,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         rowActionsView: this.rowActionsView,
                         buttonsDisabled: true,
                         el: this.options.el + ' .list-container',
-                        skipBuildRows: true
+                        skipBuildRows: true,
+                        rowActionsOptions: {
+                            unlinkDisabled: this.defs.unlinkDisabled
+                        }
                     }, function (view) {
                         view.getSelectAttributeList(function (selectAttributeList) {
                             if (selectAttributeList) {

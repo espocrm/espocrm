@@ -3,7 +3,8 @@
     "relationshipPanels": {
         "log": {
             "readOnly": true,
-            "view": "views/scheduled-job/record/panels/log"
+            "view": "views/scheduled-job/record/panels/log",
+            "unlinkDisabled": true
         }
     },
     "recordViews":{

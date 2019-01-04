@@ -241,6 +241,7 @@
         "View Personal Data": "View Personal Data",
         "Personal Data": "Personal Data",
         "Erase": "Erase",
+        "View Followers": "View Followers",
         "Move Over": "Move Over"
     },
     "messages": {
@@ -274,6 +275,7 @@
         "removeRecordConfirmation": "Are you sure you want to remove the record?",
         "unlinkRecordConfirmation": "Are you sure you want to unlink the related record?",
         "removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records?",
+        "unlinkSelectedRecordsConfirmation": "Are you sure you want to unlink selected records?",
         "massUpdateResult": "{count} records have been updated",
         "massUpdateResultSingle": "{count} record has been updated",
         "noRecordsUpdated": "No records were updated",
@@ -314,6 +316,7 @@
         "remove": "Remove",
         "merge": "Merge",
         "massUpdate": "Mass Update",
+        "unlink": "Unlink",
         "export": "Export",
         "follow": "Follow",
         "unfollow": "Unfollow",

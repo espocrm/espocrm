@@ -539,8 +539,10 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         actionViewRelatedList: function (data) {
             data.url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name + '/list/' + data.scope;
-
             data.title = this.translate(this.defs.label) + ' &raquo ' + this.translate(data.scope, 'scopeNamesPlural');
+
+            data.viewOptions = data.viewOptions || {};
+            data.viewOptions.massUnlinkDisabled = true;
 
             Dep.prototype.actionViewRelatedList.call(this, data);
         }

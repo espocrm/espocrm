@@ -39,7 +39,7 @@ Espo.define('views/record/row-actions/relationship-view-and-unlink', 'views/reco
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
-            if (this.options.acl.edit) {
+            if (this.options.acl.edit && !this.options.unlinkDisabled) {
                 list.push({
                     action: 'unlinkRelated',
                     label: 'Unlink',
@@ -54,4 +54,3 @@ Espo.define('views/record/row-actions/relationship-view-and-unlink', 'views/reco
     });
 
 });
-

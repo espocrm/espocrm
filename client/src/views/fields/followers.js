@@ -94,6 +94,9 @@ Espo.define('views/fields/followers', 'views/fields/link-multiple', function (De
                 collection.url = this.model.name + '/' + this.model.id + '/followers';
                 collection.offset = this.ids.length || 0;
                 collection.maxSize = this.portionSize;
+                collection.data.select = ['id', 'name'].join(',');
+                collection.orderBy = null;
+                collection.order = null;
 
                 this.listenToOnce(collection, 'sync', function () {
                     var idList = this.model.get(this.idsName) || [];
@@ -132,5 +135,3 @@ Espo.define('views/fields/followers', 'views/fields/link-multiple', function (De
 
     });
 });
-
-
