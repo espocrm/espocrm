@@ -25,6 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+
 Espo.define('views/email-template/fields/insert-field', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
@@ -181,6 +182,11 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('name', 'fields') + ')';
                 }
+            } else if (field.indexOf('Type') === field.length - 4) {
+                var baseField = field.substr(0, field.length - 4);
+                if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                    label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('type', 'fields') + ')';
+                }
             }
 
             if (field.indexOf('Ids') === field.length - 3) {
@@ -192,6 +198,11 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
                 var baseField = field.substr(0, field.length - 5);
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('names', 'fields') + ')';
+                }
+            } else if (field.indexOf('Types') === field.length - 5) {
+                var baseField = field.substr(0, field.length - 5);
+                if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                    label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('types', 'fields') + ')';
                 }
             }
 
