@@ -119,8 +119,10 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 }
             }
 
+            this.unlinkDisabled = this.unlinkDisabled || this.options.unlinkDisabled;
+
             if (!this.massUnlinkDisabled) {
-                if (this.defs.massUnlinkDisabled || this.defs.unlinkDisabled) {
+                if (this.unlinkDisabled || this.defs.massUnlinkDisabled || this.defs.unlinkDisabled) {
                     this.massUnlinkDisabled = true;
                 }
                 if (!this.getAcl().check(this.model, 'edit')) {
@@ -264,7 +266,7 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 massActionRemoveDisabled: this.massActionRemoveDisabled,
                 massActionMassUpdateDisabled: this.massActionMassUpdateDisabled,
                 rowActionsOptions: {
-                    unlinkDisabled: this.defs.unlinkDisabled
+                    unlinkDisabled: this.unlinkDisabled
                 }
             }, function (view) {
                 this.listenToOnce(view, 'select', function (model) {

@@ -35,6 +35,10 @@ define('views/modals/followers-list', ['views/modals/related-list'], function (D
         massActionMassUpdateDisabled: true,
 
         setup: function () {
+            if (!this.getUser().isAdmin()) {
+                this.unlinkDisabled = true;
+            }
+
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'after:relate', function () {
