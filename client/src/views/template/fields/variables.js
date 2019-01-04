@@ -74,23 +74,46 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
         setupAttributeList: function () {
             var entityType = this.model.get('entityType');
 
-            var attributeList = this.getFieldManager().getEntityAttributes(entityType) || [];
+            var fieldList = this.getFieldManager().getScopeFieldList(entityType);
 
-            var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(entityType);
+            var ignoreFieldList = [];
+            fieldList.forEach(function (field) {
+                if (
+                    this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'onlyAdmin'])
+                    ||
+                    this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'forbidden'])
+                    ||
+                    this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'internal'])
+                    ||
+                    this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'disabled'])
+                ) ignoreFieldList.push(field);
+            }, this);
+
+            var attributeList = this.getFieldManager().getScopeAttributeList(entityType) || [];
+
+            var forbiddenList = Espo.Utils.clone(this.getAcl().getScopeForbiddenAttributeList(entityType));
+
+            ignoreFieldList.forEach(function (field) {
+                this.getFieldManager().getScopeFieldAttributeList(entityType, field).forEach(function (attribute) {
+                    forbiddenList.push(attribute);
+                });
+            }, this);
+
             attributeList = attributeList.filter(function (item) {
                 if (~forbiddenList.indexOf(item)) return;
 
                 var fieldType = this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'type']);
                 if (fieldType === 'map') return;
 
-                if (this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'disabled'])) return;
-
                 return true;
             }, this);
 
+
             attributeList.push('id');
             if (this.getMetadata().get('entityDefs.' + entityType + '.fields.name.type') == 'personName') {
-                attributeList.unshift('name');
+                if (!~attributeList.indexOf('name')) {
+                    attributeList.unshift('name');
+                }
             };
             attributeList = attributeList.sort(function (v1, v2) {
                 return this.translate(v1, 'fields', entityType).localeCompare(this.translate(v2, 'fields', entityType));
@@ -114,8 +137,6 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 this.attributeList.unshift('today');
             }
 
-            attributeList.unshift('');
-
             var links = this.getMetadata().get('entityDefs.' + entityType + '.links') || {};
 
             var linkList = Object.keys(links).sort(function (v1, v2) {
@@ -128,16 +149,44 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 var scope = links[link].entity;
                 if (!scope) return;
 
+                if (
+                    this.getMetadata().get(['entityAcl', entityType, 'links', link, 'onlyAdmin'])
+                    ||
+                    this.getMetadata().get(['entityAcl', entityType, 'links', link, 'forbidden'])
+                    ||
+                    this.getMetadata().get(['entityAcl', entityType, 'links', link, 'internal'])
+                ) return;
+
+                var fieldList = this.getFieldManager().getScopeFieldList(scope);
+
+                var ignoreFieldList = [];
+                fieldList.forEach(function (field) {
+                    if (
+                        this.getMetadata().get(['entityAcl', scope, 'fields', field, 'onlyAdmin'])
+                        ||
+                        this.getMetadata().get(['entityAcl', scope, 'fields', field, 'forbidden'])
+                        ||
+                        this.getMetadata().get(['entityAcl', scope, 'fields', field, 'internal'])
+                        ||
+                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])
+                    ) ignoreFieldList.push(field);
+                }, this);
+
                 var attributeList = this.getFieldManager().getEntityAttributes(scope) || [];
 
-                var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(scope);
+                var forbiddenList = Espo.Utils.clone(this.getAcl().getScopeForbiddenAttributeList(scope));
+
+                ignoreFieldList.forEach(function (field) {
+                    this.getFieldManager().getScopeFieldAttributeList(scope, field).forEach(function (attribute) {
+                        forbiddenList.push(attribute);
+                    });
+                }, this);
+
                 attributeList = attributeList.filter(function (item) {
                     if (~forbiddenList.indexOf(item)) return;
 
                     var fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']);
                     if (fieldType === 'map') return;
-
-                    if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'disabled'])) return;
 
                     return true;
                 }, this);
@@ -200,6 +249,11 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                         this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('name', 'fields') + ')';
                     }
+                } else if (field.indexOf('Type') === field.length - 4) {
+                    var baseField = field.substr(0, field.length - 4);
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('type', 'fields') + ')';
+                    }
                 }
 
                 if (field.indexOf('Ids') === field.length - 3) {
@@ -211,6 +265,11 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     var baseField = field.substr(0, field.length - 5);
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                         this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('names', 'fields') + ')';
+                    }
+                } else if (field.indexOf('Types') === field.length - 5) {
+                    var baseField = field.substr(0, field.length - 5);
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('types', 'fields') + ')';
                     }
                 }
 

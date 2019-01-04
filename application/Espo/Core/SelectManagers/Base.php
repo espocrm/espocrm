@@ -271,7 +271,7 @@ class Base
 
     protected function applyLinkedWith($link, $idsValue, &$result)
     {
-        $part = array();
+        $part = [];
 
         if (is_array($idsValue) && count($idsValue) == 1) {
             $idsValue = $idsValue[0];
@@ -344,9 +344,9 @@ class Base
                 JOIN team AS {$aliasName} ON {$aliasName}.deleted = 0 AND {$aliasName}Middle.team_id = {$aliasName}.id
             ";
 
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 $aliasName . 'Middle.teamId' => $idsValue
-            );
+            ];
         } else {
             return;
         }
@@ -419,7 +419,7 @@ class Base
 
     public function getEmptySelectParams()
     {
-        $result = array();
+        $result = [];
         $this->prepareResult($result);
 
         return $result;
@@ -437,16 +437,16 @@ class Base
             $result['leftJoins'] = [];
         }
         if (empty($result['whereClause'])) {
-            $result['whereClause'] = array();
+            $result['whereClause'] = [];
         }
         if (empty($result['customJoin'])) {
             $result['customJoin'] = '';
         }
         if (empty($result['additionalSelectColumns'])) {
-            $result['additionalSelectColumns'] = array();
+            $result['additionalSelectColumns'] = [];
         }
         if (empty($result['joinConditions'])) {
-            $result['joinConditions'] = array();
+            $result['joinConditions'] = [];
         }
     }
 
@@ -488,9 +488,9 @@ class Base
 
     protected function accessNo(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'id' => null
-        );
+        ];
     }
 
     protected function accessOnlyOwn(&$result)
@@ -498,23 +498,23 @@ class Base
         if ($this->hasAssignedUsersField()) {
             $this->setDistinct(true, $result);
             $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'assignedUsersAccess.id' => $this->getUser()->id
-            );
+            ];
             return;
         }
 
         if ($this->hasAssignedUserField()) {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'assignedUserId' => $this->getUser()->id
-            );
+            ];
             return;
         }
 
         if ($this->hasCreatedByField()) {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'createdById' => $this->getUser()->id
-            );
+            ];
         }
     }
 
@@ -529,44 +529,44 @@ class Base
 
         if ($this->hasAssignedUsersField()) {
             $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-            $result['whereClause'][] = array(
-                'OR' => array(
+            $result['whereClause'][] = [
+                'OR' => [
                     'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
                     'assignedUsersAccess.id' => $this->getUser()->id
-                )
-            );
+                ]
+            ];
             return;
         }
 
-        $d = array(
+        $d = [
             'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')
-        );
+        ];
         if ($this->hasAssignedUserField()) {
             $d['assignedUserId'] = $this->getUser()->id;
         } else if ($this->hasCreatedByField()) {
             $d['createdById'] = $this->getUser()->id;
         }
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'OR' => $d
-        );
+        ];
     }
 
     protected function accessPortalOnlyOwn(&$result)
     {
         if ($this->getSeed()->hasAttribute('createdById')) {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'createdById' => $this->getUser()->id
-            );
+            ];
         } else {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'id' => null
-            );
+            ];
         }
     }
 
     protected function accessPortalOnlyContact(&$result)
     {
-        $d = array();
+        $d = [];
 
         $contactId = $this->getUser()->get('contactId');
 
@@ -588,27 +588,27 @@ class Base
         if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
             $contactId = $this->getUser()->get('contactId');
             if ($contactId) {
-                $d[] = array(
+                $d[] = [
                     'parentType' => 'Contact',
                     'parentId' => $contactId
-                );
+                ];
             }
         }
 
         if (!empty($d)) {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'OR' => $d
-            );
+            ];
         } else {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'id' => null
-            );
+            ];
         }
     }
 
     protected function accessPortalOnlyAccount(&$result)
     {
-        $d = array();
+        $d = [];
 
         $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
         $contactId = $this->getUser()->get('contactId');
@@ -623,15 +623,15 @@ class Base
                 $d['accountsAccess.id'] = $accountIdList;
             }
             if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
-                $d[] = array(
+                $d[] = [
                     'parentType' => 'Account',
                     'parentId' => $accountIdList
-                );
+                ];
                 if ($contactId) {
-                    $d[] = array(
+                    $d[] = [
                         'parentType' => 'Contact',
                         'parentId' => $contactId
-                    );
+                    ];
                 }
             }
         }
@@ -652,13 +652,13 @@ class Base
         }
 
         if (!empty($d)) {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'OR' => $d
-            );
+            ];
         } else {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'id' => null
-            );
+            ];
         }
     }
 
@@ -692,7 +692,7 @@ class Base
 
     public function getAclParams()
     {
-        $result = array();
+        $result = [];
         $this->applyAccess($result);
         return $result;
     }
@@ -843,11 +843,11 @@ class Base
         }
         $type = $item['type'];
 
-        if (empty($value) && in_array($type, array('on', 'before', 'after'))) {
+        if (empty($value) && in_array($type, ['on', 'before', 'after'])) {
             return null;
         }
 
-        $where = array();
+        $where = [];
         $where['attribute'] = $attribute;
 
         $dt = new \DateTime('now', new \DateTimeZone($timeZone));
@@ -1656,9 +1656,9 @@ class Base
 
     public function addOrWhere($whereClause, &$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'OR' => $whereClause
-        );
+        ];
     }
 
     public function getFullTextSearchDataForTextFilter($textFilter, $isAuxiliaryUse = false)

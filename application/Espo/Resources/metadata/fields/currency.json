@@ -29,7 +29,9 @@
    "fields":{
       "currency":{
          "type":"varchar",
-         "disabled": true,
+         "layoutDetailDisabled": true,
+         "layoutListDisabled": true,
+         "layoutMassUpdateDisabled": true,
          "maxLength": 6
       },
       "converted":{

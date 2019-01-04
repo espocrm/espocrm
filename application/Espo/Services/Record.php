@@ -1327,6 +1327,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        $methodName = 'link' . ucfirst($link);
+        if ($link !== 'entity' && $link !== 'entityMass' && method_exists($this, $methodName)) {
+            return $this->$methodName($id, $foreignId);
+        }
+
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
         if (!$foreignEntityType) {
             throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
@@ -1388,6 +1393,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        $methodName = 'unlink' . ucfirst($link);
+        if ($link !== 'entity' && method_exists($this, $methodName)) {
+            return $this->$methodName($id, $foreignId);
+        }
+
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
         if (!$foreignEntityType) {
             throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
@@ -1412,10 +1422,10 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntityMass($id, $link, $where, $selectData = null) //TODO Remove in 5.8
     {
-        return $this->linkMass($id, $link, $where, $selectData);
+        return $this->massLink($id, $link, $where, $selectData);
     }
 
-    public function linkMass($id, $link, $where, $selectData = null)
+    public function massLink($id, $link, $where, $selectData = null)
     {
         if (empty($id) || empty($link)) {
             throw new BadRequest;
@@ -1443,6 +1453,11 @@ class Record extends \Espo\Core\Services\Base
         }
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
+        }
+
+        $methodName = 'massLink' . ucfirst($link);
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($id, $where, $selectData);
         }
 
         $entityType = $entity->getEntityType();

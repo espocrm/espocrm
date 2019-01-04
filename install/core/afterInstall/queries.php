@@ -28,5 +28,5 @@
  ************************************************************************/
 
 return array(
-    "INSERT INTO `job` (`id`, `name`, `deleted`, `status`, `execute_time`, `service_name`, `method`, `data`, `attempts`, `failed_attempts`, `created_at`, `modified_at`, `scheduled_job_id`, `target_id`, `target_type`) VALUES ('". uniqid() ."', 'Dummy', '0', 'Pending', '" . gmdate('Y-m-d H:i:s') . "', NULL, 'Dummy', NULL, '3', NULL, '" . gmdate('Y-m-d H:i:s') . "', '" . gmdate('Y-m-d H:i:s') . "', (SELECT id FROM scheduled_job WHERE deleted = 0 AND job = 'Dummy'), NULL, NULL);"
+    "INSERT INTO `job` (`id`, `name`, `deleted`, `status`, `execute_time`, `method_name`, `created_at`, `modified_at`, `scheduled_job_id`) VALUES ('". uniqid() ."', 'Dummy', '0', 'Pending', '" . gmdate('Y-m-d H:i:s') . "', 'Dummy', '" . gmdate('Y-m-d H:i:s') . "', '" . gmdate('Y-m-d H:i:s') . "', (SELECT id FROM scheduled_job WHERE deleted = 0 AND job = 'Dummy'));"
 );

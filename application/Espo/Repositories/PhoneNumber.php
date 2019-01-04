@@ -39,6 +39,8 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 
     protected $processFieldsAfterRemoveDisabled = true;
 
+    const ERASED_PREFIX = 'ERASED:';
+
     protected function init()
     {
         parent::init();
@@ -471,7 +473,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 
         if ($entity->has('name')) {
             $number = $entity->get('name');
-            if (is_string($number)) {
+            if (is_string($number) && strpos($number, self::ERASED_PREFIX) !== 0) {
                 $numeric = preg_replace('/[^0-9]/', '', $number);
             } else {
                 $numeric = null;

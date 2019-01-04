@@ -86,9 +86,9 @@ class Team extends Record
         return $result;
     }
 
-    public function linkMass($id, $link, $where, $selectData = null)
+    public function massLink($id, $link, $where, $selectData = null)
     {
-        $result = parent::linkMass($id, $link, $where, $selectData);
+        $result = parent::massLink($id, $link, $where, $selectData);
 
         if ($link === 'users') {
             $this->getFileManager()->removeInDir('data/cache/application/acl');
@@ -97,4 +97,3 @@ class Team extends Record
         return $result;
     }
 }
-

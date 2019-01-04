@@ -133,7 +133,9 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
 
             if (this.model) {
                 this.header += Handlebars.Utils.escapeExpression(this.model.get('name'));
-                this.header += ' &raquo ';
+                if (this.header) {
+                    this.header += ' &raquo ';
+                }
             }
             this.header += this.options.title || this.getLanguage().translate(this.link, 'links', this.model.name);
 
