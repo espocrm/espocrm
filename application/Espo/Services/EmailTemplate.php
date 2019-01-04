@@ -46,21 +46,27 @@ class EmailTemplate extends Record
         $this->addDependency('fileStorageManager');
         $this->addDependency('dateTime');
         $this->addDependency('language');
+        $this->addDependency('number');
     }
 
     protected function getFileStorageManager()
     {
-        return $this->injections['fileStorageManager'];
+        return $this->getInjection('fileStorageManager');
     }
 
     protected function getDateTime()
     {
-        return $this->injections['dateTime'];
+        return $this->getInjection('dateTime');
     }
 
     protected function getLanguage()
     {
         return $this->getInjection('language');
+    }
+
+    protected function getNumber()
+    {
+        return $this->getInjection('number');
     }
 
     public function parseTemplate(Entity $emailTemplate, array $params = [], $copyAttachments = false, $skipAcl = false)
@@ -175,7 +181,7 @@ class EmailTemplate extends Record
 
     protected function parseText($type, Entity $entity, $text, $skipLinks = false, $prefixLink = null, $skipAcl = false)
     {
-        $fieldList = array_keys($entity->getAttributes());
+        $attributeList = array_keys($entity->getAttributes());
 
         if ($skipAcl) {
             $forbiddenAttributeList = [];
@@ -191,30 +197,30 @@ class EmailTemplate extends Record
             $forbiddenLinkList = $this->getAcl()->getScopeRestrictedLinkList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']);
         }
 
-        foreach ($fieldList as $field) {
-            if (in_array($field, $forbiddenAttributeList)) continue;
+        foreach ($attributeList as $attribute) {
+            if (in_array($attribute, $forbiddenAttributeList)) continue;
 
-            $value = $entity->get($field);
+            $value = $entity->get($attribute);
             if (is_object($value)) {
                 continue;
             }
 
-            $fieldType = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() .'.fields.' . $field . '.type');
+            $fieldType = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'type']);
 
             if ($fieldType === 'enum') {
-                $value = $this->getLanguage()->translateOption($value, $field, $entity->getEntityType());
+                $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
             } else if ($fieldType === 'array' || $fieldType === 'multiEnum') {
                 $valueList = [];
                 if (is_array($value)) {
                     foreach ($value as $v) {
-                        $valueList[] = $this->getLanguage()->translateOption($v, $field, $entity->getEntityType());
+                        $valueList[] = $this->getLanguage()->translateOption($v, $attribute, $entity->getEntityType());
                     }
                 }
                 $value = implode(', ', $valueList);
-                $value = $this->getLanguage()->translateOption($value, $field, $entity->getEntityType());
+                $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
             } else {
-                if (!isset($entity->fields[$field]['type'])) continue;
-                $attributeType = $entity->fields[$field]['type'];
+                if (!isset($entity->fields[$attribute]['type'])) continue;
+                $attributeType = $entity->fields[$attribute]['type'];
 
                 if ($attributeType == 'date') {
                     $value = $this->getDateTime()->convertSystemDate($value);
@@ -225,12 +231,22 @@ class EmailTemplate extends Record
                         $value = '';
                     }
                     $value = nl2br($value);
+                } else if ($attributeType == 'float') {
+                    if (is_float($value)) {
+                        $value = $this->getNumber()->format($value, 2);
+                    }
+                } else if ($attributeType == 'int') {
+                    if (is_int($value)) {
+                        $value = $this->getNumber()->format($value);
+                    }
                 }
             }
+
+
             if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                $variableName = $field;
+                $variableName = $attribute;
                 if (!is_null($prefixLink)) {
-                    $variableName = $prefixLink . '.' . $field;
+                    $variableName = $prefixLink . '.' . $attribute;
                 }
                 $text = str_replace('{' . $type . '.' . $variableName . '}', $value, $text);
             }
