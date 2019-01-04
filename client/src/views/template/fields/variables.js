@@ -84,6 +84,8 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'forbidden'])
                     ||
                     this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'internal'])
+                    ||
+                    this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'disabled'])
                 ) ignoreFieldList.push(field);
             }, this);
 
@@ -103,10 +105,9 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 var fieldType = this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'type']);
                 if (fieldType === 'map') return;
 
-                if (this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'disabled'])) return;
-
                 return true;
             }, this);
+
 
             attributeList.push('id');
             if (this.getMetadata().get('entityDefs.' + entityType + '.fields.name.type') == 'personName') {
@@ -135,8 +136,6 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
             if (!~this.attributeList.indexOf('today')) {
                 this.attributeList.unshift('today');
             }
-
-            attributeList.unshift('');
 
             var links = this.getMetadata().get('entityDefs.' + entityType + '.links') || {};
 
@@ -168,6 +167,8 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                         this.getMetadata().get(['entityAcl', scope, 'fields', field, 'forbidden'])
                         ||
                         this.getMetadata().get(['entityAcl', scope, 'fields', field, 'internal'])
+                        ||
+                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])
                     ) ignoreFieldList.push(field);
                 }, this);
 
@@ -186,8 +187,6 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
 
                     var fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']);
                     if (fieldType === 'map') return;
-
-                    if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'disabled'])) return;
 
                     return true;
                 }, this);
