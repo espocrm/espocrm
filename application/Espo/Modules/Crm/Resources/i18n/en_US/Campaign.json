@@ -21,6 +21,7 @@
         "revenueConverted": "Revenue (converted)",
         "budget": "Budget",
         "budgetConverted": "Budget (converted)",
+        "budgetCurrency": "Budget Currency",
         "contactsTemplate": "Contacts Template",
         "leadsTemplate": "Leads Template",
         "accountsTemplate": "Accounts Template",
