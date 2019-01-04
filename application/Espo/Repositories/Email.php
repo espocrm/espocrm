@@ -47,22 +47,27 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
         $eaRepository = $this->getEntityManager()->getRepository('EmailAddress');
 
-        $address = $entity->get($type);
+        $addressValue = $entity->get($type);
         $idList = [];
-        if (
-            (!empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL))
-            &&
-            $type !== 'replyTo'
-        ) {
-            $arr = array_map(function ($e) {
-                return trim($e);
-            }, explode(';', $address));
 
-            $idList = $eaRepository->getIdListFormAddressList($arr);
-            foreach ($idList as $id) {
-                $this->addUserByEmailAddressId($entity, $id, $addAssignedUser);
+        if (!empty($addressValue)) {
+            $addressList = array_map(function ($item) {
+                return trim($item);
+            }, explode(';', $addressValue));
+
+            $addressList = array_filter($addressList, function ($item) {
+                return filter_var($item, FILTER_VALIDATE_EMAIL);
+            });
+
+            $idList = $eaRepository->getIdListFormAddressList($addressList);
+
+            if ($type !== 'replyTo') {
+                foreach ($idList as $id) {
+                    $this->addUserByEmailAddressId($entity, $id, $addAssignedUser);
+                }
             }
         }
+
         $entity->setLinkMultipleIdList($type . 'EmailAddresses', $idList);
     }
 
