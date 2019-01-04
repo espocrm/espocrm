@@ -352,6 +352,7 @@
         "ids": "IDs",
         "type": "Type",
         "names": "Names",
+        "types": "Types",
         "targetListIsOptedOut": "Is Opted Out (Target List)"
     },
     "links": {

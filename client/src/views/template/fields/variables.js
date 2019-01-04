@@ -262,6 +262,11 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                         this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('names', 'fields') + ')';
                     }
+                } else if (field.indexOf('Types') === field.length - 5) {
+                    var baseField = field.substr(0, field.length - 5);
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('types', 'fields') + ')';
+                    }
                 }
 
 
