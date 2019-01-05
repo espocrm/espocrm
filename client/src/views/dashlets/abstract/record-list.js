@@ -103,7 +103,7 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                 }
 
                 if (this.getOption('order') === 'asc') {
-                    collection.order = 'order';
+                    collection.order = 'asc';
                 } else if (this.getOption('order') === 'desc') {
                     collection.order = 'desc';
                 }
