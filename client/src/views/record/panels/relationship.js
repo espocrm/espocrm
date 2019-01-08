@@ -472,22 +472,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }, function () {
                 var model = this.collection.get(id);
                 this.notify('Unlinking...');
-                $.ajax({
-                    url: this.collection.url,
-                    type: 'DELETE',
-                    data: JSON.stringify({
-                        id: id
-                    }),
-                    contentType: 'application/json',
-                    success: function () {
-                        this.notify('Unlinked', 'success');
-                        this.collection.fetch();
-                        this.model.trigger('after:unrelate');
-                    }.bind(this),
-                    error: function () {
-                        this.notify('Error occurred', 'error');
-                    }.bind(this),
-                });
+                Espo.Ajax.deleteRequest(this.collection.url, {
+                    id: id
+                }).then(function () {
+                    this.notify('Unlinked', 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:unrelate');
+                }.bind(this));
             }, this);
         },
 

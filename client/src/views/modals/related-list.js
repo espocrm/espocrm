@@ -101,6 +101,10 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 this.listenTo(this.panelCollection, 'sync', function () {
                     this.collection.fetch();
                 }, this)
+            } else if (this.model) {
+                this.listenTo(this.model, 'after:relate', function () {
+                    this.collection.fetch();
+                });
             }
 
             if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
@@ -315,6 +319,25 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                     }.bind(this));
                 }
             });
+        },
+
+        actionUnlinkRelated: function (data) {
+            var id = data.id;
+
+            this.confirm({
+                message: this.translate('unlinkRecordConfirmation', 'messages'),
+                confirmText: this.translate('Unlink')
+            }, function () {
+                var model = this.collection.get(id);
+                this.notify('Unlinking...');
+                Espo.Ajax.deleteRequest(this.collection.url, {
+                    id: id
+                }).then(function () {
+                    this.notify('Unlinked', 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:unrelate');
+                }.bind(this));
+            }, this);
         },
 
         actionCreateRelated: function () {

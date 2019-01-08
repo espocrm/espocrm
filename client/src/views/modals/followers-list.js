@@ -40,29 +40,6 @@ define('views/modals/followers-list', ['views/modals/related-list'], function (D
             }
 
             Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'after:relate', function () {
-                this.collection.fetch();
-            }, this);
-        },
-
-        actionUnlinkRelated: function (data) {
-            var id = data.id;
-
-            this.confirm({
-                message: this.translate('unlinkRecordConfirmation', 'messages'),
-                confirmText: this.translate('Unlink')
-            }, function () {
-                var model = this.collection.get(id);
-                this.notify('Unlinking...');
-                Espo.Ajax.deleteRequest(this.collection.url, {
-                    id: id
-                }).then(function () {
-                    this.notify('Unlinked', 'success');
-                    this.collection.fetch();
-                    this.model.trigger('after:unrelate');
-                }.bind(this));
-            }, this);
         },
 
         actionSelectRelated: function () {

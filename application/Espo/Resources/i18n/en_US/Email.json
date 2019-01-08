@@ -101,7 +101,8 @@
         "Retrieve from Trash": "Retrieve from Trash",
         "Move to Folder": "Move to Folder",
         "Filters": "Filters",
-        "Folders": "Folders"
+        "Folders": "Folders",
+        "View Users": "View Users"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",
