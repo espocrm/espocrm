@@ -325,7 +325,8 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 defs: {
                     name: name,
                 },
-                mode: 'edit'
+                mode: 'edit',
+                readOnlyDisabled: true
             }, function (view) {
                 this.additionalFields.push(name);
                 view.render();
