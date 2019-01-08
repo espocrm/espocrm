@@ -267,7 +267,7 @@ class FieldManager
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
         if (!empty($entityDefs)) {
-            $result &= $this->saveCustomDefs($scope, $entityDefs);
+            $result &= $this->saveCustomEntityDefs($scope, $entityDefs);
             $this->isChanged = true;
         }
 
@@ -434,7 +434,7 @@ class FieldManager
         }
     }
 
-    protected function saveCustomDefs($scope, $newDefs)
+    protected function saveCustomEntityDefs($scope, $newDefs)
     {
         $customDefs = $this->getMetadata()->getCustom('entityDefs', $scope, (object) []);
 
