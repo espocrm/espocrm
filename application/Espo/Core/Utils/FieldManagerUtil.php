@@ -146,4 +146,43 @@ class FieldManagerUtil
 
         return $this->fieldByTypeListCache[$scope][$type];
     }
+
+    private function getFieldTypeAttributeListByType($fieldType, $name, $type)
+    {
+        $defs = $this->getMetadata()->get(['fields', $fieldType]);
+        if (!$defs) return [];
+
+        $attributeList = [];
+
+        if (isset($defs[$type . 'Fields'])) {
+            $list = $defs[$type . 'Fields'];
+            $naming = 'suffix';
+            if (isset($defs['naming'])) {
+                $naming = $defs['naming'];
+            }
+            if ($naming == 'prefix') {
+                foreach ($list as $f) {
+                    $attributeList[] = $f . ucfirst($name);
+                }
+            } else {
+                foreach ($list as $f) {
+                    $attributeList[] = $name . ucfirst($f);
+                }
+            }
+        } else {
+            if ($type == 'actual') {
+                $attributeList[] = $name;
+            }
+        }
+
+        return $attributeList;
+    }
+
+    public function getFieldTypeAttributeList($fieldType, $name)
+    {
+        return array_merge(
+            $this->getFieldTypeAttributeListByType($fieldType, $name, 'actual'),
+            $this->getFieldTypeAttributeListByType($fieldType, $name, 'notActual')
+        );
+    }
 }

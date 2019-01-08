@@ -79,6 +79,11 @@ class FieldManager
         return $this->container->get('defaultLanguage');
     }
 
+    protected function getFieldManagerUtil()
+    {
+        return $this->container->get('fieldManagerUtil');
+    }
+
     public function read($scope, $name)
     {
         $fieldDefs = $this->getFieldDefs($scope, $name);
@@ -513,7 +518,7 @@ class FieldManager
 
         $params = [];
         foreach ($fieldDefsByType['params'] as $paramData) {
-            $params[ $paramData['name'] ] = $paramData;
+            $params[$paramData['name']] = $paramData;
         }
         foreach ($additionalParamList as $paramName => $paramValue) {
             if (!isset($params[$paramName])) {
