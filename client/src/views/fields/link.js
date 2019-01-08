@@ -59,7 +59,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             if (nameValue === null) {
                 nameValue = this.model.get(this.idName);
             }
-            if (this.mode === 'detail' && !nameValue && this.model.get(this.idName)) {
+            if (this.isReadMode() && !nameValue && this.model.get(this.idName)) {
                 nameValue = this.translate(this.foreignScope, 'scopeNames');
             }
 

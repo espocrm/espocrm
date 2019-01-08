@@ -288,7 +288,10 @@ class InboundEmail extends \Espo\Services\Record
 
                 if ($forceByDate && $previousLastUID) {
                     $uid = $storage->getUniqueId($id);
-                    if ($uid <= $previousLastUID) continue;
+                    if ($uid <= $previousLastUID) {
+                        $k++;
+                        continue;
+                    }
                 }
 
                 $fetchOnlyHeader = false;

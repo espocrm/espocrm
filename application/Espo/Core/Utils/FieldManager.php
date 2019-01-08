@@ -79,6 +79,11 @@ class FieldManager
         return $this->container->get('defaultLanguage');
     }
 
+    protected function getFieldManagerUtil()
+    {
+        return $this->container->get('fieldManagerUtil');
+    }
+
     public function read($scope, $name)
     {
         $fieldDefs = $this->getFieldDefs($scope, $name);
@@ -267,13 +272,16 @@ class FieldManager
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
         if (!empty($entityDefs)) {
-            $this->saveCustomdDefs($scope, $entityDefs);
+            $result &= $this->saveCustomEntityDefs($scope, $entityDefs);
             $this->isChanged = true;
         }
 
         if ($metadataToBeSaved) {
             $result &= $this->getMetadata()->save();
+            $this->isChanged = true;
+        }
 
+        if ($this->isChanged) {
             $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
         }
 
@@ -431,7 +439,7 @@ class FieldManager
         }
     }
 
-    protected function saveCustomdDefs($scope, $newDefs)
+    protected function saveCustomEntityDefs($scope, $newDefs)
     {
         $customDefs = $this->getMetadata()->getCustom('entityDefs', $scope, (object) []);
 
@@ -492,6 +500,9 @@ class FieldManager
             'inlineEditDisabled' => [
                 'type' => 'bool',
                 'default' => false
+            ],
+            'defaultAttributes' => [
+                'type' => 'jsonObject'
             ]
         ];
 
@@ -510,7 +521,7 @@ class FieldManager
 
         $params = [];
         foreach ($fieldDefsByType['params'] as $paramData) {
-            $params[ $paramData['name'] ] = $paramData;
+            $params[$paramData['name']] = $paramData;
         }
         foreach ($additionalParamList as $paramName => $paramValue) {
             if (!isset($params[$paramName])) {
