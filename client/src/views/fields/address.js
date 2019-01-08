@@ -338,9 +338,6 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                 this.$street.on('input', function (e) {
                     this.controlStreetTextareaHeight();
                 }.bind(this));
-
-                var numberOfLines = this.$street.val().split('\n').length;
-                this.$street.prop('rows', numberOfLines);
             }
         },
 
