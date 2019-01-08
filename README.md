@@ -54,9 +54,9 @@ Before we can merge your pull request you need to accept our CLA [here](https://
 
 Branches:
 
-* hotfix/* – an upcoming maintenance release; fixes should be pushed to this branch;
-* master – an upcoming minor or major release; new features should be pushed to this branch;
-* stable – a last stable release.
+* hotfix/* – upcoming maintenance release; fixes should be pushed to this branch;
+* master – develop branch; new features should be pushed to this branch;
+* stable – last stable release.
 
 ### How to make a translation
 
