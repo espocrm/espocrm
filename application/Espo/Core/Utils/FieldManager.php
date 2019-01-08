@@ -500,6 +500,9 @@ class FieldManager
             'inlineEditDisabled' => [
                 'type' => 'bool',
                 'default' => false
+            ],
+            'defaultAttributes' => [
+                'type' => 'jsonObject'
             ]
         ];
 
