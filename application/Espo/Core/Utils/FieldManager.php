@@ -267,13 +267,16 @@ class FieldManager
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
         if (!empty($entityDefs)) {
-            $this->saveCustomdDefs($scope, $entityDefs);
+            $result &= $this->saveCustomDefs($scope, $entityDefs);
             $this->isChanged = true;
         }
 
         if ($metadataToBeSaved) {
             $result &= $this->getMetadata()->save();
+            $this->isChanged = true;
+        }
 
+        if ($this->isChanged) {
             $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
         }
 
@@ -431,7 +434,7 @@ class FieldManager
         }
     }
 
-    protected function saveCustomdDefs($scope, $newDefs)
+    protected function saveCustomDefs($scope, $newDefs)
     {
         $customDefs = $this->getMetadata()->getCustom('entityDefs', $scope, (object) []);
 
