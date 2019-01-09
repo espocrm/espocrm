@@ -252,15 +252,15 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
             $new = true;
             $changed = false;
 
-            if ($hash->$key['primary']) {
+            if ($hash->{$key}['primary']) {
                 $primary = $key;
             }
 
             if (property_exists($hashPrevious, $key)) {
                 $new = false;
-                $changed = $hash->$key['type'] != $hashPrevious->$key['type'];
-                if ($hash->$key['primary']) {
-                    if ($hash->$key['primary'] == $hashPrevious->$key['primary']) {
+                $changed = $hash->{$key}['type'] != $hashPrevious->$key['type'];
+                if ($hash->{$key}['primary']) {
+                    if ($hash->{$key}['primary'] == $hashPrevious->$key['primary']) {
                         $primary = false;
                     }
                 }
@@ -301,7 +301,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 $skipSave = $this->checkChangeIsForbidden($phoneNumber, $entity);
                 if (!$skipSave) {
                     $phoneNumber->set([
-                        'type' => $hash->$number['type'],
+                        'type' => $hash->{$number}['type'],
                     ]);
                     $this->save($phoneNumber);
                 } else {
@@ -319,15 +319,15 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 
                 $phoneNumber->set([
                     'name' => $number,
-                    'type' => $hash->$number['type'],
+                    'type' => $hash->{$number}['type'],
                 ]);
                 $this->save($phoneNumber);
             } else {
                 $skipSave = $this->checkChangeIsForbidden($phoneNumber, $entity);
                 if (!$skipSave) {
-                    if ($phoneNumber->get('type') != $hash->$number['type']) {
+                    if ($phoneNumber->get('type') != $hash->{$number}['type']) {
                         $phoneNumber->set([
-                            'type' => $hash->$number['type'],
+                            'type' => $hash->{$number}['type'],
                         ]);
                         $this->save($phoneNumber);
                     }
