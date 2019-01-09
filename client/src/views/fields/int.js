@@ -126,6 +126,10 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         getMaxValue: function () {
             var maxValue = this.model.getFieldParam(this.name, 'max') || null;
 
+            if (!maxValue && maxValue !== 0) {
+                maxValue = null;
+            }
+
             if ('max' in this.params) {
                 maxValue = this.params.max;
             }
@@ -134,7 +138,11 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         getMinValue: function () {
-            var minValue = this.model.getFieldParam(this.name, 'min') || null;
+            var minValue = this.model.getFieldParam(this.name, 'min');
+
+            if (!minValue && minValue !== 0) {
+                minValue = null;
+            }
 
             if ('min' in this.params) {
                 minValue = this.params.min;
