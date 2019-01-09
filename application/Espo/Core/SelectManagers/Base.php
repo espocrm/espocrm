@@ -2082,13 +2082,13 @@ class Base
             }
         }
 
-        $attibute = null;
-        if (!empty($item['attribute'])) $attibute = $item['attribute'];
-        if (!$attibute) return;
+        $attribute = null;
+        if (!empty($item['attribute'])) $attribute = $item['attribute'];
+        if (!$attribute) return;
 
-        $attributeType = $this->getSeed()->getAttributeType($attibute);
+        $attributeType = $this->getSeed()->getAttributeType($attribute);
         if ($attributeType === 'foreign') {
-            $relation = $this->getSeed()->getAttributeParam($attibute, 'relation');
+            $relation = $this->getSeed()->getAttributeParam($attribute, 'relation');
             if ($relation) {
                 $this->addLeftJoin($relation, $result);
             }
