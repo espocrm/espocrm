@@ -309,6 +309,22 @@ class AclManager
         return $list;
     }
 
+
+    public function getScopeForbiddenLinkList(User $user, $scope, $action = 'read', $thresholdLevel = 'no')
+    {
+        $list = [];
+
+        if ($thresholdLevel === 'no') {
+            $list = array_merge(
+                $list,
+                $this->getScopeRestrictedLinkList($scope, $this->getGlobalRestrictionTypeList($user, $action))
+            );
+            $list = array_values($list);
+        }
+
+        return $list;
+    }
+
     public function checkUserPermission(User $user, $target, $permissionType = 'userPermission')
     {
         $permission = $this->get($user, $permissionType);

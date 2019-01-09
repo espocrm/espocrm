@@ -787,6 +787,13 @@ class Base
                     if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
                         throw new Forbidden();
                     }
+                    if (
+                        $this->getSeed()->hasRelation($attribute)
+                        &&
+                        in_array($attribute, $this->getAcl()->getScopeForbiddenLinkList($this->getEntityType()))
+                    ) {
+                        throw new Forbidden();
+                    }
                 } else {
                     if (in_array($attribute, $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType()))) {
                         throw new Forbidden();
