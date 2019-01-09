@@ -782,20 +782,42 @@ class Base
             if (isset($w['attribute'])) {
                 $attribute = $w['attribute'];
             }
+
+            $type = null;
+            if (isset($w['type'])) {
+                $type = $w['type'];
+            }
+
+            $entityType = $this->getEntityType();
+
             if ($attribute) {
-                if (isset($w['type']) && in_array($w['type'], ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith', 'isUserFromTeams'])) {
-                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
+                if (strpos($attribute, '.')) {
+                    list($link, $attribute) = explode('.', $attribute);
+                    if (!$this->getSeed()->hasRelation($link)) {
+                        throw new Forbidden("SelectManager::checkWhere: Unknow relation '{$link}' in where.");
+                    }
+                    $entityType = $this->getSeed($this->getEntityType())->getRelationParam($link, 'entity');
+                    if (!$entityType) {
+                        throw new Forbidden("SelectManager::checkWhere: Bad relation.");
+                    }
+                    if (!$this->getAcl()->checkScope($entityType)) {
+                        throw new Forbidden();
+                    }
+                }
+
+                if ($type && in_array($type, ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith', 'isUserFromTeams'])) {
+                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($entityType))) {
                         throw new Forbidden();
                     }
                     if (
                         $this->getSeed()->hasRelation($attribute)
                         &&
-                        in_array($attribute, $this->getAcl()->getScopeForbiddenLinkList($this->getEntityType()))
+                        in_array($attribute, $this->getAcl()->getScopeForbiddenLinkList($entityType))
                     ) {
                         throw new Forbidden();
                     }
                 } else {
-                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType()))) {
+                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenAttributeList($entityType))) {
                         throw new Forbidden();
                     }
                 }
