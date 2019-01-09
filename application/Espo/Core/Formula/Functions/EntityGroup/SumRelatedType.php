@@ -101,6 +101,10 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
 
         $selectParams['groupBy'] = [$foreignLink . '.id'];
 
+        $selectParams['whereClause'][] = [
+            $foreignLink . '.id' => $entity->id
+        ];
+
         $entityManager->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 
         $sql = $entityManager->getQuery()->createSelectQuery($foreignEntityType, $selectParams);

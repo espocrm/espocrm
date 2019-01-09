@@ -124,6 +124,11 @@ class Acl
         return $this->getAclManager()->getScopeForbiddenFieldList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
+    public function getScopeForbiddenLinkList($scope, $action = 'read', $thresholdLevel = 'no')
+    {
+        return $this->getAclManager()->getScopeForbiddenLinkList($this->getUser(), $scope, $action, $thresholdLevel);
+    }
+
     public function checkUserPermission($target, $permissionType = 'userPermission')
     {
         return $this->getAclManager()->checkUserPermission($this->getUser(), $target, $permissionType);
