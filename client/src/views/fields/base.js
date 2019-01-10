@@ -247,7 +247,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.getFieldManager().getParamList(this.type).forEach(function (d) {
                 var name = d.name;
                 if (!(name in this.params)) {
-                    this.params[name] = this.model.getFieldParam(this.name, name) || null;
+                    this.params[name] = this.model.getFieldParam(this.name, name);
+                    if (typeof this.params[name] === 'undefined') {
+                        this.params[name] = null;
+                    }
                 }
             }, this);
 
