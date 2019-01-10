@@ -217,6 +217,8 @@ Espo.define('view-helper', [], function () {
 
                 text = marked(text);
 
+                text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
+
                 text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
                 return new Handlebars.SafeString(text);
             }.bind(this));
