@@ -75,13 +75,13 @@ class Invitations
     public function sendInvitation(Entity $entity, Entity $invitee, $link)
     {
         $uid = $this->getEntityManager()->getEntity('UniqueId');
-        $uid->set('data', array(
+        $uid->set('data', [
             'eventType' => $entity->getEntityType(),
             'eventId' => $entity->id,
             'inviteeId' => $invitee->id,
             'inviteeType' => $invitee->getEntityType(),
             'link' => $link
-        ));
+        ]);
 
         if ($entity->get('dateEnd')) {
             $terminateAt = $entity->get('dateEnd');
@@ -110,9 +110,9 @@ class Invitations
         $subjectTpl = $this->templateFileManager->getTemplate('invitation', 'subject', $entity->getEntityType(), 'Crm');
         $bodyTpl = $this->templateFileManager->getTemplate('invitation', 'body', $entity->getEntityType(), 'Crm');
 
-        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+        $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
-        $data = array();
+        $data = [];
 
         $siteUrl = rtrim($this->getConfig()->get('siteUrl'), '/');
         $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
@@ -150,24 +150,23 @@ class Invitations
         $email->set('subject', $subject);
         $email->set('body', $body);
         $email->set('isHtml', true);
-        $this->getEntityManager()->saveEntity($email);
 
         $attachmentName = ucwords($this->language->translate($entity->getEntityType(), 'scopeNames')).'.ics';
         $attachment = $this->getEntityManager()->getEntity('Attachment');
-        $attachment->set(array(
+        $attachment->set([
             'name' => $attachmentName,
             'type' => 'text/calendar',
             'contents' => $this->getIscContents($entity),
-        ));
+        ]);
 
-        $email->addAttachment($attachment);
+        $message = new \Zend\Mail\Message();
 
         $emailSender = $this->mailSender;
 
         if ($this->smtpParams) {
             $emailSender->useSmtp($this->smtpParams);
         }
-        $emailSender->send($email);
+        $emailSender->send($email, [], $message, [$attachment]);
 
         $this->getEntityManager()->removeEntity($email);
     }
@@ -183,7 +182,7 @@ class Invitations
             $email = $user->get('emailAddress');
         }
 
-        $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', array(
+        $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', [
             'startDate' => strtotime($entity->get('dateStart')),
             'endDate' => strtotime($entity->get('dateEnd')),
             'uid' => $entity->id,
@@ -191,10 +190,8 @@ class Invitations
             'who' => $who,
             'email' => $email,
             'description' => $entity->get('description'),
-        ));
+        ]);
 
         return $ics->get();
     }
-
 }
-

@@ -269,8 +269,13 @@ class Sender
 
         if (!empty($attachmentCollection)) {
             foreach ($attachmentCollection as $a) {
-                $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($a);
-                $attachment = new MimePart(file_get_contents($fileName));
+                if ($a->get('contents')) {
+                    $contents = $a->get('contents');
+                } else {
+                    $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($a);
+                    $contents = file_get_contents($fileName);
+                }
+                $attachment = new MimePart($contents);
                 $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
                 $attachment->encoding = Mime::ENCODING_BASE64;
                 $attachment->filename ='=?utf-8?B?' . base64_encode($a->get('name')) . '?=';
@@ -283,8 +288,13 @@ class Sender
 
         if (!empty($attachmentInlineCollection)) {
             foreach ($attachmentInlineCollection as $a) {
-                $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($a);
-                $attachment = new MimePart(file_get_contents($fileName));
+                if ($a->get('contents')) {
+                    $contents = $a->get('contents');
+                } else {
+                    $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($a);
+                    $contents = file_get_contents($fileName);
+                }
+                $attachment = new MimePart($contents);
                 $attachment->disposition = Mime::DISPOSITION_INLINE;
                 $attachment->encoding = Mime::ENCODING_BASE64;
                 $attachment->id = $a->id;
