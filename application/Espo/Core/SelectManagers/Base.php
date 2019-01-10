@@ -843,7 +843,7 @@ class Base
         return $this->userTimeZone;
     }
 
-    public function tranformDateTimeWhereItem($item)
+    public function transformDateTimeWhereItem($item)
     {
         $format = 'Y-m-d H:i:s';
 
@@ -1047,7 +1047,7 @@ class Base
 
     public function convertDateTimeWhere($item)
     {
-        $where = $this->tranformDateTimeWhereItem($item);
+        $where = $this->transformDateTimeWhereItem($item);
         $result = $this->getWherePart($where);
         return $result;
     }
