@@ -1034,6 +1034,7 @@ class Base
                 $dtTo->setTimezone(new \DateTimeZone('UTC'));
 
                 $where['value'] = [$dtFrom->format($format), $dtTo->format($format)];
+                break;
 
             default:
                 $where['type'] = $type;
