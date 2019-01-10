@@ -843,7 +843,7 @@ class Base
         return $this->userTimeZone;
     }
 
-    public function convertDateTimeWhere($item)
+    public function tranformDateTimeWhereItem($item)
     {
         $format = 'Y-m-d H:i:s';
 
@@ -997,6 +997,7 @@ class Base
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
                 break;
+
             case 'between':
                 $where['type'] = 'between';
                 if (is_array($value)) {
@@ -1012,11 +1013,39 @@ class Base
                     $where['value'] = [$from, $to];
                 }
                break;
+
+            case 'currentMonth':
+            case 'lastMonth':
+            case 'nextMonth':
+                $where['type'] = 'between';
+                $dtFrom = new \DateTime('now', new \DateTimeZone($timeZone));
+                $dtFrom = $dt->modify('first day of this month')->setTime(0, 0, 0);
+
+                if ($type == 'lastMonth') {
+                    $dtFrom->modify('-1 month');
+                } else if ($type == 'nextMonth') {
+                    $dtFrom->modify('+1 month');
+                }
+
+                $dtTo = clone $dtFrom;
+                $dtTo->modify('+1 month');
+
+                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
+
+                $where['value'] = [$dtFrom->format($format), $dtTo->format($format)];
+
             default:
                 $where['type'] = $type;
         }
-        $result = $this->getWherePart($where);
 
+        return $where;
+    }
+
+    public function convertDateTimeWhere($item)
+    {
+        $where = $this->tranformDateTimeWhereItem($item);
+        $result = $this->getWherePart($where);
         return $result;
     }
 
@@ -1055,6 +1084,11 @@ class Base
             $item['value'] = null;
         }
         $value = $item['value'];
+
+        $timeZone = null;
+        if (isset($item['timeZone'])) {
+            $timeZone = $item['timeZone'];
+        }
 
         if (!empty($item['type'])) {
             $type = $item['type'];
