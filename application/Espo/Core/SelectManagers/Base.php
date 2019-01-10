@@ -1039,6 +1039,8 @@ class Base
                 $where['type'] = $type;
         }
 
+        $where['originalType'] = $type;
+
         return $where;
     }
 
