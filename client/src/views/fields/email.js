@@ -385,8 +385,10 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 return;
             }
 
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') || 'views/modals/compose-email';
+
             this.notify('Loading...');
-            this.createView('quickCreate', 'views/modals/compose-email', {
+            this.createView('quickCreate', viewName, {
                 attributes: attributes,
             }, function (view) {
                 view.render();
