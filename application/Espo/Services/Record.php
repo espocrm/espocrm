@@ -2041,7 +2041,7 @@ class Record extends \Espo\Core\Services\Base
                         break;
                     }
                     $value = $entity->get($attribute);
-                    return \Espo\Core\Utils\Json::encode($value);
+                    return \Espo\Core\Utils\Json::encode($value, \JSON_UNESCAPED_UNICODE);
                     break;
                 case 'jsonArray':
                     if (!empty($defs[$attribute]['isLinkMultipleIdList'])) {
@@ -2049,7 +2049,7 @@ class Record extends \Espo\Core\Services\Base
                     }
                     $value = $entity->get($attribute);
                     if (is_array($value)) {
-                        return \Espo\Core\Utils\Json::encode($value);
+                        return \Espo\Core\Utils\Json::encode($value, \JSON_UNESCAPED_UNICODE);
                     } else {
                         return null;
                     }
