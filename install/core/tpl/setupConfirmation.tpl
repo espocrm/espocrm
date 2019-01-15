@@ -92,7 +92,7 @@
 </div>
 <div class="loading-panel hide">
     <div class="text-right">
-        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+        <i class="fas fa-spinner fa-spin"></i>
     </div>
 </div>
 <footer class="modal-footer">
