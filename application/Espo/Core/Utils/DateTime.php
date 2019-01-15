@@ -37,6 +37,10 @@ class DateTime
 
     protected $timezone;
 
+    public static $systemDateTimeFormat = 'Y-m-d H:i:s';
+
+    public static $systemDateFormat  = 'Y-m-d';
+
     protected $internalDateTimeFormat = 'Y-m-d H:i:s';
 
     protected $internalDateFormat = 'Y-m-d';
