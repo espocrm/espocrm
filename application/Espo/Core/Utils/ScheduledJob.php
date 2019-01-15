@@ -208,30 +208,33 @@ class ScheduledJob
      */
     public function isCronConfigured()
     {
-        $startDate = new \DateTime('-' . $this->checkingCronPeriod, new \DateTimeZone("UTC"));
-        $endDate = new \DateTime('+' . $this->checkingCronPeriod, new \DateTimeZone("UTC"));
+        $r1From = new \DateTime('-' . $this->checkingCronPeriod);
+        $r1To = new \DateTime('+' . $this->checkingCronPeriod);
 
-        $query = "
-            SELECT job.id FROM scheduled_job
-            LEFT JOIN job ON job.scheduled_job_id = scheduled_job.id AND job.deleted = 0
-            WHERE
-                scheduled_job.job = 'Dummy'
-                AND scheduled_job.deleted = 0
-                AND job.execute_time BETWEEN '". $startDate->format('Y-m-d H:i:s') ."' AND '". $endDate->format('Y-m-d H:i:s') ."'
-                AND job.status IN ('Success', 'Failed', 'Pending')
-            ORDER BY job.execute_time DESC
-        ";
+        $r2From = new \DateTime('- 1 hour');
+        $r2To = new \DateTime();
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $format = \Espo\Core\Utils\DateTime::$systemDateTimeFormat;
 
-        $row = $sth->fetch(\PDO::FETCH_ASSOC);
+        $selectParams = [
+            'select' => ['id'],
+            'leftJoins' => ['scheduledJob'],
+            'whereClause' => [
+                'OR' => [
+                    [
+                        ['executedAt>=' => $r2From->format($format)] ,
+                        ['executedAt<=' => $r2To->format($format)],
+                    ],
+                    [
+                        ['executeTime>=' => $r1From->format($format)],
+                        ['executeTime<='=> $r1To->format($format)],
+                        'scheduledJob.job' => 'Dummy'
+                    ]
+                ]
+            ]
+        ];
 
-        if (!empty($row['id'])) {
-            return true;
-        }
 
-        return false;
+        return !!$this->getEntityManager()->getRepository('Job')->findOne($selectParams);
     }
 }
