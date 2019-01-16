@@ -14,7 +14,9 @@
       },
       "city":{
          "type":"varchar",
-         "trim": true
+         "trim": true,
+         "view": "views/fields/address-city",
+         "customizationOptionsDisabled": true
       },
       "state":{
          "type":"varchar",
