@@ -296,7 +296,7 @@ abstract class Base
             throw new \Exception("Not allowed function '".$function."'.");
         }
 
-        if (strpos($function, 'YEAR_') === 0) {
+        if (strpos($function, 'YEAR_') === 0 && $function !== 'YEAR_NUMBER') {
             $fiscalShift = substr($function, 5);
             if (is_numeric($fiscalShift)) {
                 $fiscalShift = intval($fiscalShift);
@@ -309,7 +309,7 @@ abstract class Base
             }
         }
 
-        if (strpos($function, 'QUARTER_') === 0) {
+        if (strpos($function, 'QUARTER_') === 0 && $function !== 'QUARTER_NUMBER') {
             $fiscalShift = substr($function, 8);
             if (is_numeric($fiscalShift)) {
                 $fiscalShift = intval($fiscalShift);
