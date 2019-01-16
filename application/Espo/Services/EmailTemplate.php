@@ -276,6 +276,11 @@ class EmailTemplate extends Record
         $replaceData['today'] = $this->getDateTime()->getTodayString();
         $replaceData['now'] = $this->getDateTime()->getNowString();
 
+        $timeZone = $this->getConfig()->get('timeZone');
+        $now = new \DateTime('now', new \DateTimezone($timeZone));
+
+        $replaceData['currentYear'] = $now->format('Y');
+
         foreach ($replaceData as $key => $value) {
             $text = str_replace('{' . $key . '}', $value, $text);
         }

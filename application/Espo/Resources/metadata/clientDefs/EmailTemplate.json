@@ -43,6 +43,6 @@
     "filterList": [
         "actual"
     ],
-    "placeholderList": ["today", "now", "optOutUrl", "optOutLink"],
+    "placeholderList": ["today", "now", "currentYear", "optOutUrl", "optOutLink"],
     "iconClass": "fas fa-envelope-square"
 }
