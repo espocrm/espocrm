@@ -16,9 +16,9 @@
             [{"name": "language"}, {"name": "timeZone"}],
             [{"name": "dateFormat"}, {"name": "weekStart"}],
             [{"name": "timeFormat"},  {"name": "thousandSeparator"}],
-            [{"name": "addressFormat"}, {"name": "decimalMark"}],
-            [{"name": "addressPreview"}, {"name": "addressCountryList"}],
-            [{"name": "fiscalYearShift"},  false]
+            [{"name": "fiscalYearShift"},  {"name": "decimalMark"}],
+            [{"name": "addressFormat"}, {"name": "addressPreview"}],
+            [{"name": "addressCountryList"}, {"name": "addressCityList"}]
         ]
     },
     {

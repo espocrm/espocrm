@@ -106,6 +106,7 @@
         "outboundEmailBccAddress": "BCC address for external clients",
         "cleanupDeletedRecords": "Clean up deleted records",
         "addressCountryList": "Address Country Autocomplete List",
+        "addressCityList": "Address City Autocomplete List",
         "fiscalYearShift": "Fiscal Year Start",
         "jobRunInParallel": "Jobs Run in Parallel",
         "jobMaxPortion": "Jobs Max Portion",
