@@ -367,4 +367,25 @@ class App extends \Espo\Core\Services\Base
             } catch (\Exception $e) {}
         }
     }
+
+    public function jobPopulateOptedOutPhoneNumbers()
+    {
+        $entityTypeList = ['Contact', 'Lead'];
+
+        foreach ($entityTypeList as $entityType) {
+            $entityList = $this->getEntityManager()->getRepository($entityType)->where([
+                'doNotCall' => true,
+                'phoneNumber!=' => null,
+            ])->select(['id', 'phoneNumber'])->find();
+            foreach ($entityList as $entity) {
+                $phoneNumber = $entity->get('phoneNumber');
+                if (!$phoneNumber) continue;
+                $phoneNumberEntity = $this->getEntityManager()->getRepository('PhoneNumber')->getByNumber($phoneNumber);
+                if (!$phoneNumberEntity) continue;
+                $phoneNumberEntity->set('optOut', true);
+                $this->getEntityManager()->saveEntity($phoneNumberEntity);
+
+            }
+        }
+    }
 }
