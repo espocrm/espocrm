@@ -258,9 +258,9 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 
             if (property_exists($hashPrevious, $key)) {
                 $new = false;
-                $changed = $hash->{$key}['type'] != $hashPrevious->$key['type'];
+                $changed = $hash->{$key}['type'] != $hashPrevious->{$key}['type'];
                 if ($hash->{$key}['primary']) {
-                    if ($hash->{$key}['primary'] == $hashPrevious->$key['primary']) {
+                    if ($hash->{$key}['primary'] == $hashPrevious->{$key}['primary']) {
                         $primary = false;
                     }
                 }
