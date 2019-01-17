@@ -211,7 +211,7 @@ return [
     'ldapUserEmailAddressAttribute' => 'mail',
     'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
     'ldapUserObjectClass' => 'person',
-    'requiredPhpVersion' => '5.6.0',
+    'requiredPhpVersion' => '7.1.0',
     'requiredPhpLibs' => [
         'json',
         'openssl',
