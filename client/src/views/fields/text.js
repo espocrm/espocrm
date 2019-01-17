@@ -56,7 +56,10 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             'click a[data-action="seeMoreText"]': function (e) {
                 this.seeMoreText = true;
                 this.reRender();
-            }
+            },
+            'click [data-action="mailTo"]': function (e) {
+                this.mailTo($(e.currentTarget).data('email-address'));
+            },
         },
 
         setup: function () {
@@ -287,8 +290,38 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
-        }
+        },
+
+        mailTo: function (emailAddress) {
+            var attributes = {
+                status: 'Draft',
+                to: emailAddress
+            };
+
+            if (
+                this.getConfig().get('emailForceUseExternalClient') ||
+                this.getPreferences().get('emailUseExternalClient') ||
+                !this.getAcl().checkScope('Email', 'create')
+            ) {
+                require('email-helper', function (EmailHelper) {
+                    var emailHelper = new EmailHelper();
+                    var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+                    document.location.href = link;
+                }.bind(this));
+
+                return;
+            }
+
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') || 'views/modals/compose-email';
+
+            this.notify('Loading...');
+            this.createView('quickCreate', viewName, {
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+            });
+        },
 
     });
 });
-

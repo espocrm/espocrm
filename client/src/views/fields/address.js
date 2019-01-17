@@ -338,6 +338,45 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                 this.$street.on('input', function (e) {
                     this.controlStreetTextareaHeight();
                 }.bind(this));
+
+                var cityList = this.getConfig().get('addressCityList') || [];
+                if (cityList.length) {
+                    this.$city.autocomplete({
+                        minChars: 0,
+                        lookup: cityList,
+                        maxHeight: 200,
+                        formatResult: function (suggestion) {
+                            return suggestion.value;
+                        },
+                        lookupFilter: function (suggestion, query, queryLowerCase) {
+                            if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
+                                if (suggestion.value.length === queryLowerCase.length) return false;
+                                return true;
+                            }
+                            return false;
+                        },
+                        onSelect: function () {
+                            this.trigger('change');
+                        }.bind(this)
+                    });
+                    this.$city.on('focus', function () {
+                        if (this.$city.val()) return;
+                        this.$city.autocomplete('onValueChange');
+                    }.bind(this));
+                    this.once('render', function () {
+                        this.$city.autocomplete('dispose');
+                    }, this);
+                    this.once('remove', function () {
+                        this.$city.autocomplete('dispose');
+                    }, this);
+
+                    this.$city.attr('autocomplete', 'espo-city');
+                }
+
+                this.controlStreetTextareaHeight();
+                this.$street.on('input', function (e) {
+                    this.controlStreetTextareaHeight();
+                }.bind(this));
             }
         },
 

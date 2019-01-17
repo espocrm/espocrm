@@ -136,6 +136,8 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 data.valueIsSet = this.model.has(this.name);
             }
 
+            data.itemMaxLength = this.itemMaxLength;
+
             return data;
         },
 
@@ -385,8 +387,10 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 return;
             }
 
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') || 'views/modals/compose-email';
+
             this.notify('Loading...');
-            this.createView('quickCreate', 'views/modals/compose-email', {
+            this.createView('quickCreate', viewName, {
                 attributes: attributes,
             }, function (view) {
                 view.render();
@@ -405,6 +409,8 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             this.erasedPlaceholder = 'ERASED:';
 
             this.emailAddressOptedOutByDefault = this.getConfig().get('emailAddressIsOptedOutByDefault');
+
+            this.itemMaxLength = this.getMetadata().get(['entityDefs', 'EmailAddress', 'fields', 'name', 'maxLength']) || 255;
         },
 
         fetchEmailAddressData: function () {

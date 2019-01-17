@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,28 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+Espo.define('views/fields/address-city', 'views/fields/varchar', function (Dep) {
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+    return Dep.extend({
 
-use \Espo\ORM\Entity;
+        setupOptions: function () {
+            var cityList = this.getConfig().get('addressCityList') || [];
+            if (cityList.length) {
+                this.params.options = Espo.Utils.clone(cityList);
+            }
+        },
 
-class Task extends \Espo\Services\Record
-{
-    protected $selectAttributesDependancyMap = [
-        'dateEnd' => ['status']
-    ];
-
-    public function loadAdditionalFields(Entity $entity)
-    {
-        parent::loadAdditionalFields($entity);
-        $this->loadRemindersField($entity);
-    }
-
-    protected function loadRemindersField(Entity $entity)
-    {
-        $reminders = $this->getRepository()->getEntityReminderList($entity);
-        $entity->set('reminders', $reminders);
-    }
-}
+    });
+});

@@ -117,6 +117,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $forceSelectAllAttributes = false;
 
+    protected $selectAttributesDependancyMap = [];
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -2073,7 +2075,7 @@ class Record extends \Espo\Core\Services\Base
                         break;
                     }
                     $value = $entity->get($attribute);
-                    return \Espo\Core\Utils\Json::encode($value);
+                    return \Espo\Core\Utils\Json::encode($value, \JSON_UNESCAPED_UNICODE);
                     break;
                 case 'jsonArray':
                     if (!empty($defs[$attribute]['isLinkMultipleIdList'])) {
@@ -2081,7 +2083,7 @@ class Record extends \Espo\Core\Services\Base
                     }
                     $value = $entity->get($attribute);
                     if (is_array($value)) {
-                        return \Espo\Core\Utils\Json::encode($value);
+                        return \Espo\Core\Utils\Json::encode($value, \JSON_UNESCAPED_UNICODE);
                     } else {
                         return null;
                     }
@@ -2476,6 +2478,16 @@ class Record extends \Espo\Core\Services\Base
             foreach ($this->mandatorySelectAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
+                }
+            }
+
+            foreach ($this->selectAttributesDependancyMap as $attribute => $dependantAttributeList) {
+                if (in_array($attribute, $attributeList)) {
+                    foreach ($dependantAttributeList as $dependantAttribute) {
+                        if (!in_array($dependantAttribute, $attributeList)) {
+                            $attributeList[] = $dependantAttribute;
+                        }
+                    }
                 }
             }
 

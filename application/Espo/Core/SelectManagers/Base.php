@@ -843,7 +843,7 @@ class Base
         return $this->userTimeZone;
     }
 
-    public function convertDateTimeWhere($item)
+    public function transformDateTimeWhereItem($item)
     {
         $format = 'Y-m-d H:i:s';
 
@@ -997,6 +997,7 @@ class Base
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
                 break;
+
             case 'between':
                 $where['type'] = 'between';
                 if (is_array($value)) {
@@ -1012,11 +1013,143 @@ class Base
                     $where['value'] = [$from, $to];
                 }
                break;
+
+            case 'currentMonth':
+            case 'lastMonth':
+            case 'nextMonth':
+                $where['type'] = 'between';
+                $dtFrom = new \DateTime('now', new \DateTimeZone($timeZone));
+                $dtFrom = $dt->modify('first day of this month')->setTime(0, 0, 0);
+
+                if ($type == 'lastMonth') {
+                    $dtFrom->modify('-1 month');
+                } else if ($type == 'nextMonth') {
+                    $dtFrom->modify('+1 month');
+                }
+
+                $dtTo = clone $dtFrom;
+                $dtTo->modify('+1 month');
+
+                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
+
+                $where['value'] = [$dtFrom->format($format), $dtTo->format($format)];
+                break;
+
+            case 'currentQuarter':
+            case 'lastQuarter':
+                $where['type'] = 'between';
+                $dt = new \DateTime('now', new \DateTimeZone($timeZone));
+                $quarter = ceil($dt->format('m') / 3);
+
+                $dtFrom = clone $dt;
+                $dtFrom->modify('first day of January this year')->setTime(0, 0, 0);
+
+                if ($type === 'lastQuarter') {
+                    $quarter--;
+                    if ($quarter == 0) {
+                        $quarter = 4;
+                        $dtFrom->modify('-1 year');
+                    }
+                }
+
+                $dtFrom->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'));
+                $dtTo = clone $dtFrom;
+                $dtTo->add(new \DateInterval('P3M'));
+                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = [
+                    $dtFrom->format($format),
+                    $dtTo->format($format)
+                ];
+                break;
+
+            case 'currentYear':
+            case 'lastYear':
+                $where['type'] = 'between';
+                $dtFrom = new \DateTime('now', new \DateTimeZone($timeZone));
+                $dtFrom->modify('first day of January this year')->setTime(0, 0, 0);
+                if ($type == 'lastYear') {
+                    $dtFrom->modify('-1 year');
+                }
+                $dtTo = clone $dtFrom;
+                $dtTo = $dtTo->modify('+1 year');
+                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = [
+                    $dtFrom->format($format),
+                    $dtTo->format($format)
+                ];
+                break;
+
+            case 'currentFiscalYear':
+            case 'lastFiscalYear':
+                $where['type'] = 'between';
+                $dtToday = new \DateTime('now', new \DateTimeZone($timeZone));
+                $dt = clone $dtToday;
+                $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+                $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months')->setTime(0, 0, 0);
+                if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
+                    $dt->modify('-1 year');
+                }
+                if ($type === 'lastFiscalYear') {
+                    $dt->modify('-1 year');
+                }
+                $dtFrom = clone $dt;
+                $dtTo = clone $dt;
+                $dtTo = $dtTo->modify('+1 year');
+                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = [
+                    $dtFrom->format($format),
+                    $dtTo->format($format)
+                ];
+                break;
+
+            case 'currentFiscalQuarter':
+            case 'lastFiscalQuarter':
+                $where['type'] = 'between';
+                $dtToday = new \DateTime('now', new \DateTimeZone($timeZone));
+                $dt = clone $dtToday;
+                $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+                $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months')->setTime(0, 0, 0);
+                $month = intval($dtToday->format('m'));
+                $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
+                if ($quarterShift) {
+                    if ($quarterShift >= 0) {
+                        $dt->add(new \DateInterval('P'.($quarterShift * 3).'M'));
+                    } else {
+                        $quarterShift *= -1;
+                        $dt->sub(new \DateInterval('P'.($quarterShift * 3).'M'));
+                    }
+                }
+                if ($type === 'lastFiscalQuarter') {
+                    $dt->modify('-3 months');
+                }
+                $dtFrom = clone $dt;
+                $dtTo = clone $dt;
+                $dtTo = $dtTo->modify('+3 months');
+                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = [
+                    $dtFrom->format($format),
+                    $dtTo->format($format)
+                ];
+                break;
+
             default:
                 $where['type'] = $type;
         }
-        $result = $this->getWherePart($where);
 
+        $where['originalType'] = $type;
+
+        return $where;
+    }
+
+    public function convertDateTimeWhere($item)
+    {
+        $where = $this->transformDateTimeWhereItem($item);
+        $result = $this->getWherePart($where);
         return $result;
     }
 
@@ -1055,6 +1188,11 @@ class Base
             $item['value'] = null;
         }
         $value = $item['value'];
+
+        $timeZone = null;
+        if (isset($item['timeZone'])) {
+            $timeZone = $item['timeZone'];
+        }
 
         if (!empty($item['type'])) {
             $type = $item['type'];

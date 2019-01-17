@@ -29,6 +29,7 @@
     "placeholderTexts": {
         "today": "Today's date",
         "now": "Current date & time",
+        "currentYear": "Current Year",
         "optOutUrl": "URL for an unsubsbribe link",
         "optOutLink": "an unsubscribe link"
     }

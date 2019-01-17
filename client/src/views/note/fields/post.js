@@ -230,32 +230,9 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                             xhr.errorIsHandled = true;
                         });
                     }
-                } else if (text.indexOf(siteUrl) === 0) {
-                    if (/\#[A-Z][a-zA-Z0-9]*\/view\/[a-zA-Z0-9]*$/.test(text)) {
-                        var match = /\#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9]*)$/.exec(text)
-                        if (match.length === 3) {
-                            var entityType = match[1];
-                            var id = match[2];
-
-                            event.preventDefault();
-
-                            var cursorStartPosition = this.$element.prop('selectionStart');
-                            var cursorEndPosition = this.$element.prop('selectionEnd');
-                            var text = this.$element.val();
-                            var textBefore = text.substring(0,  cursorStartPosition);
-                            var textAfter  = text.substring(cursorEndPosition, text.length);
-
-                            var textToPaste = '['+entityType+'/'+id+'](#'+entityType+'/view/'+id+')';
-
-                            this.$element.val(textBefore + textToPaste + textAfter);
-
-                            this.controlTextareaHeight();
-                        }
-                    }
                 }
             }
         }
 
     });
-
 });

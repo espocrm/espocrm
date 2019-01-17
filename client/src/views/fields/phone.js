@@ -128,6 +128,8 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 data.valueIsSet = this.model.has(this.name);
             }
 
+            data.itemMaxLength = this.itemMaxLength;
+
             return data;
         },
 
@@ -270,6 +272,8 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             }
 
             this.erasedPlaceholder = 'ERASED:';
+
+            this.itemMaxLength = this.getMetadata().get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
         },
 
         fetchPhoneNumberData: function () {

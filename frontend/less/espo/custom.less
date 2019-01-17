@@ -108,6 +108,10 @@
     .clearfix();
 }
 
+hr {
+    border-top: 1px solid @panel-default-border;
+}
+
 blockquote {
     font-size: @font-size-base;
     border-left-width: 3px;
@@ -207,10 +211,14 @@ label {
 }
 
 .page-header {
-  margin: 10px 0;
-  border-bottom: 0;
-  padding-bottom: 2px;
-  min-height: 33px;
+    margin: 10px 0;
+    border-bottom: 0;
+    padding-bottom: 2px;
+    min-height: 33px;
+
+    .page-header-column-1 {
+        overflow: hidden;
+    }
 }
 
 .page-header > .row {
@@ -919,6 +927,13 @@ ul.dropdown-menu > li > a > .check-icon + div {
 table.table > tbody td > .list-row-buttons button {
     position: relative;
     margin-top: 2px;
+}
+
+table.table > tbody > tr > td,
+table.table > tbody > tr > th,
+table.table > thead > tr > th {
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .list-row-buttons span.caret {
