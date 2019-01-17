@@ -82,6 +82,11 @@ class Note extends Record
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
+
+        if ($entity->get('type') === 'Post') {
+            $this->handlePostText($entity);
+        }
+
         $targetType = $entity->get('targetType');
 
         $entity->clear('isGlobal');
@@ -119,11 +124,28 @@ class Note extends Record
     {
         parent::beforeUpdateEntity($entity, $data);
 
+        if ($entity->get('type') === 'Post') {
+            $this->handlePostText($entity);
+        }
+
         $entity->clear('targetType');
         $entity->clear('usersIds');
         $entity->clear('teamsIds');
         $entity->clear('portalsIds');
         $entity->clear('isGlobal');
+    }
+
+    protected function handlePostText(Entity $entity)
+    {
+        $post = $entity->get('post');
+        if (empty($post)) return;
+
+        $siteUrl = $this->getConfig()->getSiteUrl();
+
+        $regexp = '/' . preg_quote($siteUrl, '/') . '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9]*)/';
+        $post = preg_replace($regexp, '[\2/\3](#\2/view/\3)', $post);
+
+        $entity->set('post', $post);
     }
 
     public function checkAssignment(Entity $entity)
