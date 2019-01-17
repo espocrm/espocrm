@@ -86,6 +86,20 @@ class Phone extends Base
                         'type' => 'text',
                         'notStorable' => true
                     ),
+                    $fieldName .'IsOptedOut' => [
+                        'type' => 'bool',
+                        'notStorable' => true,
+                        'select' => 'phoneNumbers.opt_out',
+                        'where' => [
+                            '= TRUE' => [
+                                'sql' => 'phoneNumbers.opt_out = true AND phoneNumbers.opt_out IS NOT NULL'
+                            ],
+                            '= FALSE' => [
+                                'sql' => 'phoneNumbers.opt_out = false OR phoneNumbers.opt_out IS NULL'
+                            ]
+                        ],
+                        'orderBy' => 'phoneNumbers.opt_out {direction}'
+                    ],
                     $fieldName . 'Numeric' => [
                         'type' => 'varchar',
                         'notStorable' => true,

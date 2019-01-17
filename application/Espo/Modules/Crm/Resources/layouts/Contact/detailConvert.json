@@ -4,7 +4,7 @@
         "rows": [
             [{"name":"name"}, false],
             [{"name":"emailAddress"},{"name":"phoneNumber"}],
-            [{"name":"title"}, {"name":"doNotCall"}],
+            [{"name":"title"}, false],
             [{"name":"address"}, false],
             [{"name":"description", "fullWidth": true}]
         ]

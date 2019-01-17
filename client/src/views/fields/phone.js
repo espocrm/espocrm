@@ -81,10 +81,18 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
                 if (this.model.isNew() || !this.model.get(this.name)) {
                     if (!phoneNumberData || !phoneNumberData.length) {
-                         phoneNumberData = [{
+                        var optOut = false;
+                        if (this.model.isNew()) {
+                            optOut = this.phoneNumberOptedOutByDefault && this.model.name !== 'User';
+                        } else {
+                            optOut = this.model.get(this.isOptedOutFieldName)
+                        }
+                        phoneNumberData = [{
                             phoneNumber: this.model.get(this.name) || '',
                             primary: true,
-                            type: this.defaultType
+                            type: this.defaultType,
+                            optOut: optOut,
+                            invalid: false
                         }];
                     }
                 }
@@ -99,6 +107,7 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                     if (!item.erased) {
                         item.valueForLink = item.phoneNumber.replace(/ /g, '');
                     }
+                    item.lineThrough = item.optOut || item.invalid || this.model.get('doNotCall');
                 }, this);
             }
 
@@ -115,10 +124,12 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
             var data = _.extend({
                 phoneNumberData: phoneNumberData,
-                doNotCall: this.model.get('doNotCall')
+                doNotCall: this.model.get('doNotCall'),
+                lineThrough: this.model.get('doNotCall') || this.model.get(this.isOptedOutFieldName)
             }, Dep.prototype.data.call(this));
 
-            if (this.mode === 'detail' || this.mode === 'list') {
+            if (this.isReadMode()) {
+                data.isOptedOut = this.model.get(this.isOptedOutFieldName);
                 if (this.model.get(this.name)) {
                     data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0;
                     if (!data.isErased) {
@@ -200,7 +211,9 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 o = {
                     phoneNumber: '',
                     primary: data.length ? false : true,
-                    type: false
+                    type: false,
+                    optOut: this.emailAddressOptedOutByDefault,
+                    invalid: false,
                 };
 
                 data.push(o);
@@ -263,6 +276,10 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             this.dataFieldName = this.name + 'Data';
             this.defaultType = this.defaultType || this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
 
+            this.isOptedOutFieldName = this.name + 'IsOptedOut';
+
+            this.phoneNumberOptedOutByDefault = this.getConfig().get('phoneNumberIsOptedOutByDefault');
+
             if (this.model.has('doNotCall')) {
                 this.listenTo(this.model, 'change:doNotCall', function (model, value, o) {
                     if (this.mode !== 'detail' && this.mode !== 'list') return;
@@ -291,6 +308,8 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                     }
                     row.primary = $d.find('button[data-property-type="primary"]').hasClass('active');
                     row.type = $d.find('select[data-property-type="type"]').val();
+                    row.optOut = $d.find('button[data-property-type="optOut"]').hasClass('active');
+                    row.invalid = $d.find('button[data-property-type="invalid"]').hasClass('active');
                     data.push(row);
                 }.bind(this));
             }
@@ -304,14 +323,18 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             var adderssData = this.fetchPhoneNumberData() || [];
             data[this.dataFieldName] = adderssData;
             data[this.name] = null;
+            data[this.isOptedOutFieldName] = false;
 
             var primaryIndex = 0;
             adderssData.forEach(function (item, i) {
                 if (item.primary) {
                     primaryIndex = i;
+                    if (item.optOut) {
+                        data[this.isOptedOutFieldName] = true;
+                    }
                     return;
                 }
-            });
+            }, this);
 
             if (adderssData.length && primaryIndex > 0) {
                 var t = adderssData[0];
@@ -321,13 +344,12 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
             if (adderssData.length) {
                 data[this.name] = adderssData[0].phoneNumber;
+            } else {
+                data[this.isOptedOutFieldName] = null;
             }
 
             return data;
         }
 
     });
-
 });
-
-

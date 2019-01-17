@@ -348,6 +348,7 @@
         "phoneNumberOffice": "Phone (Office)",
         "phoneNumberOther": "Phone (Other)",
         "phoneNumberData": "Phone Number Data",
+        "phoneNumberIsOptedOut": "Phone Number is Opted-Out",
         "order": "Order",
         "parent": "Parent",
         "children": "Children",

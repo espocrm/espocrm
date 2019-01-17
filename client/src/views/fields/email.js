@@ -120,7 +120,8 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             if (emailAddressData) {
                 emailAddressData = Espo.Utils.cloneDeep(emailAddressData);
                 emailAddressData.forEach(function (item) {
-                    item.erased = item.emailAddress.indexOf(this.erasedPlaceholder) === 0
+                    item.erased = item.emailAddress.indexOf(this.erasedPlaceholder) === 0;
+                    item.lineThrough = item.optOut || item.invalid;
                 }, this);
             }
 
@@ -128,7 +129,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 emailAddressData: emailAddressData
             }, Dep.prototype.data.call(this));
 
-            if (this.mode === 'list' || this.mode === 'detail') {
+            if (this.isReadMode()) {
                 data.isOptedOut = this.model.get(this.isOptedOutFieldName);
                 if (this.model.get(this.name)) {
                     data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0

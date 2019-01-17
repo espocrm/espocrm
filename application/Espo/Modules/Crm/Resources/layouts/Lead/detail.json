@@ -4,8 +4,8 @@
         "rows": [
             [{"name":"name"},{"name":"accountName"}],
             [{"name":"emailAddress"},{"name":"phoneNumber"}],
-            [{"name":"title"},{"name":"doNotCall"}],
-            [{"name":"address"},{"name":"website"}]
+            [{"name":"title"}, {"name":"website"}],
+            [{"name":"address"}, false]
         ]
     },
     {

@@ -344,12 +344,12 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             if (property_exists($hashPrevious, $key)) {
                 $new = false;
                 $changed =
-                    $hash->{$key}['optOut'] != $hashPrevious->$key['optOut'] ||
-                    $hash->{$key}['invalid'] != $hashPrevious->$key['invalid'] ||
-                    $hash->{$key}['emailAddress'] !== $hashPrevious->$key['emailAddress'];
+                    $hash->{$key}['optOut'] != $hashPrevious->{$key}['optOut'] ||
+                    $hash->{$key}['invalid'] != $hashPrevious->{$key}['invalid'] ||
+                    $hash->{$key}['emailAddress'] !== $hashPrevious->{$key}['emailAddress'];
 
                 if ($hash->{$key}['primary']) {
-                    if ($hash->{$key}['primary'] == $hashPrevious->$key['primary']) {
+                    if ($hash->{$key}['primary'] == $hashPrevious->{$key}['primary']) {
                         $primary = false;
                     }
                 }
@@ -398,7 +398,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                 } else {
                     $revertData[$address] = [
                         'optOut' => $emailAddress->get('optOut'),
-                        'invalid' => $emailAddress->get('invalid')
+                        'invalid' => $emailAddress->get('invalid'),
                     ];
                 }
             }

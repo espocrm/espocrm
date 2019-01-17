@@ -2,9 +2,8 @@
     {
         "label":"Overview",
         "rows": [
-            [{"name":"name"},false],
+            [{"name":"name"}, {"name":"website"}],
             [{"name":"emailAddress"},{"name":"phoneNumber"}],
-            [{"name":"website"},false],
             [{"name":"billingAddress"},{"name":"shippingAddress"}]
         ]
     },

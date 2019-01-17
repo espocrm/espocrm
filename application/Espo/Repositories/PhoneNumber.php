@@ -93,7 +93,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
-            SELECT phone_number.name, phone_number.type, entity_phone_number.primary
+            SELECT phone_number.name, phone_number.type, entity_phone_number.primary, phone_number.opt_out AS optOut, phone_number.invalid
             FROM entity_phone_number
             JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id AND phone_number.deleted = 0
             WHERE
@@ -110,6 +110,8 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 $obj->phoneNumber = $row['name'];
                 $obj->primary = ($row['primary'] == '1') ? true : false;
                 $obj->type = $row['type'];
+                $obj->optOut = ($row['optOut'] == '1') ? true : false;
+                $obj->invalid = ($row['invalid'] == '1') ? true : false;
 
                 $data[] = $obj;
             }
@@ -199,6 +201,11 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
     {
         $pdo = $this->getEntityManager()->getPDO();
 
+        $phoneNumberValue = $entity->get('phoneNumber');
+        if (is_string($phoneNumberValue)) {
+            $phoneNumberValue = trim($phoneNumberValue);
+        }
+
         $phoneNumberData = null;
         if ($entity->has('phoneNumberData')) {
             $phoneNumberData = $entity->get('phoneNumberData');
@@ -223,9 +230,32 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
             if (empty($key)) continue;
             $hash->$key = [
                 'primary' => $row->primary ? true : false,
-                'type' => $row->type
+                'type' => $row->type,
+                'optOut' => !empty($row->optOut) ? true : false,
+                'invalid' => !empty($row->invalid) ? true : false,
             ];
             $keyList[] = $key;
+        }
+
+        if (
+            $entity->has('phoneNumberIsOptedOut')
+            &&
+            (
+                $entity->isNew()
+                ||
+                (
+                    $entity->hasFetched('phoneNumberIsOptedOut')
+                    &&
+                    $entity->get('phoneNumberIsOptedOut') !== $entity->getFetched('phoneNumberIsOptedOut')
+                )
+            )
+        ) {
+            if ($phoneNumberValue) {
+                $key = $phoneNumberValue;
+                if ($key && isset($hash->$key)) {
+                    $hash->{$key}['optOut'] = $entity->get('phoneNumberIsOptedOut');
+                }
+            }
         }
 
         foreach ($previousPhoneNumberData as $row) {
@@ -233,7 +263,9 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
             if (empty($key)) continue;
             $hashPrevious->$key = [
                 'primary' => $row->primary ? true : false,
-                'type' => $row->type
+                'type' => $row->type,
+                'optOut' => $row->optOut ? true : false,
+                'invalid' => $row->invalid ? true : false,
             ];
             $keyPreviousList[] = $key;
         }
@@ -258,9 +290,13 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 
             if (property_exists($hashPrevious, $key)) {
                 $new = false;
-                $changed = $hash->{$key}['type'] != $hashPrevious->$key['type'];
+                $changed =
+                    $hash->{$key}['type'] != $hashPrevious->{$key}['type'] ||
+                    $hash->{$key}['optOut'] != $hashPrevious->{$key}['optOut'] ||
+                    $hash->{$key}['invalid'] != $hashPrevious->{$key}['invalid'];
+
                 if ($hash->{$key}['primary']) {
-                    if ($hash->{$key}['primary'] == $hashPrevious->$key['primary']) {
+                    if ($hash->{$key}['primary'] == $hashPrevious->{$key}['primary']) {
                         $primary = false;
                     }
                 }
@@ -302,11 +338,15 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 if (!$skipSave) {
                     $phoneNumber->set([
                         'type' => $hash->{$number}['type'],
+                        'optOut' => $hash->{$number}['optOut'],
+                        'invalid' => $hash->{$number}['invalid'],
                     ]);
                     $this->save($phoneNumber);
                 } else {
                     $revertData[$number] = [
-                        'type' => $phoneNumber->get('type')
+                        'type' => $phoneNumber->get('type'),
+                        'optOut' => $phoneNumber->get('optOut'),
+                        'invalid' => $phoneNumber->get('invalid'),
                     ];
                 }
             }
@@ -320,20 +360,30 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 $phoneNumber->set([
                     'name' => $number,
                     'type' => $hash->{$number}['type'],
+                    'optOut' => $hash->{$number}['optOut'],
+                    'invalid' => $hash->{$number}['invalid'],
                 ]);
                 $this->save($phoneNumber);
             } else {
                 $skipSave = $this->checkChangeIsForbidden($phoneNumber, $entity);
                 if (!$skipSave) {
-                    if ($phoneNumber->get('type') != $hash->{$number}['type']) {
+                    if (
+                        $phoneNumber->get('type') != $hash->{$number}['type'] ||
+                        $phoneNumber->get('optOut') != $hash->{$number}['optOut'] ||
+                        $phoneNumber->get('invalid') != $hash->{$number}['invalid']
+                    ) {
                         $phoneNumber->set([
                             'type' => $hash->{$number}['type'],
+                            'optOut' => $hash->{$number}['optOut'],
+                            'invalid' => $hash->{$number}['invalid'],
                         ]);
                         $this->save($phoneNumber);
                     }
                 } else {
                     $revertData[$number] = [
-                        'type' => $phoneNumber->get('type')
+                        'type' => $phoneNumber->get('type'),
+                        'optOut' => $phoneNumber->get('optOut'),
+                        'invalid' => $phoneNumber->get('invalid'),
                     ];
                 }
             }
@@ -387,6 +437,8 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
             foreach ($phoneNumberData as $row) {
                 if (!empty($revertData[$row->phoneNumber])) {
                     $row->type = $revertData[$row->phoneNumber]['type'];
+                    $row->optOut = $revertData[$row->phoneNumber]['optOut'];
+                    $row->invalid = $revertData[$row->phoneNumber]['invalid'];
                 }
             }
             $entity->set('phoneNumberData', $phoneNumberData);
@@ -409,6 +461,9 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 if (!$phoneNumberNew) {
                     $phoneNumberNew = $this->get();
                     $phoneNumberNew->set('name', $phoneNumberValue);
+                    if ($entity->has('phoneNumberIsOptedOut')) {
+                        $phoneNumberNew->set('optOut', !!$entity->get('phoneNumberIsOptedOut'));
+                    }
                     $defaultType = $this->getEntityManager()->getEspoMetadata()->get('entityDefs.' .  $entity->getEntityType() . '.fields.phoneNumber.defaultType');
 
                     $phoneNumberNew->set('type', $defaultType);
@@ -426,6 +481,10 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 }
                 $entityRepository->relate($entity, 'phoneNumbers', $phoneNumberNew);
 
+                if ($entity->has('phoneNumberIsOptedOut')) {
+                    $this->markNumberOptedOut($phoneNumberValue, !!$entity->get('phoneNumberIsOptedOut'));
+                }
+
                 $query = "
                     UPDATE entity_phone_number
                     SET `primary` = 1
@@ -436,6 +495,22 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 ";
                 $sth = $pdo->prepare($query);
                 $sth->execute();
+            } else {
+                if (
+                    $entity->has('phoneNumberIsOptedOut')
+                    &&
+                    (
+                        $entity->isNew()
+                        ||
+                        (
+                            $entity->hasFetched('phoneNumberIsOptedOut')
+                            &&
+                            $entity->get('phoneNumberIsOptedOut') !== $entity->getFetched('phoneNumberIsOptedOut')
+                        )
+                    )
+                ) {
+                    $this->markNumberOptedOut($phoneNumberValue, !!$entity->get('phoneNumberIsOptedOut'));
+                }
             }
         } else {
             $phoneNumberValueOld = $entity->getFetched('phoneNumber');
@@ -479,6 +554,15 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 $numeric = null;
             }
             $entity->set('numeric', $numeric);
+        }
+    }
+
+    public function markNumberOptedOut($number, $isOptedOut = true)
+    {
+        $number = $this->getByNumber($number);
+        if ($number) {
+            $number->set('optOut', !!$isOptedOut);
+            $this->save($number);
         }
     }
 }
