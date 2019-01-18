@@ -1,7 +1,7 @@
 [
-    {"name":"name", "width":25, "link":"true"},
-    {"name":"status"},
-    {"name":"emailAddress", "notSortable": true},
-    {"name":"assignedUser"},
-    {"name":"createdAt"}
+    {"name":"name", "link": "true"},
+    {"name":"status", "width": 15},
+    {"name":"emailAddress", "notSortable": true, "width": 20},
+    {"name":"assignedUser", "width": 18},
+    {"name":"createdAt", "width": 13}
 ]
