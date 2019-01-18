@@ -52,9 +52,9 @@ class Account extends \Espo\Services\Record
         if (!$entity->get('name')) {
             return false;
         }
-        return array(
+        return [
             'name' => $entity->get('name')
-        );
+        ];
     }
 
     protected function afterMerge(Entity $entity, array $sourceList, $attributes)
