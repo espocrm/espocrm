@@ -124,7 +124,7 @@ class EntityManager
         }
 
         if (empty($this->mappers[$className])) {
-            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery(), $this);
+            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
         }
         return $this->mappers[$className];
     }
