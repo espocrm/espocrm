@@ -1775,7 +1775,7 @@ class Record extends \Espo\Core\Services\Base
             if ($entity->id) {
                 $where['id!='] = $entity->id;
             }
-            $duplicateList = $this->getRepository()->where($where)->find();
+            $duplicateList = $this->getRepository()->where($where)->limit(0, 20)->find();
             if (count($duplicateList)) {
                 $result = array();
                 foreach ($duplicateList as $e) {
