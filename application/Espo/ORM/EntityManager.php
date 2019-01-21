@@ -124,7 +124,7 @@ class EntityManager
         }
 
         if (empty($this->mappers[$className])) {
-            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
+            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery(), $this);
         }
         return $this->mappers[$className];
     }
@@ -247,6 +247,21 @@ class EntityManager
     public function getEntityFactory()
     {
         return $this->entityFactory;
+    }
+
+    public function runQuery($query, $rerunIfDeadlock = false)
+    {
+        try {
+            return $this->getPDO()->query($query);
+        } catch (\Exception $e) {
+            if ($rerunIfDeadlock) {
+                if ($e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
+                    return $this->getPDO()->query($query);
+                } else {
+                    throw $e;
+                }
+            }
+        }
     }
 
     protected function init()
