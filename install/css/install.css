@@ -146,28 +146,6 @@ span.ok {
     padding: 0px 2px;
 }
 
-.glyphicon-refresh-animate {
-    -animation: front .5s infinite linear;
-    -ms-animation: front .5s infinite linear;
-    -webkit-animation: right .5s infinite linear;
-    -moz-animation: left .5s infinite linear;
-}
-
-@keyframes front {
-    from { transform: scale(1) rotate(0deg);}
-    to { transform: scale(1) rotate(360deg);}
-}
-
-@-webkit-keyframes right {
-    from { -webkit-transform: rotate(0deg);}
-    to { -webkit-transform: rotate(360deg);}
-}
-
-@-moz-keyframes left {
-    from { -moz-transform: rotate(0deg);}
-    to { -moz-transform: rotate(360deg);}
-}
-
 #license-agree {
     margin-right: 5px;
     margin-top: -1px;
