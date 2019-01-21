@@ -268,8 +268,14 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         fetch: function () {
             var value = this.$element.val();
+
+            if (this.fetchEmptyValueAsNull && !value) {
+                value = null;
+            }
+
             var data = {};
             data[this.name] = value;
+
             return data;
         },
 

@@ -6,6 +6,10 @@
          "default":false
       },
       {
+         "name": "default",
+         "type": "int"
+      },
+      {
          "name":"min",
          "type":"float"
       },
@@ -28,10 +32,18 @@
    ],
    "fields":{
       "currency":{
-         "type":"varchar",
+         "type": "enum",
+         "view": "views/fields/currency-list",
          "layoutDetailDisabled": true,
          "layoutListDisabled": true,
          "layoutMassUpdateDisabled": true,
+         "customizationRequiredDisabled": true,
+         "customizationOptionsDisabled": true,
+         "customizationIsSortedDisabled": true,
+         "customizationDisplayAsLabelDisabled": true,
+         "customizationAuditedDisabled": true,
+         "customizationReadOnlyDisabled": true,
+         "customizationDefaultView": "views/admin/field-manager/fields/currency-default",
          "maxLength": 6
       },
       "converted":{

@@ -142,6 +142,11 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         if (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + this.field + '.' + disableParamName)) {
                             return;
                         }
+                        var viewParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'View';
+                        var view = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, viewParamName]);
+                        if (view) {
+                            o.view = view;
+                        }
                         this.paramList.push(o);
                     }, this);
 
