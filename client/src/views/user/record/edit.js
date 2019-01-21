@@ -78,6 +78,12 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     this.hideField('passwordPreview');
                 }
             }, this);
+
+
+            this.listenTo(this.model, 'after:save', function () {
+                this.model.unset('password', {silent: true});
+                this.model.unset('passwordConfirm', {silent: true});
+            }, this);
         },
 
         setupNonAdminFieldsAccess: function () {

@@ -12,6 +12,10 @@
             "internal": true,
             "nonAdminReadOnly": true
         },
+        "passwordConfirm": {
+            "internal": true,
+            "nonAdminReadOnly": true
+        },
         "authMethod": {
             "onlyAdmin": true
         },
