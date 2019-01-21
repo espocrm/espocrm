@@ -55,7 +55,7 @@ class CheckNewVersion extends \Espo\Core\Jobs\Base
     protected function getRunTime()
     {
         $hour = rand(0, 4);
-        $minute = rand(0, 60);
+        $minute = rand(0, 59);
 
         $nextDay = new \DateTime('+ 1 day');
         $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';

@@ -169,6 +169,14 @@
             "insertText": "entity\\countRelated(LINK, FILTER)"
         },
         {
+            "name": "record\\exists",
+            "insertText": "record\\exists(ENTITY_TYPE, KEY, VALUE)"
+        },
+        {
+            "name": "record\\count",
+            "insertText": "record\\count(ENTITY_TYPE, KEY, VALUE)"
+        },
+        {
             "name": "env\\userAttribute",
             "insertText": "env\\userAttribute(ATTRIBUTE)"
         }
