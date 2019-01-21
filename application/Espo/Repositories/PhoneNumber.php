@@ -400,8 +400,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                     )
                 ON DUPLICATE KEY UPDATE deleted = 0, `primary` = ".$pdo->quote((int)($number === $primary))."
             ";
-            $sth = $pdo->prepare($query);
-            $sth->execute();
+            $this->getEntityManager()->runQuery($query, true);
         }
 
         if ($primary) {

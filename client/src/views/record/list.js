@@ -834,6 +834,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        removeAllResultMassAction: function (item) {
+            var index = this.checkAllResultMassActionList.indexOf(item);
+            if (~index) {
+                this.checkAllResultMassActionList.splice(index, 1);
+            }
+        },
+
         setup: function () {
             if (typeof this.collection === 'undefined') {
                 throw new Error('Collection has not been injected into views/record/list view.');
@@ -937,6 +944,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (this.options.unlinkMassAction && this.collection) {
                 this.addMassAction('unlink', false, true);
+            }
+
+            if (this.collection.url !== this.entityType) {
+                this.removeAllResultMassAction('massUpdate');
+                this.removeAllResultMassAction('remove');
+                this.removeAllResultMassAction('export');
             }
 
             this.setupMassActionItems();

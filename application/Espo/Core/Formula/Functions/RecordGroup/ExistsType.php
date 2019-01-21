@@ -27,46 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use \Espo\ORM\Entity;
+use \Espo\Core\Exceptions\Error;
 
-class Account extends \Espo\Services\Record
+class ExistsType extends \Espo\Core\Formula\Functions\Base
 {
-    protected $linkSelectParams = array(
-        'contacts' => array(
-            'additionalColumns' => array(
-                'role' => 'accountRole',
-                'isInactive' => 'accountIsInactive'
-            )
-        ),
-        'targetLists' => array(
-            'additionalColumns' => array(
-                'optedOut' => 'isOptedOut'
-            )
-        )
-    );
-
-    protected function getDuplicateWhereClause(Entity $entity, $data)
+    protected function init()
     {
-        if (!$entity->get('name')) {
-            return false;
-        }
-        return [
-            'name' => $entity->get('name')
-        ];
+        $this->addDependency('entityManager');
     }
 
-    protected function afterMerge(Entity $entity, array $sourceList, $attributes)
+    public function process(\StdClass $item)
     {
-        foreach ($sourceList as $source) {
-            $contactList = $this->getEntityManager()->getRepository('Contact')->where([
-                'accountId' => $source->id
-            ])->find();
-            foreach ($contactList as $contact) {
-                $contact->set('accountId', $entity->id);
-                $this->getEntityManager()->saveEntity($contact);
-            }
+        if (!property_exists($item, 'value')) {
+            throw new Error();
         }
+
+        if (!is_array($item->value)) {
+            throw new Error();
+        }
+
+        if (count($item->value) < 3) {
+            throw new Error();
+        }
+
+        $entityType = $this->evaluate($item->value[0]);
+
+        $whereClause = [];
+
+        $i = 1;
+        while ($i < count($item->value) - 1) {
+            $key = $this->evaluate($item->value[$i]);
+            $value = $this->evaluate($item->value[$i + 1]);
+            $whereClause[$key] = $value;
+            $i = $i + 2;
+        }
+
+        return !!$this->getInjection('entityManager')->getRepository($entityType)->where($whereClause)->findOne();
     }
 }

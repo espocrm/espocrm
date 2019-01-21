@@ -453,11 +453,26 @@ abstract class Mapper implements IMapper
 
                 $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = '0'";
 
-                if ($this->pdo->query($sql)) {
+                if ($this->runQuery($sql, true)) {
                     return true;
                 }
 
                 break;
+        }
+    }
+
+    public function runQuery($query, $rerunIfDeadlock = false)
+    {
+        try {
+            return $this->pdo->query($query);
+        } catch (\Exception $e) {
+            if ($rerunIfDeadlock) {
+                if ($e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
+                    return $this->pdo->query($query);
+                } else {
+                    throw $e;
+                }
+            }
         }
     }
 
@@ -574,7 +589,7 @@ abstract class Mapper implements IMapper
                             $sql .= ', ' . implode(', ', $setArr);
                         }
 
-                        if ($this->pdo->query($sql)) {
+                        if ($this->runQuery($sql, true)) {
                             return true;
                         }
 

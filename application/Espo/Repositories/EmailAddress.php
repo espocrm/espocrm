@@ -450,8 +450,8 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                     )
                 ON DUPLICATE KEY UPDATE deleted = 0, `primary` = ".$pdo->quote((int)($address === $primary))."
             ";
-            $sth = $pdo->prepare($query);
-            $sth->execute();
+
+            $this->getEntityManager()->runQuery($query, true);
         }
 
         if ($primary) {

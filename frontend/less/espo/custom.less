@@ -929,11 +929,13 @@ table.table > tbody td > .list-row-buttons button {
     margin-top: 2px;
 }
 
-table.table > tbody > tr > td,
-table.table > tbody > tr > th,
-table.table > thead > tr > th {
-    text-overflow: ellipsis;
-    overflow: hidden;
+.table.table-no-overflow {
+     > tbody > tr > td,
+     > tbody > tr > th,
+     > thead > tr > th {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
 
 .list-row-buttons span.caret {

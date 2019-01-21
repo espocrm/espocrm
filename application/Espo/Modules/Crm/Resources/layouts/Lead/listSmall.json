@@ -1,6 +1,6 @@
 [
-    {"name":"name", "width":32, "link":true},
-    {"name":"status", "width":17},
-    {"name":"emailAddress", "notSortable": true},
+    {"name":"name", "link": true},
+    {"name":"status", "width": 17},
+    {"name":"emailAddress", "notSortable": true, "width": 27},
     {"name":"createdAt", "width": 18}
 ]
