@@ -37,6 +37,7 @@ class CountType extends \Espo\Core\Formula\Functions\Base
     protected function init()
     {
         $this->addDependency('entityManager');
+        $this->addDependency('selectManagerFactory');
     }
 
     public function process(\StdClass $item)
@@ -49,11 +50,26 @@ class CountType extends \Espo\Core\Formula\Functions\Base
             throw new Error();
         }
 
-        if (count($item->value) < 3) {
+        if (count($item->value) < 1) {
             throw new Error();
         }
 
         $entityType = $this->evaluate($item->value[0]);
+
+        if (count($item->value) < 3) {
+            $filter = null;
+            if (count($item->value) == 2) {
+                $filter = $this->evaluate($item->value[1]);
+            }
+
+            $selectManager = $this->getInjection('selectManagerFactory')->create($entityType);
+            $selectParams = $selectManager->getEmptySelectParams();
+            if ($filter) {
+                $selectManager->applyFilter($filter, $selectParams);
+            }
+
+            return $this->getInjection('entityManager')->getRepository($entityType)->count($selectParams);
+        }
 
         $whereClause = [];
 
