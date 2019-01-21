@@ -7,7 +7,7 @@
       },
       {
          "name": "default",
-         "type": "int"
+         "type": "float"
       },
       {
          "name":"min",
