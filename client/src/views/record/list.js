@@ -810,6 +810,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        removeAllResultMassAction: function (item) {
+            var index = this.checkAllResultMassActionList.indexOf(item);
+            if (~index) {
+                this.checkAllResultMassActionList.splice(index, 1);
+            }
+        },
+
         addMassAction: function (item, allResult) {
             this.massActionList.push(item);
             if (allResult) {
@@ -916,6 +923,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 ~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)
             ) {
                 this.addMassAction('printPdf');
+            }
+
+            if (this.collection.url !== this.entityType) {
+                this.removeAllResultMassAction('massUpdate');
+                this.removeAllResultMassAction('remove');
+                this.removeAllResultMassAction('export');
             }
 
             this.setupMassActionItems();
