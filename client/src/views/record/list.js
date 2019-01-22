@@ -548,6 +548,37 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        getMassActionSelectionPostData: function () {
+            var data = {};
+            if (this.allResultIsChecked) {
+                data.where = this.collection.getWhere();
+                data.selectData = this.collection.data || {};
+                data.byWhere = true;
+            } else {
+                data.ids = [];
+                for (var i in this.checkedList) {
+                    data.ids.push(this.checkedList[i]);
+                }
+            }
+            return data;
+        },
+
+        massActionRecalculateFormula: function () {
+            this.confirm({
+                message: this.translate('recalculateFormulaConfirmation', 'messages'),
+                confirmText: this.translate('Yes')
+            }, function () {
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                var data = this.getMassActionSelectionPostData();
+                Espo.Ajax.postRequest(this.entityType + '/action/massRecalculateFormula', data).then(function (result) {
+                    result = result || {};
+                    this.collection.fetch().then(function () {
+                        Espo.Ui.success(this.translate('Done'));
+                    }.bind(this));
+                }.bind(this));
+            }.bind(this));
+        },
+
         massActionRemove: function () {
             if (!this.getAcl().check(this.entityType, 'delete')) {
                 this.notify('Access denied', 'error');
@@ -557,33 +588,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var count = this.checkedList.length;
             var deletedCount = 0;
 
-            var self = this;
-
             this.confirm({
                 message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify('Removing...');
+                var data = this.getMassActionSelectionPostData();
 
-                var ids = [];
-                var data = {};
-                if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhere();
-                    data.selectData = this.collection.data || {};
-                    data.byWhere = true;
-                } else {
-                    data.ids = ids;
-                }
-
-                for (var i in this.checkedList) {
-                    ids.push(this.checkedList[i]);
-                }
-
-                $.ajax({
-                    url: this.entityType + '/action/massDelete',
-                    type: 'POST',
-                    data: JSON.stringify(data)
-                }).done(function (result) {
+                Espo.Ajax.postRequest(this.entityType + '/action/massDelete', data).then(function (result) {
                     result = result || {};
                     var count = result.count;
                     if (this.allResultIsChecked) {
@@ -599,7 +611,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             this.collection.fetch();
                             Espo.Ui.notify(false);
                         } else {
-                            Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
+                            Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
                         }
                     } else {
                         var idsRemoved = result.ids || [];
@@ -616,9 +628,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             if (count == 1) {
                                 msg = 'massRemoveResultSingle'
                             }
-                            Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
+                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
                         } else {
-                            Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
+                            Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
                         }
                     }
                 }.bind(this));
@@ -950,6 +962,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.removeAllResultMassAction('massUpdate');
                 this.removeAllResultMassAction('remove');
                 this.removeAllResultMassAction('export');
+            }
+
+            if (this.getUser().isAdmin() && this.collection.url == this.entityType) {
+                if (this.getMetadata().get(['formula', this.entityType, 'beforeSaveCustomScript'])) {
+                    this.addMassAction('recalculateFormula', true);
+                }
             }
 
             this.setupMassActionItems();

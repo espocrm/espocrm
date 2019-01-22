@@ -1708,6 +1708,41 @@ class Record extends \Espo\Core\Services\Base
         ];
     }
 
+    public function massRecalculateFormula(array $params)
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        $count = 0;
+        if (array_key_exists('ids', $params)) {
+            if (!is_array($params['ids'])) throw new BadRequest();
+            $selectParams = $this->getSelectParams([]);
+            $selectParams['whereClause'][] = [
+                'id' => $params['ids']
+            ];
+
+        } else if (array_key_exists('where', $params)) {
+            $p = ['where' => $params['where']];
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $p[$k] = $v;
+                }
+            }
+            $selectParams = $this->getSelectParams($p);
+        } else {
+            throw new BadRequest();
+        }
+
+        $collection = $this->getRepository()->find($selectParams);
+        foreach ($collection as $entity) {
+            $this->getEntityManager()->saveEntity($entity);
+            $count++;
+        }
+
+        return [
+            'count' => $count
+        ];
+    }
+
     public function follow($id, $userId = null)
     {
         $entity = $this->getRepository()->get($id);

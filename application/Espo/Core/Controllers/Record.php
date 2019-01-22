@@ -315,28 +315,13 @@ class Record extends Base
         return $idsUpdated;
     }
 
-    public function actionMassDelete($params, $data, $request)
+    public function postActionMassDelete($params, $data, $request)
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
         if (!$this->getAcl()->check($this->name, 'delete')) {
             throw new Forbidden();
         }
 
-        $params = array();
-        if (property_exists($data, 'where') && !empty($data->byWhere)) {
-            $where = json_decode(json_encode($data->where), true);
-            $params['where'] = $where;
-            if (property_exists($data, 'selectData')) {
-                $params['selectData'] = json_decode(json_encode($data->selectData), true);
-            }
-        }
-        if (property_exists($data, 'ids')) {
-            $params['ids'] = $data->ids;
-        }
-
-        return $this->getRecordService()->massDelete($params);
+        return $this->getRecordService()->massDelete($this->getMassActionParamsFromData($data));
     }
 
     public function actionCreateLink($params, $data, $request)
@@ -509,5 +494,30 @@ class Record extends Base
         }
 
         return $this->getRecordService()->massUnfollow($params);
+    }
+
+    protected function getMassActionParamsFromData($data)
+    {
+        $params = [];
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $where = json_decode(json_encode($data->where), true);
+            $params['where'] = $where;
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
+            }
+        }
+        if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
+        }
+
+        return $params;
+    }
+
+    public function postActionMassRecalculateFormula($params, $data, $request)
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getAcl()->check($this->name, 'edit')) throw new Forbidden();
+
+        return $this->getRecordService()->massRecalculateFormula($this->getMassActionParamsFromData($data));
     }
 }

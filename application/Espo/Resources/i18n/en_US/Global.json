@@ -278,6 +278,7 @@
         "unlinkSelectedRecordsConfirmation": "Are you sure you want to unlink selected records?",
         "massUpdateResult": "{count} records have been updated",
         "massUpdateResultSingle": "{count} record has been updated",
+        "recalculateFormulaConfirmation": "Are you sure you want to recalculate formula for selected records?",
         "noRecordsUpdated": "No records were updated",
         "massRemoveResult": "{count} records have been removed",
         "massRemoveResultSingle": "{count} record has been removed",
@@ -321,6 +322,7 @@
         "follow": "Follow",
         "unfollow": "Unfollow",
         "convertCurrency": "Convert Currency",
+        "recalculateFormula": "Recalculate Formula",
         "printPdf": "Print to PDF"
     },
     "fields": {
