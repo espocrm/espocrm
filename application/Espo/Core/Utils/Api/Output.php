@@ -33,14 +33,18 @@ class Output
 {
     private $slim;
 
-    protected $errorDesc = array(
+    protected $errorDesc = [
         400 => 'Bad Request',
         401 => 'Unauthorized',
         403 => 'Forbidden',
         404 => 'Page Not Found',
         409 => 'Conflict',
         500 => 'Internal Server Error',
-    );
+    ];
+
+    protected $allowedStatusCodeList = [
+        200, 400, 401, 403, 404, 409, 500
+    ];
 
     protected $ignorePrintXStatusReasonExceptionClassNameList = [
         'PDOException'
@@ -104,6 +108,11 @@ class Output
             if ($exception && in_array(get_class($exception), $this->ignorePrintXStatusReasonExceptionClassNameList)) {
                 $toPrintXStatusReason = false;
             }
+
+            if (!in_array($statusCode, $this->allowedStatusCodeList)) {
+                $statusCode = 500;
+            }
+
             $this->getSlim()->response()->setStatus($statusCode);
             if ($toPrintXStatusReason) {
                 $this->getSlim()->response()->headers->set('X-Status-Reason', $text);

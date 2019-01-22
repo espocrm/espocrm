@@ -67,6 +67,8 @@
             },
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "importDisabled": true,
+            "exportDisabled": true,
             "where": {
                 "=": {
                     "leftJoins": ["users", "contacts", "leads"],
