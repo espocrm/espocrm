@@ -752,7 +752,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function processDuplicateCheck(Entity $entity, $data)
     {
-        if (empty($data->forceDuplicate)) {
+        if (empty($data->skipDuplicateCheck) && empty($data->forceDuplicate)) {
             $duplicates = $this->checkEntityForDuplicate($entity, $data);
             if (!empty($duplicates)) {
                 $reason = [

@@ -1007,7 +1007,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 view.render();
 
                 this.listenToOnce(view, 'save', function () {
-                    this.model.set('forceDuplicate', true);
+                    this.model.set('skipDuplicateCheck', true);
                     this.actionSave();
                 }.bind(this));
 

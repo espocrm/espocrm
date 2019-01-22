@@ -45,7 +45,7 @@ class FieldManager
 
     private $container;
 
-    protected $forbiddenFieldNameList = ['id', 'deleted'];
+    protected $forbiddenFieldNameList = ['id', 'deleted', 'skipDuplicateCheck'];
 
     public function __construct(Container $container = null)
     {
