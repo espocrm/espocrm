@@ -6,5 +6,6 @@
     "aclPortal": true,
     "aclPortalLevelList": ["all", "no"],
     "customizable": true,
+    "importable": true,
     "disabled": false
 }
