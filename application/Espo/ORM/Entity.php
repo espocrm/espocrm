@@ -175,28 +175,39 @@ abstract class Entity implements IEntity
         return false;
     }
 
-    public function populateFromArray(array $arr, $onlyAccessible = true, $reset = false)
+    public function populateFromArray(array $data, $onlyAccessible = true, $reset = false)
     {
         if ($reset) {
             $this->reset();
         }
 
-        foreach ($this->getAttributes() as $field => $fieldDefs) {
-            if (array_key_exists($field, $arr)) {
-                if ($field == 'id') {
-                    $this->id = $arr[$field];
+        foreach ($this->getAttributes() as $attribute => $defs) {
+            if (array_key_exists($attribute, $data)) {
+                if ($attribute == 'id') {
+                    $this->id = $data[$attribute];
                     continue;
                 }
                 if ($onlyAccessible) {
-                    if (isset($fieldDefs['notAccessible']) && $fieldDefs['notAccessible'] == true) {
+                    if (isset($defs['notAccessible']) && $defs['notAccessible'] == true) {
                         continue;
                     }
                 }
 
-                $value = $arr[$field];
+                $value = $data[$attribute];
 
                 if (!is_null($value)) {
-                    switch ($fieldDefs['type']) {
+                    $valueType = $defs['type'];
+                    if ($valueType === self::FOREIGN) {
+                        $relation = $this->getAttributeParam($attribute, 'relation');
+                        $foreign = $this->getAttributeParam($attribute, 'foreign');
+                        if (is_string($foreign)) {
+                            $foreignEntityType = $this->getRelationParam($relation, 'entity');
+                            if ($foreignEntityType) {
+                                $valueType = $this->entityManager->getMetadata()->get($foreignEntityType, ['fields', $foreign, 'type']);
+                            }
+                        }
+                    }
+                    switch ($valueType) {
                         case self::VARCHAR:
                             break;
                         case self::BOOL:
@@ -225,11 +236,11 @@ abstract class Entity implements IEntity
                     }
                 }
 
-                $method = '_set' . ucfirst($field);
+                $method = '_set' . ucfirst($attribute);
                 if (method_exists($this, $method)) {
                     $this->$method($value);
                 } else {
-                    $this->valuesContainer[$field] = $value;
+                    $this->valuesContainer[$attribute] = $value;
                 }
             }
         }
