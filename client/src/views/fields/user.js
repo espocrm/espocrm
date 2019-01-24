@@ -97,6 +97,7 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                     minChars: 1,
                     triggerSelectOnValidInput: false,
                     paramName: 'q',
+                    noCache: true,
                     formatResult: function (suggestion) {
                         return suggestion.name;
                     },

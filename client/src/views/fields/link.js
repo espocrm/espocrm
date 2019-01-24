@@ -270,7 +270,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         minChars: 1,
                         triggerSelectOnValidInput: false,
                         autoSelectFirst: true,
-                           formatResult: function (suggestion) {
+                        noCache: true,
+                        formatResult: function (suggestion) {
                             return suggestion.name;
                         },
                         transformResult: function (response) {
@@ -316,6 +317,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }.bind(this),
                             minChars: 1,
                             paramName: 'q',
+                            noCache: true,
                             formatResult: function (suggestion) {
                                 return suggestion.name;
                             },
