@@ -258,6 +258,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         minChars: 1,
                         paramName: 'q',
+                        noCache: true,
                         triggerSelectOnValidInput: false,
                         formatResult: function (suggestion) {
                             return suggestion.name;
