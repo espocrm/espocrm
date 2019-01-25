@@ -41,9 +41,9 @@ class AclManager
 
     private $metadata;
 
-    private $implementationHashMap = array();
+    private $implementationHashMap = [];
 
-    private $tableHashMap = array();
+    private $tableHashMap = [];
 
     protected $tableClassName = '\\Espo\\Core\\Acl\\Table';
 
@@ -93,8 +93,8 @@ class AclManager
 
             if (class_exists($className)) {
                 $acl = new $className($scope);
-                $dependencies = $acl->getDependencyList();
-                foreach ($dependencies as $name) {
+                $dependencyList = $acl->getDependencyList();
+                foreach ($dependencyList as $name) {
                     $acl->inject($name, $this->getContainer()->get($name));
                 }
                 $this->implementationHashMap[$scope] = $acl;

@@ -39,13 +39,15 @@ use \Espo\Core\Interfaces\Injectable;
 
 class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 {
-    protected $dependencies = array(
+    protected $dependencyList = [
         'metadata',
         'config',
         'fieldManagerUtil'
-    );
+    ];
 
-    protected $injections = array();
+    protected $dependencies = []; // for backward compatibility
+
+    protected $injections = [];
 
     private $restoreData = null;
 
@@ -59,7 +61,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function addDependency($name)
     {
-        $this->dependencies[] = $name;
+        $this->dependencyList[] = $name;
     }
 
     protected function addDependencyList(array $list)
@@ -81,7 +83,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function getDependencyList()
     {
-        return $this->dependencies;
+        return array_merge($this->dependencyList, $this->dependencies);
     }
 
     protected function getMetadata()

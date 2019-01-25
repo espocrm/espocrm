@@ -37,11 +37,10 @@ class RepositoryFactory extends \Espo\ORM\RepositoryFactory
     {
         $repository = parent::create($name);
 
-        $dependencies = $repository->getDependencyList();
-        foreach ($dependencies as $name) {
+        $dependencyList = $repository->getDependencyList();
+        foreach ($dependencyList as $name) {
             $repository->inject($name, $this->entityManager->getContainer()->get($name));
         }
         return $repository;
     }
 }
-

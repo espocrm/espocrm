@@ -33,14 +33,14 @@ use \Espo\Core\Interfaces\Injectable;
 
 abstract class Base implements Injectable
 {
-    protected $dependencies = array(
+    protected $dependencyList = [
         'config',
         'entityManager',
         'user',
-        'serviceFactory'
-    );
+        'serviceFactory',
+    ];
 
-    protected $injections = array();
+    protected $injections = [];
 
     public function inject($name, $object)
     {
@@ -67,7 +67,7 @@ abstract class Base implements Injectable
 
     protected function addDependency($name)
     {
-        $this->dependencies[] = $name;
+        $this->dependencyList[] = $name;
     }
 
     protected function addDependencyList(array $list)
@@ -79,7 +79,7 @@ abstract class Base implements Injectable
 
     public function getDependencyList()
     {
-        return $this->dependencies;
+        return $this->dependencyList;
     }
 
     protected function getEntityManager()

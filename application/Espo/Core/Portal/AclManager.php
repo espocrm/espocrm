@@ -63,8 +63,8 @@ class AclManager extends \Espo\Core\AclManager
 
             if (class_exists($className)) {
                 $acl = new $className($scope);
-                $dependencies = $acl->getDependencyList();
-                foreach ($dependencies as $name) {
+                $dependencyList = $acl->getDependencyList();
+                foreach ($dependencyList as $name) {
                     $acl->inject($name, $this->getContainer()->get($name));
                 }
                 $this->implementationHashMap[$scope] = $acl;

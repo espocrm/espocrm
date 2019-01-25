@@ -36,15 +36,17 @@ use \Espo\ORM\Entity;
 
 class Base implements Injectable
 {
-    protected $dependencies = array(
+    protected $dependencyList = [
         'config',
         'entityManager',
-        'aclManager'
-    );
+        'aclManager',
+    ];
+
+    protected $dependencies = []; // for backward compatibility
 
     protected $scope;
 
-    protected $injections = array();
+    protected $injections = [];
 
     protected $ownerUserIdAttribute = null;
 
@@ -79,12 +81,12 @@ class Base implements Injectable
 
     protected function addDependency($name)
     {
-        $this->dependencies[] = $name;
+        $this->dependencyList[] = $name;
     }
 
     public function getDependencyList()
     {
-        return $this->dependencies;
+        return array_merge($this->dependencyList, $this->dependencies);
     }
 
     protected function getConfig()

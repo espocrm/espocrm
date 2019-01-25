@@ -35,12 +35,12 @@ use \Espo\ORM\Entity;
 
 class Base implements Injectable
 {
-    protected $dependencies = array(
+    protected $dependencyList = [
         'user',
         'entityManager',
-    );
+    ];
 
-    protected $injections = array();
+    protected $injections = [];
 
     public static $order = 9;
 
@@ -62,12 +62,12 @@ class Base implements Injectable
 
     protected function addDependency($name)
     {
-        $this->dependencies[] = $name;
+        $this->dependencyList[] = $name;
     }
 
     public function getDependencyList()
     {
-        return $this->dependencies;
+        return $this->dependencyList;
     }
 
     protected function getInjection($name)
@@ -82,12 +82,12 @@ class Base implements Injectable
 
     protected function getEntityManager()
     {
-        return $this->injections['entityManager'];
+        return $this->getInjection('entityManager');
     }
 
     protected function getUser()
     {
-        return $this->injections['user'];
+        return $this->getInjection('user');
     }
 
     public function process(Entity $entity, array $options = [])

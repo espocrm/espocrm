@@ -62,7 +62,7 @@ abstract class Base
 
     protected function addDependency($name)
     {
-        $this->dependencies[] = $name;
+        $this->dependencyList[] = $name;
     }
 
     protected function getInjection($name)

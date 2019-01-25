@@ -42,7 +42,7 @@ use \Espo\Core\Utils\Util;
 
 class Record extends \Espo\Core\Services\Base
 {
-    protected $dependencies = [
+    protected $dependencyList = [
         'entityManager',
         'user',
         'metadata',
@@ -54,7 +54,7 @@ class Record extends \Espo\Core\Services\Base
         'selectManagerFactory',
         'fileStorageManager',
         'injectableFactory',
-        'fieldManagerUtil'
+        'fieldManagerUtil',
     ];
 
     protected $getEntityBeforeUpdate = false;
