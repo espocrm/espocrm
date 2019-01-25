@@ -38,4 +38,3 @@ class EmailFolder extends \Espo\Core\SelectManagers\Base
         }
     }
 }
-

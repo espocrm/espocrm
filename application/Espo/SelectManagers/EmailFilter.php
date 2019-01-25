@@ -67,4 +67,3 @@ class EmailFilter extends \Espo\Core\SelectManagers\Base
         $result['whereClause'][] = $d;
     }
 }
-

@@ -53,4 +53,3 @@ class EmailQueueItem extends \Espo\Core\SelectManagers\Base
         );
     }
 }
-

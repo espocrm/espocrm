@@ -92,4 +92,68 @@ class Meeting extends \Espo\Core\SelectManagers\Base
         	'timeZone' => $this->getUserTimeZone()
         ));
     }
+
+    public function transformDateTimeWhereItem(array $item) : ?array
+    {
+        $where = parent::transformDateTimeWhereItem($item);
+
+        if (empty($where)) {
+            return null;
+        }
+        $attribute = null;
+        if (!empty($item['attribute'])) {
+            $attribute = $item['attribute'];
+        }
+
+        if ($attribute != 'dateStart' && $attribute != 'dateEnd') return $where;
+        if (!$this->getSeed()->hasAttribute('dateStartDate')) return $where;
+
+
+        $attributeDate = $attribute . 'Date';
+
+        $value = null;
+        if (array_key_exists('value', $item)) {
+            $value = $item['value'];
+            if (is_string($value)) {
+                if (strlen($value) > 11) {
+                    return $where;
+                }
+            } else if (is_array($value)) {
+                foreach ($value as $valueItem) {
+                    if (strlen($valueItem) > 11) {
+                        return $where;
+                    }
+                }
+            }
+        }
+
+        $dateItem = [
+            'attribute' => $attributeDate,
+            'type' => $item['type']
+        ];
+
+        if (array_key_exists('value', $item)) {
+            $dateItem['value'] = $value;
+        }
+
+        $where = [
+            'type' => 'or',
+            'value' => [
+                $dateItem,
+                [
+                    'type' => 'and',
+                    'value' => [
+                        $where,
+                        [
+                            'type' => 'isNull',
+                            'attribute' => $attributeDate
+                        ]
+                    ]
+
+                ]
+            ]
+        ];
+
+        return $where;
+    }
 }

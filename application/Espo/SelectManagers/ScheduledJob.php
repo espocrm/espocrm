@@ -35,8 +35,8 @@ class ScheduledJob extends \Espo\Core\SelectManagers\Base
     {
         parent::access($result);
 
-        $result['whereClause'] = array(
+        $result['whereClause'] = [
             'isInternal' => false
-        );
+        ];
     }
 }

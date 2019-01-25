@@ -33,7 +33,7 @@ class Email extends \Espo\Core\SelectManagers\Base
 {
     protected $textFilterUseContainsAttributeList = ['name'];
 
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function getSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false) : array
     {
         $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
@@ -46,7 +46,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         return $result;
     }
 
-    public function applyFolder($folderId, &$result)
+    public function applyFolder(?string $folderId, array &$result)
     {
         switch ($folderId) {
             case 'all':
@@ -71,7 +71,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         }
     }
 
-    public function addUsersJoin(&$result)
+    public function addUsersJoin(array &$result)
     {
         if (!$this->hasJoin('users', $result) && !$this->hasLeftJoin('users', $result)) {
             $this->addLeftJoin('users', $result);
@@ -85,19 +85,19 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected function applyEmailFolder($folderId, &$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'usersMiddle.inTrash' => false,
             'usersMiddle.folderId' => $folderId
-        );
+        ];
         $this->boolFilterOnlyMy($result);
     }
 
     protected function boolFilterOnlyMy(&$result)
     {
         $this->addJoin('users', $result);
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'usersMiddle.userId' => $this->getUser()->id
-        );
+        ];
 
         $this->addUsersColumns($result);
     }
@@ -270,7 +270,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function applyAdditionalToTextFilterGroup($textFilter, &$group, &$result)
+    protected function applyAdditionalToTextFilterGroup(string $textFilter, array &$group, array &$result)
     {
         if (strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
             $emailAddressId = $this->getEmailAddressIdByValue($textFilter);
@@ -286,9 +286,9 @@ class Email extends \Espo\Core\SelectManagers\Base
     {
         $pdo = $this->getEntityManager()->getPDO();
 
-        $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
+        $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where([
             'lower' => strtolower($value)
-        ))->findOne();
+        ])->findOne();
 
         $emailAddressId = null;
         if ($emailAddress) {
@@ -314,7 +314,7 @@ class Email extends \Espo\Core\SelectManagers\Base
     }
 
 
-    public function whereEmailAddress($value, &$result)
+    public function whereEmailAddress($value, array &$result) : array
     {
         $d = array();
 
@@ -401,4 +401,3 @@ class Email extends \Espo\Core\SelectManagers\Base
         );
     }
 }
-

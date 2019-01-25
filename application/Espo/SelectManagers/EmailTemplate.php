@@ -33,10 +33,8 @@ class EmailTemplate extends \Espo\Core\SelectManagers\Base
 {
     protected function filterActual(&$result)
     {
-
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'oneOff!=' => true
-        );
+        ];
     }
-
 }

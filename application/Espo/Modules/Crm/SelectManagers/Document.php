@@ -44,6 +44,4 @@ class Document extends \Espo\Core\SelectManagers\Base
             'status' => 'Draft'
         );
     }
-
  }
-

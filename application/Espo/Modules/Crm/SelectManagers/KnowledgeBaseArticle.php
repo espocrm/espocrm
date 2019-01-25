@@ -54,12 +54,4 @@ class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
             ), $result);
         }
     }
-
-    public function applyAdditional(&$result)
-    {
-        if ($this->checkIsPortal()) {
-
-        }
-    }
  }
-

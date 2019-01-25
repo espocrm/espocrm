@@ -36,10 +36,6 @@ use \Espo\ORM\Entity;
 
 class Task extends \Espo\Services\Record
 {
-    protected $selectAttributesDependancyMap = [
-        'dateEnd' => ['status']
-    ];
-
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);

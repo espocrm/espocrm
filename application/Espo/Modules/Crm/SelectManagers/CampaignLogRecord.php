@@ -121,4 +121,3 @@ class CampaignLogRecord extends \Espo\Core\SelectManagers\Base
         );
     }
 }
-

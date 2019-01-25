@@ -70,4 +70,3 @@ class Contact extends \Espo\Core\SelectManagers\Base
     }
 
  }
-

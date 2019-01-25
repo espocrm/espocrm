@@ -86,4 +86,3 @@ class MassEmail extends \Espo\Core\SelectManagers\Base
         );
     }
 }
-

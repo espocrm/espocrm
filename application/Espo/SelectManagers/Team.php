@@ -47,4 +47,3 @@ class Team extends \Espo\Core\SelectManagers\Base
         $this->boolFilterOnlyMy($result);
     }
 }
-

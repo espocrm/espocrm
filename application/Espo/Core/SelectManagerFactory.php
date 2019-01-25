@@ -30,8 +30,8 @@
 namespace Espo\Core;
 
 use \Espo\Core\Exceptions\Error;
-
 use \Espo\Core\Utils\Util;
+
 use \Espo\Core\InjectableFactory;
 
 class SelectManagerFactory
@@ -46,7 +46,18 @@ class SelectManagerFactory
 
     private $injectableFactory;
 
-    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Utils\Metadata $metadata, Utils\Config $config, InjectableFactory $injectableFactory)
+    private $FieldManagerUtil;
+
+    public function __construct(
+        $entityManager,
+        \Espo\Entities\User $user,
+        Acl $acl,
+        AclManager $aclManager,
+        Utils\Metadata $metadata,
+        Utils\Config $config,
+        Utils\FieldManagerUtil $fieldManagerUtil,
+        InjectableFactory $injectableFactory
+    )
     {
         $this->entityManager = $entityManager;
         $this->user = $user;
@@ -54,10 +65,11 @@ class SelectManagerFactory
         $this->aclManager = $aclManager;
         $this->metadata = $metadata;
         $this->config = $config;
+        $this->fieldManagerUtil = $fieldManagerUtil;
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create($entityType, $user = null)
+    public function create(string $entityType, ?\Espo\Entities\User $user = null) : \Espo\Core\SelectManagers\Base
     {
         $normalizedName = Util::normilizeClassName($entityType);
 
@@ -81,10 +93,18 @@ class SelectManagerFactory
             $user = $this->user;
         }
 
-        $selectManager = new $className($this->entityManager, $user, $acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
+        $selectManager = new $className(
+            $this->entityManager,
+            $user,
+            $acl,
+            $this->aclManager,
+            $this->metadata,
+            $this->config,
+            $this->fieldManagerUtil,
+            $this->injectableFactory
+        );
         $selectManager->setEntityType($entityType);
 
         return $selectManager;
     }
 }
-

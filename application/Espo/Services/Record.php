@@ -117,8 +117,6 @@ class Record extends \Espo\Core\Services\Base
 
     protected $forceSelectAllAttributes = false;
 
-    protected $selectAttributesDependancyMap = [];
-
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -2460,75 +2458,21 @@ class Record extends \Espo\Core\Services\Base
             return null;
         }
 
-        $seed = $this->getEntityManager()->getEntity($this->getEntityType());
-
-        if (array_key_exists('select', $params)) {
-            $passedAttributeList = $params['select'];
-        } else {
-            $passedAttributeList = null;
+        if (!array_key_exists('select', $params)) {
+            return null;
         }
 
-        if ($passedAttributeList) {
-            $attributeList = [];
-            if (!in_array('id', $passedAttributeList)) {
-                $attributeList[] = 'id';
-            }
-            $aclAttributeList = ['assignedUserId', 'createdById'];
+        $attributeList = $this->getSelectManager()->getSelectAttributeList($params);
 
-            if ($this->getUser()->isPortal()) {
-                $aclAttributeList[] = 'accountId';
-                $aclAttributeList[] = 'contactId';
-            }
-
-            foreach ($aclAttributeList as $attribute) {
-                if (!in_array($attribute, $passedAttributeList) && $seed->hasAttribute($attribute)) {
-                    $attributeList[] = $attribute;
-                }
-            }
-
-            foreach ($passedAttributeList as $attribute) {
-                if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
-                    $attributeList[] = $attribute;
-                }
-            }
-
-            if (!empty($params['orderBy'])) {
-                $sortByField = $params['orderBy'];
-                $sortByFieldType = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortByField, 'type']);
-
-                if ($sortByFieldType === 'currency') {
-                    if (!in_array($sortByField . 'Converted', $attributeList)) {
-                        $attributeList[] = $sortByField . 'Converted';
-                    }
-                }
-
-                $sortByAttributeList = $this->getFieldManagerUtil()->getAttributeList($this->getEntityType(), $sortByField);
-                foreach ($sortByAttributeList as $attribute) {
-                    if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
-                        $attributeList[] = $attribute;
-                    }
-                }
-            }
-
+        if (!empty($this->mandatorySelectAttributeList)) {
+            $seed = $this->getEntityManager()->getEntity($this->getEntityType());
             foreach ($this->mandatorySelectAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
                 }
             }
-
-            foreach ($this->selectAttributesDependancyMap as $attribute => $dependantAttributeList) {
-                if (in_array($attribute, $attributeList)) {
-                    foreach ($dependantAttributeList as $dependantAttribute) {
-                        if (!in_array($dependantAttribute, $attributeList)) {
-                            $attributeList[] = $dependantAttribute;
-                        }
-                    }
-                }
-            }
-
-            return $attributeList;
         }
 
-        return null;
+        return $attributeList;
     }
 }

@@ -39,4 +39,3 @@ class Campaign extends \Espo\Core\SelectManagers\Base
     }
 
  }
-

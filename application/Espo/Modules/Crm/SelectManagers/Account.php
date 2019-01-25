@@ -80,4 +80,3 @@ class Account extends \Espo\Core\SelectManagers\Base
     }
 
  }
-

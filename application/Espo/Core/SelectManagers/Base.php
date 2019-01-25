@@ -37,6 +37,8 @@ use \Espo\Core\AclManager;
 use \Espo\Core\Utils\Metadata;
 use \Espo\Core\Utils\Config;
 use \Espo\Core\InjectableFactory;
+use \Espo\Core\Utils\FieldManagerUtil;
+use \Espo\ORM\EntityManager;
 
 class Base
 {
@@ -60,7 +62,13 @@ class Base
 
     protected $additionalFilterTypeList = ['inCategory', 'isUserFromTeams'];
 
+    protected $aclAttributeList = ['assignedUserId', 'createdById'];
+
+    protected $aclPortalAttributeList = ['assignedUserId', 'createdById', 'contactId', 'accountId'];
+
     protected $textFilterUseContainsAttributeList = [];
+
+    protected $selectAttributesDependancyMap = [];
 
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
@@ -68,7 +76,7 @@ class Base
 
     protected $fullTextSearchDataCacheHash = [];
 
-    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
+    public function __construct(EntityManager $entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, FieldManagerUtil $fieldManagerUtil, InjectableFactory $injectableFactory)
     {
         $this->entityManager = $entityManager;
         $this->user = $user;
@@ -76,55 +84,61 @@ class Base
         $this->aclManager = $aclManager;
         $this->metadata = $metadata;
         $this->config = $config;
+        $this->fieldManagerUtil = $fieldManagerUtil;
         $this->injectableFactory = $injectableFactory;
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager() : EntityManager
     {
         return $this->entityManager;
     }
 
-    protected function getMetadata()
+    protected function getMetadata() : Metadata
     {
         return $this->metadata;
     }
 
-    protected function getUser()
+    protected function getUser() : \Espo\Entities\User
     {
         return $this->user;
     }
 
-    protected function getAcl()
+    protected function getAcl() : Acl
     {
         return $this->acl;
     }
 
-    protected function getConfig()
+    protected function getConfig() : Config
     {
         return $this->config;
     }
 
-    protected function getAclManager()
+    protected function getAclManager() : AclManager
     {
         return $this->aclManager;
     }
 
-    protected function getInjectableFactory()
+    protected function getInjectableFactory() : InjectableFactory
     {
         return $this->injectableFactory;
     }
 
-    public function setEntityType($entityType)
+    protected function getFieldManagerUtil() : FieldManagerUtil
+    {
+        return $this->fieldManagerUtil;
+    }
+
+    public function setEntityType(string $entityType)
     {
         $this->entityType = $entityType;
     }
 
-    protected function getEntityType()
+    protected function getEntityType() : string
     {
         return $this->entityType;
     }
 
-    protected function limit($offset = null, $maxSize = null, &$result)
+    protected function limit(?int $offset = null, ?int $maxSize = null, array &$result)
     {
         if (!is_null($offset)) {
             $result['offset'] = $offset;
@@ -134,7 +148,7 @@ class Base
         }
     }
 
-    protected function order($sortBy, $desc = false, &$result)
+    protected function order(string $sortBy, bool $desc = false, array &$result)
     {
         if (is_string($desc)) {
             $desc = $desc === strtolower('desc');
@@ -179,12 +193,12 @@ class Base
         }
     }
 
-    protected function getTextFilterFieldList()
+    protected function getTextFilterFieldList() : array
     {
-        return $this->getMetadata()->get("entityDefs.{$this->entityType}.collection.textFilterFields", ['name']);
+        return $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'textFilterFields'], ['name']);
     }
 
-    protected function getSeed()
+    protected function getSeed() : \Espo\ORM\Entity
     {
         if (empty($this->seed)) {
             $this->seed = $this->entityManager->getEntity($this->entityType);
@@ -192,13 +206,13 @@ class Base
         return $this->seed;
     }
 
-    public function applyWhere($where, &$result)
+    public function applyWhere(array $where, array &$result)
     {
         $this->prepareResult($result);
         $this->where($where, $result);
     }
 
-    protected function where($where, &$result)
+    protected function where(array $where, array &$result)
     {
         $this->prepareResult($result);
 
@@ -229,7 +243,7 @@ class Base
         $this->applyLeftJoinsFromWhere($where, $result);
     }
 
-    public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false, &$result = null)
+    public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result = null) : array
     {
         $whereClause = [];
 
@@ -269,7 +283,7 @@ class Base
         return $whereClause;
     }
 
-    protected function applyLinkedWith($link, $idsValue, &$result)
+    protected function applyLinkedWith(string $link, $idsValue, array &$result)
     {
         $part = [];
 
@@ -318,7 +332,7 @@ class Base
         $this->setDistinct(true, $result);
     }
 
-    protected function applyIsUserFromTeams($link, $idsValue, &$result)
+    protected function applyIsUserFromTeams(string $link, $idsValue, array &$result)
     {
         if (is_array($idsValue) && count($idsValue) == 1) {
             $idsValue = $idsValue[0];
@@ -354,7 +368,7 @@ class Base
         $this->setDistinct(true, $result);
     }
 
-    public function applyInCategory($link, $value, &$result)
+    public function applyInCategory(string $link, $value, array &$result)
     {
         $relDefs = $this->getSeed()->getRelations();
 
@@ -397,7 +411,7 @@ class Base
         }
     }
 
-    protected function q($params, &$result)
+    protected function q(array $params, array &$result)
     {
         if (isset($params['q']) && $params['q'] !== '') {
             $textFilter = $params['q'];
@@ -405,19 +419,19 @@ class Base
         }
     }
 
-    public function manageAccess(&$result)
+    public function manageAccess(array &$result)
     {
         $this->prepareResult($result);
         $this->applyAccess($result);
     }
 
-    public function manageTextFilter($textFilter, &$result)
+    public function manageTextFilter(string $textFilter, array &$result)
     {
         $this->prepareResult($result);
         $this->q(['q' => $textFilter], $result);
     }
 
-    public function getEmptySelectParams()
+    public function getEmptySelectParams() : array
     {
         $result = [];
         $this->prepareResult($result);
@@ -425,7 +439,7 @@ class Base
         return $result;
     }
 
-    protected function prepareResult(&$result)
+    protected function prepareResult(array &$result)
     {
         if (empty($result)) {
             $result = [];
@@ -450,7 +464,7 @@ class Base
         }
     }
 
-    protected function checkIsPortal()
+    protected function checkIsPortal() : bool
     {
         return !!$this->getUser()->get('portalId');
     }
@@ -486,7 +500,7 @@ class Base
         }
     }
 
-    protected function accessNo(&$result)
+    protected function accessNo(array &$result)
     {
         $result['whereClause'][] = [
             'id' => null
@@ -662,47 +676,51 @@ class Base
         }
     }
 
-    protected function hasAssignedUsersField()
+    protected function hasAssignedUsersField() : bool
     {
         if ($this->getSeed()->hasRelation('assignedUsers') && $this->getSeed()->hasAttribute('assignedUsersIds')) {
             return true;
         }
+        return false;
     }
 
-    protected function hasAssignedUserField()
+    protected function hasAssignedUserField() : bool
     {
         if ($this->getSeed()->hasAttribute('assignedUserId')) {
             return true;
         }
+        return false;
     }
 
-    protected function hasCreatedByField()
+    protected function hasCreatedByField() : bool
     {
         if ($this->getSeed()->hasAttribute('createdById')) {
             return true;
         }
+        return false;
     }
 
-    protected function hasTeamsField()
+    protected function hasTeamsField() : bool
     {
         if ($this->getSeed()->hasRelation('teams') && $this->getSeed()->hasAttribute('teamsIds')) {
             return true;
         }
+        return false;
     }
 
-    public function getAclParams()
+    public function getAclParams() : array
     {
         $result = [];
         $this->applyAccess($result);
         return $result;
     }
 
-    public function buildSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function buildSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false) : array
     {
         return $this->getSelectParams($params, $withAcl, $checkWherePermission);
     }
 
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function getSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false) : array
     {
         $result = [];
         $this->prepareResult($result);
@@ -772,7 +790,7 @@ class Base
         return $result;
     }
 
-    protected function checkWhere($where)
+    protected function checkWhere(array $where)
     {
         foreach ($where as $w) {
             $attribute = null;
@@ -828,7 +846,7 @@ class Base
         }
     }
 
-    public function getUserTimeZone()
+    public function getUserTimeZone() : string
     {
         if (empty($this->userTimeZone)) {
             $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
@@ -843,7 +861,7 @@ class Base
         return $this->userTimeZone;
     }
 
-    public function transformDateTimeWhereItem($item)
+    public function transformDateTimeWhereItem(array $item) : ?array
     {
         $format = 'Y-m-d H:i:s';
 
@@ -1146,14 +1164,14 @@ class Base
         return $where;
     }
 
-    public function convertDateTimeWhere($item)
+    public function convertDateTimeWhere(array $item) : ?array
     {
         $where = $this->transformDateTimeWhereItem($item);
         $result = $this->getWherePart($where);
         return $result;
     }
 
-    protected function getWherePart($item, &$result = null)
+    protected function getWherePart($item, array &$result = null)
     {
         $part = [];
 
@@ -1648,19 +1666,19 @@ class Base
         return $part;
     }
 
-    public function applyOrder($sortBy, $desc, &$result)
+    public function applyOrder($sortBy, $desc, array &$result)
     {
         $this->prepareResult($result);
         $this->order($sortBy, $desc, $result);
     }
 
-    public function applyLimit($offset, $maxSize, &$result)
+    public function applyLimit($offset, $maxSize, array &$result)
     {
         $this->prepareResult($result);
         $this->limit($offset, $maxSize, $result);
     }
 
-    public function applyPrimaryFilter($filterName, &$result)
+    public function applyPrimaryFilter($filterName, array &$result)
     {
         $this->prepareResult($result);
 
@@ -1684,12 +1702,12 @@ class Base
         }
     }
 
-    public function applyFilter($filterName, &$result)
+    public function applyFilter($filterName, array &$result)
     {
         $this->applyPrimaryFilter($filterName, $result);
     }
 
-    public function applyBoolFilter($filterName, &$result)
+    public function applyBoolFilter($filterName, array &$result)
     {
         $this->prepareResult($result);
 
@@ -1699,18 +1717,18 @@ class Base
         }
     }
 
-    public function applyTextFilter($textFilter, &$result)
+    public function applyTextFilter($textFilter, array &$result)
     {
         $this->prepareResult($result);
         $this->textFilter($textFilter, $result);
     }
 
-    public function applyAdditional(&$result)
+    public function applyAdditional(array &$result)
     {
 
     }
 
-    public function hasJoin($join, &$result)
+    public function hasJoin($join, array &$result)
     {
         if (in_array($join, $result['joins'])) {
             return true;
@@ -1727,7 +1745,7 @@ class Base
         return false;
     }
 
-    public function hasLeftJoin($leftJoin, &$result)
+    public function hasLeftJoin($leftJoin, array &$result)
     {
         if (in_array($leftJoin, $result['leftJoins'])) {
             return true;
@@ -1744,7 +1762,7 @@ class Base
         return false;
     }
 
-    public function addJoin($join, &$result)
+    public function addJoin($join, array &$result)
     {
         if (empty($result['joins'])) {
             $result['joins'] = [];
@@ -1775,7 +1793,7 @@ class Base
         $result['joins'][] = $join;
     }
 
-    public function addLeftJoin($leftJoin, &$result)
+    public function addLeftJoin($leftJoin, array &$result)
     {
         if (empty($result['leftJoins'])) {
             $result['leftJoins'] = [];
@@ -1806,22 +1824,22 @@ class Base
         $result['leftJoins'][] = $leftJoin;
     }
 
-    public function setJoinCondition($join, $condition, &$result)
+    public function setJoinCondition($join, $condition, array &$result)
     {
         $result['joinConditions'][$join] = $condition;
     }
 
-    public function setDistinct($distinct, &$result)
+    public function setDistinct($distinct, array &$result)
     {
         $result['distinct'] = (bool) $distinct;
     }
 
-    public function addAndWhere($whereClause, &$result)
+    public function addAndWhere($whereClause, array &$result)
     {
         $result['whereClause'][] = $whereClause;
     }
 
-    public function addOrWhere($whereClause, &$result)
+    public function addOrWhere($whereClause, array &$result)
     {
         $result['whereClause'][] = [
             'OR' => $whereClause
@@ -1943,7 +1961,7 @@ class Base
         return $result;
     }
 
-    protected function textFilter($textFilter, &$result)
+    protected function textFilter($textFilter, array &$result)
     {
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
@@ -2072,17 +2090,17 @@ class Base
         ];
     }
 
-    protected function applyAdditionalToTextFilterGroup($textFilter, &$group, &$result)
+    protected function applyAdditionalToTextFilterGroup(string $textFilter, array &$group, array &$result)
     {
     }
 
-    public function applyAccess(&$result)
+    public function applyAccess(array &$result)
     {
         $this->prepareResult($result);
         $this->access($result);
     }
 
-    protected function boolFilters($params, &$result)
+    protected function boolFilters(array $params, array &$result)
     {
         if (!empty($params['boolFilterList']) && is_array($params['boolFilterList'])) {
             foreach ($params['boolFilterList'] as $filterName) {
@@ -2091,7 +2109,7 @@ class Base
         }
     }
 
-    protected function getBoolFilterWhere($filterName)
+    protected function getBoolFilterWhere(string $filterName)
     {
         $method = 'getBoolFilterWhere' . ucfirst($filterName);
         if (method_exists($this, $method)) {
@@ -2140,7 +2158,7 @@ class Base
         $this->filterFollowed($result);
     }
 
-    public function mergeSelectParams($selectParams1, $selectParams2)
+    public function mergeSelectParams(array $selectParams1, ?array $selectParams2) : array
     {
         if (!$selectParams2) {
             return $selectParams1;
@@ -2221,7 +2239,7 @@ class Base
         return $selectParams1;
     }
 
-    protected function applyLeftJoinsFromWhere($where, &$result)
+    protected function applyLeftJoinsFromWhere($where, array &$result)
     {
         if (!is_array($where)) return;
 
@@ -2230,7 +2248,7 @@ class Base
         }
     }
 
-    protected function applyLeftJoinsFromWhereItem($item, &$result)
+    protected function applyLeftJoinsFromWhereItem($item, array &$result)
     {
         if (!empty($item['type'])) {
             if (in_array($item['type'], ['or', 'and', 'not', 'having'])) {
@@ -2253,5 +2271,68 @@ class Base
                 $this->addLeftJoin($relation, $result);
             }
         }
+    }
+
+    public function getSelectAttributeList(array $params) : ?array
+    {
+        if (array_key_exists('select', $params)) {
+            $passedAttributeList = $params['select'];
+        } else {
+            return null;
+        }
+
+        $seed = $this->getSeed();
+
+        $attributeList = [];
+        if (!in_array('id', $passedAttributeList)) {
+            $attributeList[] = 'id';
+        }
+
+        $aclAttributeList = $this->aclAttributeList;
+        if ($this->getUser()->isPortal()) {
+            $aclAttributeList = $this->aclPortalAttributeList;
+        }
+
+        foreach ($aclAttributeList as $attribute) {
+            if (!in_array($attribute, $passedAttributeList) && $seed->hasAttribute($attribute)) {
+                $attributeList[] = $attribute;
+            }
+        }
+
+        foreach ($passedAttributeList as $attribute) {
+            if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
+                $attributeList[] = $attribute;
+            }
+        }
+
+        if (!empty($params['orderBy'])) {
+            $sortByField = $params['orderBy'];
+            $sortByFieldType = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortByField, 'type']);
+
+            if ($sortByFieldType === 'currency') {
+                if (!in_array($sortByField . 'Converted', $attributeList)) {
+                    $attributeList[] = $sortByField . 'Converted';
+                }
+            }
+
+            $sortByAttributeList = $this->getFieldManagerUtil()->getAttributeList($this->getEntityType(), $sortByField);
+            foreach ($sortByAttributeList as $attribute) {
+                if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
+                    $attributeList[] = $attribute;
+                }
+            }
+        }
+
+        foreach ($this->selectAttributesDependancyMap as $attribute => $dependantAttributeList) {
+            if (in_array($attribute, $attributeList)) {
+                foreach ($dependantAttributeList as $dependantAttribute) {
+                    if (!in_array($dependantAttribute, $attributeList)) {
+                        $attributeList[] = $dependantAttribute;
+                    }
+                }
+            }
+        }
+
+        return $attributeList;
     }
 }

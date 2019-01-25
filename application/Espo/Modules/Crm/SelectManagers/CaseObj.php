@@ -50,4 +50,3 @@ class CaseObj extends \Espo\Core\SelectManagers\Base
         );
     }
 }
-

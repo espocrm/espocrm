@@ -31,6 +31,10 @@ namespace Espo\Modules\Crm\SelectManagers;
 
 class Task extends \Espo\Core\SelectManagers\Base
 {
+    protected $selectAttributesDependancyMap = [
+        'dateEnd' => ['status']
+    ];
+
     protected function boolFilterActual(&$result)
     {
         $this->filterActual($result);
@@ -43,9 +47,9 @@ class Task extends \Espo\Core\SelectManagers\Base
 
     protected function filterActual(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'status!=' => ['Completed', 'Canceled', 'Deferred']
-        );
+        ];
     }
 
     protected function filterDeferred(&$result)
@@ -111,53 +115,74 @@ class Task extends \Espo\Core\SelectManagers\Base
 
     protected function filterTodays(&$result)
     {
-        $result['whereClause'][] = $this->convertDateTimeWhere(array(
+        $result['whereClause'][] = $this->convertDateTimeWhere([
             'type' => 'today',
             'attribute' => 'dateEnd',
             'timeZone' => $this->getUserTimeZone()
-        ));
+        ]);
     }
 
-    public function convertDateTimeWhere($item)
+    public function transformDateTimeWhereItem(array $item) : ?array
     {
-        $result = parent::convertDateTimeWhere($item);
+        $where = parent::transformDateTimeWhereItem($item);
 
-        if (empty($result)) {
+        if (empty($where)) {
             return null;
         }
         $attribute = null;
-        if (!empty($item['field'])) { // for backward compatibility
-            $attribute = $item['field'];
-        }
         if (!empty($item['attribute'])) {
             $attribute = $item['attribute'];
         }
 
-        if ($attribute != 'dateStart' && $attribute != 'dateEnd') {
-            return $result;
-        }
+        if ($attribute != 'dateStart' && $attribute != 'dateEnd') return $where;
+        if (!$this->getSeed()->hasAttribute('dateStartDate')) return $where;
+
 
         $attributeDate = $attribute . 'Date';
 
-        $dateItem = array(
-            'attribute' => $attributeDate,
-            'type' => $item['type']
-        );
-        if (!empty($item['value'])) {
-            $dateItem['value'] = $item['value'];
+        $value = null;
+        if (array_key_exists('value', $item)) {
+            $value = $item['value'];
+            if (is_string($value)) {
+                if (strlen($value) > 11) {
+                    return $where;
+                }
+            } else if (is_array($value)) {
+                foreach ($value as $valueItem) {
+                    if (strlen($valueItem) > 11) {
+                        return $where;
+                    }
+                }
+            }
         }
 
-        $result = array(
-            'OR' => array(
-                'AND' => [
-                    $result,
-                    $attributeDate . '=' => null
-                ],
-                $this->getWherePart($dateItem)
-            )
-        );
+        $dateItem = [
+            'attribute' => $attributeDate,
+            'type' => $item['type']
+        ];
 
-        return $result;
+        if (array_key_exists('value', $item)) {
+            $dateItem['value'] = $value;
+        }
+
+        $where = [
+            'type' => 'or',
+            'value' => [
+                $dateItem,
+                [
+                    'type' => 'and',
+                    'value' => [
+                        $where,
+                        [
+                            'type' => 'isNull',
+                            'attribute' => $attributeDate
+                        ]
+                    ]
+
+                ]
+            ]
+        ];
+
+        return $where;
     }
 }
-

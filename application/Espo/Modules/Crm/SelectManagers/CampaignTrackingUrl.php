@@ -72,4 +72,3 @@ class CampaignTrackingUrl extends \Espo\Core\SelectManagers\Base
         );
     }
 }
-

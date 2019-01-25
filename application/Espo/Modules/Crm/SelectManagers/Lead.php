@@ -52,4 +52,3 @@ class Lead extends \Espo\Core\SelectManagers\Base
         );
     }
  }
-

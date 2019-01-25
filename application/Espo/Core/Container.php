@@ -209,7 +209,7 @@ class Container
         );
     }
 
-    protected function loadSelectManagerFactory()
+    protected function loadSelectManagerFactory() : \Espo\Core\SelectManagerFactory
     {
         return new \Espo\Core\SelectManagerFactory(
             $this->get('entityManager'),
@@ -218,6 +218,7 @@ class Container
             $this->get('aclManager'),
             $this->get('metadata'),
             $this->get('config'),
+            $this->get('fieldManagerUtil'),
             $this->get('injectableFactory')
         );
     }

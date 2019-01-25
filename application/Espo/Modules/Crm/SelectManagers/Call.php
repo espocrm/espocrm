@@ -93,4 +93,3 @@ class Call extends \Espo\Core\SelectManagers\Base
         ));
     }
 }
-

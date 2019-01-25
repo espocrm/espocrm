@@ -45,4 +45,3 @@ class AuthToken extends \Espo\Core\SelectManagers\Base
         );
     }
 }
-
