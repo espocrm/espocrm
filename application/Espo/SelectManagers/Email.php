@@ -314,27 +314,26 @@ class Email extends \Espo\Core\SelectManagers\Base
     }
 
 
-    public function whereEmailAddress($value, array &$result) : array
+    public function whereEmailAddress(string $value, array &$result)
     {
-        $d = array();
+        $orItem = [];
 
         $emailAddressId = $this->getEmailAddressIdByValue($value);
 
         if ($emailAddressId) {
             $this->leftJoinEmailAddress($result);
 
-            $d['fromEmailAddressId'] = $emailAddressId;
-            $d['emailEmailAddress.emailAddressId'] = $emailAddressId;
-            $result['whereClause'][] = array(
-                'OR' => $d
-            );
+            $orItem['fromEmailAddressId'] = $emailAddressId;
+            $orItem['emailEmailAddress.emailAddressId'] = $emailAddressId;
+            $result['whereClause'][] = [
+                'OR' => $orItem
+            ];
         } else {
             if (empty($result['customWhere'])) {
                 $result['customWhere'] = '';
             }
             $result['customWhere'] .= ' AND 0';
         }
-
     }
 
     protected function getWherePartIsNotRepliedIsTrue()
