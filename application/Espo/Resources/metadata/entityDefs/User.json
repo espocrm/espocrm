@@ -237,6 +237,7 @@
         "account": {
             "type": "link",
             "notStorable": true,
+            "foreignAccessDisabled": true,
             "readOnly": true
         },
         "portal": {
