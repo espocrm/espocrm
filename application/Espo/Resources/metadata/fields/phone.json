@@ -33,6 +33,7 @@
          "type": "bool",
          "notStorable": true,
          "layoutDetailDisabled": true,
+         "foreignAccessDisabled": true,
          "mergeDisabled": true,
          "customizationDefaultDisabled": true,
          "customizationReadOnlyDisabled": true
