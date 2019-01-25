@@ -23,6 +23,7 @@
          "notStorable": true,
          "layoutDetailDisabled": true,
          "mergeDisabled": true,
+         "foreignAccessDisabled": true,
          "customizationDefaultDisabled": true,
          "customizationReadOnlyDisabled": true
       }
