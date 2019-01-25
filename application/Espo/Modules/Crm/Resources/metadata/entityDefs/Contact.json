@@ -31,6 +31,7 @@
                 "IS NULL": "contact.account_id IS NULL",
                 "IS NOT NULL": "contact.account_id IS NOT NULL"
             },
+            "customizationDisabled": true,
             "disabled": true
         },
         "title": {

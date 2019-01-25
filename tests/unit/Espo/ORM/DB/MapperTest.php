@@ -61,28 +61,38 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
                     return "'" . $args[0] . "'";
                 }));
 
+        $metadata = $this->getMockBuilder('\\Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+        $metadata
+            ->method('get')
+            ->will($this->returnValue(false));
+
+        $entityManager = $this->getMockBuilder('\\Espo\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+        $entityManager
+            ->method('getMetadata')
+            ->will($this->returnValue($metadata));
 
         $this->entityFactory = $this->getMockBuilder('\\Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
-        $this->entityFactory->expects($this->any())
-                            ->method('create')
-                            ->will($this->returnCallback(function() {
-                                $args = func_get_args();
-                                $className = "\\Espo\\Entities\\" . $args[0];
-                                  return new $className();
-                            }));
+        $this->entityFactory
+            ->expects($this->any())
+            ->method('create')
+            ->will($this->returnCallback(function () use ($entityManager) {
+                $args = func_get_args();
+                $className = "\\Espo\\Entities\\" . $args[0];
+                return new $className([], $entityManager);
+            }));
 
         $this->query = new Query($this->pdo, $this->entityFactory);
 
         $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query);
         $this->db->setReturnCollection(true);
 
-        $this->post = new \Espo\Entities\Post();
-        $this->comment = new \Espo\Entities\Comment();
-        $this->tag = new \Espo\Entities\Tag();
-        $this->note = new \Espo\Entities\Note();
+        $this->post = new \Espo\Entities\Post([], $entityManager);
+        $this->comment = new \Espo\Entities\Comment([], $entityManager);
+        $this->tag = new \Espo\Entities\Tag([], $entityManager);
+        $this->note = new \Espo\Entities\Note([], $entityManager);
 
-        $this->contact = new \Espo\Entities\Contact();
-        $this->account = new \Espo\Entities\Account();
+        $this->contact = new \Espo\Entities\Contact([], $entityManager);
+        $this->account = new \Espo\Entities\Account([], $entityManager);
 
     }
 

@@ -304,12 +304,23 @@ Espo.define('controller', [], function () {
                     if (this.hasStoredMainView(storedKey)) {
                         var main = this.getStoredMainView(storedKey);
 
-                        if (!main.lastUrl || main.lastUrl === this.getRouter().getCurrentUrl()) {
+                        var isActual = true;
+                        if (main && typeof main.isActualForReuse === 'function') {
+                            isActual = main.isActualForReuse();
+                        }
+
+                        if (
+                            (!main.lastUrl || main.lastUrl === this.getRouter().getCurrentUrl())
+                            &&
+                            isActual
+                        ) {
                             process(main);
                             if (main && typeof main.applyRoutingParams === 'function') {
                                 main.applyRoutingParams(options.params || {});
                             }
                             return;
+                        } else {
+                            this.clearStoredMainView(storedKey);
                         }
                     }
                 }

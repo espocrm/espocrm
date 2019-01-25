@@ -434,6 +434,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             router.navigate(url, {trigger: false});
             router.dispatch(this.scope, 'create', options);
+        },
+
+        isActualForReuse: function () {
+            return this.collection.isFetched;
         }
 
     });
