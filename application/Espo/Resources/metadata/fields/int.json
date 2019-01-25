@@ -32,5 +32,6 @@
    ],
    "filter": true,
    "textFilter": true,
+   "textFilterForeign": true,
    "personalData": true
 }

@@ -223,6 +223,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
 
                 var orderableFieldList = Object.keys(fieldDefs).filter(function (item) {
+                    if (!this.getFieldManager().isScopeFieldAvailable(scope, item)) return false;
                     if (fieldDefs[item].notStorable) {
                         return false;
                     }
@@ -280,20 +281,17 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }
                 });
 
-                var optionList = Object.keys(fieldDefs).filter(function (item) {
-                    var fieldType = fieldDefs[item].type;
-                    if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) return false
-                    if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'disabled'])) {
-                        return false;
-                    }
-                    if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'textFilterDisabled'])) {
-                        return false;
-                    }
-                    return true;
-                }, this);
+                var filtersOptionList = this.getTextFiltersOptionList(scope);
 
                 var textFilterFieldsTranslation = {};
-                optionList.forEach(function (item) {
+                filtersOptionList.forEach(function (item) {
+                    if (~item.indexOf('.')) {
+                        var link = item.split('.')[0];
+                        var foreignField = item.split('.')[1];
+                        var foreignEntityType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'entity']);
+                        textFilterFieldsTranslation[item] = this.translate(link, 'links', scope) + '.' + this.translate(foreignField, 'fields', foreignEntityType);
+                        return;
+                    }
                     textFilterFieldsTranslation[item] = this.translate(item, 'fields', scope);
                 }, this);
 
@@ -304,7 +302,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     defs: {
                         name: 'textFilterFields',
                         params: {
-                            options: optionList
+                            options: filtersOptionList
                         }
                     },
                     tooltip: true,
@@ -621,7 +619,48 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }.bind(this));
                 }.bind(this));
             }, this);
-        }
+        },
+
+        getTextFiltersOptionList: function (scope) {
+            var fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+
+            var filtersOptionList = Object.keys(fieldDefs).filter(function (item) {
+                var fieldType = fieldDefs[item].type;
+                if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) return false
+                if (!this.getFieldManager().isScopeFieldAvailable(scope, item)) return false;
+                if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'textFilterDisabled'])) return false;
+                return true;
+            }, this);
+
+            var linkList = Object.keys(this.getMetadata().get(['entityDefs', scope, 'links']) || {});
+            linkList.sort(function (v1, v2) {
+                return this.translate(v1, 'links', scope).localeCompare(this.translate(v2, 'links', scope));
+            }.bind(this));
+            linkList.forEach(function (link) {
+                var linkType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'type']);
+                if (linkType != 'belongsTo') return;
+                var foreignEntityType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'entity']);
+                if (!foreignEntityType) return;
+                var fields = this.getMetadata().get(['entityDefs', foreignEntityType, 'fields']) || {};
+                var fieldList = Object.keys(fields);
+                fieldList.sort(function (v1, v2) {
+                    return this.translate(v1, 'fields', foreignEntityType).localeCompare(this.translate(v2, 'fields', foreignEntityType));
+                }.bind(this));
+                fieldList.filter(function (item) {
+                    var fieldType = this.getMetadata().get(['entityDefs', foreignEntityType, 'fields', item, 'type']);
+                    if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) return false;
+                    if (!this.getMetadata().get(['fields', fieldType, 'textFilterForeign'])) return false;
+                    if (!this.getFieldManager().isScopeFieldAvailable(foreignEntityType, item)) return false;
+
+                    if (this.getMetadata().get(['entityDefs', foreignEntityType, 'fields', item, 'textFilterDisabled'])) return false;
+                    return true;
+                }, this).forEach(function (item) {
+                    filtersOptionList.push(link + '.' + item);
+                }, this);
+            }, this);
+
+            return filtersOptionList;
+        },
 
     });
 });

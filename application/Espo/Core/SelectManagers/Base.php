@@ -148,7 +148,7 @@ class Base
         }
     }
 
-    protected function order(string $sortBy, bool $desc = false, array &$result)
+    protected function order(string $sortBy, $desc, array &$result)
     {
         if (is_string($desc)) {
             $desc = $desc === strtolower('desc');
@@ -1666,19 +1666,19 @@ class Base
         return $part;
     }
 
-    public function applyOrder($sortBy, $desc, array &$result)
+    public function applyOrder(string $sortBy, $desc, array &$result)
     {
         $this->prepareResult($result);
         $this->order($sortBy, $desc, $result);
     }
 
-    public function applyLimit($offset, $maxSize, array &$result)
+    public function applyLimit(?int $offset, ?int $maxSize, array &$result)
     {
         $this->prepareResult($result);
         $this->limit($offset, $maxSize, $result);
     }
 
-    public function applyPrimaryFilter($filterName, array &$result)
+    public function applyPrimaryFilter(string $filterName, array &$result)
     {
         $this->prepareResult($result);
 
@@ -1702,12 +1702,12 @@ class Base
         }
     }
 
-    public function applyFilter($filterName, array &$result)
+    public function applyFilter(string $filterName, array &$result)
     {
         $this->applyPrimaryFilter($filterName, $result);
     }
 
-    public function applyBoolFilter($filterName, array &$result)
+    public function applyBoolFilter(string $filterName, array &$result)
     {
         $this->prepareResult($result);
 
@@ -1717,7 +1717,7 @@ class Base
         }
     }
 
-    public function applyTextFilter($textFilter, array &$result)
+    public function applyTextFilter(string $textFilter, array &$result)
     {
         $this->prepareResult($result);
         $this->textFilter($textFilter, $result);
@@ -1824,22 +1824,22 @@ class Base
         $result['leftJoins'][] = $leftJoin;
     }
 
-    public function setJoinCondition($join, $condition, array &$result)
+    public function setJoinCondition(string $join, $condition, array &$result)
     {
         $result['joinConditions'][$join] = $condition;
     }
 
-    public function setDistinct($distinct, array &$result)
+    public function setDistinct(bool $distinct, array &$result)
     {
         $result['distinct'] = (bool) $distinct;
     }
 
-    public function addAndWhere($whereClause, array &$result)
+    public function addAndWhere(array $whereClause, array &$result)
     {
         $result['whereClause'][] = $whereClause;
     }
 
-    public function addOrWhere($whereClause, array &$result)
+    public function addOrWhere(array $whereClause, array &$result)
     {
         $result['whereClause'][] = [
             'OR' => $whereClause
@@ -1887,6 +1887,10 @@ class Base
 
         if ($useFullTextSearch) {
             foreach ($fieldList as $field) {
+                if (strpos($item, '.') !== false) {
+                    continue;
+                }
+
                 $defs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field], []);
                 if (empty($defs['type'])) continue;
                 $fieldType = $defs['type'];
@@ -2024,9 +2028,21 @@ class Base
             }
             if ($forceFullTextSearch) continue;
 
+            $seed = $this->getSeed();
+
             $attributeType = null;
-            if (!empty($fieldDefs[$field]['type'])) {
-                $attributeType = $fieldDefs[$field]['type'];
+
+            if (strpos($field, '.') !== false) {
+                list($link, $foreignField) = explode('.', $field);
+                $foreignEntityType = $seed->getRelationParam($link, 'entity');
+                $seed = $this->getEntityManager()->getEntity($foreignEntityType);
+                $this->addLeftJoin($link, $result);
+                if ($seed->getRelationParam($link, 'type') === $seed::HAS_MANY) {
+                    $this->setDistinct(true, $result);
+                }
+                $attributeType = $seed->getAttributeType($foreignField);
+            } else {
+                $attributeType = $seed->getAttributeType($field);
             }
 
             if ($attributeType === 'int') {

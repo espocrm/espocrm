@@ -34,5 +34,6 @@
    "filter": true,
    "personalData": true,
    "textFilter": true,
+   "textFilterForeign": true,
    "fullTextSearch": true
 }
