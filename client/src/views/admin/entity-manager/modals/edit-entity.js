@@ -653,6 +653,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     if (!this.getFieldManager().isScopeFieldAvailable(foreignEntityType, item)) return false;
 
                     if (this.getMetadata().get(['entityDefs', foreignEntityType, 'fields', item, 'textFilterDisabled'])) return false;
+                    if (this.getMetadata().get(['entityDefs', foreignEntityType, 'fields', item, 'foreingAccessDisabled'])) return false;
                     return true;
                 }, this).forEach(function (item) {
                     filtersOptionList.push(link + '.' + item);
