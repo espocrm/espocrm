@@ -1157,9 +1157,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.buttonList.push(o);
         },
 
-        addDropdownItem: function (o) {
+        addDropdownItem: function (o, toBeginning) {
+            var method = toBeginning ? 'unshift' : 'push';
             if (!o) {
-                this.dropdownItemList.push(false);
+                this.dropdownItemList[method](false);
                 return;
             }
             var name = o.name;
@@ -1169,7 +1170,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     return;
                 }
             }
-            this.dropdownItemList.push(o);
+            this.dropdownItemList[method](o);
         },
 
         enableButtons: function () {
