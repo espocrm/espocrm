@@ -508,6 +508,9 @@
         "addressCityList": {
             "type": "multiEnum"
         },
+        "addressStateList": {
+            "type": "multiEnum"
+        },
         "jobRunInParallel": {
             "type": "bool",
             "tooltip": true
