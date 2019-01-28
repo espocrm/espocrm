@@ -6,30 +6,36 @@
       "country",
       "postalCode"
    ],
-   "fields":{
-      "street":{
+   "fields": {
+      "street": {
           "type": "text",
           "maxLength": 255,
           "dbType": "varchar"
       },
-      "city":{
+      "city": {
          "type":"varchar",
          "trim": true,
+         "maxLength": 255,
          "view": "views/fields/address-city",
          "customizationOptionsDisabled": true
       },
-      "state":{
-         "type":"varchar",
-         "trim": true
-      },
-      "country":{
+      "state": {
          "type":"varchar",
          "trim": true,
+         "maxLength": 255,
+         "view": "views/fields/address-state",
+         "customizationOptionsDisabled": true
+      },
+      "country": {
+         "type":"varchar",
+         "trim": true,
+         "maxLength": 255,
          "view": "views/fields/address-country",
          "customizationOptionsDisabled": true
       },
-      "postalCode":{
+      "postalCode": {
          "type":"varchar",
+         "maxLength": 40,
          "trim": true
       },
       "map": {

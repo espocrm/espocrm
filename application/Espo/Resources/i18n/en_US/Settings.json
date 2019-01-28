@@ -107,6 +107,7 @@
         "cleanupDeletedRecords": "Clean up deleted records",
         "addressCountryList": "Address Country Autocomplete List",
         "addressCityList": "Address City Autocomplete List",
+        "addressStateList": "Address State Autocomplete List",
         "fiscalYearShift": "Fiscal Year Start",
         "jobRunInParallel": "Jobs Run in Parallel",
         "jobMaxPortion": "Jobs Max Portion",

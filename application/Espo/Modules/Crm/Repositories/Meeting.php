@@ -97,41 +97,24 @@ class Meeting extends \Espo\Core\Repositories\Event
 
         parent::beforeSave($entity, $options);
 
-        $assignedUserId = $entity->get('assignedUserId');
-        if ($assignedUserId) {
-            if ($entity->has('usersIds')) {
-                $usersIds = $entity->get('usersIds');
-                if (!is_array($usersIds)) {
-                    $usersIds = [];
-                }
-                if (!in_array($assignedUserId, $usersIds)) {
-                    $usersIds[] = $assignedUserId;
-                    $entity->set('usersIds', $usersIds);
-                    $hash = $entity->get('usersNames');
-                    if ($hash instanceof \StdClass) {
-                        $hash->$assignedUserId = $entity->get('assignedUserName');
-                        $entity->set('usersNames', $hash);
-                    }
-                }
-            } else {
+        if ($entity->hasLinkMultipleField('assignedUsers')) {
+            $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
+            foreach ($assignedUserIdList as $assignedUserId) {
                 $entity->addLinkMultipleId('users', $assignedUserId);
+                $entity->setLinkMultipleName('users', $assignedUserId, $entity->getLinkMultipleName('assignedUsers', $assignedUserId));
             }
-            if ($entity->isNew()) {
-                $currentUserId = $this->getEntityManager()->getUser()->id;
-                if (isset($usersIds) && in_array($currentUserId, $usersIds)) {
-                    $usersColumns = $entity->get('usersColumns');
-                    if (empty($usersColumns)) {
-                        $usersColumns = new \StdClass();
-                    }
-                    if ($usersColumns instanceof \StdClass) {
-                        if (empty($usersColumns->$currentUserId) || !($usersColumns->$currentUserId instanceof \StdClass)) {
-                            $usersColumns->$currentUserId = new \StdClass();
-                        }
-                        if (empty($usersColumns->$currentUserId->status)) {
-                            $usersColumns->$currentUserId->status = 'Accepted';
-                        }
-                    }
-                }
+        } else {
+            $assignedUserId = $entity->get('assignedUserId');
+            if ($assignedUserId) {
+                $entity->addLinkMultipleId('users', $assignedUserId);
+                $entity->setLinkMultipleName('users', $assignedUserId, $entity->get('assignedUserName'));
+            }
+        }
+
+        if ($entity->isNew()) {
+            $currentUserId = $this->getEntityManager()->getUser()->id;
+            if ($entity->hasLinkMultipleId('users', $currentUserId)) {
+                $entity->setLinkMultipleColumn('users', 'status', $currentUserId, 'Accepted');
             }
         }
     }

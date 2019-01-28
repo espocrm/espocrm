@@ -1342,6 +1342,15 @@ table.no-margin {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-bottom: 2px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &:empty {
+        margin-bottom: -2px;
+    }
 }
 
 .expanded-row .cell .complex-text {
@@ -1929,14 +1938,12 @@ h4.panel-title span.fas.color-icon {
         position: relative;
         top: -1px;
     }
+
+    padding-left: 26px;
 }
 
 .stream-head-container {
-    padding-bottom: 3px;
-}
-
-.stream-head-text-container {
-    padding-left: 26px;
+    margin-bottom: 4px;
 }
 
 .stream-head-container > img.avatar {
@@ -1975,7 +1982,8 @@ stream-head-text-container .span {
 .stream-details-container,
 .stream-subject-container,
 {
-    padding: 2px 0 5px 26px;
+    padding: 2px 0 2px 26px;
+    margin-bottom: 2px;
 }
 
 .stream-details-container > ul {
