@@ -219,8 +219,8 @@ class EmailTemplate extends Record
                 $value = implode(', ', $valueList);
                 $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
             } else {
-                if (!isset($entity->fields[$attribute]['type'])) continue;
-                $attributeType = $entity->fields[$attribute]['type'];
+                $attributeType = $entity->getAttributeType($attribute);
+                if (!$attributeType) continue;
 
                 if ($attributeType == 'date') {
                     $value = $this->getDateTime()->convertSystemDate($value);
@@ -233,7 +233,11 @@ class EmailTemplate extends Record
                     $value = nl2br($value);
                 } else if ($attributeType == 'float') {
                     if (is_float($value)) {
-                        $value = $this->getNumber()->format($value, 2);
+                        $decimalPlaces = 2;
+                        if ($fieldType === 'currency') {
+                            $decimalPlaces = $this->getConfig()->get('currencyDecimalPlaces');
+                        }
+                        $value = $this->getNumber()->format($value, $decimalPlaces);
                     }
                 } else if ($attributeType == 'int') {
                     if (is_int($value)) {
@@ -241,7 +245,6 @@ class EmailTemplate extends Record
                     }
                 }
             }
-
 
             if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
                 $variableName = $attribute;
