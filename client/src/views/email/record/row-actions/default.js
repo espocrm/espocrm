@@ -81,15 +81,6 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
 
 
             }
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
             if (this.model.get('isUsers')) {
                 if (!this.model.get('isImportant')) {
                     if (!this.model.get('inTrash')) {
@@ -122,11 +113,17 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
                     });
                 }
             }
+            if (this.options.acl.delete) {
+                list.push({
+                    action: 'quickRemove',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
             return list;
         }
 
     });
-
 });
-
-

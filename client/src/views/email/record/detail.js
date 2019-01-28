@@ -72,12 +72,6 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 }
             }, this);
 
-            this.addDropdownItem({
-                label: 'Show Plain Text',
-                name: 'showBodyPlain',
-                hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
-            });
-
             if (!(this.model.get('isHtml') && this.model.get('bodyPlain'))) {
                 this.listenToOnce(this.model, 'sync', function () {
                     if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
@@ -87,31 +81,37 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
             }
 
             if (this.model.get('isUsers')) {
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Mark as Important',
                     'name': 'markAsImportant',
                     'hidden': this.model.get('isImportant')
                 });
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Unmark Importance',
                     'name': 'markAsNotImportant',
                     'hidden': !this.model.get('isImportant')
                 });
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Move to Trash',
                     'name': 'moveToTrash',
                     'hidden': this.model.get('inTrash')
                 });
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Retrieve from Trash',
                     'name': 'retrieveFromTrash',
                     'hidden': !this.model.get('inTrash')
                 });
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Move to Folder',
                     'name': 'moveToFolder'
                 });
             }
+
+            this.addDropdownItem({
+                label: 'Show Plain Text',
+                name: 'showBodyPlain',
+                hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
+            });
 
             this.listenTo(this.model, 'change:isImportant', function () {
                 if (this.model.get('isImportant')) {
