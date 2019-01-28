@@ -327,7 +327,4 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
         }
 
     });
-
 });
-
-
