@@ -33,6 +33,20 @@
         "replyToString": {
             "type": "varchar"
         },
+        "replyToName": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true,
+            "textFilterDisabled": true,
+            "layoutFiltersDisabled": true
+        },
+        "replyToAddress": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true,
+            "textFilterDisabled": true,
+            "layoutFiltersDisabled": true
+        },
         "addressNameMap": {
             "type": "jsonObject",
             "disabled": true,

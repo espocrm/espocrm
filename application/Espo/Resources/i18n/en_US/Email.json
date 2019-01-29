@@ -49,6 +49,8 @@
         "fromName": "From Name",
         "fromString": "From String",
         "fromAddress": "From Address",
+        "replyToName": "Reply-To Name",
+        "replyToAddress": "Reply-To Address",
         "isSystem": "Is System"
     },
     "links": {
