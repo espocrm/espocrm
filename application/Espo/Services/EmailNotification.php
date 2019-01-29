@@ -120,11 +120,10 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $assignerUser = $this->getEntityManager()->getEntity('User', $assignerUserId);
         $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
-
-        $this->loadParentNameFields($entity);
-
         if (!$entity) return true;
         if (!$assignerUser) return true;
+
+        $this->loadParentNameFields($entity);
 
         if (!$entity->hasLinkMultipleField('assignedUsers')) {
             if ($entity->get('assignedUserId') !== $userId) return true;
