@@ -52,7 +52,11 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             }
 
             if (!this.options.signatureDisabled && this.hasSignature()) {
-                var body = this.prependSignature(this.model.get('body') || '', this.model.get('isHtml'));
+                var addSignatureMethod = 'prependSignature';
+                if (this.options.appendSignature) {
+                    addSignatureMethod = 'appendSignature';
+                }
+                var body = this[addSignatureMethod](this.model.get('body') || '', this.model.get('isHtml'));
                 this.model.set('body', body);
             }
 
