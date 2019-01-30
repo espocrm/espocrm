@@ -314,30 +314,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             }, this);
 
-            if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
-                var $a;
-                this.once('after:render', function () {
-                    $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
-                    var $label = this.getLabelElement();
-                    $label.append(' ');
-                    this.getLabelElement().append($a);
-                    $a.popover({
-                        placement: 'bottom',
-                        container: 'body',
-                        html: true,
-                        content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />"),
-                        trigger: 'click',
-                    }).on('shown.bs.popover', function () {
-                        $('body').one('click', function () {
-                            $a.popover('hide');
-                        });
-                    });
-                }, this);
-                this.on('remove', function () {
-                    if ($a) {
-                        $a.popover('destroy')
-                    }
-                }, this);
+            if ((this.isDetailMode() || this.isEditMode()) && this.tooltip) {
+                this.initTooltip();
             }
 
             if (this.mode == 'detail') {
@@ -373,6 +351,42 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.model.set(attributes, {ui: true});
                 });
             }
+        },
+
+        initTooltip: function () {
+            var $a;
+            this.once('after:render', function () {
+                $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
+                var $label = this.getLabelElement();
+                $label.append(' ');
+                this.getLabelElement().append($a);
+
+                $a.popover({
+                    placement: 'bottom',
+                    container: 'body',
+                    html: true,
+                    content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />"),
+                }).on('shown.bs.popover', function () {
+                    $('body').off('click.popover-' + this.id);
+                    $('body').on('click.popover-' + this.id , function (e) {
+                        if (e.target.classList.contains('popover-content')) return;
+                        if ($.contains($a.get(0), e.target)) return;
+                        $('body').off('click.popover-' + this.id);
+                        $a.popover('hide');
+                    }.bind(this));
+                }.bind(this));
+
+                $a.on('click', function () {
+                    $(this).popover('toggle');
+                });
+            }, this);
+
+            this.on('remove', function () {
+                if ($a) {
+                    $a.popover('destroy')
+                }
+                $('body').off('click.popover-' + this.id);
+            }, this);
         },
 
         showRequiredSign: function () {
