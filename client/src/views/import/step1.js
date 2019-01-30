@@ -89,12 +89,16 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                     {key: "YYYY.MM.DD", value: '2017.12.27'}
                 ],
                 timeFormatDataList: [
-                    {key: "HH:mm", value: '23:00'},
                     {key: "HH:mm:ss", value: '23:00:00'},
+                    {key: "HH:mm", value: '23:00'},
                     {key: "hh:mm a", value: '11:00 pm'},
                     {key: "hh:mma", value: '11:00pm'},
                     {key: "hh:mm A", value: '11:00 PM'},
-                    {key: "hh:mmA", value: '11:00PM'}
+                    {key: "hh:mmA", value: '11:00PM'},
+                    {key: "hh:mm:ss a", value: '11:00:00 pm'},
+                    {key: "hh:mm:ssa", value: '11:00:00pm'},
+                    {key: "hh:mm:ss A", value: '11:00:00 PM'},
+                    {key: "hh:mmA:ss", value: '11:00:00PM'},
                 ],
                 timezoneList: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'])
             };
@@ -107,7 +111,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                 delimiter: ',',
                 textQualifier: '"',
                 dateFormat: 'YYYY-MM-DD',
-                timeFormat: 'HH:mm',
+                timeFormat: 'HH:mm:ss',
                 timezone: 'UTC',
                 decimalMark: '.',
                 personNameFormat: 'f l',
