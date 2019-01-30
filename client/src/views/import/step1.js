@@ -98,7 +98,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                     {key: "hh:mm:ss a", value: '11:00:00 pm'},
                     {key: "hh:mm:ssa", value: '11:00:00pm'},
                     {key: "hh:mm:ss A", value: '11:00:00 PM'},
-                    {key: "hh:mmA:ss", value: '11:00:00PM'},
+                    {key: "hh:mm:ssA", value: '11:00:00PM'},
                 ],
                 timezoneList: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'])
             };
