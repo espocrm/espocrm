@@ -32,11 +32,15 @@ Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep)
 
         layoutName: 'settings',
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-        },
+            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
+                this.hideField('cronDisabled');
+                this.hideField('maintenanceMode');
+                this.setFieldReadOnly('siteUrl');
+            }
 
+        }
     });
 });
-
