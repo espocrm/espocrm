@@ -402,38 +402,46 @@ var Bull = Bull || {};
             this._isRendered = false;
             this._isFullyRendered = false;
 
-            this._getHtml(function (html) {
-                if (this._isRenderCanceled) {
-                    this._isRenderCanceled = false;
-                    this._isBeingRendered = false;
-                    return;
-                }
-                if (this.$el.size()) {
-                    this.$el.html(html);
-                } else {
-                    if (this.options.el) {
-                       this.setElement(this.options.el);
+            return new Promise(function (resolve, reject) {
+                this._getHtml(function (html) {
+                    if (this._isRenderCanceled) {
+                        this._isRenderCanceled = false;
+                        this._isBeingRendered = false;
+                        reject();
+                        return;
                     }
-                    this.$el.html(html);
-                }
-                this._afterRender();
-                if (typeof callback === 'function') {
-                    callback();
-                }
+                    if (this.$el.size()) {
+                        this.$el.html(html);
+                    } else {
+                        if (this.options.el) {
+                           this.setElement(this.options.el);
+                        }
+                        this.$el.html(html);
+                    }
+                    this._afterRender();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                    resolve(this);
+                }.bind(this));
             }.bind(this));
-
         },
 
+        /**
+         * Re-render view.
+         */
         reRender: function (force) {
             if (this.isRendered()) {
-                this.render();
+                return this.render();
             } else if (this.isBeingRendered()) {
-                this.once('after:render', function () {
-                    this.render();
-                }, this);
+                return new Promise(function (resolve, reject) {
+                    this.once('after:render', function () {
+                        this.render().then(resolve).catch(reject);
+                    }, this);
+                }.bind(this));
             } else {
                 if (force) {
-                    this.render();
+                    return this.render();
                 }
             }
         },
