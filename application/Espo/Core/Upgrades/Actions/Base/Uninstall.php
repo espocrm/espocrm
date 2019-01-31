@@ -50,9 +50,11 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->checkIsWritable();
 
+        $this->enableMaintenanceMode();
+
         $this->beforeRunAction();
 
-        /* run before install script */
+        /* run before uninstall script */
         if (!isset($data['skipBeforeScript']) || !$data['skipBeforeScript']) {
             $this->runScript('beforeUninstall');
         }
@@ -69,6 +71,8 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         if (!$this->deleteFiles('delete', true)) {
             $this->throwErrorAndRemovePackage('Permission denied to delete files.');
         }
+
+        $this->disableMaintenanceMode();
 
         if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
             if (!$this->systemRebuild()) {
