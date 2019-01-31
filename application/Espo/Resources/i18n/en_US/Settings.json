@@ -114,7 +114,9 @@
         "jobPoolConcurrencyNumber": "Jobs Pool Concurrency Number",
         "daemonInterval": "Daemon Interval",
         "daemonMaxProcessNumber": "Daemon Max Process Number",
-        "daemonProcessTimeout": "Daemon Process Timeout"
+        "daemonProcessTimeout": "Daemon Process Timeout",
+        "cronDisabled": "Disable Cron",
+        "maintenanceMode": "Maintenance Mode"
     },
     "options": {
         "weekStart": {
@@ -178,11 +180,15 @@
         "jobMaxPortion": "Max number of jobs processed per one execution.",
         "daemonInterval": "Interval between process cron runs in seconds.",
         "daemonMaxProcessNumber": "Max number of cron processes run simultaneously.",
-        "daemonProcessTimeout": "Max execution time (in seconds) allocated for a single cron process."
+        "daemonProcessTimeout": "Max execution time (in seconds) allocated for a single cron process.",
+        "cronDisabled": "Cron will not run.",
+        "maintenanceMode": "Only administrators will have access to the system."
     },
     "labels": {
         "System": "System",
         "Locale": "Locale",
+        "Search": "Search",
+        "Misc": "Misc",
         "SMTP": "SMTP",
         "Configuration": "Configuration",
         "In-app Notifications": "In-app Notifications",

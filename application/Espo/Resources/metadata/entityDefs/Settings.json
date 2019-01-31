@@ -536,6 +536,14 @@
         "daemonProcessTimeout": {
             "type": "int",
             "tooltip": true
+        },
+        "cronDisabled": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "maintenanceMode": {
+            "type": "bool",
+            "tooltip": true
         }
     }
 }

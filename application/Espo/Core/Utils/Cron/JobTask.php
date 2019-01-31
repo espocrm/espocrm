@@ -45,6 +45,10 @@ class JobTask extends \Spatie\Async\Task
     public function run()
     {
         $app = new \Espo\Core\Application();
-        $app->runJob($this->jobId);
+        try {
+            $app->runJob($this->jobId);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("JobTask: Failed job run. Job id: ".$this->jobId.". Error details: ".$e->getMessage());
+        }
     }
 }

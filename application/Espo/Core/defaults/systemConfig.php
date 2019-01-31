@@ -183,6 +183,7 @@ return [
         'adminNotificationsCronIsNotConfigured',
         'adminNotificationsNewExtensionVersion',
         'leadCaptureAllowOrigin',
+        'cronDisabled',
     ],
     'superAdminItems' => [
         'jobMaxPortion',
@@ -196,6 +197,9 @@ return [
         'daemonProcessTimeout',
         'daemonMaxProcessNumber',
         'adminPanelIframeUrl',
+        'cronDisabled',
+        'maintenanceMode',
+        'siteUrl',
     ],
     'userItems' => [
         'outboundEmailFromAddress',

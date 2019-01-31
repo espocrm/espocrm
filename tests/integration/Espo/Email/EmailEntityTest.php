@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,21 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+namespace tests\integration\Espo\Email;
 
-    return Dep.extend({
+class EmailEntityTest extends \tests\integration\Core\BaseTestCase
+{
+    public function testFromFields()
+    {
+        $entityManager = $this->getContainer()->get('entityManager');
 
-        layoutName: 'settings',
+        $email = $entityManager->getEntity('Email');
+        $email->set('fromString', 'Test Hello <test@test.com>');
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        $this->assertEquals('test@test.com', $email->get('fromAddress'));
+        $this->assertEquals('Test Hello', $email->get('fromName'));
+    }
 
-            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
-                this.hideField('cronDisabled');
-                this.hideField('maintenanceMode');
-                this.setFieldReadOnly('siteUrl');
-            }
+    public function testReplyToFields()
+    {
+        $entityManager = $this->getContainer()->get('entityManager');
 
-        }
-    });
-});
+        $email = $entityManager->getEntity('Email');
+        $email->set('replyToString', 'Test Hello <test@test.com>; Man Test <man@test.com>');
+
+        $this->assertEquals('test@test.com', $email->get('replyToAddress'));
+        $this->assertEquals('Test Hello', $email->get('replyToName'));
+    }
+}

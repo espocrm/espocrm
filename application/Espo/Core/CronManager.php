@@ -310,7 +310,7 @@ class CronManager
             } else {
                 $this->runService($job);
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $isSuccess = false;
             if ($e->getCode() === -1) {
                 $job->set('attempts', 0);

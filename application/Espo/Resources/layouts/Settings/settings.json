@@ -3,11 +3,22 @@
         "label": "System",
         "rows": [
             [{"name": "useCache"}, {"name": "siteUrl"}],
-            [{"name": "exportDisabled"}, {"name": "globalSearchEntityList"}],
-            [{"name": "followCreatedEntities"}, {"name": "b2cMode"}],
-            [{"name": "aclStrictMode"}, {"name": "aclAllowDeleteCreated"}],
-            [{"name": "textFilterUseContainsForVarchar"}, {"name": "emailAddressIsOptedOutByDefault"}],
-            [{"name": "cleanupDeletedRecords"}, false]
+            [{"name": "b2cMode"}, {"name": "aclStrictMode"}],
+            [{"name": "maintenanceMode"}, {"name": "cronDisabled"}]
+        ]
+    },
+    {
+        "label": "Search",
+        "rows": [
+            [{"name": "textFilterUseContainsForVarchar"}, {"name": "globalSearchEntityList"}]
+        ]
+    },
+    {
+        "label": "Misc",
+        "rows": [
+            [{"name": "followCreatedEntities"}, {"name": "emailAddressIsOptedOutByDefault"}],
+            [{"name": "aclAllowDeleteCreated"}, {"name": "cleanupDeletedRecords"}],
+            [{"name": "exportDisabled"}, false]
         ]
     },
     {

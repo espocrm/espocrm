@@ -7,3 +7,4 @@
 {{else}}
 <div class="plain complex-text hidden">{{complexText value}}</div>
 {{/unless}}
+{{#unless isNotEmpty}}{{#if valueIsSet}}{{translate 'None'}}{{/if}}{{/unless}}

@@ -49,10 +49,15 @@ Espo.define('model-factory', [], function () {
         user: null,
 
         create: function (name, callback, context) {
-            context = context || this;
-            this.getSeed(name, function (seed) {
-                var model = new seed();
-                callback.call(context, model);
+            return new Promise(function (resolve) {
+                context = context || this;
+                this.getSeed(name, function (seed) {
+                    var model = new seed();
+                    if (callback) {
+                        callback.call(context, model);
+                    }
+                    resolve(model);
+                }.bind(this));
             }.bind(this));
         },
 

@@ -202,13 +202,13 @@ var Bull = Bull || {};
 
         _wait: false,
 
-        expectedViews: null,
+        _waitViewList: null,
 
         optionsToPass: null,
 
         _nestedViewsFromLayoutLoaded: false,
 
-        _readyConditions: null,
+        _readyConditionList: null,
 
         _isRendered: false,
 
@@ -243,12 +243,14 @@ var Bull = Bull || {};
             this.nestedViews = {};
             this._nestedViewDefs = {};
 
-            if (this.expectedViews == null) {
-                this.expectedViews = [];
+            if (this._waitViewList == null) {
+                this._waitViewList = [];
             }
 
-            if (this._readyConditions == null) {
-                this._readyConditions = [];
+            this._waitPromiseCount = 0;
+
+            if (this._readyConditionList == null) {
+                this._readyConditionList = [];
             }
 
             this.optionsToPass = this.options.optionsToPass || this.optionsToPass || [];
@@ -278,6 +280,8 @@ var Bull = Bull || {};
             this.layout = this.options.layout || this.layout;
             this._layout = this.options._layout || this._layout;
             this.layoutData = this.options.layoutData || this.layoutData;
+
+            this._template = this.templateContent || this._template;
 
             if (this._template != null && this._templator.compilable) {
                 this._templateCompiled = this._templator.compileTemplate(this._template);
@@ -398,38 +402,46 @@ var Bull = Bull || {};
             this._isRendered = false;
             this._isFullyRendered = false;
 
-            this._getHtml(function (html) {
-                if (this._isRenderCanceled) {
-                    this._isRenderCanceled = false;
-                    this._isBeingRendered = false;
-                    return;
-                }
-                if (this.$el.size()) {
-                    this.$el.html(html);
-                } else {
-                    if (this.options.el) {
-                       this.setElement(this.options.el);
+            return new Promise(function (resolve, reject) {
+                this._getHtml(function (html) {
+                    if (this._isRenderCanceled) {
+                        this._isRenderCanceled = false;
+                        this._isBeingRendered = false;
+                        reject();
+                        return;
                     }
-                    this.$el.html(html);
-                }
-                this._afterRender();
-                if (typeof callback === 'function') {
-                    callback();
-                }
+                    if (this.$el.size()) {
+                        this.$el.html(html);
+                    } else {
+                        if (this.options.el) {
+                           this.setElement(this.options.el);
+                        }
+                        this.$el.html(html);
+                    }
+                    this._afterRender();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                    resolve(this);
+                }.bind(this));
             }.bind(this));
-
         },
 
+        /**
+         * Re-render view.
+         */
         reRender: function (force) {
             if (this.isRendered()) {
-                this.render();
+                return this.render();
             } else if (this.isBeingRendered()) {
-                this.once('after:render', function () {
-                    this.render();
-                }, this);
+                return new Promise(function (resolve, reject) {
+                    this.once('after:render', function () {
+                        this.render().then(resolve).catch(reject);
+                    }, this);
+                }.bind(this));
             } else {
                 if (force) {
-                    this.render();
+                    return this.render();
                 }
             }
         },
@@ -455,29 +467,23 @@ var Bull = Bull || {};
         afterRender: function () {},
 
         _tryReady: function () {
-            if (this.isReady) {
-                return;
+            if (this.isReady) return;
+
+            if (this._wait) return;
+
+            if (!this._nestedViewsFromLayoutLoaded) return;
+
+            for (var i = 0; i < this._waitViewList.length; i++) {
+                if (!this.hasView(this._waitViewList[i])) return;
             }
-            if (this._wait) {
-                return;
-            }
-            if (!this._nestedViewsFromLayoutLoaded) {
-                return;
-            }
-            for (var i in this.expectedViews) {
-                if (!this.hasView(this.expectedViews[i])) {
-                    return;
-                }
-            }
-            for (var i in this._readyConditions) {
-                if (typeof this._readyConditions[i] === 'function') {
-                    if (!this._readyConditions[i]()) {
-                        return;
-                    }
+
+            if (this._waitPromiseCount) return;
+
+            for (var i = 0; i < this._readyConditionList.length; i++) {
+                if (typeof this._readyConditionList[i] === 'function') {
+                    if (!this._readyConditionList[i]()) return;
                 } else {
-                    if (!this._readyConditions) {
-                        return;
-                    }
+                    if (!this._readyConditionList) return;
                 }
             }
 
@@ -669,6 +675,7 @@ var Bull = Bull || {};
                 if (this.model || null) {
                     data.model = this.model;
                 }
+                data.viewObject = this;
                 this.handleDataBeforeRender(data);
                 this._getTemplate(function (template) {
                     var html = this._renderer.render(template, data);
@@ -802,27 +809,30 @@ var Bull = Bull || {};
          * @param {Bool} wait True be default. Set false if no need parent view wait for nested view loaded.
          */
         createView: function (key, viewName, options, callback, wait) {
-            wait = (typeof wait === 'undefined') ? true : wait;
-            var context = this;
-            if (wait) {
-                this.waitForView(key);
-            }
-            options = options || {};
-            if (!options.el) {
-                options.el = this.getSelector() + ' [data-view="'+key+'"]';
-            }
-            this._factory.create(viewName, options, function (view) {
-                var isSet = false;
-                if (this._isRendered || options.setViewBeforeCallback) {
-                    this.setView(key, view);
-                    isSet = true;
+            return new Promise(function (resolve) {
+                wait = (typeof wait === 'undefined') ? true : wait;
+                var context = this;
+                if (wait) {
+                    this.waitForView(key);
                 }
-                if (typeof callback === 'function') {
-                    callback.call(context, view);
+                options = options || {};
+                if (!options.el) {
+                    options.el = this.getSelector() + ' [data-view="'+key+'"]';
                 }
-                if (!this._isRendered && !options.setViewBeforeCallback && !isSet) {
-                    this.setView(key, view);
-                }
+                this._factory.create(viewName, options, function (view) {
+                    var isSet = false;
+                    if (this._isRendered || options.setViewBeforeCallback) {
+                        this.setView(key, view);
+                        isSet = true;
+                    }
+                    if (typeof callback === 'function') {
+                        callback.call(context, view);
+                    }
+                    resolve(view);
+                    if (!this._isRendered && !options.setViewBeforeCallback && !isSet) {
+                        this.setView(key, view);
+                    }
+                }.bind(this));
             }.bind(this));
         },
 
@@ -897,7 +907,7 @@ var Bull = Bull || {};
          * @param {Function} or {Bool}
          */
         addReadyCondition: function (condition) {
-            this._readyConditions.push(condition);
+            this._readyConditionList.push(condition);
         },
 
         /**
@@ -905,14 +915,34 @@ var Bull = Bull || {};
          * @param {String} key
          */
         waitForView: function (key) {
-            this.expectedViews.push(key);
+            this._waitViewList.push(key);
         },
 
         /**
-         * Add wait condition is true is passed. Remove wait condition if false.
-         * @param {Bool}
+         * Make view wait for promise if Promise is passed as a parameter.
+         * Add wait condition if true is passed. Remove wait condition if false.
+         * @param wait Promise | Function | {Bool}
          */
         wait: function (wait) {
+            if (typeof wait === 'object' && (wait instanceof Promise || typeof wait.then === 'function')) {
+                this._waitPromiseCount++;
+                wait.then(function () {
+                    this._waitPromiseCount--;
+                    this._tryReady();
+                }.bind(this));
+                return;
+            }
+            if (typeof wait == 'function') {
+                this._waitPromiseCount++;
+                var promise = new Promise(function (resolve) {
+                    resolve(wait.call(this));
+                }.bind(this))
+                promise.then(function () {
+                    this._waitPromiseCount--;
+                    this._tryReady();
+                }.bind(this));
+                return promise;
+            }
             if (wait) {
                 this._wait = true;
             } else {

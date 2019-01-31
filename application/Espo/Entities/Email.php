@@ -51,23 +51,49 @@ class Email extends \Espo\Core\ORM\Entity
         return $this->has('fromString');
     }
 
-    protected function _getFromName()
-    {
-        if (!$this->has('fromString')) return null;
-
-        return \Espo\Services\Email::parseFromName($this->get('fromString'));
-    }
-
     protected function _hasFromAddress()
     {
         return $this->has('fromString');
     }
 
+    protected function _hasReplyToName()
+    {
+        return $this->has('replyToString');
+    }
+
+    protected function _hasReplyToAddress()
+    {
+        return $this->has('replyToString');
+    }
+
+    protected function _getFromName()
+    {
+        if (!$this->has('fromString')) return null;
+        return \Espo\Services\Email::parseFromName($this->get('fromString'));
+    }
+
     protected function _getFromAddress()
     {
         if (!$this->has('fromString')) return null;
-
         return \Espo\Services\Email::parseFromAddress($this->get('fromString'));
+    }
+
+    protected function _getReplyToName()
+    {
+        if (!$this->has('replyToString')) return null;
+        $string = $this->get('replyToString');
+        if (!$string) return null;
+        $string = trim(explode(';', $string)[0]);
+        return \Espo\Services\Email::parseFromName($string);
+    }
+
+    protected function _getReplyToAddress()
+    {
+        if (!$this->has('replyToString')) return null;
+        $string = $this->get('replyToString');
+        if (!$string) return null;
+        $string = trim(explode(';', $string)[0]);
+        return \Espo\Services\Email::parseFromAddress($string);
     }
 
     protected function _setIsRead($value)

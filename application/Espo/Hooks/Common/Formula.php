@@ -66,7 +66,7 @@ class Formula extends \Espo\Core\Hooks\Base
             }
         }
 
-        $customScript = $this->getMetadata()->get(['formula', $entity->getEntityType(), 'beforeSaveCustomScript'], []);
+        $customScript = $this->getMetadata()->get(['formula', $entity->getEntityType(), 'beforeSaveCustomScript']);
         if ($customScript) {
             try {
                 $this->getFormulaManager()->run($customScript, $entity, $variables);

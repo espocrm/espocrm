@@ -45,7 +45,7 @@ Espo.define('crm:views/call/fields/contacts', 'crm:views/meeting/fields/contacts
             if (key in phoneNumbersMap) {
                 number = phoneNumbersMap[key];
                 var innerHtml = $(html).html();
-                innerHtml += '<span class="text-muted small"> &#187; </span> ' + '<a href="tel:'+number+'" class="small">' + number + '</a>';
+                innerHtml += '<span class="text-muted small"> &#187; </span> ' + '<a href="tel:'+number+'" class="small" data-phone-number="'+number+'" data-action="dial">' + number + '</a>';
                 html = '<div>' + innerHtml + '</div>';
             }
 
