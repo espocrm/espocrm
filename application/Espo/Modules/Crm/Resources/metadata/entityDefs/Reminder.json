@@ -31,6 +31,9 @@
         "userId": {
             "type": "varchar",
             "maxLength": 50
+        },
+        "isSubmitted": {
+            "type": "bool"
         }
     },
     "collection": {

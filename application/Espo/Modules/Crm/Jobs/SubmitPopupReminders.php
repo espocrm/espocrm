@@ -50,6 +50,7 @@ class SubmitPopupReminders extends \Espo\Core\Jobs\Base
             'type' => 'Popup',
             'remindAt<=' => $now,
             'startAt>' => $nowShifted,
+            'isSubmitted' => false,
         ])->find();
 
         $submitData = [];
@@ -100,6 +101,10 @@ class SubmitPopupReminders extends \Espo\Core\Jobs\Base
             }
 
             $submitData[$userId][] = $data;
+
+            $reminder->set('isSubmitted', true);
+
+            $this->getEntityManager()->saveEntity($reminder);
         }
 
         foreach ($submitData as $userId => $list) {
