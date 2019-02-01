@@ -1475,7 +1475,7 @@ class Activities extends \Espo\Core\Services\Base
         $sth->execute();
         $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        $result = array();
+        $resultList = [];
         foreach ($rowList as $row) {
             $reminderId = $row['id'];
             $entityType = $row['entityType'];
@@ -1486,7 +1486,7 @@ class Activities extends \Espo\Core\Services\Base
 
             if ($entity) {
                 if ($entity->hasLinkMultipleField('users')) {
-                    $entity->loadLinkMultipleField('users', array('status' => 'acceptanceStatus'));
+                    $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
                     $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
                     if ($status === 'Declined') {
                         $this->removeReminder($reminderId);
@@ -1499,22 +1499,22 @@ class Activities extends \Espo\Core\Services\Base
                     $dateAttribute = 'dateEnd';
                 }
 
-                $data = array(
+                $data = [
                     'id' => $entity->id,
                     'entityType' => $entityType,
                     $dateAttribute => $entity->get($dateAttribute),
                     'name' => $entity->get('name')
-                );
+                ];
             } else {
                 continue;
             }
-            $result[] = array(
+            $resultList[] = [
                 'id' => $reminderId,
                 'data' => $data
-            );
+            ];
 
         }
-        return $result;
+        return $resultList;
     }
 
     public function getUpcomingActivities($userId, $params = array(), $entityTypeList = null, $futureDays = null)

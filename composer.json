@@ -31,7 +31,9 @@
         "phpoffice/phpexcel": "^1.8",
         "phpoffice/phpspreadsheet": "^1.1",
         "spatie/async": "dev-for-espocrm",
-        "symfony/process": "4.1.7"
+        "symfony/process": "4.1.7",
+        "cboden/ratchet": "^0.4.1",
+        "react/zmq": "^0.4.0"
     },
     "autoload": {
         "psr-0": {

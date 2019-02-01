@@ -126,7 +126,5 @@ Espo.define('views/popup-notification', 'view', function (Dep) {
             this.trigger('cancel');
             this.remove();
         }
-
     });
 });
-

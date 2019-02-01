@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,22 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+namespace Espo\Core\WebSocket;
 
-    return Dep.extend({
+class Submission
+{
+    protected $config;
 
-        layoutName: 'settings',
+    public function __construct(\Espo\Core\Utils\Config $config)
+    {
+        $this->config = $config;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    public function submit(string $category, ?string $userId = null, $data = null)
+    {
+        if (!$data) $data = (object) [];
 
-            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
-                this.hideField('cronDisabled');
-                this.hideField('maintenanceMode');
-                this.hideField('useWebSocket');
-                this.setFieldReadOnly('siteUrl');
-            }
+        $dsn = $this->config->get('webSocketSubmissionDsn', 'tcp://localhost:5555');
 
+        $data->userId = $userId;
+        $data->category = $category;
+
+        try {
+            $context = new \ZMQContext();
+            $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'my pusher');
+            $socket->connect($dsn);
+
+            $socket->send(json_encode($data));
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("WebSocketSubmission: " . $e->getMessage());
         }
-    });
-});
+    }
+}

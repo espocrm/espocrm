@@ -116,10 +116,14 @@ class EmailReminder
         $user = $this->getEntityManager()->getEntity('User', $reminder->get('userId'));
         $entity = $this->getEntityManager()->getEntity($reminder->get('entityType'), $reminder->get('entityId'));
 
+        if (!$user || !$entity) return;
         $emailAddress = $user->get('emailAddress');
+        if (!$emailAddress) return;
 
-        if (empty($user) || empty($emailAddress) || empty($entity)) {
-            return;
+        if ($entity->hasLinkMultipleField('users')) {
+            $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
+            $status = $entity->getLinkMultipleColumn('users', 'status', $user->id);
+            if ($status === 'Declined') return;
         }
 
         $email = $this->getEntityManager()->getEntity('Email');
@@ -128,9 +132,9 @@ class EmailReminder
         $subjectTpl = $this->getTemplateFileManager()->getTemplate('reminder', 'subject', $entity->getEntityType(), 'Crm');
         $bodyTpl = $this->getTemplateFileManager()->getTemplate('reminder', 'body', $entity->getEntityType(), 'Crm');
 
-        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+        $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
-        $data = array();
+        $data = [];
 
         $siteUrl = rtrim($this->getConfig()->get('siteUrl'), '/');
         $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
@@ -164,4 +168,3 @@ class EmailReminder
         $emailSender->send($email);
     }
 }
-

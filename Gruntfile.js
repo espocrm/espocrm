@@ -176,6 +176,8 @@ module.exports = function (grunt) {
                     'clear_cache.php',
                     'upgrade.php',
                     'extension.php',
+                    'websocket.php',
+                    'auth_token_check.php',
                     'index.php',
                     'LICENSE.txt',
                     '.htaccess',

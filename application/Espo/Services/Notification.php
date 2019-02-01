@@ -40,6 +40,12 @@ class Notification extends \Espo\Services\Record
 {
     protected $actionHistoryDisabled = true;
 
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('container');
+    }
+
     public function notifyAboutMentionInPost($userId, $noteId)
     {
         $notification = $this->getEntityManager()->getEntity('Notification');
@@ -84,6 +90,12 @@ class Notification extends \Espo\Services\Record
 
         $sql .= implode(", ", $arr);
         $pdo->query($sql);
+
+        if ($this->getConfig()->get('useWebSocket')) {
+            foreach ($userIdList as $useId) {
+                $this->getInjection('container')->get('webSocketSubmission')->submit('newNotification', $userId);
+            }
+        }
     }
 
     public function checkUserNoteAccess(\Espo\Entities\User $user, \Espo\Entities\Note $note)

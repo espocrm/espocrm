@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,22 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+namespace Espo\Hooks\Notification;
 
-    return Dep.extend({
+use Espo\ORM\Entity;
 
-        layoutName: 'settings',
+class WebSocketSubmit extends \Espo\Core\Hooks\Base
+{
+    public static $order = 20;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    protected function init()
+    {
+        $this->addDependency('webSocketSubmission');
+    }
 
-            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
-                this.hideField('cronDisabled');
-                this.hideField('maintenanceMode');
-                this.hideField('useWebSocket');
-                this.setFieldReadOnly('siteUrl');
-            }
+    public function afterSave(Entity $entity, array $options = [])
+    {
+        if (!$this->getConfig()->get('useWebSocket')) return;
+        if (!$entity->isNew()) return;
+        $userId = $entity->get('userId');
+        if (!$userId) return;
 
-        }
-    });
-});
+        $this->getInjection('webSocketSubmission')->submit('newNotification', $userId);
+    }
+}

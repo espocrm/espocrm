@@ -50,7 +50,8 @@ Espo.define(
         'layout-manager',
         'theme-manager',
         'session-storage',
-        'view-helper'
+        'view-helper',
+        'web-socket-manager'
     ],
     function (
         Ui,
@@ -73,7 +74,8 @@ Espo.define(
         LayoutManager,
         ThemeManager,
         SessionStorage,
-        ViewHelper
+        ViewHelper,
+        WebSocketManager
     ) {
 
     var App = function (options, callback) {
@@ -140,6 +142,10 @@ Espo.define(
 
             this.modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
             this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory);
+
+            if (this.settings.get('useWebSocket')) {
+                this.webSocketManager = new WebSocketManager(this.settings);
+            }
 
             this.initDateTime();
             this.initView();
@@ -221,6 +227,10 @@ Espo.define(
 
                 if (this.themeManager.isUserTheme()) {
                     this.loadStylesheet();
+                }
+
+                if (this.webSocketManager) {
+                    this.webSocketManager.connect(this.auth, this.user.id);
                 }
 
                 var promiseList = [];
@@ -396,6 +406,7 @@ Espo.define(
             helper.sessionStorage = this.sessionStorage;
             helper.basePath = this.basePath;
             helper.appParams = this.appParams;
+            helper.webSocketManager = this.webSocketManager;
 
             this.viewLoader = function (viewName, callback) {
                 Espo.require(Espo.Utils.composeViewClassName(viewName), callback);
@@ -491,6 +502,10 @@ Espo.define(
                         })
                     });
                 }
+            }
+
+            if (this.webSocketManager) {
+                this.webSocketManager.close();
             }
 
             this.auth = null;

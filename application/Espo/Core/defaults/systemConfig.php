@@ -200,6 +200,7 @@ return [
         'cronDisabled',
         'maintenanceMode',
         'siteUrl',
+        'useWebSocket',
     ],
     'userItems' => [
         'outboundEmailFromAddress',

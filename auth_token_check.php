@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,22 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+ob_start();
 
-    return Dep.extend({
+if (substr(php_sapi_name(), 0, 3) != 'cli') exit;
 
-        layoutName: 'settings',
+$token = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : null;
+if (empty($token)) exit;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+include "bootstrap.php";
 
-            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
-                this.hideField('cronDisabled');
-                this.hideField('maintenanceMode');
-                this.hideField('useWebSocket');
-                this.setFieldReadOnly('siteUrl');
-            }
+$app = new \Espo\Core\Application();
+$entityManager = $app->getContainer()->get('entityManager');
 
-        }
-    });
-});
+$authToken = $entityManager->getRepository('AuthToken')->where([
+    'token' => $token,
+    'isActive' => true,
+])->findOne();
+
+if (!$authToken) exit;
+if (!$authToken->get('userId')) exit;
+
+$userId = $authToken->get('userId');
+
+$user = $entityManager->getEntity('User', $userId);
+if (!$user) exit;
+
+ob_end_clean();
+
+echo $user->id;
+
+exit;

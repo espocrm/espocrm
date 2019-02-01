@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,22 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+namespace Espo\Core\Loaders;
 
-    return Dep.extend({
-
-        layoutName: 'settings',
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
-                this.hideField('cronDisabled');
-                this.hideField('maintenanceMode');
-                this.hideField('useWebSocket');
-                this.setFieldReadOnly('siteUrl');
-            }
-
-        }
-    });
-});
+class WebSocketSubmission extends Base
+{
+    public function load()
+    {
+        return new \Espo\Core\WebSocket\Submission(
+            $this->getContainer()->get('config')
+        );
+    }
+}

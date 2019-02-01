@@ -544,6 +544,9 @@
         "maintenanceMode": {
             "type": "bool",
             "tooltip": true
+        },
+        "useWebSocket": {
+            "type": "bool"
         }
     }
 }

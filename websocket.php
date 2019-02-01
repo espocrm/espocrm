@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,22 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+if (substr(php_sapi_name(), 0, 3) != 'cli') die('Cron can be run only via CLI');
 
-    return Dep.extend({
+include "bootstrap.php";
 
-        layoutName: 'settings',
+$app = new \Espo\Core\Application();
+$categoryList = array_keys($app->getContainer()->get('metadata')->get(['app', 'webSocket', 'categories'], []));
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+$loop = \React\EventLoop\Factory::create();
+$pusher = new \Espo\Core\WebSocket\Pusher($categoryList);
 
-            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
-                this.hideField('cronDisabled');
-                this.hideField('maintenanceMode');
-                this.hideField('useWebSocket');
-                this.setFieldReadOnly('siteUrl');
-            }
+$context = new \React\ZMQ\Context($loop);
+$pull = $context->getSocket(\ZMQ::SOCKET_PULL);
+$pull->bind('tcp://127.0.0.1:5555');
+$pull->on('message', [$pusher, 'onMessageReceive']);
 
-        }
-    });
-});
+$webSocket = new \React\Socket\Server('0.0.0.0:8080', $loop);
+$webServer = new \Ratchet\Server\IoServer(
+    new \Ratchet\Http\HttpServer(
+        new \Ratchet\WebSocket\WsServer(
+            new \Ratchet\Wamp\WampServer($pusher)
+        )
+    ),
+    $webSocket
+);
+
+$loop->run();

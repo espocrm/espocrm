@@ -2,6 +2,8 @@
     "event": {
         "url": "Activities/action/popupNotifications",
         "interval": 15,
+        "useWebSocket": true,
+        "portalDisabled": true,
         "view": "crm:views/meeting/popup-notification"
     }
 }
