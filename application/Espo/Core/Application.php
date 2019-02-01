@@ -157,6 +157,11 @@ class Application
         $interval = $this->getConfig()->get('daemonInterval');
         $timeout = $this->getConfig()->get('daemonProcessTimeout');
 
+        $phpExecutablePath = $this->getConfig()->get('phpExecutablePath');
+        if (!$phpExecutablePath) {
+            $phpExecutablePath = (new \Symfony\Component\Process\PhpExecutableFinder)->find();
+        }
+
         if (!$maxProcessNumber || !$interval) {
             $GLOBALS['log']->error("Daemon config params are not set.");
             return;
@@ -178,7 +183,7 @@ class Application
                 $toSkip = true;
             }
             if (!$toSkip) {
-                $process = new \Symfony\Component\Process\Process(['php', 'cron.php']);
+                $process = new \Symfony\Component\Process\Process([$phpExecutablePath, 'cron.php']);
                 $process->setTimeout($timeout);
                 $process->run();
             }

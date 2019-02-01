@@ -32,10 +32,12 @@ if (substr(php_sapi_name(), 0, 3) != 'cli') die('Cron can be run only via CLI');
 include "bootstrap.php";
 
 $app = new \Espo\Core\Application();
+
 $categoryList = array_keys($app->getContainer()->get('metadata')->get(['app', 'webSocket', 'categories'], []));
+$phpExecutablePath = $app->getContainer()->get('config')->get('phpExecutablePath');
 
 $loop = \React\EventLoop\Factory::create();
-$pusher = new \Espo\Core\WebSocket\Pusher($categoryList);
+$pusher = new \Espo\Core\WebSocket\Pusher($categoryList, $phpExecutablePath);
 
 $context = new \React\ZMQ\Context($loop);
 $pull = $context->getSocket(\ZMQ::SOCKET_PULL);

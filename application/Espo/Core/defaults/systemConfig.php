@@ -115,6 +115,7 @@ return [
         'recommendedPhpParams',
         'requiredMariadbVersion',
         'recommendedMariadbParams',
+        'phpExecutablePath',
     ],
     'adminItems' => [
         'devMode',

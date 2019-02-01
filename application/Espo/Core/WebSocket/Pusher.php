@@ -46,9 +46,12 @@ class Pusher implements WampServerInterface
 
     protected $connections = [];
 
-    public function __construct(array $categoryList = [], $isDebugMode = false)
+    private $phpExecutablePath;
+
+    public function __construct(array $categoryList = [], $phpExecutablePath = null, $isDebugMode = false)
     {
         $this->categoryList = $categoryList;
+        $this->phpExecutablePath = $phpExecutablePath ?: (new \Symfony\Component\Process\PhpExecutableFinder)->find();
         $this->isDebugMode = $isDebugMode;
     }
 
@@ -157,7 +160,8 @@ class Pusher implements WampServerInterface
         $authToken = preg_replace('/[^a-zA-Z0-9]+/', '', $params['authToken']);
         $userId = $params['userId'];
 
-        $result = shell_exec("php auth_token_check.php " . $authToken);
+        $result = $this->getUserIdByAuthToken($authToken);
+
         if (empty($result)) {
             $this->closeConnection($connection);
             return;
@@ -169,6 +173,11 @@ class Pusher implements WampServerInterface
         }
 
         $this->subscribeUser($connection, $userId);
+    }
+
+    private function getUserIdByAuthToken($authToken)
+    {
+        return shell_exec($this->phpExecutablePath . " auth_token_check.php " . $authToken);
     }
 
     protected function closeConnection(ConnectionInterface $connection)
