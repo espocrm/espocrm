@@ -94,7 +94,7 @@ define('web-socket-manager', ['lib!client/lib/autobahn.js'], function () {
                 if (e.message) {
                     console.error(e.message);
                 } else {
-                    console.error("Coud not subscribe "+category+" to WebSocket.");
+                    console.error("WebSocket: Coud not subscribe to "+category+".");
                 }
             }
         },
@@ -107,7 +107,7 @@ define('web-socket-manager', ['lib!client/lib/autobahn.js'], function () {
                 if (e.message) {
                     console.error(e.message);
                 } else {
-                    console.error("Coud not unsubscribe "+category+" from WebSocket.");
+                    console.error("WebSocket: Coud not unsubscribe from "+category+".");
                 }
             }
         },

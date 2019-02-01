@@ -2226,6 +2226,17 @@ table.table td.cell .complex-text {
     background-color: @panel-bg;
     border: 2px solid @main-gray;
     margin-top: 10px;
+    margin-right: 5px;
+
+    &:last-child {
+        margin-bottom: 5px;
+    }
+    .cell {
+        margin-bottom: 5px;
+    }
+    .cell:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .popup-notification a.close{
@@ -2279,10 +2290,6 @@ table.table td.cell .complex-text {
 
 .popup-notification-success h4 {
     color: @brand-success;
-}
-
-.popup-notification .cell {
-    margin-bottom: 5px;
 }
 
 
