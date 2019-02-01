@@ -28,12 +28,12 @@
         "tecnickcom/tcpdf": "^6.2",
         "php-mime-mail-parser/php-mime-mail-parser": "3.*",
         "zbateson/mail-mime-parser": "0.4.*",
-        "phpoffice/phpexcel": "^1.8",
         "phpoffice/phpspreadsheet": "^1.1",
         "spatie/async": "dev-for-espocrm",
         "symfony/process": "4.1.7",
         "cboden/ratchet": "^0.4.1",
-        "react/zmq": "^0.4.0"
+        "react/zmq": "^0.4.0",
+        "guzzlehttp/psr7": "^1.5"
     },
     "autoload": {
         "psr-0": {
