@@ -168,8 +168,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.checkUpdates(isFirstCheck);
 
             if (this.useWebSocket) {
-                this.getHelper().webSocketManager.subscribe('newNotification', function (a, b) {
-                    console.log(a, b);
+                this.getHelper().webSocketManager.subscribe('newNotification', function () {
                     this.checkUpdates();
                 }.bind(this))
                 return;
@@ -194,7 +193,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                 this.getHelper().webSocketManager.subscribe(category, function (c, response) {
                     if (!response.list) return;
                     response.list.forEach(function (item) {
-                        console.log(item);
                         this.showPopupNotification(name, item);
                     }, this);
                 }.bind(this))
@@ -209,7 +207,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                 }
                 var jqxhr = Espo.Ajax.getRequest(url).done(function (list) {
                     list.forEach(function (item) {
-                        console.log(item);
                         this.showPopupNotification(name, item, isNotFirstCheck);
                     }, this);
                 }.bind(this));
@@ -312,7 +309,5 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             $document.off('mouseup.notification');
             $container.remove();
         },
-
     });
-
 });
