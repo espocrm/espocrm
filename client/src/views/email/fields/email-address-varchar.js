@@ -33,7 +33,7 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
 
         editTemplate: 'email/fields/email-address-varchar/edit',
 
-        emailAddressRegExp: /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi,
+        emailAddressRegExp: /([a-zA-Z0-9._-d\+"]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi,
 
         data: function () {
             var data = Dep.prototype.data.call(this);
@@ -212,10 +212,11 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
 
             address = address.trim();
 
-            var arr = address.match(this.emailAddressRegExp);
-            if (!arr || !arr.length) return;
-
-            address = arr[0];
+            if (!type) {
+                var arr = address.match(this.emailAddressRegExp);
+                if (!arr || !arr.length) return;
+                address = arr[0];
+            }
 
             if (!~this.addressList.indexOf(address)) {
                 this.addressList.push(address);
