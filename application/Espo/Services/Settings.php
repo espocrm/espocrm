@@ -90,6 +90,11 @@ class Settings extends \Espo\Core\Services\Base
             }
         }
 
+        if ($portal = $this->getContainer()->get('portal')) {
+            $this->getContainer()->get('entityManager')->getRepository('Portal')->loadUrlField($portal);
+            $data->siteUrl = $portal->get('url');
+        }
+
         foreach ($ignoreItemList as $item) {
             unset($data->$item);
         }
