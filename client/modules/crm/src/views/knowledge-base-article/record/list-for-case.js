@@ -37,39 +37,47 @@ Espo.define('crm:views/knowledge-base-article/record/list-for-case', 'views/reco
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            new Promise(function (resolve, reject) {
-                if (parentModel.get('contactsIds') && parentModel.get('contactsIds').length) {
-                    this.getCollectionFactory().create('Contact', function (contactList) {
-                        var contactListFinal = [];
-                        contactList.url = 'Case/' + parentModel.id + '/contacts';
-                        contactList.fetch().then(function () {
-                            contactList.forEach(function (contact) {
-                                if (contact.id == parentModel.get('contactId')) {
-                                    contactListFinal.unshift(contact);
-                                } else {
-                                    contactListFinal.push(contact);
-                                }
-                            });
-                            resolve(contactListFinal);
-                        }, function () {resolve([])});
-                    }, this);
-                } else if (parentModel.get('accountId')) {
-                    this.getModelFactory().create('Account', function (account) {
-                        account.id = parentModel.get('accountId');
-                        account.fetch().then(function () {
-                            resolve([account]);
-                        }, function () {resolve([])});
-                    }, this);
-                } else if (parentModel.get('leadId')) {
-                    this.getModelFactory().create('Lead', function (account) {
-                        lead.id = parentModel.get('leadId');
-                        lead.fetch().then(function () {
-                            resolve([lead]);
-                        }, function () {resolve([])});
-                    }, this);
-                } else {
-                    resolve([]);
+            new Promise(
+                function (resolve, reject) {
+                    model.fetch().then(function () {
+                        resolve();
+                    });
                 }
+            ).then(function () {
+                return new Promise(function (resolve, reject) {
+                    if (parentModel.get('contactsIds') && parentModel.get('contactsIds').length) {
+                        this.getCollectionFactory().create('Contact', function (contactList) {
+                            var contactListFinal = [];
+                            contactList.url = 'Case/' + parentModel.id + '/contacts';
+                            contactList.fetch().then(function () {
+                                contactList.forEach(function (contact) {
+                                    if (contact.id == parentModel.get('contactId')) {
+                                        contactListFinal.unshift(contact);
+                                    } else {
+                                        contactListFinal.push(contact);
+                                    }
+                                });
+                                resolve(contactListFinal);
+                            }, function () {resolve([])});
+                        }, this);
+                    } else if (parentModel.get('accountId')) {
+                        this.getModelFactory().create('Account', function (account) {
+                            account.id = parentModel.get('accountId');
+                            account.fetch().then(function () {
+                                resolve([account]);
+                            }, function () {resolve([])});
+                        }, this);
+                    } else if (parentModel.get('leadId')) {
+                        this.getModelFactory().create('Lead', function (account) {
+                            lead.id = parentModel.get('leadId');
+                            lead.fetch().then(function () {
+                                resolve([lead]);
+                            }, function () {resolve([])});
+                        }, this);
+                    } else {
+                        resolve([]);
+                    }
+                }.bind(this))
             }.bind(this)).then(function (list) {
                 var attributes = {
                     parentType: 'Case',
@@ -117,4 +125,3 @@ Espo.define('crm:views/knowledge-base-article/record/list-for-case', 'views/reco
 
     });
 });
-
