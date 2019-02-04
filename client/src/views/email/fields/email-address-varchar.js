@@ -33,7 +33,7 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
 
         editTemplate: 'email/fields/email-address-varchar/edit',
 
-        emailAddressRegExp: /([a-zA-Z0-9._-d\+"]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi,
+        emailAddressRegExp: /([a-zA-Z0-9._\-\+"]+@[a-zA-Z0-9._\-]+\.[a-zA-Z0-9._\-]+)/gi,
 
         data: function () {
             var data = Dep.prototype.data.call(this);
