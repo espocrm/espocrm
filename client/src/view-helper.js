@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('view-helper', [], function () {
+define('view-helper', [], function () {
 
     var ViewHelper = function (options) {
         this.urlRegex = /(^|[^\(])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
@@ -319,5 +319,4 @@ Espo.define('view-helper', [], function () {
     });
 
     return ViewHelper;
-
 });

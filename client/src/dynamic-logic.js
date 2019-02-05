@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('dynamic-logic', [], function () {
+define('dynamic-logic', [], function () {
 
     var DynamicLogic = function (defs, recordView) {
         this.defs = defs || {};
@@ -277,4 +277,3 @@ Espo.define('dynamic-logic', [], function () {
 
     return DynamicLogic;
 });
-

@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('view-record-helper', [], function () {
+
+define('view-record-helper', [], function () {
 
     var ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
         if (defaultFieldStates) {
@@ -128,5 +129,4 @@ Espo.define('view-record-helper', [], function () {
     });
 
     return ViewRecordHelper;
-
 });

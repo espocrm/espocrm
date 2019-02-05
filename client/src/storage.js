@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('storage', [], function () {
+define('storage', [], function () {
 
     var Storage = function () {
     };

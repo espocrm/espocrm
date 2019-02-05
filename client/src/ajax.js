@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('ajax', [], function () {
+define('ajax', [], function () {
 
     var Ajax = Espo.Ajax = {
 

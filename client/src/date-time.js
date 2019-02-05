@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('date-time', [], function () {
+define('date-time', [], function () {
 
     var DateTime = function () {
 

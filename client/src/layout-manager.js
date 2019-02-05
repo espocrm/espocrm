@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('layout-manager', [], function () {
+define('layout-manager', [], function () {
 
     var LayoutManager = function (options, userId) {
         var options = options || {};
@@ -145,5 +145,3 @@ Espo.define('layout-manager', [], function () {
     return LayoutManager;
 
 });
-
-

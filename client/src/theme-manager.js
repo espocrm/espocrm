@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('theme-manager', [], function () {
+
+define('theme-manager', [], function () {
 
     var ThemeManager = function (config, preferences, metadata) {
         this.config = config;
@@ -96,5 +97,4 @@ Espo.define('theme-manager', [], function () {
     });
 
     return ThemeManager;
-
 });

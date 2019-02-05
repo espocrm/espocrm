@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('acl', [], function () {
+define('acl', [], function () {
 
     var Acl = function (user, scope, aclAllowDeleteCreated) {
         this.user = user || null;

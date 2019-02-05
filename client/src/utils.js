@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('utils', [], function () {
+define('utils', [], function () {
 
     var Utils = Espo.utils = Espo.Utils = {
 

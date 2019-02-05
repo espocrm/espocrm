@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('language', ['ajax'], function (Ajax) {
+define('language', ['ajax'], function (Ajax) {
 
     var Language = function (cache) {
         this.cache = cache || null;

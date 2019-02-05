@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('model-offline', 'model', function (Model) {
+define('model-offline', 'model', function (Model) {
 
     var ModelOffline = Model.extend({
 
@@ -83,6 +82,4 @@ Espo.define('model-offline', 'model', function (Model) {
     });
 
     return ModelOffline;
-
 });
-

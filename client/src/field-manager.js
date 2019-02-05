@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
- Espo.define('field-manager', [], function () {
+ define('field-manager', [], function () {
 
     var FieldManager = function (defs, metadata) {
         this.defs = defs || {};

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('pre-loader', [], function () {
+define('pre-loader', [], function () {
 
     var PreLoader = function (cache, viewFactory, basePath) {
         this.cache = cache;

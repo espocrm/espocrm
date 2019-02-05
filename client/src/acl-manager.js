@@ -35,7 +35,7 @@
  * }
  */
 
-Espo.define('acl-manager', ['acl'], function (Acl) {
+define('acl-manager', ['acl'], function (Acl) {
 
     var AclManager = function (user, implementationClassMap, aclAllowDeleteCreated) {
         this.setEmpty();

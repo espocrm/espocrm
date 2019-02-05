@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('session-storage', 'storage', function (Dep) {
+define('session-storage', ['storage'], function (Dep) {
 
     return Dep.extend({
 

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('multi-collection', 'collection', function (Collection) {
+define('multi-collection', ['collection'], function (Collection) {
 
     var MultiCollection = Collection.extend({
 

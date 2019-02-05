@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('model-factory', [], function () {
+define('model-factory', [], function () {
 
     var ModelFactory = function (loader, metadata, user) {
         this.loader = loader;
@@ -83,5 +83,4 @@ Espo.define('model-factory', [], function () {
     });
 
     return ModelFactory;
-
 });

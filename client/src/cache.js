@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('cache', [], function () {
+define('cache', [], function () {
 
     var Cache = function (cacheTimestamp) {
         this.basePrefix = this.prefix;

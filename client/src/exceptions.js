@@ -41,5 +41,3 @@ Espo.Exceptions.NotFound = function (message) {
 }
 Espo.Exceptions.NotFound.prototype = new Error();
 Espo.Exceptions.NotFound.prototype.name = 'NotFound';
-
-

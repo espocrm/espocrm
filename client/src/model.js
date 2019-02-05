@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('model', [], function () {
+define('model', [], function () {
 
     var Dep = Backbone.Model;
 
@@ -267,5 +267,4 @@ Espo.define('model', [], function () {
     });
 
     return Model;
-
 });

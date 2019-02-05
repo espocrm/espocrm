@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('collection', [], function () {
+define('collection', [], function () {
 
     var Collection = Backbone.Collection.extend({
 

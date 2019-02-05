@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('email-helper', [], function () {
+define('email-helper', [], function () {
 
     var EmailHelper = function (language, user, dateTime, acl) {
         this.language = language;
@@ -428,5 +428,4 @@ Espo.define('email-helper', [], function () {
     });
 
     return EmailHelper;
-
 });
