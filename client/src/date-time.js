@@ -247,7 +247,7 @@ define('date-time', [], function () {
         },
 
         setLanguage: function (language) {
-            moment.locale('en', {
+            moment.updateLocale('en', {
                 months: language.translate('monthNames', 'lists'),
                 monthsShort: language.translate('monthNamesShort', 'lists'),
                 weekdays: language.translate('dayNames', 'lists'),
