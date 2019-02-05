@@ -51,7 +51,8 @@ define(
         'theme-manager',
         'session-storage',
         'view-helper',
-        'web-socket-manager'
+        'web-socket-manager',
+        'ajax'
     ],
     function (
         Ui,
@@ -75,7 +76,8 @@ define(
         ThemeManager,
         SessionStorage,
         ViewHelper,
-        WebSocketManager
+        WebSocketManager,
+        Ajax
     ) {
 
     var App = function (options, callback) {
@@ -494,12 +496,8 @@ define(
             if (this.auth) {
                 var arr = Base64.decode(this.auth).split(':');
                 if (arr.length > 1) {
-                    $.ajax({
-                        url: 'App/action/destroyAuthToken',
-                        type: 'POST',
-                        data: JSON.stringify({
-                            token: arr[1]
-                        })
+                    Espo.Ajax.postRequest('App/action/destroyAuthToken', {
+                        token: arr[1]
                     });
                 }
             }
@@ -522,7 +520,6 @@ define(
             xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
             xhr.send('');
             xhr.abort();
-
 
             this.loadStylesheet();
         },
@@ -611,11 +608,7 @@ define(
         },
 
         requestUserData: function (callback) {
-            $.ajax({
-                url: 'App/user',
-            }).done(function (data) {
-                callback(data);
-            }.bind(this));
+            Espo.Ajax.getRequest('App/user').then(callback);
         },
 
         setupAjax: function () {
