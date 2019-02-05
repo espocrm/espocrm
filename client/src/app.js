@@ -696,5 +696,3 @@ define(
 
     return App;
 });
-
-
