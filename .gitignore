@@ -6,6 +6,7 @@
 /data/config.php
 /build
 /node_modules
+npm-debug.log
 /test.php
 /main.html
 
