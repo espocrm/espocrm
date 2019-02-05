@@ -210,6 +210,8 @@ class Email extends Record
 
         $message = null;
 
+        $this->validateEmailAddresses($entity);
+
         try {
             $emailSender->send($entity, $params, $message);
         } catch (\Exception $e) {
@@ -252,6 +254,34 @@ class Email extends Record
         $entity->set('isJustSent', true);
 
         $this->getEntityManager()->saveEntity($entity);
+    }
+
+    public function validateEmailAddresses(\Espo\Entities\Email $entity)
+    {
+        $from = $entity->get('from');
+        if ($from) {
+            if (!filter_var($from, \FILTER_VALIDATE_EMAIL)) {
+                throw new Error('From email address is not valid.');
+            }
+        }
+
+        foreach ($entity->getToList() as $address) {
+            if (!filter_var($address, \FILTER_VALIDATE_EMAIL)) {
+                throw new Error('To email address is not valid.');
+            }
+        }
+
+        foreach ($entity->getCcList() as $address) {
+            if (!filter_var($address, \FILTER_VALIDATE_EMAIL)) {
+                throw new Error('CC email address is not valid.');
+            }
+        }
+
+        foreach ($entity->getBccList() as $address) {
+            if (!filter_var($address, \FILTER_VALIDATE_EMAIL)) {
+                throw new Error('BCC email address is not valid.');
+            }
+        }
     }
 
     protected function getStreamService()
