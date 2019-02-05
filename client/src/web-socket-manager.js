@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('web-socket-manager', ['lib!client/lib/autobahn.js'], function () {
+define('web-socket-manager', [], function () {
 
     var WebSocketManager = function (config) {
         this.config = config;

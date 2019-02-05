@@ -19,6 +19,7 @@
         "client/lib/bootstrap-datepicker.js",
         "client/lib/bull.js",
         "client/lib/marked.min.js",
+        "client/lib/autobahn.js",
         "client/src/loader.js",
         "client/src/utils.js",
         "client/src/exceptions.js"

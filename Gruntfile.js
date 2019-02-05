@@ -37,6 +37,7 @@ module.exports = function (grunt) {
         'client/lib/bootstrap-datepicker.js',
         'client/lib/bull.js',
         'client/lib/marked.min.js',
+        'client/lib/autobahn.js',
 
         'client/src/namespace.js',
         'client/src/exceptions.js',
