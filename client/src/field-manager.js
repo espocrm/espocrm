@@ -68,6 +68,10 @@
             return this.getScopeAttributeList(entityType);
         },
 
+        getEntityTypeAttributeList: function (entityType) {
+            return this.getScopeAttributeList(entityType);
+        },
+
         getScopeAttributeList: function (entityType) {
             var list = [];
             var defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
@@ -142,12 +146,20 @@
             return this.getAttributeList(type, field);
         },
 
+        getEntityTypeFieldAttributeList: function (scope, field) {
+            return this.getScopeFieldAttributeList(scope, field);
+        },
+
         getAttributeList: function (fieldType, fieldName) {
             return _.union(this.getActualAttributeList(fieldType, fieldName), this.getNotActualAttributeList(fieldType, fieldName));
         },
 
         getScopeFieldList: function (scope) {
             return Object.keys(this.metadata.get('entityDefs.' + scope + '.fields') || {});
+        },
+
+        getEntityTypeFieldList: function (scope) {
+            return this.getScopeFieldList(scope);
         },
 
         getViewName: function (fieldType) {
@@ -179,14 +191,14 @@
             return this.getNotActualAttributeList(fieldType, fieldName);
         },
 
-        isScopeFieldAvailable: function (enittyType, field) {
-            if (this.metadata.get(['entityDefs', enittyType, 'fields', field, 'disabled'])) return false;
+        isScopeFieldAvailable: function (entityType, field) {
+            if (this.metadata.get(['entityDefs', entityType, 'fields', field, 'disabled'])) return false;
             if (
-                this.metadata.get(['entityAcl', enittyType, 'fields', field, 'onlyAdmin'])
+                this.metadata.get(['entityAcl', entityType, 'fields', field, 'onlyAdmin'])
                 ||
-                this.metadata.get(['entityAcl', enittyType, 'fields', field, 'forbidden'])
+                this.metadata.get(['entityAcl', entityType, 'fields', field, 'forbidden'])
                 ||
-                this.metadata.get(['entityAcl', enittyType, 'fields', field, 'internal'])
+                this.metadata.get(['entityAcl', entityType, 'fields', field, 'internal'])
             ) return false;
 
             return true;
