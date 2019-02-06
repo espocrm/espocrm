@@ -22,6 +22,9 @@
    "notActualFields":[
       "names"
    ],
+   "validationList": [
+      "required"
+   ],
    "notCreatable": true,
    "notSortable": true,
    "filter": true

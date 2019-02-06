@@ -28,6 +28,13 @@
          "customizationReadOnlyDisabled": true
       }
    },
+   "validationList": [
+      "required",
+      "emailAddress"
+   ],
+   "mandatoryValidationList": [
+      "emailAddress"
+   ],
    "notCreatable": true,
    "filter": true,
    "fieldDefs":{

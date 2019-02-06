@@ -39,6 +39,9 @@
          "customizationReadOnlyDisabled": true
       }
    },
+   "validationList": [
+      "required"
+   ],
    "notCreatable": true,
    "filter": true,
    "fieldDefs":{

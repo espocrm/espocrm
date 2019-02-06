@@ -29,12 +29,24 @@
 
 namespace Espo\Core\FieldValidators;
 
-use \Espo\ORM\Entity;
-
 class IntType extends BaseType
 {
     public function checkRequired(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
     {
         return $entity->has($field) && $entity->get($field) !== null;
+    }
+
+    public function checkMax(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
+    {
+        if (!$entity->has($field) || $entity->get($field) === null) return true;
+        if ($entity->get($field) > $validationValue) return false;
+        return true;
+    }
+
+    public function checkMin(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
+    {
+        if (!$entity->has($field) || $entity->get($field) === null) return true;
+        if ($entity->get($field) < $validationValue) return false;
+        return true;
     }
 }

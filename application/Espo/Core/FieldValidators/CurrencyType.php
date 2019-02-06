@@ -29,9 +29,6 @@
 
 namespace Espo\Core\FieldValidators;
 
-use \Espo\ORM\Entity;
-
 class CurrencyType extends FloatType
 {
-
 }

@@ -30,7 +30,11 @@
          "type":"bool"
       }
    ],
-   "validationList": ["required"],
+   "validationList": [
+      "required",
+      "min",
+      "max"
+   ],
    "filter": true,
    "textFilter": true,
    "textFilterForeign": true,

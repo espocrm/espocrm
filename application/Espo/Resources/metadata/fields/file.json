@@ -27,6 +27,9 @@
    "notActualFields":[
       "name"
    ],
+   "validationList": [
+      "required"
+   ],
    "filter": true,
    "linkDefs": {
       "type": "belongsTo",

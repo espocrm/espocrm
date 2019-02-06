@@ -47,10 +47,16 @@ class FieldValidatorManager
     {
         if (!$data) $data = (object) [];
 
-        $validationValue = $this->fieldManagerUtil->getEntityTypeFieldParam($entity->getEntityType(), $field, $type);
-        if (is_null($validationValue) || $validationValue === false) return true;
-
         $fieldType = $this->fieldManagerUtil->getEntityTypeFieldParam($entity->getEntityType(), $field, 'type');
+
+        $validationValue = $this->fieldManagerUtil->getEntityTypeFieldParam($entity->getEntityType(), $field, $type);
+
+        $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
+
+        if (!in_array($type, $mandatoryValidationList)) {
+            if (is_null($validationValue) || $validationValue === false) return true;
+        }
+
         if (!array_key_exists($fieldType, $this->implHash)) {
             $this->loadImpl($fieldType);
         }

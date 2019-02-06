@@ -29,21 +29,16 @@
 
 namespace Espo\Core\FieldValidators;
 
-class PersonNameType extends BaseType
+class LinkType extends BaseType
 {
     public function checkRequired(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
     {
-        $isEmpty = true;
-        foreach ($this->getActualAttributeList($entity, $field) as $attribute) {
-            if ($attribute === 'salutation' . ucfirst($field)) {
-                continue;
-            }
-            if ($entity->has($attribute) && $entity->get($attribute) !== '') {
-                $isEmpty = false;
-                break;
-            }
+        $idAttribute = $field . 'Id';
+
+        if (!$entity->has($idAttribute)) {
+            return false;
         }
-        if ($isEmpty) return false;
-        return true;
+
+        return $entity->get($idAttribute) !== null && $entity->get($idAttribute) !== '';
     }
 }

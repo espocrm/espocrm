@@ -52,7 +52,11 @@
          "importDisabled": true
       }
    },
-   "validationList": ["required"],
+   "validationList": [
+      "required",
+      "min",
+      "max"
+   ],
    "filter": true,
    "personalData": true
 }

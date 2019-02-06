@@ -26,7 +26,11 @@
          "type":"bool"
       }
    ],
-   "validationList": ["required"],
+   "validationList": [
+      "required",
+      "min",
+      "max"
+   ],
    "filter": true,
    "fieldDefs":{
       "notNull":false

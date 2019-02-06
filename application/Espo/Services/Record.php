@@ -507,25 +507,27 @@ class Record extends \Espo\Core\Services\Base
             if (!$entity->isNew()) {
                 if (!$this->isFieldSetInData($data, $field)) continue;
             }
-            $this->processDataValidationField($entity, $field, $data);
+            $this->processValidationField($entity, $field, $data);
         }
     }
 
-    protected function processDataValidationField(Entity $entity, $field, $data)
+    protected function processValidationField(Entity $entity, $field, $data)
     {
         $fieldType = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, 'type');
-        if (!$fieldType) return;
-
+        $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
+        $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
         $fieldValidatorManager = $this->getInjection('container')->get('fieldValidatorManager');
 
-        $validationTypeList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
 
-        foreach ($validationTypeList as $validationType) {
-            $validationValue = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, $validationType);
-            if (is_null($validationValue)) continue;
-
-            if (!$fieldValidatorManager->check($entity, $field, $validationType, $validationValue, $data)) {
-                throw new BadRequest("Validation {$validationType}: {$field}.");
+        foreach ($validationList as $type) {
+            $value = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, $type);
+            if (is_null($value)) {
+                if (!in_array($type, $mandatoryValidationList)) {
+                    continue;
+                }
+            }
+            if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
+                throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
             }
         }
     }

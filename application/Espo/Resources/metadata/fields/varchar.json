@@ -31,7 +31,10 @@
          "type":"bool"
       }
    ],
-   "validationList": ["required"],
+   "validationList": [
+      "required",
+      "maxLength"
+   ],
    "filter": true,
    "personalData": true,
    "textFilter": true,

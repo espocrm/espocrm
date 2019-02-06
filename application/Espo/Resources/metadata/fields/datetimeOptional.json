@@ -73,6 +73,9 @@
          "disabled": true
       }
    },
+   "validationList": [
+      "required"
+   ],
    "filter": true,
    "notCreatable": true,
    "fieldDefs":{

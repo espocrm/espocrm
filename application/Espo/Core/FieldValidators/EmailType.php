@@ -29,21 +29,42 @@
 
 namespace Espo\Core\FieldValidators;
 
-class PersonNameType extends BaseType
+class EmailType extends BaseType
 {
     public function checkRequired(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
     {
-        $isEmpty = true;
-        foreach ($this->getActualAttributeList($entity, $field) as $attribute) {
-            if ($attribute === 'salutation' . ucfirst($field)) {
-                continue;
-            }
-            if ($entity->has($attribute) && $entity->get($attribute) !== '') {
-                $isEmpty = false;
-                break;
+        if ($entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null) return true;
+
+        $dataList = $entity->get($field . 'Data');
+        if (!is_array($dataList)) return false;
+
+        foreach ($dataList as $item) {
+            if (!empty($item->emailAddress)) return true;
+        }
+
+        return false;
+    }
+
+    public function checkEmailAddress(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
+    {
+        if ($entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null) {
+            $address = $entity->get($field);
+            if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                return false;
             }
         }
-        if ($isEmpty) return false;
+
+        $dataList = $entity->get($field . 'Data');
+        if (is_array($dataList)) {
+            foreach ($dataList as $item) {
+                if (empty($item->emailAddress)) continue;
+                $address = $item->emailAddress;
+                if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 }
