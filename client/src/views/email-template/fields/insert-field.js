@@ -112,7 +112,7 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
         },
 
         getScopeAttributeList: function (scope) {
-            var fieldList = this.getFieldManager().getScopeFieldList(scope);
+            var fieldList = this.getFieldManager().getEntityTypeFieldList(scope);
 
             var list = [];
 

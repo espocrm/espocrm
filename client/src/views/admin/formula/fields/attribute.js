@@ -33,7 +33,7 @@ Espo.define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', f
         setupOptions: function () {
             Dep.prototype.setupOptions.call(this);
 
-            var attributeList = this.getFieldManager().getEntityAttributeList(this.options.scope).sort();
+            var attributeList = this.getFieldManager().getEntityTypeAttributeList(this.options.scope).sort();
 
             var links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']);
             var linkList = [];
@@ -49,7 +49,7 @@ Espo.define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', f
             linkList.forEach(function (link) {
                 var scope = links[link].entity;
                 if (!scope) return;
-                var linkAttributeList = this.getFieldManager().getEntityAttributeList(scope).sort();
+                var linkAttributeList = this.getFieldManager().getEntityTypeAttributeList(scope).sort();
                 linkAttributeList.forEach(function (item) {
                     attributeList.push(link + '.' + item);
                 }, this);

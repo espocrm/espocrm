@@ -64,15 +64,7 @@
             return false;
         },
 
-        getEntityAttributeList: function (entityType) {
-            return this.getScopeAttributeList(entityType);
-        },
-
         getEntityTypeAttributeList: function (entityType) {
-            return this.getScopeAttributeList(entityType);
-        },
-
-        getScopeAttributeList: function (entityType) {
             var list = [];
             var defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
             Object.keys(defs).forEach(function (field) {
@@ -139,27 +131,18 @@
             return fieldNames;
         },
 
-        getScopeFieldAttributeList: function (scope, field) {
-            var type = this.metadata.get(['entityDefs', scope, 'fields', field, 'type']);
+        getEntityTypeFieldAttributeList: function (entityType, field) {
+            var type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
             if (!type) return [];
-
             return this.getAttributeList(type, field);
-        },
-
-        getEntityTypeFieldAttributeList: function (scope, field) {
-            return this.getScopeFieldAttributeList(scope, field);
         },
 
         getAttributeList: function (fieldType, fieldName) {
             return _.union(this.getActualAttributeList(fieldType, fieldName), this.getNotActualAttributeList(fieldType, fieldName));
         },
 
-        getScopeFieldList: function (scope) {
-            return Object.keys(this.metadata.get('entityDefs.' + scope + '.fields') || {});
-        },
-
-        getEntityTypeFieldList: function (scope) {
-            return this.getScopeFieldList(scope);
+        getEntityTypeFieldList: function (entityType) {
+            return Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
         },
 
         getViewName: function (fieldType) {
@@ -175,10 +158,6 @@
             return this.getParamList(fieldType);
         },
 
-        getEntityAttributes: function (entityType) {
-            return this.getEntityAttributeList(entityType);
-        },
-
         getAttributes: function (fieldType, fieldName) {
             return this.getAttributeList(fieldType, fieldName);
         },
@@ -191,7 +170,7 @@
             return this.getNotActualAttributeList(fieldType, fieldName);
         },
 
-        isScopeFieldAvailable: function (entityType, field) {
+        isEntityTypeFieldAvailable: function (entityType, field) {
             if (this.metadata.get(['entityDefs', entityType, 'fields', field, 'disabled'])) return false;
             if (
                 this.metadata.get(['entityAcl', entityType, 'fields', field, 'onlyAdmin'])
@@ -202,6 +181,10 @@
             ) return false;
 
             return true;
+        },
+
+        isScopeFieldAvailable: function (entityType, field) {
+            return this.isEntityTypeFieldAvailable(entityType, field);
         },
 
     });

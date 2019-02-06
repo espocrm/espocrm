@@ -37,7 +37,7 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
 
             this.scope = this.options.scope;
 
-            var fieldList = this.getFieldManager().getScopeFieldList(this.scope);
+            var fieldList = this.getFieldManager().getEntityTypeFieldList(this.scope);
 
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope);
 

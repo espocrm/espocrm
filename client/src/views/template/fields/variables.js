@@ -74,7 +74,7 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
         setupAttributeList: function () {
             var entityType = this.model.get('entityType');
 
-            var fieldList = this.getFieldManager().getScopeFieldList(entityType);
+            var fieldList = this.getFieldManager().getEntityTypeFieldList(entityType);
 
             var ignoreFieldList = [];
             fieldList.forEach(function (field) {
@@ -89,12 +89,12 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 ) ignoreFieldList.push(field);
             }, this);
 
-            var attributeList = this.getFieldManager().getScopeAttributeList(entityType) || [];
+            var attributeList = this.getFieldManager().getEntityTypeAttributeList(entityType) || [];
 
             var forbiddenList = Espo.Utils.clone(this.getAcl().getScopeForbiddenAttributeList(entityType));
 
             ignoreFieldList.forEach(function (field) {
-                this.getFieldManager().getScopeFieldAttributeList(entityType, field).forEach(function (attribute) {
+                this.getFieldManager().getEntityTypeFieldAttributeList(entityType, field).forEach(function (attribute) {
                     forbiddenList.push(attribute);
                 });
             }, this);
@@ -157,7 +157,7 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     this.getMetadata().get(['entityAcl', entityType, 'links', link, 'internal'])
                 ) return;
 
-                var fieldList = this.getFieldManager().getScopeFieldList(scope);
+                var fieldList = this.getFieldManager().getEntityTypeFieldList(scope);
 
                 var ignoreFieldList = [];
                 fieldList.forEach(function (field) {
@@ -172,12 +172,12 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     ) ignoreFieldList.push(field);
                 }, this);
 
-                var attributeList = this.getFieldManager().getEntityAttributes(scope) || [];
+                var attributeList = this.getFieldManager().getEntityTypeAttributeList(scope) || [];
 
                 var forbiddenList = Espo.Utils.clone(this.getAcl().getScopeForbiddenAttributeList(scope));
 
                 ignoreFieldList.forEach(function (field) {
-                    this.getFieldManager().getScopeFieldAttributeList(scope, field).forEach(function (attribute) {
+                    this.getFieldManager().getEntityTypeFieldAttributeList(scope, field).forEach(function (attribute) {
                         forbiddenList.push(attribute);
                     });
                 }, this);

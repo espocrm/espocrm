@@ -303,7 +303,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                 };
                 var scopeData = this.acl.fieldData[scope];
 
-                var fieldList = this.getFieldManager().getScopeFieldList(scope);
+                var fieldList = this.getFieldManager().getEntityTypeFieldList(scope);
                 this.getLanguage().sortFieldList(scope, fieldList);
 
                 var fieldDataList = [];

@@ -88,7 +88,7 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
             }, this);
             var i = 0;
 
-            var attributeList = this.getFieldManager().getEntityAttributes(this.model.name);
+            var attributeList = this.getFieldManager().getEntityTypeAttributeList(this.model.name);
             var ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
 
             if (scopeList.length) {
