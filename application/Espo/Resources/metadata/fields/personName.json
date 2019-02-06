@@ -35,6 +35,7 @@
     "personalData": true,
     "textFilter": true,
     "fullTextSearch": true,
+    "validationList": ["required"],
     "fullTextSearchColumnList": [
         "first",
         "last"

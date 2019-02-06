@@ -52,6 +52,7 @@
          "importDisabled": true
       }
    },
+   "validationList": ["required"],
    "filter": true,
    "personalData": true
 }

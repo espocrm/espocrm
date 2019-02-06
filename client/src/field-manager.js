@@ -145,6 +145,10 @@
             return Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
         },
 
+        getEntityTypeFieldParam: function (entityType, field, param) {
+            this.metadata.get(['entityDefs', entityType, 'fields', field, param]);
+        },
+
         getViewName: function (fieldType) {
             if (fieldType in this.defs) {
                 if ('view' in this.defs[fieldType]) {

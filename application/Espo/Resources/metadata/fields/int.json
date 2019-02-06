@@ -30,6 +30,7 @@
          "type":"bool"
       }
    ],
+   "validationList": ["required"],
    "filter": true,
    "textFilter": true,
    "textFilterForeign": true,

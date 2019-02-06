@@ -26,6 +26,7 @@
          "type":"bool"
       }
    ],
+   "validationList": ["required"],
    "filter": true,
    "fieldDefs":{
       "notNull":false

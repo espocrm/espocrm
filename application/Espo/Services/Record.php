@@ -55,6 +55,7 @@ class Record extends \Espo\Core\Services\Base
         'fileStorageManager',
         'injectableFactory',
         'fieldManagerUtil',
+        'container',
     ];
 
     protected $getEntityBeforeUpdate = false;
@@ -116,6 +117,8 @@ class Record extends \Espo\Core\Services\Base
     protected $mandatorySelectAttributeList = [];
 
     protected $forceSelectAllAttributes = false;
+
+    protected $validateSkipFieldList = [];
 
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
@@ -495,16 +498,49 @@ class Record extends \Espo\Core\Services\Base
         return $this->getRepository()->save($entity);
     }
 
-    protected function isValid($entity)
+    public function processValidation(Entity $entity, $data)
     {
-        $fieldDefs = $entity->getAttributes();
-        if ($entity->hasAttribute('name') && !empty($fieldDefs['name']['required'])) {
-            if (!$entity->get('name')) {
-                return false;
+        $fieldList = $this->getFieldManagerUtil()->getEntityTypeFieldList($this->entityType);
+
+        foreach ($fieldList as $field) {
+            if (in_array($field, $this->validateSkipFieldList)) continue;
+            if (!$entity->isNew()) {
+                if (!$this->isFieldSetInData($data, $field)) continue;
+            }
+            $this->processDataValidationField($entity, $field, $data);
+        }
+    }
+
+    protected function processDataValidationField(Entity $entity, $field, $data)
+    {
+        $fieldType = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, 'type');
+        if (!$fieldType) return;
+
+        $fieldValidatorManager = $this->getInjection('container')->get('fieldValidatorManager');
+
+        $validationTypeList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
+
+        foreach ($validationTypeList as $validationType) {
+            $validationValue = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, $validationType);
+            if (is_null($validationValue)) continue;
+
+            if (!$fieldValidatorManager->check($entity, $field, $validationType, $validationValue, $data)) {
+                throw new BadRequest("Validation {$validationType}: {$field}.");
             }
         }
+    }
 
-        return true;
+    protected function isFieldSetInData($data, $field)
+    {
+        $attributeList = $this->getFieldManagerUtil()->getActualAttributeList($this->entityType, $field);
+        $isSet = false;
+        foreach ($attributeList as $attribute) {
+            if (property_exists($data, $attribute)) {
+                $isSet = true;
+                break;
+            }
+        }
+        return $isSet;
     }
 
     public function checkAssignment(Entity $entity)
@@ -827,11 +863,9 @@ class Record extends \Espo\Core\Services\Base
 
         $this->populateDefaults($entity, $data);
 
-        $this->beforeCreateEntity($entity, $data);
+        $this->processValidation($entity, $data);
 
-        if (!$this->isValid($entity)) {
-            throw new BadRequest();
-        }
+        $this->beforeCreateEntity($entity, $data);
 
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden('Assignment permission failure');
@@ -894,10 +928,6 @@ class Record extends \Espo\Core\Services\Base
         $entity->set($data);
 
         $this->beforeUpdateEntity($entity, $data);
-
-        if (!$this->isValid($entity)) {
-            throw new BadRequest();
-        }
 
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden();

@@ -185,4 +185,14 @@ class FieldManagerUtil
             $this->getFieldTypeAttributeListByType($fieldType, $name, 'notActual')
         );
     }
+
+    public function getEntityTypeFieldList($entityType)
+    {
+        return array_keys($this->getMetadata()->get(['entityDefs', $entityType, 'fields'], []));
+    }
+
+    public function getEntityTypeFieldParam($entityType, $field, $param)
+    {
+        return $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, $param]);
+    }
 }
