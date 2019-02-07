@@ -89,11 +89,14 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test'
         ]);
 
-        $result = $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate((object) [
-            'name' => ''
-        ], [
-            'ids' => [$entity->id]
-        ]);
+        $result = $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
+            [
+                'ids' => [$entity->id]
+            ],
+            (object) [
+                'name' => ''
+            ]
+        );
 
         $this->assertEquals(0, $result->count);
     }
@@ -111,11 +114,14 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test'
         ]);
 
-        $result = $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate((object) [
-            'name' => 'hello'
-        ], [
-            'ids' => [$entity->id]
-        ]);
+        $result = $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
+            [
+                'ids' => [$entity->id]
+            ],
+            (object) [
+                'name' => 'hello'
+            ]
+        );
 
         $this->assertEquals(1, $result->count);
     }

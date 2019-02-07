@@ -36,6 +36,15 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     protected $userName = 'admin';
     protected $password = '1';
 
+    private function setFieldsDefs($app, $entityType, $data)
+    {
+        $metadata = $app->getContainer()->get('metadata');
+        $metadata->set('entityDefs', $entityType, [
+            'fields' => $data
+        ]);
+        $metadata->save();
+    }
+
     /**
      * @expectedException \Espo\Core\Exceptions\Forbidden
      */
@@ -316,7 +325,12 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
-        $e = $service->createEntity((object)['name' => 'Test', 'assignedUserId' => 'testUserId']);
+        $e = $service->createEntity((object) [
+            'name' => 'Test',
+            'assignedUserId' => 'testUserId',
+            'dateStart' => '2019-01-01 00:00:00',
+            'dateEnd' => '2019-01-01 00:01:00',
+        ]);
 
         $this->assertNotNull($e);
     }
@@ -325,6 +339,13 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->prepareTestUser();
 
+        $app = $this->createApplication();
+        $this->setFieldsDefs($app, 'Meeting', [
+            'assignedUser' => [
+                'required' => false
+            ]
+        ]);
+
         $this->auth('test');
         $app = $this->createApplication();
 
@@ -332,7 +353,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
 
-        $service->createEntity((object)['name' => 'Test']);
+        $service->createEntity((object) [
+            'name' => 'Test',
+            'dateStart' => '2019-01-01 00:00:00',
+            'dateEnd' => '2019-01-01 00:01:00',
+        ]);
     }
 
     public function testUserAccessCreateAssignedPermissionNo2()
@@ -349,7 +374,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $service->createEntity((object)[
             'name' => 'Test',
             'assignedUserId' => 'testUserId',
-            'teamsIds' => ['testOtherTeamId']
+            'teamsIds' => ['testOtherTeamId'],
+            'dateStart' => '2019-01-01 00:00:00',
+            'dateEnd' => '2019-01-01 00:01:00',
         ]);
     }
 
@@ -365,7 +392,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $e = $service->createEntity((object)[
             'name' => 'Test',
             'assignedUserId' => 'testUserId',
-            'teamsIds' => ['testTeamId']
+            'teamsIds' => ['testTeamId'],
+            'dateStart' => '2019-01-01 00:00:00',
+            'dateEnd' => '2019-01-01 00:01:00',
         ]);
 
         $this->assertNotNull($e);
