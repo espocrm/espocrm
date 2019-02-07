@@ -929,6 +929,8 @@ class Record extends \Espo\Core\Services\Base
 
         $entity->set($data);
 
+        $this->processValidation($entity, $data);
+
         $this->beforeUpdateEntity($entity, $data);
 
         if (!$this->checkAssignment($entity)) {
@@ -1587,6 +1589,11 @@ class Record extends \Espo\Core\Services\Base
                 $entity = $this->getEntity($id);
                 if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
                     $entity->set($data);
+                    try {
+                        $this->processValidation($entity, $data);
+                    } catch (\Exception $e) {
+                        continue;
+                    }
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity, ['massUpdate' => true])) {
                             $idsUpdated[] = $entity->id;
@@ -1638,14 +1645,14 @@ class Record extends \Espo\Core\Services\Base
 
             $this->afterMassUpdate($idsUpdated, $data);
 
-            return [
+            return (object) [
                 'count' => $count
             ];
         }
 
         $this->afterMassUpdate($idsUpdated, $data);
 
-        return [
+        return (object) [
             'count' => $count,
             'ids' => $idsUpdated
         ];

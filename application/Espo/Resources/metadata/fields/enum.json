@@ -42,6 +42,9 @@
          "type":"bool"
       }
    ],
+   "validationList": [
+      "required"
+   ],
    "filter": true,
    "fieldDefs":{
       "type":"varchar"
