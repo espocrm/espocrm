@@ -37,6 +37,10 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Meeting extends \Espo\Services\Record
 {
+    protected $validateRequiredSkipFieldList = [
+        'dateEnd'
+    ];
+
     protected function init()
     {
         $this->addDependencyList([

@@ -33,6 +33,10 @@ use \Espo\ORM\Entity;
 
 class Event extends \Espo\Services\Record
 {
+    protected $validateRequiredSkipFieldList = [
+        'dateEnd'
+    ];
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);

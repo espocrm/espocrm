@@ -526,6 +526,14 @@ class Record extends \Espo\Core\Services\Base
                     continue;
                 }
             }
+
+            $skipPropertyName = 'validate' . ucfirst($type) . 'SkipFieldList';
+            if (property_exists($this, $skipPropertyName)) {
+                $skipList = $this->$skipPropertyName;
+                if (!in_array($type, $skipList)) {
+                    continue;
+                }
+            }
             if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
                 throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
             }
