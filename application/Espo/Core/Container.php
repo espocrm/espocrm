@@ -34,15 +34,11 @@ class Container
 
     private $data = [];
 
-
-    /**
-     * Constructor
-     */
     public function __construct()
     {
     }
 
-    public function get($name)
+    public function get(string $name)
     {
         if (empty($this->data[$name])) {
             $this->load($name);
@@ -67,7 +63,7 @@ class Container
         } else {
 
             try {
-                $className = $this->get('metadata')->get('app.loaders.' . ucfirst($name));
+                $className = $this->get('metadata')->get(['app', 'loaders', ucfirst($name)]);
             } catch (\Exception $e) {}
 
             if (!isset($className) || !class_exists($className)) {
@@ -86,10 +82,10 @@ class Container
         return null;
     }
 
-    protected function getServiceClassName($name, $default)
+    public function getServiceClassName(string $name, string $default)
     {
         $metadata = $this->get('metadata');
-        $className = $metadata->get('app.serviceContainer.classNames.' . $name, $default);
+        $className = $metadata->get(['app', 'serviceContainer', 'classNames',  $name], $default);
         return $className;
     }
 
@@ -176,15 +172,6 @@ class Container
         );
     }
 
-    protected function loadMailSender()
-    {
-        $className = $this->getServiceClassName('mailSender', '\\Espo\\Core\\Mail\\Sender');
-        return new $className(
-            $this->get('config'),
-            $this->get('entityManager')
-        );
-    }
-
     protected function loadDateTime()
     {
         return new \Espo\Core\Utils\DateTime(
@@ -206,20 +193,6 @@ class Container
     {
         return new \Espo\Core\ServiceFactory(
             $this
-        );
-    }
-
-    protected function loadSelectManagerFactory() : \Espo\Core\SelectManagerFactory
-    {
-        return new \Espo\Core\SelectManagerFactory(
-            $this->get('entityManager'),
-            $this->get('user'),
-            $this->get('acl'),
-            $this->get('aclManager'),
-            $this->get('metadata'),
-            $this->get('config'),
-            $this->get('fieldManagerUtil'),
-            $this->get('injectableFactory')
         );
     }
 
@@ -375,15 +348,6 @@ class Container
         );
     }
 
-    protected function loadClientManager()
-    {
-        return new \Espo\Core\Utils\ClientManager(
-            $this->get('config'),
-            $this->get('themeManager'),
-            $this->get('metadata')
-        );
-    }
-
     protected function loadInjectableFactory()
     {
         return new \Espo\Core\InjectableFactory(
@@ -396,4 +360,3 @@ class Container
         $this->set('user', $user);
     }
 }
-

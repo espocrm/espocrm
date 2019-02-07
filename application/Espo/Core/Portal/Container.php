@@ -31,17 +31,17 @@ namespace Espo\Core\Portal;
 
 class Container extends \Espo\Core\Container
 {
-    protected function getServiceClassName($name, $default)
+    public function getServiceClassName(string $name, string $default)
     {
         $metadata = $this->get('metadata');
-        $className = $metadata->get('app.serviceContainerPortal.classNames.' . $name, $default);
+        $className = $metadata->get(['app', 'serviceContainerPortal', 'classNames',  $name], $default);
         return $className;
     }
 
-    protected function getServiceMainClassName($name, $default)
+    protected function getServiceMainClassName(string $name, string $default)
     {
         $metadata = $this->get('metadata');
-        $className = $metadata->get('app.serviceContainer.classNames.' . $name, $default);
+        $className = $metadata->get(['app', 'serviceContainer', 'classNames',  $name], $default);
         return $className;
     }
 
@@ -138,4 +138,3 @@ class Container extends \Espo\Core\Container
         }
     }
 }
-
