@@ -147,7 +147,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionSave: function () {
-            if (this.save(null, true)) {
+            var modeBeforeSave = this.mode;
+            var errorCallback = function () {
+                if (modeBeforeSave == 'edit') {
+                    this.setEditMode();
+                }
+            }.bind(this);
+            if (this.save(null, true, errorCallback)) {
                 this.setDetailMode();
                 $(window).scrollTop(0)
             }
