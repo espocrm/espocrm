@@ -310,7 +310,7 @@ class Record extends Base
 
         $attributes = $data->attributes;
 
-        $idsUpdated = $this->getRecordService()->massUpdate($attributes, $params);
+        $idsUpdated = $this->getRecordService()->massUpdate($params, $attributes);
 
         return $idsUpdated;
     }

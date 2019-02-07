@@ -1573,9 +1573,9 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function massUpdate($data, array $params)
+    public function massUpdate(array $params, $data)
     {
-        $idsUpdated = array();
+        $idsUpdated = [];
         $repository = $this->getRepository();
 
         $count = 0;
@@ -1608,7 +1608,7 @@ class Record extends \Espo\Core\Services\Base
 
         if (array_key_exists('where', $params)) {
             $where = $params['where'];
-            $p = array();
+            $p = [];
             $p['where'] = $where;
 
             if (!empty($params['selectData']) && is_array($params['selectData'])) {

@@ -644,13 +644,13 @@ class User extends Record
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
     }
 
-    public function massUpdate($data, array $params)
+    public function massUpdate(array $params, $data)
     {
         unset($data->type);
         unset($data->isAdmin);
         unset($data->isSuperAdmin);
         unset($data->isPortalUser);
-        return parent::massUpdate($data, $params);
+        return parent::massUpdate($params, $data);
     }
 
     protected function afterMassUpdate(array $idList, $data)
