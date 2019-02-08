@@ -179,7 +179,7 @@ module.exports = function (grunt) {
                     'upgrade.php',
                     'extension.php',
                     'websocket.php',
-                    'auth_token_check.php',
+                    'command.php',
                     'index.php',
                     'LICENSE.txt',
                     '.htaccess',

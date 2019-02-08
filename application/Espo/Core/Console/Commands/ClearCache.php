@@ -27,9 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') die('Daemon can be run only via CLI.');
+namespace Espo\Core\Console\Commands;
 
-include "bootstrap.php";
-
-$app = new \Espo\Core\Application();
-$app->runDaemon();
+class ClearCache extends Base
+{
+    public function run()
+    {
+        $this->getContainer()->get('dataManager')->clearCache();
+        echo "Cache has been cleared.\n";
+    }
+}

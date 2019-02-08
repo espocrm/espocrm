@@ -27,9 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') die('Daemon can be run only via CLI.');
+namespace Espo\Core\Console;
 
-include "bootstrap.php";
+class CommandManager
+{
+    private $container;
 
-$app = new \Espo\Core\Application();
-$app->runDaemon();
+    public function __construct(\Espo\Core\Container $container)
+    {
+        $this->container = $container;
+    }
+
+    public function run(string $command)
+    {
+        $className = '\\Espo\\Core\\Console\\Commands\\' . $command;
+        if (!class_exists($className)) {
+            $msg = "Command '{$command}' does not exist.";
+            echo $msg . "\n";
+            throw new \Espo\Core\Exceptions\Error($msg);
+        }
+        $impl = new $className($this->container);
+        return $impl->run();
+    }
+}

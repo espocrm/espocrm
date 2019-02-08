@@ -27,33 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-ob_start();
+namespace Espo\Core\Console\Commands;
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') exit;
+abstract class Base
+{
+    private $container;
 
-$token = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : null;
-if (empty($token)) exit;
+    public function __construct(\Espo\Core\Container $container)
+    {
+        $this->container = $container;
+    }
 
-include "bootstrap.php";
-
-$app = new \Espo\Core\Application();
-$entityManager = $app->getContainer()->get('entityManager');
-
-$authToken = $entityManager->getRepository('AuthToken')->where([
-    'token' => $token,
-    'isActive' => true,
-])->findOne();
-
-if (!$authToken) exit;
-if (!$authToken->get('userId')) exit;
-
-$userId = $authToken->get('userId');
-
-$user = $entityManager->getEntity('User', $userId);
-if (!$user) exit;
-
-ob_end_clean();
-
-echo $user->id;
-
-exit;
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+}

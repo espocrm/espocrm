@@ -212,6 +212,12 @@ class Application
         $dataManager->clearCache();
     }
 
+    public function runCommand(string $command)
+    {
+        $consoleCommandManager = $this->getContainer()->get('consoleCommandManager');
+        return $consoleCommandManager->run($command);
+    }
+
     public function isInstalled()
     {
         $config = $this->getConfig();

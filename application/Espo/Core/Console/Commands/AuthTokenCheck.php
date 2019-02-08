@@ -27,9 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') die('Daemon can be run only via CLI.');
+namespace Espo\Core\Console\Commands;
 
-include "bootstrap.php";
+class AuthTokenCheck extends Base
+{
+    public function run()
+    {
+        $token = isset($_SERVER['argv'][2]) ? trim($_SERVER['argv'][2]) : null;
+        if (empty($token)) return;
 
-$app = new \Espo\Core\Application();
-$app->runDaemon();
+        $entityManager = $this->getContainer()->get('entityManager');
+
+        $authToken = $entityManager->getRepository('AuthToken')->where([
+            'token' => $token,
+            'isActive' => true,
+        ])->findOne();
+
+        if (!$authToken) return;
+        if (!$authToken->get('userId')) return;
+
+        $userId = $authToken->get('userId');
+
+        $user = $entityManager->getEntity('User', $userId);
+        if (!$user) return;
+
+        return $user->id;
+    }
+}

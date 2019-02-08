@@ -27,9 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') die('Daemon can be run only via CLI.');
+if (substr(php_sapi_name(), 0, 3) != 'cli') exit;
+
+ob_start();
+
+$command = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : null;
+if (empty($command)) exit;
 
 include "bootstrap.php";
-
 $app = new \Espo\Core\Application();
-$app->runDaemon();
+$result = $app->runCommand($command);
+
+if (is_string($result)) {
+    ob_end_clean();
+    echo $result;
+}
+exit;
