@@ -50,7 +50,7 @@ class SubtractionType extends \Espo\Core\Formula\Functions\Base
         $result = $this->evaluate($item->value[0]);
         $part = $this->evaluate($item->value[1]);
         if (!is_float($part) && !is_int($part)) {
-            $part = intval($part);
+            $part = floatval($part);
         }
         $result -= $part;
 

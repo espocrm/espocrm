@@ -48,7 +48,7 @@ class SummationType extends \Espo\Core\Formula\Functions\Base
             $part = $this->evaluate($subItem);
 
             if (!is_float($part) && !is_int($part)) {
-                $part = intval($part);
+                $part = floatval($part);
             }
 
             $result += $part;

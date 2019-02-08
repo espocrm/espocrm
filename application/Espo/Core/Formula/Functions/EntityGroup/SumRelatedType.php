@@ -118,6 +118,6 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
             return 0;
         }
 
-        return $rowList[0]['SUM:' . $field];
+        return floatval($rowList[0]['SUM:' . $field]);
     }
 }
