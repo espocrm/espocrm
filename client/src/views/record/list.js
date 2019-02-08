@@ -406,6 +406,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
         selectAllResult: function () {
             this.allResultIsChecked = true;
 
+            this.hideActions();
+
             this.$el.find('input.record-checkbox').prop('checked', true).attr('disabled', 'disabled');
             this.$el.find('input.select-all').prop('checked', true);
 
@@ -926,13 +928,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.addMassAction('printPdf');
             }
 
-            if (this.collection.url !== this.entityType) {
-                this.removeAllResultMassAction('massUpdate');
-                this.removeAllResultMassAction('remove');
-                this.removeAllResultMassAction('export');
-            }
-
             this.setupMassActionItems();
+
+            if (this.collection.url !== this.entityType) {
+                Espo.Utils.clone(this.checkAllResultMassActionList).forEach(function (item) {
+                    this.removeAllResultMassAction(item);
+                }, this);
+            }
 
             if (this.selectable) {
                 this.events['click .list a.link'] = function (e) {
