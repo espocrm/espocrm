@@ -876,6 +876,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
             (this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []).forEach(function (item) {
+                if (this.collection.url !== this.entityType) return;
                 if (~this.massActionList.indexOf(item)) {
                     var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
                     var acl = defs.acl;
