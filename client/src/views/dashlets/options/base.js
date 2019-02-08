@@ -120,7 +120,9 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 }
             });
 
-            this.header = this.getLanguage().translate('Dashlet Options') + ': ' + this.getLanguage().translate(this.name, 'dashlets');
+            this.header =
+                this.getLanguage().translate('Dashlet Options') + ': ' +
+                Handlebars.Utils.escapeExpression(this.getLanguage().translate(this.name, 'dashlets'));
         },
 
         setupBeforeFinal: function () {},
