@@ -5174,10 +5174,10 @@ Flotr.addPlugin('hit', {
         }
       }
       if (n.mouse.autoPositionVertical) {
-        if (n.yaxis.d2p(n.y) > this.plotHeight * 2 / 3) {
-          p = 'n';
-        } else {
+        if (this.plotHeight - n.yaxis.d2p(n.y) > this.plotHeight * 3 / 4) {
           p = 's';
+        } else {
+          p = 'n';
         }
       }
       // EspoCRM fix end
