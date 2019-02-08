@@ -5156,7 +5156,7 @@ Flotr.addPlugin('hit', {
           x: (this.plotWidth)/2,
           y: (this.plotHeight)/2
         },
-        radius = (Math.min(this.canvasWidth, this.canvasHeight) * s.pie.sizeRatio) / 2,
+        radius = (Math.min(this.canvasWidth, this.canvasHeight) * s.pie.sizeRatio), // EspoCRM fix line
         bisection = n.sAngle<n.eAngle ? (n.sAngle + n.eAngle) / 2: (n.sAngle + n.eAngle + 2* Math.PI) / 2;
       
       pos += 'bottom:' + (m - top - center.y - Math.sin(bisection) * radius/2 + this.canvasHeight) + 'px;top:auto;';
@@ -5171,6 +5171,13 @@ Flotr.addPlugin('hit', {
           p = 'w';
         } else {
           p = 'e';
+        }
+      }
+      if (n.mouse.autoPositionVertical) {
+        if (n.yaxis.d2p(n.y) > this.plotHeight * 2 / 3) {
+          p = 'n';
+        } else {
+          p = 's';
         }
       }
       // EspoCRM fix end

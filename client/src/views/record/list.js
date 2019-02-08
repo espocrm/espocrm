@@ -406,6 +406,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
         selectAllResult: function () {
             this.allResultIsChecked = true;
 
+            this.hideActions();
+
             this.$el.find('input.record-checkbox').prop('checked', true).attr('disabled', 'disabled');
             this.$el.find('input.select-all').prop('checked', true);
 
@@ -905,6 +907,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
             (this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []).forEach(function (item) {
+                if (this.collection.url !== this.entityType) return;
                 if (~this.massActionList.indexOf(item)) {
                     var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
                     var acl = defs.acl;
@@ -954,23 +957,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.addMassAction('printPdf');
             }
 
+
             if (this.options.unlinkMassAction && this.collection) {
                 this.addMassAction('unlink', false, true);
             }
 
-            if (this.collection.url !== this.entityType) {
-                this.removeAllResultMassAction('massUpdate');
-                this.removeAllResultMassAction('remove');
-                this.removeAllResultMassAction('export');
-            }
+            this.setupMassActionItems();
 
-            if (this.getUser().isAdmin() && this.collection.url == this.entityType) {
+            if (this.getUser().isAdmin()) {
                 if (this.getMetadata().get(['formula', this.entityType, 'beforeSaveCustomScript'])) {
                     this.addMassAction('recalculateFormula', true);
                 }
             }
 
-            this.setupMassActionItems();
+            if (this.collection.url !== this.entityType) {
+                Espo.Utils.clone(this.checkAllResultMassActionList).forEach(function (item) {
+                    this.removeAllResultMassAction(item);
+                }, this);
+            }
 
             Espo.Utils.clone(this.massActionList).forEach(function (item) {
                 var propName = 'massAction' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
