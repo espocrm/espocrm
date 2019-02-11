@@ -2323,13 +2323,6 @@ class Base
 
         if (!empty($params['orderBy'])) {
             $sortByField = $params['orderBy'];
-            $sortByFieldType = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortByField, 'type']);
-
-            if ($sortByFieldType === 'currency') {
-                if (!in_array($sortByField . 'Converted', $attributeList)) {
-                    $attributeList[] = $sortByField . 'Converted';
-                }
-            }
 
             $sortByAttributeList = $this->getFieldManagerUtil()->getAttributeList($this->getEntityType(), $sortByField);
             foreach ($sortByAttributeList as $attribute) {

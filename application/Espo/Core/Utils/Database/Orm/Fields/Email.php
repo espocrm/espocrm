@@ -37,7 +37,10 @@ class Email extends Base
             $entityName => array(
                 'fields' => array(
                     $fieldName => array(
-                        'select' => 'emailAddresses.name',
+                        'select' => [
+                            'sql' => 'emailAddresses.name',
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                        ],
                         'fieldType' => 'email',
                         'where' =>
                         array (
@@ -80,7 +83,10 @@ class Email extends Base
                                 'distinct' => true
                             )
                         ),
-                        'orderBy' => 'emailAddresses.lower {direction}',
+                        'orderBy' => [
+                            'sql' => 'emailAddresses.lower {direction}',
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                        ],
                     ),
                     $fieldName .'Data' => array(
                         'type' => 'text',

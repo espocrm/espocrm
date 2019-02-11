@@ -113,9 +113,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function handleSelectParams(&$params)
     {
-        $this->handleEmailAddressParams($params);
-        $this->handlePhoneNumberParams($params);
-        $this->handleCurrencyParams($params);
     }
 
     protected function handleCurrencyParams(&$params)

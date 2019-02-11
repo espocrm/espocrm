@@ -201,8 +201,8 @@ abstract class Base
         }
 
         if (empty($params['aggregation'])) {
-            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength']);
-            $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
+            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength'], $params);
+            $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order'], $params);
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
@@ -273,7 +273,7 @@ abstract class Base
         if (!empty($params['groupBy']) && is_array($params['groupBy'])) {
             $arr = array();
             foreach ($params['groupBy'] as $field) {
-                $arr[] = $this->convertComplexExpression($entity, $field);
+                $arr[] = $this->convertComplexExpression($entity, $field, false, $params);
             }
             $groupByPart = implode(', ', $arr);
         }
@@ -414,7 +414,7 @@ abstract class Base
         return $result;
     }
 
-    protected function convertComplexExpression($entity, $field, $distinct = false)
+    protected function convertComplexExpression($entity, $field, $distinct = false, &$params = null)
     {
         $function = null;
         $relName = null;
@@ -451,7 +451,7 @@ abstract class Base
             $part = $relName . '.' . $part;
         } else {
             if (!empty($entity->fields[$field]['select'])) {
-                $part = $entity->fields[$field]['select'];
+                $part = $this->getAttributeSql($entity, $field, 'select', $params);
             } else {
                 $part = $this->toDb($entityType) . '.' . $part;
             }
@@ -462,7 +462,54 @@ abstract class Base
         return $part;
     }
 
-    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null)
+    protected function getAttributeSql(IEntity $entity, $attribute, $type, &$params = null)
+    {
+        $fieldDefs = $entity->fields[$attribute];
+
+        if (is_string($fieldDefs[$type])) {
+            $part = $fieldDefs[$type];
+        } else {
+            if (!empty($fieldDefs[$type]['sql'])) {
+                $part = $fieldDefs[$type]['sql'];
+            } else {
+                $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($attribute);
+                if ($type === 'orderBy') {
+                    $part .= ' {direction}';
+                }
+            }
+        }
+
+        if ($params) {
+            if (!empty($fieldDefs[$type]['leftJoins'])) {
+                foreach ($fieldDefs[$type]['leftJoins'] as $j) {
+                    $jAlias = $this->obtainJoinAlias($j);
+                    foreach ($params['leftJoins'] as $jE) {
+                        $jEAlias = $this->obtainJoinAlias($jE);
+                        if ($jEAlias === $jAlias) {
+                            continue 2;
+                        }
+                    }
+                    $params['leftJoins'][] = $j;
+                }
+            }
+            if (!empty($fieldDefs[$type]['joins'])) {
+                foreach ($fieldDefs[$type]['joins'] as $j) {
+                    $jAlias = $this->obtainJoinAlias($j);
+                    foreach ($params['joins'] as $jE) {
+                        $jEAlias = $this->obtainJoinAlias($jE);
+                        if ($jEAlias === $jAlias) {
+                            continue 2;
+                        }
+                    }
+                    $params['joins'][] = $j;
+                }
+            }
+        }
+
+        return $part;
+    }
+
+    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, &$params = null)
     {
         $select = "";
         $arr = array();
@@ -500,11 +547,11 @@ abstract class Base
                     }
                 } else {
                     if (!array_key_exists($attribute[0], $entity->fields)) {
-                        $part = $this->convertComplexExpression($entity, $attribute[0], $distinct);
+                        $part = $this->convertComplexExpression($entity, $attribute[0], $distinct, $params);
                     } else {
                         $fieldDefs = $entity->fields[$attribute[0]];
                         if (!empty($fieldDefs['select'])) {
-                            $part = $fieldDefs['select'];
+                            $part = $this->getAttributeSql($entity, $attribute[0], 'select', $params);
                         } else {
                             if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['noSelect'])) {
                                 continue;
@@ -521,13 +568,13 @@ abstract class Base
             if (array_key_exists($attribute, $entity->fields)) {
                 $fieldDefs = $entity->fields[$attribute];
             } else {
-                $part = $this->convertComplexExpression($entity, $attribute, $distinct);
+                $part = $this->convertComplexExpression($entity, $attribute, $distinct, $params);
                 $arr[] = $part . ' AS `' . $this->sanitizeAlias($attribute) . '`';
                 continue;
             }
 
             if (!empty($fieldDefs['select'])) {
-                $fieldPath = $fieldDefs['select'];
+                $fieldPath = $this->getAttributeSql($entity, $attribute, 'select', $params);
             } else {
                 if (!empty($fieldDefs['notStorable'])) {
                     continue;
@@ -612,7 +659,7 @@ abstract class Base
         return implode(' ', $joinsArr);
     }
 
-    protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null, $useColumnAlias = false) {
+    protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null, $useColumnAlias = false, &$params = null) {
 
         if (!is_null($orderBy)) {
             if (is_array($orderBy)) {
@@ -625,7 +672,7 @@ abstract class Base
                         if (!empty($item[1])) {
                             $orderInternal = $item[1];
                         }
-                        $arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal);
+                        $arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal, false, $params);
                     }
                 }
                 return implode(", ", $arr);
@@ -664,7 +711,8 @@ abstract class Base
                 $fieldDefs = $entity->fields[$orderBy];
             }
             if (!empty($fieldDefs) && !empty($fieldDefs['orderBy'])) {
-                $orderPart = str_replace('{direction}', $order, $fieldDefs['orderBy']);
+                $orderPart = $this->getAttributeSql($entity, $orderBy, 'orderBy', $params);
+                $orderPart = str_replace('{direction}', $order, $orderPart);
                 return "{$orderPart}";
             } else {
                 if ($useColumnAlias) {
@@ -677,9 +725,9 @@ abstract class Base
         }
     }
 
-    protected function getOrder(IEntity $entity, $orderBy = null, $order = null)
+    protected function getOrder(IEntity $entity, $orderBy = null, $order = null, &$params = null)
     {
-        $orderPart = $this->getOrderPart($entity, $orderBy, $order);
+        $orderPart = $this->getOrderPart($entity, $orderBy, $order, false, $params);
         if ($orderPart) {
             return "ORDER BY " . $orderPart;
         }
@@ -910,7 +958,7 @@ abstract class Base
                 }
 
                 if (strpos($field, '.') !== false || strpos($field, ':') !== false) {
-                    $leftPart = $this->convertComplexExpression($entity, $field);
+                    $leftPart = $this->convertComplexExpression($entity, $field, false, $params);
                     $isComplex = true;
                 }
 
@@ -1050,7 +1098,7 @@ abstract class Base
                     } else if (!is_array($value)) {
                         if (!is_null($value)) {
                             if ($isNotValue) {
-                                $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
+                                $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value, $params);
                             } else {
                                 $whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
                             }
@@ -1093,7 +1141,10 @@ abstract class Base
     {
         if (is_array($j)) {
             if (count($j)) {
-                $joinAlias = $j[1];
+                if ($j[1])
+                    $joinAlias = $j[1];
+                else
+                    $joinAlias = $j[0];
             } else {
                 $joinAlias = $j[0];
             }
@@ -1486,6 +1537,4 @@ abstract class Base
                 );
         }
     }
-
 }
-

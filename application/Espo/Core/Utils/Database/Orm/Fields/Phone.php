@@ -37,7 +37,10 @@ class Phone extends Base
             $entityName => array(
                 'fields' => array(
                     $fieldName => array(
-                        'select' => 'phoneNumbers.name',
+                        'select' => [
+                            'sql' => 'phoneNumbers.name',
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                        ],
                         'fieldType' => 'phone',
                         'where' =>
                         array (
@@ -80,26 +83,15 @@ class Phone extends Base
                                 'distinct' => true
                             )
                         ),
-                        'orderBy' => 'phoneNumbers.name {direction}',
+                        'orderBy' => [
+                            'sql' => 'phoneNumbers.name {direction}',
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                        ],
                     ),
                     $fieldName .'Data' => array(
                         'type' => 'text',
                         'notStorable' => true
                     ),
-                    $fieldName .'IsOptedOut' => [
-                        'type' => 'bool',
-                        'notStorable' => true,
-                        'select' => 'phoneNumbers.opt_out',
-                        'where' => [
-                            '= TRUE' => [
-                                'sql' => 'phoneNumbers.opt_out = true AND phoneNumbers.opt_out IS NOT NULL'
-                            ],
-                            '= FALSE' => [
-                                'sql' => 'phoneNumbers.opt_out = false OR phoneNumbers.opt_out IS NULL'
-                            ]
-                        ],
-                        'orderBy' => 'phoneNumbers.opt_out {direction}'
-                    ],
                     $fieldName . 'Numeric' => [
                         'type' => 'varchar',
                         'notStorable' => true,

@@ -38,8 +38,34 @@
             "type": "varchar",
             "maxLength": 100,
             "notStorable": true,
-            "select": "accountContact.role",
-            "orderBy": "accountContact.role {direction}",
+            "select": {
+                "sql": "accountContact.role",
+                "leftJoins": [
+                    [
+                        "AccountContact",
+                        "accountContact",
+                        {
+                            "contact.id:": "accountContact.contactId",
+                            "contact.accountId:": "accountContact.accountId",
+                            "accountContact.deleted": true
+                        }
+                    ]
+                ]
+            },
+            "orderBy": {
+                "sql": "accountContact.role {direction}",
+                "leftJoins": [
+                    [
+                        "AccountContact",
+                        "accountContact",
+                        {
+                            "contact.id:": "accountContact.contactId",
+                            "contact.accountId:": "accountContact.accountId",
+                            "accountContact.deleted": true
+                        }
+                    ]
+                ]
+            },
             "where": {
                 "LIKE": {
                     "leftJoins": ["accounts"],
@@ -138,8 +164,34 @@
         "accountIsInactive": {
             "type": "bool",
             "notStorable": true,
-            "select": "accountContact.is_inactive",
-            "orderBy": "accountContact.is_inactive {direction}",
+            "select": {
+                "sql": "accountContact.is_inactive",
+                "leftJoins": [
+                    [
+                        "AccountContact",
+                        "accountContact",
+                        {
+                            "contact.id:": "accountContact.contactId",
+                            "contact.accountId:": "accountContact.accountId",
+                            "accountContact.deleted": true
+                        }
+                    ]
+                ]
+            },
+            "orderBy": {
+                "sql": "accountContact.is_inactive {direction}",
+                "leftJoins": [
+                    [
+                        "AccountContact",
+                        "accountContact",
+                        {
+                            "contact.id:": "accountContact.contactId",
+                            "contact.accountId:": "accountContact.accountId",
+                            "accountContact.deleted": true
+                        }
+                    ]
+                ]
+            },
             "where": {
                 "=": {
                     "leftJoins": ["accounts"],
