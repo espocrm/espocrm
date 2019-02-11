@@ -40,7 +40,10 @@ class CommandManager
 
     public function run(string $command)
     {
+        $command = ucfirst(\Espo\Core\Utils\Util::hyphenToCamelCase($command));
+
         $className = '\\Espo\\Core\\Console\\Commands\\' . $command;
+        $className = $this->container->get('metadata')->get(['app', 'consoleCommands', $command, 'className'], $className);
         if (!class_exists($className)) {
             $msg = "Command '{$command}' does not exist.";
             echo $msg . "\n";

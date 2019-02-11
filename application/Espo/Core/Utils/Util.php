@@ -38,7 +38,7 @@ class Util
      */
     protected static $separator = DIRECTORY_SEPARATOR;
 
-    protected static $reservedWords = array('Case');
+    protected static $reservedWordList = ['Case'];
 
 
     /**
@@ -49,6 +49,16 @@ class Util
     public static function getSeparator()
     {
         return static::$separator;
+    }
+
+    public static function camelCaseToUnderscore(string $string) : string
+    {
+        return static::toUnderScore($string);
+    }
+
+    public static function hyphenToCamelCase(string $string) : string
+    {
+        return self::toCamelCase($string, '-');
     }
 
 
@@ -134,11 +144,6 @@ class Util
     public static function toUnderScore($name)
     {
         return static::fromCamelCase($name, '_');
-    }
-
-    public static function camelCaseToUnderscore($value)
-    {
-        return static::toUnderScore($value);
     }
 
     /**
@@ -299,7 +304,7 @@ class Util
      */
     public static function normilizeClassName($name)
     {
-        if (in_array($name, self::$reservedWords)) {
+        if (in_array($name, self::$reservedWordList)) {
             $name .= 'Obj';
         }
         return $name;
@@ -313,7 +318,7 @@ class Util
      */
     public static function normilizeScopeName($name)
     {
-        foreach (self::$reservedWords as $reservedWord) {
+        foreach (self::$reservedWordList as $reservedWord) {
             if ($reservedWord.'Obj' == $name) {
                 return $reservedWord;
             }
