@@ -269,13 +269,13 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
-
         $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
             'lastName' => 'test',
             'opportunityAmount' => 100,
             'opportunityAmountCurrency' => null,
         ]);
+
+        $this->assertTrue(true);
     }
 
     public function testRequiredCurrency3()

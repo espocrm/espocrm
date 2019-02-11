@@ -838,6 +838,15 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
         }
+
+        foreach ($this->getFieldManagerUtil()->getEntityTypeFieldList($this->entityType) as $field) {
+            $type = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, 'type');
+            if ($type === 'currency') {
+                if ($entity->get($field) && !$entity->get($field . 'Currency')) {
+                    $entity->set($field . 'Currency', $this->getConfig()->get('defaultCurrency'));
+                }
+            }
+        }
     }
 
     public function createEntity($data) //TODO Remove in 5.8
