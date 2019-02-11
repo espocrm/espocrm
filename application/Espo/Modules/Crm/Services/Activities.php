@@ -159,13 +159,13 @@ class Activities extends \Espo\Core\Services\Base
     {
         $selectManager = $this->getSelectManagerFactory()->create('Call');
 
-        $selectParams = array(
+        $selectParams = [
             'select' => [
                 'id',
                 'name',
                 ['dateStart', 'dateStart'],
                 ['dateEnd', 'dateEnd'],
-                ['VALUE:', 'dateStart'],
+                ['VALUE:', 'dateStartDate'],
                 ['VALUE:', 'dateEndDate'],
                 ['VALUE:Call', '_scope'],
                 'assignedUserId',
@@ -177,30 +177,30 @@ class Activities extends \Espo\Core\Services\Base
                 ['VALUE:', 'hasAttachment']
             ],
             'leftJoins' => [['users', 'usersLeft']],
-            'whereClause' => array(
-            ),
+            'whereClause' => [
+            ],
             'customJoin' => ''
-        );
+        ];
 
-        $where = array(
+        $where = [
             'usersLeftMiddle.userId' => $entity->id
-        );
+        ];
 
         if ($entity->isPortal() && $entity->get('contactId')) {
             $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
             $selectParams['distinct'] = true;
             $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
-            $selectParams['whereClause'][] = array(
+            $selectParams['whereClause'][] = [
                 'OR' => $where
-            );
+            ];
         } else {
             $selectParams['whereClause'][] = $where;
         }
 
         if (!empty($statusList)) {
-            $selectParams['whereClause'][] = array(
+            $selectParams['whereClause'][] = [
                 'status' => $statusList
-            );
+            ];
         }
 
         $selectManager->applyAccess($selectParams);
