@@ -370,6 +370,9 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                         this.trigger('change')
                     }.bind(this),
                 },
+                onCreateLink: function (link) {
+                    return link;
+                },
                 toolbar: this.toolbar,
                 buttons: this.buttons
             };
