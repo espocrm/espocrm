@@ -59,7 +59,7 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
         ],
 
         setup: function () {
-            this.header = this.translate('Add Dashlet');
+            this.headerHtml = this.translate('Add Dashlet');
 
             var dashletList = Object.keys(this.getMetadata().get('dashlets') || {}).sort(function (v1, v2) {
                 return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
@@ -85,5 +85,3 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
         },
     });
 });
-
-

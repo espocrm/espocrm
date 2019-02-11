@@ -32,8 +32,6 @@ Espo.define('views/modals/duplicate', 'views/modal', function (Dep) {
 
         cssName: 'duplicate-modal',
 
-        header: false,
-
         template: 'modals/duplicate',
 
         data: function () {
@@ -65,4 +63,3 @@ Espo.define('views/modals/duplicate', 'views/modal', function (Dep) {
 
     });
 });
-

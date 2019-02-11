@@ -32,8 +32,6 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
         cssName: 'mass-update',
 
-        header: false,
-
         template: 'modals/mass-update',
 
         data: function () {
@@ -76,7 +74,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.selectData = this.options.selectData;
             this.byWhere = this.options.byWhere;
 
-            this.header = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
+            this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
 
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {

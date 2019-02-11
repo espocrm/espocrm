@@ -36,7 +36,7 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.header = this.translate('Send Test', 'labels', 'MassEmail');
+            this.headerHtml = this.translate('Send Test', 'labels', 'MassEmail');
 
             var model = new Model();
 

@@ -150,13 +150,13 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 });
             }
 
-            this.header = '';
+            this.headerHtml = '';
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
             if (this.model) {
-                this.header += Handlebars.Utils.escapeExpression(this.model.get('name'));
-                if (this.header) {
-                    this.header += ' &raquo ';
+                this.headerHtml += Handlebars.Utils.escapeExpression(this.model.get('name'));
+                if (this.headerHtml) {
+                    this.headerHtml += ' &raquo ';
                 }
             }
 
@@ -165,13 +165,13 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
                 title = Handlebars.Utils.escapeExpression(this.options.title);
                 title = title.replace(/&amp;raquo/, '&raquo;');
             }
-            this.header += title || this.getLanguage().translate(this.link, 'links', this.model.name);
+            this.headerHtml += title || this.getLanguage().translate(this.link, 'links', this.model.name);
 
             if (this.options.listViewUrl) {
-                this.header = '<a href="'+this.options.listViewUrl+'">'+this.header+'</a>';
+                this.headerHtml = '<a href="'+this.options.listViewUrl+'">'+this.headerHtml+'</a>';
             }
 
-            this.header = iconHtml + this.header;
+            this.headerHtml = iconHtml + this.headerHtml;
 
             this.waitForView('list');
             if (this.searchPanel) {

@@ -51,12 +51,12 @@ Espo.define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
 
             this.statusField = this.options.statusField;
 
-            this.header = '';
-            this.header += this.getLanguage().translate(this.scope, 'scopeNames');
+            this.headerHtml = '';
+            this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNames');
             if (this.model.get('name')) {
-                this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(this.model.get('name'));
+                this.headerHtml += ' &raquo; ' + Handlebars.Utils.escapeExpression(this.model.get('name'));
             }
-            this.header = iconHtml + this.header;
+            this.headerHtml = iconHtml + this.headerHtml;
 
             this.buttonList = [
                 {

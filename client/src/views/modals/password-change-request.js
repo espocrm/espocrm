@@ -48,7 +48,7 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
                 }
             ];
 
-            this.header = this.translate('Password Change Request', 'labels', 'User');
+            this.headerHtml = this.translate('Password Change Request', 'labels', 'User');
         },
 
         actionSubmit: function () {

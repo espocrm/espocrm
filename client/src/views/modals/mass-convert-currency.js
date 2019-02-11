@@ -47,7 +47,7 @@ Espo.define('views/modals/mass-convert-currency', ['views/modal', 'model'], func
         ],
 
         setup: function () {
-            this.header = this.translate(this.options.entityType, 'scopeNamesPlural') + ' &raquo ' + this.translate('convertCurrency', 'massActions');
+            this.headerHtml = this.translate(this.options.entityType, 'scopeNamesPlural') + ' &raquo ' + this.translate('convertCurrency', 'massActions');
             this.addButton({
                 name: 'convert',
                 text: this.translate('Update'),

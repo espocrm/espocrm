@@ -89,9 +89,8 @@ Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
                 final: true
             });
 
-            this.header = this.translate('Access');
+            this.headerHtml = this.translate('Access');
         }
 
     });
 });
-

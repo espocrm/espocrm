@@ -41,7 +41,7 @@ Espo.define('views/email/modals/body-plain', 'views/modal', function (Dep) {
                 'label': 'Close'
             });
 
-            this.header = Handlebars.Utils.escapeExpression(this.model.get('name'));
+            this.headerHtml = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
             this.createView('bodyPlain', 'views/fields/text', {
                 el: this.options.el + ' .field[data-name="bodyPlain"]',
@@ -58,4 +58,3 @@ Espo.define('views/email/modals/body-plain', 'views/modal', function (Dep) {
 
     });
 });
-

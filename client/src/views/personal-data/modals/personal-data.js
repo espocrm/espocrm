@@ -46,8 +46,8 @@ Espo.define('views/personal-data/modals/personal-data', ['views/modal'], functio
                 }
             ];
 
-            this.header = this.getLanguage().translate('Personal Data');
-            this.header += ': ' + Handlebars.Utils.escapeExpression(this.model.get('name'));
+            this.headerHtml = this.getLanguage().translate('Personal Data');
+            this.headerHtml += ': ' + Handlebars.Utils.escapeExpression(this.model.get('name'));
 
             if (this.getAcl().check(this.model, 'edit')) {
                 this.buttonList.unshift({
