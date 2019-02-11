@@ -36,6 +36,8 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         header: false,
 
+        headerHtml: null,
+
         dialog: null,
 
         containerSelector: null,
@@ -68,6 +70,7 @@ Espo.define('views/modal', 'view', function (Dep) {
             var containerSelector = this.containerSelector = '#' + id;
 
             this.header = this.options.header || this.header;
+            this.headerHtml = this.options.headerHtml || this.headerHtml;
 
             this.options = this.options || {};
 
@@ -127,9 +130,11 @@ Espo.define('views/modal', 'view', function (Dep) {
                     modalBodyDiffHeight = this.getThemeManager().getParam('modalBodyDiffHeight');
                 }
 
+                var headerHtml = this.headerHtml || this.header;
+
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
-                    header: this.header,
+                    header: headerHtml,
                     container: containerSelector,
                     body: '',
                     buttons: buttonListExt,

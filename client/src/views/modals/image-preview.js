@@ -32,8 +32,6 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
 
         cssName: 'image-preview',
 
-        header: true,
-
         template: 'modals/image-preview',
 
         size: '',
@@ -61,7 +59,7 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
 
         setup: function () {
             this.buttonList = [];
-            this.header = '&nbsp;';
+            this.headerHtml = '&nbsp;';
 
             this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);
 

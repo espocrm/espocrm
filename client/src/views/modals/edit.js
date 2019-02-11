@@ -32,8 +32,6 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
         cssName: 'edit-modal',
 
-        header: false,
-
         template: 'modals/edit',
 
         saveDisabled: false,
@@ -95,22 +93,22 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             this.id = this.options.id;
 
             if (!this.id) {
-                this.header = this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope);
+                this.headerHtml = this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope);
             } else {
-                this.header = this.getLanguage().translate('Edit');
-                this.header += ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
+                this.headerHtml = this.getLanguage().translate('Edit');
+                this.headerHtml += ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
             }
 
             if (!this.fullFormDisabled) {
                 if (!this.id) {
-                    this.header = '<a href="#' + this.scope + '/create" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                    this.headerHtml = '<a href="#' + this.scope + '/create" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
                 } else {
-                    this.header = '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                    this.headerHtml = '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
                 }
             }
 
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-            this.header = iconHtml + this.header;
+            this.headerHtml = iconHtml + this.headerHtml;
 
             this.sourceModel = this.model;
 

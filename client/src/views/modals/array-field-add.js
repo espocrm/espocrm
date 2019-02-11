@@ -63,4 +63,3 @@ Espo.define('views/modals/array-field-add', 'views/modal', function (Dep) {
 
     });
 });
-

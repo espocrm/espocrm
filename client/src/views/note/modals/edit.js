@@ -34,5 +34,3 @@ Espo.define('views/note/modals/edit', 'views/modals/edit', function (Dep) {
 
     });
 });
-
-

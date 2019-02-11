@@ -55,7 +55,7 @@ Espo.define('views/role/modals/add-field', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-            this.header = this.translate('Add Field');
+            this.headerHtml = this.translate('Add Field');
 
             var scope = this.scope = this.options.scope;
 

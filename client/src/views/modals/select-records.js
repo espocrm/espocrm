@@ -128,11 +128,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 }
             }
 
-            this.header = '';
+            this.headerHtml = '';
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-            this.header += this.translate('Select') + ': ';
-            this.header += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
-            this.header = iconHtml + this.header;
+            this.headerHtml += this.translate('Select') + ': ';
+            this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            this.headerHtml = iconHtml + this.headerHtml;
 
             this.waitForView('list');
             if (this.searchPanel) {

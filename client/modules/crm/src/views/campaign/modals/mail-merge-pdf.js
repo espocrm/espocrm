@@ -40,7 +40,7 @@ Espo.define('crm:views/campaign/modals/mail-merge-pdf', ['views/modal', 'model']
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.header = this.translate('Generate Mail Merge PDF', 'labels', 'Campaign');
+            this.headerHtml = this.translate('Generate Mail Merge PDF', 'labels', 'Campaign');
             var linkList = ['contacts', 'leads', 'accounts', 'users'];
             this.linkList = [];
             linkList.forEach(function (link) {

@@ -56,8 +56,8 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
                 }
             ];
 
-            this.header = this.getLanguage().translate('LastViewed', 'scopeNamesPlural');
-            this.header = '<a href="#LastViewed" class="action" data-action="listView">' + this.header + '</a>';
+            this.headerHtml = this.getLanguage().translate('LastViewed', 'scopeNamesPlural');
+            this.headerHtml = '<a href="#LastViewed" class="action" data-action="listView">' + this.headerHtml + '</a>';
 
             this.waitForView('list');
 

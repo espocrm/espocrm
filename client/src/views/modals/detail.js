@@ -32,8 +32,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         cssName: 'detail-modal',
 
-        header: false,
-
         template: 'modals/detail',
 
         editDisabled: false,
@@ -209,19 +207,19 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var model = this.model;
             var scope = this.getScope();
 
-            this.header = '';
+            this.headerHtml = '';
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
-            this.header += this.getLanguage().translate(scope, 'scopeNames');
+            this.headerHtml += this.getLanguage().translate(scope, 'scopeNames');
 
             if (model.get('name')) {
-                this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
+                this.headerHtml += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
             }
             if (!this.fullFormDisabled) {
-                this.header = '<a href="#' + scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                this.headerHtml = '<a href="#' + scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
             }
 
-            this.header = iconHtml + this.header;
+            this.headerHtml = iconHtml + this.headerHtml;
 
             if (!this.editDisabled) {
                 var editAccess = this.getAcl().check(model, 'edit', true);

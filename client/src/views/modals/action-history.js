@@ -30,8 +30,6 @@ Espo.define('views/modals/action-history', ['views/modal', 'search-manager'], fu
 
     return Dep.extend({
 
-        header: false,
-
         scope: 'ActionHistoryRecord',
 
         className: 'dialog dialog-record',
@@ -52,8 +50,8 @@ Espo.define('views/modals/action-history', ['views/modal', 'search-manager'], fu
 
             this.scope = this.entityType = this.options.scope || this.scope;
 
-            this.header = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
-            this.header = '<a href="#ActionHistoryRecord" class="action" data-action="listView">' + this.header + '</a>';
+            this.headerHtml = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            this.headerHtml = '<a href="#ActionHistoryRecord" class="action" data-action="listView">' + this.headerHtml + '</a>';
 
             this.waitForView('list');
 
@@ -111,4 +109,3 @@ Espo.define('views/modals/action-history', ['views/modal', 'search-manager'], fu
         },
     });
 });
-

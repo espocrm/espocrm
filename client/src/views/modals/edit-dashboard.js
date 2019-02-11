@@ -88,7 +88,7 @@ Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (D
                 model: model
             });
 
-            this.header = this.translate('Edit Dashboard');
+            this.headerHtml = this.translate('Edit Dashboard');
 
             this.dashboardLayout = this.options.dashboardLayout;
         },

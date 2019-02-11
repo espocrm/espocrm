@@ -64,7 +64,7 @@ Espo.define('views/email-folder/modals/select-folder', 'views/modal', function (
         ],
 
         setup: function () {
-            this.header = '';
+            this.headerHtml = '';
             this.wait(true);
 
             this.getCollectionFactory().create('EmailFolder', function (collection) {
@@ -79,5 +79,3 @@ Espo.define('views/email-folder/modals/select-folder', 'views/modal', function (
         },
     });
 });
-
-

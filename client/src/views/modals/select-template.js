@@ -32,8 +32,6 @@ Espo.define('views/modals/select-template', ['views/modals/select-records', 'sea
 
         multiple: false,
 
-        header: false,
-
         createButton: false,
 
         searchPanel: false,
@@ -58,4 +56,3 @@ Espo.define('views/modals/select-template', ['views/modals/select-records', 'sea
         }
     });
 });
-

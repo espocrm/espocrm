@@ -54,4 +54,3 @@ Espo.define('views/email/modals/detail', ['views/modals/detail', 'views/email/de
 
     });
 });
-

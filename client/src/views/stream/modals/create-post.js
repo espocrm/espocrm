@@ -33,7 +33,7 @@ Espo.define('views/stream/modals/create-post', 'views/modal', function (Dep) {
         _template: '<div class="record">{{{record}}}</div>',
 
         setup: function () {
-            this.header = this.translate('Create Post');
+            this.headerHtml = this.translate('Create Post');
 
             this.buttonList = [
                 {

@@ -54,7 +54,7 @@ Espo.define('views/modals/save-filters', ['views/modal', 'model'], function (Dep
                 }
             ];
 
-            this.header = this.translate('Save Filters');
+            this.headerHtml = this.translate('Save Filters');
 
             var model = new Model();
             this.createView('name', 'views/fields/varchar', {

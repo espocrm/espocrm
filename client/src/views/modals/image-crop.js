@@ -44,8 +44,6 @@ Espo.define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function 
         },
 
         setup: function () {
-            this.header = null;
-
             this.buttonList = [
                 {
                     name: 'crop',
