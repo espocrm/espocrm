@@ -414,44 +414,55 @@ abstract class Base
         return $result;
     }
 
-    protected function convertComplexExpression($entity, $field, $distinct = false, &$params = null)
+    protected function convertComplexExpression($entity, $attribute, $distinct = false, &$params = null)
     {
         $function = null;
         $relName = null;
 
         $entityType = $entity->getEntityType();
 
-        if (strpos($field, ':')) {
-            $dilimeterPosition = strpos($field, ':');
-            $function = substr($field, 0, $dilimeterPosition);
+        if (strpos($attribute, ':')) {
+            $dilimeterPosition = strpos($attribute, ':');
+            $function = substr($attribute, 0, $dilimeterPosition);
 
             if (in_array($function, $this->matchFunctionList)) {
-                return $this->convertMatchExpression($entity, $field);
+                return $this->convertMatchExpression($entity, $attribute);
             }
 
-            $field = substr($field, $dilimeterPosition + 1);
+            $attribute = substr($attribute, $dilimeterPosition + 1);
         }
         if (!empty($function)) {
             $function = preg_replace('/[^A-Za-z0-9_]+/', '', $function);
         }
 
-        if (strpos($field, '.')) {
-            list($relName, $field) = explode('.', $field);
+        if (strpos($attribute, '.')) {
+            list($relName, $attribute) = explode('.', $attribute);
         }
 
         if (!empty($relName)) {
             $relName = preg_replace('/[^A-Za-z0-9_]+/', '', $relName);
         }
-        if (!empty($field)) {
-            $field = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
+        if (!empty($attribute)) {
+            $attribute = preg_replace('/[^A-Za-z0-9_]+/', '', $attribute);
         }
 
-        $part = $this->toDb($field);
+        $part = $this->toDb($attribute);
         if ($relName) {
             $part = $relName . '.' . $part;
+
+            $foreignEntityType = $entity->getRelationParam($relName, 'entity');
+            if ($foreignEntityType) {
+                $foreignSeed = $this->getSeed($foreignEntityType);
+                if ($foreignSeed) {
+                    $selectForeign = $foreignSeed->getAttributeParam($attribute, 'selectForeign');
+                    if (is_array($selectForeign)) {
+                        $part = $this->getAttributeSql($foreignSeed, $attribute, 'selectForeign', $params, $relName);
+                    }
+                }
+            }
         } else {
-            if (!empty($entity->fields[$field]['select'])) {
-                $part = $this->getAttributeSql($entity, $field, 'select', $params);
+            if (!empty($entity->fields[$attribute]['select'])) {
+                $part = $this->getAttributeSql($entity, $attribute, 'select', $params);
             } else {
                 $part = $this->toDb($entityType) . '.' . $part;
             }
@@ -462,7 +473,7 @@ abstract class Base
         return $part;
     }
 
-    protected function getAttributeSql(IEntity $entity, $attribute, $type, &$params = null)
+    protected function getAttributeSql(IEntity $entity, $attribute, $type, &$params = null, $alias = null)
     {
         $fieldDefs = $entity->fields[$attribute];
 
@@ -471,6 +482,9 @@ abstract class Base
         } else {
             if (!empty($fieldDefs[$type]['sql'])) {
                 $part = $fieldDefs[$type]['sql'];
+                if ($alias) {
+                    $part = str_replace('{alias}', $alias, $part);
+                }
             } else {
                 $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($attribute);
                 if ($type === 'orderBy') {
@@ -489,6 +503,17 @@ abstract class Base
                             continue 2;
                         }
                     }
+                    if ($alias) {
+                        if (count($j) >= 3) {
+                            $conditions = [];
+                            foreach ($j[2] as $k => $value) {
+                                $value = str_replace('{alias}', $alias, $value);
+                                $conditions[$k] = $value;
+                            }
+                            $j[2] = $conditions;
+                        }
+                    }
+
                     $params['leftJoins'][] = $j;
                 }
             }

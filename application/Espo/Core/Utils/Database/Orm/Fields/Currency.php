@@ -60,6 +60,8 @@ class Currency extends Base
             ]
         ];
 
+        $foreignAlias = "{$alias}{$entityType}Foreign";
+
         $params = $this->getFieldParams($fieldName);
         if (!empty($params['notStorable'])) {
             $defs[$entityType]['fields'][$fieldName]['notStorable'] = true;
@@ -69,6 +71,18 @@ class Currency extends Base
                 'select' => [
                     'sql' => $part . " * {$alias}.rate",
                     'leftJoins' => $leftJoins,
+                ],
+                'selectForeign' => [
+                    'sql' => "{alias}.{$currencyColumnName} * {$foreignAlias}.rate",
+                    'leftJoins' => [
+                        [
+                            'Currency',
+                            $foreignAlias,
+                            [
+                                $foreignAlias . '.id:' => "{alias}.{$fieldName}Currency"
+                            ]
+                        ]
+                    ],
                 ],
                 'where' =>
                 [
@@ -85,7 +99,7 @@ class Currency extends Base
                 'orderBy' => [
                     'sql' => $converedFieldName . " {direction}",
                     'leftJoins' => $leftJoins,
-                ]
+                ],
             ];
 
             $defs[$entityType]['fields'][$fieldName]['orderBy'] = [
