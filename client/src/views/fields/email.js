@@ -442,13 +442,13 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
         fetch: function () {
             var data = {};
 
-            var adderssData = this.fetchEmailAddressData() || [];
-            data[this.dataFieldName] = adderssData;
+            var addressData = this.fetchEmailAddressData() || [];
+            data[this.dataFieldName] = addressData;
             data[this.name] = null;
             data[this.isOptedOutFieldName] = false;
 
             var primaryIndex = 0;
-            adderssData.forEach(function (item, i) {
+            addressData.forEach(function (item, i) {
                 if (item.primary) {
                     primaryIndex = i;
                     if (item.optOut) {
@@ -458,14 +458,14 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 }
             }, this);
 
-            if (adderssData.length && primaryIndex > 0) {
-                var t = adderssData[0];
-                adderssData[0] = adderssData[primaryIndex];
-                adderssData[primaryIndex] = t;
+            if (addressData.length && primaryIndex > 0) {
+                var t = addressData[0];
+                addressData[0] = addressData[primaryIndex];
+                addressData[primaryIndex] = t;
             }
 
-            if (adderssData.length) {
-                data[this.name] = adderssData[0].emailAddress;
+            if (addressData.length) {
+                data[this.name] = addressData[0].emailAddress;
             } else {
                 data[this.isOptedOutFieldName] = null;
             }
