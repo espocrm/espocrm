@@ -224,7 +224,7 @@ class Note extends Record
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
         }
-        return parant::link($id, $link, $foreignId);
+        return parent::link($id, $link, $foreignId);
     }
 
     public function unlink($id, $link, $foreignId)
@@ -232,7 +232,7 @@ class Note extends Record
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
         }
-        return parant::unlink($id, $link, $foreignId);
+        return parent::unlink($id, $link, $foreignId);
     }
 
     public function processNoteAclJob($data)
