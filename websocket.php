@@ -33,11 +33,12 @@ include "bootstrap.php";
 
 $app = new \Espo\Core\Application();
 
-$categoryList = array_keys($app->getContainer()->get('metadata')->get(['app', 'webSocket', 'categories'], []));
+$categoriesData = $app->getContainer()->get('metadata')->get(['app', 'webSocket', 'categories'], []);
+
 $phpExecutablePath = $app->getContainer()->get('config')->get('phpExecutablePath');
 
 $loop = \React\EventLoop\Factory::create();
-$pusher = new \Espo\Core\WebSocket\Pusher($categoryList, $phpExecutablePath);
+$pusher = new \Espo\Core\WebSocket\Pusher($categoriesData, $phpExecutablePath);
 
 $context = new \React\ZMQ\Context($loop);
 $pull = $context->getSocket(\ZMQ::SOCKET_PULL);

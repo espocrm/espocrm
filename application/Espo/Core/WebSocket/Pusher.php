@@ -36,6 +36,8 @@ class Pusher implements WampServerInterface
 {
     private $categoryList;
 
+    protected $categoriesData;
+
     protected $isDebugMode = false;
 
     protected $connectionIdUserIdMap = [];
@@ -48,9 +50,11 @@ class Pusher implements WampServerInterface
 
     private $phpExecutablePath;
 
-    public function __construct(array $categoryList = [], $phpExecutablePath = null, $isDebugMode = false)
+    public function __construct(array $categoriesData = [], $phpExecutablePath = null, $isDebugMode = false)
     {
-        $this->categoryList = $categoryList;
+        $this->categoryList = array_keys($categoriesData);
+        $this->categoriesData = $categoriesData;
+
         $this->phpExecutablePath = $phpExecutablePath ?: (new \Symfony\Component\Process\PhpExecutableFinder)->find();
         $this->isDebugMode = $isDebugMode;
     }
@@ -60,7 +64,7 @@ class Pusher implements WampServerInterface
         $topicId = $topic->getId();
         if (!$topicId) return;
 
-        if (!$this->isCategoryAllowed($topicId)) return;
+        if (!$this->isTopicAllowed($topicId)) return;
 
         $connectionId = $connection->resourceId;
 
@@ -68,6 +72,14 @@ class Pusher implements WampServerInterface
         if (!$userId) return;
 
         if (!isset($this->connectionIdTopicIdListMap[$connectionId])) $this->connectionIdTopicIdListMap[$connectionId] = [];
+
+        $checkCommand = $this->getAccessCheckCommandForTopic($connection, $topic);
+        if ($checkCommand) {
+            $checkResult = shell_exec($checkCommand);
+            if ($checkResult !== 'true') {
+                return;
+            }
+        }
 
         if (!in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
             if ($this->isDebugMode) echo "add topic {$topicId} for user {$userId}\n";
@@ -80,7 +92,7 @@ class Pusher implements WampServerInterface
         $topicId = $topic->getId();
         if (!$topicId) return;
 
-        if (!$this->isCategoryAllowed($topicId)) return;
+        if (!$this->isTopicAllowed($topicId)) return;
 
         $connectionId = $connection->resourceId;
 
@@ -96,8 +108,55 @@ class Pusher implements WampServerInterface
         }
     }
 
-    protected function isCategoryAllowed($category)
+    protected function getParamsFromTopicId(string $topicId) : array
     {
+        $arr = explode('.', $topicId);
+        $category = $arr[0];
+
+        $params = [];
+
+        if (array_key_exists('paramList', $this->categoriesData[$category])) {
+            foreach ($this->categoriesData[$category]['paramList'] as $i => $item) {
+                if (isset($arr[$i + 1])) {
+                    $params[$item] = $arr[$i + 1];
+                }
+            }
+        }
+
+        return $params;
+    }
+
+    protected function getAccessCheckCommandForTopic(ConnectionInterface $connection, $topic) : ?string
+    {
+        $topicId = $topic->getId();
+
+        $params = $this->getParamsFromTopicId($topicId);
+        $params['userId'] = $this->getUserIdByConnection($connection);
+        if (!$params['userId']) {
+            $connection->close();
+            return null;
+        }
+
+        $category = $this->getTopicCategory($topic);
+        if (!array_key_exists('accessCheckCommand', $this->categoriesData[$category])) return null;
+
+        $command = $this->phpExecutablePath . " command.php " . $this->categoriesData[$category]['accessCheckCommand'];
+        foreach ($params as $key => $value) {
+            str_replace(':' . $key, $value, $command);
+        }
+
+        return $command;
+    }
+
+    protected function getTopicCategory($topic)
+    {
+        list($category) = explode('.', $topic->getId());
+        return $category;
+    }
+
+    protected function isTopicAllowed($topicId)
+    {
+        list($category) = explode('.', $topicId);
         return in_array($category, $this->categoryList);
     }
 
