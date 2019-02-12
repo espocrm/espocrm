@@ -9,7 +9,7 @@ DirectoryIndex index.php index.html
 
   # PROTECTED DIRECTORIES
   RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^/?(data|api)/ - [F]
+  RewriteRule ^/?(data|api|client)/ - [F]
 
   RewriteRule ^/?data/config\.php$ - [F]
   RewriteRule ^/?data/logs/ - [F]
@@ -19,6 +19,7 @@ DirectoryIndex index.php index.html
   RewriteRule ^/?application/ - [F]
   RewriteRule ^/?custom/ - [F]
   RewriteRule ^/?vendor/ - [F]
+  RewriteRule ^/?client/?$ - [F]
   #END PROTECTED DIRECTORIES
 
   RewriteRule .* - [E=HTTP_ESPO_CGI_AUTH:%{HTTP:Authorization}]
