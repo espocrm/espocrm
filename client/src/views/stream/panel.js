@@ -174,6 +174,37 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     this.wait(false);
                 }, this);
             }, this);
+
+            if (!this.defs.hidden) {
+                this.subscribeToWebSocket();
+            }
+
+            this.once('remove', function () {
+                if (this.isSubscribedToWebSocked) {
+                    this.unsubscribeFromWebSocket();
+                }
+            }.bind(this));
+        },
+
+        subscribeToWebSocket: function () {
+            if (!this.getConfig().get('useWebSocket')) return;
+
+            var topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
+            if (this.getUser().isPortal()) {
+                topic += '.' + this.getUser().get('portalId');
+            }
+            this.streamUpdateWebSocketTopic = topic;
+
+            this.isSubscribedToWebSocked = true;
+
+            this.getHelper().webSocketManager.subscribe(topic, function (t, data) {
+                if (data.createdById === this.getUser().id) return;
+                this.collection.fetchNew();
+            }.bind(this))
+        },
+
+        unsubscribeFromWebSocket: function () {
+            this.getHelper().webSocketManager.unsubscribe(this.streamUpdateWebSocketTopic);
         },
 
         setupTitle: function () {

@@ -38,14 +38,16 @@ class Submission
         $this->config = $config;
     }
 
-    public function submit(string $category, ?string $userId = null, $data = null)
+    public function submit(string $topic, ?string $userId = null, $data = null)
     {
         if (!$data) $data = (object) [];
 
         $dsn = $this->config->get('webSocketSubmissionDsn', 'tcp://localhost:5555');
 
-        $data->userId = $userId;
-        $data->category = $category;
+        if ($userId) {
+            $data->userId = $userId;
+        }
+        $data->topicId = $topic;
 
         try {
             $context = new \ZMQContext();

@@ -27,33 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') die('WebSocket can be run only via CLI.');
+namespace Espo\Hooks\Note;
 
-include "bootstrap.php";
+use Espo\ORM\Entity;
 
-$app = new \Espo\Core\Application();
+class WebSocketSubmit extends \Espo\Core\Hooks\Base
+{
+    public static $order = 20;
 
-$categoriesData = $app->getContainer()->get('metadata')->get(['app', 'webSocket', 'categories'], []);
+    protected function init()
+    {
+        $this->addDependency('webSocketSubmission');
+    }
 
-$phpExecutablePath = $app->getContainer()->get('config')->get('phpExecutablePath');
-$isDebugMode = (bool) $app->getContainer()->get('config')->get('webSocketDebugMode');
+    public function afterSave(Entity $entity, array $options = [])
+    {
+        if (!$this->getConfig()->get('useWebSocket')) return;
+        if (!$entity->isNew()) return;
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
+        if (!$parentId) return;
+        if (!$parentType) return;
 
-$loop = \React\EventLoop\Factory::create();
-$pusher = new \Espo\Core\WebSocket\Pusher($categoriesData, $phpExecutablePath, $isDebugMode);
+        $data = (object) [
+            'createdById' => $entity->get('createdById'),
+        ];
 
-$context = new \React\ZMQ\Context($loop);
-$pull = $context->getSocket(\ZMQ::SOCKET_PULL);
-$pull->bind('tcp://127.0.0.1:5555');
-$pull->on('message', [$pusher, 'onMessageReceive']);
-
-$webSocket = new \React\Socket\Server('0.0.0.0:8080', $loop);
-$webServer = new \Ratchet\Server\IoServer(
-    new \Ratchet\Http\HttpServer(
-        new \Ratchet\WebSocket\WsServer(
-            new \Ratchet\Wamp\WampServer($pusher)
-        )
-    ),
-    $webSocket
-);
-
-$loop->run();
+        $topic = "streamUpdate.{$parentType}.{$parentId}";
+        $this->getInjection('webSocketSubmission')->submit($topic, null, $data);
+    }
+}

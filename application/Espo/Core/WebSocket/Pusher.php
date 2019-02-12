@@ -48,9 +48,11 @@ class Pusher implements WampServerInterface
 
     protected $connections = [];
 
+    protected $topicHash = [];
+
     private $phpExecutablePath;
 
-    public function __construct(array $categoriesData = [], $phpExecutablePath = null, $isDebugMode = false)
+    public function __construct(array $categoriesData = [], ?string $phpExecutablePath = null, bool $isDebugMode = false)
     {
         $this->categoryList = array_keys($categoriesData);
         $this->categoriesData = $categoriesData;
@@ -74,9 +76,11 @@ class Pusher implements WampServerInterface
         if (!isset($this->connectionIdTopicIdListMap[$connectionId])) $this->connectionIdTopicIdListMap[$connectionId] = [];
 
         $checkCommand = $this->getAccessCheckCommandForTopic($connection, $topic);
+
         if ($checkCommand) {
             $checkResult = shell_exec($checkCommand);
             if ($checkResult !== 'true') {
+                if ($this->isDebugMode) echo "check access faied for topic {$topicId} for user {$userId}\n";
                 return;
             }
         }
@@ -85,6 +89,8 @@ class Pusher implements WampServerInterface
             if ($this->isDebugMode) echo "add topic {$topicId} for user {$userId}\n";
             $this->connectionIdTopicIdListMap[$connectionId][] = $topicId;
         }
+
+        $this->topicHash[$topicId] = $topic;
     }
 
     public function onUnSubscribe(ConnectionInterface $connection, $topic)
@@ -119,6 +125,8 @@ class Pusher implements WampServerInterface
             foreach ($this->categoriesData[$category]['paramList'] as $i => $item) {
                 if (isset($arr[$i + 1])) {
                     $params[$item] = $arr[$i + 1];
+                } else {
+                    $params[$item] = '';
                 }
             }
         }
@@ -142,7 +150,7 @@ class Pusher implements WampServerInterface
 
         $command = $this->phpExecutablePath . " command.php " . $this->categoriesData[$category]['accessCheckCommand'];
         foreach ($params as $key => $value) {
-            str_replace(':' . $key, $value, $command);
+            $command = str_replace(':' . $key, $value, $command);
         }
 
         return $command;
@@ -281,28 +289,34 @@ class Pusher implements WampServerInterface
     {
         $data = json_decode($dataString);
 
-        if (!property_exists($data, 'category')) return;
-        if (!property_exists($data, 'userId')) return;
+        if (!property_exists($data, 'topicId')) return;
 
-        $userId = $data->userId;
-        $category = $data->category;
+        $userId = $data->userId ?? null;
+        $topicId = $data->topicId;
 
-        if (!$userId || !$category) return;
+        if (!$topicId) return;
+        if (!$this->isTopicAllowed($topicId)) return;
 
-        if (!in_array($category, $this->categoryList)) return;
+        if ($userId) {
+            foreach ($this->getConnectionIdListByUserId($userId) as $connectionId) {
+                if (!isset($this->connections[$connectionId])) continue;
+                if (!isset($this->connectionIdTopicIdListMap[$connectionId])) continue;
 
-        foreach ($this->getConnectionIdListByUserId($userId) as $connectionId) {
-            if (!isset($this->connections[$connectionId])) continue;
-            if (!isset($this->connectionIdTopicIdListMap[$connectionId])) continue;
+                $connection = $this->connections[$connectionId];
 
-            $connection = $this->connections[$connectionId];
-
-            if (in_array($category, $this->connectionIdTopicIdListMap[$connectionId])) {
-                if ($this->isDebugMode) echo "send {$category} for connection {$connectionId}\n";
-                $connection->event($category, $data);
+                if (in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
+                    if ($this->isDebugMode) echo "send {$topicId} for connection {$connectionId}\n";
+                    $connection->event($topicId, $data);
+                }
+            }
+        } else {
+            $topic = $this->topicHash[$topicId] ?? null;
+            if ($topic) {
+                $topic->broadcast($data);
+                if ($this->isDebugMode) echo "send {$topicId} to all\n";
             }
         }
 
-        if ($this->isDebugMode) echo "onMessage {$category} for {$userId}\n";
+        if ($this->isDebugMode) echo "onMessage {$topicId} for {$userId}\n";
     }
 }
