@@ -50,7 +50,7 @@ class Import extends \Espo\Services\Record
         $this->addDependency('fileStorageManager');
     }
 
-    protected $dateFormatsMap = array(
+    protected $dateFormatsMap = [
         'YYYY-MM-DD' => 'Y-m-d',
         'DD-MM-YYYY' => 'd-m-Y',
         'MM-DD-YYYY' => 'm-d-Y',
@@ -59,18 +59,18 @@ class Import extends \Espo\Services\Record
         'DD.MM.YYYY' => 'd.m.Y',
         'MM.DD.YYYY' => 'm.d.Y',
         'YYYY.MM.DD' => 'Y.m.d',
-    );
+    ];
 
-    protected $timeFormatsMap = array(
+    protected $timeFormatsMap = [
         'HH:mm' => 'H:i',
         'HH:mm:ss' => 'H:i:s',
         'hh:mm a' => 'h:i a',
         'hh:mma' => 'h:ia',
         'hh:mm A' => 'h:iA',
         'hh:mmA' => 'h:iA',
-    );
+    ];
 
-    protected $services = array();
+    protected $services = [];
 
     protected function getSelectManagerFactory()
     {
@@ -109,11 +109,11 @@ class Import extends \Espo\Services\Record
         $importedCount = $this->getRepository()->countRelated($entity, 'imported');
         $duplicateCount = $this->getRepository()->countRelated($entity, 'duplicates');
         $updatedCount = $this->getRepository()->countRelated($entity, 'updated');
-        $entity->set(array(
+        $entity->set([
             'importedCount' => $importedCount,
             'duplicateCount' => $duplicateCount,
             'updatedCount' => $updatedCount
-        ));
+        ]);
     }
 
     public function findLinked($id, $link, $params)
@@ -153,7 +153,7 @@ class Import extends \Espo\Services\Record
 
     protected function readCsvString(&$string, $CSV_SEPARATOR = ';', $CSV_ENCLOSURE = '"', $CSV_LINEBREAK = "\n")
     {
-        $o = array();
+        $o = [];
         $cnt = strlen($string);
         $esc = false;
         $escesc = false;
@@ -333,7 +333,7 @@ class Import extends \Espo\Services\Record
         $this->import($entityType, $importAttributeList, $attachmentId, $params, $importId, $user);
     }
 
-    public function import($scope, array $importAttributeList, $attachmentId, array $params = array(), $importId = null, $user = null)
+    public function import($scope, array $importAttributeList, $attachmentId, array $params = [], $importId = null, $user = null)
     {
         $delimiter = ',';
         if (!empty($params['delimiter'])) {
@@ -378,10 +378,10 @@ class Import extends \Espo\Services\Record
             }
         } else {
             $import = $this->getEntityManager()->getEntity('Import');
-            $import->set(array(
+            $import->set([
                 'entityType' => $scope,
                 'fileId' => $attachmentId
-            ));
+            ]);
             $import->set('status', 'In Process');
         }
 
@@ -472,14 +472,14 @@ class Import extends \Espo\Services\Record
 
         $this->getEntityManager()->saveEntity($import);
 
-        return array(
+        return [
             'id' => $import->id,
             'countCreated' => count($result['importedIds']),
             'countUpdated' => count($result['updatedIds']),
-        );
+        ];
     }
 
-    public function importRow($scope, array $importAttributeList, array $row, array $params = array(), $user)
+    public function importRow($scope, array $importAttributeList, array $row, array $params = [], $user)
     {
         $id = null;
         $action = 'create';
@@ -493,7 +493,7 @@ class Import extends \Espo\Services\Record
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
             $updateByAttributeList = [];
-            $whereClause = array();
+            $whereClause = [];
             if (!empty($params['updateBy']) && is_array($params['updateBy'])) {
                 foreach ($params['updateBy'] as $i) {
                     if (array_key_exists($i, $importAttributeList)) {
@@ -672,7 +672,7 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        $result = array();
+        $result = [];
 
         try {
             if ($isNew) {
@@ -684,11 +684,11 @@ class Import extends \Espo\Services\Record
             if ($entity->id) {
                 $sql = $this->getEntityManager()->getRepository($entity->getEntityType())->deleteFromDb($entity->id, true);
             }
-            $saveResult = $this->getEntityManager()->saveEntity($entity, array(
+            $saveResult = $this->getEntityManager()->saveEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
                 'import' => true
-            ));
+            ]);
             if ($saveResult) {
                 $result['id'] = $entity->id;
                 if ($isNew) {
@@ -750,7 +750,7 @@ class Import extends \Espo\Services\Record
         return ['firstName' => $firstName, 'lastName' => $lastName];
     }
 
-    protected function parseValue(Entity $entity, $attribute, $value, $params = array())
+    protected function parseValue(Entity $entity, $attribute, $value, $params = [])
     {
         $decimalMark = '.';
         if (!empty($params['decimalMark'])) {
