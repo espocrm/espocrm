@@ -687,7 +687,8 @@ class Import extends \Espo\Services\Record
             $saveResult = $this->getEntityManager()->saveEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
-                'import' => true
+                'import' => true,
+                'silent' => !empty($params['silentMode']),
             ]);
             if ($saveResult) {
                 $result['id'] = $entity->id;

@@ -140,6 +140,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             this.formData.personNameFormat = $('#import-person-name-format').val();
             this.formData.skipDuplicateChecking = $('#skip-duplicate-checking').get(0).checked;
             this.formData.idleMode = $('#import-idle-mode').get(0).checked;
+            this.formData.silentMode = $('#import-silent-mode').get(0).checked;
 
             this.getParentView().formData = this.formData;
             this.getParentView().changeStep(2);
@@ -149,6 +150,8 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             $('#import-header-row').get(0).checked = this.formData.headerRow || false;
 
             $('#import-idle-mode').get(0).checked = this.formData.idleMode || false;
+
+            $('#import-silent-mode').get(0).checked = this.formData.silentMode || false;
 
             $('#skip-duplicate-checking').get(0).checked = this.formData.skipDuplicateChecking || false;
 
