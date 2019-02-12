@@ -31,9 +31,9 @@ namespace Espo\Core\Console\Commands;
 
 class AuthTokenCheck extends Base
 {
-    public function run()
+    public function run($options, $flagList, $argumentList)
     {
-        $token = isset($_SERVER['argv'][2]) ? trim($_SERVER['argv'][2]) : null;
+        $token = $argumentList[0] ?? null;
         if (empty($token)) return;
 
         $entityManager = $this->getContainer()->get('entityManager');

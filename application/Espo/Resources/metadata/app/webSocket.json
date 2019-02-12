@@ -3,7 +3,7 @@
         "newNotification": {},
         "streamUpdate": {
             "paramList": ["scope", "id", "portalId"],
-            "accessCheckCommand": "AclCheck :userId :scope :id stream :portalId"
+            "accessCheckCommand": "AclCheck --userId=:userId --scope=:scope --id=:id --action=stream --portalId=:portalId"
         }
     }
 }
