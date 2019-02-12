@@ -53,6 +53,7 @@ class EntryPointManager
         'corePath' => 'application/Espo/EntryPoints',
         'modulePath' => 'application/Espo/Modules/{*}/EntryPoints',
         'customPath' => 'custom/Espo/Custom/EntryPoints',
+	'customModulePath' => 'custom/Espo/Custom/Modules/{*}/EntryPoints'
     );
 
 

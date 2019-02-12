@@ -105,6 +105,14 @@ class ClassParser
                 }
             }
 
+            if (isset($paths['customModulePath'])) {
+                foreach ($this->getMetadata()->getModuleList() as $moduleName) {
+                    $path = str_replace('{*}', $moduleName, $paths['customModulePath']);
+
+                    $data = array_merge($data, $this->getClassNameHash($path));
+                }
+            }
+
             if (isset($paths['customPath'])) {
                 $data = array_merge($data, $this->getClassNameHash($paths['customPath']));
             }
