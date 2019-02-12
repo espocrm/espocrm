@@ -120,6 +120,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $validateSkipFieldList = [];
 
+    protected $findDuplicatesSelectAttributeList = ['id', 'name'];
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -797,11 +799,15 @@ class Record extends \Espo\Core\Services\Base
     protected function processDuplicateCheck(Entity $entity, $data)
     {
         if (empty($data->skipDuplicateCheck) && empty($data->forceDuplicate)) {
-            $duplicates = $this->checkEntityForDuplicate($entity, $data);
-            if (!empty($duplicates)) {
+            $duplicateList = $this->findDuplicates($entity, $data);
+            if (!empty($duplicateList)) {
+                $data = [];
+                foreach ($duplicateList as $e) {
+                    $data[$e->id] = $e->getValueMap();
+                }
                 $reason = [
                     'reason' => 'Duplicate',
-                    'data' => $duplicates
+                    'data' => $data
                 ];
                 throw new Conflict(json_encode($reason));
             }
@@ -1881,10 +1887,27 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
     {
+        return null;
+    }
+
+    public function checkIsDuplicate(Entity $entity) : bool
+    {
+        $where = $this->getDuplicateWhereClause($entity, (object) []);
+
+        if ($where) {
+            if ($entity->id) {
+                $where['id!='] = $entity->id;
+            }
+            $duplicate = $this->getRepository()->select(['id'])->where($where)->findOne();
+            if ($duplicate) {
+                return true;
+            }
+        }
+
         return false;
     }
 
-    public function checkEntityForDuplicate(Entity $entity, $data = null)
+    public function findDuplicates(Entity $entity, $data = null) : ?\Espo\ORM\EntityCollection
     {
         if (!$data) {
             $data = (object) [];
@@ -1896,16 +1919,16 @@ class Record extends \Espo\Core\Services\Base
             if ($entity->id) {
                 $where['id!='] = $entity->id;
             }
-            $duplicateList = $this->getRepository()->where($where)->limit(0, 20)->find();
+            $select = $this->findDuplicatesSelectAttributeList;
+
+            $duplicateList = $this->getRepository()->select($select)->where($where)->limit(0, 20)->find();
+
             if (count($duplicateList)) {
-                $result = array();
-                foreach ($duplicateList as $e) {
-                    $result[$e->id] = $e->getValues();
-                }
-                return $result;
+                return $duplicateList;
             }
         }
-        return false;
+
+        return null;
     }
 
     public function checkAttributeIsAllowedForExport($entity, $attribute, $isExportAllFields = false)

@@ -678,7 +678,7 @@ class Import extends \Espo\Services\Record
             if ($isNew) {
                 $isDuplicate = false;
                 if (empty($params['skipDuplicateChecking'])) {
-                    $isDuplicate = $recordService->checkEntityForDuplicate($entity);
+                    $isDuplicate = $recordService->checkIsDuplicate($entity);
                 }
             }
             if ($entity->id) {
