@@ -163,7 +163,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function beforeRemove(Entity $entity, array $options = array())
+    protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
@@ -179,7 +179,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function afterRemove(Entity $entity, array $options = array())
+    protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
@@ -192,7 +192,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $hookData = array(
@@ -203,13 +203,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    public function remove(Entity $entity, array $options = array())
+    public function remove(Entity $entity, array $options = [])
     {
         $result = parent::remove($entity, $options);
         return $result;
     }
 
-    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
 
@@ -226,7 +226,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
 
@@ -242,7 +242,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function beforeSave(Entity $entity, array $options = array())
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
@@ -277,10 +277,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    public function save(Entity $entity, array $options = array())
+    public function save(Entity $entity, array $options = [])
     {
         $nowString = date('Y-m-d H:i:s', time());
-        $restoreData = array();
+        $restoreData = [];
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {

@@ -72,7 +72,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             if (this.options.params && this.options.params.rootUrl) {
                 o.rootUrl = this.options.params.rootUrl;
             }
-            this.createView('record', this.getRecordViewName(), o);
+            return this.createView('record', this.getRecordViewName(), o);
         },
 
         getRecordViewName: function () {

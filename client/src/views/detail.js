@@ -74,6 +74,16 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.setupHeader();
             this.setupRecord();
 
+            if (this.model.get('deleted')) {
+                this.menuDisabled = true;
+
+                this.listenTo(this.model, 'after:restore-deleted', function () {
+                    this.setupRecord().then(function () {
+                        this.reRender();
+                    }.bind(this));
+                }, this);
+            }
+
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
                 if (this.model.has('isFollowed')) {
                     this.handleFollowButton();
@@ -114,7 +124,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             if (this.options.params && this.options.params.rootUrl) {
                 o.rootUrl = this.options.params.rootUrl;
             }
-            this.createView('record', this.getRecordViewName(), o);
+            if (this.model.get('deleted')) {
+                o.readOnly = true;
+            }
+            return this.createView('record', this.getRecordViewName(), o);
         },
 
         getRecordViewName: function () {
@@ -169,6 +182,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
             if (name === '') {
                 name = this.model.id;
+            }
+
+            if (this.model.get('deleted')) {
+                name = '<span style="text-decoration: line-through;">' + name + '</span>';
             }
 
             var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;

@@ -528,4 +528,14 @@ class Record extends Base
 
         return $this->getRecordService()->massRecalculateFormula($this->getMassActionParamsFromData($data));
     }
+
+    public function postActionRestoreDeleted($params, $data, $request)
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        $id = $data->id ?? null;
+        if (!$id) throw new Forbidden();
+
+        return $this->getRecordService()->restoreDeleted($id);
+    }
 }

@@ -98,7 +98,7 @@ class RDB extends \Espo\ORM\Repository
         $this->listParams = [];
     }
 
-    protected function getNewEntity()
+    public function getNew() : ?Entity
     {
         $entity = $this->entityFactory->create($this->entityType);
         if ($entity) {
@@ -108,14 +108,15 @@ class RDB extends \Espo\ORM\Repository
         }
     }
 
-    protected function getEntityById($id)
+    public function getById($id, array $params = []) : ?Entity
     {
         $entity = $this->entityFactory->create($this->entityType);
-
         if (!$entity) return null;
 
-        $params = [];
-        $this->handleSelectParams($params);
+        if (empty($params['skipAdditionalSelectParams'])) {
+            $this->handleSelectParams($params);
+        }
+
         if ($this->getMapper()->selectById($entity, $id, $params)) {
             return $entity;
         }
@@ -123,12 +124,12 @@ class RDB extends \Espo\ORM\Repository
         return null;
     }
 
-    public function get($id = null)
+    public function get($id = null) : ?Entity
     {
-        if (empty($id)) {
-            return $this->getNewEntity();
+        if (is_null($id)) {
+            return $this->getNew();
         }
-        return $this->getEntityById($id);
+        return $this->getById($id);
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -169,6 +170,11 @@ class RDB extends \Espo\ORM\Repository
         $entity->setAsNotBeingSaved();
 
         return $result;
+    }
+
+    public function restoreDeleted($id)
+    {
+        return $this->getMapper()->restoreDeleted($this->entityType, $id);
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])

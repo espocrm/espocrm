@@ -257,10 +257,10 @@ class Record extends \Espo\Core\Services\Base
         $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
 
         if ($entity) {
-            $historyRecord->set(array(
+            $historyRecord->set([
                 'targetType' => $entity->getEntityType(),
                 'targetId' => $entity->id
-            ));
+            ]);
         }
 
         $this->getEntityManager()->saveEntity($historyRecord);
@@ -287,17 +287,26 @@ class Record extends \Espo\Core\Services\Base
 
     public function getEntity($id = null)
     {
-        $entity = $this->getRepository()->get($id);
-        if (!empty($entity) && !empty($id)) {
+        if (!is_null($id)) {
+            $selectParams = [];
+            if ($this->getUser()->isAdmin()) {
+                $selectParams['withDeleted'] = true;
+            }
+            $entity = $this->getRepository()->getById($id, $selectParams);
+        } else {
+            $entity = $this->getRepository()->getNew();
+        }
+
+        if ($entity && !is_null($id)) {
             $this->loadAdditionalFields($entity);
 
             if (!$this->getAcl()->check($entity, 'read')) {
                 throw new Forbidden();
             }
-        }
-        if (!empty($entity)) {
+
             $this->prepareEntityForOutput($entity);
         }
+
         return $entity;
     }
 
@@ -1222,6 +1231,20 @@ class Record extends \Espo\Core\Services\Base
             'collection' => $collection,
             'additionalData' => $additionalData
         ];
+    }
+
+    public function restoreDeleted(string $id)
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        $entity = $this->getRepository()->getById($id, ['withDeleted' => true]);
+
+        if (!$entity) throw new NotFound();
+        if (!$entity->get('deleted')) throw new Forbidden();
+
+        $this->getRepository()->restoreDeleted($entity->id);
+
+        return true;
     }
 
     public function getMaxSelectTextAttributeLength()
