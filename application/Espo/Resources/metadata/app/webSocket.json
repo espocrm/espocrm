@@ -2,8 +2,8 @@
     "categories": {
         "newNotification": {},
         "streamUpdate": {
-            "paramList": ["scope", "id", "portalId"],
-            "accessCheckCommand": "AclCheck --userId=:userId --scope=:scope --id=:id --action=stream --portalId=:portalId"
+            "paramList": ["scope", "id"],
+            "accessCheckCommand": "AclCheck --userId=:userId --scope=:scope --id=:id --action=stream"
         }
     }
 }

@@ -190,9 +190,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             if (!this.getConfig().get('useWebSocket')) return;
 
             var topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
-            if (this.getUser().isPortal()) {
-                topic += '.' + this.getUser().get('portalId');
-            }
             this.streamUpdateWebSocketTopic = topic;
 
             this.isSubscribedToWebSocked = true;

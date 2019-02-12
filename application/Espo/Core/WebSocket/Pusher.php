@@ -80,7 +80,7 @@ class Pusher implements WampServerInterface
         if ($checkCommand) {
             $checkResult = shell_exec($checkCommand);
             if ($checkResult !== 'true') {
-                if ($this->isDebugMode) echo "check access faied for topic {$topicId} for user {$userId}\n";
+                if ($this->isDebugMode) echo "check access failed for topic {$topicId} for user {$userId}\n";
                 return;
             }
         }
@@ -309,14 +309,16 @@ class Pusher implements WampServerInterface
                     $connection->event($topicId, $data);
                 }
             }
+
+            if ($this->isDebugMode) echo "onMessage {$topicId} for {$userId}\n";
         } else {
             $topic = $this->topicHash[$topicId] ?? null;
             if ($topic) {
                 $topic->broadcast($data);
                 if ($this->isDebugMode) echo "send {$topicId} to all\n";
             }
-        }
 
-        if ($this->isDebugMode) echo "onMessage {$topicId} for {$userId}\n";
+            if ($this->isDebugMode) echo "onMessage {$topicId} for all\n";
+        }
     }
 }
