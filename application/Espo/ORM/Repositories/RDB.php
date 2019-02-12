@@ -46,17 +46,17 @@ class RDB extends \Espo\ORM\Repository
     /**
      * @var array Where clause array. To be used in further find operation.
      */
-    protected $whereClause = array();
+    protected $whereClause = [];
 
     /**
      * @var array Having clause array.
      */
-    protected $havingClause = array();
+    protected $havingClause = [];
 
     /**
      * @var array Parameters to be used in further find operations.
      */
-    protected $listParams = array();
+    protected $listParams = [];
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
@@ -93,9 +93,9 @@ class RDB extends \Espo\ORM\Repository
 
     public function reset()
     {
-        $this->whereClause = array();
-        $this->havingClause = array();
-        $this->listParams = array();
+        $this->whereClause = [];
+        $this->havingClause = [];
+        $this->listParams = [];
     }
 
     protected function getNewEntity()
@@ -114,7 +114,7 @@ class RDB extends \Espo\ORM\Repository
 
         if (!$entity) return null;
 
-        $params = array();
+        $params = [];
         $this->handleSelectParams($params);
         if ($this->getMapper()->selectById($entity, $id, $params)) {
             return $entity;
@@ -131,15 +131,15 @@ class RDB extends \Espo\ORM\Repository
         return $this->getEntityById($id);
     }
 
-    protected function beforeSave(Entity $entity, array $options = array())
+    protected function beforeSave(Entity $entity, array $options = [])
     {
     }
 
-    protected function afterSave(Entity $entity, array $options = array())
+    protected function afterSave(Entity $entity, array $options = [])
     {
     }
 
-    public function save(Entity $entity, array $options = array())
+    public function save(Entity $entity, array $options = [])
     {
         $entity->setAsBeingSaved();
 
@@ -171,15 +171,15 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    protected function beforeRemove(Entity $entity, array $options = array())
+    protected function beforeRemove(Entity $entity, array $options = [])
     {
     }
 
-    protected function afterRemove(Entity $entity, array $options = array())
+    protected function afterRemove(Entity $entity, array $options = [])
     {
     }
 
-    public function remove(Entity $entity, array $options = array())
+    public function remove(Entity $entity, array $options = [])
     {
         $this->beforeRemove($entity, $options);
         $result = $this->getMapper()->delete($entity);
@@ -194,7 +194,7 @@ class RDB extends \Espo\ORM\Repository
         return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 
-    public function find(array $params = array())
+    public function find(array $params = [])
     {
         $params = $this->getSelectParams($params);
 
@@ -212,7 +212,7 @@ class RDB extends \Espo\ORM\Repository
         return $collection;
     }
 
-    public function findOne(array $params = array())
+    public function findOne(array $params = [])
     {
         $collection = $this->limit(0, 1)->find($params);
         if (count($collection)) {
@@ -231,7 +231,7 @@ class RDB extends \Espo\ORM\Repository
         return $collection;
     }
 
-    public function findRelated(Entity $entity, $relationName, array $params = array())
+    public function findRelated(Entity $entity, $relationName, array $params = [])
     {
         if (!$entity->id) {
             return [];
@@ -266,7 +266,7 @@ class RDB extends \Espo\ORM\Repository
         }
     }
 
-    public function countRelated(Entity $entity, $relationName, array $params = array())
+    public function countRelated(Entity $entity, $relationName, array $params = [])
     {
         if (!$entity->id) {
             return;
@@ -302,7 +302,7 @@ class RDB extends \Espo\ORM\Repository
         ));
     }
 
-    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
+    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         if (!$entity->id) {
             return;
@@ -343,7 +343,7 @@ class RDB extends \Espo\ORM\Repository
     }
 
 
-    public function unrelate(Entity $entity, $relationName, $foreign, array $options = array())
+    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
         if (!$entity->id) {
             return;
@@ -382,27 +382,27 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
     }
 
-    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
     }
 
-    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
     }
 
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
     }
 
-    protected function beforeMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    protected function beforeMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
     }
 
-    protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
     }
 
@@ -425,7 +425,7 @@ class RDB extends \Espo\ORM\Repository
         return null;
     }
 
-    public function massRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    public function massRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
         if (!$entity->id) {
             return;
@@ -445,7 +445,7 @@ class RDB extends \Espo\ORM\Repository
         return $this->find();
     }
 
-    public function count(array $params = array())
+    public function count(array $params = [])
     {
         if (empty($params['skipAdditionalSelectParams'])) {
             $this->handleSelectParams($params);
@@ -523,7 +523,7 @@ class RDB extends \Espo\ORM\Repository
         return $this;
     }
 
-    public function where($param1 = array(), $param2 = null)
+    public function where($param1 = [], $param2 = null)
     {
         if (is_array($param1)) {
             $this->whereClause = $param1 + $this->whereClause;
@@ -537,7 +537,7 @@ class RDB extends \Espo\ORM\Repository
         return $this;
     }
 
-    public function having($param1 = array(), $param2 = null)
+    public function having($param1 = [], $param2 = null)
     {
         if (is_array($param1)) {
             $this->havingClause = $param1 + $this->havingClause;
@@ -578,7 +578,7 @@ class RDB extends \Espo\ORM\Repository
         return $this;
     }
 
-    public function setListParams(array $params = array())
+    public function setListParams(array $params = [])
     {
         $this->listParams = $params;
     }
@@ -588,7 +588,7 @@ class RDB extends \Espo\ORM\Repository
         return $this->listParams;
     }
 
-    protected function getSelectParams(array $params = array())
+    protected function getSelectParams(array $params = [])
     {
         if (isset($params['whereClause'])) {
             $params['whereClause'] = $params['whereClause'];

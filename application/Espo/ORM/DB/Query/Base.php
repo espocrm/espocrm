@@ -36,7 +36,7 @@ use PDO;
 
 abstract class Base
 {
-    protected static $selectParamList = array(
+    protected static $selectParamList = [
         'select',
         'whereClause',
         'offset',
@@ -56,14 +56,14 @@ abstract class Base
         'customHaving',
         'skipTextColumns',
         'maxTextColumnsLength'
-    );
+    ];
 
-    protected static $sqlOperators = array(
+    protected static $sqlOperators = [
         'OR',
         'AND',
-    );
+    ];
 
-    protected static $comparisonOperators = array(
+    protected static $comparisonOperators = [
         '!=s' => 'NOT IN',
         '=s' => 'IN',
         '!=' => '<>',
@@ -74,7 +74,7 @@ abstract class Base
         '>' => '>',
         '<' => '<',
         '=' => '='
-    );
+    ];
 
     protected $functionList = [
         'COUNT',
@@ -145,11 +145,11 @@ abstract class Base
 
     protected $pdo;
 
-    protected $fieldsMapCache = array();
+    protected $fieldsMapCache = [];
 
-    protected $aliasesCache = array();
+    protected $aliasesCache = [];
 
-    protected $seedCache = array();
+    protected $seedCache = [];
 
     public function __construct(PDO $pdo, EntityFactory $entityFactory)
     {
@@ -165,7 +165,7 @@ abstract class Base
         return $this->seedCache[$entityType];
     }
 
-    public function createSelectQuery($entityType, array $params = array(), $deleted = false)
+    public function createSelectQuery(string $entityType, array $params = [], $deleted = false)
     {
         $entity = $this->getSeed($entityType);
 
@@ -175,18 +175,18 @@ abstract class Base
 
         $whereClause = $params['whereClause'];
         if (empty($whereClause)) {
-            $whereClause = array();
+            $whereClause = [];
         }
 
         if (!$deleted) {
-            $whereClause = $whereClause + array('deleted' => 0);
+            $whereClause = $whereClause + ['deleted' => 0];
         }
 
         if (empty($params['joins'])) {
-            $params['joins'] = array();
+            $params['joins'] = [];
         }
         if (empty($params['leftJoins'])) {
-            $params['leftJoins'] = array();
+            $params['leftJoins'] = [];
         }
         if (empty($params['customJoin'])) {
             $params['customJoin'] = '';
@@ -271,7 +271,7 @@ abstract class Base
 
         $groupByPart = null;
         if (!empty($params['groupBy']) && is_array($params['groupBy'])) {
-            $arr = array();
+            $arr = [];
             foreach ($params['groupBy'] as $field) {
                 $arr[] = $this->convertComplexExpression($entity, $field, false, $params);
             }
@@ -537,7 +537,7 @@ abstract class Base
     protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, &$params = null)
     {
         $select = "";
-        $arr = array();
+        $arr = [];
         $specifiedList = is_array($fields) ? true : false;
 
         if (empty($fields)) {
@@ -641,11 +641,11 @@ abstract class Base
         }
     }
 
-    protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array())
+    protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = [])
     {
-        $joinsArr = array();
+        $joinsArr = [];
 
-        $relationsToJoin = array();
+        $relationsToJoin = [];
         if (is_array($select)) {
             foreach ($select as $item) {
                 $field = $item;
@@ -688,7 +688,7 @@ abstract class Base
 
         if (!is_null($orderBy)) {
             if (is_array($orderBy)) {
-                $arr = array();
+                $arr = [];
 
                 foreach ($orderBy as $item) {
                     if (is_array($item)) {
@@ -758,7 +758,7 @@ abstract class Base
         }
     }
 
-    public function order($sql, IEntity $entity, $orderBy = null, $order = null, $useColumnAlias = false)
+    public function order(string $sql, IEntity $entity, $orderBy = null, $order = null, $useColumnAlias = false)
     {
         $orderPart = $this->getOrderPart($entity, $orderBy, $order, $useColumnAlias);
         if ($orderPart) {
@@ -806,14 +806,14 @@ abstract class Base
         }
     }
 
-    public function toDb($field)
+    public function toDb(string $field)
     {
         if (array_key_exists($field, $this->fieldsMapCache)) {
             return $this->fieldsMapCache[$field];
 
         } else {
             $field[0] = strtolower($field[0]);
-            $dbField = preg_replace_callback('/([A-Z])/', array($this, 'toDbConversion'), $field);
+            $dbField = preg_replace_callback('/([A-Z])/', [$this, 'toDbConversion'], $field);
 
             $this->fieldsMapCache[$field] = $dbField;
             return $dbField;
@@ -840,10 +840,10 @@ abstract class Base
 
     protected function getTableAliases(IEntity $entity)
     {
-        $aliases = array();
+        $aliases = [];
         $c = 0;
 
-        $occuranceHash = array();
+        $occuranceHash = [];
 
         foreach ($entity->relations as $name => $r) {
             if ($r['type'] == IEntity::BELONGS_TO) {
@@ -915,21 +915,18 @@ abstract class Base
         return false;
     }
 
-    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array(), $level = 0)
+    public function getWhere(IEntity $entity, $whereClause = null, $sqlOp = 'AND', &$params = [], $level = 0)
     {
-        $whereParts = array();
+        $wherePartList = [];
 
-        if (!is_array($whereClause)) {
-            $whereClause = array();
-        }
+        if (!$whereClause) $whereClause = [];
 
         foreach ($whereClause as $field => $value) {
-
             if (is_int($field)) {
                 if (is_string($value)) {
                     if (strpos($value, 'MATCH_') === 0) {
                         $rightPart = $this->convertMatchExpression($entity, $value);
-                        $whereParts[] = $rightPart;
+                        $wherePartList[] = $rightPart;
                         continue;
                     }
                 }
@@ -940,12 +937,12 @@ abstract class Base
                 if ($level > 1) break;
 
                 $field = 'id!=s';
-                $value = array(
-                    'selectParams' => array(
+                $value = [
+                    'selectParams' => [
                         'select' => ['id'],
                         'whereClause' => $value
-                    )
-                );
+                    ]
+                ];
                 if (!empty($params['joins'])) {
                     $value['selectParams']['joins'] = $params['joins'];
                 }
@@ -957,209 +954,207 @@ abstract class Base
                 }
             }
 
-            if (!in_array($field, self::$sqlOperators)) {
-                $isComplex = false;
-
-                $operator = '=';
-                $operatorOrm = '=';
-
-                $leftPart = null;
-
-                $isNotValue = false;
-                if (substr($field, -1) === ':') {
-                    $field = substr($field, 0, strlen($field) - 1);
-                    $isNotValue = true;
-                }
-
-                if (!preg_match('/^[a-z0-9]+$/i', $field)) {
-                    foreach (self::$comparisonOperators as $op => $opDb) {
-                        if (strpos($field, $op) !== false) {
-                            $field = trim(str_replace($op, '', $field));
-                            $operatorOrm = $op;
-                            $operator = $opDb;
-                            break;
-                        }
-                    }
-                }
-
-                if (strpos($field, '.') !== false || strpos($field, ':') !== false) {
-                    $leftPart = $this->convertComplexExpression($entity, $field, false, $params);
-                    $isComplex = true;
-                }
-
-
-                if (empty($isComplex)) {
-
-                    if (!isset($entity->fields[$field])) {
-                        $whereParts[] = '0';
-                        continue;
-                    }
-
-                    $fieldDefs = $entity->fields[$field];
-
-                    $operatorModified = $operator;
-
-                    $attributeType = null;
-                    if (!empty($fieldDefs['type'])) {
-                        $attributeType = $fieldDefs['type'];
-                    }
-
-                    if (
-                        is_bool($value)
-                        &&
-                        in_array($operator, ['=', '<>'])
-                        &&
-                        $attributeType == IEntity::BOOL
-                    ) {
-                        if ($value) {
-                            if ($operator === '=') {
-                                $operatorModified = '= TRUE';
-                            } else {
-                                $operatorModified = '= FALSE';
-                            }
-                        } else {
-                            if ($operator === '=') {
-                                $operatorModified = '= FALSE';
-                            } else {
-                                $operatorModified = '= TRUE';
-                            }
-                        }
-                    } else if (is_array($value)) {
-                        if ($operator == '=') {
-                            $operatorModified = 'IN';
-                        } else if ($operator == '<>') {
-                            $operatorModified = 'NOT IN';
-                        }
-                    } else if (is_null($value)) {
-                        if ($operator == '=') {
-                            $operatorModified = 'IS NULL';
-                        } else if ($operator == '<>') {
-                            $operatorModified = 'IS NOT NULL';
-                        }
-                    }
-
-                    if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
-                        $whereSqlPart = '';
-                        if (is_string($fieldDefs['where'][$operatorModified])) {
-                            $whereSqlPart = $fieldDefs['where'][$operatorModified];
-                        } else {
-                            if (!empty($fieldDefs['where'][$operatorModified]['sql'])) {
-                                $whereSqlPart = $fieldDefs['where'][$operatorModified]['sql'];
-                            }
-                        }
-                        if (!empty($fieldDefs['where'][$operatorModified]['leftJoins'])) {
-                            foreach ($fieldDefs['where'][$operatorModified]['leftJoins'] as $j) {
-                                $jAlias = $this->obtainJoinAlias($j);
-                                foreach ($params['leftJoins'] as $jE) {
-                                    $jEAlias = $this->obtainJoinAlias($jE);
-                                    if ($jEAlias === $jAlias) {
-                                        continue 2;
-                                    }
-                                }
-                                $params['leftJoins'][] = $j;
-                            }
-                        }
-                        if (!empty($fieldDefs['where'][$operatorModified]['joins'])) {
-                            foreach ($fieldDefs['where'][$operatorModified]['joins'] as $j) {
-                                $jAlias = $this->obtainJoinAlias($j);
-                                foreach ($params['joins'] as $jE) {
-                                    $jEAlias = $this->obtainJoinAlias($jE);
-                                    if ($jEAlias === $jAlias) {
-                                        continue 2;
-                                    }
-                                }
-                                $params['joins'][] = $j;
-                            }
-                        }
-                        if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
-                            $params['customJoin'] .= ' ' . $fieldDefs['where'][$operatorModified]['customJoin'];
-                        }
-                        if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
-                            $params['distinct'] = true;
-                        }
-                        $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
-                    } else {
-                        if ($fieldDefs['type'] == IEntity::FOREIGN) {
-                            $leftPart = '';
-                            if (isset($fieldDefs['relation'])) {
-                                $relationName = $fieldDefs['relation'];
-                                if (isset($entity->relations[$relationName])) {
-
-                                    $alias = $this->getAlias($entity, $relationName);
-                                    if ($alias) {
-                                        if (!is_array($fieldDefs['foreign'])) {
-                                            $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
-                                        } else {
-                                            $leftPart = $this->getFieldPath($entity, $field);
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            $leftPart = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
-                        }
-                    }
-                }
-                if (!empty($leftPart)) {
-
-                    if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
-                        if (!is_array($value)) {
-                            continue;
-                        }
-                        if (!empty($value['entityType'])) {
-                            $subQueryEntityType = $value['entityType'];
-                        } else {
-                            $subQueryEntityType = $entity->getEntityType();
-                        }
-                        $subQuerySelectParams = array();
-                        if (!empty($value['selectParams'])) {
-                            $subQuerySelectParams = $value['selectParams'];
-                        }
-                        $withDeleted = false;
-                        if (!empty($value['withDeleted'])) {
-                            $withDeleted = true;
-                        }
-                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
-                    } else if (!is_array($value)) {
-                        if (!is_null($value)) {
-                            if ($isNotValue) {
-                                $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value, $params);
-                            } else {
-                                $whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
-                            }
-                        } else {
-                            if ($operator == '=') {
-                                $whereParts[] = $leftPart . " IS NULL";
-                            } else if ($operator == '<>') {
-                                $whereParts[] = $leftPart . " IS NOT NULL";
-                            }
-                        }
-                    } else {
-                        $valArr = $value;
-                        foreach ($valArr as $k => $v) {
-                            $valArr[$k] = $this->pdo->quote($valArr[$k]);
-                        }
-                        $oppose = '';
-                        $emptyValue = '0';
-                        if ($operator == '<>') {
-                            $oppose = 'NOT ';
-                            $emptyValue = '1';
-                        }
-                        if (!empty($valArr)) {
-                            $whereParts[] = $leftPart . " {$oppose}IN " . "(" . implode(',', $valArr) . ")";
-                        } else {
-                            $whereParts[] = "" . $emptyValue;
-                        }
-                    }
-                }
-            } else {
+            if (in_array($field, self::$sqlOperators)) {
                 $internalPart = $this->getWhere($entity, $value, $field, $params, $level + 1);
                 if ($internalPart || $internalPart === '0') {
-                    $whereParts[] = "(" . $internalPart . ")";
+                    $wherePartList[] = "(" . $internalPart . ")";
+                }
+                continue;
+            }
+
+            $isComplex = false;
+
+            $operator = '=';
+            $operatorOrm = '=';
+
+            $leftPart = null;
+
+            $isNotValue = false;
+            if (substr($field, -1) === ':') {
+                $field = substr($field, 0, strlen($field) - 1);
+                $isNotValue = true;
+            }
+
+            if (!preg_match('/^[a-z0-9]+$/i', $field)) {
+                foreach (self::$comparisonOperators as $op => $opDb) {
+                    if (strpos($field, $op) !== false) {
+                        $field = trim(str_replace($op, '', $field));
+                        $operatorOrm = $op;
+                        $operator = $opDb;
+                        break;
+                    }
+                }
+            }
+
+            if (strpos($field, '.') !== false || strpos($field, ':') !== false) {
+                $leftPart = $this->convertComplexExpression($entity, $field, false, $params);
+                $isComplex = true;
+            }
+
+            if (empty($isComplex)) {
+                if (!isset($entity->fields[$field])) {
+                    $wherePartList[] = '0';
+                    continue;
+                }
+
+                $fieldDefs = $entity->fields[$field];
+
+                $operatorModified = $operator;
+
+                $attributeType = null;
+                if (!empty($fieldDefs['type'])) {
+                    $attributeType = $fieldDefs['type'];
+                }
+
+                if (
+                    is_bool($value)
+                    &&
+                    in_array($operator, ['=', '<>'])
+                    &&
+                    $attributeType == IEntity::BOOL
+                ) {
+                    if ($value) {
+                        if ($operator === '=') {
+                            $operatorModified = '= TRUE';
+                        } else {
+                            $operatorModified = '= FALSE';
+                        }
+                    } else {
+                        if ($operator === '=') {
+                            $operatorModified = '= FALSE';
+                        } else {
+                            $operatorModified = '= TRUE';
+                        }
+                    }
+                } else if (is_array($value)) {
+                    if ($operator == '=') {
+                        $operatorModified = 'IN';
+                    } else if ($operator == '<>') {
+                        $operatorModified = 'NOT IN';
+                    }
+                } else if (is_null($value)) {
+                    if ($operator == '=') {
+                        $operatorModified = 'IS NULL';
+                    } else if ($operator == '<>') {
+                        $operatorModified = 'IS NOT NULL';
+                    }
+                }
+
+                if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
+                    $whereSqlPart = '';
+                    if (is_string($fieldDefs['where'][$operatorModified])) {
+                        $whereSqlPart = $fieldDefs['where'][$operatorModified];
+                    } else {
+                        if (!empty($fieldDefs['where'][$operatorModified]['sql'])) {
+                            $whereSqlPart = $fieldDefs['where'][$operatorModified]['sql'];
+                        }
+                    }
+                    if (!empty($fieldDefs['where'][$operatorModified]['leftJoins'])) {
+                        foreach ($fieldDefs['where'][$operatorModified]['leftJoins'] as $j) {
+                            $jAlias = $this->obtainJoinAlias($j);
+                            foreach ($params['leftJoins'] as $jE) {
+                                $jEAlias = $this->obtainJoinAlias($jE);
+                                if ($jEAlias === $jAlias) {
+                                    continue 2;
+                                }
+                            }
+                            $params['leftJoins'][] = $j;
+                        }
+                    }
+                    if (!empty($fieldDefs['where'][$operatorModified]['joins'])) {
+                        foreach ($fieldDefs['where'][$operatorModified]['joins'] as $j) {
+                            $jAlias = $this->obtainJoinAlias($j);
+                            foreach ($params['joins'] as $jE) {
+                                $jEAlias = $this->obtainJoinAlias($jE);
+                                if ($jEAlias === $jAlias) {
+                                    continue 2;
+                                }
+                            }
+                            $params['joins'][] = $j;
+                        }
+                    }
+                    if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
+                        $params['customJoin'] .= ' ' . $fieldDefs['where'][$operatorModified]['customJoin'];
+                    }
+                    if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
+                        $params['distinct'] = true;
+                    }
+                    $wherePartList[] = str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
+                } else {
+                    if ($fieldDefs['type'] == IEntity::FOREIGN) {
+                        $leftPart = '';
+                        if (isset($fieldDefs['relation'])) {
+                            $relationName = $fieldDefs['relation'];
+                            if (isset($entity->relations[$relationName])) {
+
+                                $alias = $this->getAlias($entity, $relationName);
+                                if ($alias) {
+                                    if (!is_array($fieldDefs['foreign'])) {
+                                        $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+                                    } else {
+                                        $leftPart = $this->getFieldPath($entity, $field);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        $leftPart = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
+                    }
+                }
+            }
+            if (!empty($leftPart)) {
+                if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
+                    if (!is_array($value)) {
+                        continue;
+                    }
+                    if (!empty($value['entityType'])) {
+                        $subQueryEntityType = $value['entityType'];
+                    } else {
+                        $subQueryEntityType = $entity->getEntityType();
+                    }
+                    $subQuerySelectParams = [];
+                    if (!empty($value['selectParams'])) {
+                        $subQuerySelectParams = $value['selectParams'];
+                    }
+                    $withDeleted = false;
+                    if (!empty($value['withDeleted'])) {
+                        $withDeleted = true;
+                    }
+                    $wherePartList[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
+                } else if (!is_array($value)) {
+                    if (!is_null($value)) {
+                        if ($isNotValue) {
+                            $wherePartList[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value, $params);
+                        } else {
+                            $wherePartList[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
+                        }
+                    } else {
+                        if ($operator == '=') {
+                            $wherePartList[] = $leftPart . " IS NULL";
+                        } else if ($operator == '<>') {
+                            $wherePartList[] = $leftPart . " IS NOT NULL";
+                        }
+                    }
+                } else {
+                    $valArr = $value;
+                    foreach ($valArr as $k => $v) {
+                        $valArr[$k] = $this->pdo->quote($valArr[$k]);
+                    }
+                    $oppose = '';
+                    $emptyValue = '0';
+                    if ($operator == '<>') {
+                        $oppose = 'NOT ';
+                        $emptyValue = '1';
+                    }
+                    if (!empty($valArr)) {
+                        $wherePartList[] = $leftPart . " {$oppose}IN " . "(" . implode(',', $valArr) . ")";
+                    } else {
+                        $wherePartList[] = "" . $emptyValue;
+                    }
                 }
             }
         }
-        return implode(" " . $sqlOp . " ", $whereParts);
+        return implode(" " . $sqlOp . " ", $wherePartList);
     }
 
     public function obtainJoinAlias($j)
@@ -1203,7 +1198,7 @@ abstract class Base
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
-    protected function getJoins(IEntity $entity, array $joins, $isLeft = false, $joinConditions = array())
+    protected function getJoins(IEntity $entity, array $joins, $isLeft = false, $joinConditions = [])
     {
         $joinSqlList = [];
         foreach ($joins as $item) {
@@ -1489,13 +1484,13 @@ abstract class Base
                     $key = $relOpt['key'];
                 }
                 $foreignKey = 'id';
-                if(isset($relOpt['foreignKey'])){
+                if (isset($relOpt['foreignKey'])){
                     $foreignKey = $relOpt['foreignKey'];
                 }
-                return array(
+                return [
                     'key' => $key,
                     'foreignKey' => $foreignKey,
-                );
+                ];
 
             case IEntity::HAS_MANY:
             case IEntity::HAS_ONE:
@@ -1507,10 +1502,10 @@ abstract class Base
                 if (isset($relOpt['foreignKey'])) {
                     $foreignKey = $relOpt['foreignKey'];
                 }
-                return array(
+                return [
                     'key' => $key,
                     'foreignKey' => $foreignKey,
-                );
+                ];
 
             case IEntity::HAS_CHILDREN:
                 $key = 'id';
@@ -1525,11 +1520,11 @@ abstract class Base
                 if (isset($relOpt['foreignType'])) {
                     $foreignType = $relOpt['foreignType'];
                 }
-                return array(
+                return [
                     'key' => $key,
                     'foreignKey' => $foreignKey,
                     'foreignType' => $foreignType,
-                );
+                ];
 
             case IEntity::MANY_MANY:
                 $key = 'id';
@@ -1546,20 +1541,20 @@ abstract class Base
                     $nearKey = $relOpt['midKeys'][0];
                     $distantKey = $relOpt['midKeys'][1];
                 }
-                return array(
+                return [
                     'key' => $key,
                     'foreignKey' => $foreignKey,
                     'nearKey' => $nearKey,
                     'distantKey' => $distantKey
-                );
+                ];
             case IEntity::BELONGS_TO_PARENT:
                 $key = $relationName . 'Id';
                 $typeKey = $relationName . 'Type';
-                return array(
+                return [
                     'key' => $key,
                     'typeKey' => $typeKey,
                     'foreignKey' => 'id'
-                );
+                ];
         }
     }
 }

@@ -47,8 +47,8 @@ abstract class Mapper implements IMapper
 
     protected $query;
 
-    protected $fieldsMapCache = array();
-    protected $aliasesCache = array();
+    protected $fieldsMapCache = [];
+    protected $aliasesCache = [];
 
     protected $returnCollection = false;
 
@@ -60,10 +60,10 @@ abstract class Mapper implements IMapper
         $this->entityFactory = $entityFactory;
     }
 
-    public function selectById(IEntity $entity, $id, $params = array())
+    public function selectById(IEntity $entity, $id, $params = [])
     {
         if (!array_key_exists('whereClause', $params)) {
-            $params['whereClause'] = array();
+            $params['whereClause'] = [];
         }
 
         $params['whereClause']['id'] = $id;
@@ -82,27 +82,27 @@ abstract class Mapper implements IMapper
         return false;
     }
 
-    public function count(IEntity $entity, $params = array())
+    public function count(IEntity $entity, $params = [])
     {
         return $this->aggregate($entity, $params, 'COUNT', 'id');
     }
 
-    public function max(IEntity $entity, $params = array(), $field, $deleted = false)
+    public function max(IEntity $entity, $params = [], $field, $deleted = false)
     {
         return $this->aggregate($entity, $params, 'MAX', $field, $deleted);
     }
 
-    public function min(IEntity $entity, $params = array(), $field, $deleted = false)
+    public function min(IEntity $entity, $params = [], $field, $deleted = false)
     {
         return $this->aggregate($entity, $params, 'MIN', $field, $deleted);
     }
 
-    public function sum(IEntity $entity, $params = array())
+    public function sum(IEntity $entity, $params = [])
     {
         return $this->aggregate($entity, $params, 'SUM', 'id');
     }
 
-    public function select(IEntity $entity, $params = array())
+    public function select(IEntity $entity, $params = [])
     {
         $sql = $this->query->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
 
@@ -112,7 +112,7 @@ abstract class Mapper implements IMapper
     /* TODO ability to pass offset and limit */
     public function selectByQuery(IEntity $entity, $sql)
     {
-        $dataArr = array();
+        $dataArr = [];
         $ps = $this->pdo->query($sql);
         if ($ps) {
             $dataArr = $ps->fetchAll();
@@ -128,7 +128,7 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function aggregate(IEntity $entity, $params = array(), $aggregation, $aggregationBy, $deleted = false)
+    public function aggregate(IEntity $entity, $params = [], $aggregation, $aggregationBy, $deleted = false)
     {
         if (empty($aggregation) || !isset($entity->fields[$aggregationBy])) {
             return false;
@@ -149,7 +149,7 @@ abstract class Mapper implements IMapper
         return false;
     }
 
-    public function selectRelated(IEntity $entity, $relationName, $params = array(), $totalCount = false)
+    public function selectRelated(IEntity $entity, $relationName, $params = [], $totalCount = false)
     {
         $relOpt = $entity->relations[$relationName];
 
@@ -176,7 +176,7 @@ abstract class Mapper implements IMapper
         }
 
         if (empty($params['whereClause'])) {
-            $params['whereClause'] = array();
+            $params['whereClause'] = [];
         }
 
         $relType = $relOpt['type'];
@@ -329,7 +329,7 @@ abstract class Mapper implements IMapper
     }
 
 
-    public function countRelated(IEntity $entity, $relationName, $params = array())
+    public function countRelated(IEntity $entity, $relationName, $params = [])
     {
         return $this->selectRelated($entity, $relationName, $params, true);
     }
@@ -365,7 +365,7 @@ abstract class Mapper implements IMapper
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $setArr = array();
+                $setArr = [];
                 foreach ($columnData as $column => $value) {
                     $setArr[] = "`".$this->toDb($column) . "` = " . $this->quote($value);
                 }
@@ -393,7 +393,7 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function massRelate(IEntity $entity, $relationName, array $params = array())
+    public function massRelate(IEntity $entity, $relationName, array $params = [])
     {
         if (!$entity) {
             return false;
@@ -597,7 +597,7 @@ abstract class Mapper implements IMapper
                         $setPart = 'deleted = 0';
 
                         if (!empty($data) && is_array($data)) {
-                            $setArr = array();
+                            $setArr = [];
                             foreach ($data as $column => $value) {
                                 $setArr[] = $this->toDb($column) . " = " . $this->quote($value);
                             }
@@ -658,16 +658,9 @@ abstract class Mapper implements IMapper
         $keySet = $this->query->getKeys($entity, $relationName);
 
         switch ($relType) {
-
             case IEntity::BELONGS_TO:
-                /*$foreignKey = $keySet['foreignKey'];
-                $relEntity->$foreignKey = null;
-                $this->
-                break;*/
-
             case IEntity::HAS_ONE:
                 return false;
-
 
             case IEntity::HAS_MANY:
             case IEntity::HAS_CHILDREN:
@@ -676,7 +669,7 @@ abstract class Mapper implements IMapper
 
                 $setPart = $this->toDb($foreignKey) . " = " . "NULL";
 
-                $whereClause = array('deleted' => 0);
+                $whereClause = ['deleted' => 0];
                 if (empty($all)) {
                     $whereClause['id'] = $id;
                 } else {
@@ -746,8 +739,8 @@ abstract class Mapper implements IMapper
     {
         $dataArr = $this->toValueMap($entity);
 
-        $fieldArr = array();
-        $valArr = array();
+        $fieldArr = [];
+        $valArr = [];
         foreach ($dataArr as $field => $value) {
             $fieldArr[] = $this->toDb($field);
 
@@ -870,7 +863,7 @@ abstract class Mapper implements IMapper
         return $entity;
     }
 
-    protected function getMMJoin(IEntity $entity, $relationName, $keySet = false, $conditions = array())
+    protected function getMMJoin(IEntity $entity, $relationName, $keySet = false, $conditions = [])
     {
         $relOpt = $entity->relations[$relationName];
 
