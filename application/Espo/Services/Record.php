@@ -1598,7 +1598,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function massUpdate(array $params, $data)
     {
-        $idsUpdated = [];
+        $updatedIdList = [];
         $repository = $this->getRepository();
 
         $count = 0;
@@ -1619,7 +1619,7 @@ class Record extends \Espo\Core\Services\Base
                     }
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity, ['massUpdate' => true])) {
-                            $idsUpdated[] = $entity->id;
+                            $updatedIdList[] = $entity->id;
                             $count++;
 
                             $this->processActionHistoryRecord('update', $entity);
@@ -1657,7 +1657,7 @@ class Record extends \Espo\Core\Services\Base
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
-                            $idsUpdated[] = $entity->id;
+                            $updatedIdList[] = $entity->id;
                             $count++;
 
                             $this->processActionHistoryRecord('update', $entity);
@@ -1666,18 +1666,18 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->afterMassUpdate($idsUpdated, $data);
+            $this->afterMassUpdate($updatedIdList, $data);
 
             return (object) [
                 'count' => $count
             ];
         }
 
-        $this->afterMassUpdate($idsUpdated, $data);
+        $this->afterMassUpdate($updatedIdList, $data);
 
         return (object) [
             'count' => $count,
-            'ids' => $idsUpdated
+            'ids' => $updatedIdList
         ];
     }
 
@@ -1698,7 +1698,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function massDelete(array $params)
     {
-        $idsRemoved = array();
+        $removedIdList = [];
         $repository = $this->getRepository();
 
         $count = 0;
@@ -1709,7 +1709,7 @@ class Record extends \Espo\Core\Services\Base
                 $entity = $this->getEntity($id);
                 if ($entity && $this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
                     if ($repository->remove($entity)) {
-                        $idsRemoved[] = $entity->id;
+                        $removedIdList[] = $entity->id;
                         $count++;
 
                         $this->processActionHistoryRecord('delete', $entity);
@@ -1745,7 +1745,7 @@ class Record extends \Espo\Core\Services\Base
 
                 if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
                     if ($repository->remove($entity)) {
-                        $idsRemoved[] = $entity->id;
+                        $removedIdList[] = $entity->id;
                         $count++;
 
                         $this->processActionHistoryRecord('delete', $entity);
@@ -1753,18 +1753,18 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->afterMassDelete($idsRemoved);
+            $this->afterMassDelete($removedIdList);
 
             return [
                 'count' => $count
             ];
         }
 
-        $this->afterMassDelete($idsRemoved);
+        $this->afterMassDelete($removedIdList);
 
         return [
             'count' => $count,
-            'ids' => $idsRemoved
+            'ids' => $removedIdList
         ];
     }
 

@@ -321,7 +321,15 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->massDelete($this->getMassActionParamsFromData($data));
+        $actionParams = $this->getMassActionParamsFromData($data);
+
+        if (array_key_exists('where', $actionParams)) {
+            if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
+                throw new Forbidden();
+            }
+        }
+
+        return $this->getRecordService()->massDelete($actionParams);
     }
 
     public function actionCreateLink($params, $data, $request)
