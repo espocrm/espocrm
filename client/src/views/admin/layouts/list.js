@@ -184,10 +184,12 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
             if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) != -1) {
                 return false;
             }
+
+            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+            if (layoutList && !~layoutList.indexOf(this.type)) return;
+
             return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutListDisabled');
         }
 
     });
 });
-
-

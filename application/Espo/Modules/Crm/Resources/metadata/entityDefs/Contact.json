@@ -156,6 +156,7 @@
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
+            "layoutAvailabilityList": ["listForAccount"],
             "exportDisabled": true,
             "importDisabled": true,
             "view": "crm:views/contact/fields/account-role",

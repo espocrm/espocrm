@@ -162,6 +162,10 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
                     return false;
                 }
             }
+
+            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+            if (layoutList && !~layoutList.indexOf(this.type)) return;
+
             return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutDetailDisabled');
         },
 

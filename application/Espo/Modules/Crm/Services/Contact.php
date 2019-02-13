@@ -43,13 +43,18 @@ class Contact extends \Espo\Core\Templates\Services\Person
         'title'
     ];
 
-    protected $linkSelectParams = array(
-        'targetLists' => array(
-            'additionalColumns' => array(
+    protected $linkSelectParams =[
+        'targetLists' => [
+            'additionalColumns' => [
                 'optedOut' => 'isOptedOut'
-            )
-        )
-    );
+            ]
+        ],
+        'opportunities' => [
+            'additionalColumns' => [
+                'role' => 'contactRole'
+            ]
+        ]
+    ];
 
     protected $mandatorySelectAttributeList = [
         'accountId',

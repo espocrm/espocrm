@@ -120,6 +120,10 @@ Espo.define('views/admin/layouts/mass-update', 'views/admin/layouts/rows', funct
             if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) != -1) {
                 return false;
             }
+
+            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+            if (layoutList && !~layoutList.indexOf(this.type)) return;
+
             return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutMassUpdateDisabled') && !model.getFieldParam(name, 'readOnly');
         }
 
