@@ -400,8 +400,6 @@ abstract class Entity implements IEntity
             $this->getFetched($name),
             $this->getAttributeParam($name, 'isUnordered')
         );
-
-        return $this->get($name) != $this->getFetched($name);
     }
 
     public static function areValuesEqual($type, $v1, $v2, $isUnordered = false)
