@@ -111,29 +111,29 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 var model = options.model;
                 createView(model);
 
-                this.listenToOnce(model, 'sync', function () {
-                    this.hideLoadingNotification();
-                }, this);
                 this.showLoadingNotification();
-                model.fetch();
+
+                model.fetch().then(function () {
+                    this.hideLoadingNotification();
+                }.bind(this));
 
                 this.listenToOnce(this.baseController, 'action', function () {
                     model.abortLastFetch();
                 }, this);
             } else {
-                this.getModel(function (model) {
+                this.getModel().then(function (model) {
                     model.id = id;
 
                     this.showLoadingNotification();
-                    this.listenToOnce(model, 'sync', function () {
+
+                    model.fetch({main: true}).then(function () {
                         createView(model);
-                    }, this);
-                    model.fetch({main: true});
+                    }.bind(this));
 
                     this.listenToOnce(this.baseController, 'action', function () {
                         model.abortLastFetch();
                     }, this);
-                });
+                }.bind(this));
             }
         },
 
@@ -163,7 +163,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
 
         create: function (options) {
             options = options || {};
-            this.getModel(function (model) {
+            this.getModel().then(function (model) {
                 if (options.relate) {
                     model.setRelate(options.relate);
                 }
@@ -183,7 +183,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 this.prepareModelCreate(model, options);
 
                 this.main(this.getViewName('edit'), o);
-            });
+            }.bind(this));
         },
 
         beforeEdit: function () {
@@ -203,7 +203,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         edit: function (options) {
             var id = options.id;
 
-            this.getModel(function (model) {
+            this.getModel().then(function (model) {
                 model.id = id;
                 if (options.model) {
                     model = options.model;
@@ -232,7 +232,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 this.listenToOnce(this.baseController, 'action', function () {
                     model.abortLastFetch();
                 }, this);
-            });
+            }.bind(this));
         },
 
         beforeMerge: function () {
@@ -242,7 +242,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         merge: function (options) {
             var ids = options.ids.split(',');
 
-            this.getModel(function (model) {
+            this.getModel().then(function (model) {
                 var models = [];
 
                 var proceed = function () {
@@ -287,12 +287,14 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     return;
                 }
             }
-            this.collectionFactory.create(collectionName, function (collection) {
+            return this.collectionFactory.create(collectionName, function (collection) {
                 this.collectionMap[collectionName] = collection;
                 this.listenTo(collection, 'sync', function () {
                     collection.isFetched = true;
                 }, this);
-                callback.call(context, collection);
+                if (callback) {
+                    callback.call(context, collection);
+                }
             }, context);
         },
 
@@ -307,10 +309,13 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 throw new Error('No collection for unnamed controller');
             }
             var modelName = this.entityType || this.name;
-            this.modelFactory.create(modelName, function (model) {
-                callback.call(context, model);
+
+            return this.modelFactory.create(modelName, function (model) {
+                if (callback) {
+                    callback.call(context, model);
+                }
             }, context);
         },
-    });
 
+    });
 });
