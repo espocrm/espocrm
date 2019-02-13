@@ -184,17 +184,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
-        actionRestoreDeleted: function () {
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-            Espo.Ajax.postRequest(this.model.entityType + '/action/restoreDeleted', {
-                id: this.model.id
-            }).then(function () {
-                Espo.Ui.notify(false);
-                this.model.set('deleted', false);
-                this.model.trigger('after:restore-deleted');
-            }.bind(this));
-        },
-
         getSelfAssignAttributes: function () {
         },
 
@@ -780,15 +769,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         setupBeforeFinal: function () {
             this.manageAccess();
-
-            if (this.model.get('deleted')) {
-                this.buttonList = [];
-                this.dropdownItemList = [];
-                this.addDropdownItem({
-                    name: 'restoreDeleted',
-                    label: 'Restore'
-                });
-            }
 
             this.attributes = this.model.getClonedAttributes();
 
@@ -1519,5 +1499,4 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         }
 
     });
-
 });

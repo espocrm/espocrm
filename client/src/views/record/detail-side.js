@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail-side', 'views/record/panels-container', function (Dep) {
+define('views/record/detail-side', 'views/record/panels-container', function (Dep) {
 
     return Dep.extend({
 
@@ -89,10 +89,12 @@ Espo.define('views/record/detail-side', 'views/record/panels-container', functio
 
             this.setupPanels();
 
-            var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.type) || [];
-            additionalPanels.forEach(function (panel) {
-                this.panelList.push(panel);
-            }, this);
+            if (!this.additionalPanelsDisabled) {
+                var additionalPanels = this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.type]) || [];
+                additionalPanels.forEach(function (panel) {
+                    this.panelList.push(panel);
+                }, this);
+            }
 
             this.panelList = this.panelList.filter(function (p) {
                 if (p.aclScope) {

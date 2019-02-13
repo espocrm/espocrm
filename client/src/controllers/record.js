@@ -87,8 +87,9 @@ Espo.define('controllers/record', 'controller', function (Dep) {
             this.handleCheckAccess('read');
         },
 
-        createViewView: function (options, model) {
-            this.main(this.getViewName('detail'), {
+        createViewView: function (options, model, view) {
+            var view = view || this.getViewName('detail');
+            this.main(view, {
                 scope: this.name,
                 model: model,
                 returnUrl: options.returnUrl,
@@ -127,6 +128,15 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     this.showLoadingNotification();
 
                     model.fetch({main: true}).then(function () {
+                        if (model.get('deleted')) {
+                            this.listenToOnce(model, 'after:restore-deleted', function () {
+                                createView(model);
+                            }, this);
+
+                            this.prepareModelView(model, options);
+                            this.createViewView(options, model, 'views/deleted-detail');
+                            return;
+                        }
                         createView(model);
                     }.bind(this));
 

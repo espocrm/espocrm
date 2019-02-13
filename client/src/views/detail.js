@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/detail', 'views/main', function (Dep) {
+define('views/detail', 'views/main', function (Dep) {
 
     return Dep.extend({
 
@@ -73,16 +73,6 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
             this.setupHeader();
             this.setupRecord();
-
-            if (this.model.get('deleted')) {
-                this.menuDisabled = true;
-
-                this.listenTo(this.model, 'after:restore-deleted', function () {
-                    this.setupRecord().then(function () {
-                        this.reRender();
-                    }.bind(this));
-                }, this);
-            }
 
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
                 if (this.model.has('isFollowed')) {
