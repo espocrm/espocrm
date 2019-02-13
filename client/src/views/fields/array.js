@@ -115,6 +115,13 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 this.setupTranslation();
             }
 
+            if (this.params.isSorted && this.translatedOptions) {
+                this.params.options = Espo.Utils.clone(this.params.options);
+                this.params.options = this.params.options.sort(function (v1, v2) {
+                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                }.bind(this));
+            }
+
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList, true);
             }

@@ -11,6 +11,10 @@
          "view": "views/admin/field-manager/fields/options"
       },
       {
+         "name":"isSorted",
+         "type":"bool"
+      },
+      {
          "name":"translation",
          "type":"varchar",
          "hidden": true
