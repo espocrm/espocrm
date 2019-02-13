@@ -69,9 +69,7 @@ class Record extends Base
         $id = $params['id'];
         $entity = $this->getRecordService()->read($id);
 
-        if (empty($entity)) {
-            throw new NotFound();
-        }
+        if (!$entity) throw new NotFound();
 
         return $entity->getValueMap();
     }

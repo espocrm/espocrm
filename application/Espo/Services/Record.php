@@ -278,9 +278,9 @@ class Record extends \Espo\Core\Services\Base
         }
         $entity = $this->getEntity($id);
 
-        if ($entity) {
-            $this->processActionHistoryRecord('read', $entity);
-        }
+        if (!$entity) throw new NotFound();
+
+        $this->processActionHistoryRecord('read', $entity);
 
         return $entity;
     }
