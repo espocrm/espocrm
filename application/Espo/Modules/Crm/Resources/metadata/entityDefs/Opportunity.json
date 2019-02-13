@@ -18,18 +18,108 @@
             "type": "float",
             "readOnly": true,
             "notStorable": true,
-            "select": "opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100",
-            "where": {
-                "=": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) = {value}",
-                "<": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) < {value}",
-                ">": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) > {value}",
-                "<=": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) <= {value}",
-                ">=": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) >= {value}",
-                "<>": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) <> {value}",
-                "IS NULL": "opportunity.amount IS NULL",
-                "IS NOT NULL": "opportunity.amount IS NOT NULL"
+            "select": {
+                "sql": "opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100",
+                "leftJoins": [
+                    [
+                        "Currency",
+                        "amountCurrencyRate",
+                        {"amountCurrencyRate.id:": "amountCurrency"}
+                    ]
+                ]
             },
-            "orderBy": "amountWeightedConverted {direction}",
+            "where": {
+                "=": {
+                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) = {value}",
+                    "leftJoins": [
+                        [
+                            "Currency",
+                            "amountCurrencyRate",
+                            {"amountCurrencyRate.id:": "amountCurrency"}
+                        ]
+                    ]
+                },
+                "<": {
+                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) < {value}",
+                    "leftJoins": [
+                        [
+                            "Currency",
+                            "amountCurrencyRate",
+                            {"amountCurrencyRate.id:": "amountCurrency"}
+                        ]
+                    ]
+                },
+                ">": {
+                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) > {value}",
+                    "leftJoins": [
+                        [
+                            "Currency",
+                            "amountCurrencyRate",
+                            {"amountCurrencyRate.id:": "amountCurrency"}
+                        ]
+                    ]
+                },
+                "<=": {
+                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) <= {value}",
+                    "leftJoins": [
+                        [
+                            "Currency",
+                            "amountCurrencyRate",
+                            {"amountCurrencyRate.id:": "amountCurrency"}
+                        ]
+                    ]
+                },
+                ">=": {
+                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) >= {value}",
+                    "leftJoins": [
+                        [
+                            "Currency",
+                            "amountCurrencyRate",
+                            {"amountCurrencyRate.id:": "amountCurrency"}
+                        ]
+                    ]
+                },
+                "<>": {
+                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) <> {value}",
+                    "leftJoins": [
+                        [
+                            "Currency",
+                            "amountCurrencyRate",
+                            {"amountCurrencyRate.id:": "amountCurrency"}
+                        ]
+                    ]
+                },
+                "IS NULL": {
+                    "sql": "opportunity.amount IS NULL",
+                    "leftJoins": [
+                        [
+                            "Currency",
+                            "amountCurrencyRate",
+                            {"amountCurrencyRate.id:": "amountCurrency"}
+                        ]
+                    ]
+                },
+                "IS NOT NULL": {
+                    "sql": "opportunity.amount IS NOT NULL",
+                    "leftJoins": [
+                        [
+                            "Currency",
+                            "amountCurrencyRate",
+                            {"amountCurrencyRate.id:": "amountCurrency"}
+                        ]
+                    ]
+                }
+            },
+            "orderBy": {
+                "sql": "amountWeightedConverted {direction}",
+                "leftJoins": [
+                    [
+                        "Currency",
+                        "amountCurrencyRate",
+                        {"amountCurrencyRate.id:": "amountCurrency"}
+                    ]
+                ]
+            },
             "view": "views/fields/currency-converted"
         },
         "account": {
