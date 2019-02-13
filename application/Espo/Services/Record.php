@@ -120,6 +120,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $validateSkipFieldList = [];
 
+    protected $findDuplicatesSelectAttributeList = ['id', 'name'];
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -255,10 +257,10 @@ class Record extends \Espo\Core\Services\Base
         $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
 
         if ($entity) {
-            $historyRecord->set(array(
+            $historyRecord->set([
                 'targetType' => $entity->getEntityType(),
                 'targetId' => $entity->id
-            ));
+            ]);
         }
 
         $this->getEntityManager()->saveEntity($historyRecord);
@@ -285,17 +287,26 @@ class Record extends \Espo\Core\Services\Base
 
     public function getEntity($id = null)
     {
-        $entity = $this->getRepository()->get($id);
-        if (!empty($entity) && !empty($id)) {
+        if (!is_null($id)) {
+            $selectParams = [];
+            if ($this->getUser()->isAdmin()) {
+                $selectParams['withDeleted'] = true;
+            }
+            $entity = $this->getRepository()->getById($id, $selectParams);
+        } else {
+            $entity = $this->getRepository()->getNew();
+        }
+
+        if ($entity && !is_null($id)) {
             $this->loadAdditionalFields($entity);
 
             if (!$this->getAcl()->check($entity, 'read')) {
                 throw new Forbidden();
             }
-        }
-        if (!empty($entity)) {
+
             $this->prepareEntityForOutput($entity);
         }
+
         return $entity;
     }
 
@@ -797,11 +808,15 @@ class Record extends \Espo\Core\Services\Base
     protected function processDuplicateCheck(Entity $entity, $data)
     {
         if (empty($data->skipDuplicateCheck) && empty($data->forceDuplicate)) {
-            $duplicates = $this->checkEntityForDuplicate($entity, $data);
-            if (!empty($duplicates)) {
+            $duplicateList = $this->findDuplicates($entity, $data);
+            if (!empty($duplicateList)) {
+                $data = [];
+                foreach ($duplicateList as $e) {
+                    $data[$e->id] = $e->getValueMap();
+                }
                 $reason = [
                     'reason' => 'Duplicate',
-                    'data' => $duplicates
+                    'data' => $data
                 ];
                 throw new Conflict(json_encode($reason));
             }
@@ -1218,6 +1233,20 @@ class Record extends \Espo\Core\Services\Base
         ];
     }
 
+    public function restoreDeleted(string $id)
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        $entity = $this->getRepository()->getById($id, ['withDeleted' => true]);
+
+        if (!$entity) throw new NotFound();
+        if (!$entity->get('deleted')) throw new Forbidden();
+
+        $this->getRepository()->restoreDeleted($entity->id);
+
+        return true;
+    }
+
     public function getMaxSelectTextAttributeLength()
     {
         if (!$this->maxSelectTextAttributeLengthDisabled) {
@@ -1592,7 +1621,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function massUpdate(array $params, $data)
     {
-        $idsUpdated = [];
+        $updatedIdList = [];
         $repository = $this->getRepository();
 
         $count = 0;
@@ -1613,7 +1642,7 @@ class Record extends \Espo\Core\Services\Base
                     }
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity, ['massUpdate' => true])) {
-                            $idsUpdated[] = $entity->id;
+                            $updatedIdList[] = $entity->id;
                             $count++;
 
                             $this->processActionHistoryRecord('update', $entity);
@@ -1651,7 +1680,7 @@ class Record extends \Espo\Core\Services\Base
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
-                            $idsUpdated[] = $entity->id;
+                            $updatedIdList[] = $entity->id;
                             $count++;
 
                             $this->processActionHistoryRecord('update', $entity);
@@ -1660,18 +1689,18 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->afterMassUpdate($idsUpdated, $data);
+            $this->afterMassUpdate($updatedIdList, $data);
 
             return (object) [
                 'count' => $count
             ];
         }
 
-        $this->afterMassUpdate($idsUpdated, $data);
+        $this->afterMassUpdate($updatedIdList, $data);
 
         return (object) [
             'count' => $count,
-            'ids' => $idsUpdated
+            'ids' => $updatedIdList
         ];
     }
 
@@ -1692,7 +1721,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function massDelete(array $params)
     {
-        $idsRemoved = array();
+        $removedIdList = [];
         $repository = $this->getRepository();
 
         $count = 0;
@@ -1703,7 +1732,7 @@ class Record extends \Espo\Core\Services\Base
                 $entity = $this->getEntity($id);
                 if ($entity && $this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
                     if ($repository->remove($entity)) {
-                        $idsRemoved[] = $entity->id;
+                        $removedIdList[] = $entity->id;
                         $count++;
 
                         $this->processActionHistoryRecord('delete', $entity);
@@ -1739,7 +1768,7 @@ class Record extends \Espo\Core\Services\Base
 
                 if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
                     if ($repository->remove($entity)) {
-                        $idsRemoved[] = $entity->id;
+                        $removedIdList[] = $entity->id;
                         $count++;
 
                         $this->processActionHistoryRecord('delete', $entity);
@@ -1747,18 +1776,18 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->afterMassDelete($idsRemoved);
+            $this->afterMassDelete($removedIdList);
 
             return [
                 'count' => $count
             ];
         }
 
-        $this->afterMassDelete($idsRemoved);
+        $this->afterMassDelete($removedIdList);
 
         return [
             'count' => $count,
-            'ids' => $idsRemoved
+            'ids' => $removedIdList
         ];
     }
 
@@ -1881,10 +1910,27 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
     {
+        return null;
+    }
+
+    public function checkIsDuplicate(Entity $entity) : bool
+    {
+        $where = $this->getDuplicateWhereClause($entity, (object) []);
+
+        if ($where) {
+            if ($entity->id) {
+                $where['id!='] = $entity->id;
+            }
+            $duplicate = $this->getRepository()->select(['id'])->where($where)->findOne();
+            if ($duplicate) {
+                return true;
+            }
+        }
+
         return false;
     }
 
-    public function checkEntityForDuplicate(Entity $entity, $data = null)
+    public function findDuplicates(Entity $entity, $data = null) : ?\Espo\ORM\EntityCollection
     {
         if (!$data) {
             $data = (object) [];
@@ -1896,16 +1942,16 @@ class Record extends \Espo\Core\Services\Base
             if ($entity->id) {
                 $where['id!='] = $entity->id;
             }
-            $duplicateList = $this->getRepository()->where($where)->limit(0, 20)->find();
+            $select = $this->findDuplicatesSelectAttributeList;
+
+            $duplicateList = $this->getRepository()->select($select)->where($where)->limit(0, 20)->find();
+
             if (count($duplicateList)) {
-                $result = array();
-                foreach ($duplicateList as $e) {
-                    $result[$e->id] = $e->getValues();
-                }
-                return $result;
+                return $duplicateList;
             }
         }
-        return false;
+
+        return null;
     }
 
     public function checkAttributeIsAllowedForExport($entity, $attribute, $isExportAllFields = false)

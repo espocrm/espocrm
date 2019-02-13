@@ -93,9 +93,9 @@ class Import extends \Espo\Core\Controllers\Record
         $attachment->set('contents', $contents);
         $this->getEntityManager()->saveEntity($attachment);
 
-        return array(
+        return [
             'attachmentId' => $attachment->id
-        );
+        ];
     }
 
     public function actionRevert($params, $data, $request)
@@ -175,7 +175,7 @@ class Import extends \Espo\Core\Controllers\Record
            $timezone = $data->timezone;
         }
 
-        $importParams = array(
+        $importParams = [
             'headerRow' => !empty($data->headerRow),
             'delimiter' => $data->delimiter,
             'textQualifier' => $data->textQualifier,
@@ -188,8 +188,9 @@ class Import extends \Espo\Core\Controllers\Record
             'defaultValues' => $data->defaultValues,
             'action' => $data->action,
             'skipDuplicateChecking' => !empty($data->skipDuplicateChecking),
-            'idleMode' => !empty($data->idleMode)
-        );
+            'idleMode' => !empty($data->idleMode),
+            'silentMode' => !empty($data->silentMode),
+        ];
 
         if (property_exists($data, 'updateBy')) {
             $importParams['updateBy'] = $data->updateBy;

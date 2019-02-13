@@ -321,7 +321,15 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->massDelete($this->getMassActionParamsFromData($data));
+        $actionParams = $this->getMassActionParamsFromData($data);
+
+        if (array_key_exists('where', $actionParams)) {
+            if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
+                throw new Forbidden();
+            }
+        }
+
+        return $this->getRecordService()->massDelete($actionParams);
     }
 
     public function actionCreateLink($params, $data, $request)
@@ -519,5 +527,15 @@ class Record extends Base
         if (!$this->getAcl()->check($this->name, 'edit')) throw new Forbidden();
 
         return $this->getRecordService()->massRecalculateFormula($this->getMassActionParamsFromData($data));
+    }
+
+    public function postActionRestoreDeleted($params, $data, $request)
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        $id = $data->id ?? null;
+        if (!$id) throw new Forbidden();
+
+        return $this->getRecordService()->restoreDeleted($id);
     }
 }

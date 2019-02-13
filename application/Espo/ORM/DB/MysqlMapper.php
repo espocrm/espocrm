@@ -43,6 +43,4 @@ class MysqlMapper extends Mapper
     {
         return $this->query->toDb($field);
     }
-
 }
-

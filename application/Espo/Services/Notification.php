@@ -92,7 +92,7 @@ class Notification extends \Espo\Services\Record
         $pdo->query($sql);
 
         if ($this->getConfig()->get('useWebSocket')) {
-            foreach ($userIdList as $useId) {
+            foreach ($userIdList as $userId) {
                 $this->getInjection('container')->get('webSocketSubmission')->submit('newNotification', $userId);
             }
         }

@@ -41,11 +41,10 @@ class UniqueId extends \Espo\Core\ORM\Repositories\RDB
 
     protected $processFieldsAfterRemoveDisabled = true;
 
-    protected function getNewEntity()
+    public function getNew() : ?Entity
     {
-        $entity = parent::getNewEntity();
+        $entity = parent::getNew();
         $entity->set('name', \Espo\Core\Utils\Util::generateId());
         return $entity;
     }
 }
-

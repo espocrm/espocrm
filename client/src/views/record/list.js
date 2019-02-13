@@ -976,6 +976,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }, this);
             }
 
+            if (this.getAcl().get('massUpdatePermission') !== 'yes') {
+                this.removeAllResultMassAction('remove');
+            }
+
             Espo.Utils.clone(this.massActionList).forEach(function (item) {
                 var propName = 'massAction' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
                 if (this[propName] || this.options[propName]) {

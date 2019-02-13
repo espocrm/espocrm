@@ -54,7 +54,8 @@
         "Timezone": "Timezone",
         "Remove Import Log": "Remove Import Log",
         "New Import": "New Import",
-        "Import Results": "Import Results"
+        "Import Results": "Import Results",
+        "Silent Mode": "Silent Mode"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",

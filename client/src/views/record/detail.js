@@ -184,6 +184,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
+        actionRestoreDeleted: function () {
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ajax.postRequest(this.model.entityType + '/action/restoreDeleted', {
+                id: this.model.id
+            }).then(function () {
+                Espo.Ui.notify(false);
+                this.model.set('deleted', false);
+                this.model.trigger('after:restore-deleted');
+            }.bind(this));
+        },
+
         getSelfAssignAttributes: function () {
         },
 
@@ -749,8 +760,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.sideDisabled = this.options.sideDisabled || this.sideDisabled;
             this.bottomDisabled = this.options.bottomDisabled || this.bottomDisabled;
 
-            this.readOnlyLocked = this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
+            this.readOnlyLocked = this.readOnly;
 
             this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled']) || false;
 
@@ -769,6 +780,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         setupBeforeFinal: function () {
             this.manageAccess();
+
+            if (this.model.get('deleted')) {
+                this.buttonList = [];
+                this.dropdownItemList = [];
+                this.addDropdownItem({
+                    name: 'restoreDeleted',
+                    label: 'Restore'
+                });
+            }
 
             this.attributes = this.model.getClonedAttributes();
 

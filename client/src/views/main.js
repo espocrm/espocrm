@@ -66,6 +66,8 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         getMenu: function () {
+            if (this.menuDisabled) return {};
+
             var menu = {};
 
             if (this.menu) {

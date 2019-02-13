@@ -60,6 +60,7 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                     if (streamAllowed) {
                         this.showPanel('stream', function () {
                             this.getView('stream').collection.fetch();
+                            this.getView('stream').subscribeToWebSocket();
                         });
                     }
                 }, this);
