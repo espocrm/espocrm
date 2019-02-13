@@ -193,15 +193,25 @@
                 ]
             },
             "where": {
-                "=": {
-                    "leftJoins": ["accounts"],
-                    "sql": "accountsMiddle.is_inactive = {value}",
-                    "distinct": true
+                "= TRUE": {
+                    "leftJoins": [
+                        [
+                            "AccountContact",
+                            "accountContactFilterIsInactive",
+                            {"contact.accountId:": "accountContactFilterIsInactive.accountId"}
+                        ]
+                    ],
+                    "sql": "accountContactFilterIsInactive.is_inactive = true"
                 },
-                "<>": {
-                    "leftJoins": ["accounts"],
-                    "sql": "accountsMiddle.is_inactive <> {value}",
-                    "distinct": true
+                "= FALSE": {
+                    "leftJoins": [
+                        [
+                            "AccountContact",
+                            "accountContactFilterIsInactive",
+                            {"contact.accountId:": "accountContactFilterIsInactive.accountId"}
+                        ]
+                    ],
+                    "sql": "accountContactFilterIsInactive.is_inactive <> true OR accountContactFilterIsInactive.is_inactive IS NULL"
                 }
             },
             "layoutListDisabled": true,
