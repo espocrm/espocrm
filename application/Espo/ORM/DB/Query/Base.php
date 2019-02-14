@@ -55,7 +55,7 @@ abstract class Base
         'havingClause',
         'customHaving',
         'skipTextColumns',
-        'maxTextColumnsLength'
+        'maxTextColumnsLength',
     ];
 
     protected static $sqlOperators = [
@@ -73,7 +73,7 @@ abstract class Base
         '<=' => '<=',
         '>' => '>',
         '<' => '<',
-        '=' => '='
+        '=' => '=',
     ];
 
     protected $functionList = [
@@ -131,6 +131,17 @@ abstract class Base
         'QUARTER_9',
         'QUARTER_10',
         'QUARTER_11',
+        'CONCAT',
+        'TZ',
+        'FLOOR',
+        'CEIL',
+        'ROUND',
+    ];
+
+    protected $multipleArgumentsFunctionList = [
+        'CONCAT',
+        'TZ',
+        'ROUND',
     ];
 
     protected $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
@@ -138,7 +149,7 @@ abstract class Base
     protected $matchFunctionMap = [
         'MATCH_BOOLEAN' => 'IN BOOLEAN MODE',
         'MATCH_NATURAL_LANGUAGE' => 'IN NATURAL LANGUAGE MODE',
-        'MATCH_QUERY_EXPANSION' => 'WITH QUERY EXPANSION'
+        'MATCH_QUERY_EXPANSION' => 'WITH QUERY EXPANSION',
     ];
 
     protected $entityFactory;
@@ -290,7 +301,7 @@ abstract class Base
         return $sql;
     }
 
-    protected function getFunctionPart($function, $part, $entityType, $distinct = false)
+    protected function getFunctionPart($function, $part, $entityType, $distinct = false, ?array $argumentPartList = null)
     {
         if (!in_array($function, $this->functionList)) {
             throw new \Exception("Not allowed function '".$function."'.");
@@ -321,6 +332,10 @@ abstract class Base
                     "CONCAT(YEAR({$part}), '_', FLOOR((MONTH({$part}) - {$fiscalFirstMonth}) / 3) + 1) ".
                     "ELSE CONCAT(YEAR({$part}) - 1, '_', CEIL((MONTH({$part}) + {$fiscalDistractedMonth}) / 3)) END";
             }
+        }
+
+        if ($function === 'TZ') {
+            return $this->getFunctionPartTZ($entityType, $argumentPartList);
         }
 
         switch ($function) {
@@ -364,6 +379,7 @@ abstract class Base
                 $function = 'DAYOFWEEK';
                 break;
         }
+
         if ($distinct) {
             $idPart = $this->toDb($entityType) . ".id";
             switch ($function) {
@@ -371,7 +387,33 @@ abstract class Base
                     return $function . "({$part}) * COUNT(DISTINCT {$idPart}) / COUNT({$idPart})";
             }
         }
+
         return $function . '(' . $part . ')';
+    }
+
+    protected function getFunctionPartTZ($entityType, ?array $argumentPartList = null)
+    {
+        if (!$argumentPartList || count($argumentPartList) < 2) {
+            throw new \Exception("Not enough arguments for function TZ.");
+        }
+        $offsetHoursString = $argumentPartList[1];
+        if (substr($offsetHoursString, 0, 1) === '\'' && substr($offsetHoursString, -1) === '\'') {
+            $offsetHoursString = substr($offsetHoursString, 1, -1);
+        }
+        $offset = floatval($offsetHoursString);
+        $offsetHours = intval(floor(abs($offset)));
+        $offsetMinutes = (abs($offset) - $offsetHours) * 60;
+        $offsetString =
+            str_pad((string) $offsetHours, 2, '0', \STR_PAD_LEFT) .
+            ':' .
+            str_pad((string) $offsetMinutes, 2, '0', \STR_PAD_LEFT);
+        if ($offset < 0) {
+            $offsetString = '-' . $offsetString;
+        } else {
+            $offsetString = '+' . $offsetString;
+        }
+
+        return "CONVERT_TZ(". $argumentPartList[0]. ", '+00:00', " . $this->quote($offsetString) . ")";
     }
 
     protected function convertMatchExpression($entity, $expression)
@@ -417,7 +459,6 @@ abstract class Base
     protected function convertComplexExpression($entity, $attribute, $distinct = false, &$params = null)
     {
         $function = null;
-        $relName = null;
 
         $entityType = $entity->getEntityType();
 
@@ -430,20 +471,162 @@ abstract class Base
             }
 
             $attribute = substr($attribute, $dilimeterPosition + 1);
+
+            if (substr($attribute, 0, 1) === '(' && substr($attribute, -1) === ')') {
+                $attribute = substr($attribute, 1, -1);
+            }
         }
         if (!empty($function)) {
-            $function = preg_replace('/[^A-Za-z0-9_]+/', '', $function);
+            $function = strtoupper($this->sanitize($function));
         }
 
-        if (strpos($attribute, '.')) {
-            list($relName, $attribute) = explode('.', $attribute);
+        $argumentPartList = null;
+
+        if ($function && in_array($function, $this->multipleArgumentsFunctionList)) {
+            //$argumentList = [];
+            $arguments = $attribute;
+
+            /*$commaPositionList = [];
+            for ($i = 0; $i < strlen($arguments); $i++) {
+                if ($arguments[$i] === ',') {
+                    if (
+                        substr_count(substr($arguments, 0, $i), '(') === substr_count(substr($arguments, 0, $i), ')')
+                        &&
+                        substr_count(substr($arguments, $i), '(') === substr_count(substr($arguments, $i), ')')
+                    ) {
+                        $commaPositionList[] = $i;
+                    }
+                }
+            }
+
+            if (!count($commaPositionList)) {
+                $argumentList[] = $attribute;
+            } else {
+                $previousIndex = -1;
+                foreach ($commaPositionList as $i => $index) {
+                    $argumentList[] = trim(substr($arguments, $previousIndex + 1, $index - $previousIndex - 1));
+                    if ($i === count($commaPositionList) - 1) {
+                        $argumentList[] = trim(substr($arguments, $index + 1));
+                    }
+                    $previousIndex = $index;
+                }
+            }*/
+
+            $argumentList = $this->parseArgumentListFromFunctionContent($arguments);
+
+            $argumentPartList = [];
+            foreach ($argumentList as $argument) {
+                $argumentPartList[] = $this->getFunctionArgumentPart($entity, $argument, $distinct, $params);
+            }
+            $part = implode(', ', $argumentPartList);
+
+        } else {
+            $part = $this->getFunctionArgumentPart($entity, $attribute, $distinct, $params);
+        }
+
+        if ($function) {
+            $part = $this->getFunctionPart($function, $part, $entityType, $distinct, $argumentPartList);
+        }
+
+        return $part;
+    }
+
+    static protected function parseArgumentListFromFunctionContent($functionContent)
+    {
+        $functionContent = trim($functionContent);
+
+        $isString = false;
+        $isSingleQuote = false;
+
+        if ($functionContent === '') {
+            return [];
+        }
+
+        $commaIndexList = [];
+        $braceCounter = 0;
+        for ($i = 0; $i < strlen($functionContent); $i++) {
+            if ($functionContent[$i] === "'" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+                if (!$isString) {
+                    $isString = true;
+                    $isSingleQuote = true;
+                } else {
+                    if ($isSingleQuote) {
+                        $isString = false;
+                    }
+                }
+            } else if ($functionContent[$i] === "\"" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+                if (!$isString) {
+                    $isString = true;
+                    $isSingleQuote = false;
+                } else {
+                    if (!$isSingleQuote) {
+                        $isString = false;
+                    }
+                }
+            }
+
+            if (!$isString) {
+                if ($functionContent[$i] === '(') {
+                    $braceCounter++;
+                } else if ($functionContent[$i] === ')') {
+                    $braceCounter--;
+                }
+            }
+
+            if ($braceCounter === 0 && !$isString && $functionContent[$i] === ',') {
+                $commaIndexList[] = $i;
+            }
+        }
+
+        $commaIndexList[] = strlen($functionContent);
+
+        $argumentList = [];
+        for ($i = 0; $i < count($commaIndexList); $i++) {
+            if ($i > 0) {
+                $previousCommaIndex = $commaIndexList[$i - 1] + 1;
+            } else {
+                $previousCommaIndex = 0;
+            }
+            $argument = trim(substr($functionContent, $previousCommaIndex, $commaIndexList[$i] - $previousCommaIndex));
+            $argumentList[] = $argument;
+        }
+
+        return $argumentList;
+    }
+
+    protected function getFunctionArgumentPart($entity, $attribute, $distinct = false, &$params = null)
+    {
+        $argument = $attribute;
+
+        if (
+            substr($argument, 0, 1) === '\'' && substr($argument, -1) === '\''
+            ||
+            substr($argument, 0, 1) === '"' && substr($argument, -1) === '"'
+        ) {
+            $string = substr($argument, 1, -1);
+            $string = $this->quote($string);
+            return $string;
+        } else if (is_numeric($argument)) {
+            $string = $this->quote($argument);
+            return $string;
+        }
+
+        if (strpos($argument, ':')) {
+            return $this->convertComplexExpression($entity, $argument, $distinct, $params);
+        }
+
+        $relName = null;
+        $entityType = $entity->getEntityType();
+
+        if (strpos($argument, '.')) {
+            list($relName, $attribute) = explode('.', $argument);
         }
 
         if (!empty($relName)) {
-            $relName = preg_replace('/[^A-Za-z0-9_]+/', '', $relName);
+            $relName = $this->sanitize($relName);
         }
         if (!empty($attribute)) {
-            $attribute = preg_replace('/[^A-Za-z0-9_]+/', '', $attribute);
+            $attribute = $this->sanitize($attribute);
         }
 
         $part = $this->toDb($attribute);
@@ -467,9 +650,7 @@ abstract class Base
                 $part = $this->toDb($entityType) . '.' . $part;
             }
         }
-        if ($function) {
-            $part = $this->getFunctionPart(strtoupper($function), $part, $entityType, $distinct);
-        }
+
         return $part;
     }
 
@@ -534,19 +715,25 @@ abstract class Base
         return $part;
     }
 
-    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, &$params = null)
+    protected function getSelect(IEntity $entity, $itemList = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, &$params = null)
     {
         $select = "";
         $arr = [];
-        $specifiedList = is_array($fields) ? true : false;
+        $specifiedList = is_array($itemList) ? true : false;
 
-        if (empty($fields)) {
+        if (empty($itemList)) {
             $attributeList = array_keys($entity->fields);
         } else {
-            $attributeList = $fields;
+            $attributeList = $itemList;
             foreach ($attributeList as $i => $attribute) {
-                if (!is_array($attribute)) {
-                    $attributeList[$i] = $this->sanitizeAlias($attribute);
+                if (is_string($attribute)) {
+                    if (strpos($attribute, ':')) {
+                        $attributeList[$i] = [
+                            $attribute,
+                            $attribute
+                        ];
+                        continue;
+                    }
                 }
             }
         }
@@ -586,15 +773,17 @@ abstract class Base
                     }
                 }
 
-                $arr[] = $part . ' AS `' . $this->sanitizeAlias($attribute[1]) . '`';
+                $arr[] = $part . ' AS `' . $this->sanitizeSelectAlias($attribute[1]) . '`';
                 continue;
             }
+
+            $attribute = $this->sanitizeSelectItem($attribute);
 
             if (array_key_exists($attribute, $entity->fields)) {
                 $fieldDefs = $entity->fields[$attribute];
             } else {
                 $part = $this->convertComplexExpression($entity, $attribute, $distinct, $params);
-                $arr[] = $part . ' AS `' . $this->sanitizeAlias($attribute) . '`';
+                $arr[] = $part . ' AS `' . $this->sanitizeSelectAlias($attribute) . '`';
                 continue;
             }
 
@@ -741,7 +930,7 @@ abstract class Base
                 return "{$orderPart}";
             } else {
                 if ($useColumnAlias) {
-                    $fieldPath = $this->sanitizeAlias($orderBy);
+                    $fieldPath = '`'. $this->sanitizeSelectAlias($orderBy) . '`';
                 } else {
                     $fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy);
                 }
@@ -1193,7 +1382,12 @@ abstract class Base
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
 
-    public function sanitizeAlias($string)
+    public function sanitizeSelectAlias($string)
+    {
+        return preg_replace('/[^A-Za-z0-9_:.,\-\(\)]+/', '', $string);
+    }
+
+    public function sanitizeSelectItem($string)
     {
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }

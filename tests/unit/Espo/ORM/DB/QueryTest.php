@@ -491,12 +491,12 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testFunction1()
     {
-        $sql = $this->query->createSelectQuery('Comment', array(
+        $sql = $this->query->createSelectQuery('Comment', [
             'select' => ['id'],
-            'whereClause' => array(
+            'whereClause' => [
                 'MONTH_NUMBER:comment.created_at' => 2
-            )
-        ));
+            ]
+        ]);
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
             "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = '0'";
@@ -505,15 +505,115 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testFunction2()
     {
-        $sql = $this->query->createSelectQuery('Comment', array(
+        $sql = $this->query->createSelectQuery('Comment', [
             'select' => ['id'],
-            'whereClause' => array(
+            'whereClause' => [
                 'WEEK_NUMBER_1:createdAt' => 2
-            )
-        ));
+            ]
+        ]);
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
             "WHERE WEEK(comment.created_at, 5) = '2' AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction3()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id'],
+            'whereClause' => [
+                'MONTH_NUMBER:(comment.created_at)' => 2
+            ]
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction4()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id'],
+            'whereClause' => [
+                "CONCAT:(MONTH:comment.created_at,' ',CONCAT:(comment.name,'+'))" => 'Test Hello'
+            ]
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE CONCAT(DATE_FORMAT(comment.created_at, '%Y-%m'), ' ', CONCAT(comment.name, '+')) = 'Test Hello' AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction5()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', ['FLOOR:3.5', 'FLOOR:3.5']],
+            'whereClause' => [
+            ]
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, FLOOR('3.5') AS `FLOOR:3.5` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction6()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', ['ROUND:3.5,1', 'ROUND:3.5,1']],
+            'whereClause' => []
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, ROUND('3.5', '1') AS `ROUND:3.5,1` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction7()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', 'ROUND:3.5,1'],
+            'whereClause' => []
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, ROUND('3.5', '1') AS `ROUND:3.5,1` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction8()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', ["CONCAT:(',test',\"+\",'\"', \"'\")", 'value']]
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, CONCAT(',test', '+', '\"', ''') AS `value` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunctionTZ1()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', "MONTH_NUMBER:TZ:(comment.created_at,-3.5)"],
+            'whereClause' => []
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '-03:30')) AS `MONTH_NUMBER:TZ:(comment.created_at,-3.5)` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunctionTZ2()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', "MONTH_NUMBER:TZ:(comment.created_at,0)"],
+            'whereClause' => []
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '+00:00')) AS `MONTH_NUMBER:TZ:(comment.created_at,0)` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -523,9 +623,9 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             'select' => ['COUNT:comment.id', 'postId', 'postName'],
             'leftJoins' => ['post'],
             'groupBy' => ['postId'],
-            'whereClause' => array(
+            'whereClause' => [
                 'post.createdById' => 'id_1'
-            ),
+            ],
             'havingClause' => [
                 'COUNT:comment.id>' => 1
             ]
