@@ -146,7 +146,7 @@
         },
 
         getScopeFieldList: function (entityType) { // TODO remove in 5.8.0
-            return this.getEntityTypeFieldList(entity);
+            return this.getEntityTypeFieldList(entityType);
         },
 
         getEntityTypeFieldParam: function (entityType, field, param) {
