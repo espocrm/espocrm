@@ -145,6 +145,10 @@
             return Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
         },
 
+        getScopeFieldList: function (entityType) { // TODO remove in 5.8.0
+            return this.getEntityTypeFieldList(entity);
+        },
+
         getEntityTypeFieldParam: function (entityType, field, param) {
             this.metadata.get(['entityDefs', entityType, 'fields', field, param]);
         },
