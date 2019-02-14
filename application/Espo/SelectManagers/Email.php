@@ -33,9 +33,9 @@ class Email extends \Espo\Core\SelectManagers\Base
 {
     protected $textFilterUseContainsAttributeList = ['name'];
 
-    public function getSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false) : array
+    public function applyAdditional(array $params, array &$result)
     {
-        $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);
+        parent::applyAdditional($params, $result);
 
         if (!empty($params['folderId'])) {
             $this->applyFolder($params['folderId'], $result);

@@ -715,12 +715,12 @@ class Base
         return $result;
     }
 
-    public function buildSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false) : array
+    public function buildSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false) : array
     {
-        return $this->getSelectParams($params, $withAcl, $checkWherePermission);
+        return $this->getSelectParams($params, $withAcl, $checkWherePermission, $forbidComplexExpressions);
     }
 
-    public function getSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false) : array
+    public function getSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false) : array
     {
         $result = [];
         $this->prepareResult($result);
@@ -730,14 +730,31 @@ class Base
             if (isset($params['order'])) {
                 $isDesc = $params['order'] === 'desc';
             }
-            $this->order($params['orderBy'], $isDesc, $result);
+            $orderBy = $params['orderBy'];
+
+            if ($forbidComplexExpressions) {
+                if (!is_string($orderBy) || strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
+                    throw new Forbidden("Complex expressions are forbidden in orderBy.");
+                }
+            }
+
+            $this->order($orderBy, $isDesc, $result);
         } else if (!empty($params['sortBy'])) {
             if (isset($params['order'])) {
                 $isDesc = $params['order'] === 'desc';
             } else if (isset($params['asc'])) {
                 $isDesc = $params['asc'] !== true;
             }
-            $this->order($params['sortBy'], $isDesc, $result);
+
+            $orderBy = $params['sortBy'];
+
+            if ($forbidComplexExpressions) {
+                if (!is_string($orderBy) || strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
+                    throw new Forbidden("Complex expressions are forbidden in orderBy.");
+                }
+            }
+
+            $this->order($orderBy, $isDesc, $result);
         } else if (!empty($params['order'])) {
             $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'orderBy']);
             $isDesc = $params['order'] === 'desc';
@@ -770,7 +787,7 @@ class Base
 
         if (!empty($params['where']) && is_array($params['where'])) {
             if ($checkWherePermission) {
-                $this->checkWhere($params['where']);
+                $this->checkWhere($params['where'], $checkWherePermission, $forbidComplexExpressions);
             }
             $this->where($params['where'], $result);
         }
@@ -785,12 +802,12 @@ class Base
             $this->access($result);
         }
 
-        $this->applyAdditional($result);
+        $this->applyAdditional($params, $result);
 
         return $result;
     }
 
-    protected function checkWhere(array $where)
+    protected function checkWhere(array $where, bool $checkWherePermission = true, bool $forbidComplexExpressions = true)
     {
         foreach ($where as $w) {
             $attribute = null;
@@ -808,7 +825,13 @@ class Base
 
             $entityType = $this->getEntityType();
 
-            if ($attribute) {
+            if ($attribute && $forbidComplexExpressions) {
+                if (strpos($attribute, '.') !== false || strpos($attribute, ':')) {
+                    throw new Forbidden("SelectManager::checkWhere: Complex expressions are forbidden.");
+                }
+            }
+
+            if ($attribute && $checkWherePermission) {
                 if (strpos($attribute, '.')) {
                     list($link, $attribute) = explode('.', $attribute);
                     if (!$this->getSeed()->hasRelation($link)) {
@@ -840,8 +863,9 @@ class Base
                     }
                 }
             }
+
             if (!empty($w['value']) && is_array($w['value'])) {
-                $this->checkWhere($w['value']);
+                $this->checkWhere($w['value'], $checkWherePermission, $forbidComplexExpressions);
             }
         }
     }
@@ -1723,7 +1747,7 @@ class Base
         $this->textFilter($textFilter, $result);
     }
 
-    public function applyAdditional(array &$result)
+    public function applyAdditional(array $params, array &$result)
     {
 
     }

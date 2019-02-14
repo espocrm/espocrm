@@ -1052,7 +1052,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getSelectParams($params)
     {
-        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
+        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true, true);
 
         return $selectParams;
     }
@@ -2555,7 +2555,7 @@ class Record extends \Espo\Core\Services\Base
             return $this->selectAttributeList;
         }
 
-        // TODO remove in 5.5.0
+        // TODO remove in 5.7.0
         if (in_array($this->getEntityType(), ['Report', 'Workflow', 'ReportPanel'])) {
             return null;
         }
