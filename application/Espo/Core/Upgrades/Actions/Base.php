@@ -111,13 +111,18 @@ abstract class Base
         return $this->actionManager;
     }
 
-    protected function getParams($name = null)
+    protected function getParams($name, $returns = null)
     {
         if (isset($this->params[$name])) {
             return $this->params[$name];
         }
 
-        return $this->params;
+        return $returns;
+    }
+
+    protected function setParam($name, $value)
+    {
+        $this->params[$name] = $value;
     }
 
     protected function getZipUtil()
@@ -153,6 +158,7 @@ abstract class Base
     {
         $this->deletePackageFiles();
         $this->deletePackageArchive();
+        $this->disableMaintenanceMode();
         throw new Error($errorMessage);
     }
 
@@ -736,5 +742,58 @@ abstract class Base
         }
 
         return $array;
+    }
+
+    protected function enableMaintenanceMode()
+    {
+        $config = $this->getConfig();
+
+        $actualParams = [
+            'maintenanceMode' => $config->get('maintenanceMode'),
+            'cronDisabled' => $config->get('cronDisabled'),
+            'useCache' => $config->get('useCache'),
+        ];
+
+        $this->setParam('beforeMaintenanceModeParams', $actualParams);
+
+        $save = false;
+
+        if (!$actualParams['maintenanceMode']) {
+            $config->set('maintenanceMode', true);
+            $save = true;
+        }
+
+        if (!$actualParams['cronDisabled']) {
+            $config->set('cronDisabled', true);
+            $save = true;
+        }
+
+        if ($actualParams['useCache']) {
+            $config->set('useCache', false);
+            $save = true;
+        }
+
+        if ($save) {
+            $config->save();
+        }
+    }
+
+    protected function disableMaintenanceMode()
+    {
+        $config = $this->getConfig();
+        $beforeMaintenanceModeParams = $this->getParams('beforeMaintenanceModeParams', []);
+
+        $save = false;
+
+        foreach ($beforeMaintenanceModeParams as $paramName => $paramValue) {
+            if ($config->get($paramName) != $paramValue) {
+                $config->set($paramName, $paramValue);
+                $save = true;
+            }
+        }
+
+        if ($save) {
+            $config->save();
+        }
     }
 }

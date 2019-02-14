@@ -63,6 +63,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         //check permissions copied and deleted files
         $this->checkIsWritable();
 
+        $this->enableMaintenanceMode();
+
         $this->beforeRunAction();
 
         $this->backupExistingFiles();
@@ -91,6 +93,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->deleteFiles('vendor');
         $this->copyFiles('vendor');
 
+        $this->disableMaintenanceMode();
+
         if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
             if (!$this->systemRebuild()) {
                 $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
@@ -102,7 +106,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
             $this->throwErrorAndRemovePackage('Cannot copy afterInstall files.');
         }
 
-        /* run before install script */
+        /* run after install script */
         if (!isset($data['skipAfterScript']) || !$data['skipAfterScript']) {
             $this->runScript('after');
         }
