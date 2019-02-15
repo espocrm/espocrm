@@ -82,14 +82,16 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 role = '';
             }
             if (role != '') {
-                var style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', this.roleField, 'style', role]) || 'muted';
+                var style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', this.roleField, 'style', role]);
                 var className = 'text';
 
-                if (this.displayRoleAsLabel) {
+                if (this.displayRoleAsLabel && style && style !== 'default') {
                     className = 'label label-sm label';
                     if (style === 'muted') {
                         style = 'default';
                     }
+                } else {
+                    style = style || 'muted';
                 }
 
                 roleHtml = '<span class="test-muted small"> &#187; </span>' +

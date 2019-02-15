@@ -56,7 +56,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             if (this.isReadMode()) {
-                if (this.params.displayAsLabel) {
+                if (this.params.displayAsLabel && data.style && data.style !== 'default') {
                     data.class = 'label label-md label';
                 } else {
                     data.class = 'text';

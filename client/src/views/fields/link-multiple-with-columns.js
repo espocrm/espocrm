@@ -117,11 +117,11 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                 var type = this.columnsDefs[column].type;
                 if (value !== '' && value) {
                     if (type === 'enum') {
-                        roleHtml += '<span class="text-muted small"> &#187; ' +
+                        roleHtml += ' <span class="text-muted small">&#187;</span> ' + '<span class="text-muted small">' +
                             this.getHelper().stripTags(this.getLanguage().translateOption(value, this.columnsDefs[column].field, this.columnsDefs[column].scope)) +
                         '</span>';
                     } else if (type === 'varchar') {
-                        roleHtml += '<span class="text-muted small"> &#187; ' +
+                        roleHtml += ' <span class="text-muted small">&#187;</span> ' + '<span class="text-muted small">' +
                             value
                         '</span>';
                     }
