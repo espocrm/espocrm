@@ -52,9 +52,9 @@ class EntityManager
 
     private $reservedWordList = ['__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'for', 'foreach', 'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common'];
 
-    private $linkForbiddenNameList = ['posts', 'stream', 'subscription', 'followers', 'action'];
+    private $linkForbiddenNameList = ['posts', 'stream', 'subscription', 'followers', 'action', 'null', 'false', 'true'];
 
-    private $forbiddenEntityTypeNameList = ['PortalUser', 'ApiUser', 'Timeline', 'About', 'Admin'];
+    private $forbiddenEntityTypeNameList = ['PortalUser', 'ApiUser', 'Timeline', 'About', 'Admin', 'Null', 'False', 'True'];
 
     public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, Container $container = null)
     {
