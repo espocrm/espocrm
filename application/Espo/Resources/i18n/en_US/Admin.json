@@ -181,7 +181,8 @@
         "minuteStep": "Minutes Step",
         "inlineEditDisabled": "Disable Inline Edit",
         "allowCustomOptions": "Allow Custom Options",
-        "displayAsLabel": "Display as Label"
+        "displayAsLabel": "Display as Label",
+        "maxCount": "Max Item Count"
     },
     "messages": {
         "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",

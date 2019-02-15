@@ -269,6 +269,7 @@
         "fieldMaxFileSizeError": "File should not exceed {max} Mb",
         "fieldValueDuplicate": "Duplicate value",
         "fieldIsUploading": "Uploading in progress",
+        "fieldExceedsMaxCount": "Count exceeds max allowed {maxCount}",
         "resetPreferencesDone": "Preferences has been reset to defaults",
         "confirmation": "Are you sure?",
         "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",

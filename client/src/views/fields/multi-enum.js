@@ -174,7 +174,20 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     return true;
                 }
             }
-        }
+        },
 
+        validateMaxCount: function () {
+            if (this.params.maxCount) {
+                var itemList = this.model.get(this.name) || [];
+                if (itemList.length > this.params.maxCount) {
+                    var msg =
+                        this.translate('fieldExceedsMaxCount', 'messages')
+                            .replace('{field}', this.getLabelText())
+                            .replace('{maxCount}', this.params.maxCount.toString());
+                    this.showValidationMessage(msg, '.selectize-control');
+                    return true;
+                }
+            }
+        },
     });
 });

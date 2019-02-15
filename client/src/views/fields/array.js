@@ -44,6 +44,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         maxItemLength: null,
 
+        validations: ['required', 'maxCount'],
+
         data: function () {
             var itemHtmlList = [];
             (this.selected || []).forEach(function (value) {
@@ -467,7 +469,21 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 var value = this.model.get(this.name);
                 if (!value || value.length == 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
-                    this.showValidationMessage(msg);
+                    this.showValidationMessage(msg, '.array-control-container');
+                    return true;
+                }
+            }
+        },
+
+        validateMaxCount: function () {
+            if (this.params.maxCount) {
+                var itemList = this.model.get(this.name) || [];
+                if (itemList.length > this.params.maxCount) {
+                    var msg =
+                        this.translate('fieldExceedsMaxCount', 'messages')
+                            .replace('{field}', this.getLabelText())
+                            .replace('{maxCount}', this.params.maxCount.toString());
+                    this.showValidationMessage(msg, '.array-control-container');
                     return true;
                 }
             }
@@ -475,7 +491,6 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         getSearchType: function () {
             return this.getSearchParamsData().type || 'anyOf';
-        }
-
+        },
     });
 });
