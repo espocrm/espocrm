@@ -338,11 +338,11 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 var label = null;
                 if (this.translatedOptions != null) {
                     if (item in this.translatedOptions) {
-                        label = this.getHelper().stripTags(this.translatedOptions[item]);
+                        label = this.escapeValue(item);
                     }
                 }
                 if (label === null) {
-                    label = this.getHelper().stripTags(item);
+                    label = this.escapeValue(item);
                 }
                 if (label === '') {
                     label = this.translate('None');
@@ -379,22 +379,25 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             value = value.toString();
 
-            var valueSanitized = this.getHelper().stripTags(value);
-            var valueSanitized = valueSanitized.replace(/"/g, '&quot;');
+            var valueSanitized = this.escapeValue(value);
 
             var label = valueSanitized;
             if (this.translatedOptions) {
-                label = ((value in this.translatedOptions) ? this.translatedOptions[value] : label);
-                label = label.toString();
-                label = this.getHelper().stripTags(label);
-                label = label.replace(/"/g, '&quot;');
+                if ((value in this.translatedOptions)) {
+                    label = this.translatedOptions[value];
+                    label = label.toString();
+                    label = this.escapeValue(label);
+                }
             }
-
             var html = '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' + label +
             '&nbsp;<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
             '</div>';
 
             return html;
+        },
+
+        escapeValue: function (value) {
+            return Handlebars.Utils.escapeExpression(value);
         },
 
         addValue: function (value) {
@@ -407,9 +410,10 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         removeValue: function (value) {
-            var valueSanitized = this.getHelper().stripTags(value).replace(/"/g, '\\"');
+            var valueInternal = value.replace(/"/g, '\\"');
 
-            this.$list.children('[data-value="' + valueSanitized + '"]').remove();
+            this.$list.children('[data-value="' + valueInternal + '"]').remove();
+
             var index = this.selected.indexOf(value);
             this.selected.splice(index, 1);
             this.trigger('change');

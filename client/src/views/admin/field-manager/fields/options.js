@@ -45,12 +45,13 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
         },
 
         getItemHtml: function (value) {
-            var valueSanitized = this.getHelper().stripTags(value);
+            var valueSanitized = this.escapeValue(value);
+
             var translatedValue = this.translatedOptions[value] || valueSanitized;
 
             translatedValue = translatedValue.replace(/"/g, '&quot;');
 
-            var valueInternal = valueSanitized.replace(/"/g, '&quot;');
+            var valueInternal = this.escapeValue(value);
 
             var html = '' +
             '<div class="list-group-item link-with-role form-inline" data-value="' + valueInternal + '">' +

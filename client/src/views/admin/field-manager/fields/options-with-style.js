@@ -49,6 +49,7 @@ Espo.define('views/admin/field-manager/fields/options-with-style', 'views/admin/
 
         changeStyle: function (value, style) {
             var valueInternal = value.replace(/"/g, '\\"');
+
             this.$el.find('[data-action="selectOptionItemStyle"][data-value="'+valueInternal+'"] .check-icon').addClass('hidden');
             this.$el.find('[data-action="selectOptionItemStyle"][data-value="'+valueInternal+'"][data-style="'+style+'"] .check-icon').removeClass('hidden');
 
@@ -71,8 +72,8 @@ Espo.define('views/admin/field-manager/fields/options-with-style', 'views/admin/
 
             if (!value) return html;
 
-            var valueSanitized = this.getHelper().stripTags(value);
-            var valueInternal = valueSanitized.replace(/"/g, '&quot;');
+            var valueSanitized = this.escapeValue(value);
+            var valueInternal = this.escapeValue(value);
 
             var $item = $(html);
 
