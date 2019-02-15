@@ -55,6 +55,9 @@ class Submission
             $socket->connect($dsn);
 
             $socket->send(json_encode($data));
+
+            $socket->setSockOpt(\ZMQ::SOCKOPT_LINGER, 1000);
+            $socket->disconnect($dsn);
         } catch (\Throwable $e) {
             $GLOBALS['log']->error("WebSocketSubmission: " . $e->getMessage());
         }
