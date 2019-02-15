@@ -104,6 +104,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 this.selected = [];
             }
 
+            this.styleMap = this.params.style || {};
+
             this.setupOptions();
 
             if ('translatedOptions' in this.options) {
@@ -332,7 +334,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         getValueForDisplay: function () {
-            return this.selected.map(function (item) {
+            var list = this.selected.map(function (item) {
                 var label = null;
                 if (this.translatedOptions != null) {
                     if (item in this.translatedOptions) {
@@ -345,8 +347,24 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 if (label === '') {
                     label = this.translate('None');
                 }
+
+                var style = this.styleMap[item] || 'default';
+                if (this.params.displayAsLabel) {
+                    label = '<span class="label label-md label-'+style+'">' + label + '</span>';
+                } else {
+                    if (style && style != 'default') {
+                        label = '<span class="text-'+style+'">' + label + '</span>';
+                    }
+                }
                 return label;
-            }, this).join(', ');
+            }, this)
+
+
+            if (this.params.displayAsLabel) {
+                return list.join(' ');
+            } else {
+                return list.join(', ')
+            }
         },
 
         getItemHtml: function (value) {
