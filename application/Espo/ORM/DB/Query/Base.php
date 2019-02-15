@@ -483,34 +483,7 @@ abstract class Base
         $argumentPartList = null;
 
         if ($function && in_array($function, $this->multipleArgumentsFunctionList)) {
-            //$argumentList = [];
             $arguments = $attribute;
-
-            /*$commaPositionList = [];
-            for ($i = 0; $i < strlen($arguments); $i++) {
-                if ($arguments[$i] === ',') {
-                    if (
-                        substr_count(substr($arguments, 0, $i), '(') === substr_count(substr($arguments, 0, $i), ')')
-                        &&
-                        substr_count(substr($arguments, $i), '(') === substr_count(substr($arguments, $i), ')')
-                    ) {
-                        $commaPositionList[] = $i;
-                    }
-                }
-            }
-
-            if (!count($commaPositionList)) {
-                $argumentList[] = $attribute;
-            } else {
-                $previousIndex = -1;
-                foreach ($commaPositionList as $i => $index) {
-                    $argumentList[] = trim(substr($arguments, $previousIndex + 1, $index - $previousIndex - 1));
-                    if ($i === count($commaPositionList) - 1) {
-                        $argumentList[] = trim(substr($arguments, $index + 1));
-                    }
-                    $previousIndex = $index;
-                }
-            }*/
 
             $argumentList = $this->parseArgumentListFromFunctionContent($arguments);
 
