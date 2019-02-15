@@ -58,7 +58,8 @@
             "options": ["None", "Accepted", "Tentative", "Declined"],
             "style": {
                 "Accepted": "success",
-                "Declined": "danger"
+                "Declined": "danger",
+                "Tentative": "warning"
             },
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
