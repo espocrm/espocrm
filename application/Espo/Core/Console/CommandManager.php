@@ -48,13 +48,14 @@ class CommandManager
 
         foreach ($_SERVER['argv'] as $i => $item) {
             if ($i < 2) continue;
-            $argumentList[] = $item;
 
             if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
                 list($name, $value) = explode('=', substr($item, 2));
                 $options[$name] = $value;
             } else if (strpos($item, '-') === 0) {
                 $flagList[] = substr($item, 1);
+            } else {
+                $argumentList[] = $item;
             }
         }
 
