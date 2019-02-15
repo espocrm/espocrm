@@ -593,6 +593,17 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction9()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', ["COALESCE:(name,FALSE,true,null)", 'value']]
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, COALESCE(comment.name, FALSE, TRUE, NULL) AS `value` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testFunctionTZ1()
     {
         $sql = $this->query->createSelectQuery('Comment', [

@@ -136,12 +136,14 @@ abstract class Base
         'FLOOR',
         'CEIL',
         'ROUND',
+        'COALESCE',
     ];
 
     protected $multipleArgumentsFunctionList = [
         'CONCAT',
         'TZ',
         'ROUND',
+        'COALESCE',
     ];
 
     protected $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
@@ -582,6 +584,8 @@ abstract class Base
         } else if (is_numeric($argument)) {
             $string = $this->quote($argument);
             return $string;
+        } else if (in_array(strtoupper($argument), ['NULL', 'TRUE', 'FALSE'])) {
+            return strtoupper($argument);
         }
 
         if (strpos($argument, ':')) {
