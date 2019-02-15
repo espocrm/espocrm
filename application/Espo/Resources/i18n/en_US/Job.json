@@ -15,7 +15,8 @@
         "targetType": "Target Type",
         "targetId": "Target ID",
         "number": "Number",
-        "queue": "Queue"
+        "queue": "Queue",
+        "job": "Job"
     },
     "options": {
         "status": {

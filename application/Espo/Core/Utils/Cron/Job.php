@@ -90,14 +90,15 @@ class Job
                 'targetType',
                 'methodName',
                 'serviceName',
-                'data'
+                'job',
+                'data',
             ],
             'whereClause' => [
                 'status' => CronManager::PENDING,
                 'executeTime<=' => date('Y-m-d H:i:s'),
-                'queue' => $queue
+                'queue' => $queue,
             ],
-            'orderBy' => 'number'
+            'orderBy' => 'number',
         ];
         if ($limit) {
             $selectParams['offset'] = 0;
@@ -111,7 +112,7 @@ class Job
     {
         $where = [
             'scheduledJobId' => $scheduledJobId,
-            'status' => [CronManager::RUNNING, CronManager::READY]
+            'status' => [CronManager::RUNNING, CronManager::READY],
         ];
         if ($targetId && $targetType) {
             $where['targetId'] = $targetId;
@@ -235,7 +236,7 @@ class Job
             'targetId',
             'targetType',
             'pid',
-            'startedAt'
+            'startedAt',
         ])->where([
             'status' => CronManager::READY,
             'startedAt<' => $dateTimeThreshold

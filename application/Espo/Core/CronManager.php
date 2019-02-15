@@ -59,7 +59,7 @@ class CronManager
         '* * *',
         '* * * *',
         '* * * * *',
-        '* * * * * *'
+        '* * * * * *',
     ];
 
     const PENDING = 'Pending';
@@ -182,8 +182,6 @@ class CronManager
 
     /**
      * Run Cron
-     *
-     * @return void
      */
     public function run()
     {
@@ -299,7 +297,7 @@ class CronManager
         $this->runJob($job);
     }
 
-    public function runJob($job)
+    public function runJob(\Espo\Entities\Job $job)
     {
         $isSuccess = true;
         $skipLog = false;
@@ -307,6 +305,8 @@ class CronManager
         try {
             if ($job->get('scheduledJobId')) {
                 $this->runScheduledJob($job);
+            } else if ($job->get('job')) {
+                $this->runJobByName($job);
             } else {
                 $this->runService($job);
             }
@@ -333,6 +333,9 @@ class CronManager
         if ($job->get('scheduledJobId') && !$skipLog) {
             $this->getCronScheduledJobUtil()->addLogRecord($job->get('scheduledJobId'), $status, null, $job->get('targetId'), $job->get('targetType'));
         }
+
+        if ($isSuccess) return true;
+        return false;
     }
 
     protected function runScheduledJob($job)
@@ -340,18 +343,14 @@ class CronManager
         $jobName = $job->get('scheduledJobJob');
 
         $className = $this->getScheduledJobUtil()->get($jobName);
-        if ($className === false) {
-            throw new NotFound();
-        }
+
+        if ($className === false) throw new Error("No class name for job {$jobName}.");
 
         $jobClass = new $className($this->container);
         $method = 'run';
-        if (!method_exists($jobClass, $method)) {
-            throw new NotFound();
-        }
+        if (!method_exists($jobClass, $method)) throw new Error();
 
         $data = null;
-
         if ($job->get('data')) {
             $data = $job->get('data');
         }
@@ -359,41 +358,45 @@ class CronManager
         $jobClass->$method($data, $job->get('targetId'), $job->get('targetType'));
     }
 
-    /**
-     * Run Service
-     *
-     * @param  array  $job
-     *
-     * @return void
-     */
     protected function runService($job)
     {
         $serviceName = $job->get('serviceName');
 
         if (!$serviceName) {
-            throw new Error('Job with empty serviceName.');
+            throw new Error("Job with empty serviceName.");
         }
 
-        if (!$this->getServiceFactory()->checkExists($serviceName)) {
-            throw new NotFound();
-        }
+        if (!$this->getServiceFactory()->checkExists($serviceName)) throw new Error();
 
         $service = $this->getServiceFactory()->create($serviceName);
 
         $methodNameDeprecated = $job->get('method');
         $methodName = $job->get('methodName');
 
-        if (!$methodName) {
-            throw new Error('Job with empty methodName.');
-        }
+        if (!$methodName) throw new Error('Job with empty methodName.');
 
-        if (!method_exists($service, $methodName)) {
-            throw new NotFound();
-        }
+        if (!method_exists($service, $methodName)) throw new Error();
 
         $data = $job->get('data');
 
         $service->$methodName($data, $job->get('targetId'), $job->get('targetType'));
+    }
+
+    protected function runJobByName($job)
+    {
+        $jobName = $job->get('job');
+
+        $className = $this->getScheduledJobUtil()->get($jobName);
+
+        if ($className === false) throw new Error("No class name for job {$jobName}.");
+
+        $jobClass = new $className($this->container);
+        $method = 'run';
+        if (!method_exists($jobClass, $method)) throw new Error();
+
+        $data = $job->get('data') ?: null;
+
+        $jobClass->$method($data, $job->get('targetId'), $job->get('targetType'));
     }
 
     protected function createJobsFromScheduledJobs()

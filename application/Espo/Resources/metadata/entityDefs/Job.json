@@ -39,6 +39,10 @@
             "type": "varchar",
             "maxLength": 100
         },
+        "job": {
+            "type": "varchar",
+            "view": "views/scheduled-job/fields/job"
+        },
         "data": {
             "type": "jsonObject"
         },
