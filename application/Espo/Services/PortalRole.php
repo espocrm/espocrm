@@ -47,7 +47,7 @@ class PortalRole extends Record
         $this->clearRolesCache();
     }
 
-    public function afterUpdate(Entity $entity, $data)
+    public function afterUpdateEntity(Entity $entity, $data)
     {
         parent::afterUpdateEntity($entity, $data);
         $this->clearRolesCache();
