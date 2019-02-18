@@ -222,6 +222,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         getAutocompleteUrl: function () {
             var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
+            if (!this.forceSelectAllAttributes) {
+                var select = ['id', 'name'];
+                if (this.mandatorySelectAttributeList) {
+                    select = select.concat(this.mandatorySelectAttributeList);
+                }
+                url += '&select=' + select.join(',')
+            }
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {

@@ -92,7 +92,7 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                 var $elemeneTeams = this.$el.find('input.element-teams');
                 $elemeneTeams.autocomplete({
                     serviceUrl: function (q) {
-                        return 'Team?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
+                        return 'Team?orderBy=name&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
                     }.bind(this),
                     minChars: 1,
                     triggerSelectOnValidInput: false,
