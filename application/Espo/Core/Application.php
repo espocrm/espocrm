@@ -310,8 +310,6 @@ class Application
     protected function getRouteList()
     {
         $routes = new \Espo\Core\Utils\Route($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
-
-
         return $routes->getAll();
     }
 
@@ -339,30 +337,7 @@ class Application
     protected function initAutoloads()
     {
         $autoload = new \Espo\Core\Utils\Autoload($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
-
-        try {
-            $autoloadList = $autoload->getAll();
-        } catch (\Exception $e) {} //bad permissions
-
-        if (empty($autoloadList)) {
-            return;
-        }
-
-        $namespacesPath = 'vendor/composer/autoload_namespaces.php';
-        $existingNamespaces = file_exists($namespacesPath) ? include($namespacesPath) : array();
-        if (!empty($existingNamespaces) && is_array($existingNamespaces)) {
-            $existingNamespaces = array_keys($existingNamespaces);
-        }
-
-        $classLoader = new \Composer\Autoload\ClassLoader();
-
-        foreach ($autoloadList as $prefix => $path) {
-            if (!in_array($prefix, $existingNamespaces)) {
-                $classLoader->add($prefix, $path);
-            }
-        }
-
-        $classLoader->register(true);
+        $autoload->register();
     }
 
     public function setBasePath($basePath)
