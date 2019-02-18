@@ -33,9 +33,13 @@ class Autoload
 {
     protected $data = null;
 
-    private $fileManager;
     private $config;
+
     private $metadata;
+
+    private $fileManager;
+
+    private $loader;
 
     protected $cacheFile = 'data/cache/application/autoload.php';
 
@@ -50,6 +54,7 @@ class Autoload
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
+        $this->loader = new \Espo\Core\Utils\Autoload\Loader($config, $fileManager);
     }
 
     protected function getConfig()
@@ -67,6 +72,11 @@ class Autoload
         return $this->metadata;
     }
 
+    protected function getLoader()
+    {
+        return $this->loader;
+    }
+
     public function get($key = null, $returns = null)
     {
         if (!isset($this->data)) {
@@ -79,7 +89,6 @@ class Autoload
 
         return Utill::getValueByKey($this->data, $key, $returns);
     }
-
 
     public function getAll()
     {
@@ -120,15 +129,49 @@ class Autoload
     protected function loadData($autoloadFile, $returns = array())
     {
         if (file_exists($autoloadFile)) {
-            $content= $this->getFileManager()->getContents($autoloadFile);
+            $content = $this->getFileManager()->getContents($autoloadFile);
             $arrayContent = Json::getArrayData($content);
             if (!empty($arrayContent)) {
-                return $arrayContent;
+                return $this->normalizeData($arrayContent);
             }
 
             $GLOBALS['log']->error('Autoload::unify() - Empty file or syntax error - ['.$autoloadFile.']');
         }
 
         return $returns;
+    }
+
+    protected function normalizeData(array $data)
+    {
+        $normalizedData = [];
+
+        foreach ($data as $key => $value) {
+            switch ($key) {
+                case 'psr-4':
+                case 'psr-0':
+                case 'classmap':
+                case 'files':
+                case 'autoloadFileList':
+                    $normalizedData[$key] = $value;
+                    break;
+
+                default:
+                    $normalizedData['psr-0'][$key] = $value;
+                    break;
+            }
+        }
+
+        return $normalizedData;
+    }
+
+    public function register()
+    {
+        try {
+            $autoloadList = $this->getAll();
+        } catch (\Exception $e) {} //bad permissions
+
+        if (!empty($autoloadList)) {
+            $this->getLoader()->register($autoloadList);
+        }
     }
 }
