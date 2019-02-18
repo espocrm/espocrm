@@ -880,6 +880,10 @@ class Base
             } else {
                 $this->userTimeZone = 'UTC';
             }
+
+            if (!$this->userTimeZone) {
+                $this->userTimeZone = 'UTC';
+            }
         }
 
         return $this->userTimeZone;
