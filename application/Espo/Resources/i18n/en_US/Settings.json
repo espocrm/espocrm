@@ -87,6 +87,7 @@
         "calendarEntityList": "Calendar Entity List",
         "mentionEmailNotifications": "Send email notifications about mentions in posts",
         "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link",
+        "massEmailOpenTracking": "Email Open Tracking",
         "activitiesEntityList": "Activities Entity List",
         "historyEntityList": "History Entity List",
         "b2cMode": "B2C Mode",

@@ -53,6 +53,11 @@ Espo.define('crm:views/campaign/record/panels/campaign-stats', 'views/record/pan
     				fieldList = ['leadCreatedCount', 'revenue'];
     		}
 
+            if (!this.getConfig().get('massEmailOpenTracking')) {
+                var i = fieldList.indexOf('openedCount')
+                if (~i) fieldList.splice(i, 1);
+            }
+
             this.statsFieldList.forEach(function (item) {
                 this.options.recordViewObject.hideField(item);
             }, this);

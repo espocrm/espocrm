@@ -453,6 +453,9 @@
         "massEmailDisableMandatoryOptOutLink": {
             "type": "bool"
         },
+        "massEmailOpenTracking": {
+            "type": "bool"
+        },
         "aclStrictMode": {
             "type": "bool",
             "tooltip": true

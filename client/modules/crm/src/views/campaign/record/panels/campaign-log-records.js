@@ -47,6 +47,13 @@ Espo.define('crm:views/campaign/record/panels/campaign-log-records', 'views/reco
                     label: 'Create Target List'
                 });
             }
+            this.filterList = Espo.Utils.clone(this.filterList);
+
+            if (!this.getConfig().get('massEmailOpenTracking')) {
+                var i = this.filterList.indexOf('opened')
+                if (~i) this.filterList.splice(i, 1);
+            }
+
     		Dep.prototype.setup.call(this);
     	},
 
