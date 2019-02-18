@@ -31,6 +31,7 @@ namespace Espo\Services;
 
 use \Espo\ORM\Entity;
 use \Espo\Entities\Team;
+use \Zend\Mail\Storage;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
@@ -320,8 +321,20 @@ class InboundEmail extends \Espo\Services\Record
                             }
                         }
                     }
+
                     if (!$toSkip) {
+                        if ($message->isFetched() && $emailAccount->get('keepFetchedEmailsUnread')) {
+                            $flags = $message->getFlags();
+                        }
+
                         $email = $this->importMessage($parserName, $importer, $emailAccount, $message, $teamIdList, $userId, $userIdList, $filterCollection, $fetchOnlyHeader, null);
+
+                        if ($emailAccount->get('keepFetchedEmailsUnread')) {
+                            if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
+                                unset($flags[Storage::FLAG_RECENT]);
+                                $storage->setFlags($id, $flags);
+                            }
+                        }
                     }
                 } catch (\Exception $e) {
                     $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage());

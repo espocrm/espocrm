@@ -34,7 +34,7 @@
                 {"name":"monitoredFolders"},{"name":"password"}
             ],
             [
-                false, {"name":"storeSentEmails"}
+                {"name":"keepFetchedEmailsUnread"}, {"name":"storeSentEmails"}
             ],
             [
                 false, {"name":"sentFolder"}

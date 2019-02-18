@@ -25,6 +25,7 @@
         "teams": "Teams",
         "sentFolder": "Sent Folder",
         "storeSentEmails": "Store Sent Emails",
+        "keepFetchedEmailsUnread": "Keep Fetched Emails Unread",
         "useImap": "Fetch Emails",
         "useSmtp": "Use SMTP",
         "smtpHost": "SMTP Host",

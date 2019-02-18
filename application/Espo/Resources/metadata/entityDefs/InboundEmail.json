@@ -74,6 +74,9 @@
             "type": "bool",
             "tooltip": true
         },
+        "keepFetchedEmailsUnread": {
+            "type": "bool"
+        },
         "useImap": {
             "type": "bool",
             "default": true
