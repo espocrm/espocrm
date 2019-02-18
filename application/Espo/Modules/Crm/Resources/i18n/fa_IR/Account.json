@@ -1,5 +1,7 @@
 {
   "fields": {
+    "name": "نام",
+    "emailAddress": "ایمیل",
     "website": "وبسایت",
     "phoneNumber": "تلفن",
     "billingAddress": "آدرس صورت‌حساب",
@@ -20,12 +22,14 @@
     "meetingsPrimary": "جلسات (بسط یافته)",
     "callsPrimary": "تماس‌ها (بسط یافته)",
     "tasksPrimary": "وظایف (بسط یافته)",
+    "campaign": "کمپین",
     "portalUsers": "کاربران پورتال",
     "originalLead": "لید اصلی"
   },
   "options": {
     "type": {
       "Customer": "مشتری",
+      "Investor": "سرمایه گذار",
       "Partner": "همکار",
       "Reseller": "نماینده"
     },

@@ -20,6 +20,9 @@
   "presetFilters": {
     "actual": "واقعی"
   },
+  "messages": {
+    "infoText": "متغیرهایی موجود:\n\n{optOutUrl} - URL برای یک لینک unsubsbribe؛\n\n{optOutLink} - یک لینک لغو اشتراک"
+  },
   "placeholderTexts": {
     "optOutUrl": "نشانی اینترنتی برای پیوند لغو اشتراک"
   }

@@ -23,11 +23,13 @@
   },
   "links": {
     "opportunities": "فرصت ها",
+    "cases": "موارد",
     "targetLists": "لیست های هدف",
     "campaignLogRecords": "لاگ کمپین",
     "campaign": "کمپین",
     "account": "حساب (اولیه)",
     "accounts": "حساب ها",
+    "casesPrimary": "موارد (اولیه)",
     "portalUser": "کاربر پورتال",
     "originalLead": "لید اصلی",
     "documents": "اسناد"

@@ -9,7 +9,9 @@
     "targetLists": "لیست های هدف",
     "excludingTargetLists": "به غیر از لیست هدف",
     "sentCount": "ارسال شد",
+    "openedCount": "بازشده",
     "clickedCount": "کلیک کرد",
+    "optedOutCount": "تصمیم گرفتند از",
     "leadCreatedCount": "ایجاد لید ها(سرنخ فروش)",
     "revenue": "درآمد",
     "revenueConverted": "درآمد (تبدیل شده)",
@@ -41,7 +43,8 @@
       "Web": "وب",
       "Television": "تلویزیون",
       "Radio": "رادیو",
-      "Newsletter": "خبرنامه"
+      "Newsletter": "خبرنامه",
+      "Mail": "پست"
     },
     "status": {
       "Planning": "برنامه ریزی",

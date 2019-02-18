@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "نام",
+    "parent": "والدین",
     "status": "وضعیت",
     "dateStart": "تاریخ شروع",
     "dateEnd": "تاریخ پایان",
@@ -19,6 +20,10 @@
       "Planned": "برنامه ریزی شده",
       "Held": "برگزار شد",
       "Not Held": "برگزار نشد"
+    },
+    "direction": {
+      "Outbound": "خروجی",
+      "Inbound": "ورودی"
     },
     "acceptanceStatus": {
       "None": "هیچکدام",

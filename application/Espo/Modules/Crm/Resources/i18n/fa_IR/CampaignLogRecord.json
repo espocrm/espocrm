@@ -31,6 +31,8 @@
   "presetFilters": {
     "sent": "ارسال شد",
     "opened": "باز شده",
+    "optedOut": "تصمیم گرفتند از",
+    "bounced": "تندرست",
     "clicked": "کلیک کرد",
     "leadCreated": "ایجاد لید"
   }
