@@ -18,7 +18,8 @@
     {
         "label": "Mass Email",
         "rows": [
-            [{"name": "massEmailMaxPerHourCount"}, {"name": "massEmailDisableMandatoryOptOutLink"}]
+            [{"name": "massEmailMaxPerHourCount"}, {"name": "massEmailDisableMandatoryOptOutLink"}],
+            [{"name": "massEmailOpenTracking"}, false]
         ]
     }
 ]

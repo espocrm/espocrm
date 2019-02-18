@@ -389,11 +389,9 @@ class MassEmail extends \Espo\Services\Record
         $trackOpenedUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
         $trackOpenedHtml = '<img alt="'.$trackImageAlt.'" width="1" height="1" border="0" src="'.$trackOpenedUrl.'">';
 
-        if ($massEmail->get('campaignId')) {
+        if ($massEmail->get('campaignId') && $this->getConfig()->get('massEmailOpenTracking')) {
             if ($emailData['isHtml']) {
-                if ($massEmail->get('campaignId')) {
-                    $body .= '<br>' . $trackOpenedHtml;
-                }
+                $body .= '<br>' . $trackOpenedHtml;
             }
         }
 
