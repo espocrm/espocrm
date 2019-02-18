@@ -63,7 +63,7 @@ class User extends Record
         ]
     ];
 
-    protected $validateSkipFieldList = ['name'];
+    protected $validateSkipFieldList = ['name', "firstName", "lastName"];
 
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
 
