@@ -106,7 +106,9 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
             var assignmentPermission = this.getAcl().get('assignmentPermission');
 
             var buildUserListUrl = function (term) {
-                var url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+                var url = 'User?q=' + term + '&' + $.param({'primaryFilter': 'active'}) +
+                    'orderBy=name&maxSize=' + this.getConfig().get('recordsPerPage') +
+                    '&select=id,name,userName';
                 if (assignmentPermission == 'team') {
                     url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
                 }
@@ -121,9 +123,7 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                             callback([]);
                             return;
                         }
-                        $.ajax({
-                            url: buildUserListUrl(term)
-                        }).done(function (data) {
+                        Espo.Ajax.getRequest(buildUserListUrl(term)).then(function (data) {
                             callback(data.list)
                         });
                     },
