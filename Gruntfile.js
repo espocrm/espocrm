@@ -230,26 +230,6 @@ module.exports = function (grunt) {
             }
         },
         replace: {
-            timestamp: {
-                options: {
-                    patterns: [
-                        {
-                            match: 'timestamp',
-                            replacement: '<%= new Date().getTime() %>'
-                        }
-                    ]
-                },
-                files: [
-                    {
-                        src: 'build/tmp/html/main.html',
-                        dest: 'build/tmp/html/main.html'
-                    },
-                    {
-                        src: 'build/tmp/html/portal.html',
-                        dest: 'build/tmp/html/portal.html'
-                    }
-                ]
-            },
             version: {
                 options: {
                     patterns: [
@@ -304,5 +284,4 @@ module.exports = function (grunt) {
         'chmod',
         'clean:final'
     ]);
-
 };
