@@ -89,12 +89,16 @@ module.exports = function (grunt) {
         themeList.push(file.substr(0, file.length - 5));
     });
 
+    var cssminFilesData = {};
     var lessData = {};
     themeList.forEach(function (theme) {
         var name = camelCaseToHyphen(theme);
         var files = {};
         files['client/css/espo/'+name+'.css'] = 'frontend/less/'+name+'/main.less';
         files['client/css/espo/'+name+'-iframe.css'] = 'frontend/less/'+name+'/iframe/main.less';
+
+        cssminFilesData['client/css/espo/'+name+'.css'] = 'client/css/espo/'+name+'.css';
+        cssminFilesData['client/css/espo/'+name+'-iframe.css'] = 'client/css/espo/'+name+'-iframe.css';
         var o = {
             options: {
                 yuicompress: true,
@@ -126,6 +130,11 @@ module.exports = function (grunt) {
             }
         },
         less: lessData,
+        cssmin: {
+            themes: {
+                files: cssminFilesData
+            }
+        },
         uglify: {
             options: {
                 mangle: false,
@@ -274,6 +283,7 @@ module.exports = function (grunt) {
         'clean:start',
         'mkdir:tmp',
         'less',
+        'cssmin',
         'uglify',
         'copy:frontendFolders',
         'copy:frontendLib',
