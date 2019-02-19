@@ -2042,8 +2042,6 @@ class Record extends \Espo\Core\Services\Base
             $sth->execute();
         }
 
-        $dataList = [];
-
         $attributeListToSkip = [
             'deleted'
         ];
@@ -2089,6 +2087,8 @@ class Record extends \Espo\Core\Services\Base
             $fieldList = $exportObj->filterFieldList($this->entityType, $fieldList, $exportAllFields);
         }
 
+        $fp = null;
+
         if (is_null($attributeList)) {
             $attributeList = [];
             $seed = $this->getEntityManager()->getEntity($this->entityType);
@@ -2109,6 +2109,8 @@ class Record extends \Espo\Core\Services\Base
             $exportObj->addAdditionalAttributes($this->entityType, $attributeList, $fieldList);
         }
 
+        $fp = fopen('php://temp', 'w');
+
         if ($collection) {
             foreach ($collection as $entity) {
                 $this->loadAdditionalFieldsForExport($entity);
@@ -2120,8 +2122,10 @@ class Record extends \Espo\Core\Services\Base
                     $value = $this->getAttributeFromEntityForExport($entity, $attribute);
                     $row[$attribute] = $value;
                 }
-                $dataList[] = $row;
+                $line = base64_encode(serialize($row)) . \PHP_EOL;
+                fwrite($fp, $line);
             }
+            rewind($fp);
         } else {
             while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
                 $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
@@ -2137,8 +2141,11 @@ class Record extends \Espo\Core\Services\Base
                     $value = $this->getAttributeFromEntityForExport($entity, $attribute);
                     $row[$attribute] = $value;
                 }
-                $dataList[] = $row;
+
+                $line = base64_encode(serialize($row)) . \PHP_EOL;
+                fwrite($fp, $line);
             }
+            rewind($fp);
         }
 
         if (is_null($attributeList)) {
@@ -2168,7 +2175,9 @@ class Record extends \Espo\Core\Services\Base
         if (array_key_exists('exportName', $params)) {
             $exportParams['exportName'] = $params['exportName'];
         }
-        $contents = $exportObj->process($this->entityType, $exportParams, $dataList);
+        $contents = $exportObj->process($this->entityType, $exportParams, null, $fp);
+
+        fclose($fp);
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);

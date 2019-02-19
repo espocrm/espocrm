@@ -52,7 +52,7 @@ class Csv extends \Espo\Core\Injectable
         }
     }
 
-    public function process($entityType, $params, $dataList)
+    public function process(string $entityType, array $params, ?array $dataList, $dataFp = null)
     {
         if (!is_array($params['attributeList'])) {
             throw new Error();
@@ -67,10 +67,20 @@ class Csv extends \Espo\Core\Injectable
 
         $fp = fopen('php://temp', 'w');
         fputcsv($fp, $attributeList, $delimiter);
-        foreach ($dataList as $row) {
-            $preparedRow = $this->prepareRow($row);
-            fputcsv($fp, $preparedRow, $delimiter);
+
+        if ($dataFp) {
+            while (($line = fgets($dataFp)) !== false) {
+                $row = unserialize(base64_decode($line));
+                $preparedRow = $this->prepareRow($row);
+                fputcsv($fp, $preparedRow, $delimiter);
+            }
+        } else {
+            foreach ($dataList as $row) {
+                $preparedRow = $this->prepareRow($row);
+                fputcsv($fp, $preparedRow, $delimiter);
+            }
         }
+
         rewind($fp);
         $csv = stream_get_contents($fp);
         fclose($fp);
