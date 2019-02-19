@@ -36,30 +36,32 @@ class HasChildren extends Base
         $foreignLinkName = $this->getForeignLinkName();
         $foreignEntityName = $this->getForeignEntityName();
 
-        return array(
-            $entityName => array (
-                'fields' => array(
-                       $linkName.'Ids' => array(
-                        'type' => 'varchar',
+        $isStub = !$this->getMetadata()->get(['entityDefs', $entityName, 'fields', $linkName]);
+
+        return [
+            $entityName => [
+                'fields' => [
+                       $linkName.'Ids' => [
+                        'type' => 'jsonArray',
                         'notStorable' => true,
-                    ),
-                    $linkName.'Names' => array(
+                        'isLinkStub' => $isStub,
+                    ],
+                    $linkName.'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
-                    ),
-                ),
-                'relations' => array(
-                    $linkName => array(
+                        'isLinkStub' => $isStub,
+                    ],
+                ],
+                'relations' => [
+                    $linkName => [
                         'type' => 'hasChildren',
                         'entity' => $foreignEntityName,
                         'foreignKey' => $foreignLinkName.'Id',
                         'foreignType' => $foreignLinkName.'Type',
                         'foreign' => $foreignLinkName
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
     }
-
-
 }

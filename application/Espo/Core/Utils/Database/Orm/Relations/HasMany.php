@@ -39,31 +39,33 @@ class HasMany extends Base
 
         $relationType = isset($linkParams['relationName']) ? 'manyMany' : 'hasMany';
 
-        $relation = array(
-            $entityName => array (
-                'fields' => array(
-                       $linkName.'Ids' => array(
+        $isStub = !$this->getMetadata()->get(['entityDefs', $entityName, 'fields', $linkName]);
+
+        $relation = [
+            $entityName => [
+                'fields' => [
+                       $linkName.'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
-                    ),
-                    $linkName.'Names' => array(
+                        'isLinkStub' => $isStub,
+                    ],
+                    $linkName.'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
-                    ),
-                ),
-                'relations' => array(
-                    $linkName => array(
+                        'isLinkStub' => $isStub,
+                    ],
+                ],
+                'relations' => [
+                    $linkName => [
                         'type' => $relationType,
                         'entity' => $foreignEntityName,
                         'foreignKey' => lcfirst($foreignLinkName.'Id'),
                         'foreign' => $foreignLinkName
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         return $relation;
     }
-
-
 }
