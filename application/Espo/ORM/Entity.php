@@ -37,33 +37,22 @@ abstract class Entity implements IEntity
 
     private $isSaved = false;
 
-    /**
-     * Entity type.
-     * @var string
-     */
     protected $entityType;
 
-    /**
-     * @var array Defenition of fields.
-     * @todo make protected
-     */
-    public $fields = array();
+    public $fields = [];
 
-    /**
-     * @var array Defenition of relations.
-     * @todo make protected
-     */
-    public $relations = array();
+
+    public $relations = [];
 
     /**
      * @var array Field-Value pairs.
      */
-    protected $valuesContainer = array();
+    protected $valuesContainer = [];
 
     /**
      * @var array Field-Value pairs of initial values (fetched from DB).
      */
-    protected $fetchedValuesContainer = array();
+    protected $fetchedValuesContainer = [];
 
     /**
      * @var EntityManager Entity Manager.
@@ -74,7 +63,7 @@ abstract class Entity implements IEntity
 
     protected $isBeingSaved = false;
 
-    public function __construct($defs = array(), EntityManager $entityManager = null)
+    public function __construct($defs = [], ?EntityManager $entityManager = null)
     {
         if (empty($this->entityType)) {
             $classNames = explode('\\', get_class($this));
@@ -102,7 +91,7 @@ abstract class Entity implements IEntity
 
     public function reset()
     {
-        $this->valuesContainer = array();
+        $this->valuesContainer = [];
     }
 
     protected function setValue($name, $value)
@@ -308,7 +297,7 @@ abstract class Entity implements IEntity
 
     public function toArray()
     {
-        $arr = array();
+        $arr = [];
         if (isset($this->id)) {
             $arr['id'] = $this->id;
         }
@@ -477,7 +466,7 @@ abstract class Entity implements IEntity
 
     public function resetFetchedValues()
     {
-        $this->fetchedValuesContainer = array();
+        $this->fetchedValuesContainer = [];
     }
 
     public function updateFetchedValues()
