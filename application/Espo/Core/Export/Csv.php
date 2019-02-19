@@ -58,8 +58,6 @@ class Csv extends \Espo\Core\Injectable
             throw new Error();
         }
 
-        $dataList = $this->prepareDataList($dataList);
-
         $attributeList = $params['attributeList'];
 
         $delimiter = $this->getInjection('preferences')->get('exportDelimiter');
@@ -70,7 +68,8 @@ class Csv extends \Espo\Core\Injectable
         $fp = fopen('php://temp', 'w');
         fputcsv($fp, $attributeList, $delimiter);
         foreach ($dataList as $row) {
-            fputcsv($fp, $row, $delimiter);
+            $preparedRow = $this->prepareRow($row);
+            fputcsv($fp, $preparedRow, $delimiter);
         }
         rewind($fp);
         $csv = stream_get_contents($fp);
@@ -79,20 +78,15 @@ class Csv extends \Espo\Core\Injectable
         return $csv;
     }
 
-    protected function prepareDataList($dataList)
+    protected function prepareRow($row)
     {
-        $prepareDataList = [];
-        foreach ($dataList as $row) {
-            $preparedRow = [];
-            foreach ($row as $item) {
-                if (is_array($item) || is_object($item)) {
-                    $item = \Espo\Core\Utils\Json::encode($item);
-                }
-                $preparedRow[] = $item;
+        $preparedRow = [];
+        foreach ($row as $item) {
+            if (is_array($item) || is_object($item)) {
+                $item = \Espo\Core\Utils\Json::encode($item);
             }
-            $prepareDataList[] = $preparedRow;
+            $preparedRow[] = $item;
         }
-
-        return $prepareDataList;
+        return $preparedRow;
     }
 }

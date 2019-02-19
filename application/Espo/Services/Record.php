@@ -1958,30 +1958,19 @@ class Record extends \Espo\Core\Services\Base
     {
         $entity = $this->getEntityManager()->getEntity($this->getEntityType());
 
-        if (in_array($attribute, $this->internalAttributeList)) {
-            return false;
-        }
+        if (in_array($attribute, $this->internalAttributeList)) return false;
+        if (in_array($attribute, $this->forbiddenAttributeList)) return false;
 
-        if (in_array($attribute, $this->forbiddenAttributeList)) {
-            return false;
-        }
+        if (!$this->getUser()->isAdmin() && in_array($attribute, $this->onlyAdminAttributeList)) return false;
 
-        if (!$this->getUser()->isAdmin() && in_array($attribute, $this->onlyAdminAttributeList)) {
-            return false;
-        }
+        if (!$isExportAllFields) return true;
 
-        if (!$isExportAllFields) {
-            return true;
-        }
+        if ($entity->getAttributeParam($attribute, 'notExportable')) return false;
+        if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) return false;
+        if ($entity->getAttributeParam($attribute, 'isLinkMultipleNameMap')) return false;
+        if ($entity->getAttributeParam($attribute, 'isLinkStub')) return false;
 
-        if (!$entity->getAttributeParam($attribute, 'notStorable')) {
-            return true;
-        } else {
-            if ($entity->getAttributeParam($attribute, 'notExportable')) {
-                return false;
-            }
-            return true;
-        }
+        return true;
     }
 
     public function exportCollection(array $params, $collection)
@@ -2072,9 +2061,7 @@ class Record extends \Espo\Core\Services\Base
             $attributeList = [];
             $seed = $this->getEntityManager()->getEntity($this->getEntityType());
             foreach ($params['attributeList'] as $attribute) {
-                if (in_array($attribute, $attributeListToSkip)) {
-                    continue;
-                }
+                if (in_array($attribute, $attributeListToSkip)) continue;
                 if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
                     $attributeList[] = $attribute;
                 }
