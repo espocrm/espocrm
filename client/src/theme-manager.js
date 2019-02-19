@@ -53,7 +53,9 @@ define('theme-manager', [], function () {
         },
 
         getAppliedName: function () {
-            return window.getComputedStyle(document.body).getPropertyValue('--theme-name');
+            var name = window.getComputedStyle(document.body).getPropertyValue('--theme-name');
+            if (!name) return null;
+            return name.trim();
         },
 
         isApplied: function () {

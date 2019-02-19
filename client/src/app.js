@@ -255,9 +255,14 @@ define(
                 if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
                     promiseList.push(
                         new Promise(function (resolve) {
-                            (function check () {
+                            (function check (i) {
+                                i = i || 0;
                                 if (!this.themeManager.isApplied()) {
-                                    setTimeout(check.bind(this), 10);
+                                    if (i === 50) {
+                                        resolve();
+                                        return;
+                                    }
+                                    setTimeout(check.bind(this, i + 1), 10);
                                     return;
                                 }
                                 resolve();
