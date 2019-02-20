@@ -2,20 +2,24 @@
   "fields": {
     "status": "Статус",
     "executeTime": "Виконати в",
+    "executedAt": "Виконано в",
+    "startedAt": "Почато в",
     "attempts": "Залишилось спроб",
     "failedAttempts": "Невдалі спроби",
     "serviceName": "Обслуговування",
+    "method": "Метод",
     "methodName": "Метод",
     "scheduledJob": "Запланована робота",
+    "scheduledJobJob": "Назва запланованого завдання",
     "data": "Дата",
-    "method": "Метод",
-    "scheduledJobJob": "Назва запланованого завдання"
+    "targetType": "Тип цілі",
+    "targetId": "ID цілі"
   },
   "options": {
     "status": {
       "Pending": "В очікуванні",
       "Success": "Успішно",
-      "Running": "Плинний",
+      "Running": "Запущено",
       "Failed": "Невдало"
     }
   }

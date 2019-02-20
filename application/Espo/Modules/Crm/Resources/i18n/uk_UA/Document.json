@@ -31,8 +31,8 @@
     "type": {
       "": "Немає",
       "Contract": "Контракт",
-      "NDA": "\n NDA",
-      "EULA": "\n EULA",
+      "NDA": " NDA",
+      "EULA": " EULA",
       "License Agreement": "Ліцензійна угода"
     }
   },

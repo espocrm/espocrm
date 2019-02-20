@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "Field": "Поле"
+  },
   "options": {
     "operators": {
       "equals": "Так само",
@@ -8,7 +11,7 @@
       "greaterThanOrEquals": "Більше ніж або дорівнює",
       "lessThanOrEquals": "Менше ніж або дорівнює",
       "in": "В",
-      "notIn": "Не в\n",
+      "notIn": "Не в",
       "inPast": "В минулому",
       "inFuture": "В майбутньому",
       "isToday": "Сьогодні",
@@ -21,8 +24,5 @@
       "notContains": "Не містить",
       "notHas": "Не містить"
     }
-  },
-  "labels": {
-    "Field": "Поле"
   }
 }

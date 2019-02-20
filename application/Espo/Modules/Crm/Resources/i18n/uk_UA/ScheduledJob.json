@@ -2,7 +2,7 @@
   "options": {
     "job": {
       "ProcessMassEmail": "Запустити масову розсилку",
-      "ControlKnowledgeBaseArticleStatus": "Перевірка статусу статтей Бази знань"
+      "ControlKnowledgeBaseArticleStatus": "Перевірка статусу статей бази знань"
     }
   }
 }

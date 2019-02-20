@@ -38,10 +38,10 @@
       "Article": "Стаття"
     }
   },
-  "presetFilters": {
-    "published": "Опубліковано"
-  },
   "tooltips": {
     "portals": "Стаття буде доступна тільки в певних порталах."
+  },
+  "presetFilters": {
+    "published": "Опубліковано"
   }
 }

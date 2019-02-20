@@ -5,15 +5,15 @@
     "createdAt": "Дата",
     "target": "Ціль",
     "targetType": "Тип цілі",
-    "authToken": "Токен аутентифікації",
+    "authToken": "Токен автентифікації",
     "ipAddress": "IP адреса",
-    "authLogRecord": "Запис Логу Аутентифікації"
+    "authLogRecord": "Запис журналу автентифікації"
   },
   "links": {
-    "authToken": "Токен аутентифікації",
+    "authToken": "Токен автентифікації",
+    "authLogRecord": "Запис журналу автентифікації",
     "user": "Користувач",
-    "target": "Ціль",
-    "authLogRecord": "Запис Логу Аутентифікації"
+    "target": "Ціль"
   },
   "presetFilters": {
     "onlyMy": "Тільки моє"
