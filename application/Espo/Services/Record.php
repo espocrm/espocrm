@@ -2037,9 +2037,7 @@ class Record extends \Espo\Core\Services\Base
 
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
-            $sth->execute();
+            $collection = $this->getEntityManager()->createSthCollection($this->getEntityType(), $selectParams);
         }
 
         $attributeListToSkip = [
@@ -2111,42 +2109,21 @@ class Record extends \Espo\Core\Services\Base
 
         $fp = fopen('php://temp', 'w');
 
-        if ($collection) {
-            foreach ($collection as $entity) {
-                $this->loadAdditionalFieldsForExport($entity);
-                if (method_exists($exportObj, 'loadAdditionalFields')) {
-                    $exportObj->loadAdditionalFields($entity, $fieldList);
-                }
-                $row = [];
-                foreach ($attributeList as $attribute) {
-                    $value = $this->getAttributeFromEntityForExport($entity, $attribute);
-                    $row[$attribute] = $value;
-                }
-                $line = base64_encode(serialize($row)) . \PHP_EOL;
-                fwrite($fp, $line);
+        foreach ($collection as $entity) {
+            $this->loadAdditionalFieldsForExport($entity);
+            if (method_exists($exportObj, 'loadAdditionalFields')) {
+                $exportObj->loadAdditionalFields($entity, $fieldList);
             }
-            rewind($fp);
-        } else {
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                $this->loadAdditionalFieldsForExport($entity);
-                if (method_exists($exportObj, 'loadAdditionalFields')) {
-                    $exportObj->loadAdditionalFields($entity, $fieldList);
-                }
-                $row = [];
-                foreach ($attributeList as $attribute) {
-                    $value = $this->getAttributeFromEntityForExport($entity, $attribute);
-                    $row[$attribute] = $value;
-                }
-
-                $line = base64_encode(serialize($row)) . \PHP_EOL;
-                fwrite($fp, $line);
+            $row = [];
+            foreach ($attributeList as $attribute) {
+                $value = $this->getAttributeFromEntityForExport($entity, $attribute);
+                $row[$attribute] = $value;
             }
-            rewind($fp);
+            $line = base64_encode(serialize($row)) . \PHP_EOL;
+            fwrite($fp, $line);
         }
+        rewind($fp);
+
 
         if (is_null($attributeList)) {
             $attributeList = [];

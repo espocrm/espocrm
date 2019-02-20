@@ -243,6 +243,11 @@ class EntityManager
         return $collection;
     }
 
+    public function createSthCollection(string $entityType, array $selectParams = [])
+    {
+        return new SthCollection($entityType, $this, $selectParams);
+    }
+
     public function getEntityFactory()
     {
         return $this->entityFactory;
