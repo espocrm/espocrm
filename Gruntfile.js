@@ -138,6 +138,7 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 mangle: false,
+                sourceMap: true,
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
             },
             'build/tmp/client/espo.min.js': jsFilesToMinify.map(function (item) {

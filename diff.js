@@ -88,6 +88,7 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
     });
 
     fileList.push('client/espo.min.js');
+    fileList.push('client/espo.min.js.map');
 
     fs.readdirSync('client/css/espo/').forEach(function (file) {
         fileList.push('client/css/espo/' + file);
