@@ -13,7 +13,7 @@
     "amountConverted": "Сума (конвертирована)",
     "amountWeightedConverted": "Зважена сума",
     "campaign": "Кампанія",
-    "originalLead": "Початковий Лід",
+    "originalLead": "Початковий лід",
     "amountCurrency": "Валюта суми",
     "contactRole": "Роль контакту",
     "lastStage": "Остання стадія"
@@ -22,12 +22,14 @@
     "contacts": "Контакти",
     "documents": "Документи",
     "campaign": "Кампанія",
-    "originalLead": "Початковий Лід"
+    "originalLead": "Початковий лід"
   },
   "options": {
     "stage": {
       "Prospecting": "Проспектінг",
       "Qualification": "Кваліфікація",
+      "Proposal": "Пропозиція",
+      "Negotiation": "Переговори",
       "Needs Analysis": "Вимагає аналізу",
       "Value Proposition": "Цінова пропозиція",
       "Id. Decision Makers": "Визначення осіб, що приймають рішення",
@@ -35,9 +37,7 @@
       "Proposal/Price Quote": "Квота пропозицій/цін",
       "Negotiation/Review": "Переговори/перегляд",
       "Closed Won": "Закрито переможно",
-      "Closed Lost": "Закрито провалом",
-      "Proposal": "Пропозиція",
-      "Negotiation": "Переговори"
+      "Closed Lost": "Закрито провалом"
     }
   },
   "labels": {

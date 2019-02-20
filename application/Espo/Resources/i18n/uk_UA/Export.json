@@ -1,7 +1,7 @@
 {
   "fields": {
-    "fieldList": "Список полів",
     "exportAllFields": "Експортувати всі поля",
+    "fieldList": "Список полів",
     "format": "Формат"
   }
 }

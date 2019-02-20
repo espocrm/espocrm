@@ -3,18 +3,19 @@
     "username": "Ім'я користувача",
     "ipAddress": "IP Адреса",
     "requestTime": "Час запиту",
-    "createdAt": "Запит здійснено з",
+    "createdAt": "Запит здійснено",
     "isDenied": "Відмовлено",
     "denialReason": "Причина відмови",
     "portal": "Портал",
     "user": "Користувач",
-    "authToken": "Створений токен аутентифікації",
+    "authToken": "Створений токен автентифікації",
     "requestUrl": "URL запиту",
     "requestMethod": "Метод запиту",
-    "authTokenIsActive": "Токен аутентифікації активний"
+    "authTokenIsActive": "Токен автентифікації активний",
+    "authenticationMethod": "Метод автентифікації"
   },
   "links": {
-    "authToken": "Створений токен аутентифікації",
+    "authToken": "Створений токен автентифікації",
     "user": "Користувач",
     "portal": "Портал",
     "actionHistoryRecords": "Історія дій"
