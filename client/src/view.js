@@ -133,6 +133,12 @@ define('view', [], function () {
             }
         },
 
+        getNumberUtil: function () {
+            if (this._helper) {
+                return this._helper.numberUtil;
+            }
+        },
+
         getFieldManager: function () {
             if (this._helper) {
                 return this._helper.fieldManager;

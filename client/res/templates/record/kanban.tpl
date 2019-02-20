@@ -3,7 +3,7 @@
 <div class="list-buttons-container clearfix">
     {{#if displayTotalCount}}
         <div class="text-muted total-count">
-        {{translate 'Total'}}: <span class="total-count-span">{{totalCount}}</span>
+        {{translate 'Total'}}: <span class="total-count-span">{{totalCountFormatted}}</span>
         </div>
     {{/if}}
 

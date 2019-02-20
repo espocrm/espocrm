@@ -83,7 +83,7 @@
 
     {{#if displayTotalCount}}
         <div class="text-muted total-count">
-        {{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span>
+        {{translate 'Total'}}: <span class="total-count-span">{{totalCountFormatted}}</span>
         </div>
     {{/if}}
 </div>
@@ -138,9 +138,9 @@
     {{#unless paginationEnabled}}
     {{#if showMoreEnabled}}
     <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
-        <a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore" {{#if showCount}}title="{{translate 'Total'}}: {{collection.total}}"{{/if}}>
+        <a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore" {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}>
             {{#if showCount}}
-            <div class="pull-right text-muted more-count">{{moreCount}}</div>
+            <div class="pull-right text-muted more-count">{{moreCountFormatted}}</div>
             {{/if}}
             <span>{{translate 'Show more'}}</span>
         </a>

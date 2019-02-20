@@ -336,6 +336,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
 
+            var moreCount = this.collection.total - this.collection.length;
+
             return {
                 scope: this.scope,
                 entityType: this.entityType,
@@ -347,7 +349,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 showMoreActive: this.collection.total > this.collection.length || this.collection.total == -1,
                 showMoreEnabled: this.showMore,
                 showCount: this.showCount && this.collection.total > 0,
-                moreCount: this.collection.total - this.collection.length,
+                moreCount: moreCount,
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
                 rowList: this.rowList,
@@ -358,6 +360,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 dropdownItemList: this.dropdownItemList,
                 displayTotalCount: this.displayTotalCount && this.collection.total > 0,
                 displayActionsButtonGroup: this.checkboxes || this.massActionList || this.buttonList.length || this.dropdownItemList.length,
+                totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
+                moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
             };
         },
 
@@ -1460,7 +1464,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (
                     (collection.total > collection.length + collection.lengthCorrection || collection.total == -1)
                 ) {
-                    this.$el.find('.more-count').text(collection.total - collection.length - collection.lengthCorrection);
+                    var moreCount = collection.total - collection.length - collection.lengthCorrection;
+                    var moreCountString = this.getNumberUtil().formatInt(moreCount);
+                    this.$el.find('.more-count').text(moreCountString);
                     $showMore.removeClass('hidden');
                 }
                 $showMore.children('a').removeClass('disabled');

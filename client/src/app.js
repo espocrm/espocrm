@@ -52,7 +52,8 @@ define(
         'session-storage',
         'view-helper',
         'web-socket-manager',
-        'ajax'
+        'ajax',
+        'number',
     ],
     function (
         Ui,
@@ -77,7 +78,8 @@ define(
         SessionStorage,
         ViewHelper,
         WebSocketManager,
-        Ajax
+        Ajax,
+        NumberUtil
     ) {
 
     var App = function (options, callback) {
@@ -149,7 +151,7 @@ define(
                 this.webSocketManager = new WebSocketManager(this.settings);
             }
 
-            this.initDateTime();
+            this.initUtils();
             this.initView();
             this.initBaseController();
 
@@ -381,10 +383,12 @@ define(
             this.preLoader.load(callback, this);
         },
 
-        initDateTime: function () {
+        initUtils: function () {
             this.dateTime = new DateTime();
             this.modelFactory.dateTime = this.dateTime;
             this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
+
+            this.numberUtil = new NumberUtil(this.settings, this.preferences);
         },
 
         createAclManager: function () {
@@ -414,6 +418,7 @@ define(
             helper.basePath = this.basePath;
             helper.appParams = this.appParams;
             helper.webSocketManager = this.webSocketManager;
+            helper.numberUtil = this.numberUtil;
 
             this.viewLoader = function (viewName, callback) {
                 Espo.require(Espo.Utils.composeViewClassName(viewName), callback);

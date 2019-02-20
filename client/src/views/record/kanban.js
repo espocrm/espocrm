@@ -111,7 +111,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                 statusList: this.statusList,
                 groupDataList: this.groupDataList,
                 minTableWidthPx: this.minColumnWidthPx * this.statusList.length,
-                isEmptyList: this.collection.models.length === 0
+                isEmptyList: this.collection.models.length === 0,
+                totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             };
         },
 
