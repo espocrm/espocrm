@@ -338,6 +338,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var moreCount = this.collection.total - this.collection.length;
 
+            var checkAllResultDisabled = this.checkAllResultDisabled;
+
+            if (!this.massActionsDisabled) {
+                if (!this.checkAllResultMassActionList.length) {
+                    checkAllResultDisabled = true;
+                }
+            }
+
             return {
                 scope: this.scope,
                 entityType: this.entityType,
@@ -355,7 +363,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 rowList: this.rowList,
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || (this.dropdownItemList.length && !this.buttonsDisabled),
                 bottomBar: paginationBottom,
-                checkAllResultDisabled: this.checkAllResultDisabled,
+                checkAllResultDisabled: checkAllResultDisabled,
                 buttonList: this.buttonList,
                 dropdownItemList: this.dropdownItemList,
                 displayTotalCount: this.displayTotalCount && this.collection.total > 0,
