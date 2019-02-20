@@ -36,7 +36,12 @@ Espo.define('controllers/preferences', ['controllers/record', 'models/preference
             var model = new Preferences();
             model.settings = this.getConfig();
             model.defs = this.getMetadata().get('entityDefs.Preferences');
-            callback.call(this, model);
+            if (callback) {
+                callback.call(this, model);
+            }
+            return new Promise(function (resolve) {
+                resolve(model);
+            });
         },
 
         checkAccess: function (action) {
@@ -52,5 +57,3 @@ Espo.define('controllers/preferences', ['controllers/record', 'models/preference
         list: function () {}
     });
 });
-
-
