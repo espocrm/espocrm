@@ -239,8 +239,7 @@ class EntityManager
 
     public function createCollection($entityType, $data = [])
     {
-        $seed = $this->getEntity($entityType);
-        $collection = new EntityCollection($data, $seed, $this->entityFactory);
+        $collection = new EntityCollection($data, $entityType, $this->entityFactory);
         return $collection;
     }
 

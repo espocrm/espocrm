@@ -1958,30 +1958,19 @@ class Record extends \Espo\Core\Services\Base
     {
         $entity = $this->getEntityManager()->getEntity($this->getEntityType());
 
-        if (in_array($attribute, $this->internalAttributeList)) {
-            return false;
-        }
+        if (in_array($attribute, $this->internalAttributeList)) return false;
+        if (in_array($attribute, $this->forbiddenAttributeList)) return false;
 
-        if (in_array($attribute, $this->forbiddenAttributeList)) {
-            return false;
-        }
+        if (!$this->getUser()->isAdmin() && in_array($attribute, $this->onlyAdminAttributeList)) return false;
 
-        if (!$this->getUser()->isAdmin() && in_array($attribute, $this->onlyAdminAttributeList)) {
-            return false;
-        }
+        if (!$isExportAllFields) return true;
 
-        if (!$isExportAllFields) {
-            return true;
-        }
+        if ($entity->getAttributeParam($attribute, 'notExportable')) return false;
+        if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) return false;
+        if ($entity->getAttributeParam($attribute, 'isLinkMultipleNameMap')) return false;
+        if ($entity->getAttributeParam($attribute, 'isLinkStub')) return false;
 
-        if (!$entity->getAttributeParam($attribute, 'notStorable')) {
-            return true;
-        } else {
-            if ($entity->getAttributeParam($attribute, 'notExportable')) {
-                return false;
-            }
-            return true;
-        }
+        return true;
     }
 
     public function exportCollection(array $params, $collection)
@@ -2053,8 +2042,6 @@ class Record extends \Espo\Core\Services\Base
             $sth->execute();
         }
 
-        $dataList = [];
-
         $attributeListToSkip = [
             'deleted'
         ];
@@ -2072,9 +2059,7 @@ class Record extends \Espo\Core\Services\Base
             $attributeList = [];
             $seed = $this->getEntityManager()->getEntity($this->getEntityType());
             foreach ($params['attributeList'] as $attribute) {
-                if (in_array($attribute, $attributeListToSkip)) {
-                    continue;
-                }
+                if (in_array($attribute, $attributeListToSkip)) continue;
                 if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
                     $attributeList[] = $attribute;
                 }
@@ -2102,6 +2087,8 @@ class Record extends \Espo\Core\Services\Base
             $fieldList = $exportObj->filterFieldList($this->entityType, $fieldList, $exportAllFields);
         }
 
+        $fp = null;
+
         if (is_null($attributeList)) {
             $attributeList = [];
             $seed = $this->getEntityManager()->getEntity($this->entityType);
@@ -2122,6 +2109,8 @@ class Record extends \Espo\Core\Services\Base
             $exportObj->addAdditionalAttributes($this->entityType, $attributeList, $fieldList);
         }
 
+        $fp = fopen('php://temp', 'w');
+
         if ($collection) {
             foreach ($collection as $entity) {
                 $this->loadAdditionalFieldsForExport($entity);
@@ -2133,8 +2122,10 @@ class Record extends \Espo\Core\Services\Base
                     $value = $this->getAttributeFromEntityForExport($entity, $attribute);
                     $row[$attribute] = $value;
                 }
-                $dataList[] = $row;
+                $line = base64_encode(serialize($row)) . \PHP_EOL;
+                fwrite($fp, $line);
             }
+            rewind($fp);
         } else {
             while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
                 $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
@@ -2150,8 +2141,11 @@ class Record extends \Espo\Core\Services\Base
                     $value = $this->getAttributeFromEntityForExport($entity, $attribute);
                     $row[$attribute] = $value;
                 }
-                $dataList[] = $row;
+
+                $line = base64_encode(serialize($row)) . \PHP_EOL;
+                fwrite($fp, $line);
             }
+            rewind($fp);
         }
 
         if (is_null($attributeList)) {
@@ -2181,7 +2175,9 @@ class Record extends \Espo\Core\Services\Base
         if (array_key_exists('exportName', $params)) {
             $exportParams['exportName'] = $params['exportName'];
         }
-        $contents = $exportObj->process($this->entityType, $exportParams, $dataList);
+        $contents = $exportObj->process($this->entityType, $exportParams, null, $fp);
+
+        fclose($fp);
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);

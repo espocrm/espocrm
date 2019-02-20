@@ -46,34 +46,38 @@ class ManyMany extends Base
             $relationName = $this->getJoinTable($entityName, $foreignEntityName);
         }
 
-        return array(
-            $entityName => array(
-                'fields' => array(
-                       $linkName.'Ids' => array(
+        $isStub = !$this->getMetadata()->get(['entityDefs', $entityName, 'fields', $linkName]);
+
+        return [
+            $entityName => [
+                'fields' => [
+                       $linkName.'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
-                    ),
-                    $linkName.'Names' => array(
+                        'isLinkStub' => $isStub,
+                    ],
+                    $linkName.'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
-                    ),
-                ),
-                'relations' => array(
-                    $linkName => array(
+                        'isLinkStub' => $isStub,
+                    ],
+                ],
+                'relations' => [
+                    $linkName => [
                         'type' => 'manyMany',
                         'entity' => $foreignEntityName,
                         'relationName' => $relationName,
                         'key' => 'id', //todo specify 'key'
                         'foreignKey' => 'id', //todo specify 'foreignKey'
-                        'midKeys' => array(
+                        'midKeys' => [
                             lcfirst($entityName).'Id',
                             lcfirst($foreignEntityName).'Id',
-                        ),
+                        ],
                         'foreign' => $foreignLinkName
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
     }
 
     protected function getJoinTable($tableName1, $tableName2)

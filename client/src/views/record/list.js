@@ -484,7 +484,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         data.fieldList = dialogData.fieldList;
                     }
                     data.format = dialogData.format;
-                    this.ajaxPostRequest(url, data, {timeout: 0}).then(function (data) {
+
+                    Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+                    Espo.Ajax.postRequest(url, data, {timeout: 0}).then(function (data) {
+                        Espo.Ui.notify(false);
                         if ('id' in data) {
                             window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
                         }

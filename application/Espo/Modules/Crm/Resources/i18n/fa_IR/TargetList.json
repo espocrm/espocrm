@@ -30,6 +30,8 @@
     }
   },
   "labels": {
-    "Create TargetList": "ایجاد لیست هدف"
+    "Create TargetList": "ایجاد لیست هدف",
+    "Opted Out": "تصمیم گرفتند از",
+    "Cancel Opt-Out": "لغو مجوز"
   }
 }

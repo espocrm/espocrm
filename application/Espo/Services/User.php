@@ -63,6 +63,8 @@ class User extends Record
         ]
     ];
 
+    protected $validateSkipFieldList = ['name', "firstName", "lastName"];
+
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
 
     protected function getMailSender()

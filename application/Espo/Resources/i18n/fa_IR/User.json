@@ -28,7 +28,11 @@
     "position": "موقعیت در تیم",
     "passwordPreview": "پیش‌نمایش کلمه عبور",
     "isSuperAdmin": "سوپر ادمین است",
-    "lastAccess": "آخرین دسترسی"
+    "lastAccess": "آخرین دسترسی",
+    "type": "تایپ کنید",
+    "apiKey": "کلید ای پی ای",
+    "secretKey": "کلید گذرواژه",
+    "authMethod": "روش احراز هویت"
   },
   "links": {
     "teams": "تیم ها",
@@ -54,7 +58,8 @@
     "Email Accounts": "حسابهای ایمیل",
     "Portal": "پورتال",
     "Create Portal User": "ایجاد پورتال کاربر",
-    "Proceed w/o Contact": "ادامه W / O تماس با"
+    "Proceed w/o Contact": "ادامه W / O تماس با",
+    "Generate New API Key": "ایجاد کلید ای پی ای جدید"
   },
   "tooltips": {
     "defaultTeam": "تمام رکورد های ایجاد شده توسط این کاربر به طور پیش فرض به این تیم مربوط می شود.",
@@ -91,6 +96,13 @@
       "Male": "آقا",
       "Female": "خانم",
       "Neutral": "خنثی"
+    },
+    "type": {
+      "regular": "منظم",
+      "admin": "مدیر",
+      "portal": "پورتال",
+      "system": "سیستم",
+      "super-admin": "مدیر کل"
     }
   }
 }

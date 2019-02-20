@@ -31,6 +31,7 @@
     "FieldManager": "مدیریت فیلدها",
     "Integration": "یکپارچه‌سازی",
     "EntityManager": "مدیریت موجودیت‌ها",
+    "Export": "استخراج",
     "DynamicLogic": "منطق پویا",
     "DashletOptions": "گزینه های Dashlet",
     "Admin": "ادمین",
@@ -74,6 +75,7 @@
     "Home": "خانه",
     "by": "با",
     "Saved": "ذخیره",
+    "Error": "خطا\n",
     "Select": "انتخاب",
     "Not valid": "معتبر نیست",
     "Please wait...": "لطفا صبر کنید...",
@@ -84,6 +86,9 @@
     "Merging...": "ادغام ...",
     "Merged": "ادغام شده",
     "Removed": "حذف شده",
+    "Posted": "پست شده",
+    "Linked": "مرتبط",
+    "Unlinked": "غیر مرتبط",
     "Done": "انجام شده",
     "Access denied": "دسترسی ممنوع است",
     "Not found": "پیدا نشد",
@@ -93,6 +98,7 @@
     "Wrong username/password": "نام کاربری / پسورد اشتباه است",
     "Post cannot be empty": "پست نمیتواند خالی باشد",
     "Removing...": "حذف ...",
+    "Unlinking...": "در حال لغو پیوند",
     "Posting...": "پست کردن ...",
     "Username can not be empty!": "نام کاربری نمیتواند خالی باشد",
     "Cache is not enabled": "کش فعال نیست",
@@ -118,6 +124,7 @@
     "Open": "باز کن",
     "Admin": "ادمین",
     "About": "در باره",
+    "Refresh": "تازه کدن",
     "Remove": "حذف",
     "Options": "گزینه ها",
     "Username": "نام کاربری",
@@ -139,7 +146,9 @@
     "Update": "آپدیت",
     "Save": "ذخیره",
     "Edit": "ویرایش",
+    "View": "چشم انداز",
     "Cancel": "لغو",
+    "Apply": "اغمال کردن",
     "Mass Update": "به روز رسانی همه",
     "Export": "برون ریزی",
     "No Data": "اطلاعاتی وجود ندارد",
@@ -148,6 +157,7 @@
     "Active": "فعال",
     "Inactive": "غیر فعال",
     "Write your comment here": "نظر خود را اینجا بنویسید",
+    "Post": "پست",
     "Stream": "جریان",
     "Show more": "مشاهده بیشتر",
     "Full Form": "فرم کامل",
@@ -162,6 +172,7 @@
     "Change": "تغییر دادن",
     "Primary": "اولیه",
     "Save Filter": "ذخیره فیلتر",
+    "Administration": "مدیریت",
     "Run Import": "اجرای Import",
     "Duplicate": "تکراری",
     "Notifications": "اعلان ها",
@@ -257,9 +268,11 @@
     "massPrintPdfMaxCountError": "می توانید بیش از {maxCount} رکورد چاپ کنید"
   },
   "boolFilters": {
-    "onlyMy": "فقط من"
+    "onlyMy": "فقط من",
+    "followed": "دنبال شده"
   },
   "presetFilters": {
+    "followed": "دنبال شد",
     "all": "همه"
   },
   "massActions": {
@@ -293,6 +306,8 @@
     "phoneNumberOffice": "تلفن(دفتر)",
     "phoneNumberOther": "تلفن(سایر)",
     "order": "سفارش",
+    "parent": "زیرمجوعه",
+    "children": "فرزندان",
     "id": "شناسه",
     "emailAddressData": "اطلاعات آدرس ایمیل",
     "phoneNumberData": "اطلاعات شماره تلفن",
@@ -367,9 +382,33 @@
     "assignSelf": "{user} خود اختصاص {entityType} {entity}"
   },
   "lists": {
-    "dayNames": [ "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", " پنجشنبه", "جمعه", "شنبه" ],
-    "dayNamesShort": [ "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", " پنجشنبه", "جمعه", "شنبه" ],
-    "dayNamesMin": [ "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", " پنجشنبه", "جمعه", "شنبه" ]
+    "dayNames": [
+      "یکشنبه",
+      "دوشنبه",
+      "سه شنبه",
+      "چهارشنبه",
+      " پنجشنبه",
+      "جمعه",
+      "شنبه"
+    ],
+    "dayNamesShort": [
+      "یکشنبه",
+      "دوشنبه",
+      "سه شنبه",
+      "چهارشنبه",
+      " پنجشنبه",
+      "جمعه",
+      "شنبه"
+    ],
+    "dayNamesMin": [
+      "یکشنبه",
+      "دوشنبه",
+      "سه شنبه",
+      "چهارشنبه",
+      " پنجشنبه",
+      "جمعه",
+      "شنبه"
+    ]
   },
   "options": {
     "salutationName": {
@@ -387,18 +426,45 @@
       "bs_BA": "بسنیایی",
       "ca_ES": "کاتالان",
       "cs_CZ": "جمهوری چک",
+      "cy_GB": "ویلز",
+      "da_DK": "دانمارکی",
+      "de_DE": "آلمانی",
+      "el_GR": "یونانی",
+      "en_GB": "انگلیسی (انگلستان)",
+      "en_US": "انگلیسی",
+      "es_ES": "اسپانیایی",
+      "et_EE": "استونیایی",
+      "eu_ES": "باسک",
       "fa_IR": "فارسی",
+      "fi_FI": "فنلاندی",
+      "fo_FO": "فاروئی",
       "fr_CA": "فرانسوی (کانادا)",
       "fr_FR": "فرانسوی (فرانسه)",
+      "ga_IE": "ایرلندی",
+      "gl_ES": "گالیسیایی",
+      "gn_PY": "گوارانی",
       "he_IL": "عبری",
       "hi_IN": "هندی",
+      "hr_HR": "کرواتی",
       "hu_HU": "مجارستانی",
       "hy_AM": "ارمنی",
       "id_ID": "اندونزیایی",
       "is_IS": "آیسلندی",
       "it_IT": "ایتالیایی",
       "ja_JP": "ژاپنی",
+      "ka_GE": "گرجستان",
+      "km_KH": "خمر",
+      "ko_KR": "کره ای",
       "ku_TR": "کردی",
+      "lt_LT": "لیتوانیایی",
+      "lv_LV": "لتونی",
+      "mk_MK": "مقدونی",
+      "ml_IN": "مالایالام",
+      "ms_MY": "مالایی",
+      "nb_NO": "نروژی ",
+      "nn_NO": "نروژی نینورسک",
+      "ne_NP": "نپالی",
+      "nl_NL": "هلندی",
       "pt_PT": "پرتقالی (پرتقال)",
       "ro_RO": "رومانیایی",
       "ru_RU": "روسی",
@@ -410,9 +476,12 @@
       "uk_UA": "اوکراینی",
       "ur_PK": "اردو",
       "vi_VN": "ویتنامی",
-      "zh_CN": "چینی ساده (چین)"
+      "zh_CN": "چینی ساده (چین)",
+      "zh_TW": "چینی سنتی (تایوان)"
     },
     "dateSearchRanges": {
+      "on": "برای",
+      "notOn": "نه برای",
       "after": "بعد از",
       "before": "قبل از",
       "between": "میان",
@@ -485,7 +554,10 @@
     "summernote": {
       "NOTICE": "شما میتوانید ترجمه را اینجا پیدا کنید: https://github.com/HackerWins/summernote/tree/master/lang",
       "font": {
+        "bold": "پررنگ",
+        "underline": "خط زیر",
         "strike": "ضربه",
+        "clear": "حذف سبک فونت",
         "height": "ارتفاع خط",
         "name": "خانواده فونت",
         "size": "سایز فونت"
@@ -504,7 +576,9 @@
         "remove": "حذف تصویر"
       },
       "link": {
+        "link": "پیوند",
         "insert": "لینک را وارد کنید",
+        "unlink": "لغو پیوند",
         "edit": "ویرایش",
         "textToDisplay": "متن برای نمایش",
         "url": "کدام URL باید این پیوند را داشته باشد؟",
@@ -581,7 +655,8 @@
     "postTargetSelfAndOthers": "{user} به {target} ارسال شده و خودش"
   },
   "themes": {
-    "EspoRtl": "RTL G-crm"
+    "EspoRtl": "RTL G-crm",
+    "Espo": "\n"
   },
   "listViewModes": {
     "list": "لیست",

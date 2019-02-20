@@ -146,7 +146,7 @@ class Xlsx extends \Espo\Core\Injectable
         }
     }
 
-    public function process($entityType, $params, $dataList)
+    public function process(string $entityType, array $params, ?array $dataList = null, $dataFp = null)
     {
         if (!is_array($params['fieldList'])) {
             throw new Error();
@@ -258,7 +258,24 @@ class Xlsx extends \Espo\Core\Injectable
         $typesCache = array();
 
         $rowNumber++;
-        foreach ($dataList as $row) {
+
+        $lineIndex = -1;
+        if ($dataList) {
+            $lineCount = count($dataList);
+        }
+
+        while (true) {
+            $lineIndex++;
+
+            if ($dataFp) {
+                $line = fgets($dataFp);
+                if ($line === false) break;
+                $row = unserialize(base64_decode($line));
+            } else {
+                if ($lineIndex >= $lineCount) break;
+                $row = $dataList[$lineIndex];
+            }
+
             $i = 0;
             foreach ($fieldList as $i => $name) {
                 $col = $azRange[$i];
