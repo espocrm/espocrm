@@ -115,29 +115,15 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
 
             $submit = this.$el.find('button[data-name="submit"]');
             $submit.addClass('disabled');
-            this.notify('Please wait...');
 
-            $.ajax({
-                url: 'User/passwordChangeRequest',
-                type: 'POST',
-                data: JSON.stringify({
-                    userName: userName,
-                    emailAddress: emailAddress,
-                    url: this.options.url
-                }),
-                error: function (xhr) {
-                    if (xhr.status == 404) {
-                        this.notify(this.translate('userNameEmailAddressNotFound', 'messages', 'User'), 'error');
-                        xhr.errorIsHandled = true;
-                    }
-                    if (xhr.status == 403) {
-                        this.notify(this.translate('forbidden', 'messages', 'User'), 'error');
-                        xhr.errorIsHandled = true;
-                    }
-                    $submit.removeClass('disabled');
-                }.bind(this)
-            }).done(function () {
-                this.notify(false);
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            Espo.Ajax.postRequest('User/passwordChangeRequest', {
+                userName: userName,
+                emailAddress: emailAddress,
+                url: this.options.url,
+            }).then(function () {
+                Espo.Ui.notify(false);
 
                 var msg = this.translate('uniqueLinkHasBeenSent', 'messages', 'User');
 
@@ -149,6 +135,24 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
                 this.$el.find('.msg-box').removeClass('hidden');
 
                 this.$el.find('.msg-box').html('<span class="text-success">' + msg + '</span>');
+            }.bind(this)).fail(function (xhr) {
+                if (xhr.status == 404) {
+                    this.notify(this.translate('userNameEmailAddressNotFound', 'messages', 'User'), 'error');
+                    xhr.errorIsHandled = true;
+                }
+                if (xhr.status == 403) {
+                    var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                    if (statusReasonHeader) {
+                        try {
+                            var response = JSON.parse(statusReasonHeader);
+                            if (response.reason === 'Already-Sent') {
+                                xhr.errorIsHandled = true;
+                                Espo.Ui.error(this.translate('forbidden', 'messages', 'User'), 'error');
+                            }
+                        } catch (e) {}
+                    }
+                }
+                $submit.removeClass('disabled');
             }.bind(this));
         }
 

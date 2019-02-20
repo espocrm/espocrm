@@ -104,7 +104,8 @@ class App extends \Espo\Core\Services\Base
             'appParams' => [
                 'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
                 'templateEntityTypeList' => $this->getTemplateEntityTypeList(),
-                'isRestrictedMode' => $this->getConfig()->get('restrictedMode')
+                'isRestrictedMode' => $this->getConfig()->get('restrictedMode'),
+                'passwordChangeForNonAdminDisabled' => $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo'
             ]
         ];
     }

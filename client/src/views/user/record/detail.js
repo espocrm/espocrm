@@ -51,14 +51,18 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 }
             }
 
-            if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
-                if (this.model.id == this.getUser().id && !this.model.isApi()) {
-                    this.addDropdownItem({
-                        name: 'changePassword',
-                        label: 'Change Password',
-                        style: 'default'
-                    });
-                }
+            if (
+                this.model.id == this.getUser().id
+                &&
+                !this.model.isApi()
+                &&
+                (this.getUser().isAdmin() || !this.getHelper().getAppParam('passwordChangeForNonAdminDisabled'))
+            ) {
+                this.addDropdownItem({
+                    name: 'changePassword',
+                    label: 'Change Password',
+                    style: 'default'
+                });
             }
 
             if (this.model.isPortal() || this.model.isApi()) {

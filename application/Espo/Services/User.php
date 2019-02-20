@@ -124,16 +124,20 @@ class User extends Record
             throw new Forbidden();
         }
 
+        if (!$user->isAdmin() && $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo') {
+            throw new Forbidden();
+        }
+
         if (empty($password)) {
             throw new Error('Password can\'t be empty.');
         }
 
         if ($checkCurrentPassword) {
             $passwordHash = new \Espo\Core\Utils\PasswordHash($this->getConfig());
-            $u = $this->getEntityManager()->getRepository('User')->where(array(
+            $u = $this->getEntityManager()->getRepository('User')->where([
                 'id' => $user->id,
                 'password' => $passwordHash->hash($currentPassword)
-            ))->findOne();
+            ])->findOne();
             if (!$u) {
                 throw new Forbidden();
             }
@@ -148,10 +152,10 @@ class User extends Record
 
     public function passwordChangeRequest($userName, $emailAddress, $url = null)
     {
-        $user = $this->getEntityManager()->getRepository('User')->where(array(
+        $user = $this->getEntityManager()->getRepository('User')->where([
             'userName' => $userName,
             'emailAddress' => $emailAddress
-        ))->findOne();
+        ])->findOne();
 
         if (empty($user)) {
             throw new NotFound();
@@ -163,21 +167,25 @@ class User extends Record
 
         $userId = $user->id;
 
-        $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
+        $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
             'userId' => $userId
-        ))->findOne();
+        ])->findOne();
         if ($passwordChangeRequest) {
-            throw new Forbidden();
+            throw new Forbidden(json_encode(['reason' => 'Already-Sent']));
         }
 
         $requestId = Util::generateId();
 
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
-        $passwordChangeRequest->set(array(
+        $passwordChangeRequest->set([
             'userId' => $userId,
             'requestId' => $requestId,
             'url' => $url
-        ));
+        ]);
+
+        if (!$user->isAdmin() && $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo') {
+            throw new Forbidden();
+        }
 
         $this->sendChangePasswordLink($requestId, $emailAddress, $user);
 
