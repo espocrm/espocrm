@@ -335,6 +335,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         data: function () {
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
+            var displayTotalCount = this.displayTotalCount && this.collection.total > 0;
 
             return {
                 scope: this.scope,
@@ -351,12 +352,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || (this.dropdownItemList.length && !this.buttonsDisabled),
+                topBar: paginationTop || displayTotalCount|| this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || (this.dropdownItemList.length && !this.buttonsDisabled),
                 bottomBar: paginationBottom,
                 checkAllResultDisabled: this.checkAllResultDisabled,
                 buttonList: this.buttonList,
                 dropdownItemList: this.dropdownItemList,
-                displayTotalCount: this.displayTotalCount && this.collection.total > 0,
+                displayTotalCount: displayTotalCount,
                 displayActionsButtonGroup: this.checkboxes || this.massActionList || this.buttonList.length || this.dropdownItemList.length,
             };
         },
