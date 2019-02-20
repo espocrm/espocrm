@@ -4,8 +4,16 @@
         "rows":[
             [{"name": "name"}, {"name":"oneOff"}],
             [{"name": "category"}, false],
-            [{"name":"subject","fullWidth":true}],
-            [{"name":"body","fullWidth":true}],
+            [{"name":"subject","fullWidth": true}],
+            [
+                {
+                    "name":"insertField",
+                    "view": "views/email-template/fields/insert-field",
+                    "customLabel": "",
+                    "fullWidth":true
+                }
+            ],
+            [{"name":"body","fullWidth": true}],
             [{"name":"attachments"},{"name":"isHtml"}]
         ]
     }

@@ -263,7 +263,7 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
         },
 
         insert: function (entityType, field) {
-            this.trigger('insert-field', {
+            this.model.trigger('insert-field', {
                 entityType: entityType,
                 field: field
             });

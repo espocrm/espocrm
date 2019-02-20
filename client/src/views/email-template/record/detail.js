@@ -32,15 +32,15 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
 
         duplicateAction: true,
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        setup: function () {
+            Dep.prototype.setup.call(this);
             this.listenToInsertField();
         },
 
         listenToInsertField: function () {
             var fieldView = this.getFieldView('insertField');
-            if (fieldView) {
-                this.listenTo(fieldView, 'insert-field', function (o) {
+            //if (fieldView) {
+                this.listenTo(this.model, 'insert-field', function (o) {
                     var tag = '{' + o.entityType + '.' + o.field + '}';
 
                     var bodyView = this.getFieldView('body');
@@ -57,8 +57,8 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
                     var bodyView = this.getFieldView('body');
 
 
-                }.bind(this));
-            };
+                }, this);
+           //};
         },
 
     });

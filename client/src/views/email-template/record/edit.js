@@ -30,8 +30,8 @@ Espo.define('views/email-template/record/edit', ['views/record/edit', 'views/ema
 
     return Dep.extend({
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        setup: function () {
+            Dep.prototype.setup.call(this);
             Detail.prototype.listenToInsertField.call(this);
         },
 
