@@ -48,6 +48,7 @@ abstract class Mapper implements IMapper
     protected $query;
 
     protected $fieldsMapCache = [];
+
     protected $aliasesCache = [];
 
     protected $returnCollection = false;
@@ -517,7 +518,7 @@ abstract class Mapper implements IMapper
                 $key = $keySet['key'];
                 $foreignKey = $keySet['foreignKey'];
 
-                if ($this->count($relEntity, array('whereClause' => array('id' => $id))) > 0) {
+                if ($this->count($relEntity, ['whereClause' => ['id' => $id]]) > 0) {
 
                     $setPart = $this->toDb($foreignKey) . " = " . $this->pdo->quote($entity->get($key));
 
@@ -526,7 +527,7 @@ abstract class Mapper implements IMapper
                         $setPart .= ", " . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType());
                     }
 
-                    $wherePart = $this->query->getWhere($relEntity, array('id' => $id, 'deleted' => 0));
+                    $wherePart = $this->query->getWhere($relEntity, ['id' => $id, 'deleted' => 0]);
                     $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityType()), $setPart, $wherePart);
 
                     if ($this->pdo->query($sql)) {
@@ -543,7 +544,7 @@ abstract class Mapper implements IMapper
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                if ($this->count($relEntity, array('whereClause' => array('id' => $id))) > 0) {
+                if ($this->count($relEntity, ['whereClause' => ['id' => $id]]) > 0) {
                     $relTable = $this->toDb($relOpt['relationName']);
 
                     $wherePart =
