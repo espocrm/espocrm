@@ -97,9 +97,9 @@ abstract class Mapper implements IMapper
         return $this->aggregate($entity, $params, 'MIN', $field, $deleted);
     }
 
-    public function sum(IEntity $entity, $params = array())
+    public function sum(IEntity $entity, $params = array(), $field, $deleted = false)
     {
-        return $this->aggregate($entity, $params, 'SUM', 'id');
+        return $this->aggregate($entity, $params, 'SUM', $field, $deleted);
     }
 
     public function select(IEntity $entity, $params = array())
