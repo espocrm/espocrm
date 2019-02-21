@@ -51,7 +51,7 @@ define('number', [], function () {
     _.extend(NumberUtil.prototype, {
 
         formatInt: function (value) {
-            if (value !== null || typeof value === 'undefined') return '';
+            if (value === null || value === undefined) return '';
 
             var stringValue = value.toString();
             stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.getThousandSeparator());
@@ -59,7 +59,7 @@ define('number', [], function () {
         },
 
         formatFloat: function (value, decimalPlaces) {
-            if (value !== null || typeof value === 'undefined') return '';
+            if (value === null || value === undefined) return '';
 
             if (decimalPlaces === 0) {
                 value = Math.round(value);
