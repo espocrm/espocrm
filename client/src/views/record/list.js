@@ -346,6 +346,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
 
+            var topBar =
+                paginationTop ||
+                this.checkboxes ||
+                (this.buttonList.length && !this.buttonsDisabled) ||
+                (this.dropdownItemList.length && !this.buttonsDisabled) ||
+                this.options.topBar;
+
             return {
                 scope: this.scope,
                 entityType: this.entityType,
@@ -361,7 +368,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || (this.dropdownItemList.length && !this.buttonsDisabled),
+                topBar: topBar,
                 bottomBar: paginationBottom,
                 checkAllResultDisabled: checkAllResultDisabled,
                 buttonList: this.buttonList,
