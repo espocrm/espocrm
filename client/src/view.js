@@ -37,6 +37,10 @@ define('view', [], function () {
             this.events[fullAction] = handler;
         },
 
+        escapeString: function (string) {
+            return Handlebars.Utils.escapeExpression(string);
+        },
+
         notify: function (label, type, timeout, scope) {
             if (label == false) {
                 Espo.Ui.notify(false);

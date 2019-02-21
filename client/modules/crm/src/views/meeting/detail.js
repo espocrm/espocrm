@@ -33,15 +33,49 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             this.controlSendInvitationsButton();
-            this.listenTo(this.model, 'change', function () {
-                if (
-                    this.model.hasChanged('status')
-                    ||
-                    this.model.hasChanged('teamsIds')
-                ) {
-                    this.controlSendInvitationsButton();
-                }
-            }.bind(this));
+            this.controlAcceptanceStatusButton();
+
+            this.listenTo(this.model, 'sync', function () {
+                this.controlSendInvitationsButton();
+            }, this);
+
+            this.listenTo(this.model, 'sync', function () {
+                this.controlAcceptanceStatusButton();
+            }, this);
+        },
+
+        controlAcceptanceStatusButton: function () {
+            if (!this.model.has('status')) return;
+            if (!this.model.has('usersIds')) return;
+
+            if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
+                this.removeMenuItem('acceptanceStatus');
+                return;
+            }
+
+            if (!~this.model.getLinkMultipleIdList('users').indexOf(this.getUser().id)) {
+                this.removeMenuItem('acceptanceStatus');
+                return;
+            }
+
+            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
+
+            var html;
+            var style = 'default';
+            if (acceptanceStatus && acceptanceStatus !== 'None') {
+                html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
+                style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
+            } else {
+                html = this.translate('Acceptance', 'labels', 'Meeting');
+            }
+
+            this.removeMenuItem('acceptanceStatus');
+
+            this.addMenuItem('buttons', {
+                html: html,
+                action: 'setAcceptanceStatus',
+                style: style
+            });
         },
 
         controlSendInvitationsButton: function () {
@@ -69,7 +103,7 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
             if (show) {
                 this.addMenuItem('buttons', {
-                    label: 'Send Invitations',
+                    html: this.translate('Send Invitations', 'labels', 'Meeting'),
                     action: 'sendInvitations',
                     acl: 'edit',
                 });
@@ -80,30 +114,42 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
         actionSendInvitations: function () {
             this.confirm(this.translate('confirmation', 'messages'), function () {
-                 this.disableMenuItem('sendInvitations');
+                this.disableMenuItem('sendInvitations');
                 this.notify('Sending...');
-                $.ajax({
-                    url: 'Meeting/action/sendInvitations',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        id: this.model.id
-                    }),
-                    success: function (result) {
-                        if (result) {
-                            this.notify('Sent', 'success');
-                        } else {
-                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
-                        }
-
-                        this.enableMenuItem('sendInvitations');
-                    }.bind(this),
-                    error: function () {
-                        this.enableMenuItem('sendInvitations');
-                    }.bind(this),
-                });
+                Espo.Ajax.postRequest(this.model.entityType + '/action/sendInvitations', {
+                    id: this.model.id
+                }).then(function (result) {
+                    if (result) {
+                        this.notify('Sent', 'success');
+                    } else {
+                        Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                    }
+                    this.enableMenuItem('sendInvitations');
+                }.bind(this)).fail(function () {
+                    this.enableMenuItem('sendInvitations');
+                }.bind(this));
             }, this);
+        },
+
+        actionSetAcceptanceStatus: function () {
+            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
+
+            this.createView('dialog', 'crm:views/meeting/modals/acceptance-status', {
+                model: this.model
+            }, function (view) {
+                view.render();
+
+                this.listenTo(view, 'set-status', function (status) {
+                    this.removeMenuItem('setAcceptanceStatus');
+                    Espo.Ajax.postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
+                        id: this.model.id,
+                        status: status
+                    }).then(function () {
+                        this.model.fetch();
+                    }.bind(this));
+                });
+            });
         }
 
     });
 });
-

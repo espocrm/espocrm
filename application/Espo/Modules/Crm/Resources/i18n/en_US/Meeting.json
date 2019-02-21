@@ -15,7 +15,8 @@
         "acceptanceStatus": "Acceptance Status",
         "dateStartDate": "Date Start (all day)",
         "dateEndDate": "Date End (all day)",
-        "isAllDay": "Is All-Day"
+        "isAllDay": "Is All-Day",
+        "Acceptance": "Acceptance"
     },
     "links": {
     },

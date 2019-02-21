@@ -61,7 +61,7 @@ class Call extends \Espo\Core\Controllers\Record
 
     public function postActionMassSetHeld($params, $data)
     {
-        if (empty($data->ids) && !is_array($data->ids)) {
+        if (empty($data->ids) || !is_array($data->ids)) {
             throw new BadRequest();
         }
 
@@ -70,10 +70,19 @@ class Call extends \Espo\Core\Controllers\Record
 
     public function postActionMassSetNotHeld($params, $data)
     {
-        if (empty($data->ids) && !is_array($data->ids)) {
+        if (empty($data->ids) || !is_array($data->ids)) {
             throw new BadRequest();
         }
 
         return $this->getRecordService()->massSetNotHeld($data->ids);
+    }
+
+    public function postActionSetAcceptanceStatus($params, $data)
+    {
+        if (empty($data->id) || empty($data->status)) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->setAcceptanceStatus($data->id, $data->status);
     }
 }

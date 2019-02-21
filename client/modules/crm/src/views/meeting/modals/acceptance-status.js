@@ -26,40 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
- Espo.define('crm:views/call/detail', ['views/detail', 'crm:views/meeting/detail'], function (Dep, MeetingDetail) {
+define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (Dep) {
 
     return Dep.extend({
+
+        backdrop: true,
+
+        templateContent: `
+            {{#each viewObject.statusDataList}}
+                <p>
+                    <button class="action btn btn-{{style}} btn-x-wide" type="button" data-action="setStatus" data-status="{{name}}">{{label}}</button>
+                </p>
+            {{/each}}
+        `,
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.controlSendInvitationsButton();
-            this.controlAcceptanceStatusButton();
+            this.headerHtml = this.escapeString(this.model.get('name')) + ' &raquo ' + this.translate('Acceptance', 'labels', 'Meeting');
 
-            this.listenTo(this.model, 'sync', function () {
-                this.controlSendInvitationsButton();
+            var statusList = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'options']) || [];
+
+            this.statusDataList = [];
+            statusList.forEach(function (item) {
+                var o = {
+                    name: item,
+                    style: this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', item]) || 'default',
+                    label: this.getLanguage().translateOption(item, 'acceptanceStatus', this.model.entityType)
+                };
+
+                this.statusDataList.push(o);
             }, this);
-
-            this.listenTo(this.model, 'sync', function () {
-                this.controlAcceptanceStatusButton();
-            }, this);
         },
 
-        actionSendInvitations: function () {
-            MeetingDetail.prototype.actionSendInvitations.call(this);
-        },
-
-        actionSetAcceptanceStatus: function () {
-            MeetingDetail.prototype.actionSetAcceptanceStatus.call(this);
-        },
-
-        controlSendInvitationsButton: function () {
-            MeetingDetail.prototype.controlSendInvitationsButton.call(this);
-        },
-
-        controlAcceptanceStatusButton: function () {
-            MeetingDetail.prototype.controlAcceptanceStatusButton.call(this);
-        },
-
+        actionSetStatus: function (data) {
+            this.trigger('set-status', data.status);
+            this.close();
+        }
     });
 });

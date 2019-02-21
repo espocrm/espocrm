@@ -34,6 +34,7 @@ use \Espo\Modules\Crm\Business\Event\Invitations;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
 class Meeting extends \Espo\Services\Record
 {
@@ -241,5 +242,37 @@ class Meeting extends \Espo\Services\Record
             }
         }
         return $attributeList;
+    }
+
+    public function setAcceptanceStatus(string $id, string $status, ?string $userId = null)
+    {
+        $userId = $userId ?? $this->getUser()->id;
+
+        $statusList = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'acceptanceStatus', 'options'], []);
+        if (!in_array($status, $statusList)) throw new BadRequest();
+
+        $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+        if (!$entity) throw new NotFound();
+        if (!$entity->hasLinkMultipleId('users', $userId));
+
+
+        $this->getEntityManager()->getRepository($this->entityType)->updateRelation(
+            $entity, 'users', $userId, (object) ['status' => $status]
+        );
+
+        $actionData = [
+            'eventName' => $entity->get('name'),
+            'eventType' => $entity->getEntityType(),
+            'eventId' => $entity->id,
+            'dateStart' => $entity->get('dateStart'),
+            'status' => $status,
+            'link' => 'users',
+            'inviteeType' => 'User',
+            'inviteeId' => $userId,
+        ];
+
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterConfirmation', $entity, [], $actionData);
+
+        return true;
     }
 }
