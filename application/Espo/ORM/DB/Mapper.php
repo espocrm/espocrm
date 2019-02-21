@@ -152,18 +152,18 @@ abstract class Mapper implements IMapper
 
     public function selectRelated(IEntity $entity, $relationName, $params = [], $totalCount = false)
     {
-        $relOpt = $entity->relations[$relationName];
+        $relDefs = $entity->relations[$relationName];
 
-        if (!isset($relOpt['type'])) {
+        if (!isset($relDefs['type'])) {
             throw new \LogicException("Missing 'type' in defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
-        if ($relOpt['type'] !== IEntity::BELONGS_TO_PARENT) {
-            if (!isset($relOpt['entity'])) {
+        if ($relDefs['type'] !== IEntity::BELONGS_TO_PARENT) {
+            if (!isset($relDefs['entity'])) {
                 throw new \LogicException("Missing 'entity' in defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
             }
 
-            $relEntityName = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+            $relEntityName = (!empty($relDefs['class'])) ? $relDefs['class'] : $relDefs['entity'];
             $relEntity = $this->entityFactory->create($relEntityName);
 
             if (!$relEntity) {
@@ -180,7 +180,7 @@ abstract class Mapper implements IMapper
             $params['whereClause'] = [];
         }
 
-        $relType = $relOpt['type'];
+        $relType = $relDefs['type'];
 
         $keySet = $this->query->getKeys($entity, $relationName);
 
@@ -273,7 +273,7 @@ abstract class Mapper implements IMapper
                 }
                 $params['customJoin'] .= $MMJoinPart;
 
-                $params['relationName'] = $relOpt['relationName'];
+                $params['relationName'] = $relDefs['relationName'];
 
                 $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
@@ -353,14 +353,14 @@ abstract class Mapper implements IMapper
 
         if (empty($columnData)) return;
 
-        $relOpt = $entity->relations[$relationName];
+        $relDefs = $entity->relations[$relationName];
         $keySet = $this->query->getKeys($entity, $relationName);
 
-        $relType = $relOpt['type'];
+        $relType = $relDefs['type'];
 
         switch ($relType) {
             case IEntity::MANY_MANY:
-                $relTable = $this->toDb($relOpt['relationName']);
+                $relTable = $this->toDb($relDefs['relationName']);
                 $key = $keySet['key'];
                 $foreignKey = $keySet['foreignKey'];
                 $nearKey = $keySet['nearKey'];
@@ -380,8 +380,8 @@ abstract class Mapper implements IMapper
                     AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0
                     ";
 
-                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                    foreach ($relOpt['conditions'] as $f => $v) {
+                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
+                    foreach ($relDefs['conditions'] as $f => $v) {
                         $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
                     }
                 }
@@ -405,15 +405,15 @@ abstract class Mapper implements IMapper
             return false;
         }
 
-        $relOpt = $entity->relations[$relationName];
+        $relDefs = $entity->relations[$relationName];
 
-        if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
+        if (!isset($relDefs['entity']) || !isset($relDefs['type'])) {
             throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
-        $relType = $relOpt['type'];
+        $relType = $relDefs['type'];
 
-        $className = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+        $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $relDefs['entity'];
         $relEntity = $this->entityFactory->create($className);
         $foreignEntityType = $relEntity->getEntityType();
 
@@ -426,7 +426,7 @@ abstract class Mapper implements IMapper
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $relTable = $this->toDb($relOpt['relationName']);
+                $relTable = $this->toDb($relDefs['relationName']);
 
                 $fieldsPart = $this->toDb($nearKey);
                 $valuesPart = $this->pdo->quote($entity->id);
@@ -434,8 +434,8 @@ abstract class Mapper implements IMapper
                 $valueList = [];
                 $valueList[] = $entity->id;
 
-                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                    foreach ($relOpt['conditions'] as $f => $v) {
+                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
+                    foreach ($relDefs['conditions'] as $f => $v) {
                         $fieldsPart .= ", " . $this->toDb($f);
                         $valuesPart .= ", " . $this->pdo->quote($v);
                         $valueList[] = $v;
@@ -487,20 +487,23 @@ abstract class Mapper implements IMapper
             return false;
         }
 
-        $relOpt = $entity->relations[$relationName];
+        if (!$entity->hasRelation($relationName)) return false;
 
-        if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
+        $relDefs = $entity->relations[$relationName];
+
+        $relType = $entity->getRelationType($relationName);
+        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
+        if (!$relType || !$foreignEntityType && $relType !== IEntity::BELONGS_TO_PARENT) {
             throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
-        $relType = $relOpt['type'];
-
-        $className = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+        $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $foreignEntityType;
 
         if (is_null($relEntity)) {
             $relEntity = $this->entityFactory->create($className);
             if (!$relEntity) {
-                return null;
+                return false;
             }
             $relEntity->id = $id;
         }
@@ -509,9 +512,52 @@ abstract class Mapper implements IMapper
 
         switch ($relType) {
             case IEntity::BELONGS_TO:
+                $key = $relationName . 'Id';
+                $setPart = $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id);
+                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+
+                $entity->set([
+                    $key => $relEntity->id
+                ]);
+
+                $sql = $this->composeUpdateQuery(
+                    $this->toDb($entity->getEntityType()),
+                    $setPart,
+                    $wherePart
+                );
+
+                if ($this->pdo->query($sql)) {
+                    return true;
+                }
+                return false;
+
+            case IEntity::BELONGS_TO_PARENT:
+                $key = $relationName . 'Id';
+                $typeKey = $relationName . 'Type';
+
+                $entity->set([
+                    $key => $relEntity->id,
+                    $typeKey => $relEntity->getEntityType()
+                ]);
+
+                $setPart =
+                    $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id) . ', ' .
+                    $this->toDb($typeKey) . " = " . $this->pdo->quote($relEntity->getEntityType());
+                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+
+                $sql = $this->composeUpdateQuery(
+                    $this->toDb($entity->getEntityType()),
+                    $setPart,
+                    $wherePart
+                );
+
+                if ($this->pdo->query($sql)) {
+                    return true;
+                }
+                return false;
+
             case IEntity::HAS_ONE:
                 return false;
-            break;
 
             case IEntity::HAS_CHILDREN:
             case IEntity::HAS_MANY:
@@ -533,10 +579,11 @@ abstract class Mapper implements IMapper
                     if ($this->pdo->query($sql)) {
                         return true;
                     }
+                    return false;
                 } else {
                     return false;
                 }
-            break;
+                break;
 
             case IEntity::MANY_MANY:
                 $key = $keySet['key'];
@@ -545,13 +592,13 @@ abstract class Mapper implements IMapper
                 $distantKey = $keySet['distantKey'];
 
                 if ($this->count($relEntity, ['whereClause' => ['id' => $id]]) > 0) {
-                    $relTable = $this->toDb($relOpt['relationName']);
+                    $relTable = $this->toDb($relDefs['relationName']);
 
                     $wherePart =
                         $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . " ".
                         "AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id);
-                    if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                        foreach ($relOpt['conditions'] as $f => $v) {
+                    if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
+                        foreach ($relDefs['conditions'] as $f => $v) {
                             $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
                         }
                     }
@@ -564,8 +611,8 @@ abstract class Mapper implements IMapper
                         $fieldsPart = $this->toDb($nearKey) . ", " . $this->toDb($distantKey);
                         $valuesPart = $this->pdo->quote($entity->id) . ", " . $this->pdo->quote($relEntity->id);
 
-                        if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                            foreach ($relOpt['conditions'] as $f => $v) {
+                        if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
+                            foreach ($relDefs['conditions'] as $f => $v) {
                                 $fieldsPart .= ", " . $this->toDb($f);
                                 $valuesPart .= ", " . $this->quote($v);
                             }
@@ -610,8 +657,8 @@ abstract class Mapper implements IMapper
                             AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id) . "
                             ";
 
-                        if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                            foreach ($relOpt['conditions'] as $f => $v) {
+                        if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
+                            foreach ($relDefs['conditions'] as $f => $v) {
                                 $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
                             }
                         }
@@ -624,8 +671,10 @@ abstract class Mapper implements IMapper
                 } else {
                     return false;
                 }
-            break;
+                break;
         }
+
+        return false;
     }
 
     public function removeRelation(IEntity $entity, $relationName, $id = null, $all = false, IEntity $relEntity = null)
@@ -638,15 +687,18 @@ abstract class Mapper implements IMapper
             return false;
         }
 
-        $relOpt = $entity->relations[$relationName];
+        if (!$entity->hasRelation($relationName)) return false;
 
-        if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
+        $relDefs = $entity->relations[$relationName];
+
+        $relType = $entity->getRelationType($relationName);
+        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
+        if (!$relType || !$foreignEntityType && $relType !== IEntity::BELONGS_TO_PARENT) {
             throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
-        $relType = $relOpt['type'];
-
-        $className = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+        $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $foreignEntityType;
 
         if (is_null($relEntity)) {
             $relEntity = $this->entityFactory->create($className);
@@ -660,6 +712,50 @@ abstract class Mapper implements IMapper
 
         switch ($relType) {
             case IEntity::BELONGS_TO:
+                $key = $relationName . 'Id';
+                $setPart = $this->toDb($key) . " = " . $this->quote(null);
+                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+
+                $entity->set([
+                    $key => null
+                ]);
+
+                $sql = $this->composeUpdateQuery(
+                    $this->toDb($entity->getEntityType()),
+                    $setPart,
+                    $wherePart
+                );
+
+                if ($this->pdo->query($sql)) {
+                    return true;
+                }
+                return false;
+
+            case IEntity::BELONGS_TO_PARENT:
+                $key = $relationName . 'Id';
+                $typeKey = $relationName . 'Type';
+
+                $entity->set([
+                    $key => null,
+                    $typeKey => null
+                ]);
+
+                $setPart =
+                    $this->toDb($key) . " = " . $this->quote(null) . ', ' .
+                    $this->toDb($typeKey) . " = " . $this->quote(null);
+                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+
+                $sql = $this->composeUpdateQuery(
+                    $this->toDb($entity->getEntityType()),
+                    $setPart,
+                    $wherePart
+                );
+
+                if ($this->pdo->query($sql)) {
+                    return true;
+                }
+                return false;
+
             case IEntity::HAS_ONE:
                 return false;
 
@@ -695,7 +791,7 @@ abstract class Mapper implements IMapper
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $relTable = $this->toDb($relOpt['relationName']);
+                $relTable = $this->toDb($relDefs['relationName']);
 
                 $setPart = 'deleted = 1';
                 $wherePart = $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id);
@@ -705,8 +801,8 @@ abstract class Mapper implements IMapper
                     $wherePart .= " AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . "";
                 }
 
-                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                    foreach ($relOpt['conditions'] as $f => $v) {
+                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
+                    foreach ($relDefs['conditions'] as $f => $v) {
                         $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
                     }
                 }
@@ -881,7 +977,7 @@ abstract class Mapper implements IMapper
 
     protected function getMMJoin(IEntity $entity, $relationName, $keySet = false, $conditions = [])
     {
-        $relOpt = $entity->relations[$relationName];
+        $relDefs = $entity->relations[$relationName];
 
         if (empty($keySet)) {
             $keySet = $this->query->getKeys($entity, $relationName);
@@ -892,8 +988,8 @@ abstract class Mapper implements IMapper
         $nearKey = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
 
-        $relTable = $this->toDb($relOpt['relationName']);
-        $distantTable = $this->toDb($relOpt['entity']);
+        $relTable = $this->toDb($relDefs['relationName']);
+        $distantTable = $this->toDb($relDefs['entity']);
 
         $join =
             "JOIN `{$relTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
@@ -902,8 +998,8 @@ abstract class Mapper implements IMapper
             . " AND "
             . "{$relTable}.deleted = " . $this->pdo->quote(0) . "";
 
-        if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-            foreach ($relOpt['conditions'] as $f => $v) {
+        if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
+            foreach ($relDefs['conditions'] as $f => $v) {
                 $join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
             }
         }
