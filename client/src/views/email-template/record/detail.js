@@ -38,29 +38,21 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
         },
 
         listenToInsertField: function () {
-            var fieldView = this.getFieldView('insertField');
-            //if (fieldView) {
-                this.listenTo(this.model, 'insert-field', function (o) {
-                    var tag = '{' + o.entityType + '.' + o.field + '}';
+            this.listenTo(this.model, 'insert-field', function (o) {
+                var tag = '{' + o.entityType + '.' + o.field + '}';
 
-                    var bodyView = this.getFieldView('body');
+                var bodyView = this.getFieldView('body');
+                if (!bodyView) return;
 
-                    if (this.model.get('isHtml')) {
-                        bodyView.$summernote.summernote('insertText', tag);
-                    } else {
-                        var $body = bodyView.$element;
-                        var text = $body.val();
-                        text += tag;
-                        $body.val(text);
-                    }
-
-                    var bodyView = this.getFieldView('body');
-
-
-                }, this);
-           //};
+                if (this.model.get('isHtml')) {
+                    bodyView.$summernote.summernote('insertText', tag);
+                } else {
+                    var $body = bodyView.$element;
+                    var text = $body.val();
+                    text += tag;
+                    $body.val(text);
+                }
+            }, this);
         },
-
     });
-
 });
