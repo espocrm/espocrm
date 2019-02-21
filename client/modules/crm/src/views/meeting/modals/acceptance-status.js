@@ -43,7 +43,8 @@ define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (De
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerHtml = this.escapeString(this.model.get('name')) + ' &raquo ' + this.translate('Acceptance', 'labels', 'Meeting');
+            this.headerHtml = this.escapeString(this.translate(this.model.entityType, 'scopeNames'))  + ' &raquo ' +
+                this.escapeString(this.model.get('name')) + ' &raquo ' + this.translate('Acceptance', 'labels', 'Meeting');
 
             var statusList = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'options']) || [];
 

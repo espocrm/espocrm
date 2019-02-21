@@ -8,6 +8,9 @@
         "list":"crm:views/meeting/record/list",
         "detail":"crm:views/meeting/record/detail"
     },
+    "modalViews": {
+        "detail":"crm:views/meeting/modals/detail"
+    },
     "sidePanels":{
         "detail":[
             {

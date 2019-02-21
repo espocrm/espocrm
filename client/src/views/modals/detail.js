@@ -327,6 +327,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         switchToModelByIndex: function (indexOfRecord) {
             if (!this.model.collection) return;
 
+            var previousModel = this.model;
+
             this.sourceModel = this.model.collection.at(indexOfRecord);
 
             if (!this.sourceModel) {
@@ -356,6 +358,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }.bind(this));
 
             this.controlNavigationButtons();
+
+            this.trigger('switch-model', this.model, previousModel);
         },
 
         actionPrevious: function () {
@@ -414,9 +418,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 }, this);
 
                 this.listenToOnce(view, 'after:save', function (model) {
-                    this.trigger('after:save', model);
-
                     this.model.set(model.getClonedAttributes());
+
+                    this.trigger('after:save', model);
                 }, this);
 
                 view.render();
