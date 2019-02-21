@@ -49,12 +49,12 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
             if (!this.model.has('usersIds')) return;
 
             if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-                this.removeMenuItem('acceptanceStatus');
+                this.removeMenuItem('setAcceptanceStatus');
                 return;
             }
 
             if (!~this.model.getLinkMultipleIdList('users').indexOf(this.getUser().id)) {
-                this.removeMenuItem('acceptanceStatus');
+                this.removeMenuItem('setAcceptanceStatus');
                 return;
             }
 
@@ -69,7 +69,7 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
                 html = this.translate('Acceptance', 'labels', 'Meeting');
             }
 
-            this.removeMenuItem('acceptanceStatus');
+            this.removeMenuItem('setAcceptanceStatus');
 
             this.addMenuItem('buttons', {
                 html: html,
