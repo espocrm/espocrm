@@ -227,11 +227,17 @@ class RDB extends \Espo\ORM\Repository
         return null;
     }
 
-    public function findByQuery($sql)
+    public function findByQuery(string $sql, ?string $collectionType = null)
     {
         $dataArr = $this->getMapper()->selectByQuery($this->seed, $sql);
 
-        $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
+        if (!$collectionType) {
+            $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
+        } else if ($collectionType === \Espo\ORM\EntityManager::STH_COLLECTION) {
+            $collection = $this->getEntityManager()->createSthCollection($this->entityType);
+            $collection->setQuery($sql);
+        }
+
         $this->reset();
 
         return $collection;

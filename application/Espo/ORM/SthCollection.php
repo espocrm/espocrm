@@ -39,6 +39,8 @@ class SthCollection implements \IteratorAggregate
 
     private $sth = null;
 
+    private $sql = null;
+
     public function __construct(string $entityType, EntityManager $entityManager = null, array $selectParams = [])
     {
         $this->selectParams = $selectParams;
@@ -51,9 +53,18 @@ class SthCollection implements \IteratorAggregate
         $this->selectParams = $selectParams;
     }
 
+    public function setQuery(?string $sql)
+    {
+        $this->sql = $sql;
+    }
+
     public function executeQuery()
     {
-        $sql = $this->entityManager->getQuery()->createSelectQuery($this->entityType, $this->selectParams);
+        if ($this->sql) {
+            $sql = $this->sql;
+        } else {
+            $sql = $this->entityManager->getQuery()->createSelectQuery($this->entityType, $this->selectParams);
+        }
         $sth = $this->entityManager->getPdo()->prepare($sql);
         $sth->execute();
 

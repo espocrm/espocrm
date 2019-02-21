@@ -33,6 +33,7 @@ use \Espo\Core\Exceptions\Error;
 
 class EntityManager
 {
+    const STH_COLLECTION = 'sthCollection';
 
     protected $pdo;
 
