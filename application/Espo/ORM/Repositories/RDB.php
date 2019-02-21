@@ -301,11 +301,11 @@ class RDB extends \Espo\ORM\Repository
 
         if (!$id) return;
 
-        return !!$this->countRelated($entity, $relationName, array(
-            'whereClause' => array(
+        return !!$this->countRelated($entity, $relationName, [
+            'whereClause' => [
                 'id' => $id
-            )
-        ));
+            ]
+        ]);
     }
 
     public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
