@@ -12,7 +12,8 @@
             [{"name": "assignmentEmailNotifications"}, {"name": "mentionEmailNotifications"}],
             [{"name": "assignmentEmailNotificationsEntityList"}, false],
             [{"name": "streamEmailNotifications"}, {"name": "portalStreamEmailNotifications"}],
-            [{"name": "streamEmailNotificationsEntityList"}, {"name": "streamEmailNotificationsTypeList"}]
+            [{"name": "streamEmailNotificationsEntityList"}, {"name": "streamEmailNotificationsTypeList"}],
+            [{"name": "emailNotificationsDelay"}, false]
         ]
     },
     {

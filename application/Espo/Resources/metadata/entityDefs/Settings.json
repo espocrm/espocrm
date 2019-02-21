@@ -283,6 +283,11 @@
             "type": "bool",
             "default": false
         },
+        "emailNotificationsDelay": {
+            "type": "int",
+            "min": 0,
+            "max": 18000
+        },
         "assignmentEmailNotifications": {
             "type": "bool",
             "default": false

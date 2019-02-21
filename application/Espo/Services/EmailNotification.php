@@ -38,6 +38,8 @@ class EmailNotification extends \Espo\Core\Services\Base
 {
     const HOURS_THERSHOLD = 5;
 
+    const PROCESS_MAX_COUNT = 200;
+
     protected function init()
     {
         $this->addDependencyList([
@@ -54,7 +56,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         ]);
     }
 
-    protected $emailNotificationEntityHandlerHash = array();
+    protected $emailNotificationEntityHandlerHash = [];
 
     protected function getMailSender()
     {
@@ -94,7 +96,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         return $this->htmlizer;
     }
 
-    protected $userIdPortalCacheMap = array();
+    protected $userIdPortalCacheMap = [];
 
     public function notifyAboutAssignmentJob($data)
     {
@@ -136,22 +138,22 @@ class EmailNotification extends \Espo\Core\Services\Base
             $subjectTpl = $this->getTemplateFileManager()->getTemplate('assignment', 'subject', $entity->getEntityType());
             $bodyTpl = $this->getTemplateFileManager()->getTemplate('assignment', 'body', $entity->getEntityType());
 
-            $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+            $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
             $recordUrl = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
 
-            $data = array(
+            $data = [
                 'userName' => $user->get('name'),
                 'assignerUserName' => $assignerUser->get('name'),
                 'recordUrl' => $recordUrl,
                 'entityType' => $this->getLanguage()->translate($entity->getEntityType(), 'scopeNames')
-            );
+            ];
             $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
 
             $subject = $this->getHtmlizer()->render($entity, $subjectTpl, 'assignment-email-subject-' . $entity->getEntityType(), $data, true);
             $body = $this->getHtmlizer()->render($entity, $bodyTpl, 'assignment-email-body-' . $entity->getEntityType(), $data, true);
 
-            $email->set(array(
+            $email->set([
                 'subject' => $subject,
                 'body' => $body,
                 'isHtml' => true,
@@ -159,7 +161,7 @@ class EmailNotification extends \Espo\Core\Services\Base
                 'isSystem' => true,
                 'parentId' => $entity->id,
                 'parentType' => $entity->getEntityType()
-            ));
+            ]);
             try {
                 $this->getMailSender()->send($email);
             } catch (\Exception $e) {
@@ -172,9 +174,6 @@ class EmailNotification extends \Espo\Core\Services\Base
 
     public function process()
     {
-        $dateTime = new \DateTime();
-        $dateTime->modify('-' . self::HOURS_THERSHOLD . ' hours');
-
         $mentionEmailNotifications = $this->getConfig()->get('mentionEmailNotifications');
 
         $streamEmailNotifications = $this->getConfig()->get('streamEmailNotifications');
@@ -191,11 +190,21 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         if (empty($typeList)) return;
 
-        $where = array(
-            'createdAt>' => $dateTime->format('Y-m-d H:i:s'),
+        $fromDt = new \DateTime();
+        $fromDt->modify('-' . self::HOURS_THERSHOLD . ' hours');
+
+        $where = [
+            'createdAt>' => $fromDt->format('Y-m-d H:i:s'),
             'read' => false,
-            'emailIsProcessed' => false
-        );
+            'emailIsProcessed' => false,
+        ];
+
+        $delay = $this->getConfig()->get('emailNotificationsDelay');
+        if ($delay) {
+            $delayDt = new \DateTime();
+            $delayDt->modify('-' . $delay . ' seconds');
+            $where[] = ['createdAt<' => $delayDt->format('Y-m-d H:i:s')];
+        }
 
         $sqlArr = [];
         foreach ($typeList as $type) {
@@ -206,7 +215,9 @@ class EmailNotification extends \Espo\Core\Services\Base
             $sqlArr[] = $this->getEntityManager()->getQuery()->createSelectQuery('Notification', $selectParams);
         }
 
-        $sql = '' . implode(' UNION ', $sqlArr) . ' ORDER BY number';
+        $maxCount = intval(self::PROCESS_MAX_COUNT);
+
+        $sql = '' . implode(' UNION ', $sqlArr) . " ORDER BY number LIMIT 0, {$maxCount}";
 
         $notificationList = $this->getEntityManager()->getRepository('Notification')->findByQuery($sql);
 
@@ -255,16 +266,16 @@ class EmailNotification extends \Espo\Core\Services\Base
         if (empty($entityList)) {
             $selectParams['whereClause']['relatedParentType'] = null;
         } else {
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
-                    array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
+                    [
                         'relatedParentType' => $entityList
-                    ),
-                    array(
+                    ],
+                    [
                         'relatedParentType' => null
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
         }
 
         $forInternal = $this->getConfig()->get('streamEmailNotifications');
@@ -302,7 +313,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
 
-        $data = array();
+        $data = [];
 
         if ($parentId && $parentType) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
@@ -323,25 +334,25 @@ class EmailNotification extends \Espo\Core\Services\Base
         $subjectTpl = $this->getTemplateFileManager()->getTemplate('mention', 'subject');
         $bodyTpl = $this->getTemplateFileManager()->getTemplate('mention', 'body');
 
-        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+        $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        $email->set(array(
+        $email->set([
             'subject' => $subject,
             'body' => $body,
             'isHtml' => true,
             'to' => $emailAddress,
             'isSystem' => true
-        ));
+        ]);
         if ($parentId && $parentType) {
-            $email->set(array(
+            $email->set([
                 'parentId' => $parentId,
                 'parentType' => $parentType
-            ));
+            ]);
         }
 
         try {
@@ -407,7 +418,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         $emailAddress = $user->get('emailAddress');
         if (!$emailAddress) return;
 
-        $data = array();
+        $data = [];
 
         $data['userName'] = $note->get('createdByName');
         $data['post'] = nl2br($note->get('post'));
@@ -429,7 +440,7 @@ class EmailNotification extends \Espo\Core\Services\Base
             $subjectTpl = $this->getTemplateFileManager()->getTemplate('notePost', 'subject', $parentType);
             $bodyTpl = $this->getTemplateFileManager()->getTemplate('notePost', 'body', $parentType);
 
-            $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+            $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
             $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject-' . $parentType, $data, true);
             $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body-' . $parentType, $data, true);
@@ -439,7 +450,7 @@ class EmailNotification extends \Espo\Core\Services\Base
             $subjectTpl = $this->getTemplateFileManager()->getTemplate('notePostNoParent', 'subject');
             $bodyTpl = $this->getTemplateFileManager()->getTemplate('notePostNoParent', 'body');
 
-            $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+            $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
             $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject', $data, true);
             $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
@@ -447,18 +458,18 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        $email->set(array(
+        $email->set([
             'subject' => $subject,
             'body' => $body,
             'isHtml' => true,
             'to' => $emailAddress,
             'isSystem' => true
-        ));
+        ]);
         if ($parentId && $parentType) {
-            $email->set(array(
+            $email->set([
                 'parentId' => $parentId,
                 'parentType' => $parentType
-            ));
+            ]);
         }
 
         $smtpParams = null;
@@ -529,7 +540,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         $emailAddress = $user->get('emailAddress');
         if (!$emailAddress) return;
 
-        $data = array();
+        $data = [];
 
         if (!$parentId || !$parentType) return;
 
@@ -560,14 +571,14 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $subjectTpl = $this->getTemplateFileManager()->getTemplate('noteStatus', 'subject', $parentType);
         $bodyTpl = $this->getTemplateFileManager()->getTemplate('noteStatus', 'body', $parentType);
-        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+        $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-status-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-status-email-body', $data, true);
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        $email->set(array(
+        $email->set([
             'subject' => $subject,
             'body' => $body,
             'isHtml' => true,
@@ -575,7 +586,7 @@ class EmailNotification extends \Espo\Core\Services\Base
             'isSystem' => true,
             'parentId' => $parentId,
             'parentType' => $parentType
-        ));
+        ]);
 
         try {
             $this->getMailSender()->send($email);
@@ -608,7 +619,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         if (!$email) return;
         if ($email->hasLinkMultipleId('users', $user->id)) return;
 
-        $data = array();
+        $data = [];
 
         $data['fromName'] = '';
         if (isset($noteData->personEntityName)) {
@@ -642,25 +653,25 @@ class EmailNotification extends \Espo\Core\Services\Base
         $subjectTpl = $this->getTemplateFileManager()->getTemplate('noteEmailRecieved', 'subject', $parentType);
         $bodyTpl = $this->getTemplateFileManager()->getTemplate('noteEmailRecieved', 'body', $parentType);
 
-        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+        $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-email-recieved-email-subject-' . $parentType, $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-email-recieved-email-body-' . $parentType, $data, true);
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        $email->set(array(
+        $email->set([
             'subject' => $subject,
             'body' => $body,
             'isHtml' => true,
             'to' => $emailAddress,
             'isSystem' => true
-        ));
+        ]);
 
-        $email->set(array(
+        $email->set([
             'parentId' => $parentId,
             'parentType' => $parentType
-        ));
+        ]);
 
         try {
             $this->getMailSender()->send($email);
