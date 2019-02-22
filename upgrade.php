@@ -27,11 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-$sapiName = php_sapi_name();
-
-if (substr($sapiName, 0, 3) != 'cli') {
-    die("Upgrade script can be run only via CLI.\n");
-}
+if (substr(php_sapi_name(), 0, 3) != 'cli') exit;
 
 include "bootstrap.php";
 
@@ -43,7 +39,7 @@ if ($arg == 'version' || $arg == '-v') {
 }
 
 if (empty($arg)) {
-    die("Specify an upgrade package file.\n");
+    die("Upgrade package file is not specified.\n");
 }
 
 if (!file_exists($arg)) {
@@ -66,14 +62,14 @@ $app->getContainer()->setUser($user);
 $upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
 
 echo "Current version is " . $config->get('version') . "\n";
-echo "Start upgrade process...\n";
+echo "Starting upgrade process...\n";
 
 try {
     $fileData = file_get_contents($arg);
     $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
 
     $upgradeId = $upgradeManager->upload($fileData);
-    $upgradeManager->install(array('id' => $upgradeId));
+    $upgradeManager->install(['id' => $upgradeId]);
 } catch (\Exception $e) {
     die("Error: " . $e->getMessage() . "\n");
 }
@@ -83,4 +79,4 @@ try {
     $app->runRebuild();
 } catch (\Exception $e) {}
 
-echo "Upgrade is complete. New version is " . $config->get('version') . ". \n";
+echo "Upgrade is complete. Current version is " . $config->get('version') . ". \n";
