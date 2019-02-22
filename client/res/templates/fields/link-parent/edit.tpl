@@ -1,4 +1,4 @@
-<div class="input-group">
+<div class="input-group input-group-link-parent">
     <span class="input-group-btn">
         <select class="form-control" data-name="{{typeName}}">
             {{options foreignScopeList foreignScope category='scopeNames'}}
