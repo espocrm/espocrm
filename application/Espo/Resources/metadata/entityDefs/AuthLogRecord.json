@@ -24,7 +24,8 @@
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "hasSeconds": true
         },
         "isDenied": {
             "type": "bool",

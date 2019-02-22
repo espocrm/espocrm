@@ -20,7 +20,8 @@
             "options": ["read", "update", "create", "delete"]
         },
         "createdAt": {
-            "type": "datetime"
+            "type": "datetime",
+            "hasSeconds": true
         },
         "user": {
             "type": "link"
