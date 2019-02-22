@@ -617,7 +617,6 @@ class EmailNotification extends \Espo\Core\Services\Base
         if (!isset($noteData->emailId)) return;
         $email = $this->getEntityManager()->getEntity('Email', $noteData->emailId);
         if (!$email) return;
-        if ($email->hasLinkMultipleId('users', $user->id)) return;
 
         $data = [];
 
