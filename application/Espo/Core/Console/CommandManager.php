@@ -46,8 +46,13 @@ class CommandManager
         $options = [];
         $flagList = [];
 
+        $skipIndex = 1;
+        if (isset($_SERVER['argv'][0]) && $_SERVER['argv'][0] === 'command.php') {
+            $skipIndex = 2;
+        }
+
         foreach ($_SERVER['argv'] as $i => $item) {
-            if ($i < 2) continue;
+            if ($i < $skipIndex) continue;
 
             if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
                 list($name, $value) = explode('=', substr($item, 2));
