@@ -178,9 +178,11 @@ abstract class Base
         return $this->seedCache[$entityType];
     }
 
-    public function createSelectQuery(string $entityType, array $params = [], $deleted = false)
+    public function createSelectQuery(string $entityType, ?array $params = null, $withDeleted = false)
     {
         $entity = $this->getSeed($entityType);
+
+        $params = $params ?? [];
 
         foreach (self::$selectParamList as $k) {
             $params[$k] = array_key_exists($k, $params) ? $params[$k] : null;
@@ -191,7 +193,7 @@ abstract class Base
             $whereClause = [];
         }
 
-        if (!$deleted) {
+        if (!$withDeleted && empty($params['withDeleted'])) {
             $whereClause = $whereClause + ['deleted' => 0];
         }
 
@@ -1282,11 +1284,10 @@ abstract class Base
                     if (!empty($value['selectParams'])) {
                         $subQuerySelectParams = $value['selectParams'];
                     }
-                    $withDeleted = false;
                     if (!empty($value['withDeleted'])) {
-                        $withDeleted = true;
+                        $subQuerySelectParams['withDeleted'] = true;
                     }
-                    $wherePartList[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
+                    $wherePartList[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams) . ")";
                 } else if (!is_array($value)) {
                     if (!is_null($value)) {
                         if ($isNotValue) {

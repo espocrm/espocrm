@@ -117,11 +117,7 @@ class RDB extends \Espo\ORM\Repository
             $this->handleSelectParams($params);
         }
 
-        if ($this->getMapper()->selectById($entity, $id, $params)) {
-            return $entity;
-        }
-
-        return null;
+        return $this->getMapper()->selectById($entity, $id, $params);
     }
 
     public function get($id = null) : ?Entity

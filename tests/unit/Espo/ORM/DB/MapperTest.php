@@ -460,7 +460,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testMax()
     {
-        $query = "SELECT MAX(post.id) AS AggregateValue FROM `post` LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id";
+        $query = "SELECT MAX(post.id) AS AggregateValue FROM `post` LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id WHERE post.deleted = '0'";
         $return = new MockDBResult(array(
             array (
                 'AggregateValue' => 10,

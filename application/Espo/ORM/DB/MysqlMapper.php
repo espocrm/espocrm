@@ -39,8 +39,8 @@ use PDO;
  */
 class MysqlMapper extends Mapper
 {
-    protected function toDb($field)
+    protected function toDb($attribute)
     {
-        return $this->query->toDb($field);
+        return $this->query->toDb($attribute);
     }
 }

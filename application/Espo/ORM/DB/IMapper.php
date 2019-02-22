@@ -34,149 +34,109 @@ use Espo\ORM\Classes\EntityFactory;
 interface IMapper
 {
     /**
-     * Selects bean by id.
-     *
-     * @param IEntity $entity
-     * @param string $id Id of the needed bean
-     * @return IEntity $entity
+     * Selects entity by id.
      */
-    function selectById(IEntity $entity, $id);
+    function selectById(IEntity $entity, $id, ?array $params = null) : ?IEntity;
 
     /**
-     * Selects list of beans according to given parameters.
+     * Selects list of entitys according to given parameters.
      *
-     * @param IEntity $entity
-     * @param array $params Parameters (whereClause, offset, limit, orderBy, order, customWhere, joins, distinct)
-     * @return array Array of beans
+     * @return array Array of entities or collection.
      */
-    function select(IEntity $entity, $params);
+    function select(IEntity $entity, ?array $params = null);
 
     /**
      * Invokes aggregate function and returns a value.
      *
-     * @param IEntity $entity
-     * @param array $params Parameters (whereClause, joins, distinct, customWhere, customJoin)
-     * @param string $aggregation Aggregate function (COUNT, MAX, MIN, SUM, AVG)
-     * @param string $aggregationBy Field to aggregate
-     * @param bool $deleted True to consider records marked as deleted either.
      * @return mixed Result of the aggregation
      */
-    function aggregate(IEntity $entity, $params, $aggregation, $aggregationBy, $deleted);
+    function aggregate(IEntity $entity, ?array $params, string $aggregation, string $aggregationBy);
 
     /**
      * Returns count of records according to given parameters.
      *
-     * @param IEntity $entity
-     * @param array $params Parameters (ordering, and limitig are not used)
      * @return int Count of record
      */
-    function count(IEntity $entity, $params);
+    function count(IEntity $entity, ?array $params = null);
 
     /**
-     * Returns max value of the field in the select according to given parameters.
+     * Returns max value of the attribute in the select according to given parameters.
      *
      * @param IEntity $entity
      * @param array $params Parameters
-     * @param string $field Needed field.
-     * @param bool $deleted True to consider records marked as deleted either.
+     * @param string $attribute Needed attribute.
      * @return mixed Max value
      */
-    function max(IEntity $entity, $params, $field, $deleted);
+    function max(IEntity $entity, ?array $params, string $attribute);
 
     /**
-     * Returns min value of the field in the select according to given parameters.
+     * Returns min value of the attribute in the select according to given parameters.
      *
-     * @param IEntity $entity
-     * @param array $params Parameters
-     * @param string $field Needed field.
-     * @param bool $deleted True to consider records marked as deleted either.
      * @return mixed Min value
      */
-    function min(IEntity $entity, $params, $field, $deleted);
+    function min(IEntity $entity, ?array $params, string $attribute);
 
     /**
-     * Returns sum value of the field in the select according to given parameters.
+     * Returns sum value of the attribute in the select according to given parameters.
      *
-     * @param IEntity $entity
-     * @param array $params Parameters
-     * @param string $field Needed field.
-     * @param bool $deleted True to consider records marked as deleted either.
      * @return mixed Sum value
      */
-    function sum(IEntity $entity, $params);
+    function sum(IEntity $entity, ?array $params, string $attribute);
 
     /**
-     * Selects related bean or list of beans.
+     * Selects related entity or list of entitys.
      *
-     * @param IEntity $entity
-     * @param string $relName Relation name
-     * @param array $params (whereClause, offset, limit, orderBy, order, customWhere)
-     * @param bool $totalCount used by DB::countRelated to make this method return total count
-     * @return array List of beans or total count if $totalCount was passed as true
+     * @return array List of entitys or total count if $totalCount was passed as true
      */
     function selectRelated(IEntity $entity, $relName, $params, $totalCount);
 
     /**
      * Returns count of related records according to given parameters.
      *
-     * @param IEntity $entity
-     * @param string $relName Relation name
-     * @param array $params (whereClause, customWhere)
      * @return int Count of records
      */
     function countRelated(IEntity $entity, $relName, $params);
 
     /**
-     * Links the bean with another one.
+     * Links entity with another one.
      *
-     * @param IEntity $entity
-     * @param string $relName Relation name
-     * @param string $id Id of the foreign record.
      * @return bool True if success
      */
-    function addRelation(IEntity $entity, $relName, $id);
+    function addRelation(IEntity $entity, string $relationName, $id = null, $relEntity = null, $data = null);
 
     /**
-     * Removes relation of bean with certain record.
+     * Removes relation of entity with certain record.
      *
-     * @param IEntity $entity
-     * @param string $relName Relation name
-     * @param string $id Id of the foreign record.
      * @return bool True if success
      */
-    function removeRelation(IEntity $entity, $relName, $id);
+    function removeRelation(IEntity $entity, string $relationName, $id = null, $all = false, IEntity $relEntity = null);
 
     /**
-     * Removes all relations of bean of specified relation name.
+     * Removes all relations of entity of specified relation name.
      *
-     * @param IEntity $entity
-     * @param string $relName Relation name
      * @return bool True if success
      */
-    function removeAllRelations(IEntity $entity, $relName);
+    function removeAllRelations(IEntity $entity, string $relationName);
 
     /**
-     * Insert the bean into db.
+     * Insert entity into db.
      *
-     * @param IEntity $entity
      * @return bool True if success
      */
     function insert(IEntity $entity);
 
     /**
-     * Updates the bean in db.
+     * Updates entity in db.
      *
-     * @param IEntity $entity
      * @return bool True if success
      */
     function update(IEntity $entity);
 
 
     /**
-     * Deletes the bean.
+     * Deletes entity.
      * (Marks as deleted)
      *
-     * @param IEntity $entity
      * @return bool True if success
      */
     function delete(IEntity $entity);
@@ -184,9 +144,8 @@ interface IMapper
     /**
      * Sets class name of a model collection that will be returned by operations such as select.
      *
-     * @param string $collectionClass Class name of a model collection.
      */
-    function setCollectionClass($collectionClass);
+    function setCollectionClass(string $collectionClass);
+
+    function deleteFromDb(string $entityType, $id, $onlyDeleted = false);
 }
-
-

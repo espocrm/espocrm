@@ -61,15 +61,17 @@ abstract class Mapper implements IMapper
         $this->entityFactory = $entityFactory;
     }
 
-    public function selectById(IEntity $entity, $id, $params = [])
+    public function selectById(IEntity $entity, $id, ?array $params = null) : ?IEntity
     {
+        $params = $params ?? [];
+
         if (!array_key_exists('whereClause', $params)) {
             $params['whereClause'] = [];
         }
 
         $params['whereClause']['id'] = $id;
 
-        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
+        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
 
         $ps = $this->pdo->query($sql);
 
@@ -77,40 +79,39 @@ abstract class Mapper implements IMapper
             foreach ($ps as $row) {
                 $entity = $this->fromRow($entity, $row);
                 $entity->setAsFetched();
-                return true;
+                return $entity;
             }
         }
-        return false;
+        return null;
     }
 
-    public function count(IEntity $entity, $params = [])
+    public function count(IEntity $entity, ?array $params = null)
     {
         return $this->aggregate($entity, $params, 'COUNT', 'id');
     }
 
-    public function max(IEntity $entity, $params = [], $field, $deleted = false)
+    public function max(IEntity $entity, ?array $params, string $attribute)
     {
-        return $this->aggregate($entity, $params, 'MAX', $field, $deleted);
+        return $this->aggregate($entity, $params, 'MAX', $attribute);
     }
 
-    public function min(IEntity $entity, $params = [], $field, $deleted = false)
+    public function min(IEntity $entity, ?array $params, string $attribute)
     {
-        return $this->aggregate($entity, $params, 'MIN', $field, $deleted);
+        return $this->aggregate($entity, $params, 'MIN', $attribute);
     }
 
-    public function sum(IEntity $entity, $params = [])
+    public function sum(IEntity $entity, ?array $params, string $attribute)
     {
-        return $this->aggregate($entity, $params, 'SUM', 'id');
+        return $this->aggregate($entity, $params, 'SUM', $attribute);
     }
 
-    public function select(IEntity $entity, $params = [])
+    public function select(IEntity $entity, ?array $params = null)
     {
-        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
+        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
 
         return $this->selectByQuery($entity, $sql);
     }
 
-    /* TODO ability to pass offset and limit */
     public function selectByQuery(IEntity $entity, $sql)
     {
         $dataArr = [];
@@ -129,16 +130,18 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function aggregate(IEntity $entity, $params = [], $aggregation, $aggregationBy, $deleted = false)
+    public function aggregate(IEntity $entity, ?array $params, string $aggregation, string $aggregationBy)
     {
-        if (empty($aggregation) || !isset($entity->fields[$aggregationBy])) {
+        if (empty($aggregation) || !$entity->hasAttribute($aggregationBy)) {
             return false;
         }
+
+        $params = $params ?? [];
 
         $params['aggregation'] = $aggregation;
         $params['aggregationBy'] = $aggregationBy;
 
-        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params, $deleted);
+        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
 
         $ps = $this->pdo->query($sql);
 
@@ -477,7 +480,7 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function addRelation(IEntity $entity, $relationName, $id = null, $relEntity = null, $data = null)
+    public function addRelation(IEntity $entity, string $relationName, $id = null, $relEntity = null, $data = null)
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -677,7 +680,7 @@ abstract class Mapper implements IMapper
         return false;
     }
 
-    public function removeRelation(IEntity $entity, $relationName, $id = null, $all = false, IEntity $relEntity = null)
+    public function removeRelation(IEntity $entity, string $relationName, $id = null, $all = false, IEntity $relEntity = null)
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -816,7 +819,7 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function removeAllRelations(IEntity $entity, $relationName)
+    public function removeAllRelations(IEntity $entity, string $relationName)
     {
         $this->removeRelation($entity, $relationName, null, true);
     }
@@ -1034,14 +1037,14 @@ abstract class Mapper implements IMapper
         return $sql;
     }
 
-    abstract protected function toDb($field);
+    abstract protected function toDb($attribute);
 
     public function setReturnCollection($returnCollection)
     {
         $this->returnCollection = $returnCollection;
     }
 
-    public function setCollectionClass($collectionClass)
+    public function setCollectionClass(string $collectionClass)
     {
         $this->collectionClass = $collectionClass;
     }
