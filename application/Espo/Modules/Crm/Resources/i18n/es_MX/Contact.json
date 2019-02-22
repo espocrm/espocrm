@@ -41,7 +41,7 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--Ninguno--",
+      "": "",
       "Decision Maker": "Tomador de Desiciones",
       "Evaluator": "Evaluador",
       "Influencer": "Factor de Influencia"

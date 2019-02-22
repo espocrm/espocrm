@@ -41,7 +41,7 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--Немає--",
+      "": "",
       "Decision Maker": "Приймає рішення",
       "Evaluator": "Оцінює",
       "Influencer": "Впливає"

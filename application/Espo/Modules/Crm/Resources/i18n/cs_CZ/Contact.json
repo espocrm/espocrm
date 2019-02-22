@@ -28,7 +28,7 @@
     },
     "options": {
         "opportunityRole": {
-            "": "--",
+            "": "",
             "Decision Maker": "Rozhoduje",
             "Evaluator": "Hodnotí",
             "Influencer": "Má vliv"
