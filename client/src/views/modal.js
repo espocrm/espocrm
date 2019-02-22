@@ -207,17 +207,25 @@ Espo.define('views/modal', 'view', function (Dep) {
             this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
         },
 
-        addButton: function (o, toBeginnig, doNotReRender) {
+        addButton: function (o, position, doNotReRender) {
             var index = -1;
             this.buttonList.forEach(function (item, i) {
-                if (item.name === o.name) {
-                    index = i;
-                }
+                if (item.name === o.name) index = i;
             }, this);
             if (~index) return;
 
-            if (toBeginnig) {
+            if (position === true) {
                 this.buttonList.unshift(o);
+            } else if (typeof position === 'string') {
+                index = -1;
+                this.buttonList.forEach(function (item, i) {
+                    if (item.name === position) index = i;
+                }, this);
+                if (~index) {
+                    this.buttonList.splice(index, 0, o);
+                } else {
+                    this.buttonList.push(o);
+                }
             } else {
                 this.buttonList.push(o);
             }

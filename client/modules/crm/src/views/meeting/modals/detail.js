@@ -41,7 +41,7 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 pullLeft: false,
                 hidden: this.hasAcceptanceStatusButton(),
                 style: buttonData.style,
-            }, false);
+            }, 'cancel');
 
             this.initAcceptenceStatus();
             this.on('switch-model', function (model, previousModel) {
