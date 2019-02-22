@@ -999,6 +999,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }, this);
             }
 
+            if (this.forcedCheckAllResultMassActionList) {
+                this.checkAllResultMassActionList = this.forcedCheckAllResultMassActionList;
+            }
+
             if (this.getAcl().get('massUpdatePermission') !== 'yes') {
                 this.removeAllResultMassAction('remove');
             }
