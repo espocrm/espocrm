@@ -174,7 +174,7 @@ class Application
             foreach ($processList as $i => $process) {
                 if ($process->isRunning()) {
                     $runningCount++;
-                } else if ($process->isRunning()) {
+                } else {
                     unset($processList[$i]);
                 }
             }
@@ -186,6 +186,7 @@ class Application
                 $process = new \Symfony\Component\Process\Process([$phpExecutablePath, 'cron.php']);
                 $process->setTimeout($timeout);
                 $process->run();
+                $processList[] = $process;
             }
             sleep($interval);
         }
