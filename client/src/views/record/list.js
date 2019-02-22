@@ -351,7 +351,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.checkboxes ||
                 (this.buttonList.length && !this.buttonsDisabled) ||
                 (this.dropdownItemList.length && !this.buttonsDisabled) ||
-                this.options.topBar;
+                this.forceDisplayTopBar;
 
             return {
                 scope: this.scope,
@@ -1036,6 +1036,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if ('displayTotalCount' in this.options) {
                 this.displayTotalCount = this.options.displayTotalCount;
             }
+
+            this.forceDisplayTopBar = this.options.forceDisplayTopBar || this.forceDisplayTopBar;
 
             if (this.options.massActionsDisabled) {
                 this.massActionList = [];
