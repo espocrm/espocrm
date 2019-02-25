@@ -945,13 +945,13 @@ class Stream extends \Espo\Core\Services\Base
     {
         $entityType = $entity->getEntityType();
 
-        if ($this->getEntityManager()->getRepository('Note')->where(array(
+        if ($this->getEntityManager()->getRepository('Note')->where([
             'type' => 'EmailReceived',
             'parentId' => $entity->id,
             'parentType' => $entityType,
             'relatedId' => $email->id,
             'relatedType' => 'Email'
-        ))->findOne()) {
+        ])->findOne()) {
             return;
         }
 
@@ -976,7 +976,7 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('post', $email->getBodyPlain());
         }
 
-        $data = array();
+        $data = [];
 
         $data['emailId'] = $email->id;
         $data['emailName'] = $email->get('name');
@@ -996,7 +996,7 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        $note->set('data', $data);
+        $note->set('data', (object) $data);
 
 
         $this->getEntityManager()->saveEntity($note);
@@ -1027,7 +1027,7 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('post', $email->getBodyPlain());
         }
 
-        $data = array();
+        $data = [];
         $data['emailId'] = $email->id;
         $data['emailName'] = $email->get('name');
 
@@ -1052,7 +1052,7 @@ class Stream extends \Espo\Core\Services\Base
             $data['personEntityId'] = $person->id;
         }
 
-        $note->set('data', $data);
+        $note->set('data', (object) $data);
 
         $this->getEntityManager()->saveEntity($note);
     }
@@ -1095,7 +1095,7 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        $note->set('data', $data);
+        $note->set('data', (object) $data);
 
         $this->getEntityManager()->saveEntity($note);
     }
