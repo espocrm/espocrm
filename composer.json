@@ -33,7 +33,8 @@
         "symfony/process": "4.1.7",
         "cboden/ratchet": "^0.4.1",
         "react/zmq": "^0.4.0",
-        "guzzlehttp/psr7": "^1.5"
+        "guzzlehttp/psr7": "^1.5",
+        "michelf/php-markdown": "^1.8"
     },
     "autoload": {
         "psr-0": {

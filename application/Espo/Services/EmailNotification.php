@@ -329,7 +329,9 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $data['userName'] = $note->get('createdByName');
 
-        $data['post'] = nl2br($note->get('post'));
+        $post = $note->get('post') ?? '';
+        $post = \Michelf\Markdown::defaultTransform($post);
+        $data['post'] = $post;
 
         $subjectTpl = $this->getTemplateFileManager()->getTemplate('mention', 'subject');
         $bodyTpl = $this->getTemplateFileManager()->getTemplate('mention', 'body');
@@ -421,7 +423,10 @@ class EmailNotification extends \Espo\Core\Services\Base
         $data = [];
 
         $data['userName'] = $note->get('createdByName');
-        $data['post'] = nl2br($note->get('post'));
+
+        $post = $note->get('post') ?? '';
+        $post = \Michelf\Markdown::defaultTransform($post);
+        $data['post'] = $post;
 
         if ($parentId && $parentType) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
