@@ -43,8 +43,6 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected $cleanupNotificationsPeriod = '2 months';
 
-    protected $cleanupRemovedNotesPeriod = '2 months';
-
     protected $cleanupAttachmentsPeriod = '15 days';
 
     protected $cleanupAttachmentsFromPeriod = '3 months';
@@ -61,7 +59,6 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $this->cleanupScheduledJobLog();
         $this->cleanupAttachments();
         $this->cleanupEmails();
-        $this->cleanupNotes();
         $this->cleanupNotifications();
         $this->cleanupActionHistory();
         $this->cleanupAuthToken();
@@ -318,31 +315,6 @@ class Cleanup extends \Espo\Core\Jobs\Base
         }
     }
 
-    protected function cleanupNotes()
-    {
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $period = '-' . $this->getConfig()->get('cleanupRemovedNotesPeriod', $this->cleanupRemovedNotesPeriod);
-        $datetime = new \DateTime();
-        $datetime->modify($period);
-
-        $sql = "SELECT * FROM `note` WHERE deleted = 1 AND DATE(created_at) < ".$pdo->quote($datetime->format('Y-m-d'));
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $id = $row['id'];
-            $attachments = $this->getEntityManager()->getRepository('Attachment')->where(array(
-                'parentId' => $id,
-                'parentType' => 'Note'
-            ))->find();
-            foreach ($attachments as $attachment) {
-                $this->getEntityManager()->removeEntity($attachment);
-            }
-            $sqlDel = "DELETE FROM `note` WHERE deleted = 1 AND id = ".$pdo->quote($id);
-            $pdo->query($sqlDel);
-        }
-    }
-
     protected function cleanupNotifications()
     {
         $pdo = $this->getEntityManager()->getPDO();
@@ -381,13 +353,82 @@ class Cleanup extends \Espo\Core\Jobs\Base
         }
     }
 
+    protected function cleanupDeletedEntity(\Espo\ORM\Entity $e)
+    {
+        $scope = $e->getEntityType();
+
+        if (!$e->get('deleted')) return;
+
+        $repository = $this->getEntityManager()->getRepository($scope);
+        $repository->deleteFromDb($e->id);
+
+        $query = $this->getEntityManager()->getQuery();
+
+        foreach ($e->getRelationList() as $relation) {
+            if ($e->getRelationType($relation) !== 'manyMany') continue;;
+            try {
+                $relationName = $e->getRelationParam($relation, 'relationName');
+                $relationTable = $query->toDb($relationName);
+
+                $midKey = $e->getRelationParam($relation, 'midKeys')[0];
+
+                $where = [];
+                $where[$midKey] = $e->id;
+
+                $conditions = $e->getRelationParam($relation, 'conditions');
+                if (!empty($conditions)) {
+                    foreach ($conditions as $key => $value) {
+                        $where[$key] = $value;
+                    }
+                }
+
+                $partList = [];
+                foreach ($where as $key => $value) {
+                    $partList[] = $query->toDb($key) . ' = ' . $query->quote($value);
+                }
+                if (empty($partList)) continue;
+
+                $sql = "DELETE FROM `{$relationTable}` WHERE " . implode(' AND ', $partList);
+
+                $this->getEntityManager()->getPDO()->query($sql);
+            } catch (\Exception $e) {}
+        }
+
+        $noteList = $this->getEntityManager()->getRepository('Note')->where([
+            'OR' => [
+                [
+                    'relatedType' => $scope,
+                    'relatedId' => $e->id
+                ],
+                [
+                    'parentType' => $scope,
+                    'parentId' => $e->id
+                ]
+            ]
+        ])->find(['withDeleted' => true]);
+        foreach ($noteList as $note) {
+            $this->getEntityManager()->removeEntity($note);
+            $note->set('deleted', true);
+            $this->cleanupDeletedEntity($note);
+        }
+
+        if ($scope === 'Note') {
+            $attachmentList = $this->getEntityManager()->getRepository('Attachment')->where([
+                'parentId' => $e->id,
+                'parentType' => 'Note'
+            ])->find();
+            foreach ($attachmentList as $attachment) {
+                $this->getEntityManager()->removeEntity($attachment);
+                $this->getEntityManager()->getRepository('Attachment')->deleteFromDb($attachment->id);
+            }
+        }
+    }
+
     protected function cleanupDeletedRecords()
     {
         if (!$this->getConfig()->get('cleanupDeletedRecords')) return;
         $period = '-' . $this->getConfig()->get('cleanupDeletedRecordsPeriod', $this->cleanupDeletedRecordsPeriod);
         $datetime = new \DateTime('-' . $period);
-
-        $query = $this->getEntityManager()->getQuery();
 
         $scopeList = array_keys($this->getMetadata()->get(['scopes']));
         foreach ($scopeList as $scope) {
@@ -408,38 +449,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
                 'modifiedAt<' => $datetime->format('Y-m-d H:i:s')
             ])->find(['withDeleted' => true]);
             foreach ($deletedEntityList as $e) {
-                if (!$e->get('deleted')) continue;
-                $repository->deleteFromDb($e->id);
-
-                foreach ($e->getRelationList() as $relation) {
-                    if ($e->getRelationType($relation) !== 'manyMany') continue;
-                    try {
-                        $relationName = $e->getRelationParam($relation, 'relationName');
-                        $relationTable = $query->toDb($relationName);
-
-                        $midKey = $e->getRelationParam($relation, 'midKeys')[0];
-
-                        $where = [];
-                        $where[$midKey] = $e->id;
-
-                        $conditions = $e->getRelationParam($relation, 'conditions');
-                        if (!empty($conditions)) {
-                            foreach ($conditions as $key => $value) {
-                                $where[$key] = $value;
-                            }
-                        }
-
-                        $partList = [];
-                        foreach ($where as $key => $value) {
-                            $partList[] = $query->toDb($key) . ' = ' . $query->quote($value);
-                        }
-                        if (empty($partList)) continue;
-
-                        $sql = "DELETE FROM `{$relationTable}` WHERE " . implode(' AND ', $partList);
-
-                        $this->getEntityManager()->getPDO()->query($sql);
-                    } catch (\Exception $e) {}
-                }
+                $this->cleanupDeletedEntity($e);
             }
         }
     }

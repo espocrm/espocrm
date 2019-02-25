@@ -87,18 +87,6 @@ class Stream extends \Espo\Core\Hooks\Base
         if ($this->checkHasStream($entity)) {
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
         }
-        $query = $this->getEntityManager()->getQuery();
-        $sql = "
-            UPDATE `note`
-            SET `deleted` = 1
-            WHERE
-                (
-                    (related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) .")
-                OR
-                    (parent_id = ".$query->quote($entity->id)." AND parent_type = ".$query->quote($entity->getEntityType()) .")
-                )
-        ";
-        $this->getEntityManager()->getPDO()->query($sql);
     }
 
     protected function handleCreateRelated(Entity $entity)
