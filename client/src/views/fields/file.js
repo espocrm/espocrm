@@ -72,16 +72,6 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 }
             },
             'click a[data-action="showImagePreview"]': function (e) {
-                var id = $(e.currentTarget).data('id');
-                this.createView('preview', 'views/modals/image-preview', {
-                    id: id,
-                    model: this.model,
-                    name: this.nameHash[id]
-                }, function (view) {
-                    view.render();
-                });
-            },
-            'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
 
                 var id = this.model.get(this.idName);
