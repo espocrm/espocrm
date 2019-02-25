@@ -37,7 +37,7 @@ class RunJob extends Base
         $targetId = $options['targetId'] ?? null;
         $targetType = $options['targetType'] ?? null;
 
-        if (!$job && count($argumentList)) {
+        if (!$jobName && count($argumentList)) {
             $jobName = $argumentList[0];
         }
 
