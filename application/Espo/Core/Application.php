@@ -215,6 +215,9 @@ class Application
 
     public function runCommand(string $command)
     {
+        $auth = $this->createAuth();
+        $auth->useNoAuth();
+
         $consoleCommandManager = $this->getContainer()->get('consoleCommandManager');
         return $consoleCommandManager->run($command);
     }
