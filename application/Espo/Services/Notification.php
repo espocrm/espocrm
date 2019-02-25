@@ -61,8 +61,14 @@ class Notification extends \Espo\Services\Record
 
     public function notifyAboutNote(array $userIdList, \Espo\Entities\Note $note)
     {
-        $data = array('noteId' => $note->id);
+        $data = ['noteId' => $note->id];
         $encodedData = Json::encode($data);
+
+        $related = null;
+        if ($note->get('relatedType') == 'Email') {
+            $related = $this->getEntityManager()->getRepository('Email')
+                ->select(['id', 'sentById', 'createdById'])->where(['id' => $note->get('relatedId')])->findOne();
+        }
 
         $now = date('Y-m-d H:i:s');
         $pdo = $this->getEntityManager()->getPDO();
@@ -72,21 +78,23 @@ class Notification extends \Espo\Services\Record
         $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`, `related_id`, `related_type`, `related_parent_id`, `related_parent_type`) VALUES ";
         $arr = [];
 
-        $userList = $this->getEntityManager()->getRepository('User')->where(array(
+        $userList = $this->getEntityManager()->getRepository('User')->where([
             'isActive' => true,
             'id' => $userIdList
-        ))->find();
+        ])->find();
+
         foreach ($userList as $user) {
             $userId = $user->id;
             if (!$this->checkUserNoteAccess($user, $note)) continue;
             if ($note->get('createdById') === $user->id) continue;
+            if ($related && $related->getEntityType() == 'Email' && $related->get('sentById') == $user->id) continue;
+            if ($related && $related->get('createdById') == $user->id) continue;
+
             $id = \Espo\Core\Utils\Util::generateId();
             $arr[] = "(".$query->quote($id).", ".$query->quote($encodedData).", ".$query->quote('Note').", ".$query->quote($userId).", ".$query->quote($now).", ".$query->quote($note->id).", ".$query->quote('Note').", ".$query->quote($note->get('parentId')).", ".$query->quote($note->get('parentType')).")";
         }
 
-        if (empty($arr)) {
-            return;
-        }
+        if (empty($arr)) return;
 
         $sql .= implode(", ", $arr);
         $pdo->query($sql);

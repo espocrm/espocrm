@@ -618,6 +618,16 @@ class EmailNotification extends \Espo\Core\Services\Base
         $email = $this->getEntityManager()->getEntity('Email', $noteData->emailId);
         if (!$email) return;
 
+        $emailRepository = $this->getEntityManager()->getRepository('Email');
+        $eaList = $user->get('emailAddresses');
+        foreach ($eaList as $ea) {
+            if (
+                $emailRepository->isRelated($email, 'toEmailAddresses', $ea)
+                ||
+                $emailRepository->isRelated($email, 'ccEmailAddresses', $ea)
+            ) return;
+        }
+
         $data = [];
 
         $data['fromName'] = '';
