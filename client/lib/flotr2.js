@@ -1441,6 +1441,7 @@ Text.prototype = {
     var div = D.create('div');
 
     D.setStyles(div, { 'position' : 'absolute', 'top' : '-10000px' });
+    D.setStyles(div, {'top' : '0px', 'left' : '-10000px' }); // EspoCRM fix line
     D.insert(div, '<div style="'+style+'" class="'+className+' flotr-dummy-div">' + text + '</div>');
     D.insert(this.o.element, div);
 
