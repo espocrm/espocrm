@@ -43,6 +43,28 @@
                         }
                     ]
                 }
+            },
+            "pageWidth": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "pageFormat",
+                            "value": "Custom"
+                        }
+                    ]
+                }
+            },
+            "pageHeight": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "pageFormat",
+                            "value": "Custom"
+                        }
+                    ]
+                }
             }
         }
     },

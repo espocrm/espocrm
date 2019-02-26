@@ -14,10 +14,10 @@
             [{"name":"header","fullWidth":true}],
             [{"name":"body","fullWidth":true}],
             [{"name":"pageOrientation"}, {"name":"pageFormat"}],
+            [{"name":"pageWidth"}, {"name":"pageHeight"}],
             [{"name":"fontFace"}, false],
-            [{"name":"topMargin"}, false],
+            [{"name":"topMargin"}, {"name":"bottomMargin"}],
             [{"name":"leftMargin"}, {"name":"rightMargin"}],
-            [{"name":"bottomMargin"}, false],
             [{"name":"printFooter"}, false],
             [{"name":"footer","fullWidth":true}],
             [{"name":"footerPosition"}, false]
