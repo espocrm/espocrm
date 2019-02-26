@@ -78,8 +78,16 @@
         },
         "pageFormat": {
             "type": "enum",
-            "options": ["A3", "A4", "A5", "A6", "A7"],
+            "options": ["A3", "A4", "A5", "A6", "A7", "Custom"],
             "default": "A4"
+        },
+        "pageWidth": {
+            "type": "int",
+            "min": 1
+        },
+        "pageHeight": {
+            "type": "int",
+            "min": 1
         },
         "fontFace": {
             "type": "enum",
