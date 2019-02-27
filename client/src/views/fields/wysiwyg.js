@@ -47,6 +47,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.hasBodyPlainField = !!~this.getFieldManager().getEntityTypeFieldList(this.model.entityType).indexOf(this.name + 'Plain');
+
             if ('height' in this.params) {
                 this.height = this.params.height;
             }
@@ -446,7 +448,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 data[this.name] = this.$element.val();
             }
 
-            if (this.model.has('isHtml')) {
+            if (this.model.has('isHtml') && this.hasBodyPlainField) {
             	if (this.model.get('isHtml')) {
             		data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
             	} else {
