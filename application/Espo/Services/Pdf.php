@@ -110,7 +110,7 @@ class Pdf extends \Espo\Core\Services\Base
             $pageFormat = $template->get('pageFormat');
         }
         if ($pageFormat === 'Custom') {
-            $pageFormat = [$template->get('pageWidth') * 10, $template->get('pageHeight') * 10];
+            $pageFormat = [$template->get('pageWidth'), $template->get('pageHeight')];
         }
         $pageOrientationCode = 'P';
         if ($pageOrientation === 'Landscape') {

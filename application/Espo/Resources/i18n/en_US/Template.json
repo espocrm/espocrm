@@ -14,8 +14,8 @@
         "variables": "Available Placeholders",
         "pageOrientation": "Page Orientation",
         "pageFormat": "Paper Format",
-        "pageWidth": "Page Width (cm)",
-        "pageHeight": "Page Height (cm)",
+        "pageWidth": "Page Width (mm)",
+        "pageHeight": "Page Height (mm)",
         "fontFace": "Font"
     },
     "links": {
@@ -29,7 +29,7 @@
             "Landscape": "Landscape"
         },
         "pageFormat": {
-            "Custom": "Custom Page Size"
+            "Custom": "Custom"
         },
         "placeholders": {
             "today": "Today (date)",

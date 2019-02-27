@@ -82,11 +82,11 @@
             "default": "A4"
         },
         "pageWidth": {
-            "type": "int",
+            "type": "float",
             "min": 1
         },
         "pageHeight": {
-            "type": "int",
+            "type": "float",
             "min": 1
         },
         "fontFace": {
