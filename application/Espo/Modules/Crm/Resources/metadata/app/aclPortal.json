@@ -34,5 +34,33 @@
                 }
             }
         }
+    },
+    "strictDefault": {
+        "scopeFieldLevel": {
+            "KnowledgeBaseArticle": {
+                "portals": false,
+                "order": false,
+                "status": false,
+                "assignedUser": false
+            },
+            "Case": {
+                "status": {
+                    "read": "yes",
+                    "edit": "no"
+                },
+                "account": {
+                    "read": "yes",
+                    "edit": "no"
+                },
+                "contacts": {
+                    "read": "yes",
+                    "edit": "no"
+                },
+                "contact": {
+                    "read": "yes",
+                    "edit": "no"
+                }
+            }
+        }
     }
 }
