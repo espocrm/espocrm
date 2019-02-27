@@ -283,7 +283,9 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-        }
+        },
+
+        fetch: function () {},
 
     });
 
