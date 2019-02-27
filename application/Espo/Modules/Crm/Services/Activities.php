@@ -1209,7 +1209,7 @@ class Activities extends \Espo\Core\Services\Base
             ];
             try {
                 $userData->eventList = $this->getEventList($userId, $from, $to, $scopeList);
-                $userData->busyRangeList = $this->getBusyRangeList($userId, $from, $to, $scopeList);
+                $userData->busyRangeList = $this->getBusyRangeList($userId, $from, $to, $scopeList, $userData->eventList);
             } catch (\Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
@@ -1308,21 +1308,28 @@ class Activities extends \Espo\Core\Services\Base
         return $eventList;
     }
 
-    public function getBusyRangeList($userId, $from, $to, $scopeList = null)
+    public function getBusyRangeList($userId, $from, $to, $scopeList = null, ?array $ignoreEventList = null)
     {
         $rangeList = [];
 
         $eventList = $this->getEventList($userId, $from, $to, $scopeList, true);
+
+        $ignoreHash = (object) [];
+        if ($ignoreEventList) {
+            foreach ($ignoreEventList as $item) {
+                $ignoreHash->{$item['id']} = true;
+            }
+        }
 
         foreach ($eventList as $i => $item) {
             $eventList[$i] = (object) $item;
         }
         foreach ($eventList as $event) {
             if (empty($event->dateStart) || empty($event->dateEnd)) continue;
+            if (isset($ignoreHash->{$event->id})) continue;
             try {
                 $start = new \DateTime($event->dateStart);
                 $end = new \DateTime($event->dateEnd);
-
 
                 foreach ($rangeList as &$range) {
                     if (
