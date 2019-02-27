@@ -413,7 +413,11 @@ class User extends Record
                     !$entity->isPortal() && !$entity->isApi()
                 )
                 ||
-                (!$entity->isPortal() && !$entity->isApi() && $entity->isAttributeChanged('type'))
+                (
+                    !$entity->isPortal() && !$entity->isApi() && $entity->isAttributeChanged('type') &&
+                    ($entity->isRegular() || $entity->isAdmin()) &&
+                    ($entity->getFetched('type') == 'portal' || $entity->getFetched('type') == 'api')
+                )
             ) {
                 $userCount = $this->getInternalUserCount();
                 if ($userCount >= $this->getConfig()->get('userLimit')) {
