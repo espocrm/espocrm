@@ -38,7 +38,8 @@ define('ui', [], function () {
         this.body = '';
         this.width = false;
         this.height = false;
-        this.buttons = [];
+        this.buttonList = [];
+        this.dropdownItemList = [];
         this.removeOnClose = true;
         this.draggable = false;
         this.container = 'body'
@@ -57,6 +58,8 @@ define('ui', [], function () {
             'height',
             'fitHeight',
             'buttons',
+            'buttonList',
+            'dropdownItemList',
             'removeOnClose',
             'draggable',
             'container',
@@ -67,6 +70,10 @@ define('ui', [], function () {
                 this[param] = options[param];
             }
         }.bind(this));
+
+        if (this.buttons && this.buttons.length) {
+            this.buttonList = this.buttons;
+        }
 
         this.id = 'dialog-' + Math.floor((Math.random() * 100000));
 
@@ -84,52 +91,16 @@ define('ui', [], function () {
 
         var body = '<div class="modal-body body">' + this.body + '</div>';
 
-        var footer = '';
+        var footerHtml = this.getFooterHtml();
 
-        if (this.buttons.length) {
-            footer += '<footer class="modal-footer">';
-
-            var rightPart = '';
-            this.buttons.forEach(function (o) {
-                if (o.pullLeft) return;
-                var className = '';
-                if (o.className) {
-                    className = ' ' + o.className;
-                }
-                rightPart +=
-                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
-                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + className+'" ' +
-                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
-                    (o.html || o.text) + '</button> ';
-            }, this);
-            var leftPart = '';
-            this.buttons.forEach(function (o) {
-                if (!o.pullLeft) return;
-                var className = '';
-                if (o.className) {
-                    className = ' ' + o.className;
-                }
-                leftPart +=
-                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
-                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + className+'" ' +
-                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
-                    (o.html || o.text) + '</button> ';
-            }, this);
-            if (leftPart !== '') {
-                leftPart = '<div class="btn-group additional-btn-group">'+leftPart+'</div>';
-                footer += leftPart;
-            }
-            if (rightPart !== '') {
-                rightPart = '<div class="btn-group main-btn-group">'+rightPart+'</div>';
-                footer += rightPart;
-            }
-            footer += '</footer>';
+        if (footerHtml !== '') {
+            footerHtml = '<footer class="modal-footer">' + footerHtml + '</footer>';
         }
 
         if (this.options.footerAtTheTop) {
-            this.contents += footer + body;
+            this.contents += footerHtml + body;
         } else {
-            this.contents += body + footer;
+            this.contents += body + footerHtml;
         }
 
         this.contents = '<div class="modal-dialog"><div class="modal-content">' + this.contents + '</div></div>'
@@ -148,13 +119,7 @@ define('ui', [], function () {
             //this.close();
         }.bind(this));
 
-        this.buttons.forEach(function (o) {
-            if (typeof o.onClick == 'function') {
-                $('#' + this.id + ' button[data-name="' + o.name + '"]').on('click', function () {
-                    o.onClick(this);
-                }.bind(this));
-            }
-        }.bind(this));
+        this.initButtonEvents();
 
         if (this.draggable) {
             this.$el.find('header').css('cursor', 'pointer');
@@ -235,6 +200,89 @@ define('ui', [], function () {
         });
 
     }
+
+    Dialog.prototype.initButtonEvents = function () {
+        this.buttonList.forEach(function (o) {
+            if (typeof o.onClick == 'function') {
+                $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]').on('click', function () {
+                    o.onClick(this);
+                }.bind(this));
+            }
+        }.bind(this));
+
+        this.dropdownItemList.forEach(function (o) {
+            if (typeof o.onClick == 'function') {
+                $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]').on('click', function () {
+                    o.onClick(this);
+                }.bind(this));
+            }
+        }.bind(this));
+    }
+
+    Dialog.prototype.getFooterHtml = function () {
+        var footer = '';
+
+        if (this.buttonList.length || this.dropdownItemList.length) {
+            var rightPart = '';
+            this.buttonList.forEach(function (o) {
+                if (o.pullLeft) return;
+                var className = '';
+                if (o.className) {
+                    className = ' ' + o.className;
+                }
+                rightPart +=
+                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + className+'" ' +
+                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
+                    (o.html || o.text) + '</button> ';
+            }, this);
+            var leftPart = '';
+            this.buttonList.forEach(function (o) {
+                if (!o.pullLeft) return;
+                var className = '';
+                if (o.className) {
+                    className = ' ' + o.className;
+                }
+                leftPart +=
+                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + className+'" ' +
+                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
+                    (o.html || o.text) + '</button> ';
+            }, this);
+            if (leftPart !== '') {
+                leftPart = '<div class="btn-group additional-btn-group">'+leftPart+'</div>';
+                footer += leftPart;
+            }
+
+            if (this.dropdownItemList.length) {
+                var visibleCount = 0;
+                this.dropdownItemList.forEach(function (o) {
+                    if (!o.hidden) {
+                        visibleCount++;
+                    }
+                });
+
+                rightPart += '<div class="btn-group'+ ((visibleCount === 0) ? ' hidden' : '') +'">';
+                rightPart += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
+                rightPart += '<span class="fas fa-ellipsis-h"></span>'
+                rightPart += '</button>'
+
+                rightPart += '<ul class="dropdown-menu pull-right">';
+                this.dropdownItemList.forEach(function (o) {
+                    rightPart += '<li class="'+(o.hidden ? ' hidden' : '')+'"><a href="javascript:" data-name="'+o.name+'">'+(o.html || o.text)+'</a></li>';
+                }, this);
+                rightPart += '</ul>'
+                rightPart += '</div>';
+            }
+            if (rightPart !== '') {
+                rightPart = '<div class="btn-group main-btn-group">'+rightPart+'</div>';
+                footer += rightPart;
+            }
+        }
+
+        return footer;
+    }
+
     Dialog.prototype.show = function () {
         this.$el.modal({
              backdrop: this.backdrop,
@@ -301,7 +349,7 @@ define('ui', [], function () {
                 header: false,
                 className: 'dialog-confirm',
                 body: '<span class="confirm-message">' + message + '</a>',
-                buttons: [
+                buttonList: [
                     {
                         text: ' ' + confirmText + ' ',
                         name: 'confirm',

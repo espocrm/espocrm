@@ -48,6 +48,8 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         buttonList: [],
 
+        dropdownItemList: [],
+
         // TODO remove it as depricated
         buttons: [],
 
@@ -77,6 +79,7 @@ Espo.define('views/modal', 'view', function (Dep) {
             this.setSelector(this.containerSelector);
 
             this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
+            this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
 
             // TODO remove it as depricated
             this.buttons = Espo.Utils.cloneDeep(this.buttons);
@@ -89,41 +92,6 @@ Espo.define('views/modal', 'view', function (Dep) {
                 $(containerSelector).remove();
                 $('<div />').css('display', 'none').attr('id', id).addClass('modal-container').appendTo('body');
 
-                var buttonListExt = [];
-
-                // TODO remove it as depricated
-                this.buttons.forEach(function (item) {
-                    var o = Espo.Utils.clone(item);
-                    if (!('text' in o) && ('label' in o)) {
-                        o.text = this.getLanguage().translate(o.label);
-                    }
-                    buttonListExt.push(o);
-                }, this);
-
-
-                this.buttonList.forEach(function (item) {
-                    var o = {};
-
-                    if (typeof item === 'string') {
-                        o.name = item;
-                    } else if (typeof item === 'object') {
-                        o = item;
-                    } else {
-                        return;
-                    }
-
-                    var text = o.text;
-                    if (!o.text) {
-                        if ('label' in o) {
-                            o.text = this.translate(o.label, 'labels', this.scope)
-                        } else {
-                            o.text = this.translate(o.name, 'modalActions', this.scope);
-                        }
-                    }
-                    o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}).bind(this);
-
-                    buttonListExt.push(o);
-                }, this);
 
                 var modalBodyDiffHeight = 92;
                 if (this.getThemeManager().getParam('modalBodyDiffHeight') !== null) {
@@ -137,7 +105,8 @@ Espo.define('views/modal', 'view', function (Dep) {
                     header: headerHtml,
                     container: containerSelector,
                     body: '',
-                    buttons: buttonListExt,
+                    buttonList: this.getDialogButtonList(),
+                    dropdownItemList: this.getDialogDropdownItemList(),
                     width: this.width,
                     keyboard: !this.escapeDisabled,
                     fitHeight: this.fitHeight,
@@ -166,6 +135,75 @@ Espo.define('views/modal', 'view', function (Dep) {
                 }
                 $(containerSelector).remove();
             });
+        },
+
+        getDialogButtonList: function () {
+            var buttonListExt = [];
+
+            // TODO remove it as depricated
+            this.buttons.forEach(function (item) {
+                var o = Espo.Utils.clone(item);
+                if (!('text' in o) && ('label' in o)) {
+                    o.text = this.getLanguage().translate(o.label);
+                }
+                buttonListExt.push(o);
+            }, this);
+
+
+            this.buttonList.forEach(function (item) {
+                var o = {};
+                if (typeof item === 'string') {
+                    o.name = item;
+                } else if (typeof item === 'object') {
+                    o = item;
+                } else {
+                    return;
+                }
+                var text = o.text;
+                if (!o.text) {
+                    if ('label' in o) {
+                        o.text = this.translate(o.label, 'labels', this.scope)
+                    } else {
+                        o.text = this.translate(o.name, 'modalActions', this.scope);
+                    }
+                }
+                o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}).bind(this);
+                buttonListExt.push(o);
+            }, this);
+
+            return buttonListExt;
+        },
+
+        getDialogDropdownItemList: function () {
+            var dropdownItemListExt = [];
+            this.dropdownItemList.forEach(function (item) {
+                var o = {};
+                if (typeof item === 'string') {
+                    o.name = item;
+                } else if (typeof item === 'object') {
+                    o = item;
+                } else {
+                    return;
+                }
+                var text = o.text;
+                if (!o.text) {
+                    if ('label' in o) {
+                        o.text = this.translate(o.label, 'labels', this.scope)
+                    } else {
+                        o.text = this.translate(o.name, 'modalActions', this.scope);
+                    }
+                }
+                o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}).bind(this);
+                dropdownItemListExt.push(o);
+            }, this);
+
+            return dropdownItemListExt;
+        },
+
+        updateDialog: function () {
+            if (!this.dialog) return;
+            this.dialog.buttonList = this.getDialogButtonList();
+            this.dialog.dropdownItemList = this.getDialogDropdownItemList();
         },
 
         onDialogClose: function () {
@@ -231,8 +269,36 @@ Espo.define('views/modal', 'view', function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.reRender();
+                this.reRenderFooter();
             }
+        },
+
+        addDropdownItem: function (o, toBeginning, doNotReRender) {
+            var method = toBeginning ? 'unshift' : 'push';
+            if (!o) {
+                this.dropdownItemList[method](false);
+                return;
+            }
+            var name = o.name;
+            if (!name) return;
+            for (var i in this.dropdownItemList) {
+                if (this.dropdownItemList[i].name == name) {
+                    return;
+                }
+            }
+            this.dropdownItemList[method](o);
+
+            if (!doNotReRender && this.isRendered()) {
+                this.reRenderFooter();
+            }
+        },
+
+        reRenderFooter: function () {
+            if (!this.dialog) return;
+            this.updateDialog();
+            var html = this.dialog.getFooterHtml();
+            this.$el.find('footer.modal-footer').html(html);
+            this.dialog.initButtonEvents();
         },
 
         removeButton: function (name, doNotReRender) {
@@ -244,6 +310,17 @@ Espo.define('views/modal', 'view', function (Dep) {
             }, this);
             if (~index) {
                 this.buttonList.splice(index, 1);
+            }
+
+            for (var i in this.dropdownItemList) {
+                if (this.dropdownItemList[i].name == name) {
+                    this.dropdownItemList.splice(i, 1);
+                    break;
+                }
+            }
+
+            if (this.isRendered()) {
+                this.$el.find('.modal-footer [data-name="'+name+'"]').remove();
             }
 
             if (!doNotReRender && this.isRendered()) {
@@ -267,6 +344,58 @@ Espo.define('views/modal', 'view', function (Dep) {
             }, this);
             if (!this.isRendered()) return;
             this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
+        },
+
+        showActionItem: function (name) {
+            this.buttonList.forEach(function (d) {
+                if (d.name !== name) return;
+                d.hidden = false;
+            }, this);
+            this.dropdownItemList.forEach(function (d) {
+                if (d.name !== name) return;
+                d.hidden = false;
+            }, this);
+
+            if (!this.isRendered()) return;
+            this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
+            this.$el.find('footer li > a[data-name="'+name+'"]').parent().removeClass('hidden');
+
+            if (!this.isDropdownItemListEmpty()) {
+                this.$el.find('footer .main-btn-group > .btn-group').removeClass('hidden');
+            }
+        },
+
+        hideActionItem: function (name) {
+            this.buttonList.forEach(function (d) {
+                if (d.name !== name) return;
+                d.hidden = true;
+            }, this);
+            this.dropdownItemList.forEach(function (d) {
+                if (d.name !== name) return;
+                d.hidden = true;
+            }, this);
+
+            if (!this.isRendered()) return;
+
+            this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
+            this.$el.find('footer li > a[data-name="'+name+'"]').parent().addClass('hidden');
+
+            if (this.isDropdownItemListEmpty()) {
+                this.$el.find('footer .main-btn-group > .btn-group').addClass('hidden');
+            }
+        },
+
+        isDropdownItemListEmpty: function () {
+            if (this.dropdownItemList.length === 0) {
+                return true;
+            }
+            var isEmpty = true;
+            this.dropdownItemList.forEach(function (item) {
+                if (!item.hidden) {
+                    isEmpty = false;
+                }
+            }, this);
+            return isEmpty;
         },
     });
 });

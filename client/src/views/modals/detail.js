@@ -119,37 +119,44 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             this.sourceModel = this.model;
 
-            this.getModelFactory().create(this.scope, function (model) {
+            this.getModelFactory().create(this.scope).then(function (model) {
                 if (!this.sourceModel) {
                     this.model = model;
                     this.model.id = this.id;
 
+                    this.setupAfterModelCreated();
+
+                    this.listenTo(this.model, 'sync', this.controlRecordButtonsVisibility, this);
+
                     this.listenToOnce(this.model, 'sync', function () {
                         this.createRecordView();
                     }, this);
-                    this.model.fetch().then(function () {
-                        this.controlRecordButtonsVisibility();
-                    }.bind(this));
+                    this.model.fetch();
                 } else {
                     this.model = this.sourceModel.clone();
                     this.model.collection = this.sourceModel.collection;
+
+                    this.setupAfterModelCreated();
 
                     this.listenTo(this.model, 'change', function () {
                         this.sourceModel.set(this.model.getClonedAttributes());
                     }, this);
 
+                    this.listenTo(this.model, 'sync', this.controlRecordButtonsVisibility, this);
+
                     this.once('after:render', function () {
-                        this.model.fetch().then(function () {
-                        this.controlRecordButtonsVisibility();
-                    }.bind(this));
+                        this.model.fetch();
                     }, this);
                     this.createRecordView();
                 }
-            }, this);
+            }.bind(this));
 
             this.listenToOnce(this.getRouter(), 'routed', function () {
                 this.remove();
             }, this);
+        },
+
+        setupAfterModelCreated: function () {
         },
 
         setupRecordButtons: function () {
@@ -189,10 +196,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         addRemoveButton: function () {
-            this.addButton({
+            this.addDropdownItem({
                 name: 'remove',
                 label: 'Remove'
-            }, true);
+            });
         },
 
         removeRemoveButton: function () {
@@ -347,10 +354,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.sourceModel.set(this.model.getClonedAttributes());
             }, this);
 
+            this.listenTo(this.model, 'sync', this.controlRecordButtonsVisibility, this);
+
             this.once('after:render', function () {
-                this.model.fetch().then(function () {
-                    this.controlRecordButtonsVisibility();
-                }.bind(this));
+                this.model.fetch();
             }, this);
 
             this.createRecordView(function () {
@@ -421,6 +428,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     this.model.set(model.getClonedAttributes());
 
                     this.trigger('after:save', model);
+
+                    this.controlRecordButtonsVisibility();
                 }, this);
 
                 view.render();

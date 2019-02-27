@@ -30,18 +30,32 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
 
     return Dep.extend({
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        setupAfterModelCreated: function () {
+            Dep.prototype.setupAfterModelCreated.call(this);
 
             var buttonData = this.getAcceptanceButtonData();
 
             this.addButton({
                 name: 'setAcceptanceStatus',
                 html: buttonData.html,
-                pullLeft: false,
                 hidden: this.hasAcceptanceStatusButton(),
                 style: buttonData.style,
             }, 'cancel');
+
+            if (
+                !~this.getAcl().getScopeForbiddenFieldList(this.model.entityType).indexOf('status')
+            ) {
+                this.addDropdownItem({
+                    name: 'setHeld',
+                    html: this.translate('Set Held', 'labels', this.model.entityType),
+                    hidden: true,
+                });
+                this.addDropdownItem({
+                    name: 'setNotHeld',
+                    html: this.translate('Set Not Held', 'labels', this.model.entityType),
+                    hidden: true,
+                });
+            }
 
             this.initAcceptenceStatus();
             this.on('switch-model', function (model, previousModel) {
@@ -56,6 +70,25 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                     this.hideAcceptanceButton();
                 }
             }, this);
+        },
+
+        controlRecordButtonsVisibility: function () {
+            Dep.prototype.controlRecordButtonsVisibility.call(this);
+            this.controlStatusActionVisibility();
+        },
+
+        controlStatusActionVisibility: function () {
+            if (this.getAcl().check(this.model, 'edit') && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
+                this.showActionItem('setHeld');
+                this.showActionItem('setNotHeld');
+            } else {
+                this.hideActionItem('setHeld');
+                this.hideActionItem('setNotHeld');
+            }
+        },
+
+        hasSetStatusButton: function () {
+
         },
 
         initAcceptenceStatus: function () {
@@ -163,6 +196,16 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                     }.bind(this));
                 });
             });
-        }
+        },
+
+        actionSetHeld: function () {
+            this.model.save({status: 'Held'});
+            this.trigger('after:save');
+        },
+
+        actionSetNotHeld: function () {
+            this.model.save({status: 'Not Held'});
+            this.trigger('after:save');
+        },
     });
 });
