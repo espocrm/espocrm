@@ -170,7 +170,7 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
             if (this.mode == 'edit') {
                 this.$currency = this.$el.find('[data-name="' + this.currencyFieldName + '"]');
                 this.$currency.on('change', function () {
-                    this.model.set(this.currencyFieldName, this.$currency.val());
+                    this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
                 }.bind(this));
             }
         },
