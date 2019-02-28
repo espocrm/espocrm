@@ -222,6 +222,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.mode === 'search';
         },
 
+
         setMode: function (mode) {
             this.mode = mode;
             var property = mode + 'Template';
@@ -229,6 +230,17 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this[property] = 'fields/' + Espo.Utils.camelCaseToHyphen(this.type) + '/' + this.mode;
             }
             this.template = this[property];
+
+            var contentProperty = mode + 'TemplateContent';
+            this._template = null;
+            this._templateCompiled = null;
+            if (contentProperty in this) {
+                this._template = this[contentProperty];
+                this.compiledTemplatesCache = this.compiledTemplatesCache || {};
+                this._templateCompiled =
+                this.compiledTemplatesCache[contentProperty] =
+                    this.compiledTemplatesCache[contentProperty] || this._templator.compileTemplate(this._template);
+            }
         },
 
         init: function () {
