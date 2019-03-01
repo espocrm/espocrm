@@ -2554,13 +2554,34 @@ pre > code {
 }
 
 .admin-panel-iframe-container {
-    > .section {
+    > h4 {
         padding: @padding-base-vertical @padding-base-horizontal;
-        margin-bottom: @padding-base-vertical;
+        padding-bottom: 12px;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+    > div > .section:first-child {
+        padding-top: 0;
+    }
+    > div > .section:last-child {
+
+    }
+    > div > .section {
+        padding-left: @padding-base-horizontal;
+        padding-right: @padding-base-horizontal;
+        padding-top: 10px;
+        padding-bottom: 7px;
+        border-bottom: 1px solid @panel-default-border;
+
+        > p:last-child {
+            padding-bottom: 0;
+        }
     }
 
-    > .section:first-child > h4 {
-        margin-top: 0;
+    > div > .section.extension > p:last-child {
+        > .btn {
+            margin-top: 4px;
+        }
     }
 
     height: 100%;
