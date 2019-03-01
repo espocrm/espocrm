@@ -2563,14 +2563,11 @@ pre > code {
     > div > .section:first-child {
         padding-top: 0;
     }
-    > div > .section:last-child {
-
-    }
     > div > .section {
         padding-left: @padding-base-horizontal;
         padding-right: @padding-base-horizontal;
         padding-top: 10px;
-        padding-bottom: 7px;
+        padding-bottom: 6px;
         border-bottom: 1px solid @panel-default-border;
 
         > p:last-child {
@@ -2578,9 +2575,17 @@ pre > code {
         }
     }
 
+    > div > .section.extension > p:first-child {
+        font-size: 16px;
+    }
+
     > div > .section.extension > p:last-child {
         > .btn {
             margin-top: 4px;
+        }
+        .price {
+            margin-top: 9px;
+            font-size: 18px;
         }
     }
 
