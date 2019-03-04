@@ -2560,15 +2560,21 @@ pre > code {
         margin-bottom: 0;
         margin-top: 0;
     }
+
+    > div {
+      margin-bottom: 10px;
+    }
+
     > div > .section {
         padding-left: @padding-base-horizontal;
         padding-right: @padding-base-horizontal;
         padding-top: 10px;
-        padding-bottom: 6px;
+        padding-bottom: 10px;
         border-bottom: 1px solid @panel-default-border;
 
         > p:last-child {
             padding-bottom: 0;
+            margin-bottom: 0;
         }
     }
 
@@ -2581,8 +2587,11 @@ pre > code {
             margin-top: 4px;
         }
         .price {
-            margin-top: 9px;
-            font-size: 18px;
+            margin-top: -3px;
+            font-size: 16px;
+        }
+        > a.text-danger {
+            font-weight: bold;
         }
     }
 
