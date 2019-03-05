@@ -274,7 +274,7 @@ class Email extends Record
                         $GLOBALS['log']->error("Send Email: Could not create Smtp Handler for {$emailAddress}. Error: " . $e->getMessage());
                     }
                     if (method_exists($handler, 'applyParams')) {
-                        $handler->applyParams($userId, $emailAddress, $params);
+                        $handler->applyParams($userId, $params);
                     }
                 }
             }
