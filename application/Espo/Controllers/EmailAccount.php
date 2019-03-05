@@ -44,6 +44,7 @@ class EmailAccount extends \Espo\Core\Controllers\Record
             'password' => $request->get('password'),
             'id' => $request->get('id'),
             'emailAddress' => $request->get('emailAddress'),
+            'userId' => $request->get('userId'),
         ]);
     }
 
