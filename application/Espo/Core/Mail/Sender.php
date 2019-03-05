@@ -98,11 +98,12 @@ class Sender
             'host' => $params['server'],
             'port' => $params['port'],
             'connection_config' => [],
+            'connectionConfig' => [],
         ];
 
         $connectionOptions = $params['connectionOptions'] ?? [];
         foreach ($connectionOptions as $key => $value) {
-            $options['connection_config'][$key] = $value;
+            $options['connectionConfig'][$key] = $value;
         }
 
         if ($params['auth']) {
