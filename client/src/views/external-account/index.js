@@ -24,13 +24,13 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.ExternalAccount.Index', 'View', function (Dep) {
+define('views/external-account/index', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'external-account.index',
+        template: 'external-account/index',
 
         data: function () {
             return {
@@ -74,9 +74,11 @@ Espo.define('Views.ExternalAccount.Index', 'View', function (Dep) {
 
             this.getRouter().navigate('#ExternalAccount/edit/' + id, {trigger: false});
 
+            var authMethod = this.getMetadata().get(['integrations', integration, 'authMethod']);
+
             var viewName =
-                    this.getMetadata().get('integrations.' + integration + '.userView') ||
-                    'ExternalAccount.' + this.getMetadata().get('integrations.' + integration + '.authMethod');
+                    this.getMetadata().get(['integrations', integration, 'userView']) ||
+                    'views/external-account/' + Espo.Utils.camelCaseToHyphen(authMethod);
 
             this.notify('Loading...');
             this.createView('content', viewName, {
@@ -109,5 +111,3 @@ Espo.define('Views.ExternalAccount.Index', 'View', function (Dep) {
         },
     });
 });
-
-
