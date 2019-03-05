@@ -813,24 +813,41 @@ class Email extends Record
             }
         }
 
-        return array(
+        return [
             'ids' => $ids,
             'names' => $names
-        );
+        ];
     }
 
     public function sendTestEmail($data)
     {
+        $smtpParams = $data;
+
+        $userId = $data['userId'] ?? null;
+        $fromAddress = $data['fromAddress'] ?? null;
+
+        if ($userId) {
+            if ($userId !== $this->getUser()->id && !$this->getUser()->isAdmin()) {
+                throw new Forbidden();
+            }
+        }
+
         $email = $this->getEntityManager()->getEntity('Email');
 
         $email->set([
             'subject' => 'EspoCRM: Test Email',
             'isHtml' => false,
-            'to' => $data['emailAddress']
+            'to' => $data['emailAddress'],
         ]);
 
+        if ($userId) {
+            if ($fromAddress) {
+                $this->applySmtpHandler($userId, $fromAddress, $smtpParams);
+            }
+        }
+
         $emailSender = $this->getMailSender();
-        $emailSender->useSmtp($data)->send($email);
+        $emailSender->useSmtp($smtpParams)->send($email);
 
         return true;
     }
