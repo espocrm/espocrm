@@ -56,6 +56,8 @@ class Meeting extends \Espo\Services\Record
 
     protected $exportSkipFieldList = ['duration'];
 
+    protected $duplicateIgnoreAttributeList = ['usersColumns', 'contactsColumns', 'leadsColumns'];
+
     protected function getMailSender()
     {
         return $this->getInjection('container')->get('mailSender');

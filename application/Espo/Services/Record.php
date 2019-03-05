@@ -122,6 +122,10 @@ class Record extends \Espo\Core\Services\Base
 
     protected $findDuplicatesSelectAttributeList = ['id', 'name'];
 
+    protected $duplicateIgnoreFieldList = [];
+
+    protected $duplicateIgnoreAttributeList = [];
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -2426,21 +2430,21 @@ class Record extends \Espo\Core\Services\Base
         $attributes = $entity->getValueMap();
         unset($attributes->id);
 
-        $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], array());
+        $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []);
 
         $fieldManager = new \Espo\Core\Utils\FieldManagerUtil($this->getMetadata());
 
         foreach ($fields as $field => $item) {
-            if (empty($item['type'])) continue;
-            $type = $item['type'];
-
-            if (!empty($item['duplicateIgnore'])) {
+            if (!empty($item['duplicateIgnore']) || in_array($field, $this->duplicateIgnoreFieldList)) {
                 $attributeToIgnoreList = $fieldManager->getAttributeList($this->entityType, $field);
                 foreach ($attributeToIgnoreList as $attribute) {
                     unset($attributes->$attribute);
                 }
                 continue;
             }
+
+            if (empty($item['type'])) continue;
+            $type = $item['type'];
 
             if (in_array($type, ['file', 'image'])) {
                 $attachment = $entity->get($field);
@@ -2481,6 +2485,10 @@ class Record extends \Espo\Core\Services\Base
                     }
                 }
             }
+        }
+
+        foreach ($this->duplicateIgnoreAttributeList as $attribute) {
+            unset($attributes->$attribute);
         }
 
         $attributes->_duplicatingEntityId = $id;
