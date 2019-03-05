@@ -212,6 +212,10 @@ class Email extends Record
 
         $this->validateEmailAddresses($entity);
 
+        if ($fromAddress) {
+            $this->applySmtpHandler($this->getUser()->id, $fromAddress, $params);
+        }
+
         try {
             $emailSender->send($entity, $params, $message);
         } catch (\Exception $e) {
@@ -254,6 +258,27 @@ class Email extends Record
         $entity->set('isJustSent', true);
 
         $this->getEntityManager()->saveEntity($entity);
+    }
+
+    protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
+    {
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if ($preferences) {
+            $smtpHandlers = $preferences->get('smtpHandlers') ?? (object) [];
+            if (is_object($smtpHandlers)) {
+                if (isset($smtpHandlers->$emailAddress)) {
+                    $handlerClassName = $smtpHandlers->$emailAddress;
+                    try {
+                        $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+                    } catch (\Throwable $e) {
+                        $GLOBALS['log']->error("Send Email: Could not create Smtp Handler for {$emailAddress}. Error: " . $e->getMessage());
+                    }
+                    if (method_exists($handler, 'applyParams')) {
+                        $handler->applyParams($userId, $emailAddress, $params);
+                    }
+                }
+            }
+        }
     }
 
     public function validateEmailAddresses(\Espo\Entities\Email $entity)
