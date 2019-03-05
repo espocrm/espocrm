@@ -105,6 +105,9 @@ class Sender
             } else {
                 $opts['connection_class'] = 'login';
             }
+            if (!empty($params['smtpAuthClassName'])) {
+                $opts['connection_class'] = $params['smtpAuthClassName'];
+            }
             $opts['connection_config']['username'] = $params['username'];
             $opts['connection_config']['password'] = $params['password'];
         }
