@@ -130,8 +130,8 @@ class EmailAccount extends Record
                         } catch (\Throwable $e) {
                             $GLOBALS['log']->error("EmailAccount: Could not create Imap Handler for {$emailAddress}. Error: " . $e->getMessage());
                         }
-                        if (method_exists($handler, 'prepareImapStorageParams')) {
-                            $imapParams = $handler->prepareImapStorageParams($params);
+                        if (method_exists($handler, 'prepareImapStorageProtocol')) {
+                            $imapParams = $handler->prepareImapStorageProtocol($params);
                         }
                     }
                 }
