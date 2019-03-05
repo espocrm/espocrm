@@ -32,7 +32,7 @@ Espo.define('views/email-account/fields/test-connection', 'views/fields/base', f
 
         readOnly: true,
 
-        _template: '<button class="btn btn-default disabled" data-action="testConnection">{{translate \'Test Connection\' scope=\'EmailAccount\'}}</button>',
+        templateContent: '<button class="btn btn-default disabled" data-action="testConnection">{{translate \'Test Connection\' scope=\'EmailAccount\'}}</button>',
 
         url: 'EmailAccount/action/testConnection',
 
@@ -48,9 +48,9 @@ Espo.define('views/email-account/fields/test-connection', 'views/fields/base', f
 
         checkAvailability: function () {
             if (this.model.get('host')) {
-                this.$el.find('button').removeClass('disabled');
+                this.$el.find('button').removeClass('disabled').removeAttr('disabled');
             } else {
-                this.$el.find('button').addClass('disabled');
+                this.$el.find('button').addClass('disabled').attr('disabled', 'disabled');
             }
         },
 

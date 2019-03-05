@@ -232,14 +232,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.template = this[property];
 
             var contentProperty = mode + 'TemplateContent';
-            this._template = null;
             this._templateCompiled = null;
             if (contentProperty in this) {
-                this._template = this[contentProperty];
                 this.compiledTemplatesCache = this.compiledTemplatesCache || {};
                 this._templateCompiled =
                 this.compiledTemplatesCache[contentProperty] =
-                    this.compiledTemplatesCache[contentProperty] || this._templator.compileTemplate(this._template);
+                    this.compiledTemplatesCache[contentProperty] || this._templator.compileTemplate(this[contentProperty]);
             }
         },
 

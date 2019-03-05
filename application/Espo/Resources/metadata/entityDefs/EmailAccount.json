@@ -108,7 +108,6 @@
         },
         "smtpUsername": {
             "type": "varchar",
-            "required": true,
             "trim": true
         },
         "smtpPassword": {

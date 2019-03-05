@@ -30,7 +30,7 @@ Espo.define('views/outbound-email/fields/test-send', 'views/fields/base', functi
 
     return Dep.extend({
 
-        _template: '<button class="btn btn-default hidden" data-action="sendTestEmail">{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
+        templateContent: '<button class="btn btn-default hidden" data-action="sendTestEmail">{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
 
         events: {
             'click [data-action="sendTestEmail"]': function () {
