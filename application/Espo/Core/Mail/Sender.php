@@ -100,6 +100,11 @@ class Sender
             'connection_config' => [],
         ];
 
+        $connectionOptions = $params['connectionOptions'] ?? [];
+        foreach ($connectionOptions as $key => $value) {
+            $options['connection_config'][$key] = $value;
+        }
+
         if ($params['auth']) {
             if (!empty($params['smtpAuthMechanism'])) {
                 $options['connection_class'] = $params['smtpAuthMechanism'];

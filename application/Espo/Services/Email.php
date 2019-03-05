@@ -148,15 +148,18 @@ class Email extends Record
             if (!$smtpParams) {
                 if ($emailAccount && $emailAccount->get('useSmtp')) {
                     $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
-                    if ($smtpParams) {
-                        $emailSender->useSmtp($smtpParams);
-                    }
                 }
             }
             if ($smtpParams) {
                 $smtpParams['fromName'] = $this->getUser()->get('name');
-                $emailSender->useSmtp($smtpParams);
             }
+        }
+
+        if ($smtpParams) {
+            if ($fromAddress) {
+                $this->applySmtpHandler($this->getUser()->id, $fromAddress, $smtpParams);
+            }
+            $emailSender->useSmtp($smtpParams);
         }
 
         if (!$smtpParams) {
@@ -164,9 +167,9 @@ class Email extends Record
             $inboundEmail = $inboundEmailService->findSharedAccountForUser($this->getUser(), $fromAddress);
             if ($inboundEmail) {
                 $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
-                if ($smtpParams) {
-                    $emailSender->useSmtp($smtpParams);
-                }
+            }
+            if ($smtpParams) {
+                $emailSender->useSmtp($smtpParams);
             }
         }
 
@@ -211,10 +214,6 @@ class Email extends Record
         $message = null;
 
         $this->validateEmailAddresses($entity);
-
-        if ($fromAddress) {
-            $this->applySmtpHandler($this->getUser()->id, $fromAddress, $params);
-        }
 
         try {
             $emailSender->send($entity, $params, $message);
@@ -824,11 +823,11 @@ class Email extends Record
     {
         $email = $this->getEntityManager()->getEntity('Email');
 
-        $email->set(array(
+        $email->set([
             'subject' => 'EspoCRM: Test Email',
             'isHtml' => false,
             'to' => $data['emailAddress']
-        ));
+        ]);
 
         $emailSender = $this->getMailSender();
         $emailSender->useSmtp($data)->send($email);
