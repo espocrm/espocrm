@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "imapHandlers": {
+            "internal": true
+        },
+        "smtpHandlers": {
+            "internal": true
+        }
+    }
+}
