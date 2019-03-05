@@ -85,7 +85,10 @@ class App extends \Espo\Core\Services\Base
 
         $userData = $user->getValueMap();
 
-        $userData->emailAddressList = $this->getEmailAddressList();
+        $emailAddressData = $this->getEmailAddressData();
+
+        $userData->emailAddressList = $emailAddressData->emailAddressList;
+        $userData->userEmailAddressList = $emailAddressData->userEmailAddressList;
 
         $settings = $this->getServiceFactory()->create('Settings')->getConfigData();
 
@@ -110,12 +113,15 @@ class App extends \Espo\Core\Services\Base
         ];
     }
 
-    protected function getEmailAddressList() {
+    protected function getEmailAddressData() {
         $user = $this->getUser();
 
         $emailAddressList = [];
+        $userEmailAddressList = [];
+
         foreach ($user->get('emailAddresses') as $emailAddress) {
             if ($emailAddress->get('invalid')) continue;
+            $userEmailAddressList[] = $emailAddress->get('name');
             if ($user->get('emailAddress') === $emailAddress->get('name')) continue;
             $emailAddressList[] = $emailAddress->get('name');
         }
@@ -162,7 +168,10 @@ class App extends \Espo\Core\Services\Base
             }
         }
 
-        return $emailAddressList;
+        return (object) [
+            'emailAddressList' => $emailAddressList,
+            'userEmailAddressList' => $userEmailAddressList
+        ];
     }
 
     private function getMaxUploadSize()

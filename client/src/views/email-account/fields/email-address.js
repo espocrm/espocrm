@@ -39,5 +39,12 @@ Espo.define('views/email-account/fields/email-address', 'views/fields/varchar', 
             }, this);
         },
 
+        setupOptions: function () {
+            if (this.model.get('assignedUserId') == this.getUser().id) {
+                this.params.options = this.getUser().get('userEmailAddressList');
+            }
+
+        },
+
     });
 });
