@@ -51,7 +51,7 @@ class Sender
 
     protected $isGlobal = false;
 
-    protected $params = array();
+    protected $params = [];
 
     public function __construct($config, $entityManager)
     {
@@ -72,17 +72,17 @@ class Sender
 
     public function resetParams()
     {
-        $this->params = array();
+        $this->params = [];
         return $this;
     }
 
-    public function setParams(array $params = array())
+    public function setParams(array $params = [])
     {
         $this->params = array_merge($this->params, $params);
         return $this;
     }
 
-    public function useSmtp(array $params = array())
+    public function useSmtp(array $params = [])
     {
         $this->isGlobal = false;
         $this->params = $params;
@@ -93,26 +93,27 @@ class Sender
 
         $localHostName = $config->get('smtpLocalHostName', gethostname());
 
-        $opts = array(
+        $options = [
             'name' => $localHostName,
             'host' => $params['server'],
             'port' => $params['port'],
-            'connection_config' => array()
-        );
+            'connection_config' => [],
+        ];
+
         if ($params['auth']) {
             if (!empty($params['smtpAuthMechanism'])) {
-                $opts['connection_class'] = $params['smtpAuthMechanism'];
+                $options['connection_class'] = $params['smtpAuthMechanism'];
             } else {
-                $opts['connection_class'] = 'login';
+                $options['connection_class'] = 'login';
             }
             if (!empty($params['smtpAuthClassName'])) {
-                $opts['connection_class'] = $params['smtpAuthClassName'];
+                $options['connection_class'] = $params['smtpAuthClassName'];
             }
-            $opts['connection_config']['username'] = $params['username'];
-            $opts['connection_config']['password'] = $params['password'];
+            $options['connection_config']['username'] = $params['username'];
+            $options['connection_config']['password'] = $params['password'];
         }
         if ($params['security']) {
-            $opts['connection_config']['ssl'] = strtolower($params['security']);
+            $options['connection_config']['ssl'] = strtolower($params['security']);
         }
 
         if (array_key_exists('fromName', $params)) {
@@ -122,15 +123,15 @@ class Sender
             $this->params['fromAddress'] = $params['fromAddress'];
         }
 
-        $options = new SmtpOptions($opts);
-        $this->transport->setOptions($options);
+        $smtpOptions = new SmtpOptions($options);
+        $this->transport->setOptions($smtpOptions);
 
         return $this;
     }
 
     public function useGlobal()
     {
-        $this->params = array();
+        $this->params = [];
         if ($this->isGlobal) {
             return $this;
         }
@@ -141,30 +142,30 @@ class Sender
 
         $localHostName = $config->get('smtpLocalHostName', gethostname());
 
-        $opts = array(
+        $options = [
             'name' => $localHostName,
             'host' => $config->get('smtpServer'),
             'port' => $config->get('smtpPort'),
-            'connection_config' => array()
-        );
+            'connection_config' => [],
+        ];
         if ($config->get('smtpAuth')) {
-            $opts['connection_class'] = $config->get('smtpAuthMechanism', 'login');
-            $opts['connection_config']['username'] = $config->get('smtpUsername');
-            $opts['connection_config']['password'] = $config->get('smtpPassword');
+            $options['connection_class'] = $config->get('smtpAuthMechanism', 'login');
+            $options['connection_config']['username'] = $config->get('smtpUsername');
+            $options['connection_config']['password'] = $config->get('smtpPassword');
         }
         if ($config->get('smtpSecurity')) {
-            $opts['connection_config']['ssl'] = strtolower($config->get('smtpSecurity'));
+            $options['connection_config']['ssl'] = strtolower($config->get('smtpSecurity'));
         }
 
-        $options = new SmtpOptions($opts);
-        $this->transport->setOptions($options);
+        $smtpOptions = new SmtpOptions($options);
+        $this->transport->setOptions($smtpOptions);
 
         $this->isGlobal = true;
 
         return $this;
     }
 
-    public function send(Email $email, $params = array(), &$message = null, $attachmentList = [])
+    public function send(Email $email, $params = [], &$message = null, $attachmentList = [])
     {
         if (!$message) {
             $message = new Message();
@@ -348,7 +349,7 @@ class Sender
 
         } else {
             if ($email->get('isHtml')) {
-                $body->setParts(array($textPart, $htmlPart));
+                $body->setParts([$textPart, $htmlPart]);
                 $messageType = 'multipart/alternative';
             } else {
                 $body = $email->getBodyPlainForSending();
@@ -413,4 +414,3 @@ class Sender
         return $messageId;
     }
 }
-
