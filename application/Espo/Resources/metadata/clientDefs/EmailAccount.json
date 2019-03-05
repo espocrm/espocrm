@@ -35,6 +35,29 @@
             ]
         }
     },
+    "dynamicLogic": {
+        "fields": {
+            "smtpUsername": {
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "and",
+                            "value": [
+                                {
+                                    "type": "isTrue",
+                                    "attribute": "useImap"
+                                },
+                                {
+                                    "type": "isTrue",
+                                    "attribute": "smtpAuth"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    },
     "relationshipPanels": {
         "filters": {
             "select": false,

@@ -19,20 +19,17 @@
         },
         "host": {
             "type": "varchar",
-            "required": true,
             "trim": true
         },
         "port": {
             "type": "varchar",
-            "default": "143",
-            "required": true
+            "default": "143"
         },
         "ssl": {
             "type": "bool"
         },
         "username": {
             "type": "varchar",
-            "required": true,
             "trim": true
         },
         "password": {
@@ -40,7 +37,6 @@
         },
         "monitoredFolders": {
             "type": "varchar",
-            "required": true,
             "default": "INBOX",
             "view": "views/email-account/fields/folders",
             "tooltip": true

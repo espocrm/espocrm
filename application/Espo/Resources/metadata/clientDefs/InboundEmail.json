@@ -28,6 +28,29 @@
             ]
         }
     },
+    "dynamicLogic": {
+        "fields": {
+            "smtpUsername": {
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "and",
+                            "value": [
+                                {
+                                    "type": "isTrue",
+                                    "attribute": "useImap"
+                                },
+                                {
+                                    "type": "isTrue",
+                                    "attribute": "smtpAuth"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    },
     "searchPanelDisabled": true,
     "relationshipPanels": {
         "filters": {
