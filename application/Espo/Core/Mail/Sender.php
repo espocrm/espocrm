@@ -111,12 +111,14 @@ class Sender
             } else {
                 $options['connection_class'] = 'login';
             }
-            if (!empty($params['smtpAuthClassName'])) {
-                $options['connection_class'] = $params['smtpAuthClassName'];
-            }
             $options['connection_config']['username'] = $params['username'];
             $options['connection_config']['password'] = $params['password'];
         }
+
+        if (!empty($params['smtpAuthClassName'])) {
+            $options['connection_class'] = $params['smtpAuthClassName'];
+        }
+
         if ($params['security']) {
             $options['connection_config']['ssl'] = strtolower($params['security']);
         }
