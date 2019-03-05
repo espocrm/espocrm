@@ -64,7 +64,7 @@ class EmailAccount extends Record
 
     public function getFolders($params)
     {
-        $userId = $params['userId'] ?? $userId;
+        $userId = $params['userId'] ?? null;
         if ($userId) {
             if (!$this->getUser()->isAdmin() && $userId !== $this->getUser()->id) {
                 throw new Forbidden();
@@ -95,7 +95,7 @@ class EmailAccount extends Record
     {
         $storage = $this->createStorage($params);
 
-        $userId = $params['userId'] ?? $userId;
+        $userId = $params['userId'] ?? null;
         if ($userId) {
             if (!$this->getUser()->isAdmin() && $userId !== $this->getUser()->id) {
                 throw new Forbidden();
