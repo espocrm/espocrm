@@ -178,6 +178,12 @@
         },
         "tabColorsDisabled": {
             "type": "bool"
+        },
+        "imapHandlers": {
+            "type": "jsonObject"
+        },
+        "smtpHandlers": {
+            "type": "jsonObject"
         }
     }
 }

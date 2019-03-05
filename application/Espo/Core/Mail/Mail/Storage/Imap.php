@@ -34,12 +34,12 @@ class Imap extends \Zend\Mail\Storage\Imap
     public function getIdsFromUID($uid)
     {
         $uid = intval($uid) + 1;
-        return $this->protocol->search(array('UID ' . $uid . ':*'));
+        return $this->protocol->search(['UID ' . $uid . ':*']);
     }
 
     public function getIdsFromDate($date)
     {
-        return $this->protocol->search(array('SINCE "' . $date . '"'));
+        return $this->protocol->search(['SINCE "' . $date . '"']);
     }
 
     public function getHeaderAndFlags($id, $part = null)
@@ -53,11 +53,9 @@ class Imap extends \Zend\Mail\Storage\Imap
             $flags[] = isset(static::$knownFlags[$flag]) ? static::$knownFlags[$flag] : $flag;
         }
 
-        return array(
+        return [
             'flags' => $flags,
             'header' => $header
-        );
+        ];
     }
-
 }
-

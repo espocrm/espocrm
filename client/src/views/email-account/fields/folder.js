@@ -43,6 +43,8 @@ Espo.define('views/email-account/fields/folder', 'views/fields/base', function (
                     port: this.model.get('port'),
                     ssl: this.model.get('ssl'),
                     username: this.model.get('username'),
+                    emailAddress: this.model.get('emailAddress'),
+                    userId: this.model.get('assignedUserId'),
                 };
 
                 if (this.model.has('password')) {

@@ -61,6 +61,10 @@
         "fieldLevel": {
         },
         "scopeFieldLevel": {
+            "Preferences": {
+                "imapHandlers": false,
+                "smtpHandlers": false
+            },
             "Attachment": {
                 "parent": false
             },

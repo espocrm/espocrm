@@ -36,14 +36,15 @@ class EmailAccount extends \Espo\Core\Controllers\Record
 {
     public function actionGetFolders($params, $data, $request)
     {
-        return $this->getRecordService()->getFolders(array(
+        return $this->getRecordService()->getFolders([
             'host' => $request->get('host'),
             'port' => $request->get('port'),
             'ssl' => $request->get('ssl') === 'true',
             'username' => $request->get('username'),
             'password' => $request->get('password'),
-            'id' => $request->get('id')
-        ));
+            'id' => $request->get('id'),
+            'emailAddress' => $request->get('emailAddress'),
+        ]);
     }
 
     protected function checkControllerAccess()

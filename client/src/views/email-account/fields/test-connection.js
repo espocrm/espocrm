@@ -70,7 +70,9 @@ Espo.define('views/email-account/fields/test-connection', 'views/fields/base', f
                 'ssl': this.model.get('ssl'),
                 'username': this.model.get('username'),
                 'password': this.model.get('password') || null,
-                'id': this.model.id
+                'id': this.model.id,
+                emailAddress: this.model.get('emailAddress'),
+                userId: this.model.get('assignedUserId'),
             };
             return data;
         },
