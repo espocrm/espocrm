@@ -178,7 +178,12 @@ abstract class OAuth2Abstract implements IClient
             }
         }
 
-        throw new Error("Error after requesting {$httpMethod} {$url}.", $code);
+        $reasonPart = '';
+        if (isset($r['result']['error']) && isset($r['result']['error']['message'])) {
+            $reasonPart = '; Reason: ' . $r['result']['error']['message'];
+        }
+
+        throw new Error("Oauth: Error after requesting {$httpMethod} {$url}{$reasonPart}.", $code);
     }
 
     protected function refreshToken()
