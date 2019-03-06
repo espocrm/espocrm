@@ -46,12 +46,8 @@ class Email extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->getCopiedAttachments($id);
     }
 
-    public function actionSendTestEmail($params, $data, $request)
+    public function postActionSendTestEmail($params, $data, $request)
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
         if (!$this->getAcl()->checkScope('Email')) {
             throw new Forbidden();
         }

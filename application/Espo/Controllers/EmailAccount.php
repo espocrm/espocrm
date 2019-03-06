@@ -34,17 +34,17 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class EmailAccount extends \Espo\Core\Controllers\Record
 {
-    public function actionGetFolders($params, $data, $request)
+    public function postActionGetFolders($params, $data)
     {
         return $this->getRecordService()->getFolders([
-            'host' => $request->get('host'),
-            'port' => $request->get('port'),
-            'ssl' => $request->get('ssl') === 'true',
-            'username' => $request->get('username'),
-            'password' => $request->get('password'),
-            'id' => $request->get('id'),
-            'emailAddress' => $request->get('emailAddress'),
-            'userId' => $request->get('userId'),
+            'host' => $data->host ?? null,
+            'port' => $data->port ?? null,
+            'ssl' =>  $data->ssl ?? false,
+            'username' => $data->username ?? null,
+            'password' => $data->password ?? null,
+            'id' => $data->id ?? null,
+            'emailAddress' => $data->emailAddress ?? null,
+            'userId' => $data->userId ?? null,
         ]);
     }
 
@@ -55,12 +55,8 @@ class EmailAccount extends \Espo\Core\Controllers\Record
         }
     }
 
-    public function actionTestConnection($params, $data, $request)
+    public function postActionTestConnection($params, $data, $request)
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
         if (is_null($data->password)) {
             $emailAccount = $this->getEntityManager()->getEntity('EmailAccount', $data->id);
             if (!$emailAccount || !$emailAccount->id) {
@@ -77,4 +73,3 @@ class EmailAccount extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->testConnection(get_object_vars($data));
     }
 }
-
