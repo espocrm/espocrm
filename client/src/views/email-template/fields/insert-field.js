@@ -123,6 +123,8 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
             fieldList.forEach(function (field) {
                 var fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])) return;
+                if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'directAccessDisabled'])) return;
+
                 if (fieldType === 'map') return;
                 if (fieldType === 'linkMultiple') return;
                 if (fieldType === 'attachmentMultiple') return;

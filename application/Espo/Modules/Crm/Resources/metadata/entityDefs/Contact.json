@@ -340,7 +340,8 @@
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
             "exportDisabled": true,
-            "entity": "TargetList"
+            "entity": "TargetList",
+            "directAccessDisabled": true
         },
         "portalUser": {
             "type": "link",

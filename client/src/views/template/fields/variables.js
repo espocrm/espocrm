@@ -86,6 +86,8 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'internal'])
                     ||
                     this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'disabled'])
+                    ||
+                    this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'directAccessDisabled'])
                 ) ignoreFieldList.push(field);
             }, this);
 
@@ -169,6 +171,8 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                         this.getMetadata().get(['entityAcl', scope, 'fields', field, 'internal'])
                         ||
                         this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])
+                        ||
+                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'directAccessDisabled'])
                     ) ignoreFieldList.push(field);
                 }, this);
 

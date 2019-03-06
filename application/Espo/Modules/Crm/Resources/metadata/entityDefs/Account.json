@@ -200,7 +200,8 @@
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
-            "entity": "TargetList"
+            "entity": "TargetList",
+            "directAccessDisabled": true
         },
         "originalLead": {
             "type": "link",
