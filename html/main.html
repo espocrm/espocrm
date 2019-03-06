@@ -27,13 +27,16 @@
                         {{runScript}}
                     });
                 });
+                var d = new Date();
+                var n = d.getFullYear();
+                document.getElementById("year").innerHTML = n;
             });
         </script>
     </head>
     <body>
         <div class="container content"></div>
         <footer>
-            <p class="credit small">&copy; 2019 <a href="https://www.espocrm.com" title="Powered by EspoCRM" alt="Visit official EspoCRM website">EspoCRM</a></p>
+            <p class="credit small">&copy; <span id="year"></span> <a href="https://www.espocrm.com" title="Powered by EspoCRM" alt="Visit official EspoCRM website">EspoCRM</a></p>
         </footer>
     </body>
 </html>
