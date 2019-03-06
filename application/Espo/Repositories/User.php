@@ -162,6 +162,11 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
             $apiKeyUtil->removeSecretKeyForUserId($entity->id);
         }
+
+        $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($entity->id);
+        if ($userData) {
+            $this->getEntityManager()->removeEntity($userData);
+        }
     }
 
     public function checkBelongsToAnyOfTeams($userId, array $teamIds)

@@ -119,9 +119,9 @@ class EmailAccount extends Record
         $imapParams = null;
 
         if ($emailAddress && $userId) {
-            $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
-            if ($preferences) {
-                $imapHandlers = $preferences->get('imapHandlers') ?? (object) [];
+            $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($userId);
+            if ($userData) {
+                $imapHandlers = $userData->get('imapHandlers') ?? (object) [];
                 if (is_object($imapHandlers)) {
                     if (isset($imapHandlers->$emailAddress)) {
                         $handlerClassName = $imapHandlers->$emailAddress;

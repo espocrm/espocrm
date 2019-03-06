@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "imapHandlers": {
+            "type": "jsonObject"
+        },
+        "smtpHandlers": {
+            "type": "jsonObject"
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    }
+}

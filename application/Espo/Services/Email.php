@@ -261,9 +261,9 @@ class Email extends Record
 
     protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
     {
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
-        if ($preferences) {
-            $smtpHandlers = $preferences->get('smtpHandlers') ?? (object) [];
+        $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($userId);
+        if ($userData) {
+            $smtpHandlers = $userData->get('smtpHandlers') ?? (object) [];
             if (is_object($smtpHandlers)) {
                 if (isset($smtpHandlers->$emailAddress)) {
                     $handlerClassName = $smtpHandlers->$emailAddress;

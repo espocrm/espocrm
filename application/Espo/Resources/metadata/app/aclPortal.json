@@ -48,8 +48,6 @@
         },
         "scopeFieldLevel": {
             "Preferences": {
-                "imapHandlers": false,
-                "smtpHandlers": false,
                 "smtpServer": false,
                 "smtpPort": false,
                 "smtpSecurity": false,
