@@ -97,7 +97,6 @@ class Sender
             'name' => $localHostName,
             'host' => $params['server'],
             'port' => $params['port'],
-            'connection_config' => [],
             'connectionConfig' => [],
         ];
 
@@ -108,20 +107,20 @@ class Sender
 
         if ($params['auth']) {
             if (!empty($params['smtpAuthMechanism'])) {
-                $options['connection_class'] = $params['smtpAuthMechanism'];
+                $options['connectionClass'] = $params['smtpAuthMechanism'];
             } else {
-                $options['connection_class'] = 'login';
+                $options['connectionClass'] = 'login';
             }
-            $options['connection_config']['username'] = $params['username'];
-            $options['connection_config']['password'] = $params['password'];
+            $options['connectionConfig']['username'] = $params['username'];
+            $options['connectionConfig']['password'] = $params['password'];
         }
 
         if (!empty($params['smtpAuthClassName'])) {
-            $options['connection_class'] = $params['smtpAuthClassName'];
+            $options['connectionClass'] = $params['smtpAuthClassName'];
         }
 
         if ($params['security']) {
-            $options['connection_config']['ssl'] = strtolower($params['security']);
+            $options['connectionConfig']['ssl'] = strtolower($params['security']);
         }
 
         if (array_key_exists('fromName', $params)) {
