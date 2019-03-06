@@ -492,8 +492,10 @@ class EmailAccount extends Record
             $smtpParams['port'] = $emailAccount->get('smtpPort');
             $smtpParams['auth'] = $emailAccount->get('smtpAuth');
             $smtpParams['security'] = $emailAccount->get('smtpSecurity');
-            $smtpParams['username'] = $emailAccount->get('smtpUsername');
-            $smtpParams['password'] = $emailAccount->get('smtpPassword');
+            if ($emailAccount->get('smtpAuth')) {
+                $smtpParams['username'] = $emailAccount->get('smtpUsername');
+                $smtpParams['password'] = $emailAccount->get('smtpPassword');
+            }
             if (array_key_exists('password', $smtpParams)) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
             }
