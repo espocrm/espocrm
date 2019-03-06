@@ -823,6 +823,11 @@ class Email extends Record
     {
         $smtpParams = $data;
 
+        if (empty($smtpParams['auth'])) {
+            unset($smtpParams['username']);
+            unset($smtpParams['password']);
+        }
+
         $userId = $data['userId'] ?? null;
         $fromAddress = $data['fromAddress'] ?? null;
 

@@ -58,13 +58,12 @@ Espo.define('views/preferences/fields/test-send', 'views/outbound-email/fields/t
                 'fromName': this.getUser().get('name'),
                 'fromAddress': this.getUser().get('emailAddress'),
                 'type': 'preferences',
-                'id': this.model.id
+                'id': this.model.id,
+                userId: this.model.id,
             };
             return data;
         },
 
-
     });
 
 });
-
