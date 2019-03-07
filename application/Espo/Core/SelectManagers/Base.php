@@ -243,7 +243,7 @@ class Base
         $this->applyLeftJoinsFromWhere($where, $result);
     }
 
-    public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result = null) : array
+    public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result) : array
     {
         $whereClause = [];
 
@@ -1199,7 +1199,7 @@ class Base
         return $result;
     }
 
-    protected function getWherePart($item, array &$result = null)
+    protected function getWherePart($item, array &$result)
     {
         $part = [];
 
