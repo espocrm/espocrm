@@ -243,7 +243,7 @@ class Base
         $this->applyLeftJoinsFromWhere($where, $result);
     }
 
-    public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result) : array
+    public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result = []) : array
     {
         $whereClause = [];
 
@@ -1199,7 +1199,7 @@ class Base
         return $result;
     }
 
-    protected function getWherePart($item, array &$result)
+    protected function getWherePart($item, array &$result = [])
     {
         $part = [];
 
@@ -1246,19 +1246,48 @@ class Base
             switch ($type) {
                 case 'or':
                 case 'and':
-                case 'not':
-                    if (is_array($value)) {
-                        $arr = [];
-                        foreach ($value as $i) {
-                            $a = $this->getWherePart($i, $result);
-                            foreach ($a as $left => $right) {
-                                if (!empty($right) || is_null($right) || $right === '' || $right === 0 || $right === false) {
-                                    $arr[] = [$left => $right];
-                                }
+                    if (!is_array($value)) break;
+
+                    $sqWhereClause = [];
+                    foreach ($value as $sqWhereItem) {
+                        $sqWherePart = $this->getWherePart($sqWhereItem, $result);
+                        foreach ($sqWherePart as $left => $right) {
+                            if (!empty($right) || is_null($right) || $right === '' || $right === 0 || $right === false) {
+                                $sqWhereClause[] = [$left => $right];
                             }
                         }
-                        $part[strtoupper($type)] = $arr;
                     }
+                    $part[strtoupper($type)] = $sqWhereClause;
+
+                    break;
+
+                case 'not':
+                case 'subQueryNotIn':
+                case 'subQueryIn':
+                    if (!is_array($value)) break;
+
+                    $sqWhereClause = [];
+                    $sqResult = $this->getEmptySelectParams();
+                    foreach ($value as $sqWhereItem) {
+                        $sqWherePart = $this->getWherePart($sqWhereItem, $sqResult);
+                        foreach ($sqWherePart as $left => $right) {
+                            if (!empty($right) || is_null($right) || $right === '' || $right === 0 || $right === false) {
+                                $sqWhereClause[] = [$left => $right];
+                            }
+                        }
+                    }
+
+                    $this->applyLeftJoinsFromWhere($value, $sqResult);
+                    $key = $type === 'subQueryIn' ? 'id=s' : 'id!=s';
+                    $part[$key] = [
+                        'selectParams' =>  [
+                            'select' => ['id'],
+                            'whereClause' => $sqWhereClause,
+                            'leftJoins' => $sqResult['leftJoins'] ?? [],
+                            'joins' => $sqResult['joins'] ?? [],
+                        ]
+                    ];
+
                     break;
 
                 case 'like':
@@ -2294,19 +2323,38 @@ class Base
 
     protected function applyLeftJoinsFromWhereItem($item, array &$result)
     {
-        if (!empty($item['type'])) {
-            if (in_array($item['type'], ['or', 'and', 'not', 'having'])) {
-                if (!array_key_exists('value', $item) || !is_array($item['value'])) return;
-                foreach ($item['value'] as $listItem) {
+        $type = $item['type'] ?? null;
+
+        if ($type) {
+            if (in_array($type, ['subQueryNotIn', 'subQueryIn', 'not'])) return;
+
+            if (in_array($type, ['or', 'and', 'having'])) {
+                $value = $item['value'] ?? null;
+                if (!is_array($value)) return;
+                foreach ($value as $listItem) {
                     $this->applyLeftJoinsFromWhereItem($listItem, $result);
                 }
                 return;
             }
         }
 
-        $attribute = null;
-        if (!empty($item['attribute'])) $attribute = $item['attribute'];
+        $attribute = $item['attribute'] ?? null;
         if (!$attribute) return;
+
+        if (strpos($attribute, ':') !== false) {
+            list($function, $attribute) = explode(':', $attribute);
+        }
+
+        if (strpos($attribute, '.') !== false) {
+            list($link, $attribute) = explode('.', $attribute);
+            if ($this->getSeed()->hasRelation($link) && !$this->hasLeftJoin($link, $result)) {
+                $this->addLeftJoin($link, $result);
+                if ($this->getSeed()->getRelationType($link) === \Espo\ORM\Entity::HAS_MANY) {
+                    $result['distinct'] = true;
+                }
+            }
+            return;
+        }
 
         $attributeType = $this->getSeed()->getAttributeType($attribute);
         if ($attributeType === 'foreign') {

@@ -254,7 +254,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $selectParams = $selectManager->buildSelectParams($params);
 
-        $this->assertEquals('2016-10-10', $selectParams['whereClause'][0]['NOT'][0]['date=']);
+        $this->assertEquals('2016-10-10', $selectParams['whereClause'][0]['id!=s']['selectParams']['whereClause'][0]['date=']);
     }
 
     function testBuildSelectParamsComplex()
