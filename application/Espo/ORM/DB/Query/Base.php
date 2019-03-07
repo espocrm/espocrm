@@ -508,6 +508,39 @@ abstract class Base
         return $part;
     }
 
+    public static function getAllAttributesFromComplexExpression(string $expression, &$list = null) : array
+    {
+        if (!$list) $list = [];
+
+        $arguments = $expression;
+
+        if (strpos($expression, ':')) {
+            $dilimeterPosition = strpos($expression, ':');
+            $function = substr($expression, 0, $dilimeterPosition);
+            $arguments = substr($expression, $dilimeterPosition + 1);
+            if (substr($arguments, 0, 1) === '(' && substr($arguments, -1) === ')') {
+                $arguments = substr($arguments, 1, -1);
+            }
+        } else {
+            if (
+                !self::isArgumentString($expression) &&
+                !self::isArgumentNumeric($expression) &&
+                !self::isArgumentBoolOrNull($expression)
+            ) {
+                $list[] = $expression;
+            }
+            return [];
+        }
+
+        $argumentList = self::parseArgumentListFromFunctionContent($arguments);
+
+        foreach ($argumentList as $argument) {
+            self::getAllAttributesFromComplexExpression($argument, $list);
+        }
+
+        return $list;
+    }
+
     static protected function parseArgumentListFromFunctionContent($functionContent)
     {
         $functionContent = trim($functionContent);
@@ -571,22 +604,36 @@ abstract class Base
         return $argumentList;
     }
 
+    protected static function isArgumentString(string $argument)
+    {
+        return
+            substr($argument, 0, 1) === '\'' && substr($argument, -1) === '\''
+            ||
+            substr($argument, 0, 1) === '"' && substr($argument, -1) === '"';
+    }
+
+    protected static function isArgumentNumeric(string $argument)
+    {
+        return is_numeric($argument);
+    }
+
+    protected static function isArgumentBoolOrNull(string $argument)
+    {
+        return in_array(strtoupper($argument), ['NULL', 'TRUE', 'FALSE']);
+    }
+
     protected function getFunctionArgumentPart($entity, $attribute, $distinct = false, &$params = null)
     {
         $argument = $attribute;
 
-        if (
-            substr($argument, 0, 1) === '\'' && substr($argument, -1) === '\''
-            ||
-            substr($argument, 0, 1) === '"' && substr($argument, -1) === '"'
-        ) {
+        if (self::isArgumentString($argument)) {
             $string = substr($argument, 1, -1);
             $string = $this->quote($string);
             return $string;
-        } else if (is_numeric($argument)) {
+        } else if (self::isArgumentNumeric($argument)) {
             $string = $this->quote($argument);
             return $string;
-        } else if (in_array(strtoupper($argument), ['NULL', 'TRUE', 'FALSE'])) {
+        } else if (self::isArgumentBoolOrNull($argument)) {
             return strtoupper($argument);
         }
 

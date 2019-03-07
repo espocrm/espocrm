@@ -739,4 +739,14 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($expectedSql, $sql);
     }
+
+    public function testGetAllAttributesFromComplexExpression()
+    {
+        $expression = "CONCAT:(MONTH:comment.created_at,' ',CONCAT:(comment.name,'+'))";
+
+        $list = $this->query::getAllAttributesFromComplexExpression($expression);
+
+        $this->assertTrue(in_array('comment.created_at', $list));
+        $this->assertTrue(in_array('comment.name', $list));
+    }
 }

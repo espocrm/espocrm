@@ -823,6 +823,12 @@ class Base
                 $type = $w['type'];
             }
 
+            if ($forbidComplexExpressions) {
+                if ($type && in_array($type, ['subQueryIn', 'subQueryNotIn', 'not'])) {
+                    throw new Forbidden("SelectManager::checkWhere: Sub-queries are forbidden.");
+                }
+            }
+
             $entityType = $this->getEntityType();
 
             if ($attribute && $forbidComplexExpressions) {
@@ -835,7 +841,7 @@ class Base
                 if (strpos($attribute, '.')) {
                     list($link, $attribute) = explode('.', $attribute);
                     if (!$this->getSeed()->hasRelation($link)) {
-                        throw new Forbidden("SelectManager::checkWhere: Unknow relation '{$link}' in where.");
+                        throw new Forbidden("SelectManager::checkWhere: Unknown relation '{$link}' in where.");
                     }
                     $entityType = $this->getSeed($this->getEntityType())->getRelationParam($link, 'entity');
                     if (!$entityType) {
@@ -2312,7 +2318,7 @@ class Base
         return $selectParams1;
     }
 
-    protected function applyLeftJoinsFromWhere($where, array &$result)
+    public function applyLeftJoinsFromWhere($where, array &$result)
     {
         if (!is_array($where)) return;
 
@@ -2321,7 +2327,7 @@ class Base
         }
     }
 
-    protected function applyLeftJoinsFromWhereItem($item, array &$result)
+    public function applyLeftJoinsFromWhereItem($item, array &$result)
     {
         $type = $item['type'] ?? null;
 
@@ -2341,8 +2347,17 @@ class Base
         $attribute = $item['attribute'] ?? null;
         if (!$attribute) return;
 
+        $this->applyLeftJoinsFromAttribute($attribute, $result);
+    }
+
+    protected function applyLeftJoinsFromAttribute(string $attribute, array &$result)
+    {
         if (strpos($attribute, ':') !== false) {
-            list($function, $attribute) = explode(':', $attribute);
+            $argumentList = \Espo\ORM\DB\Query\Base::getAllAttributesFromComplexExpression($attribute);
+            foreach ($argumentList as $argument) {
+                $this->applyLeftJoinsFromAttribute($argument, $result);
+            }
+            return;
         }
 
         if (strpos($attribute, '.') !== false) {
