@@ -107,6 +107,12 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
                     maxLines: this.mode === 'edit' ? this.maxLineEditCount : this.maxLineDetailCount
                 });
 
+                if (this.isEditMode()) {
+                    editor.getSession().on('change', function () {
+                        this.trigger('change', {ui: true});
+                    }.bind(this));
+                }
+
                 if (this.isReadMode()) {
                     editor.setReadOnly(true);
                     editor.renderer.$cursorLayer.element.style.display = "none";
