@@ -1,7 +1,8 @@
 {
     "formatList": [
         "xlsx",
-        "csv"
+        "csv",
+        "pdf"
     ],
     "formatDefs": {
         "csv": {
@@ -11,10 +12,15 @@
         "xlsx": {
             "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "fileExtension": "xlsx"
+        },
+        "pdf": {
+            "mimeType": "application/pdf",
+            "fileExtension": "pdf"
         }
     },
     "exportFormatClassNameMap": {
         "csv": "\\Espo\\Core\\Export\\Csv",
-        "xlsx": "\\Espo\\Core\\Export\\Xlsx"
+        "xlsx": "\\Espo\\Core\\Export\\Xlsx",
+        "pdf": "\\Espo\\Core\\Export\\Pdf"
     }
 }
