@@ -94,7 +94,7 @@ class Campaign extends \Espo\Services\Record
             'campaignId' => $entity->id,
             'action' => 'Opted In',
             'isTest' => false
-        ])->groupBy(['parentId', 'parentType'])->count();
+        ])->count();
         if (!$optedInCount) $optedInCount = null;
         $entity->set('optedInCount', $optedInCount);
 
@@ -102,7 +102,7 @@ class Campaign extends \Espo\Services\Record
             'campaignId' => $entity->id,
             'action' => 'Opted Out',
             'isTest' => false
-        ])->groupBy(['parentId', 'parentType'])->count();
+        ])->count();
         $entity->set('optedOutCount', $optedOutCount);
 
         $optedOutPercentage = null;
