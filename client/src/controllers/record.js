@@ -171,7 +171,7 @@ define('controllers/record', 'controller', function (Dep) {
             }, this);
         },
 
-        actionCreate: function (options) {
+        create: function (options) {
             options = options || {};
             this.getModel().then(function (model) {
                 if (options.relate) {
@@ -194,6 +194,10 @@ define('controllers/record', 'controller', function (Dep) {
 
                 this.main(this.getViewName('edit'), o);
             }.bind(this));
+        },
+
+        actionCreate: function (options) {
+            this.create(options);
         },
 
         beforeEdit: function () {
@@ -325,22 +329,6 @@ define('controllers/record', 'controller', function (Dep) {
                     callback.call(context, model);
                 }
             }, context);
-        },
-
-        create: function (options) {
-            this.actionCreate(options);
-        },
-
-        view: function (options) {
-            this.actionView(options);
-        },
-
-        edit: function (options) {
-            this.actionEdit(options);
-        },
-
-        list: function (options) {
-            this.actionList(options);
         },
 
     });
