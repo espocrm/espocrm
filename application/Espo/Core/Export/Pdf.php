@@ -424,21 +424,4 @@ class Pdf extends \Espo\Core\Injectable
         // Close and output PDF document
         return $pdf->Output('', 'S');
     }
-
-    protected function prepareDataList($dataList)
-    {
-        $prepareDataList = [];
-        foreach ($dataList as $row) {
-            $preparedRow = [];
-            foreach ($row as $item) {
-                if (is_array($item) || is_object($item)) {
-                    $item = \Espo\Core\Utils\Json::encode($item);
-                }
-                $preparedRow[] = $item;
-            }
-            $prepareDataList[] = $preparedRow;
-        }
-
-        return $prepareDataList;
-    }
 }
