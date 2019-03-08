@@ -138,6 +138,14 @@
             "view": "views/admin/dynamic-logic/conditions/field-types/link",
             "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
         },
+        "file": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/link",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "image": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/link",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
         "linkParent": {
             "view": "views/admin/dynamic-logic/conditions/field-types/link-parent",
             "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
