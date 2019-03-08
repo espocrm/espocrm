@@ -349,9 +349,9 @@ abstract class Base
                 return "DATE_FORMAT({$part}, '%Y-%m-%d')";
             case 'WEEK':
             case 'WEEK_0':
-                return "CONCAT(YEAR({$part}), '/', WEEK({$part}, 0))";
+                return "CONCAT(SUBSTRING(YEARWEEK({$part}, 0), 1, 4), '/', TRIM(LEADING '0' FROM SUBSTRING(YEARWEEK({$part}, 0), 5, 2)))";
             case 'WEEK_1':
-                return "CONCAT(YEAR({$part}), '/', WEEK({$part}, 5))";
+                return "CONCAT(SUBSTRING(YEARWEEK({$part}, 5), 1, 4), '/', TRIM(LEADING '0' FROM SUBSTRING(YEARWEEK({$part}, 5), 5, 2)))";
             case 'QUARTER':
                 return "CONCAT(YEAR({$part}), '_', QUARTER({$part}))";
             case 'MONTH_NUMBER':
