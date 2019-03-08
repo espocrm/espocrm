@@ -2,12 +2,14 @@
     "fields": {
         "exportAllFields": "Export all fields",
         "fieldList": "Field List",
+        "pdfDesign": "PDF Design (Horizontal)",
         "format": "Format"
     },
     "options": {
         "format": {
             "csv": "CSV",
-            "xlsx": "XLSX (Excel)"
+            "xlsx": "XLSX (Excel)",
+            "pdf": "PDF"
         }
     }
 }
