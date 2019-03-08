@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/portal-user', 'controllers/record', function (Dep) {
+define('controllers/portal-user', 'controllers/record', function (Dep) {
 
     return Dep.extend({
 
@@ -52,11 +52,11 @@ Espo.define('controllers/portal-user', 'controllers/record', function (Dep) {
             Dep.prototype.createViewView.call(this, options, model);
         },
 
-        create: function (options) {
+        actionCreate: function (options) {
             options = options || {};
             options.attributes = options.attributes  || {};
             options.attributes.type = 'portal';
-            Dep.prototype.create.call(this, options);
+            Dep.prototype.actionCreate.call(this, options);
         }
 
     });

@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/record-tree', 'controllers/record', function (Dep) {
+
+define('controllers/record-tree', 'controllers/record', function (Dep) {
 
     return Dep.extend({
 
@@ -44,7 +45,7 @@ Espo.define('controllers/record-tree', 'controllers/record', function (Dep) {
             this.handleCheckAccess('read');
         },
 
-        listTree: function (options) {
+        actionListTree: function (options) {
             this.getCollection(function (collection) {
                 collection.url = collection.name + '/action/listTree';
                 this.main(this.getViewName('listTree'), {
@@ -55,5 +56,4 @@ Espo.define('controllers/record-tree', 'controllers/record', function (Dep) {
         }
 
     });
-
 });

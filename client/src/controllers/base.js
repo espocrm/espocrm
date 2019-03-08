@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/base', 'controller', function (Dep) {
+
+define('controllers/base', 'controller', function (Dep) {
 
     return Dep.extend({
 
@@ -39,13 +40,25 @@ Espo.define('controllers/base', 'controller', function (Dep) {
             }.bind(this));
         },
 
+        actionLogin: function () {
+            this.login();
+        },
+
         logout: function () {
             var title = this.getConfig().get('applicationName') || 'EspoCRM';
             $('head title').text(title);
             this.trigger('logout');
         },
 
-        clearCache: function (options) {
+        actionLogout: function () {
+            this.logout();
+        },
+
+        actionClearCache: function () {
+            this.clearCache();
+        },
+
+        clearCache: function () {
             this.entire('views/clear-cache', {
                 cache: this.getCache()
             }, function (view) {
@@ -67,4 +80,3 @@ Espo.define('controllers/base', 'controller', function (Dep) {
 
     });
 });
-

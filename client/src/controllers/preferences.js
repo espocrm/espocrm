@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/preferences', ['controllers/record', 'models/preferences'], function (Dep, Preferences) {
+define('controllers/preferences', ['controllers/record', 'models/preferences'], function (Dep, Preferences) {
 
     return Dep.extend({
 
@@ -48,12 +48,12 @@ Espo.define('controllers/preferences', ['controllers/record', 'models/preference
             return true;
         },
 
-        own: function () {
+        actionOwn: function () {
             this.edit({
                 id: this.getUser().id
             });
         },
 
-        list: function () {}
+        actionList: function () {}
     });
 });

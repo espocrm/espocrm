@@ -11,7 +11,7 @@
 					    {{#each itemList}}
 					    <tr>
 					        <td>
-					            <a href="{{url}}">{{translate label scope='Admin' category='labels'}}</a>
+					            <a href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{translate label scope='Admin' category='labels'}}</a>
 					        </td>
 					        <td>{{translate description scope='Admin' category='descriptions'}}</td>
 					    </tr>

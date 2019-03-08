@@ -25,13 +25,14 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/about', 'controller', function (Dep) {
+
+define('controllers/about', 'controller', function (Dep) {
 
     return Dep.extend({
 
         defaultAction: 'about',
 
-        about: function () {
+        actionAbout: function () {
             this.main('About', {}, function (view) {
                 view.render();
             });

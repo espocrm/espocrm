@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/password-change-request', 'controller', function (Dep) {
+define('controllers/password-change-request', 'controller', function (Dep) {
 
     return Dep.extend({
 
-        passwordChange: function (id) {
+        actionPasswordChange: function (id) {
             if (!id) {
                 throw new Error();
             }
@@ -43,4 +43,3 @@ Espo.define('controllers/password-change-request', 'controller', function (Dep) 
         },
     });
 });
-

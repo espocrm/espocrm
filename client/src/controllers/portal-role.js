@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/portal-role', 'controllers/record', function (Dep) {
+define('controllers/portal-role', 'controllers/record', function (Dep) {
 
     return Dep.extend({
 

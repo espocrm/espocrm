@@ -53,12 +53,12 @@
                 "description":"systemRequirements"
             },
             {
-                "url":"#Admin/clearCache",
+                "action": "clearCache",
                 "label":"Clear Cache",
                 "description":"clearCache"
             },
             {
-                "url":"#Admin/rebuild",
+                "action": "rebuild",
                 "label":"Rebuild",
                 "description":"rebuild"
             }

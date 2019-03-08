@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/lead-capture-opt-in-confirmation', 'controller', function (Dep) {
+define('controllers/lead-capture-opt-in-confirmation', 'controller', function (Dep) {
 
     return Dep.extend({
 
-        optInConfirmationSuccess: function (data) {
+        actionOptInConfirmationSuccess: function (data) {
             var viewName = this.getMetadata().get(['clientDefs', 'LeadCapture', 'optInConfirmationSuccessView']) ||
                 'views/lead-capture/opt-in-confirmation-success';
 
@@ -41,7 +41,7 @@ Espo.define('controllers/lead-capture-opt-in-confirmation', 'controller', functi
             });
         },
 
-        optInConfirmationExpired: function (data) {
+        actionOptInConfirmationExpired: function (data) {
             var viewName = this.getMetadata().get(['clientDefs', 'LeadCapture', 'optInConfirmationExpiredView']) ||
                 'views/lead-capture/opt-in-confirmation-expired';
 

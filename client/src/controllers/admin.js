@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep, SearchManager) {
+
+define('controllers/admin', ['controller', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -37,54 +38,59 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             return false;
         },
 
-        index: function () {
-            this.main('views/admin/index', null);
+        actionIndex: function () {
+            this.main('views/admin/index', null, function (view) {
+                view.render();
+
+                this.listenToOnce(view, 'clear-cache', this.clearCache);
+                this.listenToOnce(view, 'rebuild', this.rebuild);
+            }.bind(this));
         },
 
-        layouts: function (options) {
+        actionLayouts: function (options) {
             var scope = options.scope || null;
             var type = options.type || null;
 
             this.main('views/admin/layouts/index', {scope: scope, type: type});
         },
 
-        labelManager: function (options) {
+        actionLabelManager: function (options) {
             var scope = options.scope || null;
             var language = options.language || null;
 
             this.main('views/admin/label-manager/index', {scope: scope, language: language});
         },
 
-        templateManager: function (options) {
+        actionTemplateManager: function (options) {
             var name = options.name || null;
 
             this.main('views/admin/template-manager/index', {name: name});
         },
 
-        fieldManager: function (options) {
+        actionFieldManager: function (options) {
             var scope = options.scope || null;
             var field = options.field || null;
 
             this.main('views/admin/field-manager/index', {scope: scope, field: field});
         },
 
-        entityManager: function (options) {
+        actionEntityManager: function (options) {
             var scope = options.scope || null;
 
             this.main('views/admin/entity-manager/index', {scope: scope});
         },
 
-        linkManager: function (options) {
+        actionLinkManager: function (options) {
             var scope = options.scope || null;
 
             this.main('views/admin/link-manager/index', {scope: scope});
         },
 
-        upgrade: function (options) {
+        actionUpgrade: function (options) {
             this.main('views/admin/upgrade/index');
         },
 
-        systemRequirements: function (options) {
+        actionSystemRequirements: function (options) {
             this.main('views/admin/system-requirements/index');
         },
 
@@ -95,7 +101,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             return model;
         },
 
-        settings: function () {
+        actionSettings: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -109,7 +115,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        notifications: function () {
+        actionNotifications: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -123,7 +129,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        outboundEmails: function () {
+        actionOutboundEmails: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -137,7 +143,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        inboundEmails: function () {
+        actionInboundEmails: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -151,7 +157,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        currency: function () {
+        actionCurrency: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -165,7 +171,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        authTokens: function () {
+        actionAuthTokens: function () {
             this.collectionFactory.create('AuthToken', function (collection) {
                 var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
                 searchManager.loadStored();
@@ -180,7 +186,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             }, this);
         },
 
-        authLog: function () {
+        actionAuthLog: function () {
             this.collectionFactory.create('AuthLogRecord', function (collection) {
                 var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
                 searchManager.loadStored();
@@ -195,7 +201,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             }, this);
         },
 
-        jobs: function () {
+        actionJobs: function () {
             this.collectionFactory.create('Job', function (collection) {
                 var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
                 searchManager.loadStored();
@@ -210,7 +216,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             }, this);
         },
 
-        userInterface: function () {
+        actionUserInterface: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -224,7 +230,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        authentication: function () {
+        actionAuthentication: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -238,7 +244,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        jobsSettings: function () {
+        actionJobsSettings: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -252,42 +258,33 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        integrations: function (options) {
+        actionIntegrations: function (options) {
             var integration = options.name || null;
 
             this.main('views/admin/integrations/index', {integration: integration});
         },
 
-        extensions: function (options) {
+        actionExtensions: function (options) {
             this.main('views/admin/extensions/index');
         },
 
         rebuild: function (options) {
             var master = this.get('master');
-            Espo.Ui.notify(master.translate('Please wait...'));
-            this.getRouter().navigate('#Admin');
-            $.ajax({
-                url: 'Admin/rebuild',
-                timeout: 0,
-                type: 'POST',
-                success: function () {
-                    var msg = master.translate('Rebuild has been done', 'labels', 'Admin');
-                    Espo.Ui.success(msg);
-                }.bind(this)
+            Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
+
+            Espo.Ajax.postRequest('Admin/rebuild').then(function () {
+                var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
+                Espo.Ui.success(msg);
             });
         },
 
         clearCache: function (options) {
             var master = this.get('master');
-            Espo.Ui.notify(master.translate('Please wait...'));
-            this.getRouter().navigate('#Admin');
-            $.ajax({
-                url: 'Admin/clearCache',
-                type: 'POST',
-                success: function () {
-                    var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
-                    Espo.Ui.success(msg);
-                }.bind(this)
+            Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
+
+            Espo.Ajax.postRequest('Admin/clearCache').then(function () {
+                var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
+                Espo.Ui.success(msg);
             });
         }
     });

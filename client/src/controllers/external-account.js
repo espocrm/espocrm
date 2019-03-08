@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('controllers/external-account', 'controller', function (Dep) {
+define('controllers/external-account', 'controller', function (Dep) {
 
     return Dep.extend({
 
         defaultAction: 'list',
 
-        list: function (options) {
+        actionList: function (options) {
             this.collectionFactory.create('ExternalAccount', function (collection) {
                 collection.once('sync', function () {
                     this.main('ExternalAccount.Index', {
@@ -43,7 +43,7 @@ Espo.define('controllers/external-account', 'controller', function (Dep) {
             }, this);
         },
 
-        edit: function (options) {
+        actionEdit: function (options) {
             var id = options.id;
 
             this.collectionFactory.create('ExternalAccount', function (collection) {

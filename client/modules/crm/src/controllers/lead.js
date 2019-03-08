@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:controllers/lead', 'controllers/record', function (Dep) {
+define('crm:controllers/lead', 'controllers/record', function (Dep) {
 
     return Dep.extend({
 
-        convert: function (id) {
+        actionConvert: function (id) {
             this.main('crm:views/lead/convert', {
                 id: id
             });
@@ -38,5 +38,3 @@ Espo.define('crm:controllers/lead', 'controllers/record', function (Dep) {
 
     });
 });
-
-

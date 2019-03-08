@@ -582,8 +582,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         actionLogout: function () {
-            this.getRouter().dispatch(null, 'logout');
-            this.getRouter().navigate('', {trigger: false});
+            this.getRouter().logout();
         },
 
         actionShowLastViewed: function () {
