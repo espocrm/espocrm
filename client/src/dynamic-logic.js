@@ -151,6 +151,11 @@ Espo.define('dynamic-logic', [], function () {
 
             if (!attribute) return;
 
+            var fieldType = this.recordView.getMetadata().get(['entityDefs', this.recordView.model.name, 'fields', attribute, 'type']);
+            if (['file', 'image'].indexOf(fieldType) !== -1) {
+                attribute = attribute + 'Id';
+            }
+
             var setValue = this.recordView.model.get(attribute);
 
             if (type === 'equals') {
