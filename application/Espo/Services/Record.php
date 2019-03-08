@@ -1990,6 +1990,12 @@ class Record extends \Espo\Core\Services\Base
         } else {
             $format = 'csv';
         }
+        
+        if (array_key_exists('pdfDesign', $params)) {
+            $pdfDesign = $params['pdfDesign'];
+        } else {
+            $pdfDesign = false;
+        }
 
         if (!in_array($format, $this->getMetadata()->get(['app', 'export', 'formatList']))) {
             throw new Error('Not supported export format.');
@@ -2149,7 +2155,8 @@ class Record extends \Espo\Core\Services\Base
 
         $exportParams = [
             'attributeList' => $attributeList,
-            'fileName ' => $fileName
+            'fileName ' => $fileName,
+            'pdfDesign' => $pdfDesign
         ];
 
         $exportParams['fieldList'] = $fieldList;
