@@ -4,7 +4,10 @@
     "dateStart": "Startdatum",
     "dateEnd": "Enddatum",
     "duration": "Dauer",
-    "reminders": "Erinnerungen"
+    "reminders": "Erinnerungen",
+    "dateStartDate": "Startdatum (ganztägig)",
+    "dateEndDate": "Enddatum (ganztägig)",
+    "isAllDay": "Ist ganztägig"
   },
   "links": {
     "parent": "Bezieht sich auf"

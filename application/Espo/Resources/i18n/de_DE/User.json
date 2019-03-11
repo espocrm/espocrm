@@ -25,7 +25,11 @@
     "ipAddress": "IP Adresse",
     "passwordPreview": "Passwortvorschau",
     "isSuperAdmin": "Ist Super-Admin",
-    "lastAccess": "Letzter Zugriff"
+    "lastAccess": "Letzter Zugriff",
+    "type": "Art",
+    "apiKey": "API Schlüssel",
+    "secretKey": "Geheime Phrase",
+    "authMethod": "Authentifizierungsmethode"
   },
   "links": {
     "roles": "Rollen",
@@ -35,7 +39,8 @@
     "contact": "Kontakt",
     "accounts": "Firmen",
     "account": "Benutzerkonto (Primär)",
-    "tasks": "Aufgaben"
+    "tasks": "Aufgaben",
+    "defaultTeam": "Standard Team"
   },
   "labels": {
     "Create User": "Benutzer erstellen",
@@ -50,7 +55,8 @@
     "External Accounts": "Externe Konten",
     "Email Accounts": "E-Mail Konten",
     "Create Portal User": "Portalbenutzer erstellen",
-    "Proceed w/o Contact": "Weiter mit Kontakt"
+    "Proceed w/o Contact": "Weiter mit Kontakt",
+    "Generate New API Key": "Neuen API Schlüssel erstellen"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
@@ -87,6 +93,12 @@
       "": "Nicht gesetzt",
       "Male": "Männlich",
       "Female": "Weiblich"
+    },
+    "type": {
+      "regular": "Regulär"
+    },
+    "authMethod": {
+      "ApiKey": "API Schlüssel"
     }
   }
 }

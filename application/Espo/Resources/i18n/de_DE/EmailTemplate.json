@@ -23,6 +23,9 @@
   },
   "placeholderTexts": {
     "optOutUrl": "URL für einen Abmeldelink\n",
-    "optOutLink": "ein Abmeldelink"
+    "optOutLink": "ein Abmeldelink",
+    "today": "Heutiges Datum",
+    "now": "Aktuelles Datum & Uhrzeit",
+    "currentYear": "Laufendes Jahr"
   }
 }

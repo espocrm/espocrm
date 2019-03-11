@@ -22,7 +22,8 @@
     "accountsTemplate": "Kontenvorlage",
     "usersTemplate": "Benutzervorlage",
     "mailMergeOnlyWithAddress": "Datensätze ohne gefüllte Adresse überspringen",
-    "optedInCount": "Opt-In gesetzt"
+    "optedInCount": "Opt-In gesetzt",
+    "budgetCurrency": "Budget Währung"
   },
   "links": {
     "targetLists": "Kontaktlisten",

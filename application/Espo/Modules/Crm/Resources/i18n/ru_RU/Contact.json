@@ -40,7 +40,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "",
       "Decision Maker": "Принимающий решение",
       "Evaluator": "Оценщик",
       "Influencer": "Консультант"

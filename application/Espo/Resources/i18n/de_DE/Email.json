@@ -11,7 +11,7 @@
     "subject": "Betreff",
     "attachments": "Anhänge",
     "selectTemplate": "Vorlage wählen",
-    "fromEmailAddress": "Absenderadresse",
+    "fromAddress": "Absenderadresse",
     "emailAddress": "E-Mail Adresse",
     "deliveryDate": "Zustelldatum",
     "account": "Firma",
@@ -42,7 +42,10 @@
     "isSystem": "Ist System",
     "toEmailAddresses": "An E-Mail Adressen",
     "bccEmailAddresses": "BCC E-Mail Adressen",
-    "replyToEmailAddresses": "Antwort-an E-Mail Adressen"
+    "replyToEmailAddresses": "Antwort-an E-Mail Adressen",
+    "fromEmailAddress": "Absenderadresse (link)",
+    "replyToName": "Antwort-an Name",
+    "replyToAddress": "Antwort-an Adresse"
   },
   "links": {
     "replied": "Beantwortet",
@@ -94,7 +97,8 @@
     "Retrieve from Trash": "Aus dem Papierkorb hervorholen",
     "Move to Folder": "In Ordner verschieben",
     "Filters": "Filter",
-    "Folders": "Ordner"
+    "Folders": "Ordner",
+    "View Users": "Benutzer anzeigen"
   },
   "messages": {
     "noSmtpSetup": "Keine SMTP Einstellungen {link}.",

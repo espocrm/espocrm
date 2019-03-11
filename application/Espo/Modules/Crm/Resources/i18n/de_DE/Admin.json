@@ -3,5 +3,9 @@
     "detailConvert": "Interessent umwandeln",
     "listForAccount": "Liste (für Firma)",
     "listForContact": "Liste (für Kontakt)"
+  },
+  "templates": {
+    "invitation": "Einladung",
+    "reminder": "Erinnerung"
   }
 }

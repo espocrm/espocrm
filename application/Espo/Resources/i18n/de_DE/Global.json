@@ -37,7 +37,8 @@
     "EmailTemplateCategory": "E-Mail Vorlagenkategorien",
     "LeadCapture": "Einstiegspunkt der Erfassung des Interessenten",
     "LeadCaptureLogRecord": "Logeintrag der Erfassung des Interessenten",
-    "ArrayValue": "Array-Wert"
+    "ArrayValue": "Array-Wert",
+    "ApiUser": "API Benutzer"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -69,7 +70,8 @@
     "EmailTemplateCategory": "E-Mail Vorlagenkategorien",
     "LeadCapture": "Erfassung des Interessenten",
     "LeadCaptureLogRecord": "Erfassung des Interessenten Log",
-    "ArrayValue": "Array-Werte"
+    "ArrayValue": "Array-Werte",
+    "ApiUser": "API Benutzer"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -215,7 +217,9 @@
     "Convert to": "Umgewandelt zu",
     "View Personal Data": "Persönliche Daten anzeigen",
     "Personal Data": "Persönliche Daten",
-    "Erase": "Löschen"
+    "Erase": "Löschen",
+    "Restore": "Wiederherstellen",
+    "View Followers": "Abonnenten anzeigen"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -273,7 +277,11 @@
     "fieldIsUploading": "Hochladen läuft",
     "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Notiz hervorzuheben.\n\nVerfügbare Syntax:\n`<code>Code</code>`\n**<strong>fetter Text</strong>**\n*<em>Hervorgehobener Text</em>*\n~<del>Durchgestrichen</del>~\n> blockquote\n[text](url)",
     "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
-    "massPrintPdfMaxCountError": "Es kann nicht mehr als {maxCount} Datensätze gedruckt werden."
+    "massPrintPdfMaxCountError": "Es kann nicht mehr als {maxCount} Datensätze gedruckt werden.",
+    "fieldValueDuplicate": "Doppelter Wert",
+    "unlinkSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die Beziehungen zu ausgewählten Datensätzen  entfernen möchten?",
+    "recalculateFormulaConfirmation": "Sind Sie sicher, dass Sie Formel für ausgewählte Datensätze neu berechnen möchten?",
+    "fieldExceedsMaxCount": "Anzahl überschreitet die maximal zulässige Anzahl {maxCount}"
   },
   "boolFilters": {
     "onlyMy": "Nur Meine",
@@ -291,7 +299,9 @@
     "follow": "Abonnieren",
     "unfollow": "nicht gefolgt",
     "convertCurrency": "Währung umrechnen",
-    "printPdf": "Als PDF drucken"
+    "printPdf": "Als PDF drucken",
+    "unlink": "Link entfernen",
+    "recalculateFormula": "Formel neu berechnen"
   },
   "fields": {
     "firstName": "Vorname",
@@ -321,7 +331,9 @@
     "names": "Namen",
     "emailAddressIsOptedOut": "E-Mail-Adresse ist Opt-Out gesetzt",
     "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
-    "type": "Typ"
+    "type": "Typ",
+    "phoneNumberIsOptedOut": "Telefonnummer ist Opt-Out gesetzt",
+    "types": "Typen"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
@@ -549,7 +561,11 @@
       "isEmpty": "Ist leer",
       "olderThanXDays": "älter als X Tage",
       "afterXDays": "nach X Tagen",
-      "nextMonth": "Nächsten Monat"
+      "nextMonth": "Nächsten Monat",
+      "currentFiscalYear": "Aktuelles Geschäftsjahr",
+      "lastFiscalYear": "Letztes Geschäftsjahr",
+      "currentFiscalQuarter": "Aktuelles Geschäftsquartal",
+      "lastFiscalQuarter": "Letztes Geschäftsquartal"
     },
     "searchRanges": {
       "is": "Ist",

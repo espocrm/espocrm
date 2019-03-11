@@ -52,7 +52,17 @@
     "Label Manager": "Bezeichnung Manager",
     "Auth Log": "Auth-Protokoll",
     "Lead Capture": "Erfassung des Interessenten",
-    "Attachments": "Anhänge"
+    "Attachments": "Anhänge",
+    "API Users": "API Benutzer",
+    "Template Manager": "Vorlagen Manager",
+    "System Requirements": "Systemanforderungen",
+    "PHP Settings": "PHP Einstellungen",
+    "Database Settings": "Datenbank-Einstellungen",
+    "Permissions": "Zugriffsrechte",
+    "Success": "Erfolgreich",
+    "Fail": "Fehlgeschlagen",
+    "is recommended": "wird empfohlen",
+    "extension is missing": "Erweiterung fehlt"
   },
   "layouts": {
     "list": "Liste",
@@ -145,7 +155,9 @@
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Ist Persönliche Daten",
     "useIframe": "Iframe verwenden",
-    "useNumericFormat": "Verwenden Sie das numerische Format"
+    "useNumericFormat": "Verwenden Sie das numerische Format",
+    "minuteStep": "Minutenschritte",
+    "allowCustomOptions": "Benutzerdefinierte Optionen zulassen"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -197,7 +209,9 @@
     "labelManager": "Bezeichnungen der Applikation anpassen",
     "authLog": "Anmeldeverlauf",
     "leadCapture": "API-Einstiegspunkte für Web-zu-Interessent.",
-    "attachments": "Alle Dateianhänge, die im System gespeichert sind."
+    "attachments": "Alle Dateianhänge, die im System gespeichert sind.",
+    "templateManager": "Nachrichten Templates anpassen",
+    "systemRequirements": "Systemanforderungen für EspoCRM"
   },
   "options": {
     "previewSize": {
@@ -206,5 +220,24 @@
       "medium": "Mittel",
       "large": "Groß"
     }
+  },
+  "systemRequirements": {
+    "host": "Hostname",
+    "dbname": "Datenbankname",
+    "user": "Benutzername",
+    "writable": "Überschreibbar",
+    "readable": "Lesbar",
+    "requiredMariadbVersion": "MariaDB Version"
+  },
+  "templates": {
+    "accessInfo": "Zugriffsinfo",
+    "accessInfoPortal": "Zugriffsinfo für Portale",
+    "assignment": "Zuweisung",
+    "mention": "Erwähnen",
+    "noteEmailRecieved": "Hinweis zu empfangenen E-Mails",
+    "notePost": "Hinweis zum Beitrag",
+    "notePostNoParent": "Hinweis zum Beitrag (no Parent)",
+    "noteStatus": "Benachrichtigung über Statusupdates",
+    "passwordChangeLink": "Link zum Ändern des Passwords"
   }
 }

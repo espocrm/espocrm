@@ -10,7 +10,8 @@
     "authToken": "Auth Token erstellt",
     "requestUrl": "Anforderungs-URL",
     "requestMethod": "Anforderungsmethode",
-    "authTokenIsActive": "Auth Token ist aktiv"
+    "authTokenIsActive": "Auth Token ist aktiv",
+    "authenticationMethod": "Authentifizierungsmethode"
   },
   "links": {
     "authToken": "Auth Token erstellt",

@@ -10,7 +10,11 @@
     "leads": "Interessenten",
     "reminders": "Erinnerungen",
     "account": "Firma",
-    "acceptanceStatus": "Akzeptanzstatus"
+    "acceptanceStatus": "Akzeptanzstatus",
+    "dateStartDate": "Startdatum (ganztägig)",
+    "dateEndDate": "Enddatum (ganztägig)",
+    "isAllDay": "Ist ganztägig",
+    "Acceptance": "Akzeptanz"
   },
   "options": {
     "status": {
@@ -35,7 +39,8 @@
     "Set Not Held": "Auf nicht abgehalten setzen",
     "Send Invitations": "Einladungen versenden",
     "on time": "Genaue Uhrzeit",
-    "before": "vorher"
+    "before": "vorher",
+    "All-Day": "Ganztägig"
   },
   "presetFilters": {
     "planned": "Geplant",

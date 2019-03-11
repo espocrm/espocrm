@@ -27,15 +27,20 @@
     "Test settings": "Verbindung überprüfen",
     "Database Settings Description": "Geben Sie die Verbindungsinformationen für Ihre MySQL Datenbank ein (Hostname, Benutzername und Passwort). Ein abweichender Port kann im Format  localhost:3306 im Hostnamen-Feld definiert werden.",
     "Install": "Installieren",
-    "SetupConfirmation page title": "Empfohlene Einstellungen",
-    "PHP Configuration": "Empfohlene PHP Einstellungen",
-    "MySQL Configuration": "MySQL Konfiguration",
     "Configuration Instructions": "Konfigurationsanleitung",
     "phpVersion": "PHP Version",
     "requiredMysqlVersion": "MySQL Version",
     "dbHostName": "Hostname",
     "dbName": "Datenbankname",
-    "dbUserName": "Datenbankbenutzer"
+    "dbUserName": "Datenbankbenutzer",
+    "SetupConfirmation page title": "Systemanforderungen",
+    "PHP Configuration": "PHP Einstellungen",
+    "MySQL Configuration": "Datenbank-Einstellungen",
+    "Permission Requirements": "Berechtigungen",
+    "Success": "Erfolgreich",
+    "Fail": "Fehlgeschlagen",
+    "is recommended": "wird empfohlen",
+    "extension is missing": "Erweiterung fehlt"
   },
   "fields": {
     "Choose your language": "Wählen Sie Ihre Sprache",
@@ -73,7 +78,6 @@
     "Some errors occurred!": "Es sind Fehler aufgetreten!",
     "phpVersion": "Ihre PHP Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf {minVersion}",
     "requiredMysqlVersion": "Ihre MySQL Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf MySQL {minVersion}",
-    "requiredMariadbVersion": "Ihre MariaDB Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf MariaDB {minVersion}",
     "The PHP extension was not found...": "PHP Fehler: Erweiterung <b>{extName}</b> wurde nicht gefunden.",
     "All Settings correct": "Alle Einstellungen sind korrekt",
     "Failed to connect to database": "Konnte nicht zur Datenbank verbinden",
@@ -86,7 +90,6 @@
     "buildDatabase error": "buildDatabase Fehler",
     "createUser error": "createUser Fehler",
     "checkAjaxPermission error": "checkAjaxPermission Fehler",
-    "Ajax failed": "Ajax fehlgeschlagen",
     "Cannot create user": "Kann keinen Benutzer erstellen",
     "Permission denied": "Zugriff verweigert",
     "Permission denied to": "Zugriff verweigert",
@@ -97,7 +100,9 @@
     "Thousand Separator and Decimal Mark equal": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein",
     "extension": "{0} Erweiterung fehlt",
     "option": "Empfohlener Wert ist {0}",
-    "mysqlSettingError": "EspoCRM erfordert, dass die MySQL Einstellung \"{NAME}\"  auf {VALUE} gesetzt ist"
+    "mysqlSettingError": "EspoCRM erfordert, dass die MySQL Einstellung \"{NAME}\"  auf {VALUE} gesetzt ist",
+    "requiredMariadbVersion": "6",
+    "Ajax failed": "Es ist ein unerwarteter Fehler aufgetreten"
   },
   "options": {
     "modRewriteInstruction": {
@@ -116,5 +121,13 @@
       "microsoft-iis": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes \"URL Rewrite\". Bitte überprüfen und aktivieren Sie das \"URL Rewrite\" Modul im IIS Server.",
       "default": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes Rewrite Modul. Bitte überprüfen und aktivieren Sie das Rewrite Modul (z.B. mod_rewrite im Apache Server) und die .htaccess Unterstützung."
     }
+  },
+  "systemRequirements": {
+    "host": "Hostname",
+    "dbname": "Datenbankname ",
+    "user": "Benutzername",
+    "writable": "Überschreibbar",
+    "readable": "Lesbar",
+    "requiredMariadbVersion": "MariaDB Version"
   }
 }

@@ -7,7 +7,13 @@
     "scheduledJob": "Geplante Aufgabe",
     "data": "Daten",
     "method": "Methode",
-    "scheduledJobJob": "Geplante Aufgabe Name"
+    "scheduledJobJob": "Geplante Aufgabe Name",
+    "executedAt": "Ausgeführt um",
+    "startedAt": "Gestartet um",
+    "targetType": "Zieltyp",
+    "targetId": "Ziel ID",
+    "number": "Nummer",
+    "queue": "Warteschlange"
   },
   "options": {
     "status": {

@@ -39,7 +39,6 @@
       "manyToMany": "Многие-ко-многим",
       "oneToMany": "Один-ко-многим",
       "manyToOne": "Много-к-одному",
-      "parentToChildren": "Від батька до сина",
       "childrenToParent": "От сына к отцу"
     },
     "sortDirection": {
@@ -59,6 +58,7 @@
     "disabled": "Отметьте, если вам не нужна эта сущность в вашей системе.",
     "linkAudited": "Создание связанной записи и привязка к существующей записи будет регистрироваться в Ленте.",
     "linkMultipleField": "Link Multiple field предоставляет удобный способ редактирования отношений. Не используйте его, если у вас может быть большое количество связанных записей.",
+    "entityType": "\nEvent - available in Calendar and Activities panel.",
     "fullTextSearch": "Требуется выполнить перестройку."
   }
 }

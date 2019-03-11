@@ -9,9 +9,11 @@
     "Field Level": "Feldebene"
   },
   "fields": {
-    "exportPermission": "Exportberechtigung"
+    "exportPermission": "Exportberechtigung",
+    "massUpdatePermission": "Massenupdate Erlaubnis"
   },
   "tooltips": {
-    "exportPermission": "Definiert, ob Portalbenutzer Datensätze exportieren können."
+    "exportPermission": "Definiert, ob Portalbenutzer Datensätze exportieren können.",
+    "massUpdatePermission": "Bestimmt, ob Portalbenutzer die Massenänderung von Datensätzen durchführen können."
   }
 }

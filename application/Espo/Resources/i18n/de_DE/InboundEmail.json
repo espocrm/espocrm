@@ -30,7 +30,8 @@
     "fromName": "Absendername",
     "smtpIsShared": "SMTP ist freigegeben",
     "smtpIsForMassEmail": "SMTP ist für Massen-E-Mails",
-    "useImap": "E-Mails abholen"
+    "useImap": "E-Mails abholen",
+    "keepFetchedEmailsUnread": "Geholte E-Mails ungelesen halten"
   },
   "tooltips": {
     "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet um eine Endlosschleife zu verhindern.",

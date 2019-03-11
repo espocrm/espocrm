@@ -82,7 +82,7 @@
     "aclStrictMode": "ACL Strict-Modus",
     "followCreatedEntities": "Eigene Einträge abonnieren",
     "aclAllowDeleteCreated": "Erlauben erstellten Einträge zu löschen",
-    "adminNotifications": "Systembenachrichtigungen im Administrationsbereich",
+    "adminNotifications": "Systembenachrichtigungen im Administrationspanel",
     "adminNotificationsNewVersion": "Benachrichtigung anzeigen, wenn eine neue EspoCRM-Version verfügbar ist",
     "massEmailMaxPerHourCount": "Max. Anzahl E-Mails pro Stunde",
     "maxEmailAccountCount": "Max. Anzahl von E-Mail Konten pro Benutzer",
@@ -95,7 +95,20 @@
     "emailAddressIsOptedOutByDefault": "Neue E-Mail-Adressen als Opt-Out markieren",
     "outboundEmailBccAddress": "BCC-Adresse für externe Clients",
     "adminNotificationsNewExtensionVersion": "Benachrichtigung anzeigen, wenn neue Versionen von Erweiterungen verfügbar sind",
-    "cleanupDeletedRecords": "Gelöschte Datensätze aufräumen"
+    "cleanupDeletedRecords": "Gelöschte Datensätze aufräumen",
+    "ldapPortalUserLdapAuth": "LDAP-Authentifizierung für Portalbenutzer verwenden",
+    "ldapPortalUserPortals": "Standardportale für einen Portalbenutzer",
+    "ldapPortalUserRoles": "Standardrollen für einen Portalbenutzer",
+    "addressCountryList": "Adresse Land Autovervollständigungsliste",
+    "fiscalYearShift": "Beginn des Geschäftsjahres",
+    "jobRunInParallel": "Jobs werden parallel ausgeführt",
+    "daemonInterval": "Daemon Intervall",
+    "addressCityList": "Adresse Stadt Autovervollständigungsliste",
+    "addressStateList": "Adresse Bundesland Autovervollständigungsliste",
+    "cronDisabled": "Cron deaktivieren",
+    "maintenanceMode": "Wartungsmodus",
+    "useWebSocket": "WebSocket verwenden",
+    "emailNotificationsDelay": "Verzögerung von E-Mail-Benachrichtigungen (in Sekunden)"
   },
   "options": {
     "weekStart": {
@@ -144,7 +157,19 @@
     "textFilterUseContainsForVarchar": "Wenn nicht aktiviert, wird der Operator \"beginnt mit\" verwendet. Sie können den Platzhalter '%' verwenden.",
     "streamEmailNotificationsEntityList": "E-Mail-Benachrichtigungen über neuen Aktivitäten von gefolgten Datensätzen. Benutzer erhalten E-Mail-Benachrichtigungen nur für bestimmte Entitätstypen.",
     "authTokenPreventConcurrent": "Benutzer können nicht gleichzeitig auf mehreren Geräten angemeldet sein.",
-    "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert."
+    "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert.",
+    "cleanupDeletedRecords": "Gelöschte Datensätze werden nach einiger Zeit aus der Datenbank gelöscht.",
+    "ldapPortalUserLdapAuth": "Zulassen, dass Portalbenutzer die LDAP-Authentifizierung anstelle der Espo-Authentifizierung verwenden.",
+    "ldapPortalUserPortals": "Standardportale für erstellte Portalbenutzer",
+    "ldapPortalUserRoles": "Standardrollen für den erstellten Portalbenutzer",
+    "jobRunInParallel": "Jobs werden in parallelen Prozessen ausgeführt.",
+    "jobPoolConcurrencyNumber": "Maximale Anzahl von Prozessen, die gleichzeitig ausgeführt werden.",
+    "jobMaxPortion": "Maximale Anzahl von Jobs, die pro Ausführung verarbeitet werden.",
+    "daemonInterval": "Intervall zwischen Prozess Cron läuft in Sekunden.",
+    "daemonMaxProcessNumber": "Die maximale Anzahl von Cron-Prozessen, die gleichzeitig ausgeführt werden.",
+    "daemonProcessTimeout": "Maximale Ausführungszeit (in Sekunden) für einen einzelnen Cron-Prozess.",
+    "cronDisabled": "Cron läuft nicht.",
+    "maintenanceMode": "Nur Administratoren haben Zugriff auf das System."
   },
   "labels": {
     "Locale": "Lokale Einstellungen",
@@ -157,7 +182,9 @@
     "Test Connection": "Verbindung prüfen",
     "Connecting": "Verbinde...",
     "Activities": "Aktivitäten",
-    "Admin Notifications": "Admin-Benachrichtigungen"
+    "Admin Notifications": "Admin-Benachrichtigungen",
+    "Search": "Suche",
+    "Misc": "Verschiedenes"
   },
   "messages": {
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."

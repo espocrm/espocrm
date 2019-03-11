@@ -14,7 +14,7 @@
     "subject": "Тема",
     "attachments": "Вложения",
     "selectTemplate": "Выбрать шаблон",
-    "fromEmailAddress": "Адрес отправителя",
+    "fromAddress": "Адрес отправителя",
     "emailAddress": "Адрес эл. почты",
     "deliveryDate": "Дата доставки",
     "account": "Контрагент",
