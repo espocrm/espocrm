@@ -123,7 +123,7 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            start: ['build/*'],
+            start: ['build/EspoCRM-*'],
             final: ['build/tmp'],
             beforeFinal: {
                 src: ['build/tmp/custom/Espo/Custom/*', '!build/tmp/custom/Espo/Custom/.htaccess']
