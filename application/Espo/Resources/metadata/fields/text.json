@@ -31,6 +31,10 @@
          "min": 1
       },
       {
+         "name": "displayRawText",
+         "type":"bool"
+      },
+      {
          "name":"readOnly",
          "type":"bool"
       }

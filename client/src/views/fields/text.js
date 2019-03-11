@@ -117,12 +117,14 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             }
             data.valueIsSet = this.model.has(this.name);
 
-            if (this.mode == 'detail' || this.mode == 'list') {
+            if (this.isReadMode()) {
                 data.isCut = this.isCut();
 
                 if (data.isCut) {
                     data.cutHeight = this.cutHeight;
                 }
+
+                data.displayRawText = this.params.displayRawText;
             }
 
             return data;

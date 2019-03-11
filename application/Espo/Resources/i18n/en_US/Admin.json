@@ -182,7 +182,8 @@
         "inlineEditDisabled": "Disable Inline Edit",
         "allowCustomOptions": "Allow Custom Options",
         "displayAsLabel": "Display as Label",
-        "maxCount": "Max Item Count"
+        "maxCount": "Max Item Count",
+        "displayRawText": "Display raw text (no markdown)"
     },
     "messages": {
         "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
