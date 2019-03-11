@@ -206,6 +206,11 @@
                 "url": "#Attachment",
                 "label": "Attachments",
                 "description": "attachments"
+            },
+            {
+                "url": "#Template",
+                "label": "PDF Templates",
+                "description": "pdfTemplates"
             }
         ],
         "order": 25
