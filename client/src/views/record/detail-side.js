@@ -195,6 +195,10 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
 
             var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
 
+            if (!fieldList) {
+                fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList']);
+            }
+
             if (fieldList) {
                 defaultPanelDefs.options = defaultPanelDefs.options || {};
                 defaultPanelDefs.options.fieldList = fieldList;
