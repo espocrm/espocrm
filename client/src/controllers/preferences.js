@@ -49,7 +49,7 @@ define('controllers/preferences', ['controllers/record', 'models/preferences'], 
         },
 
         actionOwn: function () {
-            this.edit({
+            this.actionEdit({
                 id: this.getUser().id
             });
         },
