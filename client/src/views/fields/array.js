@@ -338,7 +338,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 var label = null;
                 if (this.translatedOptions != null) {
                     if (item in this.translatedOptions) {
-                        label = this.escapeValue(item);
+                        label = this.translatedOptions[item];
+                        label = this.escapeValue(label);
                     }
                 }
                 if (label === null) {
