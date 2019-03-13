@@ -160,6 +160,13 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     list[i] = '';
                 }
             }
+
+            if (this.params.isSorted && this.translatedOptions) {
+                list = list.sort(function (v1, v2) {
+                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                }.bind(this));
+            }
+
             var data = {};
             data[this.name] = list;
             return data;

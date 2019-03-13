@@ -422,7 +422,16 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         fetch: function () {
             var data = {};
-            data[this.name] = Espo.Utils.clone(this.selected || []);
+            var list = Espo.Utils.clone(this.selected || []);
+
+            if (this.params.isSorted && this.translatedOptions) {
+                list = list.sort(function (v1, v2) {
+                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                }.bind(this));
+            }
+
+            data[this.name] = list;
+
             return data;
         },
 
