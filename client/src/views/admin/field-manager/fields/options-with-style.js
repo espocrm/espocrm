@@ -40,7 +40,7 @@ Espo.define('views/admin/field-manager/fields/options-with-style', 'views/admin/
             this.events['click [data-action="selectOptionItemStyle"]'] = function (e) {
                 var $target = $(e.currentTarget);
                 var style = $target.data('style');
-                var value = $target.data('value');
+                var value = $target.data('value').toString();
 
                 this.changeStyle(value, style);
             };
