@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class ExternalAccount extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function get($id = null)
+    public function get($id = null) : ?Entity
     {
         $entity = parent::get($id);
         if (empty($entity) && !empty($id)) {
@@ -43,4 +43,3 @@ class ExternalAccount extends \Espo\Core\ORM\Repositories\RDB
         return $entity;
     }
 }
-
