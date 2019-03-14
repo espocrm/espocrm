@@ -78,6 +78,10 @@ Espo.define('crm:views/campaign/record/panels/campaign-log-records', 'views/reco
                 layoutName: 'createFromCampaignLog'
             }, function (view) {
                 view.render();
+                var recordView = view.getView('edit');
+                if (recordView) {
+                    recordView.setFieldRequired('includingActionList');
+                }
                 this.listenToOnce(view, 'after:save', function () {
                     Espo.Ui.success(this.translate('Done'));
                 }, this);
@@ -86,5 +90,3 @@ Espo.define('crm:views/campaign/record/panels/campaign-log-records', 'views/reco
 
     });
 });
-
-

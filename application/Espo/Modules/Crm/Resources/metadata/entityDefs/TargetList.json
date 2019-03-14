@@ -59,7 +59,6 @@
             "layoutFiltersDisabled": true,
             "layoutLinkDisabled": true,
             "notStorable": true,
-            "required": true,
             "disabled": true
         },
         "excludingActionList": {
