@@ -31,7 +31,6 @@ define('web-socket-manager', [], function () {
     var WebSocketManager = function (config) {
         this.config = config;
         var url = this.config.get('webSocketUrl');
-        this.port = 8080;
 
         if (url) {
             if (url.indexOf('wss://') === 0) {
@@ -56,6 +55,14 @@ define('web-socket-manager', [], function () {
 
             if (~this.url.indexOf('/')) {
                 this.url = this.url.substr(0, this.url.indexOf('/'));
+            }
+        }
+
+        if (!this.port) {
+            if (this.protocolPart === 'wss://') {
+                this.port = 8443;
+            } else {
+                this.port = 8080;
             }
         }
 

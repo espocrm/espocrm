@@ -32,11 +32,12 @@ if (substr(php_sapi_name(), 0, 3) != 'cli') die('WebSocket can be run only via C
 include "bootstrap.php";
 
 $app = new \Espo\Core\Application();
+$config = $app->getContainer()->get('config');
 
 $categoriesData = $app->getContainer()->get('metadata')->get(['app', 'webSocket', 'categories'], []);
 
-$phpExecutablePath = $app->getContainer()->get('config')->get('phpExecutablePath');
-$isDebugMode = (bool) $app->getContainer()->get('config')->get('webSocketDebugMode');
+$phpExecutablePath = $config->get('phpExecutablePath');
+$isDebugMode = (bool) $config->get('webSocketDebugMode');
 
 $loop = \React\EventLoop\Factory::create();
 $pusher = new \Espo\Core\WebSocket\Pusher($categoriesData, $phpExecutablePath, $isDebugMode);
@@ -46,7 +47,42 @@ $pull = $context->getSocket(\ZMQ::SOCKET_PULL);
 $pull->bind('tcp://127.0.0.1:5555');
 $pull->on('message', [$pusher, 'onMessageReceive']);
 
-$webSocket = new \React\Socket\Server('0.0.0.0:8080', $loop);
+
+$useSsl = false;
+$port = null;
+
+$webSocketUrl = $config->get('webSocketUrl');
+if ($webSocketUrl) {
+    if (stripos($webSocketUrl, 'wss://') === 0) {
+        $useSsl = true;
+    }
+    $port =  parse_url($webSocketUrl, \PHP_URL_PORT);
+} else {
+    $siteUrl = $config->get('siteUrl');
+    if ($siteUrl && stripos($siteUrl, 'https://') === 0) {
+        $useSsl = true;
+    }
+}
+
+if (!$port) {
+    $port = $useSsl ? '8443' : '8080';
+}
+
+$webSocket = new \React\Socket\Server('0.0.0.0:'.$port, $loop);
+
+if ($useSsl) {
+    $webSocket = new \React\Socket\SecureServer(
+        $webSocket,
+        $loop,
+        [
+            'local_cert' => $config->get('webSocketSslCertificateFile', 'cert.pem'),
+            'local_pk' => $config->get('webSocketSslCertificateKeyFile', 'key.pem'),
+            'allow_self_signed' => $config->get('webSocketSslAllowSelfSigned', true),
+            'verify_peer' => false,
+        ]
+    );
+}
+
 $webServer = new \Ratchet\Server\IoServer(
     new \Ratchet\Http\HttpServer(
         new \Ratchet\WebSocket\WsServer(

@@ -185,6 +185,9 @@ return [
         'adminNotificationsNewExtensionVersion',
         'leadCaptureAllowOrigin',
         'cronDisabled',
+        'webSocketSslCertificateFile',
+        'webSocketSslCertificateKeyFile',
+        'webSocketSslAllowSelfSigned',
     ],
     'superAdminItems' => [
         'jobMaxPortion',
@@ -202,6 +205,10 @@ return [
         'maintenanceMode',
         'siteUrl',
         'useWebSocket',
+        'webSocketUrl',
+        'webSocketSslCertificateFile',
+        'webSocketSslCertificateKeyFile',
+        'webSocketSslAllowSelfSigned',
     ],
     'userItems' => [
         'outboundEmailFromAddress',
