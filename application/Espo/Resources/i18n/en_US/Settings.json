@@ -121,8 +121,8 @@
         "maintenanceMode": "Maintenance Mode",
         "useWebSocket": "Use WebSocket",
         "webSocketSslAllowSelfSigned": "Allow self-signed SSL certificate",
-        "webSocketSslCertificateFile": "SSL certificate file path",
-        "webSocketSslCertificateKeyFile": "SSL certificate file path key file path"
+        "webSocketSslCertificateFile": "SSL certificate file",
+        "webSocketSslCertificateKeyFile": "SSL certificate file path key file"
     },
     "options": {
         "weekStart": {
