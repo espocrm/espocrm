@@ -4,8 +4,7 @@
         "rows": [
             [{"name": "useCache"}, {"name": "siteUrl"}],
             [{"name": "b2cMode"}, {"name": "aclStrictMode"}],
-            [{"name": "maintenanceMode"}, {"name": "cronDisabled"}],
-            [{"name": "useWebSocket"}, false]
+            [{"name": "maintenanceMode"}, {"name": "cronDisabled"}]
         ]
     },
     {
@@ -39,6 +38,14 @@
         "rows": [
             [{"name": "calendarEntityList"}, {"name": "activitiesEntityList"}],
             [false, {"name": "historyEntityList"}]
+        ]
+    },
+    {
+        "label": "WebSocket",
+        "rows": [
+            [{"name": "useWebSocket"}, false],
+            [{"name": "webSocketSslCertificateFile"}, {"name": "webSocketSslCertificateKeyFile"}],
+            [{"name": "webSocketSslAllowSelfSigned"}, false]
         ]
     }
 ]

@@ -555,6 +555,15 @@
         },
         "useWebSocket": {
             "type": "bool"
+        },
+        "webSocketSslCertificateFile": {
+            "type": "varchar"
+        },
+        "webSocketSslCertificateKeyFile": {
+            "type": "varchar"
+        },
+        "webSocketSslAllowSelfSigned": {
+            "type": "bool"
         }
     }
 }

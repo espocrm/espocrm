@@ -75,9 +75,9 @@ if ($useSsl) {
         $webSocket,
         $loop,
         [
-            'local_cert' => $config->get('webSocketSslCertificateFile', 'cert.pem'),
-            'local_pk' => $config->get('webSocketSslCertificateKeyFile', 'key.pem'),
-            'allow_self_signed' => $config->get('webSocketSslAllowSelfSigned', true),
+            'local_cert' => $config->get('webSocketSslCertificateFile'),
+            'local_pk' => $config->get('webSocketSslCertificateKeyFile'),
+            'allow_self_signed' => $config->get('webSocketSslAllowSelfSigned', false),
             'verify_peer' => false,
         ]
     );
