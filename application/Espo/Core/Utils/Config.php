@@ -282,6 +282,11 @@ class Config
         return $this->get('systemItems', []);
     }
 
+    public function getSuperAdminOnlySystemItemList()
+    {
+        return $this->get('superAdminSystemItems', []);
+    }
+
     public function getUserOnlyItemList()
     {
         return $this->get('userItems', []);

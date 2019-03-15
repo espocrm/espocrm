@@ -71,21 +71,24 @@ class Settings extends \Espo\Core\Services\Base
 
         $ignoreItemList = [];
 
-        $systemOnlyItemList = $this->getSystemOnlyItemList();
-        foreach ($systemOnlyItemList as $item) {
+        foreach ($this->getSystemOnlyItemList() as $item) {
             $ignoreItemList[] = $item;
         }
 
         if (!$this->getUser()->isAdmin() || $this->getUser()->isSystem()) {
-            $adminOnlyItemList = $this->getAdminOnlyItemList();
-            foreach ($adminOnlyItemList as $item) {
+            foreach ($this->getAdminOnlyItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
 
         if ($this->getUser()->isSystem()) {
-            $userOnlyItemList = $this->getUserOnlyItemList();
-            foreach ($userOnlyItemList as $item) {
+            foreach ($this->getUserOnlyItemList() as $item) {
+                $ignoreItemList[] = $item;
+            }
+        }
+
+        if ($this->getConfig()->get('restrictedMode') && !$this->getUser()->isSuperAdmin()) {
+            foreach ($this->getConfig()->getSuperAdminOnlySystemItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
@@ -120,14 +123,15 @@ class Settings extends \Espo\Core\Services\Base
 
         $ignoreItemList = [];
 
-        $systemOnlyItemList = $this->getSystemOnlyItemList();
-        foreach ($systemOnlyItemList as $item) {
+        foreach ($this->getSystemOnlyItemList() as $item) {
             $ignoreItemList[] = $item;
         }
 
         if ($this->getConfig()->get('restrictedMode') && !$this->getUser()->isSuperAdmin()) {
-            $superAdminOnlyItemList = $this->getConfig()->getSuperAdminOnlyItemList();
-            foreach ($superAdminOnlyItemList as $item) {
+            foreach ($this->getConfig()->getSuperAdminOnlyItemList() as $item) {
+                $ignoreItemList[] = $item;
+            }
+            foreach ($this->getConfig()->getSuperAdminOnlySystemItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
@@ -223,4 +227,5 @@ class Settings extends \Espo\Core\Services\Base
 
         return $itemList;
     }
+
 }
