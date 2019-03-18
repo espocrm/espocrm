@@ -40,25 +40,6 @@ Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep)
                 this.hideField('maintenanceMode');
                 this.setFieldReadOnly('useWebSocket');
                 this.setFieldReadOnly('siteUrl');
-
-                this.hideField('webSocketSslCertificateFile');
-                this.hideField('webSocketSslCertificateKeyFile');
-                this.hideField('webSocketSslAllowSelfSigned');
-            } else {
-                this.controlWebSocketFieldsVisibility();
-                this.listenTo(this.model, 'change:useWebSocket', this.controlWebSocketFieldsVisibility);
-            }
-        },
-
-        controlWebSocketFieldsVisibility: function () {
-            if (this.model.get('useWebSocket')) {
-                this.showField('webSocketSslCertificateFile');
-                this.showField('webSocketSslCertificateKeyFile');
-                this.showField('webSocketSslAllowSelfSigned');
-            } else {
-                this.hideField('webSocketSslCertificateFile');
-                this.hideField('webSocketSslCertificateKeyFile');
-                this.hideField('webSocketSslAllowSelfSigned');
             }
         }
     });

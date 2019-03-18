@@ -119,10 +119,7 @@
         "daemonProcessTimeout": "Daemon Process Timeout",
         "cronDisabled": "Disable Cron",
         "maintenanceMode": "Maintenance Mode",
-        "useWebSocket": "Use WebSocket",
-        "webSocketSslAllowSelfSigned": "Allow self-signed SSL certificate",
-        "webSocketSslCertificateFile": "SSL certificate file",
-        "webSocketSslCertificateKeyFile": "SSL certificate file path key file"
+        "useWebSocket": "Use WebSocket"
     },
     "options": {
         "weekStart": {

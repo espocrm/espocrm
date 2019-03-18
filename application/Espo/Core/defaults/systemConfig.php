@@ -118,6 +118,12 @@ return [
         'recommendedMariadbParams',
         'phpExecutablePath',
         'webSocketDebugMode',
+        'webSocketSslCertificateFile',
+        'webSocketSslCertificateLocalPrivateKey',
+        'webSocketSslCertificatePassphrase',
+        'webSocketSslAllowSelfSigned',
+        'webSocketUseSecureServer',
+        'webSocketPort',
     ],
     'adminItems' => [
         'devMode',
@@ -187,9 +193,6 @@ return [
         'adminNotificationsNewExtensionVersion',
         'leadCaptureAllowOrigin',
         'cronDisabled',
-        'webSocketSslCertificateFile',
-        'webSocketSslCertificateKeyFile',
-        'webSocketSslAllowSelfSigned',
     ],
     'superAdminItems' => [
         'jobMaxPortion',
@@ -210,9 +213,6 @@ return [
         'webSocketUrl',
     ],
     'superAdminSystemItems' => [
-        'webSocketSslCertificateFile',
-        'webSocketSslCertificateKeyFile',
-        'webSocketSslAllowSelfSigned',
     ],
     'userItems' => [
         'outboundEmailFromAddress',

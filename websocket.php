@@ -48,39 +48,28 @@ $pull->bind('tcp://127.0.0.1:5555');
 $pull->on('message', [$pusher, 'onMessageReceive']);
 
 
-$useSsl = false;
-$port = null;
+$useSecureServer = $config->get('webSocketUseSecureServer');
 
-$webSocketUrl = $config->get('webSocketUrl');
-if ($webSocketUrl) {
-    if (stripos($webSocketUrl, 'wss://') === 0) {
-        $useSsl = true;
-    }
-    $port =  parse_url($webSocketUrl, \PHP_URL_PORT);
-} else {
-    $siteUrl = $config->get('siteUrl');
-    if ($siteUrl && stripos($siteUrl, 'https://') === 0) {
-        $useSsl = true;
-    }
-}
-
+$port = $config->get('webSocketPort');
 if (!$port) {
-    $port = $useSsl ? '8443' : '8080';
+    $port = $useSecureServer ? '8443' : '8080';
 }
 
 $webSocket = new \React\Socket\Server('0.0.0.0:'.$port, $loop);
 
-if ($useSsl) {
-    $webSocket = new \React\Socket\SecureServer(
-        $webSocket,
-        $loop,
-        [
-            'local_cert' => $config->get('webSocketSslCertificateFile'),
-            'local_pk' => $config->get('webSocketSslCertificateKeyFile'),
-            'allow_self_signed' => $config->get('webSocketSslAllowSelfSigned', false),
-            'verify_peer' => false,
-        ]
-    );
+if ($useSecureServer) {
+    $sslParams = [
+        'local_cert' => $config->get('webSocketSslCertificateFile'),
+        'allow_self_signed' => $config->get('webSocketSslAllowSelfSigned', false),
+        'verify_peer' => false,
+    ];
+    if ($config->get('webSocketSslCertificatePassphrase')) {
+        $sslParams['passphrase'] = $config->get('webSocketSslCertificatePassphrase');
+    }
+    if ($config->get('webSocketSslCertificateLocalPrivateKey')) {
+        $sslParams['local_pk'] = $config->get('webSocketSslCertificateLocalPrivateKey');
+    }
+    $webSocket = new \React\Socket\SecureServer($webSocket, $loop, $sslParams);
 }
 
 $webServer = new \Ratchet\Server\IoServer(

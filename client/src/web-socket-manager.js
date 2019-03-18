@@ -40,9 +40,6 @@ define('web-socket-manager', [], function () {
                 this.url = url.substr(5);
                 this.protocolPart = 'ws://';
             }
-            if (~this.url.indexOf(':')) {
-                this.port = parseInt(this.url.split(':')[1]);
-            }
         } else {
             var siteUrl = this.config.get('siteUrl') || '';
             if (siteUrl.indexOf('https://') === 0) {
@@ -53,22 +50,30 @@ define('web-socket-manager', [], function () {
                 this.protocolPart = 'ws://';
             }
 
+
             if (~this.url.indexOf('/')) {
-                this.url = this.url.substr(0, this.url.indexOf('/'));
+                this.url = this.url.replace(/\/$/, '');
             }
-        }
 
-        if (!this.port) {
             if (this.protocolPart === 'wss://') {
-                this.port = 8443;
+                var port = 443;
             } else {
-                this.port = 8080;
+                var port = 8080;
+            }
+
+            var si = this.url.indexOf('/');
+            if (~si) {
+                this.url = this.url.substr(0, si) + ':' + port;
+            } else {
+                this.url += ':' + port;
+            }
+
+            if (this.protocolPart == 'wss://') {
+                this.url += '/wss';
             }
         }
 
-        if (~this.url.indexOf(':')) {
-            this.url = this.url.substr(0, this.url.indexOf(':'));
-        }
+        this.subscribeQueue = [];
     };
 
     _.extend(WebSocketManager.prototype, {
@@ -78,12 +83,18 @@ define('web-socket-manager', [], function () {
                 var authArray = Base64.decode(auth).split(':');
                 var username = authArray[0];
                 var authToken = authArray[1];
-                var url = this.protocolPart + this.url + ':' + this.port;
+                var url = this.protocolPart + this.url;
 
                 url += '?authToken=' + authToken + '&userId=' + userId;
 
                 var connection = this.connection = new ab.Session(url,
-                    function () {},
+                    function () {
+                        this.subscribeQueue.forEach(function (item) {
+                            this.subscribe(item.category, item.callback);
+                        }, this);
+                        this.subscribeQueue = [];
+                        this.isConnected = true;
+                    }.bind(this),
                     function () {},
                     {'skipSubprotocolCheck': true}
                 );
@@ -95,6 +106,10 @@ define('web-socket-manager', [], function () {
 
         subscribe: function (category, callback) {
             if (!this.connection) return;
+            if (!this.isConnected) {
+                this.subscribeQueue.push({category: category, callback: callback});
+                return;
+            }
             try {
                 this.connection.subscribe(category, callback);
             } catch (e) {
@@ -126,6 +141,8 @@ define('web-socket-manager', [], function () {
             } catch (e) {
                 console.error(e.message);
             }
+
+            this.isConnected = false;
         },
     });
 

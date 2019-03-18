@@ -104,7 +104,7 @@ class Container extends \Espo\Core\Container
     {
         $this->set('portal', $portal);
 
-        $data = array();
+        $data = [];
         foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {
             $data[$attribute] = $this->get('portal')->get($attribute);
         }
@@ -131,6 +131,10 @@ class Container extends \Espo\Core\Container
         }
         if (empty($data['defaultCurrency'])) {
             unset($data['defaultCurrency']);
+        }
+
+        if ($this->get('config')->get('webSocketInPortalDisabled')) {
+            $this->get('config')->set('useWebSocket', false);
         }
 
         foreach ($data as $attribute => $value) {
