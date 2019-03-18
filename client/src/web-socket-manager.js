@@ -89,11 +89,11 @@ define('web-socket-manager', [], function () {
 
                 var connection = this.connection = new ab.Session(url,
                     function () {
+                        this.isConnected = true;
                         this.subscribeQueue.forEach(function (item) {
                             this.subscribe(item.category, item.callback);
                         }, this);
                         this.subscribeQueue = [];
-                        this.isConnected = true;
                     }.bind(this),
                     function () {},
                     {'skipSubprotocolCheck': true}
