@@ -55,6 +55,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 var addressLowerCase = String(address).toLowerCase();
                 if (!re.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
                     var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
+                    this.reRender();
                     this.showValidationMessage(msg, 'div.email-address-block:nth-child(' + (i + 1).toString() + ') input');
                     notValid = true;
                     return;
