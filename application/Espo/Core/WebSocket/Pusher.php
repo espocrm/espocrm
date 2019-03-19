@@ -80,13 +80,13 @@ class Pusher implements WampServerInterface
         if ($checkCommand) {
             $checkResult = shell_exec($checkCommand);
             if ($checkResult !== 'true') {
-                if ($this->isDebugMode) echo "check access failed for topic {$topicId} for user {$userId}\n";
+                if ($this->isDebugMode) $this->log("check access failed for topic {$topicId} for user {$userId}");
                 return;
             }
         }
 
         if (!in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
-            if ($this->isDebugMode) echo "add topic {$topicId} for user {$userId}\n";
+            if ($this->isDebugMode) $this->log("{$connectionId}: add topic {$topicId} for user {$userId}");
             $this->connectionIdTopicIdListMap[$connectionId][] = $topicId;
         }
 
@@ -108,8 +108,9 @@ class Pusher implements WampServerInterface
         if (isset($this->connectionIdTopicIdListMap[$connectionId])) {
             $index = array_search($topicId, $this->connectionIdTopicIdListMap[$connectionId]);
             if ($index !== false) {
-                if ($this->isDebugMode) echo "remove topic {$topicId} for user {$userId}\n";
-                $this->connectionIdTopicIdListMap[$connectionId] = array_splice($this->connectionIdTopicIdListMap[$connectionId], $index, 1);
+                if ($this->isDebugMode) $this->log("{$connectionId}: remove topic {$topicId} for user {$userId}");
+                unset($this->connectionIdTopicIdListMap[$connectionId][$index]);
+                $this->connectionIdTopicIdListMap[$connectionId][$index] = array_values($this->connectionIdTopicIdListMap[$connectionId][$index]);
             }
         }
     }
@@ -194,7 +195,7 @@ class Pusher implements WampServerInterface
 
         $this->connections[$resourceId] = $connection;
 
-        if ($this->isDebugMode) echo "{$userId} subscribed\n";
+        if ($this->isDebugMode) $this->log("{$resourceId}: user {$userId} subscribed");
     }
 
     protected function unsubscribeUser(ConnectionInterface $connection, $userId)
@@ -206,16 +207,17 @@ class Pusher implements WampServerInterface
         if (isset($this->userIdConnectionIdListMap[$userId])) {
             $index = array_search($resourceId, $this->userIdConnectionIdListMap[$userId]);
             if ($index !== false) {
-                $this->userIdConnectionIdListMap[$userId] = array_splice($this->userIdConnectionIdListMap[$userId], $index, 1);
+                unset($this->userIdConnectionIdListMap[$userId][$index]);
+                $this->userIdConnectionIdListMap[$userId] = array_values($this->userIdConnectionIdListMap[$userId]);
             }
         }
 
-        if ($this->isDebugMode) echo "{$userId} unsubscribed\n";
+        if ($this->isDebugMode) $this->log("{$resourceId}: user {$userId} unsubscribed");
     }
 
     public function onOpen(ConnectionInterface $connection)
     {
-        if ($this->isDebugMode) echo "onOpen {$connection->resourceId}\n";
+        if ($this->isDebugMode) $this->log("{$connection->resourceId}: open");
 
         $query = $connection->httpRequest->getUri()->getQuery();
         $params = \GuzzleHttp\Psr7\parse_query($query ?: '');
@@ -259,7 +261,7 @@ class Pusher implements WampServerInterface
 
     public function onClose(ConnectionInterface $connection)
     {
-        if ($this->isDebugMode) echo "onClose {$connection->resourceId}\n";
+        if ($this->isDebugMode) $this->log("{$connection->resourceId}: close");
 
         $userId = $this->getUserIdByConnection($connection);
 
@@ -305,20 +307,25 @@ class Pusher implements WampServerInterface
                 $connection = $this->connections[$connectionId];
 
                 if (in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
-                    if ($this->isDebugMode) echo "send {$topicId} for connection {$connectionId}\n";
+                    if ($this->isDebugMode) $this->log("send {$topicId} for connection {$connectionId}");
                     $connection->event($topicId, $data);
                 }
             }
 
-            if ($this->isDebugMode) echo "onMessage {$topicId} for {$userId}\n";
+            if ($this->isDebugMode) $this->log("message {$topicId} for user {$userId}");
         } else {
             $topic = $this->topicHash[$topicId] ?? null;
             if ($topic) {
                 $topic->broadcast($data);
-                if ($this->isDebugMode) echo "send {$topicId} to all\n";
+                if ($this->isDebugMode) $this->log("send {$topicId} to all");
             }
 
-            if ($this->isDebugMode) echo "onMessage {$topicId} for all\n";
+            if ($this->isDebugMode) $this->log("message {$topicId} for all");
         }
+    }
+
+    protected function log($msg)
+    {
+        echo "[" . date('Y-m-d H:i:s') . "] " . $msg . "\n";
     }
 }
