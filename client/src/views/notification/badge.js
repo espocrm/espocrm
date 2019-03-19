@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/badge', 'view', function (Dep) {
+define('views/notification/badge', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -72,12 +72,13 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.closedNotificationIds = [];
             this.popoupTimeouts = {};
 
-            delete localStorage['blockPlayNotificationSound'];
-            delete localStorage['closePopupNotificationId'];
+            delete localStorage['messageBlockPlayNotificationSound'];
+            delete localStorage['messageClosePopupNotificationId'];
+            delete localStorage['messageNotificationRead'];
 
             window.addEventListener('storage', function (e) {
-                if (e.key == 'closePopupNotificationId') {
-                    var id = localStorage.getItem('closePopupNotificationId');
+                if (e.key == 'messageClosePopupNotificationId') {
+                    var id = localStorage.getItem('messageClosePopupNotificationId');
                     if (id) {
                         var key = 'popup-' + id;
                         if (this.hasView(key)) {
@@ -86,6 +87,12 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                         }
                     }
 
+                }
+
+                if (e.key == 'messageNotificationRead') {
+                    if (!this.isBroadcustingNotificationRead && localStorage.getItem('messageNotificationRead')) {
+                        this.checkUpdates();
+                    }
                 }
             }.bind(this), false);
         },
@@ -140,18 +147,16 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         },
 
         checkUpdates: function (isFirstCheck) {
-            if (this.checkBypass()) {
-                return;
-            }
+            if (this.checkBypass()) return;
 
             Espo.Ajax.getRequest('Notification/action/notReadCount').done(function (count) {
                 if (!isFirstCheck && count > this.unreadCount) {
-                    var blockPlayNotificationSound = localStorage.getItem('blockPlayNotificationSound');
-                    if (!blockPlayNotificationSound) {
+                    var messageBlockPlayNotificationSound = localStorage.getItem('messageBlockPlayNotificationSound');
+                    if (!messageBlockPlayNotificationSound) {
                         this.playSound();
-                        localStorage.setItem('blockPlayNotificationSound', true);
+                        localStorage.setItem('messageBlockPlayNotificationSound', true);
                         setTimeout(function () {
-                            delete localStorage['blockPlayNotificationSound'];
+                            delete localStorage['messageBlockPlayNotificationSound'];
                         }, this.notificationsCheckInterval * 1000);
                     }
                 }
@@ -255,7 +260,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                 this.$popupContainer.removeClass('hidden');
                 this.listenTo(view, 'remove', function () {
                     this.markPopupRemoved(id);
-                    localStorage.setItem('closePopupNotificationId', id);
+                    localStorage.setItem('messageClosePopupNotificationId', id);
                 }, this);
             }.bind(this));
         },
@@ -269,6 +274,17 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                 this.$popupContainer.addClass('hidden');
             }
             this.closedNotificationIds.push(id);
+        },
+
+        broadcastNotificationsRead: function () {
+            if (!this.useWebSocket) return;
+
+            this.isBroadcustingNotificationRead = true;
+            localStorage.setItem('messageNotificationRead', true);
+            setTimeout(function () {
+                this.isBroadcustingNotificationRead = false;
+                delete localStorage['messageNotificationRead'];
+            }.bind(this), 500);
         },
 
         showNotifications: function () {
@@ -285,6 +301,11 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                 this.listenTo(view, 'all-read', function () {
                     this.hideNotRead();
                     this.$el.find('.badge-circle-warning').remove();
+                    this.broadcastNotificationsRead();
+                }, this);
+
+                this.listenTo(view, 'collection-fetched', function () {
+                    this.broadcastNotificationsRead();
                 }, this);
             }.bind(this));
 

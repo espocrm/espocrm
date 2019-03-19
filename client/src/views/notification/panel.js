@@ -53,6 +53,10 @@ Espo.define('views/notification/panel', 'view', function (Dep) {
                 this.collection = collection;
                 collection.maxSize = this.getConfig().get('notificationsMaxSize') || 5;
                 this.wait(false);
+
+                this.listenTo(this.collection, 'sync', function () {
+                    this.trigger('collection-fetched');
+                }, this);
             }, this);
 
             this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
