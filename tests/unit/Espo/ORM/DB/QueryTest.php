@@ -604,6 +604,39 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction10()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', ["IF:(LIKE:(name,'%test%'),'1','0')", 'value']]
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, IF(comment.name LIKE '%test%', '1', '0') AS `value` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction11()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => [["IS_NULL:(name)", 'value1'], ["IS_NOT_NULL:(name)", 'value2']]
+        ]);
+        $expectedSql =
+            "SELECT comment.name IS NULL AS `value1`, comment.name IS NOT NULL AS `value2` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction12()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', ["IF:(OR:('1','0'),'1','0')", 'value']]
+        ]);
+        $expectedSql =
+            "SELECT comment.id AS `id`, IF('1' OR '0', '1', '0') AS `value` FROM `comment` " .
+            "WHERE comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testFunctionTZ1()
     {
         $sql = $this->query->createSelectQuery('Comment', [

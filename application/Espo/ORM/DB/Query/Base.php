@@ -138,6 +138,18 @@ abstract class Base
         'ROUND',
         'COALESCE',
         'IF',
+        'LIKE',
+        'NOT_LIKE',
+        'EQUAL',
+        'NOT_EQUAL',
+        'GREATER_THAN',
+        'LESS_THAN',
+        'GREATER_THAN_OR_EQUAL',
+        'LESS_THAN_OR_EQUAL',
+        'IS_NULL',
+        'IS_NOT_NULL',
+        'OR',
+        'AND',
     ];
 
     protected $multipleArgumentsFunctionList = [
@@ -146,6 +158,40 @@ abstract class Base
         'ROUND',
         'COALESCE',
         'IF',
+        'LIKE',
+        'NOT_LIKE',
+        'EQUAL',
+        'NOT_EQUAL',
+        'GREATER_THAN',
+        'LESS_THAN',
+        'GREATER_THAN_OR_EQUAL',
+        'LESS_THAN_OR_EQUAL',
+        'OR',
+        'AND',
+    ];
+
+    protected $comparisonFunctionList = [
+        'LIKE',
+        'NOT_LIKE',
+        'EQUAL',
+        'NOT_EQUAL',
+        'GREATER_THAN',
+        'LESS_THAN',
+        'GREATER_THAN_OR_EQUAL',
+        'LESS_THAN_OR_EQUAL',
+    ];
+
+    protected $comparisonFunctionOperatorMap = [
+        'LIKE' => 'LIKE',
+        'NOT_LIKE' => 'NOT LIKE',
+        'EQUAL' => '=',
+        'NOT_EQUAL' => '<>',
+        'GREATER_THAN' => '>',
+        'LESS_THAN' => '<',
+        'GREATER_THAN_OR_EQUAL' => '>=',
+        'LESS_THAN_OR_EQUAL' => '<=',
+        'IS_NULL' => 'IS NULL',
+        'IS_NOT_NULL' => 'IS NOT NULL',
     ];
 
     protected $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
@@ -310,7 +356,7 @@ abstract class Base
     protected function getFunctionPart($function, $part, $entityType, $distinct = false, ?array $argumentPartList = null)
     {
         if (!in_array($function, $this->functionList)) {
-            throw new \Exception("Not allowed function '".$function."'.");
+            throw new \Exception("ORM Query: Not allowed function '{$function}'.");
         }
 
         if (strpos($function, 'YEAR_') === 0 && $function !== 'YEAR_NUMBER') {
@@ -342,6 +388,23 @@ abstract class Base
 
         if ($function === 'TZ') {
             return $this->getFunctionPartTZ($entityType, $argumentPartList);
+        }
+
+        if (in_array($function, $this->comparisonFunctionList)) {
+            if (count($argumentPartList) < 2) {
+                throw new \Exception("ORM Query: Not enough arguments for function '{$function}'.");
+            }
+            $operator = $this->comparisonFunctionOperatorMap[$function];
+            return $argumentPartList[0] . ' ' . $operator . ' ' . $argumentPartList[1];
+        }
+
+        if (in_array($function, ['IS_NULL', 'IS_NOT_NULL'])) {
+            $operator = $this->comparisonFunctionOperatorMap[$function];
+            return $part . ' ' . $operator;
+        }
+
+        if (in_array($function, ['OR', 'AND'])) {
+            return implode(' ' . $function . ' ', $argumentPartList);
         }
 
         switch ($function) {
