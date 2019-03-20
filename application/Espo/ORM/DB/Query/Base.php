@@ -1474,7 +1474,7 @@ abstract class Base
 
     public function sanitizeSelectAlias($string)
     {
-        return preg_replace('/[^A-Za-z0-9_:.,\-\(\)]+/', '', $string);
+        return preg_replace('/[^A-Za-z0-9_:\'" .,\-\(\)]+/', '', $string);
     }
 
     public function sanitizeSelectItem($string)

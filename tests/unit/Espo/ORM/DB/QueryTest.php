@@ -629,10 +629,10 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     public function testFunction12()
     {
         $sql = $this->query->createSelectQuery('Comment', [
-            'select' => ['id', ["IF:(OR:('1','0'),'1','0')", 'value']]
+            'select' => ["IF:(OR:('1','0'),'1',' ')"]
         ]);
         $expectedSql =
-            "SELECT comment.id AS `id`, IF('1' OR '0', '1', '0') AS `value` FROM `comment` " .
+            "SELECT IF('1' OR '0', '1', ' ') AS `IF:(OR:('1','0'),'1',' ')` FROM `comment` " .
             "WHERE comment.deleted = '0'";
         $this->assertEquals($expectedSql, $sql);
     }
