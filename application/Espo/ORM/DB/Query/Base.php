@@ -137,6 +137,7 @@ abstract class Base
         'CEIL',
         'ROUND',
         'COALESCE',
+        'IF',
     ];
 
     protected $multipleArgumentsFunctionList = [
@@ -144,6 +145,7 @@ abstract class Base
         'TZ',
         'ROUND',
         'COALESCE',
+        'IF',
     ];
 
     protected $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
