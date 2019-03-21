@@ -107,6 +107,7 @@ abstract class Base
         'UPPER',
         'TRIM',
         'LENGTH',
+        'CHAR_LENGTH',
         'YEAR_0',
         'YEAR_1',
         'YEAR_2',
