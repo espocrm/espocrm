@@ -648,6 +648,17 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction14()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ["NOT:(name)"],
+            'withDeleted' => true
+        ]);
+        $expectedSql =
+            "SELECT NOT comment.name AS `NOT:(name)` FROM `comment`";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testFunctionTZ1()
     {
         $sql = $this->query->createSelectQuery('Comment', [

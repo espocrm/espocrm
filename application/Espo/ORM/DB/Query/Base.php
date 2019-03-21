@@ -150,6 +150,7 @@ abstract class Base
         'IS_NOT_NULL',
         'OR',
         'AND',
+        'NOT',
         'IN',
         'NOT_IN',
     ];
@@ -465,6 +466,8 @@ abstract class Base
             case 'DAYOFWEEK_NUMBER':
                 $function = 'DAYOFWEEK';
                 break;
+            case 'NOT':
+                return 'NOT ' . $part;
         }
 
         if ($distinct) {
