@@ -717,6 +717,23 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testWhere1()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id'],
+            'whereClause' => [
+                'post.createdById<=' => '1'
+            ],
+            'withDeleted' => true
+        ]);
+
+        $expectedSql =
+            "SELECT comment.id AS `id` " .
+            "FROM `comment` " .
+            "WHERE post.created_by_id <= '1'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testMatch1()
     {
         $sql = $this->query->createSelectQuery('Article', [

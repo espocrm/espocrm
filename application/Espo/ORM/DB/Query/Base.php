@@ -1313,8 +1313,8 @@ abstract class Base
 
             if (!preg_match('/^[a-z0-9]+$/i', $field)) {
                 foreach (self::$comparisonOperators as $op => $opDb) {
-                    if (strpos($field, $op) !== false) {
-                        $field = trim(str_replace($op, '', $field));
+                    if (substr($field, -strlen($op)) === $op) {
+                        $field = trim(substr($field, 0, -strlen($op)));
                         $operatorOrm = $op;
                         $operator = $opDb;
                         break;
@@ -1585,8 +1585,8 @@ abstract class Base
 
         if (!preg_match('/^[a-z0-9]+$/i', $left)) {
             foreach (self::$comparisonOperators as $op => $opDb) {
-                if (strpos($left, $op) !== false) {
-                    $left = trim(str_replace($op, '', $left));
+                if (substr($left, -strlen($op)) === $op) {
+                    $left = trim(substr($left, 0, -strlen($op)));
                     $operator = $opDb;
                     break;
                 }
