@@ -41,11 +41,8 @@ define('views/notification/badge', 'view', function (Dep) {
         soundPath: 'client/sounds/pop_cork',
 
         events: {
-            'click a[data-action="showNotifications"]': function (e) {
+            'click a[data-action="showNotifications"]': function () {
                 this.showNotifications();
-                setTimeout(function () {
-                    this.checkUpdates();
-                }.bind(this), 100);
             },
         },
 
@@ -305,6 +302,7 @@ define('views/notification/badge', 'view', function (Dep) {
                 }, this);
 
                 this.listenTo(view, 'collection-fetched', function () {
+                    this.checkUpdates();
                     this.broadcastNotificationsRead();
                 }, this);
             }.bind(this));
