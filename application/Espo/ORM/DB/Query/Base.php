@@ -150,6 +150,8 @@ abstract class Base
         'IS_NOT_NULL',
         'OR',
         'AND',
+        'IN',
+        'NOT_IN',
     ];
 
     protected $multipleArgumentsFunctionList = [
@@ -168,6 +170,8 @@ abstract class Base
         'LESS_THAN_OR_EQUAL',
         'OR',
         'AND',
+        'IN',
+        'NOT_IN',
     ];
 
     protected $comparisonFunctionList = [
@@ -192,6 +196,8 @@ abstract class Base
         'LESS_THAN_OR_EQUAL' => '<=',
         'IS_NULL' => 'IS NULL',
         'IS_NOT_NULL' => 'IS NOT NULL',
+        'IN' => 'IN',
+        'NOT_IN' => 'NOT IN',
     ];
 
     protected $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
@@ -396,6 +402,18 @@ abstract class Base
             }
             $operator = $this->comparisonFunctionOperatorMap[$function];
             return $argumentPartList[0] . ' ' . $operator . ' ' . $argumentPartList[1];
+        }
+
+        if (in_array($function, ['IN', 'NOT_IN'])) {
+            $operator = $this->comparisonFunctionOperatorMap[$function];
+
+            if (count($argumentPartList) < 2) {
+                throw new \Exception("ORM Query: Not enough arguments for function '{$function}'.");
+            }
+            $operatorArgumentList = $argumentPartList;
+            array_shift($operatorArgumentList);
+
+            return $argumentPartList[0] .  ' ' . $operator . ' (' . implode(', ', $operatorArgumentList) . ')';
         }
 
         if (in_array($function, ['IS_NULL', 'IS_NOT_NULL'])) {

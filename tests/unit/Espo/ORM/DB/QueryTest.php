@@ -618,22 +618,33 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     public function testFunction11()
     {
         $sql = $this->query->createSelectQuery('Comment', [
-            'select' => [["IS_NULL:(name)", 'value1'], ["IS_NOT_NULL:(name)", 'value2']]
+            'select' => [["IS_NULL:(name)", 'value1'], ["IS_NOT_NULL:(name)", 'value2']],
+            'withDeleted' => true
         ]);
         $expectedSql =
-            "SELECT comment.name IS NULL AS `value1`, comment.name IS NOT NULL AS `value2` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "SELECT comment.name IS NULL AS `value1`, comment.name IS NOT NULL AS `value2` FROM `comment`";
         $this->assertEquals($expectedSql, $sql);
     }
 
     public function testFunction12()
     {
         $sql = $this->query->createSelectQuery('Comment', [
-            'select' => ["IF:(OR:('1','0'),'1',' ')"]
+            'select' => ["IF:(OR:('1','0'),'1',' ')"],
+            'withDeleted' => true
         ]);
         $expectedSql =
-            "SELECT IF('1' OR '0', '1', ' ') AS `IF:(OR:('1','0'),'1',' ')` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "SELECT IF('1' OR '0', '1', ' ') AS `IF:(OR:('1','0'),'1',' ')` FROM `comment`";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction13()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ["IN:(name,'1','0')"],
+            'withDeleted' => true
+        ]);
+        $expectedSql =
+            "SELECT comment.name IN ('1', '0') AS `IN:(name,'1','0')` FROM `comment`";
         $this->assertEquals($expectedSql, $sql);
     }
 
