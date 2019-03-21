@@ -134,6 +134,11 @@ abstract class Base
         'QUARTER_11',
         'CONCAT',
         'TZ',
+        'ADD',
+        'SUB',
+        'MUL',
+        'DIV',
+        'MOD',
         'FLOOR',
         'CEIL',
         'ROUND',
@@ -174,6 +179,11 @@ abstract class Base
         'AND',
         'IN',
         'NOT_IN',
+        'ADD',
+        'SUB',
+        'MUL',
+        'DIV',
+        'MOD',
     ];
 
     protected $comparisonFunctionList = [
@@ -200,6 +210,22 @@ abstract class Base
         'IS_NOT_NULL' => 'IS NOT NULL',
         'IN' => 'IN',
         'NOT_IN' => 'NOT IN',
+    ];
+
+    protected $mathFunctionOperatorMap = [
+        'ADD' => '+',
+        'SUB' => '-',
+        'MUL' => '*',
+        'DIV' => '/',
+        'MOD' => '%',
+    ];
+
+    protected $mathOperationFunctionList = [
+        'ADD',
+        'SUB',
+        'MUL',
+        'DIV',
+        'MOD',
     ];
 
     protected $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
@@ -404,6 +430,14 @@ abstract class Base
             }
             $operator = $this->comparisonFunctionOperatorMap[$function];
             return $argumentPartList[0] . ' ' . $operator . ' ' . $argumentPartList[1];
+        }
+
+        if (in_array($function, $this->mathOperationFunctionList)) {
+            if (count($argumentPartList) < 2) {
+                throw new \Exception("ORM Query: Not enough arguments for function '{$function}'.");
+            }
+            $operator = $this->mathFunctionOperatorMap[$function];
+            return '(' . implode(' ' . $operator . ' ', $argumentPartList) . ')';
         }
 
         if (in_array($function, ['IN', 'NOT_IN'])) {

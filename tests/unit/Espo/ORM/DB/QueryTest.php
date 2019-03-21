@@ -659,6 +659,17 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction15()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ["MUL:(2,2.5,SUB:(3,1))"],
+            'withDeleted' => true
+        ]);
+        $expectedSql =
+            "SELECT ('2' * '2.5' * ('3' - '1')) AS `MUL:(2,2.5,SUB:(3,1))` FROM `comment`";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testFunctionTZ1()
     {
         $sql = $this->query->createSelectQuery('Comment', [
