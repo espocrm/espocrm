@@ -21,8 +21,8 @@
     },
     "Selectize": {
         "path": "client/lib/selectize.min.js",
-        "exportsTo": "$",
-        "exportsAs": "selectize"
+        "exportsTo": "window",
+        "exportsAs": "Selectize"
     },
     "Cropper": {
         "path": "client/lib/cropper.min.js",
