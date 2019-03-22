@@ -807,7 +807,7 @@ class Base
         return $result;
     }
 
-    protected function checkWhere(array $where, bool $checkWherePermission = true, bool $forbidComplexExpressions = true)
+    public function checkWhere(array $where, bool $checkWherePermission = true, bool $forbidComplexExpressions = false)
     {
         foreach ($where as $w) {
             $attribute = null;
@@ -829,8 +829,6 @@ class Base
                 }
             }
 
-            $entityType = $this->getEntityType();
-
             if ($attribute && $forbidComplexExpressions) {
                 if (strpos($attribute, '.') !== false || strpos($attribute, ':')) {
                     throw new Forbidden("SelectManager::checkWhere: Complex expressions are forbidden.");
@@ -838,40 +836,51 @@ class Base
             }
 
             if ($attribute && $checkWherePermission) {
-                if (strpos($attribute, '.')) {
-                    list($link, $attribute) = explode('.', $attribute);
-                    if (!$this->getSeed()->hasRelation($link)) {
-                        throw new Forbidden("SelectManager::checkWhere: Unknown relation '{$link}' in where.");
-                    }
-                    $entityType = $this->getSeed($this->getEntityType())->getRelationParam($link, 'entity');
-                    if (!$entityType) {
-                        throw new Forbidden("SelectManager::checkWhere: Bad relation.");
-                    }
-                    if (!$this->getAcl()->checkScope($entityType)) {
-                        throw new Forbidden();
-                    }
-                }
-
-                if ($type && in_array($type, ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith', 'isUserFromTeams'])) {
-                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($entityType))) {
-                        throw new Forbidden();
-                    }
-                    if (
-                        $this->getSeed()->hasRelation($attribute)
-                        &&
-                        in_array($attribute, $this->getAcl()->getScopeForbiddenLinkList($entityType))
-                    ) {
-                        throw new Forbidden();
-                    }
-                } else {
-                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenAttributeList($entityType))) {
-                        throw new Forbidden();
-                    }
+                $argumentList = \Espo\ORM\DB\Query\Base::getAllAttributesFromComplexExpression($attribute);
+                foreach ($argumentList as $argument) {
+                    $this->checkWhereArgument($argument, $type);
                 }
             }
 
             if (!empty($w['value']) && is_array($w['value'])) {
                 $this->checkWhere($w['value'], $checkWherePermission, $forbidComplexExpressions);
+            }
+        }
+    }
+
+    protected function checkWhereArgument($attribute, $type)
+    {
+        $entityType = $this->getEntityType();
+
+        if (strpos($attribute, '.')) {
+            list($link, $attribute) = explode('.', $attribute);
+            if (!$this->getSeed()->hasRelation($link)) {
+                // TODO allow alias
+                throw new Forbidden("SelectManager::checkWhere: Unknown relation '{$link}' in where.");
+            }
+            $entityType = $this->getSeed($this->getEntityType())->getRelationParam($link, 'entity');
+            if (!$entityType) {
+                throw new Forbidden("SelectManager::checkWhere: Bad relation.");
+            }
+            if (!$this->getAcl()->checkScope($entityType)) {
+                throw new Forbidden();
+            }
+        }
+
+        if ($type && in_array($type, ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith', 'isUserFromTeams'])) {
+            if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($entityType))) {
+                throw new Forbidden();
+            }
+            if (
+                $this->getSeed()->hasRelation($attribute)
+                &&
+                in_array($attribute, $this->getAcl()->getScopeForbiddenLinkList($entityType))
+            ) {
+                throw new Forbidden();
+            }
+        } else {
+            if (in_array($attribute, $this->getAcl()->getScopeForbiddenAttributeList($entityType))) {
+                throw new Forbidden();
             }
         }
     }
