@@ -57,56 +57,52 @@ define('router', [], function () {
             },
             {
                 route: ":controller/:action/:options",
-                resolution: "action"
+                resolution: "action",
+                order: 100
             },
             {
                 route: ":controller/:action",
-                resolution: "action"
+                resolution: "action",
+                order: 200
             },
             {
                 route: ":controller",
-                resolution: "defaultAction"
+                resolution: "defaultAction",
+                order: 300
             },
             {
                 route: "*actions",
-                resolution: "home"
+                resolution: "home",
+                order: 500
             }
         ],
-
-        routes: {
-            "clearCache": "clearCache",
-            ":controller/view/:id/:options": "view",
-            ":controller/view/:id": "view",
-            ":controller/edit/:id/:options": "edit",
-            ":controller/edit/:id": "edit",
-            ":controller/create": "create",
-            ":controller/:action/:options": "action",
-            ":controller/:action": "action",
-            ":controller": "defaultAction",
-            "*actions": "home",
-        },
 
         _bindRoutes: function() {},
 
         setupRoutes: function () {
+            this.routeParams = {};
+
             if (this.options.routes) {
                 var routeList = [];
                 Object.keys(this.options.routes).forEach(function (route) {
                     var item = this.options.routes[route];
                     routeList.push({
                         route: route,
-                        resolution: item.resolution,
+                        resolution: item.resolution || 'defaultRoute',
                         order: item.order || 0
                     });
+                    this.routeParams[route] = item.params || {};
                 }, this);
-                routeList = routeList.sort(function (v1, v2) {
-                    return v1.order > v2.order;
-                });
 
                 this.routeList = Espo.Utils.clone(this.routeList);
+
                 routeList.forEach(function (item) {
                     this.routeList.push(item);
                 }, this);
+
+                this.routeList = this.routeList.sort(function (v1, v2) {
+                    return (v1.order || 0) - (v2.order || 0);
+                });
             }
             this.routeList.reverse().forEach(function (item) {
                 this.route(item.route, item.resolution);
@@ -163,7 +159,7 @@ define('router', [], function () {
                 }.bind(this), 50);
             }.bind(this)));
 
-            this.on('route', function () {
+            this.on('route', function (name, args) {
                 this.history.push(Backbone.history.fragment);
             });
         },
@@ -192,8 +188,45 @@ define('router', [], function () {
             }
         },
 
-        execute: function (callback, args, name) {
+        route: function (route, name, callback) {
+            var routeOriginal = route;
+
+            if (!_.isRegExp(route)) route = this._routeToRegExp(route);
+            if (_.isFunction(name)) {
+                callback = name;
+                name = '';
+            }
+            if (!callback) callback = this[name];
+            var router = this;
+            Backbone.history.route(route, function (fragment) {
+                var args = router._extractParameters(route, fragment);
+
+                var options = {};
+                if (name === 'defaultRoute') {
+                    var keyList = [];
+                    routeOriginal.split('/').forEach(function (key) {
+                        if (key && key.indexOf(':') === 0) keyList.push(key.substr(1));
+                    });
+                    keyList.forEach(function (key, i) {
+                        options[key] = args[i];
+                    });
+                }
+
+                if (router.execute(callback, args, name, routeOriginal, options) !== false) {
+                    router.trigger.apply(router, ['route:' + name].concat(args));
+                    router.trigger('route', name, args);
+                    Backbone.history.trigger('route', router, name, args);
+                }
+            });
+            return this;
+        },
+
+        execute: function (callback, args, name, routeOriginal, options) {
             this.checkConfirmLeaveOut(function () {
+                if (name === 'defaultRoute') {
+                    this.defaultRoute(this.routeParams[routeOriginal], options);
+                    return;
+                }
                 Backbone.Router.prototype.execute.call(this, callback, args, name);
             }, null, true);
         },
@@ -233,6 +266,13 @@ define('router', [], function () {
                 });
             }
             return options;
+        },
+
+        defaultRoute: function (params, options) {
+            var controller = params.controller || options.controller;
+            var action = params.action || options.action;
+
+            this.dispatch(controller, action, options);
         },
 
         record: function (controller, action, id, options) {
