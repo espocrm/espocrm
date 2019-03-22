@@ -1457,12 +1457,14 @@ abstract class Base
                     }
                     $wherePartList[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams) . ")";
                 } else if (!is_array($value)) {
-                    if (!is_null($value)) {
-                        if ($isNotValue) {
+                    if ($isNotValue) {
+                        if (!is_null($value)) {
                             $wherePartList[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value, $params);
                         } else {
-                            $wherePartList[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
+                            $wherePartList[] = $leftPart;
                         }
+                    } else if (!is_null($value)) {
+                        $wherePartList[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
                     } else {
                         if ($operator == '=') {
                             $wherePartList[] = $leftPart . " IS NULL";

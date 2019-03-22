@@ -269,7 +269,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testWhereNotValue()
+    public function testWhereNotValue1()
     {
         $sql = $this->query->createSelectQuery('Post', [
             'select' => ['id', 'name'],
@@ -281,6 +281,23 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
             "WHERE post.name <> post.id AND post.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereNotValue2()
+    {
+        $sql = $this->query->createSelectQuery('Post', [
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'name:' => null
+            ],
+            'withDeleted' => true
+        ]);
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "WHERE post.name";
 
         $this->assertEquals($expectedSql, $sql);
     }

@@ -1305,6 +1305,12 @@ class Base
 
                     break;
 
+                case 'expression':
+                    $key = $attribute;
+                    if (substr($key, -1) !== ':') $key .= ':';
+                    $part[$key] = null;
+                    break;
+
                 case 'like':
                     $part[$attribute . '*'] = $value;
                     break;
