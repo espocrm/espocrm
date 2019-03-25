@@ -687,6 +687,17 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction16()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ["NOW:()"],
+            'withDeleted' => true
+        ]);
+        $expectedSql =
+            "SELECT NOW() AS `NOW:()` FROM `comment`";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testFunctionTZ1()
     {
         $sql = $this->query->createSelectQuery('Comment', [

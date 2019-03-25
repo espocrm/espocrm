@@ -134,6 +134,7 @@ abstract class Base
         'QUARTER_11',
         'CONCAT',
         'TZ',
+        'NOW',
         'ADD',
         'SUB',
         'MUL',
@@ -776,7 +777,12 @@ abstract class Base
             $attribute = $this->sanitize($attribute);
         }
 
-        $part = $this->toDb($attribute);
+        if ($attribute !== '') {
+            $part = $this->toDb($attribute);
+        } else {
+            $part = '';
+        }
+
         if ($relName) {
             $part = $relName . '.' . $part;
 
@@ -794,7 +800,9 @@ abstract class Base
             if (!empty($entity->fields[$attribute]['select'])) {
                 $part = $this->getAttributeSql($entity, $attribute, 'select', $params);
             } else {
-                $part = $this->toDb($entityType) . '.' . $part;
+                if ($part !== '') {
+                    $part = $this->toDb($entityType) . '.' . $part;
+                }
             }
         }
 
