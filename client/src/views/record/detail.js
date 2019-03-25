@@ -865,7 +865,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.getRouter().dispatch(scope, 'view', {
                 id: id,
                 model: model,
-                indexOfRecord: indexOfRecord
+                indexOfRecord: indexOfRecord,
+                rootUrl: this.options.rootUrl,
             });
         },
 
