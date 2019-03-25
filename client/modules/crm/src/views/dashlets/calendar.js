@@ -60,7 +60,8 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     header: false,
                     calendarType: 'shared',
                     userList: userList,
-                    enabledScopeList: this.getOption('enabledScopeList')
+                    enabledScopeList: this.getOption('enabledScopeList'),
+                    noFetchLoadingMessage: true,
                 }, function (view) {
                     view.render();
                 }, this);

@@ -789,7 +789,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         fetchEvents: function (from, to, callback) {
-            Espo.Ui.notify(this.translate('Loading...'));
+            if (!this.options.noFetchLoadingMessage) {
+                Espo.Ui.notify(this.translate('loading', 'messages'));
+            }
 
             from = from.clone().add((-1) * this.leftMargin, 'seconds');
             to = to.clone().add(this.rightMargin, 'seconds');
