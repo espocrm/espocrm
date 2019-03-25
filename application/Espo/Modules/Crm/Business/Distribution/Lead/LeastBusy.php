@@ -77,7 +77,7 @@ class LeastBusy
                 $foundUserId = $userId;
             } else {
                 if ($count < $min) {
-                    $min = $clunt;
+                    $min = $count;
                     $foundUserId = $userId;
                 }
             }
