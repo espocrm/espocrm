@@ -103,6 +103,16 @@ define('controllers/record', 'controller', function (Dep) {
         actionView: function (options) {
             var id = options.id;
 
+            var isReturn = this.getRouter().backProcessed;
+            if (isReturn) {
+                if (this.lastViewActionOptions && this.lastViewActionOptions.id === id) {
+                    options = this.lastViewActionOptions;
+                }
+            } else {
+                delete this.lastViewActionOptions;
+            }
+            this.lastViewActionOptions = options;
+
             var createView = function (model) {
                 this.prepareModelView(model, options);
                 this.createViewView.call(this, options, model);
