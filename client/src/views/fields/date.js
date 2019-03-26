@@ -62,11 +62,21 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
-            if (this.mode === 'search') {
-                this.searchData.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
-                this.searchData.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
-            }
+
             data.dateValue = this.getDateStringValue();
+
+            if (this.isSearchMode()) {
+                var value = this.getSearchParamsData().value || this.searchParams.dateValue;
+                var valueTo = this.getSearchParamsData().valueTo || this.searchParams.dateValueTo;
+
+                data.dateValue = this.getDateTime().toDisplayDate(value);
+                data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
+
+                if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(this.getSearchType())) {
+                    data.number = this.searchParams.value;
+                }
+            }
+
             return data;
         },
 
@@ -241,15 +251,16 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 data = {
                     type: type,
                     value: [value, valueTo],
-                    dateValue: value,
-                    dateValueTo: valueTo
+                    data: {
+                        value: value,
+                        valueTo: valueTo
+                    }
                 };
             } else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(type)) {
                 var number = this.$el.find('input.number').val();
                 data = {
                     type: type,
-                    value: number,
-                    number: number
+                    value: number
                 };
             } else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
                 if (!value) {
@@ -258,7 +269,9 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 data = {
                     type: type,
                     value: value,
-                    dateValue: value
+                    data: {
+                        value: value
+                    }
                 };
             } else if (type === 'isEmpty') {
                 data = {
