@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
+define('views/fields/int', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -79,6 +79,15 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 data.isNotEmpty = true;
             }
             data.valueIsSet = this.model.has(this.name);
+
+            if (this.isSearchMode()) {
+                data.value = this.searchParams.value;
+                if (this.getSearchType() === 'between') {
+                    data.value = this.getSearchParamsData().value1 || this.searchParams.value1;
+                    data.value2 = this.getSearchParamsData().value2 || this.searchParams.value2;
+                }
+            }
+
             return data;
         },
 
@@ -257,8 +266,10 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 data = {
                     type: type,
                     value: [value, valueTo],
-                    value1: value,
-                    value2: valueTo
+                    data: {
+                        value1: value,
+                        value2: valueTo
+                    }
                 };
             } else if (type == 'isEmpty') {
                 data = {
@@ -274,7 +285,9 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 data = {
                     type: type,
                     value: value,
-                    value1: value
+                    data: {
+                        value1: value
+                    }
                 };
             }
             return data;
