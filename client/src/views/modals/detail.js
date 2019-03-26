@@ -404,6 +404,20 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         actionEdit: function () {
+            if (this.options.quickEditDisabled) {
+                var options = {
+                    id: this.id,
+                    model: this.model,
+                    returnUrl: this.getRouter().getCurrentUrl(),
+                };
+                if (this.options.rootUrl) {
+                    options.rootUrl = this.options.rootUrl;
+                }
+                this.getRouter().navigate('#' + this.scope + '/edit/' + this.id, {trigger: false});
+                this.getRouter().dispatch(this.scope, 'edit', options);
+                return;
+            }
+
             var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) || 'views/modals/edit';
             this.createView('quickEdit', viewName, {
                 scope: this.scope,
@@ -486,4 +500,3 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         }
     });
 });
-

@@ -1576,7 +1576,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var options = {
                     scope: scope,
                     model: model,
-                    id: id
+                    id: id,
+                    quickEditDisabled: this.quickEditDisabled,
                 };
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
