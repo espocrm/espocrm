@@ -38,7 +38,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
     {
         $container = $this->container = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
-        $this->functionFactory = new \Espo\Core\Formula\FunctionFactory($container);
+        $attributeFetcher = new \Espo\Core\Formula\AttributeFetcher();
+
+        $this->functionFactory = new \Espo\Core\Formula\FunctionFactory($container, $attributeFetcher);
         $this->formula = new \Espo\Core\Formula\Formula($this->functionFactory);
 
         $this->entity = $this->getEntityMock();
