@@ -38,10 +38,10 @@ class FunctionFactory
 
     private $classNameMap;
 
-    public function __construct($container, $classNameMap = null)
+    public function __construct($container, AttributeFetcher $attributeFetcher, $classNameMap = null)
     {
         $this->container = $container;
-        $this->attributeFetcher = new AttributeFetcher();
+        $this->attributeFetcher = $attributeFetcher;
         $this->classNameMap = $classNameMap;
     }
 
