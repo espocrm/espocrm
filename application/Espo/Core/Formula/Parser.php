@@ -41,7 +41,7 @@ class Parser
         ['*', '/', '%']
     ];
 
-    protected $operatorMap = array(
+    protected $operatorMap = [
         '=' => 'assign',
         '||' => 'logical\\or',
         '&&' => 'logical\\and',
@@ -56,7 +56,7 @@ class Parser
         '<' => 'comparison\\lessThan',
         '>=' => 'comparison\\greaterThanOrEquals',
         '<=' => 'comparison\\lessThanOrEquals'
-    );
+    ];
 
     public function parse($expression)
     {
@@ -465,4 +465,3 @@ class Parser
         return $argumentList;
     }
 }
-

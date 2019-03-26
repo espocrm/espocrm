@@ -35,7 +35,7 @@ class Manager
 {
     public function __construct(\Espo\Core\Container $container, \Espo\Core\Utils\Metadata $metadata)
     {
-        $functionClassNameMap = $metadata->get(['app', 'formula', 'functionClassNameMap'], array());
+        $functionClassNameMap = $metadata->get(['app', 'formula', 'functionClassNameMap'], []);
 
         $this->evaluator = new \Espo\Core\Formula\Evaluator($container, $functionClassNameMap);
     }

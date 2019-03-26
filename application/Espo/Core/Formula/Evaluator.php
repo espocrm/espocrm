@@ -43,13 +43,13 @@ class Evaluator
 
     private $parsedHash;
 
-    public function __construct($container = null, array $functionClassNameMap = array(), array $parsedHash = array())
+    public function __construct($container = null, array $functionClassNameMap = [], array $parsedHash = [])
     {
         $this->attributeFetcher = new AttributeFetcher();
-        $this->functionFactory = new \Espo\Core\Formula\FunctionFactory($container, $this->attributeFetcher, $functionClassNameMap);
-        $this->formula = new \Espo\Core\Formula\Formula($this->functionFactory);
-        $this->parser = new \Espo\Core\Formula\Parser();
-        $this->parsedHash = array();
+        $this->functionFactory = new FunctionFactory($container, $this->attributeFetcher, $functionClassNameMap);
+        $this->formula = new Formula($this->functionFactory);
+        $this->parser = new Parser();
+        $this->parsedHash = [];
     }
 
     public function process($expression, $entity = null, $variables = null)

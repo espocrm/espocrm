@@ -34,7 +34,7 @@ use \Espo\Core\Exceptions\Error;
 
 class AttributeFetcher
 {
-    private $relatedEntitiesCacheMap = array();
+    private $relatedEntitiesCacheMap = [];
 
     public function __construct()
     {
@@ -82,7 +82,7 @@ class AttributeFetcher
 
     public function resetRuntimeCache()
     {
-        $this->relatedEntitiesCacheMap = array();
+        $this->relatedEntitiesCacheMap = [];
     }
 
     protected function buildKey(Entity $entity, $link)
