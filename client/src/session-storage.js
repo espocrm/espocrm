@@ -56,7 +56,7 @@ define('session-storage', ['storage'], function (Dep) {
         },
 
         set: function (name, value) {
-            if (value instanceof Object || Array.isArray(value)) {
+            if (value instanceof Object || Array.isArray(value) || value === true || value === false) {
                 value = '__JSON__:' + JSON.stringify(value);
             }
             try {
@@ -64,6 +64,10 @@ define('session-storage', ['storage'], function (Dep) {
             } catch (error) {
                 console.error(error);
             }
+        },
+
+        has: function (name) {
+            return this.storageObject.getItem(name) !== null;
         },
 
         clear: function (name) {

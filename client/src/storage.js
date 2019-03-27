@@ -96,7 +96,7 @@ define('storage', [], function () {
             this.checkType(type);
 
             var key = this.composeKey(type, name);
-            if (value instanceof Object || Array.isArray(value)) {
+            if (value instanceof Object || Array.isArray(value) || value === true || value === false) {
                 value = '__JSON__:' + JSON.stringify(value);
             }
             try {
