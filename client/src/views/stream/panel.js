@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
+define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
 
     return Dep.extend({
 
@@ -134,6 +134,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
             this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
+            this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.name + '-' + this.model.id;
 
             this.on('remove', function () {
                 this.storeControl();
@@ -157,6 +158,19 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                         attachmentsIds: storedAttachments.idList,
                         attachmentsNames: storedAttachments.names
                     });
+                }
+
+                if (this.allowInternalNotes) {
+                    if (this.getMetadata().get(['entityDefs', 'Note', 'fields', 'isInternal', 'default'])) {
+                        this.isInternalNoteMode = true;
+                    }
+                    if (this.getSessionStorage().has(this.storageIsInernalKey)) {
+                        this.isInternalNoteMode = this.getSessionStorage().get(this.storageIsInernalKey);
+                    }
+                }
+
+                if (this.isInternalNoteMode) {
+                    this.seed.set('isInternal', true);
                 }
 
                 this.createView('postField', 'views/note/fields/post', {
@@ -216,28 +230,37 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         storeControl: function () {
+            var isNotEmpty = false;
+
             if (this.$textarea && this.$textarea.length) {
                 var text = this.$textarea.val();
                 if (text.length) {
                     this.getSessionStorage().set(this.storageTextKey, text);
+                    isNotEmpty = true;
                 } else {
                     if (this.hasStoredText) {
                         this.getSessionStorage().clear(this.storageTextKey);
                     }
                 }
+            }
 
-                var attachmetIdList = this.seed.get('attachmentsIds') || [];
-
-                if (attachmetIdList.length) {
-                    this.getSessionStorage().set(this.storageAttachmentsKey, {
-                        idList: attachmetIdList,
-                        names: this.seed.get('attachmentsNames') || {}
-                    });
-                } else {
-                    if (this.hasStoredAttachments) {
-                        this.getSessionStorage().clear(this.storageAttachmentsKey);
-                    }
+            var attachmetIdList = this.seed.get('attachmentsIds') || [];
+            if (attachmetIdList.length) {
+                this.getSessionStorage().set(this.storageAttachmentsKey, {
+                    idList: attachmetIdList,
+                    names: this.seed.get('attachmentsNames') || {}
+                });
+                isNotEmpty = true;
+            } else {
+                if (this.hasStoredAttachments) {
+                    this.getSessionStorage().clear(this.storageAttachmentsKey);
                 }
+            }
+
+            if (isNotEmpty) {
+                this.getSessionStorage().set(this.storageIsInernalKey, this.isInternalNoteMode);
+            } else {
+                this.getSessionStorage().clear(this.storageIsInernalKey);
             }
         },
 
@@ -264,6 +287,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             if (storedText && storedText.length) {
                 this.hasStoredText = true;
                 this.$textarea.val(storedText);
+            }
+
+            if (this.isInternalNoteMode) {
+                this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
             }
 
             $textarea.off('drop');
@@ -423,6 +450,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
                     this.getSessionStorage().clear(this.storageTextKey);
                     this.getSessionStorage().clear(this.storageAttachmentsKey);
+                    this.getSessionStorage().clear(this.storageIsInernalKey);
                 }, this);
 
                 model.set('post', message);
