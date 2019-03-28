@@ -36,7 +36,7 @@ class Upgrade extends Base
         $infoData = $this->getVersionInfo();
         if (!$infoData) return;
 
-        $nextVersion = $infoData->nextVersion;
+        $nextVersion = $infoData->nextVersion ?? null;
         $lastVersion = $infoData->lastVersion ?? null;
 
         $fromVersion = $this->getConfig()->get('version');
@@ -147,7 +147,7 @@ class Upgrade extends Base
             return;
         }
 
-        if (!$data || !isset($data->nextPackage) || !isset($data->nextVersion)) {
+        if (!$data) {
             echo "Could not get info about next version.\n";
             return;
         }
