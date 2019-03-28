@@ -1,9 +1,9 @@
 {
   "fields": {
     "name": "Navn",
-    "version": "Version",
     "description": "Beskrivelse",
-    "isInstalled": "Installeret"
+    "isInstalled": "Installeret",
+    "checkVersionUrl": "et URL som tjekker for nye versioner"
   },
   "labels": {
     "Uninstall": "Afinstaller",

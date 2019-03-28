@@ -1,12 +1,7 @@
 {
   "fields": {
     "name": "Navn",
-    "status": "Status",
-    "job": "Job",
     "scheduling": "Planlæg"
-  },
-  "links": {
-    "log": "Log"
   },
   "labels": {
     "Create ScheduledJob": "Opret Planlagt Job"
@@ -18,7 +13,8 @@
       "CheckEmailAccounts": "Tjek Personlige Emailkonti",
       "SendEmailReminders": "Send Emailpåmindelse",
       "AuthTokenControl": "Auth Token kontrol",
-      "SendEmailNotifications": "Send Email Notifikationer"
+      "SendEmailNotifications": "Send Email Notifikationer",
+      "CheckNewVersion": "Tjek for ny version"
     },
     "cronSetup": {
       "linux": "Kommentar: Tilføj denne linje i crontabfilen for at køre Espo-Planlagte Jobs:",

@@ -1,9 +1,6 @@
 {
   "fields": {
     "name": "Navn",
-    "logo": "Logo",
-    "companyLogo": "Logo",
-    "url": "URL",
     "portalRoles": "Roller",
     "isActive": "Er Aktiv",
     "isDefault": "Er Standard",
@@ -11,7 +8,6 @@
     "quickCreateList": "Opret Liste Hurtigt",
     "theme": "Tema",
     "language": "Sprog",
-    "dashboardLayout": "Dashboard Layout",
     "dateFormat": "Datoformat",
     "timeFormat": "Tidsformat",
     "timeZone": "Tidszone",

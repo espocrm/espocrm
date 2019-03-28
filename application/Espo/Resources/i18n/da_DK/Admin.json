@@ -2,13 +2,9 @@
   "labels": {
     "Enabled": "Aktiv",
     "Disabled": "Inaktiv",
-    "System": "System",
     "Users": "Brugere",
-    "Email": "Email",
-    "Data": "Data",
     "Customization": "Tilpasning",
     "Available Fields": "Felter til rådighed",
-    "Layout": "Layout",
     "Entity Manager": "Entitetsmanager",
     "Add Panel": "Tilføj Panel",
     "Add Field": "Tilføj Felt",
@@ -17,9 +13,7 @@
     "Upgrade": "Opgrader",
     "Clear Cache": "Tøm Cache",
     "Rebuild": "Genopbyg",
-    "Teams": "Teams",
     "Roles": "Roller",
-    "Portal": "Portal",
     "Portals": "Portaler",
     "Portal Roles": "Portalroller",
     "Outbound Emails": "Udgående Email",
@@ -27,7 +21,6 @@
     "Personal Email Accounts": "Personlige Emailkonti",
     "Inbound Emails": "Indgående Email",
     "Email Templates": "Emailskabeloner",
-    "Import": "Import",
     "Layout Manager": "Layoutmanager",
     "User Interface": "Brugergrænseflade",
     "Auth Tokens": "Auth Token",
@@ -35,7 +28,6 @@
     "Currency": "Valuta",
     "Integrations": "Integrationer",
     "Extensions": "Udvidelser",
-    "Upload": "Upload",
     "Installing...": "Installerer....",
     "Upgrading...": "Opgraderer....",
     "Upgraded successfully": "Opgraderet succesfuldt",
@@ -51,11 +43,22 @@
     "Create Link": "Opret Link",
     "Edit Link": "Rediger Link",
     "Notifications": "Notifikationer",
-    "Jobs": "Jobs",
     "Reset to Default": "Reset til Standard",
     "Email Filters": "Emailfiltre",
     "Portal Users": "Portalbrugere",
-    "Action History": "Action History"
+    "Label Manager": "Felt navne",
+    "Auth Log": "Auth log",
+    "Attachments": "Vedhæftede filer",
+    "API Users": "API brugere",
+    "Template Manager": "Skabelon manager",
+    "System Requirements": "Systemkrav",
+    "PHP Settings": "PHP indstillinger",
+    "Database Settings": "Database indstillinger",
+    "Permissions": "Tilladelser",
+    "Success": "Succes",
+    "Fail": "Fejl",
+    "is recommended": "Anbefales",
+    "extension is missing": "Udvidelsen mangler"
   },
   "layouts": {
     "list": "Liste",
@@ -68,7 +71,12 @@
     "sidePanelsDetail": "Sidepaneler (Detaljer)",
     "sidePanelsEdit": "Sidepaneler  (Rediger)",
     "sidePanelsDetailSmall": "Sidepaneler  (detalje lille)",
-    "sidePanelsEditSmall": "Sidepaneler (rediger lille)"
+    "sidePanelsEditSmall": "Sidepaneler (rediger lille)",
+    "detailPortal": "Detalje (portal)",
+    "detailSmallPortal": "Detajle (lille, portal)",
+    "listSmallPortal": "Liste (lille, portal)",
+    "listPortal": "Liste (portal)",
+    "relationshipsPortal": "Relationspanler (Portal)"
   },
   "fieldTypes": {
     "address": "Adresse",
@@ -81,21 +89,14 @@
     "bool": "Boolsk",
     "currency": "Valuta",
     "date": "Dato",
-    "datetime": "DatoTid",
-    "datetimeOptional": "Dato/DatoTid",
-    "email": "Email",
     "enum": "Enkelt udvælgelse",
     "enumInt": "Enkelt udvælgelse Heltal",
     "enumFloat": "Enkelt udvælgelse Reelt tal",
     "float": "Reelt tal",
-    "int": "Heltal",
-    "link": "Link",
     "linkMultiple": "Flere Links",
     "linkParent": "Overordnet Link",
-    "multienim": "Multiudvælgelse",
     "phone": "Telefon",
     "text": "Tekst",
-    "url": "Url",
     "varchar": "Tekst (Max 255)",
     "file": "Fil",
     "image": "Billede",
@@ -104,13 +105,16 @@
     "rangeInt": "Område Heltal",
     "rangeFloat": "Område Reelt tal",
     "rangeCurrency": "Område Valuta",
-    "wysiwyg": "Wysiwyg",
     "map": "Kort",
     "currencyConverted": "Valuta (Konverteret)",
-    "number": "Nummer"
+    "colorpicker": "Farvevælger",
+    "int": "Heltal",
+    "number": "Nummer",
+    "jsonObject": "Json objekt",
+    "datetime": "Tidspunkt",
+    "datetimeOptional": "Dato og tidspunkt"
   },
   "fields": {
-    "type": "Type",
     "name": "Navn",
     "label": "Betegnelse",
     "required": "Nødvendig",
@@ -119,10 +123,7 @@
     "options": "Muligheder",
     "after": "Efter (Felt)",
     "before": "Før (Felt)",
-    "link": "Link",
     "field": "Felt",
-    "min": "Min",
-    "max": "Max",
     "translation": "Oversættelse",
     "previewSize": "Eksempel Str.",
     "defaultType": "Standard Type",
@@ -130,7 +131,6 @@
     "entityList": "Entitetsliste",
     "isSorted": "Er sorteret (alfabetisk)",
     "audited": "Er Revideret",
-    "trim": "Trim",
     "height": "Højde (px)",
     "minHeight": "Min Højde (px)",
     "provider": "Provider½",
@@ -148,7 +148,18 @@
     "dynamicLogicRequired": "Betingelser der gør feltet påkrævet",
     "dynamicLogicOptions": "Betingelsesmuligheder",
     "probabilityMap": "Stadiesandsynlighed (%)",
-    "readOnly": "Skrivebeskyttet"
+    "readOnly": "Skrivebeskyttet",
+    "noEmptyString": "Tom strengværdi er ikke tilladt",
+    "maxFileSize": "Maks filstørrelse (MB)",
+    "isPersonalData": "Er personlige data",
+    "useIframe": "Brug lframe",
+    "useNumericFormat": "Brug numerisk format",
+    "cutHeight": "Klip højde (px)",
+    "minuteStep": "Minutters trin",
+    "inlineEditDisabled": "Deaktiver Inline redigering",
+    "displayAsLabel": "Visning som Label",
+    "allowCustomOptions": "Tillad brugerdefinerede indstillinger",
+    "maxCount": "Maks antal tæller"
   },
   "messages": {
     "selectEntityType": "Vælg entitetstype i venstremenuen",
@@ -158,12 +169,10 @@
     "selectExtensionPackage": "Vælg udvidelsespakke",
     "extensionInstalled": "Udvidelse {name} {version} er blevet installeret",
     "installExtension": "Udvidelsen {name} {version} er klar til installation",
-    "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
-    "upgradeDone": "EspoCRM has been upgraded to version <strong>{version}</strong>.",
-    "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
-    "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
-    "userHasNoEmailAddress": "User has no email address.",
-    "uninstallConfirmation": "Are you sure you want to uninstall the extension?"
+    "newVersionIsAvailable": "Ny EspoCRM version {latestVersion} er tilgængelig",
+    "uninstallConfirmation": "Er du sikker på du vil afinstallere denne udvidelse?",
+    "cronIsNotConfigured": "Planlagte job kører ikke. Derfor virker indgående mails, notifikationer og påmindelser ikke. Følg venligst [instuctions] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) for at konfigurere cron-job.",
+    "newExtensionVersionIsAvailable": "Ny {extensionName} version {latestVersion} er tilgængelig"
   },
   "descriptions": {
     "settings": "Applikationens systemindstillinger",
@@ -191,9 +200,13 @@
     "notifications": "Indstillinger for in-app og email.",
     "inboundEmails": "Indstillinger for indkommende emails.",
     "portalUsers": "Portalbrugere",
-    "entityManager": "Create and edit custom entities. Manage fields and relationships.",
-    "emailFilters": "Email messages that match the specified filter won't be imported.",
-    "actionHistory": "Log of user actions."
+    "labelManager": "Tilpas applikationens viste navn",
+    "authLog": "Login historie",
+    "leadCapture": "API indgang for Web-to-lead",
+    "attachments": "Alle vedhæftede filer er gemt i systemet",
+    "templateManager": "Tilpas besked skabeloner",
+    "systemRequirements": "Systemkrav for EspoCRM",
+    "apiUsers": "Adskilte brugere til integration"
   },
   "options": {
     "previewSize": {
@@ -203,9 +216,24 @@
       "large": "Stor"
     }
   },
-  "logicalOperators": {
-    "and": "AND",
-    "or": "OR",
-    "not": "NOT"
+  "systemRequirements": {
+    "requiredPhpVersion": "PHP version",
+    "requiredMysqlVersion": "MySQL version",
+    "host": "Værtsnavn",
+    "dbname": "Database navn",
+    "user": "Brugernavn",
+    "writable": "Skrivbar",
+    "readable": "Læsbar"
+  },
+  "templates": {
+    "accessInfo": "Adgangsinfo",
+    "accessInfoPortal": "Adgangsinfo for portaler",
+    "assignment": "Opgave",
+    "mention": "Nævne",
+    "noteEmailRecieved": "Notat omkring modtagne Email",
+    "notePost": "Notat omkring poster",
+    "notePostNoParent": "Note omkring poster (Ingen Forældre)",
+    "noteStatus": "Notat omkring status opdatering",
+    "passwordChangeLink": "Skift kodeord link"
   }
 }

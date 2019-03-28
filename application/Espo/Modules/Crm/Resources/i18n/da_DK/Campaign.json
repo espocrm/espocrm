@@ -2,8 +2,6 @@
   "fields": {
     "name": "Navn",
     "description": "Beskrivelse",
-    "status": "Status",
-    "type": "Type",
     "startDate": "Startdato",
     "endDate": "Slutdato",
     "targetLists": "Kontaktliste",
@@ -18,28 +16,31 @@
     "leadCreatedCount": "Oprettede Leads",
     "revenue": "Indtægt",
     "revenueConverted": "Indtægt (konverteret)",
-    "budget": "Budget",
-    "budgetConverted": "Budget (konverteret)"
+    "budgetConverted": "Budget (konverteret)",
+    "contactsTemplate": "Kontakt skabelon",
+    "leadsTemplate": "Leads skabeloner",
+    "accountsTemplate": "Konto skabelon",
+    "usersTemplate": "Brugere skabelon",
+    "mailMergeOnlyWithAddress": "Spring over poster uden fyldt adresse",
+    "optedInCount": "Tilmeldt",
+    "budgetCurrency": "Budget Valuta"
   },
   "links": {
     "targetLists": "Kontaktliste",
     "excludingTargetLists": "Udelukker Kontaktlister",
     "accounts": "Konti",
     "contacts": "Kontakter",
-    "leads": "Leads",
     "opportunities": "Muligheder",
-    "campaignLogRecords": "Log",
     "massEmails": "Masse-Email",
-    "trackingUrls": "Tracking URLs"
+    "contactsTemplate": "Kontakt skabelon",
+    "leadsTemplate": "Leads skabeloner",
+    "accountsTemplate": "Konto skabelon",
+    "usersTemplate": "Brugere skabelon"
   },
   "options": {
     "type": {
-      "Email": "Email",
-      "Web": "Web",
       "Television": "TV",
-      "Radio": "Radio",
-      "Newsletter": "Nyhedsbrev",
-      "Mail": "Mail"
+      "Newsletter": "Nyhedsbrev"
     },
     "status": {
       "Planning": "Planlægning",
@@ -59,7 +60,9 @@
     "Email Templates": "Emailskabeloner",
     "Unsubscribe again": "Frameld igen",
     "Subscribe again": "Tilmeld igen",
-    "Create Target List": "Opret Kontaktliste"
+    "Create Target List": "Opret Kontaktliste",
+    "Mail Merge": "Mailfletning",
+    "Generate Mail Merge PDF": "Generer mailfletning i PDF"
   },
   "presetFilters": {
     "active": "Aktiv"

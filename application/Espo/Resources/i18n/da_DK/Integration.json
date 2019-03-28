@@ -13,8 +13,5 @@
   "help": {
     "Google": "<p><b>Hent OAuth 2.0 credentials fra Google Developers Console.</b></p><p>Besøg <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> for at hente OAuth 2.0 credentials såsom Client ID og Hemmelig Client  som er kendt af både Google og EspoCRM applicationen.</p> ",
     "GoogleMaps": "<p>Hent API nøgle <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">her</a>.</p> "
-  },
-  "titles": {
-    "GoogleMaps": "Google Maps"
   }
 }

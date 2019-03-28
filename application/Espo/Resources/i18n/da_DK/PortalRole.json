@@ -7,5 +7,13 @@
     "Create PortalRole": "Opret Portalrolle",
     "Scope Level": "Adgangsniveau",
     "Field Level": "Feltniveau"
+  },
+  "fields": {
+    "exportPermission": "Eksporter tilladelse",
+    "massUpdatePermission": "Tilladelse til masse opdatering"
+  },
+  "tooltips": {
+    "exportPermission": "Definer om portalbrugere har rettigheder til at eksportere poster",
+    "massUpdatePermission": "Definerer om portalbrugere har adgang til at masse opdaterer poster"
   }
 }

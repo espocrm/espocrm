@@ -31,9 +31,6 @@
     "Properties": "Egenskaber",
     "Header Row": "Overskriftsrække",
     "Person Name Format": "Personnavn format",
-    "John Smith": "John Smith",
-    "Smith John": "Smith John",
-    "Smith, John": "Smith, John",
     "Field Delimiter": "Feltafgrænser",
     "Date Format": "Datoformat",
     "Decimal Mark": "Decimaltegn",
@@ -49,20 +46,29 @@
     "Imported": "Importeret",
     "Duplicates": "Dubletter",
     "Skip searching for duplicates": "Drop søgning efter dubletter",
-    "Timezone": "Tidszone"
+    "Timezone": "Tidszone",
+    "Remove Import Log": "Fjern Import log",
+    "New Import": "Ny import",
+    "Import Results": "Import resultater",
+    "Silent Mode": "Stille mode"
   },
   "messages": {
     "utf8": "Kodning skal være UTF-8",
     "duplicatesRemoved": "Dubletter fjernet",
-    "inIdle": "Kør når kapacitet er ledig. (for store datamængder via cron)"
+    "inIdle": "Kør når kapacitet er ledig. (for store datamængder via cron)",
+    "revert": "Dette vil fjerne alle importerede poster permanent",
+    "removeDuplicates": "Dette vil fjerne alle importerede poster, som blev genkendt som dublikater",
+    "confirmRevert": "Dette vil fjerne alle importerede poster permanent. Er du sikker?",
+    "confirmRemoveDuplicates": "Dette vil fjerne alle importerede poster, som blev genkendt som dublikater. Er du sikker?",
+    "confirmRemoveImportLog": "Dette fjerner importliggen. Alle importerede poster vil blive gemt. Du kan ikke vende tilbage til importresultaterne. Er du sikker?",
+    "removeImportLog": "Dette vil fjerner importloggen. Alle importerede poster vil blive gemt. Brug dette hvis du er sikker på at importen er god."
   },
   "fields": {
     "file": "Fil",
     "entityType": "Entitetstype",
     "imported": "Imprterede Poster",
     "duplicates": "Dobbelte Poster",
-    "updated": "Opdaterede Poster",
-    "status": "Status"
+    "updated": "Opdaterede Poster"
   },
   "options": {
     "status": {

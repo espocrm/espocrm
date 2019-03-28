@@ -6,7 +6,6 @@
     "License Agreement": "Licensaftale",
     "I accept the agreement": "Jeg accepterer aftalen",
     "Step2 page title": "Database konfiguration",
-    "Step3 page title": "Administrator Setup",
     "Step4 page title": "Systemindstillinger",
     "Step5 page title": "SMTP indstillinger for udgående emails",
     "Errors page title": "Fejl",
@@ -14,45 +13,35 @@
     "Congratulation! Welcome to EspoCRM": "Tillykke! EspoCRM er installeret succesfuldt.",
     "More Information": "Besøg venligst vores {BLOG} for mere information, følg os på {TWITTER}.<br><br>Henvend dig venligst i {FORUM} hvis du har forslag eller spørgsmål.",
     "share": "Hvis du kan lide EspoCRM beder vi dig dele det med dine venner. Lad dem høre om dette produkt.",
-    "blog": "blog",
-    "twitter": "twitter",
-    "forum": "forum",
     "Installation Guide": "Installationsguide",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
     "Locale": "Område",
     "Outbound Email Configuration": "Indstillinger for Udgående Email",
-    "SMTP": "SMTP",
-    "Start": "Start",
     "Back": "Tilbage",
     "Next": "Næste",
     "Go to EspoCRM": "Gå til EspoCRM",
     "Re-check": "Kontroller igen",
-    "Version": "Version",
     "Test settings": "Test Forbindelse",
     "Database Settings Description": "Indtast forbindelses-information for din MySQL database (Hostnavn, brugernavn og kodeord). Du kan angive server port for hostnavn som localhost:3306.",
     "Install": "Installer",
-    "SetupConfirmation page title": "Anbefalede indstillinger",
-    "PHP Configuration": "Anbefalede PHP-indstillinger",
-    "MySQL Configuration": "MySQL Indstillinger",
     "Configuration Instructions": "Indstillingsvejledning",
-    "phpVersion": "PHP version",
-    "requiredMysqlVersion": "MySQL version",
     "dbHostName": "Hostnavn",
     "dbName": "Databasenavn",
     "dbUserName": "Database Brugernavn",
-    "OK": "OK"
+    "SetupConfirmation page title": "Systemkrav",
+    "PHP Configuration": "PHP indstillinger",
+    "MySQL Configuration": "Database indstillinger",
+    "Permission Requirements": "Tilladelser",
+    "Success": "Succes",
+    "Fail": "Fejl",
+    "is recommended": "Anbefales",
+    "extension is missing": "Udvidelse mangler"
   },
   "fields": {
     "Choose your language": "Vælg dit sprog",
     "Database Name": "Databasenavn",
     "Host Name": "Hostnavn",
-    "Port": "Port",
-    "smtpPort": "Port",
     "Database User Name": "Database Brugernavn",
     "Database User Password": "Database brugerkodeord",
-    "Database driver": "Database driver",
     "User Name": "Brugernavn",
     "Password": "Kodeord",
     "smtpPassword": "Kodeord",
@@ -69,11 +58,8 @@
     "Default Currency": "Standard Valuta",
     "Currency List": "Valutaliste",
     "Language": "Sprog",
-    "smtpServer": "Server",
-    "smtpAuth": "Auth",
     "smtpSecurity": "Sikkerhed",
-    "smtpUsername": "Brugernavn",
-    "emailAddress": "Email"
+    "smtpUsername": "Brugernavn"
   },
   "messages": {
     "1045": "Brugeren nægtet adgang",
@@ -83,11 +69,9 @@
     "Some errors occurred!": "Der opstod nogle fejl!",
     "phpVersion": "Din PHP version er ikke supporteret af EspoCRM, venligst opdater som minimum til PHP {minVersion}",
     "requiredMysqlVersion": "Din MySQL version er ikke supporteret af EspoCRM, venligst opdater som minimum til MySQL {minVersion}",
-    "requiredMariadbVersion": "Din MariaDB version er ikke supporteret af EspoCRM, venligst opdater som minimum til MariaDB {minVersion}",
     "The PHP extension was not found...": "PHP-fejl: Udvidelsen <b>{extName}</b> blev ikke fundet.",
     "All Settings correct": "Alle indstillinger er korrekte.",
     "Failed to connect to database": "Kunne ikke forbinde til database.",
-    "PHP version": "PHP version",
     "You must agree to the license agreement": "Du skal erklære dig enig i licensaftalen.",
     "Passwords do not match": "Kodeord er ikke ens",
     "Enable mod_rewrite in Apache server": "Aktiver mod_rewrite i Apache server",
@@ -96,7 +80,6 @@
     "buildDatabase error": "buildDatabase fejl",
     "createUser error": "createUser fejl",
     "checkAjaxPermission error": "checkAjaxPermission fejl",
-    "Ajax failed": "Ajax fejlede",
     "Cannot create user": "Kan ikke oprette bruger",
     "Permission denied": "Tilladelse nægtet",
     "Permission denied to": "Tilladelse nægtet",
@@ -107,13 +90,11 @@
     "Thousand Separator and Decimal Mark equal": "Tusindtalsseparator og decimaltegn kan ikke være det samme",
     "extension": "{0} udvidelse mangler",
     "option": "Anbefalet værdi er {0}",
-    "mysqlSettingError": "EspoCRM kræver MySQL-indstillingen \"{NAME}\" sat til {VALUE} "
+    "mysqlSettingError": "EspoCRM kræver MySQL-indstillingen \"{NAME}\" sat til {VALUE} ",
+    "requiredMariadbVersion": "Din MariaDB version er ikke understøttet af EspoCRM, opdater venligst til MariaDB {minVersion} i det mindste",
+    "Ajax failed": "En uventet fejl opstået"
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
-    },
     "modRewriteInstruction": {
       "apache": {
         "windows": "<br> <pre>1. Find httpd.conf filen (den findes normalt i en mappe kaldet conf, config eller noget i den retning)<br>\n2. I httpd.conf file skal linjen LoadModule rewrite_module modules/mod_rewrite.so aktiveres (fjern #-tegnet foran linjen)<br>\n3. Tjek at linjen ClearModuleList er uden #-tegn og linjen AddModule mod_rewrite.c må heller ikke have #-tegnet i begyndelsen.\n</pre>",
@@ -130,5 +111,13 @@
       "microsoft-iis": "API Fejl: EspoCRM API er utilgængelig.<br> Muligt problem: deaktiveret \"URL Rewrite\". Venligst tjek og aktiver \"URL Rewrite\" Modulet i IIS serveren.",
       "default": "API Fejl: EspoCRM API er utilgængelig.<br> Muligt problem: deaktiveret Rewrite Modul. Venligst tjek og aktiver Rewrite Modulet i din server (f.eks. mod_rewrite i Apache) og .htaccess understøttelse."
     }
+  },
+  "systemRequirements": {
+    "requiredMysqlVersion": "MySQL version",
+    "host": "Værtsnavn",
+    "dbname": "Database navn",
+    "user": "Brugernavn",
+    "writable": "Skrivbar",
+    "readable": "Læsbar"
   }
 }

@@ -4,7 +4,6 @@
   },
   "labels": {
     "Create EmailFolder": "Opret Mappe",
-    "Manage Folders": "Administrer Mapper",
-    "Emails": "Emails"
+    "Manage Folders": "Administrer Mapper"
   }
 }

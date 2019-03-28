@@ -1,27 +1,8 @@
 {
   "fields": {
-    "user": "User",
-    "action": "Action",
-    "createdAt": "Date",
-    "target": "Target",
-    "targetType": "Target Type",
-    "authToken": "Auth Token",
-    "ipAddress": "IP Address"
+    "authLogRecord": "Auth log gemt"
   },
   "links": {
-    "authToken": "Auth Token",
-    "user": "User",
-    "target": "Target"
-  },
-  "presetFilters": {
-    "onlyMy": "Only My"
-  },
-  "options": {
-    "action": {
-      "read": "Read",
-      "update": "Update",
-      "delete": "Delete",
-      "create": "Create"
-    }
+    "authLogRecord": "Auth log gemt"
   }
 }

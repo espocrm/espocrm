@@ -2,19 +2,15 @@
   "labels": {
     "Converted To": "Konverteret Til",
     "Create Lead": "Opret Lead",
-    "Convert": "Konverter",
-    "convert": "convert"
+    "Convert": "Konverter"
   },
   "fields": {
     "name": " Navn",
-    "emailAddress": "Email",
     "title": "Titel",
-    "website": "Website",
     "phoneNumber": "Telefon",
     "accountName": "Kontonavn",
     "doNotCall": "Ring Ikke!",
     "address": "Adresse",
-    "status": "Status",
     "source": "Kilde",
     "opportunityAmount": "Beløb for Mulighed",
     "opportunityAmountConverted": "Beløb for Mulighed (Konverteret)",
@@ -26,8 +22,8 @@
     "targetLists": "Kontaktlister",
     "targetList": "Kontaktliste",
     "industry": "Industri",
-    "acceptanceStatus": "Acceptance Status",
-    "opportunityAmountCurrency": "Opportunity Amount Currency"
+    "acceptanceStatusMeetings": "Accept status (Møder)",
+    "acceptanceStatusCalls": "Accept status (Opkald)"
   },
   "links": {
     "targetLists": "Kontaktlister",
@@ -51,9 +47,7 @@
     "source": {
       "": "Ingen",
       "Call": "Samtale",
-      "Email": "Email",
       "Existing Customer": "Eksisterende Kunde",
-      "Partner": "Partner",
       "Public Relations": "PR",
       "Web Site": "Webside",
       "Campaign": "Kampagne",

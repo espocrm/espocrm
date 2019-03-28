@@ -1,6 +1,10 @@
 {
   "layouts": {
     "detailConvert": "Konverter Lead",
-    "listForAccount": "Liste (for Konto)"
+    "listForAccount": "Liste (for Konto)",
+    "listForContact": "Liste (for kontakter)"
+  },
+  "templates": {
+    "reminder": "Påmindelse"
   }
 }

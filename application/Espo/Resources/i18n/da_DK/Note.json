@@ -1,12 +1,14 @@
 {
   "fields": {
-    "post": "Post",
     "attachments": "Vedhæftninger",
     "targetType": "Mål",
-    "teams": "Teams",
     "users": "Brugere",
     "portals": "Portaler",
-    "type": "Type"
+    "isGlobal": "Er global",
+    "isInternal": "Er interne (For interne brugere)",
+    "related": "relateret",
+    "createdByGender": "Oprettet efter køn",
+    "number": "Nummer"
   },
   "filters": {
     "all": "Alle",
@@ -24,5 +26,9 @@
       "all": "til alle interne brugere",
       "portals": "til portalbrugere"
     }
+  },
+  "links": {
+    "superParent": "Super forældre",
+    "related": "Relateret"
   }
 }

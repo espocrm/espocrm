@@ -1,20 +1,18 @@
 {
   "fields": {
     "name": "Navn",
-    "emailAddress": "Email",
-    "website": "Website",
     "phoneNumber": "Telefon",
     "billingAddress": "Betalingsadresse",
     "shippingAddress": "Leveringsadresse",
     "description": "Beskrivelse",
     "sicCode": "Sic Kode",
     "industry": "Industri",
-    "type": "Type",
     "contactRole": "Titel",
     "campaign": "Kampagne",
     "targetLists": "Kontaktlister",
     "targetList": "Kontaktliste",
-    "originalLead": "Oprindelig Lead"
+    "originalLead": "Oprindelig Lead",
+    "contactIsInactive": "inaktiv"
   },
   "links": {
     "contacts": "Kontakter",
@@ -34,8 +32,6 @@
   "options": {
     "type": {
       "Customer": "Kunde",
-      "Investor": "Investor",
-      "Partner": "Partner",
       "Reseller": "Forhandler"
     },
     "industry": {
@@ -61,9 +57,7 @@
       "Manufacturing": "Produktion",
       "Publishing": "Medien",
       "Real Estate": "Ejendom",
-      "Service": "Service",
       "Sports": "Sport",
-      "Software": "Software",
       "Technology": "Teknologi",
       "Telecommunications": "Telekommunikation",
       "Television": "TV",
@@ -75,25 +69,23 @@
       "Defense": "Forsvar",
       "Creative": "Kreativ",
       "Culture": "Kultur",
-      "Consulting": "Consulting",
       "Electric Power": "Elektroenergi",
       "Hospitality": "Hotel og Restaurant",
       "Mass Media": "Massemedier",
       "Mining": "Mineindustri",
       "Music": "Musik",
-      "Marketing": "Marketing",
       "Petroleum": "Olieindustri",
-      "Retail": "Retail",
-      "Shipping": "Shipping",
       "Support": "Service",
       "Testing, Inspection & Certification": "Testning, Inspektion og Certificering",
       "Wholesale": "Engros",
-      "Water": "Vand"
+      "Water": "Vand",
+      "Travel": "Rejse"
     }
   },
   "labels": {
     "Create Account": "Opret Konto",
-    "Copy Billing": "Kopier Betalingsadresse"
+    "Copy Billing": "Kopier Betalingsadresse",
+    "Set Primary": "Sæt primær"
   },
   "presetFilters": {
     "customers": "Kunder",

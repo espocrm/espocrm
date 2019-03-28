@@ -3,21 +3,6 @@
     "user": "Bruger",
     "ipAddress": "IP-adresse",
     "lastAccess": "Sidste adgangsdato.",
-    "createdAt": "Logindato",
-    "isActive": "Is Active",
-    "portal": "Portal"
-  },
-  "links": {
-    "actionHistoryRecords": "Action History"
-  },
-  "presetFilters": {
-    "active": "Active",
-    "inactive": "Inactive"
-  },
-  "labels": {
-    "Set Inactive": "Set Inactive"
-  },
-  "massActions": {
-    "setInactive": "Set Inactive"
+    "createdAt": "Logindato"
   }
 }

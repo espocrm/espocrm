@@ -1,6 +1,8 @@
 {
   "labels": {
-    "Dynamic Logic": "Dynamisk Logik"
+    "Dynamic Logic": "Dynamisk Logik",
+    "Name": "Navn",
+    "Label": "Vist felt navn"
   },
   "options": {
     "dateTimeDefault": {
@@ -70,6 +72,29 @@
     "maxLength": "Højest accepterede tekstlængde",
     "before": "Datoværdien må ikke være tidligere end datoeværdien i det angivne felt.",
     "after": "Datoværdien skal være senere end datoværdien i det angivne felt.",
-    "readOnly": "Feltværdien kan ikke angives af brugeren, men beregnes gennem formel."
+    "readOnly": "Feltværdien kan ikke angives af brugeren, men beregnes gennem formel.",
+    "maxFileSize": "Hvis tom eller 0, så er der ingen begrænsning"
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Vej",
+      "city": "By",
+      "state": "stat",
+      "country": "Land",
+      "postalCode": "Postnummer",
+      "map": "Kort"
+    },
+    "personName": {
+      "salutation": "Hilsen",
+      "first": "Først",
+      "last": "Sidst"
+    },
+    "currency": {
+      "converted": "(Konverteret)",
+      "currency": "(Valuta)"
+    },
+    "datetimeOptional": {
+      "date": "Dato"
+    }
   }
 }

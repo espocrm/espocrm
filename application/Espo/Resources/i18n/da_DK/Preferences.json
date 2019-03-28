@@ -9,30 +9,30 @@
     "defaultCurrency": "Standardvaluta",
     "currencyList": "Valutaliste",
     "language": "Sprog",
-    "smtpServer": "Server",
-    "smtpPort": "Port",
-    "smtpAuth": "Auth",
     "smtpSecurity": "Sikkerhed",
     "smtpUsername": "Brugernavn",
-    "emailAddress": "Email",
     "smtpPassword": "Kodeord",
     "smtpEmailAddress": "Emailadresse",
     "exportDelimiter": "Eksportbegrænser",
-    "autoFollowEntityTypeList": "Auto-følg",
     "signature": "Emailsignatur",
     "dashboardTabList": "Menuliste",
     "tabList": "Menuliste",
     "defaultReminders": "Standard for Underretninger",
     "theme": "Tema",
     "useCustomTabList": "Brugerdefineret Menuliste",
-    "emailReplyToAllByDefault": "Emailsvar til Alle som Standard",
     "receiveAssignmentEmailNotifications": "Email notifikationer efter tildeling",
     "receiveMentionEmailNotifications": "Email notifikationer når du nævnes i poster.",
     "receiveStreamEmailNotifications": "Email notifikationer om post- og statusopdateringer",
-    "dashboardLayout": "Dashboard Layout",
     "emailReplyForceHtml": "Email Svar i HTML",
+    "autoFollowEntityTypeList": "Auto-følg",
+    "emailReplyToAllByDefault": "Emailsvar til Alle som Standard",
     "doNotFillAssignedUserIfNotRequired": "Udfyld ikke Tildelt Bruger, hvis det ikke er påkrævet.",
-    "followEntityOnStreamPost": "Auto-følg entitet efter at have postet i liste."
+    "followEntityOnStreamPost": "Auto-følg entitet efter at have postet i liste.",
+    "followCreatedEntities": "Auto følg oprettede poster",
+    "followCreatedEntityTypeList": "Autofølg oprettede poster for en specifik entitetstype",
+    "emailUseExternalClient": "Brug en ekstern email klient",
+    "scopeColorsDisabled": "Deaktier adgangsfarver",
+    "tabColorsDisabled": "Deaktiver tabulator farver"
   },
   "options": {
     "weekStart": {
@@ -43,11 +43,14 @@
   "labels": {
     "Notifications": "Notifikationer",
     "User Interface": "Brugergrænseflade",
-    "SMTP": "SMTP",
     "Misc": "Forskelligt",
-    "Locale": "Landestandard"
+    "Locale": "Landestandard",
+    "Reset Dashboard to Default": "Nulstil Dashboard til standard"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Bruger vil automatisk følge alle nye poster i de valgte entitetstyper, vil se nyheder i aktiviteter og modtage notifikationer."
+    "autoFollowEntityTypeList": "Bruger vil automatisk følge alle nye poster i de valgte entitetstyper, vil se nyheder i aktiviteter og modtage notifikationer.",
+    "doNotFillAssignedUserIfNotRequired": "Når oprettede poster i tildelt bruger er ikke nødvindigt at blive udfyldt med egen bruger, medmindre feltet er påkrævet",
+    "followCreatedEntities": "Når du opretter nye poster, vil du automatisk følge dem, selvom de tilhører en anden bruger",
+    "followCreatedEntityTypeList": "Når du opretter nye poster af en valgt entitetstype, vil du automatisk følge dem, selvom de tilhører en anden bruger"
   }
 }

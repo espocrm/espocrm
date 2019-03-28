@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "username": "Brugernavn",
+    "ipAddress": "IP adresse",
+    "requestTime": "Forespørgelstid",
+    "createdAt": "Forespurgt",
+    "isDenied": "Afvist",
+    "denialReason": "Afslagsgrund",
+    "user": "Bruger",
+    "authToken": "Auth token oprettet",
+    "requestUrl": "Andmodet URL",
+    "requestMethod": "Forespørgelsmetode",
+    "authTokenIsActive": "Auth token er aktiv",
+    "authenticationMethod": "Godkendelsesmetode"
+  },
+  "links": {
+    "authToken": "Auth token oprettet",
+    "user": "Bruger",
+    "actionHistoryRecords": "Handlingshistorie"
+  },
+  "presetFilters": {
+    "denied": "Nægtet",
+    "accepted": "Accepteret"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Ugyldige legitimationsoplysnigner",
+      "INACTIVE_USER": "Inaktive brugere",
+      "IS_PORTAL_USER": "Portal bruger",
+      "IS_NOT_PORTAL_USER": "Ikke en portal bruger",
+      "USER_IS_NOT_IN_PORTAL": "Bruger er ikke relateret til portalen"
+    }
+  }
+}

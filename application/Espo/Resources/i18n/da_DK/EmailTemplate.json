@@ -1,17 +1,17 @@
 {
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "isHtml": "Er Html",
     "body": "Indhold",
     "subject": "Emne",
     "attachments": "Vedhæftet",
     "insertField": "Indsæt Felt",
-    "oneOff": "Kun en gang"
+    "oneOff": "Kun en gang",
+    "category": "Kategori"
   },
   "labels": {
     "Create EmailTemplate": "Opret Emailskabelon",
-    "Info": "Info"
+    "Available placeholders": "Tilgængelige pladsholdere"
   },
   "tooltips": {
     "oneOff": "Check hvis du kun skal bruge denne skabelon en enkelt gang. F.eks. til masse-email."
@@ -20,6 +20,13 @@
     "actual": "Aktuel"
   },
   "messages": {
-    "infoText": "Tilgængelige variabler:\n\n{optOutUrl} &#8211; URL til afmeldingslink\n\n{optOutLink} &#8211; afmeldingslink"
+    "infoText": "Tilgængelige pladsholdere\n\n{optOutUrl} &#8211; URL for et Unsubscribe link\n\n{optOutLink} &#8211; et unsubscribe link"
+  },
+  "placeholderTexts": {
+    "optOutUrl": "URL for et afmeldningslink",
+    "optOutLink": "Et afmeldningslink",
+    "today": "Dags dato",
+    "now": "Nuværende dato og tid",
+    "currentYear": "Nuværende år"
   }
 }

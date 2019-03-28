@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "storeSentEmails": "Lager Sendte Emails",
     "startAt": "Startdato",
     "fromAddress": "Fra Adresse",
@@ -13,7 +12,8 @@
     "inboundEmail": "Emailkonto",
     "targetLists": "Kontaktlister",
     "excludingTargetLists": "Ekskluderer Kontaktlister",
-    "optOutEntirely": "Fuldstændig Opt-Out"
+    "optOutEntirely": "Fuldstændig Opt-Out",
+    "smtpAccount": "SMTP konto"
   },
   "links": {
     "targetLists": "Kontaktlister",
@@ -35,7 +35,7 @@
   },
   "labels": {
     "Create MassEmail": "Opret Masse-Email",
-    "Send Test": "Send Test"
+    "group": "gruppe"
   },
   "messages": {
     "selectAtLeastOneTarget": "Vælg mindst et Mål",
@@ -44,7 +44,8 @@
   "tooltips": {
     "optOutEntirely": "Emailadresser tilhørende modtagere, som er afmeldt, bliver markeret som \"afmeldt\", og de vil ikke modtage masse-emails fremover.",
     "targetLists": "Kontakter der skal modtage meddelelser",
-    "excludingTargetLists": "Kontakter der ikke skal modtage meddelelser"
+    "excludingTargetLists": "Kontakter der ikke skal modtage meddelelser",
+    "storeSentEmails": "Emails vil blive gemt i CRM"
   },
   "presetFilters": {
     "actual": "Aktuel",

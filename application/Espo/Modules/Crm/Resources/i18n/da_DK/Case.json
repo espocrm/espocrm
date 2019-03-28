@@ -2,27 +2,24 @@
   "fields": {
     "name": "Navn",
     "number": "Nummer",
-    "status": "Status",
     "account": "Konto",
     "contact": "Kontakt",
     "contacts": "Kontakter",
     "priority": "Prioritet",
-    "type": "Type",
     "description": "Beskrivelse",
-    "inboundEmail": "Ingående Email",
-    "lead": "Lead"
+    "attachments": "Vedhæftede filer",
+    "inboundEmail": "Gruppe email konto"
   },
   "links": {
-    "inboundEmail": "Indgående Email",
     "account": "Konto",
     "contact": "Kontakt (Primær)",
     "Contacts": "Kontakter",
     "meetings": "Møder",
     "calls": "Opkald",
     "tasks": "Opgaver",
-    "emails": "Emails",
     "articles": "Vidensbase Artikler",
-    "lead": "Lead"
+    "attachments": "Vedhæftede filer",
+    "inboundEmail": "Gruppe email konto"
   },
   "options": {
     "status": {
@@ -35,14 +32,12 @@
     },
     "priority": {
       "Low": "Lav",
-      "Normal": "Normal",
       "High": "Høj",
       "Urgent": "Vigtig"
     },
     "type": {
       "Question": "Spørgsmål",
-      "Incident": "Hændelse",
-      "Problem": "Problem"
+      "Incident": "Hændelse"
     }
   },
   "labels": {

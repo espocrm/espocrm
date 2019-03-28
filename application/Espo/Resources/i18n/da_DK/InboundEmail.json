@@ -2,15 +2,12 @@
   "fields": {
     "name": "Navn",
     "emailAddress": "Imailadresse",
-    "status": "Status",
     "assignToUser": "Tildel til Bruger",
     "host": "Vært",
     "username": "Brugernavn",
     "password": "Kodeord",
-    "port": "Port",
     "monitoredFolders": "Overvågede Mapper",
     "trashFolder": "Papirkurv",
-    "ssl": "SSL",
     "createCase": "Opret Sag",
     "reply": "Autosvar",
     "caseDistribution": "Sag Fordeling",
@@ -22,7 +19,18 @@
     "fetchSince": "Hent Siden",
     "addAllTeamUsers": "For alle teambrugere",
     "team": "Målteam",
-    "teams": "Teams"
+    "sentFolder": "Sendt mappe",
+    "storeSentEmails": "Gem sendte Emails",
+    "useSmtp": "Brug SMTP",
+    "smtpHost": "SMTP Vært",
+    "smtpSecurity": "SMTP Sikkerhed",
+    "smtpUsername": "SMTP Brugernavne",
+    "smtpPassword": "SMTP password",
+    "fromName": "Fra navn",
+    "smtpIsShared": "SMTP er delt",
+    "smtpIsForMassEmail": "SMTP er for masse-Emails",
+    "useImap": "Hent Emails",
+    "keepFetchedEmailsUnread": "Gør hentede Emails ulæste"
   },
   "tooltips": {
     "reply": "Giv afsender besked om, at deres email er modtaget\n\nKun en email i en bestemt tidsperiode til en modtager for at undgå looping",
@@ -33,11 +41,14 @@
     "team": "Team sager bliver tildelt",
     "teams": "Teams emails bliver tildelt",
     "addAllTeamUsers": "Emails vil kunne ses i alle brugeres indbakke i angivne teams.",
-    "targetUserPosition": "Users with specified position will be distributed with cases."
+    "monitoredFolders": "Flere mapper skal seperares ved komma",
+    "smtpIsShared": "Hvis markeret, vil brugerne kunne sende e-mails ved hjælp af denne SMTP. Tilgængelighed styres af Roller gennem tilladelsen til gruppens Email-konto.",
+    "smtpIsForMassEmail": "Hvis tjekket, så vil SMTP være tilgænge for masse-Emails",
+    "storeSentEmails": "Sendte emails vil blive gemt på IMAP server"
   },
   "links": {
     "filters": "Filtre",
-    "emails": "Emails"
+    "assignToUser": "Tildel til brugeren"
   },
   "options": {
     "status": {
@@ -47,15 +58,12 @@
     "caseDistribution": {
       "": "Ingen",
       "Direct-Assignment": "Direkte tildeling",
-      "Round-Robin": "Round-Robin",
       "Least-Busy": "Mindst-Optaget"
     }
   },
   "labels": {
     "Create InboundEmail": "Opret Emailkonto",
-    "IMAP": "IMAP",
-    "Actions": "Handlinger",
-    "Main": "Main"
+    "Actions": "Handlinger"
   },
   "messages": {
     "couldNotConnectToImap": "Kunne ikke forbinde til IMAPserver"

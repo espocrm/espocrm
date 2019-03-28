@@ -4,16 +4,23 @@
     "roles": "Roller",
     "assignmentPermission": "Tilladelse til tildeling",
     "userPermission": "Brugertilladelse",
-    "portalPermission": "Portaltilladelse"
+    "portalPermission": "Portaltilladelse",
+    "groupEmailAccountPermission": "Gruppe email konto tilladelser",
+    "exportPermission": "Eksporter tilladelse",
+    "dataPrivacyPermission": "Privat data tilladelse",
+    "massUpdatePermission": "Tilladelse til masse opdatering"
   },
   "links": {
-    "users": "Brugere",
-    "teams": "Teams"
+    "users": "Brugere"
   },
   "tooltips": {
     "assignmentPermission": "Tillader at begrænse mulighed for at tildele optegnelser og sende meddelelser til andre brugere.\n\nalle - ingen begrænsninger\n\nteam - kan kun tildele og sende til andre teammedlemmer\n\nnej - kan kun tildele og sende til sig selv",
     "userPermission": "Tillader at begrænse brugeres mulighed for at se andre brugeres aktiviteter og kalender.\n\nalle - kan se alt\n\nteam - kan kun se teammedlemmers aktiviteter\n\nnej - kan ikke se",
-    "portalPermission": "Definerer adgang til portalinformation, mulighed for at konvertere kontakter til portalbrugere og sende meddelelser til portalbrugere."
+    "portalPermission": "Definerer adgang til portalinformation, mulighed for at konvertere kontakter til portalbrugere og sende meddelelser til portalbrugere.",
+    "groupEmailAccountPermission": "Definerer en adgang til gruppe Email-konti, en mulighed for at sende Emails fra gruppens SMTP",
+    "dataPrivacyPermission": "Tilladelser til visning og slette privat data",
+    "exportPermission": "Definerer om brugere har rettigheder til at eksportere poster",
+    "massUpdatePermission": "Definerer om brugere har adgang til at masse opdaterer poster"
   },
   "labels": {
     "Access": "Adgang",
@@ -29,7 +36,6 @@
     },
     "levelList": {
       "all": "Alle",
-      "team": "team",
       "account": "Konto",
       "contact": "Kontakt",
       "own": "Egne",

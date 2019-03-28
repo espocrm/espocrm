@@ -1,7 +1,4 @@
 {
-  "label": {
-    "Field": "Felt"
-  },
   "options": {
     "operators": {
       "equals": "Lig med",
@@ -24,5 +21,8 @@
       "notContains": "Indeholder Ikke",
       "notHas": "Indeholder Ikke"
     }
+  },
+  "labels": {
+    "Field": "Felt"
   }
 }

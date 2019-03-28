@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "number": "Nummer",
+    "target": "Mål",
+    "createdAt": "Indtastet",
+    "isCreated": "Er Lead Capture"
+  },
+  "links": {
+    "target": "Mål"
+  }
+}

@@ -9,8 +9,7 @@
     "emailFolder": "Mappe"
   },
   "labels": {
-    "Create EmailFilter": "Opret Emailfilter",
-    "Emails": "Emails"
+    "Create EmailFilter": "Opret Emailfilter"
   },
   "tooltips": {
     "from": "Emails sendt fra den angivne adresse. Efterlad tom hvis unødvendig. Du kan benytte wildcard*.",

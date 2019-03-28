@@ -14,7 +14,8 @@
     "amountWeightedConverted": "Beløb Vægtet",
     "campaign": "Kampagne",
     "originalLead": "Oprindelig Lead",
-    "amountCurrency": "Amount Currency"
+    "contactRole": "Kontakt roller",
+    "lastStage": "Sidste etape"
   },
   "links": {
     "contacts": "Kontakter",
@@ -26,8 +27,6 @@
     "stage": {
       "Prospecting": "Undersøges",
       "Qualification": "Kvalifikation",
-      "Proposal": "Tilbud",
-      "Negotiation": "Forhandler",
       "Needs Analysis": "Behovsanalyse",
       "Value Proposition": "Vejledende Tilbud",
       "Id. Decision Makers": "Identifikation af Beslutningstagere",
@@ -35,7 +34,9 @@
       "Proposal/Price Quote": "Tilbud/Pristilbud",
       "Negotiation/Review": "Forhandler/Gennemgår",
       "Closed Won": "Vundet og Lukket",
-      "Closed Lost": "Tabt og Lukket"
+      "Closed Lost": "Tabt og Lukket",
+      "Proposal": "Forslag",
+      "Negotiation": "Forhandling"
     }
   },
   "labels": {

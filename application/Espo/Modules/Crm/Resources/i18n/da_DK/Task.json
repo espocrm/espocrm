@@ -2,7 +2,6 @@
   "fields": {
     "name": "Navn",
     "parent": "Henviser til",
-    "status": "Status",
     "dateStart": "Startdato",
     "dateEnd": "Tidsfrist",
     "dateStartDate": "Startdato (Hele dagen)",
@@ -13,10 +12,13 @@
     "account": "Konto",
     "dateCompleted": "Afsluttet Dato",
     "attachments": "Vedhæftede",
-    "reminders": "Underretninger"
+    "reminders": "Underretninger",
+    "contact": "Kontakt"
   },
   "links": {
-    "attachments": "Vedhæftede"
+    "attachments": "Vedhæftede",
+    "account": "Konto",
+    "contact": "Kontakt"
   },
   "options": {
     "status": {
@@ -28,7 +30,6 @@
     },
     "priority": {
       "Low": "Lav",
-      "Normal": "Normal",
       "High": "Høj",
       "Urgent": "Vigtig"
     }

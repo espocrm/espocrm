@@ -3,6 +3,7 @@
     "targetLists": "Kontaktlister"
   },
   "fields": {
-    "acceptanceStatus": "Acceptance Status"
+    "acceptanceStatusMeetings": "Accept satus (Møde)",
+    "acceptanceStatusCalls": "Accept status (Opkald)"
   }
 }

@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "Navn",
+    "campaign": "Kampagne",
+    "isActive": "Er aktiv",
+    "subscribeToTargetList": "Tilmeld til målliste",
+    "subscribeContactToTargetList": "Tilmeld kontakt, hvis den eksisterer",
+    "targetList": "Målliste",
+    "fieldList": "Nyttelast felter",
+    "optInConfirmation": "Dobbelt tilmelding",
+    "optInConfirmationEmailTemplate": "Skabelon til Email tilmeldingsbekræftelse",
+    "optInConfirmationLifetime": "Tilmeldt bekræftelse liftime (i timer)",
+    "optInConfirmationSuccessMessage": "Tekst som bliver vist efter tilmelding bekræftelse",
+    "apiKey": "API nøgle",
+    "targetTeam": "Mål team",
+    "exampleRequestMethod": "Metode",
+    "exampleRequestPayload": "Nyttelast"
+  },
+  "links": {
+    "targetList": "Målliste",
+    "campaign": "Kampagne",
+    "optInConfirmationEmailTemplate": "Skabelon til Email tilmeldingsbekræftelse ",
+    "targetTeam": "Mål team"
+  },
+  "labels": {
+    "Create LeadCapture": "Opret adgangspunkt",
+    "Generate New API Key": "Generere ny API nøgle",
+    "Request": "Admodning",
+    "Confirm Opt-In": "Bekræft tilmelding"
+  },
+  "messages": {
+    "generateApiKey": "Opret ny API nøgle",
+    "optInConfirmationExpired": "Tilmeldingsbekræftelseslink er udløbet",
+    "optInIsConfirmed": "Tilmelding er bekræftet"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown er supportet"
+  }
+}

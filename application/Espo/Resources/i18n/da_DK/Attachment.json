@@ -1,5 +1,24 @@
 {
   "insertFromSourceLabels": {
     "Document": "Indsæt dokument."
+  },
+  "fields": {
+    "role": "Rolle",
+    "related": "Relateret",
+    "file": "Fil",
+    "field": "Felt",
+    "sourceId": "Søge ID",
+    "storage": "Opbevaring",
+    "size": "Størrelse (Bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Vedhæftet fil",
+      "Inline Attachment": "Inline vedhæftning",
+      "Import File": "Importer fil",
+      "Export File": "Eksporter fil",
+      "Mail Merge": "Mail fletning",
+      "Mass Pdf": "Masse-PDF"
+    }
   }
 }

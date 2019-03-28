@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Lav kategori",
+    "Manage Categories": "Administrer kategorier",
+    "EmailTemplates": "Email skabelon"
+  },
+  "fields": {
+    "order": "Ordre",
+    "childList": "Børneliste"
+  },
+  "links": {
+    "emailTemplates": "Email skabelon"
+  }
+}

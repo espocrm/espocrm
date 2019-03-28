@@ -3,12 +3,10 @@
     "Fields": "Felter",
     "Relationships": "Relationer",
     "Schedule": "Planlæg",
-    "Log": "Log",
     "Formula": "Formel"
   },
   "fields": {
     "name": "Navn",
-    "type": "Type",
     "labelSingular": "Betegnelse Ental",
     "labelPlural": "Betegnelse Flertal",
     "stream": "aktiviteter",
@@ -16,7 +14,6 @@
     "linkType": "Relationsype",
     "entityForeign": "Fremmedentitet",
     "linkForeign": "Fremmedlink",
-    "link": "Link",
     "labelForeign": "Fremmedbetegnelse",
     "sortBy": "Standard Sortering (Felt)",
     "sortDirection": "Standard Sortering (Rækkefølge)",
@@ -28,16 +25,19 @@
     "audited": "Revideret",
     "auditedForeign": "Revideret af udenforstående",
     "statusField": "Statusfelt",
-    "beforeSaveCustomScript": "Før Lagring af Brugerdefineret Script"
+    "beforeSaveCustomScript": "Før Lagring af Brugerdefineret Script",
+    "color": "Farve",
+    "kanbanViewMode": "Kanban view",
+    "kanbanStatusIgnoreList": "Ignorerede grupper i Kanban visning",
+    "iconClass": "Ikon",
+    "fullTextSearch": "Fuld tekst søgning"
   },
   "options": {
     "type": {
       "": "Ingen",
       "Base": "Basis",
-      "Person": "Person",
       "CategoryTree": "Kategoritræ",
       "Event": "Begivenhed",
-      "BasePlus": "Base Plus",
       "Company": "Firma"
     },
     "linkType": {
@@ -64,6 +64,7 @@
     "disabled": "Marker hvis du ikke behøver denne entitet i dit system.",
     "linkAudited": "Oprettelse af relaterede poster og sammenkædning med eksisterende poster bliver logget i Listen.",
     "linkMultipleField": "'Forbind-Flere'-feltet er en bekvem måde at redigere relationer. Brug den ikke, hvis du har markeret et stort antal relaterede poster.",
-    "entityType": "Base Plus - har Aktivitets-, historiks- og opgavepaneler."
+    "entityType": "Base Plus - har Aktivitets-, historiks- og opgavepaneler.",
+    "fullTextSearch": "Løbende genopretning er nødvendig"
   }
 }

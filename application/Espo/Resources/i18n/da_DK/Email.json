@@ -1,12 +1,9 @@
 {
   "fields": {
     "parent": "Henviser til",
-    "status": "Status",
     "dateSent": "Dato sendt",
     "from": "Fra",
     "to": "Til",
-    "cc": "CC",
-    "bcc": "BCC",
     "replyTo": "Svar Til",
     "replyToString": "Svar Til (Streng) ",
     "isHtml": "Er Html",
@@ -14,8 +11,7 @@
     "subject": "Emne",
     "attachments": "Vedhæftet",
     "selectTemplate": "Vælg Skabelon",
-    "fromEmailAddress": "Fra Adresse",
-    "toEmailAddresses": "Til Adresse",
+    "fromAddress": "Fra Adresse",
     "emailAddress": "Emailadresse",
     "deliveryDate": "Afleveringsdato",
     "account": "Konto",
@@ -30,17 +26,41 @@
     "name": "Navn (Emne)",
     "isReplied": "Er Besvaret",
     "isNotReplied": "Er Ikke Besvaret",
-    "sentBy": "Sendt af (Bruger)",
     "folder": "Mappe",
     "inboundEmails": "Gruppekonti",
     "emailAccounts": "Personlige Konti",
-    "hasAttachment": "Har Vedhæftet"
+    "hasAttachment": "Har Vedhæftet",
+    "sentBy": "Sendt af (Bruger)",
+    "assignedUsers": "Tildelte brugere",
+    "bodyPlain": "Body (Almindelig)",
+    "ccEmailAddresses": "CC Email Adresser",
+    "messageId": "Besked ID",
+    "messageIdInternal": "Besked ID (interne)",
+    "folderId": "Mappe ID",
+    "fromName": "Fra Navn",
+    "fromString": "Fra streng",
+    "isSystem": "Er i system",
+    "toEmailAddresses": "Til Emailadresser",
+    "bccEmailAddresses": "BCC Emailadresser",
+    "replyToEmailAddresses": "Besvar Emailadresser",
+    "personStringData": "Personlig streng data",
+    "fromEmailAddress": "Fra adresse (link)",
+    "replyToName": "Besvar til navn",
+    "replyToAddress": "Besvar til adresse"
   },
   "links": {
     "replied": "Besvaret",
     "replies": "Svar",
     "inboundEmails": "Gruppekonti",
-    "emailAccounts": "Personlige Konti"
+    "emailAccounts": "Personlige Konti",
+    "assignedUsers": "Tildelte brugere",
+    "sentBy": "Sendt af",
+    "attachments": "Vedhæftede filer",
+    "fromEmailAddress": "Fra Email adresse",
+    "toEmailAddresses": "Til Email adresse",
+    "ccEmailAddresses": "CC Email adresse",
+    "bccEmailAddresses": "BCC Email adresse",
+    "replyToEmailAddresses": "Besvar Emailadresser"
   },
   "options": {
     "status": {
@@ -65,7 +85,6 @@
     "Inbound Emails": "Gruppe Emailkonti",
     "Email Templates": "Emailskabeloner",
     "Send Test Email": "Send Test-email",
-    "Send": "Send",
     "Email Address": "Emailadresse",
     "Mark Read": "Marker som Læst",
     "Sending...": "Sender..",
@@ -78,13 +97,15 @@
     "Retrieve from Trash": "Hent fra Papirkurv",
     "Move to Folder": "Flyt til Mappe",
     "Filters": "Filtre",
-    "Folders": "Mapper"
+    "Folders": "Mapper",
+    "View Users": "Se brugere"
   },
   "messages": {
     "noSmtpSetup": "Ingen SMTP indstillinger {link}.",
     "testEmailSent": "Test-email afsendt",
     "emailSent": "Email afsendt",
-    "savedAsDraft": "Gemt som Kladde"
+    "savedAsDraft": "Gemt som Kladde",
+    "confirmInsertTemplate": "Email-koden vil gå tabt. Er du sikker på at du vil indsætte skabelonen?"
   },
   "presetFilters": {
     "sent": "Sendt",

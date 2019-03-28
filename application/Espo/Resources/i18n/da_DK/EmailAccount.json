@@ -1,13 +1,10 @@
 {
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "host": "Vært",
     "username": "Brugernavn",
     "password": "Kodeord",
-    "port": "Port",
     "monitoredFolders": "Overvågede Mapper",
-    "ssl": "SSL",
     "fetchSince": "Hent Siden",
     "emailAddress": "Emailadresse",
     "sentFolder": "Sendt Mappe",
@@ -15,16 +12,13 @@
     "keepFetchedEmailsUnread": "Behold Hentede Emails som Ulæste",
     "emailFolder": "Læg i Mappe",
     "useSmtp": "Brug SMTP",
-    "smtpHost": "SMTP Host",
-    "smtpPort": "SMTP Port",
-    "smtpAuth": "SMTP Auth",
     "smtpSecurity": "SMTP Sikkerhed",
     "smtpUsername": "SMTP Brugernavn",
-    "smtpPassword": "SMTP Kodeord"
+    "smtpPassword": "SMTP Kodeord",
+    "useImap": "Hent Emails"
   },
   "links": {
-    "filters": "Filtre",
-    "emails": "Emails"
+    "filters": "Filtre"
   },
   "options": {
     "status": {
@@ -34,11 +28,9 @@
   },
   "labels": {
     "Create EmailAccount": "Opret Emailkonto",
-    "IMAP": "IMAP",
     "Main": "Konto",
     "Test Connection": "Test Forbindelse",
-    "Send Test Email": "Send Testemail",
-    "SMTP": "SMTP"
+    "Send Test Email": "Send Testemail"
   },
   "messages": {
     "couldNotConnectToImap": "Kunne ikke forbinde til IMAP server",

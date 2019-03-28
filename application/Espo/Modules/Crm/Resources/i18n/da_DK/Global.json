@@ -3,11 +3,9 @@
     "parent": "Overordnet",
     "contacts": "Kontakter",
     "opportunities": "Muligheder",
-    "leads": "Leads",
     "meetings": "Møder",
     "calls": "Opkald",
     "tasks": "Opgaver",
-    "emails": "Emails",
     "accounts": "Konti",
     "cases": "Sager",
     "documents": "Dokumenter",
@@ -18,7 +16,6 @@
   "scopeNames": {
     "Account": "Konto",
     "Contact": "Kontakt",
-    "Lead": "Lead",
     "Target": "Mål",
     "Opportunity": "Mulighed",
     "Meeting": "Møde",
@@ -32,7 +29,6 @@
     "TargetList": "Kontaktliste",
     "MassEmail": "Masse-Email",
     "EmailQueueItem": "Emne i Email-Kø",
-    "CampaignTrackingUrl": "Tracking URL",
     "Activities": "Aktiviteter",
     "KnowledgeBaseArticle": "Vidensbase Artikel",
     "KnowledgeBaseCategory": "Vidensbase Kategori",
@@ -41,7 +37,6 @@
   "scopeNamesPlural": {
     "Account": "Konti",
     "Contact": "Kontakter",
-    "Lead": "Leads",
     "Target": "Mål",
     "Opportunity": "Muligheder",
     "Meeting": "Møder",
@@ -108,11 +103,5 @@
     "shippingAddressState": "Stat (Levering)",
     "shippingAddressPostalCode": "Postnummer (Levering)",
     "shippingAddressMap": "Kort (Levering)"
-  },
-  "options": {
-    "reminderTypes": {
-      "Popup": "Popup",
-      "Email": "Email"
-    }
   }
 }

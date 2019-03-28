@@ -7,22 +7,25 @@
     "endDate": "Slutdato",
     "targetLists": "Kontaktliste",
     "includingActionList": "Inkluder",
-    "excludingActionList": "Ekskluder"
+    "excludingActionList": "Ekskluder",
+    "optedOutCount": "Antal fravalgte",
+    "targetStatus": "Mål status",
+    "isOptedOut": "er fravalgte"
   },
   "links": {
     "accounts": "Konti",
     "contacts": "Kontakter",
-    "leads": "Leads",
     "campaigns": "Kampagner",
     "massEmails": "Masse-Emails"
   },
   "options": {
     "type": {
-      "Email": "Email",
-      "Web": "Web",
       "Television": "TV",
-      "Radio": "Radio",
       "Newsletter": "Nyhedsbrev"
+    },
+    "targetStatus": {
+      "Opted Out": "Fravalgt",
+      "Listed": "Listet"
     }
   },
   "labels": {

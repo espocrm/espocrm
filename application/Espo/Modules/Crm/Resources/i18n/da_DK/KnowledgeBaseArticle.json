@@ -10,8 +10,6 @@
   },
   "fields": {
     "name": "Navn",
-    "status": "Status",
-    "type": "Type",
     "attachments": "Vedhæftede",
     "publishDate": "Startdato",
     "expirationDate": "Slutdato",
@@ -40,8 +38,5 @@
   },
   "presetFilters": {
     "published": "Publiseret"
-  },
-  "tooltips": {
-    "portals": "Article will be available only in specified portals."
   }
 }

@@ -1,8 +1,6 @@
 {
   "fields": {
     "name": "Navn",
-    "emailAddress": "Email",
-    "title": "Titel",
     "accountRole": "Titel",
     "account": "Konto",
     "accounts": "Konti",
@@ -17,7 +15,10 @@
     "targetList": "Kontaktliste",
     "portalUser": "Portalbruger",
     "originalLead": "Oprindelig Lead",
-    "acceptanceStatus": "Acceptance Status"
+    "accountIsInactive": "Konto inaktiv",
+    "acceptanceStatusMeetings": "Accept status (Møder)",
+    "acceptanceStatusCalls": "Accpet status (Opkald)",
+    "title": "Primær brugertitel"
   },
   "links": {
     "opportunities": "Muligheder",
@@ -30,21 +31,21 @@
     "casesPrimary": "Sager (Primære)",
     "portalUser": "Portalbruger",
     "originalLead": "Oprindelig Lead",
-    "documents": "Dokumenter"
+    "documents": "Dokumenter",
+    "tasksPrimary": "Opgaver (udvidede)"
   },
   "labels": {
     "Create Contact": "Opret Kontakt"
   },
   "options": {
     "opportunityRole": {
-      "": "--Ingen--",
       "Decision Maker": "Beslutningstager",
-      "Evaluator": "Evaluator",
       "Influencer": "Har Indflydelse"
     }
   },
   "presetFilters": {
     "portalUsers": "Portalbrugere",
-    "notPortalUsers": "Ikke Portalbrugere"
+    "notPortalUsers": "Ikke Portalbrugere",
+    "accountActive": "Aktiv"
   }
 }

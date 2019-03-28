@@ -4,8 +4,10 @@
     "dateStart": "Startdato",
     "dateEnd": "Slutdato",
     "duration": "Varighed",
-    "status": "Status",
-    "reminders": "Underretninger"
+    "reminders": "Underretninger",
+    "dateStartDate": "Start dato (hele dagen)",
+    "dateEndDate": "Slut dato (hele dagen)",
+    "isAllDay": "Hele dagen"
   },
   "links": {
     "parent": "Henviser til"
@@ -20,7 +22,6 @@
   "labels": {
     "Create {entityType}": "Opret {entityTypeTranslated}",
     "Schedule {entityType}": "Planlæg {entityTypeTranslated}",
-    "Log {entityType}": "Log {entityTypeTranslated}",
     "Set Held": "Marker som Gennemført",
     "Set Not Held": "Marker som Ikke Gennemført"
   },

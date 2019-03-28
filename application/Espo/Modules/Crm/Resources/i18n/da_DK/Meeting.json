@@ -2,7 +2,6 @@
   "fields": {
     "name": "Navn",
     "parent": "Henviser til",
-    "status": "Status",
     "dateStart": "Startdato",
     "dateEnd": "Slutdato",
     "duration": "Varighed",
@@ -12,7 +11,11 @@
     "leads": "leads",
     "reminders": "Påmindelser",
     "account": "Konto",
-    "acceptanceStatus": "Acceptstatus"
+    "acceptanceStatus": "Acceptstatus",
+    "dateStartDate": "Start dato (hele dagen)",
+    "dateEndDate": "Slut dato (hele dagen)",
+    "isAllDay": "Hele dagen",
+    "Acceptance": "Accept"
   },
   "options": {
     "status": {
@@ -37,7 +40,8 @@
     "Set Not Held": "Marker som Ikke Gennemført",
     "Send Invitations": "Send Invitationer",
     "on time": "Til Tiden",
-    "before": "Før"
+    "before": "Før",
+    "All-Day": "Hele dagen"
   },
   "presetFilters": {
     "planned": "Planlagt",

@@ -2,7 +2,6 @@
   "fields": {
     "name": "Navn",
     "parent": "Henviser til",
-    "status": "Status",
     "dateStart": "Startdato",
     "dateEnd": "Slutdato",
     "direction": "Retning",
@@ -10,7 +9,6 @@
     "description": "Beskrivelse",
     "users": "Brugere",
     "contacts": "Kontakter",
-    "leads": "Leads",
     "reminders": "Underretninger",
     "account": "Konto",
     "acceptanceStatus": "Acceptstatus"

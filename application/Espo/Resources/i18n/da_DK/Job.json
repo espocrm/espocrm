@@ -1,13 +1,18 @@
 {
   "fields": {
-    "status": "Status",
     "executeTime": "Udfør når",
     "attempts": "Forsøg tilbage",
     "failedAttempts": "Fejlede forsøg",
-    "serviceName": "Service",
-    "method": "Metode",
+    "methodName": "Metode",
     "scheduledJob": "Planlagt job",
-    "data": "Data"
+    "method": "Metode",
+    "scheduledJobJob": "Planlagt job navn",
+    "executedAt": "Udført",
+    "startedAt": "Startet",
+    "targetType": "Mål type",
+    "targetId": "Mål ID",
+    "number": "Nummer",
+    "queue": "Kø"
   },
   "options": {
     "status": {

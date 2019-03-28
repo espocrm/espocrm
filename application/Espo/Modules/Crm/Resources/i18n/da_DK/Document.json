@@ -5,9 +5,7 @@
   },
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "file": "Fil",
-    "type": "Type",
     "publishDate": "Offentliggørelsesdato",
     "expirationDate": "Afslutningsdato",
     "description": "Beskrivelse",
@@ -18,7 +16,6 @@
     "accounts": "Konti",
     "opportunities": "Muligheder",
     "folder": "Mappe",
-    "leads": "Leads",
     "contacts": "Kontakter"
   },
   "options": {
@@ -31,8 +28,6 @@
     "type": {
       "": "ingen",
       "Contract": "Kontrakt",
-      "NDA": "NDA",
-      "EULA": "EULA",
       "License Agreement": "Licensaftale"
     }
   },

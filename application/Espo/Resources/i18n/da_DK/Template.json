@@ -3,21 +3,36 @@
     "name": "Navn",
     "body": "Indhold",
     "entityType": "Entitetstype",
-    "header": "Header",
-    "footer": "Footer",
     "leftMargin": "Venstre Margin",
-    "topMargin": "Top Margin",
     "rightMargin": "Højre Margin",
     "bottomMargin": "Bund Margin",
     "printFooter": "Udskriv Footer",
-    "footerPosition": "Footer Position",
-    "variables": "Available Placeholders"
+    "pageOrientation": "Side orientering",
+    "pageFormat": "Papir format",
+    "fontFace": "Skrifttype",
+    "pageWidth": "Sidebredde (mm)",
+    "pageHeight": "Sidehøjde (mm)"
   },
   "labels": {
     "Create Template": "Opret Skabelon"
   },
   "tooltips": {
-    "footer": "Brug {pageNumber} til at printe sidetal.",
-    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
+    "footer": "Brug {pageNumber} til at printe sidetal."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Portræt",
+      "Landscape": "Landskab"
+    },
+    "placeholders": {
+      "today": "Dags dato",
+      "now": "Nu (tidspunkt)"
+    },
+    "fontFace": {
+      "cid0kr": "\nCID-0 kr"
+    },
+    "pageFormat": {
+      "Custom": "Brugerdefinerede"
+    }
   }
 }

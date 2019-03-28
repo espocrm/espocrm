@@ -1,8 +1,7 @@
 {
   "fields": {
     "billingAddress": "Betalingsadresse",
-    "shippingAddress": "Leveringsadresse",
-    "website": "Website"
+    "shippingAddress": "Leveringsadresse"
   },
   "links": {
     "meetings": "Møder",
