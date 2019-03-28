@@ -261,8 +261,8 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                     autoSelectFirst: true,
                     triggerSelectOnValidInput: false,
                     formatResult: function (suggestion) {
-                        return suggestion.name + ' &#60;' + suggestion.id + '&#62;';
-                    },
+                        return this.getHelper().escapeString(suggestion.name) + ' &#60;' + this.getHelper().escapeString(suggestion.id) + '&#62;';
+                    }.bind(this),
                     transformResult: function (response) {
                         var response = JSON.parse(response);
                         var list = [];

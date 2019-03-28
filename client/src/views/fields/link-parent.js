@@ -268,8 +268,8 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         noCache: true,
                         triggerSelectOnValidInput: false,
                         formatResult: function (suggestion) {
-                            return suggestion.name;
-                        },
+                            return this.getHelper().escapeString(suggestion.name);
+                        }.bind(this),
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];

@@ -81,6 +81,10 @@ define('view-helper', [], function () {
             return text;
         },
 
+        escapeString: function (text) {
+            return Handlebars.Utils.escapeExpression(text);
+        },
+
         getAvatarHtml: function (id, size, width, additionalClassName) {
             if (this.config.get('avatarsDisabled')) {
                 return '';

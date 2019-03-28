@@ -315,8 +315,8 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                         lookup: countryList,
                         maxHeight: 200,
                         formatResult: function (suggestion) {
-                            return suggestion.value;
-                        },
+                            return this.getHelper().escapeString(suggestion.value);
+                        }.bind(this),
                         lookupFilter: function (suggestion, query, queryLowerCase) {
                             if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
                                 if (suggestion.value.length === queryLowerCase.length) return false;
@@ -353,8 +353,8 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                         lookup: cityList,
                         maxHeight: 200,
                         formatResult: function (suggestion) {
-                            return suggestion.value;
-                        },
+                            return this.getHelper().escapeString(suggestion.value);
+                        }.bind(this),
                         lookupFilter: function (suggestion, query, queryLowerCase) {
                             if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
                                 if (suggestion.value.length === queryLowerCase.length) return false;
@@ -391,8 +391,8 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                         lookup: stateList,
                         maxHeight: 200,
                         formatResult: function (suggestion) {
-                            return suggestion.value;
-                        },
+                            return this.getHelper().escapeString(suggestion.value);
+                        }.bind(this),
                         lookupFilter: function (suggestion, query, queryLowerCase) {
                             if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
                                 if (suggestion.value.length === queryLowerCase.length) return false;

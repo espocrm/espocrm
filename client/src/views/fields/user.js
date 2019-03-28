@@ -99,8 +99,8 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                     paramName: 'q',
                     noCache: true,
                     formatResult: function (suggestion) {
-                        return suggestion.name;
-                    },
+                        return this.getHelper().escapeString(suggestion.name);
+                    }.bind(this),
                     transformResult: function (response) {
                         var response = JSON.parse(response);
                         var list = [];
@@ -123,7 +123,6 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                 });
 
                 $elemeneTeams.attr('autocomplete', 'espo-' + this.name);
-
 
                 this.once('render', function () {
                     $elemeneTeams.autocomplete('dispose');
@@ -199,4 +198,3 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
 
     });
 });
-

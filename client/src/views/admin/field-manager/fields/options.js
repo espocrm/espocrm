@@ -78,8 +78,7 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
 
             data.translatedOptions = {};
             (data[this.name] || []).forEach(function (value) {
-                var valueSanitized = this.getHelper().stripTags(value);
-                var valueInternal = valueSanitized.replace(/"/g, '\\"');
+                var valueInternal = value.replace(/"/g, '\\"');
                 var translatedValue = this.$el.find('input[data-name="translatedValue"][data-value="'+valueInternal+'"]').val() || value;
 
                 translatedValue = translatedValue.toString();
@@ -91,5 +90,4 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
         }
 
     });
-
 });

@@ -124,8 +124,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     lookup: this.params.options,
                     maxHeight: 200,
                     formatResult: function (suggestion) {
-                        return suggestion.value;
-                    },
+                        return this.getHelper().escapeString(suggestion.value);
+                    }.bind(this),
                     lookupFilter: function (suggestion, query, queryLowerCase) {
                         if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
                             if (suggestion.value.length === queryLowerCase.length) return false;

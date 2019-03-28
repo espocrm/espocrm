@@ -212,8 +212,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         noCache: true,
                         triggerSelectOnValidInput: false,
                         formatResult: function (suggestion) {
-                            return suggestion.name;
-                        },
+                            return this.getHelper().escapeString(suggestion.name);
+                        }.bind(this),
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
@@ -309,7 +309,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         addLinkHtml: function (id, name) {
             var $container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
-            $el.html(this.getHelper().stripTags(name || id) + '&nbsp');
+            $el.html(this.getHelper().escapeString(name || id) + '&nbsp');
             $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>');
             $container.append($el);
 
@@ -329,7 +329,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             if (this.mode == 'detail') {
                 iconHtml = this.getIconHtml(id);
             }
-            return '<a href="#' + this.foreignScope + '/view/' + id + '">' + iconHtml + this.getHelper().stripTags(name) + '</a>';
+            return '<a href="#' + this.foreignScope + '/view/' + id + '">' + iconHtml + this.getHelper().escapeString(name) + '</a>';
         },
 
         getValueForDisplay: function () {

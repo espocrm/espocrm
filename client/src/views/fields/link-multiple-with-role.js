@@ -96,14 +96,14 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
                 roleHtml = '<span class="test-muted small"> &#187; </span>' +
                 '<span class="'+className+'-'+style+' small">' +
-                this.getHelper().stripTags(this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope)) +
+                this.getHelper().escapeString(this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope)) +
                 '</span>';
             }
             var iconHtml = '';
             if (this.mode == 'detail') {
                 iconHtml = this.getIconHtml(id);
             }
-            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a> ' + roleHtml + '</div>';
+            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().escapeString(name) + '</a> ' + roleHtml + '</div>';
             return lineHtml;
         },
 
@@ -164,7 +164,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
             var $container = this.$el.find('.link-container');
             var $el = $('<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">').addClass('link-' + id);
 
-            var nameHtml = '<div>' + this.getHelper().stripTags(name) + '&nbsp;' + '</div>';
+            var nameHtml = '<div>' + this.getHelper().escapeString(name) + '&nbsp;' + '</div>';
 
             var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>';
 

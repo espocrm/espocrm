@@ -118,11 +118,11 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                 if (value !== '' && value) {
                     if (type === 'enum') {
                         roleHtml += ' <span class="text-muted small">&#187;</span> ' + '<span class="text-muted small">' +
-                            this.getHelper().stripTags(this.getLanguage().translateOption(value, this.columnsDefs[column].field, this.columnsDefs[column].scope)) +
+                            this.getHelper().escapeString(this.getLanguage().translateOption(value, this.columnsDefs[column].field, this.columnsDefs[column].scope)) +
                         '</span>';
                     } else if (type === 'varchar') {
                         roleHtml += ' <span class="text-muted small">&#187;</span> ' + '<span class="text-muted small">' +
-                            value
+                            this.getHelper().escapeString(value)
                         '</span>';
                     }
                 }
@@ -133,7 +133,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                 iconHtml = this.getIconHtml();
             }
 
-            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a> ' + roleHtml + '</div>';
+            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().escapeString(name) + '</a> ' + roleHtml + '</div>';
             return lineHtml;
         },
 
@@ -209,7 +209,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
             var $container = this.$el.find('.link-container');
             var $el = $('<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">').addClass('link-' + id);
 
-            var nameHtml = '<div class="link-item-name">' + this.getHelper().stripTags(name) + '&nbsp;' + '</div>';
+            var nameHtml = '<div class="link-item-name">' + this.getHelper().escapeString(name) + '&nbsp;' + '</div>';
             var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>';
 
             var columnFormElementJQList = [];
