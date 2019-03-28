@@ -453,7 +453,7 @@ class Metadata
                         $fieldName = $matches[1];
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 
-                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath), $fieldDefinitionList);
+                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath, []), $fieldDefinitionList);
                         if (is_array($additionalFields)) {
                             foreach ($additionalFields as $additionalFieldName => $additionalFieldParams) {
                                 $unsets[] = 'fields.' . $additionalFieldName;
