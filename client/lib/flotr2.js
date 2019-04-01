@@ -5180,7 +5180,7 @@ Flotr.addPlugin('hit', {
         } else {
           p = 'n';
         }
-        if (this.plotWidth - n.xaxis.d2p(n.x) < 30) {
+        if (this.plotWidth - n.xaxis.d2p(n.x) < 38) {
           p += 'w;'
         }
       }
