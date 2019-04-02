@@ -165,8 +165,7 @@ class Pusher implements WampServerInterface
 
     protected function isTopicAllowed($topicId)
     {
-        list($category) = explode('.', $topicId);
-        return in_array($category, $this->categoryList);
+        return in_array($topicId, $this->categoryList);
     }
 
     protected function getConnectionIdListByUserId($userId)
