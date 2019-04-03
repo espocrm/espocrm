@@ -195,6 +195,9 @@ class NamespaceLoader
 
             if (file_exists($this->vendorNamespacesCacheFile) && $this->getConfig()->get('useCache')) {
                 $this->vendorNamespaces = $this->getFileManager()->getPhpContents($this->vendorNamespacesCacheFile);
+                if (!is_array($this->vendorNamespaces)) {
+                    $this->vendorNamespaces = [];
+                }
             }
         }
 
