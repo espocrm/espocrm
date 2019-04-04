@@ -42,8 +42,8 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             this.main('views/admin/index', null, function (view) {
                 view.render();
 
-                this.listenToOnce(view, 'clear-cache', this.clearCache);
-                this.listenToOnce(view, 'rebuild', this.rebuild);
+                this.listenTo(view, 'clear-cache', this.clearCache);
+                this.listenTo(view, 'rebuild', this.rebuild);
             }.bind(this));
         },
 
@@ -269,24 +269,39 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
         },
 
         rebuild: function (options) {
+            if (this.rebuildRunning) return;
+            this.rebuildRunning = true;
+
             var master = this.get('master');
             Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
 
-            Espo.Ajax.postRequest('Admin/rebuild').then(function () {
-                var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
-                Espo.Ui.success(msg);
-            });
+            Espo.Ajax.postRequest('Admin/rebuild')
+                .then(function () {
+                    var msg = master.translate('Rebuild has been done', 'labels', 'Admin');
+                    Espo.Ui.success(msg);
+                    this.rebuildRunning = false;
+                }.bind(this))
+                .fail(function () {
+                    this.rebuildRunning = false;
+                }.bind(this));
         },
 
         clearCache: function (options) {
+            if (this.clearCacheRunning) return;
+            this.clearCacheRunning = true;
+
             var master = this.get('master');
             Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
 
-            Espo.Ajax.postRequest('Admin/clearCache').then(function () {
-                var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
-                Espo.Ui.success(msg);
-            });
+            Espo.Ajax.postRequest('Admin/clearCache')
+                .then(function () {
+                    var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
+                    Espo.Ui.success(msg);
+                    this.clearCacheRunning = false;
+                }.bind(this))
+                .fail(function () {
+                    this.clearCacheRunning = false;
+                }.bind(this));
         }
     });
-
 });
