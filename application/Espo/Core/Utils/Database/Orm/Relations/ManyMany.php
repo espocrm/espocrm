@@ -33,7 +33,7 @@ use Espo\Core\Utils\Util;
 
 class ManyMany extends Base
 {
-    protected function load($linkName, $entityName)
+    protected function load($linkName, $entityType)
     {
         $foreignEntityName = $this->getForeignEntityName();
         $foreignLinkName = $this->getForeignLinkName();
@@ -43,15 +43,28 @@ class ManyMany extends Base
         if (!empty($linkParams['relationName'])) {
             $relationName = $linkParams['relationName'];
         } else {
-            $relationName = $this->getJoinTable($entityName, $foreignEntityName);
+            $relationName = $this->getJoinTable($entityType, $foreignEntityName);
         }
 
-        $isStub = !$this->getMetadata()->get(['entityDefs', $entityName, 'fields', $linkName]);
+        $isStub = !$this->getMetadata()->get(['entityDefs', $entityType, 'fields', $linkName]);
+
+        $key1 = lcfirst($entityType) . 'Id';
+        $key2 = lcfirst($foreignEntityName) . 'Id';
+
+        if ($key1 === $key2) {
+            if (strcmp($linkName, $foreignLinkName)) {
+                $key1 = 'leftId';
+                $key2 = 'rightId';
+            } else {
+                $key1 = 'rightId';
+                $key2 = 'leftId';
+            }
+        }
 
         return [
-            $entityName => [
+            $entityType => [
                 'fields' => [
-                       $linkName.'Ids' => [
+                    $linkName.'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,
@@ -67,13 +80,13 @@ class ManyMany extends Base
                         'type' => 'manyMany',
                         'entity' => $foreignEntityName,
                         'relationName' => $relationName,
-                        'key' => 'id', //todo specify 'key'
-                        'foreignKey' => 'id', //todo specify 'foreignKey'
+                        'key' => 'id',
+                        'foreignKey' => 'id',
                         'midKeys' => [
-                            lcfirst($entityName).'Id',
-                            lcfirst($foreignEntityName).'Id',
+                            $key1,
+                            $key2,
                         ],
-                        'foreign' => $foreignLinkName
+                        'foreign' => $foreignLinkName,
                     ],
                 ],
             ],
