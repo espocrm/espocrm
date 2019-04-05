@@ -93,7 +93,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     if (this.$textarea.val() !== '') return;
 
                     var attachmentsIds = this.seed.get('attachmentsIds') || [];
-                    if (!attachmentsIds.length && !this.getView('attachments').isUploading) {
+                    if (!attachmentsIds.length && (!this.getView('attachments') || !this.getView('attachments').isUploading)) {
                         this.disablePostingMode();
                     }
                 }.bind(this));
