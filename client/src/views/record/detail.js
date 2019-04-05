@@ -56,7 +56,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             {
                 name: 'edit',
                 label: 'Edit',
-                style: 'primary',
             }
         ],
 

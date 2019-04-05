@@ -187,7 +187,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             this.addButton({
                 name: 'edit',
                 label: 'Edit',
-                style: 'primary'
             }, true);
         },
 
