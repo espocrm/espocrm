@@ -140,7 +140,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
                         var label = (obj.series.label || self.translate('None'));
-                        var value = label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.x, true);
+                        var value = label  + '<br>' + self.currencySymbol + self.formatNumber(obj.x, true);
                         return value;
                     }
                 },

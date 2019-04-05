@@ -170,7 +170,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                         var i = parseInt(obj.x);
                         var value = '';
                         if (i in self.monthList) {
-                            value += moment(self.monthList[i] + '-01').format('MMM YYYY') + ':<br>';
+                            value += moment(self.monthList[i] + '-01').format('MMM YYYY') + '<br>';
                         }
                         return value + self.currencySymbol + self.formatNumber(obj.y, true);
                     }

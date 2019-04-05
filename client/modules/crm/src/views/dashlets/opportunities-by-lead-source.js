@@ -111,7 +111,7 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                         var fraction = obj.fraction || 0;
                         var percentage = (100 * fraction).toFixed(2).toString();
 
-                        return (obj.series.label || self.translate('None')) + ':<br>' + value + ' / ' + percentage + '%';
+                        return (obj.series.label || self.translate('None')) + '<br>' + value + ' / ' + percentage + '%';
                     }
                 },
                 legend: {
