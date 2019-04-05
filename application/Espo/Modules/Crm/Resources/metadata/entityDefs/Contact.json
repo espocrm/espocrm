@@ -47,7 +47,7 @@
                         {
                             "contact.id:": "accountContact.contactId",
                             "contact.accountId:": "accountContact.accountId",
-                            "accountContact.deleted": true
+                            "accountContact.deleted": false
                         }
                     ]
                 ]
@@ -61,7 +61,7 @@
                         {
                             "contact.id:": "accountContact.contactId",
                             "contact.accountId:": "accountContact.accountId",
-                            "accountContact.deleted": true
+                            "accountContact.deleted": false
                         }
                     ]
                 ]
@@ -174,7 +174,7 @@
                         {
                             "contact.id:": "accountContact.contactId",
                             "contact.accountId:": "accountContact.accountId",
-                            "accountContact.deleted": true
+                            "accountContact.deleted": false
                         }
                     ]
                 ]
@@ -188,7 +188,7 @@
                         {
                             "contact.id:": "accountContact.contactId",
                             "contact.accountId:": "accountContact.accountId",
-                            "accountContact.deleted": true
+                            "accountContact.deleted": false
                         }
                     ]
                 ]
