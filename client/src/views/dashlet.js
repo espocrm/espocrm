@@ -42,7 +42,7 @@ Espo.define('views/dashlet', 'view', function (Dep) {
             return {
                 name: this.name,
                 id: this.id,
-                title: this.getOption('title') || this.name,
+                title: this.getTitle(),
                 actionList: (this.getView('body') || {}).actionList || [],
                 buttonList: (this.getView('body') || {}).buttonList || [],
                 noPadding: (this.getView('body') || {}).noPadding
@@ -141,16 +141,17 @@ Espo.define('views/dashlet', 'view', function (Dep) {
             return this.getView('body').getOption(key);
         },
 
+        getTitle: function () {
+            return this.getView('body').getTitle();
+        },
+
         actionRemove: function () {
             this.confirm(this.translate('confirmation', 'messages'), function () {
                 this.trigger('remove-dashlet');
                 this.$el.remove();
                 this.remove();
             }, this);
-
         }
 
     });
 });
-
-

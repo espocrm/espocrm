@@ -12,7 +12,7 @@
               </ul>
           </div>
         <h4 class="panel-title">
-          <span data-action="refresh" class="action" title="{{translate 'Refresh'}}" style="cursor: pointer;">{{title}}</span>
+          <span data-action="refresh" class="action" title="{{translate 'Refresh'}}" style="cursor: pointer;">{{#if title}}{{title}}{{else}}&nbsp;{{/if}}</span>
         </h4>
     </div>
     <div class="dashlet-body panel-body{{#if noPadding}} no-padding{{/if}}">{{{body}}}</div>
