@@ -1038,7 +1038,8 @@ class Base
                 $where['type'] = 'between';
                 $dt = new \DateTime($value, new \DateTimeZone($timeZone));
                 $dtTo = clone $dt;
-                $dtTo->modify('+1 day -1 second');
+                if (strlen($value) <= 10)
+                    $dtTo->modify('+1 day -1 second');
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $dtTo->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
@@ -1054,7 +1055,9 @@ class Base
             case 'after':
                 $where['type'] = 'after';
                 $dt = new \DateTime($value, new \DateTimeZone($timeZone));
-                $dt->modify('+1 day -1 second');
+                if (strlen($value) <= 10)
+                    $dt->modify('+1 day -1 second');
+
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
                 break;
@@ -1068,7 +1071,8 @@ class Base
 
                     $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
-                    $dt->modify('-1 second');
+                    if (strlen($value[1]) <= 10)
+                        $dt->modify('-1 second');
                     $to = $dt->format($format);
 
                     $where['value'] = [$from, $to];
