@@ -49,6 +49,7 @@ Espo.define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', f
             linkList.forEach(function (link) {
                 var scope = links[link].entity;
                 if (!scope) return;
+                if (links[link].disabled) return;
                 var linkAttributeList = this.getFieldManager().getEntityTypeAttributeList(scope).sort();
                 linkAttributeList.forEach(function (item) {
                     attributeList.push(link + '.' + item);
