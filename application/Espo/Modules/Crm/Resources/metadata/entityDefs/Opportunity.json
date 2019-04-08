@@ -175,6 +175,7 @@
             "type": "enum",
             "view": "crm:views/opportunity/fields/lead-source",
             "customizationOptionsDisabled": true,
+            "translation": "Lead.options.source",
             "default": ""
         },
         "closeDate": {
