@@ -35,7 +35,8 @@
    "linkDefs": {
       "type": "belongsTo",
       "entity": "Attachment",
-      "skipOrmDefs": true
+      "skipOrmDefs": true,
+      "disabled": true
    },
    "personalData": true
 }
