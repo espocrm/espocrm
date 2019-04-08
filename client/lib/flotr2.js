@@ -4925,6 +4925,11 @@ Flotr.addPlugin('hit', {
         );
       }
       D.hide(this.mouseTrack);
+      // EspoCRM fix start
+      if (this.options && this.options.mouse && this.options.mouse.cursorPointer) {
+        $(this.el).css('cursor', '');
+      }
+      // EspoCRM fix end
       this.prevHit = null;
     }
     octx.restore();
@@ -5125,10 +5130,20 @@ Flotr.addPlugin('hit', {
     });
     if (_.isNull(content) || _.isUndefined(content)) {
       D.hide(mouseTrack);
+      // EspoCRM fix start
+      if (this.options && this.options.mouse && this.options.mouse.cursorPointer) {
+        $(this.el).css('cursor', '');
+      }
+      // EspoCRM fix end
       return;
     } else {
       mouseTrack.innerHTML = content;
       D.show(mouseTrack);
+      // EspoCRM fix start
+      if (this.options && this.options.mouse && this.options.mouse.cursorPointer) {
+        $(this.el).css('cursor', 'pointer'); // EspoCRM fix
+      }
+      // EspoCRM fix end
     }
 
     // Positioning
