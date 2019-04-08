@@ -151,6 +151,8 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 var scope = links[link].entity;
                 if (!scope) return;
 
+                if (links[link].disabled) return;
+
                 if (
                     this.getMetadata().get(['entityAcl', entityType, 'links', link, 'onlyAdmin'])
                     ||

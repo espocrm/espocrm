@@ -83,6 +83,8 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
                         var foreignScope = links[link].entity;
                         if (!foreignScope) return;
 
+                        if (links[link].disabled) return;
+
                         if (
                             this.getMetadata().get(['entityAcl', scope, 'links', link, 'onlyAdmin'])
                             ||
@@ -270,7 +272,5 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
                 field: field
             });
         }
-
     });
-
 });
