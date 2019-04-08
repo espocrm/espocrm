@@ -35,7 +35,8 @@
       "entity": "Attachment",
       "foreign": "parent",
       "layoutRelationshipsDisabled": true,
-      "relationName": "attachments"
+      "relationName": "attachments",
+      "disabled": true
    },
    "notSortable": true,
    "filter": true,
