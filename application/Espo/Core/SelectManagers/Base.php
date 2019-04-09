@@ -1072,7 +1072,7 @@ class Base
                     $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
                     if (strlen($value[1]) <= 10)
-                        $dt->modify('-1 second');
+                        $dt->modify('+1 day -1 second');
                     $to = $dt->format($format);
 
                     $where['value'] = [$from, $to];
