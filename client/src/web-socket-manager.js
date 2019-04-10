@@ -116,7 +116,7 @@ define('web-socket-manager', [], function () {
                 if (e.message) {
                     console.error(e.message);
                 } else {
-                    console.error("WebSocket: Coud not subscribe to "+category+".");
+                    console.error("WebSocket: Could not subscribe to "+category+".");
                 }
             }
         },
@@ -129,7 +129,7 @@ define('web-socket-manager', [], function () {
                 if (e.message) {
                     console.error(e.message);
                 } else {
-                    console.error("WebSocket: Coud not unsubscribe from "+category+".");
+                    console.error("WebSocket: Could not unsubscribe from "+category+".");
                 }
             }
         },
