@@ -112,7 +112,7 @@
     },
     "relationshipPanels": {
         "logRecords": {
-            "rowActionsView": "views/record/row-actions/remove-only",
+            "rowActionsView": "views/record/row-actions/view-and-remove",
             "layout": "listForLeadCapture",
             "select": false,
             "create": false

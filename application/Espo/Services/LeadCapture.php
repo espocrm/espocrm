@@ -242,7 +242,9 @@ class LeadCapture extends Record
                 $groupOr['phoneNumber'] = $lead->get('phoneNumber');
             }
 
-            $duplicate = $this->getEntityManager()->getRepository('Lead')->where(['OR' => $groupOr])->findOne();
+            if ($leadCapture->get('duplicateCheck')) {
+                $duplicate = $this->getEntityManager()->getRepository('Lead')->where(['OR' => $groupOr])->findOne();
+            }
             $contact = $this->getEntityManager()->getRepository('Contact')->where(['OR' => $groupOr])->findOne();
             if ($contact) {
                 $target = $contact;

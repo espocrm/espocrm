@@ -16,7 +16,8 @@
         "targetTeam": "Target Team",
         "exampleRequestMethod": "Method",
         "exampleRequestUrl": "URL",
-        "exampleRequestPayload": "Payload"
+        "exampleRequestPayload": "Payload",
+        "duplicateCheck": "Duplicate Check"
     },
     "links": {
         "targetList": "Target List",
