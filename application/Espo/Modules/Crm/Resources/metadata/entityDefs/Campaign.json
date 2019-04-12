@@ -61,6 +61,7 @@
         "sentCount": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
@@ -68,6 +69,7 @@
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
@@ -75,12 +77,14 @@
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "optedInCount": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
@@ -88,6 +92,7 @@
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
@@ -95,54 +100,63 @@
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "hardBouncedCount": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "softBouncedCount": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "leadCreatedCount": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "openedPercentage": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "clickedPercentage": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "optedOutPercentage": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "bouncedPercentage": {
             "type": "int",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
         "revenue": {
             "type": "currency",
             "notStorable": true,
+            "directAccessDisabled": true,
             "readOnly": true,
             "disabled": true
         },
