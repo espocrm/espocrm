@@ -119,6 +119,7 @@ class EmailAccount extends Record
         $imapParams = null;
 
         if ($emailAddress && $userId) {
+            $emailAddress = strtolower($emailAddress);
             $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($userId);
             if ($userData) {
                 $imapHandlers = $userData->get('imapHandlers') ?? (object) [];

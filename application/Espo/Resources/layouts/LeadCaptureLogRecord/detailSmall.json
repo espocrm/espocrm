@@ -1,0 +1,10 @@
+[
+    {
+        "label":"",
+        "rows":[
+            [{"name": "target"}, {"name":"leadCapture"}],
+            [{"name": "isCreated"}, {"name":"createdAt"}],
+            [{"name": "data", "fullWidth": true}]
+        ]
+    }
+]

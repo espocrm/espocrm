@@ -41,6 +41,10 @@
                 "createdContact"
             ]
         },
+        "duplicateCheck": {
+            "type": "bool",
+            "default": true
+        },
         "optInConfirmation": {
             "type": "bool"
         },
