@@ -41,11 +41,16 @@ class Helper
      */
     protected $copiedDefParams = array(
         'readOnly',
+        'disabled',
         'notStorable',
         'layoutListDisabled',
         'layoutDetailDisabled',
         'layoutMassUpdateDisabled',
         'layoutFiltersDisabled',
+        'directAccessDisabled',
+        'customizationDisabled',
+        'importDisabled',
+        'exportDisabled',
     );
 
     public function __construct(\Espo\Core\Utils\Metadata $metadata)
