@@ -99,10 +99,12 @@ class ClientManager
         if ($isDeveloperMode) {
             $useCache = $this->getConfig()->get('useCacheInDeveloperMode');
             $jsFileList = $this->getMetadata()->get(['app', 'client', 'developerModeScriptList']);
+            $cssFileList = $this->getMetadata()->get(['app', 'client', 'developerModeCssList']) ?? [];
             $loaderCacheTimestamp = 'null';
         } else {
             $useCache = $this->getConfig()->get('useCache');
             $jsFileList = $this->getMetadata()->get(['app', 'client', 'scriptList']);
+            $cssFileList = $this->getMetadata()->get(['app', 'client', 'cssList']) ?? [];
             $loaderCacheTimestamp = $cacheTimestamp;
         }
 
@@ -111,6 +113,12 @@ class ClientManager
             $src = $this->basePath . $jsFile . '?r=' . $cacheTimestamp;
             $scriptsHtml .= '        ' .
             '<script type="text/javascript" src="'.$src.'" data-base-path="'.$this->basePath.'"></script>' . "\n";
+        }
+
+        foreach ($cssFileList as $cssFile) {
+            $src = $this->basePath . $cssFile . '?r=' . $cacheTimestamp;
+            $scriptsHtml .= '        ' .
+                '<link rel="stylesheet" href="' . $src . '" data-base-path="' . $this->basePath . '">' . "\n";
         }
 
         $data = [
