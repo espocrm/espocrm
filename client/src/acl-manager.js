@@ -95,7 +95,7 @@ define('acl-manager', ['acl'], function (Acl) {
 
         getLevel: function (scope, action) {
             if (!(scope in this.data.table)) return;
-            if (!(action in this.data.table[scope])) return;
+            if (typeof this.data.table[scope] !== 'object' || !(action in this.data.table[scope])) return;
 
             return this.data.table[scope][action];
         },
