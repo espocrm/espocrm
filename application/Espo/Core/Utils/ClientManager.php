@@ -109,7 +109,7 @@ class ClientManager
         }
 
         $scriptsHtml = '';
-        foreach ($jsFileList as $i => $jsFile) {
+        foreach ($jsFileList as $jsFile) {
             $src = $this->basePath . $jsFile . '?r=' . $cacheTimestamp;
             $scriptsHtml .= "\n        " .
                 "<script type=\"text/javascript\" src=\"{$src}\" data-base-path=\"{$this->basePath}\"></script>";
