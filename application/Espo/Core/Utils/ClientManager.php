@@ -98,19 +98,27 @@ class ClientManager
 
         if ($isDeveloperMode) {
             $useCache = $this->getConfig()->get('useCacheInDeveloperMode');
-            $jsFileList = $this->getMetadata()->get(['app', 'client', 'developerModeScriptList']);
+            $jsFileList = $this->getMetadata()->get(['app', 'client', 'developerModeScriptList'], []);
+            $cssFileList = $this->getMetadata()->get(['app', 'client', 'developerModeCssList'], []);
             $loaderCacheTimestamp = 'null';
         } else {
             $useCache = $this->getConfig()->get('useCache');
-            $jsFileList = $this->getMetadata()->get(['app', 'client', 'scriptList']);
+            $jsFileList = $this->getMetadata()->get(['app', 'client', 'scriptList'], []);
+            $cssFileList = $this->getMetadata()->get(['app', 'client', 'cssList'], []);
             $loaderCacheTimestamp = $cacheTimestamp;
         }
 
         $scriptsHtml = '';
-        foreach ($jsFileList as $jsFile) {
+        foreach ($jsFileList as $i => $jsFile) {
             $src = $this->basePath . $jsFile . '?r=' . $cacheTimestamp;
-            $scriptsHtml .= '        ' .
-            '<script type="text/javascript" src="'.$src.'" data-base-path="'.$this->basePath.'"></script>' . "\n";
+            $scriptsHtml .= "\n        " .
+                "<script type=\"text/javascript\" src=\"{$src}\" data-base-path=\"{$this->basePath}\"></script>";
+        }
+
+        $additionalStyleSheetsHtml = '';
+        foreach ($cssFileList as $cssFile) {
+            $src = $this->basePath . $cssFile . '?r=' . $cacheTimestamp;
+            $additionalStyleSheetsHtml .= "\n        <link rel=\"stylesheet\" src=\"{$src}\">";
         }
 
         $data = [
@@ -124,7 +132,8 @@ class ClientManager
             'basePath' => $this->basePath,
             'useCache' => $useCache ? 'true' : 'false',
             'appClientClassName' => 'app',
-            'scriptsHtml' => $scriptsHtml
+            'scriptsHtml' => $scriptsHtml,
+            'additionalStyleSheetsHtml' => $additionalStyleSheetsHtml,
         ];
 
         $html = file_get_contents($htmlFilePath);
