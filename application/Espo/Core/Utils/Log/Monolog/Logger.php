@@ -32,7 +32,6 @@ class Logger extends \Monolog\Logger
 {
     protected $defaultLevelName = 'DEBUG';
 
-
     /**
      * Get Level Code
      * @param  string $level Ex. DEBUG, ...
@@ -51,5 +50,16 @@ class Logger extends \Monolog\Logger
         return $levels[$this->defaultLevelName];
     }
 
+    public function setLevel($levelName)
+    {
+        $level = static::toMonologLevel($levelName);
 
+        $handlers = $this->getHandlers();
+        foreach ($handlers as $handler) {
+            if ($handler->getLevel() > $level) {
+                $className = get_class($handler);
+                $handler->setLevel($level);
+            }
+        }
+    }
 }
