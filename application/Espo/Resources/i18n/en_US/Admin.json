@@ -203,7 +203,7 @@
         "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available.",
         "newExtensionVersionIsAvailable": "New {extensionName} version {latestVersion} is available.",
         "uninstallConfirmation": "Are you sure you want to uninstall the extension?",
-        "upgradeInfo": "Check the <a href=\"{url}\">documentation</a> about how to upgrade your EspoCRM instance. Upgrading from CLI is the most preferable way."
+        "upgradeInfo": "Check the <a href=\"{url}\">documentation</a> about how to upgrade your EspoCRM instance. Upgrading from CLI is the most preferable way. Upgrading from UI is not recommended."
     },
     "descriptions": {
         "settings": "System settings of application.",
