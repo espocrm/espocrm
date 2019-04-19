@@ -923,7 +923,7 @@ abstract class Base
                             if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['noSelect'])) {
                                 continue;
                             }
-                            $part = $this->getFieldPath($entity, $attribute[0]);
+                            $part = $this->getFieldPath($entity, $attribute[0], $params);
                         }
                     }
                 }
@@ -951,7 +951,7 @@ abstract class Base
                 if ($attributeType === null) {
                     continue;
                 }
-                $fieldPath = $this->getFieldPath($entity, $attribute);
+                $fieldPath = $this->getFieldPath($entity, $attribute, $params);
                 if ($attributeType === $entity::TEXT && $maxTextColumnsLength !== null) {
                     $fieldPath = 'LEFT(' . $fieldPath . ', '. intval($maxTextColumnsLength) . ')';
                 }
@@ -1049,7 +1049,7 @@ abstract class Base
 
             if (strpos($orderBy, 'LIST:') === 0) {
                 list($l, $field, $list) = explode(':', $orderBy);
-                $fieldPath = $this->getFieldPathForOrderBy($entity, $field);
+                $fieldPath = $this->getFieldPathForOrderBy($entity, $field, $params);
                 $listQuoted = [];
                 $list = array_reverse(explode(',', $list));
                 foreach ($list as $i => $listItem) {
@@ -1087,7 +1087,7 @@ abstract class Base
                 if ($useColumnAlias) {
                     $fieldPath = '`'. $this->sanitizeSelectAlias($orderBy) . '`';
                 } else {
-                    $fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy);
+                    $fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy, $params);
                 }
                 return "{$fieldPath} " . $order;
             }
@@ -1111,13 +1111,13 @@ abstract class Base
         return $sql;
     }
 
-    protected function getFieldPathForOrderBy($entity, $orderBy)
+    protected function getFieldPathForOrderBy($entity, $orderBy, $params)
     {
         if (strpos($orderBy, '.') !== false) {
             list($alias, $field) = explode('.', $orderBy);
             $fieldPath = $this->sanitize($alias) . '.' . $this->toDb($this->sanitize($field));
         } else {
-            $fieldPath = $this->getFieldPath($entity, $orderBy);
+            $fieldPath = $this->getFieldPath($entity, $orderBy, $params);
         }
         return $fieldPath;
     }
@@ -1211,7 +1211,7 @@ abstract class Base
         return $aliases;
     }
 
-    protected function getFieldPath(IEntity $entity, $field)
+    protected function getFieldPath(IEntity $entity, $field, &$params = null)
     {
         if (isset($entity->fields[$field])) {
             $f = $entity->fields[$field];
@@ -1245,7 +1245,8 @@ abstract class Base
                             }
                             $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreigh). '))';
                         } else {
-                            $fieldPath = $this->getAlias($entity, $relationName) . '.' . $this->toDb($foreigh);
+                            $expression = $this->getAlias($entity, $relationName) . '.' . $foreigh;
+                            $fieldPath = $this->convertComplexExpression($entity, $expression, false, $params);
                         }
                     }
                     break;
@@ -1430,13 +1431,17 @@ abstract class Base
                         if (isset($fieldDefs['relation'])) {
                             $relationName = $fieldDefs['relation'];
                             if (isset($entity->relations[$relationName])) {
-
                                 $alias = $this->getAlias($entity, $relationName);
                                 if ($alias) {
                                     if (!is_array($fieldDefs['foreign'])) {
-                                        $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+                                        $leftPart = $this->convertComplexExpression(
+                                            $entity,
+                                            $alias . '.' . $fieldDefs['foreign'],
+                                            false,
+                                            $params
+                                        );
                                     } else {
-                                        $leftPart = $this->getFieldPath($entity, $field);
+                                        $leftPart = $this->getFieldPath($entity, $field, $params);
                                     }
                                 }
                             }

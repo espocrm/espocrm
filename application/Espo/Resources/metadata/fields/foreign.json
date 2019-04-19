@@ -18,7 +18,38 @@
          "hidden": true
       }
    ],
-   "fieldTypeList": ["varchar", "enum", "enumInt", "enumFloat", "int", "float", "website", "date", "datetime", "text", "number", "bool"],
+   "fieldTypeList": [
+      "varchar",
+      "enum",
+      "enumInt",
+      "enumFloat",
+      "int",
+      "float",
+      "url",
+      "date",
+      "datetime",
+      "text",
+      "number",
+      "bool",
+      "email",
+      "phone"
+   ],
+   "fieldTypeViewMap": {
+      "varchar": "views/fields/foreign-varchar",
+      "enum": "views/fields/enum",
+      "enumInt": "views/fields/foreign-int",
+      "enumFloat": "views/fields/foreign-float",
+      "int": "views/fields/foreign-int",
+      "float": "views/fields/foreign-float",
+      "url": "views/fields/foreign-url",
+      "date": "views/fields/foreign-date",
+      "datetime": "views/fields/foreign-datetime",
+      "text": "views/fields/views/fields/foreign-text",
+      "number": "views/fields/foreign-varchar",
+      "bool": "views/fields/foreign-bool",
+      "email": "views/fields/foreign-email",
+      "phone": "views/fields/foreign-phone"
+   },
    "filter": true,
    "notCreatable": false,
    "fieldDefs": {
