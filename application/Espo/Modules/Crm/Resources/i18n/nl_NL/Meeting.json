@@ -1,48 +1,45 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "parent": "Behorende bij",
-        "status": "Status",
-        "dateStart": "Start Datum",
-        "dateEnd": "Eind Datum",
-        "duration": "Duur",
-        "description": "Beschrijving",
-        "users": "Gebruikers",
-        "contacts": "Contacten",
-        "leads": "Leads",
-        "reminders": "Herineringen",
-        "account": "Account"
+  "fields": {
+    "name": "Record Naam",
+    "parent": "Behorende bij",
+    "dateStart": "Start Datum",
+    "dateEnd": "Eind Datum",
+    "duration": "Duur",
+    "description": "Beschrijving",
+    "users": "Gebruikers",
+    "contacts": "Contacten",
+    "reminders": "Herineringen",
+    "acceptanceStatus": "Acceptatiestatus",
+    "dateStartDate": "Startdatum (de hele dag)",
+    "dateEndDate": "Datum einde (hele dag)",
+    "isAllDay": "Is de hele dag",
+    "Acceptance": "Aanvaarding"
+  },
+  "options": {
+    "status": {
+      "Planned": "Gepland",
+      "Held": "Vastgehouden",
+      "Not Held": "Niet vastgehouden"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Gepland",
-            "Held": "Vasthouden",
-            "Not Held": "Niet Vasthouden"
-        },
-        "acceptanceStatus": {
-            "None": "None",
-            "Accepted": "Geaccepteerd",
-            "Declined": "Geweigerd",
-            "Tentative": "Tentative"
-        }
-    },
-    "massActions": {
-        "setHeld": "Set Held",
-        "setNotHeld": "Set Not Held"
-    },
-    "labels": {
-        "Create Meeting": "Plan Vergadering",
-        "Set Held": "Set Held",
-        "Set Not Held": "Set Not Held",
-        "Send Invitations": "Uitnodiging versturen",
-        "on time": "op tijd",
-        "before": "voordat"
-    },
-    "presetFilters": {
-        "planned": "Gepland",
-        "held": "Vasthouden",
-        "todays": "Huidig"
+    "acceptanceStatus": {
+      "None": "Geen",
+      "Accepted": "Geaccepteerd",
+      "Declined": "Geweigerd"
     }
+  },
+  "labels": {
+    "Create Meeting": "Plan Vergadering",
+    "Send Invitations": "Uitnodiging versturen",
+    "on time": "op tijd",
+    "before": "voordat",
+    "All-Day": "Hele dag"
+  },
+  "presetFilters": {
+    "planned": "Gepland",
+    "held": "Vasthouden",
+    "todays": "Huidig"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Er is niets verzonden"
+  }
 }

@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "user": "Gebruiker",
+    "action": "Actie",
+    "createdAt": "Datum",
+    "target": "Doelwit",
+    "ipAddress": "IP adres"
+  },
+  "links": {
+    "user": "Gebruiker",
+    "target": "Doelwit"
+  },
+  "presetFilters": {
+    "onlyMy": "Alleen mijn"
+  },
+  "options": {
+    "action": {
+      "read": "Lezen",
+      "update": "Bijwerken",
+      "delete": "Verwijder",
+      "create": "creëren"
+    }
+  }
+}

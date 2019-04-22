@@ -1,33 +1,25 @@
 {
-    "fields": {
-        "action": "Actie",
-        "actionDate": "Datum",
-        "data": "Data",
-        "campaign": "Campaign",
-        "parent": "Target",
-        "object": "Object",
-        "application": "Application",
-        "queueItem": "Queue Item"
-    },
-    "options": {
-    	"action": {
-            "Sent": "Verstuur",
-            "Opened": "Opened",
-            "Opted Out": "Opted Out",
-            "Bounced": "Bounced",
-            "Clicked": "Clicked",
-            "Lead Created": "Lead Created"
-    	}
-    },
-    "labels": {
-        "All": "Alles"
-    },
-    "presetFilters": {
-        "sent": "Verstuur",
-        "opened": "Opened",
-        "optedOut": "Opted Out",
-        "bounced": "Bounced",
-        "clicked": "Clicked",
-        "leadCreated": "Lead Created"
+  "fields": {
+    "action": "Actie",
+    "actionDate": "Datum",
+    "stringData": "Stringgegevens",
+    "stringAdditionalData": "String extra gegevens"
+  },
+  "links": {
+    "queueItem": "Wachtrij-item",
+    "parent": "Ouder",
+    "object": "Voorwerp",
+    "campaign": "Campagne"
+  },
+  "options": {
+    "action": {
+      "Sent": "Verstuur"
     }
+  },
+  "labels": {
+    "All": "Alles"
+  },
+  "presetFilters": {
+    "sent": "Verstuur"
+  }
 }

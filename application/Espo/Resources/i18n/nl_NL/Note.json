@@ -1,11 +1,33 @@
 {
-    "fields": {
-        "post": "Post",
-        "attachments": "Bijlagen"
-    },
-    "filters": {
-        "all": "Alles",
-        "posts": "Posts",
-        "updates": "Updates"
+  "fields": {
+    "attachments": "Bijlagen",
+    "targetType": "Doel",
+    "users": "Gebruikers",
+    "portals": "portals",
+    "isGlobal": "Is wereldwijd",
+    "isInternal": "Is intern (voor interne gebruikers)",
+    "related": "Verwant",
+    "createdByGender": "Gemaakt door geslacht",
+    "data": "Gegevens",
+    "number": "Aantal"
+  },
+  "filters": {
+    "all": "Alles"
+  },
+  "messages": {
+    "writeMessage": "Schrijf je bericht hier"
+  },
+  "options": {
+    "targetType": {
+      "self": "Voor mezelf",
+      "users": "voor bepaalde gebruiker (s)",
+      "teams": "naar een specifiek team (s)",
+      "all": "voor alle interne gebruikers",
+      "portals": "voor portalgebruikers"
     }
+  },
+  "links": {
+    "superParent": "Super ouder",
+    "related": "Verwant"
+  }
 }

@@ -1,5 +1,10 @@
 {
-    "links": {
-        "targetLists": "Doellijsten"
-    }
+  "links": {
+    "targetLists": "Doellijsten"
+  },
+  "fields": {
+    "acceptanceStatus": "Acceptatiestatus",
+    "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
+    "acceptanceStatusCalls": "Acceptatiestatus (oproepen)"
+  }
 }

@@ -1,46 +1,46 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "account": "Account",
-        "stage": "Stadium",
-        "amount": "Aantal",
-        "probability": "Waarschijnlijkheid, %",
-        "leadSource": "Leadbron",
-        "doNotCall": "Niet Bellen",
-        "closeDate": "Datum gesloten",
-        "contacts": "Contacten",
-        "description": "Beschrijving",
-        "amountConverted": "Bedrag (geconverteerd)",
-        "amountWeightedConverted": "Afgewogen bedrag",
-        "campaign": "Campaign"
-    },
-    "links": {
-        "contacts": "Contacten",
-        "documents": "Documenten",
-        "campaign": "Campaign"
-    },
-    "options": {
-        "stage": {
-            "Prospecting": "Prospectie",
-            "Qualification": "Kwalificatie",
-            "Proposal": "Voorstel",
-            "Negotiation": "Onderhandeling",
-            "Needs Analysis": "Analyse behoefte",
-            "Value Proposition": "Waarde voorstel",
-            "Id. Decision Makers": "Id. Beslissers",
-            "Perception Analysis": "Perceptie Analyse",
-            "Proposal/Price Quote": "Voorstel/Offerte",
-            "Negotiation/Review": "Onderhandeling/Beoordeling",
-            "Closed Won": "Gesloten Gewonnen",
-            "Closed Lost": "Gesloten Verloren"
-        }
-    },
-    "labels": {
-        "Create Opportunity": "Kans aanmaken"
-    },
-    "presetFilters": {
-        "open": "Open",
-        "won": "Gewonnen",
-        "lost": "Lost"
+  "fields": {
+    "name": "Record Naam",
+    "stage": "Stadium",
+    "amount": "Aantal",
+    "probability": "Waarschijnlijkheid, %",
+    "leadSource": "Leadbron",
+    "doNotCall": "Niet Bellen",
+    "closeDate": "Datum gesloten",
+    "contacts": "Contacten",
+    "description": "Beschrijving",
+    "amountConverted": "Bedrag (geconverteerd)",
+    "amountWeightedConverted": "Afgewogen bedrag",
+    "originalLead": "Oorspronkelijke lead",
+    "amountCurrency": "Bedrag valuta",
+    "contactRole": "Neem contact op met de functie",
+    "lastStage": "Laatste fase"
+  },
+  "links": {
+    "contacts": "Contacten",
+    "documents": "Documenten",
+    "originalLead": "Oorspronkelijke lead"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospectie",
+      "Qualification": "Kwalificatie",
+      "Needs Analysis": "Analyse behoefte",
+      "Value Proposition": "Waarde voorstel",
+      "Id. Decision Makers": "Id. Beslissers",
+      "Perception Analysis": "Perceptie Analyse",
+      "Proposal/Price Quote": "Voorstel/Offerte",
+      "Negotiation/Review": "Onderhandeling/Beoordeling",
+      "Closed Won": "Gesloten Gewonnen",
+      "Closed Lost": "Gesloten Verloren",
+      "Proposal": "Voorstel",
+      "Negotiation": "Onderhandeling"
     }
+  },
+  "labels": {
+    "Create Opportunity": "Kans aanmaken"
+  },
+  "presetFilters": {
+    "won": "Gewonnen"
+  }
 }

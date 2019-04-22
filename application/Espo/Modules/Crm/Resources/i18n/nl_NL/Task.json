@@ -1,44 +1,39 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "parent": "Behorende bij",
-        "status": "Status",
-        "dateStart": "Start Datum",
-        "dateEnd": "Date Due",
-        "dateStartDate": "Date Start (all day)",
-        "dateEndDate": "Date End (all day)",
-        "priority": "Prioriteit",
-        "description": "Beschrijving",
-        "isOverdue": "Te Laat",
-        "account": "Account",
-        "dateCompleted": "Date Completed",
-        "attachments": "Bijlagen"
+  "fields": {
+    "name": "Record Naam",
+    "parent": "Behorende bij",
+    "dateStart": "Start Datum",
+    "priority": "Prioriteit",
+    "description": "Beschrijving",
+    "isOverdue": "Te Laat",
+    "attachments": "Bijlagen",
+    "reminders": "herinneringen"
+  },
+  "links": {
+    "attachments": "Bijlagen"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Niet Gestart",
+      "Started": "Gestart",
+      "Completed": "Voltooid",
+      "Canceled": "Geannuleerd",
+      "Deferred": "Uitgesteld"
     },
-    "links": {
-        "attachments": "Bijlagen"
-    },
-    "options": {
-        "status": {
-            "Not Started": "Niet Gestart",
-            "Started": "Gestart",
-            "Completed": "Voltooid",
-            "Canceled": "Geannuleerd"
-        },
-        "priority" : {
-            "Low": "Laag",
-            "Normal": "Normaal",
-            "High": "Hoog",
-            "Urgent": "Urgent"
-        }
-    },
-    "labels": {
-        "Create Task": "Taak Aanmaken",
-        "Complete": "Complete"
-    },
-    "presetFilters": {
-        "actual": "Werkelijke",
-        "completed": "Voltooid",
-        "todays": "Huidig",
-        "overdue": "Laat"
+    "priority": {
+      "Low": "Laag",
+      "Normal": "Normaal",
+      "High": "Hoog"
     }
+  },
+  "labels": {
+    "Create Task": "Taak Aanmaken"
+  },
+  "presetFilters": {
+    "actual": "Werkelijke",
+    "completed": "Voltooid",
+    "todays": "Huidig",
+    "overdue": "Laat",
+    "deferred": "uitgestelde"
+  }
 }

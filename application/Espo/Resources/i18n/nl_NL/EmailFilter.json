@@ -1,19 +1,28 @@
 {
-    "fields": {
-        "from": "Van",
-        "to": "Naar",
-        "subject": "Onderwerp",
-        "bodyContains": "Body Contains"
-    },
-    "labels": {
-        "Create EmailFilter": "Create Email Filter"
-    },
-    "tooltips": {
-        "name": "Just a name of the filter.",
-        "subject": "Use wildcard *:\n\ntext* - starts with text,\n*text* - contains text,\n*text - ends with text.",
-        "bodyContains": "Body of email contains any of specified words or phrases.",
-        "from": "Emails being sent from the specified address. Leave empty if not needed.",
-        "to": "Emails being sent to the specified address. Leave empty if not needed.",
-        "parent": "Leave it empty to apply this filter globally (to all incoming emails)."
+  "fields": {
+    "from": "Van",
+    "to": "Naar",
+    "subject": "Onderwerp",
+    "bodyContains": "Bericht bevat",
+    "action": "Actie",
+    "isGlobal": "Is globaal",
+    "emailFolder": "Map"
+  },
+  "tooltips": {
+    "from": "Emails being sent from the specified address. Leave empty if not needed.",
+    "to": "Emails being sent to the specified address. Leave empty if not needed.",
+    "name": "Just a name of the filter.",
+    "subject": "Use wildcard *:\n\ntext* - starts with text,\n*text* - contains text,\n*text - ends with text.",
+    "bodyContains": "Body of email contains any of specified words or phrases.",
+    "isGlobal": "Past dit filter toe op alle e-mails die binnenkomen op het systeem."
+  },
+  "labels": {
+    "Emails": "emails"
+  },
+  "options": {
+    "action": {
+      "Skip": "Negeren",
+      "Move to Folder": "Zet in map"
     }
+  }
 }

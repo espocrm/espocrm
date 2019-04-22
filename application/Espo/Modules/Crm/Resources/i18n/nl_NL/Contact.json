@@ -1,40 +1,46 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "emailAddress": "E-mail",
-        "title": "Titel",
-        "account": "Account",
-        "accounts": "Klanten",
-        "phoneNumber": "Telefoon",
-        "accountType": "Klant Type",
-        "doNotCall": "Niet Bellen",
-        "address": "Adres",
-        "opportunityRole": "Functie Kansen",
-        "accountRole": "Titel",
-        "description": "Beschrijving",
-        "campaign": "Campaign",
-        "targetLists": "Doellijsten",
-        "targetList": "Target List"
-    },
-    "links": {
-        "opportunities": "Kansen",
-        "cases": "Casus",
-        "targetLists": "Doellijsten",
-        "campaignLogRecords": "Campaign Log",
-        "campaign": "Campaign",
-        "account": "Account (Primary)",
-        "accounts": "Klanten",
-        "casesPrimary": "Cases (Primary)"
-    },
-    "labels": {
-        "Create Contact": "Contact Aanmaken"
-    },
-    "options": {
-        "opportunityRole": {
-            "": "--Geen--",
-            "Decision Maker": "Beslisser",
-            "Evaluator": "Evaluator",
-            "Influencer": "Beinvloeder"
-        }
+  "fields": {
+    "name": "Record Naam",
+    "emailAddress": "E-mail",
+    "accountRole": "Titel",
+    "accounts": "Klanten",
+    "phoneNumber": "Telefoon",
+    "accountType": "Klant Type",
+    "doNotCall": "Niet Bellen",
+    "address": "Adres",
+    "opportunityRole": "Functie Kansen",
+    "description": "Beschrijving",
+    "targetLists": "Doellijsten",
+    "portalUser": "Portalgebruiker",
+    "originalLead": "Oorspronkelijke lead",
+    "acceptanceStatus": "Acceptatiestatus",
+    "accountIsInactive": "account inactief",
+    "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
+    "acceptanceStatusCalls": "Acceptatiestatus (oproepen)",
+    "title": "Primair Account titel"
+  },
+  "links": {
+    "opportunities": "Kansen",
+    "cases": "Casus",
+    "targetLists": "Doellijsten",
+    "accounts": "Klanten",
+    "portalUser": "Portalgebruiker",
+    "originalLead": "Oorspronkelijke lead",
+    "documents": "documenten",
+    "tasksPrimary": "Taken (uitgebreid)"
+  },
+  "labels": {
+    "Create Contact": "Contact Aanmaken"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "Beslisser",
+      "Influencer": "Beinvloeder"
     }
+  },
+  "presetFilters": {
+    "portalUsers": "Portal-gebruikers",
+    "notPortalUsers": "Geen portalgebruikers",
+    "accountActive": "Actief"
+  }
 }

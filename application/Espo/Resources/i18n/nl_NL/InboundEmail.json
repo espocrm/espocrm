@@ -1,57 +1,58 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "emailAddress": "E-mailadres",
-        "team": "Groep",
-        "status": "Status",
-        "assignToUser": "Assign to User",
-        "host": "Host",
-        "username": "Gebruikersnaam",
-        "password": "Wachtwoord",
-        "port": "Poort",
-        "monitoredFolders": "Gecontroleerde Folders",
-        "trashFolder": "Trash Folder",
-        "ssl": "SSL",
-        "createCase": "Create Case",
-        "reply": "Auto-Reply",
-        "caseDistribution": "Case Distribution",
-        "replyEmailTemplate": "Reply Email Template",
-        "replyFromAddress": "Reply From Address",
-        "replyToAddress": "Reply To Address",
-        "replyFromName": "Reply From Name",
-        "targetUserPosition": "Target User Position",
-        "fetchSince": "Opgehaald Vanaf"
+  "fields": {
+    "name": "Record Naam",
+    "emailAddress": "E-mailadres",
+    "username": "Gebruikersnaam",
+    "password": "Wachtwoord",
+    "port": "Poort",
+    "monitoredFolders": "Gecontroleerde Folders",
+    "fetchSince": "Opgehaald Vanaf",
+    "addAllTeamUsers": "Voor alle teamgebruikers",
+    "team": "Groep",
+    "sentFolder": "Verzonden map",
+    "storeSentEmails": "Verzonden e-mails opslaan",
+    "useSmtp": "Gebruik SMTP",
+    "smtpHost": "SMTP-host",
+    "smtpPort": "SMTP-poort",
+    "smtpSecurity": "SMTP-beveiliging",
+    "smtpUsername": "SMTP-gebruikersnaam",
+    "smtpPassword": "SMTP-wachtwoord",
+    "fromName": "Van naam",
+    "smtpIsShared": "SMTP is gedeeld",
+    "smtpIsForMassEmail": "SMTP Is voor massa-e-mail",
+    "useImap": "Ophalen van e-mails",
+    "keepFetchedEmailsUnread": "Ongelezen e-mailberichten ongelezen houden"
+  },
+  "options": {
+    "status": {
+      "Active": "Actief",
+      "Inactive": "Inactief"
     },
-    "tooltips": {
-        "reply": "Notify email senders that their emails has been received.\n\n Only one email will be sent to a particular recipient during some period of time to prevent looping.",
-        "createCase": "Automatically create case from incoming emails.",
-        "replyToAddress": "Specify email address of this mailbox to make responses come here.",
-        "caseDistribution": "How cases will be assigned to. Assigned directly to the user or among the team.",
-        "assignToUser": "User emails/cases will be assigned to.",
-        "team": "Team emails/cases will be related to.",
-        "targetUserPosition": "Define the position of users which will be destributed with cases."
-    },
-    "links": {
-        "filters": "Filters"
-    },
-    "options": {
-        "status": {
-            "Active": "Actief",
-            "Inactive": "Inactief"
-        },
-        "caseDistribution": {
-            "Direct-Assignment": "Direct-Assignment",
-            "Round-Robin": "Round-Robin",
-            "Least-Busy": "Least-Busy"
-        }
-    },
-    "labels": {
-        "Create InboundEmail": "E-mail Account Aanmaken",
-        "IMAP": "IMAP",
-        "Actions": "Acties",
-        "Main": "Hoofd"
-    },
-    "messages": {
-        "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server"
+    "caseDistribution": {
+      "": "Geen"
     }
+  },
+  "labels": {
+    "Create InboundEmail": "E-mail Account Aanmaken",
+    "Actions": "Acties",
+    "Main": "Hoofd"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server"
+  },
+  "tooltips": {
+    "assignToUser": "User emails/cases will be assigned to.",
+    "team": "Team emails/cases will be related to.",
+    "teams": "E-mails van teams worden toegewezen.",
+    "addAllTeamUsers": "E-mails worden weergegeven in de Inbox van alle gebruikers van opgegeven teams.",
+    "targetUserPosition": "Define the position of users which will be destributed with cases.",
+    "monitoredFolders": "Meerdere mappen moeten gescheiden worden door een komma.",
+    "smtpIsShared": "Indien ingeschakeld, kunnen gebruikers e-mails verzenden met behulp van deze SMTP. De beschikbaarheid wordt bepaald door Rollen via de toestemming van de Group Email Account.",
+    "smtpIsForMassEmail": "Indien ingeschakeld, is SMTP beschikbaar voor Massa-e-mail.",
+    "storeSentEmails": "Verzonden e-mails worden opgeslagen op de IMAP-server."
+  },
+  "links": {
+    "emails": "emails",
+    "assignToUser": "Toewijzen aan gebruiker"
+  }
 }

@@ -1,20 +1,23 @@
 {
-    "fields": {
-        "status": "Status",
-        "executeTime": "Execute At",
-        "attempts": "Attempts Left",
-        "failedAttempts": "Failed Attempts",
-        "serviceName": "Service",
-        "method": "Method",
-        "scheduledJob": "Geplande Opdracht",
-        "data": "Data"
-    },
-    "options": {
-        "status": {
-            "Pending": "In afwachting",
-            "Success": "Success",
-            "Running": "Running",
-            "Failed": "Failed"
-        }
+  "fields": {
+    "failedAttempts": "Pogingen Mislukt",
+    "scheduledJob": "Geplande Opdracht",
+    "method": "Method",
+    "scheduledJobJob": "Geplande taaknaam",
+    "executedAt": "Uitgevoerd bij",
+    "startedAt": "Begonnen bij",
+    "targetType": "Doeltype",
+    "targetId": "Doel-ID",
+    "number": "Aantal",
+    "queue": "Wachtrij",
+    "job": "Baan"
+  },
+  "options": {
+    "status": {
+      "Pending": "In afwachting",
+      "Success": "Succesvol",
+      "Running": "bezig",
+      "Failed": "Mislukt"
     }
+  }
 }

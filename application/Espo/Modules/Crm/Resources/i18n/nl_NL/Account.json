@@ -1,76 +1,66 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "emailAddress": "E-mail",
-        "website": "Website",
-        "phoneNumber": "Telefoon",
-        "billingAddress": "Factuur Adres",
-        "shippingAddress": "Verzend Adres",
-        "description": "Beschrijving",
-        "sicCode": "Sic Code",
-        "industry": "Industrie",
-        "type": "Type",
-        "contactRole": "Titel",
-        "campaign": "Campaign"
+  "fields": {
+    "name": "Record Naam",
+    "emailAddress": "E-mail",
+    "phoneNumber": "Telefoon",
+    "billingAddress": "Factuur Adres",
+    "shippingAddress": "Verzend Adres",
+    "description": "Beschrijving",
+    "industry": "Industrie",
+    "contactRole": "Titel",
+    "targetLists": "Doellijsten",
+    "targetList": "Doellijst",
+    "originalLead": "Oorspronkelijke lead",
+    "contactIsInactive": "Inactief"
+  },
+  "links": {
+    "contacts": "Contacten",
+    "opportunities": "Kansen",
+    "cases": "Casus",
+    "documents": "Documenten",
+    "targetLists": "Doellijsten",
+    "portalUsers": "Portal-gebruikers",
+    "originalLead": "Oorspronkelijke lead"
+  },
+  "options": {
+    "type": {
+      "Customer": "Klant",
+      "Investor": "Investeerder"
     },
-    "links": {
-        "contacts": "Contacten",
-        "opportunities": "Kansen",
-        "cases": "Casus",
-        "documents": "Documenten",
-        "meetingsPrimary": "Meetings (expanded)",
-        "callsPrimary": "Calls (expanded)",
-        "tasksPrimary": "Tasks (expanded)",
-        "emailsPrimary": "Emails (expanded)",
-        "targetLists": "Doellijsten",
-        "campaignLogRecords": "Campaign Log",
-        "campaign": "Campaign"
-    },
-    "options": {
-        "type": {
-            "Customer": "Klant",
-            "Investor": "Investeerder",
-            "Partner": "Partner",
-            "Reseller": "Reseller"
-        },
-        "industry": {
-            "Agriculture": "Agriculture",
-            "Advertising": "Advertising",
-            "Apparel & Accessories": "Apparel & Accessories",
-            "Automotive": "Automotive",
-            "Banking": "Bankwezen",
-            "Biotechnology": "Biotechnology",
-            "Chemical": "Chemical",
-            "Computer": "Computer",
-            "Education": "Onderwijs",
-            "Electronics": "Electronica",
-            "Energy": "Energy",
-            "Entertainment & Leisure": "Entertainment & Leisure",
-            "Finance": "Finance",
-            "Food & Beverage": "Food & Beverage",
-            "Grocery": "Grocery",
-            "Healthcare": "Healthcare",
-            "Insurance": "Verzekeringen",
-            "Legal": "Legal",
-            "Manufacturing": "Manufacturing",
-            "Publishing": "Publishing",
-            "Real Estate": "Real Estate",
-            "Service": "Service",
-            "Sports": "Sports",
-            "Software": "Software",
-            "Technology": "Technology",
-            "Telecommunications": "Telecommunications",
-            "Television": "Television",
-            "Transportation": "Transportation",
-            "Venture Capital": "Venture Capital"
-        }
-    },
-    "labels": {
-        "Create Account": "Klant Aanmaken",
-        "Copy Billing": "Kopieer van Factuur"
-    },
-    "presetFilters": {
-        "customers": "Customers",
-        "partners": "Partners"
+    "industry": {
+      "Banking": "Bankwezen",
+      "Building Materials & Equipment": "Bouwmaterialen en -apparatuur",
+      "Education": "Onderwijs",
+      "Electronics": "Electronica",
+      "Insurance": "Verzekeringen",
+      "Aerospace": "ruimte",
+      "Architecture": "Architectuur",
+      "Construction": "Bouw",
+      "Defense": "Verdediging",
+      "Creative": "Creatief",
+      "Culture": "Cultuur",
+      "Consulting": "Overleg plegen",
+      "Electric Power": "Elektrische energie",
+      "Hospitality": "Gastvrijheid",
+      "Mass Media": "Massa media",
+      "Mining": "Mijnbouw",
+      "Music": "Muziek",
+      "Petroleum": "petroleum",
+      "Retail": "Kleinhandel",
+      "Shipping": "Verzenden",
+      "Support": "Ondersteuning",
+      "Testing, Inspection & Certification": "Testen, inspectie en certificering",
+      "Wholesale": "Groothandel",
+      "Travel": "Reizen"
     }
+  },
+  "labels": {
+    "Create Account": "Klant Aanmaken",
+    "Copy Billing": "Kopieer van Factuur",
+    "Set Primary": "Primair instellen"
+  },
+  "presetFilters": {
+    "customers": "Klanten",
+    "recentlyCreated": "Recent gemaakt"
+  }
 }

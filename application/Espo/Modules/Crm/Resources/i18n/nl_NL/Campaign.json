@@ -1,64 +1,56 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "description": "Beschrijving",
-        "status": "Status",
-        "type": "Type",
-        "startDate": "Start Date",
-        "endDate": "End Date",
-        "targetLists": "Doellijsten",
-        "excludingTargetLists": "Excluding Target Lists",
-        "sentCount": "Verstuur",
-        "openedCount": "Opened",
-        "clickedCount": "Clicked",
-        "optedOutCount": "Opted Out",
-        "bouncedCount": "Bounced",
-        "hardBouncedCount": "Hard Bounced",
-        "softBouncedCount": "Soft Bounced",
-        "leadCreatedCount": "Leads Created",
-        "revenue": "Revenue",
-        "revenueConverted": "revenue (converted)",
-        "budget": "Budget"
+  "fields": {
+    "name": "Record Naam",
+    "description": "Beschrijving",
+    "targetLists": "Doellijsten",
+    "sentCount": "Verstuur",
+    "revenueConverted": "revenue (converted)",
+    "budgetConverted": "Budget (omgezet)",
+    "contactsTemplate": "Contacten-sjabloon",
+    "leadsTemplate": "Leads sjabloon",
+    "accountsTemplate": "Accounts-sjabloon",
+    "usersTemplate": "Gebruikers sjabloon",
+    "mailMergeOnlyWithAddress": "Records overslaan zonder ingevuld adres",
+    "budgetCurrency": "Budgetvaluta"
+  },
+  "links": {
+    "targetLists": "Doellijsten",
+    "accounts": "Klanten",
+    "contacts": "Contacten",
+    "opportunities": "Kansen",
+    "contactsTemplate": "Contacten-sjabloon",
+    "leadsTemplate": "Leads sjabloon",
+    "accountsTemplate": "Accounts-sjabloon",
+    "usersTemplate": "Gebruikers sjabloon"
+  },
+  "options": {
+    "type": {
+      "Email": "E-mail"
     },
-    "links": {
-        "targetLists": "Doellijsten",
-        "excludingTargetLists": "Excluding Target Lists",
-        "accounts": "Klanten",
-        "contacts": "Contacten",
-        "leads": "Leads",
-        "opportunities": "Kansen",
-        "campaignLogRecords": "Log",
-        "massEmails": "Mass Emails",
-        "trackingUrls": "Tracking URLs"
-    },
-    "options": {
-        "type": {
-            "Email": "E-mail",
-            "Web": "Web",
-            "Television": "Television",
-            "Radio": "Radio",
-            "Newsletter": "Newsletter",
-            "Mail": "Mail"
-        },
-        "status": {
-            "Planning": "Planning",
-            "Active": "Actief",
-            "Inactive": "Inactief",
-            "Complete": "Complete"
-        }
-    },
-    "labels": {
-        "Create Campaign": "Create Campaign",
-        "Target Lists": "Doellijsten",
-        "Statistics": "Statistics",
-        "hard": "hard",
-        "soft": "soft",
-        "Unsubscribe": "Unsubscribe"
-    },
-    "presetFilters": {
-        "active": "Actief"
-    },
-    "messages": {
-        "unsubscribed": "You have been unsubscribed from our mailing list."
+    "status": {
+      "Active": "Actief",
+      "Inactive": "Inactief",
+      "Complete": "Compleet"
     }
+  },
+  "labels": {
+    "Target Lists": "Doellijsten",
+    "Mass Emails": "Massale e-mails",
+    "Email Templates": "E-mailsjablonen",
+    "Unsubscribe again": "Afmelden opnieuw",
+    "Subscribe again": "Abonneer opnieuw",
+    "Create Target List": "Maak een doellijst",
+    "Mail Merge": "Mailmerge",
+    "Generate Mail Merge PDF": "Genereer Mail Merge PDF"
+  },
+  "presetFilters": {
+    "active": "Actief"
+  },
+  "tooltips": {
+    "targetLists": "Doelen die berichten zouden moeten ontvangen.",
+    "excludingTargetLists": "Doelen die geen berichten mogen ontvangen."
+  },
+  "messages": {
+    "subscribedAgain": "U bent opnieuw ingeschreven."
+  }
 }

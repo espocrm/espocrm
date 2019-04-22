@@ -1,35 +1,31 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "status": "Status",
-        "job": "Job",
-        "scheduling": "Scheduling (crontab notatie)"
+  "fields": {
+    "name": "Record Naam",
+    "scheduling": "Scheduling (crontab notatie)"
+  },
+  "labels": {
+    "Create ScheduledJob": "Geplande Opdracht Aanmaken"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Opschonen",
+      "CheckInboundEmails": "Controleer Binnenkomende E-mails",
+      "SendEmailReminders": "Stuur Herinnering Email",
+      "SendEmailNotifications": "Verzend e-mailmeldingen",
+      "CheckNewVersion": "Controleer op nieuwe versie"
     },
-    "links": {
-        "log": "Log"
+    "cronSetup": {
+      "linux": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+      "mac": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+      "windows": "Opgelet: Maak een batch bestand met de volgende commando's om de geplande opdrachten voor Espo onder Windows te gebruiken:",
+      "default": "Opgelet: Voeg deze regel toe aan de Cron Job (geplande opdracht):"
     },
-    "labels": {
-        "Create ScheduledJob": "Geplande Opdracht Aanmaken"
-    },
-    "options": {
-        "job": {
-            "Cleanup": "Opschonen",
-            "CheckInboundEmails": "Controleer Binnenkomende Emails",
-            "CheckEmailAccounts": "Check Personal Email Accounts",
-            "SendEmailReminders": "Stuur Herinnering Email"
-        },
-        "cronSetup": {
-            "linux": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
-            "mac": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
-            "windows": "Opgelet: Maak een batch bestand met de volgende commando's om de geplande opdrachten voor Espo onder Windows te gebruiken:",
-            "default": "Opgelet: Voeg deze regel toe aan de Cron Job (geplande opdracht):"
-        },
-        "status": {
-            "Active": "Actief",
-            "Inactive": "Inactief"
-        }
-    },
-    "tooltips": {
-        "scheduling": "Defines when and how often job will be run\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+    "status": {
+      "Active": "Actief",
+      "Inactive": "Inactief"
     }
+  },
+  "tooltips": {
+    "scheduling": "Defines when and how often job will be run\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+  }
 }

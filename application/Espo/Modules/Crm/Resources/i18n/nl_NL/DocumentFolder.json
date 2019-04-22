@@ -1,10 +1,8 @@
 {
-    "labels": {
-        "Create DocumentFolder": "Create Document Folder",
-        "Manage Categories": "Manage Folders",
-        "Documents": "Documenten"
-    },
-    "links": {
-        "documents": "Documenten"
-    }
+  "labels": {
+    "Documents": "Documenten"
+  },
+  "links": {
+    "documents": "Documenten"
+  }
 }

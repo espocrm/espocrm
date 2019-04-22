@@ -1,13 +1,19 @@
 {
-    "modes": {
-        "month": "Month",
-        "week": "Week",
-        "day": "Dag",
-        "agendaWeek": "Week",
-        "agendaDay": "Dag"
-    },
-    "labels": {
-        "Today": "Vandaag",
-        "Create": "Aanmaken"
-    }
+  "modes": {
+    "day": "Dag",
+    "agendaDay": "Dag",
+    "timeline": "Tijdlijn"
+  },
+  "labels": {
+    "Today": "Vandaag",
+    "Create": "Aanmaken",
+    "Shared": "gedeeld",
+    "Add User": "Voeg gebruiker toe",
+    "current": "actueel",
+    "time": "tijd",
+    "User List": "gebruikers lijst",
+    "Manage Users": "Gebruikers beheren",
+    "View Calendar": "Bekijk Agenda",
+    "Create Shared View": "Maak gedeelde weergave"
+  }
 }

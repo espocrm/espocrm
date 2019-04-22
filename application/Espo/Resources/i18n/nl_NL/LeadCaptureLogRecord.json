@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "number": "Aantal",
+    "data": "Gegevens",
+    "target": "Doelwit",
+    "createdAt": "Ingevoerd om",
+    "isCreated": "Is lead gemaakt"
+  },
+  "links": {
+    "target": "Doelwit"
+  }
+}
