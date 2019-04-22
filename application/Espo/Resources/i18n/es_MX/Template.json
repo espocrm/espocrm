@@ -13,7 +13,8 @@
     "footerPosition": "Posición del Pié",
     "variables": "Marcadores Disponibles",
     "pageOrientation": "Orientación de la Página",
-    "pageFormat": "Formato de Papel"
+    "pageFormat": "Formato de Papel",
+    "fontFace": "Fuente"
   },
   "labels": {
     "Create Template": "Crear Plantilla"
@@ -30,6 +31,10 @@
     "placeholders": {
       "today": "Hoy (fecha)",
       "now": "Ahora (fecha-hr)"
+    },
+    "fontFace": {
+      "dejavusans": "DejaVuSans",
+      "dejavusansextralight": "DejaVu Sans Condensed"
     }
   }
 }

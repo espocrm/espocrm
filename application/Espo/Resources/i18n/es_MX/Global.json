@@ -10,7 +10,7 @@
     "OutboundEmail": "Correo Saliente",
     "ScheduledJob": "Tarea Agendada",
     "ExternalAccount": "Cuenta Externa",
-    "Dashboard": "Escritorio",
+    "Dashboard": "Tablero",
     "InboundEmail": "Correo Entrante",
     "Stream": "Flujo",
     "Import": "Importar",
@@ -40,7 +40,11 @@
     "PhoneNumber": "Teléfono",
     "AuthLogRecord": "Registro en Hist. de Aut.",
     "AuthFailLogRecord": "Registro en Hist. de Fallos de Aut.",
-    "EmailTemplateCategory": "Categorías de Formatos de Correo"
+    "EmailTemplateCategory": "Categorías de Formatos de Correo",
+    "LeadCapture": "Punto de Entrada para Captura de Referencias",
+    "LeadCaptureLogRecord": "Historial de Captura de Referencias",
+    "ArrayValue": "Valor del Arreglo ",
+    "ApiUser": "Usuario de la API"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -53,7 +57,7 @@
     "ScheduledJob": "Tareas Agendadas",
     "ExternalAccount": "Cuentas Externas",
     "Extension": "Extensiones",
-    "Dashboard": "Escritorio",
+    "Dashboard": "Tablero",
     "InboundEmail": "Grupo de Cuentas de Correo",
     "Stream": "Flujo",
     "Template": "Plantillas",
@@ -72,7 +76,12 @@
     "LastViewed": "Ultimos Revisados",
     "AuthLogRecord": "Historial de Autorizaciones",
     "AuthFailLogRecord": "Hist. de Fallos de Aut.\n",
-    "EmailTemplateCategory": "Categorías de Formatos de Correo"
+    "EmailTemplateCategory": "Categorías de Formatos de Correo",
+    "Import": "Importar ",
+    "LeadCapture": "Capturar Referencia",
+    "LeadCaptureLogRecord": "Historial de Captura de Referencias",
+    "ArrayValue": "Valores del Arreglo",
+    "ApiUser": "Usuarios de la API"
   },
   "labels": {
     "Misc": "Misceláneos",
@@ -119,7 +128,7 @@
     "Add Field": "Agregar Campo",
     "Add Dashlet": "Agregar Panel",
     "Filter": "Filtro",
-    "Edit Dashboard": "Editar Escritorio",
+    "Edit Dashboard": "Editar Tablero",
     "Add": "Agregar",
     "Add Item": "Agregar Elemento",
     "Reset": "Restablecer",
@@ -220,7 +229,8 @@
     "Convert to": "Convertir a",
     "View Personal Data": "Ver Datos Personales",
     "Personal Data": "Datos Personales",
-    "Erase": "Borrar"
+    "Erase": "Borrar",
+    "Move Over": "Mover"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -278,7 +288,8 @@
     "fieldIsUploading": "Carga en prograso",
     "streamPostInfo": "Escriba <strong>@username</strong> para indicar los usuarios de esta publicación.\n\nSintaxis disponible para los marcadores:\n`<code>código</code>`\n**<strong>texto en negrita</strong>**\n*<em>texto en itálica</em>*\n~<del>texto eliminado</del>~\n> marcador de bloque\n[texto de la liga](url) ",
     "erasePersonalDataConfirmation": "¿Realmente desea borrar permanentemente los campos seleccionados?",
-    "massPrintPdfMaxCountError": "No se pueden imprimir mas de {maxCount} registros."
+    "massPrintPdfMaxCountError": "No se pueden imprimir mas de {maxCount} registros.",
+    "unlinkSelectedRecordsConfirmation": "Estas seguro que deseas desligar los registros seleccionados ?"
   },
   "boolFilters": {
     "onlyMy": "Sólo míos",
@@ -296,7 +307,8 @@
     "follow": "Dar seguimiento",
     "unfollow": "Quitar seguimiento",
     "convertCurrency": "Convertir Moneda",
-    "printPdf": "Imprimir a PDF"
+    "printPdf": "Imprimir a PDF",
+    "unlink": "Desligar"
   },
   "fields": {
     "name": "Nombre",
@@ -329,7 +341,8 @@
     "names": "Nombres",
     "emailAddressIsOptedOut": "La dirección de correo está Confirmada",
     "targetListIsOptedOut": "Se ha Excluido (De la Lista)",
-    "type": "Tipo"
+    "type": "Tipo",
+    "types": "Tipos"
   },
   "links": {
     "assignedUser": "Usuario Asignado",
@@ -562,7 +575,11 @@
       "isEmpty": "Está Vacío",
       "olderThanXDays": "Mayor de \"X\" Días",
       "afterXDays": "Después de \"X\" Días",
-      "nextMonth": "Siguiente mes"
+      "nextMonth": "Siguiente mes",
+      "currentFiscalYear": "Año Fiscal Actual",
+      "lastFiscalYear": "Último Año Fiscal",
+      "currentFiscalQuarter": "Trimestre Fiscal Actual",
+      "lastFiscalQuarter": "Último Trimestre Fiscal"
     },
     "searchRanges": {
       "is": "Es",

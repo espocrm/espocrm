@@ -98,7 +98,15 @@
     "tabIconsDisabled": "Desactivar Iconos en Pestañas",
     "textFilterUseContainsForVarchar": "Use el operador 'contiene' para filtrar campos alfanuméricos",
     "emailAddressIsOptedOutByDefault": "Marcar direcciones como confirmadas",
-    "outboundEmailBccAddress": "Direcciones CCO para clientes externos"
+    "outboundEmailBccAddress": "Direcciones CCO para clientes externos",
+    "adminNotificationsNewExtensionVersion": "Notificar cuando haya nuevas versiones disponibles de extensiones",
+    "cleanupDeletedRecords": "Eliminar los registros borrados",
+    "ldapPortalUserLdapAuth": "Usar Autenticación LDAP para Usuarios del Portal",
+    "ldapPortalUserPortals": "Portales Default del Usuario de Portal",
+    "ldapPortalUserRoles": "Roles Default del Usuario de Portal",
+    "addressCountryList": "Lista para Autocompletar Direcciones de Países",
+    "fiscalYearShift": "Inicio del Año Fiscal",
+    "maintenanceMode": "Modo de Mantenimiento"
   },
   "options": {
     "weekStart": {
@@ -127,7 +135,6 @@
     "ldapAuth": "Credenciales de acceso al servidor LDAP.",
     "ldapUserNameAttribute": "El atributo para identificar el usuario.  Por ejemplo, \"userPrincipalName\" o \"sAMAcountName\" para Active Directory.  \"uid\" en OpenLDAP.",
     "ldapUserObjectClass": "Atributo ObjectClass para buscar usuarios.  Por ejemplo, \"person\" para AD, \"inetOrgPerson\" para OpenLDAP.",
-    "ldapAccountCanonicalForm": "The type of your account canonical form. There are 4 options:<br>- 'Dn' - the form in the format 'CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - the form 'tester'.<br>- 'Backslash' - the form 'COMPANY\\tester'.<br>- 'Principal' - the form 'tester@company.com'. ",
     "ldapBindRequiresDn": "La opción para formatear el nombre del usuario en forma ND.",
     "ldapBaseDn": "La base de datos default DN usada para buscar usuarios.  Por ejemplo, \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "Opción para separar el nombre de usuario del dominio.",
@@ -151,7 +158,15 @@
     "textFilterUseContainsForVarchar": "Si no lo marca, se usará el operador 'starts with' (inicia con).  Puede utilizar el comodín '%'.",
     "streamEmailNotificationsEntityList": "Notificaciones de actualización de registros del flujo.  Los Usuarios recibirán notificaciones por correo sólo para los tipos de entidad especificados.",
     "authTokenPreventConcurrent": "Los usuarios no podrán ingresar en distintos dispositivos al mismo tiempo",
-    "emailAddressIsOptedOutByDefault": "Las nuevas direcciones de correo serán marcadas como confirmadas."
+    "emailAddressIsOptedOutByDefault": "Las nuevas direcciones de correo serán marcadas como confirmadas.",
+    "cleanupDeletedRecords": "Los registros borrados serán eliminados de la base de datos después de un tiempo.",
+    "ldapPortalUserLdapAuth": "Permitir a los usuarios del portal utilizar autenticación LDAP en vez de la de EspoCRM.",
+    "ldapPortalUserPortals": "Portales Default para el Usuario de Portal creado",
+    "ldapPortalUserRoles": "Roles Default para el Usuario de Portal creado",
+    "jobRunInParallel": "Las tareas serán ejecutadas en paralelo",
+    "jobPoolConcurrencyNumber": "Max número de procesos ejecutados simultaneamente",
+    "jobMaxPortion": "Max número de tareas por ejecución",
+    "maintenanceMode": "Unicamente administradores pueden accesar el sistema"
   },
   "labels": {
     "System": "Sistema",
@@ -165,7 +180,9 @@
     "Test Connection": "Probar Conexión",
     "Connecting": "Conectando...",
     "Activities": "Actividades",
-    "Admin Notifications": "Notificaciones al Administrador"
+    "Admin Notifications": "Notificaciones al Administrador",
+    "Search": "Busqueda",
+    "Misc": "Miscelaneos"
   },
   "messages": {
     "ldapTestConnection": "La conexión se ha establecido satisfactoriamente"

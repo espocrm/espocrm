@@ -6,7 +6,8 @@
     "portalPermission": "Permisos del Portal",
     "groupEmailAccountPermission": "Permisos de Grupos de Cuentas de Correo",
     "exportPermission": "Permisos de exportación",
-    "dataPrivacyPermission": "Permiso de Datos Privados"
+    "dataPrivacyPermission": "Permiso de Datos Privados",
+    "massUpdatePermission": "Permiso de Actualización Masiva"
   },
   "links": {
     "users": "Usuarios",
@@ -17,7 +18,9 @@
     "userPermission": "Permite restringir la capacidad de los usuarios para ver tareas, calendarios y el flujo de otros usuarios.\n\ntodos  - pueden ver todo\n\nequipo - pueden ver las actividades de su equipo\n\nno - sólo las propias",
     "portalPermission": "Define un acceso a la información del portal, permitiendo enviar mensajes a los usuarios del portal",
     "groupEmailAccountPermission": "Define el acceso a los grupos de cuentas de corros, la capacida de enviar correos desde grupos SMTP.",
-    "dataPrivacyPermission": "Permite ver y borrar datos personales."
+    "dataPrivacyPermission": "Permite ver y borrar datos personales.",
+    "exportPermission": "Define si los usuarios pueden exportar registros.",
+    "massUpdatePermission": "Define si los usuarios pueden hacer actualizaciones masivas de registros."
   },
   "labels": {
     "Access": "Acceso",

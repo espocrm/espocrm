@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "number": "Número",
+    "data": "Dato",
+    "target": "Interés",
+    "leadCapture": "Capturar Referencia",
+    "createdAt": "Ingresado el",
+    "isCreated": "La Referencia fue creada"
+  },
+  "links": {
+    "leadCapture": "Capturar Referencia",
+    "target": "Interés"
+  }
+}

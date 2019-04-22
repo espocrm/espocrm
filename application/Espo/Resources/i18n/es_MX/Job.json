@@ -14,7 +14,7 @@
   "options": {
     "status": {
       "Pending": "Pendiente",
-      "Success": "Exitoso",
+      "Success": "Correcto",
       "Running": "en ejecución...",
       "Failed": "Falló"
     }

@@ -1,1 +1,41 @@
-{}
+{
+  "fields": {
+    "name": "Nombre",
+    "campaign": "Campaña",
+    "isActive": "Está Activo",
+    "subscribeToTargetList": "Suscribirse a Lista de Intereses",
+    "subscribeContactToTargetList": "Suscribirse al Contacto, si existe",
+    "targetList": "Lista de Intereses",
+    "fieldList": "Campos de Propiedades",
+    "optInConfirmation": "Doble Opt-In",
+    "optInConfirmationEmailTemplate": "Plantilla de correo para confirmar Opt-In",
+    "optInConfirmationLifetime": "Rango de Validez (en horas) de la confirmación Opt-In",
+    "optInConfirmationSuccessMessage": "Texto para mostrar después de la confirmación Opt-In",
+    "leadSource": "Referencia Orígen",
+    "apiKey": "Llave API",
+    "targetTeam": "Equipo Interesante",
+    "exampleRequestMethod": "Método",
+    "exampleRequestPayload": "Propiedades"
+  },
+  "links": {
+    "targetList": "Lista de Intereses",
+    "campaign": "Campaña",
+    "optInConfirmationEmailTemplate": "Plantilla de confirmación de Opt-In",
+    "targetTeam": "Equipo Interesante",
+    "logRecords": "Historial"
+  },
+  "labels": {
+    "Create LeadCapture": "Crear Punto de Entrada",
+    "Generate New API Key": "Generar Nueva Llave API",
+    "Request": "Solicitud",
+    "Confirm Opt-In": "Confirmar Opt-In"
+  },
+  "messages": {
+    "generateApiKey": "Crear Nueva Llave API",
+    "optInConfirmationExpired": "La liga para confirmación de Opt-In ha expirado.",
+    "optInIsConfirmed": "El Opt-In se ha confirmado."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Soporta Reducción"
+  }
+}

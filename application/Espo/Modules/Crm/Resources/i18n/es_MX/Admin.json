@@ -3,5 +3,9 @@
     "detailConvert": "Convertir Referencia",
     "listForAccount": "Listado (por Cuentas)",
     "listForContact": "Lista (para Contactos)"
+  },
+  "templates": {
+    "invitation": "Invitación",
+    "reminder": "Recordatorio"
   }
 }

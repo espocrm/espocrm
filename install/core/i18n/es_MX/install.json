@@ -5,7 +5,7 @@
     "Step1 page title": "Contrato de licencia",
     "License Agreement": "Contrato de licencia",
     "I accept the agreement": "Acepto el contrato",
-    "Step2 page title": "Configuración de la Base de Datos",
+    "Step2 page title": "Configuración de Base de Datos",
     "Step3 page title": "Configuración (Admin)",
     "Step4 page title": "Opciones de Sistema",
     "Step5 page title": "Configuración SMTP para los correos salientes",
@@ -26,15 +26,20 @@
     "Test settings": "Probar conexión",
     "Database Settings Description": "Ingresa la información de conexión a tu Base de Datos MySQL (nombre del host, usuario y contraseña). Puedes especificar el puerto del servidor por ejemplo localhost:3306.",
     "Install": "Instalar",
-    "SetupConfirmation page title": "Configuración Recomendada",
-    "PHP Configuration": "Configuración PHP Recomendada",
-    "MySQL Configuration": "Configuración MySQL",
     "Configuration Instructions": "Instrucciones de Configuración",
     "phpVersion": "Versión PHP",
     "requiredMysqlVersion": "Versión MySQL",
     "dbHostName": "Servidor usualmente(localhost)",
     "dbName": "Nombre de la Base de Datos",
-    "dbUserName": "Usuario de la Base de Datos"
+    "dbUserName": "Usuario de la Base de Datos",
+    "SetupConfirmation page title": "Requerimientos del Sistema",
+    "PHP Configuration": "Configuración PHP",
+    "MySQL Configuration": "Configuración de la Base de Datos",
+    "Permission Requirements": "Permisos",
+    "Success": "Correcto",
+    "Fail": "Falló",
+    "is recommended": "es recomendado",
+    "extension is missing": "falta la extensión"
   },
   "fields": {
     "Choose your language": "Seleccione su idioma",
@@ -75,7 +80,6 @@
     "Some errors occurred!": "¡Hubo algún error!",
     "phpVersion": "Su versión de PHP no está soportada por EspoCRM,por favor actualizar  a PHP{minVersion} por lo menos",
     "requiredMysqlVersion": "Su versión de MySQL no está soportada por EspoCRM,por favor actualizar  a MySQL{minVersion} por lo menos",
-    "requiredMariadbVersion": "Su versión de MariaDB no está soportada por EspoCRM,por favor actualizar a MariaDB {minVersion} por lo menos",
     "The PHP extension was not found...": "PHP Error: Extensión <b>{extName}</b> no encontrada.",
     "All Settings correct": "Todas las configuraciones son correctas",
     "Failed to connect to database": "Fallo al conectar a la base de datos",
@@ -88,7 +92,6 @@
     "buildDatabase error": "Error en <b>buildDatabase</b>",
     "createUser error": "Error al Crear Usuario",
     "checkAjaxPermission error": "Error en <b>checkAjaxPermission</b>",
-    "Ajax failed": "Fallo en AJAX",
     "Cannot create user": "No puede crear un Usuario",
     "Permission denied": "Permiso denegado",
     "Permission denied to": "Permiso denegado",
@@ -99,7 +102,8 @@
     "Thousand Separator and Decimal Mark equal": "El separador de miles y el separador decimal no pueden ser iguales",
     "extension": "{0} la extensión se ha perdido",
     "option": "El valor recomendado es {0}",
-    "mysqlSettingError": "EspoCRM requiere que la configuración de MySQL \"{NAME}\" sea establecido a {VALUE}"
+    "mysqlSettingError": "EspoCRM requiere que la configuración de MySQL \"{NAME}\" sea establecido a {VALUE}",
+    "Ajax failed": "Ha ocurrido un error inesperado"
   },
   "options": {
     "modRewriteInstruction": {
@@ -118,5 +122,14 @@
       "microsoft-iis": "API Error: EspoCRM API is unavailable.<br> Posible problema: \"URL Rewrite\" deshabilitado. Verifique y active el módulo \"URL Rewrite\" en su servidor IIS",
       "default": "API Error: EspoCRM API is unavailable.<br> Posible problema: Módulo Rewrite deshabilitado.  Verifique y Active el Módulo Rewrite en su servidor (e.g. mod_rewrite en Apache) y el soporte .htaccess. "
     }
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Versión PHP",
+    "requiredMysqlVersion": "Versión MySQL",
+    "host": "Nombre del Hospedaje",
+    "dbname": "Nombre de la Base de Datos",
+    "user": "Nombre del Usuario",
+    "writable": "Permite grabar",
+    "readable": "Permite leer"
   }
 }

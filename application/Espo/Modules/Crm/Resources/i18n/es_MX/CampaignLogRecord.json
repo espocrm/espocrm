@@ -25,7 +25,8 @@
       "Opted Out": "Rechazado",
       "Bounced": "Rebotados",
       "Clicked": "Leído",
-      "Lead Created": "Referencias Creadas"
+      "Lead Created": "Referencias Creadas",
+      "Opted In": "Opt-In aceptado"
     }
   },
   "labels": {
@@ -37,6 +38,7 @@
     "optedOut": "Rechazado",
     "bounced": "Rebotados",
     "clicked": "Leído",
-    "leadCreated": "Referencia Creada"
+    "leadCreated": "Referencia Creada",
+    "optedIn": "Opt-In aceptado"
   }
 }
