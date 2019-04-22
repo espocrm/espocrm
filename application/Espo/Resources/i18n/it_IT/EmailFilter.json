@@ -2,7 +2,6 @@
   "fields": {
     "from": "Da",
     "to": "A",
-    "subject": "Soggetto",
     "bodyContains": "Contenuto del Corpo",
     "action": "Azione",
     "isGlobal": "Globale",

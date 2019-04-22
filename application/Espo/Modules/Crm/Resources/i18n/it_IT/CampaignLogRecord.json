@@ -2,7 +2,7 @@
   "fields": {
     "action": "Azione",
     "actionDate": "Data",
-    "campaign": "Campagnia",
+    "campaign": "Campagna",
     "object": "Oggetto",
     "application": "Applicazione"
   },

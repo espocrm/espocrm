@@ -24,7 +24,7 @@
       "Inbound": "in Ingresso"
     },
     "acceptanceStatus": {
-      "None": "Nessun",
+      "None": "Nessuno",
       "Accepted": "Accettato",
       "Declined": "Rifiutato",
       "Tentative": "Provvisorio"

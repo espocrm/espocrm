@@ -7,7 +7,7 @@
   },
   "options": {
     "dateTimeDefault": {
-      "": "Nessun",
+      "": "Nessuno",
       "javascript: return this.dateTime.getNow(1);": "Ora",
       "javascript: return this.dateTime.getNow(5);": "Ora (5m)",
       "javascript: return this.dateTime.getNow(15);": "Ora (15m)",
@@ -33,7 +33,7 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 settimana"
     },
     "dateDefault": {
-      "": "Nessun",
+      "": "Nessuno",
       "javascript: return this.dateTime.getToday();": "Oggi",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 giorno",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 giorni",

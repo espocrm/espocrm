@@ -6,7 +6,7 @@
     "phoneNumber": "Telefono",
     "accountType": "Tipo di Account",
     "doNotCall": "Non chiamare",
-    "address": "Indirizzi",
+    "address": "Indirizzo",
     "description": "Descrizione",
     "targetLists": "Liste di destinazione",
     "targetList": "Lista di destinazione",
@@ -33,7 +33,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--Nessun--",
       "Decision Maker": "Responsabile",
       "Evaluator": "Valutatore"
     }

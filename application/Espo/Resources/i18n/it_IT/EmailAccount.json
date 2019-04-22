@@ -4,7 +4,7 @@
     "status": "Stato",
     "port": "Porta",
     "monitoredFolders": "Cartelle Monitorate",
-    "fetchSince": "Da Raggiungere",
+    "fetchSince": "Recupera da",
     "emailAddress": "Indirizzo email",
     "sentFolder": "Cartella Inviate",
     "storeSentEmails": "Emailinviate",

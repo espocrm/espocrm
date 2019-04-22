@@ -84,7 +84,7 @@
     "relationshipsPortal": "Pannello relazioni (Portale)"
   },
   "fieldTypes": {
-    "address": "Indirizzi",
+    "address": "Indirizzo",
     "foreign": "Esterna",
     "duration": "Durata",
     "personName": "Nome persona",
@@ -194,5 +194,15 @@
     "authLog": "Cronologia login.",
     "leadCapture": "Punti di ingresso API per Web-to-Lead.",
     "attachments": "Tutti gli allegati di file memorizzati nel sistema."
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Versione PHP",
+    "requiredMysqlVersion": "Versione MySQL",
+    "host": "Nome Host",
+    "dbname": "Nome del database"
+  },
+  "templates": {
+    "accessInfo": "Informazioni di accesso",
+    "assignment": "Assegnato"
   }
 }

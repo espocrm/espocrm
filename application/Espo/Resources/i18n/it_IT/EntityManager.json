@@ -33,7 +33,7 @@
   },
   "options": {
     "type": {
-      "": "Nessun",
+      "": "Nessuno",
       "Person": "Persone",
       "CategoryTree": "Albero delle Categorie",
       "Event": "Evento",

@@ -3,7 +3,6 @@
     "name": "Nome",
     "status": "Stato",
     "body": "Corpo",
-    "subject": "Soggetto",
     "attachments": "Allegato",
     "insertField": "Inserisci Campo",
     "category": "Categoria"
