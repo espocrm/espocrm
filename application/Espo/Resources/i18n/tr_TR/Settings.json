@@ -100,7 +100,6 @@
     "ldapAuth": "LDAP sunucusu için kimlik bilgilerine erişin.",
     "ldapUserNameAttribute": "Kullanıcıyı tanımlayan özellik. \\ NE.g. \\ \"UserPrincipalName \" veya \\ \"sAMAccountName \" Active Directory için \\ \"kullanıcı \" OpenLDAP için.",
     "ldapUserObjectClass": "Kullanıcıları aramak için ObjectClass özniteliği. Örneğin, AD için \\ \"kişi \", OpenLDAP için \\ \"inetOrgPerson \".",
-    "ldapAccountCanonicalForm": "Hesap kanonik formunuzun türü. 4 seçenek var: <br> - 'Dn' - 'CN = tester, OU = espocrm, DC = test, DC = lan' biçimindeki form. <br> - 'Kullanıcı adı' - form 'tester'. <br> - 'Ters eğik çizgi' - 'ŞİRKET \\ tester' formu. <br> - 'Ana' - 'tester@company.com' formatı.",
     "ldapBindRequiresDn": "Kullanıcı adını DN biçiminde biçimlendirme seçeneği.",
     "ldapBaseDn": "Kullanıcıları aramak için kullanılan varsayılan taban DN. Örneğin, \\ \"OU = kullanıcılar, OU = espocrm, DC = test, DC = lan \".",
     "ldapTryUsernameSplit": "Bir kullanıcı adını alan adıyla bölme seçeneği.",

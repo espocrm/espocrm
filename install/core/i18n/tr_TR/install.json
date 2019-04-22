@@ -29,9 +29,6 @@
     "Test settings": "Bağlantıyı Kontrol Et",
     "Database Settings Description": "MySQL veritabanı bağlantı bilgilerinizi (hostname, kullanıcı adı ve şifre) girin. Localhost: 3306 gibi hostname için sunucu portunu belirtebilirsiniz.",
     "Install": "Yükle ",
-    "SetupConfirmation page title": "Önerilen ayarlar",
-    "PHP Configuration": "Önerilen PHP ayarları",
-    "MySQL Configuration": "MySQL Yapılandırması",
     "Configuration Instructions": "Yapılandırma Talimatları",
     "phpVersion": "PHP sürümü",
     "requiredMysqlVersion": "MySQL sürümü",
@@ -87,7 +84,6 @@
     "buildDatabase error": "buildDatabase hatası",
     "createUser error": "createUser hatası",
     "checkAjaxPermission error": "checkAjaxPermission hatası",
-    "Ajax failed": "Ajax çalışmıyor",
     "Cannot create user": "Kullanıcı oluşturulamıyor",
     "Permission denied": "Erişim izni reddedildi",
     "Permission denied to": "Erişim izni reddedildi",
@@ -108,11 +104,11 @@
     },
     "modRewriteInstruction": {
       "apache": {
-        "linux": "<br> <br> 1. \\ \"Mod_rewrite \" yı etkinleştirin. Bunu yapmak için şu komutları bir Terminalde çalıştırın: <pre> {APACHE1} </ pre> <br> 2. .htaccess desteğini etkinleştirin. Sunucu yapılandırma ayarlarını ekleyin / düzenleyin (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Sonra bu komutu bir Terminalde çalıştırın: < Pre> {APACHE3} </ pre> <br> 3. RewriteBase yolunu eklemeyi deneyin, {API_PATH} .htaccess dosyasını açın ve aşağıdaki satırı değiştirin: <pre> {APACHE4} </ pre> <pre> {APACHE5} </ pre> <br> Daha fazla bilgi için lütfen ziyaret edin. <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> EspoCRM için Apache sunucusu yapılandırması </a> kılavuzunu okuyun. <br> <br>"
+        "linux": "<br> <br> 1. \\\\ \"Mod_rewrite \" yı etkinleştirin. Bunu yapmak için şu komutları bir Terminalde çalıştırın: <pre> {APACHE1} </ pre> <br> 2. .htaccess desteğini etkinleştirin. Sunucu yapılandırma ayarlarını ekleyin / düzenleyin (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Sonra bu komutu bir Terminalde çalıştırın: < Pre> {APACHE3} </ pre> <br> 3. RewriteBase yolunu eklemeyi deneyin, {API_PATH} .htaccess dosyasını açın ve aşağıdaki satırı değiştirin: <pre> {APACHE4} </ pre> <pre> {APACHE5} </ pre> <br> Daha fazla bilgi için lütfen ziyaret edin. <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> EspoCRM için Apache sunucusu yapılandırması </a> kılavuzunu okuyun. <br> <br>"
       },
       "nginx": {
-        "linux": "<br> \\ n <pre> \\ n {NGINX} \\ n </ pre> <br> Daha fazla bilgi için lütfen <a href = \\ \"http://www.espocrm.com/blog/nginx-server adresini ziyaret edin. Için yapılandırma-espocrm / \\ \"hedef = \" boş \\ \"> EspoCRM için Nginx sunucu yapılandırması </a>. <br> <br>",
-        "windows": "<br> \\ n <pre> \\ n {NGINX} \\ n </ pre> <br> Daha fazla bilgi için lütfen <a href = \\ \"http://www.espocrm.com/blog/nginx-server adresini ziyaret edin. Için yapılandırma-espocrm / \\ \"hedef = \" boş \\ \"> EspoCRM için Nginx sunucu yapılandırması </a>. <br> <br>"
+        "linux": "<br> \\\\ n <pre> \\\\ n {NGINX} \\\\ n </ pre> <br> Daha fazla bilgi için lütfen <a href = \\\\ \"http://www.espocrm.com/blog/nginx-server adresini ziyaret edin. Için yapılandırma-espocrm / \\\\ \"hedef = \" boş \\\\ \"> EspoCRM için Nginx sunucu yapılandırması </a>. <br> <br>",
+        "windows": "<br> \\\\ n <pre> \\\\ n {NGINX} \\\\ n </ pre> <br> Daha fazla bilgi için lütfen <a href = \\\\ \"http://www.espocrm.com/blog/nginx-server adresini ziyaret edin. Için yapılandırma-espocrm / \\\\ \"hedef = \" boş \\\\ \"> EspoCRM için Nginx sunucu yapılandırması </a>. <br> <br>"
       }
     }
   }

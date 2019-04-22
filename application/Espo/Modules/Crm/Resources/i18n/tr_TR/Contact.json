@@ -2,7 +2,6 @@
   "fields": {
     "name": "İsim",
     "emailAddress": "Eposta",
-    "title": "Başlık",
     "accountRole": "Başlık",
     "account": "Hesap",
     "accounts": "Hesaplar",
@@ -38,7 +37,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "Yok",
       "Decision Maker": "Karar verici",
       "Evaluator": "Değerlendirici",
       "Influencer": "Etki Eden"

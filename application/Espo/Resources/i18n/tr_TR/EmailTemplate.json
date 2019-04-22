@@ -18,8 +18,5 @@
   },
   "presetFilters": {
     "actual": "Güncel "
-  },
-  "messages": {
-    "infoText": "Kullanılabilir değişkenler: \\ n \\ n {optOutUrl} & # 8211; Bir araştırmacı olmayan kişi bağlantısı için URL; \\ n \\ n {optOutLink} & # 8211; Bir üyelikten çıkma bağlantısı."
   }
 }
