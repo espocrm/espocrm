@@ -1,9 +1,15 @@
 {
-    "fields": {
-        "user": "Người dùng",
-        "ipAddress": "Địa chỉ IP",
-        "lastAccess": "Thời gian truy cập cuối",
-        "createdAt": "Thời gian đăng nhập"
-
-    }
+  "fields": {
+    "user": "Người dùng",
+    "ipAddress": "Địa chỉ IP",
+    "lastAccess": "Thời gian truy cập cuối",
+    "createdAt": "Thời gian đăng nhập",
+    "isActive": "Được kích hoạt"
+  },
+  "links": {
+    "actionHistoryRecords": "Lịch sử hoạt động"
+  },
+  "presetFilters": {
+    "active": "Kích hoạt"
+  }
 }

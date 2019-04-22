@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "link": "Liên kết",
+    "isLarge": "Cỡ chữ lớn"
+  },
+  "options": {
+    "align": {
+      "left": "Trái",
+      "right": "Phải"
+    },
+    "style": {
+      "default": "Mặc định",
+      "success": "Thành công",
+      "danger": "Nguy hiểm",
+      "info": "Thông tin",
+      "warning": "Cảnh báo",
+      "primary": "Chính"
+    }
+  },
+  "labels": {
+    "New panel": "Khung mới"
+  }
+}

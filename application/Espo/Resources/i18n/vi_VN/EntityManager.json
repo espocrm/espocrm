@@ -1,0 +1,38 @@
+{
+  "labels": {
+    "Fields": "Trường",
+    "Relationships": "Mối quan hệ"
+  },
+  "fields": {
+    "name": "Tên",
+    "type": "Loại",
+    "stream": "Cập nhật thông tin",
+    "label": "Nhãn",
+    "linkType": "Loại liên kết",
+    "entityForeign": "Khóa phục cho Entity",
+    "linkForeign": "Liên kết khóa phụ",
+    "link": "Liên kết",
+    "labelForeign": "Nhãn cho khóa phụ",
+    "sortBy": "Sắp xếp mặc định (trường)",
+    "sortDirection": "Sắp xếp theo mặc định (direction)",
+    "disabled": "Tắt",
+    "color": "Màu",
+    "kanbanViewMode": "Chế độ xem tiến trình"
+  },
+  "options": {
+    "type": {
+      "": "Trống",
+      "Person": "Con người",
+      "CategoryTree": "Cây thư mục"
+    },
+    "sortDirection": {
+      "asc": "Tăng dần",
+      "desc": "Giảm dần"
+    }
+  },
+  "messages": {
+    "entityCreated": "Đã tạo Entity",
+    "linkAlreadyExists": "Đường dẫn xung đột.",
+    "linkConflict": "Tên xung đột: Liên kết hoặc trường đã tồn tại."
+  }
+}

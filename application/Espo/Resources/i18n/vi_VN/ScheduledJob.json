@@ -1,30 +1,24 @@
 {
-    "fields": {
-        "name": "Tên",
-        "status": "Trạng thái",
-        "job": "Công việc",
-        "scheduling": "Scheduling (crontab notation)"
+  "fields": {
+    "name": "Tên",
+    "status": "Trạng thái",
+    "job": "Công việc",
+    "scheduling": "Scheduling (crontab notation)"
+  },
+  "links": {
+    "log": "Nhật ký"
+  },
+  "labels": {
+    "Create ScheduledJob": "Lên lịch công việc"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Dọn dẹp",
+      "CheckInboundEmails": "Kiểm tra hộp thư đến"
     },
-    "links": {
-        "log": "Nhật ký"
-    },
-    "labels": {
-        "Create ScheduledJob": "Lên lịch công việc"
-    },
-    "options": {
-        "job": {
-            "CheckInboundEmails": "Kiểm tra hộp thư đến",
-            "Cleanup": "Dọn dẹp"
-        },
-        "cronSetup": {
-            "linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
-            "mac": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
-            "windows": "Note: Create a batch file with the following commands to run Espo Scheduled Jobs using Windows Scheduled Tasks:",
-            "default": "Note: Add this command to Cron Job (Scheduled Task):"
-        },
-        "status": {
-            "Active": "Đang hoạt động",
-            "Inactive": "Chưa hoạt động"
-        }
+    "status": {
+      "Active": "Đang hoạt động",
+      "Inactive": "Chưa hoạt động"
     }
+  }
 }

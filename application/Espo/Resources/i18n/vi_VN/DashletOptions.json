@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "title": "Tiêu đề",
+    "dateFrom": "Từ ngày",
+    "dateTo": "Đến ngày",
+    "displayRecords": "Số dòng hiển thị",
+    "isDoubleHeight": "Cao 2x",
+    "enabledScopeList": "Những gì sẽ được hiển thị",
+    "users": "Người dùng"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Tuần (agenda)",
+      "basicWeek": "Tuần",
+      "month": "Tháng",
+      "basicDay": "Ngày",
+      "agendaDay": "Ngày (agenda)",
+      "timeline": "Dòng thời gian"
+    }
+  }
+}

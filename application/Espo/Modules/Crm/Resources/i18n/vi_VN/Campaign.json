@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "name": "Tên",
+    "leadCreatedCount": "Tạo khách hàng tiềm năng"
+  },
+  "links": {
+    "leads": "Khách hàng tiềm năng",
+    "opportunities": "Cơ hội"
+  },
+  "options": {
+    "type": {
+      "Television": "Truyền hình",
+      "Newsletter": "Báo"
+    }
+  },
+  "labels": {
+    "hard": "cứng",
+    "soft": "mềm",
+    "Unsubscribe": "`"
+  },
+  "presetFilters": {
+    "active": "Kích hoạt"
+  }
+}

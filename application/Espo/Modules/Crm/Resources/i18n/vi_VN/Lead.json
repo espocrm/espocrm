@@ -1,50 +1,44 @@
 {
-    "labels": {
-        "Converted To": "Đã chuyển đổi sang",
-        "Create Lead": "Tạo chỉ dẫn",
-        "Convert": "Chuyển đổi",
-        "convert": "chuyển đổi"
+  "labels": {
+    "Converted To": "Đã chuyển đổi sang",
+    "Create Lead": "Tạo chỉ dẫn",
+    "Convert": "Chuyển đổi",
+    "convert": "chuyển đổi"
+  },
+  "fields": {
+    "name": "Tên",
+    "title": "Tiêu đề",
+    "phoneNumber": "Điện thoại",
+    "accountName": "Tên tài khoản",
+    "doNotCall": "Không gọi",
+    "address": "Địa chỉ",
+    "status": "Trạng thái",
+    "source": "Nguồn",
+    "opportunityAmount": "Trị giá",
+    "description": "Mô tả",
+    "createdAccount": "Tài khoản",
+    "createdContact": "Liên hệ",
+    "createdOpportunity": "Cơ hội"
+  },
+  "options": {
+    "status": {
+      "New": "Mới",
+      "Assigned": "Chỉ định",
+      "In Process": "Đang tiến hành",
+      "Converted": "Đã chuyển đổi",
+      "Recycled": "Thùng rác",
+      "Dead": "Chết"
     },
-    "fields": {
-        "name": "Tên",
-        "emailAddress": "Email",
-        "title": "Tiêu đề",
-        "website": "Website",
-        "phoneNumber": "Điện thoại",
-        "accountName": "Tên tài khoản",
-        "doNotCall": "Không gọi",
-        "address": "Địa chỉ",
-        "status": "Trạng thái",
-        "source": "Nguồn",
-        "opportunityAmount": "Trị giá",
-        "description": "Mô tả",
-        "createdAccount": "Tài khoản",
-        "createdContact": "Liên hệ",
-        "createdOpportunity": "Cơ hội"
-    },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "New": "Mới",
-            "Assigned": "Chỉ định",
-            "In Process": "Đang tiến hành",
-            "Converted": "Đã chuyển đổi",
-            "Recycled": "Thùng rác",
-            "Dead": "Chết"
-        },
-        "source": {
-            "Call": "Gọi",
-            "Email": "Email",
-            "Existing Customer": "Khách hàng hiện có",
-            "Partner": "Đối tác",
-            "Public Relations": "Khách hàng công khai",
-            "Web Site": "Web Site",
-            "Campaign": "Chiến dịch",
-            "Other": "Khác"
-        }
-    },
-    "presetFilters": {
-        "active": "Đang hoạt động"
+    "source": {
+      "Call": "Gọi",
+      "Existing Customer": "Khách hàng hiện có",
+      "Partner": "Đối tác",
+      "Public Relations": "Khách hàng công khai",
+      "Campaign": "Chiến dịch",
+      "Other": "Khác"
     }
+  },
+  "presetFilters": {
+    "active": "Đang hoạt động"
+  }
 }

@@ -1,42 +1,43 @@
 {
-    "fields": {
-        "name": "Tên",
-        "number": "Số",
-        "status": "Trạng thái",
-        "account": "Tài khoản",
-        "contact": "Liên hệ",
-        "priority": "Ưu tiên",
-        "type": "Loại",
-        "description": "Mô tả"
+  "fields": {
+    "name": "Tên",
+    "number": "Số",
+    "status": "Trạng thái",
+    "account": "Tài khoản",
+    "contact": "Liên hệ",
+    "priority": "Ưu tiên",
+    "type": "Loại",
+    "description": "Mô tả"
+  },
+  "links": {
+    "calls": "Cuộc gọi"
+  },
+  "options": {
+    "status": {
+      "New": "Mới",
+      "Assigned": "Chỉ định",
+      "Pending": "Đang chờ",
+      "Closed": "Đã đóng",
+      "Rejected": "Đã từ chối",
+      "Duplicate": "Trùng"
     },
-    "links": {
+    "priority": {
+      "Low": "Thấp",
+      "Normal": "Bình thường",
+      "High": "Cao",
+      "Urgent": "Gấp"
     },
-    "options": {
-        "status": {
-            "New": "Mới",
-            "Assigned": "Chỉ định",
-            "Pending": "Đang chờ",
-            "Closed": "Đã đóng",
-            "Rejected": "Đã từ chối",
-            "Duplicate": "Trùng"
-        },
-        "priority" : {
-            "Low": "Thấp",
-            "Normal": "Bình thường",
-            "High": "Cao",
-            "Urgent": "Gấp"
-        },
-        "type": {
-            "Question": "Câu hỏi",
-            "Incident": "Sự cố",
-            "Problem": "Có vấn đề"
-        }
-    },
-    "labels": {
-        "Create Case": "Tạo trường hợp"
-    },
-    "presetFilters": {
-        "open": "Mở",
-        "closed": "Đã đóng"
+    "type": {
+      "Question": "Câu hỏi",
+      "Incident": "Sự cố",
+      "Problem": "Có vấn đề"
     }
+  },
+  "labels": {
+    "Create Case": "Tạo trường hợp"
+  },
+  "presetFilters": {
+    "open": "Mở",
+    "closed": "Đã đóng"
+  }
 }

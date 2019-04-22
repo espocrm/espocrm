@@ -1,31 +1,31 @@
 {
-    "fields": {
-        "name": "Tên",
-        "emailAddress": "Email",
-        "title": "Tiêu đề",
-        "account": "Tài khoản",
-        "accounts": "Tài khoản",
-        "phoneNumber": "Điện thoại",
-        "accountType": "Loại tài khoản",
-        "doNotCall": "Không gọi",
-        "address": "Địa chỉ",
-        "opportunityRole": "Vai trò cơ hội",
-        "accountRole": "Vai trò",
-        "description": "Mô tả"
-    },
-    "links": {
-        "opportunities": "Cơ hội",
-        "cases": "Trường hợp"
-    },
-    "labels": {
-        "Create Contact": "Tạo liên hệ"
-    },
-    "options": {
-        "opportunityRole": {
-            "": "--Trống--",
-            "Decision Maker": "Tạo quyết định",
-            "Evaluator": "Đánh giá",
-            "Influencer": "Phụ thuộc"
-        }
+  "fields": {
+    "name": "Tên",
+    "accountRole": "Vai trò",
+    "account": "Tài khoản",
+    "accounts": "Tài khoản",
+    "phoneNumber": "Điện thoại",
+    "accountType": "Loại tài khoản",
+    "doNotCall": "Không gọi",
+    "address": "Địa chỉ",
+    "opportunityRole": "Vai trò cơ hội",
+    "description": "Mô tả"
+  },
+  "links": {
+    "opportunities": "Cơ hội",
+    "cases": "Trường hợp"
+  },
+  "labels": {
+    "Create Contact": "Tạo liên hệ"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "Tạo quyết định",
+      "Evaluator": "Đánh giá",
+      "Influencer": "Phụ thuộc"
     }
+  },
+  "presetFilters": {
+    "accountActive": "Kích hoạt"
+  }
 }

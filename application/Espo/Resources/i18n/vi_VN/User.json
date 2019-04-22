@@ -1,30 +1,53 @@
 {
-    "fields": {
-        "name": "Tên",
-        "userName": "Tên người dùng",
-        "title": "Tiêu đề",
-        "isAdmin": "Tài khoản Admin",
-        "defaultTeam": "Nhóm mặc định",
-        "emailAddress": "Email",
-        "phoneNumber": "Điện thoại",
-        "roles": "Vai trò",        
-        "password": "Mật khẩu",
-        "passwordConfirm": "Xác thực mật khẩu",
-        "newPassword": "Mật khẩu mới"
+  "fields": {
+    "name": "Tên",
+    "userName": "Tên người dùng",
+    "title": "Tiêu đề",
+    "isAdmin": "Tài khoản Admin",
+    "defaultTeam": "Nhóm mặc định",
+    "phoneNumber": "Điện thoại",
+    "roles": "Vai trò",
+    "password": "Mật khẩu",
+    "passwordConfirm": "Xác thực mật khẩu",
+    "newPassword": "Mật khẩu mới",
+    "avatar": "Ảnh đại diện",
+    "isActive": "Được kích hoạt",
+    "ipAddress": "Địa chỉ IP",
+    "type": "Loại"
+  },
+  "links": {
+    "teams": "Nhóm",
+    "roles": "Vai trò"
+  },
+  "labels": {
+    "Create User": "Tạo người dùng",
+    "Generate": "Tạo",
+    "Access": "Truy cập",
+    "Preferences": "Tùy chỉnh",
+    "Change Password": "Đổi mật khẩu",
+    "Forgot Password?": "Quên mật khẩu?"
+  },
+  "messages": {
+    "passwordWillBeSent": "Mật khẩu sẽ được gửi tới email tài khoản",
+    "passwordChanged": "Mật khẩu đã được đổi",
+    "wrongUsernamePasword": "Sai tên đăng nhập hoặc mật khẩu",
+    "userNameEmailAddressNotFound": "Tên đăng nhập hoặc email không tồn tại",
+    "forbidden": "Từ chối truy cập, xin thử lại sau",
+    "passwordChangedByRequest": "Mật khẩu đã được thay đổi"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Chỉ nhóm của tôi"
+  },
+  "presetFilters": {
+    "active": "Kích hoạt"
+  },
+  "options": {
+    "type": {
+      "system": "Hệ thống",
+      "super-admin": "Quản trị viên cao nhất"
     },
-    "links": {
-        "teams": "Nhóm",
-        "roles": "Vai trò"
-    },
-    "labels": {
-        "Create User": "Tạo người dùng",
-        "Generate": "Tạo",
-        "Access": "Truy cập",
-        "Preferences": "Tùy chỉnh",
-        "Change Password": "Đổi mật khẩu"
-    },
-    "messages": {
-        "passwordWillBeSent": "Mật khẩu sẽ được gửi tới email tài khoản",
-        "passwordChanged": "Mật khẩu đã được đổi"
+    "authMethod": {
+      "ApiKey": "Mã khóa API"
     }
+  }
 }

@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "name": "Tên",
+    "status": "Tình trạng",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "port": "Cổng (port)",
+    "monitoredFolders": "Thư mục được theo dõi",
+    "emailAddress": "Địa chỉ email",
+    "sentFolder": "Thư mục gửi thư",
+    "storeSentEmails": "Lưu email đã gửi",
+    "keepFetchedEmailsUnread": "Giữ thư đã tải về dạng chưa đọc"
+  },
+  "links": {
+    "filters": "Lọc"
+  },
+  "options": {
+    "status": {
+      "Active": "Kích hoạt",
+      "Inactive": "Ngừng kích hoạt"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Tạo tài khoản email",
+    "Test Connection": "Kiểm tra kết nối"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Không thể kết nối đến máy chủ IMAP",
+    "connectionIsOk": "Kế nối thành công"
+  }
+}

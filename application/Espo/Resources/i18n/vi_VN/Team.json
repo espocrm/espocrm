@@ -1,12 +1,12 @@
 {
-    "fields": {
-        "name": "Tên",
-        "roles": "Vai trò"
-    },
-    "links": {
-        "users": "Người dùng"
-    },
-    "labels": {
-        "Create Team": "Tạo nhóm"
-    }
+  "fields": {
+    "name": "Tên",
+    "roles": "Vai trò"
+  },
+  "links": {
+    "users": "Người dùng"
+  },
+  "labels": {
+    "Create Team": "Tạo nhóm"
+  }
 }

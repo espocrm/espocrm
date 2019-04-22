@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "from": "Từ",
+    "to": "Đến",
+    "subject": "Chủ đề",
+    "bodyContains": "Nội dung"
+  },
+  "labels": {
+    "Create EmailFilter": "Tạo bộ lọc thư"
+  }
+}

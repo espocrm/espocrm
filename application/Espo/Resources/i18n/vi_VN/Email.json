@@ -1,36 +1,89 @@
 {
-    "fields": {
-        "name": "Chủ đề",
-        "parent": "Chủ",
-        "status": "Trạng thái",
-        "dateSent": "Ngày gửi",
-        "from": "Từ",
-        "to": "Tới",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "Chỉ Html",
-        "body": "Nội dung",
-        "subject": "Chủ đề",
-        "attachments": "Đính kèm",
-        "selectTemplate": "Chọn mẫu",
-        "fromEmailAddress": "Địa chỉ gửi",
-        "toEmailAddresses": "Địa chỉ nhận",
-        "emailAddress": "Địa chỉ email"
-    },
-    "links": {
-    },
-    "options": {
-        "Draft": "Nháp",
-        "Sending": "Đang gửi",
-        "Sent": "Đã gửi",
-        "Archived": "Lưu trữ"
-    },
-    "labels": {
-        "Create Email": "Email lưu trữ",
-        "Compose": "Soạn"
-    },
-    "presetFilters": {
-        "sent": "Đã gửi",
-        "archived": "Lưu trữ"
+  "fields": {
+    "parent": "Chủ",
+    "status": "Tình trạng",
+    "dateSent": "Ngày gửi",
+    "from": "Từ",
+    "to": "Tới",
+    "replyTo": "Trả lời đến",
+    "replyToString": "Trả lời đến (dạng chữ)",
+    "isHtml": "Chỉ Html",
+    "body": "Nội dung",
+    "subject": "Chủ đề",
+    "attachments": "Đính kèm",
+    "selectTemplate": "Chọn mẫu",
+    "fromAddress": "Địa chỉ gửi",
+    "emailAddress": "Địa chỉ email",
+    "account": "Tài khoản",
+    "users": "Người dùng",
+    "replied": "Đã trả lời",
+    "replies": "Trả lời",
+    "isRead": "Được đọc",
+    "isNotRead": "Chưa được đọc",
+    "isImportant": "Quan trọng",
+    "inTrash": "Trong thùng rác",
+    "name": "Chủ đề",
+    "sentBy": "Gửi bởi"
+  },
+  "links": {
+    "replied": "Đã trả lời",
+    "replies": "Trả lời",
+    "sentBy": "Gửi bởi",
+    "attachments": "Tệp đính kèm"
+  },
+  "options": {
+    "status": {
+      "Draft": "Bản nháp",
+      "Sending": "Đang gửi",
+      "Sent": "Gửi",
+      "Archived": "Lưu trữ",
+      "Received": "Đã nhận",
+      "Failed": "Thất bại"
     }
+  },
+  "labels": {
+    "Create Email": "Email lưu trữ",
+    "Archive Email": "Email lưu trữ",
+    "Compose": "Soạn",
+    "Reply": "Trả lời",
+    "Reply to All": "Trả lời tất cả",
+    "Forward": "Chuyển tiếp",
+    "Original message": "Tin nhắn gốc",
+    "Forwarded message": "Đã chuyển tiếp thư",
+    "Email Accounts": "Tài khoản email cá nhân",
+    "Inbound Emails": "Nhóm tài khoản email",
+    "Email Templates": "Email mẫu",
+    "Send Test Email": "Gửi email kiểm tra",
+    "Send": "Gửi",
+    "Email Address": "Địa chỉ email",
+    "Mark Read": "Đánh dấu đã đọc",
+    "Sending...": "Đang gửi...",
+    "Save Draft": "Lưu nháp",
+    "Mark all as read": "Đánh dấu tất cả đã đọc",
+    "Show Plain Text": "Hiển thị văn bản thuần",
+    "Mark as Important": "Đánh dấu quan trọng",
+    "Unmark Importance": "Bỏ đánh dấu quan trọng",
+    "Move to Trash": "Di chuyển đến thùng rác",
+    "Retrieve from Trash": "Khôi phục từ thùng rác"
+  },
+  "messages": {
+    "noSmtpSetup": "Không có cài đặt SMTP. {link}",
+    "testEmailSent": "Thư kiểm tra đã được gửi",
+    "emailSent": "Thư đã được gửi",
+    "savedAsDraft": "Đã lưu nháp"
+  },
+  "presetFilters": {
+    "sent": "Đã gửi",
+    "archived": "Lưu trữ",
+    "inbox": "Hộp thư đến",
+    "drafts": "Nháp",
+    "trash": "Thùng rác"
+  },
+  "massActions": {
+    "markAsRead": "Đánh dấu đã đọc",
+    "markAsNotRead": "Đánh dấu không đọc",
+    "markAsImportant": "Đánh dấu quan trọng",
+    "markAsNotImportant": "Ngưng đánh dấu quan trọng",
+    "moveToTrash": "Di chuyển vào thùng rác"
+  }
 }

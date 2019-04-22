@@ -1,0 +1,18 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "Chèn tài liệu"
+  },
+  "fields": {
+    "file": "Tập tin",
+    "type": "Loại",
+    "field": "Trường"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Đính kèm",
+      "Import File": "Nhập tập tin vào",
+      "Export File": "Xuất tập tin ra",
+      "Mail Merge": "Gộp email"
+    }
+  }
+}

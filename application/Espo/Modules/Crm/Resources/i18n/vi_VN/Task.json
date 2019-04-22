@@ -1,37 +1,40 @@
 {
-    "fields": {
-        "name": "Tên",
-        "parent": "Chủ",
-        "status": "Trạng thái",
-        "dateStart": "Ngày bắt đầu",
-        "dateEnd": "Hạn",
-        "priority": "Ưu tiên",
-        "description": "Mô tả",
-        "isOverdue": "Đã quá hạn"
+  "fields": {
+    "name": "Tên",
+    "parent": "Chủ",
+    "status": "Trạng thái",
+    "dateStart": "Ngày bắt đầu",
+    "dateEnd": "Hạn",
+    "priority": "Ưu tiên",
+    "description": "Mô tả",
+    "isOverdue": "Đã quá hạn",
+    "reminders": "Nhắc nhở",
+    "contact": "Danh bạ"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Chưa bắt đầu",
+      "Started": "Đã bắt đầu",
+      "Completed": "Hoàn thành",
+      "Canceled": "Hủy"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Not Started": "Chưa bắt đầu",
-            "Started": "Đã bắt đầu",
-            "Completed": "Hoàn thành",
-            "Canceled": "Hủy"
-        },
-        "priority" : {
-            "Low": "Thấp",
-            "Normal": "Bình thường",
-            "High": "Cao",
-            "Urgent": "Gấp"
-        }
-    },
-    "labels": {
-        "Create Task": "Tạo nhiệm vụ"
-    },
-    "presetFilters": {
-        "active": "Đang hoạt động",
-        "completed": "Hoàn thành",
-        "todays": "Hôm nay",
-        "overdue": "Quá hạn"
+    "priority": {
+      "Low": "Thấp",
+      "Normal": "Bình thường",
+      "High": "Cao",
+      "Urgent": "Gấp"
     }
+  },
+  "labels": {
+    "Create Task": "Tạo nhiệm vụ"
+  },
+  "presetFilters": {
+    "completed": "Hoàn thành",
+    "todays": "Hôm nay",
+    "overdue": "Quá hạn"
+  },
+  "links": {
+    "account": "Tài khoản",
+    "contact": "Danh bạ"
+  }
 }

@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Tên",
+    "portalRoles": "Quyền",
+    "isActive": "Được kích hoạt",
+    "dateFormat": "Định dạng ngày",
+    "timeFormat": "Định dạng giờ",
+    "timeZone": "Múi giờ",
+    "defaultCurrency": "Tiền tệ mặc định",
+    "customUrl": "Tùy chỉnh URL"
+  },
+  "links": {
+    "users": "Người dùng"
+  },
+  "labels": {
+    "Settings": "Cài đặt"
+  }
+}

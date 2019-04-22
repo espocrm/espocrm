@@ -1,0 +1,14 @@
+{
+  "options": {
+    "placeholders": {
+      "today": "Hôm nay (ngày)",
+      "now": "Hiện tại (ngày giờ)"
+    },
+    "pageFormat": {
+      "Custom": "Tùy chỉnh"
+    }
+  },
+  "fields": {
+    "fontFace": "Phông chữ"
+  }
+}
