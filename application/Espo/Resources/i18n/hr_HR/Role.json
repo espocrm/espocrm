@@ -6,7 +6,8 @@
     "userPermission": "Dozvola korisnika",
     "portalPermission": "Dozvola za portal",
     "groupEmailAccountPermission": "Prava pristupa Grupnom računu E-pošte",
-    "exportPermission": "Dozvola Izvoza"
+    "exportPermission": "Dozvola Izvoza",
+    "dataPrivacyPermission": "Privole Privatnosti podataka"
   },
   "links": {
     "users": "Korisnici",
@@ -17,7 +18,7 @@
     "userPermission": "Omogućava ograničavanje sposobnosti korisnicima da vide aktivnosti, kalendar i tok drugima \nsve - da vide sve\ntim - mogu vidjeti aktivnosti samo članova tima\nne - ne vide.",
     "portalPermission": "Definira se pristup informacijama sa portala, mogućnost postavljanja poruka korisnicima portala.",
     "groupEmailAccountPermission": "Određuje pristup grupnim računima E-pošte, kao i mogućnost slanja grupnih SMTP poruka.",
-    "exportPermission": "Određuje da li korisnik ima pravo izvoza podataka."
+    "dataPrivacyPermission": "Dozvoljava pregled i brisanje osobnih podataka."
   },
   "labels": {
     "Access": "Pristup",

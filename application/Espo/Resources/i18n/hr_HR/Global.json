@@ -56,7 +56,6 @@
     "Dashboard": "Radna površina",
     "InboundEmail": "Grupni računi e-pošte",
     "Stream": "Tok viesti",
-    "Import": "Rezultati uvoza",
     "Template": "Šablone",
     "Job": "Radnje",
     "EmailFilter": "Filteri e-pošte",
@@ -70,7 +69,9 @@
     "ActionHistoryRecord": "Povijest akcija",
     "AuthToken": "Auth Tokeni",
     "UniqueId": "Jedinstveni ID-evi",
-    "LastViewed": "Posljednji put pregledano"
+    "LastViewed": "Posljednji put pregledano",
+    "LeadCaptureLogRecord": "Lead Capture Dnevnik",
+    "ArrayValue": "Vrijednosti Polja"
   },
   "labels": {
     "Misc": "Ostalo",
@@ -314,7 +315,9 @@
     "phoneNumberOther": "Telefon (Drugo)",
     "order": "Redoslijed",
     "parent": "Master",
-    "children": "Child"
+    "children": "Child",
+    "emailAddressIsOptedOut": "Email adresa je izdvojena",
+    "type": "Vrsta"
   },
   "links": {
     "assignedUser": "Dodijeljen korisniku",
@@ -642,14 +645,17 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} je pisao {target} i sebi"
   },
-  "themes": {
-    "EspoVertical": "Espo sa bočnim izbornikom",
-    "SakuraVertical": "Sakura sa bočnim izbornikom",
-    "VioletVertical": "Violet sa bočnim izbornikom",
-    "HazyblueVertical": "Haziblue sa bočnim izbornikom"
-  },
   "durationUnits": {
     "h": "s",
     "s": "sec"
+  },
+  "listViewModes": {
+    "list": "Lista"
+  },
+  "themes": {
+    "Violet": "Klasična Ljubičasta",
+    "VioletVertical": "Okomita Ljubičasta",
+    "Hazyblue": "Klasična Hazyplava",
+    "HazyblueVertical": "Okomita Hazyplava"
   }
 }

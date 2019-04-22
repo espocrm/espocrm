@@ -25,7 +25,7 @@
     "Group Email Accounts": "Grupni računi  e-pošte",
     "Personal Email Accounts": "Osobni računi e-pošte",
     "Inbound Emails": "Dolazna e-pošta",
-    "Email Templates": "Nacrti za e-poštu",
+    "Email Templates": "Šablone E-pošte",
     "Layout Manager": "Upravljač izgledom",
     "User Interface": "Korisničko sučelje",
     "Auth Tokens": "Pristupni tokeni",
@@ -54,7 +54,9 @@
     "Email Filters": "Filteri E-pošte",
     "Portal Users": "Korisnici portala",
     "Action History": "Povijest akcija",
-    "Label Manager": "Upravljanje labelama"
+    "Label Manager": "Upravljanje labelama",
+    "Auth Log": "Povijest autorizacije",
+    "Attachments": "Prilozi"
   },
   "layouts": {
     "list": "Lista",
@@ -85,8 +87,6 @@
     "bool": "Logičko",
     "currency": "Valuta",
     "date": "Datum",
-    "datetime": "Datum i vrijeme",
-    "datetimeOptional": "Datum/Datum i vrijeme",
     "email": "E-pošta",
     "enum": "Lista",
     "enumInt": "Lista cijelih brojeva",
@@ -110,7 +110,11 @@
     "currencyConverted": "Valuta (konvertirana)",
     "colorpicker": "Izbornik boja",
     "int": "Cijeli broj",
-    "number": "Broj"
+    "number": "Broj",
+    "jsonArray": "Json polje",
+    "jsonObject": "Json objekt",
+    "datetime": "Datum-Vrijeme",
+    "datetimeOptional": "Datum/Datum-Vrijeme"
   },
   "fields": {
     "type": "Vrsta",
@@ -152,7 +156,10 @@
     "probabilityMap": "Faza Vjerojatnosti (%)",
     "readOnly": "Samo za čitanje",
     "noEmptyString": "Prazan unos nije dozvoljen",
-    "maxFileSize": "Maks Veličina Datoteke (Mb)"
+    "maxFileSize": "Maks Veličina Datoteke (Mb)",
+    "useIframe": "Koristi Iframe",
+    "useNumericFormat": "Koristi Numerički Format",
+    "strip": "Makni"
   },
   "messages": {
     "selectEntityType": "Izaberite tip entiteta u lijevom izborniku.",
@@ -168,9 +175,9 @@
     "thousandSeparatorEqualsDecimalMark": "Oznaka za tisuće ne može biti ista kao decimalna oznaka.",
     "userHasNoEmailAddress": "Korisnik nema e-mail adresu.",
     "newVersionIsAvailable": "Nova EspoCRM verzija {latestVersion} je dostupna.",
-    "newExtensionVersionIsAvailable": "Nova verzija {latestVersion} ekstenzije {extensionName} je dostupna.",
-    "cronIsNotConfigured": "Zakazane radnje nisu pokrenute, stoga dolazna E-pošta, obavijesti i podsjetnici nisu u funkciji. Molimo slijedite <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instructions</a> za postavljanje zakazanih radnji.",
-    "uninstallConfirmation": "Jeste li sigurni u deinstalaciju ekstenzije?"
+    "uninstallConfirmation": "Jeste li sigurni u deinstalaciju ekstenzije?",
+    "cronIsNotConfigured": "Zakazane radnje se ne izvršavaju. Stoga dolazni mailovi, notifikacije i podsjetnici ne rade. Molimo slijedite [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) za postavljanje cron radnji.",
+    "newExtensionVersionIsAvailable": "nova verzija {extensionName} {latestVersion} je dostupna."
   },
   "descriptions": {
     "settings": "Sistemska podešavanja aplikacije.",
@@ -201,7 +208,10 @@
     "entityManager": "Kreiranje i uređivanje prilagođenih entiteta. Upravljanje poljima i odnosima.",
     "emailFilters": "E-mail poruke koje se podudaraju sa određenim filterom neće biti uvezene.",
     "actionHistory": "Dnevnik korisničkih akcija.",
-    "labelManager": "Prilagodi nazive aplikacija"
+    "labelManager": "Prilagodi nazive aplikacija",
+    "authLog": "Povijest prijava",
+    "leadCapture": "API ulazna točka za Web-to-Lead.",
+    "attachments": "Svi prilozi spremljeni u sustavu."
   },
   "options": {
     "previewSize": {

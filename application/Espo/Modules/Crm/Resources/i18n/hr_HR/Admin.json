@@ -1,6 +1,7 @@
 {
   "layouts": {
     "detailConvert": "Pretvori izvor",
-    "listForAccount": "Lista (za Tvrtke)"
+    "listForAccount": "Lista (za Tvrtke)",
+    "listForContact": "Lista (za Kontakte)"
   }
 }
