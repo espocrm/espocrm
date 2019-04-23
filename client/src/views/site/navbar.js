@@ -380,6 +380,8 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 updateSizeForVertical();
             });
             updateSizeForVertical();
+
+            this.$el.find('.notifications-badge-container').insertAfter(this.$el.find('.quick-create-container'));
         },
 
         afterRender: function () {
