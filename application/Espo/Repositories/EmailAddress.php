@@ -188,24 +188,25 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, 'User', 'Contact', 'Lead', 'Account')
         ";
 
+        $sql .= " LIMIT 0, 1";
+
         $sth = $pdo->prepare($sql);
         $sth->execute();
+
         while ($row = $sth->fetch()) {
-            if (!empty($row['entityType']) && !empty($row['entityId'])) {
-                if (!$this->getEntityManager()->hasRepository($row['entityType'])) {
-                    return;
-                }
-                if ($onlyName) {
-                    $entity = $this->getEntityManager()->getRepository($row['entityType'])
-                        ->select(['id', 'name'])
-                        ->where(['id' => $row['entityId']])
-                        ->findOne();
-                } else {
-                    $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
-                }
-                if ($entity) {
-                    return $entity;
-                }
+            if (empty($row['entityType']) || empty($row['entityId'])) continue;
+            if (!$this->getEntityManager()->hasRepository($row['entityType'])) continue;
+
+            if ($onlyName) {
+                $entity = $this->getEntityManager()->getRepository($row['entityType'])
+                    ->select(['id', 'name'])
+                    ->where(['id' => $row['entityId']])
+                    ->findOne();
+            } else {
+                $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+            }
+            if ($entity) {
+                return $entity;
             }
         }
     }
