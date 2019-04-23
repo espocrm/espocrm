@@ -1181,21 +1181,25 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 } else if ('widthPx' in this.listLayout[i]) {
                     width = this.listLayout[i].widthPx;
                 }
+                var itemName = this.listLayout[i].name;
 
                 var item = {
-                    name: this.listLayout[i].name,
-                    sortable: !(this.listLayout[i].notSortable || false),
+                    name: itemName,
+                    isSortable: !(this.listLayout[i].notSortable || false),
                     width: width,
                     align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false,
                 };
                 if ('customLabel' in this.listLayout[i]) {
                     item.customLabel = this.listLayout[i].customLabel;
                     item.hasCustomLabel = true;
+                    item.label = item.customLabel;
+                } else {
+                    item.label = this.translate(itemName, 'fields', this.collection.entityType);
                 }
-                if (item.sortable) {
-                    item.sorted = this.collection.orderBy === this.listLayout[i].name;
-                    if (item.sorted) {
-                        item.asc = this.collection.order === 'asc' ;
+                if (item.isSortable) {
+                    item.isSorted = this.collection.orderBy === itemName;
+                    if (item.isSorted) {
+                        item.isDesc = this.collection.order === 'desc' ;
                     }
                 }
                 defs.push(item);

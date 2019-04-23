@@ -112,16 +112,10 @@
                 {{/if}}
                 {{#each headerDefs}}
                 <th {{#if width}} width="{{width}}"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}>
-                    {{#if this.sortable}}
-                        <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{translate this.name scope=../../../collection.name category='fields'}}{{/if}}</a>
-                        {{#if this.sorted}}{{#if this.asc}}<span class="fas fa-chevron-down fa-sm"></span>{{else}}<span class="fas fa-chevron-up fa-sm"></span>{{/if}}{{/if}}
-                    {{else}}
-                        {{#if this.hasCustomLabel}}
-                            {{this.customLabel}}
-                        {{else}}
-                            {{translate this.name scope=../../../collection.name category='fields'}}
-                        {{/if}}
-                    {{/if}}
+                    {{#if this.isSortable}}
+                        <a href="javascript:" class="sort" data-name="{{this.name}}">{{label}}</a>
+                        {{#if this.isSorted}}{{#unless this.isDesc}}<span class="fas fa-chevron-down fa-sm"></span>{{else}}<span class="fas fa-chevron-up fa-sm"></span>{{/unless}}{{/if}}
+                    {{else}}{{label}}{{/if}}
                 </th>
                 {{/each}}
             </tr>
