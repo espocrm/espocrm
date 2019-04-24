@@ -64,6 +64,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 this.model.set('exportAllFields', true);
             }
             this.model.set('format', this.getMetadata().get('app.export.formatList')[0]);
+            this.model.set('pdfDesign', false);
 
             this.createView('record', 'views/export/record/record', {
                 scope: this.scope,
@@ -79,6 +80,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
 
             var returnData = {
                 exportAllFields: data.exportAllFields,
+                pdfDesign: data.pdfDesign,
                 format: data.format
             };
 

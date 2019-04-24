@@ -503,6 +503,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         data.fieldList = dialogData.fieldList;
                     }
                     data.format = dialogData.format;
+                    data.pdfDesign = dialogData.pdfDesign;
 
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 

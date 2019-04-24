@@ -67,6 +67,9 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
 
             this.createField('exportAllFields', 'views/fields/bool', {
             });
+            
+            this.createField('pdfDesign', 'views/fields/bool', {                
+            });
 
             var setFieldList = this.model.get('fieldList') || [];
             setFieldList.forEach(function (item) {
@@ -96,6 +99,17 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
             this.controlAllFields();
             this.listenTo(this.model, 'change:exportAllFields', function () {
                 this.controlAllFields();
+            }, this);
+            
+            this.hideField('pdfDesign');
+
+            this.listenTo(this.model, 'change:format', function (model) {
+                var format = model.get('format');
+                if(format === "pdf") {
+                    this.showField('pdfDesign');
+                }else {
+                    this.hideField('pdfDesign');
+                }
             }, this);
         },
 

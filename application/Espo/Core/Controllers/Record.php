@@ -273,6 +273,10 @@ class Record extends Base
         if (isset($data->format)) {
             $params['format'] = $data->format;
         }
+        
+        if (isset($data->pdfDesign)) {
+            $params['pdfDesign'] = $data->pdfDesign;
+        }
 
         return [
             'id' => $this->getRecordService()->export($params)
