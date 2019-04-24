@@ -43,27 +43,27 @@ class Import extends \Espo\Core\Controllers\Record
         }
     }
 
-    public function actionPatch($params, $data, $request)
+    public function beforePatch()
     {
         throw new BadRequest();
     }
 
-    public function actionUpdate($params, $data, $request)
+    public function beforeUpdate()
     {
         throw new BadRequest();
     }
 
-    public function actionMassUpdate($params, $data, $request)
+    public function beforeMassUpdate()
     {
         throw new BadRequest();
     }
 
-    public function actionCreateLink($params, $data, $request)
+    public function beforeCreateLink()
     {
         throw new BadRequest();
     }
 
-    public function actionRemoveLink($params, $data, $request)
+    public function beforeRemoveLink()
     {
         throw new BadRequest();
     }
