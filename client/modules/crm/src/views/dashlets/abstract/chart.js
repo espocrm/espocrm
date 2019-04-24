@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib!Flotr'], function (Dep, Flotr) {
+define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib!Flotr'], function (Dep, Flotr) {
 
     return Dep.extend({
 
@@ -87,13 +87,20 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                 if (!this.isRendered()) return;
                 setTimeout(function () {
                     this.adjustContainer();
+                    if (this.isNoData()) {
+                        this.showNoData();
+                        return;
+                    }
                     this.draw();
                 }.bind(this), 50);
             }, this);
 
-
             $(window).on('resize.chart' + this.id, function () {
                 this.adjustContainer();
+                if (this.isNoData()) {
+                    this.showNoData();
+                    return;
+                }
                 this.draw();
             }.bind(this));
 
@@ -102,10 +109,21 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             }, this);
         },
 
-        formatNumber: function (value, isCurrency) {
+        formatNumber: function (value, isCurrency, useSiMultiplier) {
             if (value !== null) {
                 var maxDecimalPlaces = 2;
                 var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+
+                var siSuffix = '';
+                if (useSiMultiplier) {
+                    if (value >= 1000000) {
+                        siSuffix = 'M';
+                        value = value / 1000000;
+                    } else if (value >= 1000) {
+                        siSuffix = 'k';
+                        value = value / 1000;
+                    }
+                }
 
                 if (isCurrency) {
                     if (currencyDecimalPlaces === 0) {
@@ -117,6 +135,9 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                     }
                 } else {
                     var maxDecimalPlaces = 4;
+                    if (useSiMultiplier) {
+                        maxDecimalPlaces = 2;
+                    }
                     value = Math.round(value * Math.pow(10, maxDecimalPlaces)) / (Math.pow(10, maxDecimalPlaces));
                 }
 
@@ -143,7 +164,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                     }
                 }
 
-                var value = parts.join(this.decimalMark);
+                var value = parts.join(this.decimalMark) + siSuffix;
                 return value;
             }
             return '';
@@ -212,12 +233,12 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             this.fetch(function (data) {
                 this.chartData = this.prepareData(data);
 
+                this.adjustContainer();
+
                 if (this.isNoData()) {
                     this.showNoData();
                     return;
                 }
-
-                this.adjustContainer();
 
                 setTimeout(function () {
                     if (!this.$container.length || !this.$container.is(":visible")) return;

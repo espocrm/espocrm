@@ -9,6 +9,11 @@
     "Field Level": "Nivel del Campo"
   },
   "fields": {
-    "exportPermission": "Permisos de Exportación"
+    "exportPermission": "Permisos de Exportación",
+    "massUpdatePermission": "Permiso de Actualización Masiva"
+  },
+  "tooltips": {
+    "exportPermission": "Define si los usuarios del portal pueden exportar registros.",
+    "massUpdatePermission": "Define si los usuarios del portal pueden hacer actualizaciones masivas de registros."
   }
 }

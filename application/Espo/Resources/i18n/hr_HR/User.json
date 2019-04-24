@@ -26,7 +26,8 @@
     "position": "Pozicija u timu",
     "ipAddress": "IP adresa",
     "passwordPreview": "Pregled lozinke",
-    "isSuperAdmin": "Je Super Admin"
+    "isSuperAdmin": "Je Super Admin",
+    "lastAccess": "Zadnji pristup"
   },
   "links": {
     "teams": "Timovi",

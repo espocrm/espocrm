@@ -1,5 +1,13 @@
 {
-    "labels": {
-        "Create {entityType}": "Klant {entityTypeTranslated}"
-    }
+  "fields": {
+    "address": "Adres"
+  },
+  "links": {
+    "meetings": "vergaderingen",
+    "calls": "gesprekken",
+    "tasks": "taken"
+  },
+  "labels": {
+    "Create {entityType}": "Klant {entityTypeTranslated}"
+  }
 }

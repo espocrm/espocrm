@@ -1,40 +1,43 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "status": "Status",
-        "host": "Host",
-        "username": "Gebruikersnaam",
-        "password": "Wachtwoord",
-        "port": "Poort",
-        "monitoredFolders": "Gecontroleerde Folders",
-        "ssl": "SSL",
-        "fetchSince": "Opgehaald Vanaf",
-        "emailAddress": "E-mailadres",
-        "sentFolder": "Sent Folder",
-        "storeSentEmails": "Store Sent Emails",
-        "keepFetchedEmailsUnread": "Laat opgehaalde e-mails als ongelezen staan"
-    },
-    "links": {
-        "filters": "Filters"
-    },
-    "options": {
-        "status": {
-            "Active": "Actief",
-            "Inactive": "Inactief"
-        }
-    },
-    "labels": {
-        "Create EmailAccount": "E-mail Account Aanmaken",
-        "IMAP": "IMAP",
-        "Main": "Hoofd",
-        "Test Connection": "Test verbinding"
-    },
-    "messages": {
-        "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server",
-        "connectionIsOk": "Connection is Ok"
-    },
-    "tooltips": {
-        "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client.",
-        "storeSentEmails": "Sent emails will be stored on IMAP server. Email Address should much address an email is being sent from."
+  "fields": {
+    "name": "Record Naam",
+    "username": "Gebruikersnaam",
+    "password": "Wachtwoord",
+    "port": "Poort",
+    "monitoredFolders": "Gecontroleerde Folders",
+    "fetchSince": "Opgehaald Vanaf",
+    "emailAddress": "E-mailadres",
+    "keepFetchedEmailsUnread": "Laat opgehaalde e-mails als ongelezen staan",
+    "emailFolder": "Zet in map",
+    "useSmtp": "Gebruik SMTP",
+    "smtpHost": "SMTP-host",
+    "smtpPort": "SMTP-poort",
+    "smtpSecurity": "SMTP-beveiliging",
+    "smtpUsername": "SMTP-gebruikersnaam",
+    "smtpPassword": "SMTP-wachtwoord",
+    "useImap": "Ophalen van e-mails"
+  },
+  "options": {
+    "status": {
+      "Active": "Actief",
+      "Inactive": "Inactief"
     }
+  },
+  "labels": {
+    "Create EmailAccount": "E-mail Account Aanmaken",
+    "Main": "Hoofd",
+    "Test Connection": "Test verbinding",
+    "Send Test Email": "Verzend test-e-mail"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server",
+    "connectionIsOk": "Verbinding is Ok"
+  },
+  "links": {
+    "emails": "emails"
+  },
+  "tooltips": {
+    "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client.",
+    "storeSentEmails": "Sent emails will be stored on IMAP server. Email Address should much address an email is being sent from."
+  }
 }

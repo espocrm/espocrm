@@ -1,23 +1,33 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "body": "Inhoud",
-        "entityType": "Entity Type",
-        "header": "Header",
-        "footer": "Footer",
-        "leftMargin": "Left Margin",
-        "topMargin": "Top Margin",
-        "rightMargin": "Right Margin",
-        "bottomMargin": "Bottom Margin",
-        "printFooter": "Print Footer",
-        "footerPosition": "Footer Position"
+  "fields": {
+    "name": "Record Naam",
+    "body": "Inhoud",
+    "variables": "Beschikbare placeholders",
+    "pageOrientation": "Paginaoriëntatie",
+    "pageFormat": "Papierformaat",
+    "fontFace": "doopvont",
+    "pageWidth": "Paginabreedte (mm)",
+    "pageHeight": "Pagina Hoogte (mm)"
+  },
+  "tooltips": {
+    "variables": "Kopieer en plak de benodigde tijdelijke aanduiding naar koptekst, hoofdtekst of voettekst."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Portret",
+      "Landscape": "Landschap"
     },
-    "links": {
+    "placeholders": {
+      "today": "Datum van vandaag)",
+      "now": "Nu (datum-tijd)"
     },
-    "labels": {
-        "Create Template": "Create Template"
+    "fontFace": {
+      "courier": "Koerier",
+      "pdfasymbol": "PDFA-symbool",
+      "symbol": "Symbool"
     },
-    "tooltips": {
-        "footer": "Use {pageNumber} to print page number."
+    "pageFormat": {
+      "Custom": "Aangepast"
     }
+  }
 }

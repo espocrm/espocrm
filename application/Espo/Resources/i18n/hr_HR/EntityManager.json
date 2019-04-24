@@ -27,7 +27,10 @@
     "audited": "Revizija",
     "auditedForeign": "Vanjska Revizija",
     "statusField": "Status polja",
-    "beforeSaveCustomScript": "Prilagođeni kod prije spremanja"
+    "beforeSaveCustomScript": "Prilagođeni kod prije spremanja",
+    "color": "Boja",
+    "kanbanViewMode": "Kanban pogled",
+    "kanbanStatusIgnoreList": "Ignorirane grupe u Kanban pogledu"
   },
   "options": {
     "type": {

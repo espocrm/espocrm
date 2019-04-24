@@ -1,15 +1,16 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "version": "Versie",
-        "description": "Beschrijving",
-        "isInstalled": "Geinstalleerd"
-    },
-    "labels": {
-        "Uninstall": "Deinstalleren",
-        "Install": "Installeren"
-    },
-    "messages": {
-        "uninstalled": "Extensie {name} is gedeinstalleerd"
-    }
+  "fields": {
+    "name": "Record Naam",
+    "version": "Versie",
+    "description": "Beschrijving",
+    "isInstalled": "Geinstalleerd",
+    "checkVersionUrl": "Een URL voor het controleren van nieuwe versies"
+  },
+  "labels": {
+    "Uninstall": "Deinstalleren",
+    "Install": "Installeren"
+  },
+  "messages": {
+    "uninstalled": "Extensie {name} is gedeinstalleerd"
+  }
 }

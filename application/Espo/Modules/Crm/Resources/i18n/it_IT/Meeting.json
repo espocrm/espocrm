@@ -20,7 +20,7 @@
       "Not Held": "Non trattenuto"
     },
     "acceptanceStatus": {
-      "None": "Nessun",
+      "None": "Nessuno",
       "Accepted": "Accettato",
       "Declined": "Declinato",
       "Tentative": "Tentativo"

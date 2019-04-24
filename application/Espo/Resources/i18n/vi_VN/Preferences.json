@@ -1,32 +1,31 @@
 {
-    "fields": {
-        "dateFormat": "Định dạng ngày",
-        "timeFormat": "Định dạng thời gian",
-        "timeZone": "Múi giờ",
-        "weekStart": "Ngày đầu tiên của tuần",
-        "thousandSeparator": "Dấu phân cách hàng nghìn",
-        "decimalMark": "Dấu phân cách thập phân",
-        "defaultCurrency": "Tiền tệ mặc định",
-        "currencyList": "Danh sách tiền tệ",
-        "language": "Ngôn ngữ",
-        
-        "smtpServer": "Máy chủ",
-        "smtpPort": "Cổng",
-        "smtpAuth": "Truy cập",
-        "smtpSecurity": "Bảo mật",
-        "smtpUsername": "Tên đăng nhập",
-        "emailAddress": "Email",
-        "smtpPassword": "Mật khẩu",
-        "smtpEmailAddress": "Địa chỉ email",
-        
-        "exportDelimiter": "Xuất dấu phân cách"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Chủ nhật",
-            "1": "Thứ 2"
-        }
+  "fields": {
+    "dateFormat": "Định dạng ngày",
+    "timeFormat": "Định dạng thời gian",
+    "timeZone": "Múi giờ",
+    "weekStart": "Ngày đầu tiên của tuần",
+    "thousandSeparator": "Dấu phân cách hàng nghìn",
+    "decimalMark": "Dấu phân cách thập phân",
+    "defaultCurrency": "Tiền tệ mặc định",
+    "currencyList": "Danh sách tiền tệ",
+    "language": "Ngôn ngữ",
+    "smtpServer": "Máy chủ",
+    "smtpPort": "Cổng",
+    "smtpAuth": "Truy cập",
+    "smtpSecurity": "Bảo mật",
+    "smtpUsername": "Tên đăng nhập",
+    "smtpPassword": "Mật khẩu",
+    "smtpEmailAddress": "Địa chỉ email",
+    "exportDelimiter": "Xuất dấu phân cách",
+    "followCreatedEntities": "Tự động theo dõi mục đã được tạo"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Chủ nhật",
+      "1": "Thứ 2"
     }
+  },
+  "labels": {
+    "Notifications": "Thông báo"
+  }
 }

@@ -6,7 +6,8 @@
     "align": "Poravnavanje",
     "panelName": "Ime panela",
     "style": "Stil",
-    "sticked": "Ljepljivo"
+    "sticked": "Ljepljivo",
+    "isLarge": "Velika veličina slova"
   },
   "options": {
     "align": {

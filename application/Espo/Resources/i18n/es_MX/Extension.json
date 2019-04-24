@@ -2,7 +2,8 @@
   "fields": {
     "name": "Nombre",
     "description": "Descripción",
-    "isInstalled": "Instalado"
+    "isInstalled": "Instalado",
+    "checkVersionUrl": "URL para buscar nuevas versiones "
   },
   "labels": {
     "Uninstall": "Desinstalar",

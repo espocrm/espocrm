@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "name": "Naam",
+    "url": "Web adres",
+    "portalRoles": "Rollen",
+    "isActive": "Is actief",
+    "isDefault": "Is standaard",
+    "tabList": "Lijst tabbladen",
+    "quickCreateList": "Lijst \"Snelle invoer\"",
+    "theme": "Thema",
+    "language": "Taal",
+    "dashboardLayout": "Dashboard vormgeving",
+    "dateFormat": "Datum formaat",
+    "timeFormat": "Tijd formaat",
+    "timeZone": "Tijdzone",
+    "weekStart": "Eerste dag van de week",
+    "defaultCurrency": "Standaard valuta",
+    "customUrl": "Eigen URL",
+    "customId": "Aangepaste ID"
+  },
+  "links": {
+    "users": "gebruikers",
+    "portalRoles": "Rollen",
+    "notes": "Notities"
+  },
+  "tooltips": {
+    "portalRoles": "Gespecificeerde portalrollen worden toegepast op alle gebruikers van dit portaal."
+  },
+  "labels": {
+    "Create Portal": "Maak een portaal",
+    "User Interface": "Gebruikersinterface",
+    "General": "Algemeen",
+    "Settings": "instellingen"
+  }
+}

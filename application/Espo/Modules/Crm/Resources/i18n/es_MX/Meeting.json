@@ -12,7 +12,8 @@
     "leads": "Referencias",
     "reminders": "Recordatorios",
     "account": "Cuenta",
-    "acceptanceStatus": "Estátus de aprobación"
+    "acceptanceStatus": "Estátus de aprobación",
+    "Acceptance": "Aceptación"
   },
   "options": {
     "status": {

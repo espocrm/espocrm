@@ -1,56 +1,44 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "number": "Number",
-        "status": "Status",
-        "account": "Account",
-        "contact": "Contact",
-        "contacts": "Contacten",
-        "priority": "Prioriteit",
-        "type": "Type",
-        "description": "Beschrijving",
-        "inboundEmail": "Inbound Email"
+  "fields": {
+    "name": "Record Naam",
+    "contacts": "Contacten",
+    "priority": "Prioriteit",
+    "description": "Beschrijving",
+    "attachments": "Bijlagen",
+    "inboundEmail": "Groeps e-mailaccount"
+  },
+  "links": {
+    "Contacts": "Contacten",
+    "emails": "E-mails",
+    "articles": "Knowledge Base-artikelen",
+    "attachments": "Bijlagen",
+    "inboundEmail": "Groeps e-mailaccount"
+  },
+  "options": {
+    "status": {
+      "New": "Nieuw",
+      "Assigned": "Toegewezen",
+      "Pending": "In afwachting",
+      "Closed": "Gesloten",
+      "Rejected": "Afgewezen",
+      "Duplicate": "Duplicaat"
     },
-    "links": {
-        "inboundEmail": "Inbound Email",
-        "account": "Account",
-        "contact": "Contact (Primary)",
-        "Contacts": "Contacten",
-        "meetings": "Meetings",
-        "calls": "Calls",
-        "tasks": "Tasks",
-        "emails": "E-mails"
+    "priority": {
+      "Low": "Laag",
+      "Normal": "Normaal",
+      "High": "Hoog"
     },
-    "options": {
-        "status": {
-            "New": "Nieuw",
-            "Assigned": "Toegewezen",
-            "Pending": "In afwachting",
-            "Closed": "Gesloten",
-            "Rejected": "Afgewezen",
-            "Duplicate": "Dupliceer"
-        },
-        "priority" : {
-            "Low": "Laag",
-            "Normal": "Normaal",
-            "High": "Hoog",
-            "Urgent": "Urgent"
-        },
-        "type": {
-            "Question": "Vraag",
-            "Incident": "Incident",
-            "Problem": "Probleem"
-        }
-    },
-    "labels": {
-        "Create Case": "Create Case",
-        "Close": "Sluit",
-        "Reject": "Reject",
-        "Closed": "Gesloten",
-        "Rejected": "Afgewezen"
-    },
-    "presetFilters": {
-        "open": "Open",
-        "closed": "Gesloten"
+    "type": {
+      "Question": "Vraag",
+      "Problem": "Probleem"
     }
+  },
+  "labels": {
+    "Close": "Sluit",
+    "Closed": "Gesloten",
+    "Rejected": "Afgewezen"
+  },
+  "presetFilters": {
+    "closed": "Gesloten"
+  }
 }

@@ -12,7 +12,7 @@
     "subject": "Asunto",
     "attachments": "Adjuntos",
     "selectTemplate": "Seleccione una Plantilla",
-    "fromEmailAddress": "De la dirección",
+    "fromAddress": "De la dirección",
     "emailAddress": "Dirección de Correo",
     "deliveryDate": "Fecha Entrega",
     "account": "Cuenta",

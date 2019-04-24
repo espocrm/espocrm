@@ -27,7 +27,9 @@
     "Configuration Instructions": "Istruzioni di configurazione",
     "phpVersion": "versione PHP",
     "requiredMysqlVersion": "Versione MySQL",
-    "dbUserName": "Nome Utente Database"
+    "dbUserName": "Nome Utente Database",
+    "Success": "Successo",
+    "Fail": "Fallito"
   },
   "fields": {
     "Choose your language": "Scegli la lingua",

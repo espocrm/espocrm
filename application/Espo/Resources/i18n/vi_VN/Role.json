@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Tên",
-        "roles": "Vai trò"
+  "fields": {
+    "name": "Tên",
+    "roles": "Vai trò"
+  },
+  "links": {
+    "users": "Người dùng",
+    "teams": "Nhóm"
+  },
+  "labels": {
+    "Access": "Truy cập",
+    "Create Role": "Tạo vai trò"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "chưa đặt",
+      "enabled": "kích hoạt",
+      "disabled": "tắt"
     },
-    "links": {
-        "users": "Người dùng",
-        "teams": "Nhóm"
-    },
-    "labels": {
-        "Access": "Truy cập",
-        "Create Role": "Tạo vai trò"
-    },
-    "options": {
-        "accessList": {
-            "not-set": "chưa đặt",
-            "enabled": "kích hoạt",
-            "disabled": "tắt"
-        },
-        "levelList": {
-            "all": "tất cả",
-            "team": "nhóm",
-            "own": "sở hữu",
-            "no": "không"
-        }
-    },
-    "actions": {
-        "read": "Đọc",
-        "edit": "Sửa",
-        "delete": "Xóa"
+    "levelList": {
+      "all": "tất cả",
+      "team": "nhóm",
+      "own": "sở hữu",
+      "no": "không"
     }
+  },
+  "actions": {
+    "read": "Đọc",
+    "edit": "Sửa",
+    "delete": "Xóa"
+  }
 }

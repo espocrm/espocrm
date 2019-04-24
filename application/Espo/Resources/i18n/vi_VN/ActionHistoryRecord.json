@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "user": "Người dùng",
+    "action": "Hành động",
+    "createdAt": "Ngày"
+  },
+  "links": {
+    "user": "Người dùng"
+  },
+  "options": {
+    "action": {
+      "read": "Đọc",
+      "update": "Cập nhật",
+      "delete": "Xóa",
+      "create": "Tạo"
+    }
+  }
+}

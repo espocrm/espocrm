@@ -1,0 +1,26 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Is gelijk aan",
+      "notEquals": "Niet gelijk aan",
+      "greaterThan": "Groter dan",
+      "lessThan": "Minder dan",
+      "greaterThanOrEquals": "Groter dan of gelijk aan",
+      "lessThanOrEquals": "Minder dan of gelijk aan",
+      "notIn": "Niet in",
+      "inPast": "In het verleden",
+      "isToday": "Is vandaag",
+      "isTrue": "Is waar",
+      "isFalse": "Is fout",
+      "isEmpty": "Is leeg",
+      "isNotEmpty": "Is niet leeg",
+      "contains": "bevat",
+      "has": "bevat",
+      "notContains": "Niet bevat",
+      "notHas": "Niet bevat"
+    }
+  },
+  "labels": {
+    "Field": "Veld"
+  }
+}

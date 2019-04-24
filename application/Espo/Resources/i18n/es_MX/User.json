@@ -26,7 +26,11 @@
     "ipAddress": "Dirección IP",
     "passwordPreview": "Contraseña Generada:",
     "isSuperAdmin": "Es Super-Administrador",
-    "lastAccess": "Último Acceso"
+    "lastAccess": "Último Acceso",
+    "type": "Tipo",
+    "apiKey": "Llave API",
+    "secretKey": "Llave Secreta",
+    "authMethod": "Método de Autenticación"
   },
   "links": {
     "teams": "Equipos",
@@ -36,7 +40,8 @@
     "contact": "Contacto",
     "accounts": "Cuentas",
     "account": "Cuenta (principal)",
-    "tasks": "Tareas"
+    "tasks": "Tareas",
+    "defaultTeam": "Equipo default"
   },
   "labels": {
     "Create User": "Crear Usuario",
@@ -51,7 +56,8 @@
     "External Accounts": "Cuentas Externas",
     "Email Accounts": "Cuentas de Correo",
     "Create Portal User": "Crear Usuario del Portal",
-    "Proceed w/o Contact": "Proceder sin Contacto"
+    "Proceed w/o Contact": "Proceder sin Contacto",
+    "Generate New API Key": "Generar Nueva Llave API"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo default.",
@@ -88,6 +94,14 @@
       "": "No Definido",
       "Male": "Masculino",
       "Female": "Femenino"
+    },
+    "type": {
+      "admin": "Administrador",
+      "system": "Sistema",
+      "super-admin": "Super-Administrador"
+    },
+    "authMethod": {
+      "ApiKey": "Llave API"
     }
   }
 }

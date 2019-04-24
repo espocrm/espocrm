@@ -1,18 +1,29 @@
 {
-    "fields": {
-        "title": "Titel",
-        "dateFrom": "Datum Vanaf",
-        "dateTo": "Datum Tot",
-        "autorefreshInterval": "Automatisch bijwerken interval",
-        "displayRecords": "Velden weergeven",
-        "isDoubleHeight": "Hoogte 2x",
-        "mode": "Mode"
-    },
-    "options": {
-    	"mode": {
-    		"agendaWeek": "Week (agenda)",
-    		"basicWeek": "Week",
-    		"month": "Month"
-    	}
+  "fields": {
+    "title": "Titel",
+    "dateFrom": "Datum Vanaf",
+    "dateTo": "Datum Tot",
+    "autorefreshInterval": "Automatisch bijwerken interval",
+    "displayRecords": "Velden weergeven",
+    "isDoubleHeight": "Hoogte 2x",
+    "enabledScopeList": "Wat te tonen",
+    "users": "Gebruikers",
+    "entityType": "Type entiteit",
+    "primaryFilter": "Primaire filter",
+    "boolFilterList": "Extra filters",
+    "sortBy": "Bestelling (veld)",
+    "sortDirection": "Bestelling (richting)",
+    "expandedLayout": "lay-out",
+    "dateFilter": "Datumfilter"
+  },
+  "options": {
+    "mode": {
+      "basicDay": "Dag",
+      "agendaDay": "Dag (agenda)",
+      "timeline": "Tijdlijn"
     }
+  },
+  "messages": {
+    "selectEntityType": "Selecteer Entity Type in dashlet-opties."
+  }
 }

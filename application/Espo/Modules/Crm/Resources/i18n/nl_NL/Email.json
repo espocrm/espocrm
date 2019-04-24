@@ -1,8 +1,9 @@
 {
-    "labels": {
-        "Create Lead": "Lead Aanmaken",
-        "Create Contact": "Contact Aanmaken",
-        "Create Task": "Taak Aanmaken",
-        "Create Case": "Create Case"
-    }
+  "labels": {
+    "Create Lead": "Lead Aanmaken",
+    "Create Contact": "Contact Aanmaken",
+    "Create Task": "Taak Aanmaken",
+    "Add to Contact": "Toevoegen aan Contact",
+    "Add to Lead": "Toevoegen aan lead"
+  }
 }

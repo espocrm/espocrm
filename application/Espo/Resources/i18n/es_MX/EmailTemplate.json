@@ -26,6 +26,9 @@
   },
   "placeholderTexts": {
     "optOutUrl": "Dirección URL para deslistarse",
-    "optOutLink": "una liga para deslistarse"
+    "optOutLink": "una liga para deslistarse",
+    "today": "Fecha de hoy",
+    "now": "Fecha y hora actual",
+    "currentYear": "Año actual"
   }
 }

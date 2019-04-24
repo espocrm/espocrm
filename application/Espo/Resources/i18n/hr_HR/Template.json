@@ -23,6 +23,10 @@
     "pageOrientation": {
       "Portrait": "Portret",
       "Landscape": "Pejzaž"
+    },
+    "placeholders": {
+      "today": "Danas (datum)",
+      "now": "Sada (datum-vrijeme)"
     }
   }
 }

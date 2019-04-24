@@ -1,9 +1,14 @@
 <div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a> &raquo {{translate 'Upgrade' scope='Admin'}}</h3></div>
 
+<div class="row">
+<div class="col-md-8">
+
 <div class="panel panel-danger notify">
     <div class="panel-body">
         <p class="text-danger notify-text">
             {{versionMsg}}
+            <br><br>
+            {{{infoMsg}}}
             <br><br>
             {{backupsMsg}}
         </p>
@@ -29,4 +34,5 @@
     </div>
 </div>
 
-
+</div>
+</div>

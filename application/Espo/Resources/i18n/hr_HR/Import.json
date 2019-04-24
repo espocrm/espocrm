@@ -50,7 +50,9 @@
     "Duplicates": "Duplikati",
     "Skip searching for duplicates": "Preskočite potragu za duplikatima",
     "Timezone": "Vremenska zona",
-    "Remove Import Log": "Obriši dnevnik uvoza"
+    "Remove Import Log": "Obriši dnevnik uvoza",
+    "New Import": "Novi Import",
+    "Import Results": "Rezultat Importa"
   },
   "messages": {
     "utf8": "Trebalo bi biti UTF-8 kodiranje",

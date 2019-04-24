@@ -1,16 +1,19 @@
 {
-    "fields": {
-        "name": "Tên",
-        "status": "Trạng thái",
-        "isHtml": "Chỉ Html",
-        "body": "Nội dung",
-        "subject": "Chủ đề",
-        "attachments": "Đính kèm",
-        "insertField": ""
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Tạo mẫu email"
-    }
+  "fields": {
+    "name": "Tên",
+    "status": "Tình trạng",
+    "isHtml": "Chỉ Html",
+    "body": "Nội dung",
+    "subject": "Chủ đề",
+    "attachments": "Đính kèm",
+    "insertField": "Thêm trường"
+  },
+  "labels": {
+    "Create EmailTemplate": "Tạo mẫu email",
+    "Info": "Thông tin"
+  },
+  "placeholderTexts": {
+    "today": "Ngày hôm nay",
+    "currentYear": "Năm hiện tại"
+  }
 }

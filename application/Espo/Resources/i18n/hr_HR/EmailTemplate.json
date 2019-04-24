@@ -6,10 +6,12 @@
     "subject": "Predmet",
     "attachments": "Prilozi",
     "insertField": "Ubaci polje",
-    "oneOff": "Jednokratno"
+    "oneOff": "Jednokratno",
+    "category": "Kategorija"
   },
   "labels": {
-    "Create EmailTemplate": "Kreiraj šablonu e-pošte"
+    "Create EmailTemplate": "Kreiraj šablonu e-pošte",
+    "Available placeholders": "Dostupni placeholderi"
   },
   "tooltips": {
     "oneOff": "Označite ako namjeravate da koristite ovu šablonu samo jednom. Npr. masovna poruka."
@@ -18,6 +20,10 @@
     "actual": "Trenutni"
   },
   "messages": {
-    "infoText": "Dostupne varijable: \n\n{optOutUrl} &#8211; URL za link za odjavljivanje;\n\n{optOutLink} &#8211; link za odjavljivanje."
+    "infoText": "Dostupni placeholderi:\n{optOutUrl} &#8211; URL za poveznicu odjave s liste;\n{optOutLink} &#8211; poveznica za odjavu s liste."
+  },
+  "placeholderTexts": {
+    "optOutUrl": "URL za poveznicu odjave s liste",
+    "optOutLink": "poveznica za odjavu s liste"
   }
 }

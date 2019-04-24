@@ -2,7 +2,6 @@
   "fields": {
     "name": "Ime",
     "emailAddress": "E-mail",
-    "title": "Naslov",
     "accountRole": "Naslov",
     "account": "Tvrtka",
     "accounts": "Tvrtke",
@@ -41,7 +40,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "Nema",
       "Decision Maker": "Donositelj odluka",
       "Influencer": "Utjecajna osoba"
     }

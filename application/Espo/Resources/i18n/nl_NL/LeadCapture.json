@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "name": "Naam",
+    "campaign": "Campagne",
+    "isActive": "Is actief",
+    "subscribeToTargetList": "Abonneer je op de doellijst",
+    "subscribeContactToTargetList": "Abonneren Contactpersoon als dit bestaat",
+    "targetList": "Doellijst",
+    "fieldList": "Payload-velden",
+    "optInConfirmationEmailTemplate": "Opt-in bevestiging e-mailsjabloon",
+    "optInConfirmationLifetime": "Opt-in bevestiging levensduur (uren)",
+    "optInConfirmationSuccessMessage": "Tekst die moet worden weergegeven na bevestiging van de opt-in",
+    "apiKey": "API sleutel",
+    "targetTeam": "Target team",
+    "exampleRequestMethod": "Methode",
+    "exampleRequestPayload": "payload"
+  },
+  "links": {
+    "targetList": "Doellijst",
+    "campaign": "Campagne",
+    "optInConfirmationEmailTemplate": "Opt-in bevestiging e-mailsjabloon",
+    "targetTeam": "Target team"
+  },
+  "labels": {
+    "Create LeadCapture": "Creëer ingangspunt",
+    "Generate New API Key": "Genereer nieuwe API-sleutel",
+    "Request": "Verzoek",
+    "Confirm Opt-In": "Opt-in bevestigen"
+  },
+  "messages": {
+    "generateApiKey": "Maak een nieuwe API-sleutel",
+    "optInConfirmationExpired": "Opt-in bevestigingslink is verlopen.",
+    "optInIsConfirmed": "Opt-in is bevestigd."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown wordt ondersteund."
+  }
+}

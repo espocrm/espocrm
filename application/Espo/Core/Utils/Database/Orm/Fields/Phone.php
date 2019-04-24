@@ -31,25 +31,48 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class Phone extends Base
 {
-    protected function load($fieldName, $entityName)
+    protected function load($fieldName, $entityType)
     {
-        return array(
-            $entityName => array(
-                'fields' => array(
+        $foreignJoinAlias = "{$fieldName}{$entityType}Foreign";
+        $foreignJoinMiddleAlias = "{$fieldName}{$entityType}ForeignMiddle";
+
+        return [
+            $entityType => [
+                'fields' => [
                     $fieldName => array(
                         'select' => [
                             'sql' => 'phoneNumbers.name',
                             'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
                         ],
+                        'selectForeign' => [
+                            'sql' => "{$foreignJoinAlias}.name",
+                            'leftJoins' => [
+                                [
+                                    'EntityPhoneNumber',
+                                    $foreignJoinMiddleAlias,
+                                    [
+                                        "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
+                                        "{$foreignJoinMiddleAlias}.primary" => 1,
+                                    ]
+                                ],
+                                [
+                                    'PhoneNumber',
+                                    $foreignJoinAlias,
+                                    [
+                                        "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
+                                    ]
+                                ]
+                            ],
+                        ],
                         'fieldType' => 'phone',
                         'where' =>
                         array (
-                            'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
+                            'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityType) . ".id IN (
                                 SELECT entity_id
                                 FROM entity_phone_number
                                 JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
                                 WHERE
-                                    entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
+                                    entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityType}' AND
                                     phone_number.deleted = 0 AND phone_number.name LIKE {value}
                             )",
                             '=' => array(
@@ -96,12 +119,12 @@ class Phone extends Base
                         'type' => 'varchar',
                         'notStorable' => true,
                         'where' => [
-                            'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
+                            'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityType) . ".id IN (
                                 SELECT entity_id
                                 FROM entity_phone_number
                                 JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
                                 WHERE
-                                    entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
+                                    entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityType}' AND
                                     phone_number.deleted = 0 AND phone_number.numeric LIKE {value}
                             )",
                             '=' => [
@@ -136,7 +159,7 @@ class Phone extends Base
                             ]
                         ]
                     ]
-                ),
+                ],
                 'relations' => [
                     'phoneNumbers' => [
                         'type' => 'manyMany',
@@ -147,7 +170,7 @@ class Phone extends Base
                             'phoneNumberId'
                         ],
                         'conditions' => [
-                            'entityType' => $entityName
+                            'entityType' => $entityType
                         ],
                         'additionalColumns' => [
                             'entityType' => [
@@ -161,7 +184,7 @@ class Phone extends Base
                         ]
                     ]
                 ]
-            )
-        );
+            ]
+        ];
     }
 }

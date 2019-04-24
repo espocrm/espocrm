@@ -12,7 +12,7 @@
     "subject": "Konu",
     "attachments": "Dosya Ekle",
     "selectTemplate": "Şablonu Seçin",
-    "fromEmailAddress": "Gönderen Adresi",
+    "fromAddress": "Gönderen Adresi",
     "emailAddress": "Eposta Adresi",
     "deliveryDate": "Teslim Tarih",
     "account": "Hesap",

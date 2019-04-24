@@ -1,14 +1,22 @@
 {
-    "fields": {
-        "width": "Width (%)",
-        "link": "Link",
-        "notSortable": "Not Sortable",
-        "align": "Align"
-    },
-    "options": {
-        "align": {
-            "left": "Left",
-            "right": "Right"
-        }
+  "fields": {
+    "panelName": "Paneelnaam",
+    "style": "Stijl",
+    "isLarge": "Grote lettergrootte",
+    "dynamicLogicVisible": "Condities waardoor paneel zichtbaar is"
+  },
+  "options": {
+    "style": {
+      "default": "Standaard",
+      "success": "Succesvol",
+      "danger": "Gevaar",
+      "info": "info",
+      "warning": "Waarschuwing",
+      "primary": "primair"
     }
+  },
+  "labels": {
+    "New panel": "Nieuw paneel",
+    "Layout": "lay-out"
+  }
 }

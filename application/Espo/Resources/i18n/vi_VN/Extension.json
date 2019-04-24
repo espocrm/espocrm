@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Tên",
+    "version": "Phiên bản",
+    "description": "Mô tả",
+    "isInstalled": "Đã cài đặt"
+  },
+  "labels": {
+    "Uninstall": "Gỡ cài đặt",
+    "Install": "Cài đặt"
+  },
+  "messages": {
+    "uninstalled": "Tiện ích mở rộng  {name} đã được gỡ cài đặt"
+  }
+}

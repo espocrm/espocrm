@@ -10,8 +10,5 @@
   },
   "fields": {
     "exportPermission": "Dozvola Izvoza"
-  },
-  "tooltips": {
-    "exportPermission": "Određuje da li portalski korisnik ima pravo izvoza podataka."
   }
 }

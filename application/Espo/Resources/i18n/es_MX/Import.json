@@ -50,7 +50,10 @@
     "Duplicates": "Duplicados",
     "Skip searching for duplicates": "No buscar duplicados",
     "Timezone": "Zona horaria",
-    "Remove Import Log": "Eliminar Historial de Importaciones"
+    "Remove Import Log": "Eliminar Historial de Importaciones",
+    "New Import": "Nueva Importación",
+    "Import Results": "Resultados de la Importación",
+    "Silent Mode": "Modo silencioso"
   },
   "messages": {
     "utf8": "Debe ser codificado en UTF-8",

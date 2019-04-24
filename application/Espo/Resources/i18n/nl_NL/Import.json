@@ -1,34 +1,68 @@
 {
-    "labels": {
-        "Revert Import": "Revert Import",
-        "Return to Import": "Voor Import geef Enter",
-        "Run Import": "Start Importeren",
-        "Back": "Terug",
-        "Field Mapping": "Velden Overzicht",
-        "Default Values": "Voorkeur waarden",
-        "Add Field": "Veld toevoegen",
-        "Created": "Gemaakt",
-        "Updated": "Geupdate",
-        "Result": "Resultaat",
-        "Show records": "Toon Velden",
-        "Remove Duplicates": "Remove Duplicates",
-        "importedCount": "Imported (count)",
-        "duplicateCount": "Duplicates (count)",
-        "updatedCount": "Updated (count)",
-        "Create Only": "Create Only",
-        "Create and Update": "Create & Update",
-        "Update Only": "Update Only",
-        "Update by": "Update by"
-    },
-    "messages": {
-        "utf8": "Should be UTF-8 encoded",
-        "duplicatesRemoved": "Duplicates removed"
-    },
-    "fields": {
-        "file": "Bestand",
-        "entityType": "Entity Type",
-        "imported": "Imported Records",
-        "duplicates": "Duplicate Records",
-        "updated": "Updated Records"
+  "labels": {
+    "Return to Import": "Voor Import geef Enter",
+    "Run Import": "Start Importeren",
+    "Back": "Terug",
+    "Field Mapping": "Velden Overzicht",
+    "Default Values": "Voorkeur waarden",
+    "Add Field": "Veld toevoegen",
+    "Created": "Gemaakt",
+    "Updated": "Geupdate",
+    "Result": "Resultaat",
+    "Show records": "Toon Velden",
+    "Set as Not Duplicate": "Instellen als niet dupliceren",
+    "File (CSV)": "Bestand (CSV)",
+    "First Row Value": "Eerste rijwaarde",
+    "Skip": "overslaan",
+    "Header Row Value": "Header rij-waarde ",
+    "Field": "veld",
+    "What to Import?": "Wat te importeren",
+    "Entity Type": "Type entiteit",
+    "What to do?": "Wat uit te voeren?",
+    "Properties": "Eigenschappen",
+    "Header Row": "Eerste rij",
+    "Person Name Format": "Format persoonsnaam",
+    "John Smith": "Johan Visser",
+    "Smith John": "Visser Johan",
+    "Smith, John": "Visser, Johan",
+    "Field Delimiter": "scheidingsteken tussen velden",
+    "Date Format": "Datumnotatie",
+    "Decimal Mark": "Decimaal teken",
+    "Text Qualifier": "Tekstkwalificatie",
+    "Time Format": "Tijd formaat",
+    "Currency": "Valuta",
+    "Preview": "Voorbeeld",
+    "Next": "volgende",
+    "Step 1": "Stap 1",
+    "Step 2": "Stap 2",
+    "Double Quote": "Dubbele aanhalingstekens",
+    "Single Quote": "enkel aanhalingsteken",
+    "Imported": "geïmporteerd",
+    "Duplicates": "duplicaten",
+    "Skip searching for duplicates": "Sla zoeken naar duplicaten over",
+    "Timezone": "Tijdzone",
+    "Remove Import Log": "Importlog verwijderen",
+    "New Import": "Nieuwe import",
+    "Import Results": "Resultaten importeren",
+    "Silent Mode": "Stille modus"
+  },
+  "fields": {
+    "file": "Bestand"
+  },
+  "messages": {
+    "inIdle": "Uitvoeren in idle (voor big data; via cron)",
+    "revert": "Hiermee worden alle geïmporteerde records permanent verwijderd.",
+    "removeDuplicates": "Hiermee worden alle geïmporteerde records permanent verwijderd die als duplicaten werden herkend.",
+    "confirmRevert": "Hiermee worden alle geïmporteerde records permanent verwijderd. Weet je het zeker?",
+    "confirmRemoveDuplicates": "Hiermee worden alle geïmporteerde records permanent verwijderd die als duplicaten werden herkend. Weet je het zeker?",
+    "confirmRemoveImportLog": "Hiermee wordt het importlogboek verwijderd. Alle geïmporteerde records worden bewaard. U kunt de importresultaten niet terugdraaien. Weet je zeker dat je?",
+    "removeImportLog": "Hiermee wordt het importlogboek verwijderd. Alle geïmporteerde records worden bewaard. Gebruik het als u zeker weet dat het importeren goed gaat."
+  },
+  "options": {
+    "status": {
+      "Failed": "Mislukt",
+      "In Process": "Bezig met importeren",
+      "Complete": "Compleet"
     }
+  }
 }

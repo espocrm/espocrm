@@ -1,40 +1,46 @@
 {
-    "fields": {
-        "name": "Tên",
-        "emailAddress": "Email",
-        "website": "Website",
-        "phoneNumber": "Điện thoại",
-        "billingAddress": "Địa chủ thanh toán",
-        "shippingAddress": "Địa chỉ vận chuyển",
-        "description": "Mô tả",
-        "sicCode": "Mã Sic",
-        "industry": "Industry",
-        "type": "Loại",
-        "contactRole": "Vai trò"
+  "fields": {
+    "name": "Tên",
+    "phoneNumber": "Điện thoại",
+    "billingAddress": "Địa chủ thanh toán",
+    "shippingAddress": "Địa chỉ vận chuyển",
+    "description": "Mô tả",
+    "sicCode": "Mã Sic",
+    "type": "Loại",
+    "contactRole": "Vai trò"
+  },
+  "links": {
+    "contacts": "Sổ liên lạc",
+    "opportunities": "Cơ hội",
+    "cases": "Trường hợp"
+  },
+  "options": {
+    "type": {
+      "Customer": "Khách hàng",
+      "Investor": "Nhà đầu tư",
+      "Partner": "Đối tác",
+      "Reseller": "Đại lý"
     },
-    "links": {
-        "contacts": "Sổ liên lạc",
-        "opportunities": "Cơ hội",
-        "cases": "Trường hợp"
-    },
-    "options": {
-        "type": {
-            "Customer": "Khách hàng",
-            "Investor": "Nhà đầu tư",
-            "Partner": "Đối tác",
-            "Reseller": "Đại lý"
-        },
-        "industry": {
-            "Apparel": "May mặc",
-            "Banking": "Ngân hàng",
-            "Computer Software": "Phần mềm",
-            "Education": "Giáo dục",
-            "Electronics": "Điện máy",
-            "Finance": "Tín dụng",
-            "Insurance": "Bảo hiểm"
-        }
-    },
-    "labels": {
-        "Create Account": "Tạo tài khoản"
+    "industry": {
+      "Banking": "Ngân hàng",
+      "Education": "Giáo dục",
+      "Electronics": "Điện máy",
+      "Finance": "Tín dụng",
+      "Insurance": "Bảo hiểm",
+      "Real Estate": "Bất động sản",
+      "Service": "Dịch vụ",
+      "Sports": "Thể thao",
+      "Software": "Phần mềm",
+      "Technology": "Công nghệ",
+      "Support": "Hỗ trợ",
+      "Water": "Nước"
     }
+  },
+  "labels": {
+    "Create Account": "Tạo tài khoản"
+  },
+  "presetFilters": {
+    "customers": "Khách hàng",
+    "partners": "Đối tác"
+  }
 }

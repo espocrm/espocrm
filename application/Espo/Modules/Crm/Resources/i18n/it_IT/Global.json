@@ -21,11 +21,12 @@
     "Call": "Chiamata",
     "Task": "Compito",
     "Case": "Casi",
+    "Document": "Documenti",
     "DocumentFolder": "Cartella Documenti",
     "Campaign": "Campagna",
     "TargetList": "Lista di destinazione",
     "MassEmail": "Email Massima",
-    "Activities": "Attivià",
+    "Activities": "Attività",
     "KnowledgeBaseArticle": "Consocenza di Base degli Aticolo ",
     "KnowledgeBaseCategory": "Consocenza di Basec della Categoria "
   },
@@ -43,7 +44,7 @@
     "Campaign": "Campagna",
     "TargetList": "Liste di destinazione",
     "MassEmail": "Email Massive",
-    "Activities": "Attivià",
+    "Activities": "Attività",
     "KnowledgeBaseArticle": "Conoscenza di Base",
     "KnowledgeBaseCategory": "Conoscenza di Base Categorie"
   },
@@ -58,11 +59,11 @@
     "OpportunitiesByStage": "Opportunità di stage",
     "SalesByMonth": "Vendite per Mese",
     "SalesPipeline": "Canale di Vendita",
-    "Activities": "le mie Attività"
+    "Activities": "Le mie Attività"
   },
   "labels": {
     "Create InboundEmail": "Creare Email in entrata",
-    "Activities": "Attivià",
+    "Activities": "Attività",
     "Attendees": "Partecipanti",
     "Schedule Meeting": "Pianifica Riunione",
     "Schedule Call": "Pianifica chiamata",

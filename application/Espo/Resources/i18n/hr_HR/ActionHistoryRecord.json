@@ -6,12 +6,14 @@
     "target": "Meta",
     "targetType": "Vrsta mete",
     "authToken": "Auth token",
-    "ipAddress": "IP adresa"
+    "ipAddress": "IP adresa",
+    "authLogRecord": "Autorizacijski zapisi"
   },
   "links": {
     "authToken": "Auth token",
     "user": "Korisnik",
-    "target": "Meta"
+    "target": "Meta",
+    "authLogRecord": "Autorizacijski zapisi"
   },
   "presetFilters": {
     "onlyMy": "Samo moje"

@@ -49,10 +49,13 @@
     "Notifications": "Notificaciones",
     "User Interface": "Interfaz de Usuario",
     "Misc": "Misceláneos",
-    "Locale": "Localización"
+    "Locale": "Localización",
+    "Reset Dashboard to Default": "Restaurar el Tablero default"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Seguir automáticamente TODOS los nuevos registros (de cualquier usuario) de los tipos de entidad seleccionados.  Así podrá ver información del flujo y recibir notificaciones sobre todo lo registrado en el sistema.",
-    "doNotFillAssignedUserIfNotRequired": "El registro creado por el usuario asignado no será llenado con el propio usuario, a menos que el campo sea requerido."
+    "doNotFillAssignedUserIfNotRequired": "El registro creado por el usuario asignado no será llenado con el propio usuario, a menos que el campo sea requerido.",
+    "followCreatedEntities": "Cuando se creen nuevos registros, se seguirán automáticamente, aunque sean asignados a otro usuario.",
+    "followCreatedEntityTypeList": "Cuando se creen nuevos registros de cierto tipo de entidades, se seguirán automáticamente, aunque sean asignados a otro usuario."
   }
 }

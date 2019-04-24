@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "username": "Korisničko ime",
+    "ipAddress": "IP adresa",
+    "requestTime": "Vrijeme upita",
+    "createdAt": "Zatraženo u",
+    "isDenied": "je odbijeno",
+    "denialReason": "Razlog odbijanja",
+    "user": "Korisnik",
+    "authToken": "Autorizacijski token kreiran",
+    "requestUrl": "URL upita",
+    "requestMethod": "Metoda upita",
+    "authTokenIsActive": "Autorizacijski token Aktivan"
+  },
+  "links": {
+    "authToken": "Autorizacijski Token Kreiran",
+    "user": "Korisnik",
+    "actionHistoryRecords": "Povijest radnji"
+  }
+}

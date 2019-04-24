@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "status": "Tình trạng"
+  },
+  "presetFilters": {
+    "todays": "Hôm nay"
+  }
+}

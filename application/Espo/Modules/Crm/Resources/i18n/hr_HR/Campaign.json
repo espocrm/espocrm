@@ -15,7 +15,12 @@
     "revenue": "Prihod",
     "revenueConverted": "Prihod (konvertiran)",
     "budget": "Budžet",
-    "budgetConverted": "Budžet (konvertiran)"
+    "budgetConverted": "Budžet (konvertiran)",
+    "contactsTemplate": "Template Kontakata",
+    "leadsTemplate": "Template Prilika",
+    "accountsTemplate": "Template Klijenata",
+    "usersTemplate": "Template Korisnika",
+    "mailMergeOnlyWithAddress": "Preskoči zapise bez popunjene adrese"
   },
   "links": {
     "targetLists": "Liste meta",
@@ -26,7 +31,11 @@
     "opportunities": "Prilike",
     "campaignLogRecords": "Dnevnik",
     "massEmails": "Masovna e-pošta",
-    "trackingUrls": "Praćenje URL-ova"
+    "trackingUrls": "Praćenje URL-ova",
+    "contactsTemplate": "Template Kontakata",
+    "leadsTemplate": "Template Prilika",
+    "accountsTemplate": "Template Klijenata",
+    "usersTemplate": "Template Korisnika"
   },
   "options": {
     "type": {
@@ -52,7 +61,8 @@
     "Email Templates": "Šablone e-pošte",
     "Unsubscribe again": "Ponovo se odjavite",
     "Subscribe again": "Ponovo se prijavite",
-    "Create Target List": "Napravite listu meta"
+    "Create Target List": "Napravite listu meta",
+    "Generate Mail Merge PDF": "Generiranje Mail Merge PDF-a"
   },
   "presetFilters": {
     "active": "Aktivne"

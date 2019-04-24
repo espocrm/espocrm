@@ -1,47 +1,39 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "status": "Status",
-        "storeSentEmails": "Store Sent Emails",
-        "startAt": "Start Datum",
-        "fromAddress": "Van Adres",
-        "fromName": "Van Naam",
-        "replyToAddress": "Reply-to Address",
-        "replyToName": "Reply-to Name",
-        "campaign": "Campaign",
-        "emailTemplate": "E-mail Template",
-        "inboundEmail": "Email Account",
-        "targetLists": "Doellijsten",
-        "excludingTargetLists": "Excluding Target Lists",
-        "optOutEntirely": "Opt-Out Entirely"
-    },
-    "links": {
-        "targetLists": "Doellijsten",
-        "excludingTargetLists": "Excluding Target Lists",
-        "queueItems": "Queue Items",
-        "campaign": "Campaign",
-        "emailTemplate": "E-mail Template",
-        "inboundEmail": "Email Account"
-    },
-    "options": {
-        "status": {
-            "Draft": "Concept",
-            "Pending": "In afwachting",
-            "In Process": "In Behandeling",
-            "Complete": "Complete",
-            "Canceled": "Geannuleerd",
-            "Failed": "Failed"
-        }
-    },
-    "labels": {
-        "Create MassEmail": "Create Mass Email",
-        "Send Test": "Send Test"
-    },
-    "messages": {
-        "selectAtLeastOneTarget": "Select at least one target.",
-        "testSent": "Test email(s) supposed to be sent"
-    },
-    "tooltips": {
-        "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore."
+  "fields": {
+    "name": "Record Naam",
+    "startAt": "Start Datum",
+    "fromAddress": "Van Adres",
+    "fromName": "Van Naam",
+    "emailTemplate": "E-mail Template",
+    "targetLists": "Doellijsten",
+    "smtpAccount": "SMTP-account"
+  },
+  "links": {
+    "targetLists": "Doellijsten",
+    "emailTemplate": "E-mail Template"
+  },
+  "options": {
+    "status": {
+      "Draft": "Concept",
+      "Pending": "In afwachting",
+      "In Process": "In Behandeling",
+      "Complete": "Compleet",
+      "Canceled": "Geannuleerd",
+      "Failed": "Mislukt"
     }
+  },
+  "tooltips": {
+    "targetLists": "Doelen die berichten zouden moeten ontvangen.",
+    "excludingTargetLists": "Doelen die geen berichten mogen ontvangen.",
+    "storeSentEmails": "E-mails worden opgeslagen in CRM."
+  },
+  "presetFilters": {
+    "actual": "werkelijk",
+    "complete": "Compleet"
+  },
+  "labels": {
+    "System SMTP": "Systeem SMTP",
+    "system": "systeem",
+    "group": "groep"
+  }
 }

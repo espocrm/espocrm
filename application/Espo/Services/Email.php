@@ -123,6 +123,7 @@ class Email extends Record
 
         $primaryUserAddress = strtolower($this->getUser()->get('emailAddress'));
         $fromAddress = strtolower($entity->get('from'));
+        $originalFromAddress = $entity->get('from');
 
         if (empty($fromAddress)) {
             throw new Error("Can't send with empty from address.");
@@ -143,7 +144,7 @@ class Email extends Record
             }
 
             $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
-            $emailAccount = $emailAccountService->findAccountForUser($this->getUser(), $fromAddress);
+            $emailAccount = $emailAccountService->findAccountForUser($this->getUser(), $originalFromAddress);
 
             if (!$smtpParams) {
                 if ($emailAccount && $emailAccount->get('useSmtp')) {
@@ -156,15 +157,15 @@ class Email extends Record
         }
 
         if ($smtpParams) {
-            if ($fromAddress) {
-                $this->applySmtpHandler($this->getUser()->id, $fromAddress, $smtpParams);
+            if ($emailAddress) {
+                $this->applySmtpHandler($this->getUser()->id, $emailAddress, $smtpParams);
             }
             $emailSender->useSmtp($smtpParams);
         }
 
         if (!$smtpParams) {
             $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
-            $inboundEmail = $inboundEmailService->findSharedAccountForUser($this->getUser(), $fromAddress);
+            $inboundEmail = $inboundEmailService->findSharedAccountForUser($this->getUser(), $originalFromAddress);
             if ($inboundEmail) {
                 $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
             }

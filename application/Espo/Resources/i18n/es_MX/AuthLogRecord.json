@@ -10,7 +10,8 @@
     "authToken": "Clave de Aut. creada",
     "requestUrl": "URL de la Solicitud",
     "requestMethod": "Método de la Solicitud",
-    "authTokenIsActive": "La clave de aut. está activa"
+    "authTokenIsActive": "La clave de aut. está activa",
+    "authenticationMethod": "Método de Autenticación"
   },
   "links": {
     "authToken": "Clave de aut. creada",

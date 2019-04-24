@@ -1,0 +1,98 @@
+{
+  "labels": {
+    "Dynamic Logic": "Dynamische logica",
+    "Name": "Naam",
+    "Label": "Etiket"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Geen",
+      "javascript: return this.dateTime.getNow(1);": "Nu",
+      "javascript: return this.dateTime.getNow(5);": "Nu (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Nu (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Nu (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 uur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 dag",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dagen",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dagen",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dagen",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dagen",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dagen"
+    },
+    "dateDefault": {
+      "": "Geen",
+      "javascript: return this.dateTime.getToday();": "Vandaag",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 dag",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dagen",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 weken",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 weken",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 maand",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 maanden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+ 1 jaar"
+    }
+  },
+  "tooltips": {
+    "audited": "Updates worden in de stream vastgelegd.",
+    "required": "Veld is verplicht. Mag niet leeg worden gelaten.",
+    "default": "De waarde wordt standaard ingesteld bij het maken.",
+    "min": "Minimale acceptabele waarde.",
+    "max": "Maximale acceptabele waarde.",
+    "seeMoreDisabled": "Als dit niet wordt gecontroleerd, worden lange teksten ingekort.",
+    "lengthOfCut": "Hoe lang de tekst kan zijn voordat deze wordt afgekapt.",
+    "maxLength": "Maximaal toegestane lengte van de tekst.",
+    "before": "De datumwaarde moet vóór de datumwaarde van het opgegeven veld liggen.",
+    "after": "De datumwaarde moet na de datumwaarde van het opgegeven veld liggen.",
+    "readOnly": "Veldwaarde kan niet door de gebruiker worden opgegeven. Maar kan worden berekend door formule.",
+    "maxFileSize": "Indien leeg of 0 dan geen limiet."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Straat",
+      "city": "stad",
+      "state": "Staat",
+      "country": "land",
+      "postalCode": "Postcode",
+      "map": "Kaart"
+    },
+    "personName": {
+      "salutation": "Begroeting",
+      "first": "Eerste",
+      "last": "Laatste"
+    },
+    "currency": {
+      "converted": "(Geconverteerd)",
+      "currency": "(Valuta)"
+    },
+    "datetimeOptional": {
+      "date": "Datum"
+    }
+  }
+}

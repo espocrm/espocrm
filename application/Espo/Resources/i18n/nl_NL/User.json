@@ -1,62 +1,103 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "userName": "Gebruikersnaam",
-        "title": "Titel",
-        "isAdmin": "Is beheerder",
-        "defaultTeam": "Standaardgroep",
-        "emailAddress": "E-mail",
-        "phoneNumber": "Telefoon",
-        "roles": "Functies",
-        "teamRole": "Positie",
-        "password": "Wachtwoord",
-        "currentPassword": "Current Password",
-        "passwordConfirm": "Bevestig Wachtwoord",
-        "newPassword": "Nieuw Wachtwoord",
-        "newPasswordConfirm": "Nieuwe Wachtwoord Bevestigen",
-        "avatar": "Avatar",
-        "isActive": "Is actief"
+  "fields": {
+    "name": "Record Naam",
+    "userName": "Gebruikersnaam",
+    "title": "Titel",
+    "isAdmin": "Is beheerder",
+    "defaultTeam": "Standaardgroep",
+    "emailAddress": "E-mail",
+    "phoneNumber": "Telefoon",
+    "roles": "Functies",
+    "portals": "portalen",
+    "portalRoles": "Portaal Rollen",
+    "teamRole": "Positie",
+    "password": "Wachtwoord",
+    "passwordConfirm": "Bevestig Wachtwoord",
+    "newPassword": "Nieuw Wachtwoord",
+    "newPasswordConfirm": "Nieuwe Wachtwoord Bevestigen",
+    "isActive": "Is actief",
+    "isPortalUser": "Is Portal-gebruiker",
+    "accounts": "accounts",
+    "account": "Account (primair)",
+    "sendAccessInfo": "Verzend e-mail met toegangsinformatie naar gebruiker",
+    "portal": "Portaal",
+    "gender": "Geslacht",
+    "position": "Positie in Team",
+    "ipAddress": "IP adres",
+    "passwordPreview": "Wachtwoord voorbeeld",
+    "isSuperAdmin": "Is Superbeheerder",
+    "lastAccess": "Laatste toegang",
+    "apiKey": "API sleutel",
+    "secretKey": "Geheime sleutel",
+    "authMethod": "Authenticatie methode"
+  },
+  "links": {
+    "teams": "Groepen",
+    "roles": "Functies",
+    "portals": "portals",
+    "portalRoles": "Portal Rollen",
+    "accounts": "accounts",
+    "account": "Account (primair)",
+    "tasks": "taken",
+    "defaultTeam": "Standaard Team"
+  },
+  "labels": {
+    "Create User": "Gebruiker Aanmaken",
+    "Generate": "Genereer",
+    "Access": "Toegang",
+    "Preferences": "Voorkeuren",
+    "Change Password": "Wachtwoord wijzigen",
+    "Teams and Access Control": "Groeps toegang beheer",
+    "Forgot Password?": "Wachtwoord vergeten?",
+    "Password Change Request": "Verzoek voor aanpassen Wachtwoord",
+    "Email Address": "E-mailadres",
+    "External Accounts": "Externe Accounts",
+    "Portal": "Portaal",
+    "Create Portal User": "Maak een portalgebruiker",
+    "Proceed w/o Contact": "Ga verder zonder contact",
+    "Generate New API Key": "Genereer nieuwe API sleutel"
+  },
+  "tooltips": {
+    "defaultTeam": "Alle records aangemaakt door gebruiker worden standaard aan de groep gekoppeld.",
+    "userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan.",
+    "isAdmin": "Gebruiker admin heeft overal toegang",
+    "teams": "Tot welke groep deze gebruiker behoord. Toegang beheer is afhankelijk van groep regels.",
+    "roles": "Aanvullende toegangs regels. Gebruik dit als een gebruiker tot geen enkele groep behoord of als er meer rechten gegeven moeten worden.",
+    "portalRoles": "Extra portalrollen. Gebruik het om het toegangscontroleniveau exclusief voor deze gebruiker uit te breiden.",
+    "portals": "Portals waartoe deze gebruiker toegang heeft."
+  },
+  "messages": {
+    "passwordWillBeSent": "Wachtwoord wordt naar het emailadres van de gebruiker verzonden.",
+    "passwordChanged": "Het wachtwoord is gewijzigd",
+    "userCantBeEmpty": "Gebruikersnaam kan niet leeg zijn",
+    "wrongUsernamePasword": "Onjuiste gebruikersnaam/wachtwoord",
+    "emailAddressCantBeEmpty": "E-mail adres kan niet leeg zijn",
+    "userNameEmailAddressNotFound": "Gebruikersnaam/E-mail adres niet gevonden",
+    "forbidden": "Toegang niet juist, probeer later",
+    "uniqueLinkHasBeenSent": "Een unieke link is naar het gespecificeerde email adres gezonden.",
+    "passwordChangedByRequest": "Het wachtwoord is aangepast",
+    "setupSmtpBefore": "U moet de <a href=\"{url}\"> SMTP-instellingen </a> instellen om het systeem in staat te stellen een wachtwoord per e-mail te verzenden.",
+    "userNameExists": "Gebruikersnaam bestaat al"
+  },
+  "presetFilters": {
+    "active": "Actief",
+    "activePortal": "Portal actief"
+  },
+  "options": {
+    "gender": {
+      "": "Niet ingesteld",
+      "Male": "Mannetje",
+      "Female": "Vrouw",
+      "Neutral": "Neutrale"
     },
-    "links": {
-        "teams": "Groepen",
-        "roles": "Functies"
+    "type": {
+      "regular": "Regelmatig",
+      "portal": "Portaal",
+      "system": "systeem",
+      "super-admin": "Super admin"
     },
-    "labels": {
-        "Create User": "Gebruiker Aanmaken",
-        "Generate": "Genereer",
-        "Access": "Toegang",
-        "Preferences": "Voorkeuren",
-        "Change Password": "Wachtwoord wijzigen",
-        "Teams and Access Control": "Groeps toegang beheer",
-        "Forgot Password?": "Wachtwoord vergeten?",
-        "Password Change Request": "Verzoek voor aanpassen Wachtwoord",
-        "Email Address": "E-mailadres",
-        "External Accounts": "Externe Accounts",
-        "Email Accounts": "Email Accounts"
-    },
-    "tooltips": {
-        "defaultTeam": "Alle records aangemaakt door gebruiker worden standaard aan de groep gekoppeld.",
-        "userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan.",
-        "isAdmin": "Gebruiker admin heeft overal toegang",
-        "isActive": "If unchecked then user won't be able to login.",
-        "teams": "Tot welke groep deze gebruiekr behoord. Toegang beheer is afhankelijk van groep regels.",
-        "roles": "Aanvullende toegangs regels. Gebruik dit als een gebruiker tot geen enkele groep behoord of als er meer rechten gegeven moeten worden."
-    },
-    "messages": {
-        "passwordWillBeSent": "Wachtwoord wordt naar het emailadres van de gebruiker verzonden.",
-        "passwordChanged": "Het wachtwoord is gewijzigd",
-        "userCantBeEmpty": "Gebruikersnaam kan niet leeg zijn",
-        "wrongUsernamePasword": "Onjuiste gebruikersnaam/wachtwoord",
-        "emailAddressCantBeEmpty": "E-mail adres kan niet leeg zijn",
-        "userNameEmailAddressNotFound": "Gebruikersnaam/E-mail adres niet gevonden",
-        "forbidden": "Toegang niet juist, probeer later",
-        "uniqueLinkHasBeenSent": "Een unieke link is naar het gespecificeerde email adres gezonden.",
-        "passwordChangedByRequest": "Het wachtwoord is aangepast"
-    },
-    "boolFilters": {
-        "onlyMyTeam": "Only My Team"
-    },
-    "presetFilters": {
-        "active": "Actief"
+    "authMethod": {
+      "ApiKey": "API sleutel"
     }
+  }
 }

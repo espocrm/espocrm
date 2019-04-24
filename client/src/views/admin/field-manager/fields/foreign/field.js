@@ -100,31 +100,7 @@ Espo.define('views/admin/field-manager/fields/foreign/field', 'views/fields/enum
             }
             var type = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
 
-            if (type == 'enum') {
-                this.viewValue = 'views/fields/foreign-enum';
-            } else if (type == 'enumInt') {
-                this.viewValue = 'views/fields/foreign-int';
-            } else if (type == 'enumFloat') {
-                this.viewValue = 'views/fields/foreign-float';
-            } else if (type == 'varchar') {
-                this.viewValue = 'views/fields/foreign-varchar';
-            } else if (type == 'int') {
-                this.viewValue = 'views/fields/foreign-int';
-            } else if (type == 'float') {
-                this.viewValue = 'views/fields/foreign-float';
-            } else if (type == 'date') {
-                this.viewValue = 'views/fields/foreign-date';
-            } else if (type == 'datetime') {
-                this.viewValue = 'views/fields/foreign-datetime';
-            } else if (type == 'text') {
-                this.viewValue = 'views/fields/foreign-text';
-            } else if (type == 'number') {
-                this.viewValue = 'views/fields/foreign-varchar';
-            } else if (type == 'bool') {
-                this.viewValue = 'views/fields/foreign-bool';
-            } else {
-                this.viewValue = null;
-            }
+            this.viewValue = this.getMetadata().get(['fields', 'foreign', 'fieldTypeViewMap', type]);
         },
 
         fetch: function () {

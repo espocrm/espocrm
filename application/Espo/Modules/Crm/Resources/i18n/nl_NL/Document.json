@@ -1,42 +1,34 @@
 {
-    "labels": {
-        "Create Document": "Document Aanmaken",
-        "Details": "Details"
+  "labels": {
+    "Create Document": "Document Aanmaken"
+  },
+  "fields": {
+    "name": "Record Naam",
+    "file": "Bestand",
+    "publishDate": "Publicatiedatum",
+    "expirationDate": "Vervaldatum",
+    "description": "Beschrijving",
+    "accounts": "Klanten"
+  },
+  "links": {
+    "accounts": "Klanten",
+    "opportunities": "Kansen",
+    "leads": "leads",
+    "contacts": "Contacten"
+  },
+  "options": {
+    "status": {
+      "Active": "Actief",
+      "Draft": "Concept",
+      "Expired": "Vervallen",
+      "Canceled": "Geannuleerd"
     },
-    "fields": {
-        "name": "Record Naam",
-        "status": "Status",
-        "file": "Bestand",
-        "type": "Type",
-        "source": "Bron",
-        "publishDate": "Publicatiedatum",
-        "expirationDate": "Vervaldatum",
-        "description": "Beschrijving",
-        "accounts": "Klanten",
-        "folder": "Folder"
-    },
-    "links": {
-        "accounts": "Klanten",
-        "opportunities": "Kansen",
-        "folder": "Folder"
-    },
-    "options": {
-        "status": {
-            "Active": "Actief",
-            "Draft": "Concept",
-            "Expired": "Vervallen",
-            "Canceled": "Geannuleerd"
-        },
-        "type": {
-            "": "None",
-            "Contract": "Contract",
-            "NDA": "NDA",
-            "EULA": "EULA",
-            "License Agreement": "Licentie Overeenkomst"
-        }
-    },
-    "presetFilters": {
-        "active": "Actief",
-        "draft": "Concept"
+    "type": {
+      "License Agreement": "Licentie Overeenkomst"
     }
+  },
+  "presetFilters": {
+    "active": "Actief",
+    "draft": "Concept"
+  }
 }

@@ -88,12 +88,19 @@
     "adminNotificationsNewVersion": "Pokaži obavijest kada je dostupna nova EspoCRM verzija",
     "massEmailMaxPerHourCount": "Maks broj e-pošta po satu",
     "maxEmailAccountCount": "Maks broj ličnih naloga pošte po korisniku",
-    "textFilterUseContainsForVarchar": "Koristi operator 'sadrži' pri filtriranju tekst polja"
+    "authTokenPreventConcurrent": "Samo jedan token po korisniku",
+    "textFilterUseContainsForVarchar": "Korištenje 'sadrži' operatora pri filtriranju znakovnih polja",
+    "emailAddressIsOptedOutByDefault": "Označi nove email adrese kao izdvojene"
   },
   "options": {
     "weekStart": {
       "0": "Nedjelja",
       "1": "Ponedjeljak"
+    },
+    "streamEmailNotificationsTypeList": {
+      "Post": "Objave",
+      "Status": "Objave statusa",
+      "EmailReceived": "Primljeni mailovi"
     }
   },
   "tooltips": {
@@ -109,7 +116,6 @@
     "ldapAuth": "Korisnički podaci za pristup LDAP serveru.",
     "ldapUserNameAttribute": "Atribut za identifikaciju korisnika. \nNpr. \"userPrincipalName\" ili \"sAMAccountName\" za Active Directory, \"uid\" za OpenLDAP.",
     "ldapUserObjectClass": "ObjectClass atribut za pretraživanje korisnika. Npr. \"person\" za AD, \"inetOrgPerson \" za OpenLDAP.",
-    "ldapAccountCanonicalForm": "Vrsta forme vašeg računa. Postoje 4 opcije:<br>- 'Dn' - forma u formatu 'CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - the form 'tester'.<br>- 'Backslash' - the form 'COMPANY\\tester'.<br>- 'Principal' - the form 'tester@company.com'.",
     "ldapBindRequiresDn": "Mogućnost da se korisničko ime formatira u DN formatu.",
     "ldapBaseDn": "DN osnova za pretragu korisnika. Npr. \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "Opcija da podijeli ime sa domenom.",
@@ -130,7 +136,10 @@
     "aclStrictMode": "Uključeno: Pristup entitetima će biti zabranjen ako nije određeno u ulogama.\n\nIsključeno: Pristup entitetima će biti dozvoljen ako nije određeno u ulogama",
     "outboundEmailIsShared": "Dozvolite korisnicima da šalju poruke sa ove adrese.",
     "aclAllowDeleteCreated": "Korisnici će moći brisati samo vlastite zapise, čak i ako nemaju ovlast brisanja.",
-    "textFilterUseContainsForVarchar": "Ako nije označeno, koristi se 'počinje sa' operator. Možete koristiti asterisk '%'."
+    "textFilterUseContainsForVarchar": "Ako nije označeno, koristi se 'počinje sa' operator. Možete koristiti asterisk '%'.",
+    "streamEmailNotificationsEntityList": "Email notifikacije o ažuriranjima statusa slijedećih zapisa. Korisnici će dobivati email notifikacije samo za odabrane vrste zapisa.",
+    "authTokenPreventConcurrent": "Korisnici se neće moći istovremeno prijaviti sa različitim uređajima.",
+    "emailAddressIsOptedOutByDefault": "Kada se kreira novi zapis, email adresa će biti označena kao izdvojena."
   },
   "labels": {
     "System": "Sistem",

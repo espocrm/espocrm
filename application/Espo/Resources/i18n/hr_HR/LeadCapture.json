@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "name": "Ime",
+    "campaign": "Kampanja",
+    "isActive": "je Aktivna",
+    "subscribeToTargetList": "Pretplata na Listu Ciljeva",
+    "subscribeContactToTargetList": "Pretplati Kontakt ako postoji",
+    "targetList": "Lista Ciljeva"
+  }
+}

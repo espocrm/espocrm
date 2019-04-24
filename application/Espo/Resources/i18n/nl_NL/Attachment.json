@@ -1,0 +1,26 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "Voeg document in"
+  },
+  "fields": {
+    "role": "Rol",
+    "related": "Verwant",
+    "file": "het dossier",
+    "field": "Veld",
+    "sourceId": "Bron ID",
+    "storage": "opslagruimte",
+    "size": "Grootte (bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "gehechtheid",
+      "Inline Attachment": "Inline bijlage",
+      "Import File": "Importeer bestand",
+      "Export File": "Bestand exporteren",
+      "Mail Merge": "Mailmerge"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Wees"
+  }
+}

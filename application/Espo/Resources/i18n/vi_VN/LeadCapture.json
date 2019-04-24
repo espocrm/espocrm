@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "name": "Tên",
+    "campaign": "Chiến dịch",
+    "isActive": "Được kích hoạt"
+  },
+  "links": {
+    "campaign": "Chiến dịch"
+  }
+}

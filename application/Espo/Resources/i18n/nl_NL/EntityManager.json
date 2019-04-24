@@ -1,44 +1,43 @@
 {
-    "labels": {
-        "Fields": "Fields",
-        "Relationships": "Relaties"
-    },
-    "fields": {
-        "name": "Record Naam",
-        "type": "Type",
-        "labelSingular": "Label Singular",
-        "labelPlural": "Label Plural",
-        "stream": "Stream",
-        "label": "Label",
-        "linkType": "Link Type",
-        "entityForeign": "Foreign Entity",
-        "linkForeign": "Foreign Link",
-        "link": "Link",
-        "labelForeign": "Foreign Label",
-        "sortBy": "Default Order (field)",
-        "sortDirection": "Default Order (direction)"
-    },
-    "options": {
-        "type": {
-            "": "None",
-            "Base": "Base",
-            "Person": "Person",
-            "CategoryTree": "Category Tree"
-        },
-        "linkType": {
-            "manyToMany": "Many-to-Many",
-            "oneToMany": "One-to-Many",
-            "manyToOne": "Many-to-One",
-            "parentToChildren": "Parent-to-Children",
-            "childrenToParent": "Children-to-Parent"
-        },
-        "sortDirection": {
-            "asc": "Ascending",
-            "desc": "Descending"
-        }
-    },
-    "messages": {
-        "entityCreated": "Entity has been created",
-        "linkAlreadyExists": "Link name conflict."
+  "labels": {
+    "Relationships": "Relaties",
+    "Schedule": "Planning",
+    "Formula": "Formule"
+  },
+  "fields": {
+    "name": "Record Naam",
+    "relationName": "Middelste tabelnaam",
+    "linkMultipleField": "Link meerdere velden",
+    "linkMultipleFieldForeign": "Externe link Meervoudig veld",
+    "disabled": "Uitgeschakeld",
+    "textFilterFields": "Tekst filter velden",
+    "audited": "gecontroleerde",
+    "auditedForeign": "Extern gecontroleerd",
+    "statusField": "Statusveld",
+    "beforeSaveCustomScript": "Voordat u Custom Script opslaat",
+    "color": "Kleur",
+    "kanbanViewMode": "Kanban-weergave",
+    "kanbanStatusIgnoreList": "Genegeerde groepen in Kanban-weergave",
+    "iconClass": "Icoon",
+    "fullTextSearch": "Zoek volledige text"
+  },
+  "messages": {
+    "linkConflict": "Naam conflict : link of veld met dezelfde naam bestaat al"
+  },
+  "options": {
+    "type": {
+      "Event": "Evenement",
+      "Company": "Bedrijf"
     }
+  },
+  "tooltips": {
+    "statusField": "Updates van dit veld zijn in de stream vastgelegd.",
+    "textFilterFields": "Velden die worden gebruikt door tekst zoeken.",
+    "stream": "Of entiteit een stream heeft.",
+    "disabled": "Controleer of u deze entiteit niet nodig hebt in uw systeem.",
+    "linkAudited": "Het maken van gerelateerde records en het linken met bestaande records worden vastgelegd in Stream.",
+    "linkMultipleField": "Link Multiple field biedt een handige manier om relaties te bewerken. Gebruik het niet als u een groot aantal gerelateerde records kunt hebben.",
+    "entityType": "Base Plus - heeft panelen Activiteiten, Geschiedenis en Taken.\n\nEvenement - beschikbaar in het paneel Agenda en Activiteiten.",
+    "fullTextSearch": "Herbouwen is vereist."
+  }
 }

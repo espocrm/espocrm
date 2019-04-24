@@ -48,8 +48,6 @@
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Automatically slijedi SVE nove zapise odabrane vrste entiteta (kreirane od svih korisnika). Kako bi bili u mogućnosti vidjeti informacije tijeka vijesti i primati obavijesti o svim zapisima u sustavu.",
-    "doNotFillAssignedUserIfNotRequired": "Pri kreiranju zapisa, podatak \"dodijeljeni korisnik\" neće biti popunjen vlastitim imenom osim ako je polje obavezno za unos.",
-    "followCreatedEntities": "Pri kreiranju zapisa, biti će automatski slijeđeni, čak i ako se dodijele drugom korisniku.",
-    "followCreatedEntityTypeList": "Pri kreiranju zapisa vrste odabranog entiteta, biti će automatski slijeđeni, čak i ako se dodijele drugom korisniku."
+    "doNotFillAssignedUserIfNotRequired": "Pri kreiranju zapisa, podatak \"dodijeljeni korisnik\" neće biti popunjen vlastitim imenom osim ako je polje obavezno za unos."
   }
 }

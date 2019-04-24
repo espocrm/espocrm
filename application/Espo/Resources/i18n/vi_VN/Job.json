@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "status": "Tình trạng",
+    "executeTime": "Thực thi lúc",
+    "data": "Dữ liệu",
+    "startedAt": "Bắt đầu lúc",
+    "number": "Số"
+  },
+  "options": {
+    "status": {
+      "Pending": "Đang chờ",
+      "Success": "Thành công",
+      "Running": "Đang chạy",
+      "Failed": "Lỗi"
+    }
+  }
+}

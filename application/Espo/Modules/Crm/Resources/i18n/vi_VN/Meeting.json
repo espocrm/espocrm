@@ -1,36 +1,32 @@
 {
-    "fields": {
-        "name": "Tên",
-        "parent": "Chủ",
-        "status": "Trạng thái",
-        "dateStart": "Ngày bắt đầu",
-        "dateEnd": "Ngày kết thúc",
-        "duration": "Thời gian",
-        "description": "Mô tả",
-        "users": "Người dùng",
-        "contacts": "Sổ liên lạc",
-        "leads": "Trưởng nhóm"
-    },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Đã lên kế hoạch",
-            "Held": "Đã được tổ chức",
-            "Not Held": "Chưa được tổ chức"
-        }
-    },
-    "labels": {
-        "Create Meeting": "Tạo buổi hẹn",
-        "Set Held": "Tổ chức",
-        "Set Not Held": "Không tổ chức",
-        "Send Invitations": "Gửi giấy mời",
-        "Saved as Held": "Lưu là đã tổ chức",
-        "Saved as Not Held": "Lưu là chưa tổ chức"
-    },
-    "presetFilters": {
-        "planned": "Đã lên kế hoạch",
-        "held": "Đã được tổ chức",
-        "todays": "Hôm nay"
+  "fields": {
+    "name": "Tên",
+    "parent": "Chủ",
+    "status": "Trạng thái",
+    "dateStart": "Ngày bắt đầu",
+    "dateEnd": "Ngày kết thúc",
+    "duration": "Thời gian",
+    "description": "Mô tả",
+    "users": "Người dùng",
+    "contacts": "Sổ liên lạc",
+    "leads": "Trưởng nhóm"
+  },
+  "options": {
+    "status": {
+      "Planned": "Đã lên kế hoạch",
+      "Held": "Đã được tổ chức",
+      "Not Held": "Chưa được tổ chức"
     }
+  },
+  "labels": {
+    "Create Meeting": "Tạo buổi hẹn",
+    "Set Held": "Tổ chức",
+    "Set Not Held": "Không tổ chức",
+    "Send Invitations": "Gửi giấy mời"
+  },
+  "presetFilters": {
+    "planned": "Đã lên kế hoạch",
+    "held": "Đã được tổ chức",
+    "todays": "Hôm nay"
+  }
 }

@@ -37,7 +37,10 @@ Espo.define('crm:views/opportunity/fields/stage', 'views/fields/enum', function 
 
             if (this.mode != 'list') {
                 this.on('change', function () {
-                    this.model.set('probability', this.probabilityMap[this.model.get(this.name)]);
+                    var probability = this.probabilityMap[this.model.get(this.name)];
+                    if (probability !== null && probability !== undefined) {
+                        this.model.set('probability', probability);
+                    }
                 }, this);
             }
         }

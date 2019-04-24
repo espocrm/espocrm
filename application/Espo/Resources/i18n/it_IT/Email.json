@@ -9,10 +9,9 @@
     "replyToString": "Rispondi da (String)",
     "isHtml": "È Html",
     "body": "Corpo",
-    "subject": "Soggetto",
     "attachments": "Allegato",
     "selectTemplate": "Seleziona Modello",
-    "fromEmailAddress": "Indirizzo mittente",
+    "fromAddress": "Indirizzo mittente",
     "emailAddress": "Indirizzo email",
     "deliveryDate": "Data di consegna",
     "users": "Utenti",
@@ -53,7 +52,7 @@
     "sentBy": "Inviato da",
     "attachments": "Allegati",
     "fromEmailAddress": "Indirizzo email mittente",
-    "toEmailAddresses": "A Indirizzi email",
+    "toEmailAddresses": "A Indirizzo email",
     "ccEmailAddresses": "CC Indirizzi Email",
     "bccEmailAddresses": "CCN Indirizzi email",
     "replyToEmailAddresses": "Risposta-A Indirizzo Email"
@@ -106,6 +105,7 @@
   "presetFilters": {
     "sent": "Inviato",
     "archived": "Archiviato",
+    "inbox": "Posta in arrivo",
     "drafts": "Bozze",
     "trash": "Cestino",
     "important": "Importante"

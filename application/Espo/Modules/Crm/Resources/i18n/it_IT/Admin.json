@@ -3,5 +3,8 @@
     "detailConvert": "Converti Lead",
     "listForAccount": "Elenco (per Account)",
     "listForContact": "Lista (per contatto)"
+  },
+  "templates": {
+    "reminder": "Promemoria"
   }
 }

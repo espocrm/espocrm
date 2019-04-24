@@ -1,5 +1,28 @@
 {
   "insertFromSourceLabels": {
     "Document": "Insertar documento"
+  },
+  "fields": {
+    "role": "Rol",
+    "related": "Relacionado ",
+    "file": "Archivo ",
+    "type": "Tipo ",
+    "field": "Campo ",
+    "sourceId": "ID Origen",
+    "storage": "Almacenamiento ",
+    "size": "Tamaño "
+  },
+  "options": {
+    "role": {
+      "Attachment": "Adjunto ",
+      "Inline Attachment": "Adjunto inmediato ",
+      "Import File": "Importar Archivo",
+      "Export File": "Exportar Archivo",
+      "Mail Merge": "Generar Correos",
+      "Mass Pdf": "PDF Masivo"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Huérfano "
   }
 }

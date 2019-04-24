@@ -1,42 +1,53 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "roles": "Functies",
-        "assignmentPermission": "Assignment Permission",
-        "userPermission": "User Permission"
+  "fields": {
+    "name": "Record Naam",
+    "roles": "Functies",
+    "portalPermission": "Portaal toestemming",
+    "groupEmailAccountPermission": "Groep e-mailaccount toestemming",
+    "exportPermission": "Machtiging exporteren",
+    "dataPrivacyPermission": "Data Privacy Toestemming",
+    "massUpdatePermission": "Massa update rechten"
+  },
+  "links": {
+    "users": "Gebruikers",
+    "teams": "Groepen"
+  },
+  "tooltips": {
+    "assignmentPermission": "Allows to restrict an ability for users to assign records to other users.\n\nall - no restriction\n\nteam - can assign to users from own teams\n\nno - can assign only to self",
+    "userPermission": "Allows users to view activities of other users.\n\nall - can view all\n\nteam - can view user's activities from own teams\n\nno - can't view",
+    "portalPermission": "Definieert een toegang tot portalinformatie, mogelijkheid om berichten naar portalgebruikers te posten.",
+    "groupEmailAccountPermission": "Definieert een toegang tot groeps E-mail accounts, een mogelijkheid om e-mails te verzenden vanuit groep SMTP.",
+    "dataPrivacyPermission": "Toestaan ​​om persoonlijke gegevens te bekijken en te wissen.",
+    "exportPermission": "Bepaalt of gebruikers de mogelijkheid hebben om records te exporteren.",
+    "massUpdatePermission": "Definieert of gebruikers de mogelijkheid hebben om massaal records bij te werken."
+  },
+  "labels": {
+    "Access": "Toegang",
+    "Create Role": "Functie aanmaken",
+    "Field Level": "Veldniveau"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "niet-actief",
+      "enabled": "ingeschakeld",
+      "disabled": "uitgeschakeld"
     },
-    "links": {
-        "users": "Gebruikers",
-        "teams": "Groepen"
-    },
-    "tooltips": {
-        "assignmentPermission": "Allows to restrict an ability for users to assign records to other users.\n\nall - no restriction\n\nteam - can assign to users from own teams\n\nno - can assign only to self",
-        "userPermission": "Allows users to view activities of other users.\n\nall - can view all\n\nteam - can view user's activities from own teams\n\nno - can't view"
-    },
-    "labels": {
-        "Access": "Toegang",
-        "Create Role": "Functie aanmaken"
-    },
-    "options": {
-        "accessList": {
-            "not-set": "niet-actief",
-            "enabled": "ingeschakeld",
-            "disabled": "uitgeschakeld"
-        },
-        "levelList": {
-            "all": "allemaal",
-            "team": "team",
-            "own": "eigen",
-            "no": "nee",
-            "not-set": "niet-actief"
-        }
-    },
-    "actions": {
-        "read": "Lees",
-        "edit": "Bewerken",
-        "delete": "Verwijder"
-    },
-    "messages": {
-        "changesAfterClearCache": "Alle wijzigingen in een toegangscontrolesysteem worden toegepast nadat de cache is geschoond."
+    "levelList": {
+      "all": "allemaal",
+      "own": "eigen",
+      "no": "nee",
+      "yes": "ja",
+      "not-set": "niet-actief"
     }
+  },
+  "actions": {
+    "read": "Lees",
+    "edit": "Bewerken",
+    "delete": "Verwijder",
+    "stream": "Stroom",
+    "create": "creëren"
+  },
+  "messages": {
+    "changesAfterClearCache": "Alle wijzigingen in een toegangscontrolesysteem worden toegepast nadat de cache is geschoond."
+  }
 }

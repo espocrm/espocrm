@@ -178,6 +178,18 @@ blockquote {
     font-weight: normal;
 }
 
+.table tr > th {
+    font-weight: normal;
+}
+
+.table tr.accented {
+    background-color: @table-bg-accent;
+}
+
+.table td.accented {
+    background-color: @table-bg-accent;
+}
+
 .form-group.hidden-cell {
     margin-bottom: 0;
 }
@@ -1413,7 +1425,7 @@ table.no-margin {
 }
 
 .list > table td,
-table.list th {
+.list > table th {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;

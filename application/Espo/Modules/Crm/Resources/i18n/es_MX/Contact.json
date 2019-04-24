@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nombre",
     "emailAddress": "Correo electrónico",
-    "title": "Título",
     "accountRole": "Título",
     "account": "Cuenta",
     "accounts": "Cuentas",
@@ -20,7 +19,8 @@
     "acceptanceStatus": "Estatus de Aprobación",
     "accountIsInactive": "Cuenta Inactiva",
     "acceptanceStatusMeetings": "Estatus de Aceptación (Presentaciones)",
-    "acceptanceStatusCalls": "Estátus de Aceptación (Llamadas)"
+    "acceptanceStatusCalls": "Estátus de Aceptación (Llamadas)",
+    "title": "Título de la Cuenta Primaria"
   },
   "links": {
     "opportunities": "Oportunidades",
@@ -41,7 +41,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "",
       "Decision Maker": "Tomador de Desiciones",
       "Evaluator": "Evaluador",
       "Influencer": "Factor de Influencia"

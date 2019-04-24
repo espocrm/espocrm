@@ -1,51 +1,40 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "parent": "Behorende bij",
-        "status": "Status",
-        "dateStart": "Start Datum",
-        "dateEnd": "Eind Datum",
-        "direction": "Richting",
-        "duration": "Duur",
-        "description": "Beschrijving",
-        "users": "Gebruikers",
-        "contacts": "Contacten",
-        "leads": "Leads",
-        "reminders": "Herineringen",
-        "account": "Account"
+  "fields": {
+    "name": "Record Naam",
+    "parent": "Behorende bij",
+    "dateStart": "Start Datum",
+    "dateEnd": "Eind Datum",
+    "direction": "Richting",
+    "duration": "Duur",
+    "description": "Beschrijving",
+    "users": "Gebruikers",
+    "contacts": "Contacten",
+    "reminders": "Herineringen",
+    "acceptanceStatus": "Acceptatiestatus"
+  },
+  "options": {
+    "status": {
+      "Planned": "Gepland",
+      "Held": "Vastgehouden",
+      "Not Held": "Niet vastgehouden"
     },
-    "links": {
+    "direction": {
+      "Outbound": "Uitgaande",
+      "Inbound": "Binnenkomende"
     },
-    "options": {
-        "status": {
-            "Planned": "Gepland",
-            "Held": "Vasthouden",
-            "Not Held": "Niet Vasthouden"
-        },
-        "direction": {
-            "Outbound": "Uitgaande",
-            "Inbound": "Binnenkomende"
-        },
-        "acceptanceStatus": {
-            "None": "None",
-            "Accepted": "Geaccepteerd",
-            "Declined": "Geweigerd",
-            "Tentative": "Tentative"
-        }
-    },
-    "massActions": {
-        "setHeld": "Set Held",
-        "setNotHeld": "Set Not Held"
-    },
-    "labels": {
-        "Create Call": "Tel. Gesprek Aanmaken",
-        "Set Held": "Set Held",
-        "Set Not Held": "Set Not Held",
-        "Send Invitations": "Uitnodiging versturen"
-    },
-    "presetFilters": {
-        "planned": "Gepland",
-        "held": "Vasthouden",
-        "todays": "Huidig"
+    "acceptanceStatus": {
+      "None": "Geen",
+      "Accepted": "Geaccepteerd",
+      "Declined": "Geweigerd"
     }
+  },
+  "labels": {
+    "Create Call": "Tel. Gesprek Aanmaken",
+    "Send Invitations": "Uitnodiging versturen"
+  },
+  "presetFilters": {
+    "planned": "Gepland",
+    "held": "Vasthouden",
+    "todays": "Huidig"
+  }
 }

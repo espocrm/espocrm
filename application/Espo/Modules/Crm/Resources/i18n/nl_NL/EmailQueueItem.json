@@ -1,28 +1,20 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "status": "Status",
-        "target": "Target",
-        "sentAt": "Datum verzonden",
-        "attemptCount": "Attempts",
-        "emailAddress": "E-mailadres",
-        "massEmail": "Mass Email",
-        "isTest": "Is Test"
-    },
-    "links": {
-        "target": "Target",
-        "massEmail": "Mass Email"
-    },
-    "options": {
-        "status": {
-            "Pending": "In afwachting",
-            "Sent": "Verstuur",
-            "Failed": "Failed"
-        }
-    },
-    "presetFilters": {
-        "pending": "In afwachting",
-        "sent": "Verstuur",
-        "failed": "Failed"
+  "fields": {
+    "name": "Record Naam",
+    "sentAt": "Datum verzonden",
+    "emailAddress": "E-mailadres"
+  },
+  "options": {
+    "status": {
+      "Pending": "In afwachting",
+      "Sent": "Verzonden",
+      "Failed": "Mislukt",
+      "Sending": "Bezig met verzenden"
     }
+  },
+  "presetFilters": {
+    "pending": "In afwachting",
+    "sent": "Verstuur",
+    "failed": "Mislukt"
+  }
 }

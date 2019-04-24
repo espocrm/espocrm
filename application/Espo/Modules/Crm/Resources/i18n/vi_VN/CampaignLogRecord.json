@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "action": "Hành động",
+    "actionDate": "Ngày",
+    "data": "Dữ liệu",
+    "campaign": "Chiến dịch",
+    "parent": "Đối tượng",
+    "object": "Chủ đề",
+    "application": "Ứng dụng"
+  },
+  "presetFilters": {
+    "clicked": "Đã click",
+    "leadCreated": "Đã tạo khách hàng tiềm năng"
+  }
+}

@@ -1,9 +1,23 @@
 {
-    "fields": {
-        "user": "Gebruiker",
-        "ipAddress": "IP Adres",
-        "lastAccess": "Datum van laatste toegang",
-        "createdAt": "Datum Login"
-
-    }
+  "fields": {
+    "user": "Gebruiker",
+    "ipAddress": "IP Adres",
+    "lastAccess": "Datum van laatste toegang",
+    "createdAt": "Datum Login",
+    "isActive": "Is actief",
+    "portal": "Portaal"
+  },
+  "links": {
+    "actionHistoryRecords": "Actiegeschiedenis"
+  },
+  "presetFilters": {
+    "active": "Actief",
+    "inactive": "Inactief"
+  },
+  "labels": {
+    "Set Inactive": "Inactief instellen"
+  },
+  "massActions": {
+    "setInactive": "Inactief instellen"
+  }
 }

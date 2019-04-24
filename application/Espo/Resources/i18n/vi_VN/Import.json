@@ -1,0 +1,54 @@
+{
+  "labels": {
+    "Revert Import": "Khôi phục Import",
+    "Run Import": "Chạy nhập dữ liệu",
+    "Back": "Trở lại",
+    "Field Mapping": "Ánh xạ các trường",
+    "Default Values": "Giá trị mặc định",
+    "Add Field": "Thêm trường",
+    "Created": "Đã tạo",
+    "Updated": "Đã cập nhật",
+    "Result": "Kết quả",
+    "Show records": "Hiển thị các trường",
+    "Remove Duplicates": "Lọc dữ liệu trùng",
+    "importedCount": "Đã nhập (số lượng)",
+    "duplicateCount": "Đếm dữ liệu trùng",
+    "updatedCount": "Đã cập nhật (số lượng)",
+    "Create Only": "Chỉ tạo",
+    "Create and Update": "Tạo & cập nhật",
+    "Update Only": "Chỉ cập nhật",
+    "Update by": "Cập nhật bởi",
+    "File (CSV)": "Tập tin (đinh dạng CSV)",
+    "First Row Value": "Dữ liệu hàng đầu tiên",
+    "Skip": "Bỏ qua",
+    "Header Row Value": "Dữ liệu đầu",
+    "Field": "Trường",
+    "What to Import?": "Cần nhập những gì?",
+    "Entity Type": "Loại Entity",
+    "What to do?": "Cần làm gì",
+    "Header Row": "Hàng đầu",
+    "Date Format": "Định dạng ngày",
+    "Time Format": "Định dạng thời gian",
+    "Currency": "Tiền tệ",
+    "Preview": "Xem trước",
+    "Next": "Kế tiếp",
+    "Step 1": "Bước 1",
+    "Step 2": "Bước 2",
+    "Imported": "Đã nhập dữ liệu",
+    "Timezone": "Múi giờ"
+  },
+  "messages": {
+    "duplicatesRemoved": "Đã lọc trùng"
+  },
+  "fields": {
+    "file": "Tập tin",
+    "status": "Tình trạng"
+  },
+  "options": {
+    "status": {
+      "Failed": "Lỗi",
+      "In Process": "Đang thực hiện",
+      "Complete": "Hoàn thành"
+    }
+  }
+}

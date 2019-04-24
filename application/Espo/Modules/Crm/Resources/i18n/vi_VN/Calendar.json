@@ -1,13 +1,17 @@
 {
-    "modes": {
-        "month": "Tháng",
-        "week": "Tuần",
-        "day": "Ngày",
-        "agendaWeek": "Tuần",
-        "agendaDay": "Ngày"
-    },
-    "labels": {
-        "Today": "Today",
-        "Create": "Tạo"
-    }
+  "modes": {
+    "month": "Tháng",
+    "week": "Tuần",
+    "agendaWeek": "Tuần",
+    "day": "Ngày",
+    "agendaDay": "Ngày",
+    "timeline": "Dòng thời gian"
+  },
+  "labels": {
+    "Create": "Tạo",
+    "Shared": "Đã chia sẻ",
+    "Add User": "Thêm người dùng",
+    "User List": "Danh sách người dùng",
+    "Manage Users": "Quản lý người dung"
+  }
 }

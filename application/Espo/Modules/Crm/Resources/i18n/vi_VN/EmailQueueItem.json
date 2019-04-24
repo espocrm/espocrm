@@ -1,0 +1,14 @@
+{
+  "options": {
+    "status": {
+      "Pending": "Đang chờ",
+      "Sent": "Gửi",
+      "Failed": "Đã bị lỗi"
+    }
+  },
+  "presetFilters": {
+    "pending": "Đang chờ",
+    "sent": "Gửi",
+    "failed": "Bị lỗi"
+  }
+}

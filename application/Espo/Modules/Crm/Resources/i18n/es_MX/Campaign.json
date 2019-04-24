@@ -24,7 +24,8 @@
     "leadsTemplate": "Formato de Referencias",
     "accountsTemplate": "Formato de Cuentas",
     "usersTemplate": "Formato de Usuarios",
-    "mailMergeOnlyWithAddress": "Saltar registros sin dirección capturada"
+    "mailMergeOnlyWithAddress": "Saltar registros sin dirección capturada",
+    "optedInCount": "Opt-In aceptado"
   },
   "links": {
     "targetLists": "Listas de Intereses",

@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "name": "Tên",
+    "status": "Tình trạng",
+    "file": "Tập tin",
+    "type": "Loại",
+    "publishDate": "Ngày xuất bản"
+  },
+  "links": {
+    "folder": "Thư mục"
+  },
+  "options": {
+    "status": {
+      "Active": "Kích hoạt",
+      "Draft": "Nháp",
+      "Canceled": "Đã hủy"
+    },
+    "type": {
+      "": "Trống"
+    }
+  },
+  "presetFilters": {
+    "active": "Kích hoạt",
+    "draft": "Nháp"
+  }
+}
