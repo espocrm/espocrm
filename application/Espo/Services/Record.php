@@ -804,9 +804,16 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    protected function filterCreateInput($data)
+    {
+    }
+
+    protected function filterUpdateInput($data)
+    {
+    }
+
     protected function handleInput($data)
     {
-
     }
 
     protected function processDuplicateCheck(Entity $entity, $data)
@@ -880,6 +887,7 @@ class Record extends \Espo\Core\Services\Base
         $entity = $this->getRepository()->get();
 
         $this->filterInput($data);
+        $this->filterCreateInput($data);
         $this->handleInput($data);
 
         unset($data->id);
@@ -927,6 +935,7 @@ class Record extends \Espo\Core\Services\Base
         if (empty($id)) throw new BadRequest();
 
         $this->filterInput($data);
+        $this->filterUpdateInput($data);
         $this->handleInput($data);
 
         unset($data->id);
