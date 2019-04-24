@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart', function (Dep) {
+define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart', function (Dep) {
 
     return Dep.extend({
 
@@ -141,7 +141,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                             return '';
                         }
                         if (value % 1 == 0) {
-                            return self.currencySymbol + self.formatNumber(Math.floor(value)).toString();
+                            return self.currencySymbol + self.formatNumber(Math.floor(value), false, true).toString();
                         }
                         return '';
                     }
