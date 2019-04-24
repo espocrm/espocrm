@@ -875,9 +875,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function create($data)
     {
-        if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
-            throw new Forbidden();
-        }
+        if (!$this->getAcl()->check($this->getEntityType(), 'create')) throw new Forbidden();
 
         $entity = $this->getRepository()->get();
 
@@ -885,7 +883,6 @@ class Record extends \Espo\Core\Services\Base
         $this->handleInput($data);
 
         unset($data->id);
-
         unset($data->modifiedById);
         unset($data->modifiedByName);
         unset($data->modifiedAt);
@@ -895,29 +892,23 @@ class Record extends \Espo\Core\Services\Base
 
         $entity->set($data);
 
-        if (!$this->getAcl()->check($entity, 'create')) {
-            throw new Forbidden();
-        }
-
         $this->populateDefaults($entity, $data);
+
+        if (!$this->getAcl()->check($entity, 'create')) throw new Forbidden();
 
         $this->processValidation($entity, $data);
 
-        $this->beforeCreateEntity($entity, $data);
-
-        if (!$this->checkAssignment($entity)) {
-            throw new Forbidden('Assignment permission failure');
-        }
+        if (!$this->checkAssignment($entity)) throw new Forbidden('Assignment permission failure');
 
         $this->processDuplicateCheck($entity, $data);
+
+        $this->beforeCreateEntity($entity, $data);
 
         if ($this->storeEntity($entity)) {
             $this->afterCreateEntity($entity, $data);
             $this->afterCreateProcessDuplicating($entity, $data);
             $this->prepareEntityForOutput($entity);
-
             $this->processActionHistoryRecord('create', $entity);
-
             return $entity;
         }
 
@@ -933,15 +924,12 @@ class Record extends \Espo\Core\Services\Base
     {
         unset($data->deleted);
 
-        if (empty($id)) {
-            throw new BadRequest();
-        }
+        if (empty($id)) throw new BadRequest();
 
         $this->filterInput($data);
         $this->handleInput($data);
 
         unset($data->id);
-
         unset($data->modifiedById);
         unset($data->modifiedByName);
         unset($data->modifiedAt);
@@ -955,23 +943,17 @@ class Record extends \Espo\Core\Services\Base
             $entity = $this->getRepository()->get($id);
         }
 
-        if (!$entity) {
-            throw new NotFound();
-        }
+        if (!$entity) throw new NotFound();
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
+        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
 
         $entity->set($data);
 
         $this->processValidation($entity, $data);
 
-        $this->beforeUpdateEntity($entity, $data);
+        if (!$this->checkAssignment($entity)) throw new Forbidden();
 
-        if (!$this->checkAssignment($entity)) {
-            throw new Forbidden();
-        }
+        $this->beforeUpdateEntity($entity, $data);
 
         if ($this->checkForDuplicatesInUpdate) {
             $this->processDuplicateCheck($entity, $data);
@@ -980,9 +962,7 @@ class Record extends \Espo\Core\Services\Base
         if ($this->storeEntity($entity)) {
             $this->afterUpdateEntity($entity, $data);
             $this->prepareEntityForOutput($entity);
-
             $this->processActionHistoryRecord('update', $entity);
-
             return $entity;
         }
 
@@ -1028,19 +1008,13 @@ class Record extends \Espo\Core\Services\Base
 
     public function delete($id)
     {
-        if (empty($id)) {
-            throw new BadRequest();
-        }
+        if (empty($id)) throw new BadRequest();
 
         $entity = $this->getRepository()->get($id);
 
-        if (!$entity) {
-            throw new NotFound();
-        }
+        if (!$entity) throw new NotFound();
 
-        if (!$this->getAcl()->check($entity, 'delete')) {
-            throw new Forbidden();
-        }
+        if (!$this->getAcl()->check($entity, 'delete')) throw new Forbidden();
 
         $this->beforeDeleteEntity($entity);
 
