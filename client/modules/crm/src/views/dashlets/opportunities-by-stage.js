@@ -58,9 +58,12 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
 
             this.stageList = [];
 
+            this.isEmpty = true;
+
             var data = [];
             var i = 0;
             d.forEach(function (item) {
+                if (item.value) this.isEmpty = false;
                 var o = {
                     data: [[item.value, d.length - i]],
                     label: this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'),
@@ -89,6 +92,10 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
             this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
+        },
+
+        isNoData: function () {
+            return this.isEmpty;
         },
 
         draw: function () {

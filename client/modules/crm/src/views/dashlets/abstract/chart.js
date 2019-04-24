@@ -87,13 +87,20 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                 if (!this.isRendered()) return;
                 setTimeout(function () {
                     this.adjustContainer();
+                    if (this.isNoData()) {
+                        this.showNoData();
+                        return;
+                    }
                     this.draw();
                 }.bind(this), 50);
             }, this);
 
-
             $(window).on('resize.chart' + this.id, function () {
                 this.adjustContainer();
+                if (this.isNoData()) {
+                    this.showNoData();
+                    return;
+                }
                 this.draw();
             }.bind(this));
 
@@ -212,12 +219,12 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             this.fetch(function (data) {
                 this.chartData = this.prepareData(data);
 
+                this.adjustContainer();
+
                 if (this.isNoData()) {
                     this.showNoData();
                     return;
                 }
-
-                this.adjustContainer();
 
                 setTimeout(function () {
                     if (!this.$container.length || !this.$container.is(":visible")) return;
