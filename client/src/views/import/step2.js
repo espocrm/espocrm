@@ -208,6 +208,12 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                     continue;
                 }
 
+                if (d.type == 'email') {
+                    attributeList.push(field + '2');
+                    attributeList.push(field + '3');
+                    attributeList.push(field + '4');
+                }
+
                 if (d.type == 'link') {
                     attributeList.push(field + 'Name');
                     attributeList.push(field + 'Id');
@@ -277,6 +283,9 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                         var phoneNumberType = field.substr(11);
                         var phoneNumberTypeLabel = this.getLanguage().translateOption(phoneNumberType, 'phoneNumber', scope);
                         label = this.translate('phoneNumber', 'fields', scope) + ' (' + phoneNumberTypeLabel + ')';
+                    } else if (field.indexOf('emailAddress') === 0 && parseInt(field.substr(12)).toString() === field.substr(12)) {
+                        var emailAddressNum = field.substr(12);
+                        label = this.translate('emailAddress', 'fields', scope) + ' ' + emailAddressNum.toString();;
                     }
                 }
 
