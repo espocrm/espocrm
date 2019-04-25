@@ -599,6 +599,18 @@ class Import extends \Espo\Services\Record
                             continue;
                         }
 
+                        if ($attribute === 'phoneNumber' && $type === 'phone') {
+                            $phoneNumberData = $entity->get('phoneNumberData');
+                            $phoneNumberData = $phoneNumberData ?? [];
+                            $o = (object) [
+                                'phoneNumber' => $value,
+                                'primary' => true,
+                            ];
+                            $phoneNumberData[] = $o;
+                            $entity->set('phoneNumberData', $phoneNumberData);
+                            continue;
+                        }
+
                         if ($type == 'personName') {
                             $firstNameAttribute = 'first' . ucfirst($attribute);
                             $lastNameAttribute = 'last' . ucfirst($attribute);
@@ -628,12 +640,12 @@ class Import extends \Espo\Services\Record
                         }
                         $type = str_replace('phoneNumber', '', $attribute);
                         $type = str_replace('_', ' ', $type);
-                        $o = (object) [];
-                        $o->phoneNumber = $value;
-                        $o->type = $type;
-                        $o->primary = $isPrimary;
+                        $o = (object) [
+                            'phoneNumber' => $value,
+                            'type' => $type,
+                            'primary' => $isPrimary,
+                        ];
                         $phoneNumberData[] = $o;
-
                         $entity->set('phoneNumberData', $phoneNumberData);
                     }
 

@@ -200,7 +200,8 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 }
 
                 if (d.type == 'phone') {
-                    (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList' ) || []).map(function (item) {
+                    attributeList.push(field);
+                    (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList') || []).map(function (item) {
                         return item.replace(/\s/g, '_');
                     }, this).forEach(function (item) {
                         attributeList.push(field + Espo.Utils.upperCaseFirst(item));
