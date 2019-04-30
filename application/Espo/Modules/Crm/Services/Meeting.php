@@ -68,11 +68,6 @@ class Meeting extends \Espo\Services\Record
         return $this->getInjection('preferences');
     }
 
-    protected function getCrypt()
-    {
-        return $this->getInjection('container')->get('crypt');
-    }
-
     protected function getLanguage()
     {
         return $this->getInjection('language');
