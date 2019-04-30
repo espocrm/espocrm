@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
+'views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
     return Dep.extend({
 
@@ -333,8 +333,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 this.fetchLayout();
                 this.saveLayout();
 
-                if (view.afterAdding) {
-                    view.afterAdding().call(view);
+                if (view.getView('body') && view.getView('body').afterAdding) {
+                    view.getView('body').afterAdding.call(view.getView('body'));
                 }
             }, this);
         },
@@ -377,4 +377,3 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         }
     });
 });
-
