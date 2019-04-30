@@ -112,6 +112,45 @@ class Email extends Record
         return $this->injections['serviceFactory'];
     }
 
+    public function getUserSmtpParams(string $userId)
+    {
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+        if (!$user) return;
+
+        $fromAddress = $user->get('emailAddress');
+        if ($fromAddress)
+            $fromAddress = strtolower($fromAddress);
+
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
+        if (!$preferences) return;
+
+        $smtpParams = $preferences->getSmtpParams();
+        if ($smtpParams) {
+            if (array_key_exists('password', $smtpParams)) {
+                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+            }
+        }
+
+        if (!$smtpParams && $fromAddress) {
+            $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+            $emailAccount = $emailAccountService->findAccountForUser($user, $fromAddress);
+
+            if ($emailAccount && $emailAccount->get('useSmtp')) {
+                $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
+            }
+        }
+
+        if ($smtpParams) {
+            $smtpParams['fromName'] = $user->get('name');
+
+            if ($fromAddress) {
+                $this->applySmtpHandler($user->id, $fromAddress, $smtpParams);
+            }
+        }
+
+        return $smtpParams;
+    }
+
     protected function send(Entities\Email $entity)
     {
         $emailSender = $this->getMailSender();
