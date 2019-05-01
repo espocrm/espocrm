@@ -61,6 +61,8 @@ abstract class Base
 
     protected $packagePostfix = 'z';
 
+    protected $scriptParams = [];
+
     /**
      * Directory name of files in a package
      */
@@ -291,7 +293,7 @@ abstract class Base
             $script = new $scriptName();
 
             try {
-                $script->run($this->getContainer());
+                $script->run($this->getContainer(), $this->scriptParams);
             } catch (\Exception $e) {
                 $this->throwErrorAndRemovePackage($e->getMessage());
             }
