@@ -35,7 +35,16 @@ Espo.define('crm:views/opportunity/admin/field-manager/fields/probability-map', 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:options', function () {
+            this.listenTo(this.model, 'change:options', function (m, v, o) {
+                var probabilityMap = this.model.get('probabilityMap') || {}
+                if (o.ui) {
+                    (this.model.get('options') || []).forEach(function (item) {
+                        if (!(item in probabilityMap)) {
+                            probabilityMap[item] = 50;
+                        }
+                    }, this);
+                    this.model.set('probabilityMap', probabilityMap);
+                }
                 this.reRender();
             }, this);
         },
@@ -55,7 +64,6 @@ Espo.define('crm:views/opportunity/admin/field-manager/fields/probability-map', 
 
             (this.model.get('options') || []).forEach(function (item) {
                 data.probabilityMap[item] = parseInt(this.$el.find('input[data-name="'+item+'"]').val());
-
             }, this);
 
             return data;
