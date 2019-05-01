@@ -411,21 +411,12 @@ class Email extends Record
 
     public function getEntity($id = null)
     {
-        $entity = $this->getRepository()->get($id);
-        if (!empty($entity) && !empty($id)) {
-            $this->loadAdditionalFields($entity);
-
-            if (!$this->getAcl()->check($entity, 'read')) {
-                throw new Forbidden();
-            }
-        }
-        if (!empty($entity)) {
-            $this->prepareEntityForOutput($entity);
-        }
+        $entity = parent::getEntity($id);
 
         if (!empty($entity) && !empty($id) && !$entity->get('isRead')) {
             $this->markAsRead($entity->id);
         }
+
         return $entity;
     }
 
