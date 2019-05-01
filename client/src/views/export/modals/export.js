@@ -63,7 +63,12 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
             } else {
                 this.model.set('exportAllFields', true);
             }
-            this.model.set('format', this.getMetadata().get('app.export.formatList')[0]);
+
+            var formatList =
+                this.getMetadata().get(['scope', this.scope, 'exportFormatList']) ||
+                this.getMetadata().get('app.export.formatList');
+
+            this.model.set('format', formatList[0]);
 
             this.createView('record', 'views/export/record/record', {
                 scope: this.scope,
@@ -109,4 +114,3 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
 
     });
 });
-
