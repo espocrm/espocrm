@@ -203,14 +203,19 @@
                 "description":"leadCapture"
             },
             {
+                "url": "#Template",
+                "label": "PDF Templates",
+                "description": "pdfTemplates"
+            },
+            {
                 "url": "#Attachment",
                 "label": "Attachments",
                 "description": "attachments"
             },
             {
-                "url": "#Template",
-                "label": "PDF Templates",
-                "description": "pdfTemplates"
+                "url": "#Admin/jobs",
+                "label": "Jobs",
+                "description": "jobs"
             }
         ],
         "order": 25
