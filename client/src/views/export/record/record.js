@@ -90,7 +90,7 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
             });
 
             var formatList =
-                this.getMetadata().get(['scope', this.scope, 'exportFormatList']) ||
+                this.getMetadata().get(['scopes', this.scope, 'exportFormatList']) ||
                 this.getMetadata().get('app.export.formatList');
 
             this.createField('format', 'views/fields/enum', {

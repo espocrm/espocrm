@@ -65,7 +65,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
             }
 
             var formatList =
-                this.getMetadata().get(['scope', this.scope, 'exportFormatList']) ||
+                this.getMetadata().get(['scopes', this.scope, 'exportFormatList']) ||
                 this.getMetadata().get('app.export.formatList');
 
             this.model.set('format', formatList[0]);
