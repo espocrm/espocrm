@@ -15,6 +15,6 @@
     "chartGridColor": "#ddd",
     "chartTickColor": "#e8eced",
     "chartSuccessColor": "#85b75f",
-    "chartColorList": ["#6FA8D6", "#EDC555", "#DE6666", "#8A7CC2", "#c1834d", "#4E6CAD", "#ED8F42", "#d69cc7"],
+    "chartColorList": ["#6FA8D6", "#EDC555", "#DE6666", "#8A7CC2", "#c1834d", "#4E6CAD", "#ED8F42", "#d69cc7", "#d2d2d2"],
     "chartColorAlternativeList": ["#6FA8D6", "#EDC555", "#DE6666", "#8A7CC2", "#c1834d"]
 }
