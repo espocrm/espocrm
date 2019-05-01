@@ -1723,6 +1723,7 @@ Graph.prototype = {
       context.translate(this.plotOffset.left, this.plotOffset.top);
 
       for (i = 0; i < this.series.length; i++) {
+        this.series[i].index = i; // EspoCRM fix stacked
         if (!this.series[i].hide) this.drawSeries(this.series[i]);
       }
 
@@ -1741,6 +1742,7 @@ Graph.prototype = {
 
     function drawChart (series, typeKey) {
       var options = this.getOptions(series, typeKey);
+      options.index = series.index; // EspoCRM fix stacked
       this[typeKey].draw(options);
     }
 
@@ -2989,8 +2991,7 @@ Flotr.addType('bars', {
     this.translate(context, options.horizontal);
 
     for (i = 0; i < data.length; i++) {
-
-      geometry = this.getBarGeometry(data[i][0], data[i][1], options);
+      geometry = this.getBarGeometry(data[i][0], data[i][1], options, true); // EspoCRM fix stacked
       if (geometry === null) continue;
 
       left    = geometry.left;
@@ -3018,7 +3019,7 @@ Flotr.addType('bars', {
     }
   },
 
-  getBarGeometry : function (x, y, options) {
+  getBarGeometry : function (x, y, options, fillStack) { // EspoCRM fix stacked
 
     var
       horizontal    = options.horizontal,
@@ -3046,8 +3047,24 @@ Flotr.addType('bars', {
     if (stack) {
       stackValue          = yValue > 0 ? stack.positive : stack.negative;
       stackOffset         = stackValue[xValue] || stackOffset;
+
+
+      // EspoCRM fix stacked start
+      if (fillStack) {
+        this.stackData = this.stackData || {};
+        this.stackData[options.index] = this.stackData[options.index] || {};
+        this.stackData[options.index][xValue] = stackOffset;
+      } else {
+        if (this.stackData && Math.round(xValue) == xValue) {
+            stackOffset = this.stackData[options.index][xValue];
+          }
+      }
+      // EspoCRM fix stacked end
+
+      if (fillStack) // EspoCRM fix stacked
       stackValue[xValue]  = stackOffset + yValue;
     }
+
 
     left    = xScale(xValue - bisection);
     right   = xScale(xValue + barWidth - bisection);
@@ -3061,6 +3078,7 @@ Flotr.addType('bars', {
     // if (right < xa.min || left > xa.max || top < ya.min || bottom > ya.max) continue;
 
     return (x === null || y === null) ? null : {
+      bottom: bottom, // EspoCRM fix stacked
       x         : xValue,
       y         : yValue,
       xScale    : xScale,
@@ -3087,11 +3105,20 @@ Flotr.addType('bars', {
       geometry, i;
 
     for (i = data.length; i--;) {
+
       geometry = this.getBarGeometry(data[i][0], data[i][1], options);
+
       if (
         // Height:
         (
           // Positive Bars:
+          // EspoCRM fix stacked start
+          (
+            (options.stacked && !options.horizontal && hitGeometry.yScale(hitGeometry.y) < geometry.bottom && hitGeometry.yScale(hitGeometry.y) > geometry.top)
+            ||
+            (options.stacked && options.horizontal && hitGeometry.yScale(hitGeometry.y) > geometry.bottom && hitGeometry.yScale(hitGeometry.y) < geometry.top)
+          ) || !options.stacked &&
+          // EspoCRM fix stacked end
           (height > 0 && height < geometry.y) ||
           // Negative Bars:
           (height < 0 && height > geometry.y)
@@ -3101,6 +3128,18 @@ Flotr.addType('bars', {
       ) {
         n.x = data[i][0];
         n.y = data[i][1];
+
+        // EspoCRM fix stacked start
+        if (options.stacked) {
+          if (!options.horizontal) {
+            n.y = options.yInverse(geometry.top);
+            n.bottom = geometry.bottom;
+          } else {
+            n.x = options.xInverse(geometry.top);
+            n.bottom = geometry.bottom;
+          }
+        }
+        // EspoCRM fix stacked end
         n.index = i;
         n.seriesIndex = options.index;
       }
@@ -3123,12 +3162,27 @@ Flotr.addType('bars', {
     context.lineWidth = options.lineWidth;
     this.translate(context, options.horizontal);
 
+
     // Draw highlight
     context.beginPath();
     context.moveTo(left, top + height);
+
+    // EspoCRM fix stacked start
+    if (options.stacked) {
+      context.moveTo(left, options.args.bottom);
+    }
+    // EspoCRM fix stacked end
     context.lineTo(left, top);
     context.lineTo(left + width, top);
+    if (!options.stacked) // EspoCRM fix stacked
     context.lineTo(left + width, top + height);
+    // EspoCRM fix stacked start
+    if (options.stacked) {
+      context.lineTo(left + width, options.args.bottom);
+      context.lineTo(left, options.args.bottom);
+    }
+    // EspoCRM fix stacked end
+
     if (options.fill) {
       context.fillStyle = options.fillStyle;
       context.fill();
@@ -5197,6 +5251,30 @@ Flotr.addPlugin('hit', {
         }
         if (this.plotWidth - n.xaxis.d2p(n.x) < 42) {
           p += 'w;'
+        }
+      }
+      if (n.mouse.autoPositionVerticalHalf) {
+        if (this.plotHeight - n.yaxis.d2p(n.y) > this.plotHeight / 2) {
+          p = 's';
+        } else {
+          p = 'n';
+        }
+        if (n.xaxis.d2p(n.x) > this.plotWidth * 2 / 3) {
+          p += 'w';
+        } else {
+          p += 'e';
+        }
+      }
+      if (n.mouse.autoPositionHorizontalHalf) {
+        if (this.plotHeight - n.yaxis.d2p(n.y) > this.plotHeight * 3 / 4) {
+          p = 's';
+        } else {
+          p = 'n';
+        }
+        if (n.xaxis.d2p(n.x) > this.plotWidth / 2) {
+          p += 'w';
+        } else {
+          p += 'e';
         }
       }
       // EspoCRM fix end

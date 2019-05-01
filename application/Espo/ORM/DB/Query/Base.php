@@ -467,11 +467,11 @@ abstract class Base
                 return "DATE_FORMAT({$part}, '%Y-%m')";
             case 'DAY':
                 return "DATE_FORMAT({$part}, '%Y-%m-%d')";
-            case 'WEEK':
             case 'WEEK_0':
-                return "CONCAT(SUBSTRING(YEARWEEK({$part}, 0), 1, 4), '/', TRIM(LEADING '0' FROM SUBSTRING(YEARWEEK({$part}, 0), 5, 2)))";
+                return "CONCAT(SUBSTRING(YEARWEEK({$part}, 6), 1, 4), '/', TRIM(LEADING '0' FROM SUBSTRING(YEARWEEK({$part}, 6), 5, 2)))";
+            case 'WEEK':
             case 'WEEK_1':
-                return "CONCAT(SUBSTRING(YEARWEEK({$part}, 5), 1, 4), '/', TRIM(LEADING '0' FROM SUBSTRING(YEARWEEK({$part}, 5), 5, 2)))";
+                return "CONCAT(SUBSTRING(YEARWEEK({$part}, 3), 1, 4), '/', TRIM(LEADING '0' FROM SUBSTRING(YEARWEEK({$part}, 3), 5, 2)))";
             case 'QUARTER':
                 return "CONCAT(YEAR({$part}), '_', QUARTER({$part}))";
             case 'MONTH_NUMBER':
@@ -483,13 +483,11 @@ abstract class Base
             case 'YEAR_NUMBER':
                 $function = 'YEAR';
                 break;
-            case 'WEEK_NUMBER':
-                $function = 'WEEK';
-                break;
             case 'WEEK_NUMBER_0':
-                return "WEEK({$part}, 0)";
+                return "WEEK({$part}, 6)";
+            case 'WEEK_NUMBER':
             case 'WEEK_NUMBER_1':
-                return "WEEK({$part}, 5)";
+                return "WEEK({$part}, 3)";
             case 'HOUR_NUMBER':
                 $function = 'HOUR';
                 break;
@@ -1549,7 +1547,9 @@ abstract class Base
 
     public function sanitizeSelectAlias($string)
     {
-        return preg_replace('/[^A-Za-z0-9_:\'" .,\-\(\)]+/', '', $string);
+        $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-\(\)]+/', '', $string);
+        if (strlen($string) > 256) $string = substr($string, 0, 256);
+        return $string;
     }
 
     public function sanitizeSelectItem($string)

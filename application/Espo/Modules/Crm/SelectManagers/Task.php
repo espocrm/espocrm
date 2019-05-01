@@ -137,6 +137,11 @@ class Task extends \Espo\Core\SelectManagers\Base
         if ($attribute != 'dateStart' && $attribute != 'dateEnd') return $where;
         if (!$this->getSeed()->hasAttribute('dateStartDate')) return $where;
 
+        $type = $item['type'] ?? null;
+
+        if ($type === 'isNull') return $where;
+        if ($type === 'ever') return $where;
+        if ($type === 'isNotNull') return $where;
 
         $attributeDate = $attribute . 'Date';
 
@@ -158,7 +163,7 @@ class Task extends \Espo\Core\SelectManagers\Base
 
         $dateItem = [
             'attribute' => $attributeDate,
-            'type' => $item['type']
+            'type' => $type,
         ];
 
         if (array_key_exists('value', $item)) {

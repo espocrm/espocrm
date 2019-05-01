@@ -57,9 +57,7 @@ var currentPath = path.dirname(fs.realpathSync(__filename));
 var buildRelPath = 'build/EspoCRM-' + version;
 var buildPath = currentPath + '/' + buildRelPath;
 var diffFilePath = currentPath + '/build/diff';
-
 var upgradePath = currentPath + '/build/EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
-
 
 var exec = require('child_process').exec;
 
@@ -68,6 +66,23 @@ function execute(command, callback) {
         callback(stdout);
     });
 };
+
+var deleteDirRecursively = function (path) {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function(file, index) {
+            var curPath = path + "/" + file;
+            if (fs.lstatSync(curPath).isDirectory()) {
+                deleteDirRecursively(curPath);
+            } else {
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
+deleteDirRecursively(diffFilePath);
+deleteDirRecursively(upgradePath);
 
 execute('git diff --name-only ' + versionFrom, function (stdout) {
     if (!fs.existsSync(upgradePath)) {
@@ -149,15 +164,9 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
                 }
 
                 fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifest, null, '  '));
-
             });
 
             fs.unlinkSync(diffFilePath);
         });
-
-
-
     });
-
 });
-

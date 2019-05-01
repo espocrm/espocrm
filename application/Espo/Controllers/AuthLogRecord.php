@@ -40,27 +40,27 @@ class AuthLogRecord extends \Espo\Core\Controllers\Record
         }
     }
 
-    public function actionUpdate($params, $data, $request)
+    public function beforeUpdate()
     {
         throw new Forbidden();
     }
 
-    public function actionMassUpdate($params, $data, $request)
+    public function beforeMassUpdate()
     {
         throw new Forbidden();
     }
 
-    public function actionCreate($params, $data, $request)
+    public function beforeCreate()
     {
         throw new Forbidden();
     }
 
-    public function actionCreateLink($params, $data, $request)
+    public function beforeCreateLink()
     {
         throw new Forbidden();
     }
 
-    public function actionRemoveLink($params, $data, $request)
+    public function beforeRemoveLink()
     {
         throw new Forbidden();
     }

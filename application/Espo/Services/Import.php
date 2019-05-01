@@ -560,6 +560,17 @@ class Import extends \Espo\Services\Record
             }
         }
 
+        $valueMap = (object) [];
+        foreach ($importAttributeList as $i => $attribute) {
+            if (!empty($attribute)) {
+                if (!array_key_exists($i, $row)) {
+                    continue;
+                }
+                $value = $row[$i];
+                $valueMap->$attribute = $value;
+            }
+        }
+
         foreach ($importAttributeList as $i => $attribute) {
             if (!empty($attribute)) {
                 if (!array_key_exists($i, $row)) {
@@ -574,7 +585,32 @@ class Import extends \Espo\Services\Record
                 }
                 if (array_key_exists($attribute, $attributeDefs)) {
                     if ($value !== '') {
-                        $type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$attribute}.type");
+                        $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $attribute, 'type']);
+
+                        if ($attribute === 'emailAddress' && $type === 'email') {
+                            $emailAddressData = $entity->get('emailAddressData');
+                            $emailAddressData = $emailAddressData ?? [];
+                            $o = (object) [
+                                'emailAddress' => $value,
+                                'primary' => true,
+                            ];
+                            $emailAddressData[] = $o;
+                            $entity->set('emailAddressData', $emailAddressData);
+                            continue;
+                        }
+
+                        if ($attribute === 'phoneNumber' && $type === 'phone') {
+                            $phoneNumberData = $entity->get('phoneNumberData');
+                            $phoneNumberData = $phoneNumberData ?? [];
+                            $o = (object) [
+                                'phoneNumber' => $value,
+                                'primary' => true,
+                            ];
+                            $phoneNumberData[] = $o;
+                            $entity->set('phoneNumberData', $phoneNumberData);
+                            continue;
+                        }
+
                         if ($type == 'personName') {
                             $firstNameAttribute = 'first' . ucfirst($attribute);
                             $lastNameAttribute = 'last' . ucfirst($attribute);
@@ -600,19 +636,46 @@ class Import extends \Espo\Services\Record
                         $isPrimary = false;
                         if (empty($phoneNumberData)) {
                             $phoneNumberData = [];
-                            if (!in_array('phoneNumber', $importAttributeList)) {
-                                $isPrimary = true;
-                            }
+                            if (empty($valueMap->phoneNumber)) $isPrimary = true;
                         }
                         $type = str_replace('phoneNumber', '', $attribute);
                         $type = str_replace('_', ' ', $type);
-                        $o = new \StdClass();
-                        $o->phoneNumber = $value;
-                        $o->type = $type;
-                        $o->primary = $isPrimary;
+                        $o = (object) [
+                            'phoneNumber' => $value,
+                            'type' => $type,
+                            'primary' => $isPrimary,
+                        ];
                         $phoneNumberData[] = $o;
-
                         $entity->set('phoneNumberData', $phoneNumberData);
+                    }
+
+                    if (
+                        strpos($attribute, 'emailAddress') === 0 && $attribute !== 'emailAddress'
+                        &&
+                        $entity->hasAttribute('emailAddress')
+                        &&
+                        $entity->hasAttribute('emailAddressData')
+                        &&
+                        is_numeric(substr($attribute, 12))
+                        &&
+                        intval(substr($attribute, 12)) >= 2
+                        &&
+                        intval(substr($attribute, 12)) <= 4
+                        &&
+                        !empty($value)
+                    ) {
+                        $emailAddressData = $entity->get('emailAddressData');
+                        $isPrimary = false;
+                        if (empty($emailAddressData)) {
+                            $emailAddressData = [];
+                            if (empty($valueMap->emailAddress)) $isPrimary = true;
+                        }
+                        $o = (object) [
+                            'emailAddress' => $value,
+                            'primary' => $isPrimary,
+                        ];
+                        $emailAddressData[] = $o;
+                        $entity->set('emailAddressData', $emailAddressData);
                     }
                 }
             }

@@ -80,17 +80,17 @@ class AuthToken extends \Espo\Core\Controllers\Record
         throw new Forbidden();
     }
 
-    public function actionCreate($params, $data, $request)
+    public function beforeCreate()
     {
         throw new Forbidden();
     }
 
-    public function actionCreateLink($params, $data, $request)
+    public function beforeCreateLink()
     {
         throw new Forbidden();
     }
 
-    public function actionRemoveLink($params, $data, $request)
+    public function beforeRemoveLink()
     {
         throw new Forbidden();
     }

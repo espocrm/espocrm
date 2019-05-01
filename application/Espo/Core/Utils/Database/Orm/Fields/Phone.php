@@ -113,11 +113,27 @@ class Phone extends Base
                     ),
                     $fieldName .'Data' => array(
                         'type' => 'text',
-                        'notStorable' => true
+                        'notStorable' => true,
+                        'notExportable' => true,
                     ),
+                    $fieldName .'IsOptedOut' => [
+                        'type' => 'bool',
+                        'notStorable' => true,
+                        'select' => 'phoneNumbers.opt_out',
+                        'where' => [
+                            '= TRUE' => [
+                                'sql' => 'phoneNumbers.opt_out = true AND phoneNumbers.opt_out IS NOT NULL'
+                            ],
+                            '= FALSE' => [
+                                'sql' => 'phoneNumbers.opt_out = false OR phoneNumbers.opt_out IS NULL'
+                            ]
+                        ],
+                        'orderBy' => 'phoneNumbers.opt_out {direction}'
+                    ],
                     $fieldName . 'Numeric' => [
                         'type' => 'varchar',
                         'notStorable' => true,
+                        'notExportable' => true,
                         'where' => [
                             'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityType) . ".id IN (
                                 SELECT entity_id
@@ -157,7 +173,7 @@ class Phone extends Base
                                 'sql' => 'phoneNumbersNumericMultiple.numeric IS NOT NULL',
                                 'distinct' => true
                             ]
-                        ]
+                        ],
                     ]
                 ],
                 'relations' => [

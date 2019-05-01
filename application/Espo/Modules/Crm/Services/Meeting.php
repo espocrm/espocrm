@@ -68,11 +68,6 @@ class Meeting extends \Espo\Services\Record
         return $this->getInjection('preferences');
     }
 
-    protected function getCrypt()
-    {
-        return $this->getInjection('container')->get('crypt');
-    }
-
     protected function getLanguage()
     {
         return $this->getInjection('language');
@@ -121,14 +116,7 @@ class Meeting extends \Espo\Services\Record
     {
         $smtpParams = null;
         if ($useUserSmtp) {
-            $smtpParams = $this->getPreferences()->getSmtpParams();
-            if ($smtpParams) {
-                if (array_key_exists('password', $smtpParams)) {
-                    $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
-                }
-                $smtpParams['fromAddress'] = $this->getUser()->get('emailAddress');
-                $smtpParams['fromName'] = $this->getUser()->get('name');
-            }
+            $smtpParams = $this->getServiceFactory()->create('Email')->getUserSmtpParams($this->getUser()->id);
         }
 
         $templateFileManager = $this->getInjection('container')->get('templateFileManager');

@@ -39,6 +39,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $this->findExtension();
         if (!$this->isNew()) {
+            $this->scriptParams['isUpgrade'] = true;
+
             $this->compareVersion();
             $this->uninstallExtension();
             $this->deleteExtension();

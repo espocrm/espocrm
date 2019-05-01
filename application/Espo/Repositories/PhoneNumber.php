@@ -228,9 +228,14 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
         foreach ($phoneNumberData as $row) {
             $key = trim($row->phoneNumber);
             if (empty($key)) continue;
+            if (isset($row->type)) {
+                $type = $row->type;
+            } else {
+                $type = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', 'phoneNumber', 'defaultType']);
+            }
             $hash->$key = [
                 'primary' => $row->primary ? true : false,
-                'type' => $row->type,
+                'type' => $type,
                 'optOut' => !empty($row->optOut) ? true : false,
                 'invalid' => !empty($row->invalid) ? true : false,
             ];

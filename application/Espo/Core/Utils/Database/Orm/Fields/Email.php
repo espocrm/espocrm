@@ -112,7 +112,8 @@ class Email extends Base
                     ],
                     $fieldName .'Data' => [
                         'type' => 'text',
-                        'notStorable' => true
+                        'notStorable' => true,
+                        'notExportable' => true,
                     ],
                     $fieldName .'IsOptedOut' => [
                         'type' => 'bool',

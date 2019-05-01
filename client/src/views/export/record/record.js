@@ -89,8 +89,12 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 options: fieldList
             });
 
+            var formatList =
+                this.getMetadata().get(['scopes', this.scope, 'exportFormatList']) ||
+                this.getMetadata().get('app.export.formatList');
+
             this.createField('format', 'views/fields/enum', {
-                options: this.getMetadata().get('app.export.formatList')
+                options: formatList
             });
 
             this.controlAllFields();
@@ -108,6 +112,4 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
         }
 
     });
-
 });
-

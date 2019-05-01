@@ -1,6 +1,6 @@
 [
-    {"name":"name","width":35,"notSortable": true},    
-    {"name":"version","notSortable": true, "width":15},
+    {"name":"name","width": 35,"notSortable": true},
+    {"name":"version","notSortable": true, "width": 12},
     {"name":"description","notSortable": true},
-    {"name":"isInstalled","notSortable": true, "width":5}
+    {"name":"isInstalled","notSortable": true, "width": 8}
 ]

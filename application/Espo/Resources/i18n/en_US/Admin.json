@@ -208,6 +208,7 @@
     "descriptions": {
         "settings": "System settings of application.",
         "scheduledJob": "Jobs which are executed by cron.",
+        "jobs": "Jobs execute tasks in the background.",
         "upgrade": "Upgrade EspoCRM.",
         "clearCache": "Clear all backend cache.",
         "rebuild": "Rebuild backend and clear cache.",

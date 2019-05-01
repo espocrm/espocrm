@@ -677,6 +677,11 @@ define(
                             Espo.Ui.error(msg);
                         }
                         break;
+                    case 400:
+                        var msg = self.language.translate('Error') + ' ' + xhr.status;
+                        msg += ': ' + self.language.translate('Bad request');
+                        Espo.Ui.error(msg);
+                        break;
                     case 404:
                         if (options.main) {
                             self.baseController.error404();

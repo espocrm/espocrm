@@ -200,12 +200,19 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 }
 
                 if (d.type == 'phone') {
-                    (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList' ) || []).map(function (item) {
+                    attributeList.push(field);
+                    (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList') || []).map(function (item) {
                         return item.replace(/\s/g, '_');
                     }, this).forEach(function (item) {
                         attributeList.push(field + Espo.Utils.upperCaseFirst(item));
                     }, this);
                     continue;
+                }
+
+                if (d.type == 'email') {
+                    attributeList.push(field + '2');
+                    attributeList.push(field + '3');
+                    attributeList.push(field + '4');
                 }
 
                 if (d.type == 'link') {
@@ -277,6 +284,9 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                         var phoneNumberType = field.substr(11);
                         var phoneNumberTypeLabel = this.getLanguage().translateOption(phoneNumberType, 'phoneNumber', scope);
                         label = this.translate('phoneNumber', 'fields', scope) + ' (' + phoneNumberTypeLabel + ')';
+                    } else if (field.indexOf('emailAddress') === 0 && parseInt(field.substr(12)).toString() === field.substr(12)) {
+                        var emailAddressNum = field.substr(12);
+                        label = this.translate('emailAddress', 'fields', scope) + ' ' + emailAddressNum.toString();;
                     }
                 }
 
