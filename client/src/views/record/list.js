@@ -1163,7 +1163,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var field = item.name;
                 var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
                 if (!fieldType) return;
-                this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
+                this.getFieldManager().getEntityTypeFieldAttributeList(this.scope, field).forEach(function (attribute) {
                     list.push(attribute);
                 }, this);
             }, this);
