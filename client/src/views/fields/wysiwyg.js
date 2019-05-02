@@ -156,7 +156,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             if (value) {
                 value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
                 value = value.replace(/<[\/]{0,1}(script)[^><]*>/gi, '');
-                value = value.replace(/<[^><]*(onerror|onclick|onmouseover|onmousedown|onmouseenter|onmouseout|mouseleave|onchange|onblur)=[^><]*>/gi, '');
+                value = value.replace(/<[^><]*(on[a-z]+)=[^><]*>/gi, '');
             }
             return value || '';
         },
