@@ -84,7 +84,14 @@ var deleteDirRecursively = function (path) {
 deleteDirRecursively(diffFilePath);
 deleteDirRecursively(upgradePath);
 
+execute('git rev-parse --abbrev-ref HEAD', function (branch) {
+    if (branch !== 'master' && branch !== 'stable' && branch.indexOf('hotfix/') !== 0) {
+        console.log('\x1b[33m%s\x1b[0m', "Warning! You are on " + branch + " branch.");
+    }
+});
+
 execute('git diff --name-only ' + versionFrom, function (stdout) {
+
     if (!fs.existsSync(upgradePath)) {
         fs.mkdirSync(upgradePath);
     }
@@ -120,7 +127,6 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
             }
             deletedFileList.push(file);
         });
-
 
         execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files ' , function (stdout) {
             var d = new Date();
@@ -164,6 +170,8 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
                 }
 
                 fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifest, null, '  '));
+
+                console.log("Upgrade package is built.");
             });
 
             fs.unlinkSync(diffFilePath);
