@@ -1969,7 +1969,7 @@ class Base
 
         if ($useFullTextSearch) {
             foreach ($fieldList as $field) {
-                if (strpos($item, '.') !== false) {
+                if (strpos($field, '.') !== false) {
                     continue;
                 }
 
