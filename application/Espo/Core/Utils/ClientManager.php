@@ -118,7 +118,7 @@ class ClientManager
         $additionalStyleSheetsHtml = '';
         foreach ($cssFileList as $cssFile) {
             $src = $this->basePath . $cssFile . '?r=' . $cacheTimestamp;
-            $additionalStyleSheetsHtml .= "\n        <link rel=\"stylesheet\" src=\"{$src}\">";
+            $additionalStyleSheetsHtml .= "\n        <link rel=\"stylesheet\" href=\"{$src}\">";
         }
 
         $data = [
