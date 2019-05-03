@@ -319,6 +319,7 @@ abstract class Base
             if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
                 $aggDist = true;
             }
+            $params['select'] = [];
             $selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
         }
 
@@ -376,15 +377,15 @@ abstract class Base
             $groupByPart = implode(', ', $arr);
         }
 
-        if (empty($params['aggregation'])) {
-            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart, $havingPart);
-        } else {
+        if (!empty($params['aggregation'])) {
             $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation'], $groupByPart, $havingPart);
             if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
                 $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
             }
+            return $sql;
         }
 
+        $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart, $havingPart);
         return $sql;
     }
 
@@ -1010,7 +1011,7 @@ abstract class Base
                     continue;
                 }
 
-                if (!empty($select)) {
+                if (is_array($select)) {
                     if (!in_array($relationName, $relationsToJoin)) {
                         continue;
                     }
