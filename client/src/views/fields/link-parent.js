@@ -75,7 +75,8 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 foreignScope: this.foreignScope,
                 foreignScopeList: this.foreignScopeList,
                 valueIsSet: this.model.has(this.idName) || this.model.has(this.typeName),
-                iconHtml: iconHtml
+                iconHtml: iconHtml,
+                displayEntityType: this.displayEntityType && this.model.get(this.typeName),
             }, Dep.prototype.data.call(this));
         },
 

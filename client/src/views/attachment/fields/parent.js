@@ -32,6 +32,8 @@ Espo.define('views/attachment/fields/parent', 'views/fields/link-parent', functi
 
         ignoreScopeList: ['Preferences', 'ExternalAccount', 'Notification', 'Note', 'ArrayValue', 'Attachment'],
 
+        displayEntityType: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
