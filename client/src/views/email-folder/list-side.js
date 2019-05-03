@@ -150,6 +150,8 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
         },
 
         selectFolder: function (id) {
+            this.emailCollection.reset();
+
             this.selectedFolderId = id;
             this.trigger('select', id);
         },
