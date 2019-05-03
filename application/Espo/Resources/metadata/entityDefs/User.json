@@ -265,6 +265,10 @@
             "type": "datetime",
             "readOnly": true
         },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "createdBy": {
             "type": "link",
             "readOnly": true,

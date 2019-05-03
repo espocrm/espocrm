@@ -25,6 +25,14 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
         }
     },
     "links": {
