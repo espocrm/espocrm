@@ -41,6 +41,10 @@ class Email extends \Espo\Core\SelectManagers\Base
             $this->applyFolder($params['folderId'], $result);
         }
 
+        if (!empty($result['orderBy']) && $result['orderBy'] === 'dateSent') {
+            $result['useIndexList'] = ['IDX_EMAIL_DATE_SENT'];
+        }
+
         $this->addUsersJoin($result);
 
         return $result;
