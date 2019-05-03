@@ -11,16 +11,17 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "grunt": "~1.0.3",
-    "grunt-contrib-copy": "~1.0.0",
+    "grunt-chmod": "~1.1.0",
     "grunt-contrib-clean": "~2.0.0",
-    "grunt-replace": "~1.0.1",
+    "grunt-contrib-compress": "~1.4.3",
     "grunt-contrib-concat": "~1.0.1",
-    "grunt-contrib-uglify": "~4.0.0",
+    "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-cssmin": "~3.0.0",
     "grunt-contrib-less": "~2.0.0",
+    "grunt-contrib-uglify": "~4.0.0",
     "grunt-mkdir": "~1.0.0",
-    "grunt-contrib-compress": "~1.4.3",
-    "grunt-chmod": "~1.1.0",
-    "pofile": "~1.0.11"
+    "grunt-replace": "~1.0.1",
+    "pofile": "~1.0.11",
+    "tar": "^4.4.8"
   }
 }

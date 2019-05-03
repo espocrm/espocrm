@@ -434,7 +434,6 @@ class Cleanup extends \Espo\Core\Jobs\Base
         foreach ($scopeList as $scope) {
             if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
             if ($scope === 'Attachment') continue;
-            if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) continue;
 
             if (!$this->getEntityManager()->hasRepository($scope)) continue;
             $repository = $this->getEntityManager()->getRepository($scope);
@@ -444,10 +443,17 @@ class Cleanup extends \Espo\Core\Jobs\Base
             if (!method_exists($repository, 'select')) continue;
             if (!method_exists($repository, 'deleteFromDb')) continue;
 
-            $deletedEntityList = $repository->select(['id', 'deleted'])->where([
+            $whereClause = [
                 'deleted' => 1,
-                'modifiedAt<' => $datetime->format('Y-m-d H:i:s')
-            ])->find(['withDeleted' => true]);
+            ];
+
+            if ($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
+                $whereClause['modifiedAt<'] = $datetime->format('Y-m-d H:i:s');
+            } else if ($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
+                $whereClause['createdAt<'] = $datetime->format('Y-m-d H:i:s');
+            }
+
+            $deletedEntityList = $repository->select(['id', 'deleted'])->where($whereClause)->find(['withDeleted' => true]);
             foreach ($deletedEntityList as $e) {
                 $this->cleanupDeletedEntity($e);
             }

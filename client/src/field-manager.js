@@ -134,7 +134,10 @@
         getEntityTypeFieldAttributeList: function (entityType, field) {
             var type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
             if (!type) return [];
-            return this.getAttributeList(type, field);
+            return _.union(
+                this.getAttributeList(type, field),
+                this.metadata.get(['entityDefs', entityType, 'fields', field, 'additionalAttributeList']) || []
+            );
         },
 
         getAttributeList: function (fieldType, fieldName) {

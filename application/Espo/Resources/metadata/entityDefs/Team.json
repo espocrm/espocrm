@@ -21,6 +21,10 @@
         "createdAt": {
             "type": "datetime",
             "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
         }
     },
     "links": {
