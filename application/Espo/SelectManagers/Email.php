@@ -37,8 +37,10 @@ class Email extends \Espo\Core\SelectManagers\Base
     {
         parent::applyAdditional($params, $result);
 
-        if (!empty($params['folderId'])) {
-            $this->applyFolder($params['folderId'], $result);
+        $folderId = $params['folderId'] ?? null;
+
+        if ($folderId) {
+            $this->applyFolder($folderId, $result);
         }
 
         if (empty($params['textFilter']) && !empty($result['orderBy']) && $result['orderBy'] === 'dateSent') {
@@ -50,7 +52,6 @@ class Email extends \Espo\Core\SelectManagers\Base
                     }
                 }
             }
-            $folderId = $params['folderId'] ?? null;
             if ($folderId === 'important' || $folderId === 'drafts') {
                 $skipIndex = true;
             }
@@ -59,7 +60,9 @@ class Email extends \Espo\Core\SelectManagers\Base
             }
         }
 
-        $this->addUsersJoin($result);
+        if ($folderId !== 'drafts') {
+            $this->addUsersJoin($result);
+        }
 
         return $result;
     }
