@@ -588,7 +588,7 @@ class FieldManager
     }
 
     /**
-     * Add all needed block for a field defenition
+     * Add all needed block for a field definition
      *
      * @param string $scope
      * @param string $fieldName

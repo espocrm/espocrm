@@ -440,7 +440,7 @@ class Converter
     }
 
     /**
-     * Get custom table defenition in "application/Espo/Core/Utils/Database/Schema/tables/" and in metadata 'additionalTables'
+     * Get custom table definition in "application/Espo/Core/Utils/Database/Schema/tables/" and in metadata 'additionalTables'
      *
      * @param  array  $ormMeta
      *

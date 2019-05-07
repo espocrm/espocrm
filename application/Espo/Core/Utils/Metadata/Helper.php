@@ -64,9 +64,9 @@ class Helper
     }
 
     /**
-     * Get field defenition by type in metadata, "fields" key
+     * Get field definition by type in metadata, "fields" key
      *
-     * @param  array | string $fieldDef - It can be a string or field defenition from entityDefs
+     * @param  array | string $fieldDef - It can be a string or field definition from entityDefs
      * @return array | null
      */
     public function getFieldDefsByType($fieldDef)
