@@ -45,19 +45,20 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                 var field = $(e.currentTarget).data('name');
 
                 this.confirm(this.translate('confirmation', 'messages'), function () {
-                    this.notify('Removing...');
-                    $.ajax({
-                        url: 'Admin/fieldManager/' + this.scope + '/' + field,
-                        type: 'DELETE',
-                        success: function () {
-                            this.notify('Removed', 'success');
-                            var data = this.getMetadata().data;
-                            delete data['entityDefs'][this.scope]['fields'][field];
+                    Espo.Ui.notify(this.translate('Removing...'));
+                    Espo.Ajax.request('Admin/fieldManager/' + this.scope + '/' + field, 'delete').then(function () {
+                        Espo.Ui.success(this.translate('Removed'));
+
+                        $(e.currentTarget).closest('tr').remove();
+                        var data = this.getMetadata().data;
+
+                        delete data['entityDefs'][this.scope]['fields'][field];
+
+                        this.getMetadata().load(function () {
                             this.getMetadata().storeToCache();
-                            $(e.currentTarget).closest('tr').remove();
-                        }.bind(this),
-                    });
-                }, this);
+                        }.bind(this), true);
+                    }.bind(this));
+                }.bind(this));
             }
         },
 
