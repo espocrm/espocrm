@@ -71,22 +71,50 @@ class Output
         echo $data;
     }
 
-    public function processError(string $message = 'Error', int $code = 500, bool $toPrint = false, $exception = null)
+    public function processError(string $message = 'Error', int $statusCode = 500, bool $toPrint = false, $exception = null)
     {
         $currentRoute = $this->getSlim()->router()->getCurrentRoute();
 
         if (isset($currentRoute)) {
             $inputData = $this->getSlim()->request()->getBody();
             $inputData = $this->clearPasswords($inputData);
-            $GLOBALS['log']->error('API ['.$this->getSlim()->request()->getMethod().']:'.$currentRoute->getPattern().', Params:'.print_r($currentRoute->getParams(), true).', InputData: '.$inputData.' - '.$message);
+
+            $logLevel = 'debug';
+
+            $routePattern = $currentRoute->getPattern();
+            $routeParams = $currentRoute->getParams();
+            $method = $this->getSlim()->request()->getMethod();
+
+            $logMessage = "API ($statusCode) ";
+            $logMessageItemList = [];
+            if ($message) $logMessageItemList[] = $message;
+            $logMessageItemList[] .= "$method " . $_SERVER['REQUEST_URI'];
+            if ($inputData) $logMessageItemList[] = "Input data: " . $inputData;
+            if ($routePattern) $logMessageItemList[] = "Route pattern: ". $routePattern;
+            if (!empty($routeParams)) $logMessageItemList[] = "Route params: ". print_r($routeParams, true);
+
+            $logMessage .= implode("; ", $logMessageItemList);
+
+            $GLOBALS['log']->log($logLevel, $logMessage);
         }
 
-        $this->displayError($message, $code, $toPrint, $exception);
+        $this->displayError($message, $statusCode, $toPrint, $exception);
     }
 
     public function displayError(string $text, int $statusCode = 500, bool $toPrint = false, $exception = null)
     {
-        $GLOBALS['log']->error('Display Error: '.$text.', Code: '.$statusCode.' URL: '.$_SERVER['REQUEST_URI']);
+        $logLevel = 'error';
+        if ($exception && !empty($exception->logLevel)) {
+            $logLevel = $exception->logLevel;
+        }
+        $logMessageItemList = [];
+        if ($text) $logMessageItemList[] = "{$text}";
+        if (!empty($this->slim)) {
+            $logMessageItemList[] = $this->getSlim()->request()->getMethod() . ' ' .$_SERVER['REQUEST_URI'];
+        }
+        $logMessage = "($statusCode) " . implode("; ", $logMessageItemList);
+
+        $GLOBALS['log']->log($logLevel, $logMessage);
 
         ob_clean();
 

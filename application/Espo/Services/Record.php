@@ -36,7 +36,8 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Conflict;
 use \Espo\Core\Exceptions\NotFound;
-
+use \Espo\Core\Exceptions\NotFoundSilent;
+use \Espo\Core\Exceptions\ForbiddenSilent;
 
 use \Espo\Core\Utils\Util;
 
@@ -282,7 +283,7 @@ class Record extends \Espo\Core\Services\Base
         }
         $entity = $this->getEntity($id);
 
-        if (!$entity) throw new NotFound();
+        if (!$entity) throw new NotFoundSilent("Record does not exist.");
 
         $this->processActionHistoryRecord('read', $entity);
 
@@ -303,11 +304,7 @@ class Record extends \Espo\Core\Services\Base
 
         if ($entity && !is_null($id)) {
             $this->loadAdditionalFields($entity);
-
-            if (!$this->getAcl()->check($entity, 'read')) {
-                throw new Forbidden();
-            }
-
+            if (!$this->getAcl()->check($entity, 'read')) throw new ForbiddenSilent();
             $this->prepareEntityForOutput($entity);
         }
 
@@ -882,7 +879,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function create($data)
     {
-        if (!$this->getAcl()->check($this->getEntityType(), 'create')) throw new Forbidden();
+        if (!$this->getAcl()->check($this->getEntityType(), 'create')) throw new ForbiddenSilent();
 
         $entity = $this->getRepository()->get();
 
@@ -902,11 +899,11 @@ class Record extends \Espo\Core\Services\Base
 
         $this->populateDefaults($entity, $data);
 
-        if (!$this->getAcl()->check($entity, 'create')) throw new Forbidden();
+        if (!$this->getAcl()->check($entity, 'create')) throw new ForbiddenSilent();
 
         $this->processValidation($entity, $data);
 
-        if (!$this->checkAssignment($entity)) throw new Forbidden('Assignment permission failure');
+        if (!$this->checkAssignment($entity)) throw new Forbidden('Assignment permission failure.');
 
         $this->processDuplicateCheck($entity, $data);
 
@@ -954,13 +951,13 @@ class Record extends \Espo\Core\Services\Base
 
         if (!$entity) throw new NotFound();
 
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+        if (!$this->getAcl()->check($entity, 'edit')) throw new ForbiddenSilent();
 
         $entity->set($data);
 
         $this->processValidation($entity, $data);
 
-        if (!$this->checkAssignment($entity)) throw new Forbidden();
+        if (!$this->checkAssignment($entity)) throw new Forbidden("Assignment permission failure.");
 
         $this->beforeUpdateEntity($entity, $data);
 
@@ -1023,7 +1020,7 @@ class Record extends \Espo\Core\Services\Base
 
         if (!$entity) throw new NotFound();
 
-        if (!$this->getAcl()->check($entity, 'delete')) throw new Forbidden();
+        if (!$this->getAcl()->check($entity, 'delete')) throw new ForbiddenSilent();
 
         $this->beforeDeleteEntity($entity);
 
