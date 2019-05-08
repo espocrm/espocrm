@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/clear-cache', 'view', function (Dep) {
+define('views/clear-cache', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -63,4 +63,3 @@ Espo.define('views/clear-cache', 'view', function (Dep) {
 
     });
 });
-
