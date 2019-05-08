@@ -193,8 +193,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.duplicateAction) {
-                if (this.getAcl().check(this.entityType, 'create')) {
-                    this.dropdownItemList.push({
+                if (this.getAcl().check(this.entityType, 'create') && !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled'])) {
+                    this.addDropdownItem({
                         'label': 'Duplicate',
                         'name': 'duplicate'
                     });
