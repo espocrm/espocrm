@@ -914,6 +914,7 @@ class Record extends \Espo\Core\Services\Base
             $this->afterCreateProcessDuplicating($entity, $data);
             $this->prepareEntityForOutput($entity);
             $this->processActionHistoryRecord('create', $entity);
+            $this->loadAdditionalFields($entity);
             return $entity;
         }
 
