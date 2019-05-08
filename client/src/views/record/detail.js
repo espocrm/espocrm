@@ -1428,11 +1428,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         exitAfterCreate: function () {
             if (this.model.id) {
                 var url = '#' + this.scope + '/view/' + this.model.id;
-
                 this.getRouter().navigate(url, {trigger: false});
                 this.getRouter().dispatch(this.scope, 'view', {
                     id: this.model.id,
-                    rootUrl: this.options.rootUrl
+                    rootUrl: this.options.rootUrl,
+                    model: this.model,
                 });
                 return true;
             }
