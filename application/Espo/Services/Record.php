@@ -912,9 +912,9 @@ class Record extends \Espo\Core\Services\Base
         if ($this->storeEntity($entity)) {
             $this->afterCreateEntity($entity, $data);
             $this->afterCreateProcessDuplicating($entity, $data);
+            $this->loadAdditionalFields($entity);
             $this->prepareEntityForOutput($entity);
             $this->processActionHistoryRecord('create', $entity);
-            $this->loadAdditionalFields($entity);
             return $entity;
         }
 
