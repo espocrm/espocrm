@@ -48,4 +48,23 @@ class Event extends \Espo\Services\Record
         $reminders = $this->getRepository()->getEntityReminderList($entity);
         $entity->set('reminders', $reminders);
     }
+
+    public function getSelectAttributeList($params)
+    {
+        $attributeList = parent::getSelectAttributeList($params);
+        if (is_array($attributeList)) {
+            if (array_key_exists('select', $params)) {
+                $passedAttributeList = $params['select'];
+                if (in_array('duration', $passedAttributeList)) {
+                    if (!in_array('dateStart', $attributeList)) {
+                        $attributeList[] = 'dateStart';
+                    }
+                    if (!in_array('dateEnd', $attributeList)) {
+                        $attributeList[] = 'dateEnd';
+                    }
+                }
+            }
+        }
+        return $attributeList;
+    }
 }

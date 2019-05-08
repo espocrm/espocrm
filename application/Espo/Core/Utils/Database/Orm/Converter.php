@@ -291,7 +291,7 @@ class Converter
      */
     protected function convertFields($entityName, &$entityMetadata)
     {
-        //List of unmerged fields with default field defenitions in $outputMeta
+        //List of unmerged fields with default field definitions in $outputMeta
         $unmergedFields = array(
             'name',
         );
@@ -344,7 +344,7 @@ class Converter
     }
 
     /**
-     * Correct fields defenitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
+     * Correct fields definitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
      *
      * @param  array  $ormMetadata
      *
