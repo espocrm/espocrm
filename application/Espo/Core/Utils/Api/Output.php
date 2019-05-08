@@ -79,8 +79,6 @@ class Output
             $inputData = $this->getSlim()->request()->getBody();
             $inputData = $this->clearPasswords($inputData);
 
-            $logLevel = 'debug';
-
             $routePattern = $currentRoute->getPattern();
             $routeParams = $currentRoute->getParams();
             $method = $this->getSlim()->request()->getMethod();
@@ -95,7 +93,7 @@ class Output
 
             $logMessage .= implode("; ", $logMessageItemList);
 
-            $GLOBALS['log']->log($logLevel, $logMessage);
+            $GLOBALS['log']->log('debug', $logMessage);
         }
 
         $this->displayError($message, $statusCode, $toPrint, $exception);
