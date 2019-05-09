@@ -98,7 +98,7 @@ class Utils
         return $indexList;
     }
 
-    protected static function getIndexTypeByFieldDefs(array $fieldDefs)
+    public static function getIndexTypeByFieldDefs(array $fieldDefs)
     {
         if ($fieldDefs['type'] != 'id' && isset($fieldDefs['unique']) && $fieldDefs['unique']) {
             return 'unique';
@@ -109,7 +109,7 @@ class Utils
         }
     }
 
-    protected static function getIndexTypeByIndexDefs(array $indexDefs)
+    public static function getIndexTypeByIndexDefs(array $indexDefs)
     {
         if (isset($fieldDefs['unique']) && $fieldDefs['unique']) {
             return 'unique';
