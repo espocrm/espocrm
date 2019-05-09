@@ -5,7 +5,7 @@
 
 <div class="panel panel-danger notify">
     <div class="panel-body">
-        <p class="text-danger notify-text">
+        <p class="notify-text">
             {{versionMsg}}
             <br><br>
             {{{infoMsg}}}
@@ -20,8 +20,8 @@
         <h4 class="panel-title">{{translate 'selectUpgradePackage' scope='Admin' category="messages"}}</h4>
     </div>
     <div class="panel-body">
-
-        <p class="text-muted">
+        <p class="text-danger">{{{upgradeRecommendation}}}</p>
+        <p class="">
             {{{downloadMsg}}}
         </p>
         <div>

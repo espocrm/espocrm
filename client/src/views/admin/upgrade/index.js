@@ -39,8 +39,13 @@ Espo.define('views/admin/upgrade/index', 'view', function (Dep) {
                 versionMsg: this.translate('Current version') + ': ' + this.getConfig().get('version'),
                 infoMsg: this.translate('upgradeInfo', 'messages', 'Admin').replace('{url}', 'https://www.espocrm.com/documentation/administration/upgrading/'),
                 backupsMsg: this.translate('upgradeBackup', 'messages', 'Admin'),
+                upgradeRecommendation: this.translate('upgradeRecommendation', 'messages', 'Admin'),
                 downloadMsg: this.translate('downloadUpgradePackage', 'messages', 'Admin').replace('{url}', 'https://www.espocrm.com/download/upgrades')
             };
+        },
+
+        afterRender: function () {
+            this.$el.find('.panel-body a').attr('target', '_BLANK');
         },
 
         events: {
