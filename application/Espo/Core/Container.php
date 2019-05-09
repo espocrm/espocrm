@@ -115,7 +115,7 @@ class Container
         $rotation = $config->get('logger.rotation', true);
 
         $log = new \Espo\Core\Utils\Log('Espo');
-        $levelCode = $log->getLevelCode($config->get('logger.level', 'WARNING'));
+        $levelCode = $log::toMonologLevel($config->get('logger.level', 'WARNING'));
 
         if ($rotation) {
             $maxFileNumber = $config->get('logger.maxFileNumber', 30);
@@ -127,7 +127,7 @@ class Container
 
         $errorHandler = new \Monolog\ErrorHandler($log);
         $errorHandler->registerExceptionHandler(null, false);
-        $errorHandler->registerErrorHandler(array(), false);
+        $errorHandler->registerErrorHandler([], false);
 
         return $log;
     }

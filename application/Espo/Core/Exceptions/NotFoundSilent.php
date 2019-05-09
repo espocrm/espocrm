@@ -27,22 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Log\Monolog;
+namespace Espo\Core\Exceptions;
 
-class Logger extends \Monolog\Logger
+class NotFoundSilent extends NotFound
 {
-    protected $defaultLevelName = 'DEBUG';
-
-    public function setLevel($levelName)
-    {
-        $level = static::toMonologLevel($levelName);
-
-        $handlers = $this->getHandlers();
-        foreach ($handlers as $handler) {
-            if ($handler->getLevel() > $level) {
-                $className = get_class($handler);
-                $handler->setLevel($level);
-            }
-        }
-    }
+    public $logLevel = 'notice';
 }
