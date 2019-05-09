@@ -81,9 +81,11 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
                 return new $className([], $entityManager);
             }));
 
-        $this->query = new Query($this->pdo, $this->entityFactory);
+        $this->metadata = $this->getMockBuilder('\\Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 
-        $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query);
+        $this->query = new Query($this->pdo, $this->entityFactory, $this->metadata);
+
+        $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query, $this->metadata);
         $this->db->setReturnCollection(true);
 
         $this->post = new \Espo\Entities\Post([], $entityManager);

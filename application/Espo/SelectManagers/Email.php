@@ -59,8 +59,12 @@ class Email extends \Espo\Core\SelectManagers\Base
                 $skipIndex = true;
             }
             if (!$skipIndex) {
-                $result['useIndexList'] = ['IDX_DATE_SENT'];
+                $result['useIndexList'] = ['dateSent'];
             }
+        }
+
+        if ($folderId === 'drafts') {
+            $result['useIndexList'] = ['createdById'];
         }
 
         if ($folderId !== 'drafts') {

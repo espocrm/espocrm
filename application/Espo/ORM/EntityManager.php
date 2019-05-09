@@ -97,7 +97,7 @@ class EntityManager
         if (empty($this->query)) {
             $platform = $this->params['platform'];
             $className = '\\Espo\\ORM\\DB\\Query\\' . ucfirst($platform);
-            $this->query = new $className($this->getPDO(), $this->entityFactory);
+            $this->query = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
         }
         return $this->query;
     }
@@ -125,7 +125,7 @@ class EntityManager
         }
 
         if (empty($this->mappers[$className])) {
-            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
+            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery(), $this->metadata);
         }
         return $this->mappers[$className];
     }

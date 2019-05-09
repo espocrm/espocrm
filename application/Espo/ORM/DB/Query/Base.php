@@ -32,6 +32,7 @@ namespace Espo\ORM\DB\Query;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\Metadata;
 use PDO;
 
 abstract class Base
@@ -242,16 +243,19 @@ abstract class Base
 
     protected $pdo;
 
+    protected $metadata;
+
     protected $fieldsMapCache = [];
 
     protected $aliasesCache = [];
 
     protected $seedCache = [];
 
-    public function __construct(PDO $pdo, EntityFactory $entityFactory)
+    public function __construct(PDO $pdo, EntityFactory $entityFactory, Metadata $metadata = null)
     {
         $this->entityFactory = $entityFactory;
         $this->pdo = $pdo;
+        $this->metadata = $metadata;
     }
 
     protected function getSeed($entityType)
@@ -378,6 +382,17 @@ abstract class Base
             $groupByPart = implode(', ', $arr);
         }
 
+        $indexKeyList = null;
+        if (!empty($params['useIndexList']) && $this->metadata) {
+            $indexKeyList = [];
+            foreach ($params['useIndexList'] as $indexName) {
+                $indexKey = $this->metadata->get($entityType, ['indexes', $indexName, 'key']);
+                if ($indexKey) {
+                    $indexKeyList[] = $indexKey;
+                }
+            }
+        }
+
         if (!empty($params['aggregation'])) {
             $sql = $this->composeSelectQuery(
                 $this->toDb($entityType),
@@ -391,7 +406,7 @@ abstract class Base
                 $params['aggregation'],
                 $groupByPart,
                 $havingPart,
-                $params['useIndexList']
+                $indexKeyList
             );
             if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
                 $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
@@ -411,7 +426,7 @@ abstract class Base
             null,
             $groupByPart,
             $havingPart,
-            $params['useIndexList']
+            $indexKeyList
         );
         return $sql;
     }
@@ -1835,7 +1850,7 @@ abstract class Base
         $aggregation = false,
         $groupBy = null,
         $having = null,
-        $useIndexList = null
+        $indexKeyList = null
     )
     {
         $sql = "SELECT";
@@ -1846,8 +1861,8 @@ abstract class Base
 
         $sql .= " {$select} FROM `{$table}`";
 
-        if (!empty($useIndexList)) {
-            foreach ($useIndexList as $index) {
+        if (!empty($indexKeyList)) {
+            foreach ($indexKeyList as $index) {
                 $sql .= " USE INDEX (`".$this->sanitizeIndexName($index)."`)";
             }
         }

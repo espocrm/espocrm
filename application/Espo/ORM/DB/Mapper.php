@@ -32,6 +32,7 @@ namespace Espo\ORM\DB;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\Metadata;
 use PDO;
 
 /**
@@ -47,6 +48,8 @@ abstract class Mapper implements IMapper
 
     protected $query;
 
+    protected $metadata;
+
     protected $fieldsMapCache = [];
 
     protected $aliasesCache = [];
@@ -55,10 +58,11 @@ abstract class Mapper implements IMapper
 
     protected $collectionClass = "\\Espo\\ORM\\EntityCollection";
 
-    public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query\Base $query) {
+    public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query\Base $query, Metadata $metadata) {
         $this->pdo = $pdo;
         $this->query = $query;
         $this->entityFactory = $entityFactory;
+        $this->metadata = $metadata;
     }
 
     public function selectById(IEntity $entity, $id, ?array $params = null) : ?IEntity
