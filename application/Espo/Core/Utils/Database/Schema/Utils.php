@@ -43,30 +43,35 @@ class Utils
                     continue;
                 }
 
-                if (isset($fieldParams['index'])) {
-                    $keyValue = $fieldParams['index'];
-                    $columnName = Util::toUnderScore($fieldName);
+                $indexType = static::getIndexTypeByFieldDefs($fieldParams);
+                if (!$indexType) {
+                    continue;
+                }
 
-                    if (!isset($indexList[$entityName])) {
-                        $indexList[$entityName] = [];
-                    }
+                if (!isset($indexList[$entityName])) {
+                    $indexList[$entityName] = [];
+                }
 
-                    if ($keyValue === true) {
-                        $tableIndexName = static::generateIndexName($columnName);
-                        $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
-                    } else if (is_string($keyValue)) {
-                        $tableIndexName = static::generateIndexName($keyValue);
-                        $indexList[$entityName][$tableIndexName]['columns'][] = $columnName;
-                    }
+                $keyValue = $fieldParams[$indexType];
+                $columnName = Util::toUnderScore($fieldName);
+
+                if ($keyValue === true) {
+                    $tableIndexName = static::generateIndexName($columnName, $indexType);
+                    $indexList[$entityName][$tableIndexName]['type'] = $indexType;
+                    $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
+                } else if (is_string($keyValue)) {
+                    $tableIndexName = static::generateIndexName($keyValue, $indexType);
+                    $indexList[$entityName][$tableIndexName]['type'] = $indexType;
+                    $indexList[$entityName][$tableIndexName]['columns'][] = $columnName;
                 }
             }
 
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
-                    $tableIndexName = static::generateIndexName($indexName);
+                    $indexType = static::getIndexTypeByIndexDefs($indexParams);
+                    $tableIndexName = static::generateIndexName($indexName, $indexType);
 
                     if (isset($indexParams['flags']) && is_array($indexParams['flags'])) {
-
                         $skipIndex = false;
                         foreach ($ignoreFlags as $ignoreFlag) {
                             if (($flagKey = array_search($ignoreFlag, $indexParams['flags'])) !== false) {
@@ -83,6 +88,7 @@ class Utils
                     }
 
                     if (is_array($indexParams['columns'])) {
+                        $indexList[$entityName][$tableIndexName]['type'] = $indexType;
                         $indexList[$entityName][$tableIndexName]['columns'] = Util::toUnderScore($indexParams['columns']);
                     }
                 }
@@ -92,8 +98,42 @@ class Utils
         return $indexList;
     }
 
-    public static function generateIndexName($name, $prefix = 'IDX', $maxLength = 30)
+    protected static function getIndexTypeByFieldDefs(array $fieldDefs)
     {
+        if ($fieldDefs['type'] != 'id' && isset($fieldDefs['unique']) && $fieldDefs['unique']) {
+            return 'unique';
+        }
+
+        if (isset($fieldDefs['index']) && $fieldDefs['index']) {
+            return 'index';
+        }
+    }
+
+    protected static function getIndexTypeByIndexDefs(array $indexDefs)
+    {
+        if (isset($fieldDefs['unique']) && $fieldDefs['unique']) {
+            return 'unique';
+        }
+
+        if (isset($indexDefs['flags']) && in_array('fulltext', $indexDefs['flags'])) {
+            return 'fulltext';
+        }
+
+        return 'index';
+    }
+
+    public static function generateIndexName($name, $type = 'index', $maxLength = 60)
+    {
+        switch ($type) {
+            case 'unique':
+                $prefix = 'UNIQ';
+                break;
+
+            default:
+                $prefix = 'IDX';
+                break;
+        }
+
         $nameList = [];
         $nameList[] = strtoupper($prefix);
         $nameList[] = strtoupper( Util::toUnderScore($name) );

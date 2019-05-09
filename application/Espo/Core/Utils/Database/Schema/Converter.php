@@ -205,7 +205,6 @@ class Converter
             }
 
             $primaryColumns = array();
-            $uniqueColumns = array();
 
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
 
@@ -234,26 +233,24 @@ class Converter
                 if (!$tables[$entityName]->hasColumn($columnName)) {
                     $tables[$entityName]->addColumn($columnName, $fieldType, $this->getDbFieldParams($fieldParams));
                 }
-
-                //add unique
-                if ($fieldParams['type'] != 'id' && isset($fieldParams['unique'])) {
-                    $uniqueColumns = $this->getKeyList($columnName, $fieldParams['unique'], $uniqueColumns);
-                } //END: add unique
             }
 
             $tables[$entityName]->setPrimaryKey($primaryColumns);
 
             if (!empty($indexList[$entityName])) {
                 foreach($indexList[$entityName] as $indexName => $indexParams) {
-                    $indexColumnList = $indexParams['columns'];
-                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
-                    $tables[$entityName]->addIndex($indexColumnList, $indexName, $indexFlagList);
-                }
-            }
 
-            if (!empty($uniqueColumns)) {
-                foreach($uniqueColumns as $uniqueItem) {
-                    $tables[$entityName]->addUniqueIndex($uniqueItem);
+                    switch ($indexParams['type']) {
+                        case 'index':
+                        case 'fulltext':
+                            $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
+                            $tables[$entityName]->addIndex($indexParams['columns'], $indexName, $indexFlagList);
+                            break;
+
+                        case 'unique':
+                            $tables[$entityName]->addUniqueIndex($indexParams['columns'], $indexName);
+                            break;
+                    }
                 }
             }
         }
@@ -320,7 +317,7 @@ class Converter
                 'type' => 'foreignId',
                 'len' => $this->idParams['len'],
             )));
-            $table->addIndex(array($columnName));
+            $table->addIndex(array($columnName), SchemaUtils::generateIndexName($columnName));
 
             $uniqueIndex[] = $columnName;
         }
@@ -349,7 +346,7 @@ class Converter
         }
 
         if (!empty($uniqueIndex)) {
-            $table->addUniqueIndex($uniqueIndex);
+            $table->addUniqueIndex($uniqueIndex, SchemaUtils::generateIndexName($columnName, 'unique'));
         }
         //END: add unique indexes
 
@@ -418,25 +415,6 @@ class Converter
         }
 
         return $dbFieldParams;
-    }
-
-    /**
-     * Get key list (index, unique). Ex. index => true OR index => 'somename'
-     * @param  string $columnName Column name (underscore field name)
-     * @param  bool | string $keyValue
-     * @return array
-     */
-    protected function getKeyList($columnName, $keyValue, array $keyList)
-    {
-        if ($keyValue === true) {
-            $tableIndexName = SchemaUtils::generateIndexName($columnName);
-            $keyList[$tableIndexName] = array($columnName);
-        } else if (is_string($keyValue)) {
-            $tableIndexName = SchemaUtils::generateIndexName($keyValue);
-            $keyList[$tableIndexName][] = $columnName;
-        }
-
-        return $keyList;
     }
 
     /**
