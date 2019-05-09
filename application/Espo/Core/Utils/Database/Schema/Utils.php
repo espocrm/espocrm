@@ -111,7 +111,7 @@ class Utils
 
     public static function getIndexTypeByIndexDefs(array $indexDefs)
     {
-        if (isset($fieldDefs['unique']) && $fieldDefs['unique']) {
+        if (isset($indexDefs['unique']) && $indexDefs['unique']) {
             return 'unique';
         }
 
