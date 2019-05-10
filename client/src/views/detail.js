@@ -358,4 +358,3 @@ define('views/detail', 'views/main', function (Dep) {
 
     });
 });
-

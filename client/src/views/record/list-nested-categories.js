@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/list-nested-categories', 'view', function (Dep) {
+define('views/record/list-nested-categories', 'view', function (Dep) {
 
     return Dep.extend({
 

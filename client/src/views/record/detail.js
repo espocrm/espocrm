@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], function (Dep, ViewRecordHelper) {
+define('views/record/detail', ['views/record/base', 'view-record-helper'], function (Dep, ViewRecordHelper) {
 
     return Dep.extend({
 
@@ -193,8 +193,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.duplicateAction) {
-                if (this.getAcl().check(this.entityType, 'create')) {
-                    this.dropdownItemList.push({
+                if (this.getAcl().check(this.entityType, 'create') && !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled'])) {
+                    this.addDropdownItem({
                         'label': 'Duplicate',
                         'name': 'duplicate'
                     });
@@ -1428,11 +1428,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         exitAfterCreate: function () {
             if (this.model.id) {
                 var url = '#' + this.scope + '/view/' + this.model.id;
-
                 this.getRouter().navigate(url, {trigger: false});
                 this.getRouter().dispatch(this.scope, 'view', {
                     id: this.model.id,
-                    rootUrl: this.options.rootUrl
+                    rootUrl: this.options.rootUrl,
+                    model: this.model,
                 });
                 return true;
             }

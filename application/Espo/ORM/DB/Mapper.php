@@ -32,6 +32,7 @@ namespace Espo\ORM\DB;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\Metadata;
 use PDO;
 
 /**
@@ -47,6 +48,8 @@ abstract class Mapper implements IMapper
 
     protected $query;
 
+    protected $metadata;
+
     protected $fieldsMapCache = [];
 
     protected $aliasesCache = [];
@@ -55,10 +58,11 @@ abstract class Mapper implements IMapper
 
     protected $collectionClass = "\\Espo\\ORM\\EntityCollection";
 
-    public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query\Base $query) {
+    public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query\Base $query, Metadata $metadata) {
         $this->pdo = $pdo;
         $this->query = $query;
         $this->entityFactory = $entityFactory;
+        $this->metadata = $metadata;
     }
 
     public function selectById(IEntity $entity, $id, ?array $params = null) : ?IEntity
@@ -158,12 +162,12 @@ abstract class Mapper implements IMapper
         $relDefs = $entity->relations[$relationName];
 
         if (!isset($relDefs['type'])) {
-            throw new \LogicException("Missing 'type' in defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+            throw new \LogicException("Missing 'type' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
         if ($relDefs['type'] !== IEntity::BELONGS_TO_PARENT) {
             if (!isset($relDefs['entity'])) {
-                throw new \LogicException("Missing 'entity' in defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+                throw new \LogicException("Missing 'entity' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
             }
 
             $relEntityName = (!empty($relDefs['class'])) ? $relDefs['class'] : $relDefs['entity'];
@@ -411,7 +415,7 @@ abstract class Mapper implements IMapper
         $relDefs = $entity->relations[$relationName];
 
         if (!isset($relDefs['entity']) || !isset($relDefs['type'])) {
-            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+            throw new \LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
         $relType = $relDefs['type'];
@@ -498,7 +502,7 @@ abstract class Mapper implements IMapper
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         if (!$relType || !$foreignEntityType && $relType !== IEntity::BELONGS_TO_PARENT) {
-            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+            throw new \LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
         $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $foreignEntityType;
@@ -698,7 +702,7 @@ abstract class Mapper implements IMapper
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         if (!$relType || !$foreignEntityType && $relType !== IEntity::BELONGS_TO_PARENT) {
-            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+            throw new \LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
         $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $foreignEntityType;

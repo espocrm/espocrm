@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], function (Dep, ViewRecordHelper, DynamicLogic) {
+define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], function (Dep, ViewRecordHelper, DynamicLogic) {
 
     return Dep.extend({
 

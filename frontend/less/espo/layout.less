@@ -239,3 +239,19 @@ body .list-buttons-container .sticked-bar {
         left: 0;
     }
 }
+
+#content #main > .list-container > .list {
+    @media screen and (min-width: @container-max-width) {
+        margin-left: 0;
+        margin-right: 0;
+
+        > table td:first-child,
+        > table th:first-child {
+            padding-left: @panel-padding;
+        }
+        > table td:last-child,
+        > table th:last-child {
+            padding-right: @panel-padding;
+        }
+    }
+}

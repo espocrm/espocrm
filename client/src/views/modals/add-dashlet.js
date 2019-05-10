@@ -26,14 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
+define('views/modals/add-dashlet', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         cssName: 'add-dashlet',
 
         template: 'modals/add-dashlet',
+
+        backdrop: true,
 
         fitHeight: true,
 
@@ -44,7 +45,7 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
         },
 
         events: {
-            'click button.add': function (e) {
+            'click .add': function (e) {
                 var name = $(e.currentTarget).data('name');
                 this.trigger('add', name);
                 this.close();

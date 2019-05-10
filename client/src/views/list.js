@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, SearchManager) {
+define('views/list', ['views/main', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -162,8 +162,9 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             if (this.quickCreate) {
                 this.menu.buttons.unshift({
                     action: 'quickCreate',
-                    label: 'Create ' + this.scope,
-                    style: 'primary',
+                    //label: 'Create ' + this.scope,
+                    html: '<span class="fas fa-plus fa-sm"></span> ' + this.translate('Create ' +  this.scope, 'labels', this.scope),
+                    style: 'default',
                     acl: 'create',
                     aclScope: this.entityType || this.scope
                 });
@@ -171,8 +172,9 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.menu.buttons.unshift({
                     link: '#' + this.scope + '/create',
                     action: 'create',
-                    label: 'Create ' +  this.scope,
-                    style: 'primary',
+                    //label: 'Create ' +  this.scope,
+                    html: '<span class="fas fa-plus fa-sm"></span> ' + this.translate('Create ' +  this.scope,  'labels', this.scope),
+                    style: 'default',
                     acl: 'create',
                     aclScope: this.entityType || this.scope
                 });

@@ -31,6 +31,7 @@ namespace Espo\Core\Utils\Database\Orm;
 
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 
 class Converter
 {
@@ -188,10 +189,8 @@ class Converter
     {
         $ormMetadata = array();
         $ormMetadata[$entityName] = array(
-            'fields' => array(
-            ),
-            'relations' => array(
-            )
+            'fields' => [],
+            'relations' => []
         );
 
         foreach ($this->permittedEntityOptions as $optionName) {
@@ -208,6 +207,7 @@ class Converter
         $ormMetadata = Util::merge($ormMetadata, $convertedLinks);
 
         $this->applyFullTextSearch($ormMetadata, $entityName);
+        $this->applyIndexes($ormMetadata, $entityName);
 
         if (!empty($entityMetadata['collection']) && is_array($entityMetadata['collection'])) {
             $collectionDefs = $entityMetadata['collection'];
@@ -291,7 +291,7 @@ class Converter
      */
     protected function convertFields($entityName, &$entityMetadata)
     {
-        //List of unmerged fields with default field defenitions in $outputMeta
+        //List of unmerged fields with default field definitions in $outputMeta
         $unmergedFields = array(
             'name',
         );
@@ -344,7 +344,7 @@ class Converter
     }
 
     /**
-     * Correct fields defenitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
+     * Correct fields definitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
      *
      * @param  array  $ormMetadata
      *
@@ -550,6 +550,20 @@ class Converter
                 'columns' => $fullTextSearchColumnList,
                 'flags' => ['fulltext']
             ];
+        }
+    }
+
+    protected function applyIndexes(&$ormMetadata, $entityType)
+    {
+        if (!isset($ormMetadata[$entityType]['indexes'])) {
+            return;
+        }
+
+        foreach ($ormMetadata[$entityType]['indexes'] as $indexName => &$indexData) {
+            if (!isset($indexData['key'])) {
+                $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
+                $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+            }
         }
     }
 }

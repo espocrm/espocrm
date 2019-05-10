@@ -81,9 +81,11 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
                 return new $className([], $entityManager);
             }));
 
-        $this->query = new Query($this->pdo, $this->entityFactory);
+        $this->metadata = $this->getMockBuilder('\\Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 
-        $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query);
+        $this->query = new Query($this->pdo, $this->entityFactory, $this->metadata);
+
+        $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query, $this->metadata);
         $this->db->setReturnCollection(true);
 
         $this->post = new \Espo\Entities\Post([], $entityManager);
@@ -460,7 +462,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testMax()
     {
-        $query = "SELECT MAX(post.id) AS AggregateValue FROM `post` LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id WHERE post.deleted = '0'";
+        $query = "SELECT MAX(post.id) AS AggregateValue FROM `post` WHERE post.deleted = '0'";
         $return = new MockDBResult(array(
             array (
                 'AggregateValue' => 10,

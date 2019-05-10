@@ -201,7 +201,7 @@ class Importer
                 return false;
             }
         } else {
-            $email->set('body', '(Not fetched)');
+            $email->set('body', 'Not fetched. The email size exceeds the limit.');
             $email->set('isHtml', false);
         }
 

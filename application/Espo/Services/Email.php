@@ -82,6 +82,8 @@ class Email extends Record
         'hasAttachment'
     ];
 
+    private $fromEmailAddressNameCache = [];
+
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
@@ -720,17 +722,25 @@ class Email extends Record
         } else {
             $fromEmailAddressId = $entity->get('fromEmailAddressId');
             if (!empty($fromEmailAddressId)) {
-                $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId, null, true);
-                if ($person) {
-                    $entity->set('personStringData', $person->get('name'));
-                } else {
-                    $fromName = $entity->get('fromName');
-                    if (!empty($fromName)) {
-                        $entity->set('personStringData', $fromName);
+                if (!array_key_exists($fromEmailAddressId, $this->fromEmailAddressNameCache)) {
+                    $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId, null, true);
+                    if ($person) {
+                        $fromName = $person->get('name');
                     } else {
-                        $entity->set('personStringData', $entity->get('fromEmailAddressName'));
+                        $fromName = null;
+                    }
+                    $this->fromEmailAddressNameCache[$fromEmailAddressId] = $fromName;
+                }
+                $fromName = $this->fromEmailAddressNameCache[$fromEmailAddressId];
+
+                if (!$fromName) {
+                    $fromName = $entity->get('fromName');
+                    if (!$fromName) {
+                        $fromName = $entity->get('fromEmailAddressName');
                     }
                 }
+
+                $entity->set('personStringData', $fromName);
             }
         }
     }

@@ -68,7 +68,9 @@ class QueryTest extends \PHPUnit\Framework\TestCase
                                   return new $className();
                             }));
 
-        $this->query = new Query($this->pdo, $this->entityFactory);
+        $this->metadata = $this->getMockBuilder('\\Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+
+        $this->query = new Query($this->pdo, $this->entityFactory, $this->metadata);
 
         $this->post = new \Espo\Entities\Post();
         $this->comment = new \Espo\Entities\Comment();

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,15 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/edit-bottom', 'views/record/detail-bottom', function (Dep) {
+namespace Espo\Core\Exceptions;
 
-    return Dep.extend({
-
-        mode: 'edit',
-
-        streamPanel: false,
-
-        relationshipPanels: false,
-
-    });
-});
+class ForbiddenSilent extends Forbidden
+{
+    public $logLevel = 'notice';
+}

@@ -472,6 +472,9 @@
         "fullTextSearch": true
     },
     "indexes": {
+        "createdById": {
+            "columns": ["createdById"]
+        },
         "dateSent": {
             "columns": ["dateSent", "deleted"]
         },

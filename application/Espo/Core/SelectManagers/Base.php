@@ -1844,6 +1844,35 @@ class Base
         return false;
     }
 
+    public function hasLinkJoined($join, array &$result)
+    {
+        if (in_array($join, $result['joins'])) {
+            return true;
+        }
+
+        foreach ($result['joins'] as $item) {
+            if (is_array($item) && count($item) > 1) {
+                if ($item[0] == $join) {
+                    return true;
+                }
+            }
+        }
+
+        if (in_array($join, $result['leftJoins'])) {
+            return true;
+        }
+
+        foreach ($result['leftJoins'] as $item) {
+            if (is_array($item) && count($item) > 1) {
+                if ($item[0] == $join) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function addJoin($join, array &$result)
     {
         if (empty($result['joins'])) {
@@ -1969,7 +1998,7 @@ class Base
 
         if ($useFullTextSearch) {
             foreach ($fieldList as $field) {
-                if (strpos($item, '.') !== false) {
+                if (strpos($field, '.') !== false) {
                     continue;
                 }
 

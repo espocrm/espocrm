@@ -35,7 +35,8 @@
                             "view": "views/fields/datetime-short"
                         },
                         {
-                            "name": "personStringData"
+                            "name": "personStringData",
+                            "view": "views/email/fields/person-string-data-for-expanded"
                         }
                     ]
                 ]

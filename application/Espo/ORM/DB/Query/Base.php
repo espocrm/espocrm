@@ -32,6 +32,7 @@ namespace Espo\ORM\DB\Query;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\Metadata;
 use PDO;
 
 abstract class Base
@@ -56,6 +57,7 @@ abstract class Base
         'customHaving',
         'skipTextColumns',
         'maxTextColumnsLength',
+        'useIndexList',
     ];
 
     protected static $sqlOperators = [
@@ -241,16 +243,19 @@ abstract class Base
 
     protected $pdo;
 
+    protected $metadata;
+
     protected $fieldsMapCache = [];
 
     protected $aliasesCache = [];
 
     protected $seedCache = [];
 
-    public function __construct(PDO $pdo, EntityFactory $entityFactory)
+    public function __construct(PDO $pdo, EntityFactory $entityFactory, Metadata $metadata = null)
     {
         $this->entityFactory = $entityFactory;
         $this->pdo = $pdo;
+        $this->metadata = $metadata;
     }
 
     protected function getSeed($entityType)
@@ -319,6 +324,7 @@ abstract class Base
             if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
                 $aggDist = true;
             }
+            $params['select'] = [];
             $selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
         }
 
@@ -376,15 +382,52 @@ abstract class Base
             $groupByPart = implode(', ', $arr);
         }
 
-        if (empty($params['aggregation'])) {
-            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart, $havingPart);
-        } else {
-            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation'], $groupByPart, $havingPart);
-            if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
-                $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
+        $indexKeyList = null;
+        if (!empty($params['useIndexList']) && $this->metadata) {
+            $indexKeyList = [];
+            foreach ($params['useIndexList'] as $indexName) {
+                $indexKey = $this->metadata->get($entityType, ['indexes', $indexName, 'key']);
+                if ($indexKey) {
+                    $indexKeyList[] = $indexKey;
+                }
             }
         }
 
+        if (!empty($params['aggregation'])) {
+            $sql = $this->composeSelectQuery(
+                $this->toDb($entityType),
+                $selectPart,
+                $joinsPart,
+                $wherePart,
+                null,
+                null,
+                null,
+                false,
+                $params['aggregation'],
+                $groupByPart,
+                $havingPart,
+                $indexKeyList
+            );
+            if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
+                $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
+            }
+            return $sql;
+        }
+
+        $sql = $this->composeSelectQuery(
+            $this->toDb($entityType),
+            $selectPart,
+            $joinsPart,
+            $wherePart,
+            $orderPart,
+            $params['offset'],
+            $params['limit'],
+            $params['distinct'],
+            null,
+            $groupByPart,
+            $havingPart,
+            $indexKeyList
+        );
         return $sql;
     }
 
@@ -1010,7 +1053,7 @@ abstract class Base
                     continue;
                 }
 
-                if (!empty($select)) {
+                if (is_array($select)) {
                     if (!in_array($relationName, $relationsToJoin)) {
                         continue;
                     }
@@ -1557,6 +1600,11 @@ abstract class Base
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
+    public function sanitizeIndexName($string)
+    {
+        return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
+    }
+
     protected function getJoins(IEntity $entity, array $joins, $isLeft = false, $joinConditions = [])
     {
         $joinSqlList = [];
@@ -1790,7 +1838,20 @@ abstract class Base
         return false;
     }
 
-    public function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false, $groupBy = null, $having = null)
+    public function composeSelectQuery(
+        $table,
+        $select,
+        $joins = '',
+        $where = '',
+        $order = '',
+        $offset = null,
+        $limit = null,
+        $distinct = null,
+        $aggregation = false,
+        $groupBy = null,
+        $having = null,
+        $indexKeyList = null
+    )
     {
         $sql = "SELECT";
 
@@ -1799,6 +1860,12 @@ abstract class Base
         }
 
         $sql .= " {$select} FROM `{$table}`";
+
+        if (!empty($indexKeyList)) {
+            foreach ($indexKeyList as $index) {
+                $sql .= " USE INDEX (`".$this->sanitizeIndexName($index)."`)";
+            }
+        }
 
         if (!empty($joins)) {
             $sql .= " {$joins}";
