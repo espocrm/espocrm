@@ -221,6 +221,10 @@ class Record extends Base
             throw new BadRequest();
         }
 
+        if (!$this->getAcl()->check($this->name, 'delete')) {
+            throw new Forbidden();
+        }
+
         $id = $params['id'];
 
         if ($this->getRecordService()->delete($id)) {
