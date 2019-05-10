@@ -119,6 +119,7 @@ class DataManager
         $metadata->init(true);
 
         $ormData = $this->getContainer()->get('ormMetadata')->getData(true);
+        $this->getContainer()->get('entityManager')->setMetadata($ormData);
 
         $this->updateCacheTimestamp();
 
