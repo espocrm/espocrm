@@ -141,16 +141,12 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
 
             execute('git tag', function (stdout) {
                 var versionList = [];
-                var occured = false;
                 tagList = stdout.split('\n').forEach(function (tag) {
                     if (tag == versionFrom) {
-                        occured = true;
+                        versionList.push(tag);
                     }
                     if (!tag || tag == version) {
                         return;
-                    }
-                    if (occured) {
-                        versionList.push(tag);
                     }
                 });
 
