@@ -26,6 +26,10 @@
                 width: 100%;
             }
         }
+        #content {
+            margin-left: auto;
+            margin-right: auto;
+        }
     }
 
     body,
@@ -432,7 +436,8 @@ body {
         }
 
         #content {
-            margin-left: @navbar-minimized-width;
+            padding-left: @navbar-minimized-width + @container-padding;
+            max-width: @container-max-width + @navbar-minimized-width;
         }
 
         #footer {
@@ -451,7 +456,8 @@ body {
     }
 
     body > .content {
-        margin-left: @navbar-width;
+        padding-left: @navbar-width + @container-padding;
+        max-width: @container-max-width + @navbar-width;
     }
 
     body {
