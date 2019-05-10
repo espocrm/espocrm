@@ -1083,14 +1083,15 @@ section {
 #main > .list-container > .list {
     margin-left: -@container-padding;
     margin-right: -@container-padding;
-}
-#main > .list-container > .list > table td:first-child,
-#main > .list-container > .list > table th:first-child {
-    padding-left: @container-padding;
-}
-#main > .list-container > .list > table td:last-child,
-#main > .list-container > .list > table th:last-child {
-    padding-right: @container-padding;
+
+    > table td:first-child,
+    > table th:first-child {
+        padding-left: @container-padding;
+    }
+    > table td:last-child,
+    > table th:last-child {
+        padding-right: @container-padding;
+    }
 }
 
 .panel-body > .no-margin {
