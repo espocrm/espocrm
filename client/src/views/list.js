@@ -188,7 +188,8 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 searchManager: this.searchManager,
                 scope: this.scope,
                 viewMode: this.viewMode,
-                viewModeList: this.viewModeList
+                viewModeList: this.viewModeList,
+                isWide: true,
             }, function (view) {
                 this.listenTo(view, 'reset', function () {
                     this.resetSorting();
