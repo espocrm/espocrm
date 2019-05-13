@@ -72,14 +72,15 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return $this->espoTester->getApplication(true, $clearCache);
     }
 
-    protected function auth($userName, $password = null, $portalId = null)
+    protected function auth($userName, $password = null, $portalId = null, $authenticationMethod = null)
     {
         $this->userName = $userName;
         $this->password = $password;
         $this->portalId = $portalId;
+        $this->authenticationMethod = $authenticationMethod;
 
         if (isset($this->espoTester)) {
-            $this->espoTester->auth($userName, $password, $portalId);
+            $this->espoTester->auth($userName, $password, $portalId, $authenticationMethod);
         }
     }
 
@@ -126,7 +127,7 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
         $this->espoTester = new Tester($params);
         $this->espoTester->initialize();
-        $this->auth($this->userName, $this->password);
+        $this->auth($this->userName, $this->password, null, $this->authenticationMethod);
 
         $this->beforeStartApplication();
         $this->espoApplication = $this->createApplication();
