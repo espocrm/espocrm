@@ -68,7 +68,7 @@ class LeadCapture extends Record
 
         $attributeList = [];
 
-        $attributeIgnoreList = ['emailAddressIsOptedOut'];
+        $attributeIgnoreList = ['emailAddressIsOptedOut', 'phoneNumberIsOptedOut', 'emailAddressData', 'phoneNumberData'];
 
         $fieldList = $entity->get('fieldList');
         if (is_array($fieldList)) {
