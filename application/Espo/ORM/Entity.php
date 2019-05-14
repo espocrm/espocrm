@@ -453,15 +453,21 @@ abstract class Entity implements IEntity
 
     public function getFetched($name)
     {
+        if ($name === 'id') {
+            return $this->id;
+        }
         if (isset($this->fetchedValuesContainer[$name])) {
             return $this->fetchedValuesContainer[$name];
         }
         return null;
     }
 
-    public function hasFetched($attributeName)
+    public function hasFetched($name)
     {
-        return array_key_exists($attributeName, $this->fetchedValuesContainer);
+        if ($name === 'id') {
+            return !!$this->id;
+        }
+        return array_key_exists($name, $this->fetchedValuesContainer);
     }
 
     public function resetFetchedValues()
