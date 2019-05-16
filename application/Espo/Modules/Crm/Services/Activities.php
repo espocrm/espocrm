@@ -225,7 +225,7 @@ class Activities extends \Espo\Core\Services\Base
 
         $selectManager = $this->getSelectManagerFactory()->create('Email');
 
-        $selectParams = array(
+        $selectParams = [
             'select' => [
                 'id',
                 'name',
@@ -243,16 +243,16 @@ class Activities extends \Espo\Core\Services\Base
                 'hasAttachment'
             ],
             'leftJoins' => [['users', 'usersLeft']],
-            'whereClause' => array(
+            'whereClause' => [
                 'usersLeftMiddle.userId' => $entity->id
-            ),
+            ],
             'customJoin' => ''
-        );
+        ];
 
         if (!empty($statusList)) {
-            $selectParams['whereClause'][] = array(
+            $selectParams['whereClause'][] = [
                 'status' => $statusList
-            );
+            ];
         }
 
         $selectManager->applyAccess($selectParams);
