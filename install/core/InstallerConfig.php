@@ -105,7 +105,13 @@ class InstallerConfig
             }
         }
 
-        $result = $this->getFileManager()->putPhpContents($this->configPath, $data);
+        try {
+            $result = $this->getFileManager()->putPhpContents($this->configPath, $data);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->warning($e->getMessage());
+            $result = false;
+        }
+
 
         if ($result) {
             $this->data = null;
