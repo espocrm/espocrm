@@ -48,7 +48,7 @@ class Upgrade extends Base
             return;
         }
 
-        fwrite(\STDOUT, "EspoCRM will be upgaded to version {$nextVersion} now. Type 'Y' to continue.\n");
+        fwrite(\STDOUT, "EspoCRM will be upgraded to version {$nextVersion} now. Enter [Y] to continue.\n");
 
         if (!$this->confirm()) {
             echo "Upgrade canceled.\n";

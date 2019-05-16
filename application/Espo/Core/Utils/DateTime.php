@@ -251,4 +251,9 @@ class DateTime
 
         return false;
     }
+
+    public static function getSystemNowString()
+    {
+        return date(self::$systemDateTimeFormat);
+    }
 }

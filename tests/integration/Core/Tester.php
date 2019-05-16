@@ -63,6 +63,8 @@ class Tester
 
     protected $portalId = null;
 
+    protected $authenticationMethod = null;
+
     protected $defaultUserPassword = '1';
 
     public function __construct(array $params)
@@ -107,11 +109,12 @@ class Tester
         return $returns;
     }
 
-    public function auth($userName, $password = null, $portalId = null)
+    public function auth($userName, $password = null, $portalId = null, $authenticationMethod = null)
     {
         $this->userName = $userName;
         $this->password = $password;
         $this->portalId = $portalId;
+        $this->authenticationMethod = $authenticationMethod;
     }
 
     public function getApplication($reload = false, $clearCache = true)
@@ -127,7 +130,7 @@ class Tester
 
             if (isset($this->userName)) {
                 $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
-                $auth->login($this->userName, $this->password);
+                $auth->login($this->userName, $this->password, $this->authenticationMethod);
             } else {
                 $auth->useNoAuth();
             }

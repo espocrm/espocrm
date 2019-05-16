@@ -1,6 +1,6 @@
 
 <div class="row search-row">
-    <div class="form-group col-md-6 col-sm-7">
+    <div class="form-group{{#if isWide}} col-lg-7{{/if}} col-md-8 col-sm-9">
         <div class="input-group">
             <div class="input-group-btn left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
                 <button type="button" class="btn btn-default dropdown-toggle filters-button" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
@@ -32,24 +32,22 @@
                 <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide" data-action="search" title="{{translate 'Search'}}">
                     <span class="fa fa-search"></span>
                 </button>
+                <button type="button" class="btn btn-default btn-icon-x-wide" data-action="reset" title="{{translate 'Reset'}}">
+                    <span class="fas fa-redo-alt"></span>
+                </button>
+                <button type="button" class="btn btn-default btn-icon-wide dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1">
+                    <span class="fas fa-ellipsis-v"></span>
+                </button>
+                <ul class="dropdown-menu pull-right filter-list">
+                    <li class="dropdown-header">{{translate 'Add Field'}}</li>
+                    {{#each advancedFields}}
+                        <li data-name="{{name}}" class="{{#if checked}}hidden{{/if}}"><a href="javascript:" class="add-filter" data-action="addFilter" data-name="{{name}}">{{translate name scope=../entityType category='fields'}}</a></li>
+                    {{/each}}
+                </ul>
             </div>
         </div>
     </div>
-    <div class="form-group col-md-6 col-sm-5">
-        <div class="btn-group search-right-buttons-group">
-            <button type="button" class="btn btn-default btn-icon-x-wide" data-action="reset" title="{{translate 'Reset'}}">
-                <span class="fas fa-redo-alt"></span>
-            </button>
-            <button type="button" class="btn btn-default btn-icon-wide dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1">
-                <span class="fas fa-ellipsis-v"></span>
-            </button>
-            <ul class="dropdown-menu pull-right filter-list">
-                <li class="dropdown-header">{{translate 'Add Field'}}</li>
-                {{#each advancedFields}}
-                    <li data-name="{{name}}" class="{{#if checked}}hidden{{/if}}"><a href="javascript:" class="add-filter" data-action="addFilter" data-name="{{name}}">{{translate name scope=../entityType category='fields'}}</a></li>
-                {{/each}}
-            </ul>
-        </div>
+    <div class="form-group{{#if isWide}} col-lg-5{{/if}} col-md-4 col-sm-3">
         {{#if hasViewModeSwitcher}}
         <div class="btn-group view-mode-switcher-buttons-group">
             {{#each viewModeDataList}}

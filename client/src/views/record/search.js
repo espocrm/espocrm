@@ -72,7 +72,8 @@ define('views/record/search', 'view', function (Dep) {
                 textFilterDisabled: this.textFilterDisabled,
                 viewMode: this.viewMode,
                 viewModeDataList: this.viewModeDataList || [],
-                hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1
+                hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1,
+                isWide: this.options.isWide,
             };
         },
 
