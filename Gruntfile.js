@@ -126,7 +126,7 @@ module.exports = function (grunt) {
             start: ['build/EspoCRM-*'],
             final: ['build/tmp'],
             beforeFinal: {
-                src: ['build/tmp/custom/Espo/Custom/*', '!build/tmp/custom/Espo/Custom/.htaccess']
+                src: ['build/tmp/custom/Espo/Custom/*', '!build/tmp/custom/Espo/Custom/.htaccess', 'build/tmp/install/config.php']
             }
         },
         less: lessData,
