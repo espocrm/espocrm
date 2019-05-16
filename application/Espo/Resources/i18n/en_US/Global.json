@@ -48,7 +48,8 @@
         "AuthFailLogRecord": "Auth Fail Log Record",
         "LeadCapture": "Lead Capture Entry Point",
         "LeadCaptureLogRecord": "Lead Capture Log Record",
-        "ArrayValue": "Array Value"
+        "ArrayValue": "Array Value",
+        "Webhook": "Webhook"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -86,7 +87,8 @@
         "AuthFailLogRecord": "Auth Fail Log",
         "LeadCapture": "Lead Capture",
         "LeadCaptureLogRecord": "Lead Capture Log",
-        "ArrayValue": "Array Values"
+        "ArrayValue": "Array Values",
+        "Webhook": "Webhooks"
     },
     "labels": {
         "Misc": "Misc",

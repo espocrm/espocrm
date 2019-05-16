@@ -1,0 +1,27 @@
+{
+    "controller": "controllers/record",
+    "dynamicLogic": {
+        "fields": {
+            "event": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+                }
+            },
+            "secretKey": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

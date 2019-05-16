@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "number": {
+            "type": "autoincrement",
+            "dbType": "bigint"
+        },
+        "event": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "target": {
+            "type": "linkParent"
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "isProcessed": {
+            "type": "bool"
+        }
+    },
+    "links": {
+    },
+    "collection": {
+        "orderBy": "number",
+        "order": "desc"
+    }
+}

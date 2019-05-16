@@ -112,6 +112,7 @@
     },
     "presetFilters": {
         "active": "Active",
-        "activePortal": "Portal Active"
+        "activePortal": "Portal Active",
+        "activeApi": "API Active"
     }
 }

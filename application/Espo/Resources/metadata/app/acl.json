@@ -87,7 +87,8 @@
                 "read": "all",
                 "edit": "no"
             },
-            "Import": false
+            "Import": false,
+            "Webhook": false
         },
         "fieldLevel": {
         },
@@ -103,7 +104,8 @@
                 "read": "own",
                 "edit": "no"
             },
-            "Import": false
+            "Import": false,
+            "Webhook": false
         },
         "fieldLevel": {
         },

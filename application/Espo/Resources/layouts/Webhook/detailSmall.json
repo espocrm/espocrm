@@ -1,0 +1,19 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "event"},
+                {"name": "isActive"}
+            ],
+            [
+                {"name": "url", "fullWidth": true}
+            ],
+            [
+                {"name": "user", "fullWidth": true}
+            ],
+            [
+                {"name": "secretKey", "fullWidth": true}
+            ]
+        ]
+    }
+]

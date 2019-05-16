@@ -73,7 +73,8 @@
         "SendEmailReminders": "*/2 * * * *",
         "Cleanup": "1 1 * * 0",
         "AuthTokenControl": "*/6 * * * *",
-        "SendEmailNotifications": "*/2 * * * *"
+        "SendEmailNotifications": "*/2 * * * *",
+        "ProcessWebhookQueue": "*/5 * * * *"
     },
     "jobs": {
         "Dummy": {

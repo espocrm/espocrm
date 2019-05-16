@@ -1,0 +1,95 @@
+{
+    "fields": {
+        "event": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "url": {
+            "type": "varchar",
+            "maxLength": 512,
+            "required": true
+        },
+        "isActive": {
+            "type": "bool",
+            "default": true
+        },
+        "user": {
+            "type": "link",
+            "view": "views/webhook/fields/user"
+        },
+        "entityType": {
+            "type": "varchar",
+            "readOnly": true,
+            "view": "views/fields/entity-type"
+        },
+        "type": {
+            "type": "enum",
+            "options": [
+                "create",
+                "update",
+                "fieldUpdate",
+                "delete"
+            ],
+            "readOnly": true
+        },
+        "field": {
+            "type": "varchar",
+            "readOnly": true
+        },
+        "secretKey": {
+            "type": "varchar",
+            "maxLength": 100,
+            "readOnly": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutListDisabled": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc",
+        "textFilterFields": ["event"]
+    },
+    "indexes": {
+        "event": {
+            "columns": ["event"]
+        },
+        "entityTypeType": {
+            "columns": ["entityType", "type"]
+        },
+        "entityTypeField": {
+            "columns": ["entityType", "field"]
+        }
+    }
+}

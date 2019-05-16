@@ -84,6 +84,12 @@ return array(
             'job' => 'ControlKnowledgeBaseArticleStatus',
             'status' => 'Active',
             'scheduling' => '10 1 * * *'
-        )
+        ),
+        [
+            'name' => 'Process Webhook Queue',
+            'job' => 'ProcessWebhookQueue',
+            'status' => 'Active',
+            'scheduling' => '*/5 * * * *',
+        ],
     )
 );

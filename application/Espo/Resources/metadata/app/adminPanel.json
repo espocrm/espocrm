@@ -206,6 +206,13 @@
                 "url": "#Template",
                 "label": "PDF Templates",
                 "description": "pdfTemplates"
+
+            },
+            {
+
+                "url": "#Webhook",
+                "label": "Webhooks",
+                "description": "webhooks"
             },
             {
                 "url": "#Attachment",

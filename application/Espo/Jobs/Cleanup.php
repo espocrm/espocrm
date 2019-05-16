@@ -53,6 +53,8 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected $cleanupDeletedRecordsPeriod = '3 months';
 
+    protected $cleanupWebhookQueuePeriod = '10 days';
+
     public function run()
     {
         $this->cleanupJobs();
@@ -66,6 +68,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $this->cleanupUpgradeBackups();
         $this->cleanupUniqueIds();
         $this->cleanupDeletedRecords();
+        $this->cleanupWebhookQueue();
     }
 
     protected function cleanupJobs()
@@ -458,5 +461,29 @@ class Cleanup extends \Espo\Core\Jobs\Base
                 $this->cleanupDeletedEntity($e);
             }
         }
+    }
+
+    protected function cleanupWebhookQueue()
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $period = '-' . $this->getConfig()->get('cleanupWebhookQueuePeriod', $this->cleanupWebhookQueuePeriod);
+        $datetime = new \DateTime();
+        $datetime->modify($period);
+        $from = $datetime->format('Y-m-d H:i:s');
+
+        $query = "
+            DELETE FROM `webhook_queue_item`
+            WHERE
+                DATE(created_at) < ".$pdo->quote($from)." AND
+                (status <> 'Pending' OR deleted = 1)
+        ";
+        $pdo->query($query);
+
+        $query = "
+            DELETE FROM `webhook_event_queue_item`
+            WHERE DATE(created_at) < ".$pdo->quote($from)." AND (is_processed = 1 OR deleted = 1)
+        ";
+        $pdo->query($query);
     }
 }

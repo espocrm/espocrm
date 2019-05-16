@@ -1,0 +1,17 @@
+{
+    "labels": {
+        "Create Webhook": "Create Webhook"
+    },
+    "fields": {
+        "event": "Event",
+        "url": "URL",
+        "isActive": "Is Active",
+        "user": "API User",
+        "entityType": "Entity Type",
+        "field": "Field",
+        "secretKey": "Secret Key"
+    },
+    "links": {
+        "user": "User"
+    }
+}
