@@ -35,7 +35,7 @@
                 <button type="button" class="btn btn-default btn-icon-x-wide" data-action="reset" title="{{translate 'Reset'}}">
                     <span class="fas fa-redo-alt"></span>
                 </button>
-                <button type="button" class="btn btn-default btn-icon-wide dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1">
+                <button type="button" class="btn btn-text btn-icon-wide dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1">
                     <span class="fas fa-ellipsis-v"></span>
                 </button>
                 <ul class="dropdown-menu pull-right filter-list">
@@ -51,7 +51,7 @@
         {{#if hasViewModeSwitcher}}
         <div class="btn-group view-mode-switcher-buttons-group">
             {{#each viewModeDataList}}
-            <button type="button" data-name="{{name}}" data-action="switchViewMode" class="btn btn-icon btn-icon btn-default{{#ifEqual name ../viewMode}} active{{/ifEqual}}" title="{{title}}"><span class="{{iconClass}}"></span></button>
+            <button type="button" data-name="{{name}}" data-action="switchViewMode" class="btn btn-icon btn-icon btn-text{{#ifEqual name ../viewMode}} active{{/ifEqual}}" title="{{title}}"><span class="{{iconClass}}"></span></button>
             {{/each}}
         </div>
         {{/if}}

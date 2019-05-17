@@ -156,6 +156,7 @@ blockquote {
         height: @font-size-h3;
         display: inline-block;
     }
+    opacity: 0.4;
 }
 
 .modal-footer {
@@ -2991,4 +2992,57 @@ a.field-info > span.fa-info-circle {
     -o-transform: rotate(270deg);
     -ms-transform: rotate(270deg);
     transform: rotate(270deg);
+}
+
+.btn-text {
+    color: @gray-soft;
+    font-weight: normal;
+    border-radius: 0;
+
+    &,
+    &:active,
+    &.active,
+    &[disabled],
+    fieldset[disabled] & {
+        background-color: transparent;
+        .box-shadow(none);
+    }
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: transparent;
+    }
+    &:hover,
+    &:focus {
+        color: @text-color;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover,
+        &:focus {
+            color: @gray-light;
+            text-decoration: none;
+        }
+        color: @gray-light;
+    }
+    &.active {
+        text-decoration: underline;
+        .fas, .far {
+            color: @brand-warning;
+        }
+    }
+
+    &.strong {
+        font-weight: 600;
+    }
+}
+
+.btn-group.open .dropdown-toggle {
+    &.btn-text {
+       .box-shadow(none);
+    }
 }

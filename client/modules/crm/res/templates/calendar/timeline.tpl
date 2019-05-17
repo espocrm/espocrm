@@ -4,11 +4,11 @@
 <div class="row button-container">
     <div class="col-sm-4 col-xs-12">
         <div class="btn-group">
-            <button class="btn btn-default" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
-            <button class="btn btn-default btn-icon" title="{{translate 'Refresh'}}" data-action="refresh"><span class="fas fa-sync-alt fa-sm"></span></button>
+            <button class="btn btn-text strong" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
+            <button class="btn btn-text btn-icon" title="{{translate 'Refresh'}}" data-action="refresh"><span class="fas fa-sync-alt"></span></button>
         </div>{{#if calendarTypeSelectEnabled}}<div class="btn-group calendar-type-button-group">
         <div class="btn-group " role="group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="calendar-type-label">{{calendarTypeLabel}}</span> <span class="caret"></span></button>
+            <button type="button" class="btn btn-text dropdown-toggle" data-toggle="dropdown"><span class="calendar-type-label">{{calendarTypeLabel}}</span> <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 {{#each calendarTypeDataList}}
                     <li>
@@ -19,7 +19,7 @@
                 {{/each}}
             </ul>
         </div>
-        <button class="btn btn-default{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}} btn-icon" data-action="showSharedCalendarOptions" title="{{translate 'Manage Users' scope='Calendar'}}"><span class="fas fa-pencil-alt fa-sm"></span></button>
+        <button class="btn btn-text{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}} btn-icon" data-action="showSharedCalendarOptions" title="{{translate 'Manage Users' scope='Calendar'}}"><span class="fas fa-pencil-alt fa-sm"></span></button>
         </div>
         {{/if}}
     </div>
@@ -30,10 +30,10 @@
     <div class="col-sm-4 col-xs-12">
         <div class="btn-group pull-right">
             {{#each ../modeDataList}}
-            <button class="btn btn-default{{#ifEqual name ../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{name}}" title="{{translate name scope='Calendar' category='modes'}}"><span class="hidden-sm hidden-xs">{{translate name scope='Calendar' category='modes'}}</span><span class="visible-sm visible-xs">{{labelShort}}</span></button>
+            <button class="btn btn-text strong{{#ifEqual name ../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{name}}" title="{{translate name scope='Calendar' category='modes'}}"><span class="hidden-sm hidden-xs">{{translate name scope='Calendar' category='modes'}}</span><span class="visible-sm visible-xs">{{labelShort}}</span></button>
             {{/each}}
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fas fa-ellipsis-h"></span></button>
+                <button type="button" class="btn btn-text dropdown-toggle" data-toggle="dropdown"><span class="fas fa-ellipsis-h"></span></button>
                 <ul class="dropdown-menu pull-right">
                     {{#if isCustomViewAvailable}}
                     {{#each viewDataList}}
