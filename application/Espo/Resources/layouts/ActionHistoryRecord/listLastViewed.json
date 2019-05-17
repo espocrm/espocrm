@@ -1,5 +1,5 @@
 [
     {"name":"targetType", "notSortable": true, "width": 22},
     {"name":"target", "notSortable": true},
-    {"name":"createdAt", "notSortable": true, "width": 20, "align": "right"}
+    {"name":"createdAt", "notSortable": true, "width": 20, "align": "right", "view": "views/fields/datetime-short"}
 ]
