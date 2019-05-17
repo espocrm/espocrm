@@ -618,10 +618,10 @@ class Activities extends \Espo\Core\Services\Base
     protected function getResultFromQueryParts($parts, $scope, $id, $params)
     {
         if (empty($parts)) {
-            return array(
+            return [
                 'list' => [],
                 'total' => 0
-            );
+            ];
         }
 
         $pdo = $this->getEntityManager()->getPDO();
@@ -632,29 +632,29 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if (!$onlyScope) {
-            $qu = implode(" UNION ", $parts);
+            $sql = implode(" UNION ", $parts);
         } else {
-            $qu = $parts[$onlyScope];
+            $sql = $parts[$onlyScope];
         }
 
-        $countQu = "SELECT COUNT(*) AS 'count' FROM ({$qu}) AS c";
-        $sth = $pdo->prepare($countQu);
+        $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
+        $sth = $pdo->prepare($sqlCount);
         $sth->execute();
 
         $row = $sth->fetch(PDO::FETCH_ASSOC);
         $totalCount = $row['count'];
 
-        $qu .= "
+        $sql .= "
             ORDER BY dateStart DESC, createdAt DESC
         ";
 
         if (!empty($params['maxSize'])) {
-            $qu .= "
+            $sql .= "
                 LIMIT :offset, :maxSize
             ";
         }
 
-        $sth = $pdo->prepare($qu);
+        $sth = $pdo->prepare($sql);
 
         if (!empty($params['maxSize'])) {
             $offset = 0;
@@ -681,10 +681,10 @@ class Activities extends \Espo\Core\Services\Base
             $list[] = $row;
         }
 
-        return array(
+        return [
             'list' => $list,
             'total' => $totalCount
-        );
+        ];
     }
 
     protected function accessCheck($entity)
