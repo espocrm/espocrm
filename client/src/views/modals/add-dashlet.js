@@ -52,13 +52,6 @@ define('views/modals/add-dashlet', 'views/modal', function (Dep) {
             },
         },
 
-        buttonList: [
-            {
-                name: 'cancel',
-                label: 'Cancel'
-            }
-        ],
-
         setup: function () {
             this.headerHtml = this.translate('Add Dashlet');
 
