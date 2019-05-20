@@ -27,7 +27,7 @@
     ],
     "linkList": [
         {
-            "href": "client/fonts/open-sans/OpenSans-Bold.ttf",
+            "href": "client/fonts/open-sans/OpenSans-SemiBold.ttf",
             "as": "font",
             "type": "font/ttf",
             "rel": "preload",
