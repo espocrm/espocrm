@@ -91,6 +91,10 @@
     }
 }
 
+b, strong {
+    font-weight: 600;
+}
+
 .text-primary {
     color: @state-primary-text;
 }
@@ -221,6 +225,7 @@ blockquote {
 
 label {
     margin-bottom: 3px;
+    font-weight: 600;
 }
 
 .table {
@@ -1709,14 +1714,6 @@ label.attach-file-label {
     }
 }
 
-@font-face {
-     font-family: Open Sans;
-     src: url('../../fonts/open-sans-regular.eot?') format('eot'),
-          url('../../fonts/open-sans-regular.woff') format('woff'),
-          url('../../fonts/open-sans-regular.ttf')  format('truetype'),
-          url('../../fonts/open-sans-regular.svg#svgFontName') format('svg');
-}
-
 .notifications-badge-container > .notifications-button > .number-badge {
     position: absolute;
     z-index: 10;
@@ -1936,6 +1933,7 @@ h4.panel-title span.fas.color-icon {
     padding: .09em .5em .2em;
     position: relative;
     top: -1px;
+    font-weight: 600;
 }
 
 .label-md {
@@ -2149,12 +2147,12 @@ table.table td.cell .complex-text {
         margin-top: 0 !important;
     }
     h1 {
-        font-weight: bold;
+        font-weight: 600;
         margin-top: @line-height-computed;
         margin-bottom: (@line-height-computed / 2);
     }
     h2, h3 {
-        font-weight: bold;
+        font-weight: 600;
         margin-top: (@line-height-computed / 2);
         margin-bottom: (@line-height-computed / 2);
     }
@@ -2387,11 +2385,11 @@ table.table td.cell .complex-text {
 .list-group-side li.selected a:visited.side-link,
 .list-group-side li.selected a:focus.side-link {
     color: @brand-danger;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .text-bold {
-    font-weight: 800;
+    font-weight: 600;
 }
 
 .email-address-create-dropdown .btn {
@@ -2429,7 +2427,7 @@ table.table td.cell .complex-text {
 }
 
 h5 {
-    font-weight: bold;
+    font-weight: 600;
     margin-top: 9px;
     margin-bottom: 9px;
 }
@@ -2615,7 +2613,7 @@ pre > code {
             font-size: 16px;
         }
         > a.text-danger {
-            font-weight: bold;
+            font-weight: 600;
         }
     }
 
@@ -3033,7 +3031,7 @@ a.field-info > span.fa-info-circle {
         border-bottom: 1px solid @gray-light;
     }
 
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .btn-group.open .dropdown-toggle {
