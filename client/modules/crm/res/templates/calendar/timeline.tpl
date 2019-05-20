@@ -4,7 +4,7 @@
 <div class="row button-container">
     <div class="col-sm-4 col-xs-12">
         <div class="btn-group">
-            <button class="btn btn-text strong" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
+            <button class="btn btn-text" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
             <button class="btn btn-text btn-icon" title="{{translate 'Refresh'}}" data-action="refresh"><span class="fas fa-sync-alt"></span></button>
         </div>{{#if calendarTypeSelectEnabled}}<div class="btn-group calendar-type-button-group">
         <div class="btn-group " role="group">
@@ -30,7 +30,7 @@
     <div class="col-sm-4 col-xs-12">
         <div class="btn-group pull-right">
             {{#each ../modeDataList}}
-            <button class="btn btn-text strong{{#ifEqual name ../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{name}}" title="{{translate name scope='Calendar' category='modes'}}"><span class="hidden-sm hidden-xs">{{translate name scope='Calendar' category='modes'}}</span><span class="visible-sm visible-xs">{{labelShort}}</span></button>
+            <button class="btn btn-text{{#ifEqual name ../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{name}}" title="{{translate name scope='Calendar' category='modes'}}"><span class="hidden-sm hidden-xs">{{translate name scope='Calendar' category='modes'}}</span><span class="visible-sm visible-xs">{{labelShort}}</span></button>
             {{/each}}
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-text dropdown-toggle" data-toggle="dropdown"><span class="fas fa-ellipsis-h"></span></button>
