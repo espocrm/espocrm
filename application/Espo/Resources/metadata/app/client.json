@@ -24,5 +24,19 @@
         "client/src/loader.js",
         "client/src/utils.js",
         "client/src/exceptions.js"
+    ],
+    "linkList": [
+        {
+            "href": "client/fonts/open-sans/OpenSans-Bold.ttf",
+            "as": "font",
+            "type": "font/ttf",
+            "rel": "preload"
+        },
+        {
+            "href": "client/fonts/open-sans/OpenSans-Regular.ttf",
+            "as": "font",
+            "type": "font/ttf",
+            "rel": "preload"
+        }
     ]
 }
