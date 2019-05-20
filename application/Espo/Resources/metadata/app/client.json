@@ -30,13 +30,15 @@
             "href": "client/fonts/open-sans/OpenSans-Bold.ttf",
             "as": "font",
             "type": "font/ttf",
-            "rel": "preload"
+            "rel": "preload",
+            "noTimestamp": true
         },
         {
             "href": "client/fonts/open-sans/OpenSans-Regular.ttf",
             "as": "font",
             "type": "font/ttf",
-            "rel": "preload"
+            "rel": "preload",
+            "noTimestamp": true
         }
     ]
 }

@@ -125,7 +125,10 @@ class ClientManager
 
         $linksHtml = '';
         foreach ($linkList as $item) {
-            $href = $this->basePath . $item['href'] . '?r=' . $cacheTimestamp;
+            $href = $this->basePath . $item['href'];
+            if (empty($item['noTimestamp'])) {
+                $href .= '?r=' . $cacheTimestamp;
+            }
             $as = $item['as'] ?? '';
             $rel = $item['rel'] ?? '';
             $type = $item['type'] ?? '';
