@@ -52,7 +52,7 @@ class ThemeManager
 
     public function getStylesheet()
     {
-        return $this->metadata->get('themes.' . $this->getName() . '.stylesheet', 'client/css/espo.css');
+        return $this->metadata->get('themes.' . $this->getName() . '.stylesheet', 'client/espo/css/espo.css');
     }
 }
 
