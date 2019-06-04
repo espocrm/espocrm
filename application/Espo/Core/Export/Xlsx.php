@@ -416,6 +416,10 @@ class Xlsx extends \Espo\Core\Injectable
                         }
                         $sheet->setCellValue("$col$rowNumber", $value);
                     }
+                } else if ($type == 'multiEnum') {
+                    $value = trim($row[$name], '[]');
+                    $value = str_replace('"', '', $value);
+                    $sheet->setCellValue("$col$rowNumber", $value);
                 } else if ($type == 'linkMultiple') {
                     if (array_key_exists($name . 'Ids', $row) && array_key_exists($name . 'Names', $row)) {
                         $nameList = [];
