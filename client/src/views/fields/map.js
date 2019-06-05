@@ -27,6 +27,8 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
 
         detailTemplate: 'fields/map/detail',
 
+        listTemplate: 'fields/map/detail',
+
         addressField: null,
 
         provider: null,
@@ -35,6 +37,7 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+            data.hasAddress = this.hasAddress();
             return data;
         },
 
@@ -72,7 +75,7 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
         },
 
         hasAddress: function () {
-            return this.addressData.city || this.addressData.postalCode;
+            return !!this.model.get(this.addressField + 'City') || !!this.model.get(this.addressField + 'PostalCode');
         },
 
         afterRender: function () {
@@ -175,9 +178,6 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                     });
                 }
             }.bind(this));
-
         }
-
     });
-
 });
