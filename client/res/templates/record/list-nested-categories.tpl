@@ -5,8 +5,8 @@
         {{#each list}}
             <div class="col-md-3 col-sm-6 col-xs-6">
                 <div class="category-item" data-id="{{id}}">
-                    <a href="#{{../scope}}/view/{{id}}" class="action folder-icon" data-action="openCategory" data-id="{{id}}" data-name={{name}}><span class="fas fa-folder text-muted fa-sm"></span></a>
-                    <a href="#{{../scope}}/view/{{id}}" class="action" data-action="openCategory" data-id="{{id}}" data-name={{name}}>{{name}}</a>
+                    <a href="#{{../scope}}/view/{{id}}" class="action folder-icon" data-action="openCategory" data-id="{{id}}" data-name="{{name}}"><span class="fas fa-folder fa-sm text-muted"></span></a>
+                    <a href="#{{../scope}}/view/{{id}}" class="action link-gray" data-action="openCategory" data-id="{{id}}" data-name={{name}}>{{name}}</a>
                 </div>
             </div>
         {{/each}}

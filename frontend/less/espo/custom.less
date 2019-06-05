@@ -2571,6 +2571,9 @@ pre > code {
             position: relative;
             top: -1px;
         }
+        .folder-icon {
+            margin-right: 3px;
+        }
     }
 }
 
@@ -3011,6 +3014,17 @@ a.field-info > span.fa-info-circle {
     transform: rotate(270deg);
 }
 
+a.link-gray {
+    &,
+    &:active {
+        color: @gray-soft;
+    }
+    &:hover,
+    &:focus {
+        color: @gray-dark;
+    }
+}
+
 .btn-text {
     color: @gray-soft;
     border-radius: 0;
@@ -3031,7 +3045,7 @@ a.field-info > span.fa-info-circle {
     }
     &:hover,
     &:focus {
-        color: @text-color;
+        color: @gray-dark;
         text-decoration: none;
         background-color: transparent;
     }
