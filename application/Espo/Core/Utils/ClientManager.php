@@ -133,7 +133,7 @@ class ClientManager
             $rel = $item['rel'] ?? '';
             $type = $item['type'] ?? '';
             $additinalPlaceholder = '';
-            if (empty($item['crossorigin'])) {
+            if (!empty($item['crossorigin'])) {
                 $additinalPlaceholder .= ' crossorigin';
             }
             $linksHtml .= "\n        <link rel=\"{$rel}\" href=\"{$href}\" as=\"{$as}\" as=\"{$type}\"{$additinalPlaceholder}>";
