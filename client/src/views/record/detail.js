@@ -844,8 +844,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         switchToModelByIndex: function (indexOfRecord) {
-            if (!this.model.collection) return;
-            var model = this.model.collection.at(indexOfRecord);
+            var collection = this.model.collection || this.collection;
+            if (!collection) return;
+            var model = collection.at(indexOfRecord);
             if (!model) {
                 throw new Error("Model is not found in collection by index.");
             }
@@ -870,7 +871,16 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         actionPrevious: function () {
-            if (!this.model.collection) return;
+            var collection;
+            if (!this.model.collection) {
+                collection = this.collection;
+                if (!collection) return;
+                this.indexOfRecord--;
+                if (this.indexOfRecord < 0) this.indexOfRecord = 0;
+            } else {
+                collection = this.model.collection;
+            }
+
             if (!(this.indexOfRecord > 0)) return;
 
             var indexOfRecord = this.indexOfRecord - 1;
@@ -878,13 +888,18 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         actionNext: function () {
-            if (!this.model.collection) return;
-            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) return;
-            if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
-                return;
+            var collection;
+            if (!this.model.collection) {
+                collection = this.collection;
+                if (!collection) return;
+                this.indexOfRecord--;
+                if (this.indexOfRecord < 0) this.indexOfRecord = 0;
+            } else {
+                collection = this.model.collection;
             }
 
-            var collection = this.model.collection;
+            if (!(this.indexOfRecord < collection.total - 1) && collection.total >= 0) return;
+            if (collection.total === -2 && this.indexOfRecord >= collection.length - 1) return;
 
             var indexOfRecord = this.indexOfRecord + 1;
             if (indexOfRecord <= collection.length - 1) {
