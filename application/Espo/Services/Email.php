@@ -298,7 +298,7 @@ class Email extends Record
 
         $entity->set('isJustSent', true);
 
-        $this->getEntityManager()->saveEntity($entity);
+        $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);
     }
 
     protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
