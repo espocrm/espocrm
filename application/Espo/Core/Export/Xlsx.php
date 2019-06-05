@@ -491,7 +491,14 @@ class Xlsx extends \Espo\Core\Injectable
 
                         $sheet->setCellValue("$col$rowNumber", $value);
                     }
-
+                } else if ($type == 'multiEnum' || $type == 'array') {
+                    if (!empty($row[$name])) {
+                        $array = json_decode($row[$name]);
+                        if (is_array($array)) {
+                            $value = implode(', ', $array);
+                            $sheet->setCellValue("$col$rowNumber", $value, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                        }
+                    }
                 } else {
                     if (array_key_exists($name, $row)) {
                         $sheet->setCellValueExplicit("$col$rowNumber", $row[$name], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
