@@ -8,9 +8,9 @@
         <div class="col-sm-5 col-xs-7">
             <div class="pull-right btn-group">
                 {{#each filterList}}
-                <button class="btn btn-default{{#ifEqual this ../filter}} active{{/ifEqual}}" data-action="selectFilter" data-name="{{./this}}">{{translate this scope='Note' category='filters'}}</button>
+                <button class="btn btn-text{{#ifEqual this ../filter}} active{{/ifEqual}}" data-action="selectFilter" data-name="{{./this}}">{{translate this scope='Note' category='filters'}}</button>
                 {{/each}}
-                <button class="btn btn-default btn-icon btn-icon-wide" data-action="refresh" title="{{translate 'checkForNewNotes' category='messages'}}"><span class="fas fa-sync-alt"></span></button>
+                <button class="btn btn-text btn-icon btn-icon-wide" data-action="refresh" title="{{translate 'checkForNewNotes' category='messages'}}"><span class="fas fa-sync-alt"></span></button>
             </div>
         </div>
     </div>
