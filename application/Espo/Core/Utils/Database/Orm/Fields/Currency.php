@@ -100,6 +100,8 @@ class Currency extends Base
                     'sql' => $converedFieldName . " {direction}",
                     'leftJoins' => $leftJoins,
                 ],
+                'attributeRole' => 'valueConverted',
+                'fieldType' => 'currency',
             ];
 
             $defs[$entityType]['fields'][$fieldName]['orderBy'] = [
@@ -107,6 +109,12 @@ class Currency extends Base
                 'leftJoins' => $leftJoins,
             ];
         }
+
+        $defs[$entityType]['fields'][$fieldName]['attributeRole'] = 'value';
+        $defs[$entityType]['fields'][$fieldName]['fieldType'] = 'currency';
+
+        $defs[$entityType]['fields'][$fieldName . 'Currency']['attributeRole'] = 'currency';
+        $defs[$entityType]['fields'][$fieldName . 'Currency']['fieldType'] = 'currency';
 
         return $defs;
     }

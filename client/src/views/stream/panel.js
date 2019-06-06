@@ -91,6 +91,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     if ($target.parent().hasClass('remove-attachment')) return;
                     if ($.contains(this.$postContainer.get(0), e.target)) return;
                     if (this.$textarea.val() !== '') return;
+                    if (e.target.classList.contains('popover-content')) return;
 
                     var attachmentsIds = this.seed.get('attachmentsIds') || [];
                     if (!attachmentsIds.length && (!this.getView('attachments') || !this.getView('attachments').isUploading)) {
@@ -389,19 +390,32 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 }, this);
             }
 
-            $a = this.$el.find('.buttons-panel a.stream-post-info');
+            var $a = this.$el.find('.buttons-panel a.stream-post-info');
 
             $a.popover({
                 placement: 'bottom',
                 container: 'body',
                 content: this.translate('streamPostInfo', 'messages').replace(/(\r\n|\n|\r)/gm, '<br>'),
-                trigger: 'click',
                 html: true
             }).on('shown.bs.popover', function () {
-                $('body').one('click', function () {
+                $('body').off('click.popover-' + this.id);
+                $('body').on('click.popover-' + this.id , function (e) {
+                    if (e.target.classList.contains('popover-content')) return;
+                    if ($.contains($a.get(0), e.target)) return;
+                    $('body').off('click.popover-' + this.id);
                     $a.popover('hide');
-                });
+                    e.stopPropagation();
+                }.bind(this));
             });
+
+            $a.on('click', function () {
+                $(this).popover('toggle');
+            });
+
+            this.on('remove', function () {
+                if ($a) $a.popover('destroy')
+                $('body').off('click.popover-' + this.id);
+            }, this);
 
             this.createView('attachments', 'views/stream/fields/attachment-multiple', {
                 model: this.seed,

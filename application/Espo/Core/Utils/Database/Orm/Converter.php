@@ -91,7 +91,7 @@ class Converter
         'select' => 'select',
         'orderBy' => 'orderBy',
         'where' => 'where',
-        'storeArrayValues' => 'storeArrayValues'
+        'storeArrayValues' => 'storeArrayValues',
     );
 
     protected $idParams = array(
@@ -504,6 +504,10 @@ class Converter
                 }
 
             }
+        }
+
+        if (isset($fieldParams['type'])) {
+            $values['fieldType'] = $fieldParams['type'];
         }
 
         return $values;

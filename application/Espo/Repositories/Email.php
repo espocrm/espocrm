@@ -282,7 +282,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             $this->fillAccount($entity);
         }
 
-        if (!empty($options['isBeingImported'])) {
+        if (!empty($options['isBeingImported']) || !empty($options['isJustSent'])) {
             if (!$entity->has('from')) {
                 $this->loadFromField($entity);
             }
@@ -326,6 +326,10 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     public function applyUsersFilters(Entity $entity)
     {
         foreach ($entity->getLinkMultipleIdList('users') as $userId) {
+            if ($entity->get('status') === 'Sent') {
+                if ($entity->get('sentById') && $entity->get('sentById') === $userId) continue;
+            }
+
             $filter = $this->getEmailFilterManager()->getMatchingFilter($entity, $userId);
             if ($filter) {
                 $action = $filter->get('action');

@@ -41,12 +41,16 @@ class LinkMultiple extends Base
                         'notStorable' => true,
                         'isLinkMultipleIdList' => true,
                         'relation' => $fieldName,
-                        'isUnordered' => true
+                        'isUnordered' => true,
+                        'attributeRole' => 'idList',
+                        'fieldType' => 'linkMultiple',
                     ],
                     $fieldName.'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
-                        'isLinkMultipleNameMap' => true
+                        'isLinkMultipleNameMap' => true,
+                        'attributeRole' => 'nameMap',
+                        'fieldType' => 'linkMultiple',
                     ]
                 ]
             ],
@@ -71,7 +75,8 @@ class LinkMultiple extends Base
             $data[$entityName]['fields'][$fieldName . 'Columns'] = [
                 'type' => 'jsonObject',
                 'notStorable' => true,
-                'columns' => $columns
+                'columns' => $columns,
+                'attributeRole' => 'columnsMap',
             ];
         }
 

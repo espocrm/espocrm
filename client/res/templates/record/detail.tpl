@@ -25,10 +25,10 @@
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default btn-icon action {{#unless previousButtonEnabled}} disabled{{/unless}}" data-action="previous" title="{{translate 'Previous Entry'}}">
+                <button type="button" class="btn btn-text btn-icon action {{#unless previousButtonEnabled}} disabled{{/unless}}" data-action="previous" title="{{translate 'Previous Entry'}}">
                     <span class="fas fa-chevron-left"></span>
                 </button>
-                <button type="button" class="btn btn-default btn-icon action {{#unless nextButtonEnabled}} disabled{{/unless}}" data-action="next" title="{{translate 'Next Entry'}}">
+                <button type="button" class="btn btn-text btn-icon action {{#unless nextButtonEnabled}} disabled{{/unless}}" data-action="next" title="{{translate 'Next Entry'}}">
                     <span class="fas fa-chevron-right"></span>
                 </button>
             </div>

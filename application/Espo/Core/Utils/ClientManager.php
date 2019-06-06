@@ -108,6 +108,8 @@ class ClientManager
             $loaderCacheTimestamp = $cacheTimestamp;
         }
 
+        $linkList = $this->getMetadata()->get(['app', 'client', 'linkList'], []);
+
         $scriptsHtml = '';
         foreach ($jsFileList as $jsFile) {
             $src = $this->basePath . $jsFile . '?r=' . $cacheTimestamp;
@@ -119,6 +121,22 @@ class ClientManager
         foreach ($cssFileList as $cssFile) {
             $src = $this->basePath . $cssFile . '?r=' . $cacheTimestamp;
             $additionalStyleSheetsHtml .= "\n        <link rel=\"stylesheet\" href=\"{$src}\">";
+        }
+
+        $linksHtml = '';
+        foreach ($linkList as $item) {
+            $href = $this->basePath . $item['href'];
+            if (empty($item['noTimestamp'])) {
+                $href .= '?r=' . $cacheTimestamp;
+            }
+            $as = $item['as'] ?? '';
+            $rel = $item['rel'] ?? '';
+            $type = $item['type'] ?? '';
+            $additinalPlaceholder = '';
+            if (!empty($item['crossorigin'])) {
+                $additinalPlaceholder .= ' crossorigin';
+            }
+            $linksHtml .= "\n        <link rel=\"{$rel}\" href=\"{$href}\" as=\"{$as}\" as=\"{$type}\"{$additinalPlaceholder}>";
         }
 
         $data = [
@@ -134,6 +152,7 @@ class ClientManager
             'appClientClassName' => 'app',
             'scriptsHtml' => $scriptsHtml,
             'additionalStyleSheetsHtml' => $additionalStyleSheetsHtml,
+            'linksHtml' => $linksHtml,
         ];
 
         $html = file_get_contents($htmlFilePath);

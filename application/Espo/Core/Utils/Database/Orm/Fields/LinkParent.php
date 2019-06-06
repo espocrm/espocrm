@@ -33,33 +33,39 @@ class LinkParent extends Base
 {
     protected function load($fieldName, $entityName)
     {
-        $data = array(
-            $entityName => array (
-                'fields' => array(
-                    $fieldName.'Id' => array(
+        $data = [
+            $entityName => [
+                'fields' => [
+                    $fieldName.'Id' => [
                         'type' => 'foreignId',
-                        'index' => $fieldName
-                    ),
-                    $fieldName.'Type' => array(
+                        'index' => $fieldName,
+                        'attributeRole' => 'id',
+                        'fieldType' => 'linkParent',
+                    ],
+                    $fieldName.'Type' => [
                         'type' => 'foreignType',
                         'notNull' => false,
                         'index' => $fieldName,
-                        'len' => 100
-                    ),
-                    $fieldName.'Name' => array(
+                        'len' => 100,
+                        'attributeRole' => 'type',
+                        'fieldType' => 'linkParent',
+                    ],
+                    $fieldName.'Name' => [
                         'type' => 'varchar',
                         'notStorable' => true,
                         'relation' => $fieldName,
-                        'isParentName' => true
-                    )
-                )
-            ),
-            'unset' => array(
-                $entityName => array(
+                        'isParentName' => true,
+                        'attributeRole' => 'name',
+                        'fieldType' => 'linkParent',
+                    ]
+                ]
+            ],
+            'unset' => [
+                $entityName => [
                     'fields.'.$fieldName
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         $fieldParams = $this->getFieldParams();
 

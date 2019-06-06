@@ -91,6 +91,10 @@
     }
 }
 
+b, strong {
+    font-weight: 600;
+}
+
 .text-primary {
     color: @state-primary-text;
 }
@@ -156,6 +160,7 @@ blockquote {
         height: @font-size-h3;
         display: inline-block;
     }
+    opacity: 0.4;
 }
 
 .modal-footer {
@@ -220,6 +225,7 @@ blockquote {
 
 label {
     margin-bottom: 3px;
+    font-weight: 600;
 }
 
 .table {
@@ -1085,6 +1091,11 @@ section {
     }
 }
 
+.modal-body > .no-side-margin {
+    margin-left: -@panel-padding;
+    margin-right: -@panel-padding;
+}
+
 .panel-body > .no-margin {
     margin: -@panel-padding;
 }
@@ -1708,14 +1719,6 @@ label.attach-file-label {
     }
 }
 
-@font-face {
-     font-family: Open Sans;
-     src: url('../../fonts/open-sans-regular.eot?') format('eot'),
-          url('../../fonts/open-sans-regular.woff') format('woff'),
-          url('../../fonts/open-sans-regular.ttf')  format('truetype'),
-          url('../../fonts/open-sans-regular.svg#svgFontName') format('svg');
-}
-
 .notifications-badge-container > .notifications-button > .number-badge {
     position: absolute;
     z-index: 10;
@@ -1726,6 +1729,10 @@ label.attach-file-label {
     left: 27px;
     background-color: @brand-warning;
     color: @white-color;
+}
+
+.badge {
+    font-weight: 600;
 }
 
 .badge-circle {
@@ -1935,6 +1942,7 @@ h4.panel-title span.fas.color-icon {
     padding: .09em .5em .2em;
     position: relative;
     top: -1px;
+    font-weight: 600;
 }
 
 .label-md {
@@ -2148,12 +2156,12 @@ table.table td.cell .complex-text {
         margin-top: 0 !important;
     }
     h1 {
-        font-weight: bold;
+        font-weight: 600;
         margin-top: @line-height-computed;
         margin-bottom: (@line-height-computed / 2);
     }
     h2, h3 {
-        font-weight: bold;
+        font-weight: 600;
         margin-top: (@line-height-computed / 2);
         margin-bottom: (@line-height-computed / 2);
     }
@@ -2344,6 +2352,10 @@ table.table td.cell .complex-text {
 
 .categories-container .root-item {
     padding-bottom: 3px;
+
+    a, a:hover, a:active {
+        text-decoration: none;
+    }
 }
 
 .list-group-tree {
@@ -2386,11 +2398,11 @@ table.table td.cell .complex-text {
 .list-group-side li.selected a:visited.side-link,
 .list-group-side li.selected a:focus.side-link {
     color: @brand-danger;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .text-bold {
-    font-weight: 800;
+    font-weight: 600;
 }
 
 .email-address-create-dropdown .btn {
@@ -2428,7 +2440,7 @@ table.table td.cell .complex-text {
 }
 
 h5 {
-    font-weight: bold;
+    font-weight: 600;
     margin-top: 9px;
     margin-bottom: 9px;
 }
@@ -2559,6 +2571,9 @@ pre > code {
             position: relative;
             top: -1px;
         }
+        .folder-icon {
+            margin-right: 3px;
+        }
     }
 }
 
@@ -2614,7 +2629,7 @@ pre > code {
             font-size: 16px;
         }
         > a.text-danger {
-            font-weight: bold;
+            font-weight: 600;
         }
     }
 
@@ -2691,6 +2706,12 @@ pre > code {
 
     .search-row .view-mode-switcher-buttons-group {
         float: right;
+    }
+
+    .search-row {
+        .btn.btn-icon-x-wide {
+            width: 54px;
+        }
     }
 
     .categories-container > .list {
@@ -2991,4 +3012,62 @@ a.field-info > span.fa-info-circle {
     -o-transform: rotate(270deg);
     -ms-transform: rotate(270deg);
     transform: rotate(270deg);
+}
+
+a.link-gray {
+    &,
+    &:active {
+        color: @gray-soft;
+    }
+    &:hover,
+    &:focus {
+        color: @gray-dark;
+    }
+}
+
+.btn-text {
+    color: @gray-soft;
+    border-radius: 0;
+
+    &,
+    &:active,
+    &.active,
+    &[disabled],
+    fieldset[disabled] & {
+        background-color: transparent;
+        .box-shadow(none);
+    }
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: transparent;
+    }
+    &:hover,
+    &:focus {
+        color: @gray-dark;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover,
+        &:focus {
+            color: @gray-light;
+            text-decoration: none;
+        }
+        color: @gray-light;
+    }
+    &.active {
+        border-bottom: 1px solid @gray-light;
+    }
+
+    font-weight: 600;
+}
+
+.btn-group.open .dropdown-toggle {
+    &.btn-text {
+       .box-shadow(none);
+    }
 }

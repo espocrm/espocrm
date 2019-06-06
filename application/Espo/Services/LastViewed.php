@@ -49,7 +49,7 @@ class LastViewed extends \Espo\Core\Services\Base
         $scopes = $this->getInjection('metadata')->get('scopes');
 
         $targetTypeList = array_filter(array_keys($scopes), function ($item) use ($scopes) {
-            return !empty($scopes[$item]['object']);
+            return !empty($scopes[$item]['object']) || !empty($scopes[$item]['lastViewed']);
         });
 
         $offset = $params['offset'];

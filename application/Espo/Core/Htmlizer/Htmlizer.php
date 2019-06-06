@@ -147,6 +147,7 @@ class Htmlizer
             }
 
             $type = $entity->getAttributeType($attribute);
+            $fieldType = $entity->getAttributeParam($attribute, 'fieldType');
 
             if ($type == Entity::DATETIME) {
                 if (!empty($data[$attribute])) {
@@ -192,6 +193,14 @@ class Htmlizer
                 }
             } else if ($type === Entity::PASSWORD) {
                 unset($data[$attribute]);
+            }
+
+            if ($fieldType === 'currency') {
+                if ($entity->getAttributeParam($attribute, 'attributeRole') === 'currency') {
+                    if ($currencyValue = $data[$attribute]) {
+                        $data[$attribute . 'Symbol'] = $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);
+                    }
+                }
             }
 
             if (array_key_exists($attribute, $data)) {

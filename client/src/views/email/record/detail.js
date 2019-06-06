@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
+define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -147,34 +147,22 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
         },
 
         actionMarkAsImportant: function () {
-            $.ajax({
-                url: 'Email/action/markAsImportant',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
-                })
+            Espo.Ajax.postRequest('Email/action/markAsImportant', {
+                id: this.model.id
             });
             this.model.set('isImportant', true);
         },
 
         actionMarkAsNotImportant: function () {
-            $.ajax({
-                url: 'Email/action/markAsNotImportant',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
-                })
+            Espo.Ajax.postRequest('Email/action/markAsNotImportant', {
+                id: this.model.id
             });
             this.model.set('isImportant', false);
         },
 
         actionMoveToTrash: function () {
-            $.ajax({
-                url: 'Email/action/moveToTrash',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
-                })
+            Espo.Ajax.postRequest('Email/action/moveToTrash', {
+                id: this.model.id
             }).then(function () {
                 Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
             }.bind(this));
@@ -185,12 +173,8 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
         },
 
         actionRetrieveFromTrash: function () {
-            $.ajax({
-                url: 'Email/action/retrieveFromTrash',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
-                })
+            Espo.Ajax.postRequest('Email/action/retrieveFromTrash', {
+                id: this.model.id
             }).then(function () {
                 Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
             }.bind(this));

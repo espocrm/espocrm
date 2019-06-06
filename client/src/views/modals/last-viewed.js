@@ -49,13 +49,6 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Close'
-                }
-            ];
-
             this.headerHtml = this.getLanguage().translate('LastViewed', 'scopeNamesPlural');
             this.headerHtml = '<a href="#LastViewed" class="action" data-action="listView">' + this.headerHtml + '</a>';
 

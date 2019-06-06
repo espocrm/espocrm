@@ -97,6 +97,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     title: this.translate('Previous Entry'),
                     pullLeft: true,
                     className: 'btn-icon',
+                    style: 'text',
                     disabled: true
                 });
                 this.buttonList.push({
@@ -105,6 +106,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     title: this.translate('Next Entry'),
                     pullLeft: true,
                     className: 'btn-icon',
+                    style: 'text',
                     disabled: true
                 });
                 this.indexOfRecord = this.model.collection.indexOf(this.model);
