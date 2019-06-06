@@ -40,6 +40,7 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 html: buttonData.html,
                 hidden: this.hasAcceptanceStatusButton(),
                 style: buttonData.style,
+                pullLeft: true,
             }, 'cancel');
 
             if (
