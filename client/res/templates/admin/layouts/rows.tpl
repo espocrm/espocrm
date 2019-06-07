@@ -22,7 +22,7 @@
     }
 
     #layout header {
-        font-weight: bold;
+        font-weight: 600;
     }
 
     #layout ul > li .left {
