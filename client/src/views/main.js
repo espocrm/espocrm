@@ -56,6 +56,20 @@ define('views/main', 'view', function (Dep) {
 
             ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                 this.menu[type] = this.menu[type] || [];
+
+                var itemList = this.menu[type];
+                itemList.forEach(function (item) {
+                    var viewObject = this;
+                    if (item.initFunction && item.data.handler) {
+                        this.wait(new Promise(function (resolve) {
+                            require(item.data.handler, function (Handler) {
+                                var handler = new Handler(viewObject);
+                                handler[item.initFunction].call(handler);
+                                resolve();
+                            });
+                        }));
+                    }
+                }, this);
             }, this);
 
             this.updateLastUrl();
