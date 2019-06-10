@@ -65,19 +65,25 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
                         (data.dashboardTabList).forEach(function (name) {
                             var layout = [];
+                            var id = null;
                             this.dashboardLayout.forEach(function (d) {
                                 if (d.name == name) {
                                     layout = d.layout;
+                                    id = d.id;
                                 }
                             }, this);
 
                             if (name in data.renameMap) {
                                 name = data.renameMap[name];
                             }
-                            dashboardLayout.push({
+                            var o = {
                                 name: name,
-                                layout: layout
-                            });
+                                layout: layout,
+                            };
+                            if (id) {
+                                o.id = id;
+                            }
+                            dashboardLayout.push(o);
                         }, this);
 
                         this.dashletIdList.forEach(function (item) {
@@ -105,6 +111,10 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 dashboardLayout: this.dashboardLayout,
                 layoutReadOnly: this.layoutReadOnly
             };
+        },
+
+        generateId: function () {
+            return (Math.floor(Math.random() * 10000001)).toString();
         },
 
         setupCurrentTabLayout: function () {

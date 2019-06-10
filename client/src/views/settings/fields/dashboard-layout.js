@@ -123,13 +123,19 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
             grid.addWidget($item, 0, 0, 2, 2);
         },
 
+
+        generateId: function () {
+            return (Math.floor(Math.random() * 10000001)).toString();
+        },
+
         addDashlet: function (name) {
             var id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
 
             if (!~this.currentTab) {
                 this.dashboardLayout.push({
                     name: 'My Espo',
-                    layout: []
+                    layout: [],
+                    id: this.generateId(),
                 });
                 this.currentTab = 0;
                 this.setupCurrentTabLayout();
@@ -181,9 +187,11 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
 
                     (data.dashboardTabList).forEach(function (name) {
                         var layout = [];
+                        var id = this.generateId();
                         this.dashboardLayout.forEach(function (d) {
                             if (d.name == name) {
                                 layout = d.layout;
+                                id = d.id;
                             }
                         }, this);
                         if (name in data.renameMap) {
@@ -191,7 +199,8 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                         }
                         dashboardLayout.push({
                             name: name,
-                            layout: layout
+                            layout: layout,
+                            id: id,
                         });
                     }, this);
 
