@@ -188,6 +188,12 @@ class EntityManager
         return $entity;
     }
 
+    public function fetchEntity(string $entityType, string $id)
+    {
+        if (empty($id)) return;
+        return $this->getEntity($entityType, $id);
+    }
+
     public function getRepository($entityType)
     {
         if (!$this->hasRepository($entityType)) {
