@@ -556,6 +556,14 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             return data;
         },
 
+        processFetch: function () {
+            var data = this.fetch();
+            this.model.set(data);
+            if (this.validate()) return;
+
+            return data;
+        },
+
         populateDefaults: function () {
             this.model.populateDefaults();
 

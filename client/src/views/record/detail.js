@@ -1328,6 +1328,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             options: o
                         };
 
+                        if ('labelText' in cellDefs) {
+                            o.labelText = cellDefs.labelText;
+                            cell.customLabel = cellDefs.labelText;
+                        }
                         if ('customLabel' in cellDefs) {
                             cell.customLabel = cellDefs.customLabel;
                         }
