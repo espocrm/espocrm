@@ -1,0 +1,8 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}, false],
+            [{"name": "layout", "fullWidth": true}]
+        ]
+    }
+]

@@ -1,0 +1,12 @@
+{
+    "fields": {
+        "layout": "Layout"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create DashboardTemplate": "Create Template",
+        "Deploy to Users": "Deploy to Users",
+        "Deploy to Team": "Deploy to Team"
+    }
+}

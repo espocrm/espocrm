@@ -215,6 +215,12 @@
                 "description": "webhooks"
             },
             {
+
+                "url": "#DashboardTemplate",
+                "label": "Dashboard Templates",
+                "description": "dashboardTemplates"
+            },
+            {
                 "url": "#Attachment",
                 "label": "Attachments",
                 "description": "attachments"

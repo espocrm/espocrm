@@ -39,6 +39,7 @@
         "Integrations": "Integrations",
         "Extensions": "Extensions",
         "Webhooks": "Webhooks",
+        "Dashboard Templates": "Dashboard Templates",
         "Upload": "Upload",
         "Installing...": "Installing...",
         "Upgrading...": "Upgrading...",
@@ -245,6 +246,7 @@
         "systemRequirements": "System Requirements for EspoCRM.",
         "apiUsers": "Separate users for integration purposes.",
         "webhooks": "Manage webhooks.",
+        "dashboardTemplates": "Deploy dashboards to users.",
         "pdfTemplates": "Templates for printing to PDF."
     },
     "options": {

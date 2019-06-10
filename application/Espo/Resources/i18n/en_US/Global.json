@@ -49,6 +49,7 @@
         "LeadCapture": "Lead Capture Entry Point",
         "LeadCaptureLogRecord": "Lead Capture Log Record",
         "ArrayValue": "Array Value",
+        "DashboardTemplate": "Dashboard Template",
         "Webhook": "Webhook"
     },
     "scopeNamesPlural": {
@@ -88,6 +89,7 @@
         "LeadCapture": "Lead Capture",
         "LeadCaptureLogRecord": "Lead Capture Log",
         "ArrayValue": "Array Values",
+        "DashboardTemplate": "Dashboard Templates",
         "Webhook": "Webhooks"
     },
     "labels": {
