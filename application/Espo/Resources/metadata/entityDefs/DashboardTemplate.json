@@ -3,12 +3,14 @@
         "name": {
             "type": "varchar",
             "maxLength": 100,
-            "trim": true
+            "trim": true,
+            "required": true
         },
         "layout": {
             "type": "jsonArray",
             "view": "views/settings/fields/dashboard-layout",
-            "inlineEditDisabled": true
+            "inlineEditDisabled": true,
+            "required": true
         },
         "dashletsOptions": {
             "type": "jsonObject",

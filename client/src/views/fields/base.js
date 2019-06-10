@@ -609,7 +609,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         showValidationMessage: function (message, target) {
             var $el;
 
-            target = target || '.main-element';
+            target = target || this.validationElementSelector || '.main-element';
 
             if (typeof target === 'string' || target instanceof String) {
                 $el = this.$el.find(target);

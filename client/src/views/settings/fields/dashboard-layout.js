@@ -34,6 +34,8 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
 
         editTemplate: 'settings/fields/dashboard-layout/edit',
 
+        validationElementSelector: 'button[data-action="addDashlet"]',
+
         events: {
             'click button[data-action="selectTab"]': function (e) {
                 var tab = parseInt($(e.currentTarget).data('tab'));
@@ -81,7 +83,9 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                 }
                 if (this.model.hasChanged(this.name)) {
                     if (this.dashboardLayout.length) {
-                        this.selectTab(0);
+                        if (this.isDetailMode()) {
+                            this.selectTab(0);
+                        }
                     }
                 }
             }, this);
