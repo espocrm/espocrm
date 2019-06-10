@@ -58,7 +58,10 @@ define('views/dashboard-template/modals/deploy-to-team', ['views/modal', 'model'
                         type: 'link',
                         entity: 'Team',
                         required: true
-                    }
+                    },
+                    'append': {
+                        type: 'bool'
+                    },
                 }
             });
 
@@ -72,8 +75,11 @@ define('views/dashboard-template/modals/deploy-to-team', ['views/modal', 'model'
                             [
                                 {
                                     name: 'team',
-                                    fullWidth: true,
                                     labelText: this.translate('team', 'links'),
+                                },
+                                {
+                                    name: 'append',
+                                    labelText: this.translate('append', 'fields', 'DashboardTemplate'),
                                 }
                             ]
                         ]
@@ -87,6 +93,7 @@ define('views/dashboard-template/modals/deploy-to-team', ['views/modal', 'model'
                 Espo.Ajax.postRequest('DashboardTemplate/action/deployToTeam', {
                     id: this.model.id,
                     teamId: this.formModel.get('teamId'),
+                    append: this.formModel.get('append'),
                 }).then(function () {
                     Espo.Ui.success(this.translate('Done'));
                     this.close();

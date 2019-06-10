@@ -59,7 +59,10 @@ define('views/dashboard-template/modals/deploy-to-users', ['views/modal', 'model
                         view: 'views/fields/users',
                         entity: 'User',
                         required: true
-                    }
+                    },
+                    'append': {
+                        type: 'bool'
+                    },
                 }
             });
 
@@ -73,8 +76,11 @@ define('views/dashboard-template/modals/deploy-to-users', ['views/modal', 'model
                             [
                                 {
                                     name: 'users',
-                                    fullWidth: true,
                                     labelText: this.translate('users', 'links'),
+                                },
+                                {
+                                    name: 'append',
+                                    labelText: this.translate('append', 'fields', 'DashboardTemplate'),
                                 }
                             ]
                         ]
@@ -88,6 +94,7 @@ define('views/dashboard-template/modals/deploy-to-users', ['views/modal', 'model
                 Espo.Ajax.postRequest('DashboardTemplate/action/deployToUsers', {
                     id: this.model.id,
                     userIdList: this.formModel.get('usersIds'),
+                    append: this.formModel.get('append'),
                 }).then(function () {
                     Espo.Ui.success(this.translate('Done'));
                     this.close();

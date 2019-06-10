@@ -1,6 +1,7 @@
 {
     "fields": {
-        "layout": "Layout"
+        "layout": "Layout",
+        "append": "Append (don't remove user's tabs)"
     },
     "links": {
     },

@@ -35,7 +35,48 @@ use \Espo\Core\Exceptions\NotFount;
 
 class DashboardTemplate extends Record
 {
-    public function deployToUsers(string $id, array $userIdList)
+    protected function applyLayout(Entity $preferences, Entity $template, bool $append)
+    {
+        if (!$append) {
+            $preferences->set([
+                'dashboardLayout' => $template->get('layout'),
+                'dashletsOptions' => $template->get('dashletsOptions'),
+            ]);
+        } else {
+            $dashletsOptions = $preferences->get('dashletsOptions');
+            if (!$dashletsOptions) $dashletsOptions = (object) [];
+            $dashboardLayout = $preferences->get('dashboardLayout');
+            if (!$dashboardLayout) $dashboardLayout = [];
+
+            foreach ($template->get('layout') as $item) {
+                $exists = false;
+
+                foreach ($dashboardLayout as $k => $item2) {
+                    if (isset($item->id) && isset($item2->id)) {
+                        if ($item->id === $item2->id) {
+                            $exists = true;
+                            $dashboardLayout[$k] = $item;
+                        }
+                    }
+                }
+
+                if (!$exists) {
+                    $dashboardLayout[] = $item;
+                }
+            }
+
+            foreach ($template->get('dashletsOptions') as $id => $item) {
+                $dashletsOptions->$id = $item;
+            }
+
+            $preferences->set([
+                'dashboardLayout' => $dashboardLayout,
+                'dashletsOptions' => $dashletsOptions,
+            ]);
+        }
+    }
+
+    public function deployToUsers(string $id, array $userIdList, bool $append = false)
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
         if (!$template) throw new NotFount();
@@ -43,17 +84,14 @@ class DashboardTemplate extends Record
         foreach ($userIdList as $userId) {
             $preferences = $this->getEntityManager()->fetchEntity('Preferences', $userId);
             if (!$preferences) continue;
-            $preferences->set([
-                'dashboardLayout' => $template->get('layout'),
-                'dashletsOptions' => $template->get('dashletsOptions'),
-            ]);
+            $this->applyLayout($preferences, $template, $append);
             $this->getEntityManager()->saveEntity($preferences);
         }
 
         return true;
     }
 
-    public function deployToTeam(string $id, string $teamId)
+    public function deployToTeam(string $id, string $teamId, bool $append = false)
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
         if (!$template) throw new NotFount();
@@ -68,10 +106,7 @@ class DashboardTemplate extends Record
         foreach ($userList as $user) {
             $preferences = $this->getEntityManager()->fetchEntity('Preferences', $user->id);
             if (!$preferences) continue;
-            $preferences->set([
-                'dashboardLayout' => $template->get('layout'),
-                'dashletsOptions' => $template->get('dashletsOptions'),
-            ]);
+            $this->applyLayout($preferences, $template, $append);
             $this->getEntityManager()->saveEntity($preferences);
         }
 

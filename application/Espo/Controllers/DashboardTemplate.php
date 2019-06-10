@@ -46,7 +46,11 @@ class DashboardTemplate extends \Espo\Core\Controllers\Record
         if (empty($data->id)) throw new BadRequest();
         if (empty($data->userIdList)) throw new BadRequest();
 
-        return $this->getServiceFactory()->create('DashboardTemplate')->deployToUsers($data->id, $data->userIdList);
+        return $this->getServiceFactory()->create('DashboardTemplate')->deployToUsers(
+            $data->id,
+            $data->userIdList,
+            !empty($data->append)
+        );
     }
 
     public function postActionDeployToTeam($params, $data)
@@ -54,6 +58,10 @@ class DashboardTemplate extends \Espo\Core\Controllers\Record
         if (empty($data->id)) throw new BadRequest();
         if (empty($data->teamId)) throw new BadRequest();
 
-        return $this->getServiceFactory()->create('DashboardTemplate')->deployToTeam($data->id, $data->teamId);
+        return $this->getServiceFactory()->create('DashboardTemplate')->deployToTeam(
+            $data->id,
+            $data->teamId,
+            !empty($data->append)
+        );
     }
 }
