@@ -65,22 +65,6 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
         setup: function () {
             this.scope = this.options.scope;
 
-            this.typeList = [];
-
-            var fieldDefs = this.getMetadata().get('fields');
-
-            Object.keys(this.getMetadata().get('fields')).forEach(function (type) {
-                if (type in fieldDefs) {
-                    if (!fieldDefs[type].notCreatable) {
-                        this.typeList.push(type);
-                    }
-                }
-            }, this);
-
-            this.typeList.sort(function (v1, v2) {
-                return this.translate(v1, 'fieldTypes', 'Admin').localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
-            }.bind(this));
-
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {
 

@@ -58,10 +58,13 @@ Espo.define('views/admin/field-manager/index', 'view', function (Dep) {
                 this.openField(scope, field);
             },
 
-            'click a[data-action="addField"]': function (e) {
-                var scope = $(e.currentTarget).data('scope');
-                var type = $(e.currentTarget).data('type');
-                this.createField(scope, type);
+            'click [data-action="addField"]': function () {
+                this.createView('dialog', 'views/admin/field-manager/modals/add-field', {}, function (view) {
+                    view.render();
+                    this.listenToOnce(view, 'add-field', function (type) {
+                        this.createField(this.scope, type);
+                    }, this);
+                }, this);
             },
         },
 
