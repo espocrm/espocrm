@@ -3026,8 +3026,13 @@ a.link-gray {
 }
 
 .btn-text {
-    color: @gray-soft;
+    color: @gray-dark;
     border-radius: 0;
+
+    .far,
+    .fas {
+        color: @gray-soft;
+    }
 
     &,
     &:active,
@@ -3048,6 +3053,10 @@ a.link-gray {
         color: @gray-dark;
         text-decoration: none;
         background-color: transparent;
+        .far,
+        .fas {
+            color: @gray-dark;
+        }
     }
     &.disabled,
     &[disabled],
@@ -3058,12 +3067,16 @@ a.link-gray {
             text-decoration: none;
         }
         color: @gray-light;
+        .far,
+        .fas {
+            color: @gray-light;
+        }
     }
     &.active {
         border-bottom: 1px solid @gray-light;
     }
 
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .btn-group.open .dropdown-toggle {

@@ -76,7 +76,7 @@
         display: none;
     }
     #layout header {
-        font-weight: bold;
+        font-weight: 600;
         margin-bottom: 10px;
     }
     #layout ul.panels > li label {

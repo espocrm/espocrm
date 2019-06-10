@@ -1043,9 +1043,9 @@ class Activities extends \Espo\Core\Services\Base
             'createdAt'
         ];
 
-        $wherePart = array(
+        $wherePart = [
             'assignedUserId' => $userId,
-        );
+        ];
 
         if ($seed->hasRelation('users')) {
             $wherePart['usersMiddle.userId'] = $userId;
@@ -1055,35 +1055,39 @@ class Activities extends \Espo\Core\Services\Base
             $wherePart['assignedUsersMiddle.userId'] = $userId;
         }
 
-        $selectParams = array(
+        $selectParams = [
             'select' => $select,
             'leftJoins' => [],
-            'whereClause' => array(
+            'whereClause' => [
                 'OR' => $wherePart,
-                array(
-                    'OR' => array(
-                        array(
+                [
+                    'OR' => [
+                        [
                             'dateEnd' => null,
                             'dateStart>=' => $from,
                             'dateStart<' => $to
-                        ),
-                        array(
+                        ],
+                        [
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to
+                        ],
+                        [
                             'dateEnd>=' => $from,
                             'dateEnd<' => $to
-                        ),
-                        array(
+                        ],
+                        [
                             'dateStart<=' => $from,
                             'dateEnd>=' => $to
-                        ),
-                        array(
+                        ],
+                        [
                             'dateEndDate!=' => null,
                             'dateEndDate>=' => $from,
                             'dateEndDate<' => $to
-                        )
-                    )
-                )
-            )
-        );
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
         if ($seed->hasRelation('users')) {
             $selectParams['leftJoins'][] = 'users';
