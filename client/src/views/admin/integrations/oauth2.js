@@ -33,9 +33,7 @@ define('views/admin/integrations/oauth2', 'views/admin/integrations/edit', funct
         template: 'admin/integrations/oauth2',
 
         data: function () {
-            var redirectUri = this.getConfig().get('siteUrl') +
-                (this.getMetadata().get(['integrations', this.options.integration, 'params', 'redirectUri']) ||
-                '?entryPoint=oauthCallback');
+            var redirectUri = this.redirectUri || (this.getConfig().get('siteUrl') + '?entryPoint=oauthCallback');
 
             return _.extend({
                 redirectUri: redirectUri,
