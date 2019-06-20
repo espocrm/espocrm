@@ -380,9 +380,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         handleStatus: function (event) {
         	if (~this.canceledStatusList.indexOf(event.status)) {
-        		event.className = 'event-canceled';
+                event.className = ['event-canceled'];
         	} else {
-                event.className = '';
+                event.className = [];
             }
         },
 
