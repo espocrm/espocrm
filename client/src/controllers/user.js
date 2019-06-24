@@ -38,7 +38,12 @@ define('controllers/user', 'controllers/record', function (Dep) {
             }, context, usePreviouslyFetched);
         },
 
-        createViewView: function (options, model) {
+        createViewView: function (options, model, view) {
+            if (model.get('deleted')) {
+                view = 'views/deleted-detail';
+                Dep.prototype.createViewView.call(this, options, model, view);
+                return;
+            }
             if (model.isPortal()) {
                 this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
                 return;
@@ -47,7 +52,7 @@ define('controllers/user', 'controllers/record', function (Dep) {
                 this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
                 return;
             }
-            Dep.prototype.createViewView.call(this, options, model);
+            Dep.prototype.createViewView.call(this, options, model, view);
         }
 
     });
