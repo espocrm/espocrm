@@ -132,7 +132,11 @@ class Pdf extends \Espo\Core\Services\Base
         $pdf = new \Espo\Core\Pdf\Tcpdf();
         $pdf->setUseGroupNumbers(true);
 
-        $service = $this->getServiceFactory()->create($entityType);
+        if ($this->getServiceFactory()->checkExists($entityType)) {
+            $service = $this->getServiceFactory()->create($entityType);
+        } else {
+            $service = $this->getServiceFactory()->create('Record');
+        }
 
         foreach ($entityList as $entity) {
             $service->loadAdditionalFields($entity);
@@ -165,7 +169,11 @@ class Pdf extends \Espo\Core\Services\Base
 
     public function massGenerate($entityType, $idList, $templateId, $checkAcl = false)
     {
-        $service = $this->getServiceFactory()->create($entityType);
+        if ($this->getServiceFactory()->checkExists($entityType)) {
+            $service = $this->getServiceFactory()->create($entityType);
+        } else {
+            $service = $this->getServiceFactory()->create('Record');
+        }
 
         $maxCount = $this->getConfig()->get('massPrintPdfMaxCount');
         if ($maxCount) {
@@ -252,7 +260,13 @@ class Pdf extends \Espo\Core\Services\Base
     public function buildFromTemplate(Entity $entity, Entity $template, $displayInline = false)
     {
         $entityType = $entity->getEntityType();
-        $service = $this->getServiceFactory()->create($entityType);
+
+        if ($this->getServiceFactory()->checkExists($entityType)) {
+            $service = $this->getServiceFactory()->create($entityType);
+        } else {
+            $service = $this->getServiceFactory()->create('Record');
+        }
+
         $service->loadAdditionalFields($entity);
 
         if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
