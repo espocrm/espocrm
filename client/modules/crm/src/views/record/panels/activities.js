@@ -309,7 +309,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }
             } else {
                 if (this.model.name == 'Contact') {
-                    if (this.model.get('accountId')) {
+                    if (this.model.get('accountId') && !this.getConfig().get('b2cMode')) {
                         attributes.parentType = 'Account',
                         attributes.parentId = this.model.get('accountId');
                         attributes.parentName = this.model.get('accountName');
