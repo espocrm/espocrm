@@ -1346,8 +1346,6 @@ class Stream extends \Espo\Core\Services\Base
             ]
         ], $selectParams);
 
-        $selectManager->applyFilter('active', $selectParams);
-
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
         }

@@ -87,7 +87,12 @@ class ClientManager
 
         $className = $this->getMetadata()->get("integrations.{$integration}.clientClassName");
 
-        $redirectUri = $this->getConfig()->get('siteUrl') . '?entryPoint=oauthCallback'; // TODO move to client class
+        $redirectUri = $this->getConfig()->get('siteUrl') . '?entryPoint=oauthCallback';
+
+        $redirectUriPath = $this->getMetadata()->get(['integrations', $integration, 'params', 'redirectUriPath']);
+        if ($redirectUriPath) {
+            $redirectUri = rtrim($this->getConfig()->get('siteUrl'), '/') . '/' . $redirectUriPath;
+        }
 
         if (!$externalAccountEntity) {
             throw new Error("External Account {$integration} not found for {$userId}");

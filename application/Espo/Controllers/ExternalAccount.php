@@ -47,17 +47,27 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
     public function actionList($params, $data, $request)
     {
         $integrations = $this->getEntityManager()->getRepository('Integration')->find();
-        $arr = array();
+
+        $list = [];
         foreach ($integrations as $entity) {
             if ($entity->get('enabled') && $this->getMetadata()->get('integrations.' . $entity->id .'.allowUserAccounts')) {
-                $arr[] = array(
+
+                $userAccountAclScope = $this->getMetadata()->get(['integrations', $entity->id, 'userAccountAclScope']);
+
+                if ($userAccountAclScope) {
+                    if (!$this->getAcl()->checkScope($userAccountAclScope)) {
+                        continue;
+                    }
+                }
+
+                $list[] = [
                     'id' => $entity->id
-                );
+                ];
             }
         }
-        return array(
-            'list' => $arr
-        );
+        return [
+            'list' => $list
+        ];
     }
 
     public function actionGetOAuth2Info($params, $data, $request)

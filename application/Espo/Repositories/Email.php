@@ -73,8 +73,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
     protected function addUserByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
     {
-        $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User', true);
-        if ($user) {
+        $userList = $this->getEntityManager()->getRepository('EmailAddress')->getEntityListByAddressId($emailAddressId, null, 'User', true);
+
+        foreach ($userList as $user) {
             $entity->addLinkMultipleId('users', $user->id);
             if ($addAssignedUser) {
                 $entity->addLinkMultipleId('assignedUsers', $user->id);

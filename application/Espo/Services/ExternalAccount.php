@@ -37,6 +37,12 @@ use \Espo\Core\Exceptions\NotFound;
 
 class ExternalAccount extends Record
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('hookManager');
+    }
+
     protected function getClient($integration, $id)
     {
         $integrationEntity = $this->getEntityManager()->getEntity('Integration', $integration);
@@ -90,6 +96,11 @@ class ExternalAccount extends Record
                     $entity->set($name, $value);
                 }
                 $this->getEntityManager()->saveEntity($entity);
+                $this->getInjection('hookManager')->process('ExternalAccount', 'afterConnect', $entity, [
+                    'integration' => $integration,
+                    'userId' => $userId,
+                    'code' => $code,
+                ]);
                 return true;
             } else {
                 throw new Error("Could not get access token for {$integration}.");
@@ -99,4 +110,3 @@ class ExternalAccount extends Record
         }
     }
 }
-

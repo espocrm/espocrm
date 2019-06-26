@@ -1318,6 +1318,11 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
 
+        $additionalSelectParams = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'selectParams']);
+        if ($additionalSelectParams) {
+            $selectParams = array_merge($selectParams, $additionalSelectParams);
+        }
+
         $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
 
         $selectAttributeList = $recordService->getSelectAttributeList($params);

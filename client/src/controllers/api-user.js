@@ -40,7 +40,7 @@ define('controllers/api-user', 'controllers/record', function (Dep) {
             }, context, usePreviouslyFetched);
         },
 
-        createViewView: function (options, model) {
+        createViewView: function (options, model, view) {
             if (!model.isApi()) {
                 if (model.isPortal()) {
                     this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
@@ -49,7 +49,7 @@ define('controllers/api-user', 'controllers/record', function (Dep) {
                 this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
                 return;
             }
-            Dep.prototype.createViewView.call(this, options, model);
+            Dep.prototype.createViewView.call(this, options, model, view);
         },
 
         actionCreate: function (options) {

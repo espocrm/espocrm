@@ -201,12 +201,12 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
 
         actionSetHeld: function () {
             this.model.save({status: 'Held'});
-            this.trigger('after:save');
+            this.trigger('after:save', this.model);
         },
 
         actionSetNotHeld: function () {
             this.model.save({status: 'Not Held'});
-            this.trigger('after:save');
+            this.trigger('after:save', this.model);
         },
     });
 });

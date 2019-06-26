@@ -187,7 +187,11 @@ class Client
 
         $curlOptHttpHeader = array();
         foreach ($httpHeaders as $key => $value) {
-             $curlOptHttpHeader[] = "{$key}: {$value}";
+            if (is_int($key) && !is_string($key)) {
+                $curlOptHttpHeader[] = $value;
+                continue;
+            }
+            $curlOptHttpHeader[] = "{$key}: {$value}";
         }
         $curlOptions[CURLOPT_HTTPHEADER] = $curlOptHttpHeader;
 
