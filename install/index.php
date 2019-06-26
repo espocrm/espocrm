@@ -86,17 +86,21 @@ $installer = new Installer();
 
 // check if app was installed
 if ($installer->isInstalled() && !isset($_SESSION['install']['installProcess'])) {
+	if (isset($_SESSION['install']['redirected']) && $_SESSION['install']['redirected']) {
+		die('The installation is disabled. It can be enabled in config files.');
+	}
+
 	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	$url = preg_replace('/install\/?/', '', $url, 1);
 	$url = strtok($url, '#');
 	$url = strtok($url, '?');
+
+	$_SESSION['install']['redirected'] = true;
 	header("Location: {$url}");
 	exit;
 }
-else {
-	// double check if infinite loop
-	$_SESSION['install']['installProcess'] = true;
-}
+
+$_SESSION['install']['installProcess'] = true;
 
 $smarty->caching = false;
 $smarty->setTemplateDir('install/core/tpl');
@@ -142,6 +146,7 @@ $smarty->assign('action', ucfirst($action));
 
 /** config */
 $smarty->assign('config', $config);
+$smarty->assign('installerConfig', $installer->getInstallerConfigData());
 
 if (Utils::checkActionExists($action)) {
 	include $actionFile;

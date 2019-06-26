@@ -41,6 +41,8 @@ class Installer
 
     protected $databaseHelper = null;
 
+    protected $installerConfig;
+
     protected $isAuth = false;
 
     protected $permissionMap;
@@ -70,6 +72,9 @@ class Installer
 
         $user = $this->getEntityManager()->getEntity('User');
         $this->app->getContainer()->setUser($user);
+
+        require_once('install/core/InstallerConfig.php');
+        $this->installerConfig = new InstallerConfig();
 
         require_once('install/core/SystemHelper.php');
         $this->systemHelper = new SystemHelper();
@@ -127,6 +132,11 @@ class Installer
         return $this->databaseHelper;
     }
 
+    protected function getInstallerConfig()
+    {
+        return $this->installerConfig;
+    }
+
     protected function getFileManager()
     {
         return $this->app->getContainer()->get('fileManager');
@@ -161,6 +171,12 @@ class Installer
 
     public function isInstalled()
     {
+        $installerConfig = $this->getInstallerConfig();
+
+        if ($installerConfig->get('isInstalled')) {
+            return true;
+        }
+
         return $this->app->isInstalled();
     }
 
@@ -182,6 +198,11 @@ class Installer
         $translated = $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
 
         return $translated;
+    }
+
+    public function getInstallerConfigData()
+    {
+        return $this->getInstallerConfig()->getAllData();
     }
 
     public function getSystemRequirementList($type, $requiredOnly = false, array $additionalData = null)
@@ -418,6 +439,10 @@ class Installer
         $result = $this->createRecords();
         $result &= $this->executeQueries();
         /** END: afterInstall scripts */
+
+        $installerConfig = $this->getInstallerConfig();
+        $installerConfig->set('isInstalled', true);
+        $installerConfig->save();
 
         $config = $this->app->getContainer()->get('config');
         $config->set('isInstalled', true);

@@ -16,3 +16,4 @@ npm-debug.log
 composer.phar
 vendor/
 /custom/Espo/Custom/*
+/install/config.php
