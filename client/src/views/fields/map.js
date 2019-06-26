@@ -98,6 +98,12 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
         afterRenderGoogle: function () {
             if (window.google && window.google.maps) {
                 this.initMapGoogle();
+            } else if (typeof window.mapapiloaded === 'function') {
+                var mapapiloaded = window.mapapiloaded;
+                window.mapapiloaded = function() {
+                  this.initMapGoogle();
+                  mapapiloaded();
+                }.bind(this);
             } else {
                 window.mapapiloaded = function () {
                     this.initMapGoogle();
