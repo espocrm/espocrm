@@ -88,12 +88,12 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
                     }
 
                     $link = null;
-                    $m = array(
+                    $m = [
                         'Account' => 'accounts',
                         'Contact' => 'contacts',
                         'Lead' => 'leads',
                         'User' => 'users'
-                    );
+                    ];
                     if (!empty($m[$target->getEntityType()])) {
                         $link = $m[$target->getEntityType()];
                     }
@@ -115,7 +115,11 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
                         }
 
                         $data = [
-                            'queueItemId' => $queueItemId
+                            'actionData' => [
+                                'queueItemId' => $queueItemId,
+                            ],
+                            'view' => $this->getMetadata()->get(['clientDefs', 'Campaign', 'unsubscribeView']),
+                            'template' => $this->getMetadata()->get(['clientDefs', 'Campaign', 'unsubscribeTemplate']),
                         ];
 
                         $runScript = "
@@ -137,4 +141,3 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
         }
     }
 }
-
