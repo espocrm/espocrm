@@ -110,6 +110,12 @@ class Settings extends \Espo\Core\Services\Base
             }
         }
 
+        unset($data->loginView);
+        $loginView = $this->getMetadata()->get(['clientDefs', 'App', 'loginView']);
+        if ($loginView) {
+            $data->loginView = $loginView;
+        }
+
         $this->filterData($data);
 
         return $data;
