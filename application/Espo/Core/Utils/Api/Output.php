@@ -102,14 +102,28 @@ class Output
     public function displayError(string $text, int $statusCode = 500, bool $toPrint = false, $exception = null)
     {
         $logLevel = 'error';
+        $messageLineFile = null;
+
+        if ($exception) {
+            $messageLineFile = 'line: ' . $exception->getLine() . ', file: ' . $exception->getFile();
+        }
+
         if ($exception && !empty($exception->logLevel)) {
             $logLevel = $exception->logLevel;
         }
+
         $logMessageItemList = [];
+
         if ($text) $logMessageItemList[] = "{$text}";
+
         if (!empty($this->slim)) {
             $logMessageItemList[] = $this->getSlim()->request()->getMethod() . ' ' .$_SERVER['REQUEST_URI'];
         }
+
+        if ($messageLineFile) {
+            $logMessageItemList[] = $messageLineFile;
+        }
+
         $logMessage = "($statusCode) " . implode("; ", $logMessageItemList);
 
         $GLOBALS['log']->log($logLevel, $logMessage);
