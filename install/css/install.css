@@ -107,7 +107,7 @@ select[name="user-lang"] {
 
 span.remark {
 	color: #a94442;
-	font-weight: bold;
+	font-weight: 600;
 }
 span.ok {
 	color: #87c956;
