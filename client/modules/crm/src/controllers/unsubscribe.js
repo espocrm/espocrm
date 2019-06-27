@@ -31,22 +31,26 @@ Espo.define('crm:controllers/unsubscribe', 'controller', function (Dep) {
     return Dep.extend({
 
         actionUnsubscribe: function (data) {
-            var viewName = this.getMetadata().get(['clientDefs', 'Campaign', 'unsubscribeView']) ||
-                'crm:views/campaign/unsubscribe';
+            var viewName = data.view || 'crm:views/campaign/unsubscribe';
+
+            var template = this.getMetadata().get(['clientDefs', 'Campaign', 'unsubscribeTemplate']);
 
             this.entire(viewName, {
-                actionData: data
+                actionData: data.actionData,
+                template: data.template,
             }, function (view) {
                 view.render();
             });
         },
 
         actionSubscribeAgain: function (data) {
-            var viewName = this.getMetadata().get(['clientDefs', 'Campaign', 'subscribeAgainView']) ||
-                'crm:views/campaign/subscribe-again';
+            var viewName = data.view || 'crm:views/campaign/subscribe-again';
+
+            var template = this.getMetadata().get(['clientDefs', 'Campaign', 'subscribeTemplate']);
 
             this.entire(viewName, {
-                actionData: data
+                actionData: data.actionData,
+                template: data.template,
             }, function (view) {
                 view.render();
             });
