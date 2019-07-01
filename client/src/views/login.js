@@ -63,6 +63,8 @@ Espo.define('views/login', 'view', function (Dep) {
             return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
         },
 
+        authenticationMethod: null,
+
         login: function () {
                 var userName = $('#field-userName').val();
                 var trimmedUserName = userName.trim();
@@ -108,7 +110,7 @@ Espo.define('views/login', 'view', function (Dep) {
                     url: 'App/user',
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
-                        'Espo-Authorization': Base64.encode(userName + ':' + password),
+                        'Espo-Authorization': Base64.encode(userName + ':' + password + ':' + (this.authenticationMethod || '')),
                         'Espo-Authorization-By-Token': false
                     },
                     success: function (data) {

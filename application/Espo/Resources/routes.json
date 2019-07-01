@@ -5,6 +5,17 @@
         "params": "<h1>EspoCRM REST API<\/h1>"
     },
     {
+        "route":"/App/authMethod",
+        "method":"get",
+        "params":{
+            "controller":"App",
+            "action":"authMethod"
+        },
+        "conditions":{
+            "auth":false
+        }
+    },
+    {
         "route": "/App/user",
         "method": "get",
         "params": {

@@ -73,5 +73,66 @@ abstract class Base
 
         return $this->passwordHash;
     }
+
+    /**
+     * Create Espo user with data gets from external server
+     *
+     * @param  array $userData entity data
+     *
+     * @return \Espo\Entities\User
+     */
+    protected function createUser(array $data)
+    {
+        $GLOBALS['log']->info('Creating new user ...');
+
+        $this->getAuth()->useNoAuth();
+
+        $user = $this->getEntityManager()->getEntity('User');
+        $user->set($data);
+
+        $this->getEntityManager()->saveEntity($user);
+
+        return $this->getEntityManager()->getEntity('User', $user->id);
+    }
+
+    /**
+     * Login by authorization token
+     *
+     * @param  string $username
+     * @param  \Espo\Entities\AuthToken $authToken
+     *
+     * @return \Espo\Entities\User | null
+     */
+    protected function loginByToken($username, \Espo\Entities\AuthToken $authToken = null)
+    {
+        if (!isset($authToken)) {
+            return null;
+        }
+
+        $userId = $authToken->get('userId');
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+
+        $tokenUsername = $user->get('userName');
+        if (strtolower($username) != strtolower($tokenUsername)) {
+            $GLOBALS['log']->alert('Unauthorized access attempt for user ['.$username.'] from IP ['.$_SERVER['REMOTE_ADDR'].']');
+            return null;
+        }
+
+        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
+            'whereClause' => array(
+                'userName' => $username,
+            )
+        ));
+
+        return $user;
+    }
+
+    public function authDetails() {
+        return array (
+            'method' => 'form',
+            'loginUrl' => null,
+            'logoutUrl' => null,
+        );
+    }
 }
 

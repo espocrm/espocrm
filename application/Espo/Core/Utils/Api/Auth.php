@@ -60,7 +60,7 @@ class Auth extends \Slim\Middleware
 
         $espoAuthorizationHeader = $request->headers('Http-Espo-Authorization');
         if (isset($espoAuthorizationHeader)) {
-            list($username, $password) = explode(':', base64_decode($espoAuthorizationHeader), 2);
+            list($username, $password, $authenticationMethod) = explode(':', base64_decode($espoAuthorizationHeader), 3);
         } else {
             $hmacAuthorizationHeader = $request->headers('X-Hmac-Authorization');
             if ($hmacAuthorizationHeader) {
@@ -102,49 +102,42 @@ class Auth extends \Slim\Middleware
 
                     if ($username && $password) {
                         try {
-                            $isAuthenticated = $this->auth->login($username, $password);
+                            $isAuthenticated = $this->auth->login($username, $password, $authenticationMethod);
                         } catch (\Exception $e) {
                             $this->processException($e);
                             return;
                         }
                         if ($isAuthenticated) {
-                            $this->next->call();
-                            return;
+                            return $this->next->call();
                         }
                     }
 
                     $this->auth->useNoAuth();
-                    $this->next->call();
-                    return;
+                    return $this->next->call();
                 }
             }
         } else {
             if (!$this->authRequired) {
                 $this->auth->useNoAuth();
-                $this->next->call();
-                return;
+                return $this->next->call();
             }
         }
 
-        if ($username) {
-            try {
-                $isAuthenticated = $this->auth->login($username, $password, $authenticationMethod);
-            } catch (\Exception $e) {
-                $this->processException($e);
-                return;
-            }
-
-            if ($isAuthenticated) {
-                $this->next->call();
-            } else {
-                $this->processUnauthorized();
-            }
-        } else {
-            if (!$this->isXMLHttpRequest()) {
-                $this->showDialog = true;
-            }
-            $this->processUnauthorized();
+        try {
+            $isAuthenticated = $this->auth->login($username, $password, $authenticationMethod);
+        } catch (\Exception $e) {
+            $this->processException($e);
+            return;
         }
+
+        if ($isAuthenticated) {
+            return $this->next->call();
+        }
+
+        if (!$this->isXMLHttpRequest()) {
+            $this->showDialog = true;
+        }
+        $this->processUnauthorized();
     }
 
     protected function processException(\Exception $e)

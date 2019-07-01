@@ -379,4 +379,9 @@ class Auth
         $authLogRecord->set('denialReason', $denialReason);
         $this->getEntityManager()->saveEntity($authLogRecord);
     }
+
+    public function authDetails($authenticationMethod = null) {
+        if (!$authenticationMethod) $authenticationMethod = $this->getDefaultAuthenticationMethod();
+        return $this->getAuthentication($authenticationMethod)->authDetails();
+    }
 }

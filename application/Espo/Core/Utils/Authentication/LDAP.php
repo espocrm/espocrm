@@ -112,7 +112,7 @@ class LDAP extends Espo
      */
     public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $params = [], $request)
     {
-        if (!$password) return;
+        if (!($username && $password)) return;
 
         $isPortal = !empty($params['isPortal']);
 
@@ -188,38 +188,6 @@ class LDAP extends Espo
     }
 
     /**
-     * Login by authorization token
-     *
-     * @param  string $username
-     * @param  \Espo\Entities\AuthToken $authToken
-     *
-     * @return \Espo\Entities\User | null
-     */
-    protected function loginByToken($username, \Espo\Entities\AuthToken $authToken = null)
-    {
-        if (!isset($authToken)) {
-            return null;
-        }
-
-        $userId = $authToken->get('userId');
-        $user = $this->getEntityManager()->getEntity('User', $userId);
-
-        $tokenUsername = $user->get('userName');
-        if (strtolower($username) != strtolower($tokenUsername)) {
-            $GLOBALS['log']->alert('Unauthorized access attempt for user ['.$username.'] from IP ['.$_SERVER['REMOTE_ADDR'].']');
-            return null;
-        }
-
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-            )
-        ));
-
-        return $user;
-    }
-
-    /**
      * Login user with administrator rights
      *
      * @param  string $username
@@ -251,7 +219,6 @@ class LDAP extends Espo
      */
     protected function createUser(array $userData, $isPortal = false)
     {
-        $GLOBALS['log']->info('Creating new user ...');
         $data = array();
 
         // show full array of the LDAP user
@@ -279,14 +246,7 @@ class LDAP extends Espo
             $data[$fieldName] = $fieldValue;
         }
 
-        $this->getAuth()->useNoAuth();
-
-        $user = $this->getEntityManager()->getEntity('User');
-        $user->set($data);
-
-        $this->getEntityManager()->saveEntity($user);
-
-        return $this->getEntityManager()->getEntity('User', $user->id);
+        return parent::createUser($data);
     }
 
     /**

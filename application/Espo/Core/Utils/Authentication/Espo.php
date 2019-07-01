@@ -35,7 +35,9 @@ class Espo extends Base
 {
     public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $params = [], $request)
     {
-        if (!$password) return;
+        if (!($username && $password)) {
+            return;
+        }
 
         if ($authToken) {
             $hash = $authToken->get('hash');
