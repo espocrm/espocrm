@@ -526,7 +526,8 @@ define(
             this.unsetCookieAuth();
 
             xhr = new XMLHttpRequest;
-            xhr.open('GET', this.url + '/');
+
+            xhr.open('GET', this.basePath + this.url + '/');
             xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
             xhr.send('');
             xhr.abort();
