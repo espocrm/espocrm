@@ -47,6 +47,16 @@
          "height": 300,
          "exportDisabled": true,
          "importDisabled": true
+      },
+      "mapRoute": {
+         "type": "mapRoute",
+         "notStorable": true,
+         "readOnly": true,
+         "layoutListDisabled": true,
+         "provider": "Google",
+         "height": 300,
+         "exportDisabled": true,
+         "importDisabled": true
       }
    },
    "notMergeable":true,
