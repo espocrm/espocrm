@@ -88,6 +88,9 @@ define('views/main', 'view', function (Dep) {
                 ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                     (this.menu[type] || []).forEach(function (item) {
                         menu[type] = menu[type] || [];
+                        if (item.configCheck) {
+                            if (!this.getConfig().getByPath(item.configCheck.split('.'))) return;
+                        }
                         if (Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
                             menu[type].push(item);
                         }
