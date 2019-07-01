@@ -40,7 +40,13 @@ class Settings extends \Espo\Core\Controllers\Base
     {
         $data = $this->getServiceFactory()->create('Settings')->getConfigData();
 
-        $data->jsLibs = $this->getMetadata()->get('app.jsLibs');
+        $data->jsLibs = $this->getMetadata()->get(['app', 'jsLibs']);
+
+        unset($data->loginView);
+        $loginView = $this->getMetadata()->get(['clientDefs', 'App', 'loginView']);
+        if ($loginView) {
+            $data->loginView = $loginView;
+        }
 
         return $data;
     }
