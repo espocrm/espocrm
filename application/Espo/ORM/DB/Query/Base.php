@@ -1638,9 +1638,40 @@ abstract class Base
         return implode(' ', $joinSqlList);
     }
 
+    public function buildJoinConditionsStatement($entity, $alias = null, array $conditions)
+    {
+        $sql = '';
+
+        $joinSqlList = [];
+        foreach ($conditions as $left => $right) {
+            $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
+        }
+        if (count($joinSqlList)) {
+            $sql .= implode(" AND ", $joinSqlList);
+        }
+
+        return $sql;
+    }
+
     protected function buildJoinConditionStatement($entity, $alias = null, $left, $right)
     {
         $sql = '';
+
+        if (is_array($right) && (is_int($left) || in_array($left, ['AND', 'OR']))) {
+            $logicalOperator = 'AND';
+            if ($left == 'OR') {
+                $logicalOperator = 'OR';
+            }
+
+            $sqlList = [];
+            foreach ($right as $k => $v) {
+                $sqlList[] = $this->buildJoinConditionStatement($entity, $alias, $k, $v);
+            }
+
+            $sql = implode(' ' .$logicalOperator . ' ', $sqlList);
+
+            return $sql;
+        }
 
         $operator = '=';
 
@@ -1748,6 +1779,10 @@ abstract class Base
 
         $alias = $this->sanitize($alias);
 
+        if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+            $conditions = array_merge($conditions, $relOpt['conditions']);
+        }
+
         $type = $relOpt['type'];
 
         switch ($type) {
@@ -1768,10 +1803,6 @@ abstract class Base
                     "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                     . " AND "
                     . "{$midAlias}.deleted = " . $this->pdo->quote(0);
-
-                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                    $conditions = array_merge($conditions, $relOpt['conditions']);
-                }
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
@@ -1796,7 +1827,6 @@ abstract class Base
                     "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
                     . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
-
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
