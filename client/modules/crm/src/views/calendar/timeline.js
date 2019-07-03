@@ -61,31 +61,16 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         calendarTypeList: ['single', 'shared'],
 
         data: function () {
-            var scopeFilterList = Espo.Utils.clone(this.scopeList);
-            scopeFilterList.unshift('all');
-
-            var scopeFilterDataList = [];
-            this.scopeList.forEach(function (scope) {
-                var o = {scope: scope};
-                if (!~this.enabledScopeList.indexOf(scope)) {
-                    o.disabled = true;
-                }
-                scopeFilterDataList.push(o);
-            }, this);
-
             var calendarTypeDataList = this.getCalendarTypeDataList();
 
             return {
                 mode: this.mode,
-                modeDataList: this.getModeDataList(),
                 header: this.header,
                 calendarType: this.calendarType,
-                scopeFilterDataList: scopeFilterDataList,
                 calendarTypeDataList: calendarTypeDataList,
                 calendarTypeSelectEnabled: calendarTypeDataList.length > 1,
                 calendarTypeLabel: this.getCalendarTypeLabel(this.calendarType),
                 isCustomViewAvailable: this.isCustomViewAvailable,
-                viewDataList: this.getViewDataList()
             };
         },
 
@@ -204,17 +189,77 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (!~this.calendarTypeList.indexOf(this.calendarType)) {
                 this.calendarType = 'single';
             }
+
+            if (this.header) {
+                this.createView('modeButtons', 'crm:views/calendar/mode-buttons', {
+                    el: this.getSelector() + ' .mode-buttons',
+                    isCustomViewAvailable: this.isCustomViewAvailable,
+                    modeList: this.modeList,
+                    scopeList: this.scopeList,
+                    mode: this.mode,
+                });
+            }
         },
 
         getModeDataList: function () {
             var list = [];
-            this.modeList.forEach(function (name) {
+
+            this.modeList.forEach(function (name, i) {
                 var o = {
-                    name: name,
-                    labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2)
+                    mode: name,
+                    label: this.translate(name, 'modes', 'Calendar'),
+                    labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2),
                 };
                 list.push(o);
             }, this);
+
+            if (this.isCustomViewAvailable) {
+                (this.getPreferences().get('calendarViewDataList') || []).forEach(function (item) {
+                    var item = Espo.Utils.clone(item);
+                    item.mode = 'view-' + item.id;
+                    item.label = item.name;
+                    item.labelShort = (item.name || '').substr(0, 2);
+                    list.push(item);
+                }, this);
+            }
+
+            var currentIndex = -1;
+            list.forEach(function (item, i) {
+                if (item.mode === this.mode) {
+                    currentIndex = i;
+                }
+            }, this);
+
+            if (currentIndex >= this.visibleModeListCount) {
+                var tmp = list[this.visibleModeListCount - 1];
+                list[this.visibleModeListCount - 1] = list[currentIndex];
+                list[currentIndex] = tmp;
+            }
+
+            return list;
+        },
+
+        getVisibleModeDataList: function () {
+            var fullList =  this.getModeDataList();
+
+            var list = [];
+            fullList.forEach(function (o, i) {
+                if (i >= this.visibleModeListCount) return;
+                list.push(o);
+            }, this);
+
+            return list;
+        },
+
+        getHiddenModeDataList: function () {
+            var fullList =  this.getModeDataList();
+
+            var list = [];
+            fullList.forEach(function (o, i) {
+                if (i < this.visibleModeListCount) return;
+                list.push(o);
+            }, this);
+
             return list;
         },
 
@@ -920,15 +965,6 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             return this.colors[scope];
         },
-
-        getViewDataList: function () {
-            var dataList = this.getPreferences().get('calendarViewDataList') || [];
-            dataList = Espo.Utils.cloneDeep(dataList);
-            dataList.forEach(function (item) {
-                item.mode = 'view-' + item.id;
-            }, this);
-            return dataList;
-        }
 
     });
 });
