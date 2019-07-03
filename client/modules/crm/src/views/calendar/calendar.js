@@ -471,7 +471,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             }
             var height = $(window).height();
             var width = $(window).width();
-            var spaceHeight = 150;
+            var spaceHeight = 134;
             if (width < 768) {
                 spaceHeight = 164;
             }
