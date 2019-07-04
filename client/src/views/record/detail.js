@@ -1369,6 +1369,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, function (simpleLayout) {
+                if (typeof this.modifyDetailLayout == 'function') {
+                    var simpleLayout = Espo.Utils.cloneDeep(simpleLayout);
+                    this.modifyDetailLayout(simpleLayout);
+                }
                 this.gridLayout = {
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(simpleLayout)
