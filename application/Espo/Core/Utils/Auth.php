@@ -52,6 +52,10 @@ class Auth
 
     private $portal;
 
+    const STATUS_SUCCESS = 'success';
+
+    const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
+
     public function __construct(\Espo\Core\Container $container, $allowAnyAccess = false)
     {
         $this->container = $container;
@@ -197,7 +201,9 @@ class Auth
             'isPortal' => $this->isPortal()
         ];
 
-        $user = $authentication->login($username, $password, $authToken, $params, $this->request);
+        $loginResultData = [];
+
+        $user = $authentication->login($username, $password, $authToken, $params, $this->request, $loginResultData);
 
         $authLogRecord = null;
 
@@ -247,7 +253,9 @@ class Auth
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->setUser($user);
 
-        if ($this->request->headers->get('Http-Espo-Authorization')) {
+        $secondStepRequired = $loginResultData['secondStepRequired'] ?? false;
+
+        if (!$secondStepRequired && $this->request->headers->get('Http-Espo-Authorization')) {
             if (!$authToken) {
                 $authToken = $this->getEntityManager()->getEntity('AuthToken');
                 $token = $this->generateToken();
@@ -295,7 +303,18 @@ class Auth
             $user->set('authLogRecordId', $authLogRecord->id);
         }
 
-        return true;
+        if ($secondStepRequired) {
+            return [
+                'status' => self::STATUS_SECOND_STEP_REQUIRED,
+                'message' => $loginResultData['message'] ?? null,
+                'token' => $loginResultData['token'] ?? null,
+                'view' => $loginResultData['view'] ?? null,
+            ];
+        }
+
+        return [
+            'status' => self::STATUS_SUCCESS,
+        ];
     }
 
     protected function checkFailedAttemptsLimit($username = null)

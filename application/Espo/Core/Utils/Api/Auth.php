@@ -31,6 +31,8 @@ namespace Espo\Core\Utils\Api;
 
 use \Espo\Core\Utils\Api\Slim;
 
+use \Espo\Core\Utils\Auth as AuthUtil;
+
 class Auth extends \Slim\Middleware
 {
     protected $auth;
@@ -39,7 +41,7 @@ class Auth extends \Slim\Middleware
 
     protected $showDialog = false;
 
-    public function __construct(\Espo\Core\Utils\Auth $auth, $authRequired = null, $showDialog = false)
+    public function __construct(AuthUtil $auth, $authRequired = null, $showDialog = false)
     {
         $this->auth = $auth;
         $this->authRequired = $authRequired;
@@ -128,14 +130,14 @@ class Auth extends \Slim\Middleware
 
         if ($username) {
             try {
-                $isAuthenticated = $this->auth->login($username, $password, $authenticationMethod);
+                $authResult = $this->auth->login($username, $password, $authenticationMethod);
             } catch (\Exception $e) {
                 $this->processException($e);
                 return;
             }
 
-            if ($isAuthenticated) {
-                $this->next->call();
+            if ($authResult) {
+                $this->handleAuthResult($authResult);
             } else {
                 $this->processUnauthorized();
             }
@@ -144,6 +146,31 @@ class Auth extends \Slim\Middleware
                 $this->showDialog = true;
             }
             $this->processUnauthorized();
+        }
+    }
+
+    protected function handleAuthResult(array $authResult)
+    {
+        $status = $authResult['status'];
+
+        $response = $this->app->response();
+
+        if ($status === AuthUtil::STATUS_SUCCESS) {
+            $this->next->call();
+            return;
+        }
+
+        if ($status === AuthUtil::STATUS_SECOND_STEP_REQUIRED) {
+            $response->setStatus(401);
+            $response->headers->set('X-Status-Reason', 'second-step-required');
+
+            $bodyData = [
+                'status' => $status,
+                'message' => $authResult['message'] ?? null,
+                'view' => $authResult['view'] ?? null,
+                'token' => $authResult['token'] ?? null,
+            ];
+            $response->setBody(json_encode($bodyData));
         }
     }
 

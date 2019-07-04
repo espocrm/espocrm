@@ -62,7 +62,9 @@
         "Portal": "Portal",
         "Create Portal User": "Create Portal User",
         "Proceed w/o Contact": "Proceed w/o Contact",
-        "Generate New API Key": "Generate New API Key"
+        "Generate New API Key": "Generate New API Key",
+        "Code": "Code",
+        "Back to login form": "Back to login form"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
@@ -85,7 +87,9 @@
         "uniqueLinkHasBeenSent": "The unique URL has been sent to the specified email address.",
         "passwordChangedByRequest": "Password has been changed.",
         "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
-        "userNameExists": "User Name already exists"
+        "userNameExists": "User Name already exists",
+        "wrongCode": "Wrong code",
+        "codeIsRequired": "Code is required"
     },
     "options": {
         "gender": {

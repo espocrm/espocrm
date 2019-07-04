@@ -32,12 +32,49 @@ define('controllers/base', 'controller', function (Dep) {
 
         login: function () {
             var viewName = this.getConfig().get('loginView') || 'views/login';
-            this.entire(viewName, {}, function (login) {
-                login.render();
-                login.on('login', function (data) {
-                    this.trigger('login', data);
-                }.bind(this));
+
+            this.entire(viewName, {}, function (loginView) {
+                loginView.render();
+
+                loginView.on('login', function (userName, data) {
+                    this.trigger('login', this.normalizeLoginData(userName, data));
+                }, this);
+
+                loginView.once('redirect', function (viewName, userName, password, data) {
+                    loginView.remove();
+                    this.entire(viewName, {
+                        data: data,
+                        userName: userName,
+                        password: password,
+                    }, function (secondStepView) {
+                        secondStepView.render();
+
+                        secondStepView.once('login', function (userName, data) {
+                            this.trigger('login', this.normalizeLoginData(userName, data));
+                        }, this);
+
+                        secondStepView.once('back', function () {
+                            secondStepView.remove();
+
+                            this.login();
+                        }, this);
+                    }.bind(this));
+                }, this);
             }.bind(this));
+        },
+
+        normalizeLoginData: function (userName, data) {
+            return {
+                auth: {
+                    userName: userName,
+                    token: data.token,
+                },
+                user: data.user,
+                preferences: data.preferences,
+                acl: data.acl,
+                settings: data.settings,
+                appParams: data.appParams,
+            };
         },
 
         actionLogin: function () {

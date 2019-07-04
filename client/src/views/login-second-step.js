@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/login', 'view', function (Dep) {
+define('views/login-second-step', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'login',
+        template: 'login-second-step',
 
         views: {
             footer: {
@@ -41,46 +41,38 @@ define('views/login', 'view', function (Dep) {
 
         events: {
             'submit #login-form': function (e) {
-                this.login();
-                return false;
+                this.send();
+                return;
             },
-            'click a[data-action="passwordChangeRequest"]': function (e) {
-                this.showPasswordChangeRequest();
-            }
+            'click [data-action="backToLogin"]': function () {
+                this.trigger('back');
+            },
         },
 
         data: function () {
             return {
-                logoSrc: this.getLogoSrc()
+                message: this.message,
             };
         },
 
-        getLogoSrc: function () {
-            var companyLogoId = this.getConfig().get('companyLogoId');
-            if (!companyLogoId) {
-                return this.getBasePath() + ('client/img/logo.png');
-            }
-            return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
+        setup: function () {
+            this.message = this.options.data.message;
         },
 
-        login: function () {
-            var userName = $('#field-userName').val();
-            var trimmedUserName = userName.trim();
-            if (trimmedUserName !== userName) {
-                $('#field-userName').val(trimmedUserName);
-                userName = trimmedUserName;
-            }
+        send: function () {
+            var code = $('#field-code').val().trim();
 
-            var password = $('#field-password').val();
+            var userName = this.options.userName;
+            var password = this.options.data.token || this.options.password;
 
-            var $submit = this.$el.find('#btn-login');
+            var $submit = this.$el.find('#btn-send');
 
-            if (userName == '') {
+            if (code == '') {
 
                 this.isPopoverDestroyed = false;
-                var $el = $("#field-userName");
+                var $el = $("#field-code");
 
-                var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
+                var message = this.getLanguage().translate('codeIsRequired', 'messages', 'User');
 
                 $el.popover({
                     placement: 'bottom',
@@ -97,6 +89,7 @@ define('views/login', 'view', function (Dep) {
                     $el.popover('destroy');
                     this.isPopoverDestroyed = true;
                 }.bind(this));
+
                 return;
             }
 
@@ -104,12 +97,12 @@ define('views/login', 'view', function (Dep) {
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            Espo.Ajax.getRequest('App/user', null, {
+            Espo.Ajax.getRequest('App/user', {code: code}, {
                 login: true,
                 headers: {
                     'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
                     'Espo-Authorization': Base64.encode(userName + ':' + password),
-                    'Espo-Authorization-By-Token': false,
+                    'Espo-Authorization-Code': code,
                 },
             }).then(
                 function (data) {
@@ -119,26 +112,12 @@ define('views/login', 'view', function (Dep) {
             ).fail(
                 function (xhr) {
                     $submit.removeClass('disabled').removeAttr('disabled');
+
                     if (xhr.status == 401) {
-                        var data = xhr.responseJSON || {};
-                        var statusReason = xhr.getResponseHeader('X-Status-Reason');
-
-                        if (statusReason === 'second-step-required') {
-                            xhr.errorIsHandled = true;
-                            this.onSecondStepRequired(userName, password, data);
-                            return;
-                        }
-
                         this.onWrongCredentials();
                     }
                 }.bind(this)
             );
-        },
-
-        onSecondStepRequired: function (userName, password, data) {
-            var view = data.view || 'views/login-second-step';
-
-            this.trigger('redirect', view, userName, password, data);
         },
 
         onWrongCredentials: function () {
@@ -147,17 +126,8 @@ define('views/login', 'view', function (Dep) {
             this.$el.one('mousedown click', function () {
                 cell.removeClass('has-error');
             });
-            Espo.Ui.error(this.translate('wrongUsernamePasword', 'messages', 'User'));
+            Espo.Ui.error(this.translate('wrongCode', 'messages', 'User'));
         },
 
-        showPasswordChangeRequest: function () {
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-            this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
-                url: window.location.href
-            }, function (view) {
-                view.render();
-                Espo.Ui.notify(false);
-            });
-        }
     });
 });
