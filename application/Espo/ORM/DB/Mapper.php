@@ -232,6 +232,10 @@ abstract class Mapper implements IMapper
                     $params['limit'] = 1;
                 }
 
+                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
+                    $params['whereClause'][] = $relDefs['conditions'];
+                }
+
                 $resultArr = [];
 
                 $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
@@ -1005,16 +1009,14 @@ abstract class Mapper implements IMapper
             . " AND "
             . "{$relTable}.deleted = " . $this->pdo->quote(0) . "";
 
+        $conditions = $conditions ?? [];
         if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-            foreach ($relDefs['conditions'] as $f => $v) {
-                $join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
-            }
+            $conditions = array_merge($conditions, $relDefs['conditions']);
         }
 
-        if (!empty($conditions) && is_array($conditions)) {
-            foreach ($conditions as $f => $v) {
-                $join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
-            }
+        if (!empty($conditions)) {
+            $conditionsSql = $this->query->buildJoinConditionsStatement($entity, $relTable, $conditions);
+            $join .= " AND " . $conditionsSql;
         }
 
         return $join;

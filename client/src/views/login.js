@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/login', 'view', function (Dep) {
+define('views/login', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -102,16 +102,17 @@ Espo.define('views/login', 'view', function (Dep) {
 
                 $submit.addClass('disabled').attr('disabled', 'disabled');
 
-                this.notify('Please wait...');
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                $.ajax({
-                    url: 'App/user',
+                Espo.Ajax.getRequest('App/user', null, {
+                    login: true,
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
                         'Espo-Authorization': Base64.encode(userName + ':' + password),
-                        'Espo-Authorization-By-Token': false
+                        'Espo-Authorization-By-Token': false,
                     },
-                    success: function (data) {
+                }).then(
+                    function (data) {
                         this.notify(false);
                         this.trigger('login', {
                             auth: {
@@ -122,20 +123,20 @@ Espo.define('views/login', 'view', function (Dep) {
                             preferences: data.preferences,
                             acl: data.acl,
                             settings: data.settings,
-                            appParams: data.appParams
+                            appParams: data.appParams,
                         });
-                    }.bind(this),
-                    error: function (xhr) {
+                    }.bind(this)
+                ).fail(
+                    function (xhr) {
                         $submit.removeClass('disabled').removeAttr('disabled');
                         if (xhr.status == 401) {
-                            this.onWrong();
+                            this.onWrongCredentials();
                         }
-                    }.bind(this),
-                    login: true,
-                });
+                    }.bind(this)
+                );
         },
 
-        onWrong: function () {
+        onWrongCredentials: function () {
             var cell = $('#login .form-group');
             cell.addClass('has-error');
             this.$el.one('mousedown click', function () {
@@ -145,12 +146,12 @@ Espo.define('views/login', 'view', function (Dep) {
         },
 
         showPasswordChangeRequest: function () {
-            this.notify('Please wait...');
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
             this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
                 url: window.location.href
             }, function (view) {
                 view.render();
-                view.notify(false);
+                Espo.Ui.notify(false);
             });
         }
     });

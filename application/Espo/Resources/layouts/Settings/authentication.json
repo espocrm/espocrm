@@ -5,28 +5,5 @@
             [{"name": "authenticationMethod"}, {"name": "authTokenLifetime"}],
             [{"name": "authTokenPreventConcurrent"}, {"name": "authTokenMaxIdleTime"}]
         ]
-    },
-    {
-        "label": "LDAP",
-        "name": "LDAP",
-        "rows": [
-            [{"name": "ldapHost"}, {"name": "ldapPort"}],
-            [{"name": "ldapAuth"}, {"name": "ldapSecurity"}],
-            [{"name": "ldapUsername", "fullWidth": true}],
-            [{"name": "ldapPassword"}, {"name": "testConnection", "customLabel": null, "view": "views/admin/authentication/fields/test-connection"}],
-            [{"name": "ldapUserNameAttribute"}, {"name": "ldapUserObjectClass"}],
-            [{"name": "ldapAccountCanonicalForm"}, {"name": "ldapBindRequiresDn"}],
-            [{"name": "ldapBaseDn", "fullWidth": true}],
-            [{"name": "ldapUserLoginFilter", "fullWidth": true}],
-            [{"name": "ldapAccountDomainName"}, {"name": "ldapAccountDomainNameShort"}],
-            [{"name": "ldapTryUsernameSplit"}, {"name": "ldapOptReferrals"}],
-            [{"name": "ldapCreateEspoUser"}, false],
-            [{"name": "ldapUserFirstNameAttribute"}, {"name": "ldapUserLastNameAttribute"}],
-            [{"name": "ldapUserTitleAttribute"}, false],
-            [{"name": "ldapUserEmailAddressAttribute"}, {"name": "ldapUserPhoneNumberAttribute"}],
-            [{"name": "ldapUserTeams"}, {"name": "ldapUserDefaultTeam"}],
-            [{"name": "ldapPortalUserLdapAuth"}, false],
-            [{"name": "ldapPortalUserPortals"}, {"name": "ldapPortalUserRoles"}]
-        ]
     }
 ]

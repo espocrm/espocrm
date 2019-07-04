@@ -99,14 +99,14 @@ class ClientManager
         if ($isDeveloperMode) {
             $useCache = $this->getConfig()->get('useCacheInDeveloperMode');
             $jsFileList = $this->getMetadata()->get(['app', 'client', 'developerModeScriptList'], []);
-            $cssFileList = $this->getMetadata()->get(['app', 'client', 'developerModeCssList'], []);
             $loaderCacheTimestamp = 'null';
         } else {
             $useCache = $this->getConfig()->get('useCache');
             $jsFileList = $this->getMetadata()->get(['app', 'client', 'scriptList'], []);
-            $cssFileList = $this->getMetadata()->get(['app', 'client', 'cssList'], []);
             $loaderCacheTimestamp = $cacheTimestamp;
         }
+
+        $cssFileList = $this->getMetadata()->get(['app', 'client', 'cssList'], []);
 
         $linkList = $this->getMetadata()->get(['app', 'client', 'linkList'], []);
 

@@ -50,9 +50,9 @@ class Application extends \Espo\Core\Application
         $portal = $this->getContainer()->get('entityManager')->getEntity('Portal', $portalId);
 
         if (!$portal) {
-            $portal = $this->getContainer()->get('entityManager')->getRepository('Portal')->where(array(
+            $portal = $this->getContainer()->get('entityManager')->getRepository('Portal')->where([
                 'customId' => $portalId
-            ))->findOne();
+            ])->findOne();
         }
 
         if (!$portal) {

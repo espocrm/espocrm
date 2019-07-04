@@ -195,7 +195,7 @@ class Htmlizer
                 unset($data[$attribute]);
             }
 
-            if ($fieldType === 'currency') {
+            if ($fieldType === 'currency' && $this->metadata) {
                 if ($entity->getAttributeParam($attribute, 'attributeRole') === 'currency') {
                     if ($currencyValue = $data[$attribute]) {
                         $data[$attribute . 'Symbol'] = $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);

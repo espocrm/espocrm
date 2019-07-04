@@ -1,0 +1,181 @@
+{
+
+    "settings": {
+        "layout": {
+            "label": "LDAP",
+            "rows": [
+                [{"name": "ldapHost"}, {"name": "ldapPort"}],
+                [{"name": "ldapAuth"}, {"name": "ldapSecurity"}],
+                [{"name": "ldapUsername", "fullWidth": true}],
+                [{"name": "ldapPassword"}, {"name": "testConnection", "customLabel": null, "view": "views/admin/authentication/fields/test-connection"}],
+                [{"name": "ldapUserNameAttribute"}, {"name": "ldapUserObjectClass"}],
+                [{"name": "ldapAccountCanonicalForm"}, {"name": "ldapBindRequiresDn"}],
+                [{"name": "ldapBaseDn", "fullWidth": true}],
+                [{"name": "ldapUserLoginFilter", "fullWidth": true}],
+                [{"name": "ldapAccountDomainName"}, {"name": "ldapAccountDomainNameShort"}],
+                [{"name": "ldapTryUsernameSplit"}, {"name": "ldapOptReferrals"}],
+                [{"name": "ldapCreateEspoUser"}, false],
+                [{"name": "ldapUserFirstNameAttribute"}, {"name": "ldapUserLastNameAttribute"}],
+                [{"name": "ldapUserTitleAttribute"}, false],
+                [{"name": "ldapUserEmailAddressAttribute"}, {"name": "ldapUserPhoneNumberAttribute"}],
+                [{"name": "ldapUserTeams"}, {"name": "ldapUserDefaultTeam"}],
+                [{"name": "ldapPortalUserLdapAuth"}, false],
+                [{"name": "ldapPortalUserPortals"}, {"name": "ldapPortalUserRoles"}]
+            ]
+        },
+        "fieldList": [
+            "ldapHost", "ldapPort", "ldapAuth", "ldapSecurity",
+            "ldapUsername", "ldapPassword", "ldapBindRequiresDn",
+            "ldapUserLoginFilter", "ldapBaseDn", "ldapAccountCanonicalForm",
+            "ldapAccountDomainName", "ldapAccountDomainNameShort", "ldapAccountDomainName",
+            "ldapAccountDomainNameShort", "ldapTryUsernameSplit", "ldapOptReferrals",
+            "ldapCreateEspoUser", "ldapPortalUserLdapAuth"
+        ],
+        "dynamicLogic": {
+            "fields": {
+                "ldapUsername": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapAuth"
+                            }
+                        ]
+                    }
+                },
+                "ldapPassword": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapAuth"
+                            }
+                        ]
+                    }
+                },
+                "testConnection": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapAuth"
+                            }
+                        ]
+                    }
+                },
+                "ldapAccountDomainName": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "in",
+                                "attribute": "ldapAccountCanonicalForm",
+                                "value": ["Backslash", "Principal"]
+                            }
+                        ]
+                    }
+                },
+                "ldapAccountDomainNameShort": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "in",
+                                "attribute": "ldapAccountCanonicalForm",
+                                "value": ["Backslash", "Principal"]
+                            }
+                        ]
+                    }
+                },
+                "ldapUserTitleAttribute": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    }
+                },
+                "ldapUserFirstNameAttribute": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    }
+                },
+                "ldapUserLastNameAttribute": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    }
+                },
+                "ldapUserEmailAddressAttribute": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    }
+                },
+                "ldapUserPhoneNumberAttribute": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    }
+                },
+                "ldapUserTeams": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    }
+                },
+                "ldapUserDefaultTeam": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    }
+                },
+                "ldapPortalUserPortals": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapPortalUserLdapAuth"
+                            }
+                        ]
+                    }
+                },
+                "ldapPortalUserRoles": {
+                    "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapPortalUserLdapAuth"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

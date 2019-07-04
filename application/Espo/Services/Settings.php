@@ -102,18 +102,21 @@ class Settings extends \Espo\Core\Services\Base
             unset($data->$item);
         }
 
+        if ($this->getUser()->isSystem()) {
+            $globalItemList = $this->getGlobalItemList();
+            foreach (get_object_vars($data) as $item => $value) {
+                if (!in_array($item, $globalItemList)) {
+                    unset($data->$item);
+                }
+            }
+        }
+
         $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
 
         foreach ($fieldDefs as $field => $fieldParams) {
             if ($fieldParams['type'] === 'password') {
                 unset($data->$field);
             }
-        }
-
-        unset($data->loginView);
-        $loginView = $this->getMetadata()->get(['clientDefs', 'App', 'loginView']);
-        if ($loginView) {
-            $data->loginView = $loginView;
         }
 
         $this->filterData($data);
@@ -171,6 +174,10 @@ class Settings extends \Espo\Core\Services\Base
 
     protected function filterData($data)
     {
+        if (empty($data->useWebSocket)) {
+            unset($data->webSocketUrl);
+        }
+
         if ($this->getUser()->isSystem()) return;
 
         if ($this->getUser()->isAdmin()) return;
@@ -234,4 +241,19 @@ class Settings extends \Espo\Core\Services\Base
         return $itemList;
     }
 
+    public function getGlobalItemList()
+    {
+        $itemList = $this->getConfig()->get('globalItems', []);
+
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
+        foreach ($fieldDefs as $field => $fieldParams) {
+            if (!empty($fieldParams['global'])) {
+                foreach ($this->getFieldManagerUtil()->getAttributeList('Settings', $field) as $attribute) {
+                    $itemList[] = $attribute;
+                }
+            }
+        }
+
+        return $itemList;
+    }
 }

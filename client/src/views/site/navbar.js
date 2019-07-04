@@ -352,6 +352,8 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             var $more = $tabs.find('li.more > ul');
 
+            minHeight = Math.max(minHeight, $more.height());
+
             if ($more.children().length === 0) {
                 $more.parent().addClass('hidden');
             }
