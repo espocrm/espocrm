@@ -114,7 +114,7 @@ define('views/modal', 'view', function (Dep) {
                     className: this.className,
                     bodyDiffHeight: modalBodyDiffHeight,
                     footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
-                    fullHeight: this.getThemeManager().getParam('modalFullHeight'),
+                    fullHeight: !this.noFullHeight && this.getThemeManager().getParam('modalFullHeight'),
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     fixedHeaderHeight: this.fixedHeaderHeight,
                     onRemove: function () {
