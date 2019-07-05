@@ -1,6 +1,7 @@
 {
 
     "settings": {
+        "isAvailable": true,
         "layout": {
             "label": "LDAP",
             "rows": [
