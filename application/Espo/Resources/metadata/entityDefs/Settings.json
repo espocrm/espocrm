@@ -150,8 +150,8 @@
         },
         "authenticationMethod": {
             "type": "enum",
-            "options": ["Espo", "LDAP"],
-            "default": "Espo"
+            "default": "Espo",
+            "view": "views/settings/fields/authentication-method"
         },
         "ldapHost": {
             "type": "varchar",

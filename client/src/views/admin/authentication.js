@@ -33,7 +33,14 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
         layoutName: 'authentication',
 
         setup: function () {
-            this.methodList = this.getMetadata().get('entityDefs.Settings.fields.authenticationMethod.options') || [];
+            this.methodList = [];
+
+            var defs = this.getMetadata().get(['authenticationMethods']) || {};
+            for (var method in defs) {
+                if (defs[method].settings && defs[method].settings.isAvailable) {
+                    this.methodList.push(method);
+                }
+            }
 
             this.authFields = {};
 
