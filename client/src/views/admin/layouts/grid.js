@@ -375,9 +375,15 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             $('#layout ul.rows').disableSelection();
 
             $('#layout ul.cells > li.draggable').draggable({
+              appendTo: '#layout',
+              helper: "clone",
               revert: 'invalid',
+              scroll: false,
               revertDuration: 200,
-              zIndex: 10
+              zIndex: 10,
+              start: function(event, ui) {
+                $(ui.helper).width($(event.target).width());
+              }
             }).css('cursor', 'pointer');
 
             $('#layout ul.cells > li').droppable().droppable('destroy');

@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
   }
-  #layout ul > li {
+  #layout li {
     background-color: white;
   }
   
@@ -50,18 +50,18 @@
   #layout div.available-fields {
     height: 80%;
     width: 22%;
+    overflow-x: hidden;
     overflow-y: scroll;
     position: fixed;
     right: 5px;
-    z-index: 100;
   }
-  
+  #layout > li,
   #layout div.available-fields li {
     border: 1px solid #CCC;
     margin: 5px;
-    padding: 5px;  
+    padding: 5px;
   }
-        
+  #layout > li a,
   #layout div.available-fields li a {
     display: none;
   }
