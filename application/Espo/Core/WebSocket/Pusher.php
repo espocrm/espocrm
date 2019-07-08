@@ -80,9 +80,10 @@ class Pusher implements WampServerInterface
         if ($checkCommand) {
             $checkResult = shell_exec($checkCommand);
             if ($checkResult !== 'true') {
-                if ($this->isDebugMode) $this->log("check access failed for topic {$topicId} for user {$userId}");
+                if ($this->isDebugMode) $this->log("{$connectionId}: check access failed for topic {$topicId} for user {$userId}");
                 return;
             }
+            if ($this->isDebugMode) $this->log("{$connectionId}: check access succeed for topic {$topicId} for user {$userId}");
         }
 
         if (!in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
@@ -110,20 +111,37 @@ class Pusher implements WampServerInterface
             if ($index !== false) {
                 if ($this->isDebugMode) $this->log("{$connectionId}: remove topic {$topicId} for user {$userId}");
                 unset($this->connectionIdTopicIdListMap[$connectionId][$index]);
-                $this->connectionIdTopicIdListMap[$connectionId][$index] = array_values($this->connectionIdTopicIdListMap[$connectionId][$index]);
+                $this->connectionIdTopicIdListMap[$connectionId] = array_values($this->connectionIdTopicIdListMap[$connectionId]);
             }
         }
+    }
+
+    protected function getCategoryData(string $topicId) : array
+    {
+        $arr = explode('.', $topicId);
+        $category = $arr[0];
+
+        if (array_key_exists($category, $this->categoriesData)) {
+            $data = $this->categoriesData[$category];
+        } else if (array_key_exists($topicId, $this->categoriesData)) {
+            $data = $this->categoriesData[$topicId];
+        } else {
+            $data = [];
+        }
+
+        return $data;
     }
 
     protected function getParamsFromTopicId(string $topicId) : array
     {
         $arr = explode('.', $topicId);
-        $category = $arr[0];
+
+        $data = $this->getCategoryData($topicId);
 
         $params = [];
 
-        if (array_key_exists('paramList', $this->categoriesData[$category])) {
-            foreach ($this->categoriesData[$category]['paramList'] as $i => $item) {
+        if (array_key_exists('paramList', $data)) {
+            foreach ($data['paramList'] as $i => $item) {
                 if (isset($arr[$i + 1])) {
                     $params[$item] = $arr[$i + 1];
                 } else {
@@ -146,10 +164,12 @@ class Pusher implements WampServerInterface
             return null;
         }
 
-        $category = $this->getTopicCategory($topic);
-        if (!array_key_exists('accessCheckCommand', $this->categoriesData[$category])) return null;
+        $data = $this->getCategoryData($topic->getId());
 
-        $command = $this->phpExecutablePath . " command.php " . $this->categoriesData[$category]['accessCheckCommand'];
+        if (!array_key_exists('accessCheckCommand', $data)) return null;
+
+        $command = $this->phpExecutablePath . " command.php " . $data['accessCheckCommand'];
+
         foreach ($params as $key => $value) {
             $command = str_replace(':' . $key, $value, $command);
         }
