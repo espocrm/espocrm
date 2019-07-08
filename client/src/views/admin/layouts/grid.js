@@ -36,8 +36,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
         panels: null,
 
-        columnCount: 2,
-
         panelDataAttributeList: ['panelName', 'style'],
 
         panelDataAttributesDefs: {},
@@ -57,11 +55,22 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
         },
 
         emptyCellTemplate:
-                            '<li class="empty disabled cell">' +
-                            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
-                            '</li>',
+                            '<li class="draggable"><div class="empty disabled cell">' +
+                            '<a href="javascript:" data-action="minusCell" class="remove-field pull-right"><i class="fas fa-minus"></i></a>' +
+                            '</div></li>',
 
         events: _.extend({
+            'click #layout a[data-action="switchPanelMode"]': function (e) {
+                var number = $(e.currentTarget).data('number');
+                var panel = $(e.currentTarget).closest('ul.panels > li.panel');
+                this.panels.forEach(function (item, i) {
+                    if (item.number === number) {
+                      item.mode = item.mode === 'row' ? 'column' : 'row';
+                      this.panelsData[number.toString()]['mode'] = item.mode;
+                      this.updatePanelMode(panel, item.mode);
+                    }
+                }, this);
+            },
             'click #layout a[data-action="addPanel"]': function () {
                 this.addPanel();
                 this.makeDraggable();
@@ -94,6 +103,10 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var tpl = this.unescape($("#layout-row-tpl").html());
                 var html = _.template(tpl);
                 $(e.target).closest('ul.panels > li').find('ul.rows').append(html);
+                var panel = $(e.target).closest('li.panel');
+                var id = panel.attr("data-number").toString();
+                var mode = panel.attr("data-mode");
+                this.updatePanelMode(panel, mode);
                 this.makeDraggable();
             },
             'click #layout a[data-action="removeRow"]': function (e) {
@@ -102,8 +115,21 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                         $(li).appendTo($('#layout ul.disabled'));
                     }
                 });
+                var panel = $(e.target).closest('li.panel');
+                var id = panel.attr("data-number").toString();
+                var mode = panel.attr("data-mode");
                 $(e.target).closest('ul.rows > li').remove();
+                this.updatePanelMode(panel, mode);
                 this.normilizaDisabledItemList();
+            },
+            'click #layout a[data-action="addCell"]': function (e) {
+                var empty = $(this.emptyCellTemplate);
+                empty.insertBefore($(e.target).closest('ul.cells .add-cell'));
+                var panel = $(e.target).closest('li.panel');
+                var id = panel.attr("data-number").toString();
+                var mode = panel.attr("data-mode");
+                this.updatePanelMode(panel, mode);
+                this.makeDraggable();
             },
             'click #layout a[data-action="removeField"]': function (e) {
                 var el = $(e.target).closest('li');
@@ -113,45 +139,26 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 el.appendTo($('ul.disabled'));
 
                 var empty = $(this.emptyCellTemplate);
-                if (el.attr('data-full-width')) {
-                    for (var i = 0; i < this.columnCount; i++) {
-                        parent.append(empty.clone());
-                    }
+
+                if (index == 0) {
+                    parent.prepend(empty);
                 } else {
-
-                    if (index == 0) {
-                        parent.prepend(empty);
-                    } else {
-                        empty.insertAfter(parent.children(':nth-child(' + index + ')'));
-                    }
+                    empty.insertAfter(parent.children(':nth-child(' + index + ')'));
                 }
-
-                el.removeAttr('data-full-width');
-
+                var panel = parent.closest('li.panel');
+                var id = panel.attr("data-number").toString();
+                var mode = panel.attr("data-mode");
+                this.updatePanelMode(panel, mode);
                 this.makeDraggable();
             },
             'click #layout a[data-action="minusCell"]': function (e) {
-                if (this.columnCount < 2) {
-                    return;
-                }
                 $li = $(e.currentTarget).closest('li');
                 $ul = $li.parent();
-
-                var count = 0;
-
-                var isEmpty = false;
-                if ($ul.children('li:not(.empty)').length == 0) {
-                    isEmpty = true;
-                }
-
-                $ul.children('li.empty').remove();
-                $ul.children('li:not(:first-child)').remove();
-                $ul.children('li').attr('data-full-width', true);
-
-                if (isEmpty) {
-                    $ul.append($('<li class="empty"></li>').attr('data-full-width', true));
-                    this.makeDraggable();
-                }
+                $li.remove();
+                var panel = $ul.closest('li.panel');
+                var id = panel.attr("data-number").toString();
+                var mode = panel.attr("data-mode");
+                this.updatePanelMode(panel, mode);
             },
             'click #layout a[data-action="edit-panel-label"]': function (e) {
                 var $header = $(e.target).closest('header');
@@ -191,6 +198,40 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 }, this);
             }
         }, Dep.prototype.events),
+        updatePanelMode: function(panel, mode) {
+              panel.find('ul.rows > li').removeClass (function (index, className) {
+                  return (className.match (/(^|\s)col-\S+/g) || []).join(' ');
+              });
+              panel.find('ul.cells > li').removeClass (function (index, className) {
+                      return (className.match (/(^|\s)col-\S+/g) || []).join(' ');
+              });
+              panel.find('a.switch-panel').hide();
+              switch(mode)
+              {
+                case 'row':
+
+                  var rows = panel.find('ul.rows > li');
+                  rows.each(function(i, row) {
+                    var cells = $(row).find('ul.cells > li');
+                    cells.addClass('col-md-' + parseInt(12 / cells.length));
+                  });
+                  panel.find('a.switch-panel-mode').addClass('fa-rotate-90');
+                  break;
+                case 'column':
+                  var columns = panel.find('ul.rows > li');
+                  columns.addClass('col-md-' + parseInt(12 / columns.length));
+                  panel.find('a.switch-panel-mode').removeClass('fa-rotate-90');
+                  break;
+              }
+              panel.attr("data-mode", mode);
+        },
+        updatePanelModes() {
+            $("#layout ul.panels > li").each(function (i, el) {
+                var panel = $(el);
+                var mode = panel.attr('data-mode');
+                this.updatePanelMode(panel, mode ? mode : 'row');
+            }.bind(this));
+        },
 
         normilizaDisabledItemList: function () {
             $('#layout ul.cells.disabled > li').each(function (i, el) {
@@ -200,7 +241,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
         setup: function () {
             Dep.prototype.setup.call(this);
-
+            this.panelDataAttributeList.push('mode');
             this.panelsData = {};
         },
 
@@ -233,6 +274,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var o = {};
                 o.viewKey = 'panel-' + item.number;
                 o.number = item.number;
+                o.mode = item.mode;
                 panelDataList.push(o);
             }, this);
 
@@ -318,16 +360,31 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             $('#layout ul.rows').sortable({
                 distance: 4,
                 connectWith: '.rows',
+                cursorAt: { top: 20, left: 20 },
+                stop: function() {
+                    this.updatePanelModes();
+                }.bind(this),
+                over: function( event, ui ) {
+                  var placeholder = $(ui.placeholder);
+                  var targetPanel = $(ui.placeholder).closest('li.panel');
+                  var targetMode = targetPanel.attr('data-mode');
+                  placeholder.css('width', '');
+                  this.updatePanelMode(targetPanel, targetMode);
+                }.bind(this)
             });
             $('#layout ul.rows').disableSelection();
 
-            $('#layout ul.cells > li').draggable({revert: 'invalid', revertDuration: 200, zIndex: 10}).css('cursor', 'pointer');
+            $('#layout ul.cells > li.draggable').draggable({
+              revert: 'invalid',
+              revertDuration: 200,
+              zIndex: 10
+            }).css('cursor', 'pointer');
 
             $('#layout ul.cells > li').droppable().droppable('destroy');
 
             var self = this;
             $('#layout ul.cells:not(.disabled) > li').droppable({
-                accept: '.cell',
+                accept: '.draggable',
                 zIndex: 10,
                 drop: function (e, ui) {
                     var index = ui.draggable.index();
@@ -352,17 +409,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     var $target = $(this);
                     var $draggable = $(ui.draggable);
 
-                    var targetFullWidth = $target.attr('data-full-width');
-                    var draggableFullWidth = $draggable.attr('data-full-width');
-
-                    if (draggableFullWidth && !targetFullWidth) {
-                        $draggable.removeAttr('data-full-width');
-                        $target.attr('data-full-width', 'true');
-                    } else if (!draggableFullWidth && targetFullWidth) {
-                        $draggable.attr('data-full-width', 'true');
-                        $target.removeAttr('data-full-width');
-                    }
-
                     ui.draggable.css({
                         top: 0,
                         left: 0,
@@ -373,12 +419,13 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     }
 
                     self.makeDraggable();
+                    self.updatePanelModes();
                 }
             });
         },
-
         afterRender: function () {
             this.makeDraggable();
+            this.updatePanelModes();
         },
 
         fetch: function () {
@@ -411,7 +458,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 }
                 $(el).find('ul.rows > li').each(function (i, li) {
                     var row = [];
-                    $(li).find('ul.cells > li').each(function (i, li) {
+                    $(li).find('ul.cells > li > div.cell').each(function (i, li) {
                         var cell = false;
                         if (!$(li).hasClass('empty')) {
                             cell = {};

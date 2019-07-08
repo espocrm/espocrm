@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/detail', ['views/record/base', 'view-record-helper'], function (Dep, ViewRecordHelper) {
+Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], function (Dep, ViewRecordHelper) {
 
     return Dep.extend({
 
@@ -46,7 +46,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         buttonsDisabled: false,
 
-        columnCount: 2,
+        columnCount: 4,
 
         scope: null,
 
@@ -193,8 +193,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (this.duplicateAction) {
-                if (this.getAcl().check(this.entityType, 'create') && !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled'])) {
-                    this.addDropdownItem({
+                if (this.getAcl().check(this.entityType, 'create')) {
+                    this.dropdownItemList.push({
                         'label': 'Duplicate',
                         'name': 'duplicate'
                     });
@@ -844,9 +844,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         switchToModelByIndex: function (indexOfRecord) {
-            var collection = this.model.collection || this.collection;
-            if (!collection) return;
-            var model = collection.at(indexOfRecord);
+            if (!this.model.collection) return;
+            var model = this.model.collection.at(indexOfRecord);
             if (!model) {
                 throw new Error("Model is not found in collection by index.");
             }
@@ -871,16 +870,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         actionPrevious: function () {
-            var collection;
-            if (!this.model.collection) {
-                collection = this.collection;
-                if (!collection) return;
-                this.indexOfRecord--;
-                if (this.indexOfRecord < 0) this.indexOfRecord = 0;
-            } else {
-                collection = this.model.collection;
-            }
-
+            if (!this.model.collection) return;
             if (!(this.indexOfRecord > 0)) return;
 
             var indexOfRecord = this.indexOfRecord - 1;
@@ -888,18 +878,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         actionNext: function () {
-            var collection;
-            if (!this.model.collection) {
-                collection = this.collection;
-                if (!collection) return;
-                this.indexOfRecord--;
-                if (this.indexOfRecord < 0) this.indexOfRecord = 0;
-            } else {
-                collection = this.model.collection;
+            if (!this.model.collection) return;
+            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) return;
+            if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
+                return;
             }
 
-            if (!(this.indexOfRecord < collection.total - 1) && collection.total >= 0) return;
-            if (collection.total === -2 && this.indexOfRecord >= collection.length - 1) return;
+            var collection = this.model.collection;
 
             var indexOfRecord = this.indexOfRecord + 1;
             if (indexOfRecord <= collection.length - 1) {
@@ -1235,6 +1220,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
                 panel.name = simplifiedLayout[p].name || null;
                 panel.style = simplifiedLayout[p].style || 'default';
+                panel.mode = simplifiedLayout[p].mode || 'row';
                 panel.rows = [];
 
                 if (simplifiedLayout[p].dynamicLogicVisible) {
@@ -1328,10 +1314,6 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             options: o
                         };
 
-                        if ('labelText' in cellDefs) {
-                            o.labelText = cellDefs.labelText;
-                            cell.customLabel = cellDefs.labelText;
-                        }
                         if ('customLabel' in cellDefs) {
                             cell.customLabel = cellDefs.customLabel;
                         }
@@ -1447,11 +1429,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         exitAfterCreate: function () {
             if (this.model.id) {
                 var url = '#' + this.scope + '/view/' + this.model.id;
+
                 this.getRouter().navigate(url, {trigger: false});
                 this.getRouter().dispatch(this.scope, 'view', {
                     id: this.model.id,
-                    rootUrl: this.options.rootUrl,
-                    model: this.model,
+                    rootUrl: this.options.rootUrl
                 });
                 return true;
             }
