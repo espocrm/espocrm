@@ -50,6 +50,11 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
             this.listenTo(this.model, 'change:authenticationMethod', function () {
                 this.handlePanelsVisibility();
             }, this);
+
+            this.manage2FAFields();
+            this.listenTo(this.model, 'change:auth2FA', function () {
+                this.manage2FAFields();
+            }, this);
         },
 
         setupBeforeFinal: function () {
@@ -107,6 +112,16 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
                     this.processDynamicLogic();
                 }
             }, this);
+        },
+
+        manage2FAFields: function () {
+            if (this.model.get('auth2FA')) {
+                this.showField('auth2FAMethodList');
+                this.setFieldRequired('auth2FAMethodList');
+            } else {
+                this.hideField('auth2FAMethodList');
+                this.setFieldNotRequired('auth2FAMethodList');
+            }
         },
 
     });

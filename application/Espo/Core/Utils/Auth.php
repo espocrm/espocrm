@@ -75,18 +75,40 @@ class Auth
         return $this->getConfig()->get('authenticationMethod', 'Espo');
     }
 
-    protected function getAuthentication($authenticationMethod)
+    protected function getAuthenticationImpl(string $method) : \Espo\Core\Utils\Authentication\Base
     {
-        $authenticationMethod = preg_replace('/[^a-zA-Z0-9]+/', '', $authenticationMethod);
+        $className = $this->getMetadata()->get([
+            'authenticationMethods', $method, 'implementationClassName'
+        ]);
 
-        $authenticationClassName = "\\Espo\\Custom\\Core\\Utils\\Authentication\\" . $authenticationMethod;
-        if (!class_exists($authenticationClassName)) {
-            $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+
+            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "\\Espo\\Core\\Utils\\Authentication\\" . $sanitizedName;
+            }
         }
 
-        $authentication = new $authenticationClassName($this->getConfig(), $this->getEntityManager(), $this);
+        return new $className($this->getConfig(), $this->getEntityManager(), $this, $this->getContainer());
+    }
 
-        return $authentication;
+    protected function get2FAImpl(string $method) : \Espo\Core\Utils\Authentication\TwoFA\Base
+    {
+        $className = $this->getMetadata()->get([
+            'app', 'auth2FAMethods', $method, 'implementationClassName'
+        ]);
+
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+
+            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "\\Espo\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
+            }
+        }
+
+        return $this->getContainer()->get('injectableFactory')->createByClassName($className);
     }
 
     protected function setPortal(Portal $portal)
@@ -118,6 +140,11 @@ class Auth
     protected function getEntityManager()
     {
         return $this->getContainer()->get('entityManager');
+    }
+
+    protected function getMetadata()
+    {
+        return $this->getContainer()->get('metadata');
     }
 
     public function useNoAuth()
@@ -195,15 +222,15 @@ class Auth
             $authenticationMethod = $this->getDefaultAuthenticationMethod();
         }
 
-        $authentication = $this->getAuthentication($authenticationMethod);
+        $authenticationImpl = $this->getAuthenticationImpl($authenticationMethod);
 
         $params = [
-            'isPortal' => $this->isPortal()
+            'isPortal' => $this->isPortal(),
         ];
 
         $loginResultData = [];
 
-        $user = $authentication->login($username, $password, $authToken, $params, $this->request, $loginResultData);
+        $user = $authenticationImpl->login($username, $password, $authToken, $params, $this->request, $loginResultData);
 
         $authLogRecord = null;
 
@@ -253,7 +280,29 @@ class Auth
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->setUser($user);
 
-        $secondStepRequired = $loginResultData['secondStepRequired'] ?? false;
+        $secondStepRequired = false;
+
+        if (!$authToken && $this->getConfig()->get('auth2FA')) {
+            $twoFAMethod = $this->getUser2FAMethod($user);
+            if ($twoFAMethod) {
+                $twoFAImpl = $this->get2FAImpl($twoFAMethod);
+
+                $twoFACode = $this->request->headers->get('Espo-Authorization-Code');
+
+                if ($twoFACode) {
+                    if (!$twoFAImpl->verifyCode($user, $twoFACode)) {
+                        return;
+                    }
+                } else {
+                    $loginResultData = $twoFAImpl->getLoginData($user);
+                    $secondStepRequired = true;
+                }
+            }
+        }
+
+        if (!$secondStepRequired) {
+            $secondStepRequired = $loginResultData['secondStepRequired'] ?? false;
+        }
 
         if (!$secondStepRequired && $this->request->headers->get('Http-Espo-Authorization')) {
             if (!$authToken) {
@@ -270,7 +319,7 @@ class Auth
                 if ($this->getConfig()->get('authTokenPreventConcurrent')) {
                     $concurrentAuthTokenList = $this->getEntityManager()->getRepository('AuthToken')->select(['id'])->where([
                         'userId' => $user->id,
-                        'isActive' => true
+                        'isActive' => true,
                     ])->find();
                     foreach ($concurrentAuthTokenList as $concurrentAuthToken) {
                         $concurrentAuthToken->set('isActive', false);
@@ -315,6 +364,20 @@ class Auth
         return [
             'status' => self::STATUS_SUCCESS,
         ];
+    }
+
+    protected function getUser2FAMethod(\Espo\Entities\User $user) : ?string
+    {
+        $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($user->id);
+        if (!$userData) return null;
+        if (!$userData->get('auth2FA')) return null;
+
+        $method = $userData->get('auth2FAMethod');
+
+        if (!$method) return null;
+        if (!in_array($method, $this->getConfig()->get('auth2FAMethodList', []))) return null;
+
+        return $method;
     }
 
     protected function checkFailedAttemptsLimit($username = null)

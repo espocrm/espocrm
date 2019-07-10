@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b9e8f23d69f8b87a015cce6e28878e53",
-    "content-hash": "4909a1e9fc34f28433cb1f0e4aa3c415",
+    "hash": "816b58510c67753807c3e217c28f7c48",
+    "content-hash": "5b9463ed5646c07c6792049128e72ceb",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -1760,6 +1760,57 @@
                 "zmq"
             ],
             "time": "2018-05-18 15:27:55"
+        },
+        {
+            "name": "robthree/twofactorauth",
+            "version": "1.6.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobThree/TwoFactorAuth.git",
+                "reference": "3407c33775391fa8c36f7d766f26c5e59a736374"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobThree/TwoFactorAuth/zipball/3407c33775391fa8c36f7d766f26c5e59a736374",
+                "reference": "3407c33775391fa8c36f7d766f26c5e59a736374",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RobThree\\Auth\\": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rob Janssen",
+                    "homepage": "http://robiii.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Two Factor Authentication",
+            "homepage": "https://github.com/RobThree/TwoFactorAuth",
+            "keywords": [
+                "Authentication",
+                "MFA",
+                "Multi Factor Authentication",
+                "Two Factor Authentication",
+                "authenticator",
+                "authy",
+                "php",
+                "tfa"
+            ],
+            "time": "2019-06-21 08:51:04"
         },
         {
             "name": "slim/slim",

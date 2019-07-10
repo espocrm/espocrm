@@ -5,5 +5,11 @@
             [{"name": "authenticationMethod"}, {"name": "authTokenLifetime"}],
             [{"name": "authTokenPreventConcurrent"}, {"name": "authTokenMaxIdleTime"}]
         ]
+    },
+    {
+        "label": "2-Factor Authentication",
+        "rows": [
+            [{"name": "auth2FA"}, {"name": "auth2FAMethodList"}]
+        ]
     }
 ]

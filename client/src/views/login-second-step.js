@@ -56,14 +56,14 @@ define('views/login-second-step', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.message = this.options.data.message;
+            this.message = this.translate(this.options.loginData.message, 'messages', 'User');
         },
 
         send: function () {
-            var code = $('#field-code').val().trim();
+            var code = $('[data-name="field-code"]').val().trim().replace(/\s/g, '');
 
             var userName = this.options.userName;
-            var password = this.options.data.token || this.options.password;
+            var password = this.options.loginData.token || this.options.password;
 
             var $submit = this.$el.find('#btn-send');
 

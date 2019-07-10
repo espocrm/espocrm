@@ -43,7 +43,7 @@ define('controllers/base', 'controller', function (Dep) {
                 loginView.once('redirect', function (viewName, userName, password, data) {
                     loginView.remove();
                     this.entire(viewName, {
-                        data: data,
+                        loginData: data,
                         userName: userName,
                         password: password,
                     }, function (secondStepView) {

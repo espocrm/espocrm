@@ -7,7 +7,7 @@
                 <form id="login-form" onsubmit="return false;">
                     <div class="form-group">
                         <label for="field-code">{{translate 'Code' scope='User'}}</label>
-                        <input type="text" id="field-code" class="form-control" autocapitalize="off" autocorrect="off" tabindex="1" autocomplete="code">
+                        <input type="text" data-name="field-code" class="form-control" autocapitalize="off" autocorrect="off" tabindex="1" autocomplete="code">
                     </div>
                     <div>
                         <a href="javascript:" class="btn btn-link pull-right" data-action="backToLogin" tabindex="4">{{translate 'Back to login form' scope='User'}}</a>

@@ -68,6 +68,9 @@ class Metadata
         ['app', 'fileStorage', 'implementationClassNameMap'],
         ['app', 'emailNotifications', 'handlerClassNameMap'],
         ['app', 'client'],
+        ['app', 'auth2FAMethods', '__ANY__', 'implementationClassName'],
+        ['app', 'auth2FAMethods', '__ANY__', 'implementationUserClassName'],
+        ['authenticationMethods', '__ANY__', 'implementationClassName'],
     ];
 
     /**
@@ -277,30 +280,42 @@ class Metadata
         $data = $this->getAllObjects();
 
         foreach ($this->frontendHiddenPathList as $row) {
-            $p =& $data;
-            $path = [&$p];
-            foreach ($row as $i => $item) {
-                if (is_array($item)) break;
-                if (!property_exists($p, $item)) break;
-                if ($i == count($row) - 1) {
-                    unset($p->$item);
-                    $o =& $p;
-                    for ($j = $i - 1; $j > 0; $j--) {
-                        if (is_object($o) && !count(get_object_vars($o))) {
-                            $o =& $path[$j];
-                            $k = $row[$j];
-                            unset($o->$k);
-                        } else {
-                            break;
-                        }
-                    }
-                } else {
-                    $p =& $p->$item;
-                    $path[] = &$p;
-                }
-            }
+            $this->removeDataByPath($row, $data);
         }
         return $data;
+    }
+
+    private function removeDataByPath($row, &$data)
+    {
+        $p = &$data;
+        $path = [&$p];
+
+        foreach ($row as $i => $item) {
+            if (is_array($item)) break;
+            if ($item === '__ANY__') {
+                foreach (get_object_vars($p) as &$v) {
+                    $this->removeDataByPath(array_slice($row, $i + 1), $v);
+                }
+                return;
+            }
+            if (!property_exists($p, $item)) break;
+            if ($i == count($row) - 1) {
+                unset($p->$item);
+                $o = &$p;
+                for ($j = $i - 1; $j > 0; $j--) {
+                    if (is_object($o) && !count(get_object_vars($o))) {
+                        $o = &$path[$j];
+                        $k = $row[$j];
+                        unset($o->$k);
+                    } else {
+                        break;
+                    }
+                }
+            } else {
+                $p = &$p->$item;
+                $path[] = &$p;
+            }
+        }
     }
 
     protected function addAdditionalFieldsObj($data)

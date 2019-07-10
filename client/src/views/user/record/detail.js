@@ -52,6 +52,17 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             }
 
             if (
+                (this.model.id == this.getUser().id || this.getUser().isAdmin()) &&
+                (this.model.isRegular() || this.model.isAdmin()) &&
+                this.getConfig().get('auth2FA')
+            ) {
+                this.addButton({
+                    name: 'viewSecurity',
+                    label: 'Security',
+                });
+            }
+
+            if (
                 this.model.id == this.getUser().id
                 &&
                 !this.model.isApi()
@@ -277,7 +288,15 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     this.model.set(data);
                 }.bind(this));
             }.bind(this));
-        }
+        },
+
+        actionViewSecurity: function () {
+            this.createView('dialog', 'views/user/modals/security', {
+                userModel: this.model,
+            }, function (view) {
+                view.render();
+            }, this);
+        },
 
     });
 });

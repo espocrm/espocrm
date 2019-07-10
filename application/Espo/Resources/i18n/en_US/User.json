@@ -17,6 +17,7 @@
         "passwordConfirm": "Confirm Password",
         "newPassword": "New Password",
         "newPasswordConfirm": "Confirm New Password",
+        "yourPassword": "Your current password",
         "avatar": "Avatar",
         "isActive": "Is Active",
         "isPortalUser": "Is Portal User",
@@ -33,7 +34,10 @@
         "lastAccess": "Last Access",
         "apiKey": "API Key",
         "secretKey": "Secret Key",
-        "authMethod": "Authentication Method"
+        "authMethod": "Authentication Method",
+        "auth2FA": "Enable 2-Factor Authentication",
+        "auth2FAMethod": "2FA Method",
+        "auth2FATotpSecret": "2FA TOTP Secret"
     },
     "links": {
         "defaultTeam": "Default Team",
@@ -64,7 +68,10 @@
         "Proceed w/o Contact": "Proceed w/o Contact",
         "Generate New API Key": "Generate New API Key",
         "Code": "Code",
-        "Back to login form": "Back to login form"
+        "Back to login form": "Back to login form",
+        "Security": "Security",
+        "Code": "Code",
+        "Secret": "Secret"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
@@ -89,7 +96,10 @@
         "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
         "userNameExists": "User Name already exists",
         "wrongCode": "Wrong code",
-        "codeIsRequired": "Code is required"
+        "codeIsRequired": "Code is required",
+        "enterTotpCode": "Enter a code from your authenticator app.",
+        "verifyTotpCode": "Scan the QR-code with your mobile authenticator app. If you have a trouble with scanning, you can enter the secret manually. After that you will see a 6-digit code in your application. Enter this code in the field below.",
+        "securityResetConfimation": "Are you sure you want to reset security settings?"
     },
     "options": {
         "gender": {

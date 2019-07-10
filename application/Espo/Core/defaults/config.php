@@ -179,5 +179,6 @@ return [
     'noteEditThresholdPeriod' => '7 days',
     'emailForceUseExternalClient' => false,
     'useWebSocket' => false,
-    'isInstalled' => false
+    'auth2FAMethodList' => ['Totp'],
+    'isInstalled' => false,
 ];

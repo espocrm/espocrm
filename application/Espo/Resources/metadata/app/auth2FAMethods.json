@@ -1,0 +1,8 @@
+{
+    "Totp": {
+        "settings": {
+            "isAvailable": true
+        },
+        "userApplyView": "views/user-security/modals/totp"
+    }
+}
