@@ -1,32 +1,38 @@
 <header data-name="{{name}}">
     <label data-is-custom="{{#if isCustomLabel}}true{{/if}}">{{label}}</label>&nbsp;
     <a href="javascript:" data-action="edit-panel-label" class="edit-panel-label"><i class="fas fa-pencil-alt fa-sm"></i></a>
-    <a href="javascript:" style="float: right;" data-action="removePanel" class="remove-panel" data-number="{{number}}"><i class="fas fa-times"></i></a>
+
+    <a href="javascript:" style="float: right; padding-left:5px;" data-action="removePanel" class="remove-panel" data-number="{{number}}"><i class="fas fa-times"></i></a>
+    <a href="javascript:" style="float: right; padding-left:5px;" data-action="switchPanelMode" class="switch-panel-mode" data-number="{{number}}"><i class="fas fa-bars"></i></a>
 </header>
-<ul class="rows">
+<ul class="rows clearfix">
 {{#each rows}}
     <li>
-        <div><a href="javascript:" data-action="removeRow" class="remove-row pull-right"><i class="fas fa-times"></i></a></div>
-        <ul class="cells">
-        {{#each this}}
-            {{#if this}}
-            <li class="cell"
-                data-name="{{name}}"
-                data-full-width="{{#if fullWidth}}true{{/if}}"
-                {{#if hasCustomLabel}}
-                data-custom-label="{{customLabel}}"
-                {{/if}}
-                data-no-label="{{noLabel}}" >
-            {{label}}
-                <a href="javascript:" data-action="removeField" class="remove-field"><i class="fas fa-times"></i></a>
-            </li>
-            {{else}}
-            <li class="empty cell">
-                <a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>
-            </li>
-            {{/if}}
-        {{/each}}
-        </ul>
+        <div class="row">
+            <ul class="cells clearfix">
+                <div class="w-100 clearfix"><a href="javascript:" data-action="removeRow" class="remove-row pull-right"><i class="fas fa-times"></i></a></div>
+                {{#each this}}
+                <li class="draggable">
+                    {{#if this}}
+                    <div class="cell"
+                      data-name="{{name}}"
+                      {{#if hasCustomLabel}}
+                      data-custom-label="{{customLabel}}"
+                      {{/if}}
+                      data-no-label="{{noLabel}}" >
+                      {{label}}
+                        <a href="javascript:" data-action="removeField" class="remove-field pull-right"><i class="fas fa-times"></i></a>
+                    </div>
+                    {{else}}
+                    <div class="empty cell">
+                        <a href="javascript:" data-action="minusCell" class="remove-field pull-right"><i class="fas fa-minus"></i></a>
+                    </div>
+                    {{/if}}
+                </li>
+                {{/each}}
+                <a href="javascript:;" data-action="addCell" class="add-cell"><i class="fas fa-plus"></i></a>
+            </ul>
+        </div>
     </li>
 {{/each}}
 </ul>
