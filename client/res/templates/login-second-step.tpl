@@ -6,7 +6,7 @@
                 <p>{{message}}</p>
                 <form id="login-form" onsubmit="return false;">
                     <div class="form-group">
-                        <label for="field-code">{{translate 'Code' scope='User'}}</label>
+                        <label for="field-code" max-length="7">{{translate 'Code' scope='User'}}</label>
                         <input type="text" data-name="field-code" class="form-control" autocapitalize="off" autocorrect="off" tabindex="1" autocomplete="code">
                     </div>
                     <div>
