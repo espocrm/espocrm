@@ -3,7 +3,7 @@
     <div id="login" class="panel panel-default">
         <div class="panel-body">
             <div>
-                <p class="text-danger">{{message}}</p>
+                <p>{{message}}</p>
                 <form id="login-form" onsubmit="return false;">
                     <div class="form-group">
                         <label for="field-code">{{translate 'Code' scope='User'}}</label>
