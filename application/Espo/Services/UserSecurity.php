@@ -151,6 +151,12 @@ class UserSecurity extends \Espo\Core\Services\Base
             $userData->set('auth2FAMethod', null);
         }
 
+        if ($userData->get('auth2FA') && $userData->isAttributeChanged('auth2FA')) {
+            if (!$this->getInjection('config')->get('auth2FA')) {
+                throw new Forbidden('2FA is not enabled.');
+            }
+        }
+
         if (
             $userData->get('auth2FA') &&
             $userData->get('auth2FAMethod') &&
