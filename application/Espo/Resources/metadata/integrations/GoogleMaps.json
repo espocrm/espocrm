@@ -4,6 +4,10 @@
             "type": "varchar",
             "maxLength": 255,
             "required": true
+        },
+        "originAddress": {
+            "type": "address",
+            "required": true
         }
     },
     "allowUserAccounts": false,
