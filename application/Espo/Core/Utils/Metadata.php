@@ -63,16 +63,6 @@ class Metadata
 
     private $moduleList = null;
 
-    protected $frontendHiddenPathList = [
-        ['app', 'formula', 'functionClassNameMap'],
-        ['app', 'fileStorage', 'implementationClassNameMap'],
-        ['app', 'emailNotifications', 'handlerClassNameMap'],
-        ['app', 'client'],
-        ['app', 'auth2FAMethods', '__ANY__', 'implementationClassName'],
-        ['app', 'auth2FAMethods', '__ANY__', 'implementationUserClassName'],
-        ['authenticationMethods', '__ANY__', 'implementationClassName'],
-    ];
-
     /**
      * Default module order
      * @var integer
@@ -279,7 +269,9 @@ class Metadata
     {
         $data = $this->getAllObjects();
 
-        foreach ($this->frontendHiddenPathList as $row) {
+        $frontendHiddenPathList = $this->get(['app', 'metadata', 'frontendHiddenPathList'], []);
+
+        foreach ($frontendHiddenPathList as $row) {
             $this->removeDataByPath($row, $data);
         }
         return $data;
