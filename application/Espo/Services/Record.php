@@ -89,6 +89,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $onlyAdminLinkList = [];
 
+    protected $linkParams = [];
+
     protected $linkSelectParams = [];
 
     protected $noEditAccessRequiredLinkList = [];
@@ -1291,8 +1293,13 @@ class Record extends \Espo\Core\Services\Base
 
         $foreignEntityName = $entity->relations[$link]['entity'];
 
-        if (!$this->getAcl()->check($foreignEntityName, 'read')) {
-            throw new Forbidden();
+        $linkParams = $this->linkParams[$link] ?? [];
+        $skipAcl = $linkParams['skipAcl'] ?? false;
+
+        if (!$skipAcl) {
+            if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+                throw new Forbidden();
+            }
         }
 
         $recordService = $this->getRecordService($foreignEntityName);
@@ -1312,7 +1319,7 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true, true);
+        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, !$skipAcl, true);
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
