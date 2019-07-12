@@ -83,6 +83,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 $(e.target).closest('ul.panels > li').find('ul.cells > li').each(function (i, li) {
                     if ($(li).attr('data-name')) {
                         $(li).appendTo($('#layout ul.disabled'));
+                        $(li).removeClass(this.removeColClasses);
                     }
                 });
                 $(e.target).closest('ul.panels > li').remove();
@@ -101,7 +102,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     this.panels.splice(index, 1);
                 }
 
-                this.normilizaDisabledItemList();
             },
             'click #layout a[data-action="addRow"]': function (e) {
                 var tpl = this.unescape($("#layout-row-tpl").html());
@@ -117,6 +117,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 $(e.target).closest('ul.rows > li').find('ul.cells > li').each(function (i, li) {
                     if ($(li).attr('data-name')) {
                         $(li).appendTo($('#layout ul.disabled'));
+                        $(li).removeClass(this.removeColClasses);
                     }
                 });
                 var panel = $(e.target).closest('li.panel');
@@ -124,7 +125,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var mode = panel.attr("data-mode");
                 $(e.target).closest('ul.rows > li').remove();
                 this.updatePanelMode(panel, mode);
-                this.normilizaDisabledItemList();
             },
             'click #layout a[data-action="addCell"]': function (e) {
                 var empty = $(this.emptyCellTemplate);
@@ -206,7 +206,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
         updatePanelMode: function(panel, mode) {
               panel.find('ul.rows > li').removeClass(this.removeColClasses);
               panel.find('ul.cells > li').removeClass(this.removeColClasses);
-              panel.find('a.switch-panel').hide();
               switch(mode) {
                   case 'row':
                       var rows = panel.find('ul.rows > li');
@@ -229,11 +228,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var panel = $(el);
                 var mode = panel.attr('data-mode');
                 this.updatePanelMode(panel, mode ? mode : 'row');
-            }.bind(this));
-        },
-        normilizaDisabledItemList: function () {
-            $('#layout ul.cells.disabled > li').each(function (i, el) {
-                $(el).removeAttr('data-full-width');
             }.bind(this));
         },
 
