@@ -756,6 +756,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
             this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
+            this.dynamicLogicDefs = this.options.dynamicLogicDefs || this.dynamicLogicDefs;
 
             this.setupActionItems();
             this.setupBeforeFinal();
@@ -785,10 +786,12 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }, this);
 
-            this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
+            var dependencyDefs = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.model.name, 'formDependency']) || {});
+            this.dependencyDefs = _.extend(dependencyDefs, this.dependencyDefs);
             this.initDependancy();
 
-            this.dynamicLogicDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.dynamicLogic') || {}, this.dynamicLogicDefs);
+            var dynamicLogic = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.model.name, 'dynamicLogic']) || {});
+            this.dynamicLogicDefs = _.extend(dynamicLogic, this.dynamicLogicDefs);
             this.initDynamicLogic();
 
             this.setupFieldLevelSecurity();
