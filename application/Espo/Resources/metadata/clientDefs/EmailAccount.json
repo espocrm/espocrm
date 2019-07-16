@@ -8,6 +8,7 @@
     "views": {
     	"list": "views/email-account/list"
     },
+    "inlineEditDisabled": true,
     "searchPanelDisabled": true,
     "formDependency": {
         "storeSentEmails": {
