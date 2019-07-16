@@ -65,8 +65,7 @@
         width: auto;
     }
     #layout ul.cells > li a {
-        float: right;
-        margin-left: 5px;
+
     }
     #layout ul.disabled {
         min-height: 200px;
@@ -136,9 +135,14 @@
             <header>{{translate 'Available Fields' scope='Admin'}}</header>
             <ul class="disabled cells clearfix">
                 {{#each disabledFields}}
-                    <li class="cell" data-name="{{./this}}">{{translate this scope=../scope category='fields'}}
-                        &nbsp;<a href="javascript:" data-action="removeField" class="remove-field"><i class="fas fa-times"></i></a>
-                    </li>
+                <li class="cell" data-name="{{./this}}">
+                    <div class="left" style="width: calc(100% - 14px);">
+                        {{translate this scope=../scope category='fields'}}
+                    </div>
+                    <div class="right" style="width: 14px;">
+                        <a href="javascript:" data-action="removeField" class="remove-field"><i class="fas fa-times"></i></a>
+                    </div>
+                </li>
                 {{/each}}
             </ul>
         </div>
@@ -150,8 +154,20 @@
         <div><a href="javascript:" data-action="removeRow" class="remove-row pull-right"><i class="fas fa-times"></i></a></div>
         <ul class="cells">
             <% for (var i = 0; i < {{columnCount}}; i++) { %>
-                <li class="empty cell"><a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a></li>
+                <li class="empty cell">
+                <div class="right" style="width: 14px;">
+                    <a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>
+                </div>
+                </li>
             <% } %>
         </ul>
+    </li>
+</div>
+
+<div id="empty-cell-tpl" style="display: none;">
+    <li class="empty cell disabled">
+        <div class="right" style="width: 14px;">
+            <a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>
+        </div>
     </li>
 </div>
