@@ -383,6 +383,8 @@ define('ui', [], function () {
             });
 
             dialog.show();
+
+            dialog.$el.find('button[data-name="confirm"]').focus();
         },
 
         dialog: function (options) {
