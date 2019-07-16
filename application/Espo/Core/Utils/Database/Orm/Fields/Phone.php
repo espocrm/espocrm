@@ -122,10 +122,12 @@ class Phone extends Base
                         'select' => 'phoneNumbers.opt_out',
                         'where' => [
                             '= TRUE' => [
-                                'sql' => 'phoneNumbers.opt_out = true AND phoneNumbers.opt_out IS NOT NULL'
+                                'sql' => 'phoneNumbers.opt_out = true AND phoneNumbers.opt_out IS NOT NULL',
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
                             ],
                             '= FALSE' => [
-                                'sql' => 'phoneNumbers.opt_out = false OR phoneNumbers.opt_out IS NULL'
+                                'sql' => 'phoneNumbers.opt_out = false OR phoneNumbers.opt_out IS NULL',
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
                             ]
                         ],
                         'orderBy' => 'phoneNumbers.opt_out {direction}'
