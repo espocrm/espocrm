@@ -35,6 +35,8 @@ if (!$app->isInstalled()) {
 }
 
 $url = $_SERVER['REQUEST_URI'];
+$requestUri = $url;
+
 $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
 
 if (!isset($portalId)) {
@@ -52,10 +54,15 @@ if (substr($a[0], -1) !== '/') {
     exit();
 }
 
-if ($portalId) {
-    $app->setBasePath('../../');
-} else {
-    $app->setBasePath('../');
+$a = explode('?', $requestUri);
+$requestUri = rtrim($a[0], '/');
+
+if (strpos($requestUri, '/') !== false) {
+    if ($portalId) {
+        $app->setBasePath('../../');
+    } else {
+        $app->setBasePath('../');
+    }
 }
 
 if (!empty($_GET['entryPoint'])) {
