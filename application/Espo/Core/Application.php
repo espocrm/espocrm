@@ -133,7 +133,9 @@ class Application
 
             $slim->run();
         } catch (\Exception $e) {
-            $container->get('output')->processError($e->getMessage(), $e->getCode(), true, $e);
+            try {
+                $container->get('output')->processError($e->getMessage(), $e->getCode(), true, $e);
+            } catch (\Slim\Exception\Stop $e) {}
         }
     }
 
