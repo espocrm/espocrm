@@ -22,6 +22,7 @@
     "theme": "Motyw",
     "receiveAssignmentEmailNotifications": "Prześlij wiadomość po przypisaniu",
     "dashboardLayout": "Styl Głównego Panelu",
+    "emailReplyForceHtml": "Odpowiadanie na e-maile w HTML",
     "autoFollowEntityTypeList": "Automatycznie obserwuj",
     "emailReplyToAllByDefault": "Domyślnie odpowiadaj wszystkim"
   },
@@ -33,7 +34,7 @@
   },
   "labels": {
     "Notifications": "powiadomienia",
-    "User Interface": "Interfejs Użytkonika",
+    "User Interface": "Interfejs Użytkownika",
     "Misc": "Różne",
     "Locale": "Lokalizacja"
   },
