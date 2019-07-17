@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (Dep) {
+define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
@@ -228,12 +228,38 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             }
         },
 
+        controlAddItemButton: function () {
+            var $select = this.$select;
+            if (!$select) return;
+            if (!$select.get(0)) return;
+
+            var value = $select.val().toString();
+            if (!value && this.params.noEmptyString) {
+                this.$addButton.addClass('disabled').attr('disabled', 'disabled');
+            } else {
+                this.$addButton.removeClass('disabled').removeAttr('disabled');
+            }
+        },
+
         afterRender: function () {
             if (this.mode == 'edit') {
                 this.$list = this.$el.find('.list-group');
                 var $select = this.$select = this.$el.find('.select');
 
                 if (this.allowCustomOptions) {
+                    this.$addButton = this.$el.find('button[data-action="addItem"]');
+
+                    this.$addButton.on('click', function () {
+                        var value = this.$select.val().toString();
+                        this.addValue(value);
+                        $select.val('');
+                        this.controlAddItemButton();
+                    }.bind(this));
+
+                    $select.on('input', function () {
+                        this.controlAddItemButton();
+                    }.bind(this));
+
                     $select.on('keypress', function (e) {
                         if (e.keyCode == 13) {
                             var value = $select.val().toString();
@@ -244,8 +270,11 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                             }
                             this.addValue(value);
                             $select.val('');
+                            this.controlAddItemButton();
                         }
                     }.bind(this));
+
+                    this.controlAddItemButton();
                 }
 
                 this.$list.sortable({

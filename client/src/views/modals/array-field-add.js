@@ -26,13 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/array-field-add', 'views/modal', function (Dep) {
+define('views/modals/array-field-add', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         cssName: 'add-modal',
 
         template: 'modals/array-field-add',
+
+        backdrop: true,
+
+        fitHeight: true,
 
         data: function () {
             return {
@@ -42,7 +46,7 @@ Espo.define('views/modals/array-field-add', 'views/modal', function (Dep) {
         },
 
         events: {
-            'click button[data-action="add"]': function (e) {
+            'click .add': function (e) {
                 var value = $(e.currentTarget).attr('data-value');
                 this.trigger('add', value);
             },
