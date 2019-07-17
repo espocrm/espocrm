@@ -31,6 +31,7 @@
     "setNotHeld": "Set not Held"
   },
   "presetFilters": {
-    "planned": "Gepland"
+    "planned": "Gepland",
+    "todays": "Vandaag"
   }
 }

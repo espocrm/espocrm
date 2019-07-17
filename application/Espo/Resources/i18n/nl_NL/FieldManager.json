@@ -76,9 +76,9 @@
   "fieldParts": {
     "address": {
       "street": "Straat",
-      "city": "stad",
+      "city": "Stad",
       "state": "Staat",
-      "country": "land",
+      "country": "Land",
       "postalCode": "Postcode",
       "map": "Kaart"
     },

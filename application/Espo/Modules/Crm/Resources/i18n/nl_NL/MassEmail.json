@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Record Naam",
+    "storeSentEmails": "Opslaan verzonden E-mails",
     "startAt": "Start Datum",
     "fromAddress": "Van Adres",
     "fromName": "Van Naam",
@@ -28,7 +29,7 @@
     "storeSentEmails": "E-mails worden opgeslagen in CRM."
   },
   "presetFilters": {
-    "actual": "werkelijk",
+    "actual": "Werkelijk",
     "complete": "Compleet"
   },
   "labels": {

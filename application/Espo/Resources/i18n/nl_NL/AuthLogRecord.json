@@ -27,9 +27,9 @@
     "denialReason": {
       "CREDENTIALS": "Ongeldige inloggegevens",
       "INACTIVE_USER": "Inactieve gebruiker",
-      "IS_PORTAL_USER": "Portalgebruiker",
-      "IS_NOT_PORTAL_USER": "Geen portalgebruiker",
-      "USER_IS_NOT_IN_PORTAL": "Gebruiker is niet gerelateerd aan de portal"
+      "IS_PORTAL_USER": "Portaalgebruiker",
+      "IS_NOT_PORTAL_USER": "Geen portaalgebruiker",
+      "USER_IS_NOT_IN_PORTAL": "Gebruiker is niet gerelateerd aan de portaal"
     }
   }
 }

@@ -8,10 +8,10 @@
     "publishDate": "Publicatiedatum",
     "expirationDate": "Vervaldatum",
     "description": "Beschrijving",
-    "accounts": "Klanten"
+    "accounts": "Relatie"
   },
   "links": {
-    "accounts": "Klanten",
+    "accounts": "Relatie",
     "opportunities": "Kansen",
     "leads": "leads",
     "contacts": "Contacten"

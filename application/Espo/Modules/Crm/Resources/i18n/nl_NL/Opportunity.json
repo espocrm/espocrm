@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Record Naam",
+    "account": "Relatie",
     "stage": "Stadium",
     "amount": "Aantal",
     "probability": "Waarschijnlijkheid, %",

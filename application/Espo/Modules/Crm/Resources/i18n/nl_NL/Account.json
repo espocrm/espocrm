@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "emailAddress": "E-mail",
     "phoneNumber": "Telefoon",
     "billingAddress": "Factuur Adres",
@@ -8,6 +8,7 @@
     "description": "Beschrijving",
     "industry": "Industrie",
     "contactRole": "Titel",
+    "campaign": "Campagne",
     "targetLists": "Doellijsten",
     "targetList": "Doellijst",
     "originalLead": "Oorspronkelijke lead",
@@ -16,10 +17,13 @@
   "links": {
     "contacts": "Contacten",
     "opportunities": "Kansen",
-    "cases": "Casus",
+    "cases": "Tickets",
     "documents": "Documenten",
+    "emailsPrimary": "E-mails (expanded)",
     "targetLists": "Doellijsten",
-    "portalUsers": "Portal-gebruikers",
+    "campaignLogRecords": "Campagne log",
+    "campaign": "Campagne",
+    "portalUsers": "Portaal-gebruikers",
     "originalLead": "Oorspronkelijke lead"
   },
   "options": {
@@ -33,20 +37,19 @@
       "Education": "Onderwijs",
       "Electronics": "Electronica",
       "Insurance": "Verzekeringen",
-      "Aerospace": "ruimte",
+      "Aerospace": "Ruimtevaart",
       "Architecture": "Architectuur",
       "Construction": "Bouw",
-      "Defense": "Verdediging",
+      "Defense": "Defensie",
       "Creative": "Creatief",
       "Culture": "Cultuur",
-      "Consulting": "Overleg plegen",
+      "Consulting": "Consultancy",
       "Electric Power": "Elektrische energie",
       "Hospitality": "Gastvrijheid",
-      "Mass Media": "Massa media",
+      "Mass Media": "Media",
       "Mining": "Mijnbouw",
       "Music": "Muziek",
-      "Petroleum": "petroleum",
-      "Retail": "Kleinhandel",
+      "Retail": "Retailhandel",
       "Shipping": "Verzenden",
       "Support": "Ondersteuning",
       "Testing, Inspection & Certification": "Testen, inspectie en certificering",
@@ -55,8 +58,8 @@
     }
   },
   "labels": {
-    "Create Account": "Klant Aanmaken",
-    "Copy Billing": "Kopieer van Factuur",
+    "Create Account": "Relatie Aanmaken",
+    "Copy Billing": "Kopie factuur",
     "Set Primary": "Primair instellen"
   },
   "presetFilters": {
