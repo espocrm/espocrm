@@ -4,6 +4,7 @@
         "edit":"views/inbound-email/record/edit",
         "list":"views/inbound-email/record/list"
     },
+    "inlineEditDisabled": true,
     "formDependency": {
         "reply": {
             "map": {

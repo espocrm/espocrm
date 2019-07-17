@@ -17,12 +17,17 @@
                 data-custom-label="{{customLabel}}"
                 {{/if}}
                 data-no-label="{{noLabel}}" >
-            {{label}}
-                <a href="javascript:" data-action="removeField" class="remove-field"><i class="fas fa-times"></i></a>
+                <div class="left" style="width: calc(100% - 14px);">{{label}}</div>
+                <div class="right" style="width: 14px;">
+                    <a href="javascript:" data-action="removeField" class="remove-field"><i class="fas fa-times"></i></a>
+                </div>
+
             </li>
             {{else}}
             <li class="empty cell">
-                <a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>
+                <div class="right" style="width: 14px;">
+                    <a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>
+                </div>
             </li>
             {{/if}}
         {{/each}}

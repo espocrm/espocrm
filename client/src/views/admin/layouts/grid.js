@@ -112,7 +112,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
                 el.appendTo($('ul.disabled'));
 
-                var empty = $(this.emptyCellTemplate);
+                var empty = $($('#empty-cell-tpl').html());
                 if (el.attr('data-full-width')) {
                     for (var i = 0; i < this.columnCount; i++) {
                         parent.append(empty.clone());

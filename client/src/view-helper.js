@@ -26,17 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('view-helper', [], function () {
+define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
     var ViewHelper = function (options) {
         this.urlRegex = /(^|[^\(])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
         this._registerHandlebarsHelpers();
 
         this.mdBeforeList = [
-            {
-                regex: /\["?(.*?)"?\]\((.*?)\)/g,
-                value: '<a href="$2">$1</a>'
-            },
             {
                 regex: /\&\#x60;\&\#x60;\&\#x60;\n?([\s\S]*?)\&\#x60;\&\#x60;\&\#x60;/g,
                 value: function (s, string) {
@@ -220,6 +216,8 @@ define('view-helper', [], function () {
                 });
 
                 text = marked(text);
+
+                text = DOMPurify.sanitize(text);
 
                 text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
 

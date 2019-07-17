@@ -50,11 +50,12 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
     {
         if ($entity->get('customUrl')) {
             $entity->set('url', $entity->get('customUrl'));
-            return;
         }
+
         $siteUrl = $this->getConfig()->get('siteUrl');
         $siteUrl = rtrim($siteUrl , '/') . '/';
         $url = $siteUrl . 'portal/';
+
         if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
             $entity->set('isDefault', true);
             $entity->setFetched('isDefault', true);
@@ -67,7 +68,10 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
             $entity->set('isDefault', false);
             $entity->setFetched('isDefault', false);
         }
-        $entity->set('url', $url);
+
+        if (!$entity->get('customUrl')) {
+            $entity->set('url', $url);
+        }
     }
 
     protected function afterSave(Entity $entity, array $options = array())
@@ -87,4 +91,3 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 }
-

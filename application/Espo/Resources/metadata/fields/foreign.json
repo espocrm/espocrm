@@ -36,7 +36,7 @@
    ],
    "fieldTypeViewMap": {
       "varchar": "views/fields/foreign-varchar",
-      "enum": "views/fields/enum",
+      "enum": "views/fields/foreign-enum",
       "enumInt": "views/fields/foreign-int",
       "enumFloat": "views/fields/foreign-float",
       "int": "views/fields/foreign-int",
