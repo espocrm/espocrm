@@ -1,44 +1,40 @@
 {
-    "fields": {
-        "name": "Nome",
-        "parent": "Relação",
-        "status": "Status",
-        "dateStart": "Data de Início",
-        "dateEnd": "Data final",
-        "duration": "Duração",
-        "description": "Descrição",
-        "users": "Usuários",
-        "contacts": "Contatos",
-        "leads": "Leads",
-        "reminders": "Lembretes",
-        "account": "Conta"
+  "fields": {
+    "name": "Nome",
+    "parent": "Relação",
+    "dateStart": "Data de Início",
+    "dateEnd": "Data final",
+    "duration": "Duração",
+    "description": "Descrição",
+    "users": "Usuários",
+    "contacts": "Contatos",
+    "reminders": "Lembretes",
+    "account": "Conta"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planejada",
+      "Held": "Realizada",
+      "Not Held": "Não Realizada"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Planejada",
-            "Held": "Realizada",
-            "Not Held": "Não Realizada"
-        },
-		"acceptanceStatus": {
-			"None": "Nenhum",
-			"Accepted": "Aceita",
-			"Declined": "Rejeitada",
-            "Tentative": "Tentativa"
-		}
-    },
-    "labels": {
-        "Create Meeting": "Criar Reunião",
-        "Set Held": "Marcar como realizada",
-        "Set Not Held": "Marcar como não realizada",
-        "Send Invitations": "Enviar convites",
-        "on time": "na hora",
-        "before": "antes"
-	},
-	"presetFilters": {
-		"planned": "Planejada",
-		"held": "Realizada",
-		"todays": "Hoje"
-	}
+    "acceptanceStatus": {
+      "None": "Nenhum",
+      "Accepted": "Aceita",
+      "Declined": "Rejeitada",
+      "Tentative": "Tentativa"
+    }
+  },
+  "labels": {
+    "Create Meeting": "Criar Reunião",
+    "Set Held": "Marcar como realizada",
+    "Set Not Held": "Marcar como não realizada",
+    "Send Invitations": "Enviar convites",
+    "on time": "na hora",
+    "before": "antes"
+  },
+  "presetFilters": {
+    "planned": "Planejada",
+    "held": "Realizada",
+    "todays": "Hoje"
+  }
 }

@@ -1,40 +1,42 @@
 {
-    "fields": {
-        "dateFormat": "Formato da Data",
-        "timeFormat": "Formato da Hora",
-        "timeZone": "Time Zone",
-        "weekStart": "Primeiro dia da Semana",
-        "thousandSeparator": "Separador de milhar",
-        "decimalMark": "Separador decimal",
-        "defaultCurrency": "Moeda Padrão",
-        "currencyList": "Moedas Disponíveis",
-        "language": "Idioma",
-        "smtpServer": "Servidor",
-        "smtpPort": "Porta",
-        "smtpAuth": "Autenticação",
-        "smtpSecurity": "Segurança",
-        "smtpUsername": "Usuário",
-        "emailAddress": "E-mail",
-        "smtpPassword": "Senha",
-        "smtpEmailAddress": "Endereço de E-mail",
-        "exportDelimiter": "Delimitador de Exportação",
-		"receiveAssignmentEmailNotifications": "Receber e-mail de notificação quando designado",
-        "autoFollowEntityTypeList": "Auto-Seguir",
-        "signature": "Assinatura do E-mail",
-        "dashboardTabList": "Lista em abas"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Domingo",
-            "1": "Segunda"
-        }
-    },
-	"labels": {
-		"Notifications": "Notificações"
-	},
-    "tooltips": {
-        "autoFollowEntityTypeList": "O usuário seguirá automaticamente todos os novos registros das entidades selecionadas, verá informações no fluxo e receberá notificações."
+  "fields": {
+    "dateFormat": "Formato da Data",
+    "timeFormat": "Formato da Hora",
+    "weekStart": "Primeiro dia da Semana",
+    "thousandSeparator": "Separador de milhar",
+    "decimalMark": "Separador decimal",
+    "defaultCurrency": "Moeda Padrão",
+    "currencyList": "Moedas Disponíveis",
+    "language": "Idioma",
+    "smtpServer": "Servidor",
+    "smtpPort": "Porta",
+    "smtpAuth": "Autenticação",
+    "smtpSecurity": "Segurança",
+    "smtpUsername": "Usuário",
+    "emailAddress": "E-mail",
+    "smtpPassword": "Senha",
+    "smtpEmailAddress": "Endereço de E-mail",
+    "exportDelimiter": "Delimitador de Exportação",
+    "signature": "Assinatura do E-mail",
+    "dashboardTabList": "Lista de Aba",
+    "tabList": "Lista de Aba",
+    "theme": "Tema",
+    "useCustomTabList": "Customizar Lista de Aba",
+    "receiveAssignmentEmailNotifications": "Receber e-mail de notificação quando designado",
+    "autoFollowEntityTypeList": "Auto-Seguir"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Domingo",
+      "1": "Segunda"
     }
+  },
+  "labels": {
+    "Notifications": "Notificações",
+    "User Interface": "Interface de Usuário",
+    "Locale": "Local"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "O usuário seguirá automaticamente todos os novos registros das entidades selecionadas, verá informações no fluxo e receberá notificações."
+  }
 }

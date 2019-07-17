@@ -1,10 +1,7 @@
 {
-
-    "options": {
-        "job": {
-            "CheckInboundEmails": "Verificar e-mails recebidos",
-            "CheckEmailAccounts": "Verificar contas de e-mail pessoais",
-            "SendEmailReminders": "Enviar lembretes por e-mail"
-        }
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Enviar Emails em Massa"
     }
+  }
 }

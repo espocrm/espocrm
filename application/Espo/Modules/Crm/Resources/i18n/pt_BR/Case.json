@@ -1,42 +1,53 @@
 {
-    "fields": {
-        "name": "Nome",
-        "number": "Número",
-        "status": "Status",
-        "account": "Conta",
-        "contact": "Contato",
-        "priority": "Prioridade",
-        "type": "Tipo",
-        "description": "Descrição"
+  "fields": {
+    "name": "Nome",
+    "number": "Número",
+    "account": "Conta",
+    "contact": "Contato",
+    "contacts": "Contatos",
+    "priority": "Prioridade",
+    "type": "Tipo",
+    "description": "Descrição",
+    "attachments": "Anexos"
+  },
+  "links": {
+    "account": "Conta",
+    "contact": "Contato (Primário)",
+    "Contacts": "Contatos",
+    "meetings": "Reuniões",
+    "calls": "Ligações",
+    "tasks": "Tarefas",
+    "attachments": "Anexos"
+  },
+  "options": {
+    "status": {
+      "New": "Novo",
+      "Assigned": "Designado",
+      "Pending": "Pendente",
+      "Closed": "Fechado",
+      "Rejected": "Rejeitado",
+      "Duplicate": "Duplicado"
     },
-    "links": {
+    "priority": {
+      "Low": "Baixa",
+      "High": "Alta",
+      "Urgent": "Urgente"
     },
-    "options": {
-        "status": {
-            "New": "Novo",
-            "Assigned": "Designado",
-            "Pending": "Pendente",
-            "Closed": "Fechado",
-            "Rejected": "Rejeitado",
-            "Duplicate": "Duplicado"
-        },
-        "priority": {
-            "Low": "Baixa",
-            "Normal": "Normal",
-            "High": "Alta",
-            "Urgent": "Urgente"
-        },
-        "type": {
-            "Question": "Questão",
-            "Incident": "Incidente",
-            "Problem": "Problema"
-        }
-    },
-    "labels": {
-        "Create Case": "Criar Atendimento"
-    },
-	"presetFilters": {
-		"open": "Aberto",
-		"closed": "Fechado"
-	}
+    "type": {
+      "Question": "Questão",
+      "Incident": "Incidente",
+      "Problem": "Problema"
+    }
+  },
+  "labels": {
+    "Create Case": "Criar Atendimento",
+    "Close": "Fechar",
+    "Reject": "Rejeitar",
+    "Closed": "Fechado",
+    "Rejected": "Rejeitado"
+  },
+  "presetFilters": {
+    "open": "Aberto",
+    "closed": "Fechado"
+  }
 }

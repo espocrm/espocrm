@@ -1,17 +1,19 @@
 {
-    "fields": {
-        "name": "Nome",
-        "roles": "Regras",
-        "positionList": "Lista de Posições"
-    },
-    "links": {
-        "users": "Usuários"
-    },
-	"tooltips": {
-		"roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas.",
-		"positionList": "Posições disponíveis neste time. E.g. Vendedor, Gerente."
-	},
-    "labels": {
-        "Create Team": "Criar Time"
-    }
+  "fields": {
+    "name": "Nome",
+    "roles": "Regras",
+    "positionList": "Lista de Posições"
+  },
+  "links": {
+    "users": "Usuários",
+    "notes": "Notas",
+    "roles": "Regras"
+  },
+  "tooltips": {
+    "roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas.",
+    "positionList": "Posições disponíveis neste time. E.g. Vendedor, Gerente."
+  },
+  "labels": {
+    "Create Team": "Criar Time"
+  }
 }

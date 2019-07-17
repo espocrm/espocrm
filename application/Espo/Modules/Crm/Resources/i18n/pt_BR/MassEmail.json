@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "Nome",
+    "fromName": "De Nome",
+    "replyToName": "Responder para Nome",
+    "campaign": "Campanha",
+    "emailTemplate": "Template de email"
+  },
+  "links": {
+    "campaign": "Campanha"
+  },
+  "options": {
+    "status": {
+      "Draft": "Rascunho",
+      "Pending": "Pendente",
+      "In Process": "Em processo",
+      "Canceled": "Cancelado"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Criar email em massa",
+    "system": "sistema",
+    "group": "grupo"
+  }
+}

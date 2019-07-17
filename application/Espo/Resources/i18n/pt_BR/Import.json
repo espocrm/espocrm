@@ -1,18 +1,52 @@
 {
-	"labels": {
-		"Revert": "Reverter",
-		"Return to Import": "Retornar a Importação",
-		"Run Import": "Executar importação",
-		"Back": "Voltar",
-		"Field Mapping": "Mapeamento de Campos",
-		"Default Values": "Valores Padrão",
-		"Add Field": "Adicionar Campo",
-		"Created": "Criado",
-		"Updated": "Atualizado",
-		"Result": "Resultado",
-		"Show records": "Exibir Registros"
-	},
-    "messages": {
-        "utf8": "Deve estar codificado com UTF-8"
-    }
+  "labels": {
+    "Revert Import": "Reverter Importar",
+    "Return to Import": "Retornar a Importação",
+    "Run Import": "Executar importação",
+    "Back": "Voltar",
+    "Field Mapping": "Mapeamento de Campos",
+    "Default Values": "Valores Padrão",
+    "Add Field": "Adicionar Campo",
+    "Created": "Criado",
+    "Updated": "Atualizado",
+    "Result": "Resultado",
+    "Show records": "Exibir Registros",
+    "Remove Duplicates": "Remover Duplicados",
+    "Create Only": "Criar Apenas",
+    "Create and Update": "Criar & Atualizar",
+    "Update Only": "Somente Atualizar",
+    "Update by": "Atualizado por",
+    "Set as Not Duplicate": "Marcar como não duplicado",
+    "File (CSV)": "Arquivo (CSV)",
+    "Skip": "Pular",
+    "Field": "Campo",
+    "What to Import?": "O que Importar?",
+    "Entity Type": "Tipo de Entidade",
+    "What to do?": "O que fazer?",
+    "Properties": "Propriedades",
+    "John Smith": "João Silva",
+    "Smith John": "Silva João",
+    "Smith, John": "Silva, João",
+    "Field Delimiter": "Delimitar Campo",
+    "Date Format": "Formato da Data",
+    "Time Format": "Formato de data",
+    "Currency": "Moeda",
+    "Preview": "Anterior",
+    "Next": "Próximo",
+    "Step 1": "Passo 1",
+    "Step 2": "Passo 2",
+    "Imported": "Importado",
+    "Duplicates": "Duplicados"
+  },
+  "messages": {
+    "utf8": "Deve estar codificado com UTF-8",
+    "duplicatesRemoved": "Duplicados removidos"
+  },
+  "fields": {
+    "file": "Arquivo",
+    "entityType": "Tipo de Entidade",
+    "imported": "Registros Importados",
+    "duplicates": "Registros Duplicados",
+    "updated": "Registros Atualizados"
+  }
 }

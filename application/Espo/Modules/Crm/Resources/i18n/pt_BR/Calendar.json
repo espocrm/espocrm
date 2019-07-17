@@ -1,13 +1,20 @@
 {
-	"modes": {
-		"month": "Mês",
-		"week": "Semana",
-		"day": "Dia",
-		"agendaWeek": "Semana",
-		"agendaDay": "Dia"
-	},
-	"labels": {
-		"Today": "Hoje",
-		"Create": "Criar"
-	}
+  "modes": {
+    "month": "Mês",
+    "week": "Semana",
+    "agendaWeek": "Semana",
+    "day": "Dia",
+    "agendaDay": "Dia",
+    "timeline": "Linha do Tempo"
+  },
+  "labels": {
+    "Today": "Hoje",
+    "Create": "Criar",
+    "Shared": "Compartilhado",
+    "Add User": "Adicionar Usuário",
+    "current": "atual",
+    "time": "tempo",
+    "User List": "Lista de Usuário",
+    "Manage Users": "Gerenciar Usuários"
+  }
 }

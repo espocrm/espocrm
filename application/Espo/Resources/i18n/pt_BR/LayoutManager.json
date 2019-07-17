@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "width": "Largura (%)",
+    "align": "Alinhar",
+    "panelName": "Nome do Painel",
+    "style": "Estilo"
+  },
+  "options": {
+    "align": {
+      "left": "Esquerda",
+      "right": "Direita"
+    },
+    "style": {
+      "default": "Padrão",
+      "success": "Sucesso",
+      "danger": "Perigo",
+      "warning": "Aviso",
+      "primary": "Primário"
+    }
+  },
+  "labels": {
+    "New panel": "Novo Painel"
+  }
+}

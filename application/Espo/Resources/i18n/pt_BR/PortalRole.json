@@ -1,0 +1,12 @@
+{
+  "links": {
+    "users": "Usuários"
+  },
+  "labels": {
+    "Access": "Acesso",
+    "Create PortalRole": "Criar Regra de Portal"
+  },
+  "fields": {
+    "exportPermission": "Exportar Permissão"
+  }
+}

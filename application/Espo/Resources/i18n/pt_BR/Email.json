@@ -1,60 +1,88 @@
 {
-	"fields": {
-		"name": "Assunto",
-		"parent": "Origem",
-		"status": "Status",
-		"dateSent": "Data do envio",
-		"from": "De",
-		"to": "Para",
-		"cc": "CC",
-		"bcc": "BCC",
-		"isHtml": "Html",
-		"body": "Corpo",
-		"subject": "Assunto",
-		"attachments": "Anexos",
-		"selectTemplate": "Escolher Template",
-		"fromEmailAddress": "E-mail do rementente",
-		"toEmailAddresses": "E-mail do destinatário",
-		"emailAddress": "Endereço de E-mail",
-		"deliveryDate": "Data de envio"
-	},
-	"links": {
-	},
-	"options": {
-		"Draft": "Rascunho",
-		"Sending": "Enviando",
-		"Sent": "Enviado",
-		"Archived": "Arquivado",
-        "Received": "Recebido"
-	},
-	"labels": {
-		"Create Email": "Criar e-mail",
-		"Archive Email": "Arquivar e-mail",
-		"Compose": "Compor",
-		"Reply": "Responder",
-		"Reply to All": "Responder a Todos",
-		"Forward": "Encaminhar",
-		"Original message": "Mensagem original",
-		"Forwarded message": "Mensagem encaminhada",
-		"Email Accounts": "Contas de e-mail",
-        "Send Test Email": "Enviar e-mail de teste",
-        "Send": "Enviar",
-        "Email Address": "Endereço de E-mail",
-        "Mark Read": "Marcar como lido",
-        "Sending...": "Enviando...",
-        "Save Draft": "Salvar rascunho"
-	},
-    "messages": {
-        "noSmtpSetup": "Nenhuma configuração SMTP. {link}.",
-        "testEmailSent": "O e-mail de teste enviado",
-        "emailSent": "O e-mail foi enviado"
-    },
-	"presetFilters": {
-		"sent": "Enviado",
-		"archived": "Arquivado",
-        "draft": "Rascunho"
-    },
-    "massActions": {
-        "markAsRead": "Marcar como lido"
+  "fields": {
+    "parent": "Origem",
+    "dateSent": "Data do envio",
+    "from": "De",
+    "to": "Para",
+    "replyTo": "Responder Para",
+    "replyToString": "Responder Para (String)",
+    "isHtml": "Html",
+    "body": "Corpo",
+    "subject": "Assunto",
+    "attachments": "Anexos",
+    "selectTemplate": "Escolher Template",
+    "fromAddress": "E-mail do rementente",
+    "emailAddress": "Endereço de E-mail",
+    "deliveryDate": "Data de envio",
+    "account": "Conta",
+    "users": "Usuários",
+    "replied": "Respondido",
+    "replies": "Respostas",
+    "isRead": "Está lido",
+    "isNotRead": "Não está lido",
+    "isImportant": "É importante",
+    "inTrash": "Na Lixeira",
+    "name": "Assunto",
+    "sentBy": "Enviado Por"
+  },
+  "links": {
+    "replied": "Respondido",
+    "replies": "Respostas"
+  },
+  "options": {
+    "status": {
+      "Draft": "Rascunho",
+      "Sending": "Enviando",
+      "Sent": "Enviado",
+      "Archived": "Arquivado",
+      "Received": "Recebido",
+      "Failed": "Falhado"
     }
+  },
+  "labels": {
+    "Create Email": "Arquivar e-mail",
+    "Archive Email": "Arquivar e-mail",
+    "Compose": "Compor",
+    "Reply": "Responder",
+    "Reply to All": "Responder a Todos",
+    "Forward": "Encaminhar",
+    "Original message": "Mensagem original",
+    "Forwarded message": "Mensagem encaminhada",
+    "Email Accounts": "Contas de e-mail",
+    "Email Templates": "Templates de email",
+    "Send Test Email": "Enviar e-mail de teste",
+    "Send": "Enviar",
+    "Email Address": "Endereço de E-mail",
+    "Mark Read": "Marcar como lido",
+    "Sending...": "Enviando...",
+    "Save Draft": "Salvar rascunho",
+    "Mark all as read": "Marcar tudo como lido",
+    "Show Plain Text": "Exibir em texto puro",
+    "Mark as Important": "Marcar como Importante",
+    "Unmark Importance": "Desmarcar Importância",
+    "Move to Trash": "Mover para a Lixeira",
+    "Retrieve from Trash": "Recuperar da lixeira",
+    "Filters": "Filtros",
+    "Folders": "Pastas"
+  },
+  "messages": {
+    "noSmtpSetup": "Nenhuma configuração SMTP. {link}.",
+    "testEmailSent": "O e-mail de teste enviado",
+    "emailSent": "O e-mail foi enviado",
+    "savedAsDraft": "Salvar como rascunho"
+  },
+  "presetFilters": {
+    "sent": "Enviado",
+    "archived": "Arquivado",
+    "inbox": "Caixa de entrada",
+    "drafts": "Rascunhos",
+    "trash": "Lixo",
+    "important": "Importante"
+  },
+  "massActions": {
+    "markAsRead": "Marcar como lido",
+    "markAsNotRead": "Marcar como não lido",
+    "markAsImportant": "Marcar como importante",
+    "moveToTrash": "Mover para lixeira"
+  }
 }
