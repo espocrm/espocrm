@@ -1,6 +1,8 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
+    "number": "Nummer",
+    "account": "Relatie",
     "contacts": "Contacten",
     "priority": "Prioriteit",
     "description": "Beschrijving",
@@ -8,9 +10,10 @@
     "inboundEmail": "Groeps e-mailaccount"
   },
   "links": {
+    "account": "Relatie",
     "Contacts": "Contacten",
     "emails": "E-mails",
-    "articles": "Knowledge Base-artikelen",
+    "articles": "Kennisbank-artikelen",
     "attachments": "Bijlagen",
     "inboundEmail": "Groeps e-mailaccount"
   },
@@ -21,7 +24,7 @@
       "Pending": "In afwachting",
       "Closed": "Gesloten",
       "Rejected": "Afgewezen",
-      "Duplicate": "Duplicaat"
+      "Duplicate": "Dubbel"
     },
     "priority": {
       "Low": "Laag",
@@ -34,7 +37,8 @@
     }
   },
   "labels": {
-    "Close": "Sluit",
+    "Close": "Afsluiten",
+    "Reject": "Afwijzen",
     "Closed": "Gesloten",
     "Rejected": "Afgewezen"
   },

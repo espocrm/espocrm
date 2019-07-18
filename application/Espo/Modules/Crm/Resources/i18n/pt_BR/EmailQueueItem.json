@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Nome",
+    "emailAddress": "Endereço de E-mail"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendente",
+      "Sent": "Enviado",
+      "Failed": "Falhou"
+    }
+  },
+  "presetFilters": {
+    "pending": "Pendente",
+    "sent": "Enviado",
+    "failed": "Falhou"
+  }
+}

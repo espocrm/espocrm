@@ -8,19 +8,20 @@
     "budgetConverted": "Budget (omgezet)",
     "contactsTemplate": "Contacten-sjabloon",
     "leadsTemplate": "Leads sjabloon",
-    "accountsTemplate": "Accounts-sjabloon",
+    "accountsTemplate": "Relaties-sjabloon",
     "usersTemplate": "Gebruikers sjabloon",
     "mailMergeOnlyWithAddress": "Records overslaan zonder ingevuld adres",
     "budgetCurrency": "Budgetvaluta"
   },
   "links": {
     "targetLists": "Doellijsten",
-    "accounts": "Klanten",
+    "accounts": "Relaties",
     "contacts": "Contacten",
     "opportunities": "Kansen",
+    "massEmails": "Mass E-mails",
     "contactsTemplate": "Contacten-sjabloon",
     "leadsTemplate": "Leads sjabloon",
-    "accountsTemplate": "Accounts-sjabloon",
+    "accountsTemplate": "Relaties-sjabloon",
     "usersTemplate": "Gebruikers sjabloon"
   },
   "options": {
@@ -35,7 +36,7 @@
   },
   "labels": {
     "Target Lists": "Doellijsten",
-    "Mass Emails": "Massale e-mails",
+    "Mass Emails": "Massale E-mails",
     "Email Templates": "E-mailsjablonen",
     "Unsubscribe again": "Afmelden opnieuw",
     "Subscribe again": "Abonneer opnieuw",

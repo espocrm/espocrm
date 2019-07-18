@@ -1,13 +1,14 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "username": "Gebruikersnaam",
     "password": "Wachtwoord",
     "port": "Poort",
     "monitoredFolders": "Gecontroleerde Folders",
-    "fetchSince": "Opgehaald Vanaf",
+    "fetchSince": "Opgehaald sinds",
     "emailAddress": "E-mailadres",
-    "keepFetchedEmailsUnread": "Laat opgehaalde e-mails als ongelezen staan",
+    "storeSentEmails": "Opslaan verzonden E-mails",
+    "keepFetchedEmailsUnread": "Laat opgehaalde E-mails als ongelezen staan",
     "emailFolder": "Zet in map",
     "useSmtp": "Gebruik SMTP",
     "smtpHost": "SMTP-host",
@@ -27,17 +28,17 @@
     "Create EmailAccount": "E-mail Account Aanmaken",
     "Main": "Hoofd",
     "Test Connection": "Test verbinding",
-    "Send Test Email": "Verzend test-e-mail"
+    "Send Test Email": "Verzend test e-mail"
   },
   "messages": {
     "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server",
     "connectionIsOk": "Verbinding is Ok"
   },
   "links": {
-    "emails": "emails"
+    "emails": "E-mails"
   },
   "tooltips": {
-    "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client.",
-    "storeSentEmails": "Sent emails will be stored on IMAP server. Email Address should much address an email is being sent from."
+    "monitoredFolders": "Je kan de folder \"Verzonden items' van een externe E-mail client toevoegen om deze te synchroniseren.",
+    "storeSentEmails": "Verzonden E-mails worden opgeslagen op de IMAP server. E-mailadres veld moet overeenkomen met het E-mailadres waarvan verzonden wordt."
   }
 }

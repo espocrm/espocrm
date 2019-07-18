@@ -10,13 +10,14 @@
     "emailAddress": "E-mail",
     "title": "Titel",
     "phoneNumber": "Telefoon",
-    "accountName": "Naam Klant",
+    "accountName": "Relatie naam",
     "doNotCall": "Niet Bellen",
     "address": "Adres",
     "source": "Bron",
     "opportunityAmount": "Bedrag Kansen",
     "opportunityAmountConverted": "Bedrag Kans (geconverteerd)",
     "description": "Beschrijving",
+    "createdAccount": "Relatie",
     "createdOpportunity": "Kans",
     "targetLists": "Doellijsten",
     "industry": "Industrie",
@@ -27,8 +28,9 @@
   },
   "links": {
     "targetLists": "Doellijsten",
+    "createdAccount": "Relatie",
     "createdOpportunity": "Kans",
-    "cases": "Casus",
+    "cases": "Tickets",
     "documents": "documenten"
   },
   "options": {

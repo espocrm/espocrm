@@ -60,6 +60,9 @@
             "type": "text",
             "tooltip": true
         },
+        "createLeadBeforeOptInConfirmation": {
+            "type": "bool"
+        },
         "leadSource": {
             "type": "enum",
             "view": "crm:views/opportunity/fields/lead-source",

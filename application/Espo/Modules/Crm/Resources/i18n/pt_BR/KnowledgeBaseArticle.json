@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Criar artigo"
+  },
+  "fields": {
+    "name": "Nome",
+    "attachments": "Anexos",
+    "description": "Descrição",
+    "categories": "Categorias"
+  },
+  "links": {
+    "opportunities": "Oportunidades"
+  },
+  "options": {
+    "status": {
+      "Draft": "Rascunho",
+      "Archived": "Arquivado",
+      "Published": "Publicado"
+    },
+    "type": {
+      "Article": "Artigo"
+    }
+  },
+  "presetFilters": {
+    "published": "Publicado"
+  }
+}

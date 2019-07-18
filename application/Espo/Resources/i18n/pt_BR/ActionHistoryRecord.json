@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "ipAddress": "Endereço IP"
+  },
+  "options": {
+    "action": {
+      "create": "Criar"
+    }
+  }
+}

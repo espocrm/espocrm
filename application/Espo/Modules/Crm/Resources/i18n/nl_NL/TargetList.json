@@ -9,8 +9,9 @@
     "isOptedOut": "Is afgemeld"
   },
   "links": {
-    "accounts": "Klanten",
-    "contacts": "Contacten"
+    "accounts": "Relaties",
+    "contacts": "Contacten",
+    "massEmails": "Mass E-mails"
   },
   "options": {
     "type": {

@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Nome",
+    "portalRoles": "Regras",
+    "isActive": "Está Ativo",
+    "isDefault": "É padrão",
+    "tabList": "Lista de Aba",
+    "quickCreateList": "Criar Lista Rápida",
+    "theme": "Tema",
+    "language": "Linguagem",
+    "dateFormat": "Formato de data",
+    "timeFormat": "Formato de hora",
+    "weekStart": "Primeiro Dia da Semana",
+    "defaultCurrency": "Moeda Padrão",
+    "customUrl": "URL Personalizada"
+  },
+  "links": {
+    "users": "Usuários",
+    "portalRoles": "Regras",
+    "notes": "Notas"
+  },
+  "labels": {
+    "Create Portal": "Criar portal",
+    "User Interface": "Interface do Usuário",
+    "General": "Geral",
+    "Settings": "Configurações"
+  }
+}

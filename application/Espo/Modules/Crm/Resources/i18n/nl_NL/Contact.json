@@ -3,28 +3,31 @@
     "name": "Record Naam",
     "emailAddress": "E-mail",
     "accountRole": "Titel",
-    "accounts": "Klanten",
+    "account": "Relatie",
+    "accounts": "Relaties",
     "phoneNumber": "Telefoon",
-    "accountType": "Klant Type",
+    "accountType": "Relatie Type",
     "doNotCall": "Niet Bellen",
     "address": "Adres",
     "opportunityRole": "Functie Kansen",
     "description": "Beschrijving",
     "targetLists": "Doellijsten",
-    "portalUser": "Portalgebruiker",
+    "portalUser": "Portaalgebruiker",
     "originalLead": "Oorspronkelijke lead",
     "acceptanceStatus": "Acceptatiestatus",
-    "accountIsInactive": "account inactief",
+    "accountIsInactive": "Relatie inactief",
     "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
     "acceptanceStatusCalls": "Acceptatiestatus (oproepen)",
-    "title": "Primair Account titel"
+    "title": "Primair relatie titel"
   },
   "links": {
     "opportunities": "Kansen",
-    "cases": "Casus",
+    "cases": "Tickets",
     "targetLists": "Doellijsten",
-    "accounts": "Klanten",
-    "portalUser": "Portalgebruiker",
+    "account": "Relatie (Primary)",
+    "accounts": "Relatie",
+    "casesPrimary": "Tickets (Primary)",
+    "portalUser": "Portaalgebruiker",
     "originalLead": "Oorspronkelijke lead",
     "documents": "documenten",
     "tasksPrimary": "Taken (uitgebreid)"
@@ -39,8 +42,8 @@
     }
   },
   "presetFilters": {
-    "portalUsers": "Portal-gebruikers",
-    "notPortalUsers": "Geen portalgebruikers",
+    "portalUsers": "Portaal-gebruikers",
+    "notPortalUsers": "Geen portaalgebruikers",
     "accountActive": "Actief"
   }
 }

@@ -2,7 +2,7 @@
   "fields": {
     "name": "Naam",
     "url": "Web adres",
-    "portalRoles": "Rollen",
+    "portalRoles": "Functies",
     "isActive": "Is actief",
     "isDefault": "Is standaard",
     "tabList": "Lijst tabbladen",
@@ -20,11 +20,11 @@
   },
   "links": {
     "users": "gebruikers",
-    "portalRoles": "Rollen",
+    "portalRoles": "Functies",
     "notes": "Notities"
   },
   "tooltips": {
-    "portalRoles": "Gespecificeerde portalrollen worden toegepast op alle gebruikers van dit portaal."
+    "portalRoles": "Gespecificeerde portaal functies worden toegepast op alle gebruikers van dit portaal."
   },
   "labels": {
     "Create Portal": "Maak een portaal",

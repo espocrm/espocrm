@@ -14,7 +14,7 @@
     "Add Field": "Добавить поле",
     "Settings": "Настройки",
     "Scheduled Jobs": "Планировщик заданий",
-    "Upgrade": "Обновить ПО",
+    "Upgrade": "Обновление",
     "Clear Cache": "Очистить кэш",
     "Rebuild": "Перестроить ПО",
     "Teams": "Группы",
@@ -59,7 +59,17 @@
     "Label Manager": "Управление метками",
     "Auth Log": "Лог Аутентификации",
     "Lead Capture": "Захват кандидата",
-    "Attachments": "Вложения"
+    "Attachments": "Вложения",
+    "API Users": "Пользователи Интерфейса Программирования Приложений",
+    "Template Manager": "Менеджер Шаблонов",
+    "System Requirements": "Системные Требования",
+    "PHP Settings": "Настройки PHP",
+    "Database Settings": "Настройки Базы Данных",
+    "Permissions": "Права Доступа",
+    "Success": "Операция завершилась успешно",
+    "Fail": "Операция завершилась неудачей",
+    "is recommended": "рекомендовано",
+    "extension is missing": "расширение отсутствует"
   },
   "layouts": {
     "list": "Список",
@@ -214,7 +224,9 @@
     "labelManager": "Настройте метки приложения.",
     "authLog": "История входа.",
     "leadCapture": "Точки входа API для Web-to-Lead.",
-    "attachments": "Все вложения, хранящиеся в системе."
+    "attachments": "Все вложения, хранящиеся в системе.",
+    "templateManager": "Настроить шаблоны сообщений.",
+    "systemRequirements": "Системные Требования для EspoCRM."
   },
   "options": {
     "previewSize": {

@@ -4,7 +4,7 @@
   },
   "labels": {
     "Access": "Toegang",
-    "Create PortalRole": "Maak portalrol aan",
+    "Create PortalRole": "Maak portaalrol aan",
     "Field Level": "Veldniveau"
   },
   "fields": {
@@ -12,7 +12,7 @@
     "massUpdatePermission": "Massa update rechten"
   },
   "tooltips": {
-    "exportPermission": "Bepaalt of portalgebruikers de mogelijkheid hebben om records te exporteren.",
+    "exportPermission": "Bepaalt of portaalgebruikers de mogelijkheid hebben om records te exporteren.",
     "massUpdatePermission": "Definieert of portaalgebruikers de mogelijkheid hebben om massaal records bij te werken."
   }
 }

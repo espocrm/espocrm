@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "from": "De",
+    "to": "Para",
+    "subject": "Assunto",
+    "emailFolder": "Pasta"
+  },
+  "labels": {
+    "Create EmailFilter": "Criar filtro de email"
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignorar"
+    }
+  }
+}

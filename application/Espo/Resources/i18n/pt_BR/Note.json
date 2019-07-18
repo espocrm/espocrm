@@ -1,6 +1,22 @@
 {
-    "fields": {
-        "post": "Postagem",
-        "attachments": "Anexos"
-    }
+  "fields": {
+    "post": "Postagem",
+    "attachments": "Anexos",
+    "targetType": "Alvo",
+    "teams": "Equipes",
+    "users": "Usuários",
+    "portals": "Portais",
+    "isGlobal": "É Global",
+    "isInternal": "É interno (para usuários internos)",
+    "createdByGender": "Criado por Gênero",
+    "data": "Dado",
+    "number": "Número"
+  },
+  "filters": {
+    "all": "Todos",
+    "updates": "Atualizações"
+  },
+  "messages": {
+    "writeMessage": "Escreva sua mensagem aqui"
+  }
 }

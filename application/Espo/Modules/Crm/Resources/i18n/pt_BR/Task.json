@@ -1,40 +1,40 @@
 {
-    "fields": {
-        "name": "Name",
-        "parent": "Relação",
-        "status": "Status",
-        "dateStart": "Data de Início",
-        "dateEnd": "Até a Data",
-        "priority": "Prioridade",
-        "description": "Descrição",
-        "isOverdue": "Atrasada"
+  "fields": {
+    "parent": "Relação",
+    "dateStart": "Data de Início",
+    "dateEnd": "Até a Data",
+    "priority": "Prioridade",
+    "description": "Descrição",
+    "isOverdue": "Atrasada",
+    "account": "Conta",
+    "attachments": "Anexos"
+  },
+  "links": {
+    "attachments": "Anexos"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Não Iniciada",
+      "Started": "Iniciada",
+      "Completed": "Completa",
+      "Canceled": "Cancelada",
+      "Deferred": "Adiada"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Not Started": "Não Iniciada",
-            "Started": "Iniciada",
-            "Completed": "Completa",
-            "Canceled": "Cancelada",
-            "Deferred": "Adiada"
-        },
-        "priority": {
-            "Low": "Baixa",
-            "Normal": "Normal",
-            "High": "Alta",
-            "Urgent": "Urgente"
-        }
-    },
-    "labels": {
-        "Create Task": "Criar Tarefa",
-        "Complete": "Concluída"
-    },
-	"presetFilters": {
-		"actual": "Atual",
-		"completed": "Completa",
-		"todays": "Hoje",
-        "deferred": "Adiada",
-		"overdue": "Atrasada"
-	}
+    "priority": {
+      "Low": "Baixa",
+      "High": "Alta",
+      "Urgent": "Urgente"
+    }
+  },
+  "labels": {
+    "Create Task": "Criar Tarefa",
+    "Complete": "Concluída"
+  },
+  "presetFilters": {
+    "actual": "Atual",
+    "completed": "Completa",
+    "todays": "Hoje",
+    "overdue": "Atrasada",
+    "deferred": "Adiada"
+  }
 }

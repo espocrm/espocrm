@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "status": "Estado",
+    "executeTime": "Executar Em",
+    "attempts": "Tentativas Restantes",
+    "failedAttempts": "Tentativas Falhas",
+    "serviceName": "Serviço",
+    "methodName": "Método",
+    "scheduledJob": "Tarefas agendadas",
+    "data": "Dado",
+    "scheduledJobJob": "Nome Tarefa Agendada"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendente",
+      "Success": "Sucesso",
+      "Running": "Executando",
+      "Failed": "Falhado"
+    }
+  }
+}

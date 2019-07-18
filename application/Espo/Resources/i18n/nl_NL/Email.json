@@ -11,6 +11,7 @@
     "fromAddress": "Van Adres",
     "emailAddress": "E-mailadres",
     "deliveryDate": "Afleverdatum",
+    "account": "Relatie",
     "users": "Gebruikers",
     "isNotRead": "Is ongelezen",
     "isUsers": "Is van de gebruiker",
@@ -24,7 +25,7 @@
     "hasAttachment": "Heeft bijlage",
     "sentBy": "Verstuurd door",
     "assignedUsers": "Toegewezen gebruikers",
-    "bodyPlain": "Lichaam (duidelijk)",
+    "bodyPlain": "Inhoud (zonder opmaak)",
     "ccEmailAddresses": "CC E-mailadressen",
     "messageId": "Bericht-ID",
     "messageIdInternal": "Bericht-ID (intern)",
@@ -34,6 +35,7 @@
     "isSystem": "Is systeem",
     "toEmailAddresses": "Naar e-mailadressen",
     "bccEmailAddresses": "BCC E-mail Adressen",
+    "replyToEmailAddresses": "Reply-To E-mail Adressen",
     "personStringData": "Persoonlijke Stringgegevens",
     "fromEmailAddress": "Van adres (link)",
     "replyToName": "Reply-To Naam",
@@ -44,7 +46,7 @@
       "Draft": "Concept",
       "Sending": "Bezig met verzenden",
       "Sent": "Verzonden",
-      "Archived": "gearchiveerd",
+      "Archived": "Gearchiveerd",
       "Received": "Ontvangen",
       "Failed": "Mislukt"
     }
@@ -74,7 +76,7 @@
   "messages": {
     "noSmtpSetup": "Geen SMTP setup. {link}.",
     "testEmailSent": "Test email is verzonden",
-    "confirmInsertTemplate": "Het e-mailgedeelte gaat verloren. Weet je zeker dat je de sjabloon wilt invoegen?"
+    "confirmInsertTemplate": "Het e-mail opmaak gaat verloren. Weet je zeker dat je de sjabloon wilt invoegen?"
   },
   "presetFilters": {
     "sent": "Verstuur",
@@ -86,7 +88,7 @@
     "markAsNotImportant": "Mark as Not Important",
     "moveToTrash": "Verplaats naar de prullenbak",
     "moveToFolder": "Verplaats naar map",
-    "retrieveFromTrash": "Haal uit de Prullenbak"
+    "retrieveFromTrash": "Herstel uit Prullenbak"
   },
   "links": {
     "inboundEmails": "Groepsaccounts",
@@ -97,6 +99,7 @@
     "fromEmailAddress": "Van E-mailadres",
     "toEmailAddresses": "Naar e-mailadressen",
     "ccEmailAddresses": "CC E-mailadressen",
-    "bccEmailAddresses": "BCC E-mail Adressen"
+    "bccEmailAddresses": "BCC E-mail Adressen",
+    "replyToEmailAddresses": "Reply-To E-mail Adressen"
   }
 }

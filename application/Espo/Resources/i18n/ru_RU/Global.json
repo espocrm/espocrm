@@ -156,7 +156,7 @@
     "Country": "Страна",
     "City": "Город",
     "PostalCode": "Индекс",
-    "Followed": "Отписаться",
+    "Followed": "Вы подписаны",
     "Follow": "Подписаться",
     "Followers": "Подписчики",
     "Clear Local Cache": "Очистить локальный кэш",
@@ -237,7 +237,8 @@
     "Convert to": "Конвертировать в",
     "View Personal Data": "Просмотреть личные данные",
     "Personal Data": "Личные данные",
-    "Erase": "Стереть"
+    "Erase": "Стереть",
+    "Move Over": "Подвинуть"
   },
   "messages": {
     "pleaseWait": "Пожалуйста, подождите...",
@@ -290,10 +291,10 @@
   },
   "boolFilters": {
     "onlyMy": "Только мои",
-    "followed": "Отписаться"
+    "followed": "Вы подписаны"
   },
   "presetFilters": {
-    "followed": "Отписаться",
+    "followed": "Вы подписаны",
     "all": "Все"
   },
   "massActions": {
