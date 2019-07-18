@@ -17,6 +17,7 @@
         "exampleRequestMethod": "Method",
         "exampleRequestUrl": "URL",
         "exampleRequestPayload": "Payload",
+        "createLeadBeforeOptInConfirmation": "Create Lead before confirmation",
         "duplicateCheck": "Duplicate Check"
     },
     "links": {

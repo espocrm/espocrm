@@ -15,6 +15,7 @@
         "label": "",
         "rows": [
             [{"name": "optInConfirmation", "inlineEditDisabled": true}, false],
+            [{"name": "createLeadBeforeOptInConfirmation"}, false],
             [{"name": "optInConfirmationEmailTemplate"}, {"name": "optInConfirmationLifetime"}],
             [{"name": "optInConfirmationSuccessMessage", "fullWidth": true}]
         ]

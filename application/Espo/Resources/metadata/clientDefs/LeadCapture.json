@@ -32,14 +32,6 @@
                             "attribute": "subscribeToTargetList"
                         }
                     ]
-                },
-                "required": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "subscribeToTargetList"
-                        }
-                    ]
                 }
             },
             "optInConfirmationLifetime": {
@@ -61,6 +53,16 @@
                 }
             },
             "optInConfirmationSuccessMessage": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "optInConfirmation"
+                        }
+                    ]
+                }
+            },
+            "createLeadBeforeOptInConfirmation": {
                 "visible": {
                     "conditionGroup": [
                         {
