@@ -118,6 +118,10 @@
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
         },
+        "currency": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+        },
         "date": {
             "view": "views/admin/dynamic-logic/conditions/field-types/date",
             "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast", "equals", "notEquals"]
