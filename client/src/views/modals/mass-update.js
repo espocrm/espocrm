@@ -76,6 +76,8 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
 
+            var fobiddenList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit') || [];
+
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
@@ -83,6 +85,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     layout = layout || [];
                     this.fields = [];
                     layout.forEach(function (field) {
+                        if (~fobiddenList.indexOf(field)) return;
                         if (model.hasField(field)) {
                             this.fields.push(field);
                         }
