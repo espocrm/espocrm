@@ -880,4 +880,18 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(in_array('comment.created_at', $list));
         $this->assertTrue(in_array('comment.name', $list));
     }
+
+    public function testGetAllAttributesFromComplexExpression1()
+    {
+        $expression = "test";
+        $list = $this->query::getAllAttributesFromComplexExpression($expression);
+        $this->assertTrue(in_array('test', $list));
+    }
+
+    public function testGetAllAttributesFromComplexExpression2()
+    {
+        $expression = "comment.test";
+        $list = $this->query::getAllAttributesFromComplexExpression($expression);
+        $this->assertTrue(in_array('comment.test', $list));
+    }
 }

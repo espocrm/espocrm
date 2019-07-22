@@ -1,55 +1,56 @@
 {
-    "labels": {
-        "Converted To": "Convertido Para",
-        "Create Lead": "Criar Lead",
-        "Convert": "Converter",
-        "convert": "converter"
+  "labels": {
+    "Converted To": "Convertido Para",
+    "Create Lead": "Criar Lead",
+    "Convert": "Converter",
+    "convert": "converter"
+  },
+  "fields": {
+    "name": "Nome",
+    "emailAddress": "E-mail",
+    "title": "Cargo",
+    "phoneNumber": "Telefone",
+    "accountName": "Conta",
+    "doNotCall": "Não Ligar",
+    "address": "Endereço",
+    "source": "Origem",
+    "opportunityAmount": "Valor da Oportunidade",
+    "opportunityAmountConverted": "Valor da Oportunidade (convertido)",
+    "description": "Descrição",
+    "createdAccount": "Conta",
+    "createdContact": "Contato",
+    "createdOpportunity": "Oportunidade",
+    "campaign": "Campanha"
+  },
+  "links": {
+    "targetLists": "Lista de Alvos",
+    "campaignLogRecords": "Logs das Camapnhas",
+    "campaign": "Campanha",
+    "createdContact": "Contato",
+    "createdOpportunity": "Oportunidade"
+  },
+  "options": {
+    "status": {
+      "New": "Novo",
+      "Assigned": "Atribuído",
+      "In Process": "Em Processo",
+      "Converted": "Convertido",
+      "Recycled": "Reciclado",
+      "Dead": "Morto"
     },
-    "fields": {
-        "name": "Nome",
-        "emailAddress": "E-mail",
-        "title": "Cargo",
-        "website": "Website",
-        "phoneNumber": "Telefone",
-        "accountName": "Conta",
-        "doNotCall": "Não Ligar",
-        "address": "Endereço",
-        "status": "Status",
-        "source": "Origem",
-        "opportunityAmount": "Valor da Oportunidade",
-		"opportunityAmountConverted": "Valor da Oportunidade (convertido)",
-        "description": "Descrição",
-        "createdAccount": "Conta",
-        "createdContact": "Contato",
-        "createdOpportunity": "Oportunidade",
-        "campaign": "Campanha"
-    },
-    "links": {
-        "targetLists": "Lista de Alvos",
-        "campaignLogRecords": "Logs das Camapnhas"
-    },
-    "options": {
-        "status": {
-            "New": "Novo",
-            "Assigned": "Atribuído",
-            "In Process": "Em Processo",
-            "Converted": "Convertido",
-            "Recycled": "Reciclado",
-            "Dead": "Morto"
-        },
-        "source": {
-            "Call": "Ligação",
-            "Email": "E-mail",
-            "Existing Customer": "Cliente Existente",
-            "Partner": "Parceiro",
-            "Public Relations": "Relacionamento",
-            "Web Site": "Website",
-            "Campaign": "Campanha",
-            "Other": "Outro"
-        }
-    },
-	"presetFilters": {
-        "actual": "Atual",
-		"active": "Ativo"
-	}
+    "source": {
+      "Call": "Ligação",
+      "Email": "E-mail",
+      "Existing Customer": "Cliente Existente",
+      "Partner": "Parceiro",
+      "Public Relations": "Relacionamento",
+      "Web Site": "Website",
+      "Campaign": "Campanha",
+      "Other": "Outro"
+    }
+  },
+  "presetFilters": {
+    "active": "Ativo",
+    "actual": "Atual"
+  }
 }

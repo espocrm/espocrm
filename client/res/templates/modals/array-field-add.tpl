@@ -1,11 +1,12 @@
 {{#unless optionList}}
     {{translate 'No Data'}}
 {{/unless}}
-<ul class="list-group array-add-list-group">
+<ul class="list-group array-add-list-group no-side-margin">
 {{#each optionList}}
     <li class="list-group-item clearfix">
-        {{#if ../translatedOptions}}{{prop ../../translatedOptions this}}{{else}}{{./this}}{{/if}}
-        <button class="btn btn-default pull-right" data-value="{{./this}}" data-action="add">{{translate 'Add'}}</button>
+        <a href="javascript:" class="add text-bold" data-value="{{./this}}">
+            {{#if ../translatedOptions}}{{prop ../../translatedOptions this}}{{else}}{{./this}}{{/if}}
+        </a>
     </li>
 {{/each}}
 </ul>

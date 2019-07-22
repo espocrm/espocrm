@@ -1,0 +1,61 @@
+{
+  "options": {
+    "dateTimeDefault": {
+      "": "Nenhum",
+      "javascript: return this.dateTime.getNow(1);": "Agora",
+      "javascript: return this.dateTime.getNow(5);": "Agora (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Agora (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Agora (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 hora",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 horas",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 dia",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dias",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dias",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dias",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dias",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dias",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 semana"
+    },
+    "dateDefault": {
+      "javascript: return this.dateTime.getToday();": "Hoje",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 dia",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dias"
+    }
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Rua",
+      "city": "Cidade",
+      "state": "Estado",
+      "country": "País",
+      "postalCode": "Código Postal",
+      "map": "Mapa"
+    },
+    "personName": {
+      "salutation": "Saudação",
+      "first": "Primeiro",
+      "last": "Último"
+    },
+    "datetimeOptional": {
+      "date": "Data"
+    }
+  },
+  "labels": {
+    "Name": "Nome",
+    "Label": "Etiqueta",
+    "Type": "Tipo"
+  }
+}

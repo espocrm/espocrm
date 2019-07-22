@@ -4,9 +4,12 @@
     "action": "Actie",
     "createdAt": "Datum",
     "target": "Doelwit",
+    "targetType": "Doelwit Type",
+    "authToken": "Auth Sleutel",
     "ipAddress": "IP adres"
   },
   "links": {
+    "authToken": "Auth Sleutel",
     "user": "Gebruiker",
     "target": "Doelwit"
   },

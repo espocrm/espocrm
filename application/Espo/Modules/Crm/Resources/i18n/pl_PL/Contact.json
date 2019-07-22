@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nazwa",
     "emailAddress": "E-mail",
-    "title": "Tytuł",
     "accountRole": "Tytuł",
     "account": "Klient",
     "accounts": "Klienci",
@@ -31,7 +30,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--NIC--",
       "Decision Maker": "Osoba Decyzyjna",
       "Evaluator": "Oceniający",
       "Influencer": "Wpływający"

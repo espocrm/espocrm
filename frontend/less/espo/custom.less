@@ -3087,3 +3087,20 @@ a.link-gray {
        .box-shadow(none);
     }
 }
+
+#layout {
+    .cell .left {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        float: left;
+    }
+    .cell .right {
+        float: right;
+
+        .fa-times, .fa-minus {
+            position: relative;
+            top: 1px;
+        }
+    }
+}

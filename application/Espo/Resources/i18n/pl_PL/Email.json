@@ -13,7 +13,7 @@
     "subject": "Temat",
     "attachments": "Załączniki",
     "selectTemplate": "Wybierz szkic wiadomości",
-    "fromEmailAddress": "Z adresu",
+    "fromAddress": "Z adresu",
     "emailAddress": "Adres e-mail",
     "deliveryDate": "Data dostarczenia",
     "account": "Klient",

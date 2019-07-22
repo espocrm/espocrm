@@ -159,6 +159,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 value = value.replace(/<[^><]*([^a-z]{1}on[a-z]+)=[^><]*>/gi, function (match) {
                     return match.replace(/[^a-z]{1}on[a-z]+=/gi, ' data-handler-stripped=');
                 });
+                value = this.getHelper().sanitizeHtml(value);
             }
             return value || '';
         },

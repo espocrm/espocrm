@@ -70,6 +70,7 @@ define('views/user-security/modals/totp', ['views/modal', 'model', 'lib!client/l
                     'code': {
                         type: 'varchar',
                         required: true,
+                        maxLength: 7,
                     },
                     'secret': {
                         type: 'varchar',

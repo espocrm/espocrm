@@ -9,17 +9,17 @@
     "phoneNumber": "Telefoon",
     "roles": "Functies",
     "portals": "portalen",
-    "portalRoles": "Portaal Rollen",
+    "portalRoles": "Portaal functies",
     "teamRole": "Positie",
     "password": "Wachtwoord",
     "passwordConfirm": "Bevestig Wachtwoord",
     "newPassword": "Nieuw Wachtwoord",
     "newPasswordConfirm": "Nieuwe Wachtwoord Bevestigen",
     "isActive": "Is actief",
-    "isPortalUser": "Is Portal-gebruiker",
-    "accounts": "accounts",
-    "account": "Account (primair)",
-    "sendAccessInfo": "Verzend e-mail met toegangsinformatie naar gebruiker",
+    "isPortalUser": "Is Portaal-gebruiker",
+    "accounts": "Relaties",
+    "account": "Relatie (primair)",
+    "sendAccessInfo": "Verzend e-mail met inlog informatie naar gebruiker",
     "portal": "Portaal",
     "gender": "Geslacht",
     "position": "Positie in Team",
@@ -34,11 +34,12 @@
   "links": {
     "teams": "Groepen",
     "roles": "Functies",
-    "portals": "portals",
-    "portalRoles": "Portal Rollen",
-    "accounts": "accounts",
-    "account": "Account (primair)",
-    "tasks": "taken",
+    "notes": "Notities",
+    "portals": "portalen",
+    "portalRoles": "Portaal functies",
+    "accounts": "Relaties",
+    "account": "Relatie (primair)",
+    "tasks": "Taken",
     "defaultTeam": "Standaard Team"
   },
   "labels": {
@@ -53,7 +54,7 @@
     "Email Address": "E-mailadres",
     "External Accounts": "Externe Accounts",
     "Portal": "Portaal",
-    "Create Portal User": "Maak een portalgebruiker",
+    "Create Portal User": "Maak een portaalgebruiker",
     "Proceed w/o Contact": "Ga verder zonder contact",
     "Generate New API Key": "Genereer nieuwe API sleutel"
   },
@@ -63,8 +64,8 @@
     "isAdmin": "Gebruiker admin heeft overal toegang",
     "teams": "Tot welke groep deze gebruiker behoord. Toegang beheer is afhankelijk van groep regels.",
     "roles": "Aanvullende toegangs regels. Gebruik dit als een gebruiker tot geen enkele groep behoord of als er meer rechten gegeven moeten worden.",
-    "portalRoles": "Extra portalrollen. Gebruik het om het toegangscontroleniveau exclusief voor deze gebruiker uit te breiden.",
-    "portals": "Portals waartoe deze gebruiker toegang heeft."
+    "portalRoles": "Extra portaal functies. Gebruik het om het toegangscontrole niveau exclusief voor deze gebruiker uit te breiden.",
+    "portals": "Portaals waartoe deze gebruiker toegang heeft."
   },
   "messages": {
     "passwordWillBeSent": "Wachtwoord wordt naar het emailadres van de gebruiker verzonden.",
@@ -81,14 +82,14 @@
   },
   "presetFilters": {
     "active": "Actief",
-    "activePortal": "Portal actief"
+    "activePortal": "Portaal actief"
   },
   "options": {
     "gender": {
       "": "Niet ingesteld",
-      "Male": "Mannetje",
+      "Male": "Man",
       "Female": "Vrouw",
-      "Neutral": "Neutrale"
+      "Neutral": "Neutraal"
     },
     "type": {
       "regular": "Regelmatig",

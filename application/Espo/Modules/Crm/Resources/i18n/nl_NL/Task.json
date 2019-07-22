@@ -6,11 +6,13 @@
     "priority": "Prioriteit",
     "description": "Beschrijving",
     "isOverdue": "Te Laat",
+    "account": "Relatie",
     "attachments": "Bijlagen",
-    "reminders": "herinneringen"
+    "reminders": "Herinneringen"
   },
   "links": {
-    "attachments": "Bijlagen"
+    "attachments": "Bijlagen",
+    "account": "Relatie"
   },
   "options": {
     "status": {
@@ -34,6 +36,6 @@
     "completed": "Voltooid",
     "todays": "Huidig",
     "overdue": "Laat",
-    "deferred": "uitgestelde"
+    "deferred": "Uitgestelde"
   }
 }

@@ -1,0 +1,22 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Igual",
+      "notEquals": "Não igual",
+      "greaterThan": "Maior que",
+      "lessThan": "Menor que",
+      "in": "Em",
+      "notIn": "Não em",
+      "isTrue": "É verdadeiro",
+      "isFalse": "É falso",
+      "isEmpty": "É vazio",
+      "contains": "Contém",
+      "has": "Contém",
+      "notContains": "Não contém",
+      "notHas": "Não contém"
+    }
+  },
+  "labels": {
+    "Field": "Campo"
+  }
+}

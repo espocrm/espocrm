@@ -30,6 +30,7 @@
 namespace Espo\EntryPoints;
 
 use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\NotFoundSilent;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Error;
@@ -84,7 +85,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 
         if (!$attachment) {
-            throw new NotFound();
+            throw new NotFoundSilent();
         }
 
         if (!$disableAccessCheck && !$this->getAcl()->checkEntity($attachment)) {
@@ -98,7 +99,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         $fileType = $attachment->get('type');
 
         if (!file_exists($filePath)) {
-            throw new NotFound();
+            throw new NotFoundSilent();
         }
 
         if (!in_array($fileType, $this->allowedFileTypes)) {

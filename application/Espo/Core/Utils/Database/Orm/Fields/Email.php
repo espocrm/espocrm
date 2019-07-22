@@ -121,10 +121,12 @@ class Email extends Base
                         'select' => 'emailAddresses.opt_out',
                         'where' => [
                             '= TRUE' => [
-                                'sql' => 'emailAddresses.opt_out = true AND emailAddresses.opt_out IS NOT NULL'
+                                'sql' => 'emailAddresses.opt_out = true AND emailAddresses.opt_out IS NOT NULL',
+                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
                             ],
                             '= FALSE' => [
-                                'sql' => 'emailAddresses.opt_out = false OR emailAddresses.opt_out IS NULL'
+                                'sql' => 'emailAddresses.opt_out = false OR emailAddresses.opt_out IS NULL',
+                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
                             ]
                         ],
                         'orderBy' => 'emailAddresses.opt_out {direction}'

@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "name": "Nome",
+    "body": "Corpo",
+    "entityType": "Tipo de Entidade",
+    "header": "Cabeçalho",
+    "footer": "Rodapé",
+    "leftMargin": "Margem Esquerda",
+    "topMargin": "Margem Superior",
+    "rightMargin": "Margem Direita",
+    "bottomMargin": "Margem Inferior"
+  },
+  "labels": {
+    "Create Template": "Criar template"
+  }
+}

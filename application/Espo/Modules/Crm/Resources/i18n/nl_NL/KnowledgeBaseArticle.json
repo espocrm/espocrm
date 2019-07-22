@@ -15,16 +15,16 @@
     "publishDate": "Publiceer datum",
     "expirationDate": "vervaldatum",
     "description": "Beschrijving",
-    "body": "Lichaam",
+    "body": "Inhoud",
     "categories": "Categorieën",
     "language": "Taal",
-    "portals": "portals"
+    "portals": "portalen"
   },
   "links": {
-    "cases": "Casus",
+    "cases": "Tickets",
     "opportunities": "Kansen",
     "categories": "Categorieën",
-    "portals": "portals"
+    "portals": "portalen"
   },
   "options": {
     "status": {
@@ -41,6 +41,6 @@
     "published": "Gepubliceerd"
   },
   "tooltips": {
-    "portals": "Artikel is alleen beschikbaar in bepaalde portals."
+    "portals": "Artikel is alleen beschikbaar in bepaalde portalen."
   }
 }

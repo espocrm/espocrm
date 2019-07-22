@@ -7,7 +7,7 @@
   "links": {
     "users": "Gebruikers",
     "notes": "Notities",
-    "roles": "Rollen",
+    "roles": "Functies",
     "inboundEmails": "Groep e-mailaccounts"
   },
   "tooltips": {

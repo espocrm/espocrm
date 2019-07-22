@@ -692,7 +692,7 @@ abstract class Base
             ) {
                 $list[] = $expression;
             }
-            return [];
+            return $list;
         }
 
         $argumentList = self::parseArgumentListFromFunctionContent($arguments);

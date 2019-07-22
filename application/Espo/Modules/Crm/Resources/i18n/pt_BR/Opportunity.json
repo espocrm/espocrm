@@ -1,44 +1,45 @@
 {
-    "fields": {
-        "name": "Nome",
-        "account": "Conta",
-        "stage": "Estágio",
-        "amount": "Valor",
-        "probability": "Probabilidade, %",
-        "leadSource": "Origem do Lead",
-        "doNotCall": "Não ligar",
-        "closeDate": "Data de Fechamento",
-		"contacts": "Contatos",
-        "description": "Descrição",
-		"amountConverted": "Valor (convertido)",
-		"amountWeightedConverted": "Valor Quantificado",
-        "campaign": "Campanha"
-    },
-    "links": {
-        "contacts": "Contatos",
-		"documents": "Documentos"
-    },
-    "options": {
-        "stage": {
-            "Prospecting": "Prospectando",
-            "Qualification": "Qualificação",
-          "Proposal": "Proposta",
-          "Negotiation": "Negociação",
-            "Needs Analysis": "Necessita de Análise",
-            "Value Proposition": "Proposta de Valor",
-            "Id. Decision Makers": "Identificação dos Decisores",
-            "Perception Analysis": "Análise da Percepção",
-            "Proposal/Price Quote": "Proposta/Cotação",
-            "Negotiation/Review": "Negociação/Revisão",
-            "Closed Won": "Ganha",
-            "Closed Lost": "Perdida"
-        }
-    },
-    "labels": {
-        "Create Opportunity": "Criar Oportunidade"
-    },
-	"presetFilters": {
-		"open": "Aberta",
-		"won": "Ganha"
-	}
+  "fields": {
+    "name": "Nome",
+    "account": "Conta",
+    "stage": "Estágio",
+    "amount": "Valor",
+    "probability": "Probabilidade, %",
+    "leadSource": "Origem do Lead",
+    "doNotCall": "Não ligar",
+    "closeDate": "Data de Fechamento",
+    "contacts": "Contatos",
+    "description": "Descrição",
+    "amountConverted": "Valor (convertido)",
+    "amountWeightedConverted": "Valor Quantificado",
+    "campaign": "Campanha",
+    "contactRole": "Regra Contato"
+  },
+  "links": {
+    "contacts": "Contatos",
+    "documents": "Documentos"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospectando",
+      "Qualification": "Qualificação",
+      "Needs Analysis": "Necessita de Análise",
+      "Value Proposition": "Proposta de Valor",
+      "Id. Decision Makers": "Identificação dos Decisores",
+      "Perception Analysis": "Análise da Percepção",
+      "Proposal/Price Quote": "Proposta/Cotação",
+      "Negotiation/Review": "Negociação/Revisão",
+      "Closed Won": "Ganha",
+      "Closed Lost": "Perdida",
+      "Proposal": "Proposta",
+      "Negotiation": "Negociação"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Criar Oportunidade"
+  },
+  "presetFilters": {
+    "open": "Aberta",
+    "won": "Ganha"
+  }
 }
