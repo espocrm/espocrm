@@ -14,7 +14,8 @@
       "list":"views/user/record/list"
    },
    "modalViews": {
-      "detail": "views/user/modals/detail"
+      "detail": "views/user/modals/detail",
+      "massUpdate": "views/user/modals/mass-update"
    },
    "defaultSidePanel": {
       "detail": {

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
+define('views/modals/mass-update', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -34,10 +34,13 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
         template: 'modals/mass-update',
 
+        layoutName: 'massUpdate',
+
         data: function () {
             return {
                 scope: this.scope,
-                fields: this.fields
+                fieldList: this.fieldList,
+                entityType: this.entityType,
             };
         },
 
@@ -68,7 +71,9 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 }
             ];
 
-            this.scope = this.options.scope;
+            this.entityType = this.options.entityType || this.options.scope;
+            this.scope = this.options.scope || this.entityType;
+
             this.ids = this.options.ids;
             this.where = this.options.where;
             this.selectData = this.options.selectData;
@@ -76,18 +81,18 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
 
-            var fobiddenList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit') || [];
+            var fobiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 
             this.wait(true);
-            this.getModelFactory().create(this.scope, function (model) {
+            this.getModelFactory().create(this.entityType, function (model) {
                 this.model = model;
-                this.getHelper().layoutManager.get(this.scope, 'massUpdate', function (layout) {
+                this.getHelper().layoutManager.get(this.entityType, this.layoutName, function (layout) {
                     layout = layout || [];
-                    this.fields = [];
+                    this.fieldList = [];
                     layout.forEach(function (field) {
                         if (~fobiddenList.indexOf(field)) return;
                         if (model.hasField(field)) {
-                            this.fields.push(field);
+                            this.fieldList.push(field);
                         }
                     }, this);
 
@@ -95,7 +100,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 }.bind(this));
             }.bind(this));
 
-            this.fieldList = [];
+            this.addedFieldList = [];
         },
 
         addField: function (name) {
@@ -110,7 +115,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             }
 
             this.notify('Loading...');
-            var label = this.translate(name, 'fields', this.scope);
+            var label = this.translate(name, 'fields', this.entityType);
             var html = '<div class="cell form-group col-sm-6" data-name="'+name+'"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
             this.$el.find('.fields-container').append(html);
 
@@ -126,7 +131,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 },
                 mode: 'edit'
             }, function (view) {
-                this.fieldList.push(name);
+                this.addedFieldList.push(name);
                 view.render();
                 view.notify(false);
             }.bind(this));
@@ -138,7 +143,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             var self = this;
 
             var attributes = {};
-            this.fieldList.forEach(function (field) {
+            this.addedFieldList.forEach(function (field) {
                 var view = self.getView(field);
                 _.extend(attributes, view.fetch());
             });
@@ -146,7 +151,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.model.set(attributes);
 
             var notValid = false;
-            this.fieldList.forEach(function (field) {
+            this.addedFieldList.forEach(function (field) {
                 var view = self.getView(field);
                 notValid = view.validate() || notValid;
             });
@@ -154,7 +159,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             if (!notValid) {
                 self.notify('Saving...');
                 $.ajax({
-                    url: this.scope + '/action/massUpdate',
+                    url: this.entityType + '/action/massUpdate',
                     type: 'PUT',
                     data: JSON.stringify({
                         attributes: attributes,
@@ -181,12 +186,12 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         },
 
         reset: function () {
-            this.fieldList.forEach(function (field) {
+            this.addedFieldList.forEach(function (field) {
                 this.clearView(field);
                 this.$el.find('.cell[data-name="'+field+'"]').remove();
             }, this);
 
-            this.fieldList = [];
+            this.addedFieldList = [];
 
             this.model.clear();
 
