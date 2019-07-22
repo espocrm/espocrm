@@ -76,13 +76,10 @@ Espo.define('views/fields/map-route', 'views/fields/map', function (Dep) {
                    === true) {
 
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    if (position.coords.accuracy <= 10.0) {
-                        origin = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        }
-                    }
-                    this.setupMapRoute(origin, address);
+                    this.setupMapRoute({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    }, address);
                 }.bind(this), function() {
                   this.setupMapRoute(origin, address);
                 }.bind(this));
