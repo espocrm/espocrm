@@ -65,15 +65,14 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
         events: _.extend({
             'click #layout a[data-action="switchPanelMode"]': function (e) {
-                var number = $(e.currentTarget).data('number');
+                var number = $(e.currentTarget).data('number').toString();
                 var panel = $(e.currentTarget).closest('ul.panels > li.panel');
-                this.panels.forEach(function (item, i) {
-                    if (item.number === number) {
-                        item.mode = item.mode === 'row' ? 'column' : 'row';
-                        this.panelsData[number.toString()]['mode'] = item.mode;
-                        this.updatePanelMode(panel, item.mode);
-                    }
-                }, this);
+
+                var panelData = this.panelsData[number];
+                panelData['mode'] = panelData['mode'] == 'row'
+                                    ? 'column' : 'row';
+
+                this.updatePanelMode(panel, panelData['mode']);
             },
             'click #layout a[data-action="addPanel"]': function () {
                 this.addPanel();
