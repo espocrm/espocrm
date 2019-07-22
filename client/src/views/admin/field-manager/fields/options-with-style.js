@@ -95,7 +95,7 @@ Espo.define('views/admin/field-manager/fields/options-with-style', 'views/admin/
                     }
                 }
                 var translated = this.getLanguage().translateOption(item, 'style', 'LayoutManager');
-                var innerHtml = '<span class="check-icon fas fa-check pull-right'+hiddenPart+'"></span><div>'+translated+'</div>';
+                var innerHtml = '<span class="check-icon fas fa-check pull-right'+hiddenPart+'"></span><div class="text-'+item+'">'+translated+'</div>';
                 itemListHtml += '<li><a href="javascript:" data-action="selectOptionItemStyle" data-style="'+item+'" data-value="'+valueInternal+'">'+innerHtml+'</a></li>'
             }, this);
 

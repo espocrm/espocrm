@@ -49,6 +49,12 @@ class Email extends \Espo\Core\SelectManagers\Base
                 foreach ($params['where'] as $item) {
                     if ($item['type'] === 'textFilter') {
                         $skipIndex = true;
+                        break;
+                    } else {
+                        if (isset($item['attribute']) && $this->getSeed()->getAttributeParam($item['attribute'], 'type') === 'foreignId') {
+                            $skipIndex = true;
+                            break;
+                        }
                     }
                 }
             }

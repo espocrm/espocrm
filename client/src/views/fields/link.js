@@ -287,9 +287,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             response.list.forEach(function(item) {
                                 list.push({
                                     id: item.id,
-                                    name: item.name,
+                                    name: item.name || item.id,
                                     data: item.id,
-                                    value: item.name,
+                                    value: item.name || item.id,
                                     attributes: item
                                 });
                             }, this);
@@ -333,9 +333,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                 response.list.forEach(function(item) {
                                     list.push({
                                         id: item.id,
-                                        name: item.name,
+                                        name: item.name || item.id,
                                         data: item.id,
-                                        value: item.name
+                                        value: item.name || item.id,
                                     });
                                 }, this);
                                 return {

@@ -284,6 +284,7 @@ class Sender
                     $contents = $a->get('contents');
                 } else {
                     $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($a);
+                    if (!is_file($fileName)) continue;
                     $contents = file_get_contents($fileName);
                 }
                 $attachment = new MimePart($contents);
@@ -303,6 +304,7 @@ class Sender
                     $contents = $a->get('contents');
                 } else {
                     $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($a);
+                    if (!is_file($fileName)) continue;
                     $contents = file_get_contents($fileName);
                 }
                 $attachment = new MimePart($contents);

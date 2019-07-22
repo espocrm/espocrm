@@ -795,12 +795,16 @@ define('views/record/list', 'view', function (Dep) {
                 ids = this.checkedList;
             }
 
-            this.createView('massUpdate', 'views/modals/mass-update', {
-                scope: this.entityType,
+            var viewName = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'massUpdate']) ||
+                'views/modals/mass-update';
+
+            this.createView('massUpdate', viewName, {
+                scope: this.scope,
+                entityType: this.entityType,
                 ids: ids,
                 where: this.collection.getWhere(),
                 selectData: this.collection.data,
-                byWhere: this.allResultIsChecked
+                byWhere: this.allResultIsChecked,
             }, function (view) {
                 view.render();
                 view.notify(false);

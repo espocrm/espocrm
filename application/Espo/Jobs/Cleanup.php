@@ -433,6 +433,8 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $period = '-' . $this->getConfig()->get('cleanupDeletedRecordsPeriod', $this->cleanupDeletedRecordsPeriod);
         $datetime = new \DateTime($period);
 
+        $serviceFactory = $this->getServiceFactory();
+
         $scopeList = array_keys($this->getMetadata()->get(['scopes']));
         foreach ($scopeList as $scope) {
             if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
@@ -446,6 +448,15 @@ class Cleanup extends \Espo\Core\Jobs\Base
             if (!method_exists($repository, 'select')) continue;
             if (!method_exists($repository, 'deleteFromDb')) continue;
 
+            $hasCleanupMethod = false;
+            $service = null;
+            if ($serviceFactory->checkExists($scope)) {
+                $service = $serviceFactory->create($scope);
+                if (method_exists($service, 'cleanup')) {
+                    $hasCleanupMethod = true;
+                }
+            }
+
             $whereClause = [
                 'deleted' => 1,
             ];
@@ -458,6 +469,13 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
             $deletedEntityList = $repository->select(['id', 'deleted'])->where($whereClause)->find(['withDeleted' => true]);
             foreach ($deletedEntityList as $e) {
+                if ($hasCleanupMethod) {
+                    try {
+                        $service->cleanup($e->id);
+                    } catch (\Throwable $e) {
+                        $GLOBALS['log']->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());
+                    }
+                }
                 $this->cleanupDeletedEntity($e);
             }
         }
