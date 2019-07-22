@@ -467,7 +467,11 @@ class Cleanup extends \Espo\Core\Jobs\Base
             $deletedEntityList = $repository->select(['id', 'deleted'])->where($whereClause)->find(['withDeleted' => true]);
             foreach ($deletedEntityList as $e) {
                 if ($hasCleanupMethod) {
-                    $service->cleanup($e->id);
+                    try {
+                        $service->cleanup($e->id);
+                    } catch (\Throwable $e) {
+                        $GLOBALS['log']->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());
+                    }
                 }
                 $this->cleanupDeletedEntity($e);
             }
