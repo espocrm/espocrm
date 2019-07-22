@@ -269,7 +269,26 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true,
         ]);
 
-        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON post.name = 'test' OR post.name IS NULL";
+        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON (post.name = 'test' OR post.name IS NULL)";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testJoinConditions4()
+    {
+        $sql = $this->query->createSelectQuery('Note', [
+            'select' => ['id'],
+            'leftJoins' => [['post', 'post', [
+                'name' => null,
+                'OR' => [
+                    ['name' => 'test'],
+                    ['post.name' => null],
+                ]
+            ]]],
+            'withDeleted' => true,
+        ]);
+
+        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON post.name IS NULL AND (post.name = 'test' OR post.name IS NULL)";
 
         $this->assertEquals($expectedSql, $sql);
     }

@@ -1670,6 +1670,10 @@ abstract class Base
 
             $sql = implode(' ' .$logicalOperator . ' ', $sqlList);
 
+            if (count($sqlList) > 1) {
+                $sql = '(' . $sql . ')';
+            }
+
             return $sql;
         }
 
