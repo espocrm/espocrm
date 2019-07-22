@@ -125,7 +125,11 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                         "layout": []
                     }
                 ];
-                if (this.getUser().get('portalId')) {
+
+
+                if (this.getConfig().get('forcedDashboardLayout')) {
+                    this.dashboardLayout = this.getConfig().get('forcedDashboardLayout') || [];
+                } else if (this.getUser().get('portalId')) {
                     this.dashboardLayout = this.getConfig().get('dashboardLayout') || [];
                 } else {
                     this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;

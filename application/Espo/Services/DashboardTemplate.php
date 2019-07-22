@@ -32,6 +32,7 @@ namespace Espo\Services;
 use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\NotFount;
+use \Espo\Core\Exceptions\Forbidden;
 
 class DashboardTemplate extends Record
 {
@@ -80,6 +81,15 @@ class DashboardTemplate extends Record
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
         if (!$template) throw new NotFount();
+
+        foreach ($userIdList as $userId) {
+            $user = $this->getEntityManager()->fetchEntity('User', $userId);
+            if ($user) {
+                if ($user->isPortal() || $user->isApi()) {
+                    throw new Forbidden("Not allowed user type.");
+                }
+            }
+        }
 
         foreach ($userIdList as $userId) {
             $preferences = $this->getEntityManager()->fetchEntity('Preferences', $userId);

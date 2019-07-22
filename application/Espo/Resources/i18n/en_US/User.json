@@ -34,6 +34,7 @@
         "lastAccess": "Last Access",
         "apiKey": "API Key",
         "secretKey": "Secret Key",
+        "dashboardTemplate": "Dashboard Template",
         "authMethod": "Authentication Method",
         "auth2FA": "Enable 2-Factor Authentication",
         "auth2FAMethod": "2FA Method",

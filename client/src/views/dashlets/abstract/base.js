@@ -79,7 +79,8 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             if (!this.options.readOnly) {
                 var storedOptions = this.getPreferences().getDashletOptions(this.id) || {};
             } else {
-                var storedOptions = (this.getConfig().get('dashletsOptions') || {})[this.id] || {};
+                var allOptions = this.getConfig().get('forcedDashletsOptions') || this.getConfig().get('dashletsOptions') || {};
+                var storedOptions = allOptions[this.id] || {};
             }
 
             this.optionsData = _.extend(options, storedOptions);

@@ -258,6 +258,15 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                                 [{"name":"portalRoles"}, {"name":"accounts"}]
                             ]
                         });
+                        if (this.getUser().isAdmin()) {
+                            layout.push({
+                                "label": "Misc",
+                                "name": "portalMisc",
+                                "rows": [
+                                    [{"name":"dashboardTemplate"}, false]
+                                ]
+                            });
+                        }
                     }
                 }
 

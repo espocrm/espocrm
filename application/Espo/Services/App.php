@@ -92,6 +92,14 @@ class App extends \Espo\Core\Services\Base
 
         $settings = $this->getServiceFactory()->create('Settings')->getConfigData();
 
+        if ($user->get('dashboardTemplateId')) {
+            $dashboardTemplate = $this->getEntityManager()->getEntity('DashboardTemplate', $user->get('dashboardTemplateId'));
+            if ($dashboardTemplate) {
+                $settings->forcedDashletsOptions = $dashboardTemplate->get('dashletsOptions') ?? (object) [];
+                $settings->forcedDashboardLayout = $dashboardTemplate->get('layout') ?? [];
+            }
+        }
+
         unset($userData->authTokenId);
         unset($userData->password);
 
@@ -113,7 +121,8 @@ class App extends \Espo\Core\Services\Base
         ];
     }
 
-    protected function getEmailAddressData() {
+    protected function getEmailAddressData()
+    {
         $user = $this->getUser();
 
         $emailAddressList = [];

@@ -115,6 +115,15 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                         [{"name":"portalRoles"}, {"name":"accounts"}]
                     ]
                 });
+                if (this.getUser().isAdmin()) {
+                    layout.push({
+                        "label": "Misc",
+                        "name": "portalMisc",
+                        "rows": [
+                            [{"name":"dashboardTemplate"}, false]
+                        ]
+                    });
+                }
 
                 if (this.type == 'edit' && this.getUser().isAdmin() && !this.model.isApi()) {
                     layout.push({

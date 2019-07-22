@@ -274,6 +274,9 @@
             "readOnly": true,
             "view": "views/fields/user"
         },
+        "dashboardTemplate": {
+            "type": "link"
+        },
         "lastAccess": {
             "type": "datetime",
             "notStorable": true,
@@ -323,6 +326,10 @@
             "entity": "PortalRole",
             "foreign": "users",
             "layoutRelationshipsDisabled": true
+        },
+        "dashboardTemplate": {
+            "type": "belongsTo",
+            "entity": "DashboardTemplate"
         },
         "preferences": {
             "type": "hasOne",
