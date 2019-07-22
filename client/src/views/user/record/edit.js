@@ -115,7 +115,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                         [{"name":"portalRoles"}, {"name":"accounts"}]
                     ]
                 });
-                if (this.getUser().isAdmin()) {
+                if (this.getUser().isAdmin() && this.model.isPortal()) {
                     layout.push({
                         "label": "Misc",
                         "name": "portalMisc",
