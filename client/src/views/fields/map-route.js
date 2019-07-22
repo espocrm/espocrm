@@ -23,12 +23,37 @@ Espo.define('views/fields/map-route', 'views/fields/map', function (Dep) {
 
     return Dep.extend({
         type: 'mapRoute',
+        directionsDisplay: null,
+        directionsService: null,
+
+        setupMapRoute: function (origin, destination) {
+            var request = {
+                origin: origin,
+                destination: destination,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+
+            this.directionsService.route(request, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    this.directionsDisplay.setDirections(response);
+                }
+            }.bind(this));
+        },
+        getConfigOrigin: function () {
+            return this.addressToString({
+                city: this.getConfig().get('googleMapsOriginCity'),
+                street: this.getConfig().get('googleMapsOriginStreet'),
+                postalCode: this.getConfig().get('googleMapsOriginPostalCode'),
+                country: this.getConfig().get('googleMapsOriginCountry'),
+                state: this.getConfig().get('googleMapsOriginState')
+            });
+        },
         initMapGoogle: function () {
             this.$el.find('.map').css('height', this.height + 'px');
 
             var geocoder = new google.maps.Geocoder();
-            var directionsDisplay = new google.maps.DirectionsRenderer();
-            var directionsService = new google.maps.DirectionsService();
+            this.directionsDisplay = new google.maps.DirectionsRenderer();
+            this.directionsService = new google.maps.DirectionsService();
 
             try {
                 var map = new google.maps.Map(this.$el.find('.map').get(0), {
@@ -37,34 +62,33 @@ Espo.define('views/fields/map-route', 'views/fields/map', function (Dep) {
                     center: {lat: 0, lng: 0},
                     scrollwheel: false
                 });
-                directionsDisplay.setMap(map);
+                this.directionsDisplay.setMap(map);
             } catch (e) {
                 console.error(e.message);
                 return;
             }
 
-            var startAddressData = {
-                city: this.getConfig().get('googleMapsOriginCity'),
-                street: this.getConfig().get('googleMapsOriginStreet'),
-                postalCode: this.getConfig().get('googleMapsOriginPostalCode'),
-                country: this.getConfig().get('googleMapsOriginCountry'),
-                state: this.getConfig().get('googleMapsOriginState')
-            };
-            var startAddress = this.addressToString(startAddressData);
+            var origin = this.getConfigOrigin();
             var address = this.addressToString(this.addressData);
 
+            if (navigator.geolocation
+                && this.getConfig().get('googleMapsUseLocationService')
+                   === true) {
 
-            var request = {
-                origin: startAddress,
-                destination: address,
-                travelMode: google.maps.DirectionsTravelMode.DRIVING
-            };
-
-            directionsService.route(request, function(response, status) {
-              if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(response);
-              }
-            });
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    if (position.coords.accuracy <= 10.0) {
+                        origin = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        }
+                    }
+                    this.setupMapRoute(origin, address);
+                }.bind(this), function() {
+                  this.setupMapRoute(origin, address);
+                }.bind(this));
+            } else {
+                this.setupMapRoute(origin, address);
+            }
         }
     });
 });

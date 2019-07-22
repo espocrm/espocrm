@@ -5,7 +5,8 @@
         "clientSecret": "Client Secret",
         "redirectUri": "Redirect URI",
         "apiKey": "API Key",
-        "originAddress": "Origin Address"
+        "originAddress": "Origin Address",
+        "useLocationService": "Use Location Service (if available)"
     },
     "titles": {
         "GoogleMaps": "Google Maps"

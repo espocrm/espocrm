@@ -3,7 +3,8 @@
     "enabled": "Aktiv",
     "clientSecret": "Client Geheimnis",
     "redirectUri": "Weiterleitungs URI",
-    "originAddress": "Ausgangsstandort"
+    "originAddress": "Ausgangsstandort",
+    "useLocationService": "Ortungsfunktion nutzen (falls verfügbar)"
   },
   "messages": {
     "selectIntegration": "Wählen Sie eine Integration aus dem Menü.",

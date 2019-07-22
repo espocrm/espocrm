@@ -482,6 +482,10 @@
             "type": "varchar",
             "onlyUser": true
         },
+        "googleMapsUseLocationService": {
+            "type": "bool",
+            "onlyUser": true
+        },
         "massEmailDisableMandatoryOptOutLink": {
             "type": "bool"
         },

@@ -47,6 +47,7 @@ class GoogleMaps extends \Espo\Core\Hooks\Base
             $this->getConfig()->set('googleMapsOriginState', $entity->get('originAddressState'));
             $this->getConfig()->set('googleMapsOriginCity', $entity->get('originAddressCity'));
             $this->getConfig()->set('googleMapsOriginCountry', $entity->get('originAddressCountry'));
+            $this->getConfig()->set('googleMapsUseLocationService', $entity->get('useLocationService'));
 
             $this->getConfig()->save();
         }

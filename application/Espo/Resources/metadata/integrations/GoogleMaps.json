@@ -8,6 +8,9 @@
         "originAddress": {
             "type": "address",
             "required": true
+        },
+        "useLocationService": {
+            "type": "bool"
         }
     },
     "allowUserAccounts": false,
