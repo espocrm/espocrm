@@ -68,11 +68,11 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var number = $(e.currentTarget).data('number').toString();
                 var panel = $(e.currentTarget).closest('ul.panels > li.panel');
 
-                var panelData = this.panelsData[number];
-                panelData['mode'] = panelData['mode'] == 'row'
-                                    ? 'column' : 'row';
+                this.panelsData[number]['mode'] =
+                    this.panelsData[number]['mode'] === 'row'
+                    ? 'column' : 'row';
 
-                this.updatePanelMode(panel, panelData['mode']);
+                this.updatePanelMode(panel, this.panelsData[number]['mode']);
             },
             'click #layout a[data-action="addPanel"]': function () {
                 this.addPanel();
