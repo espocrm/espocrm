@@ -181,6 +181,9 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
                 }, this);
 
+                var panel = $(e.target).closest('li.panel');
+                var self = this;
+
                 var attributeList = this.panelDataAttributeList;
                 var attributeDefs = this.panelDataAttributesDefs;
 
@@ -197,6 +200,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                             if (item === 'panelName') return;
                             this.panelsData[id][item] = attributes[item];
                         }, this);
+                        self.updatePanelMode(panel, this.panelsData[id]['mode']);
                         view.close();
                     }, this);
                 }, this);
@@ -234,6 +238,12 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             Dep.prototype.setup.call(this);
 
             this.panelDataAttributeList.push('mode');
+
+            this.panelDataAttributesDefs.mode = {
+                type: 'enum',
+                options: ['row', 'column'],
+                translation: 'LayoutManager.options.mode'
+            };
             this.panelsData = {};
         },
 

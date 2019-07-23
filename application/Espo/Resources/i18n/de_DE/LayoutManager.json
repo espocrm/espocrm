@@ -5,7 +5,8 @@
     "align": "Ausrichten",
     "sticked": "Gepinnt",
     "isLarge": "Große Schriftgröße",
-    "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen"
+    "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen",
+    "mode": "Modus"
   },
   "options": {
     "align": {
@@ -18,6 +19,10 @@
       "danger": "Gefahr",
       "warning": "Warnung",
       "primary": "Primär"
+    },
+    "mode": {
+        "row": "Zeilen",
+        "column": "Spalten"
     }
   },
   "labels": {
