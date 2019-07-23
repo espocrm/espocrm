@@ -76,8 +76,14 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             this.setViewMode(this.viewMode);
 
-            if (this.getMetadata().get('clientDefs.' + this.scope + '.searchPanelDisabled')) {
+            if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelDisabled'])) {
                 this.searchPanel = false;
+            }
+
+            if (this.getUser().isPortal()) {
+                if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelInPortalDisabled'])) {
+                    this.searchPanel = false;
+                }
             }
 
             if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])) {
