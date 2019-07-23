@@ -85,7 +85,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             this.messageData = {
                 'user': 'field:createdBy',
                 'entity': 'field:parent',
-                'entityType': this.translateEntityType(this.model.get('parentType')),
+                'entityType': this.getHelper().escapeString(this.translateEntityType(this.model.get('parentType'))),
             };
 
             if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {

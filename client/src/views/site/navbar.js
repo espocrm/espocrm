@@ -41,7 +41,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 menuDataList: this.getMenuDataList(),
                 quickCreateList: this.quickCreateList,
                 enableQuickCreate: this.quickCreateList.length > 0,
-                userName: this.getUser().get('name'),
                 userId: this.getUser().id,
                 logoSrc: this.getLogoSrc()
             };
@@ -528,7 +527,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             var list = [
                 {
                     link: '#User/view/' + this.getUser().id,
-                    html: avatarHtml + this.getUser().get('name')
+                    html: avatarHtml + this.getHelper().escapeString(this.getUser().get('name')),
                 },
                 {divider: true}
             ];

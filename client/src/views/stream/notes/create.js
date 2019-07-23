@@ -52,7 +52,7 @@ Espo.define('views/stream/notes/create', 'views/stream/note', function (Dep) {
                 this.assignedUserId = data.assignedUserId || null;
                 this.assignedUserName = data.assignedUserName || null;
 
-                this.messageData['assignee'] = '<a href="#User/view/' + this.assignedUserId + '">' + this.assignedUserName + '</a>';
+                this.messageData['assignee'] = '<a href="#User/view/' + this.assignedUserId + '">' + this.getHelper().escapeString(this.assignedUserName) + '</a>';
 
                 var isYou = false;
                 if (this.isUserStream) {

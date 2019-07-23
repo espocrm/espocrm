@@ -42,7 +42,7 @@ define('views/site-portal/navbar', 'views/site/navbar', function (Dep) {
             var tabList = this.getConfig().get('tabList') || [];
             tabList = Espo.Utils.clone(tabList || []);
 
-            if (this.getThemeManager().getParam('navbarIsVertical')) {
+            if (this.getThemeManager().getParam('navbarIsVertical') || tabList.length) {
                 tabList.unshift('Home');
             }
             return tabList;

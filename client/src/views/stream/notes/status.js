@@ -56,7 +56,7 @@ Espo.define('views/stream/notes/status', 'views/stream/note', function (Dep) {
 
             this.style = data.style || 'default';
 
-            this.statusText = this.getLanguage().translateOption(value, field, this.model.get('parentType'));
+            this.statusText = this.getHelper().escapeString(this.getLanguage().translateOption(value, field, this.model.get('parentType')));
 
             this.messageData['field'] = this.translate(field, 'fields', this.model.get('parentType')).toLowerCase();
 

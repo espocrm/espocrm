@@ -67,7 +67,7 @@ Espo.define('views/stream/notes/email-received', 'views/stream/note', function (
                 }
             }
 
-            this.messageData['email'] = '<a href="#Email/view/' + data.emailId + '">' + data.emailName + '</a>';
+            this.messageData['email'] = '<a href="#Email/view/' + this.getHelper().escapeString(data.emailId) + '">' + this.getHelper().escapeString(data.emailName) + '</a>';
 
             this.messageName = 'emailReceived';
 
@@ -77,7 +77,7 @@ Espo.define('views/stream/notes/email-received', 'views/stream/note', function (
 
             if (data.personEntityId) {
                 this.messageName += 'From';
-                this.messageData['from'] = '<a href="#'+data.personEntityType+'/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
+                this.messageData['from'] = '<a href="#'+this.getHelper().escapeString(data.personEntityType)+'/view/' + this.getHelper().escapeString(data.personEntityId) + '">' + this.getHelper().escapeString(data.personEntityName) + '</a>';
             }
 
             if (this.model.get('parentType') === data.personEntityType && this.model.get('parentId') == data.personEntityId) {
