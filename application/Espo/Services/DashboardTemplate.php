@@ -31,7 +31,7 @@ namespace Espo\Services;
 
 use \Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\NotFount;
+use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;
 
 class DashboardTemplate extends Record
@@ -80,7 +80,7 @@ class DashboardTemplate extends Record
     public function deployToUsers(string $id, array $userIdList, bool $append = false)
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
-        if (!$template) throw new NotFount();
+        if (!$template) throw new NotFound();
 
         foreach ($userIdList as $userId) {
             $user = $this->getEntityManager()->fetchEntity('User', $userId);
@@ -104,10 +104,10 @@ class DashboardTemplate extends Record
     public function deployToTeam(string $id, string $teamId, bool $append = false)
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
-        if (!$template) throw new NotFount();
+        if (!$template) throw new NotFound();
 
         $team = $this->getEntityManager()->fetchEntity('Team', $teamId);
-        if (!$team) throw new NotFount();
+        if (!$team) throw new NotFound();
 
         $userList = $this->getEntityManager()->getRepository('User')->join(['teams'])->distinct()->where([
             'teams.id' => $teamId,
