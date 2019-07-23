@@ -3,7 +3,7 @@
     <a href="javascript:" data-action="edit-panel-label" class="edit-panel-label"><i class="fas fa-pencil-alt fa-sm"></i></a>
 
     <a href="javascript:" style="float: right; padding-left:5px;" data-action="removePanel" class="remove-panel" data-number="{{number}}"><i class="fas fa-times"></i></a>
-    <a href="javascript:" style="float: right; padding-left:5px;" data-action="switchPanelMode" class="switch-panel-mode" data-number="{{number}}"><i class="fas fa-bars"></i></a>
+    <a href="javascript:" style="float: right;" data-action="switchPanelMode" class="switch-panel-mode" data-number="{{number}}"><i class="fas fa-bars"></i></a>
 </header>
 <ul class="rows clearfix">
 {{#each rows}}
