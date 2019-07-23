@@ -76,7 +76,7 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
                                 teamIdList.forEach(function (teamId) {
                                     var teamName = teamNameHash[teamId];
                                     if (teamName) {
-                                        teamHtmlList.push('<a href="#Team/view/' + teamId + '">' + teamName + '</a>');
+                                        teamHtmlList.push('<a href="#Team/view/' + this.getHelper().escapeString(teamId) + '">' + this.getHelper().escapeString(teamName) + '</a>');
                                     }
                                 }, this);
 
@@ -93,7 +93,7 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
                                     userIdList.forEach(function (userId) {
                                         var userName = userNameHash[userId];
                                         if (userName) {
-                                            userHtmlList.push('<a href="#User/view/' + userId + '">' + userName + '</a>');
+                                            userHtmlList.push('<a href="#User/view/' + this.getHelper().escapeString(userId) + '">' + this.getHelper().escapeString(userName) + '</a>');
                                         }
                                     }, this);
                                     this.messageData['target'] = userHtmlList.join(', ');
@@ -113,4 +113,3 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
 
     });
 });
-

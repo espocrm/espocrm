@@ -203,6 +203,10 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
         },
 
         addAddress: function (address, name, type, id) {
+            if (name) {
+                name = this.getHelper().escapeString(name);
+            }
+
             if (this.justAddedAddress) {
                 this.deleteAddress(this.justAddedAddress);
             }
@@ -236,6 +240,13 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
         },
 
         addAddressHtml: function (address, name) {
+            if (name) {
+                name = this.getHelper().escapeString(name);
+            }
+            if (address) {
+                name = this.getHelper().escapeString(address);
+            }
+
             var conteiner = this.$el.find('.link-container');
             var html =
             '<div data-address="'+address+'" class="list-group-item">' +
@@ -287,6 +298,10 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             var id = this.idHash[address] || null;
 
             var addressHtml = '<span>' + address + '</span>';
+
+            if (name) {
+                name = this.getHelper().escapeString(name);
+            }
 
             var lineHtml;
             if (id) {
