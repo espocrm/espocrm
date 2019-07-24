@@ -41,5 +41,26 @@ class Note extends \Espo\Core\AclPortal\Base
         }
         return false;
     }
-}
 
+    public function checkEntityCreate(EntityUser $user, Entity $entity, $data)
+    {
+        if ($entity->get('type') !== 'Post') return false;
+
+        if ($entity->get('type') === 'Post' && $entity->get('targetType')) {
+            return false;
+        }
+
+        if (!$entity->get('parentId') || !$entity->get('parentType')) {
+            return false;
+        }
+
+        $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        if ($parent) {
+            if ($this->getAclManager()->checkEntity($user, $parent, 'stream')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
