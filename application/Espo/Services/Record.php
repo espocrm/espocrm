@@ -420,6 +420,8 @@ class Record extends \Espo\Core\Services\Base
                                 ->findOne();
                             if ($foreignEntity) {
                                 $entity->set($nameAttribute, $foreignEntity->get('name'));
+                            } else {
+                                $entity->set($nameAttribute, null);
                             }
                         }
                     }
