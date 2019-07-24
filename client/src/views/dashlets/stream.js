@@ -67,11 +67,14 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
                 iconHtml: '<span class="fas fa-align-justify"></span>',
                 url: '#Stream'
             });
-            this.actionList.unshift({
-                name: 'create',
-                html: this.translate('Create Post', 'labels'),
-                iconHtml: '<span class="fas fa-plus"></span>'
-            });
+
+            if (!this.getUser().isPortal()) {
+                this.actionList.unshift({
+                    name: 'create',
+                    html: this.translate('Create Post', 'labels'),
+                    iconHtml: '<span class="fas fa-plus"></span>'
+                });
+            }
         },
 
         actionCreate: function () {
