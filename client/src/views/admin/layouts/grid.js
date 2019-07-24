@@ -260,7 +260,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
             this.panelsData[number.toString()] = {};
 
-            var $li = $('<li class="panel-layout"></li>');
+            var $li = $('<li class="panel clearfix" data-mode="row"></li>');
             $li.attr('data-number', number);
             this.$el.find('ul.panels').append($li);
 
@@ -341,7 +341,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             }, this);
 
             this.createView('panel-' + data.number, 'view', {
-                el: this.getSelector() + ' li.panel-layout[data-number="'+data.number+'"]',
+                el: this.getSelector() + ' li.panel[data-number="'+data.number+'"]',
                 template: 'admin/layouts/grid-panel',
                 data: function () {
                     var o = Espo.Utils.clone(data);
