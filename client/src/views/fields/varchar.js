@@ -32,6 +32,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         type: 'varchar',
 
+        listTemplate: 'fields/varchar/list',
+
         detailTemplate: 'fields/varchar/detail',
 
         searchTemplate: 'fields/varchar/search',
