@@ -41,7 +41,7 @@ Espo.define('views/preferences/edit', 'views/edit', function (Dep) {
             var html = '';
             html += this.translate('Preferences');
             html += ' &raquo ';
-            html += this.userName;
+            html += this.getHelper().escapeString(this.userName);
             return html;
         },
 

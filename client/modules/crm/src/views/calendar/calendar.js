@@ -287,6 +287,8 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 title += ' (' + this.options.userName + ')';
             }
 
+            title = this.getHelper().escapeString(title);
+
             return title;
         },
 
@@ -686,7 +688,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
                     if (event.userIdList) {
                         event.userIdList.forEach(function (userId) {
-                            var userName = event.userNameMap[userId] || '';
+                            var userName = this.getHelper().escapeString(event.userNameMap[userId] || '');
                             var avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 13);
                             if (avatarHtml) avatarHtml += ' ';
 
@@ -722,9 +724,6 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             var url = 'Activities?from=' + from + '&to=' + to;
             if (this.options.userId) {
                 url += '&userId=' + this.options.userId;
-                if (this.options.userName) {
-                    url += '&userName=' + this.options.userName;
-                }
             }
 
             url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));

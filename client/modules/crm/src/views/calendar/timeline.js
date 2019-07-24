@@ -298,6 +298,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 } else {
                     label = this.getUser().get('name');
                 }
+                label = this.getHelper().escapeString(label);
                 return label;
             }
 
@@ -356,6 +357,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (this.options.userId && this.options.userName) {
                 title += ' (' + this.options.userName + ')';
             }
+
+            title = this.getHelper().escapeString(title);
+
             return title;
         },
 
@@ -373,8 +377,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 };
             } else {
                 event = {
-                    content: o.name,
-                    title: o.name,
+                    content: this.getHelper().escapeString(o.name),
+                    title: this.getHelper().escapeString(o.name),
                     id: userId + '-' + o.scope + '-' + o.id,
                     group: userId,
                     'record-id': o.id,
@@ -673,7 +677,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 if (!this.userList.length) {
                     this.userList.push({
                         id: this.getUser().id,
-                        name: this.getUser().get('name')
+                        name: this.getUser().get('name'),
                     });
                 }
             } else {
@@ -688,7 +692,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     } else {
                         this.userList.push({
                             id: this.getUser().id,
-                            name: this.getUser().get('name')
+                            name: this.getUser().get('name'),
                         });
                     }
                 }
@@ -805,6 +809,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         getGroupContent: function (id, name) {
+            if (name) {
+                name = this.getHelper().escapeString(name);
+            }
             if (this.calendarType === 'single') {
                 return name;
             }

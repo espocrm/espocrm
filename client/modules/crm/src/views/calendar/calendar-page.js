@@ -96,7 +96,7 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
             if (this.options.userId) {
                 url += '&userId=' + this.options.userId;
                 if (this.options.userName) {
-                    url += '&userName=' + this.options.userName;
+                    url += '&userName=' + this.getHelper().escapeString(this.options.userName).replace(/\\|\//g,'');
                 }
             }
             this.getRouter().navigate(url, {trigger: trigger});
