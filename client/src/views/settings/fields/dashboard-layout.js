@@ -254,7 +254,11 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                     this.dashletsOptions[id] = attributes;
                     view.close();
                     if ('title' in attributes) {
-                        this.$el.find('[data-id="'+id+'"] .panel-title').text(attributes.title);
+                        var title = attributes.title;
+                        if (!title) {
+                            title = this.translate(name, 'dashlets');
+                        }
+                        this.$el.find('[data-id="'+id+'"] .panel-title').text(title);
                     }
                 }, this);
             }, this);
@@ -331,9 +335,19 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                                     this.translate('Edit') +
                                 '</a>';
             }
+            var title = this.getOption(id, 'title');
+
+            if (title) {
+                title = this.getHelper().escapeString(title);
+            }
+
+            if (!title) {
+                title = this.translate(name, 'dashlets');
+            }
+
             var headerHtml =
                         '<div class="panel-heading">' +
-                            actionsHtml + '<h4 class="panel-title">' + (this.getOption(id, 'title') || this.translate(name, 'dashlets')) + '</h4>' +
+                            actionsHtml + '<h4 class="panel-title">' + title  + '</h4>' +
                         '</div>';
             var $container = $('<div class="grid-stack-item-content panel panel-default">' + headerHtml + '<div class="panel-body">'+actions2Html+'</div></div>');
             $container.attr('data-id', id);

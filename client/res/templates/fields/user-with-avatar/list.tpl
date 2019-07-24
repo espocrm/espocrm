@@ -1,4 +1,4 @@
 {{#if idValue}}
 {{{avatar}}}
-<a href="#{{foreignScope}}/view/{{idValue}}">{{nameValue}}</a>
+<a href="#{{foreignScope}}/view/{{idValue}}" title="{{nameValue}}">{{nameValue}}</a>
 {{/if}}

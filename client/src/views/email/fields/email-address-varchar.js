@@ -244,7 +244,7 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                 name = this.getHelper().escapeString(name);
             }
             if (address) {
-                name = this.getHelper().escapeString(address);
+                address = this.getHelper().escapeString(address);
             }
 
             var conteiner = this.$el.find('.link-container');

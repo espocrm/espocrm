@@ -3,7 +3,8 @@
         "fields": {
             "title": {
                 "type": "varchar",
-                "required": true
+                "required": true,
+                "trim": true
             },
             "autorefreshInterval": {
                 "type": "enumFloat",
