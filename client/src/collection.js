@@ -178,7 +178,11 @@ define('collection', [], function () {
         },
 
         getWhere: function () {
-            return (this.where || []).concat(this.whereAdditional || []);
+            var where = (this.where || []).concat(this.whereAdditional || []);
+            if (this.whereFunction) {
+                where = where.concat(this.whereFunction() || []);
+            }
+            return where;
         },
 
         getUser: function () {

@@ -77,6 +77,12 @@ Espo.define('crm:views/knowledge-base-article/record/detail', 'views/record/deta
             }, this);
         },
 
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            if (this.getUser().isPortal()) {
+                this.$el.find('.field[data-name="body"]').css('minHeight', '400px');
+            }
+        },
+
     });
 });
-

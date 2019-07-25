@@ -10,7 +10,7 @@
         },
         "body": {
             "type": "wysiwyg",
-            "view": "views/fields/wysiwyg",
+            "view": "views/email-template/fields/body",
             "useIframe": true
         },
         "isHtml": {
