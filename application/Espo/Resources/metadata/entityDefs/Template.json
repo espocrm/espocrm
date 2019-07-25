@@ -7,15 +7,15 @@
         },
         "body": {
             "type": "wysiwyg",
-            "view": "views/fields/wysiwyg"
+            "view": "views/template/fields/body"
         },
         "header": {
             "type": "wysiwyg",
-            "view": "views/fields/wysiwyg"
+            "view": "views/template/fields/body"
         },
         "footer": {
             "type": "wysiwyg",
-            "view": "views/fields/wysiwyg",
+            "view": "views/template/fields/body",
             "tooltip": true
         },
         "entityType": {

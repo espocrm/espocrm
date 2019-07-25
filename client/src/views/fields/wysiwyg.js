@@ -154,22 +154,46 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         sanitizeHtml: function (value) {
             if (value) {
-                value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
-                value = value.replace(/<[\/]{0,1}(script)[^><]*>/gi, '');
-                value = value.replace(/<[^><]*([^a-z]{1}on[a-z]+)=[^><]*>/gi, function (match) {
-                    return match.replace(/[^a-z]{1}on[a-z]+=/gi, ' data-handler-stripped=');
-                });
-
-                value = value.replace(/(<!--)/g,'<comment>').replace(/(-->)/g, '</comment>');
-                value = this.getHelper().sanitizeHtml(value, {ADD_TAGS: ['comment']});
-                value = value.replace(/(<comment>)/g,'<!--').replace(/(<\/comment>)/g,'-->');
+                if (!this.htmlPurificationDisabled) {
+                    value = this.getHelper().sanitizeHtml(value);
+                } else {
+                    value = this.sanitizeHtmlLight(value);
+                }
             }
             return value || '';
         },
 
+
+        sanitizeHtmlLight: function (value) {
+            value = value || '';
+            value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(object)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(embed)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(applet)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(iframe)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(script)[^><]*>/gi, '');
+            value = value.replace(/<[^><]*([^a-z]{1}on[a-z]+)=[^><]*>/gi, function (match) {
+                return match.replace(/[^a-z]{1}on[a-z]+=/gi, ' data-handler-stripped=');
+            });
+
+            value = value.replace(/href=" *javascript\:(.*?)"/gi, function(m, $1) {
+                return 'removed=""';
+            });
+            value = value.replace(/href=' *javascript\:(.*?)'/gi, function(m, $1) {
+                return 'removed=""';
+            });
+            value = value.replace(/src=" *javascript\:(.*?)"/gi, function(m, $1) {
+                return 'removed=""';
+            });
+            value = value.replace(/src=' *javascript\:(.*?)'/gi, function(m, $1) {
+                return 'removed=""';
+            });
+            return value;
+        },
+
         getValueForEdit: function () {
             var value = this.model.get(this.name) || '';
-            return this.sanitizeHtml(value);
+            return this.sanitizeHtmlLight(value);
         },
 
         afterRender: function () {
