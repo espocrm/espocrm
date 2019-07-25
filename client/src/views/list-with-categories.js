@@ -48,7 +48,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
 
         categoryFilterType: 'inCategory',
 
-        isExpanded: true,
+        isExpanded: false,
 
         hasExpandedToggler: true,
 
@@ -397,49 +397,67 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         applyCategoryToCollection: function () {
-            this.collection.whereAdditional = null;
-            var filter;
-            if (!this.isExpanded) {
-                if (this.isCategoryMultiple()) {
-                    if (this.currentCategoryId) {
-                        filter = {
-                            attribute: this.categoryField,
-                            type: 'linkedWith',
-                            value: [this.currentCategoryId]
-                        };
+
+            this.collection.whereFunction = function () {
+                var filter;
+                var isExpanded = this.isExpanded;
+
+                var hasTextFilter = false;
+                if (this.collection.where) {
+                    for (var i = 0; i < this.collection.where.length; i++) {
+                        if (this.collection.where[i].type === 'textFilter') {
+                            hasTextFilter = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (this.collection.data && this.collection.data.textFilter) {
+                    hasTextFilter = true;
+                }
+
+                if (!isExpanded && !hasTextFilter) {
+                    if (this.isCategoryMultiple()) {
+                        if (this.currentCategoryId) {
+                            filter = {
+                                attribute: this.categoryField,
+                                type: 'linkedWith',
+                                value: [this.currentCategoryId]
+                            };
+                        } else {
+                            filter = {
+                                attribute: this.categoryField,
+                                type: 'isNotLinked'
+                            };
+                        }
                     } else {
-                        filter = {
-                            attribute: this.categoryField,
-                            type: 'isNotLinked'
-                        };
+                        if (this.currentCategoryId) {
+                            filter = {
+                                attribute: this.categoryField + 'Id',
+                                type: 'equals',
+                                value: this.currentCategoryId
+                            };
+                        } else {
+                            filter = {
+                                attribute: this.categoryField + 'Id',
+                                type: 'isNull'
+                            };
+                        }
                     }
                 } else {
                     if (this.currentCategoryId) {
                         filter = {
-                            attribute: this.categoryField + 'Id',
-                            type: 'equals',
+                            field: this.categoryField,
+                            type: this.categoryFilterType,
                             value: this.currentCategoryId
-                        };
-                    } else {
-                        filter = {
-                            attribute: this.categoryField + 'Id',
-                            type: 'isNull'
                         };
                     }
                 }
-            } else {
-                if (this.currentCategoryId) {
-                    filter = {
-                        field: this.categoryField,
-                        type: this.categoryFilterType,
-                        value: this.currentCategoryId
-                    };
+                if (filter) {
+                    return [filter];
                 }
-            }
 
-            if (filter) {
-                this.collection.whereAdditional = [filter];
-            }
+            }.bind(this);
         },
 
         isCategoryMultiple: function () {
