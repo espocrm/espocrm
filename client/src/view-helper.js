@@ -318,8 +318,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             return html;
         },
 
-        sanitizeHtml: function (text) {
-            return DOMPurify.sanitize(text);
+        sanitizeHtml: function (text, options) {
+            return DOMPurify.sanitize(text, options);
         },
     });
 

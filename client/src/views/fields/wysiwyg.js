@@ -159,7 +159,10 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 value = value.replace(/<[^><]*([^a-z]{1}on[a-z]+)=[^><]*>/gi, function (match) {
                     return match.replace(/[^a-z]{1}on[a-z]+=/gi, ' data-handler-stripped=');
                 });
-                value = this.getHelper().sanitizeHtml(value);
+
+                value = value.replace(/(<!--)/g,'<comment>').replace(/(-->)/g, '</comment>');
+                value = this.getHelper().sanitizeHtml(value, {ADD_TAGS: ['comment']});
+                value = value.replace(/(<comment>)/g,'<!--').replace(/(<\/comment>)/g,'-->');
             }
             return value || '';
         },
