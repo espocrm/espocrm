@@ -48,7 +48,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
 
         categoryFilterType: 'inCategory',
 
-        isExpanded: false,
+        isExpanded: true,
 
         hasExpandedToggler: true,
 
@@ -87,6 +87,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
                         }
                     } else {
                         this.hasExpandedToggler = false;
+                        this.isExpanded = false;
                     }
                 }
             }
@@ -128,7 +129,8 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         getIsExpandedStoredValue: function () {
-            return this.getStorage().get('state', 'categories-expanded-' + this.scope) === 'true';
+            var value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
+            return value === 'true' || value === true ;
         },
 
         setIsExpandedStoredValue: function (value) {
