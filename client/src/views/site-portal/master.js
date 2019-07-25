@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/site-portal/master', 'views/site/master', function (Dep) {
+define('views/site-portal/master', 'views/site/master', function (Dep) {
 
     return Dep.extend({
 
@@ -45,9 +45,12 @@ Espo.define('views/site-portal/master', 'views/site/master', function (Dep) {
                 el: 'body > footer',
                 view: 'views/site/footer'
             }
-        }
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            this.$el.find('#main').addClass('main-portal');
+        },
 
     });
 });
-
-
