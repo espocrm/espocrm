@@ -339,6 +339,7 @@ class LeadCapture extends Record
                                'link' => 'contacts',
                                'targetId' => $contact->id,
                                'targetType' => 'Contact',
+                               'leadCaptureId' => $leadCapture->id,
                             ]);
                         }
                     }
@@ -386,6 +387,7 @@ class LeadCapture extends Record
                    'link' => 'leads',
                    'targetId' => $targetLead->id,
                    'targetType' => 'Lead',
+                   'leadCaptureId' => $leadCapture->id,
                 ]);
             }
         }
