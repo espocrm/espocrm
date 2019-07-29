@@ -44,6 +44,7 @@ abstract class Base implements Injectable
         'metadata',
         'aclManager',
         'user',
+        'serviceFactory',
     ];
 
     protected $dependencies = []; // for backward compatibility
@@ -117,5 +118,10 @@ abstract class Base implements Injectable
     protected function getMetadata()
     {
         return $this->getInjection('metadata');
+    }
+
+    protected function getServiceFactory()
+    {
+        return $this->getInjection('serviceFactory');
     }
 }
