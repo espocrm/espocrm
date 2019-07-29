@@ -58,6 +58,8 @@ abstract class Mapper implements IMapper
 
     protected $collectionClass = "\\Espo\\ORM\\EntityCollection";
 
+    protected $sthColletctionClass = "\\Espo\\ORM\\Sth2Collection";
+
     public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query\Base $query, Metadata $metadata) {
         $this->pdo = $pdo;
         $this->query = $query;
@@ -113,11 +115,19 @@ abstract class Mapper implements IMapper
     {
         $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
 
-        return $this->selectByQuery($entity, $sql);
+        return $this->selectByQuery($entity, $sql, $params);
     }
 
-    public function selectByQuery(IEntity $entity, $sql)
+    public function selectByQuery(IEntity $entity, $sql, ?array $params = null)
     {
+        $params = $params ?? [];
+
+        if ($params['returnSthCollection'] ?? false) {
+            $collection = $this->createSthCollection($entity->getEntityType());
+            $collection->setQuery($sql);
+            return $collection;
+        }
+
         $dataArr = [];
         $ps = $this->pdo->query($sql);
         if ($ps) {
@@ -132,6 +142,11 @@ abstract class Mapper implements IMapper
         } else {
             return $dataArr;
         }
+    }
+
+    protected function createSthCollection(string $entityType)
+    {
+        return new $this->sthColletctionClass($entityType, $this->entityFactory, $this->query, $this->pdo);;
     }
 
     public function aggregate(IEntity $entity, ?array $params, string $aggregation, string $aggregationBy)
@@ -157,7 +172,7 @@ abstract class Mapper implements IMapper
         return false;
     }
 
-    public function selectRelated(IEntity $entity, $relationName, $params = [], $totalCount = false)
+    public function selectRelated(IEntity $entity, $relationName, $params = [], $returnTotalCount = false)
     {
         $relDefs = $entity->relations[$relationName];
 
@@ -178,7 +193,7 @@ abstract class Mapper implements IMapper
             }
         }
 
-        if ($totalCount) {
+        if ($returnTotalCount) {
             $params['aggregation'] = 'COUNT';
             $params['aggregationBy'] = 'id';
         }
@@ -206,7 +221,7 @@ abstract class Mapper implements IMapper
 
                 if ($ps) {
                     foreach ($ps as $row) {
-                        if (!$totalCount) {
+                        if (!$returnTotalCount) {
                             $relEntity = $this->fromRow($relEntity, $row);
                             $relEntity->setAsFetched();
                             return $relEntity;
@@ -236,14 +251,23 @@ abstract class Mapper implements IMapper
                     $params['whereClause'][] = $relDefs['conditions'];
                 }
 
-                $resultArr = [];
+                $resultDataList = [];
 
                 $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
+                if (!$returnTotalCount) {
+                    if (!empty($params['returnSthCollection']) && $relType !== IEntity::HAS_ONE) {
+                        $collection = $this->createSthCollection($entity->getEntityType());
+                        $collection->setQuery($sql);
+                        return $collection;
+                    }
+                }
+
                 $ps = $this->pdo->query($sql);
+
                 if ($ps) {
-                    if (!$totalCount) {
-                        $resultArr = $ps->fetchAll();
+                    if (!$returnTotalCount) {
+                        $resultDataList = $ps->fetchAll();
                     } else {
                         foreach ($ps as $row) {
                             return $row['AggregateValue'];
@@ -252,8 +276,8 @@ abstract class Mapper implements IMapper
                 }
 
                 if ($relType == IEntity::HAS_ONE) {
-                    if (count($resultArr)) {
-                        $relEntity = $this->fromRow($relEntity, $resultArr[0]);
+                    if (count($resultDataList)) {
+                        $relEntity = $this->fromRow($relEntity, $resultDataList[0]);
                         $relEntity->setAsFetched();
                         return $relEntity;
                     }
@@ -261,11 +285,11 @@ abstract class Mapper implements IMapper
                 } else {
                     if ($this->returnCollection) {
                         $collectionClass = $this->collectionClass;
-                        $collection = new $collectionClass($resultArr, $relEntity->getEntityType(), $this->entityFactory);
+                        $collection = new $collectionClass($resultDataList, $relEntity->getEntityType(), $this->entityFactory);
                         $collection->setAsFetched();
                         return $collection;
                     } else {
-                        return $resultArr;
+                        return $resultDataList;
                     }
                 }
 
@@ -288,12 +312,21 @@ abstract class Mapper implements IMapper
 
                 $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
-                $resultArr = [];
+                $resultDataList = [];
+
+                if (!$returnTotalCount) {
+                    if (!empty($params['returnSthCollection'])) {
+                        $collection = $this->createSthCollection($entity->getEntityType());
+                        $collection->setQuery($sql);
+                        return $collection;
+                    }
+                }
 
                 $ps = $this->pdo->query($sql);
+
                 if ($ps) {
-                    if (!$totalCount) {
-                        $resultArr = $ps->fetchAll();
+                    if (!$returnTotalCount) {
+                        $resultDataList = $ps->fetchAll();
                     } else {
                         foreach ($ps as $row) {
                             return $row['AggregateValue'];
@@ -302,11 +335,11 @@ abstract class Mapper implements IMapper
                 }
                 if ($this->returnCollection) {
                     $collectionClass = $this->collectionClass;
-                    $collection = new $collectionClass($resultArr, $relEntity->getEntityType(), $this->entityFactory);
+                    $collection = new $collectionClass($resultDataList, $relEntity->getEntityType(), $this->entityFactory);
                     $collection->setAsFetched();
                     return $collection;
                 } else {
-                    return $resultArr;
+                    return $resultDataList;
                 }
             case IEntity::BELONGS_TO_PARENT:
                 $foreignEntityType = $entity->get($keySet['typeKey']);
@@ -326,7 +359,7 @@ abstract class Mapper implements IMapper
 
                 if ($ps) {
                     foreach ($ps as $row) {
-                        if (!$totalCount) {
+                        if (!$returnTotalCount) {
                             $relEntity = $this->fromRow($relEntity, $row);
                             return $relEntity;
                         } else {
