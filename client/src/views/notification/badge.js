@@ -305,7 +305,11 @@ define('views/notification/badge', 'view', function (Dep) {
                     this.checkUpdates();
                     this.broadcastNotificationsRead();
                 }, this);
-            }.bind(this));
+
+                this.listenToOnce(view, 'close', function () {
+                    this.closeNotifications();
+                }, this);
+            });
 
             $document = $(document);
             $document.on('mouseup.notification', function (e) {
