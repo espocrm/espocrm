@@ -17,7 +17,6 @@
                 {
                     "name": "signature",
                     "params": {
-                        "height": 70,
                         "toolbar": [
                             ["style", ["bold", "italic", "underline", "clear"]],
                             ["color", ["color"]],
