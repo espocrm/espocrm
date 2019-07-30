@@ -182,7 +182,7 @@ define('email-helper', [], function () {
 
             attributes.inReplyTo = model.get('messageId');
 
-            this.addReplyBodyAttrbutes(model, attributes);
+            this.addReplyBodyAttributes(model, attributes);
 
             return attributes;
         },
@@ -310,7 +310,7 @@ define('email-helper', [], function () {
             return address;
         },
 
-        addReplyBodyAttrbutes: function (model, attributes) {
+        addReplyBodyAttributes: function (model, attributes) {
             var format = this.getDateTime().getReadableShortDateTimeFormat();
             var dateSent = model.get('dateSent');
 

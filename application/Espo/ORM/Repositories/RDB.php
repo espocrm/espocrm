@@ -204,9 +204,15 @@ class RDB extends \Espo\ORM\Repository
             $this->handleSelectParams($params);
         }
 
-        $dataArr = $this->getMapper()->select($this->seed, $params);
+        $selectResult = $this->getMapper()->select($this->seed, $params);
 
-        $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
+        if (!empty($params['returnSthCollection'])) {
+            $collection = $selectResult;
+        } else {
+            $dataList = $selectResult;
+            $collection = new EntityCollection($dataList, $this->entityType, $this->entityFactory);
+        }
+
         $collection->setAsFetched();
 
         $this->reset();

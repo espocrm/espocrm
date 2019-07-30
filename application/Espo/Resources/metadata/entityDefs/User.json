@@ -22,6 +22,7 @@
             "default": "regular",
             "maxLength": 24,
             "index": true,
+            "inlineEditDisabled": true,
             "layoutMassUpdateDisabled": true
         },
         "password": {
@@ -139,7 +140,8 @@
         },
         "emailAddress": {
             "type": "email",
-            "required": false
+            "required": false,
+            "layoutMassUpdateDisabled": true
         },
         "phoneNumber": {
             "type": "phone",

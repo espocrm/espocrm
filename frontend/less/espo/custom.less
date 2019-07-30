@@ -1157,6 +1157,7 @@ section {
     }
     > li.list-group-item:first-child {
         border-top-width: 1px;
+        border-top-color: transparent;
     }
     > li.list-group-item:last-child {
         border-bottom-width: 0;
@@ -1874,7 +1875,8 @@ h4.panel-title span.fas.color-icon {
     }
     .list.list-expanded {
         width: auto;
-        overflow-x: hidden;
+        overflow-x: unset;
+        overflow-y: unset;
     }
     .list > table {
         min-width: @screen-sm-min;
@@ -2568,6 +2570,9 @@ pre > code {
     margin-bottom: @padding-base-horizontal;
     .category-item {
         padding: @padding-base-horizontal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         .folder-icon {
             margin-right: 3px;
             position: relative;
@@ -2988,9 +2993,15 @@ a.field-info > span.fa-info-circle {
     }
 }
 
-.transform-flip {
+.transform-flip,
+.transform-flip-x {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+}
+
+.transform-flip-y {
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
 }
 
 .transform-rotate-90 {

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -23,26 +24,35 @@
  * Section 5 of the GNU General Public License version 3.
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of tтhe "EspoCRM" word.
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/attachment/fields/name', 'views/fields/varchar', function (Dep) {
+namespace Espo\ORM;
 
-    return Dep.extend({
+class Sth2Collection extends SthCollection
+{
+    public function __construct(string $entityType, EntityFactory $entityFactory, DB\Query\Base $query, \PDO $pdo, array $selectParams = [])
+    {
+        $this->selectParams = $selectParams;
+        $this->entityType = $entityType;
 
-        detailTemplate: 'attachment/fields/name/detail',
+        $this->entityFactory = $entityFactory;
+        $this->query = $query;
+        $this->pdo = $pdo;
+    }
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+    protected function getQuery()
+    {
+        return $this->query;
+    }
 
-            var url = this.getBasePath() + '?entryPoint=download&id=' + this.model.id;
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
+    protected function getPdo()
+    {
+        return $this->pdo;
+    }
 
-            data.url = url;
-            return data;
-        }
-
-    });
-});
+    protected function getEntityFactory()
+    {
+        return $this->entityFactory;
+    }
+}

@@ -165,30 +165,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
 
         sanitizeHtmlLight: function (value) {
-            value = value || '';
-            value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
-            value = value.replace(/<[\/]{0,1}(object)[^><]*>/gi, '');
-            value = value.replace(/<[\/]{0,1}(embed)[^><]*>/gi, '');
-            value = value.replace(/<[\/]{0,1}(applet)[^><]*>/gi, '');
-            value = value.replace(/<[\/]{0,1}(iframe)[^><]*>/gi, '');
-            value = value.replace(/<[\/]{0,1}(script)[^><]*>/gi, '');
-            value = value.replace(/<[^><]*([^a-z]{1}on[a-z]+)=[^><]*>/gi, function (match) {
-                return match.replace(/[^a-z]{1}on[a-z]+=/gi, ' data-handler-stripped=');
-            });
-
-            value = value.replace(/href=" *javascript\:(.*?)"/gi, function(m, $1) {
-                return 'removed=""';
-            });
-            value = value.replace(/href=' *javascript\:(.*?)'/gi, function(m, $1) {
-                return 'removed=""';
-            });
-            value = value.replace(/src=" *javascript\:(.*?)"/gi, function(m, $1) {
-                return 'removed=""';
-            });
-            value = value.replace(/src=' *javascript\:(.*?)'/gi, function(m, $1) {
-                return 'removed=""';
-            });
-            return value;
+           return this.getHelper().moderateSanitizeHtml(value);
         },
 
         getValueForEdit: function () {

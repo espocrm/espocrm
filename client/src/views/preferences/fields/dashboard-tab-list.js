@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/preferences/fields/dashboard-tab-list', 'views/fields/array', function (Dep) {
+define('views/preferences/fields/dashboard-tab-list', 'views/fields/array', function (Dep) {
 
     return Dep.extend({
 
@@ -39,17 +39,18 @@ Espo.define('views/preferences/fields/dashboard-tab-list', 'views/fields/array',
                 this.translatedOptions[value] = value;
             }, this);
         },
-
         getItemHtml: function (value) {
-            var translatedValue = this.translatedOptions[value] || value;
+            value = value.toString();
+            var valueSanitized = this.escapeValue(value);
+            var translatedValue = this.escapeValue(this.translatedOptions[value] || value);
 
             var html = '' +
-            '<div class="list-group-item link-with-role form-inline" data-value="' + value + '">' +
+            '<div class="list-group-item link-with-role form-inline" data-value="' + valueSanitized + '">' +
                 '<div class="pull-left" style="width: 92%; display: inline-block;">' +
-                    '<input data-name="translatedValue" data-value="' + value + '" class="role form-control input-sm" value="'+translatedValue+'">' +
+                    '<input data-name="translatedValue" data-value="' + valueSanitized + '" class="role form-control input-sm" value="'+translatedValue+'">' +
                 '</div>' +
                 '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
-                    '<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="fas fa-times"></a>' +
+                    '<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
                 '</div><br style="clear: both;" />' +
             '</div>';
 
@@ -60,7 +61,8 @@ Espo.define('views/preferences/fields/dashboard-tab-list', 'views/fields/array',
             var data = Dep.prototype.fetch.call(this);
             data.translatedOptions = {};
             (data[this.name] || []).forEach(function (value) {
-                data.translatedOptions[value] = this.$el.find('input[data-name="translatedValue"][data-value="'+value+'"]').val() || value;
+                var valueInternal = value.replace(/"/g, '\\"');
+                data.translatedOptions[value] = this.$el.find('input[data-name="translatedValue"][data-value="'+valueInternal+'"]').val() || value;
             }, this);
 
             return data;

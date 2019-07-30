@@ -451,16 +451,26 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         getCalculatedHeight: function () {
+            var smallScreenWidth = this.smallScreenWidth = this.smallScreenWidth || this.getThemeManager().getParam('screenWidthXs');
+
             if (this.$container && this.$container.length) {
                 return this.$container.height();
             }
-            var height = $(window).height();
-            var width = $(window).width();
-            var spaceHeight = 134;
-            if (width < 768) {
-                spaceHeight = 164;
+
+            var footerHeight = this.footerHeight = this.footerHeight || $('#footer').height() || 26;
+
+            var top = 0;
+            if (this.$el.find('.calendar').get(0)) {
+                top = this.$el.find('.calendar').get(0).getBoundingClientRect().top;
             }
-            return $(window).height() - spaceHeight;
+
+            var spaceHeight = top + footerHeight;
+
+            if ($(window).width() < smallScreenWidth) {
+                spaceHeight -= 20;
+            }
+
+            return $(window).height() - spaceHeight - 20;
         },
 
         adjustSize: function () {
