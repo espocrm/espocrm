@@ -342,6 +342,15 @@ class LeadCapture extends Record
                                'leadCaptureId' => $leadCapture->id,
                             ]);
                         }
+
+                        $this->getInjection('hookManager')->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
+                           'targetId' => $contact->id,
+                           'targetType' => 'Contact',
+                        ]);
+
+                        $this->getInjection('hookManager')->process('Contact', 'afterLeadCapture', $contact, [], [
+                           'leadCaptureId' => $leadCapture->id,
+                        ]);
                     }
                 }
             }
@@ -390,6 +399,15 @@ class LeadCapture extends Record
                    'leadCaptureId' => $leadCapture->id,
                 ]);
             }
+
+            $this->getInjection('hookManager')->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
+               'targetId' => $targetLead->id,
+               'targetType' => 'Lead',
+            ]);
+
+            $this->getInjection('hookManager')->process('Lead', 'afterLeadCapture', $targetLead, [], [
+               'leadCaptureId' => $leadCapture->id,
+            ]);
         }
 
         if (!$isLogged) {
