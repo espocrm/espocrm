@@ -140,7 +140,8 @@
         },
         "emailAddress": {
             "type": "email",
-            "required": false
+            "required": false,
+            "layoutMassUpdateDisabled": true
         },
         "phoneNumber": {
             "type": "phone",

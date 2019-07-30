@@ -664,6 +664,8 @@ class User extends Record
         unset($data->isAdmin);
         unset($data->isSuperAdmin);
         unset($data->isPortalUser);
+        unset($data->emailAddress);
+        unset($data->password);
         return parent::massUpdate($params, $data);
     }
 
