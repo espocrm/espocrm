@@ -67,7 +67,7 @@
                 "useCustomTabList": false,
                 "tabList": false,
                 "emailUseExternalClient": false,
-                "dashletsOptions": false
+                "dashletsOptions": false,
                 "dashboardLayout": false
             },
             "Call": {
