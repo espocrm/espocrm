@@ -38,6 +38,8 @@ Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
 
         header: false,
 
+        backdrop: true,
+
         data: function () {
             return {
                 valuePermissionDataList: this.getValuePermissionList(),

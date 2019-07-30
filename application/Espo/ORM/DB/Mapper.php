@@ -257,7 +257,7 @@ abstract class Mapper implements IMapper
 
                 if (!$returnTotalCount) {
                     if (!empty($params['returnSthCollection']) && $relType !== IEntity::HAS_ONE) {
-                        $collection = $this->createSthCollection($entity->getEntityType());
+                        $collection = $this->createSthCollection($relEntity->getEntityType());
                         $collection->setQuery($sql);
                         return $collection;
                     }
@@ -316,7 +316,7 @@ abstract class Mapper implements IMapper
 
                 if (!$returnTotalCount) {
                     if (!empty($params['returnSthCollection'])) {
-                        $collection = $this->createSthCollection($entity->getEntityType());
+                        $collection = $this->createSthCollection($relEntity->getEntityType());
                         $collection->setQuery($sql);
                         return $collection;
                     }
