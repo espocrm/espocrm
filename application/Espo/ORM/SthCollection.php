@@ -150,4 +150,9 @@ class SthCollection implements \IteratorAggregate
     {
         return $this->isFetched;
     }
+
+    public function getEntityType()
+    {
+        return $this->entityType;
+    }
 }
