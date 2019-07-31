@@ -228,7 +228,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.headerHtml += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
             }
             if (!this.fullFormDisabled) {
-                this.headerHtml = '<a href="#' + scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
+                this.headerHtml = '<a href="#' + scope + '/view/' + this.id+'" class="action font-size-flexible" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
             }
 
             this.headerHtml = iconHtml + this.headerHtml;

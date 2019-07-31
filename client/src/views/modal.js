@@ -426,7 +426,7 @@ define('views/modal', 'view', function (Dep) {
                 }
 
                 var fontSizePercentage = this.fontSizePercentage -= 4;
-                $titleText.css('font-size', this.fontSizePercentage + '%');
+                this.$el.find('.modal-title .font-size-flexible').css('font-size', this.fontSizePercentage + '%');
 
                 this.adjustHeaderFontSize(step + 1);
             }
