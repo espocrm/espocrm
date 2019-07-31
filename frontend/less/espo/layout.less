@@ -1,11 +1,5 @@
 #navbar .navbar {
-    .navbar-collapse {
-        max-height: @navbar-collapse-max-height;
-
-        @media (max-device-width: @screen-xs-min) and (orientation: landscape) {
-            max-height: 200px;
-        }
-
+    .navbar-body {
         @media (min-width: @grid-float-breakpoint) {
             .navbar & {
                 padding-left: 0;
@@ -123,7 +117,7 @@
             }
         }
 
-        .navbar-collapse {
+        .navbar-right-container {
             input.global-search-input {
                 width: 100%;
             }
@@ -213,11 +207,11 @@ body > footer {
         margin-top: -95px;
         padding-top: 95px;
         margin-bottom: -20px;
-        padding-bottom: 0;
+        padding-bottom: 20px;
     }
 
     body > footer {
-        margin-top: 23px;
+        margin-top: 19px;
     }
 }
 

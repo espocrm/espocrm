@@ -64,7 +64,7 @@
             }
         }
 
-        .navbar-collapse {
+        .navbar-body {
             overflow-x: hidden !important;
         }
 
@@ -77,37 +77,47 @@
         }
 
         ul.tabs {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-
             li > a {
                 padding-top: 9px;
                 padding-bottom: 9px;
             }
 
-            &::before {
-                content: none;
-                display: none;
-            }
-
-            &::after {
-                content: none;
-                display: none;
-            }
-
             > li.more {
-                grid-column: ~"1 / -1";
-
                 &.open {
                     > ul {
-                        display: grid;
-                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-
                         li > a {
                             padding-top: 9px;
                             padding-bottom: 9px;
                             padding-left: 15px;
                             padding-right: 15px;
+                        }
+                    }
+                }
+            }
+        }
+
+        @supports (display: grid) {
+            ul.tabs {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+                &::before {
+                    content: none;
+                    display: none;
+                }
+
+                &::after {
+                    content: none;
+                    display: none;
+                }
+
+                > li.more {
+                    grid-column: ~"1 / -1";
+
+                    &.open {
+                        > ul {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                         }
                     }
                 }
@@ -1934,7 +1944,7 @@ h4.panel-title span.fas.color-icon {
     .list {
         width: auto;
         overflow-y: hidden;
-        overflow-x: scroll;
+        overflow-x: auto;
     }
     .list.list-expanded {
         width: auto;
@@ -1942,7 +1952,19 @@ h4.panel-title span.fas.color-icon {
         overflow-y: unset;
     }
     .list > table {
-        min-width: @screen-sm-min;
+        min-width: @list-table-sm-screen-min-width;
+        font-size: 93%;
+    }
+
+    #main > .list-container > .list > table {
+        td:first-child,
+        th:first-child {
+            padding-left: 10px;
+        }
+        td:last-child,
+        th:last-child {
+            padding-right: 10px;
+        }
     }
 }
 
@@ -2846,6 +2868,17 @@ pre > code {
         width: 39px;
         text-align: center;
     }
+
+    .folders-container > .list-group {
+        @supports (display: grid) {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+            > li {
+                padding-right: 10px;
+            }
+        }
+    }
 }
 
 a.field-info > span.fa-info-circle {
@@ -3187,6 +3220,26 @@ a.link-gray {
 .btn-group.open .dropdown-toggle {
     &.btn-text {
        .box-shadow(none);
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    #navbar .navbar {
+        .navbar-body:not(.in) {
+            border-top-width: 0;
+            box-shadow: none;
+
+            height: 0;
+            overflow: hidden;
+        }
+
+        .navbar-right-container {
+            li.notifications-badge-container {
+                position: absolute;
+                top: -1px;
+                right: 0;
+            }
+        }
     }
 }
 

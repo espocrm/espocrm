@@ -452,6 +452,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         getCalculatedHeight: function () {
             var smallScreenWidth = this.smallScreenWidth = this.smallScreenWidth || this.getThemeManager().getParam('screenWidthXs');
+            var $window = $(window);
 
             if (this.$container && this.$container.length) {
                 return this.$container.height();
@@ -460,17 +461,23 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             var footerHeight = this.footerHeight = this.footerHeight || $('#footer').height() || 26;
 
             var top = 0;
-            if (this.$el.find('.calendar').get(0)) {
-                top = this.$el.find('.calendar').get(0).getBoundingClientRect().top;
+
+            var colendarElement = this.$el.find('.calendar').get(0);
+
+            if (colendarElement) {
+                top = colendarElement.getBoundingClientRect().top;
+
+                if ($window.width() < smallScreenWidth) {
+                    var $navbarCollapse = $('#navbar .navbar-body');
+                    if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
+                        top -= $navbarCollapse.height();
+                    }
+                }
             }
 
             var spaceHeight = top + footerHeight;
 
-            if ($(window).width() < smallScreenWidth) {
-                spaceHeight -= 20;
-            }
-
-            return $(window).height() - spaceHeight - 20;
+            return $window.height() - spaceHeight - 20;
         },
 
         adjustSize: function () {
