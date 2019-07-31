@@ -1567,12 +1567,18 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     padding-right: @padding-small-horizontal;
 }
 
-.panel.dashlet {
-    height: inherit;
+.dashlets {
+    .panel.dashlet {
+        height: inherit;
+    }
+
+    .dashlet-container {
+        overflow-y: hidden;
+    }
+    margin-left: -8px;
+    margin-right: -8px;
 }
-.dashlet-container {
-    overflow-y: hidden;
-}
+
 
 .panel.dashlet > .panel-body {
     overflow-y: auto;

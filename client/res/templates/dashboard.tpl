@@ -23,5 +23,5 @@
         </div>
     </div>
 </div>
-<div class="dashlets grid-stack grid-stack-4 row">{{{dashlets}}}</div>
+<div class="dashlets grid-stack grid-stack-4">{{{dashlets}}}</div>
 
