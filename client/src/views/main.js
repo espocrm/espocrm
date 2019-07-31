@@ -108,10 +108,10 @@ define('views/main', 'view', function (Dep) {
         buildHeaderHtml: function (arr) {
             var a = [];
             arr.forEach(function (item) {
-                a.push('<div class="pull-left">' + item + '</div>');
+                a.push('<div class="breadcrumb-item">' + item + '</div>');
             }, this);
 
-            return '<div class="clearfix header-breadcrumbs">' + a.join('<div class="pull-left breadcrumb-separator"> &raquo </div>') + '</div>';
+            return '<div class="clearfix header-breadcrumbs">' + a.join('<div class="breadcrumb-separator"> &raquo </div>') + '</div>';
         },
 
         getHeaderIconHtml: function () {

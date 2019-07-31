@@ -54,6 +54,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         bottomDisabled: false,
 
+        fixedHeaderHeight: true,
+
+        flexibleHeaderFontSize: true,
+
         setup: function () {
 
             var self = this;

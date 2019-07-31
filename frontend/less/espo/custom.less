@@ -286,8 +286,39 @@ label {
     padding-bottom: 2px;
     min-height: 33px;
 
+    h3 {
+        margin-top: 0px;
+        margin-bottom: 4px;
+    }
+
     .page-header-column-1 {
         overflow: hidden;
+
+        .header-breadcrumbs {
+            .breadcrumb-separator {
+                padding: 0 6px;
+            }
+
+            .breadcrumb-item,
+            .breadcrumb-separator {
+                float: left;
+            }
+            min-height: 1.2em;
+        }
+
+        &.no-break-words {
+            .header-breadcrumbs {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                .breadcrumb-item,
+                .breadcrumb-separator {
+                    float: none;
+                    display: inline-block;
+                }
+            }
+        }
     }
 }
 
@@ -721,14 +752,6 @@ ul.dropdown-menu > li.checkbox:last-child {
     margin-bottom: 3px;
 }
 
-.page-header h3 {
-    margin-top: 0px;
-    margin-bottom: 8px;
-}
-
-.page-header .breadcrumb-separator {
-    padding: 0 6px;
-}
 
 .modal-header.fixed-height {
     height: 40px;

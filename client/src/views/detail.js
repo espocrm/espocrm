@@ -89,7 +89,8 @@ define('views/detail', 'views/main', function (Dep) {
             this.createView('header', this.headerView, {
                 model: this.model,
                 el: '#main > .header',
-                scope: this.scope
+                scope: this.scope,
+                fontSizeFlexible: true,
             });
 
             this.listenTo(this.model, 'sync', function (model) {
@@ -173,6 +174,8 @@ define('views/detail', 'views/main', function (Dep) {
             if (name === '') {
                 name = this.model.id;
             }
+
+            name = '<span class="font-size-flexible title">' + name + '</span>';
 
             if (this.model.get('deleted')) {
                 name = '<span style="text-decoration: line-through;">' + name + '</span>';

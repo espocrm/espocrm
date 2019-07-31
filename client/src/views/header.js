@@ -40,6 +40,8 @@ define('views/header', 'view', function (Dep) {
             data.scope = this.scope || this.getParentView().scope;
             data.items = this.getItems();
 
+            data.noBreakWords = this.options.fontSizeFlexible;
+
             data.isXsSingleRow = this.options.isXsSingleRow;
 
             if ((data.items.buttons || []).length < 2) {
@@ -61,14 +63,42 @@ define('views/header', 'view', function (Dep) {
         },
 
         afterRender: function () {
+            if (this.options.fontSizeFlexible) {
+                this.adjustFontSize();
+            }
+        },
 
+        adjustFontSize: function (step) {
+            step = step || 0;
+
+            if (!step) this.fontSizePercentage = 100;
+
+            var $container = this.$el.find('.header-breadcrumbs');
+            var containerWidth = $container.width();
+            var childrenWidth = 0;
+            $container.children().each(function (i, el) {
+                childrenWidth += $(el).outerWidth(true);
+            });
+
+            if (containerWidth < childrenWidth) {
+                if (step > 7) {
+                    this.$el.find('.title').each(function (i, el) {
+                        $(el).attr('title', $(el).text());
+                    });
+                    return;
+                }
+
+                var fontSizePercentage = this.fontSizePercentage -= 5;
+                this.$el.find('.font-size-flexible').css('font-size', this.fontSizePercentage + '%');
+
+                this.adjustFontSize(step + 1);
+            }
         },
 
         getItems: function () {
             var items = this.getParentView().getMenu() || {};
 
             return items;
-        }
+        },
     });
 });
-

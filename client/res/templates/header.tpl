@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="{{#if isHeaderAdditionalSpace}}col-sm-8{{else}}col-sm-7{{/if}}{{#if isXsSingleRow}} col-xs-6{{/if}} page-header-column-1">
+    <div class="{{#if isHeaderAdditionalSpace}}col-sm-8{{else}}col-sm-7{{/if}}{{#if isXsSingleRow}} col-xs-6{{/if}}{{#if noBreakWords}} no-break-words{{/if}} page-header-column-1">
         <h3>{{{header}}}</h3>
     </div>
     <div class="{{#if isHeaderAdditionalSpace}}col-sm-4{{else}}col-sm-5{{/if}}{{#if isXsSingleRow}} col-xs-6{{/if}} page-header-column-2">
