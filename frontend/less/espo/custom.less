@@ -297,6 +297,13 @@ label {
         font-size: 22px;
     }
 
+    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    .header-title,
+        > h3 {
+            font-size: 21px;
+        }
+    }
+
     .page-header-row {
         margin-left: ceil((@grid-gutter-width / -2));
         margin-right: floor((@grid-gutter-width / -2));
@@ -2089,7 +2096,7 @@ h4.panel-title span.fas.color-icon {
     }
     .list > table {
         min-width: @list-table-sm-screen-min-width;
-        font-size: 95%;
+        font-size: 96%;
     }
 
     #main > .list-container > .list > table {
