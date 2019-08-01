@@ -47,6 +47,7 @@ class LeadCapture extends Record
         $this->addDependency('container');
         $this->addDependency('defaultLanguage');
         $this->addDependency('hookManager');
+        $this->addDependency('dateTime');
     }
 
     protected function getMailSender()
@@ -530,6 +531,17 @@ class LeadCapture extends Record
 
         $body = str_replace('{optInUrl}', $url, $body);
         $body = str_replace('{optInLink}', $linkHtml, $body);
+
+        $createdAt = $uniqueId->get('createdAt');
+        if ($createdAt) {
+            $dateString = $this->getInjection('dateTime')->convertSystemDateTime($createdAt, null, $this->getConfig()->get('dateFormat'));
+            $timeString = $this->getInjection('dateTime')->convertSystemDateTime($createdAt, null, $this->getConfig()->get('timeFormat'));
+            $dateTimeString = $this->getInjection('dateTime')->convertSystemDateTime($createdAt);
+
+            $body = str_replace('{optInDate}', $dateString, $body);
+            $body = str_replace('{optInTime}', $timeString, $body);
+            $body = str_replace('{optInDateTime}', $dateTimeString, $body);
+        }
 
         $email = $this->getEntityManager()->getEntity('Email');
         $email->set([
