@@ -1,13 +1,13 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
+        <button type="button" class="navbar-toggle" data-action="toggleCollapsable"">
             <span class="fas fa-bars"></span>
         </button>
         <div class="navbar-logo-container"><a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"></span></a></div>
         <a href="javascript:" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
-    <div class="collapse navbar-collapse navbar-body">
+    <div class="navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
             {{#each tabDefsList}}
             {{#unless isInMore}}

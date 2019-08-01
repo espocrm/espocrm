@@ -1,5 +1,5 @@
 #navbar .navbar {
-    .navbar-collapse {
+    .navbar-right-container {
         input.global-search-input {
             width: 260px;
             padding-bottom: 4px;
@@ -9,7 +9,7 @@
 }
 
 @media (min-width: @grid-float-breakpoint) {
-    #header .navbar-collapse {
+    #header .navbar-body {
         .navbar & {
             padding-left: 0;
             padding-right: 0;
@@ -41,7 +41,7 @@
 
         #navbar .navbar {
 
-            .navbar-collapse {
+            .navbar-body {
                 padding-left: 0;
                 padding-right: 0;
             }
@@ -534,9 +534,15 @@ body.minimized .list-buttons-container .sticked-bar {
     }
 
     #navbar .navbar {
-        input.global-search-input {
-            width: 100%;
+        .navbar-right-container {
+            input.global-search-input {
+                width: 100%;
+            }
         }
+    }
+
+    body > .content {
+        padding-bottom: 20px;
     }
 }
 

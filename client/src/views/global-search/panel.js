@@ -26,17 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/global-search/panel', 'view', function (Dep) {
+define('views/global-search/panel', 'view', function (Dep) {
 
     return Dep.extend({
 
         template: 'global-search/panel',
+
+        events: {
+            'click [data-action="closePanel"]': function () {
+                this.close();
+            },
+        },
 
         setup: function () {
             this.maxSize = this.getConfig().get('globalSearchMaxSize') || 10;
 
             this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
             this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
+
+            this.once('remove', function () {
+                $(window).off('resize.global-search-height');
+                if (this.overflowWasHidden) {
+                    $('body').css('overflow', 'unset');
+                    this.overflowWasHidden = false;
+                }
+            }, this);
         },
 
         afterRender: function () {
@@ -71,12 +85,49 @@ Espo.define('views/global-search/panel', 'view', function (Dep) {
             this.collection.maxSize = this.maxSize;
             this.collection.fetch();
 
-            var windowHeight = $(window).height();
-            if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
-                var maxHeight = windowHeight - this.navbarPanelHeightSpace;
-                this.$el.find('> .panel > .panel-body').css('maxHeight', maxHeight + 'px');
+            var $window = $(window);
+            $window.off('resize.global-search-height');
+            $window.on('resize.global-search-height', this.processSizing.bind(this));
+            this.processSizing();
+        },
+
+        processSizing: function () {
+            var $window = $(window);
+            var windowHeight = $window.height();
+            var windowWidth = $window.width();
+
+            var diffHeight = this.$el.find('.panel-heading').outerHeight();
+
+            var cssParams = {};
+
+            if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
+                cssParams.height = (windowHeight - diffHeight) + 'px';
+                cssParams.overflow = 'auto';
+
+                $('body').css('overflow', 'hidden');
+                this.overflowWasHidden = true;
+
+            } else {
+                cssParams.height = 'unset';
+                cssParams.overflow = 'none';
+
+                if (this.overflowWasHidden) {
+                    $('body').css('overflow', 'unset');
+                    this.overflowWasHidden = false;
+                }
+
+                if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
+                    var maxHeight = windowHeight - this.navbarPanelHeightSpace;
+                    cssParams.maxHeight = maxHeight + 'px';
+                }
             }
-        }
+
+            this.$el.find('.panel-body').css(cssParams);
+        },
+
+        close: function () {
+            this.trigger('close');
+        },
 
     });
 });

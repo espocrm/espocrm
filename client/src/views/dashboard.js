@@ -207,8 +207,24 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             this.initGridstack();
         },
 
+        initFallbackMode: function () {
+            var $dashboard =  this.$dashboard = this.$el.find('> .dashlets');
+            $dashboard.addClass('fallback');
+
+            this.currentTabLayout.forEach(function (o) {
+                var $item = this.prepareFallbackItem(o);
+                $dashboard.append($item);
+            }, this);
+
+            this.currentTabLayout.forEach(function (o) {
+                if (!o.id || !o.name) return;
+                this.createDashletView(o.id, o.name);
+            }, this);
+        },
+
         initGridstack: function () {
             var $gridstack = this.$gridstack = this.$el.find('> .dashlets');
+            $gridstack.removeClass('fallback');
 
             var draggable = false;
             var resizable = false;
@@ -290,6 +306,26 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             $container.attr('data-name', name);
             $item.attr('data-id', id);
             $item.attr('data-name', name);
+            $item.append($container);
+
+            return $item;
+        },
+
+        prepareFallbackItem: function (o) {
+            var $item = $('<div></div>');
+            var $container = $('<div class="dashlet-container"></div>');
+
+            $container.attr('data-id', o.id);
+            $container.attr('data-name', o.name);
+            $container.attr('data-x', o.x);
+            $container.attr('data-y', o.y);
+            $container.attr('data-height', o.height);
+            $container.attr('data-width', o.width);
+            $container.css('min-height', (o.height * this.getThemeManager().getParam('dashboardCellHeight')) + 'px');
+
+            $item.attr('data-id', o.id);
+            $item.attr('data-name', o.name);
+
             $item.append($container);
 
             return $item;

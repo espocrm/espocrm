@@ -25,9 +25,11 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
+
+use Espo\Core\Exceptions\Forbidden;
 
 class ScheduledJob extends \Espo\Core\Controllers\Record
 {

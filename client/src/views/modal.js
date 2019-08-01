@@ -127,6 +127,10 @@ define('views/modal', 'view', function (Dep) {
             this.on('after:render', function () {
                 $(containerSelector).show();
                 this.dialog.show();
+
+                if (this.fixedHeaderHeight && this.flexibleHeaderFontSize) {
+                    this.adjustHeaderFontSize();
+                }
             });
 
             this.once('remove', function () {
@@ -396,6 +400,38 @@ define('views/modal', 'view', function (Dep) {
                 }
             }, this);
             return isEmpty;
+        },
+
+        adjustHeaderFontSize: function (step) {
+            step = step || 0;
+
+            if (!step) this.fontSizePercentage = 100;
+
+            var $titleText = this.$el.find('.modal-title > .modal-title-text');
+
+            var containerWidth = $titleText.width();
+
+            var textWidth = 0;
+            $titleText.children().each(function (i, el) {
+                textWidth += $(el).outerWidth(true);
+            });
+
+            if (containerWidth < textWidth) {
+                if (step > 5) {
+                    var $title = this.$el.find('.modal-title');
+                    $title.attr('title', $titleText.text());
+                    $title.addClass('overlapped');
+                    $titleText.children().each(function (i, el) {
+                       $(el).removeAttr('title');
+                    });
+                    return;
+                }
+
+                var fontSizePercentage = this.fontSizePercentage -= 4;
+                this.$el.find('.modal-title .font-size-flexible').css('font-size', this.fontSizePercentage + '%');
+
+                this.adjustHeaderFontSize(step + 1);
+            }
         },
     });
 });

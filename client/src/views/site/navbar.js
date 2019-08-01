@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/site/navbar', 'view', function (Dep) {
+define('views/site/navbar', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -42,7 +42,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 quickCreateList: this.quickCreateList,
                 enableQuickCreate: this.quickCreateList.length > 0,
                 userId: this.getUser().id,
-                logoSrc: this.getLogoSrc()
+                logoSrc: this.getLogoSrc(),
             };
         },
 
@@ -51,7 +51,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 var $a = $(e.currentTarget);
                 var href = $a.attr('href');
                 if (href) {
-                    this.$el.find('.navbar-collapse.in').collapse('hide');
+                    this.xsCollapse();
                 }
             },
             'click a.nav-link': function (e) {
@@ -60,7 +60,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
             },
             'click a.navbar-brand.nav-link': function (e) {
-                this.$el.find('.navbar-collapse.in').collapse('hide');
+                this.xsCollapse();
             },
             'click a[data-action="quick-create"]': function (e) {
                 e.preventDefault();
@@ -83,7 +83,34 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this[method](data, e);
                     e.preventDefault();
                 }
+            },
+            'click [data-action="toggleCollapsable"]': function () {
+                this.toggleCollapsable();
+            },
+        },
+
+        isCollapsableVisible: function () {
+            return this.$el.find('.navbar-body').hasClass('in');
+        },
+
+        toggleCollapsable: function () {
+            if (this.isCollapsableVisible()) {
+                this.hideCollapsable();
+            } else {
+                this.showCollapsable();
             }
+        },
+
+        hideCollapsable: function () {
+            this.$el.find('.navbar-body').removeClass('in');
+        },
+
+        showCollapsable: function () {
+            this.$el.find('.navbar-body').addClass('in');
+        },
+
+        xsCollapse: function () {
+            this.hideCollapsable();
         },
 
         isMinimized: function () {

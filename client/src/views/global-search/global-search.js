@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/global-search/global-search', 'view', function (Dep) {
+define('views/global-search/global-search', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -43,7 +43,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
             },
             'focus input.global-search-input': function (e) {
                 e.currentTarget.select();
-            }
+            },
         },
 
         setup: function () {
@@ -86,7 +86,9 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
                 collection: this.collection,
             }, function (view) {
                 view.render();
-            }.bind(this));
+
+                this.listenToOnce(view, 'close', this.closePanel);
+            });
 
             $document = $(document);
             $document.on('mouseup.global-search', function (e) {
@@ -120,7 +122,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
             $document.off('mouseup.global-search');
             $document.off('click.global-search');
             $container.remove();
-        }
+        },
 
     });
 });
