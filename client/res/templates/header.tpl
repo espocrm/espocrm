@@ -1,8 +1,8 @@
-<div class="row">
-    <div class="{{#if isHeaderAdditionalSpace}}col-sm-8{{else}}col-sm-7{{/if}}{{#if isXsSingleRow}} col-xs-6{{/if}}{{#if noBreakWords}} no-break-words{{/if}} page-header-column-1">
+<div class="page-header-row">
+    <div class="{{#if noBreakWords}} no-break-words{{/if}} page-header-column-1">
         <h3>{{{header}}}</h3>
     </div>
-    <div class="{{#if isHeaderAdditionalSpace}}col-sm-4{{else}}col-sm-5{{/if}}{{#if isXsSingleRow}} col-xs-6{{/if}} page-header-column-2">
+    <div class="page-header-column-2">
         <div class="header-buttons btn-group pull-right">
             {{#each items.buttons}}
                     <a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action{{#if hidden}} hidden{{/if}}" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}{{#if title}} title="{{title}}"{{/if}}>

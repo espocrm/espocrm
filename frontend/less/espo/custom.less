@@ -291,6 +291,61 @@ label {
     padding-bottom: 2px;
     min-height: 33px;
 
+    .page-header-row {
+        margin-left: ceil((@grid-gutter-width / -2));
+        margin-right: floor((@grid-gutter-width / -2));
+        &:extend(.clearfix all);
+        > div {
+            float: left;
+            position: relative;
+            min-height: 1px;
+            padding-left: ceil((@grid-gutter-width / 2));
+            padding-right: floor((@grid-gutter-width / 2));
+        }
+
+        .page-header-column-1 {
+            width: 66.66666667%;
+        }
+        .page-header-column-2 {
+            width: 33.33333333%
+        }
+
+        @media screen and (max-width: (@screen-sm-min - 1px)) {
+            .page-header-column-1,
+            .page-header-column-2 {
+                width: 100%;
+            }
+        }
+    }
+
+    @supports (display: grid) {
+        .page-header-row {
+            display: grid;
+            grid-template-columns: auto max-content;
+
+            margin-left: 0;
+            margin-right: 0;
+
+            @media screen and (max-width: (@screen-sm-min - 1px)) {
+                grid-template-columns: auto;
+            }
+            &::before,
+            &::after {
+                display: none !important;
+            }
+        }
+
+        .page-header-column-1,
+        .page-header-column-2 {
+            width: unset !important;
+            padding-left: unset !important;
+            padding-right: unset !important;
+            min-height: unset !important;
+            position: unset !important;
+            float: unset !important;
+        }
+    }
+
     h3 {
         margin-top: 0px;
         margin-bottom: 4px;
@@ -320,16 +375,22 @@ label {
                 .breadcrumb-separator {
                     display: inline-block;
                 }
+
+                margin-right: 20px;
+                @media screen and (max-width: (@screen-sm-min - 1px)) {
+                    margin-right: 0;
+                }
             }
 
             .header-breadcrumbs.overlapped {
+                position : relative;
                 &:after {
                     content: " ";
                     position: absolute;
-                    right: 8px;
+                    right: 0px;
                     background: linear-gradient(to right, transparent, @body-bg);
                     height: 30px;
-                    width: 60px;
+                    width: 80px;
                 }
             }
         }
