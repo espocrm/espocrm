@@ -547,8 +547,8 @@ body.minimized .list-buttons-container .sticked-bar {
 }
 
 
-#content #main > .list-container > .list {
-    @media screen and (min-width: (@container-max-width + @navbar-width)) {
+@media screen and (min-width: (@container-max-width + @navbar-width)) {
+    #content #main > .list-container > .list {
         margin-left: 0;
         margin-right: 0;
 
@@ -561,20 +561,40 @@ body.minimized .list-buttons-container .sticked-bar {
             padding-right: @panel-padding;
         }
     }
+
+    #content {
+        .list-categories-column + .list-main-column .list-container,
+        .folders-container + .list-container {
+            .list {
+                margin-right: 0
+            }
+        }
+    }
 }
 
-body.minimized #content #main > .list-container > .list {
-    @media screen and (min-width: (@container-max-width + @navbar-minimized-width)) {
-        margin-left: 0;
-        margin-right: 0;
+@media screen and (min-width: (@container-max-width + @navbar-minimized-width)) {
+    body.minimized {
+        #content #main > .list-container > .list {
 
-        > table td:first-child,
-        > table th:first-child {
-            padding-left: @panel-padding;
+            margin-left: 0;
+            margin-right: 0;
+
+            > table td:first-child,
+            > table th:first-child {
+                padding-left: @panel-padding;
+            }
+            > table td:last-child,
+            > table th:last-child {
+                padding-right: @panel-padding;
+            }
         }
-        > table td:last-child,
-        > table th:last-child {
-            padding-right: @panel-padding;
+
+        .list-categories-column + .list-main-column .list-container,
+        .folders-container + .list-container {
+            .list {
+                margin-right: 0
+            }
         }
+
     }
 }

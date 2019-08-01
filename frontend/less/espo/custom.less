@@ -1257,17 +1257,37 @@ section {
     padding-right: @panel-padding;
 }
 
-#main > .list-container > .list {
-    margin-left: -@container-padding;
-    margin-right: -@container-padding;
+@media screen and (min-width: @screen-sm-min) {
 
-    > table td:first-child,
-    > table th:first-child {
-        padding-left: @container-padding;
+    #main > .list-container > .list {
+        margin-left: -@container-padding;
+        margin-right: -@container-padding;
+
+        > table td:first-child,
+        > table th:first-child {
+            padding-left: @container-padding;
+        }
+        > table td:last-child,
+        > table th:last-child {
+            padding-right: @container-padding;
+        }
     }
-    > table td:last-child,
-    > table th:last-child {
-        padding-right: @container-padding;
+
+    .list-categories-column + .list-main-column .list-container,
+    .folders-container + .list-container {
+        .list {
+            margin-right: -@container-padding;
+
+            > table {
+                td:last-child, th:last-child {
+                    padding-right: @container-padding;
+                }
+
+                td.cell[data-name="buttons"] > .btn-group {
+                    margin-right: -11px;
+                }
+            }
+        }
     }
 }
 
