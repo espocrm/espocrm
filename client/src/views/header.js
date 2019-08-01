@@ -82,6 +82,7 @@ define('views/header', 'view', function (Dep) {
 
             if (containerWidth < childrenWidth) {
                 if (step > 7) {
+                    $container.addClass('overlapped');
                     this.$el.find('.title').each(function (i, el) {
                         $(el).attr('title', $(el).text());
                     });
@@ -89,7 +90,16 @@ define('views/header', 'view', function (Dep) {
                 }
 
                 var fontSizePercentage = this.fontSizePercentage -= 5;
-                this.$el.find('.font-size-flexible').css('font-size', this.fontSizePercentage + '%');
+                var $flexible = this.$el.find('.font-size-flexible');
+                $flexible.css('font-size', this.fontSizePercentage + '%');
+
+                $flexible.css('position', 'relative');
+
+                if (step > 5) {
+                    $flexible.css('top', '-2px');
+                } else if (step > 2) {
+                    $flexible.css('top', '-1px');
+                }
 
                 this.adjustFontSize(step + 1);
             }

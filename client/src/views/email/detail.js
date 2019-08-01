@@ -376,7 +376,9 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
             var nameHtml = name;
             if (this.model.get('isImportant')) {
-                nameHtml = '<span class="text-warning">' + name + '</span>'
+                nameHtml = '<span class="text-warning font-size-flexible title">' + name + '</span>'
+            } else {
+                nameHtml = '<span class="font-size-flexible title">' + name + '</span>'
             }
 
             var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;

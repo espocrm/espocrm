@@ -418,7 +418,9 @@ define('views/modal', 'view', function (Dep) {
 
             if (containerWidth < textWidth) {
                 if (step > 5) {
-                    this.$el.find('.modal-title').attr('title', $titleText.text());
+                    var $title = this.$el.find('.modal-title');
+                    $title.attr('title', $titleText.text());
+                    $title.addClass('overlapped');
                     $titleText.children().each(function (i, el) {
                        $(el).removeAttr('title');
                     });

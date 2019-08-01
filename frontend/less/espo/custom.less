@@ -64,6 +64,11 @@
             }
         }
 
+        .notifications-badge-container > .notifications-button > .number-badge {
+            left: unset;
+            right: 4px;
+        }
+
         .navbar-body {
             overflow-x: hidden !important;
         }
@@ -301,7 +306,7 @@ label {
 
             .breadcrumb-item,
             .breadcrumb-separator {
-                float: left;
+                display: inline-block;
             }
             min-height: 1.2em;
         }
@@ -309,13 +314,22 @@ label {
         &.no-break-words {
             .header-breadcrumbs {
                 white-space: nowrap;
-                text-overflow: ellipsis;
                 overflow: hidden;
 
                 .breadcrumb-item,
                 .breadcrumb-separator {
-                    float: none;
                     display: inline-block;
+                }
+            }
+
+            .header-breadcrumbs.overlapped {
+                &:after {
+                    content: " ";
+                    position: absolute;
+                    right: 8px;
+                    background: linear-gradient(to right, transparent, @body-bg);
+                    height: 30px;
+                    width: 60px;
                 }
             }
         }
@@ -327,7 +341,7 @@ label {
 }
 
 .modal-header {
-    background-color: @default-heading-bg-color;
+    background-color: @modal-header-bg;
 }
 
 div.list-expanded > ul > li > div.expanded-row > .cell {
@@ -766,6 +780,19 @@ ul.dropdown-menu > li.checkbox:last-child {
             white-space: nowrap;
             display: inline-block;
         }
+
+        &.overlapped {
+            > .modal-title-text {
+                &:before {
+                    content: " ";
+                    position: absolute;
+                    right: 34px;
+                    background: linear-gradient(to right, transparent, @modal-header-bg);
+                    height: 30px;
+                    width: 60px;
+                }
+            }
+        }
     }
 }
 
@@ -1022,6 +1049,8 @@ ul.dropdown-menu > li > a > .check-icon + div {
 table.table > tbody td > .list-row-buttons button {
     position: relative;
     margin-top: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .table.table-no-overflow {
@@ -1555,8 +1584,15 @@ table.no-margin {
 td.cell[data-name="buttons"] > .btn-group {
     margin-top: -8px;
     margin-bottom: -8px;
-    margin-right: -10px;
+    margin-right: -8px;
 }
+
+#main > .list-container > .list > table {
+    td.cell[data-name="buttons"] > .btn-group {
+        margin-right: -10px;
+    }
+}
+
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -13px;
@@ -1982,7 +2018,7 @@ h4.panel-title span.fas.color-icon {
     }
     .list > table {
         min-width: @list-table-sm-screen-min-width;
-        font-size: 93%;
+        font-size: 95%;
     }
 
     #main > .list-container > .list > table {
@@ -2877,6 +2913,20 @@ pre > code {
         }
         .pull-right.open > .btn {
             float: right;
+        }
+    }
+
+    .list-categories-column + .list-main-column {
+        .list-container > .list {
+            margin-left: -@container-padding;
+            margin-right: -@container-padding;
+        }
+    }
+
+    .folders-container + .list-container {
+        .list {
+            margin-left: -@container-padding;
+            margin-right: -@container-padding;
         }
     }
 
