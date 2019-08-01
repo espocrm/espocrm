@@ -89,15 +89,15 @@ define('views/header', 'view', function (Dep) {
                     return;
                 }
 
-                var fontSizePercentage = this.fontSizePercentage -= 5;
+                var fontSizePercentage = this.fontSizePercentage -= 4;
                 var $flexible = this.$el.find('.font-size-flexible');
                 $flexible.css('font-size', this.fontSizePercentage + '%');
 
                 $flexible.css('position', 'relative');
 
-                if (step > 5) {
-                    $flexible.css('top', '-2px');
-                } else if (step > 2) {
+                if (step > 6) {
+                    $flexible.css('top', '-1px');
+                } else if (step > 4) {
                     $flexible.css('top', '-1px');
                 }
 
