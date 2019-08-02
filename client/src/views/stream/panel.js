@@ -91,7 +91,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     if ($target.parent().hasClass('remove-attachment')) return;
                     if ($.contains(this.$postContainer.get(0), e.target)) return;
                     if (this.$textarea.val() !== '') return;
-                    if (e.target.classList.contains('popover-content')) return;
+                    if ($(e.target).closest('.popover-content').get(0)) return;
 
                     var attachmentsIds = this.seed.get('attachmentsIds') || [];
                     if (!attachmentsIds.length && (!this.getView('attachments') || !this.getView('attachments').isUploading)) {
@@ -431,6 +431,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 $('body').off('click.popover-' + this.id);
                 $('body').on('click.popover-' + this.id , function (e) {
                     if (e.target.classList.contains('popover-content')) return;
+                    if ($(e.target).closest('.popover-content').get(0)) return;
                     if ($.contains($a.get(0), e.target)) return;
                     $('body').off('click.popover-' + this.id);
                     $a.popover('hide');
