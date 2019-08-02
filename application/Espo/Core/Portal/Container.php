@@ -94,7 +94,7 @@ class Container extends \Espo\Core\Container
             \Espo\Core\Utils\Language::detectLanguage($this->get('config'), $this->get('preferences')),
             $this->get('fileManager'),
             $this->get('metadata'),
-            $this->get('useCache')
+            $this->get('config')->get('useCache')
         );
         $language->setPortal($this->get('portal'));
         return $language;

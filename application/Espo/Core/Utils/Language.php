@@ -28,9 +28,10 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
-use \Espo\Core\Utils\Util,
-    \Espo\Core\Exceptions\NotFound,
-    \Espo\Core\Exceptions\Error;
+
+use Espo\Core\Utils\Util,
+    Espo\Core\Exceptions\NotFound,
+    Espo\Core\Exceptions\Error;
 
 class Language
 {
@@ -40,22 +41,15 @@ class Language
 
     private $unifier;
 
-    /**
-     * Data of all languages
-     *
-     * @var array
-     */
-    private $data = array();
+    private $data = [];
 
-    private $deletedData = array();
+    private $deletedData = [];
 
-    private $changedData = array();
-
-    private $name = 'i18n';
+    private $changedData = [];
 
     private $currentLanguage = null;
 
-    protected $cacheFile = 'data/cache/application/languages/{*}.php';
+    protected $cacheFile = 'data/cache/application/languages/{language}.php';
 
     protected $defaultLanguage = 'en_US';
 
@@ -63,11 +57,11 @@ class Language
 
     protected $noCustom = false;
 
-    private $paths = array(
-        'corePath' => 'application/Espo/Resources/i18n',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/i18n',
-        'customPath' => 'custom/Espo/Custom/Resources/i18n',
-    );
+    protected $paths = [
+        'corePath' => 'application/Espo/Resources/i18n/{language}',
+        'modulePath' => 'application/Espo/Modules/{*}/Resources/i18n/{language}',
+        'customPath' => 'custom/Espo/Custom/Resources/i18n/{language}',
+    ];
 
     public function __construct($language = null, File\Manager $fileManager, Metadata $metadata, $useCache = false, $noCustom = false)
     {
@@ -106,7 +100,8 @@ class Language
         return $this->defaultLanguage;
     }
 
-    public static function detectLanguage($config, $preferences = null) {
+    public static function detectLanguage(\Espo\Core\Utils\Config $config, $preferences = null)
+    {
         $language = null;
         if ($preferences) {
             $language = $preferences->get('language');
@@ -127,9 +122,11 @@ class Language
         $this->currentLanguage = $language;
     }
 
-    protected function getLangCacheFile()
+    protected function getCacheFile(string $language = null) : string
     {
-        $langCacheFile = str_replace('{*}', $this->getLanguage(), $this->cacheFile);
+        $language = $language ?? $this->getLanguage();
+
+        $langCacheFile = str_replace('{language}', $language, $this->cacheFile);
 
         return $langCacheFile;
     }
@@ -149,7 +146,7 @@ class Language
     public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
     {
         if (is_array($label)) {
-            $translated = array();
+            $translated = [];
 
             foreach ($label as $subLabel) {
                 $translated[$subLabel] = $this->translate($subLabel, $category, $scope, $requiredOptions);
@@ -200,7 +197,7 @@ class Language
         $data = $this->getData();
 
         if (!isset($data) || $data === false) {
-            throw new Error('Language: current language ['.$this->getLanguage().'] does not found');
+            throw new Error('Language: current language '.$this->getLanguage().' not found');
         }
 
         return Util::getValueByKey($data, $key, $returns);
@@ -213,19 +210,19 @@ class Language
 
     /**
      * Save changes
-     *
-     * @return bool
      */
-    public function save()
+    public function save() : bool
     {
+        $language = $this->getLanguage();
+
         $path = $this->paths['customPath'];
-        $currentLanguage = $this->getLanguage();
+        $path = str_replace('{language}', $language, $path);
 
         $result = true;
         if (!empty($this->changedData)) {
             foreach ($this->changedData as $scope => $data) {
                 if (!empty($data)) {
-                    $result &= $this->getFileManager()->mergeContents(array($path, $currentLanguage, $scope.'.json'), $data, true);
+                    $result &= $this->getFileManager()->mergeContents([$path, $scope.'.json'], $data, true);
                 }
             }
         }
@@ -233,7 +230,7 @@ class Language
         if (!empty($this->deletedData)) {
             foreach ($this->deletedData as $scope => $unsetData) {
                 if (!empty($unsetData)) {
-                    $result &= $this->getFileManager()->unsetContents(array($path, $currentLanguage, $scope.'.json'), $unsetData, true);
+                    $result &= $this->getFileManager()->unsetContents([$path, $scope.'.json'], $unsetData, true);
                 }
             }
         }
@@ -250,19 +247,15 @@ class Language
      */
     public function clearChanges()
     {
-        $this->changedData = array();
-        $this->deletedData = array();
+        $this->changedData = [];
+        $this->deletedData = [];
         $this->init(true);
     }
 
-    /**
-     * Get data of Unifier language files
-     *
-     * @return array
-     */
     protected function getData()
     {
         $currentLanguage = $this->getLanguage();
+
         if (!isset($this->data[$currentLanguage])) {
             $this->init();
         }
@@ -345,40 +338,55 @@ class Language
         }
     }
 
-    protected function init($reload = false)
+    protected function init(bool $reload = false)
     {
-        if ($reload || !file_exists($this->getLangCacheFile()) || !$this->useCache) {
+        $this->data[$this->currentLanguage] = $this->getLanguageData($this->currentLanguage, $reload);
+    }
 
-            $paths = $this->paths;
-            if ($this->noCustom) {
-                unset($paths['customPath']);
-            }
+    protected function getDefaultLanguageData(bool $reload = false)
+    {
+        return $this->getLanguageData($this->defaultLanguage, $reload);
+    }
 
-            $fullData = $this->getUnifier()->unify($this->name, $paths, true);
+    protected function getLanguageData(string $language, bool $reload = false)
+    {
+        if ($reload || !isset($this->data[$language])) {
 
-            $result = true;
-            foreach ($fullData as $i18nName => $i18nData) {
+            $cacheFile = $this->getCacheFile($language);
 
-                if ($i18nName != $this->defaultLanguage) {
-                    $i18nData = Util::merge($fullData[$this->defaultLanguage], $i18nData);
+            if (!$this->useCache || !file_exists($cacheFile)) {
+
+                $paths = $this->paths;
+
+                foreach ($paths as $k => &$path) {
+                    $path = str_replace('{language}', $language, $path);
                 }
 
-                $this->data[$i18nName] = $i18nData;
+                if ($this->noCustom) {
+                    unset($paths['customPath']);
+                }
+
+                $data = $this->getUnifier()->unify('i18n', $paths, true);
+
+                if ($language != $this->defaultLanguage) {
+                    $data = Util::merge($this->getDefaultLanguageData(), $data);
+                }
+
+                $this->data[$language] = $data;
 
                 if ($this->useCache) {
-                    $i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
-                    $result &= $this->getFileManager()->putPhpContents($i18nCacheFile, $i18nData);
+                    $putResult = $this->getFileManager()->putPhpContents($cacheFile, $data);
+                    if (!$putResult) {
+                        $GLOBALS['log']->error("Language: Could not store cache file for {$language}");
+                    }
                 }
             }
 
-            if ($result == false) {
-                throw new Error('Language::init() - Cannot save data to a cache');
+            if ($this->useCache) {
+                $this->data[$language] = $this->getFileManager()->getPhpContents($cacheFile);
             }
         }
 
-        $currentLanguage = $this->getLanguage();
-        if (empty($this->data[$currentLanguage])) {
-            $this->data[$currentLanguage] = $this->getFileManager()->getPhpContents($this->getLangCacheFile());
-        }
+        return $this->data[$language] ?? [];
     }
 }

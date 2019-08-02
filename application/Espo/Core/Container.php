@@ -291,7 +291,7 @@ class Container
             'en_US',
             $this->get('fileManager'),
             $this->get('metadata'),
-            $this->get('useCache')
+            $this->get('config')->get('useCache')
         );
     }
 
@@ -301,7 +301,7 @@ class Container
             \Espo\Core\Utils\Language::detectLanguage($this->get('config')),
             $this->get('fileManager'),
             $this->get('metadata'),
-            $this->get('useCache')
+            $this->get('config')->get('useCache')
         );
     }
 
