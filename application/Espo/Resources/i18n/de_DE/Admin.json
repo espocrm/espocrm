@@ -162,20 +162,20 @@
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
     "selectUpgradePackage": "Aktualisierungspaket auswählen",
-    "downloadUpgradePackage": "Aktualisierungspaket(e) <a href=\"{url}\">hier </a>herunterladen.",
     "selectLayout": "Layout zum Editieren links auswählen",
     "selectExtensionPackage": "Erweiterungspaket auswählen",
     "extensionInstalled": "Erweiterung {name} {version} wurde installiert.",
     "installExtension": "Erweiterung {name} {version} ist bereit für die Installation",
-    "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann einige Zeit dauern.",
-    "upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}</strong> aktualisiert.",
     "upgradeBackup": "Wie empfehlen VOR einer Aktualisierung die EspoCRM Dateien sowie die Datenbank zu sichern.",
     "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein",
     "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
     "newVersionIsAvailable": "Die neue EspoCRM-Version {latestVersion} ist verfügbar.",
     "uninstallConfirmation": "Möchten Sie die Erweiterung wirklich deinstallieren?",
     "cronIsNotConfigured": "Geplante Jobs werden nicht ausgeführt. Daher funktionieren eingehende E-Mails, Benachrichtigungen und Erinnerungen nicht. Bitte folgen Sie den [instructions] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), um den Cron-Job einzurichten.",
-    "newExtensionVersionIsAvailable": "Die neue {extensionName} Version {latestVersion} ist verfügbar."
+    "newExtensionVersionIsAvailable": "Die neue {extensionName} Version {latestVersion} ist verfügbar.",
+    "upgradeVersion": "Ihr EspoCRM wird nun auf Version **{version}** aktualisiert. Dies kann einige Zeit dauern.",
+    "upgradeDone": "Ihr EspoCRM wurde auf Version **{version}** aktualisiert.",
+    "downloadUpgradePackage": "Aktualisierungspaket(e) [here]({url}) herunterladen."
   },
   "descriptions": {
     "settings": "Systemeinstellungen der Applikation.",

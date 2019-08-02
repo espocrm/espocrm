@@ -10,6 +10,6 @@
   },
   "help": {
     "Google": "Holen Sie die OAuth 2.0 Credentials über die Google Developers Console.\n\nBesuchen Sie [die Google Developers Console](https://console.developers.google.com/project) um OAuth 2.0 Credentials wie eine Client ID und Client Geheimnis zu erhalten die sowohl Google als auch EspoCRM bekannt sind.",
-    "GoogleMaps": "API Key [hier](https://developers.google.com/maps/documentation/javascript/get-api-key) beantragen.</p>"
+    "GoogleMaps": "API Key [hier](https://developers.google.com/maps/documentation/javascript/get-api-key) beantragen."
   }
 }
