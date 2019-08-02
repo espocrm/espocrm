@@ -204,24 +204,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 return new Handlebars.SafeString(text);
             });
 
-            Handlebars.registerHelper('complexText', function (text) {
-                text = text || ''
-
-                text = text.replace(this.urlRegex, '$1[$2]($2)');
-
-                text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
-
-                this.mdBeforeList.forEach(function (item) {
-                    text = text.replace(item.regex, item.value);
-                });
-
-                text = marked(text);
-
-                text = DOMPurify.sanitize(text);
-
-                text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
-
-                return new Handlebars.SafeString(text);
+            Handlebars.registerHelper('complexText', function (text, options) {
+                return this.transfromMarkdownText(text, options.hash);
             }.bind(this));
 
             Handlebars.registerHelper('translateOption', function (name, options) {
@@ -292,6 +276,34 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             Handlebars.registerHelper('basePath', function () {
                 return self.basePath || '';
             });
+        },
+
+        transfromMarkdownInlineText: function (text) {
+            return this.transfromMarkdownText(text, {inline: true});
+        },
+
+        transfromMarkdownText: function (text, options) {
+            text = text || '';
+
+            text = text.replace(this.urlRegex, '$1[$2]($2)');
+
+            text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
+
+            this.mdBeforeList.forEach(function (item) {
+                text = text.replace(item.regex, item.value);
+            });
+
+            if (options.inline) {
+                text = marked.inlineLexer(text, []);
+            } else {
+                text = marked(text);
+            }
+
+            text = DOMPurify.sanitize(text);
+
+            text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
+
+            return new Handlebars.SafeString(text);
         },
 
         getScopeColorIconHtml: function (scope, noWhiteSpace, additionalClassName) {

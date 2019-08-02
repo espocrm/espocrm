@@ -84,7 +84,7 @@
         "forbidden": "Forbidden, please try later",
         "uniqueLinkHasBeenSent": "The unique URL has been sent to the specified email address.",
         "passwordChangedByRequest": "Password has been changed.",
-        "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
+        "setupSmtpBefore": "You need to setup [SMTP settings]({url}) to make the system be able to send password in email.",
         "userNameExists": "User Name already exists"
     },
     "options": {

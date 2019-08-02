@@ -1,5 +1,4 @@
 
 <p class="text-success">
-{{{text}}}
+    {{complexText text inline=true}}
 </p>
-

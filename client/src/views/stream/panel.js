@@ -392,10 +392,40 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             var $a = this.$el.find('.buttons-panel a.stream-post-info');
 
+            var message = this.getHelper().transfromMarkdownInlineText(
+                this.translate('infoMention', 'messages', 'Stream')
+            ) + '<br><br>' +
+            this.getHelper().transfromMarkdownInlineText(
+                this.translate('infoSyntax', 'messages', 'Stream') + ':'
+            ) + '<br><br>';
+
+            var syntaxItemList = [
+                ['code', '`{text}`'],
+                ['multilineCode', '```{text}```'],
+                ['strongText', '**{text}**'],
+                ['emphasizedText', '*{text}*'],
+                ['deletedText', '~~{text}~~'],
+                ['blockquote', '> {text}'],
+                ['link', '[{text}](url)'],
+            ];
+
+            var messageItemList = [];
+
+            syntaxItemList.forEach(function (item) {
+                var text = this.translate(item[0], 'syntaxItems', 'Stream');
+                var result = item[1].replace('{text}', text);
+                messageItemList.push(result);
+            }, this);
+
+            message += '<ul>' + messageItemList.map(function (item) {
+                return '<li>'+ item + '</li>';
+            }).join('') + '</ul>';
+
+
             $a.popover({
                 placement: 'bottom',
                 container: 'body',
-                content: this.translate('streamPostInfo', 'messages').replace(/(\r\n|\n|\r)/gm, '<br>'),
+                content: message,
                 html: true
             }).on('shown.bs.popover', function () {
                 $('body').off('click.popover-' + this.id);

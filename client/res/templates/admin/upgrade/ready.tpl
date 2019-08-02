@@ -1,5 +1,4 @@
 
 <p class="text-danger">
-{{{text}}}
+    {{complexText text inline=true}}
 </p>
-
