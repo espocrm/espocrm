@@ -1257,11 +1257,14 @@ section {
     padding-right: @panel-padding;
 }
 
+#main > .list-container > .list {
+    margin-left: -@container-padding;
+    margin-right: -@container-padding;
+}
+
 @media screen and (min-width: @screen-sm-min) {
 
     #main > .list-container > .list {
-        margin-left: -@container-padding;
-        margin-right: -@container-padding;
 
         > table td:first-child,
         > table th:first-child {
