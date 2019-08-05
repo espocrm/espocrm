@@ -18,6 +18,9 @@
         "exampleRequestUrl": "URL",
         "exampleRequestPayload": "Payload",
         "createLeadBeforeOptInConfirmation": "Create Lead before confirmation",
+        "skipOptInConfirmationIfSubscribed": "Skip confirmation if lead is already in target list",
+        "smtpAccount": "SMTP Account",
+        "inboundEmail": "Group Email Account",
         "duplicateCheck": "Duplicate Check"
     },
     "links": {
@@ -25,6 +28,7 @@
         "campaign": "Campaign",
         "optInConfirmationEmailTemplate": "Opt-in confirmation email template",
         "targetTeam": "Target Team",
+        "inboundEmail": "Group Email Account",
         "logRecords": "Log"
     },
     "labels": {

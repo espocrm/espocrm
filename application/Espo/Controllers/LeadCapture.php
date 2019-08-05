@@ -69,4 +69,11 @@ class LeadCapture extends \Espo\Core\Controllers\Record
 
         return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
     }
+
+    public function getActionSmtpAccountDataList()
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        return $this->getServiceFactory()->create('LeadCapture')->getSmtpAccountDataList();
+    }
 }

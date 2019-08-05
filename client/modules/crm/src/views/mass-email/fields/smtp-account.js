@@ -30,6 +30,8 @@ Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', fun
 
     return Dep.extend({
 
+        dataUrl: 'MassEmail/action/smtpAccountDataList',
+
         getAttributeList: function () {
             return [this.name, 'inboundEmailId'];
         },
@@ -81,7 +83,7 @@ Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', fun
             Dep.prototype.setup.call(this);
 
             if (this.getAcl().checkScope('MassEmail', 'create') || this.getAcl().checkScope('MassEmail', 'edit')) {
-                this.ajaxGetRequest('MassEmail/action/smtpAccountDataList').then(function (dataList) {
+                this.ajaxGetRequest(this.dataUrl).then(function (dataList) {
                     if (!dataList.length) return;
                     this.loadedOptionList = [];
                     this.loadedOptionTranslations = {};

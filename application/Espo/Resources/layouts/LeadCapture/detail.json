@@ -15,8 +15,9 @@
         "label": "",
         "rows": [
             [{"name": "optInConfirmation", "inlineEditDisabled": true}, false],
-            [{"name": "createLeadBeforeOptInConfirmation"}, false],
+            [{"name": "createLeadBeforeOptInConfirmation"}, {"name": "skipOptInConfirmationIfSubscribed"}],
             [{"name": "optInConfirmationEmailTemplate"}, {"name": "optInConfirmationLifetime"}],
+            [{"name": "smtpAccount"}, false],
             [{"name": "optInConfirmationSuccessMessage", "fullWidth": true}]
         ]
     }
