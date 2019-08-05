@@ -128,8 +128,8 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
                         });
                     },
                     template: function (mention) {
-                        return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                    },
+                        return this.getHelper().escapeString(mention.name) + ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
+                    }.bind(this),
                     replace: function (o) {
                         return '$1@' + o.userName + '';
                     }

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/fields/post', 'views/fields/text', function (Dep) {
+define('views/stream/fields/post', 'views/fields/text', function (Dep) {
 
     return Dep.extend({
 
@@ -39,9 +39,9 @@ Espo.define('views/stream/fields/post', 'views/fields/text', function (Dep) {
                 Object.keys(mentionData).sort(function (a, b) {
                     return a.length < b.length
                 }).forEach(function (item) {
-                    var part = '[' + mentionData[item].name + '](#User/view/'+mentionData[item].id + ')';
+                    var part = '[' + this.getHelper().escapeString(mentionData[item].name) + '](#User/view/'+mentionData[item].id + ')';
                     text = text.replace(new RegExp(item, 'g'), part);
-                });
+                }.bind(this));
             }
 
             return text;

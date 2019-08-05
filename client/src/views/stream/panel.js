@@ -376,8 +376,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                         });
                     },
                     template: function (mention) {
-                        return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                    },
+                        return this.getHelper().escapeString(mention.name) + ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
+                    }.bind(this),
                     replace: function (o) {
                         return '$1@' + o.userName + '';
                     }
