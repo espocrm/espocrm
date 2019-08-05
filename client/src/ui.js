@@ -345,7 +345,7 @@ define('ui', [], function () {
             var confirmStyle = o.confirmStyle || 'danger';
 
             var dialog = new Dialog({
-                backdrop: false,
+                backdrop: ('backdrop' in o) ? o.backdrop : false,
                 header: false,
                 className: 'dialog-confirm',
                 body: '<span class="confirm-message">' + message + '</a>',
