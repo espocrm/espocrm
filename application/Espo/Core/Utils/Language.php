@@ -368,6 +368,9 @@ class Language
 
                 $data = $this->getUnifier()->unify('i18n', $paths, true);
 
+                if (is_array($data))
+                    $this->sanitizeData($data);
+
                 if ($language != $this->defaultLanguage) {
                     $data = Util::merge($this->getDefaultLanguageData(), $data);
                 }
@@ -388,5 +391,21 @@ class Language
         }
 
         return $this->data[$language] ?? [];
+    }
+
+    protected function sanitizeData(array &$data)
+    {
+        foreach ($data as $key => &$subData) {
+            if (is_array($subData)) {
+                $this->sanitizeData($subData);
+            } else {
+                $subData = htmlspecialchars($subData);
+                if (is_string($subData)) {
+                    $subData = str_replace('<', '&lt;', $subData);
+                    $subData = str_replace('>', '&gt;', $subData);
+                    $subData = str_replace('"', '&quot;', $subData);
+                }
+            }
+        }
     }
 }

@@ -2,6 +2,6 @@
 	"fields": {
 		"name":"User",
 		"label":"Core",
-		"source":"Core"		
-	}		
+		"source":"Core"
+	}
 }
