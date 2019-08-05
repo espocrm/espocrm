@@ -170,6 +170,7 @@ class LeadCapture extends Record
                 if (!$hasDuplicate) {
                     $this->getEntityManager()->saveEntity($lead);
                     $this->logLeadCapture($leadCapture, $target, $data, true);
+                    $isLogged = true;
                 }
             }
 
