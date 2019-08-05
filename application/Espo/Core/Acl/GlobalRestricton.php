@@ -68,9 +68,17 @@ class GlobalRestricton
         $this->fileManager = $fileManager;
         $this->fieldManagerUtil = $fieldManagerUtil;
 
+        $isFromCache = false;
+
         if ($useCache) {
             if (file_exists($this->cacheFilePath)) {
                 $this->data = include($this->cacheFilePath);
+                $isFromCache = true;
+
+                if (!($this->data instanceof \StdClass)) {
+                    $GLOBALS['log']->error("ACL GlobalRestricton: Bad data fetched from cache.");
+                    $this->data = null;
+                }
             }
         }
 
@@ -79,7 +87,9 @@ class GlobalRestricton
         }
 
         if ($useCache) {
-            $this->storeCacheFile();
+            if (!$isFromCache) {
+                $this->storeCacheFile();
+            }
         }
     }
 
