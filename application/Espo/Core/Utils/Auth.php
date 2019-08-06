@@ -142,6 +142,8 @@ class Auth
             }
         }
 
+        $createTokenSecret = $this->request->headers->get('Espo-Authorization-Create-Token-Secret') === 'true';
+
         if (!$isByTokenOnly) {
             $this->checkFailedAttemptsLimit($username);
         }
@@ -153,6 +155,15 @@ class Auth
             $authToken = $this->getEntityManager()->getRepository('AuthToken')->where([
                 'token' => $password
             ])->findOne();
+
+            if ($authToken) {
+                if ($authToken->get('secret')) {
+                    $sentSecret = $_COOKIE['auth-token-secret'] ?? null;
+                    if ($sentSecret !== $authToken->get('secret')) {
+                        $authToken = null;
+                    }
+                }
+            }
         }
 
         if ($authToken) {
@@ -255,6 +266,14 @@ class Auth
                 $authToken->set('hash', $user->get('password'));
                 $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
                 $authToken->set('userId', $user->id);
+
+                if ($createTokenSecret) {
+                    $secret = $this->generateToken();
+                    $authToken->set('secret', $secret);
+
+                    setcookie('auth-token-secret', $secret, strtotime('+1000 days'), '/; samesite=lax', '', false, true);
+                }
+
                 if ($this->isPortal()) {
                     $authToken->set('portalId', $this->getPortal()->id);
                 }

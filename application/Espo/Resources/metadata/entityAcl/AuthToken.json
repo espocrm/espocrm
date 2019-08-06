@@ -8,6 +8,10 @@
             "internal": true,
             "readOnly": true
         },
+        "secret": {
+            "internal": true,
+            "readOnly": true
+        },
         "portal": {
             "readOnly": true
         },
