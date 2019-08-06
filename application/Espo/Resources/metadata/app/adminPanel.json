@@ -3,64 +3,73 @@
         "label": "System",
         "itemList": [
             {
-                "url":"#Admin/settings",
-                "label":"Settings",
-                "description":"settings"
+                "url": "#Admin/settings",
+                "label": "Settings",
+                "iconClass": "fas fa-cog",
+                "description": "settings"
             },
             {
-                "url":"#Admin/userInterface",
-                "label":"User Interface",
-                "description":"userInterface"
+                "url": "#Admin/userInterface",
+                "label": "User Interface",
+                "iconClass": "fas fa-desktop",
+                "description": "userInterface"
             },
             {
-                "url":"#Admin/authentication",
-                "label":"Authentication",
-                "description":"authentication"
+                "url": "#Admin/authentication",
+                "label": "Authentication",
+                "iconClass": "fas fa-sign-in-alt",
+                "description": "authentication"
             },
             {
-                "url":"#ScheduledJob",
-                "label":"Scheduled Jobs",
-                "description":"scheduledJob"
+                "url": "#ScheduledJob",
+                "label": "Scheduled Jobs",
+                "iconClass": "fas fa-clock",
+                "description": "scheduledJob"
             },
             {
-                "url":"#Admin/currency",
-                "label":"Currency",
-                "description":"currency"
+                "url": "#Admin/currency",
+                "label": "Currency",
+                "iconClass": "fas fa-euro-sign",
+                "description": "currency"
             },
             {
-                "url":"#Admin/notifications",
-                "label":"Notifications",
-                "description":"notifications"
+                "url": "#Admin/notifications",
+                "label": "Notifications",
+                "iconClass": "fas fa-bell",
+                "description": "notifications"
             },
             {
-                "url":"#Admin/integrations",
-                "label":"Integrations",
-                "description":"integrations"
+                "url": "#Admin/integrations",
+                "label": "Integrations",
+                "iconClass": "fas fa-network-wired",
+                "description": "integrations"
             },
             {
-                "url":"#Admin/upgrade",
-                "label":"Upgrade",
-                "description":"upgrade"
+                "url": "#Admin/extensions",
+                "label": "Extensions",
+                "iconClass": "fas fa-upload",
+                "description": "extensions"
             },
             {
-                "url":"#Admin/extensions",
-                "label":"Extensions",
-                "description":"extensions"
+                "url": "#Admin/systemRequirements",
+                "label": "System Requirements",
+                "iconClass": "fas fa-server",
+                "description": "systemRequirements"
             },
             {
-                "url":"#Admin/systemRequirements",
-                "label":"System Requirements",
-                "description":"systemRequirements"
+                "url": "#Admin/upgrade",
+                "label": "Upgrade",
+                "description": "upgrade"
             },
             {
                 "action": "clearCache",
-                "label":"Clear Cache",
-                "description":"clearCache"
+                "label": "Clear Cache",
+                "description": "clearCache"
             },
             {
                 "action": "rebuild",
-                "label":"Rebuild",
-                "description":"rebuild"
+                "label": "Rebuild",
+                "description": "rebuild"
             }
         ],
         "order": 0
@@ -69,65 +78,74 @@
         "label": "Users",
         "itemList": [
             {
-                "url":"#User",
-                "label":"Users",
-                "description":"users"
+                "url": "#User",
+                "label": "Users",
+                "iconClass": "fas fa-user",
+                "description": "users"
             },
             {
-                "url":"#Team",
-                "label":"Teams",
-                "description":"teams"
+                "url": "#Team",
+                "label": "Teams",
+                "iconClass": "fas fa-users",
+                "description": "teams"
             },
             {
-                "url":"#Role",
-                "label":"Roles",
-                "description":"roles"
+                "url": "#Role",
+                "label": "Roles",
+                "iconClass": "fas fa-key",
+                "description": "roles"
             },
             {
-                "url":"#Admin/authLog",
-                "label":"Auth Log",
-                "description":"authLog"
+                "url": "#Admin/authLog",
+                "label": "Auth Log",
+                "description": "authLog"
             },
             {
-                "url":"#Admin/authTokens",
-                "label":"Auth Tokens",
-                "description":"authTokens"
+                "url": "#Admin/authTokens",
+                "label": "Auth Tokens",
+                "description": "authTokens"
             },
             {
                 "url": "#ActionHistoryRecord",
                 "label": "Action History",
+                "iconClass": "fas fa-history",
                 "description": "actionHistory"
             },
             {
                 "url": "#ApiUser",
                 "label": "API Users",
+                "iconClass": "fas fa-user-cog",
                 "description": "apiUsers"
             }
         ],
         "order": 5
     },
-    "customization":{
+    "customization": {
         "label": "Customization",
         "itemList": [
             {
-                "url":"#Admin/layouts",
-                "label":"Layout Manager",
-                "description":"layoutManager"
+                "url": "#Admin/layouts",
+                "label": "Layout Manager",
+                "iconClass": "fas fa-table",
+                "description": "layoutManager"
             },
             {
-                "url":"#Admin/entityManager",
-                "label":"Entity Manager",
-                "description":"entityManager"
+                "url": "#Admin/entityManager",
+                "label": "Entity Manager",
+                "iconClass": "fas fa-tools",
+                "description": "entityManager"
             },
             {
-                "url":"#Admin/labelManager",
-                "label":"Label Manager",
-                "description":"labelManager"
+                "url": "#Admin/labelManager",
+                "label": "Label Manager",
+                "iconClass": "fas fa-language",
+                "description": "labelManager"
             },
             {
-                "url":"#Admin/templateManager",
-                "label":"Template Manager",
-                "description":"templateManager"
+                "url": "#Admin/templateManager",
+                "label": "Template Manager",
+                "iconClass": "fas fa-envelope-open-text",
+                "description": "templateManager"
             }
         ],
         "order": 10
@@ -136,34 +154,40 @@
         "label": "Email",
         "itemList": [
             {
-                "url":"#Admin/outboundEmails",
-                "label":"Outbound Emails",
-                "description":"outboundEmails"
+                "url": "#Admin/outboundEmails",
+                "label": "Outbound Emails",
+                "iconClass": "fas fa-paper-plane",
+                "description": "outboundEmails"
             },
             {
-                "url":"#Admin/inboundEmails",
-                "label":"Inbound Emails",
-                "description":"inboundEmails"
+                "url": "#Admin/inboundEmails",
+                "label": "Inbound Emails",
+                "iconClass": "fas fa-envelope",
+                "description": "inboundEmails"
             },
             {
-                "url":"#InboundEmail",
-                "label":"Group Email Accounts",
-                "description":"groupEmailAccounts"
+                "url": "#InboundEmail",
+                "label": "Group Email Accounts",
+                "iconClass": "fas fa-inbox",
+                "description": "groupEmailAccounts"
             },
             {
-                "url":"#EmailAccount",
-                "label":"Personal Email Accounts",
-                "description":"personalEmailAccounts"
+                "url": "#EmailAccount",
+                "label": "Personal Email Accounts",
+                "iconClass": "fas fa-inbox",
+                "description": "personalEmailAccounts"
             },
             {
-                "url":"#EmailFilter",
-                "label":"Email Filters",
-                "description":"emailFilters"
+                "url": "#EmailFilter",
+                "label": "Email Filters",
+                "iconClass": "fas fa-filter",
+                "description": "emailFilters"
             },
             {
-                "url":"#EmailTemplate",
-                "label":"Email Templates",
-                "description":"emailTemplates"
+                "url": "#EmailTemplate",
+                "label": "Email Templates",
+                "iconClass": "fas fa-envelope-square",
+                "description": "emailTemplates"
             }
         ],
         "order": 15
@@ -172,19 +196,22 @@
         "label": "Portal",
         "itemList": [
             {
-                "url":"#Portal",
-                "label":"Portals",
-                "description":"portals"
+                "url": "#Portal",
+                "label": "Portals",
+                "iconClass": "fas fa-parking",
+                "description": "portals"
             },
             {
-                "url":"#PortalUser",
-                "label":"Portal Users",
-                "description":"portalUsers"
+                "url": "#PortalUser",
+                "label": "Portal Users",
+                "iconClass": "fas fa-user",
+                "description": "portalUsers"
             },
             {
-                "url":"#PortalRole",
-                "label":"Portal Roles",
-                "description":"portalRoles"
+                "url": "#PortalRole",
+                "label": "Portal Roles",
+                "iconClass": "fas fa-key",
+                "description": "portalRoles"
             }
         ],
         "order": 20
@@ -193,23 +220,27 @@
         "label": "Data",
         "itemList": [
             {
-                "url":"#Import",
-                "label":"Import",
-                "description":"import"
+                "url": "#Import",
+                "label": "Import",
+                "iconClass": "fas fa-file-import",
+                "description": "import"
             },
             {
-                "url":"#LeadCapture",
-                "label":"Lead Capture",
-                "description":"leadCapture"
+                "url": "#LeadCapture",
+                "label": "Lead Capture",
+                "iconClass": "fas fa-id-card",
+                "description": "leadCapture"
             },
             {
                 "url": "#Template",
                 "label": "PDF Templates",
+                "iconClass": "fas fa-file-pdf",
                 "description": "pdfTemplates"
             },
             {
                 "url": "#Attachment",
                 "label": "Attachments",
+                "iconClass": "fas fa-paperclip",
                 "description": "attachments"
             },
             {

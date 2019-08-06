@@ -2821,8 +2821,31 @@ pre > code {
     display: inline-block;
 }
 
-.table-admin-panel tr > td:first-child {
-    width: 200px;
+table.table-admin-panel {
+    table-layout: fixed;
+
+    tr > td:first-child {
+        width: 230px;
+
+        > div {
+            position: relative;
+
+            > .icon {
+                position: absolute;
+                color: @gray-light;
+                top: 1px;
+            }
+            > a {
+                padding-left: 28px;
+                position: static;
+            }
+        }
+    }
+
+    td {
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
 }
 
 .admin-tables-container > div {
