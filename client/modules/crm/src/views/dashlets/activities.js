@@ -74,7 +74,11 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
                         },
                     ],
                     [
-                        {name: 'dateEnd'}
+                        {name: 'dateEnd'},
+                        {
+                            name: 'priority',
+                            view: 'crm:views/task/fields/priority-for-dashlet',
+                        }
                     ]
                 ]
             }
