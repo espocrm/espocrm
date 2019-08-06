@@ -103,6 +103,7 @@ define('views/login-second-step', 'view', function (Dep) {
                     'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
                     'Espo-Authorization': Base64.encode(userName + ':' + password),
                     'Espo-Authorization-Code': code,
+                    'Espo-Authorization-Create-Token-Secret': true,
                 },
             }).then(
                 function (data) {
