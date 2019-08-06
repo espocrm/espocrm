@@ -382,7 +382,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }).on('shown.bs.popover', function () {
                     $('body').off('click.popover-' + this.id);
                     $('body').on('click.popover-' + this.id , function (e) {
-                        if (e.target.classList.contains('popover-content')) return;
+                        if ($(e.target).closest('.popover-content').get(0)) return;
                         if ($.contains($a.get(0), e.target)) return;
                         $('body').off('click.popover-' + this.id);
                         $a.popover('hide');

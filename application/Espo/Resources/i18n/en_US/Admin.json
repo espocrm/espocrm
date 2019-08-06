@@ -189,14 +189,14 @@
         "displayRawText": "Display raw text (no markdown)"
     },
     "messages": {
-        "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
-        "upgradeDone": "EspoCRM has been upgraded to version <strong>{version}</strong>.",
+        "upgradeVersion": "EspoCRM will be upgraded to version **{version}**. Please be patient as this may take a while.",
+        "upgradeDone": "EspoCRM has been upgraded to version **{version}**.",
         "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
         "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
         "userHasNoEmailAddress": "User has no email address.",
         "selectEntityType": "Select entity type in the left menu.",
         "selectUpgradePackage": "Select upgrade package",
-        "downloadUpgradePackage": "Download upgrade package(s) <a href=\"{url}\">here</a>.",
+        "downloadUpgradePackage": "Download upgrade package(s) [here]({url}).",
         "selectLayout": "Select needed layout in the left menu and edit it.",
         "selectExtensionPackage": "Select extension package",
         "extensionInstalled": "Extension {name} {version} has been installed.",
@@ -205,7 +205,7 @@
         "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available.",
         "newExtensionVersionIsAvailable": "New {extensionName} version {latestVersion} is available.",
         "uninstallConfirmation": "Are you sure you want to uninstall the extension?",
-        "upgradeInfo": "Check the <a href=\"{url}\">documentation</a> about how to upgrade your EspoCRM instance.",
+        "upgradeInfo": "Check the [documentation]({url}) about how to upgrade your EspoCRM instance.",
         "upgradeRecommendation": "This way of upgrading is not recommended. It's better to upgrade from CLI."
     },
     "descriptions": {

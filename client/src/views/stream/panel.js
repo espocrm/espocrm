@@ -91,7 +91,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     if ($target.parent().hasClass('remove-attachment')) return;
                     if ($.contains(this.$postContainer.get(0), e.target)) return;
                     if (this.$textarea.val() !== '') return;
-                    if (e.target.classList.contains('popover-content')) return;
+                    if ($(e.target).closest('.popover-content').get(0)) return;
 
                     var attachmentsIds = this.seed.get('attachmentsIds') || [];
                     if (!attachmentsIds.length && (!this.getView('attachments') || !this.getView('attachments').isUploading)) {
@@ -376,8 +376,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                         });
                     },
                     template: function (mention) {
-                        return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                    },
+                        return this.getHelper().escapeString(mention.name) + ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
+                    }.bind(this),
                     replace: function (o) {
                         return '$1@' + o.userName + '';
                     }
@@ -392,15 +392,46 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             var $a = this.$el.find('.buttons-panel a.stream-post-info');
 
+            var message = this.getHelper().transfromMarkdownInlineText(
+                this.translate('infoMention', 'messages', 'Stream')
+            ) + '<br><br>' +
+            this.getHelper().transfromMarkdownInlineText(
+                this.translate('infoSyntax', 'messages', 'Stream') + ':'
+            ) + '<br><br>';
+
+            var syntaxItemList = [
+                ['code', '`{text}`'],
+                ['multilineCode', '```{text}```'],
+                ['strongText', '**{text}**'],
+                ['emphasizedText', '*{text}*'],
+                ['deletedText', '~~{text}~~'],
+                ['blockquote', '> {text}'],
+                ['link', '[{text}](url)'],
+            ];
+
+            var messageItemList = [];
+
+            syntaxItemList.forEach(function (item) {
+                var text = this.translate(item[0], 'syntaxItems', 'Stream');
+                var result = item[1].replace('{text}', text);
+                messageItemList.push(result);
+            }, this);
+
+            message += '<ul>' + messageItemList.map(function (item) {
+                return '<li>'+ item + '</li>';
+            }).join('') + '</ul>';
+
+
             $a.popover({
                 placement: 'bottom',
                 container: 'body',
-                content: this.translate('streamPostInfo', 'messages').replace(/(\r\n|\n|\r)/gm, '<br>'),
+                content: message,
                 html: true
             }).on('shown.bs.popover', function () {
                 $('body').off('click.popover-' + this.id);
                 $('body').on('click.popover-' + this.id , function (e) {
                     if (e.target.classList.contains('popover-content')) return;
+                    if ($(e.target).closest('.popover-content').get(0)) return;
                     if ($.contains($a.get(0), e.target)) return;
                     $('body').off('click.popover-' + this.id);
                     $a.popover('hide');

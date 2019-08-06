@@ -60,21 +60,45 @@ class GlobalRestricton
     public function __construct(
         \Espo\Core\Utils\Metadata $metadata,
         \Espo\Core\Utils\File\Manager $fileManager,
-        \Espo\Core\Utils\FieldManagerUtil $fieldManagerUtil
+        \Espo\Core\Utils\FieldManagerUtil $fieldManagerUtil,
+        bool $useCache = true
     )
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->fieldManagerUtil = $fieldManagerUtil;
 
-        if (!file_exists($this->cacheFilePath)) {
-            $this->buildCacheFile();
+        $isFromCache = false;
+
+        if ($useCache) {
+            if (file_exists($this->cacheFilePath)) {
+                $this->data = include($this->cacheFilePath);
+                $isFromCache = true;
+
+                if (!($this->data instanceof \StdClass)) {
+                    $GLOBALS['log']->error("ACL GlobalRestricton: Bad data fetched from cache.");
+                    $this->data = null;
+                }
+            }
         }
 
-        $this->data = include($this->cacheFilePath);
+        if (!$this->data) {
+            $this->buildData();
+        }
+
+        if ($useCache) {
+            if (!$isFromCache) {
+                $this->storeCacheFile();
+            }
+        }
     }
 
-    protected function buildCacheFile()
+    protected function storeCacheFile()
+    {
+        $this->getFileManager()->putPhpContents($this->cacheFilePath, $this->data, true);
+    }
+
+    protected function buildData()
     {
         $scopeList = array_keys($this->getMetadata()->get(['entityDefs'], []));
 
@@ -127,8 +151,6 @@ class GlobalRestricton
         }
 
         $this->data = $data;
-
-        $this->getFileManager()->putPhpContents($this->cacheFilePath, $data, true);
     }
 
     protected function getMetadata()

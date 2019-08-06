@@ -24,6 +24,11 @@
             "type": "enum",
             "options": ["Low", "Normal", "High", "Urgent"],
             "default": "Normal",
+            "displayAsLabel": true,
+            "style": {
+                "High": "warning",
+                "Urgent": "danger"
+            },
             "audited": true
         },
         "type": {

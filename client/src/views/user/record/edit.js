@@ -198,7 +198,10 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
             if (this.getConfig().get('smtpServer') && this.getConfig().get('smtpServer') !== '') {
                 return '';
             }
-            return this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/outboundEmails');
+            var msg = this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/outboundEmails');
+
+            msg = this.getHelper().transfromMarkdownInlineText(msg);
+            return msg;
         },
 
         fetch: function () {

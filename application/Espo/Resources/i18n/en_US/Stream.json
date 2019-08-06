@@ -1,0 +1,15 @@
+{
+    "messages": {
+        "infoMention": "Type **@username** to mention user in the post.",
+        "infoSyntax": "Available markdown syntax"
+    },
+    "syntaxItems": {
+        "code": "code",
+        "multilineCode": "multiline code",
+        "strongText": "strong text",
+        "emphasizedText": "emphasized text",
+        "deletedText": "deleted text",
+        "blockquote": "blockquote",
+        "link": "link"
+    }
+}

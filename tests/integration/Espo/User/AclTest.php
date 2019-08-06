@@ -511,4 +511,25 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service->updateEntity('testMeetingId', (object) []);
     }
+
+    public function testUserAccessSearchByInternalField()
+    {
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $app = $this->createApplication();
+
+        $service = $app->getContainer()->get('serviceFactory')->create('User');
+
+        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+
+        $e = $service->find([
+            'where' => [
+                [
+                    'type' => 'isNull',
+                    'attribute' => 'password',
+                ]
+            ]
+        ]);
+    }
 }

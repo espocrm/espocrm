@@ -59,7 +59,8 @@ class AclManager
         $this->globalRestricton = new \Espo\Core\Acl\GlobalRestricton(
             $container->get('metadata'),
             $container->get('fileManager'),
-            $container->get('fieldManagerUtil')
+            $container->get('fieldManagerUtil'),
+            $container->get('config')->get('useCache')
         );
     }
 

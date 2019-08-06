@@ -78,8 +78,8 @@
     "forbidden": "Verboten, bitte später nochmals versuchen",
     "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
     "passwordChangedByRequest": "Das Passwort wurde geändert",
-    "setupSmtpBefore": "Sie müssen die <a href=\"{url}\">SMTP Einstellungen</a> setzen damit das System Passwörter in E-Mails senden kann.",
-    "userNameExists": "Benutzername existiert bereits"
+    "userNameExists": "Benutzername existiert bereits",
+    "setupSmtpBefore": "Sie müssen die [SMTP Einstellungen]({url}) setzen damit das System Passwörter in E-Mails senden kann."
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team"

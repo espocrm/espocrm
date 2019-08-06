@@ -63,6 +63,9 @@
         "createLeadBeforeOptInConfirmation": {
             "type": "bool"
         },
+        "skipOptInConfirmationIfSubscribed": {
+            "type": "bool"
+        },
         "leadSource": {
             "type": "enum",
             "view": "crm:views/opportunity/fields/lead-source",
@@ -93,6 +96,14 @@
             "notStorable": true,
             "readOnly": true,
             "seeMoreDisabled": true
+        },
+        "inboundEmail": {
+            "type": "link"
+        },
+        "smtpAccount": {
+            "type": "base",
+            "notStorable": true,
+            "view": "views/lead-capture/fields/smtp-account"
         },
         "createdAt": {
             "type": "datetime",
@@ -131,6 +142,10 @@
         "targetTeam": {
             "type": "belongsTo",
             "entity": "Team"
+        },
+        "inboundEmail": {
+            "type": "belongsTo",
+            "entity": "InboundEmail"
         },
         "optInConfirmationEmailTemplate": {
             "type": "belongsTo",

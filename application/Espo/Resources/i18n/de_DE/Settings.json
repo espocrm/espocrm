@@ -133,7 +133,6 @@
     "ldapAuth": "Kontoinformationen für den LDAP Zugriff.",
     "ldapUserNameAttribute": "Das Attribut, das den Nutzer identifiziert.\nZum Beispiel \"userPrincipalName\" oder \"sAMAccountName\" für Active Directory, \"uid\" für OpenLDAP.",
     "ldapUserObjectClass": "Objektklassenattribut für die Benutzersuche (z.B. \"person\" für AD, \"inetOrgPerson\" für OpenLDAP).",
-    "ldapAccountCanonicalForm": "Format der Accountinformationen. Es gibt vier Optionen:<br>- 'Dn' - LDAP DN im Format 'CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - im Format 'tester'.<br>- 'Backslash' - im Format 'COMPANY\\tester'.<br>- 'Principal' - im Format 'tester@company.com'.",
     "ldapBindRequiresDn": "Formatierung des Nutzernamens in DN Form",
     "ldapBaseDn": "Der Basis-DN, der für die Suche im LDAP Verzeichnis verwendet wird (z.B. \"OU=users,OU=espocrm,DC=test, DC=lan\").",
     "ldapTryUsernameSplit": "Option um Benutzername und Domäne voneinander zu trennen.",
@@ -169,7 +168,8 @@
     "daemonMaxProcessNumber": "Die maximale Anzahl von Cron-Prozessen, die gleichzeitig ausgeführt werden.",
     "daemonProcessTimeout": "Maximale Ausführungszeit (in Sekunden) für einen einzelnen Cron-Prozess.",
     "cronDisabled": "Cron läuft nicht.",
-    "maintenanceMode": "Nur Administratoren haben Zugriff auf das System."
+    "maintenanceMode": "Nur Administratoren haben Zugriff auf das System.",
+    "ldapAccountCanonicalForm": "Format der Accountinformationen. Es gibt vier Optionen:\n\n- 'Dn' - LDAP DN im Format 'CN=tester,OU=espocrm,DC=test, DC=lan'.\n\n- 'Username' - im Format 'tester'.\n\n- 'Backslash' - im Format 'COMPANY\\tester'.\n\n- 'Principal' - im Format 'tester@company.com'."
   },
   "labels": {
     "Locale": "Lokale Einstellungen",

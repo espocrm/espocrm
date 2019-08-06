@@ -8,7 +8,7 @@
         <p class="notify-text">
             {{versionMsg}}
             <br><br>
-            {{{infoMsg}}}
+            {{complexText infoMsg inline=true}}
             <br><br>
             {{backupsMsg}}
         </p>
@@ -22,7 +22,7 @@
     <div class="panel-body">
         <p class="text-danger">{{{upgradeRecommendation}}}</p>
         <p class="">
-            {{{downloadMsg}}}
+            {{complexText downloadMsg inline=true}}
         </p>
         <div>
             <input type="file" name="package" accept="application/zip">

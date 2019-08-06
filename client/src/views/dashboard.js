@@ -200,15 +200,43 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                         gridStack.destroy();
                     }
                 }
+
+                if (this.fallbackModeTimeout) {
+                    clearTimeout(this.fallbackModeTimeout);
+                }
+
+                $(window).off('resize.dashboard');
+
             }, this);
         },
 
         afterRender: function () {
-            this.initGridstack();
+            this.$dashboard = this.$el.find('> .dashlets');
+
+            if (window.innerWidth >= this.getThemeManager().getParam('screenWidthXs')) {
+                this.initGridstack();
+            } else {
+                this.initFallbackMode();
+            }
+
+            $(window).off('resize.dashboard');
+            $(window).on('resize.dashboard', this.onResize.bind(this));
+        },
+
+        onResize: function () {
+            if (this.isFallbackMode() && window.innerWidth >= this.getThemeManager().getParam('screenWidthXs')) {
+                this.initGridstack();
+            }
+        },
+
+        isFallbackMode: function () {
+            return this.$dashboard.hasClass('fallback');
         },
 
         initFallbackMode: function () {
-            var $dashboard =  this.$dashboard = this.$el.find('> .dashlets');
+            this.$dashboard.empty();
+
+            var $dashboard = this.$dashboard;
             $dashboard.addClass('fallback');
 
             this.currentTabLayout.forEach(function (o) {
@@ -220,11 +248,47 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 if (!o.id || !o.name) return;
                 this.createDashletView(o.id, o.name);
             }, this);
+
+            if (this.fallbackModeTimeout) {
+                clearTimeout(this.fallbackModeTimeout);
+            }
+
+            this.$dashboard.css('height', '');
+
+            this.fallbackControlHeights();
+        },
+
+        fallbackControlHeights: function () {
+            this.currentTabLayout.forEach(function (o) {
+                var $container = this.$dashboard.find('.dashlet-container[data-id="'+o.id+'"]');
+                var headerHeight = $container.find('.panel-heading').outerHeight();
+                var $body = $container.find('.dashlet-body');
+
+                var bodyEl = $body.get(0);
+                if (!bodyEl) return;
+
+                if (bodyEl.scrollHeight > bodyEl.offsetHeight) {
+                    var height = bodyEl.scrollHeight + headerHeight;
+                    $container.css('height', height + 'px');
+                }
+
+            }, this);
+
+            this.fallbackModeTimeout = setTimeout(function () {
+                this.fallbackControlHeights();
+            }.bind(this), 300);
         },
 
         initGridstack: function () {
-            var $gridstack = this.$gridstack = this.$el.find('> .dashlets');
+            this.$dashboard.empty();
+
+            var $gridstack = this.$gridstack = this.$dashboard;
+
             $gridstack.removeClass('fallback');
+
+            if (this.fallbackModeTimeout) {
+                clearTimeout(this.fallbackModeTimeout);
+            }
 
             var draggable = false;
             var resizable = false;
@@ -321,7 +385,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             $container.attr('data-y', o.y);
             $container.attr('data-height', o.height);
             $container.attr('data-width', o.width);
-            $container.css('min-height', (o.height * this.getThemeManager().getParam('dashboardCellHeight')) + 'px');
+            $container.css('height', (o.height * this.getThemeManager().getParam('dashboardCellHeight')) + 'px');
 
             $item.attr('data-id', o.id);
             $item.attr('data-name', o.name);
@@ -341,6 +405,13 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         removeDashlet: function (id) {
+            var revertToFallback = false;
+            if (this.isFallbackMode()) {
+                this.initGridstack();
+                revertToFallback = true;
+            }
+
+
             var grid = this.$gridstack.data('gridstack');
             var $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
             grid.removeWidget($item, true);
@@ -369,13 +440,24 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             }
 
             this.clearView('dashlet-' + id);
+
+            this.setupCurrentTabLayout();
+
+            if (revertToFallback) {
+                this.initFallbackMode();
+            }
         },
 
         addDashlet: function (name) {
+            var revertToFallback = false;
+            if (this.isFallbackMode()) {
+                this.initGridstack();
+                revertToFallback = true;
+            }
+
             var id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
 
             var $item = this.prepareGridstackItem(id, name);
-
             var grid = this.$gridstack.data('gridstack');
             grid.addWidget($item, 0, 0, 2, 2);
 
@@ -383,8 +465,14 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 this.fetchLayout();
                 this.saveLayout();
 
+                this.setupCurrentTabLayout();
+
                 if (view.getView('body') && view.getView('body').afterAdding) {
                     view.getView('body').afterAdding.call(view.getView('body'));
+                }
+
+                if (revertToFallback) {
+                    this.initFallbackMode();
                 }
             }, this);
         },
@@ -399,7 +487,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             if (label) {
                 o.label = label;
             }
-            this.createView('dashlet-' + id, 'views/dashlet', {
+
+            return this.createView('dashlet-' + id, 'views/dashlet', {
                 label: name,
                 name: name,
                 id: id,
@@ -424,6 +513,6 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                     callback.call(this, view);
                 }
             }, this);
-        }
+        },
     });
 });

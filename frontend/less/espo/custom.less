@@ -1260,14 +1260,37 @@ section {
 #main > .list-container > .list {
     margin-left: -@container-padding;
     margin-right: -@container-padding;
+}
 
-    > table td:first-child,
-    > table th:first-child {
-        padding-left: @container-padding;
+@media screen and (min-width: @screen-sm-min) {
+
+    #main > .list-container > .list {
+
+        > table td:first-child,
+        > table th:first-child {
+            padding-left: @container-padding;
+        }
+        > table td:last-child,
+        > table th:last-child {
+            padding-right: @container-padding;
+        }
     }
-    > table td:last-child,
-    > table th:last-child {
-        padding-right: @container-padding;
+
+    .list-categories-column + .list-main-column .list-container,
+    .folders-container + .list-container {
+        .list {
+            margin-right: -@container-padding;
+
+            > table {
+                td:last-child, th:last-child {
+                    padding-right: @container-padding;
+                }
+
+                td.cell[data-name="buttons"] > .btn-group {
+                    margin-right: -11px;
+                }
+            }
+        }
     }
 }
 
@@ -1716,6 +1739,17 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -8px;
 }
 
+.dashlets.fallback {
+    > div {
+        margin-bottom: 20px;
+
+        > .dashlet-container > .panel {
+            > .panel-body {
+                height: ~"calc(100% - 29px)";
+            }
+        }
+    }
+}
 
 .panel.dashlet > .panel-body {
     overflow-y: auto;
@@ -2200,7 +2234,14 @@ h4.panel-title span.fas.color-icon {
 .expanded-row {
     span.label {
         position: relative;
-        top: -2px;
+        top: -1px;
+
+        &.label-md {
+            padding: .09em 6px .2em;
+            font-size: 75%;
+            font-weight: 600;
+            top: -1px;
+        }
     }
 }
 

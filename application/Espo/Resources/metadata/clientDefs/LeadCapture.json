@@ -72,6 +72,38 @@
                     ]
                 }
             },
+            "smtpAccount": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "optInConfirmation"
+                        }
+                    ]
+                }
+            },
+            "skipOptInConfirmationIfSubscribed": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "and",
+                            "value": [
+                                {
+                                    "type": "isTrue",
+                                    "attribute": "optInConfirmation"
+                                },
+                                {
+                                    "type": "isNotEmpty",
+                                    "attribute": "targetListId",
+                                    "data": {
+                                        "field": "targetList"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
             "optInConfirmationEmailTemplate": {
                 "visible": {
                     "conditionGroup": [

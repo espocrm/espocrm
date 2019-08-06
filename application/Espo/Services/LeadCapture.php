@@ -164,12 +164,20 @@ class LeadCapture extends Record
             if ($hasDuplicate) {
                 $this->logLeadCapture($leadCapture, $target, $data, false);
                 $isLogged = true;
+
+                if ($leadCapture->get('skipOptInConfirmationIfSubscribed') && $leadCapture->get('targetListId')) {
+                    $isAlreadyOptedIn = $this->isTargetOptedIn($target, $leadCapture->get('targetListId'));
+                    if ($isAlreadyOptedIn) {
+                        return true;
+                    }
+                }
             }
 
             if ($leadCapture->get('createLeadBeforeOptInConfirmation')) {
                 if (!$hasDuplicate) {
                     $this->getEntityManager()->saveEntity($lead);
                     $this->logLeadCapture($leadCapture, $target, $data, true);
+                    $isLogged = true;
                 }
             }
 
@@ -551,7 +559,38 @@ class LeadCapture extends Record
             'isHtml' => $isHtml,
         ]);
 
-        $this->getMailSender()->send($email);
+        $smtpParams = null;
+
+        $inboundEmailId = $leadCapture->get('inboundEmailId');
+
+        if ($inboundEmailId) {
+            $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $inboundEmailId);
+            if (!$inboundEmail) {
+                throw new Error("Lead Capture: Group Email Account {$inboundEmailId} is not available.");
+            }
+
+            if (
+                $inboundEmail->get('status') !== 'Active'
+                ||
+                !$inboundEmail->get('useSmtp')
+            ) {
+                throw new Error("Lead Capture:  Group Email Account {$inboundEmailId} can't be used for Lead Capture.");
+            }
+
+            $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
+            $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
+            if (!$smtpParams) {
+                throw new Error("Lead Capture: Group Email Account {$inboundEmailId} has no SMTP params.");
+            }
+        }
+
+        $sender = $this->getMailSender();
+
+        if ($smtpParams) {
+            $sender->useSmtp($smtpParams);
+        }
+
+        $sender->send($email);
 
         return true;
     }
@@ -596,5 +635,32 @@ class LeadCapture extends Record
             'leadCaptureName' => $leadCapture->get('name'),
             'leadCaptureId' => $leadCapture->id,
         ];
+    }
+
+    public function getSmtpAccountDataList()
+    {
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+
+        $dataList = [];
+
+        $inboundEmailList = $this->getEntityManager()->getRepository('InboundEmail')->where([
+            'useSmtp' => true,
+            'status' => 'Active',
+
+            ['emailAddress!=' => ''],
+            ['emailAddress!=' => null],
+        ])->find();
+
+        foreach ($inboundEmailList as $inboundEmail) {
+            $item = (object) [];
+            $key = 'inboundEmail:' . $inboundEmail->id;
+            $item->key = $key;
+            $item->emailAddress = $inboundEmail->get('emailAddress');
+            $item->fromName = $inboundEmail->get('fromName');
+
+            $dataList[] = $item;
+        }
+
+        return $dataList;
     }
 }

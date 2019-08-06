@@ -1,7 +1,8 @@
 {
-  "options": { 
+  "options": {
     "language": {
       "en_US": "English (United States)"
     }
-  }
+  },
+  "testHtml": "<a href=\"javascript: alert(1)\">test</a>"
 }

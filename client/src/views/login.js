@@ -110,6 +110,7 @@ define('views/login', 'view', function (Dep) {
                     'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
                     'Espo-Authorization': Base64.encode(userName + ':' + password),
                     'Espo-Authorization-By-Token': false,
+                    'Espo-Authorization-Create-Token-Secret': true,
                 },
             }).then(
                 function (data) {

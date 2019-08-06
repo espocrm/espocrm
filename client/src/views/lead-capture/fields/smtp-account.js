@@ -26,27 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/fields/post', 'views/fields/text', function (Dep) {
+define('views/lead-capture/fields/smtp-account', 'crm:views/mass-email/fields/smtp-account', function (Dep) {
 
     return Dep.extend({
 
-        getValueForDisplay: function () {
-            var text = Dep.prototype.getValueForDisplay.call(this);
-
-            if (this.mode == 'detail' || this.mode == 'list') {
-                var mentionData = (this.model.get('data') || {}).mentions || {};
-
-                Object.keys(mentionData).sort(function (a, b) {
-                    return a.length < b.length
-                }).forEach(function (item) {
-                    var part = '[' + this.getHelper().escapeString(mentionData[item].name) + '](#User/view/'+mentionData[item].id + ')';
-                    text = text.replace(new RegExp(item, 'g'), part);
-                }.bind(this));
-            }
-
-            return text;
-        },
+        dataUrl: 'LeadCapture/action/smtpAccountDataList',
 
     });
-
 });

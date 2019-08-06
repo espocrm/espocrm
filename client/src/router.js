@@ -174,6 +174,7 @@ define('router', [], function () {
                 Espo.Ui.confirm(this.confirmLeaveOutMessage, {
                     confirmText: this.confirmLeaveOutConfirmText,
                     cancelText: this.confirmLeaveOutCancelText,
+                    backdrop: true,
                     cancelCallback: function () {
                         if (navigateBack) {
                             this.navigateBack({trigger: false});

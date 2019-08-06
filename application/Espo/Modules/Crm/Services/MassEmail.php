@@ -590,8 +590,8 @@ class MassEmail extends \Espo\Services\Record
             'useSmtp' => true,
             'status' => 'Active',
             'smtpIsForMassEmail' => true,
-            'emailAddress!=' => '',
-            'emailAddress!=' => null
+            ['emailAddress!=' => ''],
+            ['emailAddress!=' => null],
         ])->find();
 
         foreach ($inboundEmailList as $inboundEmail) {

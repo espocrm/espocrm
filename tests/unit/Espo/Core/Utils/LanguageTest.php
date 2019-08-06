@@ -39,13 +39,13 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected $cacheFile = 'tests/unit/testData/cache/application/languages/{*}.php';
+    protected $cacheFile = 'tests/unit/testData/cache/application/languages/{language}.php';
 
-    protected $paths = array(
-        'corePath' => 'tests/unit/testData/Utils/I18n/Espo/Resources/i18n',
-        'modulePath' => 'tests/unit/testData/Utils/I18n/Espo/Modules/{*}/Resources/i18n',
-        'customPath' => 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/i18n',
-    );
+    protected $paths = [
+        'corePath' => 'tests/unit/testData/Utils/I18n/Espo/Resources/i18n/{language}',
+        'modulePath' => 'tests/unit/testData/Utils/I18n/Espo/Modules/{*}/Resources/i18n/{language}',
+        'customPath' => 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/i18n/{language}',
+    ];
 
     protected function setUp()
     {
@@ -56,9 +56,9 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->objects['metadata']->expects($this->any())
              ->method('getModuleList')
              ->will($this->returnValue(
-                array (
+                [
                   'Crm',
-                )
+                ]
              ));
 
         $this->object = new \Espo\Core\Utils\Language(null, $this->objects['fileManager'], $this->objects['metadata'], false);
@@ -90,60 +90,52 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     {
         $cacheFile = $this->cacheFile;
 
-        $result = str_replace('{*}', 'en_US', $cacheFile);
-        $this->assertEquals($result, $this->reflection->invokeMethod('getLangCacheFile'));
+        $result = str_replace('{language}', 'en_US', $cacheFile);
+        $this->assertEquals($result, $this->reflection->invokeMethod('getCacheFile'));
 
         $originalLang = $this->object->getLanguage();
         $this->object->setLanguage('lang_TEST');
-        $result = str_replace('{*}', 'lang_TEST', $cacheFile);
-        $this->assertEquals($result, $this->reflection->invokeMethod('getLangCacheFile'));
+        $result = str_replace('{language}', 'lang_TEST', $cacheFile);
+        $this->assertEquals($result, $this->reflection->invokeMethod('getCacheFile'));
 
         $this->object->setLanguage($originalLang);
     }
 
     public function testGetData()
     {
-        $result = array (
-            'User' =>
-            array(
-              'fields' =>
-              array (
+        $result = [
+            'User' => [
+              'fields' => [
                 'name' => 'User',
                 'label' => 'Core',
                 'source' => 'Core',
-              ),
-            ),
-            'Account' =>
-            array (
-                'fields' =>
-                  array (
+              ],
+            ],
+            'Account' => [
+                'fields' => [
                     'name' => 'Account',
                     'label' => 'Custom',
                     'source' => 'Crm Module',
-                ),
-            ),
-            'Contact' =>
-            array (
-                'fields' =>
-                  array (
+                ],
+            ],
+            'Contact' => [
+                'fields' => [
                     'name' => 'Contact',
                     'label' => 'Custom',
                     'source' => 'Crm Module',
-                ),
-            ),
-            'Global' =>
-            array (
-                'options' =>
-                  array (
-                    'language' =>
-                    array (
+                ],
+            ],
+            'Global' => [
+                'options' => [
+                    'language' => [
                       'en_US' => 'English (United States)',
-                    )
-                ),
-            ),
-        );
+                    ]
+                ],
+                'testHtml' => '&lt;a href=&quot;javascript: alert(1)&quot;&gt;test&lt;/a&gt;',
+            ],
+        ];
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getData', array()));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getData', []));
     }
 
     public function testGet()
