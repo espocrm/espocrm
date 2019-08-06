@@ -1739,6 +1739,17 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -8px;
 }
 
+.dashlets.fallback {
+    > div {
+        margin-bottom: 20px;
+
+        > .dashlet-container > .panel {
+            > .panel-body {
+                height: ~"calc(100% - 29px)";
+            }
+        }
+    }
+}
 
 .panel.dashlet > .panel-body {
     overflow-y: auto;
