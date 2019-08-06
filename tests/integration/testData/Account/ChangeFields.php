@@ -32,7 +32,7 @@ return array(
         'User' => [
             array(
                 'id' => '1',
-                'isAdmin' => true,
+                'type' => 'admin',
                 'userName' => 'admin',
                 'password' => '1',
                 'salutationName' => '',
