@@ -170,7 +170,12 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         getValueForEdit: function () {
             var value = this.model.get(this.name) || '';
-            return this.sanitizeHtmlLight(value);
+
+            if (this.htmlPurificationForEditDisabled) {
+                return this.sanitizeHtmlLight(value);
+            }
+
+            return this.sanitizeHtml(value);
         },
 
         afterRender: function () {
