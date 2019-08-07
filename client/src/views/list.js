@@ -98,6 +98,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             this.setupHeader();
 
+            this.collection.orderBy = this.defaultOrderBy || this.collection.orderBy;
+            this.collection.order = this.defaultOrder || this.collection.order;
+
             if (this.searchPanel) {
                 this.setupSearchManager();
             }

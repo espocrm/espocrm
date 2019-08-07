@@ -37,6 +37,13 @@ class Attachment extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = true;
 
+    protected $allowedFileTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+    ];
+
     public function run()
     {
         $id = $_GET['id'];
@@ -60,8 +67,14 @@ class Attachment extends \Espo\Core\EntryPoints\Base
             throw new NotFound();
         }
 
+        $fileType = $attachment->get('type');
+
+        if (!in_array($fileType, $this->allowedFileTypes)) {
+            throw new Forbidden("EntryPoint Attachment: Not allowed type {$fileType}.");
+        }
+
         if ($attachment->get('type')) {
-            header('Content-Type: ' . $attachment->get('type'));
+            header('Content-Type: ' . $fileType);
         }
 
         header('Pragma: public');
@@ -70,4 +83,3 @@ class Attachment extends \Espo\Core\EntryPoints\Base
         exit;
     }
 }
-

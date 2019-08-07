@@ -166,7 +166,7 @@ return [
     'cleanupAuthTokenPeriod' => '1 month',
     'currencyFormat' => 2,
     'currencyDecimalPlaces' => 2,
-    'aclStrictMode' => false,
+    'aclStrictMode' => true,
     'aclAllowDeleteCreated' => false,
     'aclAllowDeleteCreatedThresholdPeriod' => '24 hours',
     'inlineAttachmentUploadMaxSize' => 20,

@@ -11,7 +11,12 @@
 					    {{#each itemList}}
 					    <tr>
 					        <td>
+					        	<div>
+					        	{{#if iconClass}}
+					        	<span class="icon {{iconClass}}"></span>
+					        	{{/if}}
 					            <a href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{translate label scope='Admin' category='labels'}}</a>
+					        	</div>
 					        </td>
 					        <td>{{translate description scope='Admin' category='descriptions'}}</td>
 					    </tr>
