@@ -59,16 +59,19 @@
             {
                 "url": "#Admin/upgrade",
                 "label": "Upgrade",
+                "iconClass": "fas fa-arrow-alt-circle-up",
                 "description": "upgrade"
             },
             {
                 "action": "clearCache",
                 "label": "Clear Cache",
+                "iconClass": "fas fa-broom",
                 "description": "clearCache"
             },
             {
                 "action": "rebuild",
                 "label": "Rebuild",
+                "iconClass": "fas fa-database",
                 "description": "rebuild"
             }
         ],
@@ -98,11 +101,13 @@
             {
                 "url": "#Admin/authLog",
                 "label": "Auth Log",
+                "iconClass": "fas fa-sign-in-alt",
                 "description": "authLog"
             },
             {
                 "url": "#Admin/authTokens",
                 "label": "Auth Tokens",
+                "iconClass": "fas fa-shield-alt",
                 "description": "authTokens"
             },
             {
@@ -246,6 +251,7 @@
             {
                 "url": "#Admin/jobs",
                 "label": "Jobs",
+                "iconClass": "fas fa-clock",
                 "description": "jobs"
             }
         ],
