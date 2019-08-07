@@ -247,12 +247,14 @@
 
                 "url": "#Webhook",
                 "label": "Webhooks",
+                "iconClass": "fas fa-share-alt icon-rotate-90",
                 "description": "webhooks"
             },
             {
 
                 "url": "#DashboardTemplate",
                 "label": "Dashboard Templates",
+                "iconClass": "fas fa-th-large",
                 "description": "dashboardTemplates"
             },
             {
