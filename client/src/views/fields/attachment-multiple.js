@@ -300,6 +300,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             var preview = name;
             if (this.showPreviews && id) {
                 preview = this.getEditPreview(name, type, id);
+            } else {
+                preview = Handlebars.Utils.escapeExpression(preview);
             }
 
             if (link && preview === name) {

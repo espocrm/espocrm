@@ -400,8 +400,6 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         addAttachmentBox: function (name, type, id) {
             this.$attachment.empty();
 
-            name = Handlebars.Utils.escapeExpression(name);
-
             var self = this;
 
             var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="fas fa-times"></span></a>';
@@ -409,6 +407,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             var preview = name;
             if (this.showPreview && id) {
                 preview = this.getEditPreview(name, type, id);
+            } else {
+                preview = Handlebars.Utils.escapeExpression(preview);
             }
 
             var $att = $('<div>').append(removeLink)
