@@ -47,6 +47,10 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            if ($.summernote.options && !('espoImage' in $.summernote.options)) {
+                this.initEspoPlugin();
+            }
+
             this.hasBodyPlainField = !!~this.getFieldManager().getEntityTypeFieldList(this.model.entityType).indexOf(this.name + 'Plain');
 
             if ('height' in this.params) {
@@ -66,7 +70,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
-                ['table', ['table', 'link', 'picture', 'hr']],
+                ['table', ['table', 'espoLink', 'espoImage', 'hr']],
                 ['misc',['codeview', 'fullscreen']]
             ];
 
@@ -147,7 +151,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             return data;
         },
 
-        getValueForDisplay: function () {
+         getValueForDisplay: function () {
             var value = Dep.prototype.getValueForDisplay.call(this);
             return this.sanitizeHtml(value);
         },
@@ -349,8 +353,14 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$summernote.find('style').remove();
             this.$summernote.find('link[ref="stylesheet"]').remove();
 
+            var keyMap = Espo.Utils.cloneDeep($.summernote.options.keyMap);
+            keyMap.pc['CTRL+K'] = 'espoLink.show';
+            keyMap.mac['CMD+K'] = 'espoLink.show';
+
             var options = {
+                espoView: this,
                 lang: this.getConfig().get('language'),
+                keyMap: keyMap,
                 callbacks: {
                     onImageUpload: function (files) {
                         var file = files[0];
@@ -389,7 +399,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 },
                 toolbar: this.toolbar,
                 buttons: this.buttons,
-                dialogsInBody: $('body'),
+                dialogsInBody: this.$el,
                 codeviewFilter: true,
             };
 
@@ -526,6 +536,122 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         attachFile: function () {
             var $form = this.$el.closest('.record');
             $form.find('.field[data-name="'+this.params.attachmentField+'"] input.file').click();
-        }
+        },
+
+       initEspoPlugin: function () {
+            var langSets = this.getLanguage().get('Global', 'sets', 'summernote') || {
+                image: {},
+                link: {},
+                video: {},
+            };
+            $.extend($.summernote.options, {
+                espoImage: {
+                    icon: '<i class="note-icon-picture"/>',
+                    tooltip: langSets.image.image,
+                },
+                espoLink: {
+                    icon: '<i class="note-icon-link"/>',
+                    tooltip: langSets.link.link,
+                },
+            });
+
+            $.extend($.summernote.plugins, {
+                'espoImage': function (context) {
+                    var ui = $.summernote.ui;
+                    var options = context.options;
+
+                    var self = options.espoView;
+
+                    this.lang = options.langInfo;
+
+                    context.memo('button.espoImage', function () {
+                        var button = ui.button({
+                            contents: options.espoImage.icon,
+                            tooltip: options.espoImage.tooltip,
+                            click: function (e) {
+                                context.invoke('espoImage.show');
+                            },
+                        });
+                        return button.render();
+                    });
+
+                    this.initialize = function () {
+                    };
+
+                    this.destroy = function () {
+                        self.clearView('insertImageDialog');
+                    }
+
+                    this.show = function () {
+                        self.createView('insertImageDialog', 'views/wysiwyg/modals/insert-image', {
+                            labels: {
+                                insert: this.lang.image.insert,
+                                url: this.lang.image.url,
+                                selectFromFiles: this.lang.image.selectFromFiles,
+                            },
+                        }, function (view) {
+                            view.render();
+
+                            self.listenToOnce(view, 'upload', function (target) {
+                                self.$summernote.summernote('insertImagesOrCallback', target);
+                            });
+                            self.listenToOnce(view, 'insert', function (target) {
+                                self.$summernote.summernote('insertImage', target);
+                            });
+                        });
+                    }
+                },
+
+                'espoLink': function (context) {
+                    var ui = $.summernote.ui;
+                    var options = context.options;
+
+                    var self = options.espoView;
+
+                    this.lang = options.langInfo;
+
+                    var isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+
+                    context.memo('button.espoLink', function () {
+                        var button = ui.button({
+                            contents: options.espoLink.icon,
+                            tooltip: options.espoLink.tooltip + ' (' + (isMacLike ? 'CMD+K': 'CTRL+K') +')',
+                            click: function (e) {
+                                context.invoke('espoLink.show');
+                            },
+                        });
+                        return button.render();
+                    });
+
+                    this.initialize = function () {
+                    };
+
+                    this.destroy = function () {
+                        self.clearView('dialogInsertLink');
+                    }
+
+                    this.show = function () {
+                        var linkInfo = context.invoke('editor.getLinkInfo');
+
+                        self.createView('dialogInsertLink', 'views/wysiwyg/modals/insert-link', {
+                            labels: {
+                                insert: this.lang.link.insert,
+                                openInNewWindow: this.lang.link.openInNewWindow,
+                                url: this.lang.link.url,
+                                textToDisplay: this.lang.link.textToDisplay,
+                            },
+                            linkInfo: linkInfo,
+                        }, function (view) {
+                            view.render();
+
+                            self.listenToOnce(view, 'insert', function (data) {
+                                self.$summernote.summernote('createLink', data);
+                            });
+                        });
+                    }
+                },
+
+            });
+        },
     });
 });
