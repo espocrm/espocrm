@@ -1824,9 +1824,23 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     padding: 0px 5px 2px 5px;
 }
 
-.note-editor .panel-heading > .btn-group {
-    right: 0;
-    top: 0;
+
+body  .note-editor .panel-heading {
+    > .btn-group {
+        right: 0;
+        top: 0;
+
+        > .btn {
+            padding-bottom: 4px;
+        }
+
+        > .btn-group {
+            > .btn {
+                padding-bottom: 4px;
+            }
+        }
+
+    }
 }
 
 

@@ -153,8 +153,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         events: {
             'click .note-editable': function () {
-                $('body > .note-popover').removeClass('hidden');
+                this.fixPopovers();
             },
+        },
+
+        fixPopovers: function () {
+            $('body > .note-popover').removeClass('hidden');
         },
 
          getValueForDisplay: function () {
@@ -604,6 +608,11 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             self.listenToOnce(view, 'insert', function (target) {
                                 self.$summernote.summernote('insertImage', target);
                             });
+
+                            self.listenToOnce(view, 'close', function () {
+                                self.clearView('insertImageDialog');
+                                self.fixPopovers();
+                            }, self);
                         });
                     }
                 },
@@ -656,6 +665,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
                             self.listenToOnce(view, 'close', function () {
                                 self.clearView('dialogInsertLink');
+                                self.fixPopovers();
                             }, self);
                         });
                     }
