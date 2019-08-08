@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function (Dep, Summernote) {
+define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function (Dep, Summernote) {
 
     return Dep.extend({
 
@@ -149,6 +149,12 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             data.isPlain = this.model.has('isHtml') && !this.model.get('isHtml');
 
             return data;
+        },
+
+        events: {
+            'click .note-editable': function () {
+                $('body > .note-popover').removeClass('hidden');
+            },
         },
 
          getValueForDisplay: function () {
@@ -647,6 +653,10 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                             self.listenToOnce(view, 'insert', function (data) {
                                 self.$summernote.summernote('createLink', data);
                             });
+
+                            self.listenToOnce(view, 'close', function () {
+                                self.clearView('dialogInsertLink');
+                            }, self);
                         });
                     }
                 },
