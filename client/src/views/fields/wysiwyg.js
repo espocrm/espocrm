@@ -388,7 +388,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     return link;
                 },
                 toolbar: this.toolbar,
-                buttons: this.buttons
+                buttons: this.buttons,
+                dialogsInBody: $('body'),
             };
 
             if (this.height) {
