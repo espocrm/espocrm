@@ -390,6 +390,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 toolbar: this.toolbar,
                 buttons: this.buttons,
                 dialogsInBody: $('body'),
+                codeviewFilter: true,
             };
 
             if (this.height) {
