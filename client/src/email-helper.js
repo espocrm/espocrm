@@ -98,7 +98,7 @@ define('email-helper', [], function () {
 
             if (!to || !~to.indexOf('@')) {
                 if (model.get('from')) {
-                    if (model.get('from') != this.getUser().get('emailAddress')) {
+                    if (!~(this.getUser().get('emailAddressList') || []).indexOf(model.get('from'))) {
                         to = model.get('from');
                         if (!nameHash[to]) {
                             var fromString = model.get('fromString') || model.get('fromName');
