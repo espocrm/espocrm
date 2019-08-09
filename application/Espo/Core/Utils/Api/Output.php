@@ -148,6 +148,8 @@ class Output
             if ($toPrint) {
                 $status = $this->getCodeDescription($statusCode);
                 $status = isset($status) ? $statusCode.' '.$status : 'HTTP '.$statusCode;
+                if ($text)
+                    $text = htmlspecialchars($text);
                 $this->getSlim()->printError($text, $status);
             }
 

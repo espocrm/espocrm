@@ -1824,9 +1824,31 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     padding: 0px 5px 2px 5px;
 }
 
-.note-editor .panel-heading > .btn-group {
-    right: 0;
-    top: 0;
+
+body .note-editor .panel-heading {
+    > .btn-group {
+        right: 0;
+        top: 0;
+
+        > .btn {
+            > i,
+            > span {
+                position: relative;
+                top: 1px;
+            }
+        }
+
+        > .btn-group {
+            > .btn {
+                > i,
+                > span {
+                    position: relative;
+                    top: 1px;
+                }
+            }
+        }
+
+    }
 }
 
 
@@ -2712,10 +2734,34 @@ table.table td.cell .complex-text {
     left: auto;
 }
 
+h1 {
+    font-size: 32px;
+}
+
+h2 {
+    font-size: 26px;
+}
+
+h3 {
+    font-size: 22px;
+}
+
+h4 {
+    font-size: 18px;
+}
+
 h5 {
     font-weight: 600;
     margin-top: 9px;
     margin-bottom: 9px;
+    font-size: 15px;
+    color: @gray-soft;
+}
+
+h6 {
+    font-weight: 600;
+    color: @gray-soft;
+    font-size: 14px;
 }
 
 .post-container .internal-mode-switcher {

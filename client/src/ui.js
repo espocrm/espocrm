@@ -145,10 +145,10 @@ define('ui', [], function () {
 
         $window = $(window);
 
-        this.$el.on('shown.bs.modal', function (e) {
+        this.$el.on('shown.bs.modal', function (e, r) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
-            var headerHeight = this.$el.find('header.modal-header').outerHeight();
-            var footerHeight = this.$el.find('footer.modal-footer').outerHeight();
+            var headerHeight = this.$el.find('.modal-header').outerHeight();
+            var footerHeight = this.$el.find('.modal-footer').outerHeight();
 
             var diffHeight = headerHeight + footerHeight;
 

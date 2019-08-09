@@ -378,7 +378,7 @@ class LeadCapture extends Record
 
         $isNew = !$duplicate && !$contact;
 
-        if (!$contact) {
+        if (!$contact || !$leadCapture->get('subscribeContactToTargetList')) {
             if ($leadCapture->get('targetTeamId')) {
                 $lead->addLinkMultipleId('teams', $leadCapture->get('targetTeamId'));
             }

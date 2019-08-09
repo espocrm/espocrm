@@ -1,234 +1,270 @@
+
 @font-face {
-    font-family: "summernote";
-    font-style: normal;
-    font-weight: normal;
-    src: url("../../fonts/summernote.eot?0d0d5fac99cc8774d89eb08b1a8323c4");
-    src: url("../../fonts/summernote.eot?#iefix") format("embedded-opentype"), url("../../fonts/summernote.woff?0d0d5fac99cc8774d89eb08b1a8323c4") format("woff"), url("../../fonts/summernote.ttf?0d0d5fac99cc8774d89eb08b1a8323c4") format("truetype")
+  font-family: "summernote";
+  font-style: normal;
+  font-weight: 400;
+  font-display: auto;
+  src: url("../../fonts/summernote.eot");
+  src: url("../../fonts/summernote.eot?#iefix") format("embedded-opentype"), url("../../fonts/summernote.woff2") format("woff2"), url("../../fonts/summernote.woff") format("woff"), url("../../fonts/summernote.ttf?0d0d5fac99cc8774d89eb08b1a8323c7") format("truetype");}
+
+[class^="note-icon"]:before,
+[class*=" note-icon"]:before {
+  display: inline-block;
+  font: normal normal normal 11px/1 summernote;
+  text-rendering: auto;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
-[class^="note-icon-"]:before,
-[class*=" note-icon-"]:before {
-    display: inline-block;
-    font: normal normal normal 14px summernote;
-    font-size: inherit;
-    -webkit-font-smoothing: antialiased;
-    text-decoration: inherit;
-    text-rendering: auto;
-    text-transform: none;
-    vertical-align: middle;
-    speak: none;
-    -moz-osx-font-smoothing: grayscale
+
+
+.note-icon-fw {
+  text-align: center;
+  width: 1.25em;
 }
-.note-icon-align-center:before,
-.note-icon-align-indent:before,
-.note-icon-align-justify:before,
-.note-icon-align-left:before,
-.note-icon-align-outdent:before,
-.note-icon-align-right:before,
-.note-icon-align:before,
-.note-icon-arrow-circle-down:before,
-.note-icon-arrow-circle-left:before,
-.note-icon-arrow-circle-right:before,
-.note-icon-arrow-circle-up:before,
-.note-icon-arrows-alt:before,
-.note-icon-arrows-h:before,
-.note-icon-arrows-v:before,
-.note-icon-bold:before,
-.note-icon-caret:before,
-.note-icon-chain-broken:before,
-.note-icon-circle:before,
-.note-icon-close:before,
-.note-icon-code:before,
-.note-icon-col-after:before,
-.note-icon-col-before:before,
-.note-icon-col-remove:before,
-.note-icon-eraser:before,
-.note-icon-font:before,
-.note-icon-frame:before,
-.note-icon-italic:before,
-.note-icon-link:before,
-.note-icon-magic:before,
-.note-icon-menu-check:before,
-.note-icon-minus:before,
-.note-icon-orderedlist:before,
-.note-icon-pencil:before,
-.note-icon-picture:before,
-.note-icon-question:before,
-.note-icon-redo:before,
-.note-icon-row-above:before,
-.note-icon-row-below:before,
-.note-icon-row-remove:before,
-.note-icon-special-character:before,
-.note-icon-square:before,
-.note-icon-strikethrough:before,
-.note-icon-subscript:before,
-.note-icon-summernote:before,
-.note-icon-superscript:before,
-.note-icon-table:before,
-.note-icon-text-height:before,
-.note-icon-trash:before,
-.note-icon-underline:before,
-.note-icon-undo:before,
-.note-icon-unorderedlist:before,
-.note-icon-video:before {
-    display: inline-block;
-    font-family: "summernote";
-    font-style: normal;
-    font-weight: normal;
-    text-decoration: inherit
+
+.note-icon-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
 }
-.note-icon-align-center:before {
-    content: "\f101"
+
+.note-icon-pull-left {
+  float: left;
 }
-.note-icon-align-indent:before {
-    content: "\f102"
+
+.note-icon-pull-right {
+  float: right;
 }
-.note-icon-align-justify:before {
-    content: "\f103"
+
+.note-icon.note-icon-pull-left {
+  margin-right: 0.3em;
 }
-.note-icon-align-left:before {
-    content: "\f104"
+
+.note-icon.note-icon-pull-right {
+  margin-left: 0.3em;
 }
-.note-icon-align-outdent:before {
-    content: "\f105"
+
+
+.note-icon-align::before {
+  content: "\ea01";
 }
-.note-icon-align-right:before {
-    content: "\f106"
+
+.note-icon-align-center::before {
+  content: "\ea02";
 }
-.note-icon-align:before {
-    content: "\f107"
+
+.note-icon-align-indent::before {
+  content: "\ea03";
 }
-.note-icon-arrow-circle-down:before {
-    content: "\f108"
+
+.note-icon-align-justify::before {
+  content: "\ea04";
 }
-.note-icon-arrow-circle-left:before {
-    content: "\f109"
+
+.note-icon-align-left::before {
+  content: "\ea05";
 }
-.note-icon-arrow-circle-right:before {
-    content: "\f10a"
+
+.note-icon-align-outdent::before {
+  content: "\ea06";
 }
-.note-icon-arrow-circle-up:before {
-    content: "\f10b"
+
+.note-icon-align-right::before {
+  content: "\ea07";
 }
-.note-icon-arrows-alt:before {
-    content: "\f10c"
+
+.note-icon-arrow-circle-down::before {
+  content: "\ea08";
 }
-.note-icon-arrows-h:before {
-    content: "\f10d"
+
+.note-icon-arrow-circle-left::before {
+  content: "\ea09";
 }
-.note-icon-arrows-v:before {
-    content: "\f10e"
+
+.note-icon-arrow-circle-right::before {
+  content: "\ea0a";
 }
-.note-icon-bold:before {
-    content: "\f10f"
+
+.note-icon-arrow-circle-up::before {
+  content: "\ea0b";
 }
-.note-icon-caret:before {
-    content: "\f110"
+
+.note-icon-arrows-alt::before {
+  content: "\ea0c";
 }
-.note-icon-chain-broken:before {
-    content: "\f111"
+
+.note-icon-arrows-h::before {
+  content: "\ea0d";
 }
-.note-icon-circle:before {
-    content: "\f112"
+
+.note-icon-arrows-v::before {
+  content: "\ea0e";
 }
-.note-icon-close:before {
-    content: "\f113"
+
+.note-icon-bold::before {
+  content: "\ea0f";
 }
-.note-icon-code:before {
-    content: "\f114"
+
+.note-icon-caret::before {
+  content: "\ea10";
 }
-.note-icon-col-after:before {
-    content: "\f115"
+
+.note-icon-chain-broken::before {
+  content: "\ea11";
 }
-.note-icon-col-before:before {
-    content: "\f116"
+
+.note-icon-circle::before {
+  content: "\ea12";
 }
-.note-icon-col-remove:before {
-    content: "\f117"
+
+.note-icon-close::before {
+  content: "\ea13";
 }
-.note-icon-eraser:before {
-    content: "\f118"
+
+.note-icon-code::before {
+  content: "\ea14";
 }
-.note-icon-font:before {
-    content: "\f119"
+
+.note-icon-col-after::before {
+  content: "\ea15";
 }
-.note-icon-frame:before {
-    content: "\f11a"
+
+.note-icon-col-before::before {
+  content: "\ea16";
 }
-.note-icon-italic:before {
-    content: "\f11b"
+
+.note-icon-col-remove::before {
+  content: "\ea17";
 }
-.note-icon-link:before {
-    content: "\f11c"
+
+.note-icon-eraser::before {
+  content: "\ea18";
 }
-.note-icon-magic:before {
-    content: "\f11d"
+
+.note-icon-float-left::before {
+  content: "\ea19";
 }
-.note-icon-menu-check:before {
-    content: "\f11e"
+
+.note-icon-float-none::before {
+  content: "\ea1a";
 }
-.note-icon-minus:before {
-    content: "\f11f"
+
+.note-icon-float-right::before {
+  content: "\ea1b";
 }
-.note-icon-orderedlist:before {
-    content: "\f120"
+
+.note-icon-font::before {
+  content: "\ea1c";
 }
-.note-icon-pencil:before {
-    content: "\f121"
+
+.note-icon-frame::before {
+  content: "\ea1d";
 }
-.note-icon-picture:before {
-    content: "\f122"
+
+.note-icon-italic::before {
+  content: "\ea1e";
 }
-.note-icon-question:before {
-    content: "\f123"
+
+.note-icon-link::before {
+  content: "\ea1f";
 }
-.note-icon-redo:before {
-    content: "\f124"
+
+.note-icon-magic::before {
+  content: "\ea20";
 }
-.note-icon-row-above:before {
-    content: "\f125"
+
+.note-icon-menu-check::before {
+  content: "\ea21";
 }
-.note-icon-row-below:before {
-    content: "\f126"
+
+.note-icon-minus::before {
+  content: "\ea22";
 }
-.note-icon-row-remove:before {
-    content: "\f127"
+
+.note-icon-orderedlist::before {
+  content: "\ea23";
 }
-.note-icon-special-character:before {
-    content: "\f128"
+
+.note-icon-pencil::before {
+  content: "\ea24";
 }
-.note-icon-square:before {
-    content: "\f129"
+
+.note-icon-picture::before {
+  content: "\ea25";
 }
-.note-icon-strikethrough:before {
-    content: "\f12a"
+
+.note-icon-question::before {
+  content: "\ea26";
 }
-.note-icon-subscript:before {
-    content: "\f12b"
+
+.note-icon-redo::before {
+  content: "\ea27";
 }
-.note-icon-summernote:before {
-    content: "\f12c"
+
+.note-icon-rollback::before {
+  content: "\ea28";
 }
-.note-icon-superscript:before {
-    content: "\f12d"
+
+.note-icon-row-above::before {
+  content: "\ea29";
 }
-.note-icon-table:before {
-    content: "\f12e"
+
+.note-icon-row-below::before {
+  content: "\ea2a";
 }
-.note-icon-text-height:before {
-    content: "\f12f"
+
+.note-icon-row-remove::before {
+  content: "\ea2b";
 }
-.note-icon-trash:before {
-    content: "\f130"
+
+.note-icon-special-character::before {
+  content: "\ea2c";
 }
-.note-icon-underline:before {
-    content: "\f131"
+
+.note-icon-square::before {
+  content: "\ea2d";
 }
-.note-icon-undo:before {
-    content: "\f132"
+
+.note-icon-strikethrough::before {
+  content: "\ea2e";
 }
-.note-icon-unorderedlist:before {
-    content: "\f133"
+
+.note-icon-subscript::before {
+  content: "\ea2f";
 }
-.note-icon-video:before {
-    content: "\f134"
+
+.note-icon-summernote::before {
+  content: "\ea30";
+}
+
+.note-icon-superscript::before {
+  content: "\ea31";
+}
+
+.note-icon-table::before {
+  content: "\ea32";
+}
+
+.note-icon-text-height::before {
+  content: "\ea33";
+}
+
+.note-icon-trash::before {
+  content: "\ea34";
+}
+
+.note-icon-underline::before {
+  content: "\ea35";
+}
+
+.note-icon-undo::before {
+  content: "\ea36";
+}
+
+.note-icon-unorderedlist::before {
+  content: "\ea37";
+}
+
+.note-icon-video::before {
+  content: "\ea38";
 }

@@ -514,7 +514,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
-            this.model.set(this.attributes);
+            this.model.set(this.attributes, {skipReRender: true});
         },
 
         delete: function () {

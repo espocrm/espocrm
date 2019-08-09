@@ -711,4 +711,26 @@ class Util
 
         return $v1 === $v2;
     }
+
+    public static function mbUpperCaseFirst(string $string)
+    {
+        if (!$string) return $string;
+
+        $length = mb_strlen($string);
+        $firstChar = mb_substr($string, 0, 1);
+        $then = mb_substr($string, 1, $length - 1);
+
+        return mb_strtoupper($firstChar) . $then;
+    }
+
+    public static function mbLowerCaseFirst(string $string)
+    {
+        if (!$string) return $string;
+
+        $length = mb_strlen($string);
+        $firstChar = mb_substr($string, 0, 1);
+        $then = mb_substr($string, 1, $length - 1);
+
+        return mb_strtolower($firstChar) . $then;
+    }
 }

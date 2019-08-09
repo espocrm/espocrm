@@ -38,13 +38,22 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             return false;
         },
 
-        actionIndex: function () {
+        actionIndex: function (options) {
+            var isReturn = options.isReturn;
+            var key = this.name + 'Index';
+
+            if (this.getRouter().backProcessed)
+                isReturn = true;
+
+            if (!isReturn && this.getStoredMainView(key))
+                this.clearStoredMainView(key);
+
             this.main('views/admin/index', null, function (view) {
                 view.render();
 
                 this.listenTo(view, 'clear-cache', this.clearCache);
                 this.listenTo(view, 'rebuild', this.rebuild);
-            }.bind(this));
+            }.bind(this), isReturn, key);
         },
 
         actionLayouts: function (options) {
