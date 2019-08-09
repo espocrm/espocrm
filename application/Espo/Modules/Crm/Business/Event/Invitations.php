@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Business\Event;
 
 use \Espo\ORM\Entity;
 
+use Espo\Core\Utils\Util;
+
 class Invitations
 {
     protected $entityManager;
@@ -140,7 +142,7 @@ class Invitations
         }
 
         $data['entityType'] = $this->language->translate($entity->getEntityType(), 'scopeNames');
-        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+        $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
         $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $dateTime, $this->number, null);
 

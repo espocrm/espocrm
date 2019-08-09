@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Business\Reminder;
 
 use \Espo\ORM\Entity;
 
+use Espo\Core\Utils\Util;
+
 class EmailReminder
 {
     protected $entityManager;
@@ -79,7 +81,7 @@ class EmailReminder
 
     protected function parseInvitationTemplate($contents, $entity, $user = null)
     {
-        $contents = str_replace('{eventType}', strtolower($this->language->translate($entity->getEntityName(), 'scopeNames')), $contents);
+        $contents = str_replace('{eventType}', mb_strtolower($this->language->translate($entity->getEntityName(), 'scopeNames')), $contents);
 
         $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
         $timezone = $preferences->get('timeZone');
@@ -141,7 +143,7 @@ class EmailReminder
         $data['recordUrl'] = $recordUrl;
 
         $data['entityType'] = $this->getLanguage()->translate($entity->getEntityType(), 'scopeNames');
-        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+        $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
         if ($user) {
             $data['userName'] = $user->get('name');
