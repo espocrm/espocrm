@@ -1825,18 +1825,26 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 
-body  .note-editor .panel-heading {
+body .note-editor .panel-heading {
     > .btn-group {
         right: 0;
         top: 0;
 
         > .btn {
-            padding-bottom: 4px;
+            > i,
+            > span {
+                position: relative;
+                top: 1px;
+            }
         }
 
         > .btn-group {
             > .btn {
-                padding-bottom: 4px;
+                > i,
+                > span {
+                    position: relative;
+                    top: 1px;
+                }
             }
         }
 
