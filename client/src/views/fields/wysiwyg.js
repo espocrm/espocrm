@@ -580,10 +580,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 'espoImage': function (context) {
                     var ui = $.summernote.ui;
                     var options = context.options;
-
                     var self = options.espoView;
-
-                    this.lang = options.langInfo;
+                    var lang = options.langInfo;
 
                     context.memo('button.espoImage', function () {
                         var button = ui.button({
@@ -606,9 +604,9 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     this.show = function () {
                         self.createView('insertImageDialog', 'views/wysiwyg/modals/insert-image', {
                             labels: {
-                                insert: this.lang.image.insert,
-                                url: this.lang.image.url,
-                                selectFromFiles: this.lang.image.selectFromFiles,
+                                insert: lang.image.insert,
+                                url: lang.image.url,
+                                selectFromFiles: lang.image.selectFromFiles,
                             },
                         }, function (view) {
                             view.render();
@@ -628,13 +626,43 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     }
                 },
 
+                'linkDialog': function (context) {
+                    var ui = $.summernote.ui;
+                    var options = context.options;
+                    var self = options.espoView;
+                    var lang = options.langInfo;
+
+                    this.show = function () {
+                        var linkInfo = context.invoke('editor.getLinkInfo');
+
+                        self.createView('dialogInsertLink', 'views/wysiwyg/modals/insert-link', {
+                            labels: {
+                                insert: lang.link.insert,
+                                openInNewWindow: lang.link.openInNewWindow,
+                                url: lang.link.url,
+                                textToDisplay: lang.link.textToDisplay,
+                            },
+                            linkInfo: linkInfo,
+                        }, function (view) {
+                            view.render();
+
+                            self.listenToOnce(view, 'insert', function (data) {
+                                self.$summernote.summernote('createLink', data);
+                            });
+
+                            self.listenToOnce(view, 'close', function () {
+                                self.clearView('dialogInsertLink');
+                                self.fixPopovers();
+                            }, self);
+                        });
+                    }
+                },
+
                 'espoLink': function (context) {
                     var ui = $.summernote.ui;
                     var options = context.options;
-
                     var self = options.espoView;
-
-                    this.lang = options.langInfo;
+                    var lang = options.langInfo;
 
                     var isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
 
@@ -661,10 +689,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
                         self.createView('dialogInsertLink', 'views/wysiwyg/modals/insert-link', {
                             labels: {
-                                insert: this.lang.link.insert,
-                                openInNewWindow: this.lang.link.openInNewWindow,
-                                url: this.lang.link.url,
-                                textToDisplay: this.lang.link.textToDisplay,
+                                insert: lang.link.insert,
+                                openInNewWindow: lang.link.openInNewWindow,
+                                url: lang.link.url,
+                                textToDisplay: lang.link.textToDisplay,
                             },
                             linkInfo: linkInfo,
                         }, function (view) {
