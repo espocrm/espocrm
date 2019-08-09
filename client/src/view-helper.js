@@ -51,6 +51,27 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             breaks: true,
             tables: false
         });
+
+        DOMPurify.addHook('beforeSanitizeAttributes', function (node) {
+            if (node instanceof HTMLAnchorElement) {
+                if (node.getAttribute('target')) {
+                    node.targetBlack = true;
+                } else {
+                    node.targetBlack = false;
+                }
+            }
+        });
+
+        DOMPurify.addHook('afterSanitizeAttributes', function (node) {
+            if (node instanceof HTMLAnchorElement) {
+                if (node.targetBlack) {
+                    node.setAttribute('target', '_blank');
+                    node.setAttribute('rel', 'noopener noreferrer');
+                } else {
+                    node.removeAttribute('rel');
+                }
+            }
+        });
     }
 
     _.extend(ViewHelper.prototype, {
