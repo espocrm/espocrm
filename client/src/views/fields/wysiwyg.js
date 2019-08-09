@@ -105,12 +105,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             if (this.lastHtmlValue && this.model.get(this.name) === this.htmlToPlain(this.lastHtmlValue)) {
                                 value = this.lastHtmlValue;
                             }
-                            this.model.set(this.name, value);
+                            this.model.set(this.name, value, {skipReRender: true});
                             this.enableWysiwygMode();
                         } else {
                             this.lastHtmlValue = this.model.get(this.name);
-        		            var value = this.htmlToPlain(this.model.get(this.name));
-        		            this.model.set(this.name, value);
+                            var value = this.htmlToPlain(this.model.get(this.name));
+                            this.model.set(this.name, value, {skipReRender: true});
                             this.disableWysiwygMode();
                         }
                     }
@@ -123,15 +123,15 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             }, this);
 
             this.once('remove', function () {
-                if (this.$summernote) {
-                    this.$summernote.summernote('destroy');
-                }
+                this.destroySummernote();
             });
 
             this.on('inline-edit-off', function () {
-                if (this.$summernote) {
-                    this.$summernote.summernote('destroy');
-                }
+                this.destroySummernote();
+            });
+
+            this.on('render', function () {
+                this.destroySummernote();
             });
 
             this.once('remove', function () {
@@ -197,6 +197,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             if (this.mode == 'edit') {
                 this.$summernote = this.$el.find('.summernote');
+                this.$noteEditor = this.$el.find('> .note-editor');
             }
 
             var language = this.getConfig().get('language');
@@ -431,20 +432,30 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 options.minHeight = this.minHeight;
             }
 
+            this.destroySummernote();
+
             this.$summernote.summernote(options);
+            this.summernoteIsInitialized = true;
 
             this.$toolbar = this.$el.find('.note-toolbar');
             this.$area = this.$el.find('.note-editing-area');
         },
 
+        destroySummernote: function () {
+            if (this.summernoteIsInitialized && this.$summernote) {
+                this.$summernote.summernote('destroy');
+                this.summernoteIsInitialized = false;
+            }
+        },
+
         plainToHtml: function (html) {
-        	html = html || '';
-        	var value = html.replace(/\n/g, '<br>');
-        	return value;
+            html = html || '';
+            var value = html.replace(/\n/g, '<br>');
+            return value;
         },
 
         htmlToPlain: function (text) {
-        	text = text || '';
+            text = text || '';
             var value = text.replace(/<br\s*\/?>/mg, '\n');
 
             value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
@@ -459,8 +470,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         },
 
         disableWysiwygMode: function () {
+            this.destroySummernote();
             if (this.$summernote) {
-                this.$summernote.summernote('destroy');
                 this.$summernote.addClass('hidden');
             }
             this.$element.removeClass('hidden');
@@ -483,11 +494,11 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             }
 
             if (this.model.has('isHtml') && this.hasBodyPlainField) {
-            	if (this.model.get('isHtml')) {
-            		data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
-            	} else {
-            		data[this.name + 'Plain'] = data[this.name];
-            	}
+                if (this.model.get('isHtml')) {
+                    data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
+                } else {
+                    data[this.name + 'Plain'] = data[this.name];
+                }
             }
             return data;
         },
@@ -585,10 +596,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         return button.render();
                     });
 
-                    this.initialize = function () {
-                    };
+                    this.initialize = function () {};
 
                     this.destroy = function () {
+                        if (!self) return;
                         self.clearView('insertImageDialog');
                     }
 
@@ -638,10 +649,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         return button.render();
                     });
 
-                    this.initialize = function () {
-                    };
+                    this.initialize = function () {};
 
                     this.destroy = function () {
+                        if (!self) return;
                         self.clearView('dialogInsertLink');
                     }
 

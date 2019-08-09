@@ -353,7 +353,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             }
                         });
 
-                        if (changed) {
+                        if (changed && !options.skipReRender) {
                             this.reRender();
                         }
                     }
