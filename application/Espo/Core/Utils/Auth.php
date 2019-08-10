@@ -326,9 +326,9 @@ class Auth
 
                 if ($createTokenSecret) {
                     $secret = $this->generateToken();
-                    $authToken->set('secret', $secret);
+                    //$authToken->set('secret', $secret);
 
-                    setcookie('auth-token-secret', $secret, strtotime('+1000 days'), '/; samesite=lax', '', false, true);
+                    setcookie('auth-token-secret', $secret, strtotime('+1000 days'), '/', '', false, true);
                 }
 
                 if ($this->isPortal()) {
