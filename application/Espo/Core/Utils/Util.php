@@ -733,4 +733,28 @@ class Util
 
         return mb_strtolower($firstChar) . $then;
     }
+
+    /**
+     * Sanitize Html code
+     * @param  string $text
+     * @param  array  $permittedHtmlTags - Allows only html tags without parameters like <p></p>, <br>, etc.
+     * @return string
+     */
+    public function sanitizeHtml($text, $permittedHtmlTags = ['p', 'br', 'b', 'strong', 'pre'])
+    {
+        if (is_array($text)) {
+            foreach ($text as $key => &$value) {
+                $value = self::sanitizeHtml($value, $permittedHtmlTags);
+            }
+            return $text;
+        }
+
+        $sanitized = htmlspecialchars($text, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
+
+        foreach ($permittedHtmlTags as $htmlTag) {
+            $sanitized = preg_replace('/&lt;(\/)?(' . $htmlTag . ')&gt;/i', '<$1$2>', $sanitized);
+        }
+
+        return $sanitized;
+    }
 }

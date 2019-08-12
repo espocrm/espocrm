@@ -54,6 +54,7 @@ $userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['u
 require_once 'core/Language.php';
 $language = new Language();
 $langs = $language->get($userLang);
+$sanitizedLangs = \Espo\Core\Utils\Util::sanitizeHtml($langs);
 //END: get user selected language
 
 $config = include('core/config.php');
@@ -63,13 +64,13 @@ $systemHelper = new SystemHelper();
 
 $systemConfig = include('application/Espo/Core/defaults/systemConfig.php');
 if (isset($systemConfig['requiredPhpVersion']) && version_compare(PHP_VERSION, $systemConfig['requiredPhpVersion'], '<')) {
-    die(str_replace('{minVersion}', $systemConfig['requiredPhpVersion'], $langs['messages']['phpVersion']) . '.');
+    die(str_replace('{minVersion}', $systemConfig['requiredPhpVersion'], $sanitizedLangs['messages']['phpVersion']) . '.');
 }
 
 if (!$systemHelper->initWritable()) {
 	$dir = $systemHelper->getWritableDir();
 
-	$message = $langs['messages']['Bad init Permission'];
+	$message = $sanitizedLangs['messages']['Bad init Permission'];
 	$message = str_replace('{*}', $dir, $message);
 	$message = str_replace('{C}', $systemHelper->getPermissionCommands(array($dir, ''), '775'), $message);
 	$message = str_replace('{CSU}', $systemHelper->getPermissionCommands(array($dir, ''), '775', true), $message);
@@ -102,7 +103,7 @@ $smarty->caching = false;
 $smarty->setTemplateDir('install/core/tpl');
 
 $smarty->assign("version", $installer->getVersion());
-$smarty->assign("langs", $langs);
+$smarty->assign("langs", $sanitizedLangs);
 $smarty->assign("langsJs", json_encode($langs));
 
 // include actions and set tpl name
