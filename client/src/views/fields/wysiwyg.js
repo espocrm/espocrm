@@ -71,7 +71,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
                 ['table', ['table', 'espoLink', 'espoImage', 'hr']],
-                ['misc',['codeview', 'fullscreen']]
+                ['misc', ['codeview', 'fullscreen']]
             ];
 
             this.buttons = {};
@@ -368,6 +368,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             keyMap.pc['CTRL+K'] = 'espoLink.show';
             keyMap.mac['CMD+K'] = 'espoLink.show';
 
+            var toolbar = this.toolbar;
+
             var options = {
                 espoView: this,
                 lang: this.getConfig().get('language'),
@@ -408,7 +410,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 onCreateLink: function (link) {
                     return link;
                 },
-                toolbar: this.toolbar,
+                toolbar: toolbar,
                 buttons: this.buttons,
                 dialogsInBody: this.$el,
                 codeviewFilter: true,
@@ -708,6 +710,81 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             }, self);
                         });
                     }
+                },
+
+                'fullscreen': function (context) {
+                    var ui = $.summernote.ui;
+                    var options = context.options;
+                    var self = options.espoView;
+                    var lang = options.langInfo;
+
+                    this.$window = $(window);
+                    this.$scrollbar = $('html, body');
+
+                    this.initialize = function () {
+                        this.$editor = context.layoutInfo.editor;
+                        this.$toolbar = context.layoutInfo.toolbar;
+                        this.$editable = context.layoutInfo.editable;
+                        this.$codable = context.layoutInfo.codable;
+
+                        this.$modal = self.$el.closest('.modal');
+                        this.isInModal = this.$modal.length > 0;
+                    };
+
+                    this.resizeTo = function (size) {
+                        this.$editable.css('height', size.h);
+                        this.$codable.css('height', size.h);
+                        if (this.$codable.data('cmeditor')) {
+                            this.$codable.data('cmeditor').setsize(null, size.h);
+                        }
+                    };
+
+                    this.onResize = function () {
+                        this.resizeTo({
+                            h: this.$window.height() - this.$toolbar.outerHeight(),
+                        });
+                    };
+
+                    this.isFullscreen = function () {
+                        return this.$editor.hasClass('fullscreen');
+                    };
+
+                    this.destroy = function () {
+                        this.$window.off('resize.summernote' + self.cid);
+                        if (this.isInModal) {
+                            this.$modal.css('overflow-y', '');
+                        } else {
+                            this.$scrollbar.css('overflow', '');
+                        }
+                    }
+
+                    this.toggle = function () {
+                        this.$editor.toggleClass('fullscreen');
+                        if (this.isFullscreen()) {
+                            this.$editable.data('orgHeight', this.$editable.css('height'));
+                            this.$editable.data('orgMaxHeight', this.$editable.css('maxHeight'));
+                            this.$editable.css('maxHeight', '');
+                            this.$window.on('resize.summernote' + self.cid, this.onResize.bind(this)).trigger('resize');
+                            if (this.isInModal) {
+                                this.$modal.css('overflow-y', 'hidden');
+                            } else {
+                                this.$scrollbar.css('overflow', 'hidden');
+                            }
+                            this._isFullscreen = true;
+                        } else {
+                            this.$window.off('resize.summernote'  + self.cid);
+                            this.resizeTo({ h: this.$editable.data('orgHeight') });
+                            this.$editable.css('maxHeight', this.$editable.css('orgMaxHeight'));
+                            if (this.isInModal) {
+                                this.$modal.css('overflow-y', '');
+                            } else {
+                                this.$scrollbar.css('overflow', '');
+                            }
+                            this._isFullscreen = false;
+                        }
+
+                        context.invoke('toolbar.updateFullscreen', this.isFullscreen());
+                    };
                 },
 
             });
