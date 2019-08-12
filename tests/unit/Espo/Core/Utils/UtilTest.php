@@ -1582,5 +1582,24 @@ class UtilTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($result, \Espo\Core\Utils\Util::arrayDiff($array1, $array2));
     }
-}
 
+    public function htmlList()
+    {
+        return [
+            ['Test<script>alert("test")</script>', 'Test&lt;script&gt;alert(&quot;test&quot;)&lt;/script&gt;'],
+            ['<p>Test</p>', '<p>Test</p>'],
+            ['<p><b>Test</b></p>', '<p><b>Test</b></p>'],
+            ['<pre>Test</pre>', '<pre>Test</pre>'],
+            ['<p><b>Test</b> <a href="#">test link</a></p>', '<p><b>Test</b> &lt;a href=&quot;#&quot;&gt;test link&lt;/a&gt;</p>'],
+            ['<strong>Test</strong>', '<strong>Test</strong>'],
+        ];
+    }
+
+    /**
+     * @dataProvider htmlList
+     */
+    public function testSanitizeHtml($html, $expectedResult)
+    {
+        $this->assertEquals($expectedResult, Util::sanitizeHtml($html));
+    }
+}
