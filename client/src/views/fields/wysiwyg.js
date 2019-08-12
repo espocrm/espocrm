@@ -63,7 +63,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             this.useIframe = this.params.useIframe || this.useIframe;
 
-            this.toolbar = this.params.toolbar || [
+            this.toolbar = this.params.toolbar || this.toolbar || [
                 ['style', ['style']],
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['fontsize', ['fontsize']],
