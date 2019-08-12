@@ -161,6 +161,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     weekStart: this.getDateTime().weekStart,
                     autoclose: true,
                     todayHighlight: true,
+                    todayBtn: true,
                 };
 
                 var language = this.getConfig().get('language');
