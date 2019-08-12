@@ -740,7 +740,7 @@ class Util
      * @param  array  $permittedHtmlTags - Allows only html tags without parameters like <p></p>, <br>, etc.
      * @return string
      */
-    public function sanitizeHtml($text, $permittedHtmlTags = ['p', 'br', 'b', 'strong', 'pre'])
+    public static function sanitizeHtml($text, $permittedHtmlTags = ['p', 'br', 'b', 'strong', 'pre'])
     {
         if (is_array($text)) {
             foreach ($text as $key => &$value) {
