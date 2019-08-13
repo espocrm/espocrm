@@ -1586,11 +1586,11 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function htmlList()
     {
         return [
-            ['Test<script>alert("test")</script>', 'Test&lt;script&gt;alert(&quot;test&quot;)&lt;/script&gt;'],
+            ['Test&lt;script&gt;alert(&quot;test&quot;)&lt;/script&gt;', 'Test<script>alert("test")</script>'],
             ['<p>Test</p>', '<p>Test</p>'],
             ['<p><b>Test</b></p>', '<p><b>Test</b></p>'],
             ['<pre>Test</pre>', '<pre>Test</pre>'],
-            ['<p><b>Test</b> <a href="#">test link</a></p>', '<p><b>Test</b> &lt;a href=&quot;#&quot;&gt;test link&lt;/a&gt;</p>'],
+            ['<p><b>Test</b> &lt;a href=&quot;#&quot;&gt;test link&lt;/a&gt;</p>', '<p><b>Test</b> <a href="#">test link</a></p>'],
             ['<strong>Test</strong>', '<strong>Test</strong>'],
         ];
     }
@@ -1598,8 +1598,48 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider htmlList
      */
-    public function testSanitizeHtml($html, $expectedResult)
+    public function testSanitizeHtml($expectedResult, $html)
     {
         $this->assertEquals($expectedResult, Util::sanitizeHtml($html));
+    }
+
+    public function urlAddParamList()
+    {
+        return [
+            ['https://test.link/?param1=1111', 'https://test.link', 'param1', '1111'],
+            ['https://test.link/?param1=1111&param2=2222', 'https://test.link/?param1=1111', 'param2', '2222'],
+            ['https://test.link/?param2=2222&param1=1111', 'https://test.link/?param2=2222', 'param1', '1111'],
+            ['https://test.link/?param1=1111&param2=2222', 'https://test.link/?param1=1111&param2=2222', 'param1', '1111'],
+            ['https://test.link/?param1=3333&param2=2222', 'https://test.link/?param1=1111&param2=2222', 'param1', '3333'],
+            ['https://test.link/?param1=1111&param2=2222&new-param3=85%7BXjKbrNe%40%5D8', 'https://test.link/?param1=1111&param2=2222', 'new-param3', '85{XjKbrNe@]8'],
+        ];
+    }
+
+    /**
+     * @dataProvider urlAddParamList
+     */
+    public function testUrlAddParam($expectedResult, $url, $paramName, $paramValue)
+    {
+        $this->assertEquals($expectedResult, Util::urlAddParam($url, $paramName, $paramValue));
+    }
+
+    public function urlRemoveParamList()
+    {
+        return [
+            ['https://test.link', 'https://test.link', 'param1'],
+            ['https://test.link/', 'https://test.link/', 'param1'],
+            ['https://test.link/?param1=1111', 'https://test.link/?param1=1111', 'param2'],
+            ['https://test.link/?param2=2222', 'https://test.link/?param1=1111&param2=2222', 'param1'],
+            ['https://test.link/?param1=1111', 'https://test.link/?param1=1111&param2=2222', 'param2'],
+            ['https://test.link/?param1=1111&param2=2222', 'https://test.link/?param1=1111&param2=2222&new-param3=85%7BXjKbrNe%40%5D8', 'new-param3'],
+        ];
+    }
+
+    /**
+     * @dataProvider urlRemoveParamList
+     */
+    public function testUrlRemoveParam($expectedResult, $url, $paramName)
+    {
+        $this->assertEquals($expectedResult, Util::urlRemoveParam($url, $paramName));
     }
 }

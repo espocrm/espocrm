@@ -757,4 +757,44 @@ class Util
 
         return $sanitized;
     }
+
+    public static function urlAddParam($url, $paramName, $paramValue)
+    {
+        $urlQuery = parse_url($url, \PHP_URL_QUERY);
+
+        if (!$urlQuery) {
+            $params = [
+                $paramName => $paramValue
+            ];
+
+            return $url . '/?' . http_build_query($params);
+        }
+
+        parse_str($urlQuery, $params);
+
+        if (!isset($params[$paramName]) || $params[$paramName] != $paramValue) {
+            $params[$paramName] = $paramValue;
+
+            return str_replace($urlQuery, http_build_query($params), $url);
+        }
+
+        return $url;
+    }
+
+    public static function urlRemoveParam($url, $paramName)
+    {
+        $urlQuery = parse_url($url, \PHP_URL_QUERY);
+
+        if ($urlQuery) {
+            parse_str($urlQuery, $params);
+
+            if (isset($params[$paramName])) {
+                unset($params[$paramName]);
+
+                return str_replace($urlQuery, http_build_query($params), $url);
+            }
+        }
+
+        return $url;
+    }
 }
