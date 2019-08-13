@@ -42,7 +42,7 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
         },
 
         setup: function () {
-            this.addressField = this.name.substr(0, this.name.length - 3);
+            this.addressField = this.name.substr(0, this.name.length - this.type.length);
 
             this.provider = this.params.provider;
             this.height = this.params.height || this.height;
@@ -137,43 +137,7 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                 return;
             }
 
-            var address = '';
-
-            if (this.addressData.street) {
-                address += this.addressData.street;
-            }
-
-            if (this.addressData.city) {
-                if (address != '') {
-                    address += ', ';
-                }
-                address += this.addressData.city;
-            }
-
-            if (this.addressData.state) {
-                if (address != '') {
-                    address += ', ';
-                }
-                address += this.addressData.state;
-            }
-
-            if (this.addressData.postalCode) {
-                if (this.addressData.state || this.addressData.city) {
-                    address += ' ';
-                } else {
-                    if (address) {
-                        address += ', ';
-                    }
-                }
-                address += this.addressData.postalCode;
-            }
-
-            if (this.addressData.country) {
-                if (address != '') {
-                    address += ', ';
-                }
-                address += this.addressData.country;
-            }
+            var address = this.addressToString(this.addressData);
 
             geocoder.geocode({'address': address}, function(results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
@@ -184,6 +148,42 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                     });
                 }
             }.bind(this));
+        },
+        addressToString: function(address) {
+            var result = '';
+            if (address.street) {
+                result += address.street;
+            }
+            if (address.city) {
+                if (result != '') {
+                    result += ', ';
+                }
+                result += address.city;
+            }
+            if (address.state) {
+                if (result != '') {
+                    result += ', ';
+                }
+                result += address.state;
+            }
+            if (address.postalCode) {
+                if (address.state || address.city) {
+                    result += ' ';
+                } else {
+                    if (result) {
+                        result += ', ';
+                    }
+                }
+                result += address.postalCode;
+            }
+            if (address.country) {
+                if (result != '') {
+                    result += ', ';
+                }
+                result += address.country;
+            }
+
+            return result;
         }
     });
 });

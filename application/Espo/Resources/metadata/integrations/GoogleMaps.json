@@ -4,6 +4,13 @@
             "type": "varchar",
             "maxLength": 255,
             "required": true
+        },
+        "originAddress": {
+            "type": "address",
+            "required": true
+        },
+        "useLocationService": {
+            "type": "bool"
         }
     },
     "allowUserAccounts": false,

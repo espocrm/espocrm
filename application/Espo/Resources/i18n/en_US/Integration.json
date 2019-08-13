@@ -4,7 +4,9 @@
         "clientId": "Client ID",
         "clientSecret": "Client Secret",
         "redirectUri": "Redirect URI",
-        "apiKey": "API Key"
+        "apiKey": "API Key",
+        "originAddress": "Origin Address",
+        "useLocationService": "Use Location Service (if available)"
     },
     "titles": {
         "GoogleMaps": "Google Maps"

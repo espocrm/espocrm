@@ -462,6 +462,30 @@
             "type": "varchar",
             "onlyUser": true
         },
+        "googleMapsOriginCity": {
+            "type": "varchar",
+            "onlyUser": true
+        },
+        "googleMapsOriginStreet": {
+            "type": "varchar",
+            "onlyUser": true
+        },
+        "googleMapsOriginPostalCode": {
+            "type": "varchar",
+            "onlyUser": true
+        },
+        "googleMapsOriginCountry": {
+            "type": "varchar",
+            "onlyUser": true
+        },
+        "googleMapsOriginCountry": {
+            "type": "varchar",
+            "onlyUser": true
+        },
+        "googleMapsUseLocationService": {
+            "type": "bool",
+            "onlyUser": true
+        },
         "massEmailDisableMandatoryOptOutLink": {
             "type": "bool"
         },

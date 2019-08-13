@@ -1,0 +1,21 @@
+{
+   "params": [
+      {
+         "name": "provider",
+         "type": "enum",
+         "options": ["Google"],
+         "default": "Google"
+      },
+      {
+         "name": "height",
+         "type": "int",
+         "default": 300
+      }
+   ],
+   "filter": false,
+   "notCreatable": true,
+   "notSortable": true,
+   "fieldDefs": {
+      "notStorable": true
+   }
+}
