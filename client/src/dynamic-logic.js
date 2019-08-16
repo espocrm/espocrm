@@ -31,6 +31,9 @@ define('dynamic-logic', [], function () {
     var DynamicLogic = function (defs, recordView) {
         this.defs = defs || {};
         this.recordView = recordView;
+        
+        recordView.on('after:set-edit-mode', function() { this.process() }.bind(this));
+        recordView.on('after:set-detail-mode', function() { this.process() }.bind(this));
 
         this.fieldTypeList = ['visible', 'required', 'readOnly'];
         this.panelTypeList = ['visible'];
@@ -145,6 +148,9 @@ define('dynamic-logic', [], function () {
             if (~['or', 'and', 'not'].indexOf(type)) {
                 return this.checkConditionGroup(defs.value, type);
             }
+            
+            if(type === 'onEdit')
+                return this.recordView.mode === 'edit';
 
             var attribute = defs.attribute;
             var value = defs.value;
