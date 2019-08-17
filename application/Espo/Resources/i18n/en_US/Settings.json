@@ -66,7 +66,6 @@
         "streamEmailNotificationsEntityList": "Stream email notifications scopes",
         "streamEmailNotificationsTypeList": "What to notify about",
         "emailNotificationsDelay": "Delay of email notifications (in seconds)",
-        "b2cMode": "B2C Mode",
         "avatarsDisabled": "Disable Avatars",
         "followCreatedEntities": "Follow created records",
         "displayListViewRecordCount": "Display Total Count (on List View)",
