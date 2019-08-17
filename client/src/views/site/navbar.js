@@ -530,6 +530,8 @@ define('views/site/navbar', 'view', function (Dep) {
                     iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
                 }
 
+                var navFilterList = this.getMetadata().get(['clientDefs', tab, 'navFilterList']) || null;
+
                 var o = {
                     link: link,
                     label: label,
@@ -537,7 +539,8 @@ define('views/site/navbar', 'view', function (Dep) {
                     name: tab,
                     isInMore: moreIsMet,
                     color: color,
-                    iconClass: iconClass
+                    iconClass: iconClass,
+                    navFilterList: navFilterList
                 };
                 if (color && !iconClass) {
                     o.colorIconClass = 'color-icon fas fa-square-full';
