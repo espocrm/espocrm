@@ -169,6 +169,21 @@ define('views/record/search', 'view', function (Dep) {
             this.createFilters();
 
             this.setupViewModeDataList();
+
+            /**
+             * Get presetFilter parameter from route and select according preset once
+             */
+            this.isFirstAfterRender = true;
+            this.on('after:render', function () {
+                if(this.isFirstAfterRender){
+                    this.isFirstAfterRender = false;
+
+                    // get presetFilterName from URL
+                    var presetFilterName = (new URL(window.location.href.replace('#', ''))).searchParams.get('presetFilter');
+                    if(presetFilterName && presetFilterName !== '')
+                        this.selectPreset(presetFilterName);
+                }
+            });
         },
 
         setupViewModeDataList: function () {
