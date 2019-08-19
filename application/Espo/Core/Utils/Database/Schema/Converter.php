@@ -408,9 +408,15 @@ class Converter
             $dbFieldParams['unsigned'] = true;
         }
 
+        if (isset($fieldParams['binary']) && $fieldParams['binary']) {
+            $dbFieldParams['platformOptions'] = array(
+                'collation' => 'utf8mb4_bin',
+            );
+        }
+
         if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {
             $dbFieldParams['platformOptions'] = array(
-                'collation' => 'utf8_unicode_ci',
+                'collation' => (isset($fieldParams['binary']) && $fieldParams['binary']) ? 'utf8_bin' : 'utf8_unicode_ci',
             );
         }
 
