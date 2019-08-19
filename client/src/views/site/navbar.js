@@ -87,13 +87,13 @@ define('views/site/navbar', 'view', function (Dep) {
             'click [data-action="toggleCollapsable"]': function () {
                 this.toggleCollapsable();
             },
-            'click a.dropdown-toggle': function (e) {
+            'click a.subnav-toggle': function (e) {
                 var $el = $(e.currentTarget);
-                var $subnav = $('#', $el.data('dropdown'));
+                var $subnav = $('#' + $el.data('dropdown'));
 
                 $subnav.toggleClass('hidden');
-                $('.dropdown-toggle span', $el).toggleClass('caret-up');
-                $('.dropdown-toggle span', $el).toggleClass('caret');
+                $('span', $el).toggleClass('caret-up');
+                $('span', $el).toggleClass('caret');
             }
         },
 

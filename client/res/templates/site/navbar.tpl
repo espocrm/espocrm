@@ -26,7 +26,7 @@
                     <span class="full-label">{{label}}</span>
                 </a>
                 {{#if navFilterList}}
-                <a class="dropdown-toggle" data-dropdown="navbar-subnav-{{label}}-toggle">
+                <a class="subnav-toggle" data-dropdown="navbar-subnav-{{label}}-toggle">
                     <span class="caret"></span>
                 </a>
                 <ul class="nav subnav hidden" id="navbar-subnav-{{label}}-toggle">
@@ -35,10 +35,13 @@
                         <a href="#{{../name}}?presetFilter={{navFilter.filter}}" class="nav-link">
                             <span class="short-label" title="{{navFilter.label}}">
                                 {{#if navFilter.icon}}
-                                <span class="{{navFilter.icon}}" {{#if navFilter.color}} style="color: {{navFilter.color}}" {{/if}}></span>
+                                <span class="{{navFilter.icon}}"></span>
+                                {{/if}}
+                                {{else}}
+                                <span class="short-label-text">{{navFilter.shortLabel}}</span>
                                 {{/if}}
                             </span>
-                            <span class="full-label">{{navFilter.label}}</span>
+                            <span class="full-label">{{translate navFilter.filter category='presetFilters' scope=../name}}</span>
                         </a>
                     </li>
                     {{/each}}
