@@ -33,10 +33,9 @@
                     {{#each navFilterList as |navFilter|}}
                     <li class="tab">
                         <a href="#{{../name}}?presetFilter={{navFilter.filter}}" class="nav-link">
-                            <span class="short-label" title="{{navFilter.label}}">
+                            <span class="short-label" title="{{navFilter.label}}" {{#if navFilter.color}} style="color: {{navFilter.color}}" {{/if}}>
                                 {{#if navFilter.icon}}
                                 <span class="{{navFilter.icon}}"></span>
-                                {{/if}}
                                 {{else}}
                                 <span class="short-label-text">{{navFilter.shortLabel}}</span>
                                 {{/if}}
