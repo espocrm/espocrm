@@ -41,5 +41,10 @@ class EmailFilter extends Record
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
+
+        if ($entity->get('isGlobal')) {
+            $entity->set('parentId', null);
+            $entity->set('parentType', null);
+        }
     }
 }
