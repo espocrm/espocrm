@@ -1612,6 +1612,8 @@ class UtilTest extends \PHPUnit\Framework\TestCase
             ['https://test.link/?param1=1111&param2=2222', 'https://test.link/?param1=1111&param2=2222', 'param1', '1111'],
             ['https://test.link/?param1=3333&param2=2222', 'https://test.link/?param1=1111&param2=2222', 'param1', '3333'],
             ['https://test.link/?param1=1111&param2=2222&new-param3=85%7BXjKbrNe%40%5D8', 'https://test.link/?param1=1111&param2=2222', 'new-param3', '85{XjKbrNe@]8'],
+            ['/?param1=1111', '', 'param1', '1111'],
+            ['/?param1=1111&param2=2222', '/?param1=1111', 'param2', '2222'],
         ];
     }
 
@@ -1627,8 +1629,11 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     {
         return [
             ['https://test.link', 'https://test.link', 'param1'],
+            ['https://test.link', 'https://test.link', 'param1', '/'],
             ['https://test.link/', 'https://test.link/', 'param1'],
             ['https://test.link/?param1=1111', 'https://test.link/?param1=1111', 'param2'],
+            ['https://test.link', 'https://test.link/?param1=1111', 'param1'],
+            ['https://test.link/', 'https://test.link/?param1=1111', 'param1', '/'],
             ['https://test.link/?param2=2222', 'https://test.link/?param1=1111&param2=2222', 'param1'],
             ['https://test.link/?param1=1111', 'https://test.link/?param1=1111&param2=2222', 'param2'],
             ['https://test.link/?param1=1111&param2=2222', 'https://test.link/?param1=1111&param2=2222&new-param3=85%7BXjKbrNe%40%5D8', 'new-param3'],
@@ -1638,8 +1643,8 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider urlRemoveParamList
      */
-    public function testUrlRemoveParam($expectedResult, $url, $paramName)
+    public function testUrlRemoveParam($expectedResult, $url, $paramName, $suffix = '')
     {
-        $this->assertEquals($expectedResult, Util::urlRemoveParam($url, $paramName));
+        $this->assertEquals($expectedResult, Util::urlRemoveParam($url, $paramName, $suffix));
     }
 }

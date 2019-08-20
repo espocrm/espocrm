@@ -767,6 +767,10 @@ class Util
                 $paramName => $paramValue
             ];
 
+            $url = trim($url);
+            $url = preg_replace('/\/\?$/', '', $url);
+            $url = preg_replace('/\/$/', '', $url);
+
             return $url . '/?' . http_build_query($params);
         }
 
@@ -781,7 +785,7 @@ class Util
         return $url;
     }
 
-    public static function urlRemoveParam($url, $paramName)
+    public static function urlRemoveParam($url, $paramName, $suffix = '')
     {
         $urlQuery = parse_url($url, \PHP_URL_QUERY);
 
@@ -791,7 +795,15 @@ class Util
             if (isset($params[$paramName])) {
                 unset($params[$paramName]);
 
-                return str_replace($urlQuery, http_build_query($params), $url);
+                $newUrl = str_replace($urlQuery, http_build_query($params), $url);
+
+                if (empty($params)) {
+                    $newUrl = preg_replace('/\/\?$/', '', $newUrl);
+                    $newUrl = preg_replace('/\/$/', '', $newUrl);
+                    $newUrl .= $suffix;
+                }
+
+                return $newUrl;
             }
         }
 
