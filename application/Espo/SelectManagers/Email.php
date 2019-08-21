@@ -51,7 +51,7 @@ class Email extends \Espo\Core\SelectManagers\Base
                         $skipIndex = true;
                         break;
                     } else {
-                        if (isset($item['attribute']) && $this->getSeed()->getAttributeParam($item['attribute'], 'type') === 'foreignId') {
+                        if (isset($item['attribute'])) {
                             $skipIndex = true;
                             break;
                         }
