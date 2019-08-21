@@ -15,15 +15,7 @@
             [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}],
             [
                 {
-                    "name": "signature",
-                    "params": {
-                        "toolbar": [
-                            ["style", ["bold", "italic", "underline", "clear"]],
-                            ["color", ["color"]],
-                            ["height", ["height"]],
-                            ["misc",["codeview"]]
-                        ]
-                    }
+                    "name": "signature"
                 },
                 {
                     "name": "defaultReminders"

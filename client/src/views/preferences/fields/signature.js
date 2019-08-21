@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,24 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+define('views/preferences/fields/signature', 'views/fields/wysiwyg', function (Dep) {
 
-use \Espo\ORM\Entity;
+    return Dep.extend({
 
-use \Espo\Core\Exceptions\Forbidden;
+        toolbar: [
+            ["style", ["bold", "italic", "underline", "clear"]],
+            ["color", ["color"]],
+            ["height", ["height"]],
+            ['table', ['espoLink']],
+            ["misc",["codeview", "fullscreen"]]
+        ],
 
-class EmailFilter extends Record
-{
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        parent::beforeCreateEntity($entity, $data);
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        if ($entity->get('isGlobal')) {
-            $entity->set('parentId', null);
-            $entity->set('parentType', null);
-        }
-    }
-}
+    });
+});

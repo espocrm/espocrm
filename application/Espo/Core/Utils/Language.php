@@ -399,7 +399,6 @@ class Language
             if (is_array($subData)) {
                 $this->sanitizeData($subData);
             } else {
-                $subData = htmlspecialchars($subData);
                 if (is_string($subData)) {
                     $subData = str_replace('<', '&lt;', $subData);
                     $subData = str_replace('>', '&gt;', $subData);

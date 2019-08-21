@@ -2,8 +2,6 @@
     <img src="{{url}}" style="max-width: 100%;">
 </div>
 
-{{#if size}}
-<div class="margin">
-{{translate 'Original'}}: <a href="{{originalUrl}}" target="_blank">{{name}}</a>
+<div class="original-link-container margin{{#unless showOriginalLink}} hidden{{/unless}}">
+    <a href="{{originalUrl}}" target="_blank">{{translate 'Original'}}</a>
 </div>
-{{/if}}
