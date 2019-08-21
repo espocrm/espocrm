@@ -1,0 +1,51 @@
+{
+   "params": [
+      {
+         "name": "required",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name": "options",
+         "type": "array",
+         "view": "views/admin/field-manager/fields/options",
+         "noEmptyString": true,
+         "required": true
+      },
+      {
+         "name":"isSorted",
+         "type":"bool"
+      },
+      {
+         "name": "translation",
+         "type": "varchar",
+         "hidden": true
+      },
+      {
+         "name": "maxCount",
+         "type": "int",
+         "min": 1
+      },
+      {
+         "name": "audited",
+         "type": "bool"
+      },
+      {
+         "name": "readOnly",
+         "type": "bool"
+      }
+   ],
+   "validationList": [
+      "required",
+      "maxCount"
+   ],
+   "filter": true,
+   "notCreatable": false,
+   "notSortable": true,
+   "fieldDefs": {
+      "type":"jsonArray",
+      "storeArrayValues": true
+   },
+   "translatedOptions": true,
+   "personalData": true
+}

@@ -131,6 +131,7 @@
         "map": "Map",
         "number": "Number (auto-increment)",
         "colorpicker": "Color Picker",
+        "checklist": "Checklist",
         "jsonArray": "Json Array",
         "jsonObject": "Json Object"
     },
