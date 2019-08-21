@@ -251,10 +251,12 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
 
         exit: function (after) {
             if (after == 'cancel') {
-                this.getRouter().navigate('#User/view/' + this.model.id, {trigger: true});
+                var url = '#User/view/' + this.model.id;
+                if (!this.getAcl().checkModel(this.getUser())) {
+                    url = '#';
+                }
+                this.getRouter().navigate(url, {trigger: true});
             }
         },
-
     });
-
 });
