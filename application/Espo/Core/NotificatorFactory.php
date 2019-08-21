@@ -53,6 +53,9 @@ class NotificatorFactory extends InjectableFactory
             }
         }
 
-        return $this->createByClassName($className);
+        $obj = $this->createByClassName($className);
+        $obj->setEntityType($entityType);
+
+        return $obj;
     }
 }

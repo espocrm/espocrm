@@ -42,6 +42,10 @@ class Base implements Injectable
 
     protected $injections = [];
 
+    private $userIdEnabledMap = [];
+
+    protected $entityType;
+
     public static $order = 9;
 
     public function __construct()
@@ -63,6 +67,11 @@ class Base implements Injectable
     protected function addDependency($name)
     {
         $this->dependencyList[] = $name;
+    }
+
+    public function setEntityType(string $entityType)
+    {
+        $this->entityType = $entityType;
     }
 
     public function getDependencyList()
@@ -113,6 +122,8 @@ class Base implements Injectable
 
     protected function processForUser(Entity $entity, $assignedUserId)
     {
+        if (!$this->isNotificationsEnabledForUser($assignedUserId)) return;
+
         if ($entity->hasAttribute('createdById') && $entity->hasAttribute('modifiedById')) {
             if ($entity->isNew()) {
                 $isNotSelfAssignment = $assignedUserId !== $entity->get('createdById');
@@ -125,18 +136,36 @@ class Base implements Injectable
         if (!$isNotSelfAssignment) return;
 
         $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set(array(
+        $notification->set([
             'type' => 'Assign',
             'userId' => $assignedUserId,
-            'data' => array(
+            'data' => [
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->id,
                 'entityName' => $entity->get('name'),
                 'isNew' => $entity->isNew(),
                 'userId' => $this->getUser()->id,
-                'userName' => $this->getUser()->get('name')
-            )
-        ));
+                'userName' => $this->getUser()->get('name'),
+            ]
+        ]);
         $this->getEntityManager()->saveEntity($notification);
+    }
+
+    protected function isNotificationsEnabledForUser(string $userId)
+    {
+        if (!array_key_exists($userId, $this->userIdEnabledMap)) {
+            $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+            $isEnabled = false;
+            if ($preferences) {
+                $isEnabled = true;
+                $ignoreList = $preferences->get('assignmentNotificationsIgnoreEntityTypeList') ?? [];
+                if (in_array($this->entityType, $ignoreList)) {
+                    $isEnabled = false;
+                }
+            }
+            $this->userIdEnabledMap[$userId] = $isEnabled;
+        }
+
+        return $this->userIdEnabledMap[$userId];
     }
 }

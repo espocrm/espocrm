@@ -67,6 +67,8 @@
                 "useCustomTabList": false,
                 "tabList": false,
                 "emailUseExternalClient": false,
+                "assignmentNotificationsIgnoreEntityTypeList": false,
+                "assignmentEmailNotificationsIgnoreEntityTypeList": false,
                 "dashletsOptions": false,
                 "dashboardLayout": false
             },

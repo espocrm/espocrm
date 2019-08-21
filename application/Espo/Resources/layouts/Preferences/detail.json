@@ -78,7 +78,8 @@
         "name": "notifications",
         "rows": [
             [{"name": "receiveAssignmentEmailNotifications"}, {"name": "receiveMentionEmailNotifications"}],
-            [{"name": "receiveStreamEmailNotifications"}, false]
+            [{"name": "receiveStreamEmailNotifications"}, false],
+            [{"name": "assignmentNotificationsIgnoreEntityTypeList"}, {"name": "assignmentEmailNotificationsIgnoreEntityTypeList"}]
         ]
     },
     {

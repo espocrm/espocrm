@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
+define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
 
@@ -123,6 +123,17 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             var hideNotificationPanel = true;
             if (!this.getConfig().get('assignmentEmailNotifications') || this.model.isPortal()) {
                 this.hideField('receiveAssignmentEmailNotifications');
+                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+            } else {
+                hideNotificationPanel = false;
+            }
+
+            if ((this.getConfig().get('assignmentEmailNotificationsEntityList') || []).length === 0) {
+                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+            }
+
+            if ((this.getConfig().get('assignmentNotificationsEntityList') || []).length === 0 || this.model.isPortal()) {
+                this.hideField('assignmentNotificationsIgnoreEntityTypeList');
             } else {
                 hideNotificationPanel = false;
             }

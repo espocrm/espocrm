@@ -53,6 +53,8 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.params.options = this.params.options || [];
+
+            this.isInversed = this.params.isInversed || this.options.isInversed || this.isInversed;
         },
 
         afterRender: function () {

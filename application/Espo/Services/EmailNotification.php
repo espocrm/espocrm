@@ -122,6 +122,9 @@ class EmailNotification extends \Espo\Core\Services\Base
         if (!$preferences) return;
         if (!$preferences->get('receiveAssignmentEmailNotifications')) return;
 
+        $ignoreList = $preferences->get('assignmentEmailNotificationsIgnoreEntityTypeList') ?? [];
+        if (in_array($entityType, $ignoreList)) return;
+
         $assignerUser = $this->getEntityManager()->getEntity('User', $assignerUserId);
         $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
         if (!$entity) return true;

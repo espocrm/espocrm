@@ -112,6 +112,16 @@
             "type": "bool",
             "default": true
         },
+        "assignmentNotificationsIgnoreEntityTypeList": {
+            "type": "checklist",
+            "translation": "Global.scopeNamesPlural",
+            "view": "views/preferences/fields/assignment-notifications-ignore-entity-type-list"
+        },
+        "assignmentEmailNotificationsIgnoreEntityTypeList": {
+            "type": "checklist",
+            "translation": "Global.scopeNamesPlural",
+            "view": "views/preferences/fields/assignment-email-notifications-ignore-entity-type-list"
+        },
         "autoFollowEntityTypeList": {
             "type": "multiEnum",
             "view": "views/preferences/fields/auto-follow-entity-type-list",
