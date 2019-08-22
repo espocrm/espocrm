@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (Dep) {
+define('views/admin/layouts/grid', 'views/admin/layouts/base', function (Dep) {
 
     return Dep.extend({
 
@@ -88,7 +88,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     this.panels.splice(index, 1);
                 }
 
-                this.normilizaDisabledItemList();
+                this.normilizeDisabledItemList();
             },
             'click #layout a[data-action="addRow"]': function (e) {
                 var tpl = this.unescape($("#layout-row-tpl").html());
@@ -103,55 +103,62 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     }
                 });
                 $(e.target).closest('ul.rows > li').remove();
-                this.normilizaDisabledItemList();
+                this.normilizeDisabledItemList();
             },
             'click #layout a[data-action="removeField"]': function (e) {
-                var el = $(e.target).closest('li');
-                var index = el.index();
-                var parent = el.parent();
+                var $li = $(e.target).closest('li');
+                var index = $li.index();
+                var $ul = $li.parent();
 
-                el.appendTo($('ul.disabled'));
+                $li.appendTo($('ul.disabled'));
 
-                var empty = $($('#empty-cell-tpl').html());
-                if (el.attr('data-full-width')) {
+                var $empty = $($('#empty-cell-tpl').html());
+
+                if (parseInt($ul.attr('data-cell-count')) === 1) {
                     for (var i = 0; i < this.columnCount; i++) {
-                        parent.append(empty.clone());
+                        $ul.append($empty.clone());
                     }
                 } else {
-
                     if (index == 0) {
-                        parent.prepend(empty);
+                        $ul.prepend($empty);
                     } else {
-                        empty.insertAfter(parent.children(':nth-child(' + index + ')'));
+                        $empty.insertAfter($ul.children(':nth-child(' + index + ')'));
                     }
                 }
 
-                el.removeAttr('data-full-width');
+                var cellCount = $ul.children().length;
+                $ul.attr('data-cell-count', cellCount.toString());
+                $ul.closest('li').attr('data-cell-count', cellCount.toString());
 
                 this.makeDraggable();
             },
             'click #layout a[data-action="minusCell"]': function (e) {
-                if (this.columnCount < 2) {
-                    return;
-                }
-                $li = $(e.currentTarget).closest('li');
-                $ul = $li.parent();
+                if (this.columnCount < 2) return;
 
-                var count = 0;
+                var $li = $(e.currentTarget).closest('li');
+                var $ul = $li.parent();
 
-                var isEmpty = false;
-                if ($ul.children('li:not(.empty)').length == 0) {
-                    isEmpty = true;
-                }
+                $li.remove();
 
-                $ul.children('li.empty').remove();
-                $ul.children('li:not(:first-child)').remove();
-                $ul.children('li').attr('data-full-width', true);
+                var cellCount = parseInt($ul.children().length || 2);
 
-                if (isEmpty) {
-                    $ul.append($('<li class="empty"></li>').attr('data-full-width', true));
-                    this.makeDraggable();
-                }
+                this.makeDraggable();
+
+                $ul.attr('data-cell-count', cellCount.toString());
+                $ul.closest('li').attr('data-cell-count', cellCount.toString());
+            },
+            'click #layout a[data-action="plusCell"]': function (e) {
+                var $li = $(e.currentTarget).closest('li');
+                var $ul = $li.find('ul');
+
+                var $empty = $($('#empty-cell-tpl').html());
+                $ul.append($empty);
+
+                var cellCount = $ul.children().length;
+                $ul.attr('data-cell-count', cellCount.toString());
+                $ul.closest('li').attr('data-cell-count', cellCount.toString());
+
+                this.makeDraggable();
             },
             'click #layout a[data-action="edit-panel-label"]': function (e) {
                 var $header = $(e.target).closest('header');
@@ -192,9 +199,9 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             }
         }, Dep.prototype.events),
 
-        normilizaDisabledItemList: function () {
+        normilizeDisabledItemList: function () {
             $('#layout ul.cells.disabled > li').each(function (i, el) {
-                $(el).removeAttr('data-full-width');
+
             }.bind(this));
         },
 
@@ -352,16 +359,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     var $target = $(this);
                     var $draggable = $(ui.draggable);
 
-                    var targetFullWidth = $target.attr('data-full-width');
-                    var draggableFullWidth = $draggable.attr('data-full-width');
-
-                    if (draggableFullWidth && !targetFullWidth) {
-                        $draggable.removeAttr('data-full-width');
-                        $target.attr('data-full-width', 'true');
-                    } else if (!draggableFullWidth && targetFullWidth) {
-                        $draggable.attr('data-full-width', 'true');
-                        $target.removeAttr('data-full-width');
-                    }
 
                     ui.draggable.css({
                         top: 0,

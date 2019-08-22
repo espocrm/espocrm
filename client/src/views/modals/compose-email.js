@@ -38,8 +38,6 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
         fullFormDisabled: true,
 
-        columnCount: 2,
-
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -83,7 +81,6 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 el: this.containerSelector + ' .edit-container',
                 type: 'editSmall',
                 layoutName: this.layoutName || 'detailSmall',
-                columnCount: this.columnCount,
                 buttonsDisabled: true,
                 selectTemplateDisabled: this.options.selectTemplateDisabled,
                 removeAttachmentsOnSelectTemplate: this.options.removeAttachmentsOnSelectTemplate,

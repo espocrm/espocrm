@@ -46,8 +46,6 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         buttonsDisabled: false,
 
-        columnCount: 2,
-
         scope: null,
 
         isNew: false,
@@ -657,7 +655,6 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.returnDispatchParams = this.options.returnDispatchParams || this.returnDispatchParams;
 
             this.exit = this.options.exit || this.exit;
-            this.columnCount = this.options.columnCount || this.columnCount;
 
             Bull.View.prototype.init.call(this);
         },
@@ -1414,7 +1411,6 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     el: el + ' .middle',
                     layoutData: {
                         model: this.model,
-                        columnCount: this.columnCount
                     },
                     recordHelper: this.recordHelper,
                     recordViewObject: this

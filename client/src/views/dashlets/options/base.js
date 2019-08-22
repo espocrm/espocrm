@@ -116,7 +116,6 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 el: this.options.el + ' .record',
                 layoutData: {
                     model: model,
-                    columnCount: 2,
                 }
             });
 

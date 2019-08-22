@@ -36,8 +36,6 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
 
         isWide: true,
 
-        columnCount: 3,
-
         stickButtonsContainerAllTheWay: true,
 
         fetch: function () {

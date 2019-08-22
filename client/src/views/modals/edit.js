@@ -40,8 +40,6 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
         editView: null,
 
-        columnCount: 2,
-
         escapeDisabled: true,
 
         fitHeight: true,
@@ -151,7 +149,6 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 el: this.containerSelector + ' .edit-container',
                 type: 'editSmall',
                 layoutName: this.layoutName || 'detailSmall',
-                columnCount: this.columnCount,
                 buttonsDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,

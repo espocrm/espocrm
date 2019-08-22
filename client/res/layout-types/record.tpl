@@ -18,6 +18,7 @@
         <div class="panel-body panel-body-form">
         <% _.each(panel.rows, function (row, rowNumber) { %>
             <div class="row">
+            <% var columnCount = row.length; %>
             <% _.each(row, function (cell, cellNumber) { %>
 
                 <%

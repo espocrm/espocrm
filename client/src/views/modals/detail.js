@@ -42,8 +42,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         removeDisabled: true,
 
-        columnCount: 2,
-
         backdrop: true,
 
         fitHeight: true,
@@ -276,7 +274,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 el: this.containerSelector + ' .record-container',
                 type: 'detailSmall',
                 layoutName: this.layoutName || 'detailSmall',
-                columnCount: this.columnCount,
                 buttonsDisabled: true,
                 inlineEditDisabled: true,
                 sideDisabled: this.sideDisabled,

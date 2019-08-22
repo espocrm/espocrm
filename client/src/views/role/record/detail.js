@@ -38,8 +38,6 @@ Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
 
         editModeDisabled: true,
 
-        columnCount: 3,
-
         stickButtonsContainerAllTheWay: true,
 
         setup: function () {

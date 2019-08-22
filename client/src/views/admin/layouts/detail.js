@@ -136,9 +136,6 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             layout.forEach(function (panel) {
                 panel.rows.forEach(function (row) {
                     row.forEach(function (cell, i) {
-                        if (i == this.columnCount) {
-                            return;
-                        }
                         this.enabledFields.push(cell.name);
                     }.bind(this));
                 }.bind(this));
