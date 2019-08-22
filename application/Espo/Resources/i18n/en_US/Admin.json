@@ -176,6 +176,7 @@
         "dynamicLogicRequired": "Conditions making field required",
         "dynamicLogicOptions": "Conditional options",
         "probabilityMap": "Stage Probabilities (%)",
+        "notActualOptions": "Not Actual Options",
         "readOnly": "Read-only",
         "maxFileSize": "Max File Size (Mb)",
         "isPersonalData": "Is Personal Data",

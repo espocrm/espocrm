@@ -33,22 +33,22 @@ class Lead extends \Espo\Core\SelectManagers\Base
 {
     protected function filterActive(&$result)
     {
-        $result['whereClause'][] = array(
-            'status!=' => ['Converted', 'Recycled', 'Dead']
-        );
+        $result['whereClause'][] = [
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+        ];
     }
 
     protected function filterActual(&$result)
     {
-        $result['whereClause'][] = array(
-            'status!=' => ['Converted', 'Recycled', 'Dead']
-        );
+        $result['whereClause'][] = [
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+        ];
     }
 
     protected function filterConverted(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'status=' => 'Converted'
-        );
+        ];
     }
  }

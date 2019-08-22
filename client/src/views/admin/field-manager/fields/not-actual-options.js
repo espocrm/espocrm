@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,26 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+define('views/admin/field-manager/fields/not-actual-options', 'views/fields/multi-enum', function (Dep) {
 
-class CaseObj extends \Espo\Core\SelectManagers\Base
-{
-    protected function boolFilterOpen(&$result)
-    {
-        $this->filterOpen($result);
-    }
+    return Dep.extend({
 
-    protected function filterOpen(&$result)
-    {
-        $result['whereClause'][] = [
-            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
-        ];
-    }
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-    protected function filterClosed(&$result)
-    {
-        $result['whereClause'][] = [
-            'status' => 'Closed'
-        ];
-    }
-}
+            this.params.options = Espo.Utils.clone(this.model.get('options')) || [];
+
+            this.listenTo(this.model, 'change:options', function (m, v, o) {
+                this.params.options = Espo.Utils.clone(m.get('options')) || [];
+
+                this.reRender();
+            }, this);
+        },
+
+    });
+});

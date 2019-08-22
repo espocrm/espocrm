@@ -48,67 +48,75 @@ class Task extends \Espo\Core\SelectManagers\Base
     protected function filterActual(&$result)
     {
         $result['whereClause'][] = [
-            'status!=' => ['Completed', 'Canceled', 'Deferred']
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
         ];
     }
 
     protected function filterDeferred(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'status=' => 'Deferred'
-        );
+        ];
     }
 
     protected function filterActualStartingNotInFuture(&$result)
     {
-        $result['whereClause'][] = array(
-            array(
-                'status!=' => ['Completed', 'Canceled', 'Deferred']
-            ),
-            array(
-                'OR' => array(
-                    array(
+        $result['whereClause'][] = [
+            [
+                'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+            ],
+            [
+                'OR' => [
+                    [
                         'dateStart' => null
-                    ),
-                    array(
+                    ],
+                    [
                         'dateStart!=' => null,
-                        'OR' => array(
-                            $this->convertDateTimeWhere(array(
+                        'OR' => [
+                            $this->convertDateTimeWhere([
                                 'type' => 'past',
                                 'attribute' => 'dateStart',
                                 'timeZone' => $this->getUserTimeZone()
-                            )),
-                            $this->convertDateTimeWhere(array(
+                            ]),
+                            $this->convertDateTimeWhere([
                                 'type' => 'today',
                                 'attribute' => 'dateStart',
                                 'timeZone' => $this->getUserTimeZone()
-                            ))
-                        )
-                    )
-                )
-            )
-        );
+                            ])
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 
     protected function filterCompleted(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'status' => ['Completed']
-        );
+        ];
     }
 
     protected function filterOverdue(&$result)
     {
+        $notActualList = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? [];
+
+        $notActual2List = [];
+        foreach ($notActualList as $item) {
+            if ($item === 'Deferred') continue;
+            $notActual2List[] = $item;
+        }
+
         $result['whereClause'][] = [
-            $this->convertDateTimeWhere(array(
+            $this->convertDateTimeWhere([
                 'type' => 'past',
                 'attribute' => 'dateEnd',
                 'timeZone' => $this->getUserTimeZone()
-            )),
+            ]),
             [
-                array(
-                    'status!=' => ['Completed', 'Canceled']
-                )
+                [
+                    'status!=' => $notActual2List,
+                ]
             ]
         ];
     }

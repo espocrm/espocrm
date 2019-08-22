@@ -12,7 +12,14 @@
                 "Completed": "success"
             },
             "default": "Not Started",
-            "audited": true
+            "audited": true,
+            "fieldManagerAdditionalParamList": [
+                {
+                    "name": "notActualOptions",
+                    "view": "views/admin/field-manager/fields/not-actual-options"
+                }
+            ],
+            "notActualOptions": ["Completed", "Canceled", "Deferred"]
         },
         "priority": {
             "type": "enum",

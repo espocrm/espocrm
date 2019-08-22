@@ -33,7 +33,14 @@
                 "Recycled": "danger",
                 "Dead": "danger"
             },
-            "audited": true
+            "audited": true,
+            "fieldManagerAdditionalParamList": [
+                {
+                    "name": "notActualOptions",
+                    "view": "views/admin/field-manager/fields/not-actual-options"
+                }
+            ],
+            "notActualOptions": ["Converted", "Recycled", "Dead"]
         },
         "source": {
             "type": "enum",
