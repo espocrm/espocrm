@@ -186,7 +186,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         select: function (model) {
-            this.$elementName.val(model.get('name'));
+            this.$elementName.val(model.get('name') || model.id);
             this.$elementId.val(model.get('id'));
             this.trigger('change');
         },

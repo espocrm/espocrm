@@ -43,8 +43,7 @@ Espo.define('crm:views/lead/record/panels/converted-to', 'views/record/panels/si
             if (this.getAcl().check('Opportunity') && !this.getMetadata().get('scopes.Opportunity.disabled')) {
                 this.fieldList.push('createdOpportunity');
             }
-        }
+        },
 
     });
-
 });

@@ -106,7 +106,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
         },
 
         getDetailLinkHtml: function (id, name) {
-            name = name || this.nameHash[id];
+            name = name || this.nameHash[id] || id;
 
             var roleHtml = '';
 

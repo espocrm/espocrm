@@ -70,7 +70,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
         },
 
         getDetailLinkHtml: function (id, name) {
-            name = name || this.nameHash[id];
+            name = name || this.nameHash[id] || id;
             if (!name && id) {
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
@@ -158,6 +158,8 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
         },
 
         addLinkHtml: function (id, name) {
+            name = name || id;
+
             if (this.mode == 'search') {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }

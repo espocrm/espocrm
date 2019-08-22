@@ -154,6 +154,8 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
         },
 
         addLinkHtml: function (id, name) {
+            name = name || id;
+
             if (this.mode == 'search') {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
