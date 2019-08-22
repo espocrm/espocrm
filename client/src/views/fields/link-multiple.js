@@ -307,6 +307,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         addLinkHtml: function (id, name) {
+            name = name || id;
+
             var $container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
             $el.html(this.getHelper().escapeString(name || id) + '&nbsp');
