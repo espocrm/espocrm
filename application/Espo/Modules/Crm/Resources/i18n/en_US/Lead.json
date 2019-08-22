@@ -22,6 +22,7 @@
         "createdAccount": "Account",
         "createdContact": "Contact",
         "createdOpportunity": "Opportunity",
+        "convertedAt": "Converted At",
         "campaign": "Campaign",
         "targetLists": "Target Lists",
         "targetList": "Target List",

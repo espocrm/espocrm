@@ -33,7 +33,17 @@ use Espo\ORM\Entity;
 
 class Lead extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function afterSave(Entity $entity, array $options = array())
+    public function beforeSave(Entity $entity, array $options = [])
+    {
+        if (!$entity->get('convertedAt') && $entity->get('status') === 'Converted' && $entity->isAttributeChanged('status')) {
+            $convertedAt = date('Y-m-d H:i:s');
+            $entity->set('convertedAt', $convertedAt);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
+    public function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 
