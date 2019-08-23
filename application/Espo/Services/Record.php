@@ -2651,6 +2651,7 @@ class Record extends \Espo\Core\Services\Base
         $list = [];
         foreach ($this->getFieldManagerUtil()->getEntityTypeFieldList($this->entityType) as $field) {
             if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') continue;
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'readOnly'])) continue;
             if (in_array($field, $forbiddenFieldList)) continue;
             $list[] = $field;
         }

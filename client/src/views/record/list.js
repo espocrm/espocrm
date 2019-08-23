@@ -1038,6 +1038,7 @@ define('views/record/list', 'view', function (Dep) {
                 var currencyFieldList = [];
                 this.getFieldManager().getEntityTypeFieldList(this.entityType).forEach(function (field) {
                     if (this.getMetadata().get(['entityDefs', this.entityType, 'fields', field, 'type']) !== 'currency') return;
+                    if (this.getMetadata().get(['entityDefs', this.entityType, 'fields', field, 'readOnly'])) return;
                     if (~forbiddenEditFieldList.indexOf('field')) return;
                     if (!this.getFieldManager().isEntityTypeFieldAvailable(this.entityType, field)) return;
                     currencyFieldList.push(field);
