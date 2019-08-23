@@ -185,10 +185,8 @@ var Espo = Espo || {classMap:{}};
 
         normalizeClassName: function (name) {
             var normalizedName = name;
-            if (~name.indexOf('.')) {
-                if (name.substr(-3) !== '.js') {
-                    console.warn(name + ': class name should use slashes for a directory separator and hyphen format.');
-                }
+            if (~name.indexOf('.') && !~name.indexOf('!')) {
+                console.warn(name + ': class name should use slashes for a directory separator and hyphen format.');
             }
             if (!!/[A-Z]/.exec(name[0])) {
                 if (name.indexOf(':') != -1) {
