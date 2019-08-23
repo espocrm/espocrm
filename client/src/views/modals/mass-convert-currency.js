@@ -27,7 +27,7 @@
  ************************************************************************/
 
 
-Espo.define('views/modals/mass-convert-currency', ['views/modal', 'model'], function (Dep, Model) {
+define('views/modals/mass-convert-currency', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 

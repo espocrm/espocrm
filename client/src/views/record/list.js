@@ -855,6 +855,45 @@ define('views/record/list', 'view', function (Dep) {
             }, this);
         },
 
+        massActionConvertCurrency: function () {
+            var ids = false;
+            var allResultIsChecked = this.allResultIsChecked;
+            if (!allResultIsChecked) {
+                ids = this.checkedList;
+            }
+
+            this.createView('modalConvertCurrency', 'views/modals/mass-convert-currency', {
+                entityType: this.scope,
+                ids: ids,
+                where: this.collection.getWhere(),
+                selectData: this.collection.data,
+                byWhere: this.allResultIsChecked,
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'after:update', function (count) {
+                    this.listenToOnce(this.collection, 'sync', function () {
+                        if (count) {
+                            var msg = 'massUpdateResult';
+                            if (count == 1) {
+                                msg = 'massUpdateResultSingle'
+                            }
+                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                        } else {
+                            Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
+                        }
+                        if (allResultIsChecked) {
+                            this.selectAllResult();
+                        } else {
+                            ids.forEach(function (id) {
+                                this.checkRecord(id);
+                            }, this);
+                        }
+                    }, this);
+                    this.collection.fetch();
+                }, this);
+            });
+        },
+
         removeMassAction: function (item) {
             var index = this.massActionList.indexOf(item);
             if (~index) {
@@ -984,10 +1023,30 @@ define('views/record/list', 'view', function (Dep) {
                 this.addMassAction('printPdf');
             }
 
-
             if (this.options.unlinkMassAction && this.collection) {
                 this.addMassAction('unlink', false, true);
             }
+
+            if (
+                !this.massConvertCurrencyDisabled &&
+                this.getConfig().get('currencyList').length > 1 &&
+                this.getAcl().checkScope(this.scope, 'edit') &&
+                this.getAcl().get('massUpdatePermission') === 'yes'
+            ) {
+                var forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit')
+
+                var currencyFieldList = [];
+                this.getFieldManager().getEntityTypeFieldList(this.entityType).forEach(function (field) {
+                    if (this.getMetadata().get(['entityDefs', this.entityType, 'fields', field, 'type']) !== 'currency') return;
+                    if (~forbiddenEditFieldList.indexOf('field')) return;
+                    if (!this.getFieldManager().isEntityTypeFieldAvailable(this.entityType, field)) return;
+                    currencyFieldList.push(field);
+                }, this);
+
+                if (currencyFieldList.length)
+                    this.addMassAction('convertCurrency', true);
+            }
+
 
             this.setupMassActionItems();
 
@@ -1752,6 +1811,6 @@ define('views/record/list', 'view', function (Dep) {
             if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
                 this.reRender();
             }
-        }
+        },
     });
 });

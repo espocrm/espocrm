@@ -536,4 +536,35 @@ class Record extends Base
 
         return $this->getRecordService()->restoreDeleted($id);
     }
+
+    public function postActionMassConvertCurrency($params, $data, $request)
+    {
+        if (!$this->getAcl()->check($this->name, 'edit')) throw new Forbidden();
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
+
+        $fieldList = $data->fieldList ?? null;
+
+        if (!empty($data->field)) {
+            if (!is_array($fieldList)) $fieldList = [];
+            $fieldList[] = $data->field;
+        }
+
+        if (!$this->getAcl()->checkScope($this->name, 'edit')) throw new Forbidden();
+
+        $params = [];
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $params['where'] = json_decode(json_encode($data->where), true);
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
+            }
+        } else if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
+        }
+
+        if (empty($data->currencyRates)) throw new BadRequest();
+        if (empty($data->targetCurrency)) throw new BadRequest();
+        if (empty($data->baseCurrency)) throw new BadRequest();
+
+        return $this->getRecordService()->massConvertCurrency($params, $data->targetCurrency,  $data->baseCurrency, $data->currencyRates, $fieldList);
+    }
 }

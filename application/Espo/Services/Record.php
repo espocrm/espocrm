@@ -1621,6 +1621,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function massUpdate(array $params, $data)
     {
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
+
         $updatedIdList = [];
         $repository = $this->getRepository();
 
@@ -2553,5 +2555,153 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $attributeList;
+    }
+
+    public function massConvertCurrency($params, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
+    {
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
+
+        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden();
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
+
+
+        foreach ($fieldList as $field) {
+            if (in_array($field, $forbiddenFieldList)) throw new Forbidden();
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
+                throw new Error("Can't convert not currency field.");
+            }
+        }
+
+        if (empty($fieldList)) throw new Forbidden();
+
+        $count = 0;
+
+        $idUpdatedList = [];
+        $repository = $this->getRepository();
+
+        if (array_key_exists('where', $params)) {
+            $where = $params['where'];
+            $p = [];
+            $p['where'] = $where;
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $p[$k] = $v;
+                }
+            }
+            $selectParams = $this->getSelectParams($p);
+            $selectParams['returnSthCollection'] = true;
+        } else if (array_key_exists('ids', $params)) {
+            $selectParams = $this->getSelectParams([]);
+            $selectParams['whereClause'][] = ['id' => $params['ids']];
+        } else {
+            throw new Error();
+        }
+
+        $collection = $repository->find($selectParams);
+
+        foreach ($collection as $entity) {
+            if ($entity->get($field) === null) continue;
+
+            $result = $this->convertEntityCurrency($entity, [$field], $targetCurrency, $baseCurrency, $rates);
+
+            if ($result) {
+                $idUpdatedList[] = $entity->id;
+                $count++;
+            }
+        }
+
+        return [
+            'count' => $count
+        ];
+    }
+
+    public function convertCurrency(string $id, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null) : ?Entity
+    {
+        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden();
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
+
+        foreach ($fieldList as $field) {
+            if (in_array($field, $forbiddenFieldList)) throw new Forbidden();
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
+                throw new Error("Can't convert not currency field.");
+            }
+        }
+
+        if (empty($fieldList)) throw new Forbidden();
+
+        $entity = $this->getEntity($id);
+
+        $result = $this->convertEntityCurrency($entity, $fieldList, $targetCurrency, $params, $baseCurrency, $rates);
+
+        if ($result) {
+            return $entity;
+        }
+
+        return null;
+    }
+
+    protected function getConvertCurrencyFieldList()
+    {
+        if (isset($this->convertCurrencyFieldList)) return $this->convertCurrencyFieldList;
+
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+
+        $list = [];
+        foreach ($this->getFieldManagerUtil()->getEntityTypeFieldList($this->entityType) as $field) {
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') continue;
+            if (in_array($field, $forbiddenFieldList)) continue;
+            $list[] = $field;
+        }
+
+        return $list;
+    }
+
+    protected function convertEntityCurrency(Entity $entity, array $fieldList, string $targetCurrency, string $baseCurrency, $rates)
+    {
+        if (!$this->getAcl()->check($entity, 'edit')) return;
+
+        $data = $this->getConvertCurrencyValues($entity, $fieldList, $targetCurrency, $baseCurrency, $rates);
+
+        $entity->set($data);
+        if ($this->getRepository()->save($entity)) {
+            $this->processActionHistoryRecord('update', $entity);
+            return true;
+        }
+    }
+
+    protected function getConvertCurrencyValues(Entity $entity, array $fieldList, string $targetCurrency, string $baseCurrency, $rates)
+    {
+        $data = (object) [];
+
+        foreach ($fieldList as $field) {
+            $currencyAttribute = $field . 'Currency';
+
+            $currentCurrency = $entity->get($currencyAttribute);
+            $value = $entity->get($field);
+
+            if ($currentCurrency === $targetCurrency) continue;
+
+            if ($currentCurrency !== $baseCurrency && !property_exists($rates, $currentCurrency)) {
+                continue;
+            }
+
+            $rate1 = property_exists($rates, $currentCurrency) ? $rates->$currentCurrency : 1.0;
+            $value = $value * $rate1;
+
+            $rate2 = property_exists($rates, $targetCurrency) ? $rates->$targetCurrency : 1.0;
+            $value = $value / $rate2;
+
+            if (!$rate2) continue;
+
+            $value = round($value, 2);
+
+            $data->$currencyAttribute = $targetCurrency;
+
+            $data->$field = $value;
+        }
+
+        return $data;
     }
 }
