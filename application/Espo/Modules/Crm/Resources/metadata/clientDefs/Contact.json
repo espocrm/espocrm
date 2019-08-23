@@ -8,30 +8,6 @@
         "detail": "crm:views/contact/record/detail",
         "detailQuick": "crm:views/contact/record/detail-small"
     },
-    "defaultSidePanelFieldLists": {
-        "detail": [
-            {
-                "name": "assignedUser"
-            },
-            {
-                "name": "teams"
-            },
-            {
-                "name": "portalUser"
-            }
-        ],
-        "detailSmall": [
-            {
-                "name": "assignedUser"
-            },
-            {
-                "name": "teams"
-            },
-            {
-                "name": "portalUser"
-            }
-        ]
-    },
     "sidePanels": {
         "detail": [
             {
@@ -112,6 +88,19 @@
                         {
                             "type": "isNotEmpty",
                             "attribute": "accountId"
+                        }
+                    ]
+                }
+            },
+            "portalUser": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "portalUserId",
+                            "data": {
+                                "field": "portalUser"
+                            }
                         }
                     ]
                 }
