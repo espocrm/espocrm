@@ -960,6 +960,7 @@ var Bull = Bull || {};
                 this.clearView(key);
             }
             this.trigger('remove');
+            this.onRemove();
             this.off();
             if (!dontEmpty) {
                 this.$el.empty();
@@ -978,6 +979,8 @@ var Bull = Bull || {};
             this._isRemoved = true;
             return this;
         },
+
+        onRemove: function () {},
 
         _setElement: function (el) {
             if (typeof el === 'string') {
