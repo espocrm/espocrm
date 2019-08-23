@@ -4,8 +4,6 @@
 {{/each}}
 </div>
 
-<link href="{{basePath}}client/css/espo/misc/layout-manager-grid.css" rel="stylesheet">
-
 <div id="layout" class="row">
     <div class="col-md-8">
         <div class="well">

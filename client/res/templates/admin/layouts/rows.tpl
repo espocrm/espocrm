@@ -4,8 +4,6 @@
 {{/each}}
 </div>
 
-<link href="{{basePath}}client/css/espo/misc/layout-manager-rows.css" rel="stylesheet">
-
 <div id="layout" class="row">
     <div class="col-sm-5">
         <div class="well">
