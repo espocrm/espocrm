@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/layouts/index', 'view', function (Dep) {
+define('views/admin/layouts/index', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -45,7 +45,7 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
             'sidePanelsDetail',
             'sidePanelsEdit',
             'sidePanelsDetailSmall',
-            'sidePanelsEditSmall'
+            'sidePanelsEditSmall',
         ],
 
         scope: null,
@@ -57,26 +57,7 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
                 scopeList: this.scopeList,
                 typeList: this.typeList,
                 scope: this.scope,
-                layoutScopeDataList: (function () {
-                    var dataList = [];
-                    this.scopeList.forEach(function (scope) {
-                        var d = {};
-                        d.scope = scope;
-                        d.typeList = _.clone(this.typeList);
-
-                        var additionalLayouts = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts') || {};
-                        for (var item in additionalLayouts) {
-                            d.typeList.push(item);
-                        }
-
-                        if (this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode'])) {
-                            d.typeList.push('kanban');
-                        }
-
-                        dataList.push(d);
-                    }, this);
-                    return dataList;
-                }).call(this)
+                layoutScopeDataList: this.getLayoutScopeDataList(),
             };
         },
 
@@ -93,6 +74,40 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
                 $(e.target).addClass('disabled');
                 this.openLayout(scope, type);
             },
+        },
+
+        getLayoutScopeDataList: function () {
+            var dataList = [];
+            this.scopeList.forEach(function (scope) {
+                var item = {};
+                item.scope = scope;
+                item.typeList = Espo.Utils.clone(this.typeList);
+
+                if (
+                    !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelDisabled'])
+                    &&
+                    !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelFieldList'])
+                ) {
+                    item.typeList.push('defaultSidePanel');
+                }
+
+                var additionalLayouts = this.getMetadata().get(['clientDefs', scope, 'additionalLayouts']) || {};
+                for (var aItem in additionalLayouts) {
+                    item.typeList.push(aItem);
+                }
+
+                if (this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode'])) {
+                    item.typeList.push('kanban');
+                }
+
+                item.typeList = item.typeList.filter(function (name) {
+                    return !this.getMetadata().get(['clientDefs', scope, 'layout' + Espo.Utils.upperCaseFirst(name) + 'Disabled'])
+                }, this);
+
+                dataList.push(item);
+            }, this);
+
+            return dataList;
         },
 
         setup: function () {

@@ -6,11 +6,6 @@
     "recordViews":{
         "detail":"crm:views/lead/record/detail"
     },
-    "defaultSidePanelFieldList": [
-        ":assignedUser",
-        "teams",
-        "convertedAt"
-    ],
     "sidePanels":{
         "detail":[
             {

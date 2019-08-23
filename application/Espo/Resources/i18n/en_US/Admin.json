@@ -87,6 +87,7 @@
         "filters": "Search Filters",
         "massUpdate": "Mass Update",
         "relationships": "Relationship Panels",
+        "defaultSidePanel": "Side Panel Fields",
         "sidePanelsDetail": "Side Panels (Detail)",
         "sidePanelsEdit": "Side Panels (Edit)",
         "sidePanelsDetailSmall": "Side Panels (Detail Small)",

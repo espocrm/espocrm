@@ -51,16 +51,12 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->object = new \Espo\Core\Utils\Layout($this->objects['fileManager'], $this->objects['metadata'], $this->objects['user']);
 
         $this->reflection = new ReflectionHelper($this->object);
-        $this->reflection->setProperty('params', array(
-            'application/Espo/Core/defaults',
-        ) );
     }
 
     protected function tearDown()
     {
         $this->object = NULL;
     }
-
 
     function testGetLayoutPathCore()
     {
@@ -101,9 +97,4 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($result, $this->object->get('Note', 'detail'));
     }
-
-
-
 }
-
-?>

@@ -37,6 +37,7 @@
          "layoutDetailDisabled": true,
          "layoutListDisabled": true,
          "layoutMassUpdateDisabled": true,
+         "layoutDefaultSidePanelDisabled": true,
          "customizationRequiredDisabled": true,
          "customizationOptionsDisabled": true,
          "customizationIsSortedDisabled": true,

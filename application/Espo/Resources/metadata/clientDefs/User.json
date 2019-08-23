@@ -110,10 +110,11 @@
             "view": "crm:views/record/panels/target-lists"
         }
     },
-   "filterList": [
-      "active"
-   ],
-   "boolFilterList": ["onlyMyTeam"],
+    "layoutDefaultSidePanelDisabled": true,
+    "filterList": [
+        "active"
+    ],
+    "boolFilterList": ["onlyMyTeam"],
     "selectDefaultFilters": {
         "filter": "active"
     },

@@ -23,6 +23,7 @@
             "maxLength": 24,
             "index": true,
             "inlineEditDisabled": true,
+            "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true
         },
         "password": {
@@ -85,6 +86,7 @@
         },
         "isActive": {
             "type": "bool",
+            "layoutDetailDisabled": true,
             "tooltip": true,
             "default": true
         },
@@ -170,6 +172,7 @@
         },
         "defaultTeam": {
             "type": "link",
+            "layoutDetailDisabled": true,
             "tooltip": true
         },
         "acceptanceStatus": {
@@ -181,9 +184,7 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
@@ -193,9 +194,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
@@ -214,32 +213,42 @@
                 "role": "userRole"
             },
             "additionalAttributeList": ["columns"],
+            "layoutDetailDisabled": true,
             "view": "views/user/fields/teams",
             "default": "javascript: return {teamsIds: []}"
         },
         "roles": {
             "type": "linkMultiple",
+            "layoutDetailDisabled": true,
             "tooltip": true
         },
         "portals": {
             "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
             "tooltip": true
         },
         "portalRoles": {
             "type": "linkMultiple",
+            "layoutDetailDisabled": true,
             "tooltip": true
         },
         "contact": {
             "type": "link",
+            "layoutDetailDisabled": true,
             "view": "views/user/fields/contact"
         },
         "accounts": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true
         },
         "account": {
             "type": "link",
             "notStorable": true,
             "foreignAccessDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
             "readOnly": true
         },
         "portal": {
@@ -251,6 +260,7 @@
         "avatar": {
             "type": "image",
             "view": "views/user/fields/avatar",
+            "layoutDetailDisabled": true,
             "previewSize": "small"
         },
         "sendAccessInfo": {
@@ -277,7 +287,9 @@
             "view": "views/fields/user"
         },
         "dashboardTemplate": {
-            "type": "link"
+            "type": "link",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true
         },
         "lastAccess": {
             "type": "datetime",

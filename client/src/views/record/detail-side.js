@@ -83,10 +83,6 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
                 this.type = this.options.type;
             }
 
-            if (this.defaultPanel) {
-                this.setupDefaultPanel();
-            }
-
             this.setupPanels();
 
             if (!this.additionalPanelsDisabled) {
@@ -124,18 +120,46 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
                 item.actionsViewKey = item.name + 'Actions';
             }, this);
 
-            this.wait(true);
-            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {
-                if (layoutData) {
-                    this.alterPanels(layoutData);
-                }
-                this.setupPanelViews();
-                this.wait(false);
-            }.bind(this));
+            this.wait(
+                Promise.all([
+                    new Promise(
+                        function (resolve) {
+                            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {
+                                this.layoutData = layoutData;
+                                resolve();
+                            }.bind(this))
+                        }.bind(this)
+                    ),
+                    new Promise(
+                        function (resolve) {
+                            if (!this.defaultPanel) resolve();
+                            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) resolve();
+                            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type])) resolve();
+                            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type])) resolve();
+                            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList'])) resolve();
+
+                            this.getHelper().layoutManager.get(this.scope, 'defaultSidePanel', function (layoutData) {
+                                this.defaultSidePanelLayoutData = layoutData;
+                                resolve();
+                            }.bind(this))
+                        }.bind(this)
+                    ),
+                ]).then(
+                    function () {
+                        if (this.defaultPanel)
+                            this.setupDefaultPanel();
+
+                        if (this.layoutData)
+                            this.alterPanels();
+
+                        this.setupPanelViews();
+                    }.bind(this)
+                )
+            );
         },
 
         alterPanels: function (layoutData) {
-            layoutData = layoutData || {};
+            layoutData = layoutData || this.layoutData || {};
 
             var newList = [];
             this.panelList.forEach(function (item, i) {
@@ -195,9 +219,11 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
 
             var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
 
-            if (!fieldList) {
+            if (!fieldList)
                 fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList']);
-            }
+
+            if (!fieldList && this.defaultSidePanelLayoutData)
+                fieldList = this.defaultSidePanelLayoutData;
 
             if (fieldList) {
                 defaultPanelDefs.options = defaultPanelDefs.options || {};

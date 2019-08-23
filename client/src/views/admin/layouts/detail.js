@@ -66,7 +66,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             }
         },
 
-        defaultPanelFieldList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'teams'],
+        defaultPanelFieldList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -111,13 +111,39 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
                 );
             }
 
+            promiseList.push(
+                new Promise(
+                    function (resolve) {
+                        if (this.getMetadata().get(['clientDefs', scope, 'layoutDefaultSidePanelDisabled'])) resolve();
+
+                        this.getHelper().layoutManager.get(this.scope, 'defaultSidePanel', function (layoutLoaded) {
+                            this.defaultSidePanelLayout = layoutLoaded;
+
+                            this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
+
+                            layoutLoaded.forEach(function (item) {
+                                var field = item.name;
+                                if (!field) return;
+                                if (field === ':assignedUser') {
+                                    field = 'assignedUser';
+                                }
+                                if (!~this.defaultPanelFieldList.indexOf(field)) {
+                                    this.defaultPanelFieldList.push(field);
+                                }
+                            }, this);
+
+                            resolve();
+                        }.bind(this));
+                    }.bind(this)
+                )
+            );
+
             Promise.all(promiseList).then(function () {
                 this.readDataFromLayout(model, layout);
                 if (callback) {
                     callback();
                 }
             }.bind(this));
-
         },
 
         readDataFromLayout: function (model, layout) {

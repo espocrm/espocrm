@@ -20,6 +20,11 @@
         "compose":"views/modals/compose-email"
     },
     "quickCreateModalType":"compose",
+    "defaultSidePanelFieldList": [
+        "teams",
+        "replied",
+        "replies"
+    ],
     "menu":{
         "list":{
             "buttons":[
@@ -71,6 +76,36 @@
                     "acl":"read"
                 }
             ]
+        }
+    },
+    "dynamicLogic":{
+        "fields": {
+            "replied": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "repliedId",
+                            "data": {
+                                "field": "replied"
+                            }
+                        }
+                    ]
+                }
+            },
+            "replies": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "repliesIds",
+                            "data": {
+                                "field": "replies"
+                            }
+                        }
+                    ]
+                }
+            }
         }
     },
     "filterList":[

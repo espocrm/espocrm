@@ -273,10 +273,8 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
             "link": "meetings",
@@ -285,9 +283,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",

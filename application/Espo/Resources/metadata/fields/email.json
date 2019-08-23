@@ -22,6 +22,7 @@
          "type": "bool",
          "notStorable": true,
          "layoutDetailDisabled": true,
+         "layoutDefaultSidePanelDisabled": true,
          "mergeDisabled": true,
          "foreignAccessDisabled": true,
          "customizationDefaultDisabled": true,

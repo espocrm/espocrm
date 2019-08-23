@@ -37,22 +37,15 @@ class Layout
 
     private $user;
 
-    protected $changedData = array();
+    protected $changedData = [];
 
-    protected $params = array(
-        'defaultsPath' => 'application/Espo/Core/defaults',
-    );
+    protected $defaultsPath = 'application/Espo/Core/defaults';
 
-
-    /**
-     * @var array - path to layout files
-     */
-    protected $paths = array(
+    protected $paths = [
         'corePath' => 'application/Espo/Resources/layouts',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',
         'customPath' => 'custom/Espo/Custom/Resources/layouts',
-    );
-
+    ];
 
     public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata, \Espo\Entities\User $user)
     {
@@ -82,14 +75,9 @@ class Layout
     }
 
     /**
-     * Get Layout context
-     *
-     * @param $scope
-     * @param $name
-     *
-     * @return json
+     * Get layout in string format
      */
-    public function get($scope, $name)
+    public function get(string $scope, string $name) : ?string
     {
         $scope = $this->sanitizeInput($scope);
         $name = $this->sanitizeInput($name);
@@ -98,21 +86,29 @@ class Layout
             return Json::encode($this->changedData[$scope][$name]);
         }
 
-        $fileFullPath = Util::concatPath($this->getLayoutPath($scope, true), $name . '.json');
-        if (!file_exists($fileFullPath)) {
-            $fileFullPath = Util::concatPath($this->getLayoutPath($scope), $name . '.json');
-        }
+        $filePath = Util::concatPath($this->getLayoutPath($scope, true), $name . '.json');
 
-        if (!file_exists($fileFullPath)) {
-            $defaultPath = $this->params['defaultsPath'];
-            $fileFullPath =  Util::concatPath(Util::concatPath($defaultPath, 'layouts'), $name . '.json' );
+        if (!file_exists($filePath))
+            $filePath = Util::concatPath($this->getLayoutPath($scope), $name . '.json');
 
-            if (!file_exists($fileFullPath)) {
-                return false;
+        if (!file_exists($filePath)) {
+            $defaultImplClassName = '\\Espo\\Custom\\Core\\Utils\\Layout\\Defaults\\' . ucfirst($name) . 'Type';
+            if (!class_exists($defaultImplClassName))
+                $defaultImplClassName = '\\Espo\\Core\\Utils\\Layout\\Defaults\\' . ucfirst($name) . 'Type';
+
+            if (class_exists($defaultImplClassName)) {
+                $defaultImpl = new $defaultImplClassName($this->metadata);
+                $data = $defaultImpl->get($scope);
+                return Json::encode($data);
             }
+
+            $defaultPath = $this->defaultsPath;
+            $filePath = Util::concatPath(Util::concatPath($defaultPath, 'layouts'), $name . '.json' );
+
+            if (!file_exists($filePath)) return null;
         }
 
-        return $this->getFileManager()->getContents($fileFullPath);
+        return $this->getFileManager()->getContents($filePath);
     }
 
     /**
@@ -189,7 +185,7 @@ class Layout
      */
     public function clearChanges()
     {
-        $this->changedData = array();
+        $this->changedData = [];
     }
 
     /**

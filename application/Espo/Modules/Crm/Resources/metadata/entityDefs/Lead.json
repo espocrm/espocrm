@@ -109,7 +109,6 @@
         },
         "convertedAt": {
             "type": "datetime",
-            "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
             "readOnly": true
         },
@@ -147,9 +146,7 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
@@ -159,9 +156,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
