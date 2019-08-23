@@ -342,6 +342,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
             $('#layout ul.cells:not(.disabled) > li').droppable({
                 accept: '.cell',
                 zIndex: 10,
+                hoverClass: 'ui-state-hover',
                 drop: function (e, ui) {
                     var index = ui.draggable.index();
                     var parent = ui.draggable.parent();
