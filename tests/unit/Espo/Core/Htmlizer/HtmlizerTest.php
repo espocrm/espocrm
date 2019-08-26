@@ -59,7 +59,9 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
                     ->expects($this->any())
                     ->method('getPhpContents')
                     ->will($this->returnCallback(function($fileName) use ($obj) {
-                        $data = eval('?>' . $obj->contents . '<?php');
+                        $obj->contents = str_replace('<?php ', '', $obj->contents);
+                        $obj->contents = str_replace('?>', '', $obj->contents);
+                        $data = eval($obj->contents . ';');
                         return $data;
                     }));
 
