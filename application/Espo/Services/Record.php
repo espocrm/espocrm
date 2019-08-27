@@ -132,6 +132,8 @@ class Record extends \Espo\Core\Services\Base
 
     private $acl = null;
 
+    private $user = null;
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -218,9 +220,21 @@ class Record extends \Espo\Core\Services\Base
         return $this->getInjection('acl');
     }
 
+    protected function getUser()
+    {
+        if ($this->user) return $this->user;
+
+        return $this->getInjection('user');
+    }
+
     public function setAcl(\Espo\Core\Acl $acl)
     {
         $this->acl = $acl;
+    }
+
+    public function setUser(\Espo\Enities\User $user)
+    {
+        $this->user = $user;
     }
 
     protected function getAclManager()
