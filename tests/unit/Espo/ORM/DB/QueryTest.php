@@ -47,7 +47,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     protected $entityFactory;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->pdo = $this->createMock('MockPDO');
         $this->pdo
@@ -81,7 +81,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->account = new \Espo\Entities\Account();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($this->query);
         unset($this->pdo);

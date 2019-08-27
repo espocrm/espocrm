@@ -47,7 +47,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         'customPath' => 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/i18n/{language}',
     ];
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
 
@@ -69,7 +69,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('currentLanguage', 'en_US');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

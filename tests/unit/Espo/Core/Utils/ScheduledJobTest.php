@@ -46,7 +46,7 @@ class ScheduledJobTest extends \PHPUnit\Framework\TestCase
         'default' => 'default command',
     );
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
 
@@ -68,7 +68,7 @@ class ScheduledJobTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('cronSetup', $this->cronSetup);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

@@ -1,12 +1,13 @@
 <!doctype html>
 <html>
     <head>
-        <title>EspoCRM Installation</title>
+        <title>{$langs['labels']['headerTitle']}</title>
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
         <script type="text/javascript" src="../client/lib/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="../client/lib/purify.min.js"></script>
 
         <script type="text/javascript" src="js/install.js"></script>
         <link href="../client/css/espo/hazyblue.css" rel="stylesheet">

@@ -43,7 +43,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     protected $systemConfigPath = 'tests/unit/testData/Utils/Config/systemConfig.php';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
 
@@ -60,7 +60,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('systemConfigPath', $this->systemConfigPath);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

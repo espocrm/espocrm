@@ -36,11 +36,11 @@ require_once 'tests/unit/testData/DB/Entities.php';
 
 class EntityTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
     }
 

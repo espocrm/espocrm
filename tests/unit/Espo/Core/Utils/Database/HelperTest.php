@@ -40,7 +40,7 @@ class HelperTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
 
@@ -58,7 +58,7 @@ class HelperTest extends \PHPUnit\Framework\TestCase
         ]));
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

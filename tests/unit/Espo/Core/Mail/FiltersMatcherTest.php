@@ -35,7 +35,7 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->object = new \Espo\Core\Mail\FiltersMatcher();
 
@@ -80,7 +80,7 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

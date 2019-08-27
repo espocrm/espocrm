@@ -92,6 +92,7 @@ class Converter
         'orderBy' => 'orderBy',
         'where' => 'where',
         'storeArrayValues' => 'storeArrayValues',
+        'binary' => 'binary',
     );
 
     protected $idParams = array(

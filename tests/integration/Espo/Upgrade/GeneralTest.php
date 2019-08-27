@@ -73,22 +73,20 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         return $upgradeId;
     }
 
-    /**
-     * @expectedException \Espo\Core\Exceptions\Error
-     */
     public function testUninstall()
     {
+        $this->expectException('\\Espo\\Core\\Exceptions\\Error');
+
         $upgradeId = $this->testInstall();
 
         $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
         $upgradeManager->uninstall(array('id' => $upgradeId));
     }
 
-    /**
-     * @expectedException \Espo\Core\Exceptions\Error
-     */
     public function testDelete()
     {
+        $this->expectException('\\Espo\\Core\\Exceptions\\Error');
+
         $upgradeId = $this->testInstall();
 
         $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());

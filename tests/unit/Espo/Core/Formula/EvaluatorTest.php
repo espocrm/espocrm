@@ -33,12 +33,12 @@ use \Espo\ORM\Entity;
 
 class EvaluatorTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->evaluator = new \Espo\Core\Formula\Evaluator();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->evaluator = null;
     }

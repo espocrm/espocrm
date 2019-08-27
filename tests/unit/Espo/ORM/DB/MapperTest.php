@@ -50,7 +50,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     protected $comment;
     protected $entityFactory;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->pdo = $this->createMock('MockPDO');
         $this->pdo
@@ -98,7 +98,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($this->pdo, $this->db, $this->post, $this->comment);
     }

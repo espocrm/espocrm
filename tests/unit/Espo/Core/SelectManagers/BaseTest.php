@@ -33,7 +33,7 @@ use \tests\unit\testData\Entities\Test2;
 
 class BaseTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         $entity = $this->entity = new Test2();
 
@@ -74,7 +74,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $this->user->id = 'test_id';
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($this->entity);
         unset($this->acl);

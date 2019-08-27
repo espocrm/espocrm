@@ -42,7 +42,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
     protected $filesPath= 'tests/unit/testData/FileManager';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['fileManager'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
         $this->objects['metadata'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
@@ -56,7 +56,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         ) );
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

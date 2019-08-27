@@ -79,6 +79,8 @@ var InstallScript = function(opt) {
 	];
 	this.checkIndex = 0;
 	this.checkError = false;
+
+    this.initSanitizeHtml();
 }
 
 InstallScript.prototype.main = function() {
@@ -542,15 +544,35 @@ InstallScript.prototype.getLang = function(key, type) {
 InstallScript.prototype.showMsg = function(opt) {
 	this.hideMsg();
 
-	var msg = opt.msg || '';
+	var message = opt.msg || '';
 	var error = opt.error || false;
-	$('#msg-box').html(msg);
-	$('#msg-box').removeClass('hide');
-	$('#msg-box').removeClass('alert-success');
-	$('#msg-box').removeClass('alert-danger');
 
-	if (error) $('#msg-box').addClass('alert-danger');
-	else $('#msg-box').addClass('alert-success');
+    if (message) {
+        message = this.sanitizeHtml(message);
+
+        $('#msg-box').html(message);
+        $('#msg-box').removeClass('hide');
+        $('#msg-box').removeClass('alert-success');
+        $('#msg-box').removeClass('alert-danger');
+    }
+
+	if (error) {
+        $('#msg-box').addClass('alert-danger');
+    } else {
+        $('#msg-box').addClass('alert-success');
+    }
+}
+
+InstallScript.prototype.initSanitizeHtml = function() {
+    DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+        if ('target' in node) {
+            node.setAttribute('target','_blank');
+        }
+    });
+}
+
+InstallScript.prototype.sanitizeHtml = function(html) {
+	return DOMPurify.sanitize(html);
 }
 
 InstallScript.prototype.hideMsg = function() {
@@ -638,7 +660,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 			// break next checking
 			var ajaxData = {
 				'success': false,
-				'errorMsg': ['Ajax failed']
+				'errorMsg': [self.getLang('Ajax failed', 'messages')]
 			}
 			self.callbackChecking(ajaxData);
 		}

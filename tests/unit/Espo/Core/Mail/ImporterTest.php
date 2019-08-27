@@ -34,7 +34,7 @@ use \Espo\Entities\Email;
 
 class ImporterTest extends \PHPUnit\Framework\TestCase
 {
-    function setUp()
+    function setUp() : void
     {
         $GLOBALS['log'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
 
@@ -126,13 +126,18 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test 3', $email->get('name'));
 
         $teamIdList = $email->getLinkMultipleIdList('teams');
-        $this->assertContains('teamTestId', $teamIdList);
+        $this->assertTrue(in_array('teamTestId', $teamIdList));
 
         $userIdList = $email->getLinkMultipleIdList('users');
-        $this->assertContains('userTestId', $userIdList);
+        $this->assertTrue(in_array('userTestId', $userIdList));
 
-        $this->assertContains('<br>Admin Test', $email->get('body'));
-        $this->assertContains('Admin Test', $email->get('bodyPlain'));
+        if (method_exists($this, 'assertStringContainsString')) { /* PHPUnit 7+ */
+            $this->assertStringContainsString('<br>Admin Test', $email->get('body'));
+            $this->assertStringContainsString('Admin Test', $email->get('bodyPlain'));
+        } else { /* PHPUnit 6 */
+            $this->assertContains('<br>Admin Test', $email->get('body'));
+            $this->assertContains('Admin Test', $email->get('bodyPlain'));
+        }
 
         $this->assertEquals('<e558c4dfc2a0f0d60f5ebff474c97ffc/1466410740/1950@espo>', $email->get('messageId'));
     }
@@ -182,13 +187,18 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test 3', $email->get('name'));
 
         $teamIdList = $email->getLinkMultipleIdList('teams');
-        $this->assertContains('teamTestId', $teamIdList);
+        $this->assertTrue(in_array('teamTestId', $teamIdList));
 
         $userIdList = $email->getLinkMultipleIdList('users');
-        $this->assertContains('userTestId', $userIdList);
+        $this->assertTrue(in_array('userTestId', $userIdList));
 
-        $this->assertContains('<br>Admin Test', $email->get('body'));
-        $this->assertContains('Admin Test', $email->get('bodyPlain'));
+        if (method_exists($this, 'assertStringContainsString')) {  /* PHPUnit 7+ */
+            $this->assertStringContainsString('<br>Admin Test', $email->get('body'));
+            $this->assertStringContainsString('Admin Test', $email->get('bodyPlain'));
+        } else {  /* PHPUnit 6 */
+            $this->assertContains('<br>Admin Test', $email->get('body'));
+            $this->assertContains('Admin Test', $email->get('bodyPlain'));
+        }
 
         $this->assertEquals('<e558c4dfc2a0f0d60f5ebff474c97ffc/1466410740/1950@espo>', $email->get('messageId'));
     }
