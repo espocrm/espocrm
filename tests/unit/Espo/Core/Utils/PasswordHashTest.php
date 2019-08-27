@@ -41,7 +41,7 @@ class PasswordHashTest extends \PHPUnit\Framework\TestCase
 
     protected $salt = 'bdaff81c7b8db54d';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
 
@@ -50,7 +50,7 @@ class PasswordHashTest extends \PHPUnit\Framework\TestCase
         $this->reflection = new ReflectionHelper($this->object);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

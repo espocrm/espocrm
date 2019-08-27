@@ -41,7 +41,7 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
 
     protected $number;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         date_default_timezone_set('UTC');
 
@@ -77,7 +77,7 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
         $this->htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $this->dateTime, $this->number);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($this->htmlizer);
         unset($this->fileManager);
@@ -170,4 +170,3 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test', $html);
     }
 }
-

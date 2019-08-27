@@ -40,7 +40,7 @@ class EntryPointManagerTest extends \PHPUnit\Framework\TestCase
 
     protected $filesPath= 'tests/unit/testData/EntryPoints';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
@@ -58,7 +58,7 @@ class EntryPointManagerTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

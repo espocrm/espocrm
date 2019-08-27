@@ -39,12 +39,12 @@ class SystemTest extends \PHPUnit\Framework\TestCase
     protected $reflection;
 
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->object = new \Espo\Core\Utils\System();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

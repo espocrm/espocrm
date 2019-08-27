@@ -114,7 +114,7 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return $this->espoTester->sendRequest($method, $action, $data);
     }
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->beforeSetUp();
 
@@ -134,7 +134,7 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         $this->afterStartApplication();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->espoTester->terminate();
         $this->espoTester = NULL;

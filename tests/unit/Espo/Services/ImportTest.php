@@ -39,7 +39,7 @@ class ImportTest extends \PHPUnit\Framework\TestCase
     protected $importService;
 
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['serviceFactory'] = $this->getMockBuilder('\Espo\Core\ServiceFactory')->disableOriginalConstructor()->getMock();
 
@@ -61,7 +61,7 @@ class ImportTest extends \PHPUnit\Framework\TestCase
 
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->importService = NULL;
     }
@@ -72,4 +72,3 @@ class ImportTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(true);
     }
 }
-

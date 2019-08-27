@@ -34,7 +34,7 @@ use \Espo\ORM\Entity;
 class FormulaTest extends \PHPUnit\Framework\TestCase
 {
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $container = $this->container = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
@@ -77,7 +77,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ]));
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->container = null;
         $this->functionFactory = null;
