@@ -2646,7 +2646,7 @@ class Record extends \Espo\Core\Services\Base
             $valueMap = (object) [];
             foreach ($entity->getAttributeList() as $a) {
                 if (in_array($a, ['modifiedAt', 'modifiedById', 'modifiedByName'])) continue;
-                if ($entity->get($a) !== $initialValueMap->$a ?? null) {
+                if ($entity->get($a) !== ($initialValueMap->$a ?? null)) {
                     $valueMap->$a = $entity->get($a);
                 }
             }
