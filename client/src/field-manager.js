@@ -150,6 +150,8 @@
         getEntityTypeFieldList: function (entityType, o) {
             var list = Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
 
+            o = o || {};
+
             var typeList = o.typeList;
             if (!typeList && o.type) typeList = [o.type];
 
