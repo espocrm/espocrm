@@ -1029,6 +1029,7 @@ define('views/record/list', 'view', function (Dep) {
 
             if (
                 !this.massConvertCurrencyDisabled &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled']) &&
                 this.getConfig().get('currencyList').length > 1 &&
                 this.getAcl().checkScope(this.scope, 'edit') &&
                 this.getAcl().get('massUpdatePermission') === 'yes'
