@@ -2565,6 +2565,8 @@ class Record extends \Espo\Core\Services\Base
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
 
+        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
+            throw new Error("Convert currency: targetCurrency rate is not specified.");
 
         foreach ($fieldList as $field) {
             if (in_array($field, $forbiddenFieldList)) throw new Forbidden();
@@ -2621,6 +2623,9 @@ class Record extends \Espo\Core\Services\Base
         if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden();
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
+
+        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
+            throw new Error("Convert currency: targetCurrency rate is not specified.");
 
         foreach ($fieldList as $field) {
             if (in_array($field, $forbiddenFieldList)) throw new Forbidden();
