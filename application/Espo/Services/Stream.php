@@ -1057,7 +1057,7 @@ class Stream extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($note);
     }
 
-    public function noteCreate(Entity $entity)
+    public function noteCreate(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
 
@@ -1097,6 +1097,10 @@ class Stream extends \Espo\Core\Services\Base
 
         $note->set('data', (object) $data);
 
+        if (!empty($options['createdById'])) {
+            $note->set('createdById', $options['createdById']);
+        }
+
         $this->getEntityManager()->saveEntity($note);
     }
 
@@ -1122,7 +1126,7 @@ class Stream extends \Espo\Core\Services\Base
         return $style;
     }
 
-    public function noteCreateRelated(Entity $entity, $parentType, $parentId)
+    public function noteCreateRelated(Entity $entity, $parentType, $parentId, array $options = [])
     {
         $note = $this->getEntityManager()->getEntity('Note');
 
@@ -1143,10 +1147,14 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('superParentType', 'Account');
         }
 
+        if (!empty($options['createdById'])) {
+            $note->set('createdById', $options['createdById']);
+        }
+
         $this->getEntityManager()->saveEntity($note);
     }
 
-    public function noteAssign(Entity $entity)
+    public function noteAssign(Entity $entity, array $options = [])
     {
         $note = $this->getEntityManager()->getEntity('Note');
 
@@ -1175,10 +1183,18 @@ class Stream extends \Espo\Core\Services\Base
             ]);
         }
 
+        if (!empty($options['createdById'])) {
+            $note->set('createdById', $options['createdById']);
+        }
+
+        if (!empty($options['modifiedById'])) {
+            $note->set('createdById', $options['modifiedById']);
+        }
+
         $this->getEntityManager()->saveEntity($note);
     }
 
-    public function noteStatus(Entity $entity, $field)
+    public function noteStatus(Entity $entity, $field, array $options = [])
     {
         $note = $this->getEntityManager()->getEntity('Note');
 
@@ -1203,6 +1219,14 @@ class Stream extends \Espo\Core\Services\Base
             'value' => $value,
             'style' => $style
         ]);
+
+        if (!empty($options['createdById'])) {
+            $note->set('createdById', $options['createdById']);
+        }
+
+        if (!empty($options['modifiedById'])) {
+            $note->set('createdById', $options['modifiedById']);
+        }
 
         $this->getEntityManager()->saveEntity($note);
     }
@@ -1233,13 +1257,13 @@ class Stream extends \Espo\Core\Services\Base
         return $this->auditedFieldsCache[$entityType];
     }
 
-    public function handleAudited($entity)
+    public function handleAudited($entity, array $options = [])
     {
         $auditedFields = $this->getAuditedFieldsData($entity);
 
         $updatedFieldList = [];
-        $was = array();
-        $became = array();
+        $was = [];
+        $became = [];
 
         foreach ($auditedFields as $field => $item) {
             $updated = false;
@@ -1288,6 +1312,10 @@ class Stream extends \Espo\Core\Services\Base
                     'became' => $became
                 ]
             ]);
+
+            if (!empty($options['modifiedById'])) {
+                $note->set('createdById', $options['modifiedById']);
+            }
 
             $this->getEntityManager()->saveEntity($note);
         }
