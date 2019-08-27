@@ -130,6 +130,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $duplicateIgnoreAttributeList = [];
 
+    private $acl = null;
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -211,7 +213,14 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getAcl()
     {
+        if ($this->acl) return $this->acl;
+
         return $this->getInjection('acl');
+    }
+
+    public function setAcl(\Espo\Core\Acl $acl)
+    {
+        $this->acl = $acl;
     }
 
     protected function getAclManager()
