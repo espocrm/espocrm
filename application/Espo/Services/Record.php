@@ -2595,7 +2595,7 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($fieldList as $i => $field) {
             if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') 
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency')
                 throw new Error("Can't convert not currency field.");
         }
 
@@ -2629,7 +2629,7 @@ class Record extends \Espo\Core\Services\Base
         $collection = $repository->find($selectParams);
 
         foreach ($collection as $entity) {
-            $result = $this->convertEntityCurrency($entity, $fieldList, $targetCurrency, $baseCurrency, $rates, $allFields);
+            $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
 
             if ($result) {
                 $idUpdatedList[] = $entity->id;
@@ -2667,7 +2667,7 @@ class Record extends \Espo\Core\Services\Base
 
         $initialValueMap = $entity->getValueMap();
 
-        $result = $this->convertEntityCurrency($entity, $fieldList, $targetCurrency, $baseCurrency, $rates, $allFields);
+        $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
 
         if ($result) {
             $valueMap = (object) [];
@@ -2699,11 +2699,11 @@ class Record extends \Espo\Core\Services\Base
         return $list;
     }
 
-    protected function convertEntityCurrency(Entity $entity, array $fieldList, string $targetCurrency, string $baseCurrency, $rates, $allFields = false)
+    protected function convertEntityCurrency(Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null)
     {
         if (!$this->getAcl()->check($entity, 'edit')) return;
 
-        $data = $this->getConvertCurrencyValues($entity, $fieldList, $targetCurrency, $baseCurrency, $rates, $allFields);
+        $data = $this->getConvertCurrencyValues($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
 
         $entity->set($data);
         if ($this->getRepository()->save($entity)) {
@@ -2712,8 +2712,10 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    protected function getConvertCurrencyValues(Entity $entity, array $fieldList, string $targetCurrency, string $baseCurrency, $rates, $allFields = false)
+    public function getConvertCurrencyValues(Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null)
     {
+        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
+
         $data = (object) [];
 
         foreach ($fieldList as $field) {
