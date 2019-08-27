@@ -1097,11 +1097,12 @@ class Stream extends \Espo\Core\Services\Base
 
         $note->set('data', (object) $data);
 
+        $o = [];
         if (!empty($options['createdById'])) {
-            $note->set('createdById', $options['createdById']);
+            $o['createdById'] = $options['createdById'];
         }
 
-        $this->getEntityManager()->saveEntity($note);
+        $this->getEntityManager()->saveEntity($note, $o);
     }
 
     protected function getStatusStyle($entityType, $field, $value)
@@ -1147,11 +1148,12 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('superParentType', 'Account');
         }
 
+        $o = [];
         if (!empty($options['createdById'])) {
-            $note->set('createdById', $options['createdById']);
+            $o['createdById'] = $options['createdById'];
         }
 
-        $this->getEntityManager()->saveEntity($note);
+        $this->getEntityManager()->saveEntity($note, $o);
     }
 
     public function noteAssign(Entity $entity, array $options = [])
@@ -1183,15 +1185,15 @@ class Stream extends \Espo\Core\Services\Base
             ]);
         }
 
+        $o = [];
         if (!empty($options['createdById'])) {
-            $note->set('createdById', $options['createdById']);
+            $o['createdById'] = $options['createdById'];
         }
-
         if (!empty($options['modifiedById'])) {
-            $note->set('createdById', $options['modifiedById']);
+            $o['createdById'] = $options['modifiedById'];
         }
 
-        $this->getEntityManager()->saveEntity($note);
+        $this->getEntityManager()->saveEntity($note, $o);
     }
 
     public function noteStatus(Entity $entity, $field, array $options = [])
@@ -1220,15 +1222,17 @@ class Stream extends \Espo\Core\Services\Base
             'style' => $style
         ]);
 
+        $o = [];
+
         if (!empty($options['createdById'])) {
-            $note->set('createdById', $options['createdById']);
+            $o['createdById'] = $options['createdById'];
         }
 
         if (!empty($options['modifiedById'])) {
-            $note->set('createdById', $options['modifiedById']);
+            $o['createdById'] = $options['modifiedById'];
         }
 
-        $this->getEntityManager()->saveEntity($note);
+        $this->getEntityManager()->saveEntity($note, $o);
     }
 
     protected function getAuditedFieldsData(Entity $entity)
@@ -1313,11 +1317,12 @@ class Stream extends \Espo\Core\Services\Base
                 ]
             ]);
 
+            $o = [];
             if (!empty($options['modifiedById'])) {
-                $note->set('createdById', $options['modifiedById']);
+                $o['createdById'] = $options['modifiedById'];
             }
 
-            $this->getEntityManager()->saveEntity($note);
+            $this->getEntityManager()->saveEntity($note, $o);
         }
     }
 

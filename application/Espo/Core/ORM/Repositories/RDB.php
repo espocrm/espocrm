@@ -301,7 +301,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     $entity->set('modifiedAt', $nowString);
                 }
                 if ($entity->hasAttribute('createdById')) {
-                    if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
+                    if (!empty($options['createdById'])) {
+                        $entity->set('createdById', $options['createdById']);
+                    } else if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
                         if ($this->getEntityManager()->getUser()) {
                             $entity->set('createdById', $this->getEntityManager()->getUser()->id);
                         }
