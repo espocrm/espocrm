@@ -2568,12 +2568,13 @@ class Record extends \Espo\Core\Services\Base
         if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
             throw new Error("Convert currency: targetCurrency rate is not specified.");
 
-        foreach ($fieldList as $field) {
-            if (in_array($field, $forbiddenFieldList)) throw new Forbidden();
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
+        foreach ($fieldList as $i => $field) {
+            if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') 
                 throw new Error("Can't convert not currency field.");
-            }
         }
+
+        $fieldList = array_values($fieldList);
 
         if (empty($fieldList)) throw new Forbidden();
 
@@ -2627,12 +2628,13 @@ class Record extends \Espo\Core\Services\Base
         if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
             throw new Error("Convert currency: targetCurrency rate is not specified.");
 
-        foreach ($fieldList as $field) {
-            if (in_array($field, $forbiddenFieldList)) throw new Forbidden();
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
+        foreach ($fieldList as $i => $field) {
+            if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') 
                 throw new Error("Can't convert not currency field.");
-            }
         }
+
+        $fieldList = array_values($fieldList);
 
         if (empty($fieldList)) throw new Forbidden();
 
