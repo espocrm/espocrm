@@ -1033,20 +1033,14 @@ define('views/record/list', 'view', function (Dep) {
                 this.getAcl().checkScope(this.scope, 'edit') &&
                 this.getAcl().get('massUpdatePermission') === 'yes'
             ) {
-                var forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit')
-
-                var currencyFieldList = [];
-                this.getFieldManager().getEntityTypeFieldList(this.entityType).forEach(function (field) {
-                    if (this.getMetadata().get(['entityDefs', this.entityType, 'fields', field, 'type']) !== 'currency') return;
-                    if (~forbiddenEditFieldList.indexOf('field')) return;
-                    if (!this.getFieldManager().isEntityTypeFieldAvailable(this.entityType, field)) return;
-                    currencyFieldList.push(field);
-                }, this);
+                var currencyFieldList = this.getFieldManager().getEntityTypeFieldList(this.entityType, {
+                    type: 'currency',
+                    acl: 'edit',
+                });
 
                 if (currencyFieldList.length)
                     this.addMassAction('convertCurrency', true);
             }
-
 
             this.setupMassActionItems();
 

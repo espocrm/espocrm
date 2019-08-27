@@ -141,6 +141,7 @@ define(
             this.preferences = new Preferences();
             this.preferences.settings = this.settings;
             this.acl = this.createAclManager();
+            this.fieldManager.acl = this.acl;
 
             this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
 

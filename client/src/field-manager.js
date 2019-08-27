@@ -28,9 +28,10 @@
 
  define('field-manager', [], function () {
 
-    var FieldManager = function (defs, metadata) {
+    var FieldManager = function (defs, metadata, acl) {
         this.defs = defs || {};
         this.metadata = metadata;
+        this.acl = acl || null;
     };
 
     _.extend(FieldManager.prototype, {
@@ -38,6 +39,8 @@
         defs: null,
 
         metadata: null,
+
+        acl: null,
 
         getParamList: function (fieldType) {
             if (fieldType in this.defs) {
@@ -144,8 +147,34 @@
             return _.union(this.getActualAttributeList(fieldType, fieldName), this.getNotActualAttributeList(fieldType, fieldName));
         },
 
-        getEntityTypeFieldList: function (entityType) {
-            return Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
+        getEntityTypeFieldList: function (entityType, o) {
+            var list = Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
+
+            var typeList = o.typeList;
+            if (!typeList && o.type) typeList = [o.type];
+
+            if (typeList) {
+                list = list.filter(function (item) {
+                    var type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
+                    return ~typeList.indexOf(type);
+                }, this);
+            }
+
+            if (o.onlyAvailable || o.acl) {
+                list = list.filter(function (item) {
+                    return this.isEntityTypeFieldAvailable(entityType, item);
+                }, this);
+            }
+
+            if (o.acl) {
+                var level = o.acl || 'read';
+                var forbiddenEditFieldList = this.acl.getScopeForbiddenFieldList(entityType, level);
+                list = list.filter(function (item) {
+                    return !~forbiddenEditFieldList.indexOf(item);
+                }, this);
+            }
+
+            return list;
         },
 
         getScopeFieldList: function (entityType) { // TODO remove in 5.8.0
