@@ -247,6 +247,7 @@
         "Personal Data": "Personal Data",
         "Erase": "Erase",
         "View Followers": "View Followers",
+        "Convert Currency": "Convert Currency",
         "Move Over": "Move Over"
     },
     "messages": {
@@ -299,6 +300,7 @@
         "internalPost": "Post will be seen only by internal users",
         "internalPostTitle": "Post is seen only by internal users",
         "done": "Done",
+        "notUpdated": "Not updated",
         "confirmMassFollow": "Are you sure you want to follow selected records?",
         "confirmMassUnfollow": "Are you sure you want to unfollow selected records?",
         "massFollowResult": "{count} records now are followed",

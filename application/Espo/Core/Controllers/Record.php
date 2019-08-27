@@ -539,17 +539,14 @@ class Record extends Base
 
     public function postActionMassConvertCurrency($params, $data, $request)
     {
-        if (!$this->getAcl()->check($this->name, 'edit')) throw new Forbidden();
+        if (!$this->getAcl()->checkScope($this->name, 'edit')) throw new Forbidden();
         if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
 
         $fieldList = $data->fieldList ?? null;
-
         if (!empty($data->field)) {
             if (!is_array($fieldList)) $fieldList = [];
             $fieldList[] = $data->field;
         }
-
-        if (!$this->getAcl()->checkScope($this->name, 'edit')) throw new Forbidden();
 
         $params = [];
         if (property_exists($data, 'where') && !empty($data->byWhere)) {
@@ -565,6 +562,24 @@ class Record extends Base
         if (empty($data->targetCurrency)) throw new BadRequest();
         if (empty($data->baseCurrency)) throw new BadRequest();
 
-        return $this->getRecordService()->massConvertCurrency($params, $data->targetCurrency,  $data->baseCurrency, $data->currencyRates, $fieldList);
+        return $this->getRecordService()->massConvertCurrency($params, $data->targetCurrency, $data->baseCurrency, $data->currencyRates, $fieldList);
+    }
+
+    public function postActionConvertCurrency($params, $data, $request)
+    {
+        if (!$this->getAcl()->checkScope($this->name, 'edit')) throw new Forbidden();
+
+        $fieldList = $data->fieldList ?? null;
+        if (!empty($data->field)) {
+            if (!is_array($fieldList)) $fieldList = [];
+            $fieldList[] = $data->field;
+        }
+
+        if (empty($data->id)) throw new BadRequest();
+        if (empty($data->currencyRates)) throw new BadRequest();
+        if (empty($data->targetCurrency)) throw new BadRequest();
+        if (empty($data->baseCurrency)) throw new BadRequest();
+
+        return $this->getRecordService()->convertCurrency($data->id, $data->targetCurrency, $data->baseCurrency, $data->currencyRates, $fieldList);
     }
 }

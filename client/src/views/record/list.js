@@ -863,7 +863,7 @@ define('views/record/list', 'view', function (Dep) {
             }
 
             this.createView('modalConvertCurrency', 'views/modals/mass-convert-currency', {
-                entityType: this.scope,
+                entityType: this.entityType,
                 ids: ids,
                 where: this.collection.getWhere(),
                 selectData: this.collection.data,

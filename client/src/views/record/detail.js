@@ -116,6 +116,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         portalLayoutDisabled: false,
 
+        convertCurrencyAction: true,
+
         events: {
             'click .button-container .action': function (e) {
                 Espo.Utils.handleAction(this, e);
@@ -181,6 +183,31 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }.bind(this));
         },
 
+        actionConvertCurrency: function () {
+            this.createView('modalConvertCurrency', 'views/modals/convert-currency', {
+                entityType: this.entityType,
+                model: this.model,
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'after:update', function (attributes) {
+                    var isChanged = false;
+                    for (var a in attributes) {
+                        if (attributes[a] !== this.model.get(a)) {
+                            isChanged = true;
+                            break;
+                        }
+                    }
+                    if (!isChanged) {
+                        Espo.Ui.warning(this.translate('notUpdated', 'messages'));
+                        return;
+                    }
+                    this.model.fetch().then(function () {
+                        Espo.Ui.success(this.translate('done', 'messages'));
+                    }.bind(this));
+                }, this);
+            });
+        },
+
         getSelfAssignAttributes: function () {
         },
 
@@ -234,6 +261,26 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         'label': 'Print to PDF',
                         'name': 'printPdf'
                     });
+                }
+            }
+
+            if (this.type === 'detail' && this.convertCurrencyAction) {
+                if (
+                    this.getAcl().check(this.entityType, 'edit')
+                    &&
+                    !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled'])
+                ) {
+                    var currencyFieldList = this.getFieldManager().getEntityTypeFieldList(this.entityType, {
+                        type: 'currency',
+                        acl: 'edit',
+                    });
+
+                    if (currencyFieldList.length) {
+                        this.addDropdownItem({
+                            label: 'Convert Currency',
+                            name: 'convertCurrency'
+                        });
+                    }
                 }
             }
 

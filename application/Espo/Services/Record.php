@@ -2604,9 +2604,7 @@ class Record extends \Espo\Core\Services\Base
         $collection = $repository->find($selectParams);
 
         foreach ($collection as $entity) {
-            if ($entity->get($field) === null) continue;
-
-            $result = $this->convertEntityCurrency($entity, [$field], $targetCurrency, $baseCurrency, $rates);
+            $result = $this->convertEntityCurrency($entity, $fieldList, $targetCurrency, $baseCurrency, $rates);
 
             if ($result) {
                 $idUpdatedList[] = $entity->id;
@@ -2619,7 +2617,7 @@ class Record extends \Espo\Core\Services\Base
         ];
     }
 
-    public function convertCurrency(string $id, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null) : ?Entity
+    public function convertCurrency(string $id, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
     {
         if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden();
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
@@ -2630,7 +2628,7 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($fieldList as $i => $field) {
             if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') 
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency')
                 throw new Error("Can't convert not currency field.");
         }
 
@@ -2640,10 +2638,19 @@ class Record extends \Espo\Core\Services\Base
 
         $entity = $this->getEntity($id);
 
-        $result = $this->convertEntityCurrency($entity, $fieldList, $targetCurrency, $params, $baseCurrency, $rates);
+        $initialValueMap = $entity->getValueMap();
+
+        $result = $this->convertEntityCurrency($entity, $fieldList, $targetCurrency, $baseCurrency, $rates);
 
         if ($result) {
-            return $entity;
+            $valueMap = (object) [];
+            foreach ($entity->getAttributeList() as $a) {
+                if (in_array($a, ['modifiedAt', 'modifiedById', 'modifiedByName'])) continue;
+                if ($entity->get($a) !== $initialValueMap->$a ?? null) {
+                    $valueMap->$a = $entity->get($a);
+                }
+            }
+            return $valueMap;
         }
 
         return null;
@@ -2687,6 +2694,8 @@ class Record extends \Espo\Core\Services\Base
 
             $currentCurrency = $entity->get($currencyAttribute);
             $value = $entity->get($field);
+
+            if ($value === null) continue;
 
             if ($currentCurrency === $targetCurrency) continue;
 

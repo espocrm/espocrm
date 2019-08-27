@@ -105,6 +105,7 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
 
             this.ajaxPostRequest(this.options.entityType + '/action/massConvertCurrency', {
                 field: this.options.field,
+                fieldList: this.options.fieldList,
                 currency: currency,
                 ids: this.options.ids || null,
                 where: hasWhere ? this.options.where : null,
@@ -112,7 +113,7 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
                 byWhere: this.options.byWhere,
                 targetCurrency: currency,
                 currencyRates: currencyRates,
-                baseCurrency: this.getConfig().get('baseCurrency')
+                baseCurrency: this.getConfig().get('baseCurrency'),
             }).then(function (result) {
                 this.trigger('after:update', result.count);
                 this.close();
