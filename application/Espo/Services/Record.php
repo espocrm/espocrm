@@ -232,7 +232,7 @@ class Record extends \Espo\Core\Services\Base
         $this->acl = $acl;
     }
 
-    public function setUser(\Espo\Enities\User $user)
+    public function setUser(\Espo\Entities\User $user)
     {
         $this->user = $user;
     }
