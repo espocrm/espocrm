@@ -67,4 +67,9 @@ class ActionHistoryRecord extends \Espo\Core\Controllers\Record
     {
         throw new Forbidden();
     }
+
+    public function beforeMassConvertCurrency()
+    {
+        throw new Forbidden();
+    }
 }
