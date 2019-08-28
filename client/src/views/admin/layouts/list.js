@@ -140,6 +140,8 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
                     if (fieldType) {
                         if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
                             o.notSortable = true;
+                            this.itemsData[fieldName] = this.itemsData[fieldName] || {};
+                            this.itemsData[fieldName].notSortable = true;
                         }
                     }
                     this.disabledFields.push(o);
