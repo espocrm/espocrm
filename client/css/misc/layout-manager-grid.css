@@ -1,0 +1,143 @@
+
+    #layout ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    #layout ul > li {
+        background-color: #FFF;
+    }
+    #layout ul.panels > li {
+        padding: 5px 10px;
+        margin-bottom: 20px;
+        min-height: 80px;
+        border: 1px solid #CCC;
+        list-style: none;
+    }
+    #layout ul.rows {
+        min-height: 80px;
+    }
+    #layout ul.rows > li  {
+        list-style: none;
+        border: 1px solid #CCC;
+        margin: 8px 0;
+        padding: 5px;
+        height: 72px;
+    }
+
+    #layout ul.cells  {
+        min-height: 30px;
+        margin-top: 12px;
+    }
+    #layout ul.panels ul.cells > li {
+        width: 46%;
+        float: left;
+    }
+    #layout ul.panels ul.cells > li[data-full-width="true"] {
+        width: 94%;
+    }
+    #layout ul.panels ul.cells[data-cell-count="1"] > li {
+        width: 94%;
+        a[data-action="minusCell"] {
+            display: none;
+        }
+    }
+    #layout ul.panels ul.cells[data-cell-count="2"] > li {
+        width: 46%;
+    }
+    #layout ul.panels ul.cells[data-cell-count="3"] > li {
+        width: 30%;
+    }
+    #layout ul.panels ul.cells[data-cell-count="4"] > li {
+        width: 22%;
+    }
+    #layout ul.cells > li {
+        list-style: none;
+        border: 1px solid #CCC;
+        margin: 5px;
+        padding: 5px;
+        height: 32px;
+    }
+    #layout ul.cells > li.ui-state-hover {
+        border-color: #c78c8c;
+    }
+    #layout  ul.cells.disabled > li {
+        margin: 5px 0;
+    }
+    #layout ul.rows > li > div {
+
+    }
+    #layout ul.disabled {
+        min-height: 200px;
+        width: 100%;
+    }
+    #layout ul.disabled > li a {
+        display: none;
+    }
+    #layout header {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    #layout ul.panels > li label {
+        display: inline;
+    }
+    #layout ul.panels > li header a {
+        font-weight: normal;
+    }
+    #layout ul.panels > li > div {
+        width: auto;
+        text-align: left;
+        margin-left: 5px;
+    }
+
+    ul.cells li.cell a.remove-field {
+        display: none;
+    }
+    ul.cells li.cell:hover a.remove-field {
+        display: block;
+    }
+    ul.cells[data-cell-count="1"] li.cell:hover a.remove-field[data-action="minusCell"] {
+        display: none;
+    }
+    ul.panels > li a.remove-panel {
+        display: none;
+    }
+    ul.panels > li:hover a.remove-panel {
+        display: block;
+    }
+    ul.rows > li a.remove-row {
+        display: none;
+        width: 5px;
+        height: 5px;
+    }
+    ul.rows > li:hover a.remove-row {
+        display: block;
+    }
+    ul.rows > li a.add-cell {
+        display: none;
+        position: relative;
+        width: 5px;
+        height: 5px;
+        top: 19px;
+        right: 7px;
+    }
+    ul.rows > li:hover a.add-cell {
+        display: block;
+    }
+    ul.rows > li[data-cell-count="4"]:hover a.add-cell {
+        display: none;
+    }
+    ul.panels > li a.edit-panel-label {
+        display: none;
+    }
+    ul.panels > li:hover a.edit-panel-label {
+        display: inline-block;
+    }
+    div.row-actions {
+        float: right;
+        height: 50px;
+        width: 12px;
+    }
+    .cell.ui-draggable-dragging {
+        opacity: 0.7;
+    }
