@@ -733,4 +733,80 @@ class Util
 
         return mb_strtolower($firstChar) . $then;
     }
+
+    /**
+     * Sanitize Html code
+     * @param  string $text
+     * @param  array  $permittedHtmlTags - Allows only html tags without parameters like <p></p>, <br>, etc.
+     * @return string
+     */
+    public static function sanitizeHtml($text, $permittedHtmlTags = ['p', 'br', 'b', 'strong', 'pre'])
+    {
+        if (is_array($text)) {
+            foreach ($text as $key => &$value) {
+                $value = self::sanitizeHtml($value, $permittedHtmlTags);
+            }
+            return $text;
+        }
+
+        $sanitized = htmlspecialchars($text, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
+
+        foreach ($permittedHtmlTags as $htmlTag) {
+            $sanitized = preg_replace('/&lt;(\/)?(' . $htmlTag . ')&gt;/i', '<$1$2>', $sanitized);
+        }
+
+        return $sanitized;
+    }
+
+    public static function urlAddParam($url, $paramName, $paramValue)
+    {
+        $urlQuery = parse_url($url, \PHP_URL_QUERY);
+
+        if (!$urlQuery) {
+            $params = [
+                $paramName => $paramValue
+            ];
+
+            $url = trim($url);
+            $url = preg_replace('/\/\?$/', '', $url);
+            $url = preg_replace('/\/$/', '', $url);
+
+            return $url . '/?' . http_build_query($params);
+        }
+
+        parse_str($urlQuery, $params);
+
+        if (!isset($params[$paramName]) || $params[$paramName] != $paramValue) {
+            $params[$paramName] = $paramValue;
+
+            return str_replace($urlQuery, http_build_query($params), $url);
+        }
+
+        return $url;
+    }
+
+    public static function urlRemoveParam($url, $paramName, $suffix = '')
+    {
+        $urlQuery = parse_url($url, \PHP_URL_QUERY);
+
+        if ($urlQuery) {
+            parse_str($urlQuery, $params);
+
+            if (isset($params[$paramName])) {
+                unset($params[$paramName]);
+
+                $newUrl = str_replace($urlQuery, http_build_query($params), $url);
+
+                if (empty($params)) {
+                    $newUrl = preg_replace('/\/\?$/', '', $newUrl);
+                    $newUrl = preg_replace('/\/$/', '', $newUrl);
+                    $newUrl .= $suffix;
+                }
+
+                return $newUrl;
+            }
+        }
+
+        return $url;
+    }
 }

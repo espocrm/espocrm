@@ -41,7 +41,7 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
 
     protected $fileList;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();
 
@@ -67,7 +67,7 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

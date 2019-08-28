@@ -39,7 +39,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
@@ -65,7 +65,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('metadataHelper', $this->objects['metadataHelper']);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

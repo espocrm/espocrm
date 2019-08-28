@@ -194,6 +194,7 @@ class Tester
         }
 
         //remove and copy Espo files
+        Utils::checkCreateDatabase($configData['database']);
         Utils::dropTables($configData['database']);
         $fileManager->removeInDir($this->installPath);
         $tt = $fileManager->copy($latestEspo, $this->installPath, true);

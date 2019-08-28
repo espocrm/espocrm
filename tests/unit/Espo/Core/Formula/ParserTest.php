@@ -33,12 +33,12 @@ use \Espo\ORM\Entity;
 
 class ParserTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->parser = new \Espo\Core\Formula\Parser();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->parser = null;
     }

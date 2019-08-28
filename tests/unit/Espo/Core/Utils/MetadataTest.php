@@ -45,7 +45,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
     protected $cacheFile = 'tests/unit/testData/cache/metadata.php';
     protected $objCacheFile = 'tests/unit/testData/cache/objMetadata.php';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         /*copy defaultCacheFile file to cache*/
         if (!file_exists($this->cacheFile)) {
@@ -68,7 +68,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('objCacheFile', $this->objCacheFile);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object->clearChanges();
         $this->object = NULL;

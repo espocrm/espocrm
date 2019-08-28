@@ -41,7 +41,7 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
 
     protected $number;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         date_default_timezone_set('UTC');
 
@@ -59,7 +59,9 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
                     ->expects($this->any())
                     ->method('getPhpContents')
                     ->will($this->returnCallback(function($fileName) use ($obj) {
-                        $data = eval('?>' . $obj->contents . '<?php');
+                        $obj->contents = str_replace('<?php ', '', $obj->contents);
+                        $obj->contents = str_replace('?>', '', $obj->contents);
+                        $data = eval($obj->contents . ';');
                         return $data;
                     }));
 
@@ -75,7 +77,7 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
         $this->htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $this->dateTime, $this->number);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($this->htmlizer);
         unset($this->fileManager);
@@ -168,4 +170,3 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test', $html);
     }
 }
-

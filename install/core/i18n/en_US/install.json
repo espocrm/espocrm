@@ -1,5 +1,6 @@
 {
     "labels": {
+        "headerTitle": "EspoCRM Installation",
         "Main page title": "Welcome to EspoCRM",
         "Main page header": "",
         "Start page title": "License Agreement",
@@ -48,7 +49,9 @@
         "Success": "Success",
         "Fail": "Fail",
         "is recommended": "is recommended",
-        "extension is missing": "extension is missing"
+        "extension is missing": "extension is missing",
+        "Crontab setup instructions": "Without running Scheduled jobs inbound emails, notifications and reminders will not be working. Here you can read {SETUP_INSTRUCTIONS}.",
+        "Setup instructions": "setup instructions"
     },
     "fields": {
         "Choose your language": "Choose your language",
@@ -82,7 +85,7 @@
         "smtpPassword": "Password"
     },
     "messages": {
-        "Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}</b></pre>\n\tOperation not permitted? Try this one: {CSU}",
+        "Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}</b></pre> Operation is not permitted? Try this one: {CSU}",
         "Some errors occurred!": "Some errors occurred!",
         "phpVersion": "Your PHP version is not supported by EspoCRM, please update to PHP {minVersion} at least",
         "requiredMysqlVersion": "Your MySQL version is not supported by EspoCRM, please update to MySQL {minVersion} at least",
@@ -102,8 +105,8 @@
         "Ajax failed": "An unexpected error occurred",
         "Cannot create user": "Cannot create a user",
         "Permission denied": "Permission denied",
-        "permissionInstruction": "<br>Run this in Terminal<pre><b>\"{C}\"</b></pre>",
-        "operationNotPermitted" : "Operation not permitted? Try this: <br>{CSU}",
+        "permissionInstruction": "<br>Run this command in Terminal:<pre><b>\"{C}\"</b></pre>",
+        "operationNotPermitted" : "Operation is not permitted? Try this one: <br><br>{CSU}",
         "Permission denied to": "Permission denied",
         "Can not save settings": "Can not save settings",
         "Cannot save preferences": "Cannot save preferences",

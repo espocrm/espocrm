@@ -72,13 +72,19 @@ select[name="user-lang"] {
 }
 
 .cron-help {
-	margin: 20px;
+	margin-top: 40px;
+	color: #ad4846;
 }
 
 .cron-help pre {
 	margin-top: 15px;
     padding-top: 15px;
     padding-bottom: 0;
+    text-align: left;
+}
+
+.cron-help p {
+	color: #333;
 }
 
 .table {
@@ -115,8 +121,7 @@ span.ok {
 
 .more-information {
 	line-height: 1.5;
-	font-size: 16px;
-	margin-top: 70px;
+	margin-top: 40px;
 	text-align: left;
 }
 

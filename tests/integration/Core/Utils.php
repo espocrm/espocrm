@@ -124,6 +124,19 @@ class Utils
         } /*END: SET UNDEFINED VARIABLES*/
     }
 
+    public static function checkCreateDatabase(array $options)
+    {
+        if (!isset($options['dbname'])) {
+            throw new \Espo\Core\Exceptions\Error('Option "dbname" is not found.');
+        }
+
+        $dbname = $options['dbname'];
+        unset($options['dbname']);
+
+        $pdo = static::createPdoConnection($options);
+        $pdo->query("CREATE DATABASE IF NOT EXISTS `". $dbname ."`");
+    }
+
     public static function dropTables(array $options)
     {
         $pdo = static::createPdoConnection($options);

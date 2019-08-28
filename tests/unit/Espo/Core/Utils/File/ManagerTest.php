@@ -42,7 +42,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
 
@@ -51,7 +51,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $this->reflection = new ReflectionHelper($this->object);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

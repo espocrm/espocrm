@@ -98,8 +98,4 @@ service apache2 restart',
     }
 }',
     ],
-
-    'blog' => 'http://blog.espocrm.com',
-    'twitter' => 'https://twitter.com/espocrm',
-    'forum' => 'http://forum.espocrm.com',
 ];
