@@ -104,6 +104,13 @@ class Base extends \Espo\Core\Acl\Base
             }
             if ($inAccount) {
                 return true;
+            } else {
+                if (is_null($isOwnContact) && $entity) {
+                    $isOwnContact = $this->checkIsOwnContact($user, $entity);
+                }
+                if ($isOwnContact) {
+                    return true;
+                }
             }
         }
 
@@ -117,7 +124,6 @@ class Base extends \Espo\Core\Acl\Base
         }
 
         return false;
-
     }
 
     public function checkReadOnlyAccount(User $user, $data)
@@ -152,13 +158,13 @@ class Base extends \Espo\Core\Acl\Base
     {
         $accountIdList = $user->getLinkMultipleIdList('accounts');
         if (count($accountIdList)) {
-            if ($entity->hasAttribute('accountId')) {
+            if ($entity->hasAttribute('accountId') && $entity->getRelationParam('account', 'entity') === 'Account') {
                 if (in_array($entity->get('accountId'), $accountIdList)) {
                     return true;
                 }
             }
 
-            if ($entity->hasRelation('accounts')) {
+            if ($entity->hasRelation('accounts') && $entity->getRelationParam('accounts', 'entity') === 'Account') {
                 $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
                 foreach ($accountIdList as $accountId) {
                     if ($repository->isRelated($entity, 'accounts', $accountId)) {
@@ -183,13 +189,13 @@ class Base extends \Espo\Core\Acl\Base
     {
         $contactId = $user->get('contactId');
         if ($contactId) {
-            if ($entity->hasAttribute('contactId')) {
+            if ($entity->hasAttribute('contactId') && $entity->getRelationParam('contact', 'entity') === 'Contact') {
                 if ($entity->get('contactId') === $contactId) {
                     return true;
                 }
             }
 
-            if ($entity->hasRelation('contacts')) {
+            if ($entity->hasRelation('contacts') && $entity->getRelationParam('contacts', 'entity') === 'Contact') {
                 $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
                 if ($repository->isRelated($entity, 'contacts', $contactId)) {
                     return true;
@@ -207,6 +213,4 @@ class Base extends \Espo\Core\Acl\Base
 
         return false;
     }
-
 }
-

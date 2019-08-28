@@ -552,16 +552,16 @@ class Base
             return;
         }
 
-        $d = [
+        $or = [
             'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')
         ];
         if ($this->hasAssignedUserField()) {
-            $d['assignedUserId'] = $this->getUser()->id;
+            $or['assignedUserId'] = $this->getUser()->id;
         } else if ($this->hasCreatedByField()) {
-            $d['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->id;
         }
         $result['whereClause'][] = [
-            'OR' => $d
+            'OR' => $or
         ];
     }
 
@@ -580,38 +580,42 @@ class Base
 
     protected function accessPortalOnlyContact(&$result)
     {
-        $d = [];
+        $or = [];
 
         $contactId = $this->getUser()->get('contactId');
 
         if ($contactId) {
-            if ($this->getSeed()->hasAttribute('contactId')) {
-                $d['contactId'] = $contactId;
+            if (
+                $this->getSeed()->hasAttribute('contactId') && $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
+            ) {
+                $or['contactId'] = $contactId;
             }
-            if ($this->getSeed()->hasRelation('contacts')) {
+            if (
+                $this->getSeed()->hasRelation('contacts') && $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
+            ) {
                 $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
                 $this->setDistinct(true, $result);
-                $d['contactsAccess.id'] = $contactId;
+                $or['contactsAccess.id'] = $contactId;
             }
         }
 
         if ($this->getSeed()->hasAttribute('createdById')) {
-            $d['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->id;
         }
 
         if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
             $contactId = $this->getUser()->get('contactId');
             if ($contactId) {
-                $d[] = [
+                $or[] = [
                     'parentType' => 'Contact',
                     'parentId' => $contactId
                 ];
             }
         }
 
-        if (!empty($d)) {
+        if (!empty($or)) {
             $result['whereClause'][] = [
-                'OR' => $d
+                'OR' => $or
             ];
         } else {
             $result['whereClause'][] = [
@@ -622,27 +626,31 @@ class Base
 
     protected function accessPortalOnlyAccount(&$result)
     {
-        $d = [];
+        $or = [];
 
         $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
         $contactId = $this->getUser()->get('contactId');
 
         if (count($accountIdList)) {
-            if ($this->getSeed()->hasAttribute('accountId')) {
-                $d['accountId'] = $accountIdList;
+            if (
+                $this->getSeed()->hasAttribute('accountId') && $this->getSeed()->getRelationParam('account', 'entity') === 'Account'
+            ) {
+                $or['accountId'] = $accountIdList;
             }
-            if ($this->getSeed()->hasRelation('accounts')) {
+            if (
+                $this->getSeed()->hasRelation('accounts') && $this->getSeed()->getRelationParam('accounts', 'entity') === 'Account'
+            ) {
                 $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
                 $this->setDistinct(true, $result);
-                $d['accountsAccess.id'] = $accountIdList;
+                $or['accountsAccess.id'] = $accountIdList;
             }
             if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
-                $d[] = [
+                $or[] = [
                     'parentType' => 'Account',
                     'parentId' => $accountIdList
                 ];
                 if ($contactId) {
-                    $d[] = [
+                    $or[] = [
                         'parentType' => 'Contact',
                         'parentId' => $contactId
                     ];
@@ -651,23 +659,27 @@ class Base
         }
 
         if ($contactId) {
-            if ($this->getSeed()->hasAttribute('contactId')) {
-                $d['contactId'] = $contactId;
+            if (
+                $this->getSeed()->hasAttribute('contactId') && $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
+            ) {
+                $or['contactId'] = $contactId;
             }
-            if ($this->getSeed()->hasRelation('contacts')) {
+            if (
+                $this->getSeed()->hasRelation('contacts') && $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
+            ) {
                 $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
                 $this->setDistinct(true, $result);
-                $d['contactsAccess.id'] = $contactId;
+                $or['contactsAccess.id'] = $contactId;
             }
         }
 
         if ($this->getSeed()->hasAttribute('createdById')) {
-            $d['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->id;
         }
 
-        if (!empty($d)) {
+        if (!empty($or)) {
             $result['whereClause'][] = [
-                'OR' => $d
+                'OR' => $or
             ];
         } else {
             $result['whereClause'][] = [
