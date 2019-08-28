@@ -162,6 +162,7 @@ abstract class Base
         'NOT',
         'IN',
         'NOT_IN',
+        'BINARY',
     ];
 
     protected $multipleArgumentsFunctionList = [
