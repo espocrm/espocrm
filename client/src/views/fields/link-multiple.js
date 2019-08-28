@@ -341,7 +341,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     names.push(this.getDetailLinkHtml(id));
                 }, this);
                 if (names.length) {
-                    return '<div>' + names.join('</div><div>') + '</div>';
+                    return '<div class="link-multiple-item">' + names.join('</div><div class="link-multiple-item">') + '</div>';
                 }
                 return;
             }
