@@ -110,8 +110,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         } else {
                             this.lastHtmlValue = this.model.get(this.name);
                             var value = this.htmlToPlain(this.model.get(this.name));
-                            this.model.set(this.name, value, {skipReRender: true});
                             this.disableWysiwygMode();
+                            this.model.set(this.name, value);
                         }
                     }
                 }
