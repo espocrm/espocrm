@@ -94,4 +94,69 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $result = $formulaManager->run($script, $contact);
         $this->assertEquals(40, $result);
     }
+
+    public function testRecordExists()
+    {
+        $em = $this->getContainer()->get('entityManager');
+
+        $em->createEntity('Meeting', [
+            'status' => 'Held',
+        ]);
+        $em->createEntity('Meeting', [
+            'status' => 'Planned',
+        ]);
+
+        $fm = $this->getContainer()->get('formulaManager');
+
+        $script = "record\\exists('Meeting', 'status', 'Held')";
+        $result = $fm->run($script, $contact);
+        $this->assertTrue($result);
+
+        $script = "record\\exists('Meeting', 'status', 'Not Held')";
+        $result = $fm->run($script, $contact);
+        $this->assertFalse($result);
+
+        $script = "record\\exists('Meeting', 'status', list('Held', 'Planned'))";
+        $result = $fm->run($script, $contact);
+        $this->assertTrue($result);
+
+        $script = "record\\exists('Meeting', 'status', list('Not Held'))";
+        $result = $fm->run($script, $contact);
+        $this->assertFalse($result);
+    }
+
+    public function testRecordCount()
+    {
+        $em = $this->getContainer()->get('entityManager');
+
+        $em->createEntity('Meeting', [
+            'status' => 'Held',
+        ]);
+        $em->createEntity('Meeting', [
+            'status' => 'Planned',
+        ]);
+
+        $fm = $this->getContainer()->get('formulaManager');
+
+        $script = "record\\count('Meeting', 'status', 'Held')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals(1, $result);
+
+        $script = "record\\count('Meeting', 'status', 'Not Held')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals(0, $result);
+
+        $script = "record\\count('Meeting', 'status', list('Held', 'Planned'))";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals(2, $result);
+
+        $script = "record\\count('Meeting', 'status', list('Not Held'))";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals(0, $result);
+
+
+        $script = "record\\count('Meeting', 'planned')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals(1, $result);
+    }
 }

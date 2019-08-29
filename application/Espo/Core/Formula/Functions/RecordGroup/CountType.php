@@ -64,8 +64,13 @@ class CountType extends \Espo\Core\Formula\Functions\Base
 
             $selectManager = $this->getInjection('selectManagerFactory')->create($entityType);
             $selectParams = $selectManager->getEmptySelectParams();
+
             if ($filter) {
-                $selectManager->applyFilter($filter, $selectParams);
+                if (is_string($filter)) {
+                    $selectManager->applyFilter($filter, $selectParams);
+                } else {
+                    throw new Error("Formula record\\count: Bad filter.");
+                }
             }
 
             return $this->getInjection('entityManager')->getRepository($entityType)->count($selectParams);
