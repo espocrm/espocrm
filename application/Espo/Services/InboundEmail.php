@@ -155,7 +155,7 @@ class InboundEmail extends \Espo\Services\Record
                         'isActive' => true,
                         'teamsMiddle.teamId' => $teamIdList
                     ),
-                    'distrinct' => true,
+                    'distinct' => true,
                     'joins' => ['teams']
                 ));
                 foreach ($userList as $user) {
