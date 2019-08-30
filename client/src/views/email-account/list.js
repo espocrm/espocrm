@@ -26,23 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-account/list', 'views/list', function (Dep) {
+define('views/email-account/list', 'views/list', function (Dep) {
 
     return Dep.extend({
-
-        createButton: false,
 
         keepCurrentRootUrl: true,
 
         setup: function () {
             Dep.prototype.setup.call(this);
-
-            this.menu.buttons.unshift({
-                action: 'create',
-                label: 'Create ' +  this.scope,
-                style: 'primary',
-                acl: 'edit'
-            });
 
             this.options.params = this.options.params || {};
 
@@ -63,7 +54,7 @@ Espo.define('views/email-account/list', 'views/list', function (Dep) {
                 attributes.assignedUserName = this.options.params.userName || this.options.params.userId;
             }
             return attributes;
-        }
+        },
 
     });
 });

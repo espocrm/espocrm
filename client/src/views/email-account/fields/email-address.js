@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-account/fields/email-address', 'views/fields/varchar', function (Dep) {
+define('views/email-account/fields/email-address', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
@@ -37,13 +37,34 @@ Espo.define('views/email-account/fields/email-address', 'views/fields/varchar', 
                 var emailAddress = this.model.get('emailAddress');
                 this.model.set('name', emailAddress);
             }, this);
+
+            var userId = this.model.get('assignedUserId');
+
+            if (this.getUser().isAdmin() && userId != this.getUser().id) {
+                Espo.Ajax.getRequest('User/' + userId).then(
+                    function (data) {
+                        var list = [];
+                        if (data.emailAddress) {
+                            list.push(data.emailAddress);
+                            this.params.options = list;
+
+                            if (data.emailAddressData) {
+                                data.emailAddressData.forEach(function (item) {
+                                    if (item.emailAddress === data.emailAddress) return;
+                                    list.push(item.emailAddress);
+                                });
+                            }
+                            this.reRender();
+                        }
+                    }.bind(this)
+                );
+            }
         },
 
         setupOptions: function () {
             if (this.model.get('assignedUserId') == this.getUser().id) {
                 this.params.options = this.getUser().get('userEmailAddressList');
             }
-
         },
 
     });
