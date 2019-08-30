@@ -40,6 +40,8 @@ class InboundEmail extends \Espo\Services\Record
 {
     private $campaignService = null;
 
+    protected $storageClassName = '\\Espo\\Core\\Mail\\Mail\\Storage\\Imap';
+
     const PORTION_LIMIT = 20;
 
     protected function init()
@@ -83,20 +85,20 @@ class InboundEmail extends \Espo\Services\Record
             }
         }
 
-        $imapParams = array(
+        $imapParams = [
             'host' => $params['host'],
             'port' => $params['port'],
             'user' => $params['username'],
             'password' => $password,
-        );
+        ];
 
         if (!empty($params['ssl'])) {
             $imapParams['ssl'] = 'SSL';
         }
 
-        $foldersArr = array();
+        $foldersArr = [];
 
-        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+        $storage = $this->createStorage($imapParams);
 
         $folders = new \RecursiveIteratorIterator($storage->getFolders(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($folders as $name => $folder) {
@@ -107,18 +109,18 @@ class InboundEmail extends \Espo\Services\Record
 
     public function testConnection(array $params)
     {
-        $imapParams = array(
+        $imapParams = [
             'host' => $params['host'],
             'port' => $params['port'],
             'user' => $params['username'],
             'password' => $params['password']
-        );
+        ];
 
         if (!empty($params['ssl'])) {
             $imapParams['ssl'] = 'SSL';
         }
 
-        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+        $storage = $this->createStorage($imapParams);
 
         if ($storage->getFolders()) {
             return true;
@@ -149,15 +151,15 @@ class InboundEmail extends \Espo\Services\Record
 
         if (!empty($teamIdList)) {
             if ($emailAccount->get('addAllTeamUsers')) {
-                $userList = $this->getEntityManager()->getRepository('User')->find(array(
+                $userList = $this->getEntityManager()->getRepository('User')->find([
                     'select' => ['id'],
-                    'whereClause' => array(
+                    'whereClause' => [
                         'isActive' => true,
                         'teamsMiddle.teamId' => $teamIdList
-                    ),
+                    ],
                     'distinct' => true,
-                    'joins' => ['teams']
-                ));
+                    'joins' => ['teams'],
+                ]);
                 foreach ($userList as $user) {
                     $userIdList[] = $user->id;
                 }
@@ -210,7 +212,7 @@ class InboundEmail extends \Espo\Services\Record
             $imapParams['ssl'] = 'SSL';
         }
 
-        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+        $storage = $this->createStorage($imapParams);
 
         $monitoredFolders = $emailAccount->get('monitoredFolders');
         if (empty($monitoredFolders)) {
@@ -649,16 +651,16 @@ class InboundEmail extends \Espo\Services\Record
             $case->set('accountId', $email->get('accountId'));
         }
 
-        $contact = $this->getEntityManager()->getRepository('Contact')->join([['emailAddresses', 'emailAddressesMultiple']])->where(array(
+        $contact = $this->getEntityManager()->getRepository('Contact')->join([['emailAddresses', 'emailAddressesMultiple']])->where([
             'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
-        ))->findOne();
+        ])->findOne();
         if ($contact) {
             $case->set('contactId', $contact->id);
         } else {
             if (!$case->get('accountId')) {
-                $lead = $this->getEntityManager()->getRepository('Lead')->join([['emailAddresses', 'emailAddressesMultiple']])->where(array(
+                $lead = $this->getEntityManager()->getRepository('Lead')->join([['emailAddresses', 'emailAddressesMultiple']])->where([
                     'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
-                ))->findOne();
+                ])->findOne();
                 if ($lead) {
                     $case->set('leadId', $lead->id);
                 }
@@ -705,7 +707,7 @@ class InboundEmail extends \Espo\Services\Record
         try {
             $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
             if ($replyEmailTemplateId) {
-                $entityHash = array();
+                $entityHash = [];
                 if ($case) {
                     $entityHash['Case'] = $case;
                     if ($case->get('contactId')) {
@@ -729,7 +731,7 @@ class InboundEmail extends \Espo\Services\Record
 
                 $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
 
-                $replyData = $emailTemplateService->parse($replyEmailTemplateId, array('entityHash' => $entityHash), true);
+                $replyData = $emailTemplateService->parse($replyEmailTemplateId, ['entityHash' => $entityHash], true);
 
                 $subject = $replyData['subject'];
                 if ($case) {
@@ -893,20 +895,25 @@ class InboundEmail extends \Espo\Services\Record
 
     protected function getStorage(\Espo\Entities\InboundEmail $emailAccount)
     {
-        $imapParams = array(
+        $imapParams = [
             'host' => $emailAccount->get('host'),
             'port' => $emailAccount->get('port'),
             'user' => $emailAccount->get('username'),
             'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
-        );
+        ];
 
         if ($emailAccount->get('ssl')) {
             $imapParams['ssl'] = 'SSL';
         }
 
-        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+        $storage = $this->createStorage($imapParams);
 
         return $storage;
+    }
+
+    protected function createStorage(array $params)
+    {
+        return new $this->storageClassName($params);
     }
 
     public function storeSentMessage(\Espo\Entities\InboundEmail $emailAccount, $message)

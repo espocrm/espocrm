@@ -37,6 +37,8 @@ use \Zend\Mail\Storage;
 
 class EmailAccount extends Record
 {
+    protected $storageClassName = '\\Espo\\Core\\Mail\\Mail\\Storage\\Imap';
+
     const PORTION_LIMIT = 10;
 
     protected function init()
@@ -110,7 +112,6 @@ class EmailAccount extends Record
 
     protected function createStorage(array $params)
     {
-
         $emailAddress = $params['emailAddress'] ?? null;
         $userId = $params['userId'] ?? null;
 
@@ -151,7 +152,7 @@ class EmailAccount extends Record
             }
         }
 
-        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+        $storage = new $this->storageClassName($imapParams);
 
         return $storage;
     }
