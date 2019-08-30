@@ -84,6 +84,7 @@
     },
     {
         "label": "SMTP",
+        "name": "smtp",
         "rows": [
             [
                 {

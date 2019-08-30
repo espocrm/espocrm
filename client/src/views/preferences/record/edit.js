@@ -44,39 +44,47 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
             }
         ],
 
-        dependencyDefs: {
-            'smtpAuth': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['smtpUsername', 'smtpPassword']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['smtpUsername', 'smtpPassword']
+        dynamicLogicDefs: {
+            fields: {
+                'smtpUsername': {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'smtpAuth',
+                            },
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            }
+                        ]
                     }
-                ]
+                },
+                'smtpPassword': {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'smtpAuth',
+                            },
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            }
+                        ]
+                    }
+                },
+                'tabList': {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'useCustomTabList',
+                            }
+                        ]
+                    }
+                },
             },
-            'useCustomTabList': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['tabList']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['tabList']
-                    }
-                ]
-            }
         },
 
         setup: function () {
@@ -194,6 +202,19 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                     this.model.set('smtpPort', '25');
                 }
             }, this);
+
+            if (this.getAcl().checkScope('EmailAccount') && !this.model.get('smtpServer')) {
+                this.hideField('smtpServer');
+                this.hideField('smtpPort');
+                this.hideField('smtpSecurity');
+                this.hideField('smtpServer');
+                this.hideField('smtpAuth');
+                this.hideField('smtpUsername');
+                this.hideField('smtpPassword');
+                this.hideField('testSend');
+                this.hideField('smtpEmailAddress');
+                this.hidePanel('smtp');
+            }
         },
 
         controlFollowCreatedEntityListVisibility: function () {
