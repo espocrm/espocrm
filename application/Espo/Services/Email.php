@@ -867,6 +867,7 @@ class Email extends Record
         if (empty($smtpParams['auth'])) {
             unset($smtpParams['username']);
             unset($smtpParams['password']);
+            unset($smtpParams['smtpAuthMechanism']);
         }
 
         $userId = $data['userId'] ?? null;

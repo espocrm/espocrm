@@ -55,6 +55,7 @@ Espo.define('views/email-account/fields/test-send', 'views/outbound-email/fields
                 'security': this.model.get('smtpSecurity'),
                 'username': this.model.get('smtpUsername'),
                 'password': this.model.get('smtpPassword') || null,
+                'smtpAuthMechanism': this.model.get('smtpAuthMechanism'),
                 'fromName': this.getUser().get('name'),
                 'fromAddress': this.model.get('emailAddress'),
                 'type': 'emailAccount',

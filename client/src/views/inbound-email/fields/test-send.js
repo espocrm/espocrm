@@ -38,6 +38,7 @@ Espo.define('views/inbound-email/fields/test-send', 'views/email-account/fields/
                 'security': this.model.get('smtpSecurity'),
                 'username': this.model.get('smtpUsername'),
                 'password': this.model.get('smtpPassword') || null,
+                'smtpAuthMechanism': this.model.get('smtpAuthMechanism'),
                 'fromName': this.model.get('fromName'),
                 'fromAddress': this.model.get('emailAddress'),
                 'type': 'inboundEmail',
