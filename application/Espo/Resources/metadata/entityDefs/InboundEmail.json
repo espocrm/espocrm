@@ -104,7 +104,7 @@
         },
         "smtpAuth": {
             "type": "bool",
-            "default": false
+            "default": true
         },
         "smtpSecurity": {
             "type": "enum",
@@ -116,6 +116,11 @@
         },
         "smtpPassword": {
             "type": "password"
+        },
+        "smtpAuthMechanism": {
+            "type": "enum",
+            "options": ["login", "crammd5", "plain"],
+            "default": "login"
         },
         "createCase": {
             "type": "bool",

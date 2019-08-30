@@ -45,7 +45,7 @@
             [{"name": "useSmtp"}, false],
             [{"name": "smtpHost"}, {"name": "smtpPort"}],
             [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}, false],
+            [{"name": "smtpUsername"}, {"name": "smtpAuthMechanism"}],
             [{"name": "smtpPassword"}, false],
             [
                 {"name": "smtpTestSend", "customLabel": null, "view": "views/email-account/fields/test-send"}, false

@@ -20,6 +20,7 @@
         "smtpPort": "SMTP Port",
         "smtpAuth": "SMTP Auth",
         "smtpSecurity": "SMTP Security",
+        "smtpAuthMechanism": "SMTP Auth Mechanism",
         "smtpUsername": "SMTP Username",
         "smtpPassword": "SMTP Password"
     },
@@ -31,6 +32,11 @@
         "status": {
             "Active": "Active",
             "Inactive": "Inactive"
+        },
+        "smtpAuthMechanism": {
+            "plain": "PLAIN",
+            "login": "LOGIN",
+            "crammd5": "CRAM-MD5"
         }
     },
     "labels": {

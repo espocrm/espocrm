@@ -487,7 +487,7 @@ class EmailAccount extends Record
 
     public function getSmtpParamsFromAccount(\Espo\Entities\EmailAccount $emailAccount)
     {
-        $smtpParams = array();
+        $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
         if ($smtpParams['server']) {
             $smtpParams['port'] = $emailAccount->get('smtpPort');
@@ -496,6 +496,7 @@ class EmailAccount extends Record
             if ($emailAccount->get('smtpAuth')) {
                 $smtpParams['username'] = $emailAccount->get('smtpUsername');
                 $smtpParams['password'] = $emailAccount->get('smtpPassword');
+                $smtpParams['smtpAuthMechanism'] = $emailAccount->get('smtpAuthMechanism');
             }
             if (array_key_exists('password', $smtpParams)) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);

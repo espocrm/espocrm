@@ -74,8 +74,9 @@
             [{"name": "smtpIsShared"}, {"name": "smtpIsForMassEmail"}],
             [{"name": "smtpHost"}, {"name": "smtpPort"}],
             [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}, {"name": "fromName"}],
+            [{"name": "smtpUsername"}, {"name": "smtpAuthMechanism"}],
             [{"name": "smtpPassword"}, false],
+            [{"name": "fromName"}, false],
             [
                 {"name": "smtpTestSend", "customLabel": null, "view": "views/inbound-email/fields/test-send"}, false
             ]

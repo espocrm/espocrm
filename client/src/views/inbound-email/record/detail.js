@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/inbound-email/record/detail', 'views/record/detail', function (Dep) {
+define('views/inbound-email/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -35,7 +35,6 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
             this.setupFieldsBehaviour();
             this.initSslFieldListening();
         },
-
 
         wasFetched: function () {
             if (!this.model.isNew()) {
@@ -74,6 +73,7 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
                 this.hideField('smtpAuth');
                 this.hideField('smtpUsername');
                 this.hideField('smtpPassword');
+                this.hideField('smtpAuthMechanism');
                 this.hideField('smtpSecurity');
                 this.hideField('smtpTestSend');
                 this.hideField('fromName');
@@ -102,10 +102,12 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
             if (this.model.get('smtpAuth')) {
                 this.showField('smtpUsername');
                 this.showField('smtpPassword');
+                this.showField('smtpAuthMechanism');
                 this.setFieldRequired('smtpUsername');
             } else {
                 this.hideField('smtpUsername');
                 this.hideField('smtpPassword');
+                this.hideField('smtpAuthMechanism');
                 this.setFieldNotRequired('smtpUsername');
             }
         },

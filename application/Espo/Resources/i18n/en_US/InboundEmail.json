@@ -32,6 +32,7 @@
         "smtpPort": "SMTP Port",
         "smtpAuth": "SMTP Auth",
         "smtpSecurity": "SMTP Security",
+        "smtpAuthMechanism": "SMTP Auth Mechanism",
         "smtpUsername": "SMTP Username",
         "smtpPassword": "SMTP Password",
         "fromName": "From Name",
@@ -68,6 +69,11 @@
             "Direct-Assignment": "Direct-Assignment",
             "Round-Robin": "Round-Robin",
             "Least-Busy": "Least-Busy"
+        },
+        "smtpAuthMechanism": {
+            "plain": "PLAIN",
+            "login": "LOGIN",
+            "crammd5": "CRAM-MD5"
         }
     },
     "labels": {
