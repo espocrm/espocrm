@@ -1,7 +1,7 @@
 <div class="detail" id="{{id}}">
     {{#unless buttonsDisabled}}
     <div class="detail-button-container button-container record-buttons clearfix">
-        <div class="btn-group" role="group">
+        <div class="btn-group actions-btn-group" role="group">
             {{#each buttonList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
             {{#if dropdownItemList}}
             <button type="button" class="btn btn-default dropdown-toggle dropdown-item-list-button{{#if dropdownItemListEmpty}} hidden{{/if}}" data-toggle="dropdown">
@@ -36,7 +36,7 @@
         {{/if}}
     </div>
     <div class="detail-button-container button-container edit-buttons hidden clearfix">
-        <div class="btn-group" role="group">
+        <div class="btn-group actions-btn-group" role="group">
         {{#each buttonEditList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
         {{#if dropdownEditItemList}}
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

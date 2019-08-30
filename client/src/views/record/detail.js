@@ -1242,13 +1242,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         enableButtons: function () {
-            this.$el.find(".button-container .action").removeAttr('disabled').removeClass('disabled');
-            this.$el.find(".button-container .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
+            this.$el.find(".button-container .actions-btn-group .action").removeAttr('disabled').removeClass('disabled');
+            this.$el.find(".button-container .actions-btn-group .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
         },
 
         disableButtons: function () {
-            this.$el.find(".button-container .action").attr('disabled', 'disabled').addClass('disabled');
-            this.$el.find(".button-container .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
+            this.$el.find(".button-container .actions-btn-group .action").attr('disabled', 'disabled').addClass('disabled');
+            this.$el.find(".button-container .actions-btn-group .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
         },
 
         removeButton: function (name) {

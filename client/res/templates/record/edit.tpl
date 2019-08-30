@@ -1,7 +1,7 @@
 <div class="edit" id="{{id}}">
     {{#unless buttonsDisabled}}
     <div class="detail-button-container button-container record-buttons clearfix">
-        <div class="btn-group" role="group">
+        <div class="btn-group actions-btn-group" role="group">
         {{#each buttonList}}{{button name scope=../../entityType label=label style=style html=html}}{{/each}}
         {{#if dropdownItemList}}
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
