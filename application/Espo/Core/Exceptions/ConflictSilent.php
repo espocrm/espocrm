@@ -27,24 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Exceptions;
 
-use \Espo\ORM\Entity;
-
-use \Espo\Core\Exceptions\Forbidden;
-
-class EmailFilter extends Record
+class ConflictSilent extends Conflict
 {
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        parent::beforeCreateEntity($entity, $data);
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        if ($entity->get('isGlobal')) {
-            $entity->set('parentId', null);
-            $entity->set('parentType', null);
-        }
-    }
+    public $logLevel = 'notice';
 }

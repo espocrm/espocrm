@@ -167,11 +167,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         select: function (model) {
-            this.$elementName.val(model.get('name'));
+            this.$elementName.val(model.get('name') || model.id);
             this.$elementId.val(model.get('id'));
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');
-                this.searchData.nameValue = model.get('name');
+                this.searchData.nameValue = model.get('name') || model.id;
             }
             this.trigger('change');
         },

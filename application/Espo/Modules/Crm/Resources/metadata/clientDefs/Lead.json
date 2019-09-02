@@ -6,6 +6,11 @@
     "recordViews":{
         "detail":"crm:views/lead/record/detail"
     },
+    "defaultSidePanelFieldList": [
+        ":assignedUser",
+        "teams",
+        "convertedAt"
+    ],
     "sidePanels":{
         "detail":[
             {
@@ -129,6 +134,26 @@
                         {
                             "type":"isEmpty",
                             "attribute":"phoneNumber"
+                        }
+                    ]
+                }
+            },
+            "convertedAt": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "and",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "Converted"
+                                },
+                                {
+                                    "type": "isNotEmpty",
+                                    "attribute": "convertedAt"
+                                }
+                            ]
                         }
                     ]
                 }

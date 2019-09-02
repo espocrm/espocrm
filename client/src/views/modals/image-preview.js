@@ -53,7 +53,7 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
                 name: this.options.name,
                 url: this.getImageUrl(),
                 originalUrl: this.getOriginalImageUrl(),
-                size: this.size
+                showOriginalLink: this.size,
             };
         },
 
@@ -99,7 +99,9 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
 
             $img.on('load', function () {
                 var self = this;
-                EXIF.getData($img.get(0), function () {
+                var imgEl = $img.get(0);
+
+                EXIF.getData(imgEl, function () {
                     var orientation = EXIF.getTag(this, 'Orientation');
                     switch (orientation) {
                         case 2:
@@ -128,6 +130,10 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
                             break;
                     }
                 });
+
+                if (imgEl.naturalWidth > imgEl.clientWidth) {
+                    this.$el.find('.original-link-container').removeClass('hidden');
+                }
             }.bind(this));
 
             if (this.navigationEnabled) {

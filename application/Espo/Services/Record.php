@@ -38,6 +38,7 @@ use \Espo\Core\Exceptions\Conflict;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\NotFoundSilent;
 use \Espo\Core\Exceptions\ForbiddenSilent;
+use \Espo\Core\Exceptions\ConflictSilent;
 
 use \Espo\Core\Utils\Util;
 
@@ -830,7 +831,7 @@ class Record extends \Espo\Core\Services\Base
                     'reason' => 'Duplicate',
                     'data' => $data
                 ];
-                throw new Conflict(json_encode($reason));
+                throw new ConflictSilent(json_encode($reason));
             }
         }
     }
