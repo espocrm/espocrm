@@ -31,7 +31,6 @@ namespace Espo\Core\Utils\Database\DBAL\Schema;
 
 class Column extends \Doctrine\DBAL\Schema\Column
 {
-
     /**
      * @var boolean
      */
@@ -42,6 +41,7 @@ class Column extends \Doctrine\DBAL\Schema\Column
      */
     protected $_unique = false;
 
+    protected $_quoted = true;
 
     /**
      * @param boolean $unique
