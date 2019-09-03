@@ -34,6 +34,8 @@ use Doctrine\DBAL\Schema\SchemaException;
 
 class Table extends \Doctrine\DBAL\Schema\Table
 {
+    protected $_quoted = true;
+
     /**
      * @param string $columnName
      * @param string $typeName
