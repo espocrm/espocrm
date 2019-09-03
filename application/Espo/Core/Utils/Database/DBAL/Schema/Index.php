@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
 use Doctrine\DBAL\Schema\Index as DBALIndex;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class Index extends \Doctrine\DBAL\Schema\Index
 {
@@ -78,5 +79,17 @@ class Index extends \Doctrine\DBAL\Schema\Index
         }
 
         return false;
+    }
+
+    public function getQuotedColumns(AbstractPlatform $platform)
+    {
+        $columns = array();
+
+        foreach ($this->_columns as $column) {
+            $column->_quoted = true;
+            $columns[] = $column->getQuotedName($platform);
+        }
+
+        return $columns;
     }
 }
