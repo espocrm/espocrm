@@ -197,10 +197,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            $hookData = array(
+            $hookData = [
                 'relationName' => $relationName,
-                'relationParams' => $params
-            );
+                'relationParams' => $params,
+            ];
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options, $hookData);
         }
     }
@@ -215,14 +215,24 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
 
-        if ($foreign instanceof Entity) {
-            $foreignEntity = $foreign;
-            if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-                $hookData = array(
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
+            if (is_string($foreign)) {
+                $foreignId = $foreign;
+                $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+                if ($foreignEntityType) {
+                    $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
+                    $foreign->id = $foreignId;
+                    $foreign->setAsFetched();
+                }
+            }
+
+            if ($foreign instanceof Entity) {
+                $hookData = [
                     'relationName' => $relationName,
                     'relationData' => $data,
-                    'foreignEntity' => $foreignEntity
-                );
+                    'foreignEntity' => $foreign,
+                    'foreignId' => $foreign->id,
+                ];
                 $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRelate', $entity, $options, $hookData);
             }
         }
@@ -232,13 +242,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
 
-        if ($foreign instanceof Entity) {
-            $foreignEntity = $foreign;
-            if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-                $hookData = array(
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
+            if (is_string($foreign)) {
+                $foreignId = $foreign;
+                $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+                if ($foreignEntityType) {
+                    $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
+                    $foreign->id = $foreignId;
+                    $foreign->setAsFetched();
+                }
+            }
+
+            if ($foreign instanceof Entity) {
+                $hookData = [
                     'relationName' => $relationName,
-                    'foreignEntity' => $foreignEntity
-                );
+                    'foreignEntity' => $foreign,
+                    'foreignId' => $foreign->id,
+                ];
                 $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterUnrelate', $entity, $options, $hookData);
             }
         }
