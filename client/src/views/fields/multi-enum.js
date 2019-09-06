@@ -32,7 +32,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
         type: 'multiEnum',
 
-        listTemplate: 'fields//array/list',
+        listTemplate: 'fields/array/list',
 
         detailTemplate: 'fields/array/detail',
 
