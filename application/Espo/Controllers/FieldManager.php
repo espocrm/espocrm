@@ -121,6 +121,8 @@ class FieldManager extends \Espo\Core\Controllers\Base
 
         $this->getContainer()->get('fieldManager')->resetToDefault($data->scope, $data->name);
 
+        $this->getContainer()->get('dataManager')->clearCache();
+
         $this->getContainer()->get('dataManager')->rebuildMetadata();
 
         return true;

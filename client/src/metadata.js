@@ -46,19 +46,22 @@ define('metadata', [], function () {
         load: function (callback, disableCache, sync) {
             var sync = (typeof sync == 'undefined') ? false: sync;
             this.off('sync');
-            this.once('sync', callback);
+
+            if (callback)
+                this.once('sync', callback);
+
             if (!disableCache) {
                  if (this.loadFromCache()) {
                     this.trigger('sync');
                     return;
                 }
             }
-            this.fetch(sync);
+            return this.fetch(sync);
         },
 
         fetch: function (sync) {
             var self = this;
-            this.ajax({
+            return this.ajax({
                 url: this.url,
                 type: 'GET',
                 dataType: 'JSON',

@@ -424,8 +424,9 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     }.bind(this)),
                     new Promise(function (resolve) {
                         this.getLanguage().load(function () {
+                            this.getLanguage().storeToCache();
                             resolve();
-                        }, true);
+                        }.bind(this), true);
                     }.bind(this))
                 ]).then(function () {
                     this.trigger('after:save');
@@ -501,6 +502,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         }.bind(this)),
                         new Promise(function (resolve) {
                             this.getLanguage().load(function () {
+                                this.getLanguage().storeToCache();
                                 resolve();
                             }.bind(this), true);
                         }.bind(this))
@@ -513,8 +515,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 }.bind(this));
 
             }, this);
-        }
+        },
 
     });
-
 });

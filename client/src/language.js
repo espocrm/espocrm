@@ -116,7 +116,8 @@ define('language', ['ajax'], function (Ajax) {
         },
 
         load: function (callback, disableCache, loadDefault) {
-            this.once('sync', callback);
+            if (callback)
+                this.once('sync', callback);
 
             if (!disableCache) {
                 if (this.loadFromCache(loadDefault)) {
@@ -129,7 +130,7 @@ define('language', ['ajax'], function (Ajax) {
         },
 
         fetch: function (disableCache, loadDefault) {
-            Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
+            return Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
                 this.data = data;
                 if (!disableCache) {
                     this.storeToCache(loadDefault);

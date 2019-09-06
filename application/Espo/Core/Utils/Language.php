@@ -354,7 +354,7 @@ class Language
 
             $cacheFile = $this->getCacheFile($language);
 
-            if (!$this->useCache || !file_exists($cacheFile)) {
+            if (!$this->useCache || !file_exists($cacheFile) || $reload) {
 
                 $paths = $this->paths;
 
@@ -368,11 +368,12 @@ class Language
 
                 $data = $this->getUnifier()->unify('i18n', $paths, true);
 
-                if (is_array($data))
+                if (is_array($data)) {
                     $this->sanitizeData($data);
+                }
 
                 if ($language != $this->defaultLanguage) {
-                    $data = Util::merge($this->getDefaultLanguageData(), $data);
+                    $data = Util::merge($this->getDefaultLanguageData($reload), $data);
                 }
 
                 $this->data[$language] = $data;
