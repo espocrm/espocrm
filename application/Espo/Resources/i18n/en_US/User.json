@@ -50,7 +50,8 @@
         "contact": "Contact",
         "accounts": "Accounts",
         "account": "Account (Primary)",
-        "tasks": "Tasks"
+        "tasks": "Tasks",
+        "dashboardTemplate": "Dashboard Template"
     },
     "labels": {
         "Create User": "Create User",
