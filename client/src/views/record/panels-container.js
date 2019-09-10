@@ -82,11 +82,9 @@ define('views/record/panels-container', 'view', function (Dep) {
         applyAccessToActions: function (actionList) {
             if (!actionList) return;
             actionList.forEach(function (item) {
-                if (item.configCheck) {
-                    if (!this.getConfig().getByPath(item.configCheck.split('.'))) {
-                        item.hidden = true;
-                        return;
-                    }
+                if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
+                    item.hidden = true;
+                    return;
                 }
                 if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
                     if (item.isHiddenByAcl) {

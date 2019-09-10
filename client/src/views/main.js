@@ -87,15 +87,15 @@ define('views/main', 'view', function (Dep) {
             if (this.menu) {
                 ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                     (this.menu[type] || []).forEach(function (item) {
+                        item = Espo.Utils.clone(item);
                         menu[type] = menu[type] || [];
-                        if (item.configCheck) {
-                            if (!this.getConfig().getByPath(item.configCheck.split('.'))) return;
-                        }
-                        if (Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
-                            menu[type].push(item);
-                        }
+
+                        if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) return;
+                        if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) return;
+
                         item.name = item.name || item.action;
                         item.action = item.action || this.name;
+                        menu[type].push(item);
                     }, this);
                 }, this);
             }

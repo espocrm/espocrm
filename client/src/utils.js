@@ -49,6 +49,26 @@ define('utils', [], function () {
             }
         },
 
+        checkActionAvailability: function (helper, item) {
+            var config = helper.config;
+
+            if (item.configCheck) {
+                var configCheck = item.configCheck;
+                var opposite = false;
+                if (configCheck.substr(0, 1) === '!') {
+                    opposite = true;
+                    configCheck = configCheck.substr(1);
+                }
+                var configCheckResult = config.getByPath(configCheck.split('.'));
+                if (opposite) {
+                    configCheckResult = !configCheckResult;
+                }
+                if (!configCheckResult) return false;
+            }
+
+            return true;
+        },
+
         checkActionAccess: function (acl, obj, item, isPrecise) {
             var hasAccess = true;
             if (item.acl) {
