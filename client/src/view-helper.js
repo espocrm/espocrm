@@ -314,6 +314,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 text = text.replace(item.regex, item.value);
             });
 
+            options = options || {};
+
             if (options.inline) {
                 text = marked.inlineLexer(text, []);
             } else {
