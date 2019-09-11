@@ -239,7 +239,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         }
 
                         if (
-                            ~['enum', 'array', 'multiEnum'].indexOf(this.type)
+                            this.getMetadata().get(['fields', this.type, 'dynamicLogicOptions'])
                             &&
                             !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicOptionsDisabled'])
                         ) {

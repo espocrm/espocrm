@@ -58,5 +58,6 @@
       "storeArrayValues": true
    },
    "translatedOptions": true,
+   "dynamicLogicOptions": true,
    "personalData": true
 }

@@ -50,5 +50,6 @@
       "type":"varchar"
    },
    "translatedOptions": true,
+   "dynamicLogicOptions": true,
    "personalData": true
 }
