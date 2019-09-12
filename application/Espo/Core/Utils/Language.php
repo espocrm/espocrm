@@ -403,7 +403,6 @@ class Language
                 if (is_string($subData)) {
                     $subData = str_replace('<', '&lt;', $subData);
                     $subData = str_replace('>', '&gt;', $subData);
-                    $subData = str_replace('"', '&quot;', $subData);
                 }
             }
         }

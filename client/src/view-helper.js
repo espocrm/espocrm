@@ -314,13 +314,15 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 text = text.replace(item.regex, item.value);
             });
 
+            options = options || {};
+
             if (options.inline) {
                 text = marked.inlineLexer(text, []);
             } else {
                 text = marked(text);
             }
 
-            text = DOMPurify.sanitize(text);
+            text = DOMPurify.sanitize(text).toString();
 
             text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
 

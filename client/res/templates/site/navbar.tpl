@@ -1,6 +1,6 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-action="toggleCollapsable"">
+        <button type="button" class="navbar-toggle" data-action="toggleCollapsable">
             <span class="fas fa-bars"></span>
         </button>
         <div class="navbar-logo-container"><a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"></span></a></div>

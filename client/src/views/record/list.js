@@ -947,20 +947,10 @@ define('views/record/list', 'view', function (Dep) {
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
-                var acl = defs.acl;
-                var aclScope = defs.aclScope;
-                if (acl || aclScope) {
-                    if (!this.getAcl().check(aclScope || this.scope, acl)) {
-                        return;
-                    }
-                }
-                var configCheck = defs.configCheck;
-                if (configCheck) {
-                    var arr = configCheck.split('.');
-                    if (!this.getConfig().getByPath(arr)) {
-                        return;
-                    }
-                }
+
+                if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) return;
+                if (!Espo.Utils.checkActionAccess(this.getAcl(), null, defs)) return;
+
                 this.massActionList.push(item);
             }, this);
 
@@ -976,20 +966,10 @@ define('views/record/list', 'view', function (Dep) {
                 if (this.collection.url !== this.entityType) return;
                 if (~this.massActionList.indexOf(item)) {
                     var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
-                    var acl = defs.acl;
-                    var aclScope = defs.aclScope;
-                    if (acl || aclScope) {
-                        if (!this.getAcl().check(aclScope || this.scope, acl)) {
-                            return;
-                        }
-                    }
-                    var configCheck = defs.configCheck;
-                    if (configCheck) {
-                        var arr = configCheck.split('.');
-                        if (!this.getConfig().getByPath(arr)) {
-                            return;
-                        }
-                    }
+
+                    if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) return;
+                    if (!Espo.Utils.checkActionAccess(this.getAcl(), null, defs)) return;
+
                     this.checkAllResultMassActionList.push(item);
                 }
             }, this);

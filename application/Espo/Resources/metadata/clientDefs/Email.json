@@ -50,7 +50,8 @@
                 },
                 {
                     "label":"Folders",
-                    "link":"#EmailFolder"
+                    "link":"#EmailFolder",
+                    "configCheck": "!emailFoldersDisabled"
                 },
                 {
                     "label":"Filters",
