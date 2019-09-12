@@ -4,6 +4,7 @@
         "action": "Action",
         "createdAt": "Date",
         "user": "User",
+        "userType": "User Type",
         "target": "Target",
         "targetType": "Target Type",
         "authToken": "Auth Token",

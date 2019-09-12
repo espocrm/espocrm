@@ -26,6 +26,13 @@
         "user": {
             "type": "link"
         },
+        "userType": {
+            "type": "foreign",
+            "link": "user",
+            "field": "type",
+            "view": "views/fields/foreign-enum",
+            "notStorable": true
+        },
         "ipAddress": {
             "type": "varchar",
             "maxLength": "39"

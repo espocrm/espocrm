@@ -3,5 +3,6 @@
     "target",
     "createdAt",
     "ipAddress",
-    "user"
+    "user",
+    "userType"
 ]
