@@ -919,7 +919,7 @@ abstract class Mapper implements IMapper
                 continue;
             }
 
-            if (!$entity->isAttributeChanged($attribute) && $type !== IEntity::JSON_OBJECT) {
+            if (!$entity->isAttributeChanged($attribute)) {
                 continue;
             }
 
