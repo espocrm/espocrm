@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (Dep) {
+define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
@@ -64,6 +64,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             if (
+                typeof value !== 'undefined'
+                &&
                 value !== null
                 &&
                 value !== ''
@@ -72,6 +74,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             ) {
                 data.isNotEmpty = true;
             }
+
+            data.valueIsSet = this.model.has(this.name);
+
             return data;
         },
 
