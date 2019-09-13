@@ -39,8 +39,10 @@ define('utils', [], function () {
                 if (typeof viewObject[method] == 'function') {
                     viewObject[method].call(viewObject, data, e);
                     e.preventDefault();
+                    e.stopPropagation();
                 } else if (data.handler) {
                     e.preventDefault();
+                    e.stopPropagation();
                     require(data.handler, function (Handler) {
                         var handler = new Handler(viewObject);
                         handler[method].call(handler, data, e);

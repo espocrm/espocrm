@@ -10,7 +10,7 @@
             <ul class="dropdown-menu pull-left">
                 {{#each dropdownItemList}}
                 {{#if this}}
-                <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../entityType}}{{/if}}</a></li>
+                <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}" {{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../entityType}}{{/if}}</a></li>
                 {{else}}
                     {{#unless @first}}
                     {{#unless @last}}
