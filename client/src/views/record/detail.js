@@ -263,11 +263,12 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     if (typeof item === 'string') {
                         item = {
                             name: item,
-                            label: this.translate(item, 'actions', this.scope),
                         };
                     }
                     var item = Espo.Utils.clone(item);
                     var name = item.name;
+
+                    if (!item.label) item.html = this.translate(name, 'actions', this.scope);
 
                     this.addDropdownItem(item);
 
