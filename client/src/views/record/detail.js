@@ -299,6 +299,56 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     name: 'viewFollowers'
                 });
             }
+
+            if (this.type === 'detail') {
+                this.additionalActionsDefs = {};
+
+                var additionalActionList = [];
+                (this.getMetadata().get(['clientDefs', this.scope, this.type + 'ActionList']) || []).forEach(function (item) {
+                    if (typeof item === 'string') {
+                        item = {
+                            name: item,
+                        };
+                    }
+                    var item = Espo.Utils.clone(item);
+                    var name = item.name;
+
+                    if (!item.label) item.html = this.translate(name, 'actions', this.scope);
+
+                    this.addDropdownItem(item);
+
+                    if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) return;
+
+                    additionalActionList.push(item);
+
+                    var viewObject = this;
+                    if (item.initFunction && item.data.handler) {
+                        this.wait(new Promise(function (resolve) {
+                            require(item.data.handler, function (Handler) {
+                                var handler = new Handler(viewObject);
+                                handler[item.initFunction].call(handler);
+                                resolve();
+                            });
+                        }));
+                    }
+
+                    if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
+                        item.hidden = true;
+                    }
+                }, this);
+
+                if (additionalActionList.length) {
+                    this.listenTo(this.model, 'sync', function () {
+                        additionalActionList.forEach(function (item) {
+                            if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
+                                this.showActionItem(item.name);
+                            } else {
+                                this.hideActionItem(item.name);
+                            }
+                        }, this);
+                    }, this);
+                }
+            }
         },
 
         disableActionItems: function () {
@@ -1565,7 +1615,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             this.getRouter().navigate(url, {trigger: true});
-        }
+        },
 
     });
 });

@@ -45,6 +45,8 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
                 if (!bodyView) return;
 
                 if (this.model.get('isHtml')) {
+                    var $anchor = $(window.getSelection().anchorNode);
+                    if (!$anchor.closest('.note-editing-area').length) return;
                     bodyView.$summernote.summernote('insertText', tag);
                 } else {
                     var $body = bodyView.$element;

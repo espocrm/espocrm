@@ -1083,7 +1083,7 @@ abstract class Base
                         if (!empty($item[1])) {
                             $orderInternal = $item[1];
                         }
-                        $arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal, false, $params);
+                        $arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal, $useColumnAlias, $params);
                     }
                 }
                 return implode(", ", $arr);
@@ -1091,7 +1091,11 @@ abstract class Base
 
             if (strpos($orderBy, 'LIST:') === 0) {
                 list($l, $field, $list) = explode(':', $orderBy);
-                $fieldPath = $this->getFieldPathForOrderBy($entity, $field, $params);
+                if ($useColumnAlias) {
+                    $fieldPath = '`'. $this->sanitizeSelectAlias($field) . '`';
+                } else {
+                    $fieldPath = $this->getFieldPathForOrderBy($entity, $field, $params);
+                }
                 $listQuoted = [];
                 $list = array_reverse(explode(',', $list));
                 foreach ($list as $i => $listItem) {

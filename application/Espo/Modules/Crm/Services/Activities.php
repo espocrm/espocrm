@@ -739,7 +739,7 @@ class Activities extends \Espo\Core\Services\Base
         $orderBy = null;
         $order = null;
         if (!empty($selectParams['orderBy'])) {
-            $order = $selectParams['order'];
+            $order = $selectParams['order'] ?? null;
             $orderBy = $selectParams['orderBy'];
         }
 

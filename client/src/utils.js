@@ -33,18 +33,34 @@ define('utils', [], function () {
         handleAction: function (viewObject, e) {
             var $target = $(e.currentTarget);
             var action = $target.data('action');
+
+            var fired = false;
             if (action) {
                 var data = $target.data();
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof viewObject[method] == 'function') {
                     viewObject[method].call(viewObject, data, e);
                     e.preventDefault();
+                    e.stopPropagation();
+                    fired = true;
                 } else if (data.handler) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    fired = true;
                     require(data.handler, function (Handler) {
                         var handler = new Handler(viewObject);
                         handler[method].call(handler, data, e);
                     });
+                }
+
+                if (fired) {
+                    var $dropdown = $target.closest('.dropdown-menu');
+                    if ($dropdown.length) {
+                        var $dropdownToggle = $dropdown.parent().find('[data-toggle="dropdown"]');
+                        if ($dropdownToggle.length) {
+                            $dropdownToggle.dropdown('toggle');
+                        }
+                    }
                 }
             }
         },
