@@ -32,7 +32,8 @@
             "audio/*",
             "video/*",
             ".pdf"
-         ]
+         ],
+         "tooltip": "fileAccept"
       }
    ],
    "actualFields":[

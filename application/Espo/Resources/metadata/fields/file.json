@@ -26,7 +26,8 @@
             "audio/*",
             "video/*",
             ".pdf"
-         ]
+         ],
+         "tooltip": "fileAccept"
       },
       {
          "name":"audited",

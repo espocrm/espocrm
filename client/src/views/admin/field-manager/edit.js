@@ -256,7 +256,12 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         var options = {};
                         if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
                             options.tooltip = true;
-                            options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
+
+                            var tooltip = o.name;
+                            if (typeof o.tooltip == 'string') {
+                                tooltip = o.tooltip;
+                            }
+                            options.tooltipText = this.translate(tooltip, 'tooltips', 'FieldManager');
                         }
                         this.createFieldView(o.type, o.name, null, o, options);
                     }, this);

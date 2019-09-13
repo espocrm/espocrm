@@ -74,6 +74,7 @@
         "before": "The date value should be before the date value of the specified field.",
         "after": "The date value should be after the date value of the specified field.",
         "readOnly": "Field value can't be specified by user. But can be calculated by formula.",
+        "fileAccept": "Which file types to accept. It's possible to add custom items.",
         "maxFileSize": "If empty or 0 then no limit."
     },
     "fieldParts": {
