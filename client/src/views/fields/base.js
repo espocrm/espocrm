@@ -380,13 +380,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     tooltipText = this.translate(this.tooltip, 'tooltips', this.model.name);
                 }
 
-                tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name);
+                tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
+                tooltipText = this.getHelper().transfromMarkdownText(tooltipText).toString();
 
                 $a.popover({
                     placement: 'bottom',
                     container: 'body',
                     html: true,
-                    content: tooltipText.replace(/\n/g, "<br />"),
+                    content: tooltipText,
                 }).on('shown.bs.popover', function () {
                     $('body').off('click.popover-' + this.id);
                     $('body').on('click.popover-' + this.id , function (e) {
