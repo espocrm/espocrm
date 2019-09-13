@@ -189,6 +189,7 @@
         "allowCustomOptions": "Allow Custom Options",
         "displayAsLabel": "Display as Label",
         "maxCount": "Max Item Count",
+        "accept": "Accept",
         "displayRawText": "Display raw text (no markdown)"
     },
     "messages": {

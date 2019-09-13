@@ -21,6 +21,18 @@
          "type": "enum",
          "default": "medium",
          "options": ["", "x-small", "small", "medium", "large"]
+      },
+      {
+         "name": "accept",
+         "type": "multiEnum",
+         "noEmptyString": true,
+         "allowCustomOptions": true,
+         "options": [
+            "image/*",
+            "audio/*",
+            "video/*",
+            ".pdf"
+         ]
       }
    ],
    "actualFields":[

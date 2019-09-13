@@ -59,6 +59,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             'image/webp',
         ],
 
+        accept: null,
+
         validations: ['ready', 'required'],
 
         searchTypeList: ['isNotEmpty', 'isEmpty'],
@@ -141,7 +143,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 idValuesString: ids ? ids.join(',') : '',
                 nameHash: this.model.get(this.nameHashName),
                 foreignScope: this.foreignScope,
-                valueIsSet: this.model.has(this.idsName)
+                valueIsSet: this.model.has(this.idsName),
+                acceptAttribute: this.acceptAttribute,
             }, Dep.prototype.data.call(this));
 
             if (this.mode == 'edit') {
@@ -166,6 +169,14 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
             if ('showPreviews' in this.params) {
                 this.showPreviews = this.params.showPreviews;
+            }
+
+            if ('accept' in this.params) {
+                this.accept = this.params.accept;
+            }
+
+            if (this.accept && this.accept.length) {
+                this.acceptAttribute = this.accept.join(', ');
             }
 
             var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};

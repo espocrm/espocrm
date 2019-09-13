@@ -16,6 +16,11 @@
          "hidden": true
       },
       {
+         "name": "allowCustomOptions",
+         "type": "bool",
+         "hidden": true
+      },
+      {
          "name": "noEmptyString",
          "type": "bool",
          "default": false

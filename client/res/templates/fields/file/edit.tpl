@@ -3,7 +3,7 @@
         <div class="pull-left">
         <label class="attach-file-label" title="{{translate 'Attach File'}}">
             <span class="btn btn-default btn-icon"><span class="fas fa-paperclip"></span></span>
-            <input type="file" class="file pull-right" {{#if acceptAttribue}}accept="{{acceptAttribue}}"{{/if}}>
+            <input type="file" class="file pull-right" {{#if acceptAttribute}}accept="{{acceptAttribute}}"{{/if}}>
         </label>
         </div>
         {{#unless id}}
