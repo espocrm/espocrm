@@ -179,11 +179,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         trim: true
                     });
 
-                    this.createFieldView('text', 'tooltipText', null, {
-                        trim: true,
-                        rows: 1
-                    });
-
                     if (this.hasPersonalData) {
                         this.createFieldView('bool', 'isPersonalData', null, {});
                     }
@@ -192,7 +187,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
                     this.createFieldView('text', 'tooltipText', null, {
                         trim: true,
-                        rows: 1
+                        rowsMin: 1,
                     });
 
                     this.hasDynamicLogicPanel = false;

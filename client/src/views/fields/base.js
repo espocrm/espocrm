@@ -374,11 +374,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $label.append(' ');
                 this.getLabelElement().append($a);
 
+                var tooltipText = this.options.tooltipText;
+
+                if (!tooltipText && typeof this.tooltip === 'string') {
+                    tooltipText = this.translate(this.tooltip, 'tooltips', this.model.name);
+                }
+
+                tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name);
+
                 $a.popover({
                     placement: 'bottom',
                     container: 'body',
                     html: true,
-                    content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />"),
+                    content: tooltipText.replace(/\n/g, "<br />"),
                 }).on('shown.bs.popover', function () {
                     $('body').off('click.popover-' + this.id);
                     $('body').on('click.popover-' + this.id , function (e) {

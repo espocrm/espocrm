@@ -74,6 +74,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 this.cutHeight = this.params.cutHeight;
             }
 
+            this.rowsMin = this.options.rowsMin || this.params.rowsMin || this.rowsMin;
+
             if (this.params.rows < this.rowsMin) {
                 this.rowsMin = this.params.rows;
             }
