@@ -21,7 +21,6 @@
       {
          "name": "rows",
          "type": "int",
-         "default": 30,
          "min": 1
       },
       {
