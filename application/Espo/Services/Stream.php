@@ -989,7 +989,9 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function loadAssignedUserName(Entity $entity)
     {
-        $user = $this->getEntityManager()->getEntity('User', $entity->get('assignedUserId'));
+        $user = $this->getEntityManager()->getRepository('User')->select(['name'])->where([
+            'id' =>  $entity->get('assignedUserId'),
+        ])->findOne();
         if ($user) {
             $entity->set('assignedUserName', $user->get('name'));
         }
