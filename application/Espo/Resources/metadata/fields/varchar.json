@@ -39,5 +39,6 @@
    "personalData": true,
    "textFilter": true,
    "textFilterForeign": true,
+   "dynamicLogicOptions": true,
    "fullTextSearch": true
 }
