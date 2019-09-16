@@ -51,7 +51,8 @@ define('views/login', 'view', function (Dep) {
 
         data: function () {
             return {
-                logoSrc: this.getLogoSrc()
+                logoSrc: this.getLogoSrc(),
+                showForgotPassword: this.getConfig().get('passwordRecoveryEnabled'),
             };
         },
 

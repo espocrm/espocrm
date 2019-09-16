@@ -111,6 +111,10 @@ class Settings extends \Espo\Core\Services\Base
             }
         }
 
+        if ($this->getConfig()->get('smtpServer')) {
+            $data->passwordRecoveryEnabled = true;
+        }
+
         $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
 
         foreach ($fieldDefs as $field => $fieldParams) {

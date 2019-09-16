@@ -18,7 +18,7 @@
                         <input type="password" name="password" id="field-password" class="form-control" tabindex="2" autocomplete="current-password">
                     </div>
                     <div>
-                        <a href="javascript:" class="btn btn-link pull-right" data-action="passwordChangeRequest" tabindex="4">{{translate 'Forgot Password?' scope='User'}}</a>
+                        {{#if showForgotPassword}}<a href="javascript:" class="btn btn-link pull-right" data-action="passwordChangeRequest" tabindex="4">{{translate 'Forgot Password?' scope='User'}}</a>{{/if}}
                         <button type="submit" class="btn btn-primary" id="btn-login" tabindex="3">{{translate 'Login' scope='User'}}</button>
                     </div>
                 </form>
