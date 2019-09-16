@@ -15,6 +15,7 @@
         "sortBy": "Order (field)",
         "sortDirection": "Order (direction)",
         "expandedLayout": "Layout",
+        "onlyNotified": "Display only records you notified about",
         "dateFilter": "Date Filter"
     },
     "options": {
@@ -29,5 +30,8 @@
     },
     "messages": {
         "selectEntityType": "Select Entity Type in dashlet options."
+    },
+    "tooltips": {
+        "onlyNotified": "Actions done by your user won't be displayed."
     }
 }

@@ -45,6 +45,10 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
                 collection.url = 'Stream';
                 collection.maxSize = this.getOption('displayRecords');
 
+                if (this.getOption('onlyNotified')) {
+                    collection.data.onlyNotified = true;
+                }
+
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('list', 'views/stream/record/list', {
                         el: this.getSelector() + ' > .list-container',

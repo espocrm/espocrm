@@ -29,10 +29,11 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
+use Espo\Entities\User;
 
 class Stream extends \Espo\Core\Services\Base
 {
@@ -302,7 +303,7 @@ class Stream extends \Espo\Core\Services\Base
         $sth = $pdo->prepare($sql)->execute();
     }
 
-    public function findUserStream($userId, $params = array())
+    public function findUserStream($userId, $params = [])
     {
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
@@ -317,6 +318,12 @@ class Stream extends \Espo\Core\Services\Base
             if (!$this->getAcl()->checkUser('userPermission', $user)) {
                 throw new Forbidden();
             }
+        }
+
+        $onlyNotified = $params['onlyNotified'] ?? false;
+
+        if ($onlyNotified) {
+            return $this->findUserStreamNotified($user, $params);
         }
 
         $teamIdList = $user->getTeamIdList();
@@ -336,7 +343,7 @@ class Stream extends \Espo\Core\Services\Base
             $selectManager = $this->getSelectMangerFactory()->create('Note');
             $additionalSelectParams = $selectManager->getSelectParams([
                 'where' => $params['where']
-            ], false, true);
+            ], false, true, true);
         }
 
         $selectParamsList = [];
@@ -658,44 +665,46 @@ class Stream extends \Espo\Core\Services\Base
         $collection = $this->getEntityManager()->getRepository('Note')->findByQuery($sql);
 
         foreach ($collection as $e) {
-            if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
-                $e->loadAttachments();
-            }
+            $this->loadNoteAdditionalFields($e);
         }
 
-        foreach ($collection as $e) {
-            if ($e->get('parentId') && $e->get('parentType')) {
-                $e->loadParentNameField('parent');
-            }
-            if ($e->get('relatedId') && $e->get('relatedType')) {
-                $e->loadParentNameField('related');
-            }
-            if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
-                $targetType = $e->get('targetType');
-                if (!$targetType || $targetType === 'users' || $targetType === 'self') {
-                    $e->loadLinkMultipleField('users');
-                }
-                if ($targetType !== 'users' && $targetType !== 'self') {
-                    if (!$targetType || $targetType === 'teams') {
-                        $e->loadLinkMultipleField('teams');
-                    } else if ($targetType === 'portals') {
-                        $e->loadLinkMultipleField('portals');
-                    }
-                }
-            }
-        }
-
+        $total = -2;
         if (count($collection) > $maxSize) {
             $total = -1;
             unset($collection[count($collection) - 1]);
-        } else {
-            $total = -2;
         }
 
         return (object) [
             'total' => $total,
             'collection' => $collection,
         ];
+    }
+
+    protected function loadNoteAdditionalFields(Entity $e)
+    {
+        if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
+            $e->loadAttachments();
+        }
+
+        if ($e->get('parentId') && $e->get('parentType')) {
+            $e->loadParentNameField('parent');
+        }
+        if ($e->get('relatedId') && $e->get('relatedType')) {
+            $e->loadParentNameField('related');
+        }
+        if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
+            $targetType = $e->get('targetType');
+            if (!$targetType || $targetType === 'users' || $targetType === 'self') {
+                $e->loadLinkMultipleField('users');
+            }
+            if ($targetType !== 'users' && $targetType !== 'self') {
+                if (!$targetType || $targetType === 'teams') {
+                    $e->loadLinkMultipleField('teams');
+                } else if ($targetType === 'portals') {
+                    $e->loadLinkMultipleField('portals');
+                }
+            }
+        }
     }
 
     public function find($scope, $id, $params = [])
@@ -905,6 +914,76 @@ class Stream extends \Espo\Core\Services\Base
         return (object) [
             'total' => $count,
             'collection' => $collection
+        ];
+    }
+
+    protected function findUserStreamNotified(User $user, $params = [])
+    {
+        $offset = $params['offset'] ?? 0;
+        $maxSize = $params['maxSize'] ?? 0;
+        $where = $params['where'] ?? null;
+        $after = $params['after'] ?? null;
+        $filter = $params['filter'] ?? null;
+
+        $selectManager = $this->getSelectMangerFactory()->create('Note');
+        $selectParams = $selectManager->getEmptySelectParams();
+
+        if ($where) {
+            $selectManager->checkWhere($where, true, true);
+            $selectManager->applyWhere($where, $selectParams);
+        }
+
+        if ($filter) {
+            switch ($filter) {
+                case 'posts':
+                    $whereClause[]['type'] = 'Post';
+                    break;
+                  case 'updates':
+                    $whereClause[]['type'] = ['Update', 'Status'];
+                    break;
+            }
+        }
+
+        if ($after) {
+            $selectParams['whereClause'][] = [
+                'createdAt>=' => $after,
+            ];
+        }
+
+        $selectManager->applyOrder('number', true, $selectParams);
+
+        $selectManager->addJoin([
+            'Notification',
+            'notification',
+            [
+                'note.id:' => 'notification.relatedId',
+                'notification.relatedType' => 'Note',
+            ]
+        ], $selectParams);
+
+        $selectParams['whereClause'][] = [
+            'notification.userId' => $user->id,
+        ];
+
+        $selectManager->applyLimit($offset, $maxSize + 1, $selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Note', $selectParams);
+
+        $collection = $this->getEntityManager()->getRepository('Note')->findByQuery($sql);
+
+        foreach ($collection as $e) {
+            $this->loadNoteAdditionalFields($e);
+        }
+
+        $total = -2;
+        if (count($collection) > $maxSize) {
+            $total = -1;
+            unset($collection[count($collection) - 1]);
+        }
+
+        return (object) [
+            'total' => $total,
+            'collection' => $collection,
         ];
     }
 

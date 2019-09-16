@@ -46,6 +46,7 @@ class Stream extends \Espo\Core\Controllers\Base
         $maxSize = intval($request->get('maxSize'));
         $after = $request->get('after');
         $filter = $request->get('filter');
+        $onlyNotified = $request->get('onlyNotified') === 'true';
 
         $service = $this->getService('Stream');
 
@@ -61,7 +62,8 @@ class Stream extends \Espo\Core\Controllers\Base
             'offset' => $offset,
             'maxSize' => $maxSize,
             'after' => $after,
-            'filter' => $filter
+            'filter' => $filter,
+            'onlyNotified' => $onlyNotified,
         ]);
 
         return (object) [
@@ -96,7 +98,7 @@ class Stream extends \Espo\Core\Controllers\Base
             'maxSize' => $maxSize,
             'after' => $after,
             'filter' => 'posts',
-            'where' => $where
+            'where' => $where,
         ]);
 
         return (object) [

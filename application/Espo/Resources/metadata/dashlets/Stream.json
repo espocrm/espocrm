@@ -13,11 +13,16 @@
             "displayRecords": {
                 "type": "enumInt",
                 "options": [3,4,5,10,15,20,30,50]
+            },
+            "onlyNotified": {
+                "type": "bool",
+                "tooltip": true
             }
         },
         "defaults": {
             "displayRecords": 10,
-            "autorefreshInterval": 0.5
+            "autorefreshInterval": 0.5,
+            "onlyNotified": true
         },
         "layout": [
             {
@@ -28,6 +33,10 @@
                     [
                         {"name": "displayRecords"},
                         {"name": "autorefreshInterval"}
+                    ],
+                    [
+                        {"name": "onlyNotified"},
+                        false
                     ]
                 ]
             }
