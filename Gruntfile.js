@@ -190,6 +190,7 @@ module.exports = function (grunt) {
                     'extension.php',
                     'websocket.php',
                     'command.php',
+                    'oauth-callback.php',
                     'index.php',
                     'LICENSE.txt',
                     '.htaccess',
