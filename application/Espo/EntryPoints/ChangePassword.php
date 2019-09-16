@@ -39,21 +39,18 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
 
     public function run()
     {
-        $requestId = $_GET['id'];
-        if (empty($requestId)) {
-            throw new BadRequest();
-        }
+        $requestId = $_GET['id'] ?? null;
+
+        if (!$requestId) throw new BadRequest();
 
         $config = $this->getConfig();
         $themeManager = $this->getThemeManager();
 
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
+        $request = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
             'requestId' => $requestId
-        ))->findOne();
+        ])->findOne();
 
-        if (!$p) {
-            throw new NotFound();
-        }
+        if (!$request) throw new NotFound();
 
         $runScript = "
             app.getController('PasswordChangeRequest', function (controller) {
@@ -69,4 +66,3 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
         return $this->getContainer()->get('themeManager');
     }
 }
-

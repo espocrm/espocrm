@@ -160,6 +160,12 @@
             "type": "multiEnum",
             "view": "views/settings/fields/auth-two-fa-method-list"
         },
+        "passwordRecoveryDisabled": {
+            "type": "bool"
+        },
+        "passwordRecoveryForAdminDisabled": {
+            "type": "bool"
+        },
         "ldapHost": {
             "type": "varchar",
             "required": true

@@ -111,7 +111,7 @@ class Settings extends \Espo\Core\Services\Base
             }
         }
 
-        if ($this->getConfig()->get('smtpServer')) {
+        if ($this->getConfig()->get('smtpServer') && !$this->getConfig()->geT('passwordRecoveryDisabled')) {
             $data->passwordRecoveryEnabled = true;
         }
 

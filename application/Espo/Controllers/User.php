@@ -69,24 +69,29 @@ class User extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
-            'requestId' => $data->requestId
-        ))->findOne();
+        if ($this->getConfig()->get('passwordRecoveryDisabled')) {
+            throw new Forbidden("Password recovery disabled");
+        }
 
-        if (!$p) {
+        $request = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
+            'requestId' => $data->requestId
+        ])->findOne();
+
+        if (!$request) {
             throw new Forbidden();
         }
-        $userId = $p->get('userId');
+
+        $userId = $request->get('userId');
         if (!$userId) {
             throw new Error();
         }
 
-        $this->getEntityManager()->removeEntity($p);
+        $this->getEntityManager()->removeEntity($request);
 
         if ($this->getService('User')->changePassword($userId, $data->password)) {
-            return array(
-                'url' => $p->get('url')
-            );
+            return [
+                'url' => $request->get('url')
+            ];
         }
     }
 

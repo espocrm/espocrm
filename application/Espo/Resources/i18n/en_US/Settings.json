@@ -119,6 +119,8 @@
         "cronDisabled": "Disable Cron",
         "maintenanceMode": "Maintenance Mode",
         "useWebSocket": "Use WebSocket",
+        "passwordRecoveryDisabled": "Disable password recovery",
+        "passwordRecoveryForAdminDisabled": "Disable password recover for admin users",
         "auth2FA": "Enable 2-Factor Authentication",
         "auth2FAMethodList": "Available 2FA methods"
     },
@@ -207,6 +209,7 @@
         "Connecting": "Connecting...",
         "Activities": "Activities",
         "Admin Notifications": "Admin Notifications",
+        "Passwords": "Passwords",
         "2-Factor Authentication": "2-Factor Authentication"
     },
     "messages": {

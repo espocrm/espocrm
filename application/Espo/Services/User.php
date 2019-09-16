@@ -152,6 +152,10 @@ class User extends Record
 
     public function passwordChangeRequest($userName, $emailAddress, $url = null)
     {
+        if ($this->getConfig()->get('passwordRecoveryDisabled')) {
+            throw new Forbidden("Password recovery disabled");
+        }
+
         $user = $this->getEntityManager()->getRepository('User')->where([
             'userName' => $userName,
             'emailAddress' => $emailAddress
@@ -165,6 +169,16 @@ class User extends Record
             throw new NotFound();
         }
 
+        if ($user->isApi()) {
+            throw new NotFound();
+        }
+
+        if ($this->getConfig()->get('passwordRecoveryForAdminDisabled')) {
+            if ($user->isAdmin()) {
+                throw new NotFound();
+            }
+        }
+
         $userId = $user->id;
 
         $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
@@ -174,7 +188,7 @@ class User extends Record
             throw new Forbidden(json_encode(['reason' => 'Already-Sent']));
         }
 
-        $requestId = Util::generateId();
+        $requestId = Util::generateId() . Util::generateKey();
 
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
         $passwordChangeRequest->set([

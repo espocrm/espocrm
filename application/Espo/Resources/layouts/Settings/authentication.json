@@ -11,5 +11,11 @@
         "rows": [
             [{"name": "auth2FA"}, {"name": "auth2FAMethodList"}]
         ]
+    },
+    {
+        "label": "Passwords",
+        "rows": [
+            [{"name": "passwordRecoveryDisabled"}, {"name": "passwordRecoveryForAdminDisabled"}]
+        ]
     }
 ]

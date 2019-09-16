@@ -198,6 +198,8 @@ return [
         'cleanupDeletedRecords',
         'authTokenPreventConcurrent',
         'emailParser',
+        'passwordRecoveryDisabled',
+        'passwordRecoveryForAdminDisabled',
         'latestVersion',
     ],
     'superAdminItems' => [
