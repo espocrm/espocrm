@@ -32,6 +32,6 @@
         "selectEntityType": "Select Entity Type in dashlet options."
     },
     "tooltips": {
-        "onlyNotified": "Actions done by your user won't be displayed."
+        "onlyNotified": "Actions made by your user won't be displayed."
     }
 }
