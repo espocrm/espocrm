@@ -51,7 +51,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
             this.dropdownItemList = [
                 {
                     name: 'reset',
-                    label: 'Reset',
+                    html: this.translate('Reset 2FA'),
                     hidden: true,
                 },
             ];
@@ -146,7 +146,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
         },
 
         actionReset: function () {
-            this.confirm(this.translate('securityResetConfimation', 'messages', 'User'), function () {
+            this.confirm(this.translate('security2FaResetConfimation', 'messages', 'User'), function () {
                 this.actionApply(true);
             }.bind(this));
 
