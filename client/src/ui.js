@@ -344,47 +344,51 @@ define('ui', [], function () {
             var cancelText = o.cancelText;
             var confirmStyle = o.confirmStyle || 'danger';
 
-            var dialog = new Dialog({
-                backdrop: ('backdrop' in o) ? o.backdrop : false,
-                header: false,
-                className: 'dialog-confirm',
-                body: '<span class="confirm-message">' + message + '</a>',
-                buttonList: [
-                    {
-                        text: ' ' + confirmText + ' ',
-                        name: 'confirm',
-                        onClick: function () {
-                            if (context) {
-                                callback.call(context);
-                            } else {
-                                callback();
-                            }
-                            dialog.close();
-                        },
-                        style: confirmStyle,
-                        pullLeft: true
-                    },
-                    {
-                        text: cancelText,
-                        name: 'cancel',
-                        onClick: function () {
-                            dialog.close();
-                            if (o.cancelCallback) {
-                                if (context) {
-                                    o.cancelCallback.call(context);
-                                } else {
-                                    o.cancelCallback();
+            return new Promise(function (resolve) {
+                var dialog = new Dialog({
+                    backdrop: ('backdrop' in o) ? o.backdrop : false,
+                    header: false,
+                    className: 'dialog-confirm',
+                    body: '<span class="confirm-message">' + message + '</a>',
+                    buttonList: [
+                        {
+                            text: ' ' + confirmText + ' ',
+                            name: 'confirm',
+                            onClick: function () {
+                                if (callback) {
+                                    if (context) {
+                                        callback.call(context);
+                                    } else {
+                                        callback();
+                                    }
                                 }
-                            }
+                                resolve();
+                                dialog.close();
+                            },
+                            style: confirmStyle,
+                            pullLeft: true
                         },
-                        pullRight: true
-                    }
-                ]
+                        {
+                            text: cancelText,
+                            name: 'cancel',
+                            onClick: function () {
+                                dialog.close();
+                                if (o.cancelCallback) {
+                                    if (context) {
+                                        o.cancelCallback.call(context);
+                                    } else {
+                                        o.cancelCallback();
+                                    }
+                                }
+                            },
+                            pullRight: true
+                        }
+                    ]
+                });
+
+                dialog.show();
+                dialog.$el.find('button[data-name="confirm"]').focus();
             });
-
-            dialog.show();
-
-            dialog.$el.find('button[data-name="confirm"]').focus();
         },
 
         dialog: function (options) {

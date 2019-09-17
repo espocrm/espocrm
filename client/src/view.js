@@ -244,7 +244,7 @@ define('view', [], function () {
                 var confirmText = o.confirmText;
                 confirmStyle = o.confirmStyle || null;
             }
-            Espo.Ui.confirm(message, {
+            return Espo.Ui.confirm(message, {
                 confirmText: confirmText,
                 cancelText: this.translate('Cancel'),
                 confirmStyle: confirmStyle
