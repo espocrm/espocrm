@@ -58,8 +58,8 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
             var letterCount = this.getConfig().get('passwordStrengthLetterCount');
             var numberCount = this.getConfig().get('passwordStrengthNumberCount');
 
-            var generateLength = this.getConfig().get('passwordGenerateLength') || 8;
-            var generateLetterCount = this.getConfig().get('passwordGenerateLetterCount') || 5;
+            var generateLength = this.getConfig().get('passwordGenerateLength') || 10;
+            var generateLetterCount = this.getConfig().get('passwordGenerateLetterCount') || 4;
             var generateNumberCount = this.getConfig().get('passwordGenerateNumberCount') || 2;
 
             length = (typeof length === 'undefined') ? generateLength : length;

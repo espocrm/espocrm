@@ -15,6 +15,7 @@
     {
         "label": "Passwords",
         "rows": [
+            [{"name": "passwordGenerateLength"}, false],
             [{"name": "passwordRecoveryDisabled"}, {"name": "passwordRecoveryForAdminDisabled"}]
         ]
     }

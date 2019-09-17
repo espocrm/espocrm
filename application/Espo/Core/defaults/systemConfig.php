@@ -284,5 +284,6 @@ return [
     'requiredMariadbVersion' => '5.5.3',
     'recommendedMariadbParams' => [],
     'ldapPortalUserLdapAuth' => false,
+    'passwordGenerateLength' => 10,
     'aclStrictMode' => true,
 ];

@@ -385,8 +385,8 @@ class User extends Record
         $letterCount = $this->getConfig()->get('passwordStrengthLetterCount');
         $numberCount = $this->getConfig()->get('passwordStrengthNumberCount');
 
-        $generateLength = $this->getConfig()->get('passwordGenerateLength', 8);
-        $generateLetterCount = $this->getConfig()->get('passwordGenerateLetterCount', 5);
+        $generateLength = $this->getConfig()->get('passwordGenerateLength', 10);
+        $generateLetterCount = $this->getConfig()->get('passwordGenerateLetterCount', 4);
         $generateNumberCount = $this->getConfig()->get('passwordGenerateNumberCount', 2);
 
         $length = is_null($length) ? $generateLength : $length;

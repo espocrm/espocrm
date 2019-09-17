@@ -166,6 +166,12 @@
         "passwordRecoveryForAdminDisabled": {
             "type": "bool"
         },
+        "passwordGenerateLength": {
+            "type": "int",
+            "min": 6,
+            "max": 150,
+            "required": true
+        },
         "ldapHost": {
             "type": "varchar",
             "required": true
