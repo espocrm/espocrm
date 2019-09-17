@@ -397,7 +397,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             ) + '<br><br>' +
             this.getHelper().transfromMarkdownInlineText(
                 this.translate('infoSyntax', 'messages', 'Stream') + ':'
-            ) + '<br><br>';
+            ) + '<br>';
 
             var syntaxItemList = [
                 ['code', '`{text}`'],
