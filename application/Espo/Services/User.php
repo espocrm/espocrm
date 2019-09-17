@@ -363,6 +363,52 @@ class User extends Record
         return $entity;
     }
 
+    public function generateNewPasswordForUser(string $id)
+    {
+        $user = $this->getEntity($id);
+        if (!$user) throw new NotFound();
+
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if ($user->isApi()) throw new Forbidden();
+        if ($user->isSuperAdmin()) throw new Forbidden();
+        if ($user->isSystem()) throw new Forbidden();
+
+        if (!$user->get('emailAddress')) {
+            throw new Forbidden("Generate new password: Can't process because user desn't have email address.");
+        }
+
+        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
+            throw new Forbidden("Generate new password: Can't process because SMTP is not configured.");
+        }
+
+        $length = $this->getConfig()->get('passwordStrengthLength');
+        $letterCount = $this->getConfig()->get('passwordStrengthLetterCount');
+        $numberCount = $this->getConfig()->get('passwordStrengthNumberCount');
+
+        $generateLength = $this->getConfig()->get('passwordGenerateLength', 8);
+        $generateLetterCount = $this->getConfig()->get('passwordGenerateLetterCount', 5);
+        $generateNumberCount = $this->getConfig()->get('passwordGenerateNumberCount', 2);
+
+        $length = is_null($length) ? $generateLength : $length;
+        $letterCount = is_null($letterCount) ? $generateLetterCount : $letterCount;
+        $numberCount = is_null($letterCount) ? $generateNumberCount : $numberCount;
+
+        if ($length < $generateLength) $length = $generateLength;
+        if ($letterCount < $generateLetterCount) $letterCount = $generateLetterCount;
+        if ($numberCount < $generateNumberCount) $numberCount = $generateNumberCount;
+
+        $otherCount = $length - ($letterCount + $numberCount);
+        if ($otherCount < 0) $otherCount = 0;
+
+        $password = Util::generatePassword($letterCount, $numberCount, $otherCount);
+
+        $this->sendPassword($user, $password);
+
+        $passwordHash = new \Espo\Core\Utils\PasswordHash($this->getConfig());
+        $user->set('password', $passwordHash->hash($password));
+        $this->getEntityManager()->saveEntity($user);
+    }
+
     protected function getInternalUserCount()
     {
         return $this->getEntityManager()->getRepository('User')->where([

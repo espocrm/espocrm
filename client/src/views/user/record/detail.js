@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
+define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -74,6 +74,31 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     label: 'Change Password',
                     style: 'default'
                 });
+            }
+
+            if (
+                this.getUser().isAdmin()
+                &&
+                (this.model.isRegular() || this.model.isAdmin() || this.model.isPortal())
+                &&
+                !this.model.isSuperAdmin()
+            ) {
+                this.addDropdownItem({
+                    name: 'generateNewPassword',
+                    label: 'Generate New Password',
+                    action: 'generateNewPassword',
+                    hidden: !this.model.get('emailAddress') || !this.getConfig().get('smtpServer'),
+                });
+
+                if (!this.model.get('emailAddress') && this.getConfig().get('smtpServer')) {
+                    this.listenTo(this.model, 'sync', function () {
+                        if (this.model.get('emailAddress')) {
+                            this.showActionItem('generateNewPassword');
+                        } else {
+                            this.hideActionItem('generateNewPassword');
+                        }
+                    }, this);
+                }
             }
 
             if (this.model.isPortal() || this.model.isApi()) {
@@ -305,6 +330,23 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             }, function (view) {
                 view.render();
             }, this);
+        },
+
+        actionGenerateNewPassword: function () {
+            this.confirm(
+                this.translate('generateAndSendNewPassword', 'messages', 'User')
+            ).then(
+                function () {
+                    Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                    Espo.Ajax.postRequest('User/action/generateNewPassword', {
+                        id: this.model.id
+                    }).then(
+                        function () {
+                            Espo.Ui.success(this.translate('Done'));
+                        }.bind(this)
+                    );
+                }.bind(this)
+            );
         },
 
     });

@@ -809,4 +809,46 @@ class Util
 
         return $url;
     }
+
+    public static function generatePassword(int $letters = 5, int $numbers = 3, int $either = 0)
+    {
+        $chars = [
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+            '0123456789',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+        ];
+
+        $shuffle = function ($array) {
+            $currentIndex = count($array);
+            while (0 !== $currentIndex) {
+                $rand = (0 + (1 - 0) * (mt_rand() / mt_getrandmax()));
+                $randomIndex = intval(floor($rand * $currentIndex));
+                $currentIndex -= 1;
+                $temporaryValue = $array[$currentIndex];
+                $array[$currentIndex] = $array[$randomIndex];
+                $array[$randomIndex] = $temporaryValue;
+            }
+            return $array;
+        };
+
+        $array = [];
+
+        foreach ([$letters, $numbers, $either] as $i => $len) {
+            $set = $chars[$i];
+            $subArray = [];
+
+            $j = 0;
+            while ($j < $len) {
+                $rand = (0 + (1 - 0) * (mt_rand() / mt_getrandmax()));
+                $index = intval(floor($rand * strlen($set)));
+                $subArray[] = $set[$index];
+                $j++;
+            }
+
+            $array = array_merge($array, $subArray);
+        }
+
+
+        return implode('', $shuffle($array));
+    }
 }

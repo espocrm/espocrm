@@ -69,6 +69,7 @@
         "Create Portal User": "Create Portal User",
         "Proceed w/o Contact": "Proceed w/o Contact",
         "Generate New API Key": "Generate New API Key",
+        "Generate New Password": "Generate New Password",
         "Code": "Code",
         "Back to login form": "Back to login form",
         "Security": "Security",
@@ -101,6 +102,7 @@
         "codeIsRequired": "Code is required",
         "enterTotpCode": "Enter a code from your authenticator app.",
         "verifyTotpCode": "Scan the QR-code with your mobile authenticator app. If you have a trouble with scanning, you can enter the secret manually. After that you will see a 6-digit code in your application. Enter this code in the field below.",
+        "generateAndSendNewPassword": "A new password will be generated and sent to the user's email address.",
         "securityResetConfimation": "Are you sure you want to reset security settings?"
     },
     "options": {

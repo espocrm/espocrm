@@ -118,6 +118,14 @@ class User extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
     }
 
+    public function postActionGenerateNewPassword($params, $data, $request)
+    {
+        if (empty($data->id)) throw new BadRequest();
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        $this->getRecordService()->generateNewPasswordForUser($data->id);
+        return true;
+    }
+
     public function beforeCreateLink()
     {
         if (!$this->getUser()->isAdmin()) throw new Forbidden();
