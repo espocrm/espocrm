@@ -120,7 +120,7 @@
         "maintenanceMode": "Maintenance Mode",
         "useWebSocket": "Use WebSocket",
         "passwordRecoveryDisabled": "Disable password recovery",
-        "passwordRecoveryForAdminDisabled": "Disable password recover for admin users",
+        "passwordRecoveryForAdminDisabled": "Disable password recovery for admin users",
         "passwordGenerateLength": "Length of generated passwords",
         "auth2FA": "Enable 2-Factor Authentication",
         "auth2FAMethodList": "Available 2FA methods"
