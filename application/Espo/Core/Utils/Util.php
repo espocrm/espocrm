@@ -810,12 +810,14 @@ class Util
         return $url;
     }
 
-    public static function generatePassword(int $letters = 5, int $numbers = 3, int $either = 0)
+    public static function generatePassword(int $length = 8, int $letters = 5, int $numbers = 3, bool $bothCases = false)
     {
         $chars = [
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
             '0123456789',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            'abcdefghijklmnopqrstuvwxyz',
         ];
 
         $shuffle = function ($array) {
@@ -831,9 +833,21 @@ class Util
             return $array;
         };
 
+        $upperCase = 0;
+        $lowerCase = 0;
+        if ($bothCases) {
+            $upperCase = 1;
+            $lowerCase = 1;
+            if ($letters >= 2) $letters = $letters - 2;
+                else $letters = 0;
+        }
+
+        $either = $length - ($letters + $numbers + $upperCase + $lowerCase);
+        if ($either < 0) $either = 0;
+
         $array = [];
 
-        foreach ([$letters, $numbers, $either] as $i => $len) {
+        foreach ([$letters, $numbers, $either, $upperCase, $lowerCase] as $i => $len) {
             $set = $chars[$i];
             $subArray = [];
 
@@ -847,7 +861,6 @@ class Util
 
             $array = array_merge($array, $subArray);
         }
-
 
         return implode('', $shuffle($array));
     }

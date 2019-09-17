@@ -70,10 +70,7 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
             if (letterCount < generateLetterCount) letterCount = generateLetterCount;
             if (numberCount < generateNumberCount) numberCount = generateNumberCount;
 
-            var otherCount = length - (letterCount + numberCount);
-            if (otherCount < 0) otherCount = 0;
-
-            var password = this.generatePassword(letterCount, numberCount, otherCount);
+            var password = this.generatePassword(length, letterCount, numberCount, true);
 
             this.model.set({
                 password: password,
@@ -82,12 +79,29 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
             }, {isGenerated: true});
         },
 
-        generatePassword: function (letters, numbers, either) {
+        generatePassword: function (length, letters, numbers, bothCases) {
             var chars = [
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
                 '0123456789',
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                'abcdefghijklmnopqrstuvwxyz',
             ];
+
+            var upperCase = 0;
+            var lowerCase = 0;
+
+            if (bothCases) {
+                upperCase = 1;
+                lowerCase = 1;
+                if (letters >= 2) letters = letters - 2;
+                    else letters = 0;
+            }
+
+            var either = length - (letters + numbers + upperCase + lowerCase);
+            if (either < 0) either = 0;
+
+            var setList = [letters, numbers, either, upperCase, lowerCase];
 
             var shuffle = function (array) {
                 var currentIndex = array.length, temporaryValue, randomIndex;
@@ -101,7 +115,7 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
                 return array;
             };
 
-            var array = [letters, numbers, either].map(
+            var array = setList.map(
                 function (len, i) {
                     return Array(len).fill(chars[i]).map(
                         function (x) {

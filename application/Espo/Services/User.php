@@ -397,10 +397,7 @@ class User extends Record
         if ($letterCount < $generateLetterCount) $letterCount = $generateLetterCount;
         if ($numberCount < $generateNumberCount) $numberCount = $generateNumberCount;
 
-        $otherCount = $length - ($letterCount + $numberCount);
-        if ($otherCount < 0) $otherCount = 0;
-
-        $password = Util::generatePassword($letterCount, $numberCount, $otherCount);
+        $password = Util::generatePassword($length, $letterCount, $numberCount, true);
 
         $this->sendPassword($user, $password);
 
