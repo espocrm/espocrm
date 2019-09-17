@@ -7,12 +7,12 @@
             <div class="panel-body">
                 <div>
                         <div class="cell form-group">
-                            <label for="login" class="control-label">{{translate 'newPassword' category="fields" scope='User'}}</label>
-                            <input type="password" name="password" class="form-control">
+                            <label for="login" class="control-label">{{translate 'newPassword' category='fields' scope='User'}}</label>
+                            <div class="field" data-name="password">{{{password}}}</div>
                         </div>
                         <div class="cell form-group">
-                            <label for="login" class="control-label">{{translate 'newPasswordConfirm' category="fields" scope='User'}}</label>
-                            <input type="password" name="passwordConfirm" class="form-control">
+                            <label for="login" class="control-label">{{translate 'newPasswordConfirm' category='fields' scope='User'}}</label>
+                            <div class="field" data-name="passwordConfirm">{{{passwordConfirm}}}</div>
                         </div>
                         <div>
                             <button type="button" class="btn btn-danger" id="btn-submit">{{translate 'Submit'}}</button>

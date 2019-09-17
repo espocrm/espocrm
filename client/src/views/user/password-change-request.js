@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/password-change-request', 'view', function (Dep) {
+define('views/user/password-change-request', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -44,76 +44,72 @@ Espo.define('views/user/password-change-request', 'view', function (Dep) {
             }
         },
 
+        setup: function () {
+            var model = this.model = new Model;
+            model.name = 'User';
+
+            this.createView('password', 'views/user/fields/password', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="password"]',
+                defs: {
+                    name: 'password',
+                    params: {
+                        required: true,
+                    },
+                },
+                strengthParams: this.options.strengthParams,
+            });
+
+            this.createView('passwordConfirm', 'views/fields/password', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="passwordConfirm"]',
+                defs: {
+                    name: 'passwordConfirm',
+                    params: {
+                        required: true,
+                    },
+                },
+            });
+        },
+
         submit: function () {
-            var $password = this.$el.find('input[name="password"]');
-            var $passwordConfirm = this.$el.find('input[name="passwordConfirm"]');
+            this.getView('password').fetchToModel();
+            this.getView('passwordConfirm').fetchToModel();
 
-            var password = $password.val();
-            var passwordConfirm = $passwordConfirm.val();
+            var notValid = this.getView('password').validate() ||
+                           this.getView('passwordConfirm').validate();
 
-            var translatedPasswordLabel = this.translate('password', 'fields', 'User');
+            var password = this.model.get('password');
 
-            if (password == '') {
-                var message = this.getLanguage().translate('fieldIsRequired', 'messages').replace('{field}', translatedPasswordLabel);
-
-                $password.popover({
-                    placement: 'bottom',
-                    content: message,
-                    trigger: 'manual',
-                }).popover('show');
-
-                var $cellPassword = $password.closest('.form-group');
-                $cellPassword.addClass('has-error');
-
-                $password.one('mousedown click', function () {
-                    $cellPassword.removeClass('has-error');
-                    $password.popover('destroy');
-                });
+            if (notValid) {
                 return;
             }
 
-            if (password != passwordConfirm) {
-                var message = this.getLanguage().translate('fieldBadPasswordConfirm', 'messages').replace('{field}', translatedPasswordLabel);
+            var $submit = this.$el.find('.btn-submit');
+            $submit.addClass('disabled');
 
-                $passwordConfirm.popover({
-                    placement: 'bottom',
-                    content: message,
-                    trigger: 'manual',
-                }).popover('show');
+            Espo.Ajax.postRequest('User/changePasswordByRequest', {
+                requestId: this.options.requestId,
+                password: password,
+            }).then(
+                function (data) {
+                    this.$el.find('.password-change').remove();
 
-                var $cellPasswordConfirm = $passwordConfirm.closest('.form-group');
-                $cellPasswordConfirm.addClass('has-error');
+                    var url = data.url || this.getConfig().get('siteUrl');
 
-                $passwordConfirm.one('mousedown click', function () {
-                    $cellPasswordConfirm.removeClass('has-error');
-                    $passwordConfirm.popover('destroy');
-                });
-                return;
-            }
-            this.$el.find('.btn-submit').addClass('disabled');
+                    var msg = this.translate('passwordChangedByRequest', 'messages', 'User');
+                    msg += ' <a href="' + url + '">' + this.translate('Login', 'labels', 'User') + '</a>.';
 
-            $.ajax({
-                type: 'POST',
-                url: 'User/changePasswordByRequest',
-                data: JSON.stringify({
-                    requestId: this.options.requestId,
-                    password: password
-                }),
-                error: function () {
-                    this.$el.find('.btn-submit').removeClass('disabled');
+                    this.$el.find('.msg-box').removeClass('hidden').html('<span class="text-success">' + msg + '</span>');
                 }.bind(this)
-            }).done(function (data) {
-                this.$el.find('.password-change').remove();
-
-                var url = data.url || this.getConfig().get('siteUrl');
-
-                var msg = this.translate('passwordChangedByRequest', 'messages', 'User');
-                msg += ' <a href="' + url + '">' + this.translate('Login', 'labels', 'User') + '</a>.';
-
-                this.$el.find('.msg-box').removeClass('hidden').html('<span class="text-success">' + msg + '</span>');
-            }.bind(this));
-
-        }
+            ).fail(
+                function () {
+                    $submit.removeClass('disabled');
+                }.bind(this)
+            );
+        },
 
     });
 });

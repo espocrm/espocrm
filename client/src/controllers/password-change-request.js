@@ -30,13 +30,16 @@ define('controllers/password-change-request', 'controller', function (Dep) {
 
     return Dep.extend({
 
-        actionPasswordChange: function (id) {
-            if (!id) {
+        actionPasswordChange: function (options) {
+            options = options || {};
+
+            if (!options.id) {
                 throw new Error();
             }
 
             this.entire('views/user/password-change-request', {
-                requestId: id
+                requestId: options.id,
+                strengthParams: options.strengthParams,
             }, function (view) {
                 view.render();
             });

@@ -66,7 +66,7 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
                     }
                 });
 
-                this.createView('password', 'views/fields/password', {
+                this.createView('password', 'views/user/fields/password', {
                     model: user,
                     mode: 'edit',
                     el: this.options.el + ' .field[data-name="password"]',

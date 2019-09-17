@@ -86,9 +86,8 @@ class User extends \Espo\Core\Controllers\Record
             throw new Error();
         }
 
-        $this->getEntityManager()->removeEntity($request);
-
         if ($this->getService('User')->changePassword($userId, $data->password)) {
+            $this->getEntityManager()->removeEntity($request);
             return [
                 'url' => $request->get('url')
             ];

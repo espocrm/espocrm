@@ -135,8 +135,9 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                                     type: 'password',
                                     params: {
                                         required: this.isNew,
-                                        readyToChange: true
-                                    }
+                                        readyToChange: true,
+                                    },
+                                    view: 'views/user/fields/password',
                                 },
                                 {
                                     name: 'generatePassword',

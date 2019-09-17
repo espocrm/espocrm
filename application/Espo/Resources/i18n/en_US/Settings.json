@@ -122,6 +122,10 @@
         "passwordRecoveryDisabled": "Disable password recovery",
         "passwordRecoveryForAdminDisabled": "Disable password recovery for admin users",
         "passwordGenerateLength": "Length of generated passwords",
+        "passwordStrengthLength": "Minimum password length",
+        "passwordStrengthLetterCount": "Number of letters required in password",
+        "passwordStrengthNumberCount": "Number of digits required in password",
+        "passwordStrengthBothCases": "Password must contain letters of both upper and lower case",
         "auth2FA": "Enable 2-Factor Authentication",
         "auth2FAMethodList": "Available 2FA methods"
     },

@@ -172,6 +172,24 @@
             "max": 150,
             "required": true
         },
+        "passwordStrengthLength": {
+            "type": "int",
+            "max": 150,
+            "min": 1
+        },
+        "passwordStrengthLetterCount": {
+            "type": "int",
+            "max": 150,
+            "min": 0
+        },
+        "passwordStrengthNumberCount": {
+            "type": "int",
+            "max": 150,
+            "min": 0
+        },
+        "passwordStrengthBothCases": {
+            "type": "bool"
+        },
         "ldapHost": {
             "type": "varchar",
             "required": true

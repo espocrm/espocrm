@@ -280,7 +280,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
-            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip');
+            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip') || this.tooltip;
 
             if (this.options.readOnlyDisabled) {
                 this.readOnly = false;
@@ -374,7 +374,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $label.append(' ');
                 this.getLabelElement().append($a);
 
-                var tooltipText = this.options.tooltipText;
+                var tooltipText = this.options.tooltipText || this.tooltipText;
 
                 if (!tooltipText && typeof this.tooltip === 'string') {
                     tooltipText = this.translate(this.tooltip, 'tooltips', this.model.name);

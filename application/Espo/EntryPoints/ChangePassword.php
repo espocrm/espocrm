@@ -50,11 +50,23 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
             'requestId' => $requestId
         ])->findOne();
 
+        $strengthParams = [
+            'passwordStrengthLength' => $this->getConfig()->get('passwordStrengthLength'),
+            'passwordStrengthLetterCount' => $this->getConfig()->get('passwordStrengthLetterCount'),
+            'passwordStrengthNumberCount' => $this->getConfig()->get('passwordStrengthNumberCount'),
+            'passwordStrengthBothCases' => $this->getConfig()->get('passwordStrengthBothCases'),
+        ];
+
         if (!$request) throw new NotFound();
+
+        $options = [
+            'id' => $requestId,
+            'strengthParams' => $strengthParams,
+        ];
 
         $runScript = "
             app.getController('PasswordChangeRequest', function (controller) {
-                controller.doAction('passwordChange', '{$requestId}');
+                controller.doAction('passwordChange', ".json_encode($options).");
             });
         ";
 

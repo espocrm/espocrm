@@ -143,9 +143,66 @@ class User extends Record
             }
         }
 
+        if (!$this->checkPasswordStrength($password)) throw new Forbidden("Change password: Password is weak.");
+
         $user->set('password', $this->hashPassword($password));
 
         $this->getEntityManager()->saveEntity($user);
+
+        return true;
+    }
+
+    public function checkPasswordStrength(string $password) : bool
+    {
+        $minLength = $this->getConfig()->get('passwordStrengthLength');
+        if ($minLength) {
+            if (mb_strlen($password) < $minLength) {
+                return false;
+            }
+        }
+
+        $requiredLetterCount = $this->getConfig()->get('passwordStrengthLetterCount');
+        if ($requiredLetterCount) {
+            $letterCount = 0;
+            foreach (str_split($password) as $c) {
+                if (ctype_alpha($c)) {
+                    $letterCount++;
+                }
+            }
+            if ($letterCount < $requiredLetterCount) {
+                return false;
+            }
+        }
+
+        $requiredNumberCount = $this->getConfig()->get('passwordStrengthNumberCount');
+        if ($requiredNumberCount) {
+            $numberCount = 0;
+            foreach (str_split($password) as $c) {
+                if (is_numeric($c)) {
+                    $numberCount++;
+                }
+            }
+            if ($numberCount < $requiredNumberCount) {
+                return false;
+            }
+        }
+
+        $bothCases = $this->getConfig()->get('passwordStrengthBothCases');
+        if ($bothCases) {
+            $ucCount = 0;
+            $lcCount = 0;
+            foreach (str_split($password) as $c) {
+                if (ctype_alpha($c) && $c === mb_strtoupper($c)) {
+                    $ucCount++;
+                }
+                if (ctype_alpha($c) && $c === mb_strtolower($c)) {
+                    $lcCount++;
+                }
+            }
+            if (!$ucCount || !$lcCount) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -271,6 +328,7 @@ class User extends Record
         $newPassword = null;
         if (property_exists($data, 'password')) {
             $newPassword = $data->password;
+            if (!$this->checkPasswordStrength($newPassword)) throw new Forbidden("Password is weak.");
             $data->password = $this->hashPassword($data->password);
         }
 
@@ -295,6 +353,7 @@ class User extends Record
         $newPassword = null;
         if (property_exists($data, 'password')) {
             $newPassword = $data->password;
+            if (!$this->checkPasswordStrength($newPassword)) throw new Forbidden("Password is weak.");
             $data->password = $this->hashPassword($data->password);
         }
 
