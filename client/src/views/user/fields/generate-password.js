@@ -109,11 +109,7 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
                         }
                     ).join('');
                 }
-            ).concat().join('').split('').sort(
-                function () {
-                    return 0.5 - Math.random();
-                }
-            );
+            ).concat();
 
             return shuffle(array).join('');
         },
