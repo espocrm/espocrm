@@ -40,7 +40,7 @@ class SubscribeAgain extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = false;
 
-    private function getHookManager()
+    protected function getHookManager()
     {
         return $this->getContainer()->get('hookManager');
     }
