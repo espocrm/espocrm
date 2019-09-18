@@ -422,12 +422,15 @@ class User extends Record
         return $entity;
     }
 
-    public function generateNewPasswordForUser(string $id)
+    public function generateNewPasswordForUser(string $id, bool $allowNonAdmin = false)
     {
+        if (!$allowNonAdmin) {
+            if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        }
+
         $user = $this->getEntity($id);
         if (!$user) throw new NotFound();
 
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
         if ($user->isApi()) throw new Forbidden();
         if ($user->isSuperAdmin()) throw new Forbidden();
         if ($user->isSystem()) throw new Forbidden();
