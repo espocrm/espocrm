@@ -159,4 +159,126 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $result = $fm->run($script, $contact);
         $this->assertEquals(1, $result);
     }
+
+    public function testRecordFindOne()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $m1 =$em->createEntity('Meeting', [
+            'name' => '1',
+            'status' => 'Held',
+        ]);
+        $m2 = $em->createEntity('Meeting', [
+            'name' => '2',
+            'status' => 'Planned',
+        ]);
+        $m3 = $em->createEntity('Meeting', [
+            'name' => '3',
+            'status' => 'Held',
+        ]);
+        $m4 = $em->createEntity('Meeting', [
+            'name' => '4',
+            'status' => 'Planned',
+            'assignedUserId' => '1',
+        ]);
+
+        $script = "record\\findOne('Meeting', 'name', 'asc')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m1->id, $result);
+
+        $script = "record\\findOne('Meeting', 'name', 'desc')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m4->id, $result);
+
+        $script = "record\\findOne('Meeting', 'name', 'asc', 'planned')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m2->id, $result);
+
+        $script = "record\\findOne('Meeting', 'name', 'asc', 'status=', 'Planned')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m2->id, $result);
+
+        $script = "record\\findOne('Meeting', 'name', 'asc', 'status=', 'Planned', 'assignedUserId=', '1')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m4->id, $result);
+
+        $script = "record\\findOne('Meeting', 'name', 'asc', 'status=', 'Not Held')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals(null, $result);
+    }
+
+    public function testRecordFindRelatedOne()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $account = $em->createEntity('Account', [
+            'name' => 'Test',
+        ]);
+
+        $m1 =$em->createEntity('Meeting', [
+            'name' => '1',
+            'status' => 'Held',
+            'parentType' => 'Account',
+            'parentId' => $account->id,
+        ]);
+        $m2 = $em->createEntity('Meeting', [
+            'name' => '2',
+            'status' => 'Planned',
+            'parentType' => 'Account',
+            'parentId' => $account->id,
+        ]);
+        $m3 = $em->createEntity('Meeting', [
+            'name' => '3',
+            'status' => 'Held',
+            'parentType' => 'Account',
+            'parentId' => $account->id,
+        ]);
+        $m4 = $em->createEntity('Meeting', [
+            'name' => '4',
+            'status' => 'Planned',
+            'assignedUserId' => '1',
+            'parentType' => 'Account',
+            'parentId' => $account->id,
+        ]);
+
+        $c0 = $em->createEntity('Contact', [
+            'lastName' => '0',
+        ]);
+
+        $c1 = $em->createEntity('Contact', [
+            'lastName' => '1',
+        ]);
+        $c2 = $em->createEntity('Contact', [
+            'lastName' => '2',
+        ]);
+
+        $em->getRepository('Account')->relate($account, 'contacts', $c1);
+        $em->getRepository('Account')->relate($account, 'contacts', $c2);
+
+        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'asc')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m1->id, $result);
+
+        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'planned')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m4->id, $result);
+
+        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'status', 'Held')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m3->id, $result);
+
+        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetingsPrimary', 'name', 'asc')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($m1->id, $result);
+
+        $script = "record\\findRelatedOne('Account', '".$account->id."', 'contacts', 'name', 'asc')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($c1->id, $result);
+
+        $script = "record\\findRelatedOne('Account', '".$account->id."', 'contacts', 'name', 'asc', 'lastName', '2')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals($c2->id, $result);
+    }
 }
