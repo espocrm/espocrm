@@ -217,7 +217,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test',
         ]);
 
-        $m1 =$em->createEntity('Meeting', [
+        $m1 = $em->createEntity('Meeting', [
             'name' => '1',
             'status' => 'Held',
             'parentType' => 'Account',
@@ -280,5 +280,20 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $script = "record\\findRelatedOne('Account', '".$account->id."', 'contacts', 'name', 'asc', 'lastName', '2')";
         $result = $fm->run($script, $contact);
         $this->assertEquals($c2->id, $result);
+    }
+
+    public function testRecordAttribute()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $m1 = $em->createEntity('Meeting', [
+            'name' => '1',
+            'status' => 'Held',
+        ]);
+
+        $script = "record\\attribute('Meeting', '".$m1->id."', 'name')";
+        $result = $fm->run($script, $contact);
+        $this->assertEquals('1', $result);
     }
 }
