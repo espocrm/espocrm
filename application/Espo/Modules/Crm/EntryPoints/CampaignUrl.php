@@ -40,6 +40,11 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = false;
 
+    protected function getHookManager()
+    {
+        return $this->getContainer()->get('hookManager');
+    }
+
     public function run()
     {
         if (empty($_GET['id']) || empty($_GET['queueItemId'])) {
@@ -69,6 +74,11 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
         if ($campaignId) {
             $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
         }
+
+        $this->getHookManager()->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
+            'targetId' => $targetId,
+            'targetType' => $targetType,
+        ]);
 
         if ($campaign && $target) {
             $campaignService = $this->getServiceFactory()->create('Campaign');
