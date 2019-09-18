@@ -922,7 +922,7 @@ class InboundEmail extends \Espo\Services\Record
 
     public function getSmtpParamsFromAccount(\Espo\Entities\InboundEmail $emailAccount)
     {
-        $smtpParams = array();
+        $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
         if ($smtpParams['server']) {
             $smtpParams['port'] = $emailAccount->get('smtpPort');
@@ -933,7 +933,10 @@ class InboundEmail extends \Espo\Services\Record
             if ($emailAccount->get('fromName')) {
                 $smtpParams['fromName'] = $emailAccount->get('fromName');
             }
-            if (array_key_exists('password', $smtpParams)) {
+            if ($emailAccount->get('emailAddress')) {
+                $smtpParams['fromAddress'] = $emailAccount->get('emailAddress');
+            }
+            if (array_key_exists('password', $smtpParams) && is_string($smtpParams['password'])) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
             }
             return $smtpParams;
