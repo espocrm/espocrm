@@ -98,6 +98,12 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
                 if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
                     show = false;
+                } else if (
+                    userIdList.length === 1 && userIdList[0] === this.getUser().id
+                    &&
+                    this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
+                ) {
+                    show = false;
                 }
             }
 

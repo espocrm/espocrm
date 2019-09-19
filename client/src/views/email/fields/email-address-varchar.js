@@ -203,10 +203,6 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
         },
 
         addAddress: function (address, name, type, id) {
-            if (name) {
-                name = this.getHelper().escapeString(name);
-            }
-
             if (this.justAddedAddress) {
                 this.deleteAddress(this.justAddedAddress);
             }
