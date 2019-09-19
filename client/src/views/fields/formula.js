@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
+define('views/fields/formula', 'views/fields/text', function (Dep) {
 
     return Dep.extend({
 
@@ -59,6 +59,8 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
             this.targetEntityType = this.options.targetEntityType || this.params.targetEntityType || this.targetEntityType;
 
+            this.insertDisabled = this.options.insertDisabled;
+
             this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
 
             if (this.mode == 'edit' || this.mode == 'detail') {
@@ -88,6 +90,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
             var data = Dep.prototype.data.call(this);
             data.containerId = this.containerId;
             data.targetEntityType = this.targetEntityType;
+            data.hasInsert = !this.insertDisabled;
 
             return data;
         },
@@ -158,8 +161,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
                     this.clearView('dialog');
                 }, this);
             }, this);
-        }
+        },
 
     });
 });
-
