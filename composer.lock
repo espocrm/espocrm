@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "816b58510c67753807c3e217c28f7c48",
-    "content-hash": "5b9463ed5646c07c6792049128e72ceb",
+    "hash": "c5bc2fb1697f4d1a1100c0bf26bb7e43",
+    "content-hash": "6d70bda95c5adbb4a3a4f868dbacfce5",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -1967,6 +1967,65 @@
             "time": "2019-01-05 16:37:49"
         },
         {
+            "name": "symfony/polyfill-iconv",
+            "version": "v1.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-iconv.git",
+                "reference": "685968b11e61a347c18bf25db32effa478be610f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-iconv/zipball/685968b11e61a347c18bf25db32effa478be610f",
+                "reference": "685968b11e61a347c18bf25db32effa478be610f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-iconv": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.12-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Iconv\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for the Iconv extension",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "iconv",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2019-08-06 08:03:45"
+        },
+        {
             "name": "symfony/polyfill-mbstring",
             "version": "v1.10.0",
             "source": {
@@ -2358,27 +2417,34 @@
         },
         {
             "name": "zbateson/mail-mime-parser",
-            "version": "0.4.8",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zbateson/mail-mime-parser.git",
-                "reference": "b05f32a1902d4e395384ff64e9f505c23d2714e5"
+                "reference": "63bedd7d71fb3abff2381174a14637c5a4ddaa36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zbateson/mail-mime-parser/zipball/b05f32a1902d4e395384ff64e9f505c23d2714e5",
-                "reference": "b05f32a1902d4e395384ff64e9f505c23d2714e5",
+                "url": "https://api.github.com/repos/zbateson/mail-mime-parser/zipball/63bedd7d71fb3abff2381174a14637c5a4ddaa36",
+                "reference": "63bedd7d71fb3abff2381174a14637c5a4ddaa36",
                 "shasum": ""
             },
             "require": {
-                "ext-mbstring": "*",
-                "php": ">=5.4"
+                "guzzlehttp/psr7": "^1.0",
+                "php": ">=5.4",
+                "zbateson/mb-wrapper": "^1.0",
+                "zbateson/stream-decorators": "^1.0.2"
             },
             "require-dev": {
-                "evert/phpdoc-md": "~0.1.1",
-                "phing/phing": "~2.15.0",
-                "phpdocumentor/phpdocumentor": "~2.8.0",
-                "phpunit/phpunit": "~4.5.0"
+                "jms/serializer": "^1.1",
+                "mikey179/vfsstream": "^1.6.0",
+                "phing/phing": "^2.15.0",
+                "phpdocumentor/phpdocumentor": "^2.9.0",
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5"
+            },
+            "suggest": {
+                "ext-iconv": "For best support/performance",
+                "ext-mbstring": "For best support/performance"
             },
             "type": "library",
             "autoload": {
@@ -2392,20 +2458,135 @@
             ],
             "authors": [
                 {
-                    "name": "Zaahid Bateson",
-                    "email": "zbateson@users.noreply.github.com"
+                    "name": "Zaahid Bateson"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/zbateson/mail-mime-parser/graphs/contributors"
                 }
             ],
             "description": "MIME email message parser",
-            "homepage": "https://github.com/zbateson/MailMimeParser",
+            "homepage": "https://mail-mime-parser.org",
             "keywords": [
+                "MimeMailParser",
                 "email",
                 "mail",
+                "mailparse",
                 "mime",
+                "mimeparse",
                 "parser",
                 "php-imap"
             ],
-            "time": "2018-02-07 07:42:33"
+            "time": "2019-03-26 16:52:07"
+        },
+        {
+            "name": "zbateson/mb-wrapper",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zbateson/mb-wrapper.git",
+                "reference": "723f25a1ab0e4e662efa8d89f38da751c799134a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zbateson/mb-wrapper/zipball/723f25a1ab0e4e662efa8d89f38da751c799134a",
+                "reference": "723f25a1ab0e4e662efa8d89f38da751c799134a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "symfony/polyfill-iconv": "^1.9",
+                "symfony/polyfill-mbstring": "^1.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5"
+            },
+            "suggest": {
+                "ext-iconv": "For best support/performance",
+                "ext-mbstring": "For best support/performance"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZBateson\\MbWrapper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Zaahid Bateson"
+                }
+            ],
+            "description": "Wrapper for mbstring with fallback to iconv for encoding conversion and string manipulation",
+            "homepage": "https://github.com/zbateson/StreamDecorators",
+            "keywords": [
+                "charset",
+                "encoding",
+                "http",
+                "iconv",
+                "mail",
+                "mb",
+                "mb_convert_encoding",
+                "mbstring",
+                "mime",
+                "multibyte",
+                "string"
+            ],
+            "time": "2018-09-28 17:43:01"
+        },
+        {
+            "name": "zbateson/stream-decorators",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zbateson/stream-decorators.git",
+                "reference": "ec3c3ea91d26a7685db7a29a270464c5e1470786"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zbateson/stream-decorators/zipball/ec3c3ea91d26a7685db7a29a270464c5e1470786",
+                "reference": "ec3c3ea91d26a7685db7a29a270464c5e1470786",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^1.0.0",
+                "php": ">=5.4",
+                "zbateson/mb-wrapper": "^1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZBateson\\StreamDecorators\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Zaahid Bateson"
+                }
+            ],
+            "description": "PHP psr7 stream decorators for mime message part streams",
+            "keywords": [
+                "base64",
+                "charset",
+                "decorators",
+                "mail",
+                "mime",
+                "psr7",
+                "quoted-printable",
+                "stream",
+                "uuencode"
+            ],
+            "time": "2019-03-21 06:13:00"
         },
         {
             "name": "zendframework/zend-crypt",
