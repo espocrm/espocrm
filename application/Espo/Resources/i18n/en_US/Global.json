@@ -314,6 +314,7 @@
     },
     "boolFilters": {
         "onlyMy": "Only My",
+        "onlyMyTeam": "My Team",
         "followed": "Followed"
     },
     "presetFilters": {

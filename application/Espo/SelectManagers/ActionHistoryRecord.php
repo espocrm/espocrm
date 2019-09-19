@@ -33,13 +33,13 @@ class ActionHistoryRecord extends \Espo\Core\SelectManagers\Base
 {
     protected function boolFilterOnlyMy(&$result)
     {
-        $this->accessOnlyOwn($result);
+        return ['userId' => $this->getUser()->id];
     }
 
     protected function accessOnlyOwn(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'userId' => $this->getUser()->id
-        );
+        ];
     }
 }

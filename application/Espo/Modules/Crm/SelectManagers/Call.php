@@ -60,8 +60,8 @@ class Call extends \Espo\Core\SelectManagers\Base
 
     protected function boolFilterOnlyMy(&$result)
     {
-        $this->addJoin(['users', 'usersFilterOnlyMy'], $result);
-        $result['whereClause'][] = [
+        $this->addLeftJoin(['users', 'usersFilterOnlyMy'], $result);
+        return [
             'usersFilterOnlyMyMiddle.userId' => $this->getUser()->id,
             'OR' => [
                 'usersFilterOnlyMyMiddle.status!=' => 'Declined',

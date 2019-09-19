@@ -37,12 +37,14 @@ class Task extends \Espo\Core\SelectManagers\Base
 
     protected function boolFilterActual(&$result)
     {
-        $this->filterActual($result);
+        return [
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+        ];
     }
 
     protected function boolFilterCompleted(&$result)
     {
-        $this->filterCompleted($result);
+        return ['status' => 'Completed'];
     }
 
     protected function filterActual(&$result)

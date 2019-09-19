@@ -33,7 +33,9 @@ class CaseObj extends \Espo\Core\SelectManagers\Base
 {
     protected function boolFilterOpen(&$result)
     {
-        $this->filterOpen($result);
+        return [
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+        ];
     }
 
     protected function filterOpen(&$result)

@@ -124,10 +124,10 @@ class Email extends \Espo\Core\SelectManagers\Base
             'usersMiddle.inTrash' => false,
             'usersMiddle.folderId' => $folderId
         ];
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
-    protected function boolFilterOnlyMy(&$result)
+    protected function filterOnlyMy(&$result)
     {
         if (!$this->hasJoin('users', $result) && !$this->hasLeftJoin('users', $result)) {
             $this->addJoin('users', $result);
@@ -138,6 +138,16 @@ class Email extends \Espo\Core\SelectManagers\Base
         ];
 
         $this->addUsersColumns($result);
+    }
+
+    protected function boolFilterOnlyMy(&$result)
+    {
+        $this->addLeftJoin(['users', 'usersOnlyMyFilter'], $result);
+        $this->setDistinct(true, $result);
+
+        return [
+            'usersOnlyMyFilterMiddle.userId' => $this->getUser()->id
+        ];
     }
 
     protected function addUsersColumns(&$result)
@@ -180,13 +190,13 @@ class Email extends \Espo\Core\SelectManagers\Base
         }
         $result['whereClause'][] = $group;
 
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function filterImportant(&$result)
     {
         $result['whereClause'][] = $this->getWherePartIsImportantIsTrue();
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function filterSent(&$result)
@@ -217,7 +227,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         $result['whereClause'][] = [
             'usersMiddle.inTrash=' => true
         ];
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function filterDrafts(&$result)
@@ -237,12 +247,12 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected function accessOnlyOwn(&$result)
     {
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function accessPortalOnlyOwn(&$result)
     {
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function accessOnlyTeam(&$result)

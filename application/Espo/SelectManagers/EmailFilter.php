@@ -33,37 +33,37 @@ class EmailFilter extends \Espo\Core\SelectManagers\Base
 {
     protected function boolFilterOnlyMy(&$result)
     {
-        $this->accessOnlyOwn($result);
-    }
-
-    protected function accessOnlyOwn(&$result)
-    {
-        $d = array();
-        $d[] = array(
+        $part = [];
+        $part[] = [
             'parentType' => 'User',
             'parentId' => $this->getUser()->id
-        );
+        ];
 
         $idList = [];
-        $emailAccountList = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
+        $emailAccountList = $this->getEntityManager()->getRepository('EmailAccount')->where([
             'assignedUserId' => $this->getUser()->id
-        ))->find();
+        ])->find();
         foreach ($emailAccountList as $emailAccount) {
             $idList = $emailAccount->id;
         }
 
         if (count($idList)) {
-            $d = array(
-                'OR' => array(
-                    $d,
-                    array(
+            $part = [
+                'OR' => [
+                    $part,
+                    [
                         'parentType' => 'EmailAccount',
                         'parentId' => $idList
-                    )
-                )
-
-            );
+                    ]
+                ]
+            ];
         }
-        $result['whereClause'][] = $d;
+
+        return $part;
+    }
+
+    protected function accessOnlyOwn(&$result)
+    {
+        $result['whereClause'][] = $this->boolFilterOnlyMy($result);
     }
 }

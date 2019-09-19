@@ -216,16 +216,15 @@ class Base
     {
         $this->prepareResult($result);
 
+        $boolFilterList = [];
+
         foreach ($where as $item) {
             if (!isset($item['type'])) continue;
 
             if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
+                $boolOr = [];
                 foreach ($item['value'] as $filter) {
-                    $p = $this->getBoolFilterWhere($filter);
-                    if (!empty($p)) {
-                        $where[] = $p;
-                    }
-                    $this->applyBoolFilter($filter, $result);
+                    $boolFilterList[] = $filter;
                 }
             } else if ($item['type'] == 'textFilter') {
                 if (isset($item['value']) || $item['value'] !== '') {
@@ -234,6 +233,10 @@ class Base
             } else if ($item['type'] == 'primary' && !empty($item['value'])) {
                 $this->applyPrimaryFilter($item['value'], $result);
             }
+        }
+
+        if (count($boolFilterList)) {
+            $this->applyBoolFilterList($boolFilterList, $result);
         }
 
         $whereClause = $this->convertWhere($where, false, $result);
@@ -786,9 +789,7 @@ class Base
         }
 
         if (!empty($params['boolFilterList']) && is_array($params['boolFilterList'])) {
-            foreach ($params['boolFilterList'] as $filterName) {
-                $this->applyBoolFilter($filterName, $result);
-            }
+            $this->applyBoolFilterList($params['boolFilterList'], $result);
         }
 
         if (!empty($params['filterList']) && is_array($params['filterList'])) {
@@ -1772,42 +1773,70 @@ class Base
         $this->limit($offset, $maxSize, $result);
     }
 
-    public function applyPrimaryFilter(string $filterName, array &$result)
+    public function applyPrimaryFilter(string $filter, array &$result)
     {
         $this->prepareResult($result);
 
-        $method = 'filter' . ucfirst($filterName);
+        $method = 'filter' . ucfirst($filter);
         if (method_exists($this, $method)) {
             $this->$method($result);
         } else {
-            $className = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'filters', $filterName, 'className']);
+            $className = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'filters', $filter, 'className']);
             if ($className) {
                 if (!class_exists($className)) {
-                    $GLOBALS['log']->error("Could find class for filter {$filterName}.");
+                    $GLOBALS['log']->error("Could find class for filter {$filter}.");
                     return;
                 }
                 $impl = $this->getInjectableFactory()->createByClassName($className);
                 if (!$impl) {
-                    $GLOBALS['log']->error("Could not create filter {$filterName} implementation.");
+                    $GLOBALS['log']->error("Could not create filter {$filter} implementation.");
                     return;
                 }
-                $impl->applyFilter($this->entityType, $filterName, $result, $this);
+                $impl->applyFilter($this->entityType, $filter, $result, $this);
             }
         }
     }
 
-    public function applyFilter(string $filterName, array &$result)
+    public function applyFilter(string $filter, array &$result)
     {
-        $this->applyPrimaryFilter($filterName, $result);
+        $this->applyPrimaryFilter($filter, $result);
     }
 
-    public function applyBoolFilter(string $filterName, array &$result)
+    public function applyBoolFilter(string $filter, array &$result)
     {
         $this->prepareResult($result);
 
-        $method = 'boolFilter' . ucfirst($filterName);
+        $method = 'boolFilter' . ucfirst($filter);
         if (method_exists($this, $method)) {
-            $this->$method($result);
+            $wherePart = $this->$method($result);
+            if ($wherePart) {
+                $result['whereClause'][] = $wherePart;
+            }
+        }
+    }
+
+    public function applyBoolFilterList(array $filterList, array &$result)
+    {
+        $this->prepareResult($result);
+
+        $wherePartList = [];
+
+        foreach ($filterList as $filter) {
+            $method = 'boolFilter' . ucfirst($filter);
+            if (method_exists($this, $method)) {
+                $wherePart = $this->$method($result);
+                if ($wherePart) {
+                    $wherePartList[] = $wherePart;
+                }
+            }
+        }
+
+        if (count($wherePartList)) {
+            if (count($wherePartList) === 1) {
+                $result['whereClause'][] = $wherePartList;
+            } else {
+                $result['whereClause'][] = ['OR' => $wherePartList];
+            }
         }
     }
 
@@ -2258,27 +2287,48 @@ class Base
 
     protected function boolFilterOnlyMy(&$result)
     {
+        $wherePart = null;
+
         if (!$this->checkIsPortal()) {
             if ($this->hasAssignedUsersField()) {
                 $this->setDistinct(true, $result);
-                $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-                $result['whereClause'][] = [
-                    'assignedUsersAccess.id' => $this->getUser()->id
+                $this->addLeftJoin(['assignedUsers', 'assignedUsersOnlyMyFilter'], $result);
+                $wherePart = [
+                    'assignedUsersOnlyMyFilter.id' => $this->getUser()->id
                 ];
             } else if ($this->hasAssignedUserField()) {
-                $result['whereClause'][] = [
+                $wherePart = [
                     'assignedUserId' => $this->getUser()->id
                 ];
             } else {
-                $result['whereClause'][] = [
+                $wherePart = [
                     'createdById' => $this->getUser()->id
                 ];
             }
         } else {
-            $result['whereClause'][] = [
+            $wherePart = [
                 'createdById' => $this->getUser()->id
             ];
         }
+
+        return $wherePart;
+    }
+
+    protected function boolFilterOnlyMyTeam(&$result)
+    {
+        $teamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+
+        if (count($teamIdList) === 0) {
+            return [
+                'id' => null
+            ];
+        }
+
+        $this->addLeftJoin(['teams', 'teamsOnlyMyFilter'], $result);
+        $this->setDistinct(true, $result);
+        return [
+            'teamsOnlyMyFilterMiddle.teamId' => $teamIdList
+        ];
     }
 
     protected function filterFollowed(&$result)
@@ -2306,7 +2356,9 @@ class Base
             ]
         ], $result);
 
-        $result['whereClause'][] = ['subscription.id!=' => null];
+        return ['subscription.id!=' => null];
+
+        //$result['whereClause'][] = ['subscription.id!=' => null];
     }
 
     public function mergeSelectParams(array $selectParams1, ?array $selectParams2) : array
