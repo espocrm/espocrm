@@ -85,6 +85,7 @@ deleteDirRecursively(diffFilePath);
 deleteDirRecursively(upgradePath);
 
 execute('git rev-parse --abbrev-ref HEAD', function (branch) {
+    branch = branch.trim();
     if (branch !== 'master' && branch !== 'stable' && branch.indexOf('hotfix/') !== 0) {
         console.log('\x1b[33m%s\x1b[0m', "Warning! You are on " + branch + " branch.");
     }
