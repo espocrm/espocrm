@@ -2283,18 +2283,30 @@ class Base
 
     protected function filterFollowed(&$result)
     {
-        $query = $this->getEntityManager()->getQuery();
-        $result['customJoin'] .= "
-            JOIN subscription ON
-                subscription.entity_type = ".$query->quote($this->getEntityType())." AND
-                subscription.entity_id = ".$query->toDb($this->getEntityType()).".id AND
-                subscription.user_id = ".$query->quote($this->getUser()->id)."
-        ";
+        $this->addJoin([
+            'Subscription',
+            'subscription',
+            [
+                'subscription.entityType' => $this->getEntityType(),
+                'subscription.entityId=:' => 'id',
+                'subscription.userId' => $this->getUser()->id,
+            ]
+        ], $result);
     }
 
     protected function boolFilterFollowed(&$result)
     {
-        $this->filterFollowed($result);
+        $this->addLeftJoin([
+            'Subscription',
+            'subscription',
+            [
+                'subscription.entityType' => $this->getEntityType(),
+                'subscription.entityId=:' => 'id',
+                'subscription.userId' => $this->getUser()->id,
+            ]
+        ], $result);
+
+        $result['whereClause'][] = ['subscription.id!=' => null];
     }
 
     public function mergeSelectParams(array $selectParams1, ?array $selectParams2) : array
