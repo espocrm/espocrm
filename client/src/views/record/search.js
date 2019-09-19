@@ -307,7 +307,7 @@ define('views/record/search', 'view', function (Dep) {
                 this.$advancedFiltersPanel.removeClass('hidden');
             },
             'click .dropdown-menu a[data-action="savePreset"]': function (e) {
-                this.createView('savePreset', 'Modals.SaveFilters', {}, function (view) {
+                this.createView('savePreset', 'views/modals/save-filters', {}, function (view) {
                     view.render();
                     this.listenToOnce(view, 'save', function (name) {
                         this.savePreset(name);
