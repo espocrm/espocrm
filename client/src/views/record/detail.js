@@ -489,6 +489,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             var $middle = this.getView('middle').$el;
             var $window = $(window);
 
+            if (this.stickButtonsFormBottomSelector) {
+                var $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
+                if ($bottom.length) {
+                    $middle = $bottom;
+                }
+            }
+
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
             $window.off('scroll.detail-' + this.numId);
