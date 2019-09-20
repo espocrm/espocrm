@@ -3,7 +3,7 @@
         "name": {
             "type": "varchar",
             "required": true,
-             "readOnly": true
+            "readOnly": true
         },
         "status": {
             "type": "enum",
@@ -39,5 +39,11 @@
     "collection": {
         "orderBy": "executionTime",
         "order": "desc"
+    },
+    "indexes": {
+        "scheduledJobIdExecutionTime": {
+            "type": "index",
+            "columns": ["scheduledJobId", "executionTime"]
+        }
     }
 }
