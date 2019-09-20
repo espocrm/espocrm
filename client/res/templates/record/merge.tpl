@@ -50,8 +50,9 @@
         </tbody>
     </table>
     <div class="button-container">
-        <button class="btn btn-primary" data-action="merge">{{translate 'Merge'}}</button>
-        <button class="btn btn-default" data-action="cancel">{{translate 'Cancel'}}</button>
+        <div class="btn-group">
+            <button class="btn btn-danger" data-action="merge">{{translate 'Merge'}}</button>
+            <button class="btn btn-default" data-action="cancel">{{translate 'Cancel'}}</button>
+        </div>
     </div>
 </div>
-
