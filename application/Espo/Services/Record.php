@@ -1331,8 +1331,11 @@ class Record extends \Espo\Core\Services\Base
         $recordService = $this->getRecordService($foreignEntityName);
 
         $disableCount = false;
+        $disableCountPropertyName = 'findLinked' . ucfirst($link) . 'CountQueryDisabled';
         if (
             in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+            ||
+            !empty($this->$disableCountPropertyName)
         ) {
             $disableCount = true;
         }
