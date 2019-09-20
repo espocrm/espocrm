@@ -52,7 +52,7 @@ Espo.define('views/modals/select-category-tree-records', 'views/modals/select-re
             if (this.multiple) {
                 this.buttonList.unshift({
                     name: 'select',
-                    style: 'primary',
+                    style: 'danger',
                     label: 'Select',
                     onClick: function (dialog) {
                         var listView = this.getView('list');

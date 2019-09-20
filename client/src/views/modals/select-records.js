@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
+define('views/modals/select-records', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -89,7 +89,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
             if (this.multiple) {
                 this.buttonList.unshift({
                     name: 'select',
-                    style: 'primary',
+                    style: 'danger',
                     label: 'Select',
                     disabled: true,
                     onClick: function (dialog) {
