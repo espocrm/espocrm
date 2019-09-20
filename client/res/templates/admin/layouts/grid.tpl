@@ -1,7 +1,9 @@
 <div class="button-container">
-{{#each buttonList}}
-    {{button name label=label scope='Admin' style=style}}
-{{/each}}
+    <div class="btn-group">
+    {{#each buttonList}}
+        {{button name label=label scope='Admin' style=style}}
+    {{/each}}
+    </div>
 </div>
 
 <div id="layout" class="row">
