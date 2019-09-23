@@ -631,22 +631,32 @@ class Activities extends \Espo\Core\Services\Base
             $onlyScope = $params['scope'];
         }
 
+        $maxSize = $params['maxSize'] ?? null;
+
         if (!$onlyScope) {
             $sql = implode(" UNION ", $parts);
         } else {
             $sql = $parts[$onlyScope];
         }
 
-        $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
-        $sth = $pdo->prepare($sqlCount);
-        $sth->execute();
+        if ($scope !== 'User') {
+            $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
+            $sth = $pdo->prepare($sqlCount);
+            $sth->execute();
 
-        $row = $sth->fetch(PDO::FETCH_ASSOC);
-        $totalCount = $row['count'];
+            $row = $sth->fetch(PDO::FETCH_ASSOC);
+            $totalCount = $row['count'];
+        }
 
         $sql .= "
             ORDER BY dateStart DESC, createdAt DESC
         ";
+
+        $maxSizeQ = $maxSize;
+
+        if ($scope === 'User') {
+            $maxSizeQ++;
+        }
 
         if (!empty($params['maxSize'])) {
             $sql .= "
@@ -656,14 +666,14 @@ class Activities extends \Espo\Core\Services\Base
 
         $sth = $pdo->prepare($sql);
 
-        if (!empty($params['maxSize'])) {
+        if ($maxSize) {
             $offset = 0;
             if (!empty($params['offset'])) {
                 $offset = $params['offset'];
             }
 
             $sth->bindParam(':offset', $offset, PDO::PARAM_INT);
-            $sth->bindParam(':maxSize', $params['maxSize'], PDO::PARAM_INT);
+            $sth->bindParam(':maxSize', $maxSizeQ, PDO::PARAM_INT);
         }
 
         $sth->execute();
@@ -681,9 +691,18 @@ class Activities extends \Espo\Core\Services\Base
             $list[] = $row;
         }
 
+        if ($scope === 'User') {
+            if ($maxSize && count($list) > $maxSize) {
+                $totalCount = -1;
+                unset($list[count($list) - 1]);
+            } else {
+                $totalCount = -2;
+            }
+        }
+
         return [
             'list' => $list,
-            'total' => $totalCount
+            'total' => $totalCount,
         ];
     }
 
