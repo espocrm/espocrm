@@ -466,6 +466,7 @@ class Manager
 
             if (file_exists($sourceFile) && is_file($sourceFile)) {
                 $res &= copy($sourceFile, $destFile);
+                $this->getPermissionUtils()->setDefaultPermissions($destFile);
                 if (function_exists('opcache_invalidate')) {
                     @opcache_invalidate($destFile);
                 }
