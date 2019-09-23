@@ -787,11 +787,10 @@ class Activities extends \Espo\Core\Services\Base
         $sqlBase = $sql;
 
         if ($orderBy) {
-            $sql = $query->order($sql, $seed, $orderBy, $order, true);
+            $sql = $query->order($sql, $seed, $orderBy, $order, strpos($sql, 'UNION') !== false);
         }
 
         $sql = $query->limit($sql, $offset, $limit);
-
 
         $collection = $this->getEntityManager()->getRepository($entityType)->findByQuery($sql);
 
