@@ -29,9 +29,10 @@
 
 namespace Espo\Core\Upgrades;
 
-use Espo\Core\Utils\Util,
-    Espo\Core\Utils\Json,
-    Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Json;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
 
 abstract class Base
 {
@@ -71,6 +72,14 @@ abstract class Base
         return $this->getActionManager()->getManifest();
     }
 
+    public function getManifestById($processId)
+    {
+        $actionClass = $this->getActionManager()->getActionClass(self::INSTALL);
+        $actionClass->setProcessId($processId);
+
+        return $actionClass->getManifest();
+    }
+
     public function upload($data)
     {
         $this->getActionManager()->setAction(self::UPLOAD);
@@ -97,5 +106,29 @@ abstract class Base
         $this->getActionManager()->setAction(self::DELETE);
 
         return $this->getActionManager()->run($processId);
+    }
+
+    public function runInstallStep($stepName, array $params = [])
+    {
+        return $this->runActionStep(self::INSTALL, $stepName, $params);
+    }
+
+    protected function runActionStep($actionName, $stepName, array $params = [])
+    {
+        $actionClass = $this->getActionManager()->getActionClass($actionName);
+        $methodName = 'step' . ucfirst($stepName);
+
+        if (!method_exists($actionClass, $methodName)) {
+            if (!empty($params['id'])) {
+                $actionClass->setProcessId($params['id']);
+                $actionClass->throwErrorAndRemovePackage('Step "'. $stepName .'" is not found.');
+            }
+
+            throw new Error('Step "'. $stepName .'" is not found.');
+        }
+
+        $actionClass->$methodName($params); // throw an Exception on error
+
+        return true;
     }
 }

@@ -27,38 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades\Actions\Upgrade;
+namespace Espo\Core\Console\Commands;
 
-class Install extends \Espo\Core\Upgrades\Actions\Base\Install
+class UpgradeStep extends Base
 {
-    public function stepBeforeUpgradeScript(array $data)
+    public function run($options, $flagList, $argumentList)
     {
-        return $this->stepBeforeInstallScript($data);
+        if (empty($options['step'])) {
+            echo "Step is not specified.\n";
+            return;
+        }
+
+        if (empty($options['id'])) {
+            echo "Upgrade ID is not specified.\n";
+            return;
+        }
+
+        $stepName = $options['step'];
+        $upgradeId = $options['id'];
+
+        return $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
     }
 
-    public function stepAfterUpgradeScript(array $data)
+    protected function runUpgradeStep($stepName, array $params)
     {
-        return $this->stepAfterInstallScript($data);
-    }
+        $app = new \Espo\Core\Application();
+        $app->setupSystemUser();
 
-    protected function finalize()
-    {
-        $manifest = $this->getManifest();
+        $upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
 
-        $this->getConfig()->set('version', $manifest['version']);
-        $this->getConfig()->save();
-    }
+        try {
+            $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
+        } catch (\Exception $e) {
+            die("Error: " . $e->getMessage() . "\n");
+        }
 
-    /**
-     * Delete temporary package files
-     *
-     * @return boolean
-     */
-    protected function deletePackageFiles()
-    {
-        $res = parent::deletePackageFiles();
-        $res &= $this->deletePackageArchive();
+        if (is_bool($result)) {
+            $result = $result ? "true" : "false";
+        }
 
-        return $res;
+        return $result;
     }
 }
