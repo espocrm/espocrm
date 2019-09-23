@@ -648,14 +648,17 @@ class Activities extends \Espo\Core\Services\Base
             $totalCount = $row['count'];
         }
 
-        $sql .= "
-            ORDER BY dateStart DESC, createdAt DESC
-        ";
-
         $maxSizeQ = $maxSize;
 
         if ($scope === 'User') {
             $maxSizeQ++;
+            $sql .= "
+                ORDER BY dateStart DESC
+            ";
+        } else {
+            $sql .= "
+                ORDER BY dateStart DESC, createdAt DESC
+            ";
         }
 
         if (!empty($params['maxSize'])) {
