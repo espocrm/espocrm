@@ -649,32 +649,33 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         $maxSizeQ = $maxSize;
+        $offset = $params['offset'] ?? 0;
+
+        if (!$onlyScope && $scope === 'User') {
+            foreach ($parts as &$part) {
+                $part .= " ORDER BY dateStart DESC";
+                if ($maxSize) {
+                    $part .= " LIMIT " . intval($offset + $maxSize + 1);
+                }
+                $part = '(' . $part . ')';
+            }
+            $sql = "SELECT * FROM (\n" . implode(" UNION ", $parts) . "\n) t";
+        }
 
         if ($scope === 'User') {
             $maxSizeQ++;
-            $sql .= "
-                ORDER BY dateStart DESC
-            ";
+            $sql .= "\nORDER BY dateStart DESC";
         } else {
-            $sql .= "
-                ORDER BY dateStart DESC, createdAt DESC
-            ";
+            $sql .= "\nORDER BY dateStart DESC, createdAt DESC";
         }
 
         if (!empty($params['maxSize'])) {
-            $sql .= "
-                LIMIT :offset, :maxSize
-            ";
+            $sql .= "\nLIMIT :offset, :maxSize";
         }
 
         $sth = $pdo->prepare($sql);
 
         if ($maxSize) {
-            $offset = 0;
-            if (!empty($params['offset'])) {
-                $offset = $params['offset'];
-            }
-
             $sth->bindParam(':offset', $offset, PDO::PARAM_INT);
             $sth->bindParam(':maxSize', $maxSizeQ, PDO::PARAM_INT);
         }
