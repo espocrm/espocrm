@@ -648,30 +648,34 @@ class Activities extends \Espo\Core\Services\Base
             $totalCount = $row['count'];
         }
 
-        $sql .= "
-            ORDER BY dateStart DESC, createdAt DESC
-        ";
-
         $maxSizeQ = $maxSize;
+        $offset = $params['offset'] ?? 0;
+
+        if (!$onlyScope && $scope === 'User') {
+            foreach ($parts as &$part) {
+                $part .= " ORDER BY dateStart DESC";
+                if ($maxSize) {
+                    $part .= " LIMIT " . intval($offset + $maxSize + 1);
+                }
+                $part = '(' . $part . ')';
+            }
+            $sql = "SELECT * FROM (\n" . implode(" UNION ", $parts) . "\n) t";
+        }
 
         if ($scope === 'User') {
             $maxSizeQ++;
+            $sql .= "\nORDER BY dateStart DESC";
+        } else {
+            $sql .= "\nORDER BY dateStart DESC, createdAt DESC";
         }
 
         if (!empty($params['maxSize'])) {
-            $sql .= "
-                LIMIT :offset, :maxSize
-            ";
+            $sql .= "\nLIMIT :offset, :maxSize";
         }
 
         $sth = $pdo->prepare($sql);
 
         if ($maxSize) {
-            $offset = 0;
-            if (!empty($params['offset'])) {
-                $offset = $params['offset'];
-            }
-
             $sth->bindParam(':offset', $offset, PDO::PARAM_INT);
             $sth->bindParam(':maxSize', $maxSizeQ, PDO::PARAM_INT);
         }
@@ -783,11 +787,10 @@ class Activities extends \Espo\Core\Services\Base
         $sqlBase = $sql;
 
         if ($orderBy) {
-            $sql = $query->order($sql, $seed, $orderBy, $order, true);
+            $sql = $query->order($sql, $seed, $orderBy, $order, strpos($sql, 'UNION') !== false);
         }
 
         $sql = $query->limit($sql, $offset, $limit);
-
 
         $collection = $this->getEntityManager()->getRepository($entityType)->findByQuery($sql);
 

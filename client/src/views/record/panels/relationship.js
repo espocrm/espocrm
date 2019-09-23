@@ -339,7 +339,19 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }, this);
             this.collection.reset();
-            this.collection.fetch();
+
+            var listView = this.getView('list');
+            if (listView && listView.$el) {
+                var height = listView.$el.height();
+                listView.$el.empty();
+                if (height) {
+                    listView.$el.parent().css('height', height + 'px');
+                }
+            }
+
+            this.collection.fetch().then(function () {
+                listView.$el.parent().css('height', '');
+            });
 
             this.setupTitle();
 
