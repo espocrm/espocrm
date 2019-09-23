@@ -11,8 +11,11 @@
     "contacts": "Контакти",
     "leads": "Ліди",
     "reminders": "Нагадування",
-    "account": "Контрагент",
-    "acceptanceStatus": "Статус підтвердження"
+    "account": "Контраґент",
+    "acceptanceStatus": "Статус підтвердження",
+    "dateStartDate": "Дата початку (цілий день)",
+    "dateEndDate": "Дата завершення (цілий день)",
+    "isAllDay": "Є цілий день"
   },
   "options": {
     "status": {
@@ -37,7 +40,8 @@
     "Set Not Held": "Позначити невиконаним",
     "Send Invitations": "Відправити запрошення",
     "on time": "на час",
-    "before": "перед"
+    "before": "перед",
+    "All-Day": "Цілий день"
   },
   "presetFilters": {
     "planned": "Заплановано",

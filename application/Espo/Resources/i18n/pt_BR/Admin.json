@@ -50,7 +50,11 @@
     "Jobs": "Tarefas",
     "Reset to Default": "Redefinir para Padrão",
     "Email Filters": "Filtros de Email",
-    "Label Manager": "Gerenciar Etiqueta"
+    "Label Manager": "Gerenciar Etiqueta",
+    "System Requirements": "Requisitos de sistema",
+    "PHP Settings": "Configurações do PHP",
+    "Database Settings": "Configurações do banco de dados",
+    "Permissions": "Permissões"
   },
   "layouts": {
     "list": "Lista",
@@ -119,13 +123,10 @@
   "messages": {
     "selectEntityType": "Escolha o tipo de entidade no menu a esquerda.",
     "selectUpgradePackage": "Selecione o pacote de atualização",
-    "downloadUpgradePackage": "Download do(s) pacote(s) de atualização <a href=\"{url}\">aqui</a>.",
     "selectLayout": "Selecione o layout necessário no meu a esquerda e edite ele.",
     "selectExtensionPackage": "Selecione o pacote de extensão",
     "extensionInstalled": "A extensão {name} {version} foi instalada.",
     "installExtension": "A extensão {name} {version} está pronta para instalação.",
-    "upgradeVersion": "Sua instalação do EspoCRM será atualizada para a versão <strong>{version}</strong>. Isto pode levar algum tempo.",
-    "upgradeDone": "Sua instalação do EspoCRM foi atualizada para a versão <strong>{version}</strong>. Atualize a janela do navegador.",
     "upgradeBackup": "Nós recomendamos que você faça um backup dos arquivos e dados do EspoCRM antes de atualizar.",
     "thousandSeparatorEqualsDecimalMark": "O separador de milhar não pode ser o mesmo do separador decimal",
     "userHasNoEmailAddress": "Usuário não possui endereço de e-mail.",
@@ -152,7 +153,8 @@
     "currency": "Configurações de moeda e taxas.",
     "extensions": "Instalar ou desinstalar extensoes.",
     "integrations": "Integração com serviços de terceiros.",
-    "inboundEmails": "Grupo de contas de e-mail IMAP. Importação de e-mail Email-to-Case."
+    "inboundEmails": "Grupo de contas de e-mail IMAP. Importação de e-mail Email-to-Case.",
+    "systemRequirements": "Requisitos de sistema para EspoCRM"
   },
   "options": {
     "previewSize": {
@@ -165,5 +167,12 @@
   "logicalOperators": {
     "or": "OU",
     "not": "NÃO"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Versão do PHP",
+    "requiredMysqlVersion": "Versão do MySQL",
+    "host": "Nome de anfitrião",
+    "dbname": "Nome do banco de dados",
+    "user": "Nome de Usuário"
   }
 }

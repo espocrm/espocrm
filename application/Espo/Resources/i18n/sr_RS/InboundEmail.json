@@ -2,15 +2,11 @@
   "fields": {
     "name": "Ime",
     "emailAddress": "Adresa e-pošte",
-    "status": "Status",
     "assignToUser": "Zaduži korisnika",
-    "host": "Host",
     "username": "Korisničko ime",
     "password": "Lozinka",
-    "port": "Port",
     "monitoredFolders": "Nadgledani folderi",
     "trashFolder": "Folder za otpad",
-    "ssl": "SSL",
     "createCase": "Napravi predmet",
     "reply": "Automatski odgovor",
     "caseDistribution": "Distribucija predmeta",
@@ -54,7 +50,6 @@
   },
   "labels": {
     "Create InboundEmail": "Stvoriti nalog e-pošte",
-    "IMAP": "IMAP",
     "Actions": "Akcije",
     "Main": "Glavni"
   },

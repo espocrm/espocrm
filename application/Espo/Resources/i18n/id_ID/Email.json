@@ -1,13 +1,9 @@
 {
   "fields": {
-    "name": "Nama",
     "parent": "Induk",
-    "status": "Status",
     "dateSent": "Tanggal Dikirim",
     "from": "Dari",
     "to": "Untuk",
-    "cc": "CC",
-    "bcc": "BCC",
     "replyTo": "Membalas ke",
     "replyToString": "Balas Untuk (String)",
     "isHtml": "Apakah Html",
@@ -15,8 +11,7 @@
     "subject": "Subyek",
     "attachments": "lampiran",
     "selectTemplate": "Pilih Template",
-    "fromEmailAddress": "dari Alamat",
-    "toEmailAddresses": "Alamat Tujuan",
+    "fromAddress": "dari Alamat",
     "emailAddress": "Alamat email",
     "deliveryDate": "Tanggal pengiriman",
     "account": "Akun",
@@ -27,7 +22,7 @@
     "isNotRead": "Belum dibaca",
     "isImportant": "Penting",
     "isUsers": "Apakah Pengguna",
-    "inTrash": "In Trash"
+    "name": "Nama"
   },
   "links": {
     "replied": "membalas",
@@ -77,9 +72,7 @@
   "presetFilters": {
     "sent": "mengirim",
     "archived": "diarsipkan",
-    "inbox": "Inbox",
-    "drafts": "draft",
-    "trash": "Trash"
+    "drafts": "draft"
   },
   "massActions": {
     "markAsRead": "Tandai sebagai terbaca",

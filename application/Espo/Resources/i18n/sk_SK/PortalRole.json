@@ -10,8 +10,5 @@
   },
   "fields": {
     "exportPermission": "Exportovať oprávnenie"
-  },
-  "tooltips": {
-    "exportPermission": "Definuje či portáloví používatelia majú možnosť exportovať záznamy."
   }
 }

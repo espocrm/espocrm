@@ -11,11 +11,11 @@
     "industry": "Промисловість",
     "type": "Тип",
     "contactRole": "Посада",
-    "contactIsInactive": "Неактивний",
     "campaign": "Кампанія",
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
-    "originalLead": "Початковий лід"
+    "originalLead": "Початковий Лід",
+    "contactIsInactive": "Неактивний"
   },
   "links": {
     "contacts": "Контакти",
@@ -30,7 +30,7 @@
     "campaignLogRecords": "Лоґ кампанії",
     "campaign": "Кампанія",
     "portalUsers": "Користувачі порталу",
-    "originalLead": "Початковий лід"
+    "originalLead": "Початковий Лід"
   },
   "options": {
     "type": {
@@ -40,57 +40,57 @@
       "Reseller": "Посередник"
     },
     "industry": {
-      "Aerospace": "Авіаційно-космічна",
       "Agriculture": "Сільське господарство",
       "Advertising": "Реклама",
       "Apparel & Accessories": "Одяг та аксесуари",
-      "Architecture": "Архітектура",
       "Automotive": "Автомобільні",
       "Banking": "Банкінг",
       "Biotechnology": "Біотехнології",
       "Building Materials & Equipment": "Будівельні матеріали й устаткування",
       "Chemical": "Хемія",
-      "Construction": "Будівництво",
       "Computer": "Комп'ютери",
-      "Defense": "Оборона",
-      "Creative": "Творча",
-      "Culture": "Культура",
-      "Consulting": "Консалтинг",
       "Education": "Освіта",
       "Electronics": "Електроніка",
-      "Electric Power": "Електроенергія",
       "Energy": "Енергія",
       "Entertainment & Leisure": "Розваги та дозвілля",
       "Finance": "Фінанси",
       "Food & Beverage": "Їжа та напої",
       "Grocery": "Доставка",
-      "Hospitality": "Гостинність",
       "Healthcare": "Охорона здоров'я",
       "Insurance": "Страхування",
       "Legal": "Право",
       "Manufacturing": "Виробництво",
-      "Mass Media": "Засоби масової інформації",
-      "Mining": "Гірнича справа",
-      "Music": "Музика",
-      "Marketing": "Маркетинг",
       "Publishing": "Видавництво",
-      "Petroleum": "Нафта",
       "Real Estate": "Нерухомість",
-      "Retail": "Роздрібна торгівля",
-      "Shipping": "Доставка",
       "Service": "Сервіс",
-      "Support": "Підтримка",
       "Sports": "Спорт",
       "Software": "Програмне забезпечення",
       "Technology": "Технологія",
       "Telecommunications": "Телекомунікації",
       "Television": "Телебачення",
-      "Testing, Inspection & Certification": "Тестування, інспектування та сертифікація",
       "Transportation": "Транспорт",
-      "Travel": "Подорожі",
       "Venture Capital": "Венчурний капітал",
+      "Aerospace": "Авіаційно-космічна",
+      "Architecture": "Архітектура",
+      "Construction": "Будівництво",
+      "Defense": "Оборона",
+      "Creative": "Творча",
+      "Culture": "Культура",
+      "Consulting": "Консалтинг",
+      "Electric Power": "Електроенергія",
+      "Hospitality": "Гостинність",
+      "Mass Media": "Засоби масової інформації",
+      "Mining": "Гірнича справа",
+      "Music": "Музика",
+      "Marketing": "Маркетинг",
+      "Petroleum": "Нафта",
+      "Retail": "Роздрібна торгівля",
+      "Shipping": "Доставка",
+      "Support": "Підтримка",
+      "Testing, Inspection & Certification": "Тестування, інспектування та сертифікація",
       "Wholesale": "Оптова торгівля",
-      "Water": "Вода"
+      "Water": "Вода",
+      "Travel": "Подорожі"
     }
   },
   "labels": {
@@ -99,8 +99,6 @@
     "Set Primary": "Встановити основним"
   },
   "presetFilters": {
-    "customers": "Клієнти",
-    "partners": "Партнери",
     "recentlyCreated": "Нещодавно Створений"
   }
 }

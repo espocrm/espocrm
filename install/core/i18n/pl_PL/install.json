@@ -26,12 +26,18 @@
     "Configuration Instructions": "Instrukcje konfiguracji",
     "phpVersion": "Wersja PHP",
     "requiredMysqlVersion": "Wersja MySQL",
+    "dbHostName": "Nazwa hosta",
     "dbName": "Nazwa Bazy Danych",
-    "dbUserName": "Nazwa Użytkonika Bazy Danych"
+    "dbUserName": "Nazwa Użytkonika Bazy Danych",
+    "SetupConfirmation page title": "Wymagania systemowe",
+    "PHP Configuration": "Ustawienia PHP",
+    "MySQL Configuration": "Ustawienia bazy danych",
+    "Permission Requirements": "Zezwolenie"
   },
   "fields": {
     "Choose your language": "Wybierz swój język",
     "Database Name": "Nazwa Bazy Danych",
+    "Host Name": "Nazwa hosta",
     "Database User Name": "Nazwa Użytkonika Bazy Danych",
     "Database User Password": "Hasło Użytkonika Bazy Danych",
     "User Name": "Nazwa Użytkownika",
@@ -72,12 +78,18 @@
     "Cannot create user": "Nie można ustworzyc użytkonika",
     "Permission denied": "Dostęp zabroniony",
     "Permission denied to": "Dostęp zabroniony",
-    "permissionInstruction": "<br>Uruchom tę komendę w Terminalu<pre><b>\"{C}\"</b></pre>",
     "Can not save settings": "Nie mogę zapisać ustawień",
     "Cannot save preferences": "Nie mogę zapisać preferencji",
     "Thousand Separator and Decimal Mark equal": "Separator dziesiętny i znak rozdzielenia nie może być taki sam",
     "extension": "Rozszerzenie {0} jest niedostępne",
     "option": "Rekomendowaną wartością jest {0}",
     "mysqlSettingError": "EspoCRM wymaga aby ustawienie MySQL \"{NAME}\" było zmienione na {VALUE}"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Wersja PHP",
+    "requiredMysqlVersion": "Wersja MySQL",
+    "host": "Nazwa hosta",
+    "dbname": "Nazwa Bazy Danych",
+    "user": "Nazwa Użytkownika"
   }
 }

@@ -11,15 +11,11 @@
     "teams": "Équipes"
   },
   "tooltips": {
-    "assignmentPermission": "Permet de restreindre la capacité pour les utilisateurs d'attribuer des enregistrements aux autres utilisateurs.\n\ntous - aucune restriction\n\néquipe - peuvent assigner aux utilisateurs de l'équipe\n\nnon - seulement à soi",
-    "userPermission": "Allows to restrict an ability for users to view activities, calendar and stream of other users.\n\nall - can view all\n\nteam - can view activities of teammates only\n\nno - can't view",
-    "portalPermission": "Defines an access to portal information, ability to post messages to portal users."
+    "assignmentPermission": "Permet de restreindre la capacité pour les utilisateurs d'attribuer des enregistrements aux autres utilisateurs.\n\ntous - aucune restriction\n\néquipe - peuvent assigner aux utilisateurs de l'équipe\n\nnon - seulement à soi"
   },
   "labels": {
     "Access": "Accès",
-    "Create Role": "Créer un rôle",
-    "Scope Level": "Scope Level",
-    "Field Level": "Field Level"
+    "Create Role": "Créer un rôle"
   },
   "options": {
     "accessList": {

@@ -1,6 +1,9 @@
 {
   "labels": {
-    "Dynamic Logic": "Lógica dinámica"
+    "Dynamic Logic": "Lógica dinámica",
+    "Name": "Nombre",
+    "Label": "Etiqueta",
+    "Type": "Tipo"
   },
   "options": {
     "dateTimeDefault": {

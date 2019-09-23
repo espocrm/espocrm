@@ -16,20 +16,16 @@
     "passwordConfirm": "konfirmasi sandi",
     "newPassword": "kata sandi baru",
     "newPasswordConfirm": "Konfirmasi password baru",
-    "avatar": "Avatar",
     "isActive": "Aktif",
     "isPortalUser": "Adalah Portal Pengguna",
     "contact": "Kontak",
     "accounts": "Akun",
-    "sendAccessInfo": "Kirim Email dengan Access Info untuk Pengguna",
-    "portal": "Portal"
+    "sendAccessInfo": "Kirim Email dengan Access Info untuk Pengguna"
   },
   "links": {
     "teams": "tim",
-    "roles": "Roles",
     "notes": "Catatan",
     "portals": "portals",
-    "portalRoles": "Portal Roles",
     "contact": "Kontak",
     "accounts": "Akun"
   },
@@ -45,7 +41,6 @@
     "Email Address": "Alamat email",
     "External Accounts": "Accounts eksternal",
     "Email Accounts": "Akun email",
-    "Portal": "Portal",
     "Create Portal User": "Buat Portal Pengguna"
   },
   "tooltips": {
@@ -68,7 +63,7 @@
     "forbidden": "Dilarang, coba nanti",
     "uniqueLinkHasBeenSent": "URL unik telah dikirim ke alamat email tertentu.",
     "passwordChangedByRequest": "Password telah berubah.",
-    "setupSmtpBefore": "Anda perlu pengaturan href=\"{url}\"> SMTP pengaturan </a> untuk membuat sistem dapat mengirim password email."
+    "userNameExists": "Nama pengguna"
   },
   "boolFilters": {
     "onlyMyTeam": "Hanya Tim saya"

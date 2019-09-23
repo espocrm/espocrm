@@ -1,0 +1,15 @@
+{
+  "messages": {
+    "infoMention": "Введіть **@username** щоб згадати користувача в пості.",
+    "infoSyntax": "Доступний синтаксис розмітки"
+  },
+  "syntaxItems": {
+    "code": "код",
+    "multilineCode": "багаторядковий код",
+    "strongText": "жирний текст",
+    "emphasizedText": "підкреслений текст",
+    "deletedText": "закреслений текст",
+    "blockquote": "блок",
+    "link": "посилання"
+  }
+}

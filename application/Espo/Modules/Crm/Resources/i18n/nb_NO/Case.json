@@ -2,18 +2,14 @@
   "fields": {
     "name": "Navn",
     "number": "Nummer",
-    "status": "Status",
     "account": "Konto",
     "contact": "Kontakt",
     "contacts": "Kontakter",
     "priority": "Prioritet",
-    "type": "Type",
     "description": "Beskrivelse",
-    "inboundEmail": "Inngående epost",
     "lead": "Ledetråd"
   },
   "links": {
-    "inboundEmail": "Inngående epost",
     "account": "Konto",
     "contact": "Kontakt (primær)",
     "Contacts": "Kontakter",
@@ -41,8 +37,7 @@
     },
     "type": {
       "Question": "Spørsmål",
-      "Incident": "Hendelse",
-      "Problem": "Problem"
+      "Incident": "Hendelse"
     }
   },
   "labels": {

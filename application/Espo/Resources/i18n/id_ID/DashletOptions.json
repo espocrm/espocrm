@@ -3,10 +3,8 @@
     "title": "Judul",
     "dateFrom": "Tanggal Dari",
     "dateTo": "Tanggal Untuk",
-    "autorefreshInterval": "Auto-refresh Interval",
     "displayRecords": "tampilan Rekaman",
     "isDoubleHeight": "2x tinggi",
-    "mode": "Mode",
     "enabledScopeList": "Apa yang akan ditampilkan",
     "users": "pengguna"
   },
@@ -16,8 +14,7 @@
       "basicWeek": "Minggu",
       "month": "Bulan",
       "basicDay": "Hari",
-      "agendaDay": "Hari (agenda)",
-      "timeline": "Timeline"
+      "agendaDay": "Hari (agenda)"
     }
   }
 }

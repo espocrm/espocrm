@@ -9,7 +9,6 @@
     "description": "Beskrivelse",
     "sicCode": "SIC-kode",
     "industry": "Industri",
-    "type": "Type",
     "contactRole": "Tittel",
     "campaign": "Kampanje",
     "targetLists": "Målgrupper",
@@ -34,8 +33,6 @@
   "options": {
     "type": {
       "Customer": "Kunder",
-      "Investor": "Investor",
-      "Partner": "Partner",
       "Reseller": "Forhandler"
     },
     "industry": {
@@ -61,7 +58,6 @@
       "Manufacturing": "Produksjon",
       "Publishing": "Forlag",
       "Real Estate": "Eiendom",
-      "Service": "Service",
       "Sports": "Sport",
       "Software": "Programvare",
       "Technology": "Teknologi",

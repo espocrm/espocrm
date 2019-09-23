@@ -1,7 +1,4 @@
 {
-  "label": {
-    "Field": "Polje"
-  },
   "options": {
     "operators": {
       "equals": "Jednak",

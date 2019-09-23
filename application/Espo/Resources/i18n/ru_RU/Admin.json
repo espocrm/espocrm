@@ -63,8 +63,8 @@
     "API Users": "Пользователи Интерфейса Программирования Приложений",
     "Template Manager": "Менеджер Шаблонов",
     "System Requirements": "Системные Требования",
-    "PHP Settings": "Настройки PHP",
-    "Database Settings": "Настройки Базы Данных",
+    "PHP Settings": "Конфигурация PHP",
+    "Database Settings": "Конфигурация Базы Данных",
     "Permissions": "Права Доступа",
     "Success": "Операция завершилась успешно",
     "Fail": "Операция завершилась неудачей",
@@ -177,13 +177,10 @@
   "messages": {
     "selectEntityType": "Выберите тип объекта в левом меню.",
     "selectUpgradePackage": "Выберите пакет обновления",
-    "downloadUpgradePackage": "Загрузить пакеты обновлений можно <a href=\"{url}\">здесь</a>.",
     "selectLayout": "Выберите интересующий макет в левом меню и отредактируйте его.",
     "selectExtensionPackage": "Выберите пакет расширения",
     "extensionInstalled": "Расширение {name} {version} было установлено.",
     "installExtension": "Расширение {name} {version} готово к установке.",
-    "upgradeVersion": "EspoCRM будет обновлен до версии <strong> {версия} </ strong>. Пожалуйста, будьте терпеливы, так как это может занять некоторое время.",
-    "upgradeDone": "EspoCRM был обновлен до версии <strong> {версия} </ strong>.",
     "upgradeBackup": "Перед обновлением рекомендуется сделать резервную копию ваших файлов и данных EspoCRM.",
     "thousandSeparatorEqualsDecimalMark": "Разделитель тысячных не может быть таким же, как разделитель десятичных.",
     "userHasNoEmailAddress": "У пользователя нет адреса эл. почты.",
@@ -240,5 +237,12 @@
     "and": "И",
     "or": "ИЛИ",
     "not": "НЕ"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Версия PHP",
+    "requiredMysqlVersion": "Версия MySQL",
+    "host": "Сервер",
+    "dbname": "Имя БД",
+    "user": "Имя пользователя"
   }
 }

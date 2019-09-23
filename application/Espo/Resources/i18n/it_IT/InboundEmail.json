@@ -30,18 +30,19 @@
     "fromName": "DA Nome",
     "smtpIsShared": "SMTP è condiviso",
     "smtpIsForMassEmail": "SMTP è per le mail di massa",
-    "useImap": "Scarica email"
+    "useImap": "Scarica email",
+    "keepFetchedEmailsUnread": "Mantieni le email non lette"
   },
   "tooltips": {
     "reply": "Notifica ai mittenti che le loro email sono state ricevute.\n\nVerrà inviata una sola email per destinatario, in un determinato periodo di tempo, per evitare loops.",
     "createCase": "Creazione automatica di un Caso all'arrivo di una email.",
     "replyToAddress": "Indicare l'indirizzo email di questo account di posta, per indirizzare qui le risposte.",
-    "caseDistribution": "Come verranno assegnati i Casi . Assegnato direttamente all'utente o all'interno del team.",
+    "caseDistribution": "Come verranno assegnati i Ticket . Assegnato direttamente all'utente o all'interno del team.",
     "assignToUser": "Assegnatari dei processi utente.",
     "team": "Assegnatari dei processi dei teams.",
     "teams": "Assegnatari delle email dei teams.",
     "addAllTeamUsers": "I Messaggi di posta elettronica vengono visualizzati nella cartella di Posta in arrivo di tutti gli utenti di un gruppo specifico.",
-    "targetUserPosition": "Gli utenti con posizione specifica verranno distribuiti con i casi.",
+    "targetUserPosition": "Gli utenti con posizione specifica verranno distribuiti con i tickets.",
     "monitoredFolders": "Se più cartelle, devono essere separate da virgola",
     "smtpIsShared": "Se selezionato, gli utenti saranno in grado di inviare e-mail utilizzando questo SMTP. La disponibilità è controllata dai ruoli tramite l'autorizzazione dell'account e-mail di gruppo.",
     "smtpIsForMassEmail": "Se selezionato, SMTP sarà disponibile per l'e-mail di massa.",

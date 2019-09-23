@@ -1,9 +1,6 @@
 {
   "fields": {
     "name": "Nom",
-    "logo": "Logo",
-    "companyLogo": "Logo",
-    "url": "URL",
     "portalRoles": "Rôles",
     "isActive": "Actif",
     "isDefault": "Par défaut",
@@ -17,16 +14,11 @@
     "timeZone": "Fuseau",
     "weekStart": "Premier jour de la semaine",
     "defaultCurrency": "Devise par défaut",
-    "customUrl": "Lien personnalisé",
-    "customId": "Custom ID"
+    "customUrl": "Lien personnalisé"
   },
   "links": {
     "users": "Utilisateurs",
-    "portalRoles": "Rôles",
-    "notes": "Notes"
-  },
-  "tooltips": {
-    "portalRoles": "Specified Portal Roles will be applied to all users of this portal."
+    "portalRoles": "Rôles"
   },
   "labels": {
     "Create Portal": "Créer un Portail",

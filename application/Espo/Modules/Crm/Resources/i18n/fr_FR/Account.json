@@ -1,27 +1,19 @@
 {
   "fields": {
     "name": "Nom",
-    "emailAddress": "Email",
     "website": "Site internet",
     "phoneNumber": "Téléphone",
     "billingAddress": "Adresse de facturation",
     "shippingAddress": "Adresse de livraison",
-    "description": "Description",
-    "sicCode": "Sic Code",
     "industry": "Industrie",
-    "type": "Type",
     "contactRole": "Titre",
     "campaign": "Campagne",
     "targetLists": "Listes de cibles",
-    "targetList": "Liste de cibles",
-    "originalLead": "Original Lead",
-    "contactIsInactive": "Inactive"
+    "targetList": "Liste de cibles"
   },
   "links": {
-    "contacts": "Contacts",
     "opportunities": "Opportunités",
     "cases": "Tickets",
-    "documents": "Documents",
     "meetingsPrimary": "Rendez-vous (étendus)",
     "callsPrimary": "Appels (étendus)",
     "tasksPrimary": "Tâches (étendues)",
@@ -29,8 +21,7 @@
     "targetLists": "Listes de cibles",
     "campaignLogRecords": "Log de campagne",
     "campaign": "Campagne",
-    "portalUsers": "Utilisateurs Portail",
-    "originalLead": "Original Lead"
+    "portalUsers": "Utilisateurs Portail"
   },
   "options": {
     "type": {
@@ -40,7 +31,6 @@
       "Reseller": "Revendeur"
     },
     "industry": {
-      "Agriculture": "Agriculture",
       "Advertising": "Publicité",
       "Apparel & Accessories": "Mode et accessoires",
       "Automotive": "Auto",
@@ -49,11 +39,9 @@
       "Building Materials & Equipment": "Matériaux de construction & équipements",
       "Chemical": "Chimie",
       "Computer": "Informatique",
-      "Education": "Education",
       "Electronics": "Électronique",
       "Energy": "Énergie",
       "Entertainment & Leisure": "Divertissement et loisirs",
-      "Finance": "Finance",
       "Food & Beverage": "Alimentation",
       "Grocery": "Épicerie",
       "Healthcare": "Santé",
@@ -62,45 +50,20 @@
       "Manufacturing": "Industrie",
       "Publishing": "Publication",
       "Real Estate": "Immobilier",
-      "Service": "Service",
-      "Sports": "Sports",
       "Software": "Logiciel",
       "Technology": "Technologie",
       "Telecommunications": "Télécommunications",
       "Television": "Télévision",
       "Transportation": "Transport",
-      "Venture Capital": "Investissement",
-      "Aerospace": "Aerospace",
-      "Architecture": "Architecture",
-      "Construction": "Construction",
-      "Defense": "Defense",
-      "Creative": "Creative",
-      "Culture": "Culture",
-      "Consulting": "Consulting",
-      "Electric Power": "Electric Power",
-      "Hospitality": "Hospitality",
-      "Mass Media": "Mass Media",
-      "Mining": "Mining",
-      "Music": "Music",
-      "Marketing": "Marketing",
-      "Petroleum": "Petroleum",
-      "Retail": "Retail",
-      "Shipping": "Shipping",
-      "Support": "Support",
-      "Testing, Inspection & Certification": "Testing, Inspection & Certification",
-      "Wholesale": "Wholesale",
-      "Water": "Water",
-      "Travel": "Travel"
+      "Venture Capital": "Investissement"
     }
   },
   "labels": {
     "Create Account": "Créer un compte",
-    "Copy Billing": "Copie de facturation",
-    "Set Primary": "Set Primary"
+    "Copy Billing": "Copie de facturation"
   },
   "presetFilters": {
     "customers": "Clients",
-    "partners": "Partenaires",
-    "recentlyCreated": "Recently Created"
+    "partners": "Partenaires"
   }
 }

@@ -1,8 +1,6 @@
 {
   "fields": {
     "name": "Ime",
-    "logo": "Logo",
-    "companyLogo": "Logo",
     "url": "URL adresa",
     "portalRoles": "Uloge",
     "isActive": "Aktivan",

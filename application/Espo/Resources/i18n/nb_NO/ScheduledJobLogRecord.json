@@ -1,6 +1,5 @@
 {
   "fields": {
-    "status": "Status",
     "executionTime": "Utførelsestid",
     "target": "Mål"
   }

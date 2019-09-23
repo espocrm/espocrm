@@ -56,7 +56,11 @@
     "Action History": "Povijest akcija",
     "Label Manager": "Upravljanje labelama",
     "Auth Log": "Povijest autorizacije",
-    "Attachments": "Prilozi"
+    "Attachments": "Prilozi",
+    "System Requirements": "Zahtjevi sustava",
+    "PHP Settings": "PHP postavke",
+    "Database Settings": "Postavke baze podataka",
+    "Permissions": "Dozvole"
   },
   "layouts": {
     "list": "Lista",
@@ -164,13 +168,10 @@
   "messages": {
     "selectEntityType": "Izaberite tip entiteta u lijevom izborniku.",
     "selectUpgradePackage": "Izaberi paket nadogradnje",
-    "downloadUpgradePackage": "Preuzmi paket nadogradnje <a href=\"{url}\">ovdje</a>.",
     "selectLayout": "Izaberi željeni izgled u lijevom izborniku.",
     "selectExtensionPackage": "Izaberi paket ekstenzije",
     "extensionInstalled": "Ekstenzija {name} {version} je instalirana.",
     "installExtension": "Ekstenzija {name} {version} je spremna za instalaciju.",
-    "upgradeVersion": "EspoCRM će biti nadograđen na verziju na <strong>{version}</ strong>. Budite strpljivi jer to može potrajati.",
-    "upgradeDone": "EspoCRM je nadograđen na verziju na <strong>{version}</strong>,.",
     "upgradeBackup": "Preporučamo izradu rezervne kopije EspoCRM datoteka i podataka prije nadogradnje.",
     "thousandSeparatorEqualsDecimalMark": "Oznaka za tisuće ne može biti ista kao decimalna oznaka.",
     "userHasNoEmailAddress": "Korisnik nema e-mail adresu.",
@@ -211,7 +212,8 @@
     "labelManager": "Prilagodi nazive aplikacija",
     "authLog": "Povijest prijava",
     "leadCapture": "API ulazna točka za Web-to-Lead.",
-    "attachments": "Svi prilozi spremljeni u sustavu."
+    "attachments": "Svi prilozi spremljeni u sustavu.",
+    "systemRequirements": "Zahtjevi sustava"
   },
   "options": {
     "previewSize": {
@@ -220,5 +222,11 @@
       "medium": "Srednje",
       "large": "Veliko"
     }
+  },
+  "systemRequirements": {
+    "requiredMysqlVersion": "MySQL verzija",
+    "host": "Ime hosta",
+    "dbname": "Ime baze",
+    "user": "Korisničko ime"
   }
 }

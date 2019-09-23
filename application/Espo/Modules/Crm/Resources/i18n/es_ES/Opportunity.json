@@ -27,8 +27,6 @@
     "stage": {
       "Prospecting": "Prospección",
       "Qualification": "Calificación",
-      "Proposal": "Propuesta",
-      "Negotiation": "Negociación",
       "Needs Analysis": "Análisis de necesidades",
       "Value Proposition": "Propuesta de valor",
       "Id. Decision Makers": "Identificar tomador de decisiones",
@@ -36,7 +34,9 @@
       "Proposal/Price Quote": "Propuesta/Presupuesto",
       "Negotiation/Review": "Negociación/Revisión",
       "Closed Won": "Cerrado ganado",
-      "Closed Lost": "Cerrado perdido"
+      "Closed Lost": "Cerrado perdido",
+      "Proposal": "Propuesta",
+      "Negotiation": "Negociación"
     }
   },
   "labels": {

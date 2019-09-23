@@ -294,7 +294,6 @@
     "fieldShouldBeLess": "{field} neturėtų būti didesnis nei {value}",
     "fieldShouldBeGreater": "{field} neturėtų būti mažesnis nei {value}",
     "fieldIsUploading": "Įkėlimas vykdomas",
-    "streamPostInfo": "Įrašykite naudotojo įrašus naudodami <strong> @pavadinimus </ strong>.\n\nGalimas žymėjimo sintaksė:\n`<code> kodas </ code>`\n`` `<code> daugiataškis kodas </ code>` ``\n** <strong> stipraus teksto </ strong> **\n* <em> pabrėžė tekstas </ em> *\n~~ <del> ištrintas tekstas </ del> ~~\n> blockquote\n[nuorodos tekstas] (url)",
     "erasePersonalDataConfirmation": "Pažymėti laukai bus ištrinti visam laikui. Ar tu tuo tikras?",
     "massPrintPdfMaxCountError": "Negalima spausdinti daugiau {maxCount} įrašų."
   },

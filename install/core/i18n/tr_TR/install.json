@@ -6,6 +6,7 @@
     "License Agreement": "Lisans Sözleşmesi",
     "I accept the agreement": "Sözleşmeyi kabul ediyorum",
     "Step2 page title": "Veritabanı Yapılandırması",
+    "Step3 page title": "Yönetici kurulumu",
     "Step4 page title": "Sistem Ayarları",
     "Step5 page title": "Giden epostalar için SMTP ayarları",
     "Errors page title": "Hatalar",
@@ -35,7 +36,11 @@
     "dbHostName": "Sunucu Adı",
     "dbName": "Veritabanı adı",
     "dbUserName": "Veritabanı Kullanıcı Adı",
-    "OK": "Tamam "
+    "OK": "Tamam ",
+    "SetupConfirmation page title": "Sistem gereksinimleri",
+    "PHP Configuration": "PHP ayarları",
+    "MySQL Configuration": "Veri tabanı ayarları",
+    "Permission Requirements": "Izin"
   },
   "fields": {
     "Choose your language": "Dili seçin",
@@ -87,29 +92,35 @@
     "Cannot create user": "Kullanıcı oluşturulamıyor",
     "Permission denied": "Erişim izni reddedildi",
     "Permission denied to": "Erişim izni reddedildi",
-    "permissionInstruction": "<br>Bunu şu Terminal içinde çalıştırın:<pre><b>\"{C}\"</b></pre>",
     "Can not save settings": "Ayarlar kayıt edilemiyor",
     "Cannot save preferences": "Özellikler kayıt edilemiyor",
     "Thousand Separator and Decimal Mark equal": "Binlik ayraç ve ondalık ayraç aynı olamaz",
     "extension": "{0} uzantı eksik",
     "option": "Önerilen değer {0}",
-    "mysqlSettingError": "EspoCRM, \\ \"{NAME} \" ayarının {VALUE} olarak ayarlanmasını gerektiriyor"
+    "mysqlSettingError": "EspoCRM, \"{NAME} \" ayarının {VALUE} olarak ayarlanmasını gerektiriyor"
   },
   "options": {
     "modRewriteTitle": {
-      "apache": "API Hatası: EspoCRM API'sı kullanılamıyor. Olası sorunlar: Apache sunucusunda \\ \"mod_rewrite \" devre dışı, .htaccess desteği veya RewriteBase sorunu devre dışı bırakıldı. <br> Gerekli adımları uygulayın. Her adımın ardından sorunun çözülüp çözülmediğini kontrol edin.",
-      "nginx": "API Hatası: EspoCRM API'sı kullanılamıyor. \\ \"Sunucu \" bölümünde bu kodu Nginx sunucu blok yapılandırma dosyanıza (/ etc / nginx / sites-available / YOUR_SITE) ekleyin:",
-      "microsoft-iis": "API Hatası: EspoCRM API'sı kullanılamıyor. <br> Olası problem: \\ \"URL Yeniden Yaz \" devre dışı. Lütfen IIS sunucusunda \\ \"URL Rewrite \" Modülü'nü kontrol edin ve etkinleştirin",
+      "apache": "API Hatası: EspoCRM API'sı kullanılamıyor. Olası sorunlar: Apache sunucusunda  \"mod_rewrite \" devre dışı, .htaccess desteği veya RewriteBase sorunu devre dışı bırakıldı. <br> Gerekli adımları uygulayın. Her adımın ardından sorunun çözülüp çözülmediğini kontrol edin.",
+      "nginx": "API Hatası: EspoCRM API'sı kullanılamıyor. \"Sunucu \" bölümünde bu kodu Nginx sunucu blok yapılandırma dosyanıza (/etc/nginx/sites-available/YOUR_SITE) ekleyin:",
+      "microsoft-iis": "API Hatası: EspoCRM API'sı kullanılamıyor. <br> Olası problem: \"URL Yeniden Yaz \" devre dışı. Lütfen IIS sunucusunda \"URL Rewrite \" Modülü'nü kontrol edin ve etkinleştirin",
       "default": "API Hatası: EspoCRM API'sı kullanılamıyor. <br> Olası sorun: devre dışı bırakılmış Rewrite Modülü. Lütfen sunucunuzdaki Rewrite Modülü'nü kontrol edin ve etkinleştirin (örn. Apache'deki mod_rewrite) ve .htaccess desteğini etkinleştirin."
     },
     "modRewriteInstruction": {
       "apache": {
-        "linux": "<br> <br> 1. \\\\ \"Mod_rewrite \" yı etkinleştirin. Bunu yapmak için şu komutları bir Terminalde çalıştırın: <pre> {APACHE1} </ pre> <br> 2. .htaccess desteğini etkinleştirin. Sunucu yapılandırma ayarlarını ekleyin / düzenleyin (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Sonra bu komutu bir Terminalde çalıştırın: < Pre> {APACHE3} </ pre> <br> 3. RewriteBase yolunu eklemeyi deneyin, {API_PATH} .htaccess dosyasını açın ve aşağıdaki satırı değiştirin: <pre> {APACHE4} </ pre> <pre> {APACHE5} </ pre> <br> Daha fazla bilgi için lütfen ziyaret edin. <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> EspoCRM için Apache sunucusu yapılandırması </a> kılavuzunu okuyun. <br> <br>"
+        "linux": "<br> <br> 1. \"Mod_rewrite \" yı etkinleştirin. Bunu yapmak için şu komutları bir Terminalde çalıştırın: <pre>{APACHE1}</pre> <br> 2. .htaccess desteğini etkinleştirin. Sunucu yapılandırma ayarlarını ekleyin / düzenleyin (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Sonra bu komutu bir Terminalde çalıştırın: <pre>{APACHE3}</pre> <br> 3. RewriteBase yolunu eklemeyi deneyin, {API_PATH} .htaccess dosyasını açın ve aşağıdaki satırı değiştirin: <pre>{APACHE4}</pre> <pre>{APACHE5}</pre> <br> Daha fazla bilgi için lütfen ziyaret edin. <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> EspoCRM için Apache sunucusu yapılandırması </a> kılavuzunu okuyun. <br> <br>"
       },
       "nginx": {
-        "linux": "<br> \\\\ n <pre> \\\\ n {NGINX} \\\\ n </ pre> <br> Daha fazla bilgi için lütfen <a href = \\\\ \"http://www.espocrm.com/blog/nginx-server adresini ziyaret edin. Için yapılandırma-espocrm / \\\\ \"hedef = \" boş \\\\ \"> EspoCRM için Nginx sunucu yapılandırması </a>. <br> <br>",
-        "windows": "<br> \\\\ n <pre> \\\\ n {NGINX} \\\\ n </ pre> <br> Daha fazla bilgi için lütfen <a href = \\\\ \"http://www.espocrm.com/blog/nginx-server adresini ziyaret edin. Için yapılandırma-espocrm / \\\\ \"hedef = \" boş \\\\ \"> EspoCRM için Nginx sunucu yapılandırması </a>. <br> <br>"
+        "linux": "<br>\n<pre> \n{NGINX} \n</pre> <br> Daha fazla bilgi için lütfen <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> EspoCRM için Nginx sunucu yapılandırması </a>. <br> <br>",
+        "windows": "<br>\n<pre> \n{NGINX} \n</pre> <br> Daha fazla bilgi için lütfen <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> EspoCRM için Nginx sunucu yapılandırması </a>. <br> <br>"
       }
     }
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "PHP sürümü",
+    "requiredMysqlVersion": "MySQL sürümü",
+    "host": "Sunucu Adı",
+    "dbname": "Veritabanı adı",
+    "user": "Kullanıcı Adı"
   }
 }

@@ -75,7 +75,6 @@
     "forbidden": "Zabranjeno, pokušajte kasnije",
     "uniqueLinkHasBeenSent": "Jedinstvena URL adresa je poslana na određenu adresu.",
     "passwordChangedByRequest": "Lozinka je promijenjena.",
-    "setupSmtpBefore": "Potrebno je da <a href=\"{url}\">SMTP postavke</a>href=\"{url}\"> budu unijete i točne kako bi lozinka bila poslana.",
     "userNameExists": "Korisničko ime već postoji"
   },
   "boolFilters": {

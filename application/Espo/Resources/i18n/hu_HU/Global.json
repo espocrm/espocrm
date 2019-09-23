@@ -54,7 +54,6 @@
     "Dashboard": "Irányítópult",
     "InboundEmail": "Csoportos e-mail fiókok",
     "Stream": "Folyam",
-    "Import": "Eredmények importálása",
     "Template": "sablonok",
     "Job": "Állás",
     "EmailFilter": "E-mail szűrők",
@@ -275,7 +274,6 @@
     "fieldShouldBeLess": "{field} nem lehet nagyobb, mint {value}",
     "fieldShouldBeGreater": "{field} nem lehet kevesebb, mint {value}",
     "fieldIsUploading": "Feltöltés folyamatban",
-    "streamPostInfo": "Írja be a <strong> @ felhasználónevet </ strong>, hogy megemlítse a felhasználókban a bejegyzést.\n\nElérhető markdown szintaxis:\n`<Code> kódot </ code>`\n`` `<kód> többsoros kód </ code>` ``\n** <strong> erős szöveg </ strong> **\n* <em> kiemelt szöveg </ em> *\n~~ <del> törölt szöveg </ del> ~~\n> blockquote\n[link szöveg] (url)",
     "erasePersonalDataConfirmation": "A bejelölt mezők véglegesen törlődnek. biztos vagy ebben?"
   },
   "boolFilters": {

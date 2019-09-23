@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nume",
     "emailAddress": "Adresă Email",
-    "team": "Echipa Țintă",
     "assignToUser": "Atribuie utilizatorului",
     "host": "Gazdă",
     "username": "Nume Utilizator",
@@ -19,10 +18,10 @@
     "targetUserPosition": "Poziția Țintă a Utiliztorului",
     "fetchSince": "Fetch începând cu",
     "addAllTeamUsers": "Pentru toți utilizatorii echipei",
+    "team": "Echipa Țintă",
     "teams": "Echipe",
     "sentFolder": "Trimite dosar",
     "storeSentEmails": "Stochează Email-uri trimisw",
-    "useImap": "Fetch email-uri",
     "useSmtp": "Folosește SMTP",
     "smtpHost": "Gazdă SMTP",
     "smtpPort": "Port SMTP",
@@ -32,7 +31,8 @@
     "smtpPassword": "Parolă SMTP",
     "fromName": "De la Nume",
     "smtpIsShared": "SMTP este partajat",
-    "smtpIsForMassEmail": "SMTP este din Email-uri în Masă"
+    "smtpIsForMassEmail": "SMTP este din Email-uri în Masă",
+    "useImap": "Fetch email-uri"
   },
   "tooltips": {
     "reply": "Notificați expeditorii că email-urile lor au fost primite.\n\n Doar un email va fi trimis unui anumit destinatar într-o anumită perioadă de timp pentru a preveni looping.",
@@ -42,8 +42,8 @@
     "assignToUser": "Cazurile utilizatorului o să fie atribuite.",
     "team": "Cazurile echipei o să fie atribuite.",
     "teams": "Email-urile echipei o să fie atribuite.",
-    "targetUserPosition": "Utilizatoriilor cu poziția specificată o să le fie distribuite cazurile.",
     "addAllTeamUsers": "Email-urile o să apară în căsuța poștală a tuturor utilizatorilor din echipele specificate.",
+    "targetUserPosition": "Utilizatoriilor cu poziția specificată o să le fie distribuite cazurile.",
     "monitoredFolders": "Dosarele multiple ar trebui separate prin virgulă",
     "smtpIsShared": "Dacă este bifat, utiliatorii o să poată trimite email-uri folosind SMTP. Disponibilitatea este controlată de Roluri prin intermediul permisiunilor din Grupul Contului Email.",
     "smtpIsForMassEmail": "Dacă este bifat, SMTP o să fie disponibil pentru Email în Masă.",
@@ -61,7 +61,8 @@
     },
     "caseDistribution": {
       "": "Nici unul",
-      "Direct-Assignment": "Atribuire directă"
+      "Direct-Assignment": "Atribuire directă",
+      "Least-Busy": "Cel putin, Ocupat"
     }
   },
   "labels": {

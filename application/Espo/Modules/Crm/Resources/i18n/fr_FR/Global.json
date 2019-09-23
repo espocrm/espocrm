@@ -1,23 +1,6 @@
 {
-  "links": {
-    "parent": "Parent",
-    "contacts": "Contacts",
-    "opportunities": "Opportunités",
-    "leads": "Prospects",
-    "meetings": "Rendez-vous",
-    "calls": "Appels",
-    "tasks": "Tâches",
-    "emails": "Emails",
-    "accounts": "Comptes",
-    "cases": "Tickets",
-    "documents": "Documents",
-    "account": "Compte",
-    "opportunity": "Opportunité",
-    "contact": "Contact"
-  },
   "scopeNames": {
     "Account": "Compte",
-    "Contact": "Contact",
     "Lead": "Prospect",
     "Target": "Cible",
     "Opportunity": "Opportunité",
@@ -26,21 +9,16 @@
     "Call": "Appel",
     "Task": "Tâche",
     "Case": "Ticket",
-    "Document": "Document",
     "DocumentFolder": "Dossier",
     "Campaign": "Campagne",
     "TargetList": "Liste de cibles",
     "MassEmail": "Emails groupé",
-    "EmailQueueItem": "Email Queue Item",
-    "CampaignTrackingUrl": "Tracking URL",
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Article de la base de connaissance",
-    "KnowledgeBaseCategory": "Catégorie de la base de connaissance",
-    "CampaignLogRecord": "Campaign Log Record"
+    "KnowledgeBaseCategory": "Catégorie de la base de connaissance"
   },
   "scopeNamesPlural": {
     "Account": "Comptes",
-    "Contact": "Contacts",
     "Lead": "Prospects",
     "Target": "Cibles",
     "Opportunity": "Opportunités",
@@ -49,13 +27,11 @@
     "Call": "Appels",
     "Task": "Tâches",
     "Case": "Tickets",
-    "Document": "Documents",
     "DocumentFolder": "Dossiers",
     "Campaign": "Campagnes",
     "TargetList": "Listes de cibles",
     "MassEmail": "Emails groupés",
     "EmailQueueItem": "File d'attente",
-    "CampaignTrackingUrl": "Tracking URLs",
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Base de connaissance",
     "KnowledgeBaseCategory": "Catégories de la base de connaissance",
@@ -109,10 +85,15 @@
     "shippingAddressPostalCode": "Code Postal (livraison)",
     "shippingAddressMap": "Carte (Transport)"
   },
-  "options": {
-    "reminderTypes": {
-      "Popup": "Popup",
-      "Email": "Email"
-    }
+  "links": {
+    "opportunities": "Opportunités",
+    "leads": "Prospects",
+    "meetings": "Rendez-vous",
+    "calls": "Appels",
+    "tasks": "Tâches",
+    "accounts": "Comptes",
+    "cases": "Tickets",
+    "account": "Compte",
+    "opportunity": "Opportunité"
   }
 }

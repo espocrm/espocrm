@@ -4,13 +4,10 @@
     "timeFormat": "Format waktu",
     "timeZone": "Zona waktu",
     "weekStart": "Hari Pertama dalam satu minggu",
-    "thousandSeparator": "Thousand Separator",
     "decimalMark": "Tanda desimal",
     "defaultCurrency": "Setelan mata uang",
     "currencyList": "Daftar mata uang",
     "language": "Bahasa",
-    "smtpServer": "Server",
-    "smtpPort": "Port",
     "smtpAuth": "Tupoksi",
     "smtpSecurity": "Keamanan",
     "smtpUsername": "Nama pengguna",
@@ -18,14 +15,14 @@
     "smtpPassword": "Kata sandi",
     "smtpEmailAddress": "Alamat email",
     "exportDelimiter": "Pembatas Ekspor",
-    "receiveAssignmentEmailNotifications": "Menerima Pemberitahuan Email pada Tugas",
-    "autoFollowEntityTypeList": "Auto-Follow",
     "signature": "email Signature",
     "dashboardTabList": "Daftar tabel",
     "tabList": "Daftar tabel",
     "defaultReminders": "Atur Pengingat",
     "theme": "Tema",
     "useCustomTabList": "Daftar Tabel Biasa",
+    "receiveAssignmentEmailNotifications": "Menerima Pemberitahuan Email pada Tugas",
+    "autoFollowEntityTypeList": "Auto-Follow",
     "emailReplyToAllByDefault": "Email Balas ke Semua sebagai pengaturan"
   },
   "options": {
@@ -37,7 +34,6 @@
   "labels": {
     "Notifications": "pemberitahuan",
     "User Interface": "Antarmuka pengguna",
-    "SMTP": "SMTP",
     "Misc": "Lain-lain",
     "Locale": "lokal"
   },

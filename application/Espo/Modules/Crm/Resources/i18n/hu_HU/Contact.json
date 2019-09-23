@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Név",
-    "title": "Cím",
     "accountRole": "Cím",
     "account": "számla",
     "accounts": "Fiókok",
@@ -40,7 +39,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--Egyik sem--",
       "Decision Maker": "Döntéshozó",
       "Evaluator": "Kiértékelő",
       "Influencer": "Befolyásoló"

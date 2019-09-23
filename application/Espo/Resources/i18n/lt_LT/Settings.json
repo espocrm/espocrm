@@ -127,7 +127,6 @@
     "ldapAuth": "Prisijunkite LDAP serverio kredencialus.",
     "ldapUserNameAttribute": "Savybė identifikuoti vartotojui.\nPvz. \"userPrincipalName\" arba \"sAMAccountName\" Active Directory, \"uid\" OpenLDAP.",
     "ldapUserObjectClass": "ObjectClass atributas naudotojų paieškai. Pavyzdžiui \"person\" AD, \"inetOrgPerson\", skirta OpenLDAP.",
-    "ldapAccountCanonicalForm": "Jūsų paskyros kanoninės formos tipas. Yra 4 variantai: <br> - 'Dn' - forma formatu 'CN = tester, OU = espocrm, DC = test, DC = lan'. <br> - \"Vartotojo vardas\" - forma \"testeris\". <br> - \"Backslash\" - forma \"COMPANY \\ tester\". <br> - \"Principal\" - forma \"tester@company.com\".",
     "ldapBindRequiresDn": "Galimybė formatuoti vartotojo vardą DN formoje.",
     "ldapBaseDn": "Numatytoji DN bazė, naudojama vartotojų paieškai. Pavyzdžiui \"OU = vartotojai, OU = espocrm, DC = testas, DC = lan\".",
     "ldapTryUsernameSplit": "Galimybė suskirstyti naudotojo vardą į domeną.",

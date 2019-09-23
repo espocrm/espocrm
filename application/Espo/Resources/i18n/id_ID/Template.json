@@ -3,8 +3,6 @@
     "name": "Nama",
     "body": "Tubuh",
     "entityType": "Jenis entitas",
-    "header": "Header",
-    "footer": "Footer",
     "leftMargin": "Batas Kiri",
     "topMargin": "Batas Atas",
     "rightMargin": "Batas kanan",

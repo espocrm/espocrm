@@ -19,6 +19,9 @@
     "posts": "Postări",
     "updates": "Actualizări"
   },
+  "messages": {
+    "writeMessage": "Scrieți mesajul aici"
+  },
   "options": {
     "targetType": {
       "self": "către mine",
@@ -30,9 +33,6 @@
     "type": {
       "Post": "Postare"
     }
-  },
-  "messages": {
-    "writeMessage": "Scrieți mesajul aici"
   },
   "links": {
     "superParent": "Super Părinte",

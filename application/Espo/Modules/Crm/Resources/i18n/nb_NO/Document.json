@@ -5,9 +5,7 @@
   },
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "file": "Fil",
-    "type": "Type",
     "publishDate": "Publiseringsdato",
     "expirationDate": "Utløpsdato",
     "description": "Beskrivelse",

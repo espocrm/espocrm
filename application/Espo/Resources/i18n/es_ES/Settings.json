@@ -49,10 +49,8 @@
     "theme": "Tema",
     "userThemesDisabled": "Deshabilitar temas de usuarios",
     "emailMessageMaxSize": "Tamaño máximo de los correos entrantes (Mb)",
-    "massEmailMaxPerHourCount": "Cantidad máxima de correos enviados por hora",
     "personalEmailMaxPortionSize": "Cantidad máxima de correos personales que se recuperarán cada vez",
     "inboundEmailMaxPortionSize": "Cantidad máxima de correos grupales que se recuperarán cada vez",
-    "maxEmailAccountCount": "Cantidad máxima de cuentas personales que se pueden crear por usuario",
     "authTokenLifetime": "Vida del token de autenticación (horas)",
     "authTokenMaxIdleTime": "Máximo tiempo de inactividad del token de autenticación (horas)",
     "dashboardLayout": "Diseño del escritorio (por defecto)",
@@ -89,16 +87,14 @@
     "aclStrictMode": "ACL en modo estricto",
     "followCreatedEntities": "Seguir los registros creados",
     "aclAllowDeleteCreated": "Permitir eliminar registros creados",
-    "adminNotifications": "Notificaciones del sistema en el panel de administración"
+    "adminNotifications": "Notificaciones del sistema en el panel de administración",
+    "massEmailMaxPerHourCount": "Cantidad máxima de correos enviados por hora",
+    "maxEmailAccountCount": "Cantidad máxima de cuentas personales que se pueden crear por usuario"
   },
   "options": {
     "weekStart": {
       "0": "Domingo",
       "1": "Lunes"
-    },
-    "currencyFormat": {
-      "1": "10 USD",
-      "2": "$10"
     }
   },
   "tooltips": {
@@ -114,20 +110,12 @@
     "ldapAuth": "Credenciales de acceso para el servidor LDAP.",
     "ldapUserNameAttribute": "El atributo para identificar al usuario.\nPor ejemplo: \"userPrincipalName\" o \"sAMAccountName\" para Active Directory, \"uid\" para OpenLDAP.",
     "ldapUserObjectClass": "Atributo ObjectClass para buscar usuarios. Por ejemplo: \"person\" para AD, \"inetOrgPerson\" para OpenLDAP.",
-    "ldapAccountCanonicalForm": "El tipo de canonización de su cuenta. Hay 4 opciones:<br><br>\n'Dn' - en el formato 'CN=tester,OU=espocrm,DC=test,DC=lan'<br>\n'Username' - 'tester'<br>\n'Backslash' - \"COMPANY/tester'.<br>\n'Principal' - 'tester@company.com '.",
     "ldapBindRequiresDn": "La opción para formatear el nombre de usuario en el formulario de DN.",
     "ldapBaseDn": "La base DN predeterminado utilizado para la búsqueda de los usuarios. E.g. \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "La opción de dividir un nombre de usuario con el dominio.",
     "ldapOptReferrals": "La opción de dividir un nombre de usuario con el dominio.",
     "ldapCreateEspoUser": "Esta opción permite EspoCRM para crear un usuario del LDAP.",
     "ldapUserFirstNameAttribute": "atributo LDAP que se utiliza para determinar el nombre de usuario primero. E.g. \"givenname\".",
-    "ldapUserLastNameAttribute": "LDAP attribute which is used to determine the user last name. E.g. \"sn\".",
-    "ldapUserTitleAttribute": "LDAP attribute which is used to determine the user title. E.g. \"title\".",
-    "ldapUserEmailAddressAttribute": "LDAP attribute which is used to determine the user email address. E.g. \"mail\".",
-    "ldapUserPhoneNumberAttribute": "LDAP attribute which is used to determine the user phone number. E.g. \"telephoneNumber\".",
-    "ldapUserLoginFilter": "The filter which allows to restrict users who able to use EspoCRM. E.g. \"memberOf=CN=espoGroup, OU=groups,OU=espocrm, DC=test,DC=lan\".",
-    "ldapAccountDomainName": "The domain which is used for authorization to LDAP server.",
-    "ldapAccountDomainNameShort": "The short domain which is used for authorization to LDAP server.",
     "ldapUserTeams": "Equipos de usuario creado. Para más información, véase el perfil de usuario.",
     "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario.",
     "b2cMode": "Por defecto EspoCRM esta adaptado para B2B. Usted puede cambiarlo a B2C.",
@@ -139,7 +127,6 @@
   "labels": {
     "System": "Sistema",
     "Locale": "Localización",
-    "SMTP": "SMTP",
     "Configuration": "Configuración",
     "In-app Notifications": "Notificaciones del sistema",
     "Email Notifications": "Notificaciones de correo",

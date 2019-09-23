@@ -172,13 +172,10 @@
   "messages": {
     "selectEntityType": "Pasirinkite objekto tipą kairiajame meniu.",
     "selectUpgradePackage": "Pasirinkite atnaujinimo paketą",
-    "downloadUpgradePackage": "Atsisiųskite atnaujinimo paketą <a href=\"{url}\">čia</a>.",
     "selectLayout": "Pasirinkite norimą išdėtymo variantą kairiajame meniu ir redaguokite jį.",
     "selectExtensionPackage": "Pasirinkite plėtinių paketą",
     "extensionInstalled": "Plėtinys {name} {version} yra įdiegtas.",
     "installExtension": "Plėtinys {name} {version} yra paruoštas diegimui.",
-    "upgradeVersion": "EspoCRM bus atnaujinta į versiją <strong> {version} </ strong>. Būkite kantrūs, nes tai gali užtrukti.",
-    "upgradeDone": "EspoCRM buvo atnaujinta į versiją <strong> {version} </ strong>.",
     "upgradeBackup": "Prieš atnaujinant EspoCRM, rekomenduojame išsisaugoti failų ir duomenų bazės kopijas.",
     "thousandSeparatorEqualsDecimalMark": "Tūkstančių skirtukų simbolis negali būti toks pat kaip dešimtainio skirtuko simbolis.",
     "userHasNoEmailAddress": "Vartotojas neturi el. pašto adreso.",

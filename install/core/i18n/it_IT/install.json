@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Main page title": "Ciao, sei in EspoCRM",
+    "Main page title": "Benvenuti in EspoCRM",
     "Start page title": "Contratto di licenza",
     "Step1 page title": "Contratto di licenza",
     "License Agreement": "Contratto di licenza",
@@ -27,12 +27,20 @@
     "Configuration Instructions": "Istruzioni di configurazione",
     "phpVersion": "versione PHP",
     "requiredMysqlVersion": "Versione MySQL",
+    "dbHostName": "Nome Host",
+    "dbName": "Nome del database",
     "dbUserName": "Nome Utente Database",
+    "SetupConfirmation page title": "Requisiti di sistema",
+    "PHP Configuration": "Impostazioni PHP",
+    "MySQL Configuration": "Impostazioni Database",
+    "Permission Requirements": "Permessi",
     "Success": "Successo",
     "Fail": "Fallito"
   },
   "fields": {
     "Choose your language": "Scegli la lingua",
+    "Database Name": "Nome del database",
+    "Host Name": "Nome Host",
     "Port": "Porta",
     "smtpPort": "Porta",
     "Database User Name": "Nome utente Database",
@@ -56,7 +64,6 @@
     "1045": "Accesso negato all'utente",
     "1049": "Database non riconosciuto",
     "2005": "MySQL server host non riconosciuto",
-    "Bad init Permission": "Permesso negato a \"{*}\" directory. Impostare 775 per \"{*}\" o semplicemente eseguire questo comando nel terminale <pre><b>{C}</b></pre>\n\tOperazione non permessa? Prova questo: {CSU}",
     "Some errors occurred!": "Alcuni errori si sono verificati!",
     "phpVersion": "la versione di PHP in uso non è supportata da EspoCRM, aggiornare PHP dalla versione {minVersion} in poi.",
     "requiredMysqlVersion": "la versione di MySQL in uso non è supportata da EspoCRM, si raccomanda di aggiornare MySQL almeno alla versione {minVersion}.",
@@ -70,8 +77,6 @@
     "Cannot create user": "Non è possibile creare un utente",
     "Permission denied": "Permesso negato",
     "Permission denied to": "Permesso negato",
-    "permissionInstruction": "<br>Eseguire il codice da Terminale<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Operazione non permessa? Prova questo: <br>{CSU}",
     "Can not save settings": "Impossibile salvare le impostazioni",
     "Cannot save preferences": "Impossibile salvare le preferenze",
     "Thousand Separator and Decimal Mark equal": "Separatore delle migliaia e decimali non possono essere uguali",
@@ -96,5 +101,11 @@
       "microsoft-iis": "API Error: EspoCRM API non è disponibile.<br> Possibili problemi : disattivato \"URL Rewrite\". Si prega di controllare e attivare il Modulo nel IIS server \"URL Rewrite\" ",
       "default": "API Error: EspoCRM API non è disponibile.<br> Possibili problemi : disattivato il Modulo Rewrite. Si prega di controllare e attivare il Rewrite Module sul vostro server (e.g. mod_rewrite in Apache) e il supporto .htaccess."
     }
+  },
+  "systemRequirements": {
+    "requiredMysqlVersion": "Versione MySQL",
+    "host": "Nome Host",
+    "dbname": "Nome del database",
+    "user": "Nome Utente"
   }
 }

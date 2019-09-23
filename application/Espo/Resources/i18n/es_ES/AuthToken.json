@@ -4,8 +4,7 @@
     "ipAddress": "Dirección IP",
     "lastAccess": "Fecha del último acceso",
     "createdAt": "Fecha de acceso",
-    "isActive": "Está activo",
-    "portal": "Portal"
+    "isActive": "Está activo"
   },
   "links": {
     "actionHistoryRecords": "Histórico"

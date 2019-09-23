@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nama",
     "parent": "Induk",
-    "status": "Status",
     "dateStart": "Tanggal mulai",
     "dateEnd": "Tanggal akhir",
     "direction": "Arah",

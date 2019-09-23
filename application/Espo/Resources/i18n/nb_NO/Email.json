@@ -1,12 +1,9 @@
 {
   "fields": {
     "parent": "Forelder",
-    "status": "Status",
     "dateSent": "Dato sendt",
     "from": "Fra",
     "to": "Til",
-    "cc": "CC",
-    "bcc": "BCC",
     "replyTo": "Svar til",
     "replyToString": "Svar til (string)",
     "isHtml": "Er HTML",
@@ -14,8 +11,7 @@
     "subject": "Emne",
     "attachments": "Vedlegg",
     "selectTemplate": "Velg mal",
-    "fromEmailAddress": "Avsenderadresse",
-    "toEmailAddresses": "Sendt til adresse",
+    "fromAddress": "Avsenderadresse",
     "emailAddress": "Epostadresse",
     "deliveryDate": "Leveringsdato",
     "account": "Konto",
@@ -30,11 +26,11 @@
     "name": "Navn (emne)",
     "isReplied": "Er besvart",
     "isNotReplied": "Er ikke besvart",
-    "sentBy": "Sent av (bruker)",
     "folder": "Mappe",
     "inboundEmails": "Gruppekonti",
     "emailAccounts": "Personlige konti",
-    "hasAttachment": "Har vedlegg"
+    "hasAttachment": "Har vedlegg",
+    "sentBy": "Sent av (bruker)"
   },
   "links": {
     "replied": "Svart",
@@ -65,7 +61,6 @@
     "Inbound Emails": "Epostkonti for grupper",
     "Email Templates": "Epostmaler",
     "Send Test Email": "Send test-epost",
-    "Send": "Send",
     "Email Address": "Epostadresse",
     "Mark Read": "Marker som lest",
     "Sending...": "Sender…",

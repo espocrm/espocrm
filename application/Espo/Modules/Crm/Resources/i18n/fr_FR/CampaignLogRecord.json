@@ -1,22 +1,15 @@
 {
   "fields": {
-    "action": "Action",
-    "actionDate": "Date",
     "data": "Donnée",
     "campaign": "Campagne",
     "parent": "Cible",
     "object": "Objet",
-    "application": "Application",
     "queueItem": "Mettre en file d'attente",
-    "stringData": "Chaîne de texte",
-    "stringAdditionalData": "String Additional Data",
-    "isTest": "Is Test"
+    "stringData": "Chaîne de texte"
   },
   "links": {
     "queueItem": "Mettre en file d'attente",
-    "parent": "Parent",
-    "object": "Objet",
-    "campaign": "Campaign"
+    "object": "Objet"
   },
   "options": {
     "action": {
@@ -35,7 +28,6 @@
     "sent": "Envoyé",
     "opened": "Ouvert",
     "optedOut": "Désinscrit",
-    "bounced": "Bounced",
     "clicked": "Cliqué",
     "leadCreated": "Prospect créé"
   }

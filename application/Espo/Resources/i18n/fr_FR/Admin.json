@@ -4,7 +4,6 @@
     "Disabled": "Inactif",
     "System": "Système",
     "Users": "Utilisateurs",
-    "Email": "Email",
     "Data": "Données",
     "Customization": "Personnalisation",
     "Available Fields": "Champs disponibles",
@@ -27,14 +26,12 @@
     "Personal Email Accounts": "Comptes email personnels",
     "Inbound Emails": "Emails entrants",
     "Email Templates": "Modèles d'email",
-    "Import": "Import",
     "Layout Manager": "Gestionnaire de modèles",
     "User Interface": "Interface utilisateur",
     "Auth Tokens": "Jetons d'authentification",
     "Authentication": "Authentification",
     "Currency": "Devise",
     "Integrations": "Intégrations",
-    "Extensions": "Extensions",
     "Upload": "Mettre en ligne",
     "Installing...": "Installation...",
     "Upgrading...": "Mise à jour...",
@@ -50,13 +47,10 @@
     "Edit Entity": "Éditer une entité",
     "Create Link": "Créer un lien",
     "Edit Link": "Éditer un lien",
-    "Notifications": "Notifications",
     "Jobs": "Travaux",
     "Reset to Default": "Valeurs par défaut",
     "Email Filters": "Filtres email",
-    "Portal Users": "Portal Users",
-    "Action History": "Action History",
-    "Label Manager": "Label Manager"
+    "Permissions": "Les permissions"
   },
   "layouts": {
     "list": "Liste",
@@ -64,12 +58,7 @@
     "listSmall": "Liste (réduite)",
     "detailSmall": "Détail (réduit)",
     "filters": "Filtres de recherche",
-    "massUpdate": "Mise à jour groupée",
-    "relationships": "Relationship Panels",
-    "sidePanelsDetail": "Side Panels (Detail)",
-    "sidePanelsEdit": "Side Panels (Edit)",
-    "sidePanelsDetailSmall": "Side Panels (Detail Small)",
-    "sidePanelsEditSmall": "Side Panels (Edit Small)"
+    "massUpdate": "Mise à jour groupée"
   },
   "fieldTypes": {
     "address": "Adresse",
@@ -81,50 +70,31 @@
     "autoincrement": "Auto-incrément",
     "bool": "Case à cocher",
     "currency": "Devise",
-    "date": "Date",
-    "datetime": "Date et heure",
-    "datetimeOptional": "Date/Date et heure",
-    "email": "Email",
     "enum": "Énumération",
-    "enumInt": "Enum Integer",
-    "enumFloat": "Enum Float",
-    "float": "Float",
-    "int": "Int",
-    "link": "Link",
     "linkMultiple": "Lien multiple",
     "linkParent": "Lien parent",
-    "multienim": "Multienum",
     "phone": "Téléphone",
     "text": "Texte",
-    "url": "Url",
     "varchar": "Phrase",
     "file": "Fichier",
-    "image": "Image",
-    "multiEnum": "Multi-Enum",
     "attachmentMultiple": "Pièces jointes multiples",
     "rangeInt": "Plage d'entiers",
     "rangeFloat": "Intervalle réel",
     "rangeCurrency": "Plage de devises",
-    "wysiwyg": "Wysiwyg",
     "map": "Carte",
-    "currencyConverted": "Currency (Converted)",
-    "number": "Number",
-    "colorpicker": "Color Picker"
+    "int": "Int",
+    "number": "Number"
   },
   "fields": {
-    "type": "Type",
     "name": "Nom",
     "label": "Libellé",
     "required": "Requis",
     "default": "Par défaut",
     "maxLength": "Longueur max",
-    "options": "Options",
     "after": "Après (le champ)",
     "before": "Avant (le champ)",
     "link": "Lien",
     "field": "Champ",
-    "min": "Min",
-    "max": "Max",
     "translation": "Traduction",
     "previewSize": "Prévisualiser la taille",
     "defaultType": "Type par défaut",
@@ -139,34 +109,15 @@
     "typeList": "Liste de types",
     "rows": "Nombre de lignes de la zone de texte",
     "lengthOfCut": "Longueur de coupe",
-    "sourceList": "Liste des sources",
-    "tooltipText": "Tooltip Text",
-    "prefix": "Prefix",
-    "nextNumber": "Next Number",
-    "padLength": "Pad Length",
-    "disableFormatting": "Disable Formatting",
-    "dynamicLogicVisible": "Conditions making field visible",
-    "dynamicLogicReadOnly": "Conditions making field read-only",
-    "dynamicLogicRequired": "Conditions making field required",
-    "dynamicLogicOptions": "Conditional options",
-    "probabilityMap": "Stage Probabilities (%)",
-    "readOnly": "Read-only",
-    "noEmptyString": "Empty string value is not allowed"
+    "sourceList": "Liste des sources"
   },
   "messages": {
     "selectEntityType": "Sélectionner le type d'entité dans le menu de gauche.",
     "selectUpgradePackage": "Sélectionner le pack de mise à jour",
-    "downloadUpgradePackage": "Téléchargement nécessaire des packs de mise à jour <a href=\"{url}\">ici</a>.",
     "selectLayout": "Sélectionnez le modèle dans le menu de gauche et modifiez-le.",
     "selectExtensionPackage": "Sélectionner un pack d'extension",
     "extensionInstalled": "L'extension {name} {version} a été installé.",
-    "installExtension": "L'extension {name} {version} est prête pour l'installation.",
-    "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
-    "upgradeDone": "EspoCRM has been upgraded to version <strong>{version}</strong>.",
-    "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
-    "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
-    "userHasNoEmailAddress": "User has no email address.",
-    "uninstallConfirmation": "Are you sure you want to uninstall the extension?"
+    "installExtension": "L'extension {name} {version} est prête pour l'installation."
   },
   "descriptions": {
     "settings": "Paramètres système de l'application.",
@@ -192,24 +143,18 @@
     "extensions": "Installer ou désinstaller des extensions.",
     "integrations": "Intégration avec des services tiers.",
     "notifications": "Paramètres des notifications emails et internes au CRM.",
-    "inboundEmails": "Group IMAP email accouts. Email import and Email-to-Case.",
-    "portalUsers": "Users of portal.",
-    "entityManager": "Create and edit custom entities. Manage fields and relationships.",
-    "emailFilters": "Email messages that match the specified filter won't be imported.",
-    "actionHistory": "Log of user actions.",
-    "labelManager": "Customize application labels."
+    "inboundEmails": "Group IMAP email accouts. Email import and Email-to-Case."
   },
   "options": {
     "previewSize": {
       "x-small": "Très petit",
       "small": "Petit",
-      "medium": "Moyen",
-      "large": "Large"
+      "medium": "Moyen"
     }
   },
-  "logicalOperators": {
-    "and": "AND",
-    "or": "OR",
-    "not": "NOT"
+  "systemRequirements": {
+    "host": "Nom d'hôte",
+    "dbname": "Nom de la base de données",
+    "user": "Nom d'utilisateur"
   }
 }

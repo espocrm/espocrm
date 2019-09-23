@@ -17,7 +17,6 @@
       "default": "Podrazumevano",
       "success": "Uspešno",
       "danger": "opasnost",
-      "info": "Info",
       "warning": "Upozorenje",
       "primary": "Primarno"
     }

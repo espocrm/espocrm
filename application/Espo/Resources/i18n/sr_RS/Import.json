@@ -61,8 +61,7 @@
     "entityType": "Tip entiteta",
     "imported": "Uvezeni upisi",
     "duplicates": "Duplirani upisi",
-    "updated": "Izmenjeni upisi",
-    "status": "Status"
+    "updated": "Izmenjeni upisi"
   },
   "options": {
     "status": {

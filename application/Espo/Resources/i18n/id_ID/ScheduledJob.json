@@ -1,12 +1,8 @@
 {
   "fields": {
     "name": "Nama",
-    "status": "Status",
     "job": "Pekerjaan",
     "scheduling": "penjadwalan"
-  },
-  "links": {
-    "log": "Log"
   },
   "labels": {
     "Create ScheduledJob": "Buat Pekerjaan Terjadwal"

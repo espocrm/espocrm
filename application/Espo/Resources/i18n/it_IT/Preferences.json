@@ -24,6 +24,9 @@
     "receiveStreamEmailNotifications": "Notifiche via email per i messaggi e gli aggiornamenti di stato",
     "dashboardLayout": "Layout panoramica",
     "emailReplyForceHtml": "Email di risposta in HTML",
+    "emailReplyToAllByDefault": "Rispondi a tutte le email",
+    "doNotFillAssignedUserIfNotRequired": "Non precompilare l'utente assegnato alla creazione del record",
+    "followEntityOnStreamPost": "Segui automaticamente dopo la pubblicazione in Stream",
     "emailUseExternalClient": "Utilizzare un client di posta elettronica esterno",
     "scopeColorsDisabled": "Disabilita campo colori",
     "tabColorsDisabled": "Disabilita tabella colori"

@@ -3,12 +3,12 @@
     "name": "Ім'я",
     "description": "Опис",
     "entryCount": "Облік записа",
-    "optedOutCount": "Кількість користувачів, що зняли підписку",
     "campaigns": "Кампанії",
     "endDate": "Дата Закінчення",
     "targetLists": "Цільові списки",
     "includingActionList": "Включаючи",
     "excludingActionList": "Виключаючи",
+    "optedOutCount": "Кількість користувачів, що зняли підписку",
     "targetStatus": "Цільовий статус",
     "isOptedOut": "Відмовлено"
   },

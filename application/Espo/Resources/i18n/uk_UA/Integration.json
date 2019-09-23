@@ -6,15 +6,11 @@
     "redirectUri": "URI перенаправлення",
     "apiKey": "Ключ API"
   },
-  "titles": {
-    "GoogleMaps": "Google Карти"
-  },
   "messages": {
     "selectIntegration": "Виберіть інтеграцію з меню.",
     "noIntegrations": "Жодних інтеграцій не доступно."
   },
-  "help": {
-    "Google": "<p><b>Отримати посвідчення OAuth 2.0 з Google Developers Console.</b></p><p>Відвідайте <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> для отримання посвідчення OAuth 2.0, таких як Клієнтський ID та Секрет Клієнта, що йдуть однаково для Google та EspoCRM додатків.</p>",
-    "GoogleMaps": "<p>Отримати ключ доступу до API можна <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">тут</a>.</p>"
+  "titles": {
+    "GoogleMaps": "Google Карти"
   }
 }

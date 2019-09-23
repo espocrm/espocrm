@@ -5,14 +5,7 @@
     "targetType": "Cible",
     "teams": "Équipes",
     "users": "Utilisateurs",
-    "portals": "Portails",
-    "type": "Type",
-    "isGlobal": "Is Global",
-    "isInternal": "Is Internal (for internal users)",
-    "related": "Related",
-    "createdByGender": "Created By Gender",
-    "data": "Data",
-    "number": "Number"
+    "portals": "Portails"
   },
   "filters": {
     "all": "Tous",
@@ -21,14 +14,5 @@
   },
   "messages": {
     "writeMessage": "Écrivez votre message ici"
-  },
-  "options": {
-    "targetType": {
-      "self": "to myself",
-      "users": "to particular user(s)",
-      "teams": "to particular team(s)",
-      "all": "to all internal users",
-      "portals": "to portal users"
-    }
   }
 }

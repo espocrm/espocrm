@@ -1,9 +1,6 @@
 {
   "fields": {
     "name": "Nama",
-    "logo": "Logo",
-    "companyLogo": "Logo",
-    "url": "URL",
     "portalRoles": "peran",
     "isActive": "Aktif",
     "isDefault": "Atur ",

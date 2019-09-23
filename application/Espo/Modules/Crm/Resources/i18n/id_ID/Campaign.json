@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nama",
     "description": "Deskripsi",
-    "status": "Status",
     "type": "Mengetik",
     "startDate": "Mulai tanggal",
     "endDate": "Tanggal akhir",
@@ -28,7 +27,6 @@
     "contacts": "kontak",
     "leads": "memimpin",
     "opportunities": "peluang",
-    "campaignLogRecords": "Log",
     "massEmails": "Email massal",
     "trackingUrls": "pelacakan URL"
   },
@@ -37,7 +35,6 @@
       "Email": "E-mail",
       "Web": "jaringan",
       "Television": "Televisi",
-      "Radio": "Radio",
       "Newsletter": "laporan berkala",
       "Mail": "Surat"
     },

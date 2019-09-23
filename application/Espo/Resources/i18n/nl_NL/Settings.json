@@ -164,7 +164,8 @@
     "daemonMaxProcessNumber": "Maximaal aantal cron processen lopen gelijktijdig.",
     "daemonProcessTimeout": "Maximale uitvoeringstijd (in seconden) toegewezen voor een enkel cronproces.",
     "cronDisabled": "Cron loopt niet.",
-    "maintenanceMode": "Alleen beheerders hebben toegang tot het systeem."
+    "maintenanceMode": "Alleen beheerders hebben toegang tot het systeem.",
+    "ldapAccountCanonicalForm": "Het type van uw account canoniek formulier. Er zijn 4 opties:\n\n- Dn' - het formulier in het formaat 'CN=tester,OU=espocrm,DC=test, DC=lan'.\n\n- Gebruikersnaam' - het formulier 'tester'.\n\n- Backslash' - het formulier 'COMPANY\\tester'.\n\n- Principal' - het formulier 'tester@company.com'."
   },
   "labels": {
     "System": "Systeem",

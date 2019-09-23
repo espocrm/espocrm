@@ -2,18 +2,15 @@
   "fields": {
     "name": "Ime",
     "number": "Broj",
-    "status": "Status",
     "account": "Pravno lice",
     "contact": "Kontakt",
     "contacts": "Kontakti",
     "priority": "Prioritet",
     "type": "Tip",
     "description": "Opis",
-    "inboundEmail": "Dolazni email",
     "lead": "Izvor"
   },
   "links": {
-    "inboundEmail": "Dolazni email",
     "account": "Pravno lice",
     "contact": "Kontakt (osnovni)",
     "Contacts": "Kontakti",
@@ -40,9 +37,7 @@
       "Urgent": "Hitan"
     },
     "type": {
-      "Question": "Pitanje",
-      "Incident": "Incident",
-      "Problem": "Problem"
+      "Question": "Pitanje"
     }
   },
   "labels": {

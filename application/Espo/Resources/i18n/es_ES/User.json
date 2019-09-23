@@ -1,13 +1,12 @@
 {
   "fields": {
     "name": "Nombre",
-    "userName": "Nombre Usuario",
+    "userName": "Nombre de Usuario",
     "title": "Título",
     "isAdmin": "Es administrador",
     "defaultTeam": "Equipo por defecto",
     "emailAddress": "Correo electrónico",
     "phoneNumber": "Teléfono",
-    "roles": "Roles",
     "portals": "Portales",
     "portalRoles": "Roles del portal",
     "teamRole": "Puesto",
@@ -16,22 +15,20 @@
     "passwordConfirm": "Confirmar Contraseña",
     "newPassword": "Nueva Contraseña",
     "newPasswordConfirm": "Confirmar Contraseña Nueva",
-    "avatar": "Avatar",
     "isActive": "Está activo",
     "isPortalUser": "Es usuario del portal",
     "contact": "Contacto",
     "accounts": "Cuentas",
     "account": "Cuenta (principal)",
     "sendAccessInfo": "Enviar información de acceso al usuario",
-    "portal": "Portal",
     "gender": "Sexo",
     "position": "Puesto en el equipo",
     "ipAddress": "Dirección IP",
-    "passwordPreview": "Vista previa de la contraseña"
+    "passwordPreview": "Vista previa de la contraseña",
+    "isSuperAdmin": "Es superadministrador"
   },
   "links": {
     "teams": "Equipos",
-    "roles": "Roles",
     "notes": "Notas",
     "portals": "Portales",
     "portalRoles": "Roles del portal",
@@ -52,7 +49,6 @@
     "Email Address": "Correo electrónico",
     "External Accounts": "Cuentas externas",
     "Email Accounts": "Cuentas de correo",
-    "Portal": "Portal",
     "Create Portal User": "Crear usuario del portal",
     "Proceed w/o Contact": "Continuar sin contacto"
   },
@@ -75,8 +71,7 @@
     "userNameEmailAddressNotFound": "Nombre de Usuario/Correo no encontrado",
     "forbidden": "Prohibido, por favor intente después",
     "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
-    "passwordChangedByRequest": "La contraseña ha sido cambiada.",
-    "setupSmtpBefore": "Necesita configurar los <a href=\"{url}\">ajustes SMTP</a> para que el sistema pueda enviar contraseñas por correo."
+    "passwordChangedByRequest": "La contraseña ha sido cambiada."
   },
   "boolFilters": {
     "onlyMyTeam": "Solo de mi equipo"
@@ -89,8 +84,7 @@
     "gender": {
       "": "No definido",
       "Male": "Masculino",
-      "Female": "Femenino",
-      "Neutral": "Neutral"
+      "Female": "Femenino"
     }
   }
 }

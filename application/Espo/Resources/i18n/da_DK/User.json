@@ -76,7 +76,6 @@
     "forbidden": "Forbudt. Prøv venligst senere.",
     "uniqueLinkHasBeenSent": "Den unikke URL er sendt til den angivne emailadresse.",
     "passwordChangedByRequest": "Kodeordet er ændret.",
-    "setupSmtpBefore": "Det er nødvendigt af udfylde <a href=\"{url}\">SMTP indstillinger</a> for at systemet kan sende kodeordet i en email.",
     "userNameExists": "Brugernavn eksisterer allerede"
   },
   "boolFilters": {
@@ -89,8 +88,8 @@
   "options": {
     "gender": {
       "": "Ikke Sat",
-      "Male": "Hankøn",
-      "Female": "Kunkøn"
+      "Male": "Mand",
+      "Female": "Kvinde"
     },
     "type": {
       "regular": "Regulær",

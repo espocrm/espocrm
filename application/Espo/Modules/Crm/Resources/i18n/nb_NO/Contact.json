@@ -2,7 +2,6 @@
   "fields": {
     "name": "Navn",
     "emailAddress": "Epost",
-    "title": "Tittel",
     "accountRole": "Tittel",
     "account": "Konto",
     "accounts": "Konti",
@@ -36,9 +35,7 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--Ingen--",
       "Decision Maker": "Beslutningstager",
-      "Evaluator": "Evaluator",
       "Influencer": "Påvirker"
     }
   },

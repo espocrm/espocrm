@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Názov",
-    "title": "Titul",
     "accountRole": "Titul",
     "account": "Účet",
     "accounts": "Účty",
@@ -40,7 +39,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--Žiadne--",
       "Decision Maker": "Kto rozhoduje",
       "Evaluator": "Kto ohodnocuje",
       "Influencer": "Kto ovplyvňuje"

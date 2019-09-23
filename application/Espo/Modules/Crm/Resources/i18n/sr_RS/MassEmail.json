@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Ime",
-    "status": "Status",
     "storeSentEmails": "Čuvaj poslate e-poruke",
     "startAt": "Početni datum",
     "fromAddress": "Dolazna adresa",

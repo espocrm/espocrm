@@ -12,7 +12,7 @@
     "subject": "Tantárgy",
     "attachments": "Mellékletek",
     "selectTemplate": "Válassza a Sablon lehetőséget",
-    "fromEmailAddress": "Címtől",
+    "fromAddress": "Címtől",
     "emailAddress": "Email cím",
     "deliveryDate": "Kiszállítási dátum",
     "account": "számla",

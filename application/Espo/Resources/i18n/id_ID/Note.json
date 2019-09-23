@@ -2,15 +2,16 @@
   "fields": {
     "post": "Posting",
     "attachments": "lampiran",
-    "targetType": "Target",
     "teams": "tim",
     "users": "pengguna",
     "portals": "portal"
   },
   "filters": {
     "all": "Semua",
-    "posts": "Posts",
     "updates": "update"
+  },
+  "messages": {
+    "writeMessage": "Tulis pesan Anda disini"
   },
   "options": {
     "targetType": {
@@ -20,8 +21,5 @@
       "all": "Untuk semua pengguna internal",
       "portals": "Untuk semua pengguna Portal"
     }
-  },
-  "messages": {
-    "writeMessage": "Tulis pesan Anda disini"
   }
 }

@@ -1,26 +1,7 @@
 {
-  "label": {
-    "Field": "Field"
-  },
   "options": {
     "operators": {
-      "equals": "Equals",
       "notEquals": "N'est pas égale",
-      "greaterThan": "Greater Than",
-      "lessThan": "Less Than",
-      "greaterThanOrEquals": "Greater Than Or Equals",
-      "lessThanOrEquals": "Less Than Or Equals",
-      "in": "In",
-      "notIn": "Not In",
-      "inPast": "In Past",
-      "inFuture": "Is Future",
-      "isToday": "Is Today",
-      "isTrue": "Is True",
-      "isFalse": "Is False",
-      "isEmpty": "Is Empty",
-      "isNotEmpty": "Is Not Empty",
-      "contains": "Contains",
-      "has": "Contains",
       "notContains": "Ne contient pas",
       "notHas": "Ne contient pas"
     }

@@ -45,14 +45,11 @@
   "labels": {
     "Notifications": "Notificaciones",
     "User Interface": "Interfaz de usuario",
-    "SMTP": "SMTP",
     "Misc": "Misceláneos",
     "Locale": "Localización"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Siguirá automáticamente todos los registros nuevos (creados por cualquier usuario) de los tipos de entidad seleccionados. Para poder ver información en la historia y recibir notificaciones sobre todos los registros en el sistema.",
-    "doNotFillAssignedUserIfNotRequired": "Cuando cree un registro, el usuario asignado no se completará con su propio usuario a menos que el campo sea obligatorio.",
-    "followCreatedEntities": "Al crear nuevos registros, se seguirán automáticamente incluso si se asignaron a otro usuario.",
-    "followCreatedEntityTypeList": "Al crear nuevos registros de los tipos de entidad seleccionados, se seguirán automáticamente incluso si se asignaron a otro usuario."
+    "doNotFillAssignedUserIfNotRequired": "Cuando cree un registro, el usuario asignado no se completará con su propio usuario a menos que el campo sea obligatorio."
   }
 }

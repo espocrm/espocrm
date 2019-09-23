@@ -1,10 +1,6 @@
 {
   "labels": {
     "Create DocumentFolder": "Créer un dossier",
-    "Manage Categories": "Gérer les dossiers",
-    "Documents": "Documents"
-  },
-  "links": {
-    "documents": "Documents"
+    "Manage Categories": "Gérer les dossiers"
   }
 }

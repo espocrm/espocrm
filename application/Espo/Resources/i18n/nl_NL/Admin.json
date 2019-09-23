@@ -45,7 +45,8 @@
     "API Users": "API gebruiker",
     "Template Manager": "Template beheerder",
     "System Requirements": "Systeem eisen",
-    "PHP Settings": "PHP settings",
+    "PHP Settings": "PHP-instellingen",
+    "Database Settings": "Database-instellingen",
     "Permissions": "Rechten",
     "Success": "Succesvol",
     "Fail": "Mislukt",
@@ -133,25 +134,28 @@
     "inlineEditDisabled": "Inline-bewerking uitschakelen",
     "displayAsLabel": "Weergave als label",
     "allowCustomOptions": "Aangepaste opties toestaan",
-    "maxCount": "Maximumpuntentelling"
+    "maxCount": "Maximumpuntentelling",
+    "displayRawText": "Onbewerkte tekst weergeven (geen markering)"
   },
   "messages": {
     "selectEntityType": "Selecteer de eenheid soort in het linker menu.",
     "selectUpgradePackage": "Selecteer het upgradebestand",
-    "downloadUpgradePackage": "Download benodigde upgrade bestanden <a href=\"{url}\">hier</a>.",
     "selectLayout": "Selecteer de layout in het linker menu en pas deze aan.",
     "selectExtensionPackage": "Selecteer extensie bestand",
     "extensionInstalled": "Extensie {name} {version} is geinstalleerd.",
     "installExtension": "Extensie {name} {version} is gereed voor installatie.",
-    "upgradeVersion": "Uw EspoCRM wordt geupgrade naar versie <strong>{version}</strong>. Dit kan enige tijd duren.",
-    "upgradeDone": "Uw EspoCRM is geupgrade naar versie <strong>{version}</strong>. Herstart uw browser scherm.",
     "upgradeBackup": "We adviseren om eerst een backup te maken van uw EspoCRM bestanden en data, alvorens te upgraden.",
     "thousandSeparatorEqualsDecimalMark": "Het duizendtal scheidingsteken mag niet hetzelfde zijn als het decimaalteken.",
     "userHasNoEmailAddress": "Gebruiker heeft geen emailadres.",
     "newVersionIsAvailable": "Nieuwe EspoCRM-versie {latestVersion} is beschikbaar.",
     "uninstallConfirmation": "Weet je zeker dat je de extensie wilt verwijderen?",
     "cronIsNotConfigured": "Geplande taken zijn niet actief. Vandaar dat inkomende e-mails, meldingen en herinneringen niet werken. Volg de [instructies] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) om cron-taak in te stellen.",
-    "newExtensionVersionIsAvailable": "Nieuwe versie {extensionName} {latestVersion} is beschikbaar."
+    "newExtensionVersionIsAvailable": "Nieuwe versie {extensionName} {latestVersion} is beschikbaar.",
+    "upgradeVersion": "EspoCRM wordt opgewaardeerd naar versie **{versie}**. Wees geduldig, want dit kan even duren.",
+    "upgradeDone": "EspoCRM is geüpgrade naar versie **{versie}**.",
+    "downloadUpgradePackage": "Download upgrade pakket(en) [hier]({url}).",
+    "upgradeInfo": "Controleer de [documentatie]({url}) over hoe u uw EspoCRM-instantie kunt upgraden.",
+    "upgradeRecommendation": "Deze manier van upgraden wordt niet aanbevolen. Het is beter om te upgraden vanuit CLI."
   },
   "descriptions": {
     "settings": "Systeem instellingen van het programma.",
@@ -184,7 +188,9 @@
     "attachments": "Alle bestandsbijlagen opgeslagen in het systeem.",
     "templateManager": "Aanpassen van berichtsjablonen.",
     "systemRequirements": "Systeem eisen voor EspoCRM.",
-    "apiUsers": "Splits gebruikers voor integratiedoeleinden."
+    "apiUsers": "Splits gebruikers voor integratiedoeleinden.",
+    "jobs": "Jobs voert taken uit op de achtergrond.",
+    "pdfTemplates": "Sjablonen om af te drukken naar PDF."
   },
   "options": {
     "previewSize": {

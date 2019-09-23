@@ -1,21 +1,14 @@
 {
   "labels": {
     "Create KnowledgeBaseArticle": "Créer un article",
-    "Any": "Any",
-    "Send in Email": "Envoyer par mail",
-    "Move Up": "Move Up",
-    "Move Down": "Move Down",
-    "Move to Top": "Move to Top",
-    "Move to Bottom": "Move to Bottom"
+    "Send in Email": "Envoyer par mail"
   },
   "fields": {
     "name": "Nom",
     "status": "Statut",
-    "type": "Type",
     "attachments": "Pièces jointes",
     "publishDate": "Date de publication",
     "expirationDate": "Date d'expiration",
-    "description": "Description",
     "body": "Corps de texte",
     "categories": "Catégories",
     "language": "Langue",
@@ -29,19 +22,12 @@
   },
   "options": {
     "status": {
-      "In Review": "In Review",
       "Draft": "Brouillon",
       "Archived": "Archivé",
       "Published": "Publié"
-    },
-    "type": {
-      "Article": "Article"
     }
   },
   "presetFilters": {
     "published": "Publié"
-  },
-  "tooltips": {
-    "portals": "Article will be available only in specified portals."
   }
 }

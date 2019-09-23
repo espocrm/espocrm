@@ -64,7 +64,7 @@
     "forbidden": "Zabronione, proszę spróbować później",
     "uniqueLinkHasBeenSent": "Unikalny adres URL został wysłany na podany adres email.",
     "passwordChangedByRequest": "Hasło zostało zmienione",
-    "setupSmtpBefore": "Musisz skonfigurować <a href=\"{url}\">pocztę wychodzącą</a> aby móc wysyłać hasła na e-mail."
+    "userNameExists": "Nazwa Użytkownika"
   },
   "boolFilters": {
     "onlyMyTeam": "Tylko mój zespół"

@@ -11,7 +11,8 @@
     "contacts": "Contatti",
     "leads": "Iniziative",
     "reminders": "Promemoria",
-    "acceptanceStatus": "Stato accettazione"
+    "acceptanceStatus": "Stato accettazione",
+    "Acceptance": "Accettazione"
   },
   "options": {
     "status": {

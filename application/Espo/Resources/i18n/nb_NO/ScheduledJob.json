@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "job": "Oppgave",
     "scheduling": "Planlegging"
   },

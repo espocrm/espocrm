@@ -3,8 +3,7 @@
     "Fields": "Polja",
     "Relationships": "Odnosi",
     "Schedule": "Raspored",
-    "Log": "Dnevnik",
-    "Formula": "Formula"
+    "Log": "Dnevnik"
   },
   "fields": {
     "name": "Ime",

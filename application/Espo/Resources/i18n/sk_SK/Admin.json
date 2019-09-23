@@ -55,7 +55,8 @@
     "Portal Users": "Portáloví používatelia",
     "Action History": "História akcií",
     "Label Manager": "Správca popiskov",
-    "Auth Log": "Auth protokol"
+    "Auth Log": "Auth protokol",
+    "Permissions": "Povolenie"
   },
   "layouts": {
     "list": "Zoznam",
@@ -148,13 +149,10 @@
   "messages": {
     "selectEntityType": "Vyber typ entity v ľavom menu",
     "selectUpgradePackage": "Vyber balíček s aktualizáciou",
-    "downloadUpgradePackage": "Stiahni balíček(y) s aktualizáciou <a href=\"{url}\">tu</a>.",
     "selectLayout": "Vyber požadované rozmiestnenie v ľavom menu a uprav ho.",
     "selectExtensionPackage": "Vyber balíček s rozšírením",
     "extensionInstalled": "Rozšírenie {name} {version} bolo nainštalované.",
     "installExtension": "Rozšírenie {name} {version} je pripravené na inštaláciu.",
-    "upgradeVersion": "EspoCRM bude aktualizované na verziu <strong>{version}</strong>. Prosím o trpezlivosť, môže to chvíľu trvať.",
-    "upgradeDone": "EspoCRM bolo aktualizované na verziu <strong>{version}</strong>.",
     "upgradeBackup": "Pred aktualizáciou odporúčame urobiť zálohu súborov a dát EspoCRM.",
     "thousandSeparatorEqualsDecimalMark": "Oddeľovač tisícov nemôže byť rovnaký ako oddeľovač desatinných miest.",
     "userHasNoEmailAddress": "Používateľ nemá emailovú adresu.",
@@ -200,5 +198,12 @@
       "medium": "Stredný (M)",
       "large": "Veľký (L)"
     }
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Verzia PHP",
+    "requiredMysqlVersion": "Verzia MySQL",
+    "host": "Názov servera",
+    "dbname": "Názov databázy",
+    "user": "Používateľské meno"
   }
 }

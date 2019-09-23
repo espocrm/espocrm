@@ -12,7 +12,7 @@
     "subject": "Tema",
     "attachments": "Prisegtukai",
     "selectTemplate": "Pasirinkti šabloną",
-    "fromEmailAddress": "Nuo adreso",
+    "fromAddress": "Nuo adreso",
     "emailAddress": "El. pašto adresas",
     "deliveryDate": "Pristatymo data",
     "account": "Paskyra",

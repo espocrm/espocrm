@@ -21,5 +21,9 @@
       "warning": "Advertencia",
       "primary": "Principal"
     }
+  },
+  "labels": {
+    "New panel": "Nuevo panel",
+    "Layout": "Diseño"
   }
 }

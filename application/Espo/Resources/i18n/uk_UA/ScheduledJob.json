@@ -17,7 +17,7 @@
       "CheckInboundEmails": "Перевірити пошту",
       "CheckEmailAccounts": "Перевірити особисті емейл-акаунти",
       "SendEmailReminders": "Відправити нагадування емейлом",
-      "AuthTokenControl": "Контроль токенів автентифікації",
+      "AuthTokenControl": "Контроль токенів аутентифікації",
       "SendEmailNotifications": "Надіслати сповіщення на електронну пошту",
       "CheckNewVersion": "Перевірити наявність нової версії"
     },

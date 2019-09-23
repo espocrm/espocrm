@@ -3,7 +3,6 @@
     "name": "Ім'я",
     "userName": "Ім'я Користувача",
     "title": "Посада",
-    "type": "Тип",
     "isAdmin": "Адміністратор",
     "defaultTeam": "Команда за замовчуванням",
     "emailAddress": "Емейл",
@@ -16,14 +15,14 @@
     "currentPassword": "Поточний пароль",
     "passwordConfirm": "Підтвердити пароль",
     "newPassword": "Новий пароль",
-    "newPasswordConfirm": "Підтвердити новий пароль",
+    "newPasswordConfirm": "Підтвердити Новий Пароль",
     "avatar": "Аватар",
     "isActive": "Активний",
     "isPortalUser": "Користувач порталу",
     "contact": "Контакт",
     "accounts": "Контрагенти",
     "account": "Контрагент (основний)",
-    "sendAccessInfo": "Надіслати емейл користувачу з інформацією доступу",
+    "sendAccessInfo": "Надіслати Емайл користувачу з інформацією доступу",
     "portal": "Портал",
     "gender": "Стать",
     "position": "Позиція в комадні",
@@ -31,11 +30,12 @@
     "passwordPreview": "Попередній перегляд паролю",
     "isSuperAdmin": "Головний адміністратор",
     "lastAccess": "Останній доступ",
-    "apiKey": "Ключ API",
-    "authMethod": "Метод автентифікації"
+    "type": "Тип",
+    "apiKey": "API ключ",
+    "secretKey": "Секретний ключ",
+    "authMethod": "Метод аутентифікації"
   },
   "links": {
-    "defaultTeam": "Команда за замовчуванням",
     "teams": "Команди",
     "roles": "Ролі",
     "notes": "Нотатки",
@@ -44,7 +44,8 @@
     "contact": "Контакт",
     "accounts": "Контрагенти",
     "account": "Контрагент (основний)",
-    "tasks": "Завдання"
+    "tasks": "Завдання",
+    "defaultTeam": "Команда за замовчуванням"
   },
   "labels": {
     "Create User": "Створити користувача",
@@ -61,7 +62,7 @@
     "Portal": "Портали",
     "Create Portal User": "Створити портал користувача",
     "Proceed w/o Contact": "Продовжити без контакту",
-    "Generate New API Key": "Згенерувати новий ключ API"
+    "Generate New API Key": "Згенерувати новий API ключ"
   },
   "tooltips": {
     "defaultTeam": "Всі записи, створені цим користувачем, відноситимуться до цієї команди за замовчуванням.",
@@ -83,8 +84,15 @@
     "forbidden": "Недоступно, будь ласка, спробуйте пізніше",
     "uniqueLinkHasBeenSent": "Унікальне посилання була відправлена на вказану адресу електронної пошти.",
     "passwordChangedByRequest": "Пароль було змінено.",
-    "setupSmtpBefore": "Вам необхідно <a href=\"{url}\">налаштувати SMTP</a>, щоб створити можливість для системи надіслати пароль по електронній пошті.",
-    "userNameExists": "Ім'я користувача вже існує"
+    "userNameExists": "Ім'я користувача вже існує",
+    "setupSmtpBefore": "Потрібно налаштувати [SMTP] ({url}), щоб система могла надсилати пароль електронною поштою."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Тільки моя команда"
+  },
+  "presetFilters": {
+    "active": "Актив",
+    "activePortal": "Портал активний"
   },
   "options": {
     "gender": {
@@ -96,19 +104,11 @@
     "type": {
       "regular": "Звичайний",
       "admin": "Адміністратор",
-      "portal": "Користувач порталу",
-      "system": "Системний",
-      "super-admin": "Головний адміністратор"
+      "portal": "Портал",
+      "super-admin": "Супер-адміністратор"
     },
     "authMethod": {
-      "ApiKey": "Ключ API"
+      "ApiKey": "API ключ"
     }
-  },
-  "boolFilters": {
-    "onlyMyTeam": "Тільки моя команда"
-  },
-  "presetFilters": {
-    "active": "Актив",
-    "activePortal": "Портал активний"
   }
 }

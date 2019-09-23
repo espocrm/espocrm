@@ -10,14 +10,12 @@
     "rightMargin": "Marge droite",
     "bottomMargin": "Marge du bas",
     "printFooter": "Imprimer les pieds de page",
-    "footerPosition": "Position des pieds de page",
-    "variables": "Available Placeholders"
+    "footerPosition": "Position des pieds de page"
   },
   "labels": {
     "Create Template": "Créer un modèle"
   },
   "tooltips": {
-    "footer": "Utiliser {pageNumber} pour imprimer la page.",
-    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
+    "footer": "Utiliser {pageNumber} pour imprimer la page."
   }
 }

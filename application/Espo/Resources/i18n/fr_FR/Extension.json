@@ -1,8 +1,6 @@
 {
   "fields": {
     "name": "Nom",
-    "version": "Version",
-    "description": "Description",
     "isInstalled": "Installé"
   },
   "labels": {

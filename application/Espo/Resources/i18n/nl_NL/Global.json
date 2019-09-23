@@ -239,7 +239,6 @@
     "fieldShouldBeLess": "{field} moet minder zijn dan {value}",
     "fieldShouldBeGreater": "{field} moet groter zijn dan {value}",
     "fieldIsUploading": "Bezig met uploaden",
-    "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[text](url)",
     "erasePersonalDataConfirmation": "De aangevinkte velden worden permanent verwijderd. Weet je het zeker?",
     "massPrintPdfMaxCountError": "Kan niet meer dan {maxCount} records afdrukken.",
     "fieldValueDuplicate": "Dubbele waarde",

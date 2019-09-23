@@ -1,8 +1,6 @@
 {
   "fields": {
     "name": "Nom",
-    "emailAddress": "Email",
-    "title": "Titre",
     "accountRole": "Titre",
     "account": "Compte",
     "accounts": "Comptes",
@@ -11,16 +9,10 @@
     "doNotCall": "Ne pas appeler",
     "address": "Adresse",
     "opportunityRole": "Rôle d'opportunité",
-    "description": "Description",
     "campaign": "Campagne",
     "targetLists": "Listes de cibles",
     "targetList": "Liste de cibles",
-    "portalUser": "Utilisateur Portail",
-    "originalLead": "Original Lead",
-    "acceptanceStatus": "Acceptance Status",
-    "accountIsInactive": "Account Inactive",
-    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    "portalUser": "Utilisateur Portail"
   },
   "links": {
     "opportunities": "Opportunités",
@@ -31,16 +23,13 @@
     "account": "Compte (principal)",
     "accounts": "Comptes",
     "casesPrimary": "Tickets (principal)",
-    "portalUser": "Utilisateur Portail",
-    "originalLead": "Original Lead",
-    "documents": "Documents"
+    "portalUser": "Utilisateur Portail"
   },
   "labels": {
     "Create Contact": "Créer un Contact"
   },
   "options": {
     "opportunityRole": {
-      "": "--Aucun--",
       "Decision Maker": "Décisionnaire",
       "Evaluator": "Évaluateur",
       "Influencer": "Influenceur"
@@ -48,7 +37,6 @@
   },
   "presetFilters": {
     "portalUsers": "Utilisateurs Portail",
-    "notPortalUsers": "N'est pas un utilisateur Portail",
-    "accountActive": "Active"
+    "notPortalUsers": "N'est pas un utilisateur Portail"
   }
 }

@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Ime",
-    "status": "Status",
     "target": "Meta",
     "sentAt": "Datum slanja",
     "attemptCount": "Pokušaji",

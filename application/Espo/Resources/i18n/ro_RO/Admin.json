@@ -20,7 +20,6 @@
     "Roles": "Roluri",
     "Portals": "Portaluri",
     "Portal Roles": "Roluri Portaluri",
-    "Portal Users": "Utilizatorii portalului",
     "Outbound Emails": "Email-uri trimise",
     "Group Email Accounts": "Grup Conturi Email",
     "Personal Email Accounts": "Conturi Personale Email",
@@ -52,26 +51,30 @@
     "Notifications": "Notificări",
     "Reset to Default": "Resetează la Implicit",
     "Email Filters": "Filtre Email",
+    "Portal Users": "Utilizatorii portalului",
     "Action History": "Istoric Acțiune",
-    "Label Manager": "Manager Etichetă"
+    "Label Manager": "Manager Etichetă",
+    "System Requirements": "Cerințe de sistem",
+    "PHP Settings": "Setări PHP",
+    "Permissions": "Permisiune"
   },
   "layouts": {
     "list": "Listă",
     "detail": "Detaliu",
     "listSmall": "Listă (Mic)",
     "detailSmall": "Detaliu (Mic)",
-    "detailPortal": "Detaliu (Portal)",
-    "detailSmallPortal": "Detaliu (Mic, Portal)",
-    "listSmallPortal": "Listă (Mic, Portal)",
-    "listPortal": "Listă (Portaluri)",
-    "relationshipsPortal": "Panouri Relație (Portal)",
     "filters": "Filtre Căutare",
     "massUpdate": "Actualizează tot",
     "relationships": "Panouri Relație",
     "sidePanelsDetail": "Panouri Laterale (Detaliu)",
     "sidePanelsEdit": "Panouri Laterale (Editează)",
     "sidePanelsDetailSmall": "Panouri Laterale (Detaliu Mic)",
-    "sidePanelsEditSmall": "Panouri Laterale (Editează Mic)"
+    "sidePanelsEditSmall": "Panouri Laterale (Editează Mic)",
+    "detailPortal": "Detaliu (Portal)",
+    "detailSmallPortal": "Detaliu (Mic, Portal)",
+    "listSmallPortal": "Listă (Mic, Portal)",
+    "listPortal": "Listă (Portaluri)",
+    "relationshipsPortal": "Panouri Relație (Portal)"
   },
   "fieldTypes": {
     "address": "Adresă",
@@ -80,12 +83,9 @@
     "password": "Parolă",
     "personName": "Nume Persoană",
     "autoincrement": "Auto-incrementare",
+    "bool": "Bool",
     "currency": "Valută",
-    "currencyConverted": "Valută (Convertită)",
     "date": "Dată",
-    "datetime": "DatăTimp",
-    "datetimeOptional": "Dată/DatăTimp",
-    "int": "Int",
     "linkMultiple": "Link Multiplu",
     "linkParent": "Link Părinte",
     "phone": "Telefon",
@@ -96,8 +96,10 @@
     "rangeFloat": "Interval Float",
     "rangeCurrency": "Interval Valută",
     "map": "Hartă",
-    "number": "Număr (auto-incrementare)",
-    "colorpicker": "Selector Culoarea"
+    "currencyConverted": "Valută (Convertită)",
+    "colorpicker": "Selector Culoarea",
+    "int": "Int",
+    "number": "Număr (auto-incrementare)"
   },
   "fields": {
     "type": "Tip",
@@ -112,7 +114,6 @@
     "field": "Câmp",
     "translation": "Tranducere",
     "previewSize": "Previzualizare Mărime",
-    "noEmptyString": "Șirul nu poate fi gol",
     "defaultType": "Tip Implicit",
     "seeMoreDisabled": "Dezactivează Text Cut",
     "entityList": "Listă Entitate",
@@ -133,24 +134,20 @@
     "dynamicLogicOptions": "Opțiuni Condiționale",
     "probabilityMap": "Etape Probabilități (%)",
     "readOnly": "Numai-citit",
+    "noEmptyString": "Șirul nu poate fi gol",
     "maxFileSize": "Mărimea Maximă A Fișierului (Mb)"
   },
   "messages": {
-    "upgradeVersion": "EspoCRM se va actualiza la versiunea <strong>{version}</strong>. Vă rugăm așteptați, s-ar putea să dureze puțin.",
-    "upgradeDone": "EspoCRM a fost actualizată la versiunea <strong>{version}</strong>.",
-    "upgradeBackup": "Vă rugăm să faceți o copie de rezervă a EspoCRM înainte de a face actualizarea.",
-    "thousandSeparatorEqualsDecimalMark": "Separatorul de mii nu poate fi același cu separatorul de zecimale.",
-    "userHasNoEmailAddress": "Utilizatorul nu are adresă de email.",
     "selectEntityType": "Selectați tipul entității aflat în meniul din stânga.",
     "selectUpgradePackage": "Selectați pachetul de actualizare",
-    "downloadUpgradePackage": "Descarcă pachetul de actualizare <a href=\"{url}\">here</a>.",
     "selectLayout": "Selectați aspectul dorit din meniul din stanga și editați-l.",
     "selectExtensionPackage": "Selectează pachetul de extensii ",
     "extensionInstalled": " Extenisa {name} {version} a fost instalată. ",
     "installExtension": "Extenisa {name} {version} este gata pentru instalare.",
-    "cronIsNotConfigured": "Activitățiile programate nu rulează. Astfel, email-urile primite, notificările și mementourile nu funcționează. Te rugăm să urmezi <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instructions</a>  pentru a seta o activitate cron. ",
-    "newVersionIsAvailable": " O nouă vesiune de EspoCRM {latestVersion} este disponibilă. ",
-    "newExtensionVersionIsAvailable": "O nouă versiune {latestVersion} din {extensionName} este disponibilă."
+    "upgradeBackup": "Vă rugăm să faceți o copie de rezervă a EspoCRM înainte de a face actualizarea.",
+    "thousandSeparatorEqualsDecimalMark": "Separatorul de mii nu poate fi același cu separatorul de zecimale.",
+    "userHasNoEmailAddress": "Utilizatorul nu are adresă de email.",
+    "newVersionIsAvailable": " O nouă vesiune de EspoCRM {latestVersion} este disponibilă. "
   },
   "descriptions": {
     "settings": "Setările de sistem ale aplicației.",
@@ -163,14 +160,12 @@
     "roles": "Management Roluri.",
     "portals": "Management Portaluri",
     "portalRoles": "Roluri pentru portal.",
-    "portalUsers": "Utilizatorii portalului.",
     "outboundEmails": "Setări SMTP pentru trimitere email-uri.",
     "groupEmailAccounts": "Grupează conturi email IMAP. Importă Email și Email-către-Caz.",
     "personalEmailAccounts": "Conturi utilizatori email",
     "emailTemplates": "Șabloane pentru email-urile trimise.",
     "import": "Importare date din fișier CSV.",
     "layoutManager": "Personalizare aspect (listă, detaliu, editare, căutare, actualizează tot).",
-    "entityManager": "Creează și editează entități personalizate. Gestionează câmpuri și relații.",
     "userInterface": "Configurare UI.",
     "authTokens": "Sesiuni Auth Active. Adresă IP și data ultimei accesări.",
     "authentication": "Setări de autentificare.",
@@ -179,6 +174,8 @@
     "integrations": "Integrează cu serviciile terților. ",
     "notifications": "Notificări pentru setări în aplicație și email.",
     "inboundEmails": "Setări pentru email-urile primite.",
+    "portalUsers": "Utilizatorii portalului.",
+    "entityManager": "Creează și editează entități personalizate. Gestionează câmpuri și relații.",
     "emailFilters": "Mesajele din email care se potrivesc cu filtrul specificat nu o să fie importate.",
     "actionHistory": "Jurnalul acțiunilor utilizatorului.",
     "labelManager": "Personalizează etichetele aplicației."
@@ -195,5 +192,12 @@
     "and": "ȘI",
     "or": "SAU",
     "not": "NU"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Versiune PHP",
+    "requiredMysqlVersion": "Versiune MySQL",
+    "host": "Numele Gazdei",
+    "dbname": "Numele Bazei de Date",
+    "user": "Nume Utilizator"
   }
 }

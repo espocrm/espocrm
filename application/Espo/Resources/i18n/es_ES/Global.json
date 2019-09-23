@@ -18,7 +18,6 @@
     "Template": "Plantilla",
     "Job": "Trabajo",
     "EmailFilter": "Filtro de correo",
-    "Portal": "Portal",
     "PortalRole": "Rol del portal",
     "Attachment": "Adjuntos",
     "EmailFolder": "Carpeta de correo electrónico",
@@ -38,7 +37,6 @@
     "DynamicLogic": "Lógica dinámica",
     "DashletOptions": "Ajustes de cajas",
     "Admin": "Administrador",
-    "Global": "Global",
     "Preferences": "Preferencias",
     "EmailAddress": "Correo electrónico",
     "PhoneNumber": "Número de teléfono"
@@ -47,7 +45,6 @@
     "Email": "Correos",
     "User": "Usuarios",
     "Team": "Equipos",
-    "Role": "Roles",
     "EmailTemplate": "Plantillas de correo",
     "EmailAccount": "Cuentas de correo personales",
     "EmailAccountScope": "Cuentas de correo personales",
@@ -58,7 +55,6 @@
     "Dashboard": "Escritorio",
     "InboundEmail": "Cuentas de correo grupales",
     "Stream": "Historia",
-    "Import": "Resultados de importaciones",
     "Template": "Plantillas",
     "Job": "Trabajos",
     "EmailFilter": "Filtros",
@@ -81,7 +77,6 @@
     "Home": "Inicio",
     "by": "por",
     "Saved": "Guardado",
-    "Error": "Error",
     "Select": "Seleccionar",
     "Not valid": "No válido",
     "Please wait...": "Por favor espere...",
@@ -174,7 +169,6 @@
     "Person": "Persona",
     "First Name": "Nombre",
     "Last Name": "Apellidos",
-    "Original": "Original",
     "You": "Tu",
     "you": "tu",
     "change": "cambiar",
@@ -193,13 +187,11 @@
     "Submit": "Enviar",
     "Close": "Cerrar",
     "Yes": "Si",
-    "No": "No",
     "Value": "Valor",
     "Current version": "Versión actual",
     "List View": "Vista de Lista",
     "Tree View": "Vista de árbol",
     "Unlink All": "Desenlazar todo",
-    "Total": "Total",
     "Print to PDF": "Imprimir PDF",
     "Default": "Por defecto",
     "Number": "Número",
@@ -216,7 +208,12 @@
     "Self-Assign": "Autoasignar",
     "Self-Assigned": "Autosegnado",
     "Return to Application": "Volver a la aplicación",
-    "Select All Results": "Seleccionar todos los resultados"
+    "Select All Results": "Seleccionar todos los resultados",
+    "Expand": "Expandir",
+    "Collapse": "Contraer",
+    "New notifications": "Nuevas notificaciones",
+    "Manage Categories": "Administrar categorías",
+    "Manage Folders": "Administrar carpetas"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -248,7 +245,6 @@
     "checkForNewNotifications": "Comprobar si hay nuevas notificaciones",
     "duplicate": "El registro que está creando parece ser un duplicado",
     "dropToAttach": "Arrastre para adjuntar",
-    "streamPostInfo": "Escriba <strong>@usuario</strong> para mencionar usuarios en el comentario.\n\nLa sintaxis markdown disponible es:\n\n`<code>código</code>`\n**<strong>texto en negritas</strong>**\n*<em>un texto con énfasis</em>*\n~<del>el texto eliminado</del>~\n> Citar bloque\n[nombre del enlace](url)",
     "writeMessageToSelf": "Escribir un mensaje en tu historia",
     "checkForNewNotes": "Comprobar si hay actualizaciones en la historia",
     "internalPost": "El puesto será visto solo por los usuarios internos",
@@ -313,15 +309,13 @@
     "phoneNumberOther": "Teléfono (Otro)",
     "order": "Orden",
     "parent": "Padre",
-    "children": "Hijos",
-    "id": "ID"
+    "children": "Hijos"
   },
   "links": {
     "assignedUser": "Usuario asignado",
     "createdBy": "Creado por",
     "modifiedBy": "Modificado Por",
     "team": "Equipo",
-    "roles": "Roles",
     "teams": "Equipos",
     "users": "Usuarios",
     "parent": "Padre",
@@ -453,8 +447,7 @@
     "salutationName": {
       "Mr.": "Sr.",
       "Mrs.": "Sra.",
-      "Ms.": "Sta.",
-      "Dr.": "Dr."
+      "Ms.": "Sta."
     },
     "language": {
       "af_ZA": "Afrikáans",
@@ -483,7 +476,6 @@
       "gl_ES": "Gallego",
       "gn_PY": "Guaraní",
       "he_IL": "Hebreo",
-      "hi_IN": "Hindi",
       "hr_HR": "Croata",
       "hu_HU": "Hungaro",
       "hy_AM": "Armenio",
@@ -517,13 +509,11 @@
       "sr_RS": "Serbio",
       "sv_SE": "Sueco",
       "sw_KE": "Suajili",
-      "ta_IN": "Tamil",
       "te_IN": "Télugu",
       "th_TH": "Tailandés",
       "tl_PH": "Tagalo",
       "tr_TR": "Turco",
       "uk_UA": "Ucraniano",
-      "ur_PK": "Urdu",
       "vi_VN": "Vietnamita",
       "zh_CN": "Chino Simplificado (China)",
       "zh_HK": "Chino Tradicional (Hong Kong)",
@@ -599,7 +589,6 @@
     "phoneNumber": {
       "Mobile": "Teléfono móvil",
       "Office": "Oficina",
-      "Fax": "Fax",
       "Home": "Hogar",
       "Other": "Otro"
     }
@@ -641,11 +630,9 @@
         "openInNewWindow": "Abrir en nueva ventana"
       },
       "video": {
-        "video": "Video",
         "videoLink": "Enlace al Video",
         "insert": "Insertar Video",
-        "url": "¿URL del Video?",
-        "providers": "(YouTube, Vimeo, Vine, Instagram, or DailyMotion)"
+        "url": "¿URL del Video?"
       },
       "table": {
         "table": "Tabla"
@@ -655,7 +642,6 @@
       },
       "style": {
         "style": "Estilo",
-        "normal": "Normal",
         "blockquote": "Cita",
         "pre": "Código",
         "h1": "Cabecera 1",
@@ -706,17 +692,6 @@
         "redo": "Rehacer"
       }
     }
-  },
-  "themes": {
-    "Espo": "Espo",
-    "Sakura": "Sakura",
-    "Violet": "Violeta",
-    "EspoRtl": "RTL Espo",
-    "EspoVertical": "Espo con barra lateral",
-    "SakuraVertical": "Sakura con barra lateral",
-    "VioletVertical": "Violet con barra lateral",
-    "Hazyblue": "Hazyblue",
-    "HazyblueVertical": "Hazyblue con barra lateral"
   },
   "streamMessagesMale": {
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí mismo"

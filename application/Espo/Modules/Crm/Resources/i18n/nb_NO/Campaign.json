@@ -2,8 +2,6 @@
   "fields": {
     "name": "Navn",
     "description": "Beskrivelse",
-    "status": "Status",
-    "type": "Type",
     "startDate": "Startdato",
     "endDate": "Sluttdato",
     "targetLists": "Målgruppe",
@@ -37,7 +35,6 @@
       "Email": "Epost",
       "Web": "Nettside",
       "Television": "Fjernsyn",
-      "Radio": "Radio",
       "Newsletter": "Nyhetsbrev",
       "Mail": "Post"
     },
@@ -52,7 +49,6 @@
     "Create Campaign": "Opprett kampanje",
     "Target Lists": "Målgruppe",
     "Statistics": "Statistikk",
-    "hard": "hard",
     "soft": "myk",
     "Unsubscribe": "Meld meg av",
     "Mass Emails": "Masseutsendte eposter",

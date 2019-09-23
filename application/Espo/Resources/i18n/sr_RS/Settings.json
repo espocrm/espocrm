@@ -13,9 +13,6 @@
     "currencyList": "Spisak valuta",
     "language": "Jezik",
     "companyLogo": "Logo kompanije",
-    "smtpServer": "Server",
-    "smtpPort": "Port",
-    "ldapPort": "Port",
     "smtpAuth": "Autorizacija",
     "ldapAuth": "Autorizacija",
     "smtpSecurity": "Bezbednost",
@@ -49,10 +46,8 @@
     "theme": "Tema",
     "userThemesDisabled": "Onemogući korisničke teme",
     "emailMessageMaxSize": "E-poruka maksimalna veličina (MB)",
-    "massEmailMaxPerHourCount": "Maks broj e-poruka po satu",
     "personalEmailMaxPortionSize": "Maks veličina uvoza e-poruka za lične naloge",
     "inboundEmailMaxPortionSize": "Maks veličina uvoza e-poruka za grupne naloge",
-    "maxEmailAccountCount": "Maks broj ličnih naloga pošte po korisniku",
     "authTokenLifetime": "Dužina trajanja tokena za pristup (sati)",
     "authTokenMaxIdleTime": "Maksimalno trajanje tokena za logovanje na čekanju (sati)",
     "dashboardLayout": "Izgled radne površine (standardan)",
@@ -87,17 +82,13 @@
     "currencyFormat": "Format valute",
     "currencyDecimalPlaces": "Valuta decimale",
     "aclStrictMode": "ACL strogo",
-    "followCreatedEntities": "Follow created records",
-    "aclAllowDeleteCreated": "Allow to remove created records"
+    "massEmailMaxPerHourCount": "Maks broj e-poruka po satu",
+    "maxEmailAccountCount": "Maks broj ličnih naloga pošte po korisniku"
   },
   "options": {
     "weekStart": {
       "0": "nedelja",
       "1": "ponedeljak"
-    },
-    "currencyFormat": {
-      "1": "10 USD",
-      "2": "$10"
     }
   },
   "tooltips": {
@@ -113,7 +104,6 @@
     "ldapAuth": "Akreditacije za pristup LDAP serveru.",
     "ldapUserNameAttribute": "Atribut za identifikaciju korisnika. \nNpr. \"userPrincipalName\" ili \"sAMAccountName\" za aktivni folder, \"uid\" za OpenLDAP.",
     "ldapUserObjectClass": "ObjectClass atribut za pretraživanje korisnika. Npr. \"osoba\" za AD, \"inetOrgPerson \" za OpenLDAP.",
-    "ldapAccountCanonicalForm": "Vrsta forme vašeg naloga. Imate 4 opcije:<br>- 'Dn' - forma u formatu 'CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - the form 'tester'.<br>- 'Backslash' - the form 'COMPANY\\tester'.<br>- 'Principal' - the form 'tester@company.com'.",
     "ldapBindRequiresDn": "Opcija da se korisničko ime formatira u DN formatu.",
     "ldapBaseDn": "Podrazumevana DN baza za pretragu korisnika. Npr. \"OU=korisnici,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "Opcija da podeli ime sa domenom.",
@@ -132,13 +122,10 @@
     "b2cMode": "Po defaultu EspoCRM je prilagođena za B2B. Možete ga prebaciti na B2C.",
     "currencyDecimalPlaces": "Broj decimalnih mesta. Ako je prazno, onda će biti prikazana sva decilana mesta.",
     "aclStrictMode": "Uključeno: Pristup entitetima će biti zabranjen ako nije određeno u ulogama.\n\nIsključeno: Pristup entitetima će biti dozvoljen ako nije određeno u ulogama",
-    "outboundEmailIsShared": "Dozvolite korisnicima da šalju poruke sa ove adrese.",
-    "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access."
+    "outboundEmailIsShared": "Dozvolite korisnicima da šalju poruke sa ove adrese."
   },
   "labels": {
     "System": "Sistem",
-    "Locale": "Locale",
-    "SMTP": "SMTP",
     "Configuration": "Konfiguracija",
     "In-app Notifications": "Obaveštenja u aplikaciji",
     "Email Notifications": "Obaveštenja e-porukama",

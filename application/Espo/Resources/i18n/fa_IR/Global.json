@@ -655,7 +655,7 @@
     "postTargetSelfAndOthers": "{user} به {target} ارسال شده و خودش"
   },
   "themes": {
-    "EspoRtl": "RTL G-crm",
+    "EspoRtl": "RTL EspoCRM",
     "Espo": "\n"
   },
   "listViewModes": {

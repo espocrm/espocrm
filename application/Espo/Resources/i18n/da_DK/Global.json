@@ -254,7 +254,6 @@
     "fieldShouldBeLess": "{field} skal være mindre end {value}",
     "fieldShouldBeGreater": "{field} skal være større end {value}",
     "fieldIsUploading": "Uploading er igang",
-    "streamPostInfo": "Skriv <strong>@username</strong> for at nævne brugere i posten\n\nTilgængelig syntax:\n`<code>kode</code>`\n**<strong>fed tekst</strong>**\n*<em>markeret tekst</em>*\n~<del>gennemstreget tekst</del>~\n> blokcitering\n[link text](url) ",
     "erasePersonalDataConfirmation": "Tjekkede felter vil bliver slettet permanent. Er du sikker?",
     "massPrintPdfMaxCountError": "Kan ikke printe mere end {maxCount} poster",
     "fieldValueDuplicate": "Dupliker værdi",

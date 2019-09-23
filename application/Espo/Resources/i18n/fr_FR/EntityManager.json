@@ -1,14 +1,10 @@
 {
   "labels": {
     "Fields": "Champs",
-    "Relationships": "Relations",
-    "Schedule": "Schedule",
-    "Log": "Log",
-    "Formula": "Formula"
+    "Relationships": "Relations"
   },
   "fields": {
     "name": "Nom",
-    "type": "Type",
     "labelSingular": "Libellé singulier",
     "labelPlural": "Libellé pluriel",
     "stream": "Flux",
@@ -24,21 +20,13 @@
     "linkMultipleField": "Lier un champ multiple",
     "linkMultipleFieldForeign": "Lier un champ multiple étranger",
     "disabled": "Désactivé",
-    "textFilterFields": "Champs de filtre textuel",
-    "audited": "Audited",
-    "auditedForeign": "Foreign Audited",
-    "statusField": "Status Field",
-    "beforeSaveCustomScript": "Before Save Custom Script"
+    "textFilterFields": "Champs de filtre textuel"
   },
   "options": {
     "type": {
       "": "Aucun",
-      "Base": "Base",
       "Person": "Personne",
-      "CategoryTree": "Arborescence catégories",
-      "Event": "Event",
-      "BasePlus": "Base Plus",
-      "Company": "Company"
+      "CategoryTree": "Arborescence catégories"
     },
     "linkType": {
       "manyToMany": "Plusieurs-à-Plusieurs",
@@ -56,14 +44,5 @@
     "entityCreated": "L'entité a bien été créée",
     "linkAlreadyExists": "Conflit: lien déjà existant.",
     "linkConflict": "Conflit de nom : un lien ou un champ portant ce nom existe déjà. "
-  },
-  "tooltips": {
-    "statusField": "Updates of this field are logged in stream.",
-    "textFilterFields": "Fields used by text search.",
-    "stream": "Whether entity has a Stream.",
-    "disabled": "Check if you don't need this entity in your system.",
-    "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
-    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
-    "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel."
   }
 }

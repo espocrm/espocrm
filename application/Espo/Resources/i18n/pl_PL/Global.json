@@ -219,8 +219,7 @@
     "fieldShouldBeDate": "{field} powinno być poprawną datą",
     "fieldShouldBeDatetime": "{field} powinno być poprawną datą/czasem",
     "fieldShouldBeLess": "{field} powinno być mniejsze niż {value}",
-    "fieldShouldBeGreater": "{field} powinno być większe niż {value}",
-    "streamPostInfo": "Wpisz <strong>@użytkownik</strong> aby zaznaczyć użytkownika w poście.\n\nDostępne znaczniki:\n`<code>kod</code>`\n**<strong>pogrubiony</strong>**\n*<em>pochylony</em>*\n~<del>skasowany</del>~\n> blockquote\n[link text](url)"
+    "fieldShouldBeGreater": "{field} powinno być większe niż {value}"
   },
   "boolFilters": {
     "onlyMy": "Tylko Moje",

@@ -39,7 +39,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--هیچ کدام--",
       "Decision Maker": "تصمیم ساز",
       "Evaluator": "ارزیاب",
       "Influencer": "اینفلوئنسر"

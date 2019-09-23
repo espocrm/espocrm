@@ -78,11 +78,10 @@
     "1045": "Vartotojui prieiga yra uždrausta ",
     "1049": "Nežinoma duomenų bazė",
     "2005": "Nežinomas MySQL serverio kompiuteris",
-    "Bad init Permission": "Leidimas nesuteiktas \"{*}\" katalogui. Prašome nustatyti 775 teises \"{*}\" arba tiesiog paleiskite šią komandą į terminalą <pre> <b> (C) </ b> </ pre>\nOperacija neleidžiama? Išbandykite šį: {CSU}",
     "Some errors occurred!": "Įvyko kelios klaidos!",
     "phpVersion": "EspoCRM nepalaiko jūsų PHP versijos, bent jau atnaujinkite iki PHP {minVersion}",
     "requiredMysqlVersion": "Jūsų \"MySQL\" versija nepalaikoma EspoCRM, prašome atnaujinti bent iki \"MySQL\" (minVersion)",
-    "The PHP extension was not found...": "PHP klaida: plėtinys <b> {extName} </ b> nerastas.",
+    "The PHP extension was not found...": "PHP klaida: plėtinys <b> {extName} </b> nerastas.",
     "All Settings correct": "Visi nustatymai yra teisingi",
     "Failed to connect to database": "Nepavyko prisijungti prie duomenų bazės",
     "PHP version": "PHP versija",
@@ -97,8 +96,6 @@
     "Cannot create user": "Negalima sukurti vartotojo",
     "Permission denied": "Leidimas nesuteiktas",
     "Permission denied to": "Leidimas nesuteiktas",
-    "permissionInstruction": "<br>Paleiskite tai terminale<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Operacija neleidžiamaa? Išbandykite šį: <br>{CSU}",
     "Can not save settings": "Nepavyko išsaugoti nustatymų",
     "Cannot save preferences": "Negalima išsaugoti nuostatų",
     "Thousand Separator and Decimal Mark equal": "Tūkstančių atskyriklis ir dešimtainis ženklas negali būti vienodi",
@@ -109,12 +106,12 @@
   "options": {
     "modRewriteInstruction": {
       "apache": {
-        "windows": "<br> <pre> 1. Suraskite httpd.conf failą (paprastai jį rasite aplanke, pavadintame conf, config arba kažką panašaus į šias eilutes) <br>\n2. Failo httpd.conf viduje atkomentuokite eilutę LoadModule rewrite_module modules / mod_rewrite.so (priešais liniją nuimkite ženkliuką \"#\") <br>\n3. Taip pat raskite eilutę ClearModuleList yra nekomentuotų, tada suraskite ir įsitikinkite, kad eilutė AddModule mod_rewrite.c nėra komentuojama.\n</ pre>",
-        "linux": "<br> <br> 1. Įgalinti \"mod_rewrite\". Norėdami tai padaryti, paleiskite tas komandas terminale: <pre> (APACHE1) </ pre> <br> 2. Įgalinti .htaccess palaikymą. Pridėti / redaguoti serverio konfigūracijos nustatymus (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf): <pre> (APACHE2) </ pre> \nVėliau paleiskite šią komandą į terminalą: <pre> (APACHE3) </ pre> <br> 3. Pabandykite įtraukti RewriteBase kelią, atidarykite failą {API_PATH} .htaccess ir pakeiskite šią eilutę: <pre> (APACHE4) </ pre> to <pre> (APACHE5) </ pre> <br> Daugiau informacijos rasite apsilankę <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> EspoCRM konfigūracija \"Apache\" </a>. <br> <br>"
+        "windows": "<br> <pre>1. Suraskite httpd.conf failą (paprastai jį rasite aplanke, pavadintame conf, config arba kažką panašaus į šias eilutes) <br>\n2. Failo httpd.conf viduje atkomentuokite eilutę LoadModule rewrite_module modules / mod_rewrite.so (priešais liniją nuimkite ženkliuką \"#\") <br>\n3. Taip pat raskite eilutę ClearModuleList yra nekomentuotų, tada suraskite ir įsitikinkite, kad eilutė AddModule mod_rewrite.c nėra komentuojama.\n</pre>",
+        "linux": "<br> <br> 1. Įgalinti \\\"mod_rewrite\\\". Norėdami tai padaryti, paleiskite tas komandas terminale: <pre>{APACHE1} </pre> <br> 2. Įgalinti .htaccess palaikymą. Pridėti / redaguoti serverio konfigūracijos nustatymus (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf): <pre>{APACHE2}</pre> \\nVėliau paleiskite šią komandą į terminalą: <pre>{APACHE3}</pre> <br> 3. Pabandykite įtraukti RewriteBase kelią, atidarykite failą {API_PATH} .htaccess ir pakeiskite šią eilutę: <pre>{APACHE4}</pre> to <pre>{APACHE5}</pre> <br> Daugiau informacijos rasite apsilankę <a href=\\\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\\\" target=\\\"_blank\\\"> EspoCRM konfigūracija \\\"Apache\\\" </a>. <br> <br>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</ pre> <br> Daugiau informacijos rasite <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx serverio konfigūracijoje EspoCRM </ a>. <br> <br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</ pre> <br> Daugiau informacijos rasite <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx serverio konfigūracijoje EspoCRM </ a>. <br> <br>"
+        "linux": "<br>\\n<pre>\\n{NGINX}\\n</pre> <br> Daugiau informacijos rasite <a href=\\\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\\\" target=\\\"_blank\\\"> Nginx serverio konfigūracijoje EspoCRM </a>. <br> <br>",
+        "windows": "<br>\\n<pre>\\n{NGINX}\\n</pre> <br> Daugiau informacijos rasite <a href=\\\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\\\" target=\\\"_blank\\\"> Nginx serverio konfigūracijoje EspoCRM </a>. <br> <br>"
       }
     },
     "modRewriteTitle": {

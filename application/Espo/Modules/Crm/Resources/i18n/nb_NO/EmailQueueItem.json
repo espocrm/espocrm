@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "target": "Mål",
     "sentAt": "Dato sendt",
     "attemptCount": "Forsøk",

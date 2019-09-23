@@ -25,8 +25,6 @@
     "stage": {
       "Prospecting": "Undersøkes",
       "Qualification": "Kvalitetskontrolleres",
-      "Proposal": "Prisforslag",
-      "Negotiation": "Forhandler",
       "Needs Analysis": "Trenger analyse",
       "Value Proposition": "Verdivurdering",
       "Id. Decision Makers": "Ser etter beslutningstagere",
@@ -34,7 +32,9 @@
       "Proposal/Price Quote": "Prisforslag/-nivå foreslått",
       "Negotiation/Review": "Forhandler/gjennomgår",
       "Closed Won": "Vunnet og lukket",
-      "Closed Lost": "Tapt og lukket"
+      "Closed Lost": "Tapt og lukket",
+      "Proposal": "Prisforslag",
+      "Negotiation": "Forhandler"
     }
   },
   "labels": {

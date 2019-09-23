@@ -36,7 +36,11 @@
     "dbHostName": "Сервер БД",
     "dbName": "Имя БД",
     "dbUserName": "Имя пользователя БД",
-    "OK": "ОК"
+    "OK": "ОК",
+    "SetupConfirmation page title": "Системные Требования",
+    "PHP Configuration": "Конфигурация PHP",
+    "MySQL Configuration": "Конфигурация Базы Данных",
+    "Permission Requirements": "Права Доступа"
   },
   "fields": {
     "Choose your language": "Выберите ваш язык",
@@ -73,7 +77,6 @@
     "1045": "Пользователю отказано в доступе",
     "1049": "Неизвестная БД",
     "2005": "Неизвестный MySQL сервер",
-    "Bad init Permission": "Запрещен доступ к директории \"{*}\". Пожалуйста, установите права 775 для \"{*}\" или просто выполните эту команду в терминале <pre><b>{C}</b></pre>\n\tОперация не разрешена? Попробуйте это: {CSU}",
     "Some errors occurred!": "Произошло несколько ошибок!",
     "phpVersion": "Установленная версия PHP не поддерживается EspoCRM, обновите РНР по крайней мере до версии {MinVersion}",
     "requiredMysqlVersion": "Установленная версия MySQL не поддерживается EspoCRM, обновите MySQL по крайней мере до версии {minVersion}",
@@ -92,8 +95,6 @@
     "Cannot create user": "Не удается создать пользователя",
     "Permission denied": "Доступ запрещен",
     "Permission denied to": "Доступ запрещен",
-    "permissionInstruction": "<br>Выполните это в терминале<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Операция не разрешена? Попробуйте это: <br>{CSU}",
     "Can not save settings": "Невозможно сохранить настройки",
     "Cannot save preferences": "Невозможно сохранить настройки",
     "Thousand Separator and Decimal Mark equal": "Тысячный разделитель не может быть таким же как и десятичный разделитель",
@@ -118,5 +119,12 @@
       "microsoft-iis": "Ошибка API: EspoCRM API недоступен.<br> Возможная проблема: не подключен модуль \"URL Rewrite\". Пожалуйста, проверьте и подключите модуль \"URL Rewrite\" к IIS серверу.",
       "default": "Ошибка API: EspoCRM API недоступен.<br> Возможная проблема: не подключен модуль Rewrite. Пожалуйста, проверьте и подключите к серверу модуль Rewrite (например mod_rewrite в Apache) и поддержку .htaccess."
     }
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Версия PHP",
+    "requiredMysqlVersion": "Версия MySQL",
+    "host": "Сервер",
+    "dbname": "Имя БД",
+    "user": "Имя пользователя"
   }
 }

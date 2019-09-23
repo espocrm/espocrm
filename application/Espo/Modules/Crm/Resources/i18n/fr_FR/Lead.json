@@ -2,12 +2,10 @@
   "labels": {
     "Converted To": "Converti en",
     "Create Lead": "Créer un prospect",
-    "Convert": "Convertir",
-    "convert": "convert"
+    "Convert": "Convertir"
   },
   "fields": {
     "name": "Nom",
-    "emailAddress": "Email",
     "title": "Titre",
     "website": "Site internet",
     "phoneNumber": "Téléphone",
@@ -15,31 +13,21 @@
     "doNotCall": "Ne pas appeler",
     "address": "Adresse",
     "status": "Statut",
-    "source": "Source",
     "opportunityAmount": "Montant en jeu de l'opportunité",
     "opportunityAmountConverted": "Montant en jeu de l'opportunité (converti)",
-    "description": "Description",
     "createdAccount": "Compte",
-    "createdContact": "Contact",
     "createdOpportunity": "Opportunité",
     "campaign": "Campagne",
     "targetLists": "Listes de cibles",
-    "targetList": "Liste de cibles",
-    "industry": "Industry",
-    "acceptanceStatus": "Acceptance Status",
-    "opportunityAmountCurrency": "Opportunity Amount Currency",
-    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    "targetList": "Liste de cibles"
   },
   "links": {
     "targetLists": "Listes de cibles",
     "campaignLogRecords": "Journaux de campagne",
     "campaign": "Campagne",
     "createdAccount": "Compte",
-    "createdContact": "Contact",
     "createdOpportunity": "Opportunité",
-    "cases": "Tickets",
-    "documents": "Documents"
+    "cases": "Tickets"
   },
   "options": {
     "status": {
@@ -47,13 +35,11 @@
       "Assigned": "Assigné",
       "In Process": "En cours",
       "Converted": "Converti",
-      "Recycled": "Recyclé",
-      "Dead": "Dead"
+      "Recycled": "Recyclé"
     },
     "source": {
       "": "Aucun",
       "Call": "Appel",
-      "Email": "Email",
       "Existing Customer": "Client existant",
       "Partner": "Partenaire",
       "Public Relations": "Relations publiques",

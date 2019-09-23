@@ -20,9 +20,9 @@
       "CheckNewVersion": "بررسی برای ورژن جدید"
     },
     "cronSetup": {
-      "linux": "توجه: این خط را به فایل crontab اضافه کنید تا G-crm Scheduled Jobs را اجرا کنید:",
-      "mac": "توجه: این خط را به فایل crontab اضافه کنید تا G-crm Scheduled Jobs را اجرا کنید:",
-      "windows": "نکته: یک فایل دسته ای با دستورات زیر برای اجرای برنامه های G-crm Scheduled با استفاده از وظایف برنامه ریزی شده ویندوز ایجاد کنید:"
+      "linux": "توجه: این خط را به فایل crontab اضافه کنید تا EspoCRM Scheduled Jobs را اجرا کنید:",
+      "mac": "توجه: این خط را به فایل crontab اضافه کنید تا EspoCRM Scheduled Jobs را اجرا کنید:",
+      "windows": "نکته: یک فایل دسته ای با دستورات زیر برای اجرای برنامه های EspoCRM Scheduled با استفاده از وظایف برنامه ریزی شده ویندوز ایجاد کنید:"
     },
     "status": {
       "Active": "فعال",

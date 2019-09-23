@@ -14,16 +14,10 @@
     "Congratulation! Welcome to EspoCRM": "¡Felicitaciones! EspoCRM (en Español) se ha instalado correctamente.",
     "More Information": "Para más información, por favor visite nuestro {BLOG} y síguenos en {TWITTER}.<br><br>Si tienes alguna sugerencia o pregunta, por favor realízala en el {FORUM}.",
     "share": "Si te gusta EspoCRM, compartelo con tus amigos. Deja que sepan de este genial producto.",
-    "blog": "blog",
-    "twitter": "twitter",
     "forum": "foro",
     "Installation Guide": "Guía de instalación",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
     "Locale": "Localización",
     "Outbound Email Configuration": "Ajustes de correo saliente",
-    "SMTP": "SMTP",
     "Start": "Comenzar",
     "Back": "Anterior",
     "Next": "Siguiente",
@@ -33,16 +27,13 @@
     "Test settings": "Probar conexión",
     "Database Settings Description": "Ingresa la información de conexión a tu Base de Datos MySQL (servidor, usuario y contraseña). Puedes especificar el puerto del servidor por ejemplo localhost:3306.",
     "Install": "Instalar",
-    "SetupConfirmation page title": "Ajustes Recomendados",
-    "PHP Configuration": "Ajustes PHP Recomendados",
-    "MySQL Configuration": "Configuración MySQL",
     "Configuration Instructions": "Instrucciones de Configuración",
     "phpVersion": "Versión PHP",
     "requiredMysqlVersion": "Versión MySQL",
     "dbHostName": "Servidor (usualmente localhost)",
     "dbName": "Nombre de la Base de Datos",
     "dbUserName": "Usuario de la Base de Datos",
-    "OK": "OK"
+    "Permission Requirements": "Permisos"
   },
   "fields": {
     "Choose your language": "Seleccione su idioma",
@@ -79,11 +70,9 @@
     "1045": "Acceso denegado para el usuario",
     "1049": "Base de Datos Desconocida",
     "2005": "Servidor MySQL Desconocido",
-    "Bad init Permission": "Permiso denegado para directorio \"{*}\". Por favor establecer 775 para \"{*}\" o solo ejecute este comando en la terminal <pre><b>{C}</b></pre>\n\t¿Operacion no permitida? Intenta esta otra: {CSU}",
     "Some errors occurred!": "¡Algunos errores ocurrieron!",
     "phpVersion": "Su versión de PHP no está soportada por EspoCRM,por favor actualizar  a PHP{minVersion} por lo menos",
     "requiredMysqlVersion": "Su versión de MySQL no está soportada por EspoCRM,por favor actualizar  a MySQL{minVersion} por lo menos",
-    "requiredMariadbVersion": "Su versión de MariaDB no está soportada por EspoCRM,por favor actualizar  a MariaDB {minVersion} por lo menos",
     "The PHP extension was not found...": "PHP Error: Extensión <b>{extName}</b> no encontrada.",
     "All Settings correct": "Todas los ajustes son correctos",
     "Failed to connect to database": "Fallo al conectar a la base de datos",
@@ -96,12 +85,9 @@
     "buildDatabase error": "Error al construir la base de datos",
     "createUser error": "Error al crear el usuario",
     "checkAjaxPermission error": "Error al comprobar los permisos de AJAX",
-    "Ajax failed": "Falló la consulta AJAX",
     "Cannot create user": "No se puede crear el usuario",
     "Permission denied": "Permiso denegado",
     "Permission denied to": "Permiso denegado",
-    "permissionInstruction": "<br>Ejecutar esto en terminal<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "¿Operacion no permitida? Intenta Esto: <br>{CSU}",
     "Can not save settings": "No se pueden guardar los ajustes",
     "Cannot save preferences": "No se puede grabar preferencias",
     "Thousand Separator and Decimal Mark equal": "El separador de miles y el separador decimal no pueden ser iguales",
@@ -110,10 +96,6 @@
     "mysqlSettingError": "EspoCRM requiere que la configuración de MySQL \"{NAME}\" sea establecido a {VALUE}"
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
-    },
     "modRewriteInstruction": {
       "apache": {
         "windows": "<br> <pre>1. Encontrar el archivo httpd.conf (generalmente lo encontrará en una carpeta llamada conf, config o o algo similar a esas líneas)<br>\n2. Dentro del archivo httpd.conf descomentamos la línea LoadModule rewrite_module modules/mod_rewrite.so (eliminar el '#' que está al comienzo de la línea)<br>\n3. También encuentre que la línea ClearModuleList no esté comentada después busque y asegurese que la línea  AddModule mod_rewrite.c no está comentada tampoco.\n</pre>",
@@ -130,5 +112,11 @@
       "microsoft-iis": "API Error: EspoCRM API inaccesible.<br> Problema posible: \"URL Rewrite\" desactivado. Por favor revisar y activar \"URL Rewrite\" Módulo en Servidor IIS",
       "default": "API Error: EspoCRM API inaccesible.<br> Problema posible: Módulo Rewrite desactivado.Por favor revisar y activar el Módulo Rewrite en su servidor (e.g. mod_rewrite en Apache) y en el soporte .htaccess"
     }
+  },
+  "systemRequirements": {
+    "requiredMysqlVersion": "Versión MySQL",
+    "host": "Nombre de host",
+    "dbname": "Nombre de la Base de Datos",
+    "user": "Nombre de usuario"
   }
 }

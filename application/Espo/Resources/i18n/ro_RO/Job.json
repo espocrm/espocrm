@@ -4,11 +4,11 @@
     "attempts": "Încercări rămase",
     "failedAttempts": "Încercări nereușite",
     "serviceName": "Serviciu",
-    "method": "Metodă (depreciată)",
     "methodName": "Metodă",
     "scheduledJob": "Activitate Planificată",
-    "scheduledJobJob": "Nume Activitate Planificată",
-    "data": "Date"
+    "data": "Date",
+    "method": "Metodă (depreciată)",
+    "scheduledJobJob": "Nume Activitate Planificată"
   },
   "options": {
     "status": {

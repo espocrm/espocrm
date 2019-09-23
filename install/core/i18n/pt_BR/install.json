@@ -19,18 +19,26 @@
     "Next": "Avançar",
     "Go to EspoCRM": "Ir para o EspoCRM",
     "Re-check": "Verificar novamente",
-    "Test settings": "Testar Conexão"
+    "Test settings": "Testar Conexão",
+    "phpVersion": "Versão do PHP",
+    "requiredMysqlVersion": "Versão do MySQL",
+    "dbHostName": "Nome de anfitrião",
+    "dbName": "Nome do banco de dados",
+    "SetupConfirmation page title": "Requisitos de sistema",
+    "PHP Configuration": "Configurações do PHP",
+    "MySQL Configuration": "Configurações do banco de dados",
+    "Permission Requirements": "Permissões"
   },
   "fields": {
     "Choose your language": "Escolha seu idioma",
     "Database Name": "Nome do banco de dados",
-    "Host Name": "Servidor do banco de dados",
+    "Host Name": "Nome de anfitrião",
     "Port": "Porta",
     "smtpPort": "Porta",
     "Database User Name": "Usuário do banco de dados",
     "Database User Password": "Senha",
     "Database driver": "Driver do banco de dados",
-    "User Name": "Usuário",
+    "User Name": "Nome de Usuário",
     "Password": "Senha",
     "smtpPassword": "Senha",
     "Confirm Password": "Confirme sua senha",
@@ -42,7 +50,7 @@
     "Time Zone": "Fuso horário",
     "First Day of Week": "Primeiro dia da semana",
     "Thousand Separator": "Separador de milhar",
-    "Decimal Mark": "Macador decimal",
+    "Decimal Mark": "Marcador decimal",
     "Default Currency": "Moeda padrão",
     "Currency List": "Lista de moedas",
     "Language": "Idioma",
@@ -53,8 +61,17 @@
     "emailAddress": "E-mail"
   },
   "messages": {
-    "1045": "Access denied for user",
+    "1045": "Acesso do usuário negado",
     "The PHP extension was not found...": "The <b>{extName}</b> PHP extension was not found...",
+    "All Settings correct": "Todas as configurações estão corretas",
+    "PHP version": "Versão do PHP",
     "Cannot create user": "Cannot create user"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Versão do PHP",
+    "requiredMysqlVersion": "Versão do MySQL",
+    "host": "Nome de anfitrião",
+    "dbname": "Nome do banco de dados",
+    "user": "Nome de Usuário"
   }
 }

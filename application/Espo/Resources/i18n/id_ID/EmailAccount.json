@@ -1,13 +1,9 @@
 {
   "fields": {
     "name": "Nama",
-    "status": "Status",
-    "host": "Host",
     "username": "Nama pengguna",
     "password": "Kata sandi",
-    "port": "Port",
     "monitoredFolders": "Folder yang dipantau",
-    "ssl": "SSL",
     "fetchSince": "Ambil Sejak",
     "emailAddress": "Alamat email",
     "sentFolder": "Folder terkirim",
@@ -25,7 +21,6 @@
   },
   "labels": {
     "Create EmailAccount": "Buat Akun Email",
-    "IMAP": "IMAP",
     "Main": "Utama",
     "Test Connection": "Tes koneksi"
   },

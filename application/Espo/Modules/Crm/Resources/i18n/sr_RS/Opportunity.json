@@ -27,8 +27,6 @@
     "stage": {
       "Prospecting": "Izviđanje",
       "Qualification": "Kvalifikacija",
-      "Proposal": "Predlog",
-      "Negotiation": "Pregovori",
       "Needs Analysis": "Analiza potrebna",
       "Value Proposition": "Dobitak",
       "Id. Decision Makers": "Id. Donosioci odluka",
@@ -36,7 +34,9 @@
       "Proposal/Price Quote": "Predlog/Cena ponuda",
       "Negotiation/Review": "Pregovori/pregled",
       "Closed Won": "Zatvorena Pobednik",
-      "Closed Lost": "Zatvorena izgubljeno"
+      "Closed Lost": "Zatvorena izgubljeno",
+      "Proposal": "Predlog",
+      "Negotiation": "Pregovori"
     }
   },
   "labels": {

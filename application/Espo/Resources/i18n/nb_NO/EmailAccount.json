@@ -1,13 +1,10 @@
 {
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "host": "Tjener",
     "username": "Brukernavn",
     "password": "Passord",
-    "port": "Port",
     "monitoredFolders": "Overvåkede mapper",
-    "ssl": "SSL",
     "fetchSince": "Hent fra dato",
     "emailAddress": "Epostadresse",
     "sentFolder": "Sendt-mappe",
@@ -37,8 +34,7 @@
     "IMAP": "IMAP-innstillinger",
     "Main": "Hovedinnstillinger",
     "Test Connection": "Test tilkobling",
-    "Send Test Email": "Send testepost",
-    "SMTP": "SMTP"
+    "Send Test Email": "Send testepost"
   },
   "messages": {
     "couldNotConnectToImap": "Kunne ikke koble til IMAP-tjener",

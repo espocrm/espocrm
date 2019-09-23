@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Nome",
-    "userName": "Usuário",
+    "userName": "Nome de Usuário",
     "title": "Título",
     "isAdmin": "Administrador",
     "defaultTeam": "Time Padrão",
@@ -63,7 +63,8 @@
     "userNameEmailAddressNotFound": "Usuário / E-mail não localizados",
     "forbidden": "Proibido, por favor tente mais tarde",
     "uniqueLinkHasBeenSent": "Um link único foi enviado para o endereço de e-mail informado.",
-    "passwordChangedByRequest": "A senha foi atualizada."
+    "passwordChangedByRequest": "A senha foi atualizada.",
+    "userNameExists": "Nome de Usuário"
   },
   "boolFilters": {
     "onlyMyTeam": "Apenas meus time"

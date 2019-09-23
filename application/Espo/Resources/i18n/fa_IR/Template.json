@@ -27,6 +27,9 @@
     "placeholders": {
       "today": "امروز (تاریخ)",
       "now": "اکنون (تاریخ-زمان)"
+    },
+    "pageFormat": {
+      "Custom": "سفارشی"
     }
   }
 }

@@ -19,7 +19,6 @@
     "Rebuild": "Re-izradi",
     "Teams": "Timovi",
     "Roles": "Uloge",
-    "Portal": "Portal",
     "Portals": "Portali",
     "Portal Roles": "Uloge za portal",
     "Outbound Emails": "Odlazeća e-pošta",
@@ -56,7 +55,8 @@
     "Email Filters": "Filteri za e-poštu",
     "Portal Users": "Korisnici portala",
     "Action History": "Istorija akcija",
-    "Label Manager": "Menadžer naziva"
+    "Label Manager": "Menadžer naziva",
+    "Permissions": "Dovolenie"
   },
   "layouts": {
     "list": "Lista",
@@ -82,18 +82,14 @@
     "bool": "Tačno/Netačno",
     "currency": "Valuta",
     "date": "Datum",
-    "datetime": "Datum i vreme",
-    "datetimeOptional": "Datum/Datum i vreme",
     "email": "E-pošta",
     "enum": "Lista",
     "enumInt": "Lista celih brojeva",
     "enumFloat": "Lista decimalnih brojeva",
     "float": "Decimalni broj",
-    "int": "Celi broj",
     "link": "Veza",
     "linkMultiple": "Višestruka veza",
     "linkParent": "Veza starija",
-    "multienim": "Multilista",
     "phone": "Telefon",
     "text": "Tekst",
     "url": "URL adresa",
@@ -108,8 +104,9 @@
     "wysiwyg": "ŠVTD",
     "map": "Mapa",
     "currencyConverted": "Valuta (konvertovana)",
-    "number": "Broj",
-    "colorpicker": "Izbornik boja"
+    "colorpicker": "Izbornik boja",
+    "int": "Celi broj",
+    "number": "Broj"
   },
   "fields": {
     "type": "Tip",
@@ -123,7 +120,6 @@
     "before": "Pre (polja)",
     "link": "Veza",
     "field": "Polje",
-    "min": "Min",
     "max": "Maks",
     "translation": "Prevod",
     "previewSize": "Veličina prikaza",
@@ -156,17 +152,13 @@
   "messages": {
     "selectEntityType": "Izaberite tip entiteta u levom meniju.",
     "selectUpgradePackage": "Izaberi paket nadogradnje",
-    "downloadUpgradePackage": "Preuzmi paket nadogradnje <a href=\"{url}\">ovde</a>.",
     "selectLayout": "Izaberi željeni izgled u levom meniju i uredi ga.",
     "selectExtensionPackage": "Izaberi paket ekstenzije",
     "extensionInstalled": "Ekstenzija {name} {version} je instalirana.",
     "installExtension": "Ekstenzija {name} {version} je spremna za instalaciju.",
-    "upgradeVersion": "EspoCRM će biti unapređen na verziju na <strong>{version}</ strong>. Budite strpljivi jer to može potrajati.",
-    "upgradeDone": "EspoCRM je unapređen na verziju na <strong>{version}</strong>,.",
     "upgradeBackup": "Preporučujemo pravljenje rezervne kopije EspoCRM datoteka i podataka pre nadogradnje.",
     "thousandSeparatorEqualsDecimalMark": "Oznaka za hiljade ne može biti ista kao decimalna oznaka.",
-    "userHasNoEmailAddress": "Korisnik nema e-mail adresu.",
-    "uninstallConfirmation": "Da li ste sigurni da želite da deinstalirate ekstenziju?"
+    "userHasNoEmailAddress": "Korisnik nema e-mail adresu."
   },
   "descriptions": {
     "settings": "Sistemska podešavanja aplikacije.",
@@ -207,9 +199,11 @@
       "large": "Veliko"
     }
   },
-  "logicalOperators": {
-    "and": "AND",
-    "or": "OR",
-    "not": "NOT"
+  "systemRequirements": {
+    "requiredPhpVersion": "PHP verzija",
+    "requiredMysqlVersion": "MySQL verzija",
+    "host": "Ime hosta",
+    "dbname": "Ime baze",
+    "user": "Korisničko ime"
   }
 }

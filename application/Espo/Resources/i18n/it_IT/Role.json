@@ -15,9 +15,11 @@
   "tooltips": {
     "assignmentPermission": "Permette di limitare la possibilità di assegnare record ed inviare messaggi ad altri utenti \n\ntutto - nessuna restrizione\n\nteam - può assegnare e postare solo al proprio team\n\nno - può assegnare e postare solo a sé stesso",
     "userPermission": "Permette di limitare agli utenti la possibilità di visualizzare le attività, il calendario ed il flusso attività, di altri utenti\n\ntutto - tutto visualizzabile\n\nteam - visualizzabili le sole attività del proprio team\n\nno - nulla di visualizzabile",
+    "portalPermission": "Definisce un accesso alle informazioni del portale, capacità di pubblicare messaggi agli utenti del portale.",
     "groupEmailAccountPermission": "Definisce un accesso agli account di posta elettronica di gruppo, una possibilità di inviare e-mail dal gruppo SMTP.",
     "dataPrivacyPermission": "Consente di visualizzare e cancellare i dati personali.",
-    "exportPermission": "Definisce se gli utenti hanno la possibilità di esportare record."
+    "exportPermission": "Definisce se gli utenti hanno la possibilità di esportare record.",
+    "massUpdatePermission": "Definisce se gli utenti hanno la possibilità di eseguire aggiornamenti di massa dei record."
   },
   "labels": {
     "Access": "Accesso",

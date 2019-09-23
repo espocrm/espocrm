@@ -2,7 +2,6 @@
   "fields": {
     "name": "Ime",
     "emailAddress": "E-mail",
-    "title": "Naslov",
     "accountRole": "Naslov",
     "account": "Pravno lice",
     "accounts": "Pravna lica",
@@ -40,9 +39,7 @@
   },
   "options": {
     "opportunityRole": {
-      "": "Nema",
       "Decision Maker": "Donosilac odluka",
-      "Evaluator": "Evaluator",
       "Influencer": "Uticajno lice"
     }
   },

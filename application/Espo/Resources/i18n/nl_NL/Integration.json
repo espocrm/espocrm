@@ -8,6 +8,7 @@
     "selectIntegration": "Selecteer een integratie in het menu."
   },
   "help": {
-    "GoogleMaps": "<p> Verkrijg API-sleutel <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\"> hier </a>. </ p>"
+    "Google": "**Bevat OAuth 2.0 referenties van de Google Developers Console.**\n\nBezoek [Google Developers Console] (https://console.developers.google.com/project) om OAuth 2.0 referenties te verkrijgen zoals een Client ID en Client Secret die bekend zijn bij zowel Google als EspoCRM applicatie.",
+    "GoogleMaps": "Verkrijg de API-sleutel [hier] (https://developers.google.com/maps/documentation/javascript/get-api-key)."
   }
 }

@@ -272,8 +272,7 @@
     "fieldMaxFileSizeError": "Ne smije premašiti {max} Mb",
     "fieldShouldBeLess": "{Field} treba da bude manje od {value}",
     "fieldShouldBeGreater": "{Field} mora biti veće od {value}",
-    "fieldIsUploading": "Prijenos u toku",
-    "streamPostInfo": "Unesi <strong>@imekoriniska</strong> da ga spomenete.\n\nDostupna sintaksa:\n`<code>kod</code>`\n```<code>multilinijski kod</code>```\n**<strong>strong tekst</strong>**\n*<em>naglašeni tekst</em>*\n~~<del>obrisan tekst</del>~~\n> blockquote\n[link text](url)"
+    "fieldIsUploading": "Prijenos u toku"
   },
   "boolFilters": {
     "onlyMy": "Samo moje",

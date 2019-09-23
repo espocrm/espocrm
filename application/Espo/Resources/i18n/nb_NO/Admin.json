@@ -2,10 +2,8 @@
   "labels": {
     "Enabled": "Aktivert",
     "Disabled": "Deaktivert",
-    "System": "System",
     "Users": "Brukere",
     "Email": "Epost",
-    "Data": "Data",
     "Customization": "Tilpass",
     "Available Fields": "Tilgjengelige felt",
     "Layout": "Oppsett",
@@ -19,7 +17,6 @@
     "Rebuild": "Gjennbygg",
     "Teams": "Grupper",
     "Roles": "Roller",
-    "Portal": "Portal",
     "Portals": "Portaler",
     "Portal Roles": "Portalroller",
     "Outbound Emails": "Utgående epost",
@@ -54,7 +51,8 @@
     "Jobs": "Oppgaver",
     "Reset to Default": "Nullstill til forvalg",
     "Email Filters": "Epostfilter",
-    "Portal Users": "Portalbrukere"
+    "Portal Users": "Portalbrukere",
+    "Permissions": "Tillatelser"
   },
   "layouts": {
     "list": "Liste",
@@ -76,29 +74,20 @@
     "duration": "Varighet",
     "password": "Passord",
     "personName": "Navn på person",
-    "autoincrement": "Auto-increment",
     "bool": "Bolsk",
     "currency": "Valuta",
     "date": "Dato",
-    "datetime": "DatoTid",
-    "datetimeOptional": "Dato/DatoTid",
     "email": "Epost",
-    "enum": "Enum",
     "enumInt": "Enum heltall",
     "enumFloat": "Enum flyt",
     "float": "Flyt",
-    "int": "Int",
     "link": "Lenke",
     "linkMultiple": "Lenke flertall",
     "linkParent": "Lenke forelder",
-    "multienim": "Multienum",
     "phone": "Telefon",
     "text": "Tekst",
-    "url": "Url",
-    "varchar": "Varchar",
     "file": "Fil",
     "image": "Bilde",
-    "multiEnum": "Multi-Enum",
     "attachmentMultiple": "Vedlegg flertall",
     "rangeInt": "Avgrenset heltall",
     "rangeFloat": "Avgrenset flyt",
@@ -106,10 +95,10 @@
     "wysiwyg": "WYSIWYG",
     "map": "Kart",
     "currencyConverted": "Valuta (konvertert)",
+    "int": "Int",
     "number": "Nummer"
   },
   "fields": {
-    "type": "Type",
     "name": "Navn",
     "label": "Merkelapp",
     "required": "Påkrevd",
@@ -120,17 +109,14 @@
     "before": "Før (felt)",
     "link": "Lenke",
     "field": "Felt",
-    "min": "Min",
     "max": "Maks",
     "translation": "Oversettelse",
     "previewSize": "Forhåndsvisningsstørrelse",
-    "noEmptyString": "Ingen tom streng",
     "defaultType": "Forvalgt type",
     "seeMoreDisabled": "Deaktiver tekstkutt",
     "entityList": "Enhetsliste",
     "isSorted": "Sortert (alfabetisk)",
     "audited": "Gjennomgått",
-    "trim": "Trim",
     "height": "Høyde (px)",
     "minHeight": "Min. høyde (px)",
     "provider": "Tilbyder",
@@ -148,22 +134,19 @@
     "dynamicLogicRequired": "Vilkår som gjør feltet påkrevd",
     "dynamicLogicOptions": "Betingede valg",
     "probabilityMap": "Stadiesannsynlighet (%)",
-    "readOnly": "Skrivebeskyttet"
+    "readOnly": "Skrivebeskyttet",
+    "noEmptyString": "Ingen tom streng"
   },
   "messages": {
-    "upgradeVersion": "EspoCRM vil oppgraderes til versjon <strong>{version}</strong>. Dette kan ta litt tid.",
-    "upgradeDone": "EspoCRM har blitt oppgradert til versjon <strong>{version}</strong>.",
-    "upgradeBackup": "Det er anbefalt å ta backup av EspoCRMs filer og data før oppgradering.",
-    "thousandSeparatorEqualsDecimalMark": "Skillet for tusentall kan ikke være et desimaltegn",
-    "userHasNoEmailAddress": "Brukeren har ikke epostadresse",
     "selectEntityType": "Velg enhetstype i venstre meny.",
     "selectUpgradePackage": "Velg oppgraderingspakke",
-    "downloadUpgradePackage": "Last ned oppgraderingspakke(r) <a href=\"{url}\">her</a>. ",
     "selectLayout": "Velg oppsett i venstre meny for å redigere det.",
     "selectExtensionPackage": "Velg utvidelsespakke",
     "extensionInstalled": "Utvidelsen <em>{name} {version}</em> er installert,",
     "installExtension": "Utvidelsen <em>{name} {version}</em> er klar for installasjon.",
-    "uninstallConfirmation": "Er du sikker på at du ønsker å avinstallere utvidelsen?"
+    "upgradeBackup": "Det er anbefalt å ta backup av EspoCRMs filer og data før oppgradering.",
+    "thousandSeparatorEqualsDecimalMark": "Skillet for tusentall kan ikke være et desimaltegn",
+    "userHasNoEmailAddress": "Brukeren har ikke epostadresse"
   },
   "descriptions": {
     "settings": "Grunnleggende systeminnstillinger",
@@ -190,9 +173,9 @@
     "integrations": "Integrasjon med tredjepartstjenester.",
     "notifications": "Innstillinger for vasler i appen og på epost.",
     "inboundEmails": "Innstillinger for inngående eposter.",
-    "emailFilters": "Eposter som samstemmer med filteret vil <em>ikke</em> importeres.",
     "portalUsers": "Portalbrukere.",
-    "entityManager": "Opprett egne enheter og rediger eksisterende. Administrer felt og relasjoner."
+    "entityManager": "Opprett egne enheter og rediger eksisterende. Administrer felt og relasjoner.",
+    "emailFilters": "Eposter som samstemmer med filteret vil <em>ikke</em> importeres."
   },
   "options": {
     "previewSize": {
@@ -202,9 +185,10 @@
       "large": "Stor"
     }
   },
-  "logicalOperators": {
-    "and": "AND",
-    "or": "OR",
-    "not": "NOT"
+  "systemRequirements": {
+    "requiredMysqlVersion": "MySQL versjon",
+    "host": "Tjenernavn",
+    "dbname": "Databasenavn",
+    "user": "Brukernavn"
   }
 }

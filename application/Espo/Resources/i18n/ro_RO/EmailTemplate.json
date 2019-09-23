@@ -11,9 +11,6 @@
   "labels": {
     "Create EmailTemplate": "Creează Șablon Email"
   },
-  "messages": {
-    "infoText": "Variabile disponibile:\n\n{optOutUrl} &#8211; URL un link de dezabonare;\n\n{optOutLink} &#8211; un link de dezabonare. "
-  },
   "tooltips": {
     "oneOff": "Bifează dacă o să folosești acest șablon doar o dată. Ex. pentru Email-uri în masă."
   }

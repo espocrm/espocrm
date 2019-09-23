@@ -55,7 +55,8 @@
     "Portal Users": "Portál felhasználók",
     "Action History": "Akció története",
     "Label Manager": "Címkekezelő",
-    "Auth Log": "Hitelesítési napló"
+    "Auth Log": "Hitelesítési napló",
+    "Permissions": "Engedélyek"
   },
   "layouts": {
     "list": "Lista",
@@ -152,19 +153,14 @@
   "messages": {
     "selectEntityType": "Válassza ki az entitás típusát a bal oldali menüben.",
     "selectUpgradePackage": "Válassza ki a frissítési csomagot",
-    "downloadUpgradePackage": "Frissítő csomag (ok) letöltése <a href=\"{url}\"> itt </a>.",
     "selectLayout": "Válassza ki a kívánt elrendezést a bal oldali menüben és szerkessze azt.",
     "selectExtensionPackage": "Válassza ki a bővítménycsomagot",
     "extensionInstalled": "A (z) {name} {version} bővítmény telepítve lett.",
     "installExtension": "A (z) {name} {version} bővítmény készen áll a telepítésre.",
-    "upgradeVersion": "Az EspoCRM frissítésre kerül a <strong> {verzió} </ strong> verzióra. Kérjük, legyen türelemmel, mert ez eltarthat egy ideig.",
-    "upgradeDone": "Az EspoCRM frissítve lett a <strong> {verzió} </ strong> verzióra.",
     "upgradeBackup": "Javasoljuk, hogy biztonsági másolatot készítsen az EspoCRM fájlokról és adatokról a frissítés előtt.",
     "thousandSeparatorEqualsDecimalMark": "A több ezer elválasztó karakter nem lehet ugyanaz, mint a tizedespont karakter.",
     "userHasNoEmailAddress": "A felhasználónak nincs e-mail címe.",
     "newVersionIsAvailable": "Új EspoCRM verzió {latestVersion} elérhető.",
-    "newExtensionVersionIsAvailable": "A (z) {extensionName} új kiadása {latestVersion} elérhető.",
-    "cronIsNotConfigured": "Az ütemezett feladatok nem futnak. Ezért a bejövő e-mailek, értesítések és emlékeztetők nem működnek. Kérjük, kövesse az <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\"> utasításokat </a> a beállításhoz cron munka.",
     "uninstallConfirmation": "Biztosan eltávolítja a bővítményt?"
   },
   "descriptions": {
@@ -210,5 +206,11 @@
     "and": "ÉS",
     "or": "VAGY",
     "not": "NEM"
+  },
+  "systemRequirements": {
+    "requiredMysqlVersion": "MySQL verzió",
+    "host": "Host név",
+    "dbname": "Adatbázis név",
+    "user": "Felhasználónév"
   }
 }

@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nama",
     "emailAddress": "E-mail",
-    "title": "Judul",
     "accountRole": "Judul",
     "account": "Akun",
     "accounts": "Akun",
@@ -33,7 +32,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--tak satupun--",
       "Decision Maker": "Pengambil keputusan",
       "Evaluator": "Penilai",
       "Influencer": "influencer"

@@ -70,7 +70,7 @@
     "forbidden": "Yasak, lütfen daha sonra deneyin",
     "uniqueLinkHasBeenSent": "Benzersiz URL belirtilen e-posta adresine gönderilmiştir.",
     "passwordChangedByRequest": "Şifre değiştirildi.",
-    "setupSmtpBefore": "Sistemin e-postayla şifre gönderebilmesi için <a href=\"{url}\"> SMTP ayarlarını kurmanız </a> gerekir."
+    "userNameExists": "Kullanıcı Adı"
   },
   "boolFilters": {
     "onlyMyTeam": "Yalnızca Ekibim"

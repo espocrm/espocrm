@@ -117,7 +117,6 @@
     "ldapAuth": "Prihlasovacie údaje pre server LDAP.",
     "ldapUserNameAttribute": "Atribút, ktorý identifikuje používateľa. Napr.: \"userPrincipalName\" alebo \"sAMAccountName\" pre Active Directory, \"uid\" pre OpenLDAP.",
     "ldapUserObjectClass": "Atribút ObjectClass pre vyhľadávanie používateľov. Napr.: \"person\" pre AD, \"inetOrgPerson\" pre OpenLDAP.",
-    "ldapAccountCanonicalForm": "Typ vášho účtu v kanonickej forme. Sú 4 možnosti: <br>- 'Dn' - vo formáte 'CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - vo formáte 'tester'.<br>- 'Backslash' - vo formáte 'COMPANY\\tester'.<br>- 'Principal' - vo formáte 'tester@company.com'.",
     "ldapBindRequiresDn": "Možnosť formátovať používateľské meno do formátu DN.",
     "ldapBaseDn": "Predvolené základné DN použité na vyhľadávanie používateľov. Napr.: \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "Možnosť oddeliť používateľské meno od domény.",

@@ -111,7 +111,6 @@
   },
   "options": {
     "reminderTypes": {
-      "Popup": "Popup",
       "Email": "Epost"
     }
   }

@@ -285,9 +285,9 @@
     "fieldShouldBeLess": "{field} должно быть меньше чем {value}",
     "fieldShouldBeGreater": "{field} должно быть больше чем {value}",
     "fieldIsUploading": "Выполняется загрузка",
-    "streamPostInfo": "Введите <strong>@username</strong> чтобы упомянуть пользователей в сообщении.\n\nДоступный синтаксис разметки:\n`<code>код</code>`\n**<strong>важный текст</strong>**\n*<em>эмоционально выделенный текст</em>*\n~<del>удаленный текст</del>~\n> цитата\n[текст ссылки](URL)",
     "erasePersonalDataConfirmation": "Отмеченные поля будут стерты навсегда. Вы уверены?",
-    "massPrintPdfMaxCountError": "Невозможно напечатать больше {maxCount} записей."
+    "massPrintPdfMaxCountError": "Невозможно напечатать больше {maxCount} записей.",
+    "recalculateFormulaConfirmation": "Вы уверены что хотите пересчитать формулу для выбраных записей?"
   },
   "boolFilters": {
     "onlyMy": "Только мои",
@@ -303,9 +303,10 @@
     "massUpdate": "Обновить все",
     "export": "Экспортировать",
     "follow": "Подписаться",
-    "unfollow": "Вы уверены, что хотите отписаться от выбранных записей?",
+    "unfollow": "Отписаться",
     "convertCurrency": "Конвертировать валюту",
-    "printPdf": "Распечатать в PDF"
+    "printPdf": "Распечатать в PDF",
+    "recalculateFormula": "Пересчитать формулу"
   },
   "fields": {
     "name": "Название",

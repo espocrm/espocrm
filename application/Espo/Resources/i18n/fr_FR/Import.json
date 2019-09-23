@@ -47,28 +47,17 @@
     "Double Quote": "Guillemet",
     "Single Quote": "Apostrophe",
     "Imported": "Importé",
-    "Duplicates": "Doublons",
-    "Skip searching for duplicates": "Skip searching for duplicates",
-    "Timezone": "Timezone"
+    "Duplicates": "Doublons"
   },
   "messages": {
     "utf8": "Devrait être en UTF-8",
-    "duplicatesRemoved": "Doublons supprimés",
-    "inIdle": "Execute in idle (for big data; via cron)"
+    "duplicatesRemoved": "Doublons supprimés"
   },
   "fields": {
     "file": "Fichier",
     "entityType": "Type d'entité",
     "imported": "Enregistrements importés",
     "duplicates": "Enregistrements doublons",
-    "updated": "Enregistrements mis à jour",
-    "status": "Status"
-  },
-  "options": {
-    "status": {
-      "Failed": "Failed",
-      "In Process": "In Process",
-      "Complete": "Complete"
-    }
+    "updated": "Enregistrements mis à jour"
   }
 }

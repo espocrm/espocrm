@@ -18,7 +18,6 @@
     "Template": "Šablon",
     "Job": "Posao",
     "EmailFilter": "Filter e-pošte",
-    "Portal": "Portal",
     "PortalRole": "Uloga za portal",
     "Attachment": "Prilog",
     "EmailFolder": "Fascikla e-pošte",
@@ -37,7 +36,6 @@
     "Export": "Izvezi",
     "DynamicLogic": "Dinamička logika",
     "DashletOptions": "Opcija za dashlet",
-    "Admin": "Admin",
     "Global": "Globalno",
     "Preferences": "Prilagođavanja",
     "EmailAddress": "Adresa e-pošte",
@@ -58,7 +56,6 @@
     "Dashboard": "Radna površina",
     "InboundEmail": "Grupni nalozi e-pošte",
     "Stream": "Tok vesti",
-    "Import": "Rezultati uvoza",
     "Template": "Šabloni",
     "Job": "Poslovi",
     "EmailFilter": "Filteri e-pošte",
@@ -90,7 +87,6 @@
     "Uploading...": "Otpremanje...",
     "Sending...": "Slanje...",
     "Merging...": "Spajanje ...",
-    "Merged": "Merged",
     "Removed": "Uklonjeno",
     "Posted": "Objavljeno",
     "Linked": "Povezano",
@@ -119,7 +115,6 @@
     "Details": "Detaljno",
     "Add Field": "Dodaj polje",
     "Add Dashlet": "Dodaj Dashlet",
-    "Filter": "Filter",
     "Edit Dashboard": "Izmeni radnu površinu",
     "Add": "Dodaj",
     "Add Item": "Dodajte stavku",
@@ -129,7 +124,6 @@
     "Search": "Pretraživanje",
     "Only My": "Samo moje",
     "Open": "Otvori",
-    "Admin": "Admin",
     "About": "O...",
     "Refresh": "Osvežiti",
     "Remove": "Ukloni",
@@ -174,7 +168,6 @@
     "Person": "Osoba",
     "First Name": "Ime",
     "Last Name": "Prezime",
-    "Original": "Original",
     "You": "Ti",
     "you": "ti",
     "change": "promena",
@@ -227,8 +220,6 @@
     "fieldShouldAfter": "{Field} mora biti nakon {otherField}",
     "fieldShouldBefore": "{field} mora biti pre {otherField}",
     "fieldShouldBeBetween": "{Field} treba da bude između {min} i {mak}",
-    "fieldShouldBeLess": "{Field} treba da bude manje od {value}",
-    "fieldShouldBeGreater": "{Field} mora biti veće od {value}",
     "fieldBadPasswordConfirm": "{Field} nije potvrđeno",
     "resetPreferencesDone": "Postavke su vraćene na podrazumevano",
     "confirmation": "Jeste li sigurni?",
@@ -250,7 +241,6 @@
     "checkForNewNotifications": "Proverite nova obaveštenja",
     "duplicate": "Upis koji stvarate možda već postoji",
     "dropToAttach": "Otpusti za prikačivanje",
-    "streamPostInfo": "Unesi <strong>@imekoriniska</strong> da ga pomeneš.\n\nDostupna sintaksa:\n`<code>kod</code>`\n**<strong>jaktekst</strong>**\n*<em>naglašentekst</em>*\n~<del>izbrisan tekst</del>~\n> blockquote\n[link text](url)",
     "writeMessageToSelf": "Napiši poruku na tok vesti",
     "checkForNewNotes": "Proveri izmene toka vesti",
     "internalPost": "Objavu će se videti samo interni korisnici",
@@ -270,7 +260,9 @@
     "fieldShouldBeDatetime": "{field} treba da bude važeći datum / vreme",
     "internalPostTitle": "Upis se prikazuje samo internim korisnicima",
     "loading": "Učitava se...",
-    "saving": "Čuva se..."
+    "saving": "Čuva se...",
+    "fieldShouldBeLess": "{Field} treba da bude manje od {value}",
+    "fieldShouldBeGreater": "{Field} mora biti veće od {value}"
   },
   "boolFilters": {
     "onlyMy": "Samo moje",
@@ -312,8 +304,7 @@
     "phoneNumberOther": "Telefon (Drugo)",
     "order": "Redosled",
     "parent": "Roditelj",
-    "children": "Deca",
-    "id": "ID"
+    "children": "Deca"
   },
   "links": {
     "assignedUser": "Dodeljen korisniku",
@@ -639,7 +630,6 @@
         "openInNewWindow": "Otvori u novom prozoru"
       },
       "video": {
-        "video": "Video",
         "videoLink": "Video veza",
         "insert": "Ubaci video",
         "url": "Video URL adresa?",
@@ -688,7 +678,6 @@
         "foreground": "Boja teksta",
         "transparent": "Transparentan",
         "setTransparent": "Postavi kao transparentan",
-        "reset": "Reset",
         "resetToDefault": "Reset na podrazumevano"
       },
       "shortcut": {
@@ -704,17 +693,6 @@
         "redo": "Unapred"
       }
     }
-  },
-  "themes": {
-    "Espo": "Espo",
-    "Sakura": "Sakura",
-    "Violet": "Violet",
-    "EspoRtl": "RTL Espo",
-    "EspoVertical": "Espo sa bočnim menijem",
-    "SakuraVertical": "Sakura sa bočnim menijem",
-    "VioletVertical": "Violet sa bočnim menijem",
-    "Hazyblue": "Hazyblue",
-    "HazyblueVertical": "Haziblue sa bočnim menijem"
   },
   "streamMessagesMale": {
     "postTargetSelfAndOthers": "{user} je pisao {target} i sebi"

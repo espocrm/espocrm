@@ -2,18 +2,15 @@
   "fields": {
     "name": "Nama",
     "number": "Jumlah",
-    "status": "Status",
     "account": "Akun",
     "contact": "Kontak",
     "contacts": "kontak",
     "priority": "Prioritas",
     "type": "Mengetik",
     "description": "Deskripsi",
-    "inboundEmail": "Email masuk",
     "lead": "Memimpin"
   },
   "links": {
-    "inboundEmail": "Email masuk",
     "account": "Akun",
     "contact": "Kontak (Primer)",
     "Contacts": "kontak",
@@ -35,7 +32,6 @@
     },
     "priority": {
       "Low": "Rendah",
-      "Normal": "Normal",
       "High": "Tinggi",
       "Urgent": "Penting"
     },

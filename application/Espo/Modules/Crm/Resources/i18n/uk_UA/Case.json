@@ -9,12 +9,11 @@
     "priority": "Пріоритет",
     "type": "Тип",
     "description": "Опис",
-    "inboundEmail": "Групова поштова скринька",
     "lead": "Лід",
-    "attachments": "Вкладення"
+    "attachments": "Вкладення",
+    "inboundEmail": "Групова поштова скринька"
   },
   "links": {
-    "inboundEmail": "Групова поштова скринька",
     "account": "Контрагент",
     "contact": "Контакт (Основний)",
     "Contacts": "Контакти",
@@ -24,7 +23,8 @@
     "emails": "Електронні скриньки",
     "articles": "Статті Бази Знань",
     "lead": "Лід",
-    "attachments": "Вкладення"
+    "attachments": "Вкладення",
+    "inboundEmail": "Групова поштова скринька"
   },
   "options": {
     "status": {
@@ -48,7 +48,7 @@
     }
   },
   "labels": {
-    "Create Case": "Створити звернення",
+    "Create Case": "Створити Звернення",
     "Close": "Закрити",
     "Reject": "Відхилити",
     "Closed": "Закрите",

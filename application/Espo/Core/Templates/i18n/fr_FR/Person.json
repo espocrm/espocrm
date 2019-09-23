@@ -1,12 +1,4 @@
 {
-  "fields": {
-    "address": "Address"
-  },
-  "links": {
-    "meetings": "Meetings",
-    "calls": "Calls",
-    "tasks": "Tasks"
-  },
   "labels": {
     "Create {entityType}": "Créer un {entityTypeTranslated}"
   }

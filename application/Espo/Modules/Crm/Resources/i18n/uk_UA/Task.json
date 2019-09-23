@@ -5,20 +5,17 @@
     "status": "Статус",
     "dateStart": "Дата початку",
     "dateEnd": "Кінцева дата",
-    "dateStartDate": "Дата початку (весь день)",
-    "dateEndDate": "Дата завершення (весь день)",
     "priority": "Пріоритет",
     "description": "Опис",
     "isOverdue": "Прострочено",
     "account": "Контрагент",
-    "dateCompleted": "Дата завершення",
     "attachments": "Вкладення",
     "reminders": "Нагадування",
     "contact": "Контакт"
   },
   "links": {
     "attachments": "Вкладення",
-    "account": "Контрагент",
+    "account": "Контраґент",
     "contact": "Контакт"
   },
   "options": {
@@ -43,8 +40,8 @@
   "presetFilters": {
     "actual": "Актуальні",
     "completed": "Завершені",
-    "deferred": "Відстрочені",
     "todays": "Сьогоднішні",
-    "overdue": "Прострочені"
+    "overdue": "Прострочені",
+    "deferred": "Відстрочені"
   }
 }

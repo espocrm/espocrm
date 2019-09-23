@@ -1,13 +1,9 @@
 {
   "fields": {
     "name": "Ime",
-    "status": "Status",
-    "host": "Host",
     "username": "Korisničko ime",
     "password": "Lozinka",
-    "port": "Port",
     "monitoredFolders": "Nadgledani folderi",
-    "ssl": "SSL",
     "fetchSince": "Preuzimaj od",
     "emailAddress": "Adresa e-pošte",
     "sentFolder": "Fascikla poslatih",
@@ -34,11 +30,9 @@
   },
   "labels": {
     "Create EmailAccount": "Napravite nalog e-pošte",
-    "IMAP": "IMAP",
     "Main": "Glavni",
     "Test Connection": "Testiraj vezu",
-    "Send Test Email": "Poštalji probnu e-poruku",
-    "SMTP": "SMTP"
+    "Send Test Email": "Poštalji probnu e-poruku"
   },
   "messages": {
     "couldNotConnectToImap": "Ne može da se poveže na IMAP server",

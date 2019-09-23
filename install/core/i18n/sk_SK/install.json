@@ -27,15 +27,13 @@
     "Test settings": "Test spojenia",
     "Database Settings Description": "Vložte informáciu o pripojení na MySQL databázu (názov servera, používateľské meno a heslo). Môžete uviesť port za názvom servera takto: localhost:3306.",
     "Install": "Inštalovať",
-    "SetupConfirmation page title": "Odporúčané nastavenia",
-    "PHP Configuration": "Odporúčané PHP nastavenia",
-    "MySQL Configuration": "Konfigurácia MySQL",
     "Configuration Instructions": "Konfiguračné inštrukcie",
     "phpVersion": "Verzia PHP",
     "requiredMysqlVersion": "Verzia MySQL",
     "dbHostName": "Názov servera",
     "dbName": "Názov databázy",
-    "dbUserName": "Meno používateľa databázy"
+    "dbUserName": "Meno používateľa databázy",
+    "Permission Requirements": "Povolenie"
   },
   "fields": {
     "Choose your language": "Vyberte jazyk",
@@ -67,11 +65,9 @@
     "1045": "Prístup zamietnutý pre daného používateľa",
     "1049": "Neznáma databáza",
     "2005": "Neznámy MySQL server",
-    "Bad init Permission": "Prístup odmietnutý pre adresár \"{*}\" . Prosím nastavte 775 pre \"{*}\" alebo spustite tento príkaz v terminále <pre><b>{C}</b></pre>\n\tOperácia je zakázaná? Skúste tento: {CSU}",
     "Some errors occurred!": "Vyskytli sa nejaké chyby!",
     "phpVersion": "Vaša verzia PHP nie je podporovaná EspoCRM, prosím nainštalujte PHP minimálne verziu {minVersion} ",
     "requiredMysqlVersion": "Vaša verzia MySQL nie je podporovaná EspoCRM, prosím nainštalujte minimálne verziu {minVersion}",
-    "requiredMariadbVersion": "Vaša verzia MariaDB nie je podporovaná EspoCRM, prosím nainštalujte minimálne verziu {minVersion}",
     "The PHP extension was not found...": "Chyba PHP: Rozširenie <b>{extName}</b> sa nenašlo.",
     "All Settings correct": "Všetky nastavenia sú správne",
     "Failed to connect to database": "Zlyhalo spojenie s databázou",
@@ -84,12 +80,9 @@
     "buildDatabase error": "chyba buildDatabase",
     "createUser error": "chyba createUser",
     "checkAjaxPermission error": "chyba checkAjaxPermission",
-    "Ajax failed": "Ajax zlyhal",
     "Cannot create user": "Nepodarilo sa vytvoriť používateľa",
     "Permission denied": "Prístup zakázaný",
     "Permission denied to": "Prístup zakázaný",
-    "permissionInstruction": "<br>Spustite toto v termináli<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Operácia nie je povolená? Skúste toto: <br>{CSU}",
     "Can not save settings": "Nastavenia sa nepodarilo uložiť",
     "Cannot save preferences": "Nastavenia sa nepodarilo uložiť",
     "Thousand Separator and Decimal Mark equal": "Oddeľovač tisícov a desatinných miest nesmú byť rovnaké",
@@ -114,5 +107,12 @@
       "microsoft-iis": "Chyba API: EspoCRM API je nedostupné.<br> Možný problém: zakázaný \"URL Rewrite\". Prosím skontrolujte a povoľte modul \"URL Rewrite\" v IIS serveri",
       "default": "Chyba API: EspoCRM API je nedostupné.<br> Možný problém: zakázaný Rewrite Module. Prosím skontrolujte a povoľte Rewrite Module vo Vašom serveri (napr. mod_rewrite v Apache) a podporu .htaccess."
     }
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Verzia PHP",
+    "requiredMysqlVersion": "Verzia MySQL",
+    "host": "Názov servera",
+    "dbname": "Názov databázy",
+    "user": "Používateľské meno"
   }
 }

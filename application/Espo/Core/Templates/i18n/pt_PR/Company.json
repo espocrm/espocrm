@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "billingAddress": "Endereço de Cobrança",
+    "shippingAddress": "Endereço de Entrega"
+  },
+  "links": {
+    "meetings": "Reuniões",
+    "tasks": "Tarefas"
+  },
+  "labels": {
+    "Create {entityType}": "Criar {entityTypeTranslated}"
+  }
+}

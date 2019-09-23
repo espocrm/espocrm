@@ -13,7 +13,9 @@
     "apiKey": "API sleutel",
     "targetTeam": "Target team",
     "exampleRequestMethod": "Methode",
-    "exampleRequestPayload": "payload"
+    "exampleRequestPayload": "payload",
+    "createLeadBeforeOptInConfirmation": "Lead aanmaken voor bevestiging",
+    "duplicateCheck": "Dubbele controle"
   },
   "links": {
     "targetList": "Doellijst",

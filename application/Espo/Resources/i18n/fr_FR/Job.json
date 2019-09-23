@@ -4,10 +4,10 @@
     "executeTime": "Exécuté à",
     "attempts": "Tentatives restantes",
     "failedAttempts": "Tentatives échouées",
-    "serviceName": "Service",
-    "method": "Méthode",
+    "methodName": "Méthode",
     "scheduledJob": "Tâche planifiée",
-    "data": "Données"
+    "data": "Données",
+    "method": "Méthode"
   },
   "options": {
     "status": {

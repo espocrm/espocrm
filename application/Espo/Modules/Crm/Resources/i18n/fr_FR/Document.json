@@ -7,10 +7,8 @@
     "name": "Nom",
     "status": "Statut",
     "file": "Fichier",
-    "type": "Type",
     "publishDate": "Date de publication",
     "expirationDate": "Date d'expiration",
-    "description": "Description",
     "accounts": "Comptes",
     "folder": "Dossier"
   },
@@ -18,8 +16,7 @@
     "accounts": "Comptes",
     "opportunities": "Opportunités",
     "folder": "Dossier",
-    "leads": "Prospects",
-    "contacts": "Contacts"
+    "leads": "Prospects"
   },
   "options": {
     "status": {
@@ -31,8 +28,6 @@
     "type": {
       "": "Aucun",
       "Contract": "Contrat",
-      "NDA": "NDA",
-      "EULA": "EULA",
       "License Agreement": "Accord de licence"
     }
   },

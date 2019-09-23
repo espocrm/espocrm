@@ -76,7 +76,6 @@
     "forbidden": "Odmietnutý prístup, skúste neskôr",
     "uniqueLinkHasBeenSent": "Jedinečná URL bola odoslaná na uvedenú emailovú adresu.",
     "passwordChangedByRequest": "Heslo bolo zmenené.",
-    "setupSmtpBefore": "Potrebujete nastaviť <a href=\"{url}\">SMTP nastavenia</a> aby Váš systém bol schopný odoslať heslo v emaile.",
     "userNameExists": "Používateľské meno už existuje"
   },
   "boolFilters": {

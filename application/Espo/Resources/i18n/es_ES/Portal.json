@@ -3,8 +3,6 @@
     "name": "Nombre",
     "logo": "Logotipo",
     "companyLogo": "Logotipo",
-    "url": "URL",
-    "portalRoles": "Roles",
     "isActive": "Está activo",
     "isDefault": "Portal por defecto",
     "tabList": "Lista de pestañas",
@@ -22,7 +20,6 @@
   },
   "links": {
     "users": "Usuarios",
-    "portalRoles": "Roles",
     "notes": "Notas"
   },
   "tooltips": {
@@ -31,7 +28,6 @@
   "labels": {
     "Create Portal": "Crear portal",
     "User Interface": "Interfaz del Usuario",
-    "General": "General",
     "Settings": "Ajustes"
   }
 }

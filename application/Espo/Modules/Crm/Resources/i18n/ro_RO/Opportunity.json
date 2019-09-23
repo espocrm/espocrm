@@ -27,8 +27,6 @@
     "stage": {
       "Prospecting": "Prospectare",
       "Qualification": "Calificări",
-      "Proposal": "Propunere",
-      "Negotiation": "Negociere",
       "Needs Analysis": "Necesită Analiză",
       "Value Proposition": "Propunere Valoare",
       "Id. Decision Makers": "Id. Factori de Decizie",
@@ -36,7 +34,9 @@
       "Proposal/Price Quote": "Propunere/Preț Ofertă",
       "Negotiation/Review": "Negociere/Revizuire",
       "Closed Won": "Închide Câștigat",
-      "Closed Lost": "Închide Pierdut"
+      "Closed Lost": "Închide Pierdut",
+      "Proposal": "Propunere",
+      "Negotiation": "Negociere"
     }
   },
   "labels": {

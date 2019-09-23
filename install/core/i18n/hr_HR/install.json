@@ -31,14 +31,18 @@
     "requiredMysqlVersion": "MySQL verzija",
     "dbHostName": "Ime hosta",
     "dbName": "Ime baze",
-    "dbUserName": "Baza Korisničko ime"
+    "dbUserName": "Baza Korisničko ime",
+    "SetupConfirmation page title": "Zahtjevi sustava",
+    "PHP Configuration": "PHP postavke",
+    "MySQL Configuration": "Postavke baze podataka",
+    "Permission Requirements": "Dozvole"
   },
   "fields": {
     "Choose your language": "Izaberite jezik",
     "Database Name": "Ime baze",
     "Host Name": "Ime hosta",
-    "Database User Name": "Baza, Korisničko ime",
-    "Database User Password": "Baza podataka, lozinka korisnika",
+    "Database User Name": "Baza Korisničko ime",
+    "Database User Password": "Baza podataka lozinka korisnika",
     "Database driver": "Driver baze podataka",
     "User Name": "Korisničko ime",
     "Password": "Lozinka",
@@ -65,7 +69,6 @@
     "1045": "Pristup zabranjen za korisnika",
     "1049": "Nepoznata baza podataka",
     "2005": "Nepoznat MySQL host servera",
-    "Bad init Permission": "Pristup odbijen za \"{*} \" direktorij. Molimo postavite 775 za \"{*} \" ili jednostavno pokrenite ovu komandu u terminalu<pre><b>{C}</b></pre> Operacija nije dozvoljena? Pokušajte ovo: {CSU}",
     "Some errors occurred!": "Neke greške su se desile!",
     "phpVersion": "Vaša PHP verzija nije podržana od strane EspoCRM, molimo nadogradite PHP na najmanje {minVersion}",
     "requiredMysqlVersion": "Vaša MySQL verzija nije podržana od strane EspoCRM, molimo nadogradite na najmanje {minVersion}",
@@ -84,8 +87,6 @@
     "Cannot create user": "Nemoguće kreiranje korisnika",
     "Permission denied": "Dozvola odbijena",
     "Permission denied to": "Dozvola odbijena",
-    "permissionInstruction": "<br>Pokreni u terminalu ovo<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Operacija nije dozvoljena? Probajte ovo: <br>{CSU}",
     "Can not save settings": "Nemoguće spremiti postavke",
     "Cannot save preferences": "Nemoguće spremiti postavke",
     "Thousand Separator and Decimal Mark equal": "Oznaka tisućica i decimalna oznaka ne mogu biti jednake",
@@ -110,5 +111,11 @@
       "microsoft-iis": "API greška: EspoCRM API je dostupan <br> Mogući problem: onemogućen \"URL Rewrite \". Molimo provjerite i omogućite \"URL Rewrite \" modul u IIS serveru",
       "default": "API greška: EspoCRM API je dostupan <br> Mogući problem: onemogućen Rewrite Module. Molimo provjerite i omogućiti Rewrite Module u vašem serveru (npr mod_rewrite u Apachu) i .htaccess podršku."
     }
+  },
+  "systemRequirements": {
+    "requiredMysqlVersion": "MySQL verzija",
+    "host": "Ime hosta",
+    "dbname": "Ime baze",
+    "user": "Korisničko ime"
   }
 }

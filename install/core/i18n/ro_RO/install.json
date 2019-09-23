@@ -26,15 +26,15 @@
     "Test settings": "Testare Conexiune",
     "Database Settings Description": "Introduceți informațiile despre conexiunea bazei de date MySQL (nume de gazdă, nume de utilizator și parolă). Puteți specifica portul de server pentru numele de gazdă, precum localhost: 3306.",
     "Install": "Instalare",
-    "SetupConfirmation page title": "Setări Recomandate",
-    "PHP Configuration": "Setări PHP recomandate",
-    "MySQL Configuration": "Configurare MySQL",
     "Configuration Instructions": "Instrucțiuni de Configurare",
     "phpVersion": "Versiune PHP",
     "requiredMysqlVersion": "Versiune MySQL",
-    "dbHostName": "Numele Server-ului",
+    "dbHostName": "Numele Gazdei",
     "dbName": "Numele Bazei de Date",
-    "dbUserName": "Nume Utilizator Bază de Date"
+    "dbUserName": "Nume Utilizator Bază de Date",
+    "SetupConfirmation page title": "Cerințe de sistem",
+    "PHP Configuration": "Setări PHP",
+    "Permission Requirements": "Permisiune"
   },
   "fields": {
     "Choose your language": "Alege Limba",
@@ -67,11 +67,9 @@
     "1045": "Acces nepermis pentru utilizatorul",
     "1049": "Baza de Date necunoscută",
     "2005": "Server MySQL necunoscut",
-    "Bad init Permission": "Permisiunea a fost refuzată pentru directorul \"{*}\". Vă rugăm să setați 775 pentru \"{*}\" sau doar să executați această comandă în terminal <pre><b>{C}</b></pre>\n\\ Încercați: {CSU} \"",
     "Some errors occurred!": "Am apărut erori!",
     "phpVersion": "Versiunea dumneavoastră de PHP nu este acceptată de EspoCRM, vă rugăm să vă actualizați măcar la versiunea PHP {minVersion}",
     "requiredMysqlVersion": "Versiunea dumneavoastră de MySQL nu este acceptată de EspoCRM, vă rugăm să vă actualizați măcar la versiunea MySQL {minVersion}",
-    "requiredMariadbVersion": "Versiunea dumneavoastră de MariaDB nu este acceptată de EspoCRM, vă rugăm să vă actualizați măcar la versiunea MariaDB {minVersion}",
     "The PHP extension was not found...": "Eroare PHP: Extensie <b>{extName}</b> nu a fost găsit.",
     "All Settings correct": "Toate setarile sunt corecte",
     "Failed to connect to database": "Nu s-a reușit conectarea la Baza de Date",
@@ -84,17 +82,21 @@
     "buildDatabase error": "Eroare la crearea Bazei de Date",
     "createUser error": "Eroare la crearea utilizatorului",
     "checkAjaxPermission error": "Eroare la verificarea permisiunilor Ajax",
-    "Ajax failed": "Ajax nu a reușit",
     "Cannot create user": "Utilizatorul nu poate fi creat",
     "Permission denied": "Permisiune respinsă",
     "Permission denied to": "Permisiune respinsă",
-    "permissionInstruction": "<br>Rulați într-un Terminal<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Operația nu este permisă? Încercați: <br>{CSU}",
     "Can not save settings": "Setările nu pot fi salvate",
     "Cannot save preferences": "Preferințele nu pot fi salvate",
     "Thousand Separator and Decimal Mark equal": "Separatoarele pentru mii și zecimale nu pot fi aceleași",
     "extension": "{0} lipsește extensia",
     "option": "Valoarea recomandată este {0}",
-    "mysqlSettingError": "EspoCRM cere ca setarea MySQL \\ \"{NAME} \" să fie setată la {VALUE}"
+    "mysqlSettingError": "EspoCRM cere ca setarea MySQL \\\\ \"{NAME} \" să fie setată la {VALUE}"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Versiune PHP",
+    "requiredMysqlVersion": "Versiune MySQL",
+    "host": "Numele Gazdei",
+    "dbname": "Numele Bazei de Date",
+    "user": "Nume Utilizator"
   }
 }

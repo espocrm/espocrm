@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Nume",
-    "title": "Rol",
     "accountRole": "Rol",
     "account": "Cont",
     "accounts": "Conturi",
@@ -30,17 +29,16 @@
     "account": "Cont (Principal)",
     "accounts": "Conturi",
     "casesPrimary": "Cazuri (Principal)",
-    "tasksPrimary": "Sarcini (extins)",
     "portalUser": "Utilizator Portal",
     "originalLead": "Lead Original",
-    "documents": "Documente"
+    "documents": "Documente",
+    "tasksPrimary": "Sarcini (extins)"
   },
   "labels": {
     "Create Contact": "Creare Contact"
   },
   "options": {
     "opportunityRole": {
-      "": "--Nici unul--",
       "Decision Maker": "Factor de decizie"
     }
   },

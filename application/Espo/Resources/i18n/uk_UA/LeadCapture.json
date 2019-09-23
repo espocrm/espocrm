@@ -14,7 +14,8 @@
     "leadSource": "Джерело ліда",
     "apiKey": "Ключ API",
     "targetTeam": "Команда",
-    "exampleRequestMethod": "Метод"
+    "exampleRequestMethod": "Метод",
+    "createLeadBeforeOptInConfirmation": "Створии Ліда до підтвердження"
   },
   "links": {
     "targetList": "Цільовий список",

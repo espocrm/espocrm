@@ -80,7 +80,6 @@
     "forbidden": "ممنوع است، لطفا بعدا امتحان کنید",
     "uniqueLinkHasBeenSent": "URL منحصر به فرد به آدرس ایمیل مشخص شده ارسال شده است.",
     "passwordChangedByRequest": "رمز عبور تغییر کرده است.",
-    "setupSmtpBefore": "شما باید <a href=\"{url}\"> تنظیمات SMTP </a> را تنظیم کنید تا سیستم قادر به ارسال رمز عبور در ایمیل باشد.",
     "userNameExists": "نام کاربری قبلا وجود داشته"
   },
   "boolFilters": {

@@ -9,8 +9,6 @@
     "defaultCurrency": "Uobičajena valuta",
     "currencyList": "Spisak valuta",
     "language": "Jezik",
-    "smtpServer": "Server",
-    "smtpPort": "Port",
     "smtpAuth": "Autorizacija",
     "smtpSecurity": "Bezbednost",
     "smtpUsername": "Korisničko ime",
@@ -28,13 +26,7 @@
     "receiveMentionEmailNotifications": "Email obaveštenja o pominjanju u postovima",
     "receiveStreamEmailNotifications": "E-mail obaveštenja o poruka i ažuriranju statusa",
     "dashboardLayout": "Raspored za Kontrolna tabla",
-    "emailReplyForceHtml": "E-mail odgovor u HTML",
-    "autoFollowEntityTypeList": "Global Auto-Follow",
-    "emailReplyToAllByDefault": "Email Reply to all by default",
-    "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
-    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
-    "followCreatedEntities": "Auto-follow created records",
-    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
+    "emailReplyForceHtml": "E-mail odgovor u HTML"
   },
   "options": {
     "weekStart": {
@@ -45,14 +37,7 @@
   "labels": {
     "Notifications": "Obaveštenja",
     "User Interface": "Korisnički interfejs",
-    "SMTP": "SMTP",
     "Misc": "Ostalo",
     "Locale": "Lokalno"
-  },
-  "tooltips": {
-    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
-    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
-    "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
-    "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
   }
 }

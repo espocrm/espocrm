@@ -11,14 +11,14 @@
     "storeSentEmails": "Trimite Email-uri Magazin",
     "keepFetchedEmailsUnread": "Păstrează Email-urile luate ca necitite",
     "emailFolder": "Pune în Dosar",
-    "useImap": "Ia Email-uri",
     "useSmtp": "Folosește SMTP",
     "smtpHost": "Gazdă SMTP",
     "smtpPort": "Port SMTP",
     "smtpAuth": "Autentificare SMTP",
     "smtpSecurity": "Securitate SMTP",
     "smtpUsername": "Nume Utilizator SMTP",
-    "smtpPassword": "Parolă SMTP"
+    "smtpPassword": "Parolă SMTP",
+    "useImap": "Ia Email-uri"
   },
   "links": {
     "filters": "Filtre",

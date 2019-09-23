@@ -2,9 +2,7 @@
   "fields": {
     "action": "Tindakan",
     "actionDate": "Tanggal",
-    "data": "Data",
     "campaign": "Kampanye",
-    "parent": "Target",
     "object": "Obyek",
     "application": "Aplikasi",
     "queueItem": "antrian Barang",

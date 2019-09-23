@@ -4,23 +4,15 @@
     "number": "Nombre",
     "status": "Statut",
     "account": "Compte",
-    "contact": "Contact",
-    "contacts": "Contacts",
     "priority": "Priorité",
-    "type": "Type",
-    "description": "Description",
-    "inboundEmail": "Email entrant",
     "lead": "Prospect"
   },
   "links": {
-    "inboundEmail": "Emails entrants",
     "account": "Compte",
     "contact": "Contact (principal)",
-    "Contacts": "Contacts",
     "meetings": "Rendez-vous",
     "calls": "Appels",
     "tasks": "Tâches",
-    "emails": "Emails",
     "articles": "Articles base de connaissance",
     "lead": "Prospect"
   },
@@ -40,8 +32,6 @@
       "Urgent": "Urgente"
     },
     "type": {
-      "Question": "Question",
-      "Incident": "Incident",
       "Problem": "Problème"
     }
   },

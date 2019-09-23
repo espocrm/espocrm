@@ -19,6 +19,9 @@
     "posts": "Пости",
     "updates": "Оновлення"
   },
+  "messages": {
+    "writeMessage": "Напишіть ваше повідомлення тут"
+  },
   "options": {
     "targetType": {
       "self": "Для себе",
@@ -30,9 +33,6 @@
     "type": {
       "Post": "Публікувати"
     }
-  },
-  "messages": {
-    "writeMessage": "Напишіть ваше повідомлення тут"
   },
   "links": {
     "related": "Пов'язаний"

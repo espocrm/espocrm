@@ -1,12 +1,9 @@
 {
   "fields": {
-    "parent": "Parent",
     "status": "Statut",
     "dateSent": "Date d'envoi",
     "from": "De",
     "to": "À",
-    "cc": "CC",
-    "bcc": "BCC",
     "replyTo": "Répondre à",
     "replyToString": "Répondre à (texte)",
     "isHtml": "Html",
@@ -14,8 +11,7 @@
     "subject": "Objet",
     "attachments": "Pièces-jointes",
     "selectTemplate": "Sélectionner un modèle",
-    "fromEmailAddress": "Depuis l'adresse",
-    "toEmailAddresses": "À l'adresse",
+    "fromAddress": "Depuis l'adresse",
     "emailAddress": "Adresse email",
     "deliveryDate": "Date de remise",
     "account": "Compte",
@@ -26,24 +22,11 @@
     "isNotRead": "Non lu",
     "isImportant": "Important",
     "isUsers": "Utilisateurs",
-    "inTrash": "Supprimé",
-    "name": "Name (Subject)",
-    "isReplied": "Is Replied",
-    "isNotReplied": "Is Not Replied",
-    "folder": "Folder",
-    "inboundEmails": "Group Accounts",
-    "emailAccounts": "Personal Accounts",
-    "hasAttachment": "Has Attachment",
-    "sentBy": "Sent By",
-    "assignedUsers": "Assigned Users"
+    "inTrash": "Supprimé"
   },
   "links": {
     "replied": "Répondu",
-    "replies": "Réponses",
-    "inboundEmails": "Group Accounts",
-    "emailAccounts": "Personal Accounts",
-    "assignedUsers": "Assigned Users",
-    "sentBy": "Sent By"
+    "replies": "Réponses"
   },
   "options": {
     "status": {
@@ -78,10 +61,7 @@
     "Mark as Important": "Marquer comme important",
     "Unmark Importance": "Marquer comme non important",
     "Move to Trash": "Mettre à la corbeille",
-    "Retrieve from Trash": "Enlever de la corbeille",
-    "Move to Folder": "Move to Folder",
-    "Filters": "Filters",
-    "Folders": "Folders"
+    "Retrieve from Trash": "Enlever de la corbeille"
   },
   "messages": {
     "noSmtpSetup": "Aucun compte SMTP n'a été installé. {link}.",
@@ -94,8 +74,7 @@
     "archived": "Archivé",
     "inbox": "Boite de réception",
     "drafts": "Brouillons",
-    "trash": "Corbeille",
-    "important": "Important"
+    "trash": "Corbeille"
   },
   "massActions": {
     "markAsRead": "Marquer commer lu",

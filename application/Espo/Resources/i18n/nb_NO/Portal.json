@@ -1,9 +1,6 @@
 {
   "fields": {
     "name": "Navn",
-    "logo": "Logo",
-    "companyLogo": "Logo",
-    "url": "URL",
     "portalRoles": "Roller",
     "isActive": "Er aktiv",
     "isDefault": "Er forvalg",

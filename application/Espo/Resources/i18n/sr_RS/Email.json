@@ -1,12 +1,9 @@
 {
   "fields": {
     "parent": "Roditelj",
-    "status": "Status",
     "dateSent": "Datum slanja",
     "from": "Od",
     "to": "Za",
-    "cc": "CC",
-    "bcc": "BCC",
     "replyTo": "Odgovarati na",
     "replyToString": "Odgovarati na (string)",
     "isHtml": "je HTML",
@@ -14,8 +11,7 @@
     "subject": "Predmet",
     "attachments": "Prilozi",
     "selectTemplate": "Izbor šablona",
-    "fromEmailAddress": "Od adresa",
-    "toEmailAddresses": "Na adresu",
+    "fromAddress": "Od adresa",
     "emailAddress": "Adresa e-pošte",
     "deliveryDate": "Datum isporuke",
     "account": "Pravno lice",

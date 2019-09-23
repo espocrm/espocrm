@@ -2,7 +2,6 @@
   "fields": {
     "name": "Ime",
     "parent": "roditelj",
-    "status": "Status",
     "dateStart": "Početni datum",
     "dateEnd": "Rok",
     "dateStartDate": "Datum početka (ceo dan)",

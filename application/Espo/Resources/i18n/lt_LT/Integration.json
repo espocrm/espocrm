@@ -10,10 +10,6 @@
     "selectIntegration": "Pasirinkite integraciją iš meniu.",
     "noIntegrations": "Nėra galimų integracijų"
   },
-  "help": {
-    "Google": "<p> <b> Gaukite įgaliojimus OAuth 2.0 iš \"Google Developers Console\". </ b> </ p> <p> Apsilankykite <a href=\"https://console.developers.google.com/project\"> \"Google Developers\" Konsolė </ a>, norint gauti \"OAuth 2.0\" kredencialus, pvz., \"Client ID\" ir \"Client Secret\", kurie yra žinomi tiek \"Google\", tiek \"EspoCRM\" programai. </ P>",
-    "GoogleMaps": "<p> Gaukite API raktą <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\"> čia </a>. </ p>"
-  },
   "titles": {
     "GoogleMaps": "Google žemėlapiai"
   }

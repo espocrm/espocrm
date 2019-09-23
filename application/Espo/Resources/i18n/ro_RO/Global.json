@@ -51,7 +51,6 @@
     "Extension": "Extensii",
     "Dashboard": "Tablou de bord",
     "InboundEmail": "Conturi Grup Email",
-    "Import": "Importă Rezultate",
     "Template": "Șabloane",
     "Job": "Activități",
     "EmailFilter": "Filtre Email",
@@ -103,7 +102,6 @@
     "Cache is not enabled": "Cache-ul nu este activat",
     "Cache has been cleared": "Cache-ul a fost șters",
     "Rebuild has been done": "Reconstruit cu succes",
-    "Return to Application": "Întoarce-te la aplicație",
     "Saving...": "Se salvează...",
     "Modified": "Modificat",
     "Created": "Creat",
@@ -158,6 +156,7 @@
     "Inactive": "Inactiv",
     "Write your comment here": "Scrie comentariul tău aici",
     "Post": "Publică",
+    "Stream": "Curent",
     "Show more": "Afișează mai mult",
     "Dashlet Options": "Opțiuni Dashlet",
     "Full Form": "Formă întreagă",
@@ -184,7 +183,6 @@
     "Close": "Închide",
     "Yes": "Da",
     "No": "Nu",
-    "Select All Results": "Selectează toate rezultatele",
     "Value": "Valoare",
     "Current version": "Verisune actuală",
     "List View": "Vizualizare listă",
@@ -205,6 +203,8 @@
     "Function": "Funcție",
     "Self-Assign": "Auto-atribuire",
     "Self-Assigned": "Auto=Atribuit",
+    "Return to Application": "Întoarce-te la aplicație",
+    "Select All Results": "Selectează toate rezultatele",
     "Expand": "Expandează",
     "Collapse": "Minimizează",
     "New notifications": "Notificare Nouă",
@@ -214,26 +214,13 @@
   "messages": {
     "pleaseWait": "Vă rugăm așteptați...",
     "posting": "Se publică...",
-    "loading": "Se încarcă...",
-    "saving": "Se salvează...",
     "confirmLeaveOutMessage": "Ești sigur că vrei să părăsești formularul?",
     "notModified": "Nu ai modificat înregistrarea",
-    "duplicate": "Înregistrarea pe care o creezi pare să fie duplicat",
-    "dropToAttach": "Trage pentru a atașa",
     "fieldIsRequired": "{field} este obligatoriu",
-    "fieldShouldBeEmail": "{field} trebuie să fie o adresă de email validă",
-    "fieldShouldBeFloat": "{field} trebuie să fie float valid",
-    "fieldShouldBeInt": "{field} trebuie sa fie întreg valid",
-    "fieldShouldBeDate": "{field} trebuie sa fie dată validă",
-    "fieldShouldBeDatetime": "{field} trebuie să fie data/timp valid",
     "fieldShouldAfter": "{field} trebuie sa fie după {otherField}",
     "fieldShouldBefore": "{field} trebuie sa fie înainte de {otherField}",
     "fieldShouldBeBetween": "{field} trebuie sa fie între {min} și  {max}",
-    "fieldShouldBeLess": "{field} trebuie sa fie mai puțin de {value}",
-    "fieldShouldBeGreater": "{field} trebuie sa fie mai mare de {value}",
     "fieldBadPasswordConfirm": "{field} confirmat în mod necorespunzator",
-    "fieldMaxFileSizeError": "Fișierul nu ar trebui să depășească {max} Mb",
-    "fieldIsUploading": "Se încarcă",
     "resetPreferencesDone": "Preferințele au fost resetate la valori implicite",
     "confirmation": "Ești sigur?",
     "unlinkAllConfirmation": "Ești sigur că vrei să dezlegi toate înregistrările asemănătoare?",
@@ -248,15 +235,15 @@
     "massRemoveResultSingle": "{count} înregistrare a fost ștearsă",
     "noRecordsRemoved": "Înregistrările nu au fost șterse",
     "clickToRefresh": "Apasă pentru reîmprospătare",
-    "streamPostInfo": "Tastează <strong>@username</strong> pentru a menționa utilizatorii în articol. \n\nAvailable markdown syntax:\n`<code>code</code>`\n```<code>multiline code</code>```\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~~<del>deleted text</del>~~\n> blockquote\n[link text](url)",
     "writeYourCommentHere": "Scrie comentariul tău aici",
     "writeMessageToUser": "Scrie un mesaj către{user}",
-    "writeMessageToSelf": "Scrie un mesaj pe stream",
     "typeAndPressEnter": "Tastează & apasă enter",
     "checkForNewNotifications": "Verifică pentru noi notificări",
+    "duplicate": "Înregistrarea pe care o creezi pare să fie duplicat",
+    "dropToAttach": "Trage pentru a atașa",
+    "writeMessageToSelf": "Scrie un mesaj pe stream",
     "checkForNewNotes": "Verifică pentru actualizări stream",
     "internalPost": "Articolul va fi vizulaizat doar de utilizatori interni",
-    "internalPostTitle": "Articolul este vizualizat de utilizatori interni",
     "done": "Terminat",
     "confirmMassFollow": "Ești sigur că vrei să urmărești înregistrările selectate?",
     "confirmMassUnfollow": "Ești sigur că nu mai vrei să urmărești înregistrările selectate?",
@@ -265,7 +252,19 @@
     "massFollowResultSingle": "{count} înregistrarea este urmărită",
     "massUnfollowResultSingle": "{count} înregistrarea nu mai este urmărită",
     "massFollowZeroResult": "Nimic nu a fost urmărit",
-    "massUnfollowZeroResult": "Nimic nu a mai fost neurmărit"
+    "massUnfollowZeroResult": "Nimic nu a mai fost neurmărit",
+    "fieldShouldBeEmail": "{field} trebuie să fie o adresă de email validă",
+    "fieldShouldBeFloat": "{field} trebuie să fie float valid",
+    "fieldShouldBeInt": "{field} trebuie sa fie întreg valid",
+    "fieldShouldBeDate": "{field} trebuie sa fie dată validă",
+    "fieldShouldBeDatetime": "{field} trebuie să fie data/timp valid",
+    "internalPostTitle": "Articolul este vizualizat de utilizatori interni",
+    "loading": "Se încarcă...",
+    "saving": "Se salvează...",
+    "fieldMaxFileSizeError": "Fișierul nu ar trebui să depășească {max} Mb",
+    "fieldShouldBeLess": "{field} trebuie sa fie mai puțin de {value}",
+    "fieldShouldBeGreater": "{field} trebuie sa fie mai mare de {value}",
+    "fieldIsUploading": "Se încarcă"
   },
   "boolFilters": {
     "onlyMy": "Doar eu",
@@ -319,6 +318,7 @@
     "children": "Copil"
   },
   "dashlets": {
+    "Stream": "Curent",
     "Emails": "Căsuța mea poștală",
     "Records": "Listă Înregistrare"
   },
@@ -340,8 +340,6 @@
     "postTargetYou": "{user} publicat către tine",
     "postTargetYouAndOthers": "{user} publicat către {target} și tine",
     "postTargetAll": "{user} publicat la toți",
-    "postTargetSelf": "{user} auto-publicat",
-    "postTargetSelfAndOthers": "{user} publicat la {target} și la el însuși",
     "mentionInPost": "{user} menționat {mentioned} în {entityType} {entity}",
     "mentionYouInPost": "{user} menționat în {entityType} {entity}",
     "mentionInPostTarget": "{user} menționat {mentioned} în articol",
@@ -352,16 +350,8 @@
     "createThis": "{user} a creaat acest {entityType}",
     "createAssignedThis": "{user} a creat acest {entityType} alocat lui {assignee}",
     "createAssigned": "{user} a creat {entityType} {entity} și alocat lui {assignee}",
-    "createAssignedYou": "{user} a creat {entityType} {entity} alocată ție",
-    "createAssignedThisSelf": "{user} a creat {entityType} auto-alocată",
-    "createAssignedSelf": "{user} a creat {entityType} {entity} auto-alocată",
     "assign": "{user} a alocat {entityType} {entity} lui {assignee}",
     "assignThis": "{user} a alocat acest {entityType} lui {assignee}",
-    "assignYou": "{user} a alocat {entityType} {entity} ție",
-    "assignThisVoid": "{user} a oprit alocarea {entityType}",
-    "assignVoid": "{user} a oprit alocarea {entityType} {entity}",
-    "assignThisSelf": "{user} a auto-alocat {entityType}",
-    "assignSelf": "{user} a auto-alocat {entityType} {entity}",
     "postThis": "{user} publicat",
     "attachThis": "{user} atașat",
     "statusThis": "{user} a actualizat {field}",
@@ -380,13 +370,17 @@
     "emailReceived": "Email a fost primit pentru {entityType} {entity}",
     "emailReceivedInitial": "Email primt: creat {entityType} {entity}",
     "emailSent": "{by} a trimis emailul asemănător {entityType} {entity}",
-    "emailSentThis": "{by} a trimis email"
-  },
-  "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} a publica la {target} și lui"
-  },
-  "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} posted to {target} și ei"
+    "emailSentThis": "{by} a trimis email",
+    "postTargetSelf": "{user} auto-publicat",
+    "postTargetSelfAndOthers": "{user} publicat la {target} și la el însuși",
+    "createAssignedYou": "{user} a creat {entityType} {entity} alocată ție",
+    "createAssignedThisSelf": "{user} a creat {entityType} auto-alocată",
+    "createAssignedSelf": "{user} a creat {entityType} {entity} auto-alocată",
+    "assignYou": "{user} a alocat {entityType} {entity} ție",
+    "assignThisVoid": "{user} a oprit alocarea {entityType}",
+    "assignVoid": "{user} a oprit alocarea {entityType} {entity}",
+    "assignThisSelf": "{user} a auto-alocat {entityType}",
+    "assignSelf": "{user} a auto-alocat {entityType} {entity}"
   },
   "lists": {
     "monthNames": [
@@ -445,10 +439,6 @@
       "Sâ"
     ]
   },
-  "durationUnits": {
-    "d": "z",
-    "h": "o"
-  },
   "options": {
     "salutationName": {
       "Mr.": "Dl.",
@@ -470,7 +460,6 @@
       "de_DE": "Germană",
       "el_GR": "Greacă",
       "en_GB": "Engleză (UK)",
-      "es_MX": "Spaniolă (Mexic)",
       "en_US": "Engleză (US)",
       "es_ES": "Spaniolă (Spania)",
       "et_EE": "Estoniană",
@@ -521,7 +510,8 @@
       "vi_VN": "Vietnameză",
       "zh_CN": "Chineză Simplificată (China)",
       "zh_HK": "Chineză Tradițională (Honk Kong)",
-      "zh_TW": "Chineză Tradițională (Taiwan)"
+      "zh_TW": "Chineză Tradițională (Taiwan)",
+      "es_MX": "Spaniolă (Mexic)"
     },
     "dateSearchRanges": {
       "on": "Pornit",
@@ -534,7 +524,6 @@
       "future": "În viitor",
       "currentMonth": "Luna curentă",
       "lastMonth": "Luna trecută",
-      "nextMonth": "Luna viitoare",
       "currentQuarter": "Trimestru actual",
       "lastQuarter": "Trimestrul trecut",
       "currentYear": "Anul curent",
@@ -545,15 +534,16 @@
       "ever": "Vreodată",
       "isEmpty": "Este gol",
       "olderThanXDays": "Mai vechi decât X zile",
-      "afterXDays": "După X zile"
+      "afterXDays": "După X zile",
+      "nextMonth": "Luna viitoare"
     },
     "searchRanges": {
       "is": "Este",
       "isEmpty": "Este gol",
       "isNotEmpty": "Nu este gol",
+      "isFromTeams": "Face parte din echipa",
       "isOneOf": "Oricare dintre",
       "anyOf": "Oricare dintre",
-      "isFromTeams": "Face parte din echipa",
       "isNot": "Nu este",
       "isNotOneOf": "Nici unul dintre",
       "noneOf": "Nici unul dintre"
@@ -561,13 +551,13 @@
     "varcharSearchRanges": {
       "equals": "Egal",
       "like": "Este ca (%)",
-      "notLike": "Nu este ca (%)",
       "startsWith": "Începe cu",
       "endsWith": "Se termină cu",
       "contains": "Conține",
-      "notContains": "Nu Conține",
       "isEmpty": "Este gol",
       "isNotEmpty": "Nu este gol",
+      "notLike": "Nu este ca (%)",
+      "notContains": "Nu Conține",
       "notEquals": "Nu este egal"
     },
     "intSearchRanges": {
@@ -687,8 +677,14 @@
       }
     }
   },
-  "themes": {
-    "Hazyblue": "Azur",
-    "HazyblueVertical": "Azur w/ sidebar "
+  "streamMessagesMale": {
+    "postTargetSelfAndOthers": "{user} a publica la {target} și lui"
+  },
+  "streamMessagesFemale": {
+    "postTargetSelfAndOthers": "{user} posted to {target} și ei"
+  },
+  "durationUnits": {
+    "d": "z",
+    "h": "o"
   }
 }

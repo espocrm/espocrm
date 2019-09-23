@@ -58,6 +58,7 @@
     "Lead Capture": "Cattura Lead",
     "Attachments": "Allegati",
     "API Users": "API Utenti",
+    "System Requirements": "Requisiti di sistema",
     "PHP Settings": "Impostazioni PHP",
     "Database Settings": "Impostazioni Database",
     "Permissions": "Permessi",
@@ -149,13 +150,10 @@
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
     "selectUpgradePackage": "Seleziona il pacchetto di aggiornamento",
-    "downloadUpgradePackage": "Scarica il pacchetto di aggiornamento <a href=\"{url}\">da qui</a>.",
     "selectLayout": "Scegli il layout dal menu di sinistra e modificalo.",
     "selectExtensionPackage": "Seleziona pacchetto di estensioni",
     "extensionInstalled": "L'estensione {name} {version} è stata installata",
     "installExtension": "L'estensione {name} {version} è pronto per essere installata",
-    "upgradeVersion": "EspoCRM verrà aggiornato alla versione <strong>{version}</strong>. Si raccomanda un pò di pazienza perché questo richiede tempo.",
-    "upgradeDone": "EspoCRM è stato aggiornato alla versione <strong>{version}</strong>.",
     "upgradeBackup": "Si raccomanda di eseguire un backup dei file e dei dati di EspoCRM prima di eseguire l'aggiornamento.",
     "thousandSeparatorEqualsDecimalMark": "Il separatore delle migliaia non può essere uguale al separatore decimale.",
     "userHasNoEmailAddress": "L'utente non ha un indirizzo email.",
@@ -199,7 +197,8 @@
     "requiredPhpVersion": "Versione PHP",
     "requiredMysqlVersion": "Versione MySQL",
     "host": "Nome Host",
-    "dbname": "Nome del database"
+    "dbname": "Nome del database",
+    "user": "Nome Utente"
   },
   "templates": {
     "accessInfo": "Informazioni di accesso",

@@ -2,7 +2,6 @@
   "fields": {
     "name": "Ime",
     "parent": "Roditelj",
-    "status": "Status",
     "dateStart": "Početni datum",
     "dateEnd": "Krajnji datum",
     "direction": "Smer",

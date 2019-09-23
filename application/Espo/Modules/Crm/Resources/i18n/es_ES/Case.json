@@ -9,12 +9,10 @@
     "priority": "Prioridad",
     "type": "Tipo",
     "description": "Descripción",
-    "inboundEmail": "Cuenta de Correo",
     "lead": "Posible cliente",
     "attachments": "Adjuntos"
   },
   "links": {
-    "inboundEmail": "Cuenta de correo",
     "account": "Cuenta",
     "contact": "Contratos (principal)",
     "Contacts": "Contactos",
@@ -37,7 +35,6 @@
     },
     "priority": {
       "Low": "Baja",
-      "Normal": "Normal",
       "High": "Alta",
       "Urgent": "Urgente"
     },

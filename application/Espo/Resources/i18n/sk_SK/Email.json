@@ -13,7 +13,7 @@
     "subject": "Predmet",
     "attachments": "Prílohy",
     "selectTemplate": "Vybrať šablónu",
-    "fromEmailAddress": "Adresa odosielateľa",
+    "fromAddress": "Adresa odosielateľa",
     "emailAddress": "Emailová adresa",
     "deliveryDate": "Dátum doručenia",
     "account": "Účet",

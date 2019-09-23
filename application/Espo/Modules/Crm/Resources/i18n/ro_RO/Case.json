@@ -8,11 +8,10 @@
     "priority": "Prioritate",
     "type": "Tip",
     "description": "Descriere",
-    "inboundEmail": "Grup Cont Email",
-    "attachments": "Atașamente"
+    "attachments": "Atașamente",
+    "inboundEmail": "Grup Cont Email"
   },
   "links": {
-    "inboundEmail": "Grup Cont Email",
     "account": "Cont",
     "contact": "Contact (Principal)",
     "Contacts": "Contacte",
@@ -21,7 +20,8 @@
     "tasks": "Sarcini",
     "emails": "Email-uri",
     "articles": "Articole Bază de Cunoștință",
-    "attachments": "Atașamente"
+    "attachments": "Atașamente",
+    "inboundEmail": "Grup Cont Email"
   },
   "options": {
     "status": {

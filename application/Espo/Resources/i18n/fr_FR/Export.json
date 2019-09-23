@@ -1,13 +1,6 @@
 {
   "fields": {
     "fieldList": "Choix de champs",
-    "exportAllFields": "Exporter tous les champs",
-    "format": "Format"
-  },
-  "options": {
-    "format": {
-      "csv": "CSV",
-      "xlsx": "XLSX (Excel)"
-    }
+    "exportAllFields": "Exporter tous les champs"
   }
 }

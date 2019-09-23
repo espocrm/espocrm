@@ -10,7 +10,7 @@
     "title": "Titolo",
     "website": "Sito Web",
     "phoneNumber": "Telefono",
-    "accountName": "Nome utente",
+    "accountName": "Azienda",
     "doNotCall": "Non chiamare",
     "address": "Indirizzo",
     "status": "Stato",
@@ -33,7 +33,7 @@
     "campaign": "Campagna",
     "createdContact": "Contatti",
     "createdOpportunity": "Opportunità",
-    "cases": "Casi",
+    "cases": "Tickets",
     "documents": "Documenti"
   },
   "options": {

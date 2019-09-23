@@ -164,7 +164,6 @@
   "messages": {
     "selectEntityType": "Vælg entitetstype i venstremenuen",
     "selectUpgradePackage": "Vælg opgraderingspakke",
-    "downloadUpgradePackage": "Download opgraderingspakke(r) <a href=\"{url}\">her</a>.",
     "selectLayout": "Vælg ønsket layout i venstremenuen og rediger",
     "selectExtensionPackage": "Vælg udvidelsespakke",
     "extensionInstalled": "Udvidelse {name} {version} er blevet installeret",
@@ -232,7 +231,7 @@
     "mention": "Nævne",
     "noteEmailRecieved": "Notat omkring modtagne Email",
     "notePost": "Notat omkring poster",
-    "notePostNoParent": "Note omkring poster (Ingen Forældre)",
+    "notePostNoParent": "Note omkring poster (Ingen henvisning)",
     "noteStatus": "Notat omkring status opdatering",
     "passwordChangeLink": "Skift kodeord link"
   }

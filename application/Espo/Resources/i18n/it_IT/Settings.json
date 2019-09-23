@@ -35,6 +35,7 @@
     "ldapAccountDomainNameShort": "Account Nome di Dominio abbreviato",
     "ldapOptReferrals": "Opt Referenti",
     "exportDisabled": "Disabilita Esporta (sarà consentito solo all'admin)",
+    "b2cMode": "Modalità B2C",
     "avatarsDisabled": "Disabilita Avatars",
     "displayListViewRecordCount": "Mostra totale trovati (in vista elenco)",
     "theme": "Tema",
@@ -86,7 +87,10 @@
     "emailAddressIsOptedOutByDefault": "Contrassegni i nuovi indirizzi del email come cancellati dall'iscrizione",
     "outboundEmailBccAddress": "CCN indirizzi per client esterni",
     "adminNotificationsNewExtensionVersion": "Mostra notifica quando sono disponibili nuove versioni di estensioni",
-    "cleanupDeletedRecords": "Pulire i record eliminati"
+    "cleanupDeletedRecords": "Pulire i record eliminati",
+    "maintenanceMode": "Modalità manutenzione",
+    "useWebSocket": "Usa WebSocket",
+    "massEmailOpenTracking": "Monitoraggio apertura Email"
   },
   "options": {
     "weekStart": {

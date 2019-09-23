@@ -1,0 +1,13 @@
+{
+  "messages": {
+    "infoMention": "Typ **@gebruikersnaam** om de gebruiker in de post te vermelden.",
+    "infoSyntax": "Beschikbare markering syntaxis"
+  },
+  "syntaxItems": {
+    "multilineCode": "multi-Line code",
+    "strongText": "vette text",
+    "emphasizedText": "benadrukte tekst",
+    "deletedText": "verwijderde text",
+    "blockquote": "blokquote"
+  }
+}

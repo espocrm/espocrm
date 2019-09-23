@@ -1,12 +1,12 @@
 {
   "fields": {
-    "name": "Nome",
+    "name": "Azienda",
     "website": "Sito Web",
     "phoneNumber": "Telefono",
     "billingAddress": "Indirizzo di Fatturazione",
     "shippingAddress": "Indirizzo di Spedizione",
     "description": "Descrizione",
-    "industry": "Azienda",
+    "industry": "Settore",
     "type": "Tipo",
     "contactRole": "Titolo",
     "campaign": "Campagna",
@@ -18,7 +18,7 @@
   "links": {
     "contacts": "Contatti",
     "opportunities": "Opportunita'",
-    "cases": "Casi",
+    "cases": "Ticket",
     "documents": "Documenti",
     "meetingsPrimary": "Riunioni (ampliato)",
     "callsPrimary": "Chiamate (ampliato)",

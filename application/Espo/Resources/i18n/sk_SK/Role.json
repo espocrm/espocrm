@@ -18,7 +18,6 @@
     "userPermission": "Umožňuje obmedziť možnosť používateľovi vidieť ativity, kalendár a stream iných používateľov.\n\nall - môže vidieť všetko\n\nteam - môže vidieť aktivity iba vrámci tímu\n\nno - nemôže vidieť",
     "portalPermission": "Definuje prístup k portálovej informácii, možnosť posielať správy portálovým používateľom.",
     "groupEmailAccountPermission": "Definuje prístup k skupinovým emailovým účtom, možnosť posielať emaily zo skupinového SMTP.",
-    "exportPermission": "Definuje či používatelia majú možnosť exportovať záznamy.",
     "dataPrivacyPermission": "Povoľuje prezerať a mazať osobné údaje."
   },
   "labels": {

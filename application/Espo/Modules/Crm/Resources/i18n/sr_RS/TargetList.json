@@ -19,7 +19,6 @@
   "options": {
     "type": {
       "Email": "E-mail",
-      "Web": "Web",
       "Television": "televizija",
       "Radio": "radio",
       "Newsletter": "bilten"

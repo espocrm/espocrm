@@ -17,7 +17,6 @@
       "default": "Forvalg",
       "success": "Suksess",
       "danger": "Fare",
-      "info": "Info",
       "warning": "Varsel",
       "primary": "Primær"
     }

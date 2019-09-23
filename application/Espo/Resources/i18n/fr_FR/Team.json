@@ -6,9 +6,7 @@
   },
   "links": {
     "users": "Utilisateurs",
-    "notes": "Notes",
-    "roles": "Rôles",
-    "inboundEmails": "Group Email Accounts"
+    "roles": "Rôles"
   },
   "tooltips": {
     "roles": "Permissions. Les utilisateurs de cette équipe obtiennent le niveau d'accès des rôles sélectionnés.",

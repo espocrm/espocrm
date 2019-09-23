@@ -19,9 +19,7 @@
   "options": {
     "type": {
       "Email": "Correo electrónico",
-      "Web": "Web",
       "Television": "Televisión",
-      "Radio": "Radio",
       "Newsletter": "Boletín de noticias"
     }
   },

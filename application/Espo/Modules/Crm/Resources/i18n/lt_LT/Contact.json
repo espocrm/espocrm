@@ -41,7 +41,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--Nėra--",
       "Decision Maker": "Sprendimus priimantis žmogus",
       "Evaluator": "Vertintojas",
       "Influencer": "Darantis įtaką"

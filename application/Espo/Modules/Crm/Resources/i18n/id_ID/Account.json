@@ -32,9 +32,7 @@
   "options": {
     "type": {
       "Customer": "Pelanggan",
-      "Investor": "Investor",
-      "Partner": "Pasangan",
-      "Reseller": "Reseller"
+      "Partner": "Pasangan"
     },
     "industry": {
       "Agriculture": "Pertanian",

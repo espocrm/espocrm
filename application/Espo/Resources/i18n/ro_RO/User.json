@@ -71,8 +71,14 @@
     "forbidden": "Înterzis, încercați mai târziu",
     "uniqueLinkHasBeenSent": "URL-ul unic a fost trimis la adresa de email specificată.",
     "passwordChangedByRequest": "Parola a fost schimbată.",
-    "setupSmtpBefore": "Pentru a face sistemul să poată trimite parola în email , trebui să setați <a href=\"{url}\">setările SMTP</a>.",
     "userNameExists": "Acest nume de utilizator există deja"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Doar în Echipa Mea"
+  },
+  "presetFilters": {
+    "active": "Activ",
+    "activePortal": "Portal Activ"
   },
   "options": {
     "gender": {
@@ -81,12 +87,5 @@
       "Female": "Feminin",
       "Neutral": "Neutru"
     }
-  },
-  "boolFilters": {
-    "onlyMyTeam": "Doar în Echipa Mea"
-  },
-  "presetFilters": {
-    "active": "Activ",
-    "activePortal": "Portal Activ"
   }
 }

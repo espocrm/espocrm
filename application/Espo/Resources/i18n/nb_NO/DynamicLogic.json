@@ -1,7 +1,4 @@
 {
-  "label": {
-    "Field": "Felt"
-  },
   "options": {
     "operators": {
       "equals": "Lik",
@@ -20,7 +17,9 @@
       "isEmpty": "Er tom",
       "isNotEmpty": "Er ikke tom",
       "contains": "Inneholder",
-      "notContains": "Inneholder ikke"
+      "has": "Inneholder",
+      "notContains": "Inneholder ikke",
+      "notHas": "Inneholder ikke"
     }
   }
 }

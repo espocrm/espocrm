@@ -6,15 +6,8 @@
     "autorefreshInterval": "Intervalle de rafraîchissement automatique",
     "displayRecords": "Afficher les enregistrements",
     "isDoubleHeight": "Hauteur 2x",
-    "mode": "Mode",
     "enabledScopeList": "Afficher",
-    "users": "Utilisateurs",
-    "entityType": "Entity Type",
-    "primaryFilter": "Primary Filter",
-    "boolFilterList": "Additional Filters",
-    "sortBy": "Order (field)",
-    "sortDirection": "Order (direction)",
-    "expandedLayout": "Layout"
+    "users": "Utilisateurs"
   },
   "options": {
     "mode": {
@@ -25,8 +18,5 @@
       "agendaDay": "Jour (calendrier)",
       "timeline": "Plage de temps"
     }
-  },
-  "messages": {
-    "selectEntityType": "Select Entity Type in dashlet options."
   }
 }

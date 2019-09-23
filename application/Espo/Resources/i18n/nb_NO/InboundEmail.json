@@ -2,15 +2,12 @@
   "fields": {
     "name": "Navn",
     "emailAddress": "Epostadresse",
-    "status": "Status",
     "assignToUser": "Tildel til bruker",
     "host": "Tjener",
     "username": "Brukernavn",
     "password": "Passord",
-    "port": "Port",
     "monitoredFolders": "Overvåkede mapper",
     "trashFolder": "Søppelkurv-mappe",
-    "ssl": "SSL",
     "createCase": "Opprett sak",
     "reply": "Automatisk svar",
     "caseDistribution": "Distribusjon av sak",
@@ -46,7 +43,6 @@
     "caseDistribution": {
       "": "Ingen",
       "Direct-Assignment": "Direktetildeling",
-      "Round-Robin": "Round-Robin",
       "Least-Busy": "Minst opptatte"
     }
   },

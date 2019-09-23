@@ -70,7 +70,6 @@
     "forbidden": "Vietato , riprova piu tardi",
     "uniqueLinkHasBeenSent": "L' URL univoco è stato inviato all'indirizzo di posta elettronica specificato .",
     "passwordChangedByRequest": "La password è stata modificata.",
-    "setupSmtpBefore": "È necessario attivare le <a href=\"{url}\">Impostazioni SMTP</a> perchè il sistema sia in grado di mandare le password via email.",
     "userNameExists": "Nome utente già esistente"
   },
   "boolFilters": {

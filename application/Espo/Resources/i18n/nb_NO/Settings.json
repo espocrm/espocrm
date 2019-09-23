@@ -14,8 +14,6 @@
     "language": "Språk",
     "companyLogo": "Foretakslogo",
     "smtpServer": "Tjener",
-    "smtpPort": "Port",
-    "ldapPort": "Port",
     "smtpAuth": "Autentisering",
     "ldapAuth": "Autentisering",
     "smtpSecurity": "Sikkerhet",
@@ -45,15 +43,12 @@
     "exportDisabled": "Deaktiver eksport (kun tillat for admin)",
     "b2cMode": "B2C-modus",
     "avatarsDisabled": "Deaktiver avatar",
-    "followCreatedEntities": "Følg nyopprettede enheter",
     "displayListViewRecordCount": "Vis totalt antall (i listevisning)",
     "theme": "Stiltema",
     "userThemesDisabled": "Deaktiver stiltemabytte for brukere",
     "emailMessageMaxSize": "Maks epoststørrelse (Mb)",
-    "massEmailMaxPerHourCount": "Maks antall eposter sendt pr time",
     "personalEmailMaxPortionSize": "Maks antall eposter som kan hentes inn fra tidligere dato for personlig konto",
     "inboundEmailMaxPortionSize": "Maks antall eposter som kan hentes inn fra tidligere dato for gruppekonto",
-    "maxEmailAccountCount": "Maks antall epostkonti pr bruker",
     "authTokenLifetime": "Levetiden for autentiseringstoken (timer)",
     "authTokenMaxIdleTime": "Lengst tillate inaktivitet fra autentiseringstoken (timer)",
     "dashboardLayout": "Dashbordoppsett (forvalg)",
@@ -64,7 +59,6 @@
     "applicationName": "Applikasjonsnavn",
     "ldapUsername": "Full bruker DN",
     "ldapBindRequiresDn": "Binding krever DN",
-    "ldapBaseDn": "Base DN",
     "ldapUserNameAttribute": "Brukernavnegenskap",
     "ldapUserObjectClass": "ObjectClass for bruker",
     "ldapUserTitleAttribute": "Tittel-egenskap for bruker",
@@ -84,7 +78,10 @@
     "mentionEmailNotifications": "Send epostvarsler når man nevnes i en post",
     "massEmailDisableMandatoryOptOutLink": "Deaktiver påbudt avmeldingslenke",
     "activitiesEntityList": "Enhetsliste for aktiviteter",
-    "historyEntityList": "Enhetsliste for historie"
+    "historyEntityList": "Enhetsliste for historie",
+    "followCreatedEntities": "Følg nyopprettede enheter",
+    "massEmailMaxPerHourCount": "Maks antall eposter sendt pr time",
+    "maxEmailAccountCount": "Maks antall epostkonti pr bruker"
   },
   "options": {
     "weekStart": {
@@ -95,7 +92,6 @@
   "tooltips": {
     "recordsPerPage": "Antall oppføringer som vises i listevisning fra starten.",
     "recordsPerPageSmall": "Antall oppføringer som vises i relasjonspanel fra starten.",
-    "outboundEmailIsShared": "Tillat brukere å sende eposter via denne SMTP-tjeneren.",
     "followCreatedEntities": "Brukere vil automatisk følge oppføringer de selv oppretter.",
     "emailMessageMaxSize": "Alle inngående eposter som overskrider en spesifisert størrelse vil bli hentet uten brødtekst og vedlegg.",
     "authTokenLifetime": "Definerer hvor lenge tokens kan eksistere\n0 – betyr ingen utløpstid.",
@@ -106,7 +102,6 @@
     "ldapAuth": "Tilgangsinformasjon for LDAP-tjeneren.",
     "ldapUserNameAttribute": "Egenskapen som identifiserer brukeren. F.eks: \"userPrincipalName\" eller \"sAMAccountName\" for Active Directory, \"uid\" for OpenLDAP.",
     "ldapUserObjectClass": "ObjectClass-egenskapen for å søke blant brukere, f.eks: \"person\" for AD, \"inetOrgPerson\" for OpenLDAP. ",
-    "ldapAccountCanonicalForm": "Ulike kanoniske formatvarianter. Det er 4 muligheter:<br>- 'Dn' - varianten i formatet 'CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - varianten 'tester'.<br>- 'Backslash' - varianten 'COMPANY\\tester'.<br>- 'Principal' - varianten 'tester@company.com'.",
     "ldapBindRequiresDn": "Muligheten til å formatere brukernavnet i DN-format.",
     "ldapBaseDn": "Forvalgt DN-base brukt for å søke blant brukere. F.eks: \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "Dette valget splitter et brukernavn fra domenet.",
@@ -122,12 +117,11 @@
     "ldapAccountDomainNameShort": "Det korte domenet som brukes for autentisering av LDAP-tjeneren.",
     "ldapUserTeams": "Grupper for opprettet bruker. Gå til brukerens profil for å se mer.",
     "ldapUserDefaultTeam": "Forvalgt gruppe for opprettet bruker. Gå til brukerens profil for å se mer.",
-    "b2cMode": "EspoCRM er tilpasset B2B som forvalg. Du kan bytte til B2C."
+    "b2cMode": "EspoCRM er tilpasset B2B som forvalg. Du kan bytte til B2C.",
+    "outboundEmailIsShared": "Tillat brukere å sende eposter via denne SMTP-tjeneren."
   },
   "labels": {
-    "System": "System",
     "Locale": "Språk og nasjonalitet",
-    "SMTP": "SMTP",
     "Configuration": "Konfigurasjon",
     "In-app Notifications": "Varslinger i appen",
     "Email Notifications": "Epostvarslinger",

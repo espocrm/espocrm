@@ -34,9 +34,9 @@
     "EmailQueueItem": "Черговість пунктів в електронній скринці",
     "CampaignTrackingUrl": "Відстеження URL",
     "Activities": "Активність",
-    "KnowledgeBaseArticle": "Стаття бази знань",
-    "KnowledgeBaseCategory": "Категорія бази знань",
-    "CampaignLogRecord": "Лог кампанії"
+    "KnowledgeBaseArticle": "Стаття Бази Знань",
+    "KnowledgeBaseCategory": "Категорія Бази Знань",
+    "CampaignLogRecord": "Лоґ кампанії"
   },
   "scopeNamesPlural": {
     "Account": "Контрагенти",
@@ -58,8 +58,8 @@
     "CampaignTrackingUrl": "Відстеження URLs",
     "Activities": "Активність",
     "KnowledgeBaseArticle": "База знань",
-    "KnowledgeBaseCategory": "Категорії бази знань",
-    "CampaignLogRecord": "Логи кампанії"
+    "KnowledgeBaseCategory": "Категорії Бази Знань",
+    "CampaignLogRecord": "Лоґи кампанії"
   },
   "dashlets": {
     "Leads": "Мої ліди",

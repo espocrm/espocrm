@@ -17,7 +17,6 @@
     "Create Template": "Napravi šablon"
   },
   "tooltips": {
-    "footer": "Koristiti {pageNumber} za štampanje broja stranice.",
-    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
+    "footer": "Koristiti {pageNumber} za štampanje broja stranice."
   }
 }

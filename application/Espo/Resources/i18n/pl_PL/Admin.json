@@ -50,7 +50,11 @@
     "Jobs": "Zadania",
     "Reset to Default": "Przywróć domyślne",
     "Email Filters": "Filtry wiadomości",
-    "Portal Users": "Użytkownicy portali"
+    "Portal Users": "Użytkownicy portali",
+    "System Requirements": "Wymagania systemowe",
+    "PHP Settings": "Ustawienia PHP",
+    "Database Settings": "Ustawienia bazy danych",
+    "Permissions": "Zezwolenie"
   },
   "layouts": {
     "list": "Lista",
@@ -140,13 +144,10 @@
   "messages": {
     "selectEntityType": "Wybierz jednostkę z menu po lewej stonie.",
     "selectUpgradePackage": "Wypierz paczkę do aktualizacji",
-    "downloadUpgradePackage": "Pobierz paczkę z aktualizacją <a href=\"{url}\">stąd</a>.",
     "selectLayout": "Wybierz interesujący Cię układ z menu po lewej stronie i zacznij go edytować.",
     "selectExtensionPackage": "Wybierz paczkę rozszerzeń",
     "extensionInstalled": "Rozszerzenie {name} {version} zostało zainstalowane.",
     "installExtension": "Rozszerzenie {name} {version} jest gotowe do instalacji.",
-    "upgradeVersion": "Twój EspoCRM jest aktualizowany do wersji <strong>{version}</strong>. To może chwilę czasu.",
-    "upgradeDone": "Twój CRM został zaaktualizowany do najnowszej wersji <strong>{version}</strong>. Odśwież swoją przeglądarke aby zobaczyć zmiany.",
     "upgradeBackup": "Zalecamy abyś wykonał archiwizacje swoich danych, przed aktualizacją.",
     "thousandSeparatorEqualsDecimalMark": "Separator dziesiętny nie może być taki sam jak znak oddzielenia",
     "userHasNoEmailAddress": "Użytkownik nie ma przypisanego adres e-mail."
@@ -177,7 +178,8 @@
     "notifications": "Ustawienia powiadomień wewnętrznych i email.",
     "inboundEmails": "Globalne ustawienia wiadomości przychodzących.",
     "entityManager": "Utwórz własne jednostki, edytuj istniejące. Zarzącaj polami i relacjami.",
-    "emailFilters": "Wiadomości które pasują do określonych kryteriów nie będą importowane."
+    "emailFilters": "Wiadomości które pasują do określonych kryteriów nie będą importowane.",
+    "systemRequirements": "Wymagania systemowe dla EspoCRM"
   },
   "options": {
     "previewSize": {
@@ -191,5 +193,12 @@
     "and": "ORAZ",
     "or": "LUB",
     "not": "NIE"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Wersja PHP",
+    "requiredMysqlVersion": "Wersja MySQL",
+    "host": "Nazwa hosta",
+    "dbname": "Nazwa Bazy Danych",
+    "user": "Nazwa Użytkownika"
   }
 }

@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Nama",
-    "status": "Status",
     "storeSentEmails": "Simpan EmailTerkirim",
     "startAt": "Tanggal mulai",
     "fromAddress": "Alamat pengirim",

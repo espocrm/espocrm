@@ -2,7 +2,7 @@
   "fields": {
     "name": "Ім'я",
     "emailAddress": "Емейл",
-    "title": "Посада",
+    "accountRole": "Посада",
     "account": "Контрагент",
     "accounts": "Контрагенти",
     "phoneNumber": "Телефон",
@@ -10,13 +10,12 @@
     "doNotCall": "Не дзвонити",
     "address": "Адреса",
     "opportunityRole": "Роль угоди",
-    "accountRole": "Посада",
     "description": "Опис",
     "campaign": "Кампанія",
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
     "portalUser": "Користувач порталів",
-    "originalLead": "Початковий лід",
+    "originalLead": "Початковий Лід",
     "acceptanceStatus": "Ухвалення статусу",
     "accountIsInactive": "Неактивний акаунт",
     "acceptanceStatusMeetings": "Статус підтвердження (Зустрічі)",
@@ -26,22 +25,21 @@
     "opportunities": "Угоди",
     "cases": "Звернення",
     "targetLists": "Цільові списки",
-    "campaignLogRecords": "Лог кампанії",
+    "campaignLogRecords": "Лоґ кампанії",
     "campaign": "Кампанія",
     "account": "Контрагент (основний)",
     "accounts": "Контрагенти",
     "casesPrimary": "Звернення (Основні)",
-    "tasksPrimary": "Завдання (розширено)",
     "portalUser": "Користувач порталу",
-    "originalLead": "Початковий лід",
-    "documents": "Документи"
+    "originalLead": "Початковий Лід",
+    "documents": "Документи",
+    "tasksPrimary": "Завдання (розширено)"
   },
   "labels": {
     "Create Contact": "Створити контакт"
   },
   "options": {
     "opportunityRole": {
-      "": "",
       "Decision Maker": "Приймає рішення",
       "Evaluator": "Оцінює",
       "Influencer": "Впливає"

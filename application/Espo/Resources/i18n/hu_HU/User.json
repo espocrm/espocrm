@@ -76,7 +76,6 @@
     "forbidden": "Tilos, próbálkozzon később",
     "uniqueLinkHasBeenSent": "Az egyedi URL-t elküldtük a megadott e-mail címre.",
     "passwordChangedByRequest": "A jelszó megváltozott.",
-    "setupSmtpBefore": "Be kell állítania az <a href=\"{url}\"> SMTP-beállításokat </a>, hogy a rendszer képes legyen jelszót küldeni e-mailben.",
     "userNameExists": "Felhasználónév már létezik"
   },
   "boolFilters": {

@@ -10,16 +10,9 @@
     "oneOff": "Une seule fois"
   },
   "labels": {
-    "Create EmailTemplate": "Créer un modèle d'email",
-    "Info": "Info"
-  },
-  "tooltips": {
-    "oneOff": "Check if you are going to use this template only once. E.g. for Mass Email."
+    "Create EmailTemplate": "Créer un modèle d'email"
   },
   "presetFilters": {
     "actual": "Réel"
-  },
-  "messages": {
-    "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link;\n\n{optOutLink} &#8211; an unsubscribe link."
   }
 }

@@ -5,40 +5,29 @@
     "title": "Titre",
     "isAdmin": "Est administrateur",
     "defaultTeam": "Équipe par défaut",
-    "emailAddress": "Email",
     "phoneNumber": "Téléphone",
     "roles": "Rôles",
     "portals": "Portails",
     "portalRoles": "Rôles de Portail",
-    "teamRole": "Position",
     "password": "Mot de passe",
     "currentPassword": "Mot de passe actuel",
     "passwordConfirm": "Confirmer le mot de passe",
     "newPassword": "Nouveau mot de passe",
     "newPasswordConfirm": "Confirmer le nouveau mot de passe",
-    "avatar": "Avatar",
     "isActive": "Est actif",
     "isPortalUser": "Utilisateur de Portail",
-    "contact": "Contact",
     "accounts": "Comptes",
     "account": "Compte (principal)",
     "sendAccessInfo": "Envoyer un email avec ses accès à l'utilisateur",
-    "portal": "Portail",
-    "gender": "Gender",
-    "position": "Position in Team",
-    "ipAddress": "IP Address",
-    "passwordPreview": "Password Preview"
+    "portal": "Portail"
   },
   "links": {
     "teams": "Équipes",
     "roles": "Rôles",
-    "notes": "Notes",
     "portals": "Portails",
     "portalRoles": "Rôles Portail",
-    "contact": "Contact",
     "accounts": "Comptes",
-    "account": "Compte (principal)",
-    "tasks": "Tasks"
+    "account": "Compte (principal)"
   },
   "labels": {
     "Create User": "Créer un utilisateur",
@@ -53,8 +42,7 @@
     "External Accounts": "Comptes externes",
     "Email Accounts": "Comptes email",
     "Portal": "Portail",
-    "Create Portal User": "Créer un utilisateur de Portail",
-    "Proceed w/o Contact": "Proceed w/o Contact"
+    "Create Portal User": "Créer un utilisateur de Portail"
   },
   "tooltips": {
     "defaultTeam": "Toutes les données créées par cet utilisateur seront liés à cette équipe par défaut.",
@@ -75,8 +63,7 @@
     "userNameEmailAddressNotFound": "Cette combinaison utilisateur/adresse email n'a pas été retrouvée.",
     "forbidden": "Erreur, veuillez réessayer plus tard.",
     "uniqueLinkHasBeenSent": "Un lien unique et temporaire a été envoyé à votre adresse email.",
-    "passwordChangedByRequest": "Le mot de passe a été modifié.",
-    "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email."
+    "passwordChangedByRequest": "Le mot de passe a été modifié."
   },
   "boolFilters": {
     "onlyMyTeam": "De mon équipe"
@@ -84,13 +71,5 @@
   "presetFilters": {
     "active": "Actif",
     "activePortal": "Portail actif"
-  },
-  "options": {
-    "gender": {
-      "": "Not Set",
-      "Male": "Male",
-      "Female": "Female",
-      "Neutral": "Neutral"
-    }
   }
 }

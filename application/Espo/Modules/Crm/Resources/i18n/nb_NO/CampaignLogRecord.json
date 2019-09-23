@@ -2,7 +2,6 @@
   "fields": {
     "action": "Handling",
     "actionDate": "Dato",
-    "data": "Data",
     "campaign": "Kampanje",
     "parent": "Mål",
     "object": "Objekt",

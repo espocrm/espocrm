@@ -1,8 +1,7 @@
 {
   "fields": {
     "fieldList": "Polje lista",
-    "exportAllFields": "Izvesti sva polja",
-    "format": "Format"
+    "exportAllFields": "Izvesti sva polja"
   },
   "options": {
     "format": {

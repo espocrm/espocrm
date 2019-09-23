@@ -10,8 +10,6 @@
   },
   "fields": {
     "name": "Navn",
-    "status": "Status",
-    "type": "Type",
     "attachments": "Vedlegg",
     "publishDate": "Publiseringsdato",
     "expirationDate": "Utløpsdato",
@@ -37,8 +35,6 @@
     "type": {
       "Article": "Artikkel"
     }
-  },
-  "tooltips": {
   },
   "presetFilters": {
     "published": "Publisert"

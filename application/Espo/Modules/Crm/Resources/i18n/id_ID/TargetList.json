@@ -19,14 +19,12 @@
       "Email": "E-mail",
       "Web": "jaringan",
       "Television": "Televisi",
-      "Radio": "Radio",
       "Newsletter": "laporan berkala"
     }
   },
   "labels": {
     "Create TargetList": "Buat target Daftar",
     "Opted Out": "Memilih keluar",
-    "Cancel Opt-Out": "Batal Opt-Out",
-    "Opt-Out": "Opt-Out"
+    "Cancel Opt-Out": "Batal Opt-Out"
   }
 }

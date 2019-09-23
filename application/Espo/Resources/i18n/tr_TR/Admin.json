@@ -55,7 +55,11 @@
     "Email Filters": "E-mail Filtreleri",
     "Portal Users": "Portal Kullanıcıları",
     "Action History": "Eylem Tarihçesi",
-    "Label Manager": "Etiket Yönetimi"
+    "Label Manager": "Etiket Yönetimi",
+    "System Requirements": "Sistem gereksinimleri",
+    "PHP Settings": "PHP ayarları",
+    "Database Settings": "Veri tabanı ayarları",
+    "Permissions": "Izin"
   },
   "layouts": {
     "list": "Liste",
@@ -145,13 +149,10 @@
   "messages": {
     "selectEntityType": "Soldaki menüden birim türünü seçin.",
     "selectUpgradePackage": "Yükseltme paketini seçin.",
-    "downloadUpgradePackage": "Güncelleme paketlerini indirin <a href=\"{url}\">here</a>.",
     "selectLayout": "Gerekli yerleşim düzenini sol menüden seçin ve düzenleyin.",
     "selectExtensionPackage": "Eklenti paketi seçiniz ",
     "extensionInstalled": "{name} {version} eklentisi başarıyla kuruldu",
     "installExtension": "{name} {version} eklentisi kurulum için hazır",
-    "upgradeVersion": "EspoCRM <strong>{version}</strong> sürümüne güncellenecektir. Bu işlem biraz zaman alabileceği için lütfen sabırlı olunuz.",
-    "upgradeDone": "EspoCRN <strong>{version}</strong> sürümüne yükseltilmiştir.",
     "userHasNoEmailAddress": "Kullanıcının email adresi yok"
   },
   "descriptions": {
@@ -194,5 +195,12 @@
     "and": "VE",
     "or": "VEYA",
     "not": "hariç"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "PHP sürümü",
+    "requiredMysqlVersion": "MySQL sürümü",
+    "host": "Sunucu Adı",
+    "dbname": "Veritabanı adı",
+    "user": "Kullanıcı Adı"
   }
 }

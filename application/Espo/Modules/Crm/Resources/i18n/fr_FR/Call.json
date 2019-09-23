@@ -1,19 +1,14 @@
 {
   "fields": {
     "name": "Nom",
-    "parent": "Parent",
     "status": "Statut",
     "dateStart": "Date de début",
     "dateEnd": "Date de fin",
-    "direction": "Direction",
     "duration": "Durée",
-    "description": "Description",
     "users": "Utilisateurs",
-    "contacts": "Contacts",
     "leads": "Prospects",
     "reminders": "Notifications",
-    "account": "Compte",
-    "acceptanceStatus": "Acceptance Status"
+    "account": "Compte"
   },
   "options": {
     "status": {
@@ -28,8 +23,7 @@
     "acceptanceStatus": {
       "None": "Aucun",
       "Accepted": "Accepté",
-      "Declined": "Décliné",
-      "Tentative": "Tentative"
+      "Declined": "Décliné"
     }
   },
   "massActions": {

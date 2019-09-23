@@ -10,11 +10,8 @@
     "currencyList": "Liste des devises",
     "language": "Langage",
     "smtpServer": "Serveur",
-    "smtpPort": "Port",
-    "smtpAuth": "Auth",
     "smtpSecurity": "Sécurité",
     "smtpUsername": "Nom d'utilisateur",
-    "emailAddress": "Email",
     "smtpPassword": "Mot de passe",
     "smtpEmailAddress": "Adresse email",
     "exportDelimiter": "Délimitant pour l'export",
@@ -23,18 +20,7 @@
     "tabList": "Liste des onglets",
     "defaultReminders": "Notifications par défaut",
     "theme": "Thème",
-    "useCustomTabList": "Liste d'onglets personnalisé",
-    "receiveAssignmentEmailNotifications": "Email notifications upon assignment",
-    "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
-    "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
-    "dashboardLayout": "Dashboard Layout",
-    "emailReplyForceHtml": "Email Reply in HTML",
-    "autoFollowEntityTypeList": "Global Auto-Follow",
-    "emailReplyToAllByDefault": "Email Reply to all by default",
-    "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
-    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
-    "followCreatedEntities": "Auto-follow created records",
-    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
+    "useCustomTabList": "Liste d'onglets personnalisé"
   },
   "options": {
     "weekStart": {
@@ -43,16 +29,7 @@
     }
   },
   "labels": {
-    "Notifications": "Notifications",
     "User Interface": "Interface utilisateurs",
-    "SMTP": "SMTP",
-    "Misc": "Divers",
-    "Locale": "Locale"
-  },
-  "tooltips": {
-    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
-    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
-    "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
-    "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
+    "Misc": "Divers"
   }
 }

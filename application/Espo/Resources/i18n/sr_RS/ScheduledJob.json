@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Ime",
-    "status": "Status",
     "job": "Posao",
     "scheduling": "Zakazivanje"
   },

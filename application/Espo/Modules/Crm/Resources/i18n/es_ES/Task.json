@@ -28,7 +28,6 @@
     },
     "priority": {
       "Low": "Baja",
-      "Normal": "Normal",
       "High": "Alta",
       "Urgent": "Urgente"
     }

@@ -1,6 +1,6 @@
 {
   "fields": {
-    "skipNotifications": "Пропустити сповіщення"
+    "skipNotifications": "Пропустити повідомлення"
   },
   "labels": {
     "Create EmailFolder": "Створити папку",

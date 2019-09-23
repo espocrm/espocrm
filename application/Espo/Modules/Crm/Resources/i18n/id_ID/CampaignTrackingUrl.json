@@ -1,6 +1,5 @@
 {
   "fields": {
-    "url": "URL",
     "urlToUse": "Kode untuk menyisipkan bukan URL",
     "campaign": "Kampanye"
   },

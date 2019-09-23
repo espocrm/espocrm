@@ -38,8 +38,8 @@
   },
   "presetFilters": {
     "completed": "Terminat",
-    "deferred": "Amânat",
     "todays": "Astăzi",
-    "overdue": "Restant"
+    "overdue": "Restant",
+    "deferred": "Amânat"
   }
 }

@@ -40,7 +40,6 @@
   },
   "actions": {
     "read": "Baca",
-    "edit": "Edit",
     "delete": "Hapus",
     "stream": "Aliran",
     "create": "Membuat"

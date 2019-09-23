@@ -1,11 +1,14 @@
 {
+  "insertFromSourceLabels": {
+    "Document": "Вставити документ"
+  },
   "fields": {
     "role": "Роль",
     "related": "Пов'язаний",
     "file": "Файл",
     "type": "Тип",
     "field": "Поле",
-    "sourceId": "ID джерела",
+    "sourceId": "ID Джерела",
     "storage": "Сховище",
     "size": "Розмір (bytes)"
   },
@@ -17,9 +20,6 @@
       "Export File": "Експортувати файл",
       "Mail Merge": "Злиття листів"
     }
-  },
-  "insertFromSourceLabels": {
-    "Document": "Вставити документ"
   },
   "presetFilters": {
     "orphan": "Сироти"

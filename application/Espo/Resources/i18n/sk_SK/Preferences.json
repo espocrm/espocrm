@@ -49,8 +49,6 @@
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Automaticky sledovať všetky nové záznamy (vytvorené ľubovoľným používateľom) vybraných typov entít. Aby bolo možné vidieť informáciu v streame a prijímať notifikácie o všetkých záznamoch v systéme.",
-    "doNotFillAssignedUserIfNotRequired": "Keď vytvoríte záznam, priradený používateľ nebude vyplnený s vlastným používateľom aj keď je pole povinné.",
-    "followCreatedEntities": "Keď vytvoríte nové záznamy, tieto budú automaticky sledované dokonca aj keď sú priradené inému používateľovi.",
-    "followCreatedEntityTypeList": "Keď vytvoríte nové záznamy vybraného typu entity, tieto budú automaticky sledované dokonca aj keď sú priradené inému používateľovi."
+    "doNotFillAssignedUserIfNotRequired": "Keď vytvoríte záznam, priradený používateľ nebude vyplnený s vlastným používateľom aj keď je pole povinné."
   }
 }

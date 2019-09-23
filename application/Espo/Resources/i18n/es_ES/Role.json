@@ -1,11 +1,11 @@
 {
   "fields": {
     "name": "Nombre",
-    "roles": "Roles",
     "assignmentPermission": "Asignación de permisos",
     "userPermission": "Permisos de Usuario",
     "portalPermission": "Permisos del portal",
-    "groupEmailAccountPermission": "Permiso de la cuenta de correo grupal"
+    "groupEmailAccountPermission": "Permiso de la cuenta de correo grupal",
+    "exportPermission": "Permisos de exportación"
   },
   "links": {
     "users": "Usuarios",

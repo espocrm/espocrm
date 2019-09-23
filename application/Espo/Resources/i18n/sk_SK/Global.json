@@ -275,7 +275,6 @@
     "fieldShouldBeLess": "{field} by nemalo byť väčšie ako {value}",
     "fieldShouldBeGreater": "{field} by nemalo byť menšie ako {value}",
     "fieldIsUploading": "Prebieha nahrávanie",
-    "streamPostInfo": "Zapíšte <strong>@username</strong> ak chcete spomenúť používateľa v príspevku.\n\nDostupná markdown syntax:\n`<code>code</code>`\n```<code>viacriadkový kód</code>```\n**<strong>tučný text</strong>**\n*<em>zvýraznený text</em>*\n~~<del>zmazaný text</del>~~\n> citát\n[link text](url)",
     "erasePersonalDataConfirmation": "Označené polia budú zmazané natrvalo. Ste si istý?",
     "massPrintPdfMaxCountError": "Nedá sa tlačiť viac ako {maxCount}  zázanmov"
   },

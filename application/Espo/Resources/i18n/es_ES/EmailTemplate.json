@@ -18,8 +18,5 @@
   },
   "presetFilters": {
     "actual": "Actuales"
-  },
-  "messages": {
-    "infoText": "Variables disponibles:\n\n{optOutUrl} &#8211; URL del enlace de baja.\n\n{optOutLink} &#8211;  Enlace de baja."
   }
 }

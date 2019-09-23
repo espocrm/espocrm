@@ -4,8 +4,7 @@
     "ipAddress": "IP adresa",
     "lastAccess": "Poslednji pristup",
     "createdAt": "Prijava",
-    "isActive": "je aktivan",
-    "portal": "Portal"
+    "isActive": "je aktivan"
   },
   "links": {
     "actionHistoryRecords": "Istorija akcija"

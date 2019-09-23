@@ -10,9 +10,6 @@
     "selectIntegration": "Выберите интерацию из меню.",
     "noIntegrations": "Нет доступных интергаций."
   },
-  "help": {
-    "Google": "<p><b>Получите учетные данные OAuth 2.0 из консоли разработчика Google.</b></p><p>Посетите <a href=\"https://console.developers.google.com/project\">консоль разработчика Google</a> для получения учетных данных OAuth 2.0 таких как Client ID и Client Secret.</p></p>"
-  },
   "titles": {
     "GoogleMaps": "Google Карты"
   }

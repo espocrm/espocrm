@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Main page title": "به G-crm خوش آمدید",
+    "Main page title": "به EspoCRM خوش آمدید",
     "Start page title": "توافقنامه مجوز",
     "Step1 page title": "توافقنامه مجوز",
     "License Agreement": "توافقنامه مجوز",
@@ -10,9 +10,9 @@
     "Step5 page title": "تنظیمات SMTP برای ایمیل های خروجی",
     "Errors page title": "خطاها",
     "Finish page title": "نصب کامل است",
-    "Congratulation! Welcome to EspoCRM": "تبریک! G-crm با موفقیت نصب شده است.",
+    "Congratulation! Welcome to EspoCRM": "تبریک! EspoCRM با موفقیت نصب شده است.",
     "More Information": "برای کسب اطلاعات بیشتر، لطفا از {BLOG} ما دیدن کنید، در {TWITTER} ما را دنبال کنید. <br> <br> اگر پیشنهادات یا سؤالات دارید، لطفا در {FORUM} بخوانید.",
-    "share": "اگر شما G-crm را دوست دارید، آن را با دوستان خود به اشتراک بگذارید. اجازه دهید آنها را در مورد این محصول بدانند.",
+    "share": "اگر شما EspoCRM را دوست دارید، آن را با دوستان خود به اشتراک بگذارید. اجازه دهید آنها را در مورد این محصول بدانند.",
     "blog": "بلاگ",
     "twitter": "توییتر",
     "forum": "انجمن",
@@ -23,7 +23,7 @@
     "Start": "شروع",
     "Back": "بازگشت",
     "Next": "بعدی",
-    "Go to EspoCRM": "برو به G-crm",
+    "Go to EspoCRM": "برو به EspoCRM",
     "Re-check": "بررسی مجدد",
     "Version": "ورژن",
     "Test settings": "اتصال تست",
@@ -76,10 +76,9 @@
     "1045": "دسترسی برای کاربر غیرقانونی است",
     "1049": "پایگاه داده ناشناخته",
     "2005": "هاست سرور نامشخص MySQL",
-    "Bad init Permission": "مجوز برای \"{*}\" دایرکتوری را رد کرد لطفا 775 را برای \"{*}\" تنظیم کنید یا فقط این دستور را در ترمینال <pre> <b> {C} </ b> </ pre> اجرا کنید\nعملیات مجاز نیست؟ این را امتحان کنید: {CSU}",
     "Some errors occurred!": "برخی از خطاها رخ داده است!",
-    "phpVersion": "نسخه PHP شما توسط G-crm پشتیبانی نمی شود، لطفا حداقل به {PHP {minVersion ارتقا دهید",
-    "requiredMysqlVersion": "نسخه MySQL شما توسط G-crm پشتیبانی نمی شود، لطفا حداقل به {MySQL {minVersion ارتقا دهید",
+    "phpVersion": "نسخه PHP شما توسط EspoCRM پشتیبانی نمی شود، لطفا حداقل به {PHP {minVersion ارتقا دهید",
+    "requiredMysqlVersion": "نسخه MySQL شما توسط EspoCRM پشتیبانی نمی شود، لطفا حداقل به {MySQL {minVersion ارتقا دهید",
     "The PHP extension was not found...": "خطایPHP:  افزونه <b> {extName} </ b> یافت نشد.",
     "All Settings correct": "تمام تنظیمات درست است",
     "Failed to connect to database": "قطع اتصال به پایگاه داده",
@@ -96,18 +95,18 @@
   },
   "options": {
     "modRewriteTitle": {
-      "apache": "خطای API: G-crm API در دسترس نیست. <br> مشکلات احتمالی: \"mod_rewrite\" را در سرور آپاچی غیرفعال کنید، پشتیبانی از .htaccess یا RewriteBase غیرفعال شده است. <br> تنها مراحل لازم را انجام دهید. بعد از هر مرحله چک کنید اگر مسئله حل شود.",
-      "nginx": "خطای API: G-crm API در دسترس نیست. <br> این کد را به فایل پیکربندی سرور Nginx خود اضافه کنید (/ etc / nginx / sites-available / YOUR_SITE) در داخل «سرور»:",
-      "microsoft-iis": "خطای API: G-crm API در دسترس نیست. <br> مشکل : غیرفعال \"URL Rewrite\". لطفا ماژول URL Rewrite را در سرور IIS چک کنید و فعال کنید",
-      "default": "خطای API: G-crm API در دسترس نیست. <br> مشکل احتمالی: غیر فعال بودن ماژول Rewrite. لطفا ماژولRewrite را در سرور خود چک کنید و فعال کنید (به عنوان مثال mod_rewrite در Apache) و پشتیبانی از .htaccess."
+      "apache": "خطای API: EspoCRM API در دسترس نیست. <br> مشکلات احتمالی: \"mod_rewrite\" را در سرور آپاچی غیرفعال کنید، پشتیبانی از .htaccess یا RewriteBase غیرفعال شده است. <br> تنها مراحل لازم را انجام دهید. بعد از هر مرحله چک کنید اگر مسئله حل شود.",
+      "nginx": "خطای API: EspoCRM API در دسترس نیست. <br> این کد را به فایل پیکربندی سرور Nginx خود اضافه کنید (/ etc / nginx / sites-available / YOUR_SITE) در داخل «سرور»:",
+      "microsoft-iis": "خطای API: EspoCRM API در دسترس نیست. <br> مشکل : غیرفعال \"URL Rewrite\". لطفا ماژول URL Rewrite را در سرور IIS چک کنید و فعال کنید",
+      "default": "خطای API: EspoCRM API در دسترس نیست. <br> مشکل احتمالی: غیر فعال بودن ماژول Rewrite. لطفا ماژولRewrite را در سرور خود چک کنید و فعال کنید (به عنوان مثال mod_rewrite در Apache) و پشتیبانی از .htaccess."
     },
     "modRewriteInstruction": {
       "apache": {
-        "linux": "<br> <br> 1. فعال کردن \"mod_rewrite\" برای انجام آن دستوراتی که در ترمینال اجرا می شود: <pre> {APACHE1} </ pre> <br> 2. پشتیبانی از .htaccess را فعال کنید افزودن / ویرایش تنظیمات پیکربندی سرور (/etc/apache/apache2.conf، /etc/httpd/conf/httpd.conf): <pre> {APACHE2} </ pre>\n  بعد از اجرای این دستور در ترمینال: <pre> {APACHE3} </ pre> <br> 3. سعی کنید مسیر RewriteBase را اضافه کنید، فایل {API_PATH} .htaccess را باز کنید و خط زیر را جایگزین کنید: <pre> {APACHE4} </ pre> برای <pre> {APACHE5} </ pre> <br> برای اطلاعات بیشتر لطفا دستورالعمل <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> پیکربندی سرور Apache برای G-crm </a>. <br> <br>"
+        "linux": "<br> <br> 1. فعال کردن \\\"mod_rewrite\\\" برای انجام آن دستوراتی که در ترمینال اجرا می شود: <pre> {APACHE1} </pre> <br> 2. پشتیبانی از .htaccess را فعال کنید افزودن / ویرایش تنظیمات پیکربندی سرور (/etc/apache/apache2.conf، /etc/httpd/conf/httpd.conf): <pre> {APACHE2} </pre>\n  بعد از اجرای این دستور در ترمینال: <pre> {APACHE3} </pre> <br> 3. سعی کنید مسیر RewriteBase را اضافه کنید، فایل {API_PATH} .htaccess را باز کنید و خط زیر را جایگزین کنید: <pre> {APACHE4} </pre> برای <pre> {APACHE5} </pre> <br> برای اطلاعات بیشتر لطفا دستورالعمل <a href=\\\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\\\" target=\\\"_blank\\\"> پیکربندی سرور Apache برای EspoCRM </a>. <br> <br>"
       },
       "nginx": {
-        "linux": "</ pre> <br> برای کسب اطلاعات بیشتر، از دستورالعمل <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> پیکربندی سرور Nginx برای G-crm <br> <br> <br> <br>",
-        "windows": "</ pre> <br> برای کسب اطلاعات بیشتر، از دستورالعمل <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> پیکربندی سرور Nginx برای G-crm <br> <br> <br> <br>"
+        "linux": "<br>\\n<pre>\\n{NGINX}\\n</pre> <br> برای کسب اطلاعات بیشتر، از دستورالعمل <a href=\\\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\\\" target=\\\"_blank\\\"> پیکربندی سرور Nginx برای EspoCRM <br> <br> <br> <br>",
+        "windows": "<br>\\n<pre>\\n{NGINX}\\n</pre> <br> برای کسب اطلاعات بیشتر، از دستورالعمل <a href=\\\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\\\" target=\\\"_blank\\\"> پیکربندی سرور Nginx برای EspoCRM <br> <br> <br> <br>"
       }
     }
   },

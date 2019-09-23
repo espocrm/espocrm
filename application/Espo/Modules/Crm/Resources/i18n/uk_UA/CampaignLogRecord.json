@@ -36,9 +36,9 @@
     "sent": "Надіслано",
     "opened": "Відкрито",
     "optedOut": "Відмовлено",
-    "optedIn": "Підписаний",
     "bounced": "Відшито",
     "clicked": "Клікнуто",
-    "leadCreated": "Лід створено"
+    "leadCreated": "Лід створено",
+    "optedIn": "Підписаний"
   }
 }

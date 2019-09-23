@@ -77,8 +77,8 @@
     "forbidden": "Toegang niet juist, probeer later",
     "uniqueLinkHasBeenSent": "Een unieke link is naar het gespecificeerde email adres gezonden.",
     "passwordChangedByRequest": "Het wachtwoord is aangepast",
-    "setupSmtpBefore": "U moet de <a href=\"{url}\"> SMTP-instellingen </a> instellen om het systeem in staat te stellen een wachtwoord per e-mail te verzenden.",
-    "userNameExists": "Gebruikersnaam bestaat al"
+    "userNameExists": "Gebruikersnaam bestaat al",
+    "setupSmtpBefore": "Je moet [SMTP-instellingen]({url}) instellen om het systeem in staat te stellen een wachtwoord in e-mail te verzenden."
   },
   "presetFilters": {
     "active": "Actief",

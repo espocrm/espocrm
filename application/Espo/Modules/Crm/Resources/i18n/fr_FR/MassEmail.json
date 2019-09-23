@@ -40,14 +40,5 @@
   "messages": {
     "selectAtLeastOneTarget": "Sélectionner au moins une cible",
     "testSent": "Le message de test est supposé être envoyé"
-  },
-  "tooltips": {
-    "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore.",
-    "targetLists": "Targets that should receive messages.",
-    "excludingTargetLists": "Targets that should not receive messages."
-  },
-  "presetFilters": {
-    "actual": "Actual",
-    "complete": "Complete"
   }
 }

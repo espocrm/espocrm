@@ -3,19 +3,7 @@
     "user": "Utilisateur",
     "ipAddress": "Adresse IP",
     "lastAccess": "Dernière date d'accès",
-    "createdAt": "Date de connexion",
-    "isActive": "Is Active",
-    "portal": "Portal"
-  },
-  "links": {
-    "actionHistoryRecords": "Action History"
-  },
-  "presetFilters": {
-    "active": "Active",
-    "inactive": "Inactive"
-  },
-  "labels": {
-    "Set Inactive": "Set Inactive"
+    "createdAt": "Date de connexion"
   },
   "massActions": {
     "setInactive": "Passer en inactif"

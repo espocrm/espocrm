@@ -5,7 +5,6 @@
   },
   "fields": {
     "name": "Ime",
-    "status": "Status",
     "file": "Datoteka",
     "type": "Tip",
     "publishDate": "Datum objave",
@@ -31,8 +30,6 @@
     "type": {
       "": "Nema",
       "Contract": "Ugovor",
-      "NDA": "NDA",
-      "EULA": "EULA",
       "License Agreement": "Ugovor o licenci"
     }
   },

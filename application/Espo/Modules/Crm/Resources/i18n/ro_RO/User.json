@@ -1,10 +1,10 @@
 {
+  "links": {
+    "targetLists": "Liste Țintă"
+  },
   "fields": {
     "acceptanceStatus": "Stare Acceptare",
     "acceptanceStatusMeetings": "Stare Acceptare (Întâlniri)",
     "acceptanceStatusCalls": "Stare Acceptare (Apeluri)"
-  },
-  "links": {
-    "targetLists": "Liste Țintă"
   }
 }

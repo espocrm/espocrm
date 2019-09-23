@@ -5,26 +5,15 @@
     "host": "Hôte",
     "username": "Nom d'utilisateur",
     "password": "Mot de passe",
-    "port": "Port",
     "monitoredFolders": "Dossiers surveillés",
-    "ssl": "SSL",
     "fetchSince": "Apporté depuis",
     "emailAddress": "Adresse email",
     "sentFolder": "Dossier d'envoi",
     "storeSentEmails": "Conserver les emails envoyés",
-    "keepFetchedEmailsUnread": "Conserver les emails reçu non lus",
-    "emailFolder": "Put in Folder",
-    "useSmtp": "Use SMTP",
-    "smtpHost": "SMTP Host",
-    "smtpPort": "SMTP Port",
-    "smtpAuth": "SMTP Auth",
-    "smtpSecurity": "SMTP Security",
-    "smtpUsername": "SMTP Username",
-    "smtpPassword": "SMTP Password"
+    "keepFetchedEmailsUnread": "Conserver les emails reçu non lus"
   },
   "links": {
-    "filters": "Filtres",
-    "emails": "Emails"
+    "filters": "Filtres"
   },
   "options": {
     "status": {
@@ -34,18 +23,12 @@
   },
   "labels": {
     "Create EmailAccount": "Créer un compte email",
-    "IMAP": "IMAP",
     "Main": "Principal",
     "Test Connection": "Tester la connexion",
-    "Send Test Email": "Envoyer un message de test",
-    "SMTP": "SMTP"
+    "Send Test Email": "Envoyer un message de test"
   },
   "messages": {
     "couldNotConnectToImap": "Impossible de se connecter au serveur IMAP",
     "connectionIsOk": "Connexion établie"
-  },
-  "tooltips": {
-    "monitoredFolders": "Multiple folders should be separated by comma.\n\nYou can add a 'Sent' folder to sync emails sent from an external email client.",
-    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
   }
 }

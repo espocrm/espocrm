@@ -61,8 +61,7 @@
     "entityType": "Enhetstype",
     "imported": "Importerte oppføringer",
     "duplicates": "Duplikatoppføringer",
-    "updated": "Oppdaterte oppføringer",
-    "status": "Status"
+    "updated": "Oppdaterte oppføringer"
   },
   "options": {
     "status": {

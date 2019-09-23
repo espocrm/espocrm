@@ -10,7 +10,6 @@
   },
   "fields": {
     "name": "Ime",
-    "status": "Status",
     "type": "Tip",
     "attachments": "prilozi",
     "publishDate": "Datum objave",

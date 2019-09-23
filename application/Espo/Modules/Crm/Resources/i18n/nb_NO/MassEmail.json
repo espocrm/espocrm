@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Navn",
-    "status": "Status",
     "storeSentEmails": "Lager sendte eposter",
     "startAt": "Startdato",
     "fromAddress": "Fra-adresse",

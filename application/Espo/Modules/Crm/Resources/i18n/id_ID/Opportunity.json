@@ -24,15 +24,14 @@
       "Prospecting": "Pencarian",
       "Qualification": "Kualifikasi",
       "Needs Analysis": "Butuh analisa",
-      "Proposal": "Proposal",
-      "Negotiation": "Negosiasi",
       "Value Proposition": "Proposisi nilai",
       "Id. Decision Makers": "Id. Pembuat keputusan",
       "Perception Analysis": "Analisis persepsi",
       "Proposal/Price Quote": "Proposal / Harga Penawaran",
       "Negotiation/Review": "Negosiasi / Ulasan",
       "Closed Won": "tertutup Won",
-      "Closed Lost": "tertutup Hilang"
+      "Closed Lost": "tertutup Hilang",
+      "Negotiation": "Negosiasi"
     }
   },
   "labels": {
@@ -40,7 +39,6 @@
   },
   "presetFilters": {
     "open": "Buka",
-    "won": "Won",
     "lost": "Kalah"
   }
 }

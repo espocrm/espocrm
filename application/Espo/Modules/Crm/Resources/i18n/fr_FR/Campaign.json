@@ -1,9 +1,7 @@
 {
   "fields": {
     "name": "Nom",
-    "description": "Description",
     "status": "Statut",
-    "type": "Type",
     "startDate": "Date de début",
     "endDate": "Date de fin",
     "targetLists": "Listes de cibles",
@@ -18,31 +16,22 @@
     "leadCreatedCount": "Prospects créés",
     "revenue": "Revenu",
     "revenueConverted": "Revenu (converti)",
-    "budget": "Budget",
     "budgetConverted": "Budget (converti)"
   },
   "links": {
     "targetLists": "Listes de cibles",
     "excludingTargetLists": "Excluant les listes de cibles",
     "accounts": "Comptes",
-    "contacts": "Contacts",
     "leads": "Prospects",
     "opportunities": "Opportunités",
     "campaignLogRecords": "Logs",
-    "massEmails": "Emails groupés",
-    "trackingUrls": "Tracking URLs"
+    "massEmails": "Emails groupés"
   },
   "options": {
     "type": {
-      "Email": "Email",
-      "Web": "Web",
-      "Television": "Télévision",
-      "Radio": "Radio",
-      "Newsletter": "Newsletter",
-      "Mail": "Mail"
+      "Television": "Télévision"
     },
     "status": {
-      "Planning": "Planning",
       "Active": "Actif",
       "Inactive": "Inactif",
       "Complete": "Terminer"
@@ -58,8 +47,7 @@
     "Mass Emails": "Emails groupés",
     "Email Templates": "Modèles d'email",
     "Unsubscribe again": "Se re-désabonner",
-    "Subscribe again": "Se réinscrire",
-    "Create Target List": "Create Target List"
+    "Subscribe again": "Se réinscrire"
   },
   "presetFilters": {
     "active": "Actif"

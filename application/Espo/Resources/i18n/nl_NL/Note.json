@@ -21,7 +21,7 @@
     "targetType": {
       "self": "Voor mezelf",
       "users": "voor bepaalde gebruiker (s)",
-      "teams": "naar een specifiek team (s)",
+      "teams": "naar een specifiek(e) team(s)",
       "all": "voor alle interne gebruikers",
       "portals": "voor portaalgebruikers"
     }

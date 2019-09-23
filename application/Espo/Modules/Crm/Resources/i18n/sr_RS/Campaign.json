@@ -2,7 +2,6 @@
   "fields": {
     "name": "Ime",
     "description": "Opis",
-    "status": "Status",
     "type": "Tip",
     "startDate": "Datum početka",
     "endDate": "Krajnji datum",
@@ -35,9 +34,7 @@
   "options": {
     "type": {
       "Email": "E-pošta",
-      "Web": "Web",
       "Television": "Televizija",
-      "Radio": "Radio",
       "Newsletter": "Bilten",
       "Mail": "Pošta"
     },

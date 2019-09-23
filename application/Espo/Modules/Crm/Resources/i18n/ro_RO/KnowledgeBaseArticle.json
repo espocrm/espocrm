@@ -38,10 +38,10 @@
       "Article": "Articol"
     }
   },
-  "tooltips": {
-    "portals": "Articolul o să fie disponibil doar în portalurile specificate."
-  },
   "presetFilters": {
     "published": "Publicat"
+  },
+  "tooltips": {
+    "portals": "Articolul o să fie disponibil doar în portalurile specificate."
   }
 }

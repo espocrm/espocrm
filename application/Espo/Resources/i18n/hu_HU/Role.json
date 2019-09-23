@@ -18,7 +18,6 @@
     "userPermission": "Lehetővé teszi a felhasználók azon képességének korlátozását, hogy megtekinthessék a többi felhasználó tevékenységét, naptárát és streamjét.\n\nmindenki - mindent megnéz\n\ncsapat - csak a csapattársak tevékenységét tekintheti meg\n\nnem - nem lehet megtekinteni",
     "portalPermission": "Meghatározza a portálinformációkhoz való hozzáférést, és képes üzenetet küldeni a portál felhasználóknak.",
     "groupEmailAccountPermission": "Meghatározza a csoportos e-mail fiókokhoz való hozzáférést, és képes e-maileket küldeni az SMTP csoportból.",
-    "exportPermission": "Meghatározza, hogy a felhasználók a rekordok exportálhatók-e.",
     "dataPrivacyPermission": "Lehetővé teszi a személyes adatok megtekintését és törlését."
   },
   "labels": {

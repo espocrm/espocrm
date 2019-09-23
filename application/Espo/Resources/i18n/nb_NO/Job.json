@@ -1,13 +1,12 @@
 {
   "fields": {
-    "status": "Status",
     "executeTime": "Utfør på",
     "attempts": "Forsøk igjen",
     "failedAttempts": "Mislykkede forsøk",
     "serviceName": "Tjeneste",
-    "method": "Metode",
+    "methodName": "Metode",
     "scheduledJob": "Planlagte oppgaver",
-    "data": "Data"
+    "method": "Metode"
   },
   "options": {
     "status": {

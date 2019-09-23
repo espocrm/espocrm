@@ -121,7 +121,6 @@
     "ldapAuth": "Hozzáférési hitelesítő adatok az LDAP kiszolgálóhoz.",
     "ldapUserNameAttribute": "A felhasználó azonosítására szolgáló attribútum.\nPéldául. \"userPrincipalName\" vagy \"sAMAccountName\" az Active Directoryhoz, az \"uid\" az OpenLDAP-hoz.",
     "ldapUserObjectClass": "ObjectClass attribútum a felhasználók kereséséhez. Például. \"személy\" az AD számára, \"inetOrgPerson\" az OpenLDAP számára.",
-    "ldapAccountCanonicalForm": "Fiókja típusának kanonikus alakja. 4 lehetőség van: <br> - \"Dn\" - az űrlap a következő formátumban: CN = tesztelő, OU = expozíció, DC = teszt, DC = lan. <br> - \"Backslash\" - a \"COMPANY \\ tester\" űrlap. <br> - \"Principal\" - az \"tester@company.com\" formanyomtatvány.",
     "ldapBindRequiresDn": "A felhasználónév formázása a DN formában.",
     "ldapBaseDn": "A felhasználók keresésére használt alapértelmezett DN alap. Például. \"OU = felhasználók, OU = expozíció, DC = teszt, DC = lan\".",
     "ldapTryUsernameSplit": "A felhasználónév megosztására vonatkozó lehetőség a domainnel.",

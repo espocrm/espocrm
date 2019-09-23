@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Naziv",
-    "emailAddress": "Email",
     "website": "Sajt",
     "phoneNumber": "Telefon",
     "billingAddress": "Adresa za naplatu",
@@ -36,7 +35,6 @@
     "type": {
       "Customer": "Klijent",
       "Investor": "Investitor",
-      "Partner": "Partner",
       "Reseller": "Prodavac"
     },
     "industry": {
@@ -82,15 +80,13 @@
       "Mass Media": "Masovni mediji",
       "Mining": "Rudarstvo",
       "Music": "muzika",
-      "Marketing": "Marketing",
       "Petroleum": "Naftna",
       "Retail": "Maloprodaja",
       "Shipping": "Dostava",
       "Support": "Podrška",
       "Testing, Inspection & Certification": "Testiranje, inspekcija i sertifikacija",
       "Wholesale": "Veleprodaja",
-      "Water": "voda",
-      "Travel": "Travel"
+      "Water": "voda"
     }
   },
   "labels": {

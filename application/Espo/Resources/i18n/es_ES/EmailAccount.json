@@ -34,11 +34,9 @@
   },
   "labels": {
     "Create EmailAccount": "Crear cuenta pesonal",
-    "IMAP": "IMAP",
     "Main": "Principal",
     "Test Connection": "Probar conexión",
-    "Send Test Email": "Enviar correo electrónico de prueba",
-    "SMTP": "SMTP"
+    "Send Test Email": "Enviar correo electrónico de prueba"
   },
   "messages": {
     "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP",

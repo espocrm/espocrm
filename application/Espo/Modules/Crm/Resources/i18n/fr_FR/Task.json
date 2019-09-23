@@ -1,19 +1,16 @@
 {
   "fields": {
     "name": "Nom",
-    "parent": "Parent",
     "status": "Statut",
     "dateStart": "Date de début",
     "dateEnd": "Date d'échéance",
     "dateStartDate": "Date de début (toute la journée)",
     "dateEndDate": "Date de fin (toute la journée)",
     "priority": "Priorité",
-    "description": "Description",
     "isOverdue": "En retard",
     "account": "Compte",
     "dateCompleted": "Date de Clôture",
-    "attachments": "Pièces jointes",
-    "reminders": "Reminders"
+    "attachments": "Pièces jointes"
   },
   "links": {
     "attachments": "Pièces jointes"
@@ -41,7 +38,6 @@
     "actual": "En cours",
     "completed": "Terminés",
     "todays": "Aujourd'hui",
-    "overdue": "En retard",
-    "deferred": "Deferred"
+    "overdue": "En retard"
   }
 }

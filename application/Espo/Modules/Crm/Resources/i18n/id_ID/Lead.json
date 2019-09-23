@@ -1,7 +1,6 @@
 {
   "labels": {
     "Converted To": "Dikonversi ke",
-    "Create Lead": "Create Lead",
     "Convert": "Ubah",
     "convert": "ubah"
   },
@@ -14,7 +13,6 @@
     "accountName": "Nama akun",
     "doNotCall": "Jangan panggil",
     "address": "Alamat",
-    "status": "Status",
     "source": "Sumber",
     "opportunityAmount": "peluang Jumlah",
     "opportunityAmountConverted": "Peluang Jumlah (dikonversi)",

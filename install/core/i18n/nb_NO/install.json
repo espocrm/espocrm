@@ -15,16 +15,9 @@
     "More Information": "Besøk vår {BLOG} eller følg oss på {TWITTER} for mer informasjon.<br><br>Hvis du har forslag eller innspill kan du besøke vårt {FORUM}.",
     "share": "Hvis du liker EspoCRM oppfordrer vi deg til å fortelle andre om applikasjonen.",
     "blog": "blogg",
-    "twitter": "twitter",
-    "forum": "forum",
     "Installation Guide": "Installasjonsveiledning",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
     "Locale": "Språk og nasjonalitet",
     "Outbound Email Configuration": "Innstillinger for utgående epost",
-    "SMTP": "SMTP",
-    "Start": "Start",
     "Back": "Tilbake",
     "Next": "Neste",
     "Go to EspoCRM": "Gå til EspoCRM",
@@ -33,23 +26,18 @@
     "Test settings": "Sjekk forbindelsen",
     "Database Settings Description": "Oppgi tilkoblingsinformasjonen til MySQL-databasen (tjenernavn, brukernavn og passord). Du kan spesifisere tjenerens port slik: localhost:3306.",
     "Install": "Installér",
-    "SetupConfirmation page title": "Anbefalte innstillinger",
-    "PHP Configuration": "Anbefalte PHP-innstillinger",
-    "MySQL Configuration": "MySQL-konfigurasjon",
     "Configuration Instructions": "Konfigurasjonsinstruks",
     "phpVersion": "PHP-versjon",
-    "requiredMysqlVersion": "MySQL-versjon",
+    "requiredMysqlVersion": "MySQL versjon",
     "dbHostName": "Tjenernavn",
     "dbName": "Databasenavn",
     "dbUserName": "Databasebrukernavn",
-    "OK": "OK"
+    "Permission Requirements": "Tillatelser"
   },
   "fields": {
     "Choose your language": "Velg språk",
     "Database Name": "Databasenavn",
     "Host Name": "Tjenernavn",
-    "Port": "Port",
-    "smtpPort": "Port",
     "Database User Name": "Databasebrukernavn",
     "Database User Password": "Databasepassord",
     "Database driver": "Databasedriver",
@@ -79,11 +67,9 @@
     "1045": "Tilgang nektet for brukeren",
     "1049": "Ukjent database",
     "2005": "Ukjent MySQL-tjener",
-    "Bad init Permission": "Nektet tilgang til mappen \"{*}\". Vennligst endre rettighetene for \"{*}\" til 775 eller kjør følgende kommando i terminalen: <pre><b>{C}</b></pre>\n\tEr kommandoen ikke tillatt? Prøv denne: <pre>{CSU}</pre>",
     "Some errors occurred!": "Det oppstod noen feil!",
     "phpVersion": "Din PHP-versjon er ikke støtte av EspoCRM, Vennligst oppgrader til {minVersion} eller nyere.",
     "requiredMysqlVersion": "Din MySQL-versjon er ikke støttet av EspoCRM. Vennligst oppgrader til {minVersion} eller nyere.",
-    "requiredMariadbVersion": "Din MariaDB-versjon er ikke støttet av EspoCRM. Vennligst oppgrader til {minVersion} eller nyere.",
     "The PHP extension was not found...": "PHP-feil: Utvidelsen <b>{extName}</b> ble ikke funnet.",
     "All Settings correct": "Alle innstillingene er riktig",
     "Failed to connect to database": "Klarte ikke å koble til databasen",
@@ -96,12 +82,9 @@
     "buildDatabase error": "buildDatabase-feil",
     "createUser error": "createUser-feil",
     "checkAjaxPermission error": "checkAjaxPermission-feil",
-    "Ajax failed": "Ajax feilet",
     "Cannot create user": "Kan ikke opprette en bruker",
     "Permission denied": "Tilgang nektet",
     "Permission denied to": "Tilgang nektet",
-    "permissionInstruction": "<br>Kjør denne kommandoen i Terminalen <pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Tillates ikke kommandoen? Prøv denne istedenfor: <br><pre>\"{CSU}\"</pre>",
     "Can not save settings": "Kan ikke lagre innstillinger",
     "Cannot save preferences": "Kan ikke lagre preferanser",
     "Thousand Separator and Decimal Mark equal": "Tusentallsdeler og desimaltegn kan ikke være det samme",
@@ -110,10 +93,6 @@
     "mysqlSettingError": "EspoCRM krever at MySQL-innstillingen \"{NAME}\" endres til {VALUE}"
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
-    },
     "modRewriteInstruction": {
       "apache": {
         "windows": "<br> <pre>1. Finn httpd.conf file (du finner den vanligvis i en mappe kalt conf, config eller lignende)<br>\n2. I httpd.conf-filen må du avkommentere linjen LoadModule rewrite_module modules/mod_rewrite.so (ved å fjerne '#'-symbolet i starten av linjen)<br>\n3. Sjekk også at linjen ClearModuleList og AddModule mod_rewrite.c er avkommentert.\n</pre> ",
@@ -130,5 +109,11 @@
       "microsoft-iis": "API-feil: EspoCRMs API er utilgjengelig.<br> Mulig problem: \"URL Rewrite\" er kanskje ikke aktivert, vennligst sjekk og aktiver \"URL Rewrite\"-modulen på IIS-tjeneren.",
       "default": "API-feil: EspoCRMs API er utilgjengelig.<br> Mulig problem: Rewrite modulen er kanskje ikke aktivert. Sjekk serveren din for å finne det ut (f.eks mod_rewrite på Apache) og at .htaccess støttes."
     }
+  },
+  "systemRequirements": {
+    "requiredMysqlVersion": "MySQL versjon",
+    "host": "Tjenernavn",
+    "dbname": "Databasenavn",
+    "user": "Brukernavn"
   }
 }

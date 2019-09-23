@@ -261,8 +261,7 @@
     "loading": "Yükleniyor...",
     "saving": "Kayıt Ediliyor...",
     "fieldShouldBeLess": "{field} şu değerden daha az olmalı: {value}",
-    "fieldShouldBeGreater": "{field} şu değerden daha büyük olmalı: {value}",
-    "streamPostInfo": "Postadaki kullanıcılardan bahsetmek için <strong> @username </ strong> yazın. \\\\ N \\\\ nMümkün markdown sözdizimi: \\\\ n '<code> kod </ code> `\\\\ n ** <strong> güçlü metin </ strong> * </ Em> * \\\\ n ~ <del> silinen metin </ del> ~ \\\\ n> blockquote \\\\ n [link text] (url)"
+    "fieldShouldBeGreater": "{field} şu değerden daha büyük olmalı: {value}"
   },
   "boolFilters": {
     "onlyMy": "Sadece Ben",

@@ -2,7 +2,6 @@
   "fields": {
     "name": "Navn",
     "parent": "Forelder",
-    "status": "Status",
     "dateStart": "Startdato",
     "dateEnd": "Tidsfrist",
     "dateStartDate": "Startdato (hele dagen)",

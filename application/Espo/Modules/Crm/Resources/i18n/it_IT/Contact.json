@@ -17,13 +17,13 @@
   },
   "links": {
     "opportunities": "Opportunita'",
-    "cases": "Casi",
+    "cases": "Ticket",
     "targetLists": "Liste di destinazione",
     "campaignLogRecords": "Log Campagna",
     "campaign": "Campagna",
     "account": "Account (Primario)",
     "accounts": "Account",
-    "casesPrimary": "Casi (Primario)",
+    "casesPrimary": "Ticket (Primario)",
     "portalUser": "Portale Utente",
     "documents": "Documenti",
     "tasksPrimary": "Attività (espanso)"

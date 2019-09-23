@@ -18,7 +18,6 @@
     "Clear Cache": "Limpiar caché",
     "Rebuild": "Reconstruir",
     "Teams": "Equipos",
-    "Roles": "Roles",
     "Portal": "Portales",
     "Portals": "Portales",
     "Portal Roles": "Roles del portal",
@@ -56,7 +55,8 @@
     "Email Filters": "Filtros",
     "Portal Users": "Usuarios del portal",
     "Action History": "Histórico",
-    "Label Manager": "Etiquetas"
+    "Label Manager": "Etiquetas",
+    "Permissions": "Permisos"
   },
   "layouts": {
     "list": "Lista",
@@ -82,21 +82,16 @@
     "bool": "SI / NO",
     "currency": "Moneda",
     "date": "Fecha",
-    "datetime": "Fecha y hora",
-    "datetimeOptional": "Fecha / Fecha y hora",
     "email": "Correo electrónico",
     "enum": "Lista",
     "enumInt": "Lista de enteros",
     "enumFloat": "Lista de decimales",
     "float": "Decimal",
-    "int": "Entero",
     "link": "Enlace",
     "linkMultiple": "Enlace múltiple",
     "linkParent": "Enlace Padre",
-    "multienim": "Lista múltiple",
     "phone": "Teléfono",
     "text": "Área de texto simple",
-    "url": "Url",
     "varchar": "Texto",
     "file": "Archivo",
     "image": "Imagen",
@@ -108,8 +103,9 @@
     "wysiwyg": "Área de texto con editor",
     "map": "Mapa",
     "currencyConverted": "Moneda (convertido)",
-    "number": "Número",
-    "colorpicker": "Selector de color"
+    "colorpicker": "Selector de color",
+    "int": "Entero",
+    "number": "Número"
   },
   "fields": {
     "type": "Tipo",
@@ -157,19 +153,14 @@
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
     "selectUpgradePackage": "Seleccione el paquete para actualizar",
-    "downloadUpgradePackage": "Si necesita paquetes de actualización puede descargarlos desde <a href='{url}'>acá</a>.",
     "selectLayout": "Seleccione el diseño necesario en el menú de la izquierda y edítelo.",
     "selectExtensionPackage": "Seleccione el paquete de la extensión",
     "extensionInstalled": "La extensión {name} {version} ha sido instalada",
     "installExtension": "La extensión {name} {version} está lista para ser instalada.",
-    "upgradeVersion": "EspoCRM se actualizará a la versión <strong>{version}</ strong>. Por favor sea paciente ya que esto puede tomar varios minutos.",
-    "upgradeDone": "EspoCRM se ha actualizado a la versión <strong>{version}</ strong>.",
     "upgradeBackup": "Recomendamos hacer una copia de seguridad de los archivos y datos de EspoCRM antes de actualizar.",
     "thousandSeparatorEqualsDecimalMark": "El símbolo de separador de miles no puede ser el mismo que el de punto decimal.",
     "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
-    "cronIsNotConfigured": "Las tareas programadas no se están ejecutando. Siga las <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instrucciones</a> para configurar las tareas CRON.",
-    "newVersionIsAvailable": "La nueva versión de EspoCRM {latestVersion} está disponible.",
-    "newExtensionVersionIsAvailable": "El nuevo lanzamiento {latestVersion} de {extensionName} está disponible."
+    "newVersionIsAvailable": "La nueva versión de EspoCRM {latestVersion} está disponible."
   },
   "descriptions": {
     "settings": "Ajustes generales del sistema.",
@@ -214,5 +205,11 @@
     "and": "Y",
     "or": "O",
     "not": "NO"
+  },
+  "systemRequirements": {
+    "requiredMysqlVersion": "Versión MySQL",
+    "host": "Nombre de host",
+    "dbname": "Nombre de la Base de Datos",
+    "user": "Nombre de usuario"
   }
 }

@@ -8,27 +8,16 @@
     "leadSource": "Source du prospect",
     "doNotCall": "Ne pas appeler",
     "closeDate": "Date de fermeture",
-    "contacts": "Contacts",
-    "description": "Description",
     "amountConverted": "Montant (converti)",
     "amountWeightedConverted": "Montant pondéré",
-    "campaign": "Campagne",
-    "originalLead": "Original Lead",
-    "amountCurrency": "Amount Currency",
-    "contactRole": "Contact Role"
+    "campaign": "Campagne"
   },
   "links": {
-    "contacts": "Contacts",
-    "documents": "Documents",
-    "campaign": "Campagne",
-    "originalLead": "Original Lead"
+    "campaign": "Campagne"
   },
   "options": {
     "stage": {
       "Prospecting": "Prospection",
-      "Qualification": "Qualification",
-      "Proposal": "Proposition",
-      "Negotiation": "Négociation",
       "Needs Analysis": "Analyse des besoins",
       "Value Proposition": "Valeur de la proposition",
       "Id. Decision Makers": "Id. Decisionnaire",
@@ -36,7 +25,9 @@
       "Proposal/Price Quote": "Proposition/devis",
       "Negotiation/Review": "Négociation/évaluation",
       "Closed Won": "Conclusion gagnante",
-      "Closed Lost": "Conclusion perdante"
+      "Closed Lost": "Conclusion perdante",
+      "Proposal": "Proposition",
+      "Negotiation": "Négociation"
     }
   },
   "labels": {

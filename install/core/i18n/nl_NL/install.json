@@ -31,6 +31,8 @@
     "dbName": "Database Naam",
     "dbUserName": "Database Gebruikersnaam",
     "SetupConfirmation page title": "Systeemeisen",
+    "PHP Configuration": "PHP-instellingen",
+    "MySQL Configuration": "Database-instellingen",
     "Permission Requirements": "Rechten",
     "Success": "Succesvol",
     "Fail": "Mislukt",
@@ -69,7 +71,6 @@
     "1045": "Geen rechten voor de gebruiker",
     "1049": "Onbekende database",
     "2005": "Onbekende MySQL server host",
-    "Bad init Permission": "Toestemming geweigerd voor \"{*}\" directory. Stel 775 in voor \"{*}\" of voer deze opdracht uit in Terminal <pre><b>{C}</b></pre>\n\tHandeling niet toegestaan? Probeer deze: {CSU}",
     "Some errors occurred!": "Er zijn fouten gevonden!",
     "phpVersion": "Uw PHP versie wordt niet ondersteund door EspoCRM, u moet minimaal updaten naar PHP {minVersion}",
     "requiredMysqlVersion": "Uw MySQL versie wordt niet ondersteund door EspoCRM, u moet minimaal updaten naar MySQL {minVersion}",
@@ -87,8 +88,6 @@
     "Cannot create user": "Kan gebruiker niet maken",
     "Permission denied": "Geen Rechten",
     "Permission denied to": "Geen Rechten",
-    "permissionInstruction": "<br>Uitvoeren in een Terminal <pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Handeling niet toegestaan? Probeer dit: <br>{CSU}",
     "Can not save settings": "Kan instellingen niet opslaan",
     "Cannot save preferences": "Kan voorkeuren niet opslaan",
     "Thousand Separator and Decimal Mark equal": "Het Duizendtal scheidingsteken mag niet gelijk zijn aan het Honderd tal",
@@ -107,11 +106,11 @@
     },
     "modRewriteInstruction": {
       "apache": {
-        "linux": "<br> 1. Schakel \"mod_rewrite\" in. Om het te doen voer je deze commando's uit in een Terminal: <pre> {APACHE1} </ pre> <br> 2. Schakel Htaccess-ondersteuning in. Serverconfiguratie-instellingen toevoegen / bewerken (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf): <pre> {APACHE2} </ pre>\n Voer daarna dit commando uit in een Terminal: <pre> {APACHE3} </ pre> <br> 3. Probeer het RewriteBase-pad toe te voegen, open een bestand {API_PATH} .htaccess en vervang de volgende regel: <pre> {APACHE4} </ pre> Naar <pre> {APACHE5} </ pre> <br> Ga voor meer informatie naar de richtlijn <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> Apache-serverconfiguratie voor EspoCRM </a> <br> <br>"
+        "linux": "<br> 1. Schakel \\\"mod_rewrite\\\" in. Om het te doen voer je deze commando's uit in een Terminal: <pre>{APACHE1}</pre> <br> 2. Schakel Htaccess-ondersteuning in. Serverconfiguratie-instellingen toevoegen / bewerken (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf): <pre>{APACHE2}</pre>\nVoer daarna dit commando uit in een Terminal: <pre>{APACHE3}</pre> <br> 3. Probeer het RewriteBase-pad toe te voegen, open een bestand {API_PATH} .htaccess en vervang de volgende regel: <pre>{APACHE4}</pre> Naar <pre>{APACHE5}</pre> <br> Ga voor meer informatie naar de richtlijn <a href=\\\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\\\" target=\\\"_blank\\\"> Apache-serverconfiguratie voor EspoCRM </a> <br> <br>"
       },
       "nginx": {
-        "linux": "<br>\n<Pre>\n{} NGINX\n</ pre> <br> Ga voor meer informatie naar de handleiding <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>",
-        "windows": "<br>\n<Pre>\n{} NGINX\n</ pre> <br> Ga voor meer informatie naar de handleiding <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>"
+        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Ga voor meer informatie naar de handleiding <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>",
+        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Ga voor meer informatie naar de handleiding <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>"
       }
     }
   },

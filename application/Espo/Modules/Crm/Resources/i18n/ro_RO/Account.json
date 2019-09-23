@@ -30,12 +30,12 @@
       "Technology": "Tehnologie",
       "Telecommunications": "Telecomunicații",
       "Television": "Televiziune",
-      "Testing, Inspection & Certification": "Testare, Inspecție & Certificări",
       "Transportation": "Transport",
-      "Travel": "Călătorit",
       "Venture Capital": "Capital de risc",
+      "Testing, Inspection & Certification": "Testare, Inspecție & Certificări",
       "Wholesale": "Angro",
-      "Water": "Apă"
+      "Water": "Apă",
+      "Travel": "Călătorit"
     }
   },
   "labels": {

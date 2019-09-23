@@ -8,7 +8,6 @@
   },
   "fields": {
     "name": "Navn",
-    "type": "Type",
     "labelSingular": "Merkelapp (entall)",
     "labelPlural": "Merkelapp (flertall)",
     "stream": "Strøm",
@@ -33,8 +32,6 @@
   "options": {
     "type": {
       "": "Ingen",
-      "Base": "Base",
-      "Person": "Person",
       "CategoryTree": "Kategoritre",
       "Event": "Handling",
       "BasePlus": "Base pluss",
