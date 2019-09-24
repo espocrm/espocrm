@@ -393,6 +393,9 @@ class Sender
             if (empty($messageId) || !is_string($messageId) || strlen($messageId) < 4 || strpos($messageId, 'dummy:') === 0) {
                 $messageId = $this->generateMessageId($email);
                 $email->set('messageId', '<' . $messageId . '>');
+                if ($email->id) {
+                    $this->getEntityManager()->saveEntity($email, ['silent' => true]);
+                }
             } else {
                 $messageId = substr($messageId, 1, strlen($messageId) - 2);
             }
