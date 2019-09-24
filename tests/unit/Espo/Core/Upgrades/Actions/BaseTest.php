@@ -145,6 +145,11 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->method('getContents')
             ->will($this->returnValue($manifest));
 
+        $this->objects['config']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue([]));
+
         $this->reflection->invokeMethod('getManifest', array());
     }
 
@@ -222,6 +227,11 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $this->expectException('\Espo\Core\Exceptions\Error');
 
+        $this->objects['config']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue([]));
+
         $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error'));
     }
 
@@ -262,7 +272,13 @@ class BaseTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('\Espo\Core\Exceptions\Error');
 
+        $this->objects['config']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue([]));
+
         $this->reflection->setProperty('data', array('manifest' => array('type' => 'upgrade')));
+
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );
     }
 }
