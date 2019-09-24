@@ -20,7 +20,7 @@
         <h4 class="panel-title">{{translate 'selectUpgradePackage' scope='Admin' category="messages"}}</h4>
     </div>
     <div class="panel-body">
-        <p class="text-danger">{{{upgradeRecommendation}}}</p>
+        <p class="text-danger" style="font-weight: 600;">{{{upgradeRecommendation}}}</p>
         <p class="">
             {{complexText downloadMsg inline=true}}
         </p>

@@ -251,7 +251,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             this.manageAddButton();
 
 
-            if (this.mode == 'search') {
+            if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
                 this.$element.autocomplete({
                     serviceUrl: function (q) {
                         return 'EmailAddress/action/searchInAddressBook?maxSize=' + this.getAutocompleteMaxCount();

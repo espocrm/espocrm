@@ -67,7 +67,9 @@ class EmailAddress extends Record
         $selectManager = $this->getSelectManagerFactory()->create($entityType);
         $selectManager->applyAccess($selectParams);
 
-        $collection = $this->getEntityManager()->getRepository($entityType)->find($selectParams);
+        $collection = $this->getEntityManager()->getRepository($entityType)
+            ->select(['id', 'emailAddress', 'name'])
+            ->find($selectParams);
 
         foreach ($collection as $entity) {
             $emailAddress = $entity->get('emailAddress');

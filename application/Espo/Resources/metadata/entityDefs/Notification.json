@@ -2,6 +2,7 @@
     "fields": {
         "number": {
             "type": "autoincrement",
+            "dbType": "bigint",
             "index": true
         },
         "data": {
