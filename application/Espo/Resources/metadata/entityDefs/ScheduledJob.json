@@ -12,7 +12,8 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Inactive"]
+            "options": ["Active", "Inactive"],
+            "default": "Active"
         },
         "scheduling": {
             "type": "varchar",
