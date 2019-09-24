@@ -267,6 +267,8 @@ class Email extends Record
             throw new Error($e->getMessage(), $e->getCode());
         }
 
+        $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);
+
         if ($message) {
             if ($inboundEmail) {
                 $entity->addLinkMultipleId('inboundEmails', $inboundEmail->id);
@@ -295,10 +297,6 @@ class Email extends Record
         if ($parent) {
             $this->getStreamService()->noteEmailSent($parent, $entity);
         }
-
-        $entity->set('isJustSent', true);
-
-        $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);
     }
 
     protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
