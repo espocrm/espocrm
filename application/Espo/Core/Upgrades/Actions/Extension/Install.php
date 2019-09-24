@@ -186,7 +186,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * @param  string $errorMessage
      * @return void
      */
-    protected function throwErrorAndRemovePackage($errorMessage = '')
+    public function throwErrorAndRemovePackage($errorMessage = '')
     {
         if (!$this->isNew()) {
             throw new Error($errorMessage);

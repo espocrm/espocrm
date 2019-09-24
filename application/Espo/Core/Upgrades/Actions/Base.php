@@ -156,7 +156,7 @@ abstract class Base
         return $this->entityManager;
     }
 
-    protected function throwErrorAndRemovePackage($errorMessage = '')
+    public function throwErrorAndRemovePackage($errorMessage = '')
     {
         $this->deletePackageFiles();
         $this->deletePackageArchive();
@@ -186,7 +186,7 @@ abstract class Base
         return $this->processId;
     }
 
-    protected function setProcessId($processId)
+    public function setProcessId($processId)
     {
         $this->processId = $processId;
     }
@@ -272,11 +272,30 @@ abstract class Base
     }
 
     /**
-     * Run scripts by type
+     * Run a script by a type
      * @param  string $type Ex. "before", "after"
      * @return void
      */
     protected function runScript($type)
+    {
+        $beforeInstallScript = $this->getScriptPath($type);
+
+        if ($beforeInstallScript) {
+            $scriptNames = $this->getParams('scriptNames');
+            $scriptName = $scriptNames[$type];
+
+            require_once($beforeInstallScript);
+            $script = new $scriptName();
+
+            try {
+                $script->run($this->getContainer(), $this->scriptParams);
+            } catch (\Exception $e) {
+                $this->throwErrorAndRemovePackage($e->getMessage());
+            }
+        }
+    }
+
+    protected function getScriptPath($type)
     {
         $packagePath = $this->getPackagePath();
         $scriptNames = $this->getParams('scriptNames');
@@ -287,16 +306,8 @@ abstract class Base
         }
 
         $beforeInstallScript = Util::concatPath( array($packagePath, self::SCRIPTS, $scriptName) ) . '.php';
-
         if (file_exists($beforeInstallScript)) {
-            require_once($beforeInstallScript);
-            $script = new $scriptName();
-
-            try {
-                $script->run($this->getContainer(), $this->scriptParams);
-            } catch (\Exception $e) {
-                $this->throwErrorAndRemovePackage($e->getMessage());
-            }
+            return $beforeInstallScript;
         }
     }
 
@@ -475,6 +486,28 @@ abstract class Base
      */
     protected function copyFiles($type = null, $dest = '')
     {
+        $filesPath = $this->getCopyFilesPath($type);
+
+        if ($filesPath) {
+            switch ($type) {
+                case 'vendor':
+                    $dest = $this->vendorDirName;
+                    break;
+            }
+
+            return $this->copy($filesPath, $dest, true);
+        }
+
+        return true;
+    }
+
+    /**
+     * Get needed file list based on type. E.g. file list for "beforeCopy" action
+     * @param  string $type
+     * @return boolean
+     */
+    protected function getCopyFilesPath($type = null)
+    {
         switch ($type) {
             case 'before':
             case 'after':
@@ -486,7 +519,6 @@ abstract class Base
                 $dirNames = $this->getParams('customDirNames');
                 if (isset($dirNames['vendor'])) {
                     $dirPath = $dirNames['vendor'];
-                    $dest = $this->vendorDirName;
                 }
                 break;
 
@@ -500,11 +532,9 @@ abstract class Base
             $filesPath = Util::concatPath($packagePath, $dirPath);
 
             if (file_exists($filesPath)) {
-                return $this->copy($filesPath, $dest, true);
+                return $filesPath;
             }
         }
-
-        return true;
     }
 
     protected function getVendorFileList($type = 'copy')
@@ -711,7 +741,9 @@ abstract class Base
         $result = $this->getFileManager()->isWritableList($fullFileList);
         if (!$result) {
             $permissionDeniedList = $this->getFileManager()->getLastPermissionDeniedList();
-            throw new Error("Permission denied for <br>". implode(", <br>", $permissionDeniedList));
+
+            $delimiter = $this->isCli() ? "\n" : "<br>";
+            throw new Error("Permission denied: " . $delimiter . implode($delimiter, $permissionDeniedList));
         }
     }
 
@@ -756,7 +788,7 @@ abstract class Base
             'useCache' => $config->get('useCache'),
         ];
 
-        $this->setParam('beforeMaintenanceModeParams', $actualParams);
+        $config->set('temporaryUpgradeParams', $actualParams);
 
         $save = false;
 
@@ -783,19 +815,34 @@ abstract class Base
     protected function disableMaintenanceMode()
     {
         $config = $this->getConfig();
-        $beforeMaintenanceModeParams = $this->getParams('beforeMaintenanceModeParams', []);
+
+        $temporaryUpgradeParams = $config->get('temporaryUpgradeParams', []);
 
         $save = false;
 
-        foreach ($beforeMaintenanceModeParams as $paramName => $paramValue) {
+        foreach ($temporaryUpgradeParams as $paramName => $paramValue) {
             if ($config->get($paramName) != $paramValue) {
                 $config->set($paramName, $paramValue);
                 $save = true;
             }
         }
 
+        if ($config->has('temporaryUpgradeParams')) {
+            $config->remove('temporaryUpgradeParams');
+            $save = true;
+        }
+
         if ($save) {
             $config->save();
         }
+    }
+
+    protected function isCli()
+    {
+        if (substr(php_sapi_name(), 0, 3) == 'cli') {
+            return true;
+        }
+
+        return false;
     }
 }

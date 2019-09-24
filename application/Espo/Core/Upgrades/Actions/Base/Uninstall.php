@@ -155,7 +155,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
-    protected function throwErrorAndRemovePackage($errorMessage = '')
+    public function throwErrorAndRemovePackage($errorMessage = '')
     {
         $this->restoreFiles();
         throw new Error($errorMessage);

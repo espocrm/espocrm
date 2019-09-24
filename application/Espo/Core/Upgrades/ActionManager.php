@@ -84,15 +84,23 @@ class ActionManager
         return $object->run($data);
     }
 
+    public function getActionClass($actionName)
+    {
+        return $this->getObject($actionName);
+    }
+
     public function getManifest()
     {
         return $this->getObject()->getManifest();
     }
 
-    protected function getObject()
+    protected function getObject($actionName = null)
     {
         $managerName = $this->getManagerName();
-        $actionName = $this->getAction();
+
+        if (!$actionName) {
+            $actionName = $this->getAction();
+        }
 
         if (!isset($this->objects[$managerName][$actionName])) {
             $class = '\Espo\Core\Upgrades\Actions\\' . ucfirst($managerName) . '\\' . ucfirst($actionName);
