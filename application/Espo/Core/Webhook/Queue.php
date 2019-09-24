@@ -111,13 +111,19 @@ class Queue
         $portionSize = $this->config->get('webhookQueuePortionSize', self::PORTION_SIZE);
         $batchSize = $this->config->get('webhookBatchSize', self::BATCH_SIZE);
 
-        $groupedItemList = $this->entityManager->getRepository('WebhookQueueItem')->where([
-            'status' => 'Pending',
-            'OR' => [
-                ['processAt' => null],
-                ['processAt<=' => DateTime::getSystemNowString()],
-            ],
-        ])->order('number')->limit(0, $portionSize)->groupBy(['webhookId'])->find();
+        $groupedItemList = $this->entityManager->getRepository('WebhookQueueItem')
+            ->select(['webhookId'])
+            ->where([
+                'status' => 'Pending',
+                'OR' => [
+                    ['processAt' => null],
+                    ['processAt<=' => DateTime::getSystemNowString()],
+                ],
+            ])
+            ->order('number')
+            ->limit(0, $portionSize)
+            ->groupBy(['webhookId'])
+            ->find();
 
         foreach ($groupedItemList as $group) {
             $webhookId = $group->get('webhookId');
