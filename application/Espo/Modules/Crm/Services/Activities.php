@@ -652,14 +652,21 @@ class Activities extends \Espo\Core\Services\Base
         $offset = $params['offset'] ?? 0;
 
         if (!$onlyScope && $scope === 'User') {
+            $skipUnion = false;
             foreach ($parts as &$part) {
+                if (strpos($part, 'UNION') !== false) {
+                    $skipUnion = true;
+                    break;
+                }
                 $part .= " ORDER BY dateStart DESC";
                 if ($maxSize) {
                     $part .= " LIMIT " . intval($offset + $maxSize + 1);
                 }
                 $part = '(' . $part . ')';
             }
-            $sql = "SELECT * FROM (\n" . implode(" UNION ", $parts) . "\n) t";
+            if (!$skipUnion) {
+                $sql = "SELECT * FROM (\n" . implode(" UNION ", $parts) . "\n) t";
+            }
         }
 
         if ($scope === 'User') {
