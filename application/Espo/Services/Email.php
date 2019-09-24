@@ -261,9 +261,7 @@ class Email extends Record
             $emailSender->send($entity, $params, $message);
         } catch (\Exception $e) {
             $entity->set('status', 'Failed');
-            $this->getEntityManager()->saveEntity($entity, array(
-                'silent' => true
-            ));
+            $this->getEntityManager()->saveEntity($entity, ['silent' => true]);
             throw new Error($e->getMessage(), $e->getCode());
         }
 
@@ -809,7 +807,7 @@ class Email extends Record
 
     public function getCopiedAttachments($id, $parentType = null, $parentId = null)
     {
-        $ids = array();
+        $ids = [];
         $names = new \stdClass();
 
         if (empty($id)) {
@@ -940,7 +938,7 @@ class Email extends Record
 
     public function getFoldersNotReadCounts()
     {
-        $data = array();
+        $data = [];
 
         $selectManager = $this->getSelectManager($this->getEntityType());
         $selectParams = $selectManager->getEmptySelectParams();
