@@ -97,7 +97,7 @@ class User extends \Espo\Core\Entities\Person
                 return $this->get('userName');
             }
         }
-        return $this->valuesContainer['name'];
+        return $this->valuesContainer['name'] ?? null;
     }
 
     protected function _hasName()
