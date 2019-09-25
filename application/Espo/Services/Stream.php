@@ -351,16 +351,17 @@ class Stream extends \Espo\Core\Services\Base
         $selectParamsSubscription = [
             'select' => $select,
             'leftJoins' => ['createdBy'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    (
-                        (
-                            note.parent_type = subscription.entity_type AND
-                            note.parent_id = subscription.entity_id
-                        )
-                    ) AND
-                    subscription.user_id = ". $pdo->quote($user->id) ."
-            ",
+            'joins' => [
+                [
+                    'Subscription',
+                    'subscription',
+                    [
+                        'entityType:' => 'parentType',
+                        'entityId:' => 'parentId',
+                        'subscription.userId' => $user->id,
+                    ]
+                ]
+            ],
             'whereClause' => [],
             'orderBy' => 'number',
             'order' => 'DESC'
@@ -439,23 +440,25 @@ class Stream extends \Espo\Core\Services\Base
         $selectParamsSubscriptionSuper = [
             'select' => $select,
             'leftJoins' => ['createdBy'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    (
-                        (
-                            note.super_parent_type = subscription.entity_type AND
-                            note.super_parent_id = subscription.entity_id
-                        )
-                    ) AND
-                    subscription.user_id = ".$pdo->quote($user->id)."
-            ",
-            'customWhere' => ' AND (
-                    note.parent_id <> note.super_parent_id
-                    OR
-                    note.parent_type <> note.super_parent_type
-                )
-            ',
-            'whereClause' => [],
+            'joins' => [
+                [
+                    'Subscription',
+                    'subscription',
+                    [
+                        'entityType:' => 'superParentType',
+                        'entityId:' => 'superParentId',
+                        'subscription.userId' => $user->id,
+                    ]
+                ]
+            ],
+            'whereClause' => [
+                [
+                    'OR' => [
+                        'parentId!=' => 'superParentId',
+                        'parentType!=' => 'superParentType',
+                    ],
+                ]
+            ],
             'orderBy' => 'number',
             'order' => 'DESC'
         ];
@@ -1411,18 +1414,23 @@ class Stream extends \Espo\Core\Services\Base
     {
         $query = $this->getEntityManager()->getQuery();
         $pdo = $this->getEntityManager()->getPDO();
-        $sql = $query->createSelectQuery('User', array(
+        $sql = $query->createSelectQuery('User', [
             'select' => ['id'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    subscription.user_id = user.id AND
-                    subscription.entity_id = ".$query->quote($entity->id)." AND
-                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
-            ",
-            'whereClause' => array(
+            'joins' => [
+                [
+                    'Subscription',
+                    'subscription',
+                    [
+                        'subscription.userId=:' => 'user.id',
+                        'subscription.entityId' => $entity->id,
+                        'subscription.entityType' => $entity->getEntityType(),
+                    ]
+                ]
+            ],
+            'whereClause' => [
                 'isActive' => true
-            )
-        ));
+            ]
+        ]);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
