@@ -125,6 +125,7 @@ return [
         'webSocketSslAllowSelfSigned',
         'webSocketUseSecureServer',
         'webSocketPort',
+        'aclStrictMode',
     ],
     'adminItems' => [
         'devMode',
