@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/site/master', 'view', function (Dep) {
+define('views/site/master', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -55,6 +55,16 @@ Espo.define('views/site/master', 'view', function (Dep) {
             this.notify(false);
         },
 
+        setup: function () {
+            $(window).on('resize.' + this.cid, function () {
+                this.adjustContent();
+            }.bind(this));
+        },
+
+        onRemove: function () {
+            $(window).off('resize.' + this.cid);
+        },
+
         afterRender: function () {
             var footerView = this.getView('footer');
             if (footerView) {
@@ -71,6 +81,40 @@ Espo.define('views/site/master', 'view', function (Dep) {
                         footerView.$el.html(decText);
                     }
                 }
+            }
+
+            this.$content = this.$el.find('> #content');
+
+            this.adjustContent();
+        },
+
+        adjustContent: function () {
+            if (!this.isRendered()) return;
+
+            if (window.innerWidth < this.getThemeManager().getParam('screenWidthXs')) {
+                this.isSmallScreen = true;
+
+                var height = window.innerHeight - this.$content.get(0).getBoundingClientRect().top;
+
+                var $navbarCollapse = $('#navbar .navbar-body');
+                if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
+                    height += $navbarCollapse.height();
+                }
+
+                var footerHeight = $('#footer').height() || 26;
+                height -= footerHeight;
+
+                if (height <= 0) {
+                    this.$content.css('minHeight', '');
+                } else {
+                    this.$content.css('minHeight', height + 'px');
+                }
+
+            } else {
+                if (this.isSmallScreen) {
+                    this.$content.css('minHeight', '');
+                }
+                this.isSmallScreen = false;
             }
         },
     });
