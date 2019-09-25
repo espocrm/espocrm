@@ -88,7 +88,7 @@ class Table
         if ($this->isStrictModeForced) {
             $this->isStrictMode = true;
         } else {
-            $this->isStrictMode = $config->get('aclStrictMode', false);
+            $this->isStrictMode = $config->get('aclStrictMode', true);
         }
 
         $this->user = $user;
