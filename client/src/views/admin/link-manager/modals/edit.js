@@ -364,8 +364,11 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.model.set('link', link);
             this.model.set('linkForeign', linkForeign);
 
-            this.model.set('label', Espo.Utils.upperCaseFirst(link));
-            this.model.set('labelForeign', Espo.Utils.upperCaseFirst(linkForeign));
+            var label = Espo.Utils.upperCaseFirst(link.replace(/([a-z])([A-Z])/g, '$1 $2'));
+            var labelForeign = Espo.Utils.upperCaseFirst(linkForeign.replace(/([a-z])([A-Z])/g, '$1 $2'));
+
+            this.model.set('label', label);
+            this.model.set('labelForeign', labelForeign);
 
             return;
         },
