@@ -968,6 +968,36 @@ class Stream extends \Espo\Core\Services\Base
             'notification.userId' => $user->id,
         ];
 
+        $selectManager->addLeftJoin([
+            'Subscription',
+            'subscription',
+            [
+                'entityType:' => 'parentType',
+                'entityId:' => 'parentId',
+                'userId' => $user->id,
+            ]
+        ], $selectParams);
+
+        $selectManager->addLeftJoin([
+            'Subscription',
+            'subscriptionSuper',
+            [
+                'entityType:' => 'superParentType',
+                'entityId:' => 'superParentId',
+                'userId' => $user->id,
+            ]
+        ], $selectParams);
+
+        $selectManager->setDistinct(true, $selectParams);
+
+        $selectParams['whereClause'][] = [
+            'OR' => [
+                'subscription.id!=' => null,
+                'subscriptionSuper.id!=' => null,
+                'parentId' => null,
+            ],
+        ];
+
         $selectManager->applyLimit($offset, $maxSize + 1, $selectParams);
 
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Note', $selectParams);
