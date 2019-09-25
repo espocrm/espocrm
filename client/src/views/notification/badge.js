@@ -319,6 +319,12 @@ define('views/notification/badge', 'view', function (Dep) {
                     }
                 }
             }.bind(this));
+
+            if (window.innerWidth < this.getThemeManager().getParam('screenWidthXs')) {
+                this.listenToOnce(this.getRouter(), 'route', function () {
+                    this.closeNotifications();
+                }, this);
+            }
         },
 
         closeNotifications: function () {
