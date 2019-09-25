@@ -33,7 +33,10 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
         dataAttributeList: ['name', 'width', 'link', 'notSortable', 'align', 'view', 'customLabel', 'widthPx'],
 
         dataAttributesDefs: {
-            link: {type: 'bool'},
+            link: {
+                type: 'bool',
+                tooltip: true,
+            },
             width: {
                 type: 'float',
                 min: 0,
