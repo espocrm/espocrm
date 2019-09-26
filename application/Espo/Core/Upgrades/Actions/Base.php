@@ -37,10 +37,6 @@ use Composer\Semver\Semver;
 
 abstract class Base
 {
-    private $config;
-
-    private $entityManager;
-
     private $helper;
 
     protected $data;
@@ -53,7 +49,7 @@ abstract class Base
 
     private $zipUtil;
 
-    private $fileManager;
+    private $databaseHelper;
 
     protected $processId = null;
 
@@ -132,28 +128,28 @@ abstract class Base
         return $this->zipUtil;
     }
 
+    protected function getDatabaseHelper()
+    {
+        if (!isset($this->databaseHelper)) {
+            $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->getConfig());
+        }
+
+        return $this->databaseHelper;
+    }
+
     protected function getFileManager()
     {
-        if (!isset($this->fileManager)) {
-            $this->fileManager = $this->getContainer()->get('fileManager');
-        }
-        return $this->fileManager;
+        return $this->getContainer()->get('fileManager');
     }
 
     protected function getConfig()
     {
-        if (!isset($this->config)) {
-            $this->config = $this->getContainer()->get('config');
-        }
-        return $this->config;
+        return $this->getContainer()->get('config');
     }
 
     public function getEntityManager()
     {
-        if (!isset($this->entityManager)) {
-            $this->entityManager = $this->getContainer()->get('entityManager');
-        }
-        return $this->entityManager;
+        return $this->getContainer()->get('entityManager');
     }
 
     public function throwErrorAndRemovePackage($errorMessage = '')
@@ -205,12 +201,26 @@ abstract class Base
 
         //check php version
         if (isset($manifest['php'])) {
-            $res &= $this->checkVersions($manifest['php'], System::getPhpVersion(), 'Your PHP version does not support this installation package.');
+            $res &= $this->checkVersions($manifest['php'], System::getPhpVersion(), 'Your PHP version ({version}) is not supported. Required version: {requiredVersion}.');
+        }
+
+        //check database version
+        if (isset($manifest['database'])) {
+            $databaseHelper = $this->getDatabaseHelper();
+            $databaseType = $databaseHelper->getDatabaseType();
+            $databaseTypeLc = strtolower($databaseType);
+
+            if (isset($manifest['database'][$databaseTypeLc])) {
+                $databaseVersion = $databaseHelper->getDatabaseVersion();
+                if ($databaseVersion) {
+                    $res &= $this->checkVersions($manifest['database'][$databaseTypeLc], $databaseVersion, 'Your '. $databaseType .' version ({version}) is not supported. Required version: {requiredVersion}.');
+                }
+            }
         }
 
         //check acceptableVersions
         if (isset($manifest['acceptableVersions'])) {
-            $res &= $this->checkVersions($manifest['acceptableVersions'], $this->getConfig()->get('version'), 'Your EspoCRM version doesn\'t match for this installation package.');
+            $res &= $this->checkVersions($manifest['acceptableVersions'], $this->getConfig()->get('version'), 'Your EspoCRM version ({version}) is not supported. Required version: {requiredVersion}.');
         }
 
         //check dependencies
@@ -244,6 +254,9 @@ abstract class Base
             }
         }
 
+        $errorMessage = preg_replace('/\{version\}/', $currentVersion, $errorMessage);
+        $errorMessage = preg_replace('/\{requiredVersion\}/', $version, $errorMessage);
+
         $this->throwErrorAndRemovePackage($errorMessage);
     }
 
@@ -264,6 +277,17 @@ abstract class Base
         }
 
         return true;
+    }
+
+    protected function getPackageType()
+    {
+        $manifest = $this->getManifest();
+
+        if (isset($manifest['type'])) {
+            return strtolower($manifest['type']);
+        }
+
+        return $this->defaultPackageType;
     }
 
     protected function checkDependencies($dependencyList)
