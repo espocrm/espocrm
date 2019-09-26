@@ -9,7 +9,7 @@ Download the latest release from our [website](http://www.espocrm.com).
 ### Requirements
 
 * PHP 7.1 or above (with pdo, json, gd, openssl, zip, imap, mbstring, curl extensions);
-* MySQL 5.5.3 or above, or MariaDB.
+* MySQL 5.6.0 or above, or MariaDB.
 
 For more information about server configuration see [this article](https://www.espocrm.com/documentation/administration/server-configuration/).
 
