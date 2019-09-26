@@ -145,7 +145,7 @@ class Helper
 
         switch ($tableEngine) {
             case 'InnoDB':
-                $version = $this->getDatabaseVersion();
+                $version = $this->getFullDatabaseVersion();
 
                 if (version_compare($version, '10.0.0') >= 0) {
                     return 767; //InnoDB, MariaDB
@@ -178,7 +178,7 @@ class Helper
             return $default;
         }
 
-        $version = $this->getDatabaseVersion();
+        $version = $this->getFullDatabaseVersion();
         if (preg_match('/mariadb/i', $version)) {
             return 'MariaDB';
         }
@@ -186,7 +186,7 @@ class Helper
         return $default;
     }
 
-    protected function getDatabaseVersion()
+    protected function getFullDatabaseVersion()
     {
         $connection = $this->getDbalConnection();
         if (!$connection) {
@@ -194,6 +194,19 @@ class Helper
         }
 
         return $connection->fetchColumn("select version()");
+    }
+
+    /**
+     * Get Database version
+     * @return string|null
+     */
+    public function getDatabaseVersion()
+    {
+        $fullVersion = $this->getFullDatabaseVersion();
+
+        if (preg_match('/[0-9]+\.[0-9]+\.[0-9]+/', $fullVersion, $match)) {
+            return $match[0];
+        }
     }
 
     /**
@@ -240,7 +253,7 @@ class Helper
 
         switch ($tableEngine) {
             case 'InnoDB':
-                $version = $this->getDatabaseVersion();
+                $version = $this->getFullDatabaseVersion();
 
                 if (version_compare($version, '5.6.4') >= 0) {
                     return true; //InnoDB, MySQL 5.6.4+
