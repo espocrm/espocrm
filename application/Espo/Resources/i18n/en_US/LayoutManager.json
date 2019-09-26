@@ -29,6 +29,6 @@
         "Layout": "Layout"
     },
     "tooltips": {
-        "link": "If checked, then a field value will be displayed as a link pointing to the detail view of the record. Usually, it is used for *Name* fields."
+        "link": "If checked, then a field value will be displayed as a link pointing to the detail view of the record. Usually it is used for *Name* fields."
     }
 }
