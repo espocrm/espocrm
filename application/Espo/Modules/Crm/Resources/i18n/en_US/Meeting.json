@@ -52,6 +52,7 @@
         "todays": "Today's"
     },
     "messages": {
+        "selectAcceptanceStatus": "Set your acceptance status.",
         "nothingHasBeenSent": "Nothing were sent"
     }
 }
