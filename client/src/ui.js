@@ -366,7 +366,7 @@ define('ui', [], function () {
                                 dialog.close();
                             },
                             style: confirmStyle,
-                            pullLeft: true
+                            pullLeft: true,
                         },
                         {
                             text: cancelText,
@@ -381,7 +381,7 @@ define('ui', [], function () {
                                     }
                                 }
                             },
-                            pullRight: true
+                            pullRight: true,
                         }
                     ]
                 });
