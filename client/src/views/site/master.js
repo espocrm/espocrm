@@ -86,6 +86,18 @@ define('views/site/master', 'view', function (Dep) {
             this.$content = this.$el.find('> #content');
 
             this.adjustContent();
+
+            if (this.getConfig().get('maintenanceMode')) {
+
+                this.createView('dalog', 'views/modal', {
+                    templateContent: '<div class="text-danger">{{complexText viewObject.options.message}}</div>',
+                    headerText: this.translate('maintenanceMode', 'fields', 'Settings'),
+                    backdrop: true,
+                    message: this.translate('maintenanceMode', 'messages'),
+                }, function (view) {
+                    view.render();
+                });
+            }
         },
 
         adjustContent: function () {
