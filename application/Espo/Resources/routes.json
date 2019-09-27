@@ -2,7 +2,7 @@
     {
         "route": "/",
         "method": "get",
-        "params": "<h1>EspoCRM REST API<\/h1>"
+        "params": "\"EspoCRM REST API\""
     },
     {
         "route": "/App/user",
