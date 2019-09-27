@@ -33,15 +33,25 @@ define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (De
         backdrop: true,
 
         templateContent: `
+            <p>{{viewObject.message}}</p>
             {{#each viewObject.statusDataList}}
                 <p>
-                    <button class="action btn btn-{{style}} btn-x-wide" type="button" data-action="setStatus" data-status="{{name}}">{{label}}</button>
+                    <button class="action btn btn-{{style}} btn-x-wide" type="button" data-action="setStatus" data-status="{{name}}">
+                    {{#if selected}}<span style="text-decoration: underline;">{{/if}}
+                    {{label}}
+                    {{#if selected}}</span>{{/if}}
+                    </button>
                 </p>
             {{/each}}
         `,
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.addButton({
+                name: 'close',
+                label: 'Close',
+            });
 
             this.headerHtml = this.escapeString(this.translate(this.model.entityType, 'scopeNames'))  + ' &raquo ' +
                 this.escapeString(this.model.get('name')) + ' &raquo ' + this.translate('Acceptance', 'labels', 'Meeting');
@@ -53,16 +63,19 @@ define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (De
                 var o = {
                     name: item,
                     style: this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', item]) || 'default',
-                    label: this.getLanguage().translateOption(item, 'acceptanceStatus', this.model.entityType)
+                    label: this.getLanguage().translateOption(item, 'acceptanceStatus', this.model.entityType),
+                    selected: this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === item,
                 };
 
                 this.statusDataList.push(o);
             }, this);
+
+            this.message = this.translate('selectAcceptanceStatus', 'messages', 'Meeting')
         },
 
         actionSetStatus: function (data) {
             this.trigger('set-status', data.status);
             this.close();
-        }
+        },
     });
 });
