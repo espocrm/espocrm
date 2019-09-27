@@ -84,6 +84,9 @@ define('views/modal', 'view', function (Dep) {
 
             this.setSelector(this.containerSelector);
 
+            this.buttonList = this.options.buttonList || this.buttonList;
+            this.dropdownItemList = this.options.dropdownItemList || this.dropdownItemList;
+
             this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
             this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
 

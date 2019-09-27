@@ -670,7 +670,7 @@ class Stream extends \Espo\Core\Services\Base
             $sqlPartList[] = "(\n" . $this->getEntityManager()->getQuery()->createSelectQuery('Note', $selectParams) . "\n)";
         }
 
-        $sql = implode("\n UNION \n", $sqlPartList) . "
+        $sql = implode("\n UNION ALL \n", $sqlPartList) . "
             ORDER BY number DESC
         ";
 

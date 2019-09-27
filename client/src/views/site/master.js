@@ -94,6 +94,12 @@ define('views/site/master', 'view', function (Dep) {
                     headerText: this.translate('maintenanceMode', 'fields', 'Settings'),
                     backdrop: true,
                     message: this.translate('maintenanceMode', 'messages'),
+                    buttonList: [
+                        {
+                            name: 'close',
+                            label: this.translate('Close'),
+                        }
+                    ],
                 }, function (view) {
                     view.render();
                 });
