@@ -812,7 +812,8 @@ abstract class Base
             'useCache' => $config->get('useCache'),
         ];
 
-        $config->set('temporaryUpgradeParams', $actualParams);
+        $configParamName = $this->getTemporaryConfigParamName();
+        $config->set($configParamName, $actualParams);
 
         $save = false;
 
@@ -840,7 +841,8 @@ abstract class Base
     {
         $config = $this->getConfig();
 
-        $temporaryUpgradeParams = $config->get('temporaryUpgradeParams', []);
+        $configParamName = $this->getTemporaryConfigParamName();
+        $temporaryUpgradeParams = $config->get($configParamName, []);
 
         $save = false;
 
@@ -851,14 +853,19 @@ abstract class Base
             }
         }
 
-        if ($config->has('temporaryUpgradeParams')) {
-            $config->remove('temporaryUpgradeParams');
+        if ($config->has($configParamName)) {
+            $config->remove($configParamName);
             $save = true;
         }
 
         if ($save) {
             $config->save();
         }
+    }
+
+    protected function getTemporaryConfigParamName()
+    {
+        return 'temporaryUpgradeParams' . $this->getProcessId();
     }
 
     protected function isCli()
