@@ -395,6 +395,38 @@ define('ui', [], function () {
             return new Dialog(options);
         },
 
+        popover: function ($el, o, view) {
+            $el.popover({
+                placement: o.placement || 'bottom',
+                container: o.container || 'body',
+                html: true,
+                content: o.content || o.text,
+                trigger: o.trigger || 'manual',
+            }).on('shown.bs.popover', function () {
+                if (view) {
+                    $('body').off('click.popover-' + view.cid);
+                    $('body').on('click.popover-' + view.cid, function (e) {
+                        if ($(e.target).closest('.popover-content').get(0)) return;
+                        if ($.contains($el.get(0), e.target)) return;
+                        if ($el.get(0) === e.target) return;
+                        $('body').off('click.popover-' + view.cid);
+                        $el.popover('hide');
+                    });
+                }
+            });
+
+            if (view) {
+                view.on('remove', function () {
+                    $el.popover('destroy');
+                    $('body').off('click.popover-' + view.cid);
+                });
+                view.on('render', function () {
+                    $el.popover('destroy');
+                    $('body').off('click.popover-' + view.cid);
+                });
+            }
+        },
+
         notify: function (message, type, timeout, closeButton) {
             $('#nofitication').remove();
 
