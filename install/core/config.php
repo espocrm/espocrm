@@ -67,21 +67,12 @@ service apache2 restart',
         try_files /reset.html =404;
     }
 
-    location ^~ (data|api)/ {
+    location ^~ (api|client)/ {
         if (-e $request_filename){
             return 403;
         }
     }
-    location ^~ /data/logs/ {
-        deny all;
-    }
-    location ^~ /data/config.php {
-        deny all;
-    }
-    location ^~ /data/cache/ {
-        deny all;
-    }
-    location ^~ /data/upload/ {
+    location ^~ /data/ {
         deny all;
     }
     location ^~ /application/ {
