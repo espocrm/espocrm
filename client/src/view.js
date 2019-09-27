@@ -236,7 +236,7 @@ define('view', [], function () {
         confirm: function (o, callback, context) {
             if (typeof o === 'string' || o instanceof String) {
                 var message = o;
-                o = o || {};
+                o = {};
             } else {
                 o = o || {};
                 var message = o.message;
