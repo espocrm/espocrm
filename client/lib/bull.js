@@ -281,7 +281,7 @@ var Bull = Bull || {};
             this._layout = this.options._layout || this._layout;
             this.layoutData = this.options.layoutData || this.layoutData;
 
-            this._template = this.templateContent || this._template;
+            this._template = this.templateContent || this.options.templateContent || this._template;
 
             if (this._template != null && this._templator.compilable) {
                 this._templateCompiled = this._templator.compileTemplate(this._template);
