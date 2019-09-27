@@ -760,7 +760,8 @@ abstract class Base
 
     protected function checkIsWritable()
     {
-        $fullFileList = array_merge($this->getDeleteFileList(), $this->getCopyFileList());
+        $backupPath = $this->getPath('backupPath');
+        $fullFileList = array_merge([$backupPath], $this->getDeleteFileList(), $this->getCopyFileList());
 
         $result = $this->getFileManager()->isWritableList($fullFileList);
         if (!$result) {
