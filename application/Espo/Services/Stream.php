@@ -308,7 +308,7 @@ class Stream extends \Espo\Core\Services\Base
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
 
-        $sqLimit = $offset + $maxSize + 1; 
+        $sqLimit = $offset + $maxSize + 1;
 
         if ($userId === $this->getUser()->id) {
             $user = $this->getUser();
@@ -453,8 +453,8 @@ class Stream extends \Espo\Core\Services\Base
             'whereClause' => [
                 [
                     'OR' => [
-                        'parentId!=' => 'superParentId',
-                        'parentType!=' => 'superParentType',
+                        'parentId!=:' => 'superParentId',
+                        'parentType!=:' => 'superParentType',
                     ],
                 ]
             ],
