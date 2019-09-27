@@ -9,13 +9,9 @@ DirectoryIndex index.php index.html
 
   # PROTECTED DIRECTORIES
   RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^/?(data|api|client)/ - [F]
+  RewriteRule ^/?(api|client)/ - [F]
 
-  RewriteRule ^/?data/config\.php$ - [F]
-  RewriteRule ^/?data/logs/ - [F]
-  RewriteRule ^/?data/cache/ - [F]
-  RewriteRule ^/?data/upload/ - [F]
-  RewriteRule ^/?data/\.backup/ - [F]
+  RewriteRule ^/?data/ - [F]
   RewriteRule ^/?application/ - [F]
   RewriteRule ^/?custom/ - [F]
   RewriteRule ^/?vendor/ - [F]
