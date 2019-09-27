@@ -45,8 +45,8 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
                 collection.url = 'Stream';
                 collection.maxSize = this.getOption('displayRecords');
 
-                if (this.getOption('onlyNotified')) {
-                    collection.data.onlyNotified = true;
+                if (this.getOption('skipOwn')) {
+                    collection.data.skipOwn = true;
                 }
 
                 this.listenToOnce(collection, 'sync', function () {

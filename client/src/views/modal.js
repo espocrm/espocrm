@@ -74,7 +74,13 @@ define('views/modal', 'view', function (Dep) {
             this.header = this.options.header || this.header;
             this.headerHtml = this.options.headerHtml || this.headerHtml;
 
+            if (this.options.headerText) {
+                this.headerHtml = Handlebars.Utils.escapeExpression(this.options.headerText);
+            }
+
             this.options = this.options || {};
+
+            this.backdrop = this.options.backdrop;
 
             this.setSelector(this.containerSelector);
 

@@ -308,6 +308,8 @@ class Stream extends \Espo\Core\Services\Base
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
 
+        $sqLimit = $offset + $maxSize + 1;
+
         if ($userId === $this->getUser()->id) {
             $user = $this->getUser();
         } else {
@@ -320,11 +322,7 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        $onlyNotified = $params['onlyNotified'] ?? false;
-
-        if ($onlyNotified) {
-            return $this->findUserStreamNotified($user, $params);
-        }
+        $skipOwn = $params['skipOwn'] ?? false;
 
         $teamIdList = $user->getTeamIdList();
 
@@ -364,7 +362,8 @@ class Stream extends \Espo\Core\Services\Base
             ],
             'whereClause' => [],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'limit' => $sqLimit,
         ];
 
         if ($user->isPortal()) {
@@ -454,13 +453,14 @@ class Stream extends \Espo\Core\Services\Base
             'whereClause' => [
                 [
                     'OR' => [
-                        'parentId!=' => 'superParentId',
-                        'parentType!=' => 'superParentType',
+                        'parentId!=:' => 'superParentId',
+                        'parentType!=:' => 'superParentType',
                     ],
                 ]
             ],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'limit' => $sqLimit,
         ];
 
         if ($user->isPortal()) {
@@ -538,7 +538,8 @@ class Stream extends \Espo\Core\Services\Base
                 'isGlobal' => false
             ],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'limit' => $sqLimit,
         ];
 
         $selectParamsList[] = [
@@ -552,7 +553,8 @@ class Stream extends \Espo\Core\Services\Base
                 'isGlobal' => false
             ],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'limit' => $sqLimit,
         ];
 
         if ((!$user->isPortal() || $user->isAdmin()) && !$user->isApi()) {
@@ -565,7 +567,8 @@ class Stream extends \Espo\Core\Services\Base
                     'isGlobal' => true
                 ],
                 'orderBy' => 'number',
-                'order' => 'DESC'
+                'order' => 'DESC',
+                'limit' => $sqLimit,
             ];
         }
 
@@ -586,7 +589,8 @@ class Stream extends \Espo\Core\Services\Base
                         'isGlobal' => false
                     ],
                     'orderBy' => 'number',
-                    'order' => 'DESC'
+                    'order' => 'DESC',
+                    'limit' => $sqLimit,
                 ];
             }
         }
@@ -602,7 +606,8 @@ class Stream extends \Espo\Core\Services\Base
                     'isGlobal' => false
                 ],
                 'orderBy' => 'number',
-                'order' => 'DESC'
+                'order' => 'DESC',
+                'limit' => $sqLimit,
             ];
         }
 
@@ -648,6 +653,12 @@ class Stream extends \Espo\Core\Services\Base
             foreach ($selectParamsList as $i => $selectParams) {
                 $selectParamsList[$i] = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
             }
+        }
+
+        if ($skipOwn) {
+            $whereClause[] = [
+                'createdById!=' => $this->getUser()->id,
+            ];
         }
 
         $sqlPartList = [];

@@ -310,6 +310,7 @@
         "massFollowZeroResult": "Nothing got followed",
         "massUnfollowZeroResult": "Nothing got unfollowed",
         "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
+        "maintenanceMode": "The application currently is in maintenance mode. Only admin users can access.\n\nIt can be turned off at Administration → Settings.",
         "massPrintPdfMaxCountError": "Can't print more that {maxCount} records."
     },
     "boolFilters": {

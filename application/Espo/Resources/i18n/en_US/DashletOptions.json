@@ -15,7 +15,7 @@
         "sortBy": "Order (field)",
         "sortDirection": "Order (direction)",
         "expandedLayout": "Layout",
-        "onlyNotified": "Display only records you notified about",
+        "skipOwn": "Don't show own records",
         "dateFilter": "Date Filter"
     },
     "options": {
@@ -32,6 +32,6 @@
         "selectEntityType": "Select Entity Type in dashlet options."
     },
     "tooltips": {
-        "onlyNotified": "Actions made by your user account won't be displayed."
+        "skipOwn": "Actions made by your user account won't be displayed."
     }
 }
