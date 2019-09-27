@@ -322,11 +322,7 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        $onlyNotified = $params['onlyNotified'] ?? false;
-
-        if ($onlyNotified) {
-            return $this->findUserStreamNotified($user, $params);
-        }
+        $skipOwn = $params['skipOwn'] ?? false;
 
         $teamIdList = $user->getTeamIdList();
 
@@ -657,6 +653,12 @@ class Stream extends \Espo\Core\Services\Base
             foreach ($selectParamsList as $i => $selectParams) {
                 $selectParamsList[$i] = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
             }
+        }
+
+        if ($skipOwn) {
+            $whereClause[] = [
+                'createdById!=' => $this->getUser()->id,
+            ];
         }
 
         $sqlPartList = [];
