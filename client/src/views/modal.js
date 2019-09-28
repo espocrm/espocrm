@@ -80,7 +80,7 @@ define('views/modal', 'view', function (Dep) {
 
             this.options = this.options || {};
 
-            this.backdrop = this.options.backdrop;
+            this.backdrop = this.options.backdrop || this.backdrop;
 
             this.setSelector(this.containerSelector);
 
