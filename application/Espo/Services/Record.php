@@ -1857,6 +1857,7 @@ class Record extends \Espo\Core\Services\Base
     public function follow($id, $userId = null)
     {
         $entity = $this->getRepository()->get($id);
+        if (!$entity) throw new NotFoundSilent();
 
         if (!$this->getAcl()->check($entity, 'stream')) {
             throw new Forbidden();
@@ -1872,6 +1873,7 @@ class Record extends \Espo\Core\Services\Base
     public function unfollow($id, $userId = null)
     {
         $entity = $this->getRepository()->get($id);
+        if (!$entity) throw new NotFoundSilent();
 
         if (empty($userId)) {
             $userId = $this->getUser()->id;

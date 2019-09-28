@@ -143,7 +143,8 @@ class Stream extends \Espo\Core\Services\Base
 
         foreach ($userIdList as $i => $userId) {
             $user = $this->getEntityManager()->getEntity('User', $userId);
-            if (!$user){
+            if (!$user) {
+                unset($userIdList[$i]);
                 continue;
             }
             if (!$this->getAclManager()->check($user, $entity, 'stream')) {
@@ -165,10 +166,10 @@ class Stream extends \Espo\Core\Services\Base
 
         $this->followEntityMass($entity, $userIdList);
 
-        $noteList = $this->getEntityManager()->getRepository('Note')->where(array(
+        $noteList = $this->getEntityManager()->getRepository('Note')->where([
             'parentType' => $entityType,
             'parentId' => $entityId
-        ))->order('number', 'ASC')->find();
+        ])->order('number', 'ASC')->find();
 
         foreach ($noteList as $note) {
             $this->getNotificationService()->notifyAboutNote($userIdList, $note);
@@ -197,9 +198,9 @@ class Stream extends \Espo\Core\Services\Base
         return false;
     }
 
-    public function followEntityMass(Entity $entity, array $sourceUserIdList)
+    public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false)
     {
-        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
+        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) {
             return false;
         }
 
@@ -212,6 +213,27 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $userIdList = array_unique($userIdList);
+
+        if (!$skipAclCheck) {
+            foreach ($userIdList as $i => $userId) {
+                $user = $this->getEntityManager()->getRepository('User')
+                    ->select(['id', 'type', 'isActive'])
+                    ->where([
+                        'id' => $userId,
+                        'isActive' => true,
+                    ])->findOne();
+
+                if (!$user) {
+                    unset($userIdList[$i]);
+                    continue;
+                }
+
+                if (!$this->getAclManager()->check($user, $entity, 'stream')) {
+                    unset($userIdList[$i]);
+                }
+            }
+            $userIdList = array_values($userIdList);
+        }
 
         if (empty($userIdList)) {
             return;
