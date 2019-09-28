@@ -106,8 +106,7 @@
                 "edit": "no"
             },
             "Team": {
-                "read": "team",
-                "edit": "no"
+                "read": "team"
             },
             "Import": false,
             "Webhook": false
