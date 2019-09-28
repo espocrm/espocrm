@@ -37,6 +37,7 @@ class Role extends Record
     {
         parent::init();
         $this->addDependency('fileManager');
+        $this->addDependency('dataManager');
     }
 
     protected $forceSelectAllAttributes = true;
@@ -56,5 +57,6 @@ class Role extends Record
     protected function clearRolesCache()
     {
         $this->getInjection('fileManager')->removeInDir('data/cache/application/acl');
+        $this->getInjection('dataManager')->updateCacheTimestamp();
     }
 }
