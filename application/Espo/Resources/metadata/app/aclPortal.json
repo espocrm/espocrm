@@ -100,6 +100,7 @@
                 "type": false,
                 "contact": false,
                 "accounts": false,
+                "account": false,
                 "portalRoles": false,
                 "portals": false,
                 "isActive": false
@@ -121,23 +122,6 @@
             "teams": false
         },
         "scopeFieldLevel": {
-            "Call": {
-                "users": {
-                    "read": "yes",
-                    "edit": "no"
-                },
-                "leads": false
-            },
-            "Meeting": {
-                "users": {
-                    "read": "yes",
-                    "edit": "no"
-                },
-                "leads": false
-            },
-            "KnowledgeBaseArticle": {
-                "assignedUser": false
-            },
             "User": {
                 "gender": false
             }
