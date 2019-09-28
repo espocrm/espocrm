@@ -36,7 +36,7 @@ class Metadata extends \Espo\Core\Controllers\Base
 
     public function actionRead($params, $data)
     {
-        return $this->getMetadata()->getAllForFrontend();
+        return $this->getServiceFactory()->create('Metadata')->getDataForFrontend();
     }
 
     public function getActionGet($params, $data, $request)

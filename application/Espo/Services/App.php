@@ -116,7 +116,8 @@ class App extends \Espo\Core\Services\Base
                 'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
                 'templateEntityTypeList' => $this->getTemplateEntityTypeList(),
                 'isRestrictedMode' => $this->getConfig()->get('restrictedMode'),
-                'passwordChangeForNonAdminDisabled' => $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo'
+                'passwordChangeForNonAdminDisabled' => $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo',
+                'timeZoneList' => $this->getMetadata()->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
             ]
         ];
     }

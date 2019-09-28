@@ -206,6 +206,8 @@ define('views/site/navbar', 'view', function (Dep) {
             var scopes = this.getMetadata().get('scopes') || {};
 
             this.tabList = tabList.filter(function (scope) {
+                if (scope === '_delimiter_' || scope === 'Home') return true;
+                if (!scopes[scope]) return false;
                 if ((scopes[scope] || {}).disabled) return;
                 if ((scopes[scope] || {}).acl) {
                     return this.getAcl().check(scope);
@@ -214,6 +216,7 @@ define('views/site/navbar', 'view', function (Dep) {
             }, this);
 
             this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
+                if (!scopes[scope]) return false;
                 if ((scopes[scope] || {}).disabled) return;
                 if ((scopes[scope] || {}).acl) {
                     return this.getAcl().check(scope, 'create');
