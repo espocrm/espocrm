@@ -130,6 +130,7 @@ class App extends \Espo\Core\Services\Base
         $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList('User');
 
         foreach ($forbiddenAttributeList as $attribute) {
+            if ($attribute === 'type') continue;
             unset($data->$attribute);
         }
 

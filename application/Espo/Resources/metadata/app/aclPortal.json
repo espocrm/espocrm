@@ -103,6 +103,8 @@
                 "account": false,
                 "portalRoles": false,
                 "portals": false,
+                "roles": false,
+                "defaultTeam": false,
                 "isActive": false
             }
         }
