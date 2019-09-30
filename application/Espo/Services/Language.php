@@ -123,9 +123,10 @@ class Language extends \Espo\Core\Services\Base
                         'userHasNoEmailAddress' => $languageObj->translate('userHasNoEmailAddress', 'messages', 'Admin'),
                     ],
                 ];
-                $data['User']['fields']['password'] = $languageObj->translate('password', 'fields', 'User');
-                $data['User']['fields']['passwordConfirm'] = $languageObj->translate('passwordConfirm', 'fields', 'User');
             }
+
+            $data['User']['fields']['password'] = $languageObj->translate('password', 'fields', 'User');
+            $data['User']['fields']['passwordConfirm'] = $languageObj->translate('passwordConfirm', 'fields', 'User');
         }
 
         return $data;
