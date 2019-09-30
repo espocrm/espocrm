@@ -129,8 +129,13 @@ class App extends \Espo\Core\Services\Base
 
         $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList('User');
 
+        $isPortal = $user->isPortal();
+
         foreach ($forbiddenAttributeList as $attribute) {
             if ($attribute === 'type') continue;
+            if ($isPortal) {
+                if (in_array($attribute, ['contactId', 'contactName', 'accountId', 'accountsIds'])) continue;
+            }
             unset($data->$attribute);
         }
 
