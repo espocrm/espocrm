@@ -238,20 +238,7 @@ class Converter
             $tables[$entityName]->setPrimaryKey($primaryColumns);
 
             if (!empty($indexList[$entityName])) {
-                foreach($indexList[$entityName] as $indexName => $indexParams) {
-
-                    switch ($indexParams['type']) {
-                        case 'index':
-                        case 'fulltext':
-                            $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
-                            $tables[$entityName]->addIndex($indexParams['columns'], $indexName, $indexFlagList);
-                            break;
-
-                        case 'unique':
-                            $tables[$entityName]->addUniqueIndex($indexParams['columns'], $indexName);
-                            break;
-                    }
-                }
+                $this->addIndexes($tables[$entityName], $indexList[$entityName]);
             }
         }
 
@@ -338,6 +325,19 @@ class Converter
             }
         } //END: add additionalColumns
 
+        //add defined indexes
+        if (!empty($relationParams['indexes'])) {
+            $normalizedIndexes = SchemaUtils::getIndexList([
+                $entityName => [
+                    'fields' => [],
+                    'indexes' => $relationParams['indexes'],
+                ]
+            ]);
+
+            $this->addIndexes($table, $normalizedIndexes[$entityName]);
+        }
+        //END: add defined indexes
+
         //add unique indexes
         if (!empty($relationParams['conditions'])) {
             foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
@@ -358,6 +358,25 @@ class Converter
         $table->setPrimaryKey(array("id"));
 
         return $table;
+    }
+
+    protected function addIndexes($table, array $indexes)
+    {
+        foreach($indexes as $indexName => $indexParams) {
+            $indexType = !empty($indexParams['type']) ? $indexParams['type'] : SchemaUtils::getIndexTypeByIndexDefs($indexParams);
+
+            switch ($indexType) {
+                case 'index':
+                case 'fulltext':
+                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
+                    $table->addIndex($indexParams['columns'], $indexName, $indexFlagList);
+                    break;
+
+                case 'unique':
+                    $table->addUniqueIndex($indexParams['columns'], $indexName);
+                    break;
+            }
+        }
     }
 
     protected function getDbFieldParams($fieldParams)
