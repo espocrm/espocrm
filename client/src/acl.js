@@ -62,13 +62,13 @@ define('acl', [], function () {
                 return true;
             }
             if (data === null) {
-                return true;
+                return false;
             }
 
             action = action || null;
 
             if (action === null) {
-                return true
+                return true;
             }
             if (!(action in data)) {
                 return false;
