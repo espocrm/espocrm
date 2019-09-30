@@ -39,11 +39,7 @@ class Layout extends \Espo\Core\Controllers\Base
 {
     public function actionRead($params, $data)
     {
-        $data = $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
-        if (empty($data)) {
-            throw new NotFound("Layout " . $params['scope'] . ":" . $params['name'] . ' is not found.');
-        }
-        return $data;
+        return $this->getServiceFactory()->create('Layout')->getForFrontend($params['scope'], $params['name']);
     }
 
     public function actionUpdate($params, $data, $request)

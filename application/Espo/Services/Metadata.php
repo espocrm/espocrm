@@ -72,6 +72,57 @@ class Metadata extends \Espo\Core\Services\Base
                 }
             }
 
+            $entityTypeList = array_keys(get_object_vars($data->entityDefs));
+            foreach ($entityTypeList as $entityType) {
+                $linksDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'links'], []);
+
+                $fobiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($entityType);
+
+                foreach ($linksDefs as $link => $defs) {
+                    $type = $defs['type'] ?? null;
+
+                    $hasField = !!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', $link]);
+
+                    if ($type === 'belongsToParent') {
+                        if ($hasField) {
+                            $parentEntityList = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $link, 'entityList']);
+                            if (is_array($parentEntityList)) {
+                                foreach ($parentEntityList as $i => $e) {
+                                    if (!$this->getAcl()->check($e)) {
+                                        unset($parentEntityList[$i]);
+                                    }
+                                }
+                                $parentEntityList = array_values($parentEntityList);
+                                $data->entityDefs->$entityType->fields->$link->entityList = $parentEntityList;
+                            }
+                        }
+                        continue;
+                    }
+
+                    $foreignEntityType = $defs['entity'] ?? null;
+                    if ($this->getAcl()->check($foreignEntityType)) continue;
+
+                    if ($hasField) {
+                        if (!in_array($link, $fobiddenFieldList)) {
+                            continue;
+                        }
+                        unset($data->entityDefs->$entityType->fields->$link);
+                    }
+
+                    unset($data->entityDefs->$entityType->links->$link);
+
+                    if (
+                        isset($data->clientDefs)
+                        &&
+                        isset($data->clientDefs->$entityType)
+                        &&
+                        isset($data->clientDefs->$entityType->relationshipPanels)
+                    ) {
+                        unset($data->clientDefs->$entityType->relationshipPanels->$link);
+                    }
+                }
+            }
+
             unset($data->entityDefs->Settings);
 
             $dashletList = array_keys($this->getMetadata()->get(['dashlets'], []));
