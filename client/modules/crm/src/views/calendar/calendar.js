@@ -149,6 +149,13 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 this.enabledScopeList = [];
             }
 
+            this.enabledScopeList.forEach(function (item) {
+                var color = this.getMetadata().get(['clientDefs', item, 'color']);
+                if (color) {
+                    this.colors[item] = color;
+                }
+            }, this);
+
             if (this.header) {
                 this.createView('modeButtons', 'crm:views/calendar/mode-buttons', {
                     el: this.getSelector() + ' .mode-buttons',
