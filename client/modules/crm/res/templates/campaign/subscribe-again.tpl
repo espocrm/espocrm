@@ -6,7 +6,7 @@
                     {{translate 'subscribedAgain' category='messages' scope='Campaign'}}
                 </p>
                 <p>
-                    <a class="btn btn-default btn-sm" href="?entryPoint=unsubscribe&id={{actionData.queueItemId}}">{{translate 'Unsubscribe again' scope='Campaign'}}</a>
+                    <a class="btn btn-default btn-sm" href="{{revertUrl}}">{{translate 'Unsubscribe again' scope='Campaign'}}</a>
                 </p>
             </div>
         </div>
