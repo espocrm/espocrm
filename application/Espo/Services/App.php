@@ -135,6 +135,8 @@ class App extends \Espo\Core\Services\Base
             if ($attribute === 'type') continue;
             if ($isPortal) {
                 if (in_array($attribute, ['contactId', 'contactName', 'accountId', 'accountsIds'])) continue;
+            } else {
+                if (in_array($attribute, ['teamsIds', 'defaultTeamId', 'defaultTeamName'])) continue;
             }
             unset($data->$attribute);
         }
