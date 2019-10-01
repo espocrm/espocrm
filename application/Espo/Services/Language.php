@@ -77,7 +77,7 @@ class Language extends \Espo\Core\Services\Base
             unset($data['Global']['options']);
 
             foreach ($data as $k => $item) {
-                if (in_array($k, ['Global', 'User'])) continue;
+                if (in_array($k, ['Global', 'User', 'Campaign'])) continue;
                 unset($data[$k]);
             }
             unset($data['User']['fields']);
@@ -87,6 +87,12 @@ class Language extends \Espo\Core\Services\Base
             unset($data['User']['presetFilters']);
             unset($data['User']['boolFilters']);
             unset($data['User']['tooltips']);
+
+            unset($data['Campaign']['fields']);
+            unset($data['Campaign']['links']);
+            unset($data['Campaign']['options']);
+            unset($data['Campaign']['tooltips']);
+            unset($data['Campaign']['presetFilters']);
         } else {
             $scopeList = array_keys($this->getMetadata()->get(['scopes'], []));
 
