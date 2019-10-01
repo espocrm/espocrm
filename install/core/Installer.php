@@ -260,7 +260,7 @@ class Installer
             'siteUrl' => $siteUrl,
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
-            'hashSecretKey' => \Espo\Core\Utils\Util::generateSecretKey();
+            'hashSecretKey' => \Espo\Core\Utils\Util::generateSecretKey(),
         ];
 
         $owner = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
