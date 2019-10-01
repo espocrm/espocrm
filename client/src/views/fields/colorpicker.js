@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], function (Dep, Colorpicker) {
+define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], function (Dep, Colorpicker) {
 
     return Dep.extend({
 
@@ -46,10 +46,18 @@ Espo.define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicke
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
             if (this.mode == 'edit') {
+                var isModal = !!this.$el.closest('.modal').length;
+
                 this.$element.parent().colorpicker({
-                    format: 'hex'
+                    format: 'hex',
+                    container: isModal ? this.$el : false,
                 });
+
+                if (isModal) {
+                    this.$el.find('.colorpicker').css('position', 'relative').addClass('pull-right');
+                }
             }
             if (this.mode === 'edit') {
                 this.$element.on('change', function () {

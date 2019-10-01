@@ -1,5 +1,5 @@
 /*!
- * Bootstrap Colorpicker v2.5.1
+ * Bootstrap Colorpicker v2.5.2
  * https://itsjavi.com/bootstrap-colorpicker/
  *
  * Originally written by (c) 2012 Stefan Petre
@@ -38,14 +38,9 @@
     val, predefinedColors, fallbackColor, fallbackFormat, hexNumberSignPrefix) {
     this.fallbackValue = fallbackColor ?
       (
-        fallbackColor && (typeof fallbackColor.h !== 'undefined') ?
-        fallbackColor :
-        this.value = {
-          h: 0,
-          s: 0,
-          b: 0,
-          a: 1
-        }
+        (typeof fallbackColor === 'string') ?
+        this.parse(fallbackColor) :
+        fallbackColor
       ) :
       null;
 
@@ -480,6 +475,9 @@
      * @returns {Object} Object containing h,s,b,a,format properties or FALSE if failed to parse
      */
     parse: function(strVal) {
+      if (typeof strVal !== 'string') {
+        return this.fallbackValue;
+      }
       if (arguments.length === 0) {
         return false;
       }
@@ -793,6 +791,8 @@
       this.updateData(this.color);
     }
 
+    this.disabled = false;
+
     // Setup picker
     var $picker = this.picker = $(this.options.template);
     if (this.options.customClass) {
@@ -861,7 +861,7 @@
         'keyup.colorpicker': $.proxy(this.keyup, this)
       });
       this.input.on({
-        'change.colorpicker': $.proxy(this.change, this)
+        'input.colorpicker': $.proxy(this.change, this)
       });
       if (this.component === false) {
         this.element.on({
@@ -1105,34 +1105,31 @@
       return (this.input !== false);
     },
     isDisabled: function() {
-      if (this.hasInput()) {
-        return (this.input.prop('disabled') === true);
-      }
-      return false;
+      return this.disabled;
     },
     disable: function() {
       if (this.hasInput()) {
         this.input.prop('disabled', true);
-        this.element.trigger({
-          type: 'disable',
-          color: this.color,
-          value: this.getValue()
-        });
-        return true;
       }
-      return false;
+      this.disabled = true;
+      this.element.trigger({
+        type: 'disable',
+        color: this.color,
+        value: this.getValue()
+      });
+      return true;
     },
     enable: function() {
       if (this.hasInput()) {
         this.input.prop('disabled', false);
-        this.element.trigger({
-          type: 'enable',
-          color: this.color,
-          value: this.getValue()
-        });
-        return true;
       }
-      return false;
+      this.disabled = false;
+      this.element.trigger({
+        type: 'enable',
+        color: this.color,
+        value: this.getValue()
+      });
+      return true;
     },
     currentSlider: null,
     mousePointer: {
@@ -1251,7 +1248,24 @@
       return false;
     },
     change: function(e) {
-      this.keyup(e);
+      this.color = this.createColor(this.input.val());
+      // Change format dynamically
+      // Only occurs if user choose the dynamic format by
+      // setting option format to false
+      if (this.color.origFormat && this.options.format === false) {
+        this.format = this.color.origFormat;
+      }
+      if (this.getValue(false) !== false) {
+        this.updateData();
+        this.updateComponent();
+        this.updatePicker();
+      }
+
+      this.element.trigger({
+        type: 'changeColor',
+        color: this.color,
+        value: this.input.val()
+      });
     },
     keyup: function(e) {
       if ((e.keyCode === 38)) {
@@ -1264,20 +1278,8 @@
           this.color.value.a = Math.round((this.color.value.a - 0.01) * 100) / 100;
         }
         this.update(true);
-      } else {
-        this.color = this.createColor(this.input.val());
-        // Change format dynamically
-        // Only occurs if user choose the dynamic format by
-        // setting option format to false
-        if (this.color.origFormat && this.options.format === false) {
-          this.format = this.color.origFormat;
-        }
-        if (this.getValue(false) !== false) {
-          this.updateData();
-          this.updateComponent();
-          this.updatePicker();
-        }
       }
+
       this.element.trigger({
         type: 'changeColor',
         color: this.color,
