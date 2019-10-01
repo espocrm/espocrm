@@ -182,11 +182,13 @@ class SubscribeAgain extends \Espo\Core\EntryPoints\Base
         if ($ea) {
             $entityList = $repository->getEntityListByAddressId($ea->id);
 
-            $ea->set('optOut', false);
-            $this->getEntityManager()->saveEntity($ea);
+            if ($ea->get('optOut')) {
+                $ea->set('optOut', false);
+                $this->getEntityManager()->saveEntity($ea);
 
-            foreach ($entityList as $entity) {
-                $this->getHookManager()->process($entity->getEntityType(), 'afterCancelOptOut', $entity, [], []);
+                foreach ($entityList as $entity) {
+                    $this->getHookManager()->process($entity->getEntityType(), 'afterCancelOptOut', $entity, [], []);
+                }
             }
 
             $this->display([

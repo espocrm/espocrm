@@ -175,11 +175,13 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
         if ($ea) {
             $entityList = $repository->getEntityListByAddressId($ea->id);
 
-            $ea->set('optOut', true);
-            $this->getEntityManager()->saveEntity($ea);
+            if (!$ea->get('optOut')) {
+                $ea->set('optOut', true);
+                $this->getEntityManager()->saveEntity($ea);
 
-            foreach ($entityList as $entity) {
-                $this->getHookManager()->process($entity->getEntityType(), 'afterOptOut', $entity, [], []);
+                foreach ($entityList as $entity) {
+                    $this->getHookManager()->process($entity->getEntityType(), 'afterOptOut', $entity, [], []);
+                }
             }
 
             $this->display([
