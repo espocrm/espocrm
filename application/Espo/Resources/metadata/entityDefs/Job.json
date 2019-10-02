@@ -104,7 +104,7 @@
     "collection": {
         "orderBy": "number",
         "order": "desc",
-        "textFilterFields": ["name", "methodName", "serviceName", "scheduledJob"]
+        "textFilterFields": ["id", "name", "methodName", "serviceName", "scheduledJob"]
     },
     "indexes": {
         "executeTime": {
