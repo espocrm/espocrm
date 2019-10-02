@@ -119,6 +119,9 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 this.setupTranslation();
             }
 
+            this.displayAsLabel = this.params.displayAsLabel || this.displayAsLabel;
+            this.displayAsList = this.params.displayAsList || this.displayAsList;
+
             if (this.params.isSorted && this.translatedOptions) {
                 this.params.options = Espo.Utils.clone(this.params.options);
                 this.params.options = this.params.options.sort(function (v1, v2) {
@@ -390,7 +393,10 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             }, this)
 
 
-            if (this.params.displayAsLabel) {
+            if (this.displayAsList) {
+                if (!list.length) return '';
+                return '<div>' + list.join('</div><div>') + '</div>';
+            } else if (this.displayAsLabel) {
                 return list.join(' ');
             } else {
                 return list.join(', ')
