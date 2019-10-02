@@ -296,4 +296,28 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $result = $fm->run($script, $contact);
         $this->assertEquals('1', $result);
     }
+
+    public function testPasswordGenerate()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+
+        $script = "password\\generate()";
+        $result = $fm->run($script);
+        $this->assertTrue(is_string($result));
+    }
+
+    public function testPasswordHash()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+
+        $script1 = "password\\hash('1')";
+        $result1 = $fm->run($script1);
+
+        $script2 = "password\\hash('2')";
+        $result2 = $fm->run($script2);
+
+        $this->assertTrue(is_string($result1));
+
+        $this->assertTrue($result1 !== $result);
+    }
 }
