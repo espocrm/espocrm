@@ -94,4 +94,25 @@ class Index extends \Doctrine\DBAL\Schema\Index
 
         return $columns;
     }
+
+    public function overrules(DBALIndex $other)
+    {
+        if ($other->isPrimary()) {
+            return false;
+        } else if ($this->isSimpleIndex() && $other->isUnique()) {
+            return false;
+        }
+
+        /*espo*/
+        if (count($other->getColumns()) != count($this->getColumns())) {
+            return false;
+        }
+        /*espo*/
+
+        if ($this->spansColumns($other->getColumns()) && ($this->isPrimary() || $this->isUnique())) {
+            return true;
+        }
+
+        return false;
+    }
 }
