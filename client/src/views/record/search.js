@@ -619,8 +619,10 @@ define('views/record/search', 'view', function (Dep) {
         updateCollection: function () {
             this.collection.abortLastFetch();
             this.collection.reset();
-            this.notify('Please wait...');
             this.collection.where = this.searchManager.getWhere();
+
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
             this.collection.fetch().then(function () {
                 Espo.Ui.notify(false);
             });
