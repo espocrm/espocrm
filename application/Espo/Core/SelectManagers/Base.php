@@ -773,7 +773,7 @@ class Base
 
             $this->order($orderBy, $isDesc, $result);
         } else if (!empty($params['order'])) {
-            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'orderBy']);
+            $orderBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
             $isDesc = $params['order'] === 'desc';
             $this->order($orderBy, $isDesc, $result);
         }
@@ -818,6 +818,13 @@ class Base
         }
 
         $this->applyAdditional($params, $result);
+
+        if (empty($result['orderBy'])) {
+            $result['orderBy'] = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
+            if (empty($result['order']) && !is_array($result['orderBy'])) {
+                $result['order'] = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'order']) ?? null;
+            }
+        }
 
         return $result;
     }
