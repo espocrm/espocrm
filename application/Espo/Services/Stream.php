@@ -61,7 +61,7 @@ class Stream extends \Espo\Core\Services\Base
 
     protected $emailsWithContentEntityList = ['Case'];
 
-    protected $auditedFieldsCache = array();
+    protected $auditedFieldsCache = [];
 
     private $notificationService = null;
 
@@ -106,7 +106,7 @@ class Stream extends \Espo\Core\Services\Base
     protected function getStatusStyles()
     {
         if (empty($this->statusStyles)) {
-            $this->statusStyles = $this->getMetadata()->get('entityDefs.Note.statusStyles', array());
+            $this->statusStyles = $this->getMetadata()->get('entityDefs.Note.statusStyles', []);
         }
         return $this->statusStyles;
     }
@@ -115,7 +115,7 @@ class Stream extends \Espo\Core\Services\Base
     {
         if (is_null($this->statusFields)) {
             $this->statusFields = array();
-            $scopes = $this->getMetadata()->get('scopes', array());
+            $scopes = $this->getMetadata()->get('scopes', []);
             foreach ($scopes as $scope => $data) {
                 if (empty($data['statusField'])) continue;
                 $this->statusFields[$scope] = $data['statusField'];
