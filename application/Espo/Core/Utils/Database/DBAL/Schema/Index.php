@@ -63,7 +63,7 @@ class Index extends \Doctrine\DBAL\Schema\Index
             $flags = $this->getFlags();
             $otherFlags = $other->getFlags();
 
-            if ( ! $this->isUnique() && !$this->isPrimary() && $flags === $otherFlags) {
+        if ( ! $this->isUnique() && !$this->isPrimary() /*espo*/ && $flags === $otherFlags /*espo*/) {
                 return true;
             } else if ($other->isPrimary() != $this->isPrimary()) {
                 return false;
@@ -71,9 +71,11 @@ class Index extends \Doctrine\DBAL\Schema\Index
                 return false;
             }
 
+            /*espo*/
             if (count($flags) != count($otherFlags) || array_diff($flags, $otherFlags) !== array_diff($otherFlags, $flags)) {
                 return false;
             }
+            /*espo*/
 
             return true;
         }

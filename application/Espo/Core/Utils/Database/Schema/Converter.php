@@ -325,18 +325,12 @@ class Converter
             }
         } //END: add additionalColumns
 
-        //add defined indexes
-        if (!empty($relationParams['indexes'])) {
-            $normalizedIndexes = SchemaUtils::getIndexList([
-                $entityName => [
-                    'fields' => [],
-                    'indexes' => $relationParams['indexes'],
-                ]
-            ]);
+        $table->addColumn('deleted', 'bool', $this->getDbFieldParams(array(
+            'type' => 'bool',
+            'default' => false,
+        )));
 
-            $this->addIndexes($table, $normalizedIndexes[$entityName]);
-        }
-        //END: add defined indexes
+        $table->setPrimaryKey(array("id"));
 
         //add unique indexes
         if (!empty($relationParams['conditions'])) {
@@ -350,12 +344,18 @@ class Converter
         }
         //END: add unique indexes
 
-        $table->addColumn('deleted', 'bool', $this->getDbFieldParams(array(
-            'type' => 'bool',
-            'default' => false,
-        )));
+        //add defined indexes
+        if (!empty($relationParams['indexes'])) {
+            $normalizedIndexes = SchemaUtils::getIndexList([
+                $entityName => [
+                    'fields' => [],
+                    'indexes' => $relationParams['indexes'],
+                ]
+            ]);
 
-        $table->setPrimaryKey(array("id"));
+            $this->addIndexes($table, $normalizedIndexes[$entityName]);
+        }
+        //END: add defined indexes
 
         return $table;
     }
