@@ -92,6 +92,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (isset($data['fullTextSearch'])) {
             $params['fullTextSearch'] = $data['fullTextSearch'];
         }
+        if (isset($data['countDisabled'])) {
+            $params['countDisabled'] = $data['countDisabled'];
+        }
 
         $params['kanbanViewMode'] = !empty($data['kanbanViewMode']);
         if (!empty($data['kanbanStatusIgnoreList'])) {

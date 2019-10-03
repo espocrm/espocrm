@@ -469,6 +469,7 @@
         "orderBy": "dateSent",
         "order": "desc",
         "textFilterFields": ["name", "bodyPlain", "body"],
+        "countDisabled": true,
         "fullTextSearch": true
     },
     "indexes": {

@@ -1080,7 +1080,7 @@ class Record extends \Espo\Core\Services\Base
         if (
             $this->listCountQueryDisabled
             ||
-            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+            $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'countDisabled'])
         ) {
             $disableCount = true;
         }
@@ -1140,7 +1140,7 @@ class Record extends \Espo\Core\Services\Base
         if (
             $this->listCountQueryDisabled
             ||
-            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+            $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'countDisabled'])
         ) {
             $disableCount = true;
         }
@@ -1316,24 +1316,22 @@ class Record extends \Espo\Core\Services\Base
             return $this->$methodName($id, $params);
         }
 
-        $foreignEntityName = $entity->relations[$link]['entity'];
+        $foreignEntityType = $entity->relations[$link]['entity'];
 
         $linkParams = $this->linkParams[$link] ?? [];
         $skipAcl = $linkParams['skipAcl'] ?? false;
 
         if (!$skipAcl) {
-            if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+            if (!$this->getAcl()->check($foreignEntityType, 'read')) {
                 throw new Forbidden();
             }
         }
 
-        $recordService = $this->getRecordService($foreignEntityName);
+        $recordService = $this->getRecordService($foreignEntityType);
 
         $disableCount = false;
         $disableCountPropertyName = 'findLinked' . ucfirst($link) . 'CountQueryDisabled';
         if (
-            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
-            ||
             !empty($this->$disableCountPropertyName)
         ) {
             $disableCount = true;
@@ -1347,7 +1345,7 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, !$skipAcl, true);
+        $selectParams = $this->getSelectManager($foreignEntityType)->getSelectParams($params, !$skipAcl, true);
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);

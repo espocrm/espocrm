@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -66,6 +66,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']);
                 this.model.set('fullTextSearch', this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false);
+                this.model.set('countDisabled', this.getMetadata().get(['entityDefs', scope, 'collection', 'countDisabled']) || false);
 
                 this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
 
@@ -270,6 +271,16 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                         name: 'fullTextSearch'
                     },
                     tooltip: true
+                });
+
+                this.createView('countDisabled', 'views/fields/bool', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="countDisabled"]',
+                    defs: {
+                        name: 'countDisabled'
+                    },
+                    tooltip: true,
                 });
 
                 this.createView('kanbanViewMode', 'views/fields/bool', {
@@ -523,6 +534,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 disabled: this.model.get('disabled'),
                 textFilterFields: this.model.get('textFilterFields'),
                 fullTextSearch: this.model.get('fullTextSearch'),
+                countDisabled: this.model.get('countDisabled'),
                 statusField: this.model.get('statusField'),
                 iconClass: this.model.get('iconClass')
             };

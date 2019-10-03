@@ -84,6 +84,12 @@
 			{{{fullTextSearch}}}
 		</div>
 	</div>
+	<div class="cell form-group col-md-6" data-name="countDisabled">
+		<label class="control-label" data-name="countDisabled">{{translate 'countDisabled' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="countDisabled">
+			{{{countDisabled}}}
+		</div>
+	</div>
 </div>
 
 <div class="row">

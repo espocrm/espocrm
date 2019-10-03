@@ -121,7 +121,6 @@ return [
     'emailNotificationsDelay' => 30,
     'emailMessageMaxSize' => 10,
     'notificationsCheckInterval' => 10,
-    'disabledCountQueryEntityList' => ['Email'],
     'maxEmailAccountCount' => 2,
     'followCreatedEntities' => false,
     'b2cMode' => false,

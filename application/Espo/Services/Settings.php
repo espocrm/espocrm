@@ -119,7 +119,6 @@ class Settings extends \Espo\Core\Services\Base
                 'assignmentEmailNotificationsEntityList',
                 'assignmentNotificationsEntityList',
                 'calendarEntityList',
-                'disabledCountQueryEntityList',
                 'streamEmailNotificationsEntityList',
                 'activitiesEntityList',
                 'historyEntityList',
