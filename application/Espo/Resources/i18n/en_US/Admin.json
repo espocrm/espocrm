@@ -206,7 +206,7 @@
         "extensionInstalled": "Extension {name} {version} has been installed.",
         "installExtension": "Extension {name} {version} is ready for an installation.",
         "cronIsNotConfigured": "Scheduled jobs are not running.  Hence inbound emails, notifications and reminders are not working. Please follow the [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) to setup cron job.",
-        "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available.",
+        "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available. Please follow the [instructions](https://www.espocrm.com/documentation/administration/upgrading/) to upgrade your instance." ,
         "newExtensionVersionIsAvailable": "New {extensionName} version {latestVersion} is available.",
         "uninstallConfirmation": "Are you sure you want to uninstall the extension?",
         "upgradeInfo": "Check the [documentation]({url}) about how to upgrade your EspoCRM instance.",
