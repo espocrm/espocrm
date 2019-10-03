@@ -70,6 +70,8 @@ class Base
 
     protected $selectAttributesDependancyMap = [];
 
+    protected $fullTextSearchForceOrderOnlyByRelevance = false;
+
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     const MIN_LENGTH_FOR_FULL_TEXT_SEARCH = 4;
@@ -2146,7 +2148,7 @@ class Base
             $textFilter = str_replace('*', '%', $textFilter);
         } else {
             if (!$useFullTextSearch) {
-                $textFilterForFullTextSearch .= '*';
+                //$textFilterForFullTextSearch .= '*';
             }
         }
 
@@ -2172,6 +2174,20 @@ class Base
         if ($fullTextSearchData) {
             $fullTextGroup[] = $fullTextSearchData['where'];
             $fullTextSearchFieldList = $fullTextSearchData['fieldList'];
+
+            if (isset($result['orderBy']) && !$this->fullTextSearchForceOrderOnlyByRelevance) {
+                if (is_string($result['orderBy'])) {
+                    $result['orderBy'] = [
+                        [$fullTextSearchData['where'], 'desc'],
+                        [$result['orderBy'], $result['order'] ?? 'asc'],
+                    ];
+                }
+            } else {
+                $result['orderBy'] = [[$fullTextSearchData['where'], 'desc']];
+                $result['order'] = null;
+            }
+
+            $result['hasFullTextSearch'] = true;
         }
 
         foreach ($fieldList as $field) {

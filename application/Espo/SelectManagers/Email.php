@@ -33,6 +33,8 @@ class Email extends \Espo\Core\SelectManagers\Base
 {
     protected $textFilterUseContainsAttributeList = ['name'];
 
+    protected $fullTextSearchForceOrderOnlyByRelevance = true;
+
     public function applyAdditional(array $params, array &$result)
     {
         parent::applyAdditional($params, $result);

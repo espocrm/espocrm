@@ -1159,7 +1159,7 @@ abstract class Base
 
     protected function getFieldPathForOrderBy($entity, $orderBy, $params)
     {
-        if (strpos($orderBy, '.') !== false) {
+        if (strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
             $fieldPath = $this->convertComplexExpression(
                 $entity,
                 $orderBy,
