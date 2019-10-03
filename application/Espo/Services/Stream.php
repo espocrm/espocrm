@@ -1662,17 +1662,30 @@ class Stream extends \Espo\Core\Services\Base
     {
         $ignoreScopeList = [];
         $scopes = $this->getMetadata()->get('scopes', []);
+
+        $aclManager = $this->getAclManager();
+
+        if ($user->isPortal() && !$this->getUser()->isPortal()) {
+            $aclManager = new \Espo\Core\Portal\AclManager($this->getInjection('container'));
+
+            $portals = $user->get('portals');
+            if (count($portals)) {
+                $aclManager->setPortal($portals[0]);
+            }
+        }
+
         foreach ($scopes as $scope => $item) {
             if (empty($item['entity'])) continue;
             if (empty($item['object'])) continue;
             if (
-                !$this->getAclManager()->checkScope($user, $scope, 'read')
+                !$aclManager->checkScope($user, $scope, 'read')
                 ||
-                !$this->getAclManager()->checkScope($user, $scope, 'stream')
+                !$aclManager->checkScope($user, $scope, 'stream')
             ) {
                 $ignoreScopeList[] = $scope;
             }
         }
+
         return $ignoreScopeList;
     }
 
