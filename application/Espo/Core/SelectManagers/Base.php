@@ -2243,10 +2243,10 @@ class Base
             if ($fullTextSearchData) {
                 if (!$useFullTextSearch) {
                     if (in_array($field, $fullTextSearchFieldList)) {
-                        if (!array_key_exists('OR', $fullTextGroup)) {
+                        /*if (!array_key_exists('OR', $fullTextGroup)) {
                             $fullTextGroup['OR'] = [];
                         }
-                        $fullTextGroup['OR'][$field . '*'] = $expression;
+                        $fullTextGroup['OR'][$field . '*'] = $expression;*/
                         continue;
                     }
                 }
