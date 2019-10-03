@@ -97,7 +97,21 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
 
         $selectParams['select'] = [[$foreignLink . '.id', 'foreignId'], 'SUM:' . $field];
 
-        $foreignSelectManager->addJoin($foreignLink, $selectParams);
+        if ($entity->getRelationType($link) === 'hasChildren') {
+            $foreignSelectManager->addJoin([
+                $entity->getEntityType(),
+                $foreignLink,
+                [
+                     $foreignLink . '.id:' => $foreignLink . 'Id',
+                    'deleted' => false,
+                    $foreignLink . '.id!=' => null,
+                ]
+            ], $selectParams);
+            $selectParams['whereClause'][] = [$foreignLink . 'Type'  => $entity->getEntityType()];
+
+        } else {
+            $foreignSelectManager->addJoin($foreignLink, $selectParams);
+        }
 
         $selectParams['groupBy'] = [$foreignLink . '.id'];
 
