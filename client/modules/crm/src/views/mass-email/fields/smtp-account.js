@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', function (Dep) {
+define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 
@@ -34,6 +34,15 @@ Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', fun
 
         getAttributeList: function () {
             return [this.name, 'inboundEmailId'];
+        },
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+
+            data.valueIsSet = true;
+            data.isNotEmpty = true;
+
+            return data;
         },
 
         setupOptions: function () {
@@ -118,7 +127,7 @@ Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', fun
             }
 
             return data;
-        }
+        },
 
     });
 });

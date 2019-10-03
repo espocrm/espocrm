@@ -134,6 +134,11 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                 this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
             } else {
                 hideNotificationPanel = false;
+
+                this.controlAssignmentEmailNotificationsVisibility();
+                this.listenTo(this.model, 'change:receiveAssignmentEmailNotifications', function () {
+                    this.controlAssignmentEmailNotificationsVisibility();
+                }, this);
             }
 
             if ((this.getConfig().get('assignmentEmailNotificationsEntityList') || []).length === 0) {
@@ -230,6 +235,14 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                 this.hideField('tabColorsDisabled');
             } else {
                 this.showField('tabColorsDisabled');
+            }
+        },
+
+        controlAssignmentEmailNotificationsVisibility: function () {
+            if (this.model.get('receiveAssignmentEmailNotifications')) {
+                this.showField('assignmentEmailNotificationsIgnoreEntityTypeList');
+            } else {
+                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
             }
         },
 

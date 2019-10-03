@@ -43,6 +43,10 @@ class Team extends \Espo\Core\SelectManagers\Base
 
     protected function accessOnlyTeam(&$result)
     {
-        $this->boolFilterOnlyMy($result);
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin(['users', 'usersOnlyMyAccess'], $result);
+        $result['whereClause'][] = [
+            'usersOnlyMyAccessMiddle.userId' => $this->getUser()->id
+        ];
     }
 }

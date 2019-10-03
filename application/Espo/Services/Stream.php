@@ -61,7 +61,7 @@ class Stream extends \Espo\Core\Services\Base
 
     protected $emailsWithContentEntityList = ['Case'];
 
-    protected $auditedFieldsCache = array();
+    protected $auditedFieldsCache = [];
 
     private $notificationService = null;
 
@@ -106,7 +106,7 @@ class Stream extends \Espo\Core\Services\Base
     protected function getStatusStyles()
     {
         if (empty($this->statusStyles)) {
-            $this->statusStyles = $this->getMetadata()->get('entityDefs.Note.statusStyles', array());
+            $this->statusStyles = $this->getMetadata()->get('entityDefs.Note.statusStyles', []);
         }
         return $this->statusStyles;
     }
@@ -115,7 +115,7 @@ class Stream extends \Espo\Core\Services\Base
     {
         if (is_null($this->statusFields)) {
             $this->statusFields = array();
-            $scopes = $this->getMetadata()->get('scopes', array());
+            $scopes = $this->getMetadata()->get('scopes', []);
             foreach ($scopes as $scope => $data) {
                 if (empty($data['statusField'])) continue;
                 $this->statusFields[$scope] = $data['statusField'];
@@ -143,7 +143,8 @@ class Stream extends \Espo\Core\Services\Base
 
         foreach ($userIdList as $i => $userId) {
             $user = $this->getEntityManager()->getEntity('User', $userId);
-            if (!$user){
+            if (!$user) {
+                unset($userIdList[$i]);
                 continue;
             }
             if (!$this->getAclManager()->check($user, $entity, 'stream')) {
@@ -165,10 +166,10 @@ class Stream extends \Espo\Core\Services\Base
 
         $this->followEntityMass($entity, $userIdList);
 
-        $noteList = $this->getEntityManager()->getRepository('Note')->where(array(
+        $noteList = $this->getEntityManager()->getRepository('Note')->where([
             'parentType' => $entityType,
             'parentId' => $entityId
-        ))->order('number', 'ASC')->find();
+        ])->order('number', 'ASC')->find();
 
         foreach ($noteList as $note) {
             $this->getNotificationService()->notifyAboutNote($userIdList, $note);
@@ -197,9 +198,9 @@ class Stream extends \Espo\Core\Services\Base
         return false;
     }
 
-    public function followEntityMass(Entity $entity, array $sourceUserIdList)
+    public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false)
     {
-        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
+        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) {
             return false;
         }
 
@@ -212,6 +213,27 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $userIdList = array_unique($userIdList);
+
+        if (!$skipAclCheck) {
+            foreach ($userIdList as $i => $userId) {
+                $user = $this->getEntityManager()->getRepository('User')
+                    ->select(['id', 'type', 'isActive'])
+                    ->where([
+                        'id' => $userId,
+                        'isActive' => true,
+                    ])->findOne();
+
+                if (!$user) {
+                    unset($userIdList[$i]);
+                    continue;
+                }
+
+                if (!$this->getAclManager()->check($user, $entity, 'stream')) {
+                    unset($userIdList[$i]);
+                }
+            }
+            $userIdList = array_values($userIdList);
+        }
 
         if (empty($userIdList)) {
             return;
@@ -364,6 +386,7 @@ class Stream extends \Espo\Core\Services\Base
             'orderBy' => 'number',
             'order' => 'DESC',
             'limit' => $sqLimit,
+            'useIndexList' => ['createdByNumber'],
         ];
 
         if ($user->isPortal()) {
@@ -461,6 +484,7 @@ class Stream extends \Espo\Core\Services\Base
             'orderBy' => 'number',
             'order' => 'DESC',
             'limit' => $sqLimit,
+            'useIndexList' => ['createdByNumber'],
         ];
 
         if ($user->isPortal()) {
@@ -1638,17 +1662,30 @@ class Stream extends \Espo\Core\Services\Base
     {
         $ignoreScopeList = [];
         $scopes = $this->getMetadata()->get('scopes', []);
+
+        $aclManager = $this->getAclManager();
+
+        if ($user->isPortal() && !$this->getUser()->isPortal()) {
+            $aclManager = new \Espo\Core\Portal\AclManager($this->getInjection('container'));
+
+            $portals = $user->get('portals');
+            if (count($portals)) {
+                $aclManager->setPortal($portals[0]);
+            }
+        }
+
         foreach ($scopes as $scope => $item) {
             if (empty($item['entity'])) continue;
             if (empty($item['object'])) continue;
             if (
-                !$this->getAclManager()->checkScope($user, $scope, 'read')
+                !$aclManager->checkScope($user, $scope, 'read')
                 ||
-                !$this->getAclManager()->checkScope($user, $scope, 'stream')
+                !$aclManager->checkScope($user, $scope, 'stream')
             ) {
                 $ignoreScopeList[] = $scope;
             }
         }
+
         return $ignoreScopeList;
     }
 

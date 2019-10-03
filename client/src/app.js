@@ -225,7 +225,7 @@ define(
                 this.fieldManager.defs = this.metadata.get('fields');
                 this.fieldManager.metadata = this.metadata;
 
-                this.settings.defs = this.metadata.get('entityDefs.Settings');
+                this.settings.defs = this.metadata.get('entityDefs.Settings') || {};
                 this.user.defs = this.metadata.get('entityDefs.User');
                 this.preferences.defs = this.metadata.get('entityDefs.Preferences');
                 this.viewHelper.layoutManager.userId = this.user.id;

@@ -29,34 +29,51 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
-
-class Role extends Record
+class Layout extends \Espo\Core\Services\Base
 {
     protected function init()
     {
-        parent::init();
-        $this->addDependency('fileManager');
-        $this->addDependency('dataManager');
+        $this->addDependency('acl');
+        $this->addDependency('layout');
+        $this->addDependency('metadata');
     }
 
-    protected $forceSelectAllAttributes = true;
-
-    public function afterCreateEntity(Entity $entity, $data)
+    protected function getAcl()
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
+        return $this->getInjection('acl');
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    protected function getMetadata()
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
+        return $this->getInjection('metadata');
     }
 
-    protected function clearRolesCache()
+    public function getForFrontend(string $scope, string $name)
     {
-        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl');
-        $this->getInjection('dataManager')->updateCacheTimestamp();
+        $dataString = $this->getInjection('layout')->get($scope, $name);
+
+        if (!$dataString) {
+            throw new NotFound("Layout {$scope}:{$scope} is not found.");
+        }
+
+        if (!$this->getUser()->isAdmin()) {
+            if ($name === 'relationships') {
+                $data = json_decode($dataString);
+                if (is_array($data)) {
+                    foreach ($data as $i => $link) {
+                        $foreignEntityType = $this->getMetadata()->get(['entityDefs', $scope, 'links', $link, 'entity']);
+                        if ($foreignEntityType) {
+                            if (!$this->getAcl()->check($foreignEntityType)) {
+                                unset($data[$i]);
+                            }
+                        }
+                    }
+                    $data = array_values($data);
+                    $dataString = json_encode($data);
+                }
+            }
+        }
+
+        return $dataString;
     }
 }

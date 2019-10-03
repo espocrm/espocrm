@@ -81,7 +81,8 @@ define('views/dashlet', 'view', function (Dep) {
                 bodyView.trigger('resize');
             }, this);
 
-            var viewName = this.getMetadata().get('dashlets.' + this.name + '.view') || 'views/dashlets/' + Espo.Utils.camelCaseToHyphen(this.name);
+            var viewName = this.getMetadata().get(['dashlets', this.name, 'view']) ||
+                'views/dashlets/' + Espo.Utils.camelCaseToHyphen(this.name);
 
             this.createView('body', viewName, {
                 el: this.options.el + ' .dashlet-body',

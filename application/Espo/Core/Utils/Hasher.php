@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,47 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], function (Dep, Colorpicker) {
+namespace Espo\Core\Utils;
 
-    return Dep.extend({
+class Hasher
+{
+    protected $config;
 
-        type: 'varchar',
+    protected $secretKeyParam = 'hashSecretKey';
 
-        detailTemplate: 'fields/colorpicker/detail',
+    public function __construct(\Espo\Core\Utils\Config $config)
+    {
+        $this->config = $config;
+    }
 
-        listTemplate: 'fields/colorpicker/detail',
+    public function hash(string $string) : string
+    {
+        $secretKey = $this->config->get($this->secretKeyParam) ?? '';
 
-        editTemplate: 'fields/colorpicker/edit',
-
-        forceTrim: true,
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode == 'edit') {
-                var isModal = !!this.$el.closest('.modal').length;
-
-                this.$element.parent().colorpicker({
-                    format: 'hex',
-                    container: isModal ? this.$el : false,
-                });
-
-                if (isModal) {
-                    this.$el.find('.colorpicker').css('position', 'relative').addClass('pull-right');
-                }
-            }
-            if (this.mode === 'edit') {
-                this.$element.on('change', function () {
-                    if (this.$element.val() === '') {
-                        this.$el.find('.input-group-addon > i').css('background-color', 'transparent');
-                    }
-                }.bind(this));
-            }
-        }
-
-    });
-});
+        return md5(hash_hmac('sha256', $string, $secretKey, true));
+    }
+}

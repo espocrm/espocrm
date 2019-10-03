@@ -85,8 +85,7 @@
         },
         "dashboardLayout": {
             "type": "jsonArray",
-            "view": "views/settings/fields/dashboard-layout",
-            "required": true
+            "view": "views/settings/fields/dashboard-layout"
         },
         "dashletsOptions": {
             "type": "jsonObject",

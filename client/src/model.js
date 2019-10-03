@@ -178,14 +178,14 @@ define('model', [], function () {
         },
 
         getFieldType: function (field) {
-            if (('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields)) {
+            if (this.defs && this.defs.fields && (field in this.defs.fields)) {
                 return this.defs.fields[field].type || null;
             }
             return null;
         },
 
         getFieldParam: function (field, param) {
-            if (('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields)) {
+            if (this.defs && this.defs.fields && (field in this.defs.fields)) {
                 if (param in this.defs.fields[field]) {
                     return this.defs.fields[field][param];
                 }
@@ -194,14 +194,14 @@ define('model', [], function () {
         },
 
         getLinkType: function (link) {
-            if (('defs' in this) && ('links' in this.defs) && (link in this.defs.links)) {
+            if (this.defs && this.defs.links && (link in this.defs.links)) {
                 return this.defs.links[link].type || null;
             }
             return null;
         },
 
         getLinkParam: function (link, param) {
-            if (('defs' in this) && ('links' in this.defs) && (link in this.defs.links)) {
+            if (this.defs && this.defs.links && (link in this.defs.links)) {
                 if (param in this.defs.links[link]) {
                     return this.defs.links[link][param];
                 }

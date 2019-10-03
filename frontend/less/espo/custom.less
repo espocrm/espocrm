@@ -2213,6 +2213,10 @@ h4.panel-title span.fas.color-icon {
 }
 
 .record .middle {
+    > .panel.hidden + .panel {
+        border-top-width: @panel-border-width;
+    }
+
     margin-bottom: @line-height-computed;
 }
 
@@ -2256,7 +2260,6 @@ h4.panel-title span.fas.color-icon {
 
 .bottom {
     .panel.hidden + .panel.sticked {
-        margin-top: 0;
         border-top-width: @panel-border-width;
     }
 }

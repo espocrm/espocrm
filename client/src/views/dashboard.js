@@ -246,6 +246,11 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             this.currentTabLayout.forEach(function (o) {
                 if (!o.id || !o.name) return;
+
+                if (!this.getMetadata().get(['dashlets', o.name])) {
+                    console.error("Dashlet " + o.name + " doesn't exist or not available.");
+                    return;
+                }
                 this.createDashletView(o.id, o.name);
             }, this);
 
@@ -323,6 +328,9 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             this.currentTabLayout.forEach(function (o) {
                 var $item = this.prepareGridstackItem(o.id, o.name);
+                if (!this.getMetadata().get(['dashlets', o.name])) {
+                    return;
+                }
                 grid.addWidget($item, o.x, o.y, o.width, o.height);
             }, this);
 
@@ -330,6 +338,10 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             this.currentTabLayout.forEach(function (o) {
                 if (!o.id || !o.name) return;
+                if (!this.getMetadata().get(['dashlets', o.name])) {
+                    console.error("Dashlet " + o.name + " doesn't exist or not available.");
+                    return;
+                }
                 this.createDashletView(o.id, o.name);
             }, this);
 

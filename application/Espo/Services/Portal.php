@@ -35,6 +35,13 @@ class Portal extends Record
 {
     protected $getEntityBeforeUpdate = true;
 
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('fileManager');
+        $this->addDependency('dataManager');
+    }
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
@@ -50,11 +57,20 @@ class Portal extends Record
     protected function afterUpdateEntity(Entity $entity, $data)
     {
         $this->loadUrlField($entity);
+
+        if (property_exists($data, 'portalRolesIds')) {
+            $this->clearRolesCache();
+        }
     }
 
     protected function loadUrlField(Entity $entity)
     {
         $this->getRepository()->loadUrlField($entity);
     }
-}
 
+    protected function clearRolesCache()
+    {
+        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
+        $this->getInjection('dataManager')->updateCacheTimestamp();
+    }
+}

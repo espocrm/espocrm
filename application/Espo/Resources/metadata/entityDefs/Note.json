@@ -155,6 +155,9 @@
         "parentAndSuperParent": {
             "type": "index",
             "columns": ["parentId", "parentType", "superParentId", "superParentType"]
+        },
+        "createdByNumber": {
+            "columns": ["createdById", "number"]
         }
     }
 }

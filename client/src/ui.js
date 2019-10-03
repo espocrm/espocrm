@@ -77,6 +77,10 @@ define('ui', [], function () {
 
         this.id = 'dialog-' + Math.floor((Math.random() * 100000));
 
+        if (typeof this.backdrop === 'undefined') {
+            this.backdrop = 'static';
+        }
+
         this.contents = '';
         if (this.header) {
             var headerClassName = '';
@@ -340,13 +344,19 @@ define('ui', [], function () {
         Dialog: Dialog,
 
         confirm: function (message, o, callback, context) {
+            o = o || {};
             var confirmText = o.confirmText;
             var cancelText = o.cancelText;
             var confirmStyle = o.confirmStyle || 'danger';
 
+            var backdrop = o.backdrop;
+            if (typeof backdrop === 'undefined') {
+                backdrop = false;
+            }
+
             return new Promise(function (resolve) {
                 var dialog = new Dialog({
-                    backdrop: ('backdrop' in o) ? o.backdrop : false,
+                    backdrop: backdrop,
                     header: false,
                     className: 'dialog-confirm',
                     body: '<span class="confirm-message">' + message + '</a>',

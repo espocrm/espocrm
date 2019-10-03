@@ -105,6 +105,9 @@
                 "read": "own",
                 "edit": "no"
             },
+            "Team": {
+                "read": "team"
+            },
             "Import": false,
             "Webhook": false
         },

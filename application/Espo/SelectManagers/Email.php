@@ -52,16 +52,15 @@ class Email extends \Espo\Core\SelectManagers\Base
                         break;
                     } else {
                         if (isset($item['attribute'])) {
-                            $skipIndex = true;
-                            break;
+                            if (!in_array($item['attribute'], ['teams', 'users', 'status'])) {
+                                $skipIndex = true;
+                                break;
+                            }
                         }
                     }
                 }
             }
             if ($folderId === 'important' || $folderId === 'drafts') {
-                $skipIndex = true;
-            }
-            if (!$skipIndex && $this->hasLinkJoined('teams', $result)) {
                 $skipIndex = true;
             }
             if (!$skipIndex) {

@@ -751,8 +751,26 @@ class User extends Record
     {
         parent::afterUpdateEntity($entity, $data);
 
-        if (property_exists($data, 'rolesIds') || property_exists($data, 'teamsIds') || property_exists($data, 'type')) {
+        if (
+            property_exists($data, 'rolesIds') ||
+            property_exists($data, 'teamsIds') ||
+            property_exists($data, 'type') ||
+            property_exists($data, 'portalRolesIds') ||
+            property_exists($data, 'portalsIds')
+        ) {
             $this->clearRoleCache($entity->id);
+        }
+
+        if (
+            property_exists($data, 'portalRolesIds')
+            ||
+            property_exists($data, 'portalsIds')
+            ||
+            property_exists($data, 'contactId')
+            ||
+            property_exists($data, 'accountsIds')
+        ) {
+            $this->clearPortalRolesCache();
         }
 
         if ($entity->isPortal() && $entity->get('contactId')) {
@@ -775,6 +793,12 @@ class User extends Record
     protected function clearRoleCache($id)
     {
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
+        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
+    }
+
+    protected function clearPortalRolesCache()
+    {
+        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
     }
 
     public function massUpdate(array $params, $data)
@@ -792,10 +816,28 @@ class User extends Record
     {
         parent::afterMassUpdate($idList, $data);
 
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('type', $data)) {
+        if (
+            property_exists($data, 'rolesIds') ||
+            property_exists($data, 'teamsIds') ||
+            property_exists($data, 'type') ||
+            property_exists($data, 'portalRolesIds') ||
+            property_exists($data, 'portalsIds')
+        ) {
             foreach ($idList as $id) {
                 $this->clearRoleCache($id);
             }
+        }
+
+        if (
+            property_exists($data, 'portalRolesIds')
+            ||
+            property_exists($data, 'portalsIds')
+            ||
+            property_exists($data, 'contactId')
+            ||
+            property_exists($data, 'accountsIds')
+        ) {
+            $this->clearPortalRolesCache();
         }
     }
 

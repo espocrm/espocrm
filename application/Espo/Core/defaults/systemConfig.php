@@ -96,6 +96,7 @@ return [
         'passwordSalt',
         'cryptKey',
         'apiSecretKeys',
+        'hashSecretKey',
         'restrictedMode',
         'userLimit',
         'portalUserLimit',

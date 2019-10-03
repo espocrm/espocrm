@@ -3,13 +3,13 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C] 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * (at your option] any later version.
  *
  * EspoCRM is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,37 +23,39 @@
  * of this program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU General Public License version 3.
  *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * In accordance with Section 7(b] of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-
-    'Subscription' => array(
-        'fields' => array(
-            'id' => array(
+return [
+    'Subscription' => [
+        'fields' => [
+            'id' => [
                 'type' => 'id',
                 'dbType' => 'int',
                 'len' => '11',
                 'autoincrement' => true,
-            ),
-            'entityId' => array(
+            ],
+            'entityId' => [
                 'type' => 'varchar',
                 'len' => '24',
                 'index' => 'entity',
-            ),
-            'entityType' => array(
+            ],
+            'entityType' => [
                 'type' => 'varchar',
                 'len' => '100',
                 'index' => 'entity',
-            ),
-            'userId' => array(
+            ],
+            'userId' => [
                 'type' => 'varchar',
                 'len' => '24',
                 'index' => true,
-            ),
-        ),
-    ),
-
-);
-
+            ],
+        ],
+        'indexes' => [
+            'userEntity' => [
+                'columns' => ['userId', 'entityId', 'entityType'],
+            ],
+        ],
+    ],
+];

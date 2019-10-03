@@ -37,6 +37,7 @@ class PortalRole extends Record
     {
         parent::init();
         $this->addDependency('fileManager');
+        $this->addDependency('dataManager');
     }
 
     protected $forceSelectAllAttributes = true;
@@ -56,6 +57,6 @@ class PortalRole extends Record
     protected function clearRolesCache()
     {
         $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
+        $this->getInjection('dataManager')->updateCacheTimestamp();
     }
 }
-

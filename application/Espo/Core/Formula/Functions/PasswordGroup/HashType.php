@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,47 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], function (Dep, Colorpicker) {
+namespace Espo\Core\Formula\Functions\PasswordGroup;
 
-    return Dep.extend({
+use \Espo\ORM\Entity;
+use \Espo\Core\Exceptions\Error;
 
-        type: 'varchar',
+class HashType extends \Espo\Core\Formula\Functions\Base
+{
+    protected function init()
+    {
+        $this->addDependency('config');
+    }
 
-        detailTemplate: 'fields/colorpicker/detail',
+    public function process(\StdClass $item)
+    {
+        $args = $item->value ?? [];
 
-        listTemplate: 'fields/colorpicker/detail',
+        if (!is_array($args)) throw new Error();
+        if (count($args) < 1)
+             throw new Error("Formula: password\\hash: no argument.");
 
-        editTemplate: 'fields/colorpicker/edit',
+        $password = $this->evaluate($args[0]);
 
-        forceTrim: true,
+        if (!is_string($password))
+             throw new Error("Formula: password\\hash: bad argument.");
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+        $passwordHash = new \Espo\Core\Utils\PasswordHash($this->getInjection('config'));
+        $hash = $passwordHash->hash($password);
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode == 'edit') {
-                var isModal = !!this.$el.closest('.modal').length;
-
-                this.$element.parent().colorpicker({
-                    format: 'hex',
-                    container: isModal ? this.$el : false,
-                });
-
-                if (isModal) {
-                    this.$el.find('.colorpicker').css('position', 'relative').addClass('pull-right');
-                }
-            }
-            if (this.mode === 'edit') {
-                this.$element.on('change', function () {
-                    if (this.$element.val() === '') {
-                        this.$el.find('.input-group-addon > i').css('background-color', 'transparent');
-                    }
-                }.bind(this));
-            }
-        }
-
-    });
-});
+        return $hash;
+    }
+}

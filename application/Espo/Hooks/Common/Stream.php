@@ -35,11 +35,11 @@ class Stream extends \Espo\Core\Hooks\Base
 {
     protected $streamService = null;
 
-    protected $auditedFieldsCache = array();
+    protected $auditedFieldsCache = [];
 
-    protected $hasStreamCache = array();
+    protected $hasStreamCache = [];
 
-    protected $isLinkObservableInStreamCache = array();
+    protected $isLinkObservableInStreamCache = [];
 
     protected $statusFields = null;
 

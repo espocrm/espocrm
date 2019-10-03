@@ -111,10 +111,44 @@ class Settings extends \Espo\Core\Services\Base
             }
         }
 
+        if (!$this->getUser()->isAdmin() && !$this->getUser()->isSystem()) {
+            $entityTypeListParamList = [
+                'tabList',
+                'quickCreateList',
+                'globalSearchEntityList',
+                'assignmentEmailNotificationsEntityList',
+                'assignmentNotificationsEntityList',
+                'calendarEntityList',
+                'disabledCountQueryEntityList',
+                'streamEmailNotificationsEntityList',
+                'activitiesEntityList',
+                'historyEntityList',
+                'streamEmailNotificationsTypeList',
+                'emailKeepParentTeamsEntityList',
+            ];
+            $scopeList = array_keys($this->getMetadata()->get(['entityDefs'], []));
+            foreach ($scopeList as $scope) {
+                if (!$this->getMetadata()->get(['scopes', $scope, 'acl'])) continue;
+                if (!$this->getAcl()->check($scope)) {
+                    foreach ($entityTypeListParamList as $param) {
+                        $list = $data->$param ?? [];
+                        foreach ($list as $i => $item) {
+                            if ($item === $scope) {
+                                unset($list[$i]);
+                            }
+                        }
+                        $list = array_values($list);
+
+                        $data->$param = $list;
+                    }
+                }
+            }
+        }
+
         if (
             ($this->getConfig()->get('smtpServer') || $this->getConfig()->get('internalSmtpServer'))
             &&
-            !$this->getConfig()->geT('passwordRecoveryDisabled')
+            !$this->getConfig()->get('passwordRecoveryDisabled')
         ) {
             $data->passwordRecoveryEnabled = true;
         }

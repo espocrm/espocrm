@@ -57,7 +57,7 @@ define('acl-portal', ['acl'], function (Dep) {
                 return true;
             }
             if (data === null) {
-                return true;
+                return false;
             }
 
             action = action || null;

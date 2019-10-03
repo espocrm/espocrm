@@ -16,6 +16,9 @@
             "internal": true,
             "nonAdminReadOnly": true
         },
+        "authLogRecordId": {
+            "internal": true
+        },
         "authMethod": {
             "onlyAdmin": true
         },

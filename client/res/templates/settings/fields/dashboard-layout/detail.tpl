@@ -1,4 +1,8 @@
 
+{{#if isEmpty}}
+{{translate 'None'}}
+{{/if}}
+
 <div class="button-container clearfix">
     {{#ifNotEqual dashboardLayout.length 1}}
     <div class="btn-group pull-right dashboard-tabs">

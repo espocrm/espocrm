@@ -558,7 +558,6 @@ class Record extends \Espo\Core\Services\Base
         $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
         $fieldValidatorManager = $this->getInjection('container')->get('fieldValidatorManager');
 
-
         foreach ($validationList as $type) {
             $value = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, $type);
             if (is_null($value)) {
@@ -570,7 +569,7 @@ class Record extends \Espo\Core\Services\Base
             $skipPropertyName = 'validate' . ucfirst($type) . 'SkipFieldList';
             if (property_exists($this, $skipPropertyName)) {
                 $skipList = $this->$skipPropertyName;
-                if (!in_array($type, $skipList)) {
+                if (in_array($type, $skipList)) {
                     continue;
                 }
             }
@@ -1857,6 +1856,7 @@ class Record extends \Espo\Core\Services\Base
     public function follow($id, $userId = null)
     {
         $entity = $this->getRepository()->get($id);
+        if (!$entity) throw new NotFoundSilent();
 
         if (!$this->getAcl()->check($entity, 'stream')) {
             throw new Forbidden();
@@ -1872,6 +1872,7 @@ class Record extends \Espo\Core\Services\Base
     public function unfollow($id, $userId = null)
     {
         $entity = $this->getRepository()->get($id);
+        if (!$entity) throw new NotFoundSilent();
 
         if (empty($userId)) {
             $userId = $this->getUser()->id;

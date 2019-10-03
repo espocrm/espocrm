@@ -170,6 +170,13 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 this.enabledScopeList = [];
             }
 
+             this.enabledScopeList.forEach(function (item) {
+                var color = this.getMetadata().get(['clientDefs', item, 'color']);
+                if (color) {
+                    this.colors[item] = color;
+                }
+            }, this);
+
             if (this.options.calendarType) {
                 this.calendarType = this.options.calendarType;
             } else {

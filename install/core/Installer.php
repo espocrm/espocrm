@@ -254,13 +254,14 @@ class Installer
         $siteUrl = $this->getSystemHelper()->getBaseUrl();
         $databaseDefaults = $this->app->getContainer()->get('config')->get('database');
 
-        $data = array(
+        $data = [
             'database' => array_merge($databaseDefaults, $database),
             'language' => $language,
             'siteUrl' => $siteUrl,
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
-            'cryptKey' => $this->getContainer()->get('crypt')->generateKey()
-        );
+            'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
+            'hashSecretKey' => \Espo\Core\Utils\Util::generateSecretKey(),
+        ];
 
         $owner = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
         $group = $this->getFileManager()->getPermissionUtils()->getDefaultGroup(true);

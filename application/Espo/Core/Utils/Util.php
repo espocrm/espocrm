@@ -568,6 +568,14 @@ class Util
         return bin2hex(random_bytes(16));
     }
 
+    public static function generateSecretKey()
+    {
+        if (!function_exists('random_bytes')) {
+            return self::generateId();
+        }
+        return bin2hex(random_bytes(16));
+    }
+
     public static function generateKey()
     {
         return md5(uniqid(rand(), true));

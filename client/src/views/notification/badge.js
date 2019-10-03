@@ -49,7 +49,7 @@ define('views/notification/badge', 'view', function (Dep) {
         setup: function () {
             this.soundPath = this.getBasePath() + (this.getConfig().get('notificationSound') || this.soundPath);
 
-            this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
+            this.notificationSoundsDisabled = true;
 
             this.useWebSocket = this.getConfig().get('useWebSocket');
 
