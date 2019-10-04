@@ -35,6 +35,11 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected $fullTextSearchForceOrderOnlyByRelevance = true;
 
+    protected $selectAttributesDependancyMap = [
+        'subject' => ['name'],
+        'personStringData' => ['fromString', 'fromEmailAddressId'],
+    ];
+
     public function applyAdditional(array $params, array &$result)
     {
         parent::applyAdditional($params, $result);
