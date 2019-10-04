@@ -69,62 +69,55 @@ class GlobalSearch extends \Espo\Core\Services\Base
         return $this->injections['metadata'];
     }
 
-    public function find($query, $offset, $maxSize)
+    public function find(string $query, int $offset, int $maxSize)
     {
-        $entityTypeList = $this->getConfig()->get('globalSearchEntityList');
-
+        $entityTypeList = $this->getConfig()->get('globalSearchEntityList') ?? [];
         $hasFullTextSearch = false;
-
-        $relevanceSelectPosition = 0;
+        $relevanceSelectPosition = 4;
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
-            if (!$this->getAcl()->checkScope($entityType, 'read')) {
-                continue;
-            }
-            if (!$this->getMetadata()->get(['scopes', $entityType])) {
-                continue;
-            }
+            if (!$this->getAcl()->checkScope($entityType, 'read')) continue;
+            if (!$this->getMetadata()->get(['scopes', $entityType])) continue;
 
             $selectManager = $this->getSelectManagerFactory()->create($entityType);
 
-            $params = [
-                'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']]
+            $selectParams = [
+                'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']],
             ];
 
             $fullTextSearchData = $selectManager->getFullTextSearchDataForTextFilter($query);
 
             if ($fullTextSearchData) {
                 $hasFullTextSearch = true;
-                $params['select'][] = [$fullTextSearchData['where'], '_relevance'];
+                $selectParams['select'][] = [$fullTextSearchData['where'], '_relevance'];
+                $selectParams['orderBy'] = [[$fullTextSearchData['where'], 'desc'], ['name']];
             } else {
-                $params['select'][] = ['VALUE:1.1', '_relevance'];
-                $relevanceSelectPosition = count($params['select']);
+                $selectParams['select'][] = ['VALUE:1.1', '_relevance'];
+                $selectParams['orderBy'] = [['name']];
             }
 
-            $selectManager->manageAccess($params);
-            $params['useFullTextSearch'] = true;
-            $selectManager->applyTextFilter($query, $params);
+            $selectParams['offset'] = 0;
+            $selectParams['limit'] = $offset + $maxSize + 1;
 
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $params);
+            $selectManager->manageAccess($selectParams);
+            $selectParams['useFullTextSearch'] = true;
+            $selectManager->applyTextFilter($query, $selectParams);
 
-            $unionPartList[] = '' . $sql . '';
+            $itemSql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $selectParams);
+
+            $unionPartList[] = "(\n" . $itemSql . "\n)";
         }
         if (empty($unionPartList)) {
             return [
                 'total' => 0,
-                'list' => []
+                'list' => [],
             ];
         }
 
         $pdo = $this->getEntityManager()->getPDO();
 
-        $unionSql = implode(' UNION ', $unionPartList);
-        $countSql = "SELECT COUNT(*) AS 'COUNT' FROM ({$unionSql}) AS c";
-        $sth = $pdo->prepare($countSql);
-        $sth->execute();
-        $row = $sth->fetch(\PDO::FETCH_ASSOC);
-        $totalCount = $row['COUNT'];
+        $sql = implode(' UNION ALL ', $unionPartList);
 
         if (count($entityTypeList)) {
             $entityListQuoted = [];
@@ -132,36 +125,42 @@ class GlobalSearch extends \Espo\Core\Services\Base
                 $entityListQuoted[] = $pdo->quote($entityType);
             }
             if ($hasFullTextSearch) {
-                $unionSql .= " ORDER BY " . $relevanceSelectPosition . " DESC, FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
+                $sql .= "\nORDER BY " . $relevanceSelectPosition . " DESC, FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
             } else {
-                $unionSql .= " ORDER BY FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
+                $sql .= "\nORDER BY FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
             }
         } else {
-            $unionSql .= " ORDER BY name";
+            $sql .= "\nORDER BY name";
         }
 
-        $unionSql .= " LIMIT :offset, :maxSize";
+        $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
 
-        $sth = $pdo->prepare($unionSql);
-
-        $sth->bindParam(':offset', $offset, \PDO::PARAM_INT);
-        $sth->bindParam(':maxSize', $maxSize, \PDO::PARAM_INT);
+        $sth = $pdo->prepare($sql);
         $sth->execute();
         $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
-        $entityDataList = [];
+        $resultList = [];
 
         foreach ($rows as $row) {
-            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['id']);
-            $entityData = $entity->toArray();
-            $entityData['_scope'] = $entity->getEntityType();
-            $entityDataList[] = $entityData;
+            $entity = $this->getEntityManager()->getRepository($row['entityType'])
+                ->select(['id', 'name'])
+                ->where(['id' => $row['id']])
+                ->findOne();
+            if (!$entity) continue;
+            $itemData = $entity->getValueMap();
+            $itemData->_scope = $entity->getEntityType();
+            $resultList[] = $itemData;
         }
 
-        return array(
-            'total' => $totalCount,
-            'list' => $entityDataList,
-        );
+        $total = -2;
+        if (count($resultList) > $maxSize) {
+            $total = -1;
+            unset($resultList[count($resultList) - 1]);
+        }
+
+        return [
+            'total' => $total,
+            'list' => $resultList,
+        ];
     }
 }
-
