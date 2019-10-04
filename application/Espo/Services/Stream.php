@@ -1671,6 +1671,9 @@ class Stream extends \Espo\Core\Services\Base
             $portals = $user->get('portals');
             if (count($portals)) {
                 $aclManager->setPortal($portals[0]);
+            } else {
+                $aclManager = null;
+
             }
         }
 
@@ -1678,6 +1681,8 @@ class Stream extends \Espo\Core\Services\Base
             if (empty($item['entity'])) continue;
             if (empty($item['object'])) continue;
             if (
+                !$aclManager
+                ||
                 !$aclManager->checkScope($user, $scope, 'read')
                 ||
                 !$aclManager->checkScope($user, $scope, 'stream')
