@@ -1624,7 +1624,7 @@ abstract class Base
             if (is_array($item)) {
                 $relationName = $item[0];
                 if (count($item) > 1) {
-                    $alias = $item[1];
+                    $alias = $item[1] ?? $relationName;
                     if (count($item) > 2) {
                         $itemConditions = $item[2] ?? [];
                     }
