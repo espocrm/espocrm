@@ -327,12 +327,16 @@ class LeadCapture extends Record
             }
         }
 
+        $isContactOptedIn = false;
+
         if ($leadCapture->get('subscribeToTargetList') && $leadCapture->get('targetListId')) {
             $isAlreadyOptedIn = false;
 
             if ($contact) {
                 if ($leadCapture->get('subscribeContactToTargetList')) {
                     $isAlreadyOptedIn = $this->isTargetOptedIn($contact, $leadCapture->get('targetListId'));
+                    $isContactOptedIn = $isAlreadyOptedIn;
+
                     if (!$isAlreadyOptedIn) {
                         $this->getEntityManager()->getRepository('Contact')->relate($contact, 'targetLists', $leadCapture->get('targetListId'), [
                             'optedOut' => false,
@@ -351,15 +355,6 @@ class LeadCapture extends Record
                                'leadCaptureId' => $leadCapture->id,
                             ]);
                         }
-
-                        $this->getInjection('hookManager')->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
-                           'targetId' => $contact->id,
-                           'targetType' => 'Contact',
-                        ]);
-
-                        $this->getInjection('hookManager')->process('Contact', 'afterLeadCapture', $contact, [], [
-                           'leadCaptureId' => $leadCapture->id,
-                        ]);
                     }
                 }
             }
@@ -374,6 +369,16 @@ class LeadCapture extends Record
                     }
                 }
             }
+        }
+
+        if ($contact && (!$isContactOptedIn || !$leadCapture->get('subscribeToTargetList'))) {
+            $this->getInjection('hookManager')->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
+               'targetId' => $contact->id,
+               'targetType' => 'Contact',
+            ]);
+            $this->getInjection('hookManager')->process('Contact', 'afterLeadCapture', $contact, [], [
+               'leadCaptureId' => $leadCapture->id,
+            ]);
         }
 
         $isNew = !$duplicate && !$contact;
@@ -408,12 +413,13 @@ class LeadCapture extends Record
                    'leadCaptureId' => $leadCapture->id,
                 ]);
             }
+        }
 
+        if ($toRelateLead  || !$leadCapture->get('subscribeToTargetList')) {
             $this->getInjection('hookManager')->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
                'targetId' => $targetLead->id,
                'targetType' => 'Lead',
             ]);
-
             $this->getInjection('hookManager')->process('Lead', 'afterLeadCapture', $targetLead, [], [
                'leadCaptureId' => $leadCapture->id,
             ]);
