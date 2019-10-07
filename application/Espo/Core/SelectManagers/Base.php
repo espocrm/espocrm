@@ -1624,11 +1624,12 @@ class Base
                     break;
 
                 case 'isNotLinked':
-                    if (!$result) break;
-                    $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
-                    $part[$alias . '.id'] = null;
-                    $this->setDistinct(true, $result);
-                    $this->addLeftJoin([$attribute, $alias], $result);
+                    $part['id!=s'] = [
+                        'selectParams' =>  [
+                            'select' => ['id'],
+                            'joins' => [$attribute],
+                        ]
+                    ];
                     break;
 
                 case 'isLinked':
