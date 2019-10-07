@@ -308,6 +308,22 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+
+    public function testJoinOnlyMiddle()
+    {
+        $sql = $this->query->createSelectQuery('Post', [
+            'select' => ['id'],
+            'leftJoins' => [['tags', null, null, ['onlyMiddle' => true]]]
+        ]);
+
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "LEFT JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = '0' " .
+            "WHERE post.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testWhereNotValue1()
     {
         $sql = $this->query->createSelectQuery('Post', [

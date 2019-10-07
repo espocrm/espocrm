@@ -1617,14 +1617,19 @@ abstract class Base
     protected function getJoins(IEntity $entity, array $joins, $isLeft = false, $joinConditions = [])
     {
         $joinSqlList = [];
+
         foreach ($joins as $item) {
             $itemConditions = [];
+            $params = [];
             if (is_array($item)) {
                 $relationName = $item[0];
                 if (count($item) > 1) {
                     $alias = $item[1];
                     if (count($item) > 2) {
                         $itemConditions = $item[2] ?? [];
+                    }
+                    if (count($item) > 3) {
+                        $params = $item[3] ?? [];
                     }
                 } else {
                     $alias = $relationName;
@@ -1640,7 +1645,7 @@ abstract class Base
             foreach ($itemConditions as $left => $right) {
                 $conditions[$left] = $right;
             }
-            if ($sql = $this->getJoin($entity, $relationName, $isLeft, $conditions, $alias)) {
+            if ($sql = $this->getJoin($entity, $relationName, $isLeft, $conditions, $alias, $params)) {
                 $joinSqlList[] = $sql;
             }
         }
@@ -1756,7 +1761,7 @@ abstract class Base
         }
     }
 
-    protected function getJoin(IEntity $entity, $name, $isLeft = false, $conditions = [], $alias = null)
+    protected function getJoin(IEntity $entity, $name, $isLeft = false, $conditions = [], $alias = null, array $params = [])
     {
         $prefix = ($isLeft) ? 'LEFT ' : '';
 
@@ -1827,9 +1832,13 @@ abstract class Base
                     $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
 
-                $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
-                    . " AND "
-                    . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                $onlyMiddle = $params['onlyMiddle'] ?? false;
+
+                if (!$onlyMiddle) {
+                    $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
+                        . " AND "
+                        . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                }
 
                 return $sql;
 
