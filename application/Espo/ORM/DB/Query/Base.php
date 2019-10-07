@@ -310,13 +310,15 @@ abstract class Base
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
-                    $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." . $this->toDb($this->sanitize($column)) . " AS `{$field}`";
+                    $itemAlias = $this->sanitizeSelectAlias($field);
+                    $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." . $this->toDb($this->sanitize($column)) . " AS `{$itemAlias}`";
                 }
             }
 
             if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
                 foreach ($params['additionalSelectColumns'] as $column => $field) {
-                    $selectPart .= ", " . $column . " AS `{$field}`";
+                    $itemAlias = $this->sanitizeSelectAlias($field);
+                    $selectPart .= ", " . $column . " AS `{$itemAlias}`";
                 }
             }
 
@@ -864,7 +866,7 @@ abstract class Base
                     $part = str_replace('{alias}', $alias, $part);
                 }
             } else {
-                $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($attribute);
+                $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
                 if ($type === 'orderBy') {
                     $part .= ' {direction}';
                 }
@@ -1019,6 +1021,8 @@ abstract class Base
 
         if (!$alias) {
             $alias = $this->getAlias($entity, $relationName);
+        } else {
+            $alias = $this->sanitizeSelectAlias($alias);
         }
 
         if ($alias) {
@@ -1759,6 +1763,8 @@ abstract class Base
         if (!$entity->hasRelation($name)) {
             if (!$alias) {
                 $alias = $this->sanitize($name);
+            } else {
+                $alias = $this->sanitizeSelectAlias($alias);
             }
             $table = $this->toDb($this->sanitize($name));
 
