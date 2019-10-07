@@ -69,7 +69,13 @@ class ClientManager
             $externalAccountEntity = $this->clientMap[$hash]['externalAccountEntity'];
             $externalAccountEntity->set('accessToken', $data['accessToken']);
             $externalAccountEntity->set('tokenType', $data['tokenType']);
-            $this->getEntityManager()->saveEntity($externalAccountEntity, ['isTokenRenewal' => true]);
+
+            $copy = $this->getEntityManager()->getEntity('ExternalAccount', $externalAccountEntity->id);
+            if ($copy) {
+                $copy->set('accessToken', $data['accessToken']);
+                $copy->set('tokenType', $data['tokenType']);
+                $this->getEntityManager()->saveEntity($copy, ['isTokenRenewal' => true]);
+            }
         }
     }
 
