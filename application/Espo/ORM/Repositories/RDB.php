@@ -396,6 +396,11 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
+    public function getRelationColumn(Entity $entity, string $relationName, string $foreignId, string $column)
+    {
+        return $this->getMapper()->getRelationColumn($entity, $relationName, $foreignId, $column);
+    }
+
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
     }

@@ -438,6 +438,59 @@ abstract class Mapper implements IMapper
         }
     }
 
+    public function getRelationColumn(IEntity $entity, string $relationName, string $id, string $column)
+    {
+        $type = $entity->getRelationType($entityType, $relationName);
+
+        if (!$type === IEntity::MANY_MANY) return null;
+
+        $relDefs = $entity->relations[$relationName];
+
+        $relTable = $this->toDb($relDefs['relationName']);
+
+        $keySet = $this->query->getKeys($entity, $relationName);
+        $key = $keySet['key'];
+        $foreignKey = $keySet['foreignKey'];
+        $nearKey = $keySet['nearKey'];
+        $distantKey = $keySet['distantKey'];
+
+        $additionalColumns = $entity->getRelationParam($relationName, 'additionalColumns') ?? [];
+
+        if (!isset($additionalColumns[$column])) return null;
+
+        $columnType = $additionalColumns[$column]['type'] ?? 'string';
+
+        $columnAlias = $this->query->sanitizeSelectAlias($column);
+
+        $sql =
+            "SELECT " . $this->toDb($this->query->sanitize($column)) . " AS `{$columnAlias}` FROM `{$relTable}` " .
+            "WHERE ";
+
+        $wherePart =
+            $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . " ".
+            "AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0";
+
+        $sql .= $wherePart;
+
+        $ps = $this->pdo->query($sql);
+        if ($ps) {
+            foreach ($ps as $row) {
+                $value = $row[$columnAlias];
+                if ($columnType == 'bool') {
+                    $value = boolval($value);
+                } else if ($columnType == 'int') {
+                    $value = intval($value);
+                } else if ($columnType == 'float') {
+                    $value = floatval($value);
+                }
+
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
     public function massRelate(IEntity $entity, $relationName, array $params = [])
     {
         if (!$entity) {

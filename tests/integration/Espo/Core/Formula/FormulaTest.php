@@ -320,4 +320,30 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertTrue($result1 !== $result);
     }
+
+    public function testEntityGetLinkColumn()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $lead = $em->createEntity('Lead', []);
+        $targetList = $em->createEntity('TargetList', []);
+
+        $em->getRepository('Lead')->relate($lead, 'targetLists', $targetList->id, [
+            'optedOut' => true,
+        ]);
+
+        $script = "entity\\getLinkColumn('targetLists', '{$targetList->id}', 'optedOut')";
+
+        $result = $fm->run($script, $lead);
+        $this->assertTrue($result);
+
+
+        $em->getRepository('Lead')->relate($lead, 'targetLists', $targetList->id, [
+            'optedOut' => false,
+        ]);
+
+        $result = $fm->run($script, $lead);
+        $this->assertFalse($result);
+    }
 }
