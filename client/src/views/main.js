@@ -191,6 +191,10 @@ define('views/main', 'view', function (Dep) {
             if (!doNotReRender && this.isRendered()) {
                 this.getView('header').reRender();
             }
+
+            if (doNotReRender && this.isRendered()) {
+                this.$el.find('.header .header-buttons [data-name="'+name+'"]').remove();
+            }
         },
 
         disableMenuItem: function (name) {

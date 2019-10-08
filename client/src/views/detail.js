@@ -136,36 +136,29 @@ define('views/detail', 'views/main', function (Dep) {
         },
 
         actionFollow: function () {
-            $el = this.$el.find('[data-action="follow"]');
-            $el.addClass('disabled');
-            $.ajax({
-                url: this.model.name + '/' + this.model.id + '/subscription',
-                type: 'PUT',
-                success: function () {
-                    $el.remove();
+            this.disableMenuItem('follow');
+
+            Espo.Ajax.putRequest(this.model.name + '/' + this.model.id + '/subscription')
+                .then(function () {
+                    this.removeMenuItem('follow', true);
                     this.model.set('isFollowed', true);
-                }.bind(this),
-                error: function () {
-                    $el.removeClass('disabled');
-                }.bind(this)
-            });
+                }.bind(this))
+                .fail(function () {
+                    this.enableMenuItem('follow');
+                }.bind(this));
         },
 
         actionUnfollow: function () {
-            $el = this.$el.find('[data-action="unfollow"]');
-            $el.addClass('disabled');
-            $.ajax({
-                url: this.model.name + '/' + this.model.id + '/subscription',
-                type: 'DELETE',
-                success: function () {
-                    $el.remove();
-                    this.model.set('isFollowed', false);
-                }.bind(this),
-                error: function () {
-                    $el.removeClass('disabled');
-                }.bind(this)
-            });
+            this.disableMenuItem('unfollow');
 
+            Espo.Ajax.deleteRequest(this.model.name + '/' + this.model.id + '/subscription')
+                .then(function () {
+                    this.removeMenuItem('unfollow', true);
+                    this.model.set('isFollowed', false);
+                }.bind(this))
+                .fail(function () {
+                    this.enableMenuItem('unfollow');
+                }.bind(this));
         },
 
         getHeader: function () {
