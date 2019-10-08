@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/meeting/fields/reminders', 'views/fields/base', function (Dep) {
+define('crm:views/meeting/fields/reminders', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -76,8 +76,8 @@ Espo.define('crm:views/meeting/fields/reminders', 'views/fields/base', function 
                 this.reminderList = this.model.get(this.name) || [];
             }, this);
 
-            this.typeList = this.getMetadata().get('entityDefs.Reminder.fields.type.options');
-            this.secondsList = this.getMetadata().get('entityDefs.Reminder.fields.seconds.options');
+            this.typeList = this.getMetadata().get('entityDefs.Reminder.fields.type.options') || [];
+            this.secondsList = this.getMetadata().get('entityDefs.Reminder.fields.seconds.options') || [];
         },
 
         afterRender: function () {

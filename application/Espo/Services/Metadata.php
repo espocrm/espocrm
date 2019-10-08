@@ -64,6 +64,7 @@ class Metadata extends \Espo\Core\Services\Base
         if (!$this->getUser()->isAdmin()) {
             $scopeList = array_keys($this->getMetadata()->get(['scopes'], []));
             foreach ($scopeList as $scope) {
+                if (in_array($scope, ['Reminder'])) continue;
                 if (!$this->getAcl()->check($scope)) {
                     unset($data->entityDefs->$scope);
                     unset($data->clientDefs->$scope);
