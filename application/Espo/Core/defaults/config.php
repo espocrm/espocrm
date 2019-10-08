@@ -57,9 +57,9 @@ return [
     'outboundEmailFromName' => 'EspoCRM',
     'outboundEmailFromAddress' => '',
     'smtpServer' => '',
-    'smtpPort' => 25,
+    'smtpPort' => 587,
     'smtpAuth' => true,
-    'smtpSecurity' => '',
+    'smtpSecurity' => 'TLS',
     'smtpUsername' => '',
     'smtpPassword' => '',
     'languageList' => [

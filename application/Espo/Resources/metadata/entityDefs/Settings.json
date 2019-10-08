@@ -101,7 +101,8 @@
             "type": "int",
             "min": 0,
             "max": 9999,
-            "default": 25
+            "required": true,
+            "default": 587
         },
         "smtpAuth": {
             "type": "bool",
@@ -109,6 +110,7 @@
         },
         "smtpSecurity": {
             "type": "enum",
+            "default": "TLS",
             "options": ["", "SSL", "TLS"]
         },
         "smtpUsername": {

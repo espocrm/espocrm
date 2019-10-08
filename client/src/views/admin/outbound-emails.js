@@ -26,29 +26,73 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/outbound-emails', 'views/settings/record/edit', function (Dep) {
+define('views/admin/outbound-emails', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 
         layoutName: 'outboundEmails',
 
-        dependencyDefs: {
-            'smtpAuth': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['smtpUsername', 'smtpPassword']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['smtpUsername', 'smtpPassword']
+        dynamicLogicDefs: {
+            fields: {
+                smtpUsername: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            },
+                            {
+                                type: 'isTrue',
+                                attribute: 'smtpAuth',
+                            }
+                        ]
                     }
-                ]
-            }
+                },
+                smtpPassword: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            },
+                            {
+                                type: 'isTrue',
+                                attribute: 'smtpAuth',
+                            }
+                        ]
+                    }
+                },
+                smtpPort: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            },
+                        ]
+                    }
+                },
+                smtpSecurity: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            },
+                        ]
+                    }
+                },
+                smtpAuth: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            },
+                        ]
+                    }
+                },
+            },
         },
 
         setup: function () {
