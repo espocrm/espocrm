@@ -819,14 +819,23 @@ class Base
 
         $this->applyAdditional($params, $result);
 
-        if (empty($result['orderBy'])) {
-            $result['orderBy'] = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
-            if (empty($result['order']) && !is_array($result['orderBy'])) {
-                $result['order'] = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'order']) ?? null;
-            }
+        return $result;
+    }
+
+    public function applyDefaultOrder(array &$result)
+    {
+        $orderBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
+        $order = $result['order'] ?? null;
+
+        if (!$order && !is_array($orderBy)) {
+            $order = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'order']) ?? null;
         }
 
-        return $result;
+        if ($orderBy) {
+            $this->applyOrder($orderBy, $order, $result);
+        } else {
+            $result['order'] = $order;
+        }
     }
 
     public function checkWhere(array $where, bool $checkWherePermission = true, bool $forbidComplexExpressions = false)

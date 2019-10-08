@@ -194,9 +194,7 @@ class RecordTree extends Record
     public function getLastChildrenIdList($parentId = null)
     {
         $selectParams = $this->getSelectManager($this->entityType)->getSelectParams([], true, true);
-        $selectParams['whereClause'][] = array(
-            'parentId' => $parentId
-        );
+        $selectParams['whereClause'][] = ['parentId' => $parentId];
 
         $idList = [];
 
@@ -205,12 +203,12 @@ class RecordTree extends Record
             $includingRecords = true;
         }
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()->select(['id'])->find($selectParams);
+
         foreach ($collection as $entity) {
             $selectParams2 = $this->getSelectManager($this->entityType)->getSelectParams([], true, true);
-            $selectParams2['whereClause'][] = array(
-                'parentId' => $entity->id
-            );
+            $selectParams2['whereClause'][] = ['parentId' => $entity->id];
+
             if (!$this->getRepository()->count($selectParams2)) {
                 $idList[] = $entity->id;
             } else {

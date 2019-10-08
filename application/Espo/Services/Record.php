@@ -1064,7 +1064,13 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getSelectParams($params)
     {
-        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true, true);
+        $selectManager = $this->getSelectManager($this->entityType);
+
+        $selectParams = $selectManager->getSelectParams($params, true, true, true);
+
+        if (empty($selectParams['orderBy'])) {
+            $selectManager->applyDefaultOrder($selectParams);
+        }
 
         return $selectParams;
     }
@@ -1345,7 +1351,13 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        $selectParams = $this->getSelectManager($foreignEntityType)->getSelectParams($params, !$skipAcl, true);
+        $selectManager = $this->getSelectManager($foreignEntityType);
+
+        $selectParams = $selectManager->getSelectParams($params, !$skipAcl, true);
+
+        if (empty($selectParams['orderBy'])) {
+            $selectManager->applyDefaultOrder($selectParams);
+        }
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
