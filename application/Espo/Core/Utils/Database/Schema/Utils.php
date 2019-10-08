@@ -69,7 +69,7 @@ class Utils
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
                     $indexType = static::getIndexTypeByIndexDefs($indexParams);
-                    $tableIndexName = static::generateIndexName($indexName, $indexType);
+                    $tableIndexName = isset($indexParams['key']) ? $indexParams['key'] : static::generateIndexName($indexName, $indexType);
 
                     if (isset($indexParams['flags']) && is_array($indexParams['flags'])) {
                         $skipIndex = false;
