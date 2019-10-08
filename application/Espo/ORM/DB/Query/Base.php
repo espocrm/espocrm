@@ -57,7 +57,7 @@ abstract class Base
         'customHaving',
         'skipTextColumns',
         'maxTextColumnsLength',
-        'useIndexList',
+        'useIndex',
     ];
 
     protected static $sqlOperators = [
@@ -386,9 +386,14 @@ abstract class Base
         }
 
         $indexKeyList = null;
-        if (!empty($params['useIndexList']) && $this->metadata) {
+        $indexList = $params['useIndex'] ?? null;
+
+        if (!empty($indexList) && $this->metadata) {
             $indexKeyList = [];
-            foreach ($params['useIndexList'] as $indexName) {
+            if (is_string($indexList)) {
+                $indexList = [$indexList];
+            }
+            foreach ($indexList as $indexName) {
                 $indexKey = $this->metadata->get($entityType, ['indexes', $indexName, 'key']);
                 if ($indexKey) {
                     $indexKeyList[] = $indexKey;
@@ -1819,8 +1824,34 @@ abstract class Base
 
                 $midAlias = $alias . 'Middle';
 
+                $indexKeyList = null;
+                $indexList = $params['useIndex'] ?? null;
+
+                if ($indexList && $this->metadata) {
+                    $indexKeyList = [];
+                    if (is_string($indexList)) {
+                        $indexList = [$indexList];
+                    }
+                    foreach ($indexList as $indexName) {
+                        $indexKey = $this->metadata->get($entity->getEntityType(), ['relations', $relationName, 'indexes', $indexName, 'key']);
+                        if ($indexKey) {
+                            $indexKeyList[] = $indexKey;
+                        }
+                    }
+                }
+
+                $indexPart = '';
+
+                if ($indexKeyList && count($indexKeyList)) {
+                    $sanitizedIndexList = [];
+                    foreach ($indexKeyList as $indexKey) {
+                        $sanitizedIndexList[] = '`' . $this->sanitizeIndexName($indexKey) . '`';
+                    }
+                    $indexPart = " USE INDEX (".implode(', ', $sanitizedIndexList).")";
+                }
+
                 $sql =
-                    "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
+                    "{$prefix}JOIN `{$relTable}` AS `{$midAlias}`{$indexPart} ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                     . " AND "
                     . "{$midAlias}.deleted = " . $this->pdo->quote(0);
 

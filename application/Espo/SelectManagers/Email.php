@@ -71,12 +71,12 @@ class Email extends \Espo\Core\SelectManagers\Base
                 $skipIndex = true;
             }
             if (!$skipIndex) {
-                $result['useIndexList'] = ['dateSent'];
+                $result['useIndex'] = 'dateSent';
             }
         }
 
         if ($folderId === 'drafts') {
-            $result['useIndexList'] = ['createdById'];
+            $result['useIndex'] = 'createdById';
         }
 
         if ($folderId !== 'drafts') {
