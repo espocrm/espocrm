@@ -975,6 +975,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         actionPrevious: function () {
+            this.model.abortLastFetch();
+
             var collection;
             if (!this.model.collection) {
                 collection = this.collection;
@@ -992,6 +994,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         actionNext: function () {
+            this.model.abortLastFetch();
+
             var collection;
             if (!this.model.collection) {
                 collection = this.collection;
@@ -1011,14 +1015,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             } else {
                 var initialCount = collection.length;
 
-                this.listenToOnce(collection, 'sync', function () {
-                    var model = collection.at(indexOfRecord);
-                    this.switchToModelByIndex(indexOfRecord);
-                }, this);
                 collection.fetch({
                     more: true,
                     remove: false,
-                });
+                }).then(function () {
+                    var model = collection.at(indexOfRecord);
+                    this.switchToModelByIndex(indexOfRecord);
+                }.bind(this));
             }
         },
 

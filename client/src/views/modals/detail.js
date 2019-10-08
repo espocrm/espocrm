@@ -394,14 +394,13 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             } else {
                 var initialCount = collection.length;
 
-                this.listenToOnce(collection, 'sync', function () {
-                    var model = collection.at(indexOfRecord);
-                    this.switchToModelByIndex(indexOfRecord);
-                }, this);
                 collection.fetch({
                     more: true,
                     remove: false,
-                });
+                }).then(function () {
+                    var model = collection.at(indexOfRecord);
+                    this.switchToModelByIndex(indexOfRecord);
+                }.bind(this));
             }
         },
 
