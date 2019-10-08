@@ -31,7 +31,7 @@ namespace Espo\Entities;
 
 class Integration extends \Espo\Core\ORM\Entity
 {
-    public function get($name, $params = array())
+    public function get($name, $params = [])
     {
         if ($name == 'id') {
             return $this->id;
@@ -98,6 +98,13 @@ class Integration extends \Espo\Core\ORM\Entity
             $data->$name = $value;
             $this->set('data', $data);
         }
+    }
+
+    public function isAttributeChanged($name)
+    {
+        if ($name === 'data') return true;
+
+        return parent::isAttributeChanged($name);
     }
 
     public function populateFromArray(array $arr, $onlyAccessible = true, $reset = false)
