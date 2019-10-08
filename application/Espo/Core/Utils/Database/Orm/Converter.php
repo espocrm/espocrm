@@ -560,14 +560,23 @@ class Converter
 
     protected function applyIndexes(&$ormMetadata, $entityType)
     {
-        if (!isset($ormMetadata[$entityType]['indexes'])) {
-            return;
+        if (isset($ormMetadata[$entityType]['indexes'])) {
+            foreach ($ormMetadata[$entityType]['indexes'] as $indexName => &$indexData) {
+                if (!isset($indexData['key'])) {
+                    $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
+                    $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+                }
+            }
         }
 
-        foreach ($ormMetadata[$entityType]['indexes'] as $indexName => &$indexData) {
-            if (!isset($indexData['key'])) {
-                $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
-                $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+        if (isset($ormMetadata[$entityType]['relations'])) {
+            foreach ($ormMetadata[$entityType]['relations'] as $relationName => &$relationData) {
+                if (isset($relationData['indexes'])) {
+                    foreach ($relationData['indexes'] as $indexName => &$indexData) {
+                        $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
+                        $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+                    }
+                }
             }
         }
     }
