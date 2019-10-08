@@ -102,6 +102,8 @@ class Language extends \Espo\Core\Services\Base
                     unset($data['Global']['scopeNames'][$scope]);
                     unset($data['Global']['scopeNamesPlural'][$scope]);
                 } else {
+                    if (in_array($scope, ['EmailAccount', 'InboundEmail'])) continue;
+
                     foreach ($this->getAcl()->getScopeForbiddenFieldList($scope) as $field) {
                         if (isset($data[$scope]['fields'])) unset($data[$scope]['fields'][$field]);
                         if (isset($data[$scope]['options'])) unset($data[$scope]['options'][$field]);
