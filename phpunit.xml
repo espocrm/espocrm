@@ -1,0 +1,31 @@
+<phpunit bootstrap="vendor/autoload.php"
+         colors="true"
+         verbose="true"
+         stopOnFailure="false"
+         testdox="true">
+    <testsuites>
+        <testsuite name="Integration">
+            <directory suffix="Test.php">./tests/integration/</directory>
+        </testsuite>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/unit/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <!-- This is for generating code coverage analysis which will appear in espocrm/coverage-report folder -->
+            <directory suffix=".php">application/Espo/</directory>
+            <exclude>
+                <directory suffix=".php">
+                    <!-- This is because the coverage conflicts with the files defined in tests/unit/testData/DB/Entities.php -->
+                    application/Espo/Entities
+                </directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="coverage-report" lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+        <log type="testdox-html" target="/tmp/testdox.html"/>
+    </logging>
+</phpunit>

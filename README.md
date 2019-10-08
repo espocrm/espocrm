@@ -73,6 +73,49 @@ Build json files from the translated po file:
 
 Json files will be created in build directory grouped by folders.
 
+### Running Tests
+
+First get PHPUnit 8
+
+```console
+$ wget -O phpunit https://phar.phpunit.de/phpunit-8.phar
+$ chmod +x phpunit
+$ ./phpunit --version
+```
+
+#### Running All Tests
+
+This will run both integration and unit test. You may want to run unit test and integration tests separately which is documented below.
+
+```console
+$ ./phpunit
+```
+
+#### Running Unit Tests Only
+
+```console
+$ ./phpunit --testsuite=Unit
+```
+
+#### Running Integration Tests Only
+
+**Note: Integration tests are very slow**
+
+```console
+$ ./phpunit --testsuite=Integration
+```
+
+#### Running Tests without Using Configurations
+
+```console
+$ ./phpunit --no-configuration --bootstrap=vendor/autoload.php tests/unit 
+$ ./phpunit --no-configuration --bootstrap=vendor/autoload.php tests/integration 
+```
+
+#### Code Coverage Analysis
+
+Load [Coverage Report](./coverage-report/index.html) in the browser of your local machine once one of the above test with configurations have been run. You can navigate between folders and files to see what is covered in php tests and what is not!
+
 ### License
 
 EspoCRM is published under the GNU GPLv3 [license](https://raw.githubusercontent.com/espocrm/espocrm/master/LICENSE.txt).
