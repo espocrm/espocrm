@@ -253,7 +253,7 @@ class Email extends Record
             }
         }
 
-        $message = null;
+        $message = new \Zend\Mail\Message();
 
         $this->validateEmailAddresses($entity);
 
