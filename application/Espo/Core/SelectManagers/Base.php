@@ -1728,6 +1728,8 @@ class Base
                 case 'arrayNoneOf':
                 case 'arrayIsEmpty':
                 case 'arrayIsNotEmpty':
+                    if (!$result) break;
+
                     $arrayValueAlias = 'arrayFilter' . strval(rand(10000, 99999));
                     $arrayAttribute = $attribute;
                     $arrayEntityType = $this->getEntityType();
@@ -1737,7 +1739,16 @@ class Base
                         list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
                         $seed = $this->getSeed();
                         $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
-                        $idPart = $arrayAttributeLink . '.id';
+
+                        $arrayLinkAlias = $arrayAttributeLink . 'Filter' . strval(rand(10000, 99999));
+                        $idPart = $arrayLinkAlias . '.id';
+
+                        $this->addLeftJoin([$arrayAttributeLink, $arrayLinkAlias], $result);
+
+                        $relationType = $seed->getRelationType($arrayAttributeLink);
+                        if ($relationType === 'manyMany' || $relationType === 'hasMany') {
+                            $this->setDistinct(true, $result);
+                        }
                     }
 
                     if ($type === 'arrayAnyOf') {
