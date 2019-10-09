@@ -395,7 +395,12 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             if (this.displayAsList) {
                 if (!list.length) return '';
-                return '<div>' + list.join('</div><div>') + '</div>';
+                var itemClassName = 'multi-enum-item-container';
+                if (this.displayAsLabel) {
+                    itemClassName += ' multi-enum-item-label-container';
+                }
+                return '<div class="'+itemClassName+'">' +
+                    list.join('</div><div class="'+itemClassName+'">') + '</div>';
             } else if (this.displayAsLabel) {
                 return list.join(' ');
             } else {

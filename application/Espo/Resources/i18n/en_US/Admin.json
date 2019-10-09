@@ -188,6 +188,7 @@
         "inlineEditDisabled": "Disable Inline Edit",
         "allowCustomOptions": "Allow Custom Options",
         "displayAsLabel": "Display as Label",
+        "displayAsList": "Display as List",
         "maxCount": "Max Item Count",
         "accept": "Accept",
         "displayRawText": "Display raw text (no markdown)"

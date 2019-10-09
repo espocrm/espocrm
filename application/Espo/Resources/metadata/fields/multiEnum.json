@@ -38,6 +38,10 @@
          "type":"bool"
       },
       {
+         "name": "displayAsList",
+         "type":"bool"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },
