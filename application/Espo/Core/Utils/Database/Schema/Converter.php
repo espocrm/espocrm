@@ -340,7 +340,8 @@ class Converter
         }
 
         if (!empty($uniqueIndex)) {
-            $table->addUniqueIndex($uniqueIndex, SchemaUtils::generateIndexName($columnName, 'unique'));
+            $uniqueIndexName = implode('_', $uniqueIndex);
+            $table->addUniqueIndex($uniqueIndex, SchemaUtils::generateIndexName($uniqueIndexName, 'unique'));
         }
         //END: add unique indexes
 
