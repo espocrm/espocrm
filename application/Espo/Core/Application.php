@@ -181,7 +181,7 @@ class Application
                 }
             }
             $processList = array_values($processList);
-            if (count($runningCount) >= $maxProcessNumber) {
+            if ($runningCount >= $maxProcessNumber) {
                 $toSkip = true;
             }
             if (!$toSkip) {
