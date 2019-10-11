@@ -106,6 +106,18 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
         $this->object->set($setKey, 'Another Wrong Value');
         $this->assertTrue($this->object->save());
+
+        $databaseOptions = (object) array(
+            'driver' => 'pdo_mysql',
+            'host' => 'localhost',
+            'dbname' => 'espocrm',
+            'user' => 'root',
+            'password' => '',
+        );
+
+        $this->object->set((object) ["database" => $databaseOptions]);
+        $this->object->save();
+        $this->assertTrue($this->object->has("database"));
     }
 
     public function testSetNull()
@@ -150,8 +162,10 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->object->save());
 
         $this->assertTrue($this->object->remove($optKey));
+        $this->assertTrue($this->object->save());
 
         $this->assertNull($this->object->get($optKey));
+        $this->assertNull($this->object->remove("logger.logname"));
     }
 
     public function testSystemConfigMerge()
@@ -165,4 +179,138 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('systemItems', $configData);
         $this->assertArrayHasKey('adminItems', $configData);
     }
+
+    public function testGetConfigPath()
+    {
+        $this->assertSame($this->configPath, $this->object->getConfigPath());
+    }
+
+    public function testHas()
+    {
+        $result = array(
+            'driver' => 'pdo_mysql',
+            'host' => 'localhost',
+            'dbname' => 'espocrm',
+            'user' => 'root',
+            'password' => '',
+        );
+        $this->assertTrue($this->object->has('database'));
+
+        $result = 'pdo_mysql';
+        $this->assertFalse($this->object->has('database.charset'));
+
+        $result = 'YYYY-MM-DD';
+        $this->assertTrue($this->object->has('dateFormat'));
+
+        $this->assertTrue($this->object->has('isInstalled'));
+    }
+
+    public function testGetDefaults()
+    {
+        $this->assertNotNull($this->object->getDefaults());
+    }
+
+    public function testGetAllData()
+    {
+        $this->assertIsObject($this->object->getAllData());
+    }
+
+    public function testGetData()
+    {
+        $this->assertNotNull($this->object->getData());
+    }
+
+    public function testSetData()
+    {
+        $data = [
+            "siteUrl" => "http://localhost"
+        ];
+        $this->object->setData((object) $data);
+        $this->assertEquals($this->object->get("siteUrl"), $this->object->getSiteUrl());
+
+        $data = [
+            "siteUrl1" => "http://localhost"
+        ];
+        $this->object->setData($data);
+        $this->assertEquals($data["siteUrl1"], $this->object->get("siteUrl1"));
+    }
+
+    public function testUpdateCacheTimeStamp()
+    {
+        $this->object->updateCacheTimeStamp(false);
+        $this->assertNotNull($this->object->get('cacheTimestamp'));
+    }
+
+    public function testGetAdminOnlyItemList()
+    {
+        $adminItems = (object) [
+            "adminItems" => array(
+                0 => "devMode",
+                1 => "outboundEmailIsShared",
+                2 => "outboundEmailFromName",
+                3 => "outboundEmailFromAddress",
+                4 => "smtpServer",
+                5 => "smtpPort",
+                6 => "smtpAuth",
+                7 => "smtpSecurity",
+                8 => "smtpUsername",
+                9 => "smtpPassword",
+                10 => "cron",
+            )
+        ];
+        $this->object->set($adminItems);
+        $this->assertEquals($adminItems->adminItems, $this->object->getAdminOnlyItemList());
+    }
+
+    public function testGetSuperAdminOnlyItemList()
+    {
+        $superAdminOnlyItemList = [];
+        $this->object->set("superAdminOnlyItemList", $superAdminOnlyItemList);
+        $this->assertEmpty($this->object->getSuperAdminOnlyItemList());
+    }
+
+    public function testGetSystemOnlyItemList()
+    {
+        $systemItems = array(
+            0 => "systemItems",
+            1 => "adminItems",
+            2 => "configPath",
+            3 => "cachePath",
+            4 => "database",
+            5 => "crud",
+            6 => "logger",
+            7 => "isInstalled",
+            8 => "defaultPermissions",
+            9 => "systemUser",
+            10 => "userItems",
+        );
+        $this->object->set("systemItems", $systemItems);
+        $this->assertEquals($systemItems, $this->object->getSystemOnlyItemList());
+    }
+
+    public function testGetSuperAdminOnlySystemItemList()
+    {
+        $superAdminOnlySystemItemList = [];
+        $this->object->set("superAdminOnlySystemItemList", $superAdminOnlySystemItemList);
+        $this->assertEmpty($this->object->getSuperAdminOnlySystemItemList());
+    }
+
+    public function testGetUserOnlyItemList()
+    {
+        $userItems = array(
+            0 => "currencyList",
+            1 => "addressFormat",
+            2 => "quickCreateList",
+            3 => "recordsPerPage",
+            4 => "recordsPerPageSmall",
+            5 => "tabList",
+            6 => "thousandSeparator",
+            7 => "timeFormat",
+            8 => "timeZone",
+            9 => "weekStart",
+        );
+        $this->object->set("userItems", $userItems);
+        $this->assertEquals($userItems, $this->object->getUserOnlyItemList());
+    }
+
 }
