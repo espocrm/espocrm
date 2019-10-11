@@ -356,12 +356,16 @@ class Base
         if ($relationType == 'belongsTo') {
             $key = $seed->getRelationParam($link, 'key');
 
-            $aliasName = 'usersTeams' . ucfirst($link);
+            $aliasName = 'usersTeams' . ucfirst($link) . strval(rand(10000, 99999));
 
-            $result['customJoin'] .= "
-                JOIN team_user AS {$aliasName}Middle ON {$aliasName}Middle.user_id = ".$query->toDb($seed->getEntityType()).".".$query->toDb($key)." AND {$aliasName}Middle.deleted = 0
-                JOIN team AS {$aliasName} ON {$aliasName}.deleted = 0 AND {$aliasName}Middle.team_id = {$aliasName}.id
-            ";
+            $this->addLeftJoin([
+                'TeamUser',
+                $aliasName . 'Middle',
+                [
+                    $aliasName . 'Middle.userId:' => $key,
+                    $aliasName . 'Middle.deleted' => false,
+                ]
+            ], $result);
 
             $result['whereClause'][] = [
                 $aliasName . 'Middle.teamId' => $idsValue
