@@ -1,18 +1,21 @@
 [
     {
-        "label":"",
-        "rows":[
+        "columns": [
             [
                 {
                     "name":"from",
                     "view": "views/email/fields/compose-from-address"
                 },
-                {"name":"cc"}
+                {"name":"to"}
             ],
             [
-                {"name":"to"},
+                {"name":"cc"},
                 {"name":"bcc"}
-            ],
+            ]
+        ]
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "parent"
@@ -22,9 +25,9 @@
                     "view":"views/email/fields/select-template"
                 }
             ],
-            [{"name":"subject","fullWidth":true}],
-            [{"name":"body","fullWidth":true}],
-            [{"name":"attachments"},{"name":"isHtml"}]
+            [{"name":"subject","fullWidth": true}],
+            [{"name":"body","fullWidth": true}],
+            [{"name":"attachments"}, {"name":"isHtml"} ]
         ]
     }
 ]

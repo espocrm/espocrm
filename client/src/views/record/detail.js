@@ -1353,11 +1353,18 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     }
                 }
 
-                for (var i in simplifiedLayout[p].rows) {
+                var lType = 'rows';
+                if (simplifiedLayout[p].columns) {
+                    lType = 'columns';
+                    panel.columns = [];
+                }
+
+
+                for (var i in simplifiedLayout[p][lType]) {
                     var row = [];
 
-                    for (var j in simplifiedLayout[p].rows[i]) {
-                        var cellDefs = simplifiedLayout[p].rows[i][j];
+                    for (var j in simplifiedLayout[p][lType][i]) {
+                        var cellDefs = simplifiedLayout[p][lType][i][j];
 
                         if (cellDefs == false) {
                             row.push(false);
@@ -1401,7 +1408,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                         var fullWidth = cellDefs.fullWidth || false;
                         if (!fullWidth) {
-                            if (simplifiedLayout[p].rows[i].length == 1) {
+                            if (simplifiedLayout[p][lType][i].length == 1) {
                                 fullWidth = true;
                             }
                         }
@@ -1455,7 +1462,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         row.push(cell);
                     }
 
-                    panel.rows.push(row);
+                    panel[lType].push(row);
                 }
                 layout.push(panel);
             }

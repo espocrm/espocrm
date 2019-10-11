@@ -16,7 +16,11 @@
         <div class="panel-heading"><h4 class="panel-title"><%= panelLabelString %></h4></div>
         <% } %>
         <div class="panel-body panel-body-form">
-        <% _.each(panel.rows, function (row, rowNumber) { %>
+
+        <% var rows = panel.rows || [] %>
+        <% var columns = panel.columns || [] %>
+
+        <% _.each(rows, function (row, rowNumber) { %>
             <div class="row">
             <% var columnCount = row.length; %>
             <% _.each(row, function (cell, cellNumber) { %>
@@ -90,6 +94,78 @@
             <% }); %>
             </div>
         <% }); %>
+
+        <%
+            var columnCount = columns.length;
+            if (columnCount) {
+                %>
+            <div class="row">
+                <%
+            }
+        %>
+        <% _.each(columns, function (column, columnNumber) { %>
+            <%
+                var spanClass;
+                if (!columnCount) return;
+
+                if (columnCount === 1 || column.fullWidth) {
+                    spanClass = 'col-sm-12';
+                } else if (columnCount === 2) {
+                    if (column.span === 2) {
+                        spanClass = 'col-sm-12';
+                    } else {
+                        spanClass = 'col-sm-6';
+                    }
+                } else if (columnCount === 3) {
+                    if (column.span === 2) {
+                        spanClass = 'col-sm-8';
+                    } else if (column.span === 3) {
+                        spanClass = 'col-sm-12';
+                    } else {
+                        spanClass = 'col-sm-4';
+                    }
+                } else if (columnCount === 4) {
+                    if (column.span === 2) {
+                        spanClass = 'col-sm-6';
+                    } else if (column.span === 3) {
+                        spanClass = 'col-sm-9';
+                    } else if (column.span === 4) {
+                        spanClass = 'col-sm-12';
+                    } else {
+                        spanClass = 'col-md-3 col-sm-6';
+                    }
+                } else {
+                    spanClass = 'col-sm-12';
+                }
+            %>
+            <div class="column <%= spanClass %>">
+                <% _.each(column, function (cell, cellNumber) { %>
+                    <div class="cell form-group<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden-cell{{/if}}<% } %>" data-name="<%= cell.field %>">
+                        <% if (!cell.noLabel) { %><label class="control-label<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden{{/if}}<% } %>" data-name="<%= cell.field %>"><span class="label-text"><%
+                            if ('customLabel' in cell) {
+                                print (cell.customLabel);
+                            } else {
+                                print ("{{translate \""+cell.field+"\" scope=\""+model.name+"\" category='fields'}}");
+                            }
+                        %></span></label><% } %>
+                        <div class="field<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden{{/if}}<% } %>" data-name="<%= cell.field %>"><%
+                            if ('customCode' in cell) {
+                                print (cell.customCode);
+                            } else {
+                                print ("{{{this."+cell.name+"}}}");
+                            }
+                        %></div>
+                    </div>
+                <% }); %>
+            </div>
+        <% }); %>
+        <%
+            if (columnCount) {
+                %>
+            </div>
+                <%
+            }
+        %>
         </div>
     </div>
 <% }); %>
