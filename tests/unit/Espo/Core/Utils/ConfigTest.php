@@ -164,7 +164,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->object->remove($optKey));
         $this->assertTrue($this->object->save());
 
-        $this->assertNull($this->object->get($optKey));
+        $this->assertNull($this->object->remove($optKey));
     }
 
     public function testSystemConfigMerge()
