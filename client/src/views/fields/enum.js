@@ -110,7 +110,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
             }
 
             if (this.params.isSorted && this.translatedOptions) {
-                this.params.options = Espo.Utils.clone(this.params.options);
+                this.params.options = Espo.Utils.clone(this.params.options) || [];
                 this.params.options = this.params.options.sort(function (v1, v2) {
                      return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
                 }.bind(this));
