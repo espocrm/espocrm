@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
+
+define('views/fields/duration', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 
@@ -111,7 +112,7 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
 
         stringifyDuration: function (seconds) {
             if (!seconds) {
-                return '';
+                return '0';
             }
             var d = seconds;
             var days = Math.floor(d / (86400));
@@ -242,7 +243,7 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
         updateDuration: function () {
             var seconds = this.seconds;
 
-            if (seconds <= 0) {
+            if (seconds < 0) {
                 if (this.mode == 'edit') {
                     this.$duration.val('');
                 } else {
