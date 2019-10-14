@@ -1,4 +1,5 @@
 <div class="input-group input-group-link-parent">
+    {{#if foreignScopeList.length}}
     <span class="input-group-btn">
         <select class="form-control" data-name="{{typeName}}">
             {{options foreignScopeList foreignScope category='scopeNames'}}
@@ -9,5 +10,8 @@
         <button data-action="selectLink" class="btn btn-default btn-icon" type="button" tabindex="-1" title="{{translate 'Select'}}"><i class="fas fa-angle-up"></i></button>
         <button data-action="clearLink" class="btn btn-default btn-icon" type="button" tabindex="-1"><i class="fas fa-times"></i></button>
     </span>
+    {{else}}
+    {{translate 'None'}}
+    {{/if}}
 </div>
 <input type="hidden" data-name="{{idName}}" value="{{idValue}}">
