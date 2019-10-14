@@ -2816,7 +2816,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('12', $actual);
     }
 
-    function testPps()
+    function testPos()
     {
         $item = json_decode('
             {
