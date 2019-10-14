@@ -300,7 +300,19 @@ class Htmlizer
                     } else {
                         return $context['inverse'] ? $context['inverse']() : '';
                     }
-                }
+                },
+                'ifInArray' => function () {
+                    $args = func_get_args();
+                    $context = $args[count($args) - 1];
+
+                    $array = $args[1] ?? [];
+
+                    if (in_array($args[0], $array)) {
+                        return $context['fn']();
+                    } else {
+                        return $context['inverse'] ? $context['inverse']() : '';
+                    }
+                },
             ]
         ]);
 
