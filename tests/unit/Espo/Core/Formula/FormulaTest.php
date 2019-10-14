@@ -2816,6 +2816,47 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('12', $actual);
     }
 
+    function testPps()
+    {
+        $item = json_decode('
+            {
+                "type": "string\\\\pos",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "1234"
+                    },
+                    {
+                        "type": "value",
+                        "value": 23
+                    }
+                ]
+            }
+        ');
+
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(1, $actual);
+
+        $item = json_decode('
+            {
+                "type": "string\\\\pos",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "1234"
+                    },
+                    {
+                        "type": "value",
+                        "value": 54
+                    }
+                ]
+            }
+        ');
+
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertFalse($actual);
+    }
+
     function testBundle()
     {
         $item = json_decode('
