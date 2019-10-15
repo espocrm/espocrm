@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (Dep, FullCalendar) {
+define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (Dep, FullCalendar) {
 
     return Dep.extend({
 
@@ -56,7 +56,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         titleFormat: {
             month: 'MMMM YYYY',
-            week: 'MMMM D, YYYY',
+            week: 'MMMM YYYY',
             day: 'dddd, MMMM D, YYYY'
         },
 
@@ -66,6 +66,8 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 header: this.header,
                 isCustomViewAvailable: this.isCustomViewAvailable,
                 isCustomView: this.isCustomView,
+                todayLabel: this.translate('Today', 'labels', 'Calendar'),
+                todayLabelShort: this.translate('Today', 'labels', 'Calendar').substr(0, 2),
             };
         },
 
@@ -286,7 +288,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             var title;
 
             if (viewName == 'week') {
-                title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' - ');
+                title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' – ');
             } else {
                 title = view.intervalStart.format(this.titleFormat[viewName]);
             }
