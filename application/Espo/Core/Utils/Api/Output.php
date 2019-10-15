@@ -71,7 +71,7 @@ class Output
         echo $data;
     }
 
-    public function processError(string $message = 'Error', int $statusCode = 500, bool $toPrint = false, $exception = null)
+    public function processError(string $message = 'Error', $statusCode = 500, bool $toPrint = false, $exception = null)
     {
         $currentRoute = $this->getSlim()->router()->getCurrentRoute();
 
@@ -99,7 +99,7 @@ class Output
         $this->displayError($message, $statusCode, $toPrint, $exception);
     }
 
-    public function displayError(string $text, int $statusCode = 500, bool $toPrint = false, $exception = null)
+    public function displayError(string $text, $statusCode = 500, bool $toPrint = false, $exception = null)
     {
         $logLevel = 'error';
         $messageLineFile = null;
