@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Attachment;
+namespace tests\integration\Espo\LeadCapture;
 
 class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
 {
