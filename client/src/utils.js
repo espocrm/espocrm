@@ -58,7 +58,15 @@ define('utils', [], function () {
                     if ($dropdown.length) {
                         var $dropdownToggle = $dropdown.parent().find('[data-toggle="dropdown"]');
                         if ($dropdownToggle.length) {
+                            var isDisabled = false;
+                            if ($dropdownToggle.attr('disabled')) {
+                                isDisabled = true;
+                                $dropdownToggle.removeAttr('disabled').removeClass('disabled');
+                            }
                             $dropdownToggle.dropdown('toggle');
+                            if (isDisabled) {
+                                $dropdownToggle.attr('disabled', 'disabled').addClass('disabled');
+                            }
                         }
                     }
                 }
