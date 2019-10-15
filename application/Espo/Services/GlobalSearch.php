@@ -97,6 +97,14 @@ class GlobalSearch extends \Espo\Core\Services\Base
                 $selectParams['orderBy'] = [['name']];
             }
 
+            if ($this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName') {
+                $selectParams['select'][] = 'firstName';
+                $selectParams['select'][] = 'lastName';
+            } else {
+                $selectParams['select'][] = ['VALUE:', 'firstName'];
+                $selectParams['select'][] = ['VALUE:', 'lastName'];
+            }
+
             $selectParams['offset'] = 0;
             $selectParams['limit'] = $offset + $maxSize + 1;
 
