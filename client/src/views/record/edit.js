@@ -86,10 +86,12 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
 
-            this.dropdownItemList.push({
-                name: 'saveAndContinueEditing',
-                label: 'Save & Continue Editing',
-            });
+            if (this.saveAndContinueEditingAction) {
+                this.dropdownItemList.push({
+                    name: 'saveAndContinueEditing',
+                    label: 'Save & Continue Editing',
+                });
+            }
         },
 
     });
