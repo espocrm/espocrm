@@ -81,7 +81,16 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
                 this.populateDefaults();
             }
             Dep.prototype.setupBeforeFinal.call(this);
-        }
+        },
+
+        setupActionItems: function () {
+            Dep.prototype.setupActionItems.call(this);
+
+            this.dropdownItemList.push({
+                name: 'saveAndContinueEditing',
+                label: 'Save & Continue Editing',
+            });
+        },
 
     });
 });

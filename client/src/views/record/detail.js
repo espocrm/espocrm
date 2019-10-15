@@ -118,6 +118,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         convertCurrencyAction: true,
 
+        saveAndContinueEditingAction: false,
+
         events: {
             'click .button-container .action': function (e) {
                 Espo.Utils.handleAction(this, e);
@@ -161,6 +163,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         actionCancelEdit: function () {
             this.cancelEdit();
             $(window).scrollTop(0);
+        },
+
+        actionSaveAndContinueEditing: function () {
+            this.save(null, true);
         },
 
         actionSelfAssign: function () {
@@ -347,6 +353,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             }
                         }, this);
                     }, this);
+                }
+
+                if (this.saveAndContinueEditingAction) {
+                    this.dropdownEditItemList.push({
+                        name: 'saveAndContinueEditing',
+                        label: 'Save & Continue Editing',
+                    });
                 }
             }
         },
