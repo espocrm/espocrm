@@ -147,7 +147,6 @@
     "upgradeBackup": "We adviseren om eerst een backup te maken van uw EspoCRM bestanden en data, alvorens te upgraden.",
     "thousandSeparatorEqualsDecimalMark": "Het duizendtal scheidingsteken mag niet hetzelfde zijn als het decimaalteken.",
     "userHasNoEmailAddress": "Gebruiker heeft geen emailadres.",
-    "newVersionIsAvailable": "Nieuwe EspoCRM-versie {latestVersion} is beschikbaar.",
     "uninstallConfirmation": "Weet je zeker dat je de extensie wilt verwijderen?",
     "cronIsNotConfigured": "Geplande taken zijn niet actief. Vandaar dat inkomende e-mails, meldingen en herinneringen niet werken. Volg de [instructies] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) om cron-taak in te stellen.",
     "newExtensionVersionIsAvailable": "Nieuwe versie {extensionName} {latestVersion} is beschikbaar.",

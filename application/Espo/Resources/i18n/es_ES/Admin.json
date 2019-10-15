@@ -56,7 +56,20 @@
     "Portal Users": "Usuarios del portal",
     "Action History": "Histórico",
     "Label Manager": "Etiquetas",
-    "Permissions": "Permisos"
+    "Auth Log": "Registros de autenticación",
+    "Lead Capture": "Captura de Posible cliente",
+    "Attachments": "Adjuntos",
+    "API Users": "Usuarios de API",
+    "Template Manager": "Gestor de plantillas",
+    "System Requirements": "Requerimientos del sistema",
+    "PHP Settings": "Configuraciones PHP",
+    "Database Settings": "Configuraciones de la Base de Datos",
+    "Permissions": "Permisos",
+    "Success": "Éxito",
+    "Fail": "Falló",
+    "is recommended": "es recomendado",
+    "extension is missing": "no se encuentra la extensión",
+    "PDF Templates": "Plantillas PDF"
   },
   "layouts": {
     "list": "Lista",
@@ -159,8 +172,7 @@
     "installExtension": "La extensión {name} {version} está lista para ser instalada.",
     "upgradeBackup": "Recomendamos hacer una copia de seguridad de los archivos y datos de EspoCRM antes de actualizar.",
     "thousandSeparatorEqualsDecimalMark": "El símbolo de separador de miles no puede ser el mismo que el de punto decimal.",
-    "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
-    "newVersionIsAvailable": "La nueva versión de EspoCRM {latestVersion} está disponible."
+    "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico."
   },
   "descriptions": {
     "settings": "Ajustes generales del sistema.",
@@ -191,7 +203,17 @@
     "entityManager": "Crear y editar entidades personalizadas. Administrar campos y relaciones.",
     "emailFilters": "Filtros para los correos entrantes.",
     "actionHistory": "Registro de las acciones del usuario.",
-    "labelManager": "Personaliza las etiquetas de las aplicaciones."
+    "labelManager": "Personaliza las etiquetas de las aplicaciones.",
+    "authLog": "Historial de acceso.",
+    "leadCapture": "Puntos de acceso al API para Web-to-Lead.",
+    "attachments": "Todos los archivos adjuntos almacenados en el sistema.",
+    "templateManager": "Personalice las plantillas de mensajes.",
+    "systemRequirements": "Requerimientos del sistema para EspoCRM.",
+    "apiUsers": "Usuarios separados para propósitos de integraciones.",
+    "jobs": "Los trabajos que ejecutan tareas en segundo plano.",
+    "pdfTemplates": "Plantillas para impresión en PDF.",
+    "webhooks": "Administre webhooks.",
+    "dashboardTemplates": "Implemente paneles para los usuarios."
   },
   "options": {
     "previewSize": {

@@ -184,10 +184,9 @@
     "upgradeBackup": "Перед обновлением рекомендуется сделать резервную копию ваших файлов и данных EspoCRM.",
     "thousandSeparatorEqualsDecimalMark": "Разделитель тысячных не может быть таким же, как разделитель десятичных.",
     "userHasNoEmailAddress": "У пользователя нет адреса эл. почты.",
-    "newVersionIsAvailable": "Новая версия EspoCRM {latestVersion} доступна.",
     "uninstallConfirmation": "Вы действительно хотите удалить расширение?",
     "cronIsNotConfigured": "Запланированные задания не выполняются. Следовательно, входящие письма, уведомления и напоминания не работают. Пожалуйста, следуйте инструкциям [https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) для установки cron job.",
-    "newExtensionVersionIsAvailable": "Новая {extensionName} версия {lastVersion} доступна."
+    "newExtensionVersionIsAvailable": "Новая {extensionName} версия {latestVersion} доступна."
   },
   "descriptions": {
     "settings": "Системные настройки.",
