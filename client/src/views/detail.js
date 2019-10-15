@@ -345,11 +345,10 @@ define('views/detail', 'views/main', function (Dep) {
 
                 this.getRouter().dispatch(this.scope, 'create', {
                     attributes: attributes,
+                    returnUrl: this.getRouter().getCurrentUrl(),
                 });
                 this.getRouter().navigate(url, {trigger: false});
             }.bind(this));
-
-
         },
 
     });
