@@ -2219,6 +2219,9 @@ class Base
                 $result['order'] = null;
             }
 
+            $result['additionalSelect'] = $result['additionalSelect'] ?? [];
+            $result['additionalSelect'][] = $fullTextSearchData['where'];
+
             $result['hasFullTextSearch'] = true;
         }
 

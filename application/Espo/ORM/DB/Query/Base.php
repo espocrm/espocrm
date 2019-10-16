@@ -929,15 +929,22 @@ abstract class Base
             $attributeList = array_keys($entity->fields);
         } else {
             $attributeList = $itemList;
-            foreach ($attributeList as $i => $attribute) {
-                if (is_string($attribute)) {
-                    if (strpos($attribute, ':')) {
-                        $attributeList[$i] = [
-                            $attribute,
-                            $attribute
-                        ];
-                        continue;
-                    }
+        }
+
+        if ($params && isset($params['additionalSelect'])) {
+            foreach ($params['additionalSelect'] as $item) {
+                $attributeList[] = $item;
+            }
+        }
+
+        foreach ($attributeList as $i => $attribute) {
+            if (is_string($attribute)) {
+                if (strpos($attribute, ':')) {
+                    $attributeList[$i] = [
+                        $attribute,
+                        $attribute
+                    ];
+                    continue;
                 }
             }
         }
