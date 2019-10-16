@@ -50,11 +50,15 @@ class Email extends \Espo\Core\SelectManagers\Base
             $this->applyFolder($folderId, $result);
         }
 
-        if (empty($params['textFilter']) && !empty($result['orderBy']) && $result['orderBy'] === 'dateSent') {
+        $textFilter = $params['textFilter'] ?? null;
+
+        if (!$textFilter && !empty($result['orderBy']) && $result['orderBy'] === 'dateSent') {
             $skipIndex = false;
             if (isset($params['where'])) {
                 foreach ($params['where'] as $item) {
-                    if ($item['type'] === 'textFilter') {
+                    $type = $item['type'] ?? null;
+                    $value = $item['value'] ?? null;
+                    if ($type === 'textFilter') {
                         $skipIndex = true;
                         break;
                     } else {
@@ -330,12 +334,21 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected function applyAdditionalToTextFilterGroup(string $textFilter, array &$group, array &$result)
     {
-        if (strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
+        if (
+            strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+            &&
+            strpos($textFilter, '@') !== false
+            &&
+            empty($result['hasFullTextSearch'])
+        ) {
             $emailAddressId = $this->getEmailAddressIdByValue($textFilter);
             if ($emailAddressId) {
                 $this->leftJoinEmailAddress($result);
+                $group = [];
                 $group['fromEmailAddressId'] = $emailAddressId;
                 $group['emailEmailAddress.emailAddressId'] = $emailAddressId;
+            } else {
+                $group = [];
             }
         }
     }
@@ -358,17 +371,18 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected function leftJoinEmailAddress(&$result)
     {
-        if (empty($result['customJoin'])) {
-            $result['customJoin'] = '';
-        }
-        if (stripos($result['customJoin'], 'emailEmailAddress') === false) {
-            $result['customJoin'] .= "
-                LEFT JOIN email_email_address AS `emailEmailAddress`
-                    ON
-                    emailEmailAddress.email_id = email.id AND
-                    emailEmailAddress.deleted = 0
-            ";
-        }
+        if ($this->hasLeftJoin('emailEmailAddress', $result)) return;
+
+        $this->setDistinct(true, $result);
+
+        $this->addLeftJoin([
+            'EmailEmailAddress',
+            'emailEmailAddress',
+            [
+                'emailId:' => 'id',
+                'deleted' => false,
+            ]
+        ], $result);
     }
 
 
@@ -396,65 +410,65 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected function getWherePartIsNotRepliedIsTrue()
     {
-        return array(
+        return [
             'isReplied' => false
-        );
+        ];
     }
 
     protected function getWherePartIsNotRepliedIsFalse()
     {
-        return array(
+        return [
             'isReplied' => true
-        );
+        ];
     }
 
     public function getWherePartIsNotReadIsTrue()
     {
-        return array(
+        return [
             'usersMiddle.isRead' => false,
-            'OR' => array(
+            'OR' => [
                 'sentById' => null,
                 'sentById!=' => $this->getUser()->id
-            )
-        );
+            ]
+        ];
     }
 
     protected function getWherePartIsNotReadIsFalse()
     {
-        return array(
+        return [
             'usersMiddle.isRead' => true
-        );
+        ];
     }
 
     protected function getWherePartIsReadIsTrue()
     {
-        return array(
+        return [
             'usersMiddle.isRead' => true
-        );
+        ];
     }
 
     protected function getWherePartIsReadIsFalse()
     {
-        return array(
+        return [
             'usersMiddle.isRead' => false,
-            'OR' => array(
+            'OR' => [
                 'sentById' => null,
                 'sentById!=' => $this->getUser()->id
-            )
-        );
+            ]
+        ];
     }
 
     protected function getWherePartIsImportantIsTrue()
     {
-        return array(
+        return [
             'usersMiddle.isImportant' => true
-        );
+        ];
     }
 
     protected function getWherePartIsImportantIsFalse()
     {
-        return array(
+        return [
             'usersMiddle.isImportant' => false
-        );
+        ];
     }
 }
