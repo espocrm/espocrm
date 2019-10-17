@@ -75,7 +75,7 @@ class Email extends \Espo\Core\Controllers\Record
                         throw new NotFound();
                     }
                     if (!$this->getUser()->isAdmin()) {
-                        if ($emailAccount->get('assigniedUserId') !== $this->getUser()->id) {
+                        if ($emailAccount->get('assignedUserId') !== $this->getUser()->id) {
                             throw new Forbidden();
                         }
                     }
