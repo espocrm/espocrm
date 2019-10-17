@@ -42,7 +42,7 @@ Espo.define('views/email/fields/email-address', ['views/fields/base'], function 
 
             this.$input = this.$el.find('input');
 
-            if (this.mode == 'search') {
+            if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
                 this.$input.autocomplete({
                     serviceUrl: function (q) {
                         return 'EmailAddress/action/searchInAddressBook?maxSize=' + this.getAutocompleteMaxCount();
