@@ -167,6 +167,9 @@ abstract class Base
         'TIMESTAMPDIFF_DAY',
         'TIMESTAMPDIFF_MONTH',
         'TIMESTAMPDIFF_YEAR',
+        'TIMESTAMPDIFF_WEEK',
+        'TIMESTAMPDIFF_HOUR',
+        'TIMESTAMPDIFF_MINUTE',
     ];
 
     protected $multipleArgumentsFunctionList = [
