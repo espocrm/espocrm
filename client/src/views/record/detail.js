@@ -872,6 +872,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
             this.dynamicLogicDefs = this.options.dynamicLogicDefs || this.dynamicLogicDefs;
 
+            this.accessControlDisabled = this.options.accessControlDisabled || this.accessControlDisabled;
+
             this.setupActionItems();
             this.setupBeforeFinal();
 
@@ -882,7 +884,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         setupBeforeFinal: function () {
-            this.manageAccess();
+            if (!this.accessControlDisabled) {
+                this.manageAccess();
+            }
 
             this.attributes = this.model.getClonedAttributes();
 

@@ -38,5 +38,7 @@ define('views/record/edit-for-modal', 'views/record/edit', function (Dep) {
 
         isWide: true,
 
+        accessControlDisabled: true,
+
     });
 });
