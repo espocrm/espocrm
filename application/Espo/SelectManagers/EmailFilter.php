@@ -44,7 +44,7 @@ class EmailFilter extends \Espo\Core\SelectManagers\Base
             'assignedUserId' => $this->getUser()->id
         ])->find();
         foreach ($emailAccountList as $emailAccount) {
-            $idList = $emailAccount->id;
+            $idList[] = $emailAccount->id;
         }
 
         if (count($idList)) {
