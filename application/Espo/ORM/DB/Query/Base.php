@@ -163,6 +163,10 @@ abstract class Base
         'IN',
         'NOT_IN',
         'BINARY',
+        'UNIX_TIMESTAMP',
+        'TIMESTAMPDIFF_DAY',
+        'TIMESTAMPDIFF_MONTH',
+        'TIMESTAMPDIFF_YEAR',
     ];
 
     protected $multipleArgumentsFunctionList = [
@@ -188,6 +192,9 @@ abstract class Base
         'MUL',
         'DIV',
         'MOD',
+        'TIMESTAMPDIFF_DAY',
+        'TIMESTAMPDIFF_MONTH',
+        'TIMESTAMPDIFF_YEAR',
     ];
 
     protected $comparisonFunctionList = [
@@ -553,6 +560,18 @@ abstract class Base
                 break;
             case 'NOT':
                 return 'NOT ' . $part;
+            case 'TIMESTAMPDIFF_YEAR':
+                return 'TIMESTAMPDIFF(YEAR, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_MONTH':
+                return 'TIMESTAMPDIFF(MONTH, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_WEEK':
+                return 'TIMESTAMPDIFF(WEEK, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_DAY':
+                return 'TIMESTAMPDIFF(DAY, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_HOUR':
+                return 'TIMESTAMPDIFF(HOUR, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_MINUTE':
+                return 'TIMESTAMPDIFF(MINUTE, ' . implode(', ', $argumentPartList) . ')';
         }
 
         if ($distinct) {
