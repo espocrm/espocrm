@@ -112,6 +112,8 @@ class GlobalSearch extends \Espo\Core\Services\Base
             $selectParams['useFullTextSearch'] = true;
             $selectManager->applyTextFilter($query, $selectParams);
 
+            unset($selectParams['additionalSelect']);
+
             $itemSql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $selectParams);
 
             $unionPartList[] = "(\n" . $itemSql . "\n)";
