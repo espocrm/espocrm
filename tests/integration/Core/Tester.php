@@ -269,8 +269,6 @@ class Tester
         $fileManager->removeInDir($this->installPath . '/custom/Espo/Custom');
         $fileManager->removeInDir($this->installPath . '/client/custom');
         $fileManager->unlink($this->installPath . '/install/config.php');
-        $this->cleanDirectory($fileManager, $this->installPath . '/application/Espo/Modules', ['Crm']);
-        $this->cleanDirectory($fileManager, $this->installPath . '/client/modules', ['crm']);
 
         return true;
     }
