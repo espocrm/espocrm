@@ -448,6 +448,9 @@ abstract class Entity implements IEntity
 
     public function setFetched($name, $value)
     {
+        if ($this->getAttributeType($name) === self::JSON_OBJECT && $value) {
+            $value = unserialize(serialize($value));
+        }
         $this->fetchedValuesContainer[$name] = $value;
     }
 
@@ -478,12 +481,18 @@ abstract class Entity implements IEntity
     public function updateFetchedValues()
     {
         $this->fetchedValuesContainer = $this->valuesContainer;
+
+        foreach ($this->fetchedValuesContainer as $attribute => $value) {
+            if ($this->getAttributeType($attribute) === self::JSON_OBJECT && $value) {
+                $this->fetchedValuesContainer[$attribute] = unserialize(serialize($value));
+            }
+        }
     }
 
     public function setAsFetched()
     {
         $this->isFetched = true;
-        $this->fetchedValuesContainer = $this->valuesContainer;
+        $this->updateFetchedValues();
     }
 
     public function setAsNotFetched()
