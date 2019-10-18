@@ -448,9 +448,15 @@ abstract class Entity implements IEntity
 
     public function setFetched($name, $value)
     {
-        if ($this->getAttributeType($name) === self::JSON_OBJECT && $value) {
-            $value = self::cloneObject($value);
+        if ($value) {
+            $type = $this->getAttributeType($name);
+            if ($type === self::JSON_OBJECT) {
+                $value = self::cloneObject($value);
+            } else if ($type === self::JSON_ARRAY) {
+                $value = self::cloneArray($value);
+            }
         }
+
         $this->fetchedValuesContainer[$name] = $value;
     }
 
@@ -483,9 +489,7 @@ abstract class Entity implements IEntity
         $this->fetchedValuesContainer = $this->valuesContainer;
 
         foreach ($this->fetchedValuesContainer as $attribute => $value) {
-            if ($this->getAttributeType($attribute) === self::JSON_OBJECT && $value) {
-                $this->fetchedValuesContainer[$attribute] = self::cloneObject($value);
-            }
+            $this->setFetched($attribute, $value);
         }
     }
 
@@ -528,6 +532,22 @@ abstract class Entity implements IEntity
     protected function getEntityManager()
     {
         return $this->entityManager;
+    }
+
+    protected function cloneArray($value)
+    {
+        if (is_array($value)) {
+            $copy = [];
+            foreach ($value as $v) {
+                if (is_object($v)) {
+                    $v = clone $v;
+                }
+                $copy[] = $v;
+            }
+            return $copy;
+        }
+
+        return $value;
     }
 
     protected function cloneObject($value)

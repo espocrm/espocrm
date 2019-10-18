@@ -98,12 +98,22 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($job->isAttributeChanged('array'));
 
         $job = new \Espo\Entities\Job();
-        $job->setFetched('array', [
+        $job->set('array', [
             (object) ['k1' => 'v1']
         ]);
+        $job->setAsFetched();
         $job->set('array', [
             (object) ['k1' => 'v1', 'k2' => 'v2'],
         ]);
+        $this->assertTrue($job->isAttributeChanged('array'));
+
+        $job = new \Espo\Entities\Job();
+        $v = [
+            (object) ['k1' => 'v1']
+        ];
+        $job->setFetched('array', $v);
+        $v[0]->k2 = 'v2';
+        $job->set('array', $v);
         $this->assertTrue($job->isAttributeChanged('array'));
 
         $job = new \Espo\Entities\Job();
