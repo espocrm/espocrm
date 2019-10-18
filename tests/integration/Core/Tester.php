@@ -109,6 +109,29 @@ class Tester
         return $returns;
     }
 
+    public function setParam($name, $value)
+    {
+        $this->params[$name] = $value;
+    }
+
+    protected function getTestConfigData()
+    {
+        if (!file_exists($this->configPath)) {
+            die('Config for integration tests ['. $this->configPath .'] is not found');
+        }
+
+        return include($this->configPath);
+    }
+
+    protected function saveTestConfigData($optionName, $data)
+    {
+        $configData = $this->getTestConfigData();
+        $configData[$optionName] = $data;
+
+        $fileManager = new \Espo\Core\Utils\File\Manager();
+        return $fileManager->putPhpContents($this->configPath, $configData);
+    }
+
     public function auth($userName, $password = null, $portalId = null, $authenticationMethod = null)
     {
         $this->userName = $userName;
@@ -172,6 +195,10 @@ class Tester
 
         chdir($baseDir);
         set_include_path($baseDir);
+
+        if ($this->getParam('fullReset')) {
+            $this->saveTestConfigData('lastModifiedTime', null);
+        }
     }
 
     protected function install()
@@ -179,9 +206,9 @@ class Tester
         $mainApplication = new \Espo\Core\Application();
         $fileManager = $mainApplication->getContainer()->get('fileManager');
 
-        $latestEspo = Utils::getLatestBuildedPath($this->buildedPath);
+        $latestEspoDir = Utils::getLatestBuildedPath($this->buildedPath);
 
-        $configData = include($this->configPath);
+        $configData = $this->getTestConfigData();
         $configData['siteUrl'] = $mainApplication->getContainer()->get('config')->get('siteUrl') . '/' . $this->installPath;
         $this->params['siteUrl'] = $configData['siteUrl'];
 
@@ -193,11 +220,9 @@ class Tester
             die("Permission denied for directory [".$this->installPath."].\n");
         }
 
-        //remove and copy Espo files
+        //reset DB, remove and copy Espo files
         Utils::checkCreateDatabase($configData['database']);
-        Utils::dropTables($configData['database']);
-        $fileManager->removeInDir($this->installPath);
-        $tt = $fileManager->copy($latestEspo, $this->installPath, true);
+        $this->reset($fileManager, $latestEspoDir);
 
         Utils::fixUndefinedVariables();
 
@@ -217,6 +242,60 @@ class Tester
         $installer = new \Installer(); //reload installer to get all config data
         $installer->buildDatabase();
         $installer->setSuccess();
+    }
+
+    protected function reset($fileManager, $latestEspoDir)
+    {
+        $configData = $this->getTestConfigData();
+
+        $fullReset = false;
+
+        $modifiedTime = filemtime($latestEspoDir . '/application');
+        if (!isset($configData['lastModifiedTime']) || $configData['lastModifiedTime'] != $modifiedTime) {
+            $fullReset = true;
+            $this->saveTestConfigData('lastModifiedTime', $modifiedTime);
+        }
+
+        if ($fullReset) {
+            Utils::dropTables($configData['database']);
+            $fileManager->removeInDir($this->installPath);
+            $fileManager->copy($latestEspoDir, $this->installPath, true);
+
+            return true;
+        }
+
+        Utils::truncateTables($configData['database']);
+        $fileManager->removeInDir($this->installPath . '/data');
+        $fileManager->removeInDir($this->installPath . '/custom/Espo/Custom');
+        $fileManager->removeInDir($this->installPath . '/client/custom');
+        $fileManager->unlink($this->installPath . '/install/config.php');
+        $this->cleanDirectory($fileManager, $this->installPath . '/application/Espo/Modules', ['Crm']);
+        $this->cleanDirectory($fileManager, $this->installPath . '/client/modules', ['crm']);
+
+        return true;
+    }
+
+    protected function cleanDirectory($fileManager, $path, array $ignoreList = [])
+    {
+        if (!file_exists($path)) {
+            return true;
+        }
+
+        $list = $fileManager->getFileList($path);
+
+        foreach ($list as $itemName) {
+            if (in_array($itemName, $ignoreList)) continue;
+
+            $itemPath = $path . '/' . $itemName;
+
+            if (is_file($itemPath)) {
+                $fileManager->unlink($itemPath);
+            } else {
+                $fileManager->removeInDir($itemPath, true);
+            }
+        }
+
+        return true;
     }
 
     protected function loadData()

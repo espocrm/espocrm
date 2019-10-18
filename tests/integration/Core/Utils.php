@@ -147,6 +147,16 @@ class Utils
         }
     }
 
+    public static function truncateTables(array $options)
+    {
+        $pdo = static::createPdoConnection($options);
+
+        $result = $pdo->query("show tables");
+        while ($row = $result->fetch(\PDO::FETCH_NUM)) {
+            $pdo->query("TRUNCATE TABLE `".$row[0]."`;");
+        }
+    }
+
     public static function createPdoConnection(array $params)
     {
         $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';

@@ -144,13 +144,13 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($job->isAttributeChanged('arrayUnordered'));
 
         $job = new \Espo\Entities\Job();
-        $job->setFetched('object', (object) ['1' => 'value-1']);
-        $job->set('object', (object) ['1' => 'value-1']);
+        $job->setFetched('object', (object) ['a1' => 'value-1']);
+        $job->set('object', (object) ['a1' => 'value-1']);
         $this->assertFalse($job->isAttributeChanged('object'));
 
         $job = new \Espo\Entities\Job();
-        $job->setFetched('object', (object) ['1' => 'value-1']);
-        $job->set('object', ['1' => 'value-1']);
+        $job->setFetched('object', (object) ['a1' => 'value-1']);
+        $job->set('object', ['a1' => 'value-1']);
         $this->assertTrue($job->isAttributeChanged('object'));
 
         $job = new \Espo\Entities\Job();
@@ -197,5 +197,4 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         ]);
         $this->assertTrue($job->isAttributeChanged('object'));
     }
-
 }
