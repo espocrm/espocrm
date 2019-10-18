@@ -448,6 +448,15 @@ abstract class Entity implements IEntity
 
     public function setFetched($name, $value)
     {
+        if ($value) {
+            $type = $this->getAttributeType($name);
+            if ($type === self::JSON_OBJECT) {
+                $value = self::cloneObject($value);
+            } else if ($type === self::JSON_ARRAY) {
+                $value = self::cloneArray($value);
+            }
+        }
+
         $this->fetchedValuesContainer[$name] = $value;
     }
 
@@ -478,12 +487,16 @@ abstract class Entity implements IEntity
     public function updateFetchedValues()
     {
         $this->fetchedValuesContainer = $this->valuesContainer;
+
+        foreach ($this->fetchedValuesContainer as $attribute => $value) {
+            $this->setFetched($attribute, $value);
+        }
     }
 
     public function setAsFetched()
     {
         $this->isFetched = true;
-        $this->fetchedValuesContainer = $this->valuesContainer;
+        $this->updateFetchedValues();
     }
 
     public function setAsNotFetched()
@@ -519,5 +532,46 @@ abstract class Entity implements IEntity
     protected function getEntityManager()
     {
         return $this->entityManager;
+    }
+
+    protected function cloneArray($value)
+    {
+        if (is_array($value)) {
+            $copy = [];
+            foreach ($value as $v) {
+                if (is_object($v)) {
+                    $v = clone $v;
+                }
+                $copy[] = $v;
+            }
+            return $copy;
+        }
+
+        return $value;
+    }
+
+    protected function cloneObject($value)
+    {
+        if (is_array($value)) {
+            $copy = [];
+            foreach ($value as $v) {
+                $copy[] = self::cloneObject($v);
+            }
+            return $copy;
+        }
+
+        if (is_object($value)) {
+            $copy = (object) [];
+            foreach (get_object_vars($value) as $k => $v) {
+                $key = $k;
+                if (!is_string($key)) {
+                    $key = strval($key);
+                }
+                $copy->$key = self::cloneObject($v);
+            }
+            return $copy;
+        }
+
+        return $value;
     }
 }

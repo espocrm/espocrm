@@ -564,6 +564,7 @@ class Stream extends \Espo\Core\Services\Base
             'orderBy' => 'number',
             'order' => 'DESC',
             'limit' => $sqLimit,
+            '_name' => 'selfPost',
         ];
 
         $selectParamsList[] = [
@@ -593,6 +594,7 @@ class Stream extends \Espo\Core\Services\Base
                 'orderBy' => 'number',
                 'order' => 'DESC',
                 'limit' => $sqLimit,
+                '_name' => 'globalPost',
             ];
         }
 
@@ -679,18 +681,22 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        if ($skipOwn) {
-            $whereClause[] = [
-                'createdById!=' => $this->getUser()->id,
-            ];
-        }
-
         $sqlPartList = [];
         foreach ($selectParamsList as $i => $selectParams) {
             if (empty($selectParams['whereClause'])) {
                 $selectParams['whereClause'] = [];
             }
             $selectParams['whereClause'][] = $whereClause;
+
+            if ($skipOwn) {
+                $itemName = $selectParams['_name'] ?? null;
+                if ($itemName !== 'selfPost' && $itemName !== 'globalPost') {
+                    $selectParams['whereClause'][] = [
+                        'createdById!=' => $this->getUser()->id,
+                    ];
+                }
+            }
+
             $sqlPartList[] = "(\n" . $this->getEntityManager()->getQuery()->createSelectQuery('Note', $selectParams) . "\n)";
         }
 

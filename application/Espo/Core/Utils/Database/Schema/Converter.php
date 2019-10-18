@@ -332,19 +332,6 @@ class Converter
 
         $table->setPrimaryKey(array("id"));
 
-        //add unique indexes
-        if (!empty($relationParams['conditions'])) {
-            foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
-                $uniqueIndex[] = Util::toUnderScore($fieldName);
-            }
-        }
-
-        if (!empty($uniqueIndex)) {
-            $uniqueIndexName = implode('_', $uniqueIndex);
-            $table->addUniqueIndex($uniqueIndex, SchemaUtils::generateIndexName($uniqueIndexName, 'unique'));
-        }
-        //END: add unique indexes
-
         //add defined indexes
         if (!empty($relationParams['indexes'])) {
             $normalizedIndexes = SchemaUtils::getIndexList([
@@ -357,6 +344,19 @@ class Converter
             $this->addIndexes($table, $normalizedIndexes[$entityName]);
         }
         //END: add defined indexes
+
+        //add unique indexes
+        if (!empty($relationParams['conditions'])) {
+            foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
+                $uniqueIndex[] = Util::toUnderScore($fieldName);
+            }
+        }
+
+        if (!empty($uniqueIndex)) {
+            $uniqueIndexName = implode('_', $uniqueIndex);
+            $table->addUniqueIndex($uniqueIndex, SchemaUtils::generateIndexName($uniqueIndexName, 'unique'));
+        }
+        //END: add unique indexes
 
         return $table;
     }

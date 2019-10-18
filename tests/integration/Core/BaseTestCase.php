@@ -189,4 +189,9 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     {
         $this->espoTester->setData($data);
     }
+
+    protected function enableFullReset()
+    {
+        $this->espoTester->setParam('fullReset', true);
+    }
 }

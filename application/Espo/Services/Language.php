@@ -134,10 +134,14 @@ class Language extends \Espo\Core\Services\Base
                     ],
                 ];
             }
-
-            $data['User']['fields']['password'] = $languageObj->translate('password', 'fields', 'User');
-            $data['User']['fields']['passwordConfirm'] = $languageObj->translate('passwordConfirm', 'fields', 'User');
         }
+
+        $data['User']['fields'] = $data['User']['fields'] ?? [];
+
+        $data['User']['fields']['password'] = $languageObj->translate('password', 'fields', 'User');
+        $data['User']['fields']['passwordConfirm'] = $languageObj->translate('passwordConfirm', 'fields', 'User');
+        $data['User']['fields']['newPassword'] = $languageObj->translate('newPassword', 'fields', 'User');
+        $data['User']['fields']['newPasswordConfirm'] = $languageObj->translate('newPasswordConfirm', 'fields', 'User');
 
         return $data;
     }
