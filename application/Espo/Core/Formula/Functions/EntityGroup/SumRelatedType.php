@@ -113,11 +113,31 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
             $foreignSelectManager->addJoin($foreignLink, $selectParams);
         }
 
-        $selectParams['groupBy'] = [$foreignLink . '.id'];
+        if (!empty($selectParams['distinct'])) {
+            $sqSelectParams = $selectParams;
 
-        $selectParams['whereClause'][] = [
-            $foreignLink . '.id' => $entity->id
-        ];
+            $sqSelectParams['whereClause'][] = [
+                $foreignLink . '.id' => $entity->id
+            ];
+
+            $sqSelectParams['select'] = ['id'];
+            unset($sqSelectParams['distinct']);
+            unset($sqSelectParams['orderBy']);
+            unset($sqSelectParams['order']);
+
+            $selectParams['whereClause'][] = [
+                'id=s' => [
+                    'entityType' => $foreignEntityType,
+                    'selectParams' => $sqSelectParams,
+                ]
+            ];
+        } else {
+            $selectParams['whereClause'][] = [
+                $foreignLink . '.id' => $entity->id
+            ];
+        }
+
+        $selectParams['groupBy'] = [$foreignLink . '.id'];
 
         $entityManager->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 

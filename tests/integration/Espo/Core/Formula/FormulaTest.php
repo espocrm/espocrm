@@ -95,6 +95,37 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(40, $result);
     }
 
+    public function testSumRelated()
+    {
+        $em = $this->getContainer()->get('entityManager');
+        $fm = $this->getContainer()->get('formulaManager');
+
+        $contact1 = $em->createEntity('Contact', [
+            'lastName' => '1',
+        ]);
+        $contact2 = $em->createEntity('Contact', [
+            'lastName' => '2',
+        ]);
+
+        $opportunity1 = $em->createEntity('Opportunity', [
+            'name' => '1',
+            'amount' => 1,
+            'stage' => 'Closed Won',
+            'contactsIds' => [$contact1->id, $contact2->id],
+        ]);
+
+        $opportunity2 = $em->createEntity('Opportunity', [
+            'name' => '2',
+            'amount' => 1,
+            'stage' => 'Closed Won',
+            'contactsIds' => [$contact1->id, $contact2->id],
+        ]);
+
+        $script = "entity\sumRelated('opportunities', 'amountConverted', 'won')";
+        $result = $fm->run($script, $contact1);
+        $this->assertEquals(2, $result);
+    }
+
     public function testRecordExists()
     {
         $em = $this->getContainer()->get('entityManager');
