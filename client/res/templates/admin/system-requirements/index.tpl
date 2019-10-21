@@ -77,7 +77,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="pull-right">
-            <a target="_blank" href="https://www.espocrm.com/documentation/administration/server-configuration/" style="font-weight:bold;">Configuration Instructions</a>
+            <a target="_blank" href="https://www.espocrm.com/documentation/administration/server-configuration/" style="font-weight:600;">Configuration Instructions</a>
         </div>
     </div>
 </div>
