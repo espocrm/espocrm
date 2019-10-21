@@ -608,6 +608,7 @@
             "isNot": "Is Not",
             "isNotOneOf": "None Of",
             "anyOf": "Any Of",
+            "allOf": "All Of",
             "noneOf": "None Of"
         },
         "varcharSearchRanges": {

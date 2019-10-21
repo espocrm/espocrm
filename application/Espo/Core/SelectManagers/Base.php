@@ -1732,6 +1732,7 @@ class Base
                 case 'arrayNoneOf':
                 case 'arrayIsEmpty':
                 case 'arrayIsNotEmpty':
+                case 'arrayAllOf':
                     if (!$result) break;
 
                     $arrayValueAlias = 'arrayFilter' . strval(rand(10000, 99999));
@@ -1763,6 +1764,8 @@ class Base
                             $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
                         $part[$arrayValueAlias . '.value'] = $value;
+
+                        $this->setDistinct(true, $result);
                     } else if ($type === 'arrayNoneOf') {
                         if (is_null($value) || !$value && !is_array($value)) break;
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
@@ -1772,6 +1775,8 @@ class Base
                             $arrayValueAlias . '.value=' => $value
                         ]], $result);
                         $part[$arrayValueAlias . '.id'] = null;
+
+                        $this->setDistinct(true, $result);
                     } else if ($type === 'arrayIsEmpty') {
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
                             $arrayValueAlias . '.entityId:' => $idPart,
@@ -1779,6 +1784,8 @@ class Base
                             $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
                         $part[$arrayValueAlias . '.id'] = null;
+
+                        $this->setDistinct(true, $result);
                     } else if ($type === 'arrayIsNotEmpty') {
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
                             $arrayValueAlias . '.entityId:' => $idPart,
@@ -1786,9 +1793,31 @@ class Base
                             $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
                         $part[$arrayValueAlias . '.id!='] = null;
-                    }
 
-                    $this->setDistinct(true, $result);
+                        $this->setDistinct(true, $result);
+                    } else if ($type === 'arrayAllOf') {
+                        if (is_null($value) || !$value && !is_array($value)) break;
+
+                        if (!is_array($value)) {
+                            $value = [$value];
+                        }
+
+                        foreach ($value as $arrayValue) {
+                            $part[] = [
+                                $idPart .'=s' => [
+                                    'entityType' => 'ArrayValue',
+                                    'selectParams' => [
+                                        'select' => ['entityId'],
+                                        'whereClause' => [
+                                            'value' => $arrayValue,
+                                            'attribute' => $arrayAttribute,
+                                            'entityType' => $arrayEntityType,
+                                        ],
+                                    ],
+                                ]
+                            ];
+                        }
+                    }
             }
         }
 
