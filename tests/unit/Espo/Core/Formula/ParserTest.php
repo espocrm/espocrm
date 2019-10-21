@@ -510,12 +510,123 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    function parseNewLine()
+    function testParseNewLine()
     {
         $expression = " \n \"test\n\thello\" ";
         $expected = (object) [
             'type' => 'value',
             'value' => "test\n\thello"
+        ];
+        $actual = $this->parser->parse($expression);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testParseComment1()
+    {
+        $expression = "// \"test\"\n \"//test\" ";
+        $expected = (object) [
+            'type' => 'value',
+            'value' => "//test"
+        ];
+        $actual = $this->parser->parse($expression);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testParseComment2()
+    {
+        $expression = "\"test\" // test\n ";
+        $expected = (object) [
+            'type' => 'value',
+            'value' => "test",
+        ];
+        $actual = $this->parser->parse($expression);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testParseComment3()
+    {
+        $expression = "\"test\" /* test\n */";
+        $expected = (object) [
+            'type' => 'value',
+            'value' => "test",
+        ];
+        $actual = $this->parser->parse($expression);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testParseComment4()
+    {
+        $expression = "/* test\n */ \"/*test*/\"";
+        $expected = (object) [
+            'type' => 'value',
+            'value' => "/*test*/",
+        ];
+        $actual = $this->parser->parse($expression);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testParseComment5()
+    {
+        $expression = "\"test\" /* test\n */ /* test */ ";
+        $expected = (object) [
+            'type' => 'value',
+            'value' => "test",
+        ];
+        $actual = $this->parser->parse($expression);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testParseComment6()
+    {
+        $expression = "/* test; */ test1 = 1 + 1; test2 = 2 * 2;";
+        $expected = (object) [
+            'type' => 'bundle',
+            'value' => [
+                (object) [
+                    'type' => 'setAttribute',
+                    'value' => [
+                        (object) [
+                            'type' => 'value',
+                            'value' => 'test1',
+                        ],
+                        (object) [
+                            'type' => 'numeric\summation',
+                            'value' => [
+                                (object) [
+                                    'type' => 'value',
+                                    'value' => 1,
+                                ],
+                                (object) [
+                                    'type' => 'value',
+                                    'value' => 1,
+                                ]
+                            ],
+                        ],
+                    ],
+                ],
+                (object) [
+                    'type' => 'setAttribute',
+                    'value' => [
+                        (object) [
+                            'type' => 'value',
+                            'value' => 'test2',
+                        ],
+                        (object) [
+                            'type' => 'numeric\multiplication',
+                            'value' => [
+                                (object) [
+                                    'type' => 'value',
+                                    'value' => 2,
+                                ],
+                                (object) [
+                                    'type' => 'value',
+                                    'value' => 2,
+                                ]
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
         $actual = $this->parser->parse($expression);
         $this->assertEquals($expected, $actual);

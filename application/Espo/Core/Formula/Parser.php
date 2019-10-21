@@ -115,10 +115,12 @@ class Parser
         $braceCounter = 0;
 
         for ($i = 0; $i < strlen($string); $i++) {
+            $isStringStart = false;
             if ($string[$i] === "'" && ($i === 0 || $string[$i - 1] !== "\\")) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = true;
+                    $isStringStart = true;
                 } else {
                     if ($isSingleQuote) {
                         $isString = false;
@@ -127,6 +129,7 @@ class Parser
             } else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
                 if (!$isString) {
                     $isString = true;
+                    $isStringStart = true;
                     $isSingleQuote = false;
                 } else {
                     if (!$isSingleQuote) {
@@ -137,6 +140,8 @@ class Parser
             if ($isString) {
                 if ($string[$i] === '(' || $string[$i] === ')') {
                     $modifiedString[$i] = '_';
+                } else if (!$isStringStart) {
+                    $modifiedString[$i] = ' ';
                 }
             } else {
                 if ($string[$i] === '(') {
@@ -175,6 +180,16 @@ class Parser
         $splitterIndexList = [];
 
         $this->processStrings($expression, $modifiedExpression, $splitterIndexList, true);
+
+        $this->stripComments($expression, $modifiedExpression);
+
+        foreach ($splitterIndexList as $i => $index) {
+            if ($expression[$index] !== ';') {
+                unset($splitterIndexList[$i]);
+            }
+        }
+
+        $splitterIndexList = array_values($splitterIndexList);
 
         $expressionOutOfBraceList = [];
 
@@ -399,6 +414,43 @@ class Parser
                 'type' => 'attribute',
                 'value' => $expression
             ];
+        }
+    }
+
+    protected function stripComments(&$expression, &$modifiedExpression)
+    {
+        $commentIndexStart = null;
+
+        for ($i = 0; $i < strlen($modifiedExpression); $i++) {
+            if (is_null($commentIndexStart)) {
+                if ($modifiedExpression[$i] === '/' && $i < strlen($modifiedExpression) - 1 && $modifiedExpression[$i + 1] === '/') {
+                    $commentIndexStart = $i;
+                }
+            } else {
+                if ($modifiedExpression[$i] === "\n" || $i === strlen($modifiedExpression) - 1) {
+                    for ($j = $commentIndexStart; $j <= $i; $j++) {
+                        $modifiedExpression[$j] = ' ';
+                        $expression[$j] = ' ';
+                    }
+                    $commentIndexStart = null;
+                }
+            }
+        }
+
+        for ($i = 0; $i < strlen($modifiedExpression) - 1; $i++) {
+            if (is_null($commentIndexStart)) {
+                if ($modifiedExpression[$i] === '/' && $modifiedExpression[$i + 1] === '*') {
+                    $commentIndexStart = $i;
+                }
+            } else {
+                if ($modifiedExpression[$i] === '*' && $modifiedExpression[$i + 1] === '/') {
+                    for ($j = $commentIndexStart; $j <= $i + 1; $j++) {
+                        $modifiedExpression[$j] = ' ';
+                        $expression[$j] = ' ';
+                    }
+                    $commentIndexStart = null;
+                }
+            }
         }
     }
 
