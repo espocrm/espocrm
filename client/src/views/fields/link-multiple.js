@@ -100,13 +100,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.nameHash = Espo.Utils.clone(nameHash);
                 this.ids = Espo.Utils.clone(idList);
             } else {
-                this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
-                this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
-            }
+                this.copyValuesFromModel();            }
 
             this.listenTo(this.model, 'change:' + this.idsName, function () {
-                this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
-                this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
+                this.copyValuesFromModel();
             }, this);
 
             this.sortable = this.sortable || this.params.sortable;
@@ -149,6 +146,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     this.deleteLink(id);
                 };
             }
+        },
+
+        copyValuesFromModel: function () {
+            this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
+            this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
         },
 
         handleSearchType: function (type) {
