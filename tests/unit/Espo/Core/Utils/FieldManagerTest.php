@@ -74,14 +74,14 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('\Espo\Core\Exceptions\Conflict');
 
-        $data = array(
+        $data = (object) [
             "type" => "varchar",
             "maxLength" => "50",
-        );
+        ];
 
         $this->objects['metadata']
             ->expects($this->once())
-            ->method('get')
+            ->method('getObjects')
             ->will($this->returnValue($data));
 
         $this->object->create('CustomEntity', 'varName', $data);
@@ -95,15 +95,14 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             "label" => "Modified Name",
         );
 
-        $existingData = array(
+        $existingData = (object) [
             "type" => "varchar",
             "maxLength" => 50,
             "label" => "Name",
-        );
+        ];
 
         $map = array(
-            ['entityDefs.Account.fields.name', [], $existingData],
-            [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $existingData['type']],
+            [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
         );
@@ -117,6 +116,11 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
+
+        $this->objects['metadata']
+            ->expects($this->exactly(2))
+            ->method('getObjects')
+            ->will($this->returnValue($existingData));
 
         $this->objects['metadataHelper']
             ->expects($this->once())
@@ -177,7 +181,6 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $map = array(
-            ['entityDefs.Account.fields.name', [], $data],
             [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
@@ -240,8 +243,17 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->objects['metadata']
             ->expects($this->exactly(2))
+            ->method('getObjects')
+            ->will($this->returnValue((object) $data));
+
+        $this->objects['metadata']
+            ->expects($this->exactly(1))
             ->method('getCustom')
             ->will($this->returnValue((object) []));
+
+        $this->objects['metadata']
+            ->expects($this->never())
+            ->method('saveCustom');
 
         $this->object->update('Account', 'name', $data);
     }
@@ -289,7 +301,6 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $map = array(
-            ['entityDefs.CustomEntity.fields.varName', [], $data],
             ['entityDefs.CustomEntity.fields.varName.type', null, $data['type']],
             [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
             ['fields.varchar', null, null],
@@ -300,6 +311,11 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
+
+        $this->objects['metadata']
+            ->expects($this->exactly(2))
+            ->method('getObjects')
+            ->will($this->returnValue((object) $data));
 
         $this->objects['metadata']
             ->expects($this->once())
@@ -374,8 +390,8 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->objects['metadata']
             ->expects($this->at(0))
-            ->method('get')
-            ->will($this->returnValue($data));
+            ->method('getObjects')
+            ->will($this->returnValue((object) $data));
 
         $this->objects['language']
             ->expects($this->once())
