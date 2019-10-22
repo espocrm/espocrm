@@ -72,6 +72,12 @@
             "entity": "Task",
             "foreign": "parent",
             "layoutRelationshipsDisabled": true
+        },
+        "emails": {
+            "type": "hasChildren",
+            "entity": "Email",
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         }
     },
     "collection": {
