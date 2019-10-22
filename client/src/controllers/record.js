@@ -306,7 +306,7 @@ define('controllers/record', 'controller', function (Dep) {
             var collectionName = this.entityType || this.name;
             if (usePreviouslyFetched) {
                 if (collectionName in this.collectionMap) {
-                    var collection = this.collectionMap[collectionName];// = this.collectionMap[collectionName].clone();
+                    var collection = this.collectionMap[collectionName];
                     callback.call(context, collection);
                     return;
                 }
