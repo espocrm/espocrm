@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
+define('views/fields/date', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -161,6 +161,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     weekStart: this.getDateTime().weekStart,
                     autoclose: true,
                     todayHighlight: true,
+                    keyboardNavigation: false,
                 };
 
                 var language = this.getConfig().get('language');
