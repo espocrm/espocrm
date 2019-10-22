@@ -29,7 +29,7 @@
 
 namespace Espo\ORM;
 
-class SthCollection implements \IteratorAggregate
+class SthCollection implements \IteratorAggregate, ICollection
 {
     protected $entityManager = null;
 

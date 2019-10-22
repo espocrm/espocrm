@@ -307,7 +307,8 @@ class Pdf extends \Espo\Core\Services\Base
             $this->getAcl(),
             $this->getInjection('entityManager'),
             $this->getInjection('metadata'),
-            $this->getInjection('defaultLanguage')
+            $this->getInjection('defaultLanguage'),
+            $this->getInjection('config')
         );
     }
 }

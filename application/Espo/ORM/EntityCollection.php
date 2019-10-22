@@ -29,7 +29,7 @@
 
 namespace Espo\ORM;
 
-class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \SeekableIterator
+class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \SeekableIterator, ICollection
 {
     private $entityFactory = null;
 

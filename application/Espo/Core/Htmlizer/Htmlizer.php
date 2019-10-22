@@ -35,26 +35,33 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\NumberUtil;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\EntityManager;
 
 require('vendor/zordius/lightncandy/src/lightncandy.php');
 
 class Htmlizer
 {
     protected $fileManager;
-
     protected $dateTime;
-
     protected $config;
-
     protected $acl;
-
     protected $entityManager;
-
     protected $metadata;
-
     protected $language;
 
-    public function __construct(FileManager $fileManager, DateTime $dateTime, NumberUtil $number, $acl = null, $entityManager = null, $metadata = null, $language = null)
+    public function __construct(
+        FileManager $fileManager,
+        DateTime $dateTime,
+        NumberUtil $number,
+        $acl = null,
+        ?EntityManager $entityManager = null,
+        ?Metadata $metadata = null,
+        ?Language $language = null,
+        ?Config $config = null
+    )
     {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
@@ -63,6 +70,7 @@ class Htmlizer
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
         $this->language = $language;
+        $this->config = $config;
     }
 
     protected function getAcl()
@@ -92,7 +100,7 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(Entity $entity, $skipLinks = false, $level = 0)
+    protected function getDataFromEntity(Entity $entity, $skipLinks = false, $level = 0, ?string $template = null)
     {
         $data = $entity->toArray();
 
@@ -118,15 +126,32 @@ class Htmlizer
 
         if (!$skipLinks && $level === 0) {
             foreach ($relationList as $relation) {
-                if (!$entity->hasLinkMultipleField($relation)) continue;
+                $collection = null;
 
-                $collection = $entity->getLinkMultipleCollection($relation);
-                $data[$relation] = $collection;
+                if ($entity->hasLinkMultipleField($relation)) {
+                    $toLoad = true;
+                    $collection = $entity->getLinkCollection($relation);
+                } else {
+                    if (
+                        $template && $entity->getRelationType($relation, ['hasMany', 'manyMany', 'hasChildren']) &&
+                        mb_stripos($template, '{{#each '.$relation.'}}') !== false
+                    ) {
+                        $limit = 100;
+                        if ($this->config) {
+                            $limit = $this->config->get('htmlizerLinkLimit') ?? $limit;
+                        }
+                        $collection = $entity->getLinkCollection($relation, ['limit' => $limit]);
+                    }
+                }
+
+                if ($collection) {
+                    $data[$relation] = $collection;
+                }
             }
         }
 
         foreach ($data as $key => $value) {
-            if ($value instanceof \Espo\ORM\EntityCollection) {
+            if ($value instanceof \Espo\ORM\ICollection) {
                 $skipAttributeList[] = $key;
                 $collection = $value;
                 $list = [];
@@ -280,7 +305,7 @@ class Htmlizer
                         }
                     }
                     return;
-                }
+                },
             ],
             'hbhelpers' => [
                 'ifEqual' => function () {
@@ -331,7 +356,7 @@ class Htmlizer
             $this->fileManager->removeFile($fileName);
         }
 
-        $data = $this->getDataFromEntity($entity, $skipLinks);
+        $data = $this->getDataFromEntity($entity, $skipLinks, 0, $template);
 
         if (!array_key_exists('today', $data)) {
             $data['today'] = $this->dateTime->getTodayString();

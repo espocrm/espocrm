@@ -74,20 +74,31 @@ class Entity extends \Espo\ORM\Entity
         }
     }
 
-    public function getLinkMultipleCollection($field)
+    public function getLinkCollection(string $link, ?array $selectParams = null)
     {
-        if (!$this->hasLinkMultipleField($field)) return;
+        if (!$selectParams) $selectParams = [];
 
-        $defs = $this->getRelationSelectParams($field);
+        $relSelectParams = $this->getRelationSelectParams($link);
 
-        $columnAttribute = $field . 'Columns';
+        $selectParams = array_merge($selectParams, $relSelectParams);
+
+        $selectParams['returnSthCollection'] = true;
+
+        $columnAttribute = $link . 'Columns';
         if ($this->hasAttribute($columnAttribute) && $this->getAttributeParam($columnAttribute, 'columns')) {
-            $defs['additionalColumns'] = $this->getAttributeParam($columnAttribute, 'columns');
+            $selectParams['additionalColumns'] = $this->getAttributeParam($columnAttribute, 'columns');
         }
 
-        $collection = $this->get($field, $defs);
+        $collection = $this->get($link, $selectParams);
 
         return $collection;
+    }
+
+    public function getLinkMultipleCollection(string $link, ?array $selectParams = null)
+    {
+        if (!$this->hasLinkMultipleField($link)) return;
+
+        return $this->getLinkCollection($link, $selectParams);
     }
 
     protected function getRelationSelectParams($link)
