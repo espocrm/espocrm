@@ -392,6 +392,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
         toPlural: function (string) {
             if (string.slice(-1) == 'y') {
                 return string.substr(0, string.length - 1) + 'ies';
+            } else if (string.slice(-1) == 's') {
+                return string + 'es';
             } else {
                 return string + 's';
             }
