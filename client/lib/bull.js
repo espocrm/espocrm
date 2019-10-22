@@ -999,8 +999,16 @@ var Bull = Bull || {};
 
             this.$el = $(el).eq(0);
             this.el = this.$el[0];
-        }
+        },
 
+        propagateEvent: function () {
+            this.trigger.apply(this, arguments);
+
+            for (var key in this.nestedViews) {
+                var view = this.nestedViews[key];
+                view.propagateEvent.apply(view, arguments);
+            }
+        },
     });
 
 }).call(this, Bull, Backbone, _);

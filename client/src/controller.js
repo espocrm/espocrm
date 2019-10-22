@@ -157,7 +157,13 @@ define('controller', [], function () {
 
         storeMainView: function (key, view) {
             this.set('storedMainView-' + key, view);
-            view.once('remove', function () {
+
+            this.listenTo(view, 'remove', function (o) {
+                o = o || {};
+                if (o.ignoreCleaning) return;
+
+                this.stopListening(view, 'remove');
+
                 this.clearStoredMainView(key);
             }, this);
         },
@@ -278,6 +284,10 @@ define('controller', [], function () {
                     if (master.currentViewKey) {
                         this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
                         if (this.hasStoredMainView(master.currentViewKey)) {
+                            var mainView = master.getView('main');
+                            if (mainView) {
+                                mainView.propagateEvent('remove', {ignoreCleaning: true});
+                            }
                             master.unchainView('main');
                         }
                     }
