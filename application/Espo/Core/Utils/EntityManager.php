@@ -54,7 +54,18 @@ class EntityManager
 
     private $linkForbiddenNameList = ['posts', 'stream', 'subscription', 'followers', 'action', 'null', 'false', 'true'];
 
-    private $forbiddenEntityTypeNameList = ['Common', 'PortalUser', 'ApiUser', 'Timeline', 'About', 'Admin', 'Null', 'False', 'True'];
+    private $forbiddenEntityTypeNameList = [
+        'Common',
+        'PortalUser',
+        'ApiUser',
+        'Timeline',
+        'About',
+        'Admin',
+        'Null',
+        'False',
+        'True',
+        'Base',
+    ];
 
     public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, Container $container = null)
     {
