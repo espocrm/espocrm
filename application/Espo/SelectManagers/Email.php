@@ -385,27 +385,82 @@ class Email extends \Espo\Core\SelectManagers\Base
         ], $result);
     }
 
-
-    public function whereEmailAddress(string $value, array &$result)
+    protected function getWherePartEmailAddressEquals($value, array &$result)
     {
-        $orItem = [];
+        if (!$value) {
+            return ['id' => null];
+        }
 
         $emailAddressId = $this->getEmailAddressIdByValue($value);
 
-        if ($emailAddressId) {
-            $this->leftJoinEmailAddress($result);
-
-            $orItem['fromEmailAddressId'] = $emailAddressId;
-            $orItem['emailEmailAddress.emailAddressId'] = $emailAddressId;
-            $result['whereClause'][] = [
-                'OR' => $orItem
-            ];
-        } else {
-            if (empty($result['customWhere'])) {
-                $result['customWhere'] = '';
-            }
-            $result['customWhere'] .= ' AND 0';
+        if (!$emailAddressId) {
+            return ['id' => null];
         }
+
+        $this->setDistinct(true, $result);
+        $alias = 'emailEmailAddress' . strval(rand(10000, 99999));
+
+        $this->addLeftJoin([
+            'EmailEmailAddress',
+            $alias,
+            [
+                'emailId:' => 'id',
+                'deleted' => false,
+            ]
+        ], $result);
+
+        return [
+            'OR' => [
+                'fromEmailAddressId' => $emailAddressId,
+                $alias . '.emailAddressId' => $emailAddressId,
+            ],
+        ];
+    }
+
+    protected function getWherePartFromEquals($value, array &$result)
+    {
+        if (!$value) {
+            return ['id' => null];
+        }
+
+        $emailAddressId = $this->getEmailAddressIdByValue($value);
+
+        if (!$emailAddressId) {
+            return ['id' => null];
+        }
+
+        return [
+            'fromEmailAddressId' => $emailAddressId,
+        ];
+    }
+
+    protected function getWherePartToEquals($value, array &$result)
+    {
+        if (!$value) {
+            return ['id' => null];
+        }
+
+        $emailAddressId = $this->getEmailAddressIdByValue($value);
+
+        if (!$emailAddressId) {
+            return ['id' => null];
+        }
+
+        $alias = 'emailEmailAddress' . strval(rand(10000, 99999));
+
+        $this->addLeftJoin([
+            'EmailEmailAddress',
+            $alias,
+            [
+                'emailId:' => 'id',
+                'deleted' => false,
+            ]
+        ], $result);
+
+        return [
+            $alias . '.emailAddressId' => $emailAddressId,
+            $alias . '.addressType' => 'to',
+        ];
     }
 
     protected function getWherePartIsNotRepliedIsTrue()

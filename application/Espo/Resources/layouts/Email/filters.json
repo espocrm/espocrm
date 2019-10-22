@@ -2,6 +2,8 @@
     "account",
     "dateSent",
     "emailAddress",
+    "from",
+    "to",
     "isNotRead",
     "isNotReplied",
     "status",

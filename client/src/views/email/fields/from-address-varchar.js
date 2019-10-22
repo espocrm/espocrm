@@ -25,7 +25,11 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', function (Dep) {
+
+define(
+    'views/email/fields/from-address-varchar',
+    ['views/fields/base', 'views/email/fields/email-address'],
+    function (Dep, EmailAddress) {
 
     return Dep.extend({
 
@@ -36,6 +40,7 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             Dep.prototype.setup.call(this);
 
             this.on('render', function () {
+                if (this.mode === 'search') return;
                 this.initAddressList();
             }, this);
         },
@@ -72,6 +77,18 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             data.valueIsSet = this.model.has(this.name);
 
             return data;
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
+                EmailAddress.prototype.initSearchAutocomplete.call(this);
+            }
+        },
+
+        getAutocompleteMaxCount: function () {
+            return EmailAddress.prototype.getAutocompleteMaxCount.call(this);
         },
 
         initAddressList: function () {
@@ -329,8 +346,21 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
 
                 }, this);
             }.bind(this));
-        }
+        },
+
+        fetchSearch: function () {
+            var value = this.$element.val().trim();
+
+            if (value) {
+                var data = {
+                    type: 'equals',
+                    value: value,
+                }
+                return data;
+            }
+
+            return false;
+        },
 
     });
-
 });

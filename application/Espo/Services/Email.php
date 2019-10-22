@@ -775,31 +775,6 @@ class Email extends Record
         $this->getEntityManager()->getRepository('Email')->loadNameHash($entity, $fieldList);
     }
 
-    protected function getSelectParams($params)
-    {
-        $searchByEmailAddress = false;
-        if (!empty($params['where']) && is_array($params['where'])) {
-            foreach ($params['where'] as $i => $p) {
-                if (!empty($p['attribute']) && $p['attribute'] == 'emailAddress') {
-                    $searchByEmailAddress = true;
-                    $emailAddress = $p['value'];
-                    unset($params['where'][$i]);
-                }
-
-            }
-        }
-
-        $selectManager = $this->getSelectManager($this->getEntityType());
-
-        $selectParams = $selectManager->getSelectParams($params, true);
-
-        if ($searchByEmailAddress) {
-            $selectManager->whereEmailAddress($emailAddress, $selectParams);
-        }
-
-        return $selectParams;
-    }
-
     public function copyAttachments($emailId, $parentType, $parentId)
     {
         return $this->getCopiedAttachments($emailId, $parentType, $parentId);
