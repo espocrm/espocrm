@@ -264,7 +264,8 @@ class Tester
             return true;
         }
 
-        Utils::truncateTables($configData['database']);
+        //Utils::truncateTables($configData['database']);
+        Utils::dropTables($configData['database']);
         $fileManager->removeInDir($this->installPath . '/data');
         $fileManager->removeInDir($this->installPath . '/custom/Espo/Custom');
         $fileManager->removeInDir($this->installPath . '/client/custom');

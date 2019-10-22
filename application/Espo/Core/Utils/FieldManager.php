@@ -427,7 +427,11 @@ class FieldManager
 
     protected function getFieldDefs($scope, $name, $default = null)
     {
-        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.fields.'.$name, $default);
+        $defs = $this->getMetadata()->getObjects(['entityDefs', $scope, 'fields', $name], $default);
+        if (is_object($defs)) {
+            return get_object_vars($defs);
+        }
+        return $defs;
     }
 
     protected function getCustomFieldDefs($scope, $name, $default = null)
@@ -532,7 +536,7 @@ class FieldManager
         }
 
         $actualCustomFieldDefs = $this->getCustomFieldDefs($scope, $name, []);
-        $actualFieldDefs = $this->getFieldDefs($scope, $name, []);
+        $actualFieldDefs = $this->getFieldDefs($scope, $name, (object) []);
         $permittedParamList = array_keys($params);
 
         $filteredFieldDefs = !empty($actualCustomFieldDefs) ? $actualCustomFieldDefs : [];
