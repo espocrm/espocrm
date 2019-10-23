@@ -240,4 +240,33 @@ class Tcpdf extends \TCPDF
         $this->_out($out);
     }
 
+    public function Output($name = 'doc.pdf', $dest = 'I')
+    {
+        if ($dest === 'I' && !$this->sign && php_sapi_name() != 'cli') {
+            if ($this->state < 3) {
+                $this->Close();
+            }
+            $name = preg_replace('/[\s]+/', '_', $name);
+            $name = \Espo\Core\Utils\Util::sanitizeFileName($name);
+
+            if (ob_get_contents()) {
+                $this->Error('Some data has already been output, can\'t send PDF file');
+            }
+
+            header('Content-Type: application/pdf');
+            if (headers_sent()) {
+                $this->Error('Some data has already been output to browser, can\'t send PDF file');
+            }
+            header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
+            header('Pragma: public');
+            header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+            header('Content-Disposition: inline; filename="'.$name.'"');
+            TCPDF_STATIC::sendOutputData($this->getBuffer(), $this->bufferlen);
+
+            return '';
+        }
+
+        return parent::Output($name, $dest);
+    }
 }
