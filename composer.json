@@ -4,7 +4,7 @@
     "homepage": "https://github.com/espocrm/espocrm.git",
     "license": "GPL-3.0-only",
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=7.2.0",
         "ext-pdo_mysql": "*",
         "ext-openssl": "*",
         "ext-json": "*",
