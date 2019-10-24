@@ -91,7 +91,13 @@ class MailMimeParser
 
     public function getMessageMessageId($message)
     {
-        return $this->getMessageAttribute($message, 'Message-ID');
+        $messageId = $this->getMessageAttribute($message, 'Message-ID');
+
+        if ($messageId && strlen($messageId) && $messageId[0] !== '<') {
+            $messageId = '<' . $messageId . '>';
+        }
+
+        return $messageId;
     }
 
     public function getAddressNameMap($message)

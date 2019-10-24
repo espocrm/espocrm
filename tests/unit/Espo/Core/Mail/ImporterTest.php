@@ -144,10 +144,6 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
     function testImport2()
     {
-        if (extension_loaded('mailparse')) {
-            $this->assertTrue(true);
-            return;
-        }
 
         $entityManager = $this->entityManager;
         $config = $this->config;
