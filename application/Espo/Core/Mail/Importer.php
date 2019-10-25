@@ -212,14 +212,18 @@ class Importer
         if ($parser->checkMessageAttribute($message, 'in-Reply-To') && $parser->getMessageAttribute($message, 'in-Reply-To')) {
             $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
             $inReplyTo = $arr[0];
-            $replied = $this->getEntityManager()->getRepository('Email')->where(array(
-                'messageId' => $inReplyTo
-            ))->findOne();
-            if ($replied) {
-                $email->set('repliedId', $replied->id);
-                $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
-                foreach ($repliedTeamIdList as $repliedTeamId) {
-                    $email->addLinkMultipleId('teams', $repliedTeamId);
+
+            if ($inReplyTo) {
+                if ($inReplyTo[0] !== '<') $inReplyTo = '<' . $inReplyTo . '>';
+                $replied = $this->getEntityManager()->getRepository('Email')->where(array(
+                    'messageId' => $inReplyTo
+                ))->findOne();
+                if ($replied) {
+                    $email->set('repliedId', $replied->id);
+                    $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
+                    foreach ($repliedTeamIdList as $repliedTeamId) {
+                        $email->addLinkMultipleId('teams', $repliedTeamId);
+                    }
                 }
             }
         }

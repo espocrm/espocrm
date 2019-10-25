@@ -44,7 +44,7 @@
       "url": "views/fields/foreign-url",
       "date": "views/fields/foreign-date",
       "datetime": "views/fields/foreign-datetime",
-      "text": "views/fields/views/fields/foreign-text",
+      "text": "views/fields/foreign-text",
       "number": "views/fields/foreign-varchar",
       "bool": "views/fields/foreign-bool",
       "email": "views/fields/foreign-email",
