@@ -189,7 +189,7 @@ class Base
             } else {
                 if (strpos($sortBy, '.') === false && strpos($sortBy, ':') === false) {
                     if (!$this->getSeed()->hasAttribute($sortBy)) {
-                        throw new Error("Order by non-existing field.");
+                        throw new Error("Order by non-existing field '{$sortBy}'.");
                     }
                 }
             }
