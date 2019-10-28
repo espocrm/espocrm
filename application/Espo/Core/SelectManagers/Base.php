@@ -186,6 +186,12 @@ class Base
                     $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
                     return;
                 }
+            } else {
+                if (strpos($sortBy, '.') === false && strpos($sortBy, ':') === false) {
+                    if (!$this->getSeed()->hasAttribute($sortBy)) {
+                        throw new Error("Order by non-existing field.");
+                    }
+                }
             }
         }
         if (!$desc) {
