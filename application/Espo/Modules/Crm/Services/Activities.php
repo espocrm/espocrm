@@ -754,6 +754,13 @@ class Activities extends \Espo\Core\Services\Base
         $service = $this->getServiceFactory()->create($entityType);
         $selectManager = $this->getSelectManagerFactory()->create($entityType);
 
+
+        if ($entityType === 'Email') {
+            if ($params['orderBy'] ?? null === 'dateStart') {
+                $params['orderBy'] = 'dateSent';
+            }
+        }
+
         $selectParams = $selectManager->getSelectParams($params, false, true);
 
         $selectAttributeList = $service->getSelectAttributeList($params);
@@ -777,13 +784,6 @@ class Activities extends \Espo\Core\Services\Base
         unset($selectParams['limit']);
         unset($selectParams['order']);
         unset($selectParams['orderBy']);
-
-        if ($entityType === 'Email') {
-            if ($orderBy === 'dateStart') {
-                $orderBy = 'dateSent';
-                $order = 'desc';
-            }
-        }
 
         $sql = $this->getActivitiesQuery($entity, $entityType, $statusList, $isHistory, $selectParams);
 
