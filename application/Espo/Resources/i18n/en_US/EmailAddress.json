@@ -1,7 +1,14 @@
 {
-    "labels": {
-        "Primary": "Primary",
-        "Opted Out": "Opted Out",
-        "Invalid": "Invalid"
-    }
+	"labels": {
+	    "Primary": "Primary",
+	    "Opted Out": "Opted Out",
+	    "Invalid": "Invalid"
+	},
+	"fields": {
+	   "optOut": "Opted Out",
+	   "invalid": "Invalid"
+	},
+	"presetFilters": {
+	   "orphan": "Orphan"
+	}
 }

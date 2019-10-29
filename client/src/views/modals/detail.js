@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/detail', 'views/modal', function (Dep) {
+define('views/modals/detail', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -57,8 +57,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         flexibleHeaderFontSize: true,
 
         setup: function () {
-
             var self = this;
+
+            this.scope = this.scope || this.options.scope;
+            this.id = this.options.id;
 
             this.buttonList = [];
 
@@ -69,6 +71,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             if ('removeDisabled' in this.options) {
                 this.removeDisabled = this.options.removeDisabled;
             }
+
+            this.editDisabled = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) || this.editDisabled;
+            this.removeDisabled = this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']) || this.removeDisabled;
 
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
 
@@ -115,9 +120,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             } else {
                 this.navigateButtonsDisabled = true;
             }
-
-            this.scope = this.scope || this.options.scope;
-            this.id = this.options.id;
 
             this.waitForView('record');
 

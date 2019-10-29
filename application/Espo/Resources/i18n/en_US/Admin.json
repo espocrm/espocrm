@@ -69,6 +69,8 @@
         "PHP Settings": "PHP Settings",
         "Database Settings": "Database Settings",
         "Permissions": "Permissions",
+        "Email Addresses": "Email Addresses",
+        "Phone Numbers": "Phone Numbers",
         "Success": "Success",
         "Fail": "Fail",
         "is recommended": "is recommended",
@@ -251,6 +253,8 @@
         "systemRequirements": "System Requirements for EspoCRM.",
         "apiUsers": "Separate users for integration purposes.",
         "webhooks": "Manage webhooks.",
+        "emailAddresses": "All emailes addresses stored in the system.",
+        "phoneNumbers": "All phone numbers stored in the system.",
         "dashboardTemplates": "Deploy dashboards to users.",
         "pdfTemplates": "Templates for printing to PDF."
     },

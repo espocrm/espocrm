@@ -1,0 +1,10 @@
+{
+    "controller": "controllers/record",
+    "createDisabled": true,
+    "editDisabled": true,
+    "exportDisabled": true,
+    "mergeDisabled": true,
+    "filterList": [
+        "orphan"
+    ]
+}

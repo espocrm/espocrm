@@ -1,0 +1,14 @@
+[
+	{
+		"name": "name",
+		"link": true
+	},
+	{
+		"name": "optOut",
+		"width": 15
+	},
+	{
+		"name": "invalid",
+		"width": 15
+	}
+]

@@ -1,0 +1,12 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "name"}, {"name": "type"}
+            ],
+            [
+                {"name": "optOut"}, {"name": "invalid"}
+            ]
+        ]
+    }
+]

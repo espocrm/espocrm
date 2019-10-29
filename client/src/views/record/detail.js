@@ -221,6 +221,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             if (this.model.isNew()) {
                 this.isNew = true;
                 this.removeButton('delete');
+            } else if (this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled'])) {
+                this.removeButton('delete');
             }
 
             if (this.duplicateAction) {
@@ -863,6 +865,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.bottomDisabled = this.options.bottomDisabled || this.bottomDisabled;
 
             this.readOnly = this.options.readOnly || this.readOnly;
+            if (!this.readOnly) {
+                this.readOnly = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) || this.readOnly;
+            }
             this.readOnlyLocked = this.readOnly;
 
             this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled']) || false;

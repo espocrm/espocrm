@@ -67,6 +67,8 @@
         "Extension": "Extensions",
         "Dashboard": "Dashboard",
         "InboundEmail": "Group Email Accounts",
+        "EmailAddress": "Email Addresses",
+        "PhoneNumber": "Phone Numbers",
         "Stream": "Stream",
         "Import": "Import",
         "Template": "Templates",

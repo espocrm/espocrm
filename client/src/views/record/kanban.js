@@ -212,6 +212,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.getAcl().checkScope(this.entityType, 'edit')
                 &&
                 !~this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').indexOf(this.statusField)
+                &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled'])
             ) {
 
                 this.statusFieldIsEditable = true;

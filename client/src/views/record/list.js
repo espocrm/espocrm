@@ -935,13 +935,24 @@ define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
+            this.editDisabled = this.options.editDisabled || this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']);
+            this.removeDisabled = this.options.removeDisabled || this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']);
+
             if (!this.getAcl().checkScope(this.entityType, 'delete')) {
                 this.removeMassAction('remove');
                 this.removeMassAction('merge');
             }
 
+            if (this.removeDisabled) {
+                this.removeMassAction('remove');
+            }
+
             if (!this.getAcl().checkScope(this.entityType, 'edit')) {
                 this.removeMassAction('massUpdate');
+                this.removeMassAction('merge');
+            }
+
+            if (this.getMetadata().get(['clientDefs', this.scope, 'mergeDisabled'])) {
                 this.removeMassAction('merge');
             }
 
@@ -978,11 +989,13 @@ define('views/record/list', 'view', function (Dep) {
                 this.getConfig().get('exportDisabled') && !this.getUser().get('isAdmin')
                 ||
                 this.getAcl().get('exportPermission') === 'no'
+                ||
+                this.getMetadata().get(['clientDefs', this.scope, 'exportDisabled'])
             ) {
                 this.removeMassAction('export');
             }
 
-            if (this.getAcl().get('massUpdatePermission') !== 'yes') {
+            if (this.getAcl().get('massUpdatePermission') !== 'yes' || this.editDisabled) {
                 this.removeMassAction('massUpdate');
             }
 
@@ -1446,8 +1459,8 @@ define('views/record/list', 'view', function (Dep) {
                 this.prepareInternalLayout(internalLayout, model);
 
                 var acl =  {
-                    edit: this.getAcl().checkModel(model, 'edit'),
-                    delete: this.getAcl().checkModel(model, 'delete')
+                    edit: this.getAcl().checkModel(model, 'edit') && !this.editDisabled,
+                    delete: this.getAcl().checkModel(model, 'delete') && !this.removeDisabled,
                 };
 
                 this.createView(key, 'views/base', {
