@@ -2172,7 +2172,7 @@ class Base
                 $fullTextSearchColumnSanitizedList[$i] = $query->sanitize($query->toDb($field));
             }
 
-            $where = $function . ':' . implode(',', $fullTextSearchColumnSanitizedList) . ':' . $textFilter;
+            $where = $function . ':(' . implode(',', $fullTextSearchColumnSanitizedList) . ',' . $textFilter . ')';
 
             $result = [
                 'where' => $where,
@@ -2242,20 +2242,22 @@ class Base
             $fullTextGroup[] = $fullTextSearchData['where'];
             $fullTextSearchFieldList = $fullTextSearchData['fieldList'];
 
+            $relevanceExpression = 'ROUND:(DIV:(' . $fullTextSearchData['where'] . ',5))';
+
             if (isset($result['orderBy']) && !$this->fullTextSearchForceOrderOnlyByRelevance) {
                 if (is_string($result['orderBy'])) {
                     $result['orderBy'] = [
-                        [$fullTextSearchData['where'], 'desc'],
+                        [$relevanceExpression, 'desc'],
                         [$result['orderBy'], $result['order'] ?? 'asc'],
                     ];
                 }
             } else {
-                $result['orderBy'] = [[$fullTextSearchData['where'], 'desc']];
+                $result['orderBy'] = [[$relevanceExpression, 'desc']];
                 $result['order'] = null;
             }
 
             $result['additionalSelect'] = $result['additionalSelect'] ?? [];
-            $result['additionalSelect'][] = $fullTextSearchData['where'];
+            $result['additionalSelect'][] = $relevanceExpression;
 
             $result['hasFullTextSearch'] = true;
         }

@@ -630,15 +630,30 @@ abstract class Base
             throw new \Exception("Empty MATCH parameters.");
         }
 
-        $delimiterPosition = strpos($rest, ':');
-        if ($delimiterPosition === false) {
-            throw new \Exception("Bad MATCH usage.");
+        if (substr($rest, 0, 1) === '(' && substr($rest, -1) === ')') {
+            $rest = substr($rest, 1, -1);
+
+            $argumentList = self::parseArgumentListFromFunctionContent($rest);
+            if (count($argumentList) < 2) {
+                throw new \Exception("Bad MATCH usage.");
+            }
+
+            $columnList = [];
+            for ($i = 0; $i < count($argumentList) - 1; $i++) {
+                $columnList[] = $argumentList[$i];
+            }
+            $query = $argumentList[count($argumentList) - 1];
+        } else {
+            $delimiterPosition = strpos($rest, ':');
+            if ($delimiterPosition === false) {
+                throw new \Exception("Bad MATCH usage.");
+            }
+
+            $columns = substr($rest, 0, $delimiterPosition);
+            $query = mb_substr($rest, $delimiterPosition + 1);
+
+            $columnList = explode(',', $columns);
         }
-
-        $columns = substr($rest, 0, $delimiterPosition);
-        $query = mb_substr($rest, $delimiterPosition + 1);
-
-        $columnList = explode(',', $columns);
 
         $tableName = $this->toDb($entity->getEntityType());
 
