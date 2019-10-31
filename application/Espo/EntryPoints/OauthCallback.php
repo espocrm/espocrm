@@ -39,7 +39,6 @@ class OauthCallback extends \Espo\Core\EntryPoints\Base
 
     public function run()
     {
-        echo "EspoCRM rocks !!!";
+        echo "EspoCRM rocks! If this window is not closed automatically, it's probable that URL you use to access EspoCRM doesn't match URL specified at Administration > Settings > Site URL.";
     }
 }
-
