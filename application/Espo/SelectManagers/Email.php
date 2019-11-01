@@ -35,6 +35,8 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected $fullTextOrderType = self::FT_ORDER_ORIGINAL;
 
+    protected $fullTextRelevanceThreshold = 0.2;
+
     protected $selectAttributesDependancyMap = [
         'subject' => ['name'],
         'personStringData' => ['fromString', 'fromEmailAddressId'],

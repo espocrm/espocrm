@@ -72,6 +72,8 @@ class Base
 
     protected $fullTextOrderType = self::FT_ORDER_COMBINTED;
 
+    protected $fullTextRelevanceThreshold = null;
+
     const FT_ORDER_COMBINTED = 0;
     const FT_ORDER_RELEVANCE = 1;
     const FT_ORDER_ORIGINAL = 3;
@@ -2244,7 +2246,12 @@ class Base
 
         $fullTextSearchFieldList = [];
         if ($fullTextSearchData) {
-            $fullTextGroup[] = $fullTextSearchData['where'];
+            if ($this->fullTextRelevanceThreshold) {
+                $fullTextGroup[] = [$fullTextSearchData['where'] . '>=' => $this->fullTextRelevanceThreshold];
+            } else {
+                $fullTextGroup[] = $fullTextSearchData['where'];
+            }
+
             $fullTextSearchFieldList = $fullTextSearchData['fieldList'];
 
             $relevanceExpression = $fullTextSearchData['where'];
