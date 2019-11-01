@@ -268,26 +268,22 @@
         "createdAccount": {
             "type": "belongsTo",
             "entity": "Account",
-            "noJoin": true,
             "foreign": "originalLead"
         },
         "createdContact": {
             "type": "belongsTo",
             "entity": "Contact",
-            "noJoin": true,
             "foreign": "originalLead"
         },
         "createdOpportunity": {
             "type": "belongsTo",
             "entity": "Opportunity",
-            "noJoin": true,
             "foreign": "originalLead"
         },
         "campaign": {
             "type": "belongsTo",
             "entity": "Campaign",
-            "foreign": "leads",
-            "noJoin": true
+            "foreign": "leads"
         },
         "campaignLogRecords": {
             "type": "hasChildren",

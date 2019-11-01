@@ -334,8 +334,7 @@
         "campaign": {
             "type": "belongsTo",
             "entity": "Campaign",
-            "foreign": "opportunities",
-            "noJoin": true
+            "foreign": "opportunities"
         },
         "originalLead": {
             "type": "hasOne",
