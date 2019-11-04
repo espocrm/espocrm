@@ -1,0 +1,8 @@
+{
+    "aclDependencies": {
+        "entityDefs.Lead.fields.source.options": {
+        	"scope": "Opportunity",
+        	"field": "leadSource"
+        }
+    }
+}
