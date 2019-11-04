@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', function (Dep) {
+define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
@@ -60,6 +60,11 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
             if (this.roleType == 'enum') {
                 this.roleList = this.getMetadata().get('entityDefs.' + this.roleFieldScope + '.fields.' + this.roleField + '.options');
+
+                if (!this.roleList) {
+                    this.roleList = [];
+                    this.skipRoles = true;
+                }
             }
         },
 
@@ -160,9 +165,10 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
         addLinkHtml: function (id, name) {
             name = name || id;
 
-            if (this.mode == 'search') {
+            if (this.mode == 'search' || this.skipRoles) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
+
             var $container = this.$el.find('.link-container');
             var $el = $('<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">').addClass('link-' + id);
 
@@ -200,6 +206,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 if ($role) {
                     var fetch = function ($target) {
                         if (!$target || !$target.length) return;
+                        if ($target.val() === null) return;
 
                         var value = $target.val().toString().trim();
                         var id = $target.data('id');
@@ -219,11 +226,12 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
-            data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
+
+            if (!this.skipRoles) {
+                data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
+            }
             return data;
         },
 
     });
 });
-
-
