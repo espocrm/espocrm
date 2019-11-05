@@ -58,6 +58,8 @@ class RDB extends \Espo\ORM\Repository
      */
     protected $listParams = [];
 
+    private $isTableLocked = false;
+
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         $this->entityType = $entityType;
@@ -643,9 +645,27 @@ class RDB extends \Espo\ORM\Repository
         return $params;
     }
 
-
     protected function getPDO()
     {
         return $this->getEntityManager()->getPDO();
+    }
+
+    protected function lockTable()
+    {
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
+        $this->getPDO()->query("LOCK TABLES `{$tableName}` WRITE");
+        $this->isTableLocked = true;
+    }
+
+    protected function unlockTable()
+    {
+        $this->getPDO()->query("UNLOCK TABLES");
+        $this->isTableLocked = false;
+    }
+
+    protected function isTableLocked()
+    {
+        return $this->isTableLocked;
     }
 }

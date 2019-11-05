@@ -85,36 +85,6 @@ class User extends \Espo\Core\ORM\Repositories\RDB
 
         parent::beforeSave($entity, $options);
 
-        if ($entity->isNew()) {
-            $userName = $entity->get('userName');
-            if (empty($userName)) {
-                throw new Error();
-            }
-
-            $user = $this->where([
-                'userName' => $userName
-            ])->findOne();
-
-            if ($user) {
-                throw new Conflict(json_encode(['reason' => 'userNameExists']));
-            }
-        } else {
-            if ($entity->isAttributeChanged('userName')) {
-                $userName = $entity->get('userName');
-                if (empty($userName)) {
-                    throw new Error();
-                }
-
-                $user = $this->where(array(
-                    'userName' => $userName,
-                    'id!=' => $entity->id
-                ))->findOne();
-                if ($user) {
-                    throw new Conflict(json_encode(['reason' => 'userNameExists']));
-                }
-            }
-        }
-
         if ($entity->has('type') && !$entity->isPortal()) {
             $entity->set('portalRolesIds', []);
             $entity->set('portalRolesNames', (object)[]);
@@ -130,10 +100,51 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             $entity->set('defaultTeamId', null);
             $entity->set('defaultTeamName', null);
         }
+
+        if ($entity->isNew()) {
+            $userName = $entity->get('userName');
+            if (empty($userName)) {
+                throw new Error("Username can't be empty.");
+            }
+
+            $this->lockTable();
+
+            $user = $this->select(['id'])->where([
+                'userName' => $userName
+            ])->findOne();
+
+            if ($user) {
+                $this->unlockTable();
+                throw new Conflict(json_encode(['reason' => 'userNameExists']));
+            }
+        } else {
+            if ($entity->isAttributeChanged('userName')) {
+                $userName = $entity->get('userName');
+                if (empty($userName)) {
+                    throw new Error("Username can't be empty.");
+                }
+
+                $this->lockTable();
+
+                $user = $this->select(['id'])->where(array(
+                    'userName' => $userName,
+                    'id!=' => $entity->id
+                ))->findOne();
+
+                if ($user) {
+                    $this->unlockTable();
+                    throw new Conflict(json_encode(['reason' => 'userNameExists']));
+                }
+            }
+        }
     }
 
     protected function afterSave(Entity $entity, array $options = [])
     {
+        if ($this->isTableLocked()) {
+            $this->unlockTable();
+        }
+
         parent::afterSave($entity, $options);
 
         if ($entity->isApi()) {

@@ -917,6 +917,22 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testMatch6()
+    {
+        $sql = $this->query->createSelectQuery('Article', [
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'MATCH_NATURAL_LANGUAGE:(description,test)'
+            ]
+        ]);
+
+        $expectedSql =
+            "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
+            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) AND article.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testGetAllAttributesFromComplexExpression()
     {
         $expression = "CONCAT:(MONTH:comment.created_at,' ',CONCAT:(comment.name,'+'))";

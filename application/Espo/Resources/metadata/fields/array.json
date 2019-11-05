@@ -26,6 +26,10 @@
          "default": false
       },
       {
+         "name": "displayAsList",
+         "type":"bool"
+      },
+      {
          "name": "maxCount",
          "type": "int",
          "min": 1

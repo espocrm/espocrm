@@ -143,6 +143,39 @@ class Metadata extends \Espo\Core\Services\Base
 
             unset($data->authenticationMethods);
             unset($data->formula);
+
+            foreach (($this->getMetadata()->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
+                $targetArr = explode('.', $target);
+
+                if (is_string($item)) {
+                    $depArr = explode('.', $item);
+                    $pointer = $data;
+                    foreach ($depArr as $k) {
+                        if (!isset($pointer->$k)) {
+                            continue 2;
+                        }
+                        $pointer = $pointer->$k;
+                    }
+                } else if (is_array($item)) {
+                    $aclScope = $item['scope'] ?? null;;
+                    $aclField = $item['field'] ?? null;
+                    if (!$aclScope) continue;
+                    if (!$this->getAcl()->check($aclScope)) continue;
+                    if ($aclField && in_array($aclField, $this->getAcl()->getScopeForbiddenFieldList($aclScope))) continue;
+                }
+
+                $pointer = $data;
+                foreach ($targetArr as $i => $k) {
+                    if ($i === count($targetArr) - 1) {
+                        $pointer->$k = $this->getMetadata()->get($targetArr);
+                        break;
+                    }
+                    if (!isset($pointer->$k)) {
+                        $pointer->$k = (object) [];
+                    }
+                    $pointer = $pointer->$k;
+                }
+            }
         }
 
         return $data;

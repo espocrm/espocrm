@@ -133,6 +133,29 @@ class Language extends \Espo\Core\Services\Base
                         'userHasNoEmailAddress' => $languageObj->translate('userHasNoEmailAddress', 'messages', 'Admin'),
                     ],
                 ];
+
+                foreach (($this->getMetadata()->get(['app', 'language', 'aclDependencies']) ?? []) as $target => $item) {
+                    $targetArr = explode('.', $target);
+
+                    $aclScope = $item['scope'] ?? null;;
+                    $aclField = $item['field'] ?? null;
+                    if (!$aclScope) continue;
+                    if (!$this->getAcl()->check($aclScope)) continue;
+                    if ($aclField && in_array($aclField, $this->getAcl()->getScopeForbiddenFieldList($aclScope))) continue;
+
+                    $pointer =& $data;
+                    foreach ($targetArr as $i => $k) {
+                        if ($i === count($targetArr) - 1) {
+                            $pointer[$k] = $languageObj->get($targetArr);
+                            break;
+                        }
+                        if (!isset($pointer[$k])) {
+                            $pointer[$k] = [];
+                        }
+
+                        $pointer =& $pointer[$k];
+                    }
+                }
             }
         }
 

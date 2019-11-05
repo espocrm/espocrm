@@ -611,7 +611,8 @@
             "isNotOneOf": "None Of",
             "anyOf": "Any Of",
             "allOf": "All Of",
-            "noneOf": "None Of"
+            "noneOf": "None Of",
+            "any": "Any"
         },
         "varcharSearchRanges": {
             "equals": "Equals",

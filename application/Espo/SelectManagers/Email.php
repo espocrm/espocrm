@@ -33,7 +33,7 @@ class Email extends \Espo\Core\SelectManagers\Base
 {
     protected $textFilterUseContainsAttributeList = ['name'];
 
-    protected $fullTextSearchForceOrderOnlyByRelevance = true;
+    protected $fullTextOrderType = self::FT_ORDER_ORIGINAL;
 
     protected $selectAttributesDependancyMap = [
         'subject' => ['name'],

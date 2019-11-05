@@ -70,11 +70,18 @@ class Base
 
     protected $selectAttributesDependancyMap = [];
 
-    protected $fullTextSearchForceOrderOnlyByRelevance = false;
+    protected $fullTextOrderType = self::FT_ORDER_COMBINTED;
+
+    protected $fullTextRelevanceThreshold = null;
+
+    const FT_ORDER_COMBINTED = 0;
+    const FT_ORDER_RELEVANCE = 1;
+    const FT_ORDER_ORIGINAL = 3;
 
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
-
     const MIN_LENGTH_FOR_FULL_TEXT_SEARCH = 4;
+
+    protected $fullTextOrderRelevanceDivider = 5;
 
     protected $fullTextSearchDataCacheHash = [];
 
@@ -2172,7 +2179,7 @@ class Base
                 $fullTextSearchColumnSanitizedList[$i] = $query->sanitize($query->toDb($field));
             }
 
-            $where = $function . ':' . implode(',', $fullTextSearchColumnSanitizedList) . ':' . $textFilter;
+            $where = $function . ':(' . implode(',', $fullTextSearchColumnSanitizedList) . ',' . $textFilter . ')';
 
             $result = [
                 'where' => $where,
@@ -2239,23 +2246,35 @@ class Base
 
         $fullTextSearchFieldList = [];
         if ($fullTextSearchData) {
-            $fullTextGroup[] = $fullTextSearchData['where'];
+            if ($this->fullTextRelevanceThreshold) {
+                $fullTextGroup[] = [$fullTextSearchData['where'] . '>=' => $this->fullTextRelevanceThreshold];
+            } else {
+                $fullTextGroup[] = $fullTextSearchData['where'];
+            }
+
             $fullTextSearchFieldList = $fullTextSearchData['fieldList'];
 
-            if (isset($result['orderBy']) && !$this->fullTextSearchForceOrderOnlyByRelevance) {
-                if (is_string($result['orderBy'])) {
-                    $result['orderBy'] = [
-                        [$fullTextSearchData['where'], 'desc'],
-                        [$result['orderBy'], $result['order'] ?? 'asc'],
-                    ];
-                }
-            } else {
-                $result['orderBy'] = [[$fullTextSearchData['where'], 'desc']];
+            $relevanceExpression = $fullTextSearchData['where'];
+
+            if (!isset($result['orderBy']) || $this->fullTextOrderType === self::FT_ORDER_RELEVANCE) {
+                $result['orderBy'] = [[$relevanceExpression, 'desc']];
                 $result['order'] = null;
+            } else {
+                if ($this->fullTextOrderType === self::FT_ORDER_COMBINTED) {
+                     $relevanceExpression =
+                        'ROUND:(DIV:(' . $fullTextSearchData['where'] . ','.$this->fullTextOrderRelevanceDivider.'))';
+
+                    if (is_string($result['orderBy'])) {
+                        $result['orderBy'] = [
+                            [$relevanceExpression, 'desc'],
+                            [$result['orderBy'], $result['order'] ?? 'asc'],
+                        ];
+                    }
+                }
             }
 
             $result['additionalSelect'] = $result['additionalSelect'] ?? [];
-            $result['additionalSelect'][] = $fullTextSearchData['where'];
+            $result['additionalSelect'][] = $relevanceExpression;
 
             $result['hasFullTextSearch'] = true;
         }

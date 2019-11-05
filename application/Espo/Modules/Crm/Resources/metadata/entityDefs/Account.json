@@ -310,8 +310,7 @@
         "campaign": {
             "type": "belongsTo",
             "entity": "Campaign",
-            "foreign": "accounts",
-            "noJoin": true
+            "foreign": "accounts"
         },
         "campaignLogRecords": {
             "type": "hasChildren",
