@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
+define('views/fields/address', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -48,6 +48,14 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
         searchTemplate: 'fields/address/search',
 
+        events: {
+            'click [data-action="viewMap"]': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.viewMapAction();
+            },
+        },
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
@@ -59,6 +67,11 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
             if (this.mode == 'detail' || this.mode == 'list') {
                 data.formattedAddress = this.getFormattedAddress();
+
+                if (this.params.viewMap && this.canBeDisplayedOnMap()) {
+                    data.viewMap = true;
+                    data.viewMapLink = '#AddressMap/view/' + this.model.entityType + '/' + this.model.id + '/' + this.name;
+                }
             }
 
             if (this.isEditMode()) {
@@ -69,13 +82,15 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                 data.countryMaxLength = this.countryMaxLength;
             }
 
-            var isNotEmpty = false;
-
             return data;
         },
 
         setupSearch: function () {
             this.searchData.value = this.getSearchParamsData().value || this.searchParams.additionalValue;
+        },
+
+        canBeDisplayedOnMap: function () {
+            return !!this.model.get(this.name + 'City') || !!this.model.get(this.name + 'PostalCode');
         },
 
         getFormattedAddress: function () {
@@ -538,6 +553,16 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                 return data;
             }
             return false;
-        }
+        },
+
+        viewMapAction: function () {
+            this.createView('mapDialog', 'views/modals/view-map', {
+                model: this.model,
+                field: this.name,
+            }, function (view) {
+                view.render();
+            });
+        },
+
     });
 });

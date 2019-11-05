@@ -49,6 +49,12 @@
          "importDisabled": true
       }
    },
+   "params": [
+      {
+         "name": "viewMap",
+         "type": "bool"
+      }
+   ],
    "notMergeable":true,
    "notCreatable": false,
    "filter": true,

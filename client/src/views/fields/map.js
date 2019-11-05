@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
+define('views/fields/map', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -44,8 +44,8 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
         setup: function () {
             this.addressField = this.name.substr(0, this.name.length - 3);
 
-            this.provider = this.params.provider;
-            this.height = this.params.height || this.height;
+            this.provider = this.options.provider || this.params.provider;
+            this.height = this.options.height || this.params.height || this.height;
 
             var addressAttributeList = Object.keys(this.getMetadata().get('fields.address.fields') || {}).map(
                 function (a) {
@@ -78,6 +78,10 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
             return !!this.model.get(this.addressField + 'City') || !!this.model.get(this.addressField + 'PostalCode');
         },
 
+        onRemove: function () {
+            $(window).off('resize.' + this.cid);
+        },
+
         afterRender: function () {
             this.addressData = {
                 city: this.model.get(this.addressField + 'City'),
@@ -87,10 +91,26 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                 state: this.model.get(this.addressField + 'State')
             };
 
+            this.$map = this.$el.find('.map');
+
             if (this.hasAddress()) {
+                this.processSetHeight(true);
+
+                if (this.height === 'auto') {
+                    $(window).off('resize.' + this.cid);
+                    $(window).on('resize.' + this.cid, this.processSetHeight.bind(this));
+                }
+
                 var methodName = 'afterRender' + this.provider.replace(/\s+/g, '');
                 if (typeof this[methodName] === 'function') {
                     this[methodName]();
+                } else {
+                    var implClassName = this.getMetadata().get(['clientDefs', 'AddressMap', 'implementations', this.provider]);
+                    if (implClassName) {
+                        require(implClassName, function (impl) {
+                            impl.render(this);
+                        }.bind(this));
+                    }
                 }
             }
         },
@@ -121,9 +141,23 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
             }
         },
 
-        initMapGoogle: function () {
-            this.$el.find('.map').css('height', this.height + 'px');
+        processSetHeight: function (init) {
+            var height = this.height;
+            if (this.height === 'auto') {
+                height = this.$el.parent().height();
 
+                if (init && height <= 0) {
+                    setTimeout(function () {
+                        this.processSetHeight(true);
+                    }.bind(this), 50);
+                    return;
+                }
+            }
+
+            this.$map.css('height', height + 'px');
+        },
+
+        initMapGoogle: function () {
             var geocoder = new google.maps.Geocoder();
 
             try {
@@ -175,7 +209,7 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                 address += this.addressData.country;
             }
 
-            geocoder.geocode({'address': address}, function(results, status) {
+            geocoder.geocode({'address': address}, function (results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     map.setCenter(results[0].geometry.location);
                     var marker = new google.maps.Marker({
@@ -184,6 +218,7 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                     });
                 }
             }.bind(this));
-        }
+        },
+
     });
 });

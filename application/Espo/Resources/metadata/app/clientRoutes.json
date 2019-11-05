@@ -1,0 +1,8 @@
+{
+    "AddressMap/view/:entityType/:id/:field": {
+        "params": {
+            "controller": "AddressMap",
+            "action": "view"
+        }
+    }
+}

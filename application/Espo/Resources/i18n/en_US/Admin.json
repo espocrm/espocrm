@@ -193,6 +193,7 @@
         "displayAsList": "Display as List",
         "maxCount": "Max Item Count",
         "accept": "Accept",
+        "viewMap": "View Map Button",
         "displayRawText": "Display raw text (no markdown)"
     },
     "messages": {

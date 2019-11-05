@@ -1,1 +1,1 @@
-{{breaklines formattedAddress}}
+{{breaklines formattedAddress}}{{#if viewMap}}<div><a href="{{viewMapLink}}" data-action="viewMap" class="small">{{translate 'View on Map'}}</a></div>{{/if}}
