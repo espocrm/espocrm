@@ -134,6 +134,9 @@
             "additionalAttributeList": ["columns"],
             "orderBy": "name"
         },
+        "contact": {
+            "type": "link"
+        },
         "stage": {
             "type": "enum",
             "options": ["Prospecting", "Qualification", "Proposal", "Negotiation", "Closed Won", "Closed Lost"],
@@ -297,6 +300,11 @@
                     "len": 50
                 }
             }
+        },
+        "contact": {
+            "type": "belongsTo",
+            "entity": "Contact",
+            "foreign": "opportunitiesPrimary"
         },
         "meetings": {
             "type": "hasChildren",

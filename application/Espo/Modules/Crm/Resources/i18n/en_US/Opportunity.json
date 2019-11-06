@@ -9,6 +9,7 @@
         "doNotCall": "Do Not Call",
         "closeDate": "Close Date",
         "contacts": "Contacts",
+        "contact": "Contact (Primary)",
         "description": "Description",
         "amountConverted": "Amount (converted)",
         "amountWeightedConverted": "Amount Weighted",
@@ -20,6 +21,7 @@
     },
     "links": {
         "contacts": "Contacts",
+        "contact": "Contact (Primary)",
         "documents": "Documents",
         "campaign": "Campaign",
         "originalLead": "Original Lead"

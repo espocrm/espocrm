@@ -406,6 +406,12 @@
             "entity": "Opportunity",
             "foreign": "contacts"
         },
+        "opportunitiesPrimary": {
+            "type": "hasMany",
+            "entity": "Opportunity",
+            "foreign": "contact",
+            "layoutRelationshipsDisabled": true
+        },
         "casesPrimary": {
             "type": "hasMany",
             "entity": "Case",
