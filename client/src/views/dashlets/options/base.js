@@ -51,8 +51,8 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
         buttonList: [
             {
                 name: 'save',
-                label: 'Save',
-                style: 'primary'
+                label: 'Apply',
+                style: 'danger'
             },
             {
                 name: 'cancel',
