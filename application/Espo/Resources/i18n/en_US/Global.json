@@ -387,6 +387,7 @@
     "dashlets": {
         "Stream": "Stream",
         "Emails": "My Inbox",
+        "Iframe": "Iframe",
         "Records": "Record List"
     },
     "notificationMessages": {
