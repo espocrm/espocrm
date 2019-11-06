@@ -460,6 +460,12 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         },
 
         getCalculatedHeight: function () {
+            if (this.$container && this.$container.length) {
+                return this.$container.height();
+            }
+
+            return this.getHelper().calculateContentContainerHeight(this.$el.find('.calendar'));
+
             var smallScreenWidth = this.smallScreenWidth = this.smallScreenWidth || this.getThemeManager().getParam('screenWidthXs');
             var $window = $(window);
 

@@ -427,6 +427,30 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             }
             return html;
         },
+
+        calculateContentContainerHeight: function ($el) {
+            var smallScreenWidth = this.themeManager.getParam('screenWidthXs');
+            var $window = $(window);
+
+            var footerHeight = $('#footer').height() || 26;
+            var top = 0;
+            var element = $el.get(0);
+
+            if (element) {
+                top = element.getBoundingClientRect().top;
+
+                if ($window.width() < smallScreenWidth) {
+                    var $navbarCollapse = $('#navbar .navbar-body');
+                    if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
+                        top -= $navbarCollapse.height();
+                    }
+                }
+            }
+
+            var spaceHeight = top + footerHeight;
+
+            return $window.height() - spaceHeight - 20;
+        },
     });
 
     return ViewHelper;

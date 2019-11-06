@@ -41,20 +41,26 @@ define('views/address-map/view', 'views/main', function (Dep) {
                 this.translate(field, 'fields', this.model.entityType)
             );
 
+            this.createView('header', 'views/header', {
+                model: this.model,
+                el: '#main > .header',
+                scope: this.model.entityType,
+                fontSizeFlexible: true,
+            });
+        },
+
+        afterRender: function () {
+        	var field = this.options.field;
+
             var viewName = this.model.getFieldParam(field + 'Map', 'view') || this.getFieldManager().getViewName('map');
 
             this.createView('map', viewName, {
                 model: this.model,
                 name: field + 'Map',
                 el: this.getSelector() + ' .map-container',
-                heightElementSelector: '#main > .map-container',
-            });
-
-            this.createView('header', 'views/header', {
-                model: this.model,
-                el: '#main > .header',
-                scope: this.model.entityType,
-                fontSizeFlexible: true,
+                height: this.getHelper().calculateContentContainerHeight(this.$el.find('.map-container')),
+            }, function (view) {
+            	view.render();
             });
         },
 
