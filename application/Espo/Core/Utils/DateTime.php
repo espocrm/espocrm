@@ -86,7 +86,8 @@ class DateTime
         'ss' => 's',
         's' => 's',
         'Z' => 'O',
-        'z' => 'O'
+        'z' => 'O',
+        'Do' => 'jS',
     );
 
     public function __construct($dateFormat = 'YYYY-MM-DD', $timeFormat = 'HH:mm', $timeZone = 'UTC')
