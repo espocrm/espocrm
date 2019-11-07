@@ -220,10 +220,6 @@ class InboundEmail extends \Espo\Services\Record
         }
 
         $parserName = 'MailMimeParser';
-        if ($this->getConfig()->get('emailParser')) {
-            $parserName = $this->getConfig()->get('emailParser');
-        }
-
         $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserName;
 
         $monitoredFoldersArr = explode(',', $monitoredFolders);
