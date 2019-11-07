@@ -87,6 +87,7 @@ class DateTime
         's' => 's',
         'Z' => 'O',
         'z' => 'O',
+        'ZZ' => 'P',
         'Do' => 'jS',
     );
 
