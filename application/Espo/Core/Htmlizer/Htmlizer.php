@@ -176,10 +176,12 @@ class Htmlizer
 
             if ($type == Entity::DATETIME) {
                 if (!empty($data[$attribute])) {
+                    $data[$attribute . '_RAW'] = $data[$attribute];
                     $data[$attribute] = $this->dateTime->convertSystemDateTime($data[$attribute]);
                 }
             } else if ($type == Entity::DATE) {
                 if (!empty($data[$attribute])) {
+                    $data[$attribute . '_RAW'] = $data[$attribute];
                     $data[$attribute] = $this->dateTime->convertSystemDate($data[$attribute]);
                 }
             } else if ($type == Entity::JSON_ARRAY) {
@@ -230,7 +232,9 @@ class Htmlizer
 
             if (array_key_exists($attribute, $data)) {
                 $keyRaw = $attribute . '_RAW';
-                $data[$keyRaw] = $data[$attribute];
+
+                if (!isset($data[$keyRaw]))
+                    $data[$keyRaw] = $data[$attribute];
 
                 $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
                 if ($fieldType === 'enum') {
@@ -308,6 +312,19 @@ class Htmlizer
                 },
             ],
             'hbhelpers' => [
+                'dateFormat' => function () {
+                    $args = func_get_args();
+                    if (count($args) !== 2) return null;
+                    $context = $args[count($args) - 1];
+                    $dateValue = $args[0];
+
+                    $format = $context['hash']['format'] ?? null;
+                    $timezone = $context['hash']['timezone'] ?? null;
+                    $dateTime = $context['data']['root']['__dateTime'];
+                    if (strlen($dateValue) > 11) return $dateTime->convertSystemDateTime($dateValue, $timezone, $format);
+
+                    return $dateTime->convertSystemDate($dateValue, $format);
+                },
                 'ifEqual' => function () {
                     $args = func_get_args();
                     $context = $args[count($args) - 1];
@@ -360,15 +377,19 @@ class Htmlizer
 
         if (!array_key_exists('today', $data)) {
             $data['today'] = $this->dateTime->getTodayString();
+            $data['today_RAW'] = date('Y-m-d');
         }
 
         if (!array_key_exists('now', $data)) {
             $data['now'] = $this->dateTime->getNowString();
+            $data['now_RAW'] = date('Y-m-d H:i:s');
         }
 
         foreach ($additionalData as $k => $value) {
             $data[$k] = $value;
         }
+
+        $data['__dateTime'] = $this->dateTime;
 
         $html = $renderer($data);
 
