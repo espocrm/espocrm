@@ -320,10 +320,11 @@ class Htmlizer
 
                     $format = $context['hash']['format'] ?? null;
                     $timezone = $context['hash']['timezone'] ?? null;
+                    $language = $context['hash']['language'] ?? null;
                     $dateTime = $context['data']['root']['__dateTime'];
-                    if (strlen($dateValue) > 11) return $dateTime->convertSystemDateTime($dateValue, $timezone, $format);
+                    if (strlen($dateValue) > 11) return $dateTime->convertSystemDateTime($dateValue, $timezone, $format, $language);
 
-                    return $dateTime->convertSystemDate($dateValue, $format);
+                    return $dateTime->convertSystemDate($dateValue, $format, $language);
                 },
                 'ifEqual' => function () {
                     $args = func_get_args();

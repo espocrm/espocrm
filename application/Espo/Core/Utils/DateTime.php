@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Carbon\Carbon;
+
 class DateTime
 {
     protected $dateFormat;
@@ -36,6 +38,8 @@ class DateTime
     protected $timeFormat;
 
     protected $timezone;
+
+    protected $langauge;
 
     public static $systemDateTimeFormat = 'Y-m-d H:i:s';
 
@@ -45,58 +49,31 @@ class DateTime
 
     protected $internalDateFormat = 'Y-m-d';
 
-    protected $dateFormats = array(
+    protected $dateFormats = [
         'MM/DD/YYYY' => 'm/d/Y',
         'YYYY-MM-DD' => 'Y-m-d',
         'DD.MM.YYYY' => 'd.m.Y',
         'DD/MM/YYYY' => 'd/m/Y',
-    );
+    ];
 
-    protected $timeFormats = array(
+    protected $timeFormats = [
         'HH:mm' => 'H:i',
         'hh:mm A' => 'h:i A',
         'hh:mm a' => 'h:ia',
         'hh:mmA' => 'h:iA',
-    );
+    ];
 
-
-    protected $formattingMap = array(
-        'MMMM' => 'F',
-        'MMM' => 'M',
-        'MM' => 'm',
-        'M' => 'n',
-        'DDDD' => 'z',
-        'DD' => 'd',
-        'D' => 'j',
-        'dddd' => 'l',
-        'ddd' => 'D',
-        'ww' => 'W',
-        'w' => 'W',
-        'e' => 'w',
-        'YYYY' => 'Y',
-        'YY' => 'y',
-        'HH' => 'H',
-        'H' => 'G',
-        'hh' => 'h',
-        'h' => 'g',
-        'mm' => 'i',
-        'm' => 'i',
-        'A' => 'A',
-        'a' => 'a',
-        'ss' => 's',
-        's' => 's',
-        'Z' => 'O',
-        'z' => 'O',
-        'ZZ' => 'P',
-        'Do' => 'jS',
-    );
-
-    public function __construct($dateFormat = 'YYYY-MM-DD', $timeFormat = 'HH:mm', $timeZone = 'UTC')
+    public function __construct(
+        ?string $dateFormat = 'YYYY-MM-DD',
+        ?string $timeFormat = 'HH:mm',
+        ?string $timeZone = 'UTC',
+        ?string $language = 'en_US'
+    )
     {
-        $this->dateFormat = $dateFormat;
-        $this->timeFormat = $timeFormat;
-
-        $this->timezone = new \DateTimeZone($timeZone);
+        $this->dateFormat = $dateFormat ?? 'YYYY-MM-DD';
+        $this->timeFormat = $timeFormat ?? 'HH:mm';
+        $this->timezone = new \DateTimeZone($timeZone ?? 'UTC');
+        $this->language = $language ?? 'en_US';
     }
 
     public function getDateFormat()
@@ -129,11 +106,6 @@ class DateTime
         return $this->dateFormats[$this->dateFormat] . ' ' . $this->timeFormats[$this->timeFormat];
     }
 
-    protected function convertFormatToPhp($format)
-    {
-        return strtr($format, $this->formattingMap);
-    }
-
     public function convertSystemDateToGlobal($string)
     {
         return $this->convertSystemDate($string);
@@ -144,39 +116,36 @@ class DateTime
         return $this->convertSystemDateTime($string);
     }
 
-    public function convertSystemDate($string, $format = null)
+    public function convertSystemDate(string $string, ?string $format = null, ?string $language = null)
     {
         $dateTime = \DateTime::createFromFormat('Y-m-d', $string);
         if ($dateTime) {
-            if ($format) {
-                $phpFormat = $this->convertFormatToPhp($format);
-            } else {
-                $phpFormat = $this->getPhpDateFormat();
-            }
-            return $dateTime->format($phpFormat);
+            $carbon = Carbon::instance($dateTime);
+            $carbon->locale($language ?? $this->language);
+
+            return $carbon->isoFormat($format ?? $this->getDateFormat());
         }
         return null;
     }
 
-    public function convertSystemDateTime($string, $timezone = null, $format = null)
+    public function convertSystemDateTime(string $string, ?string $timezone = null, ?string $format = null, ?string $language = null)
     {
         if (is_string($string) && strlen($string) === 16) {
             $string .= ':00';
         }
         $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $string);
         if (empty($timezone)) {
-            $timezone = $this->timezone;
+            $tz = $this->timezone;
         } else {
-            $timezone = new \DateTimeZone($timezone);
+            $tz = new \DateTimeZone($timezone);
         }
 
         if ($dateTime) {
-            if ($format) {
-                $phpFormat = $this->convertFormatToPhp($format);
-            } else {
-                $phpFormat = $this->getPhpDateTimeFormat();
-            }
-            return $dateTime->setTimezone($timezone)->format($phpFormat);
+            $dateTime->setTimezone($tz);
+            $carbon = Carbon::instance($dateTime);
+            $carbon->locale($language ?? $this->language);
+
+            return $carbon->isoFormat($format ?? $this->getDateFormat());
         }
         return null;
     }
@@ -196,38 +165,42 @@ class DateTime
         return date($this->getInternalDateFormat());
     }
 
-    public function getTodayString($timezone = null)
+    public function getTodayString(?string $timezone = null, ?string $format = null)
     {
         if ($timezone) {
-            $timezoneObj = new \DateTimeZone($timezone);
+            $tz = new \DateTimeZone($timezone);
         } else {
-            $timezoneObj = $this->timezone;
+            $tz = $this->timezone;
         }
 
         $dateTime = new \DateTime();
-        $dateTime->setTimezone($timezoneObj);
+        $dateTime->setTimezone($tz);
 
-        return $dateTime->format($this->getPhpDateFormat());
+        $format = $format ?? $this->getDateTimeFormat();
+
+        $carbon = Carbon::instance($dateTime);
+        $carbon->locale($this->language);
+
+        return $carbon->isoFormat($format);
     }
 
-    public function getNowString($timezone = null, $format = null)
+    public function getNowString(?string $timezone = null, ?string $format = null)
     {
         if ($timezone) {
-            $timezoneObj = new \DateTimeZone($timezone);
+            $tz = new \DateTimeZone($timezone);
         } else {
-            $timezoneObj = $this->timezone;
+            $tz = $this->timezone;
         }
 
         $dateTime = new \DateTime();
-        $dateTime->setTimezone($timezoneObj);
+        $dateTime->setTimezone($tz);
 
-        if ($format) {
-            $phpFormat = $this->convertFormatToPhp($format);
-        } else {
-            $phpFormat = $this->getPhpDateTimeFormat();
-        }
+        $format = $format ?? $this->getDateTimeFormat();
 
-        return $dateTime->format($phpFormat);
+        $carbon = Carbon::instance($dateTime);
+        $carbon->locale($this->language);
+
+        return $carbon->isoFormat($format);
     }
 
     public static function isAfterThreshold($value, $period)

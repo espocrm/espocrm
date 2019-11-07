@@ -177,7 +177,8 @@ class Container
         return new \Espo\Core\Utils\DateTime(
             $this->get('config')->get('dateFormat'),
             $this->get('config')->get('timeFormat'),
-            $this->get('config')->get('timeZone')
+            $this->get('config')->get('timeZone'),
+            $this->get('config')->get('language')
         );
     }
 

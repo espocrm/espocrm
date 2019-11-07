@@ -25,7 +25,6 @@
         "zordius/lightncandy": "0.*",
         "composer/semver": "^1.4",
         "tecnickcom/tcpdf": "^6.2",
-        "php-mime-mail-parser/php-mime-mail-parser": "3.*",
         "zbateson/mail-mime-parser": "1.1.*",
         "phpoffice/phpspreadsheet": "^1.1",
         "spatie/async": "dev-for-espocrm",
@@ -37,7 +36,8 @@
         "container-interop/container-interop": "1.2.0",
         "zendframework/zend-mime": "^2.7.1",
         "zendframework/zend-stdlib": "^3.1",
-        "robthree/twofactorauth": "^1.6"
+        "robthree/twofactorauth": "^1.6",
+        "nesbot/carbon": "^2.26"
     },
     "autoload": {
         "psr-0": {
