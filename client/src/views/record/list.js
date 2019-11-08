@@ -589,6 +589,12 @@ define('views/record/list', 'view', function (Dep) {
         },
 
         massActionRecalculateFormula: function () {
+            var ids = false;
+            var allResultIsChecked = this.allResultIsChecked;
+            if (!allResultIsChecked) {
+                ids = this.checkedList;
+            }
+
             this.confirm({
                 message: this.translate('recalculateFormulaConfirmation', 'messages'),
                 confirmText: this.translate('Yes')
@@ -599,6 +605,13 @@ define('views/record/list', 'view', function (Dep) {
                     result = result || {};
                     this.collection.fetch().then(function () {
                         Espo.Ui.success(this.translate('Done'));
+                        if (allResultIsChecked) {
+                            this.selectAllResult();
+                        } else {
+                            ids.forEach(function (id) {
+                                this.checkRecord(id);
+                            }, this);
+                        }
                     }.bind(this));
                 }.bind(this));
             }.bind(this));

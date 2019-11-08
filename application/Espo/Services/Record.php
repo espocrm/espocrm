@@ -1658,7 +1658,7 @@ class Record extends \Espo\Core\Services\Base
     {
         if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
 
-        $updatedIdList = [];
+        $resultIdList = [];
         $repository = $this->getRepository();
 
         $count = 0;
@@ -1666,79 +1666,35 @@ class Record extends \Espo\Core\Services\Base
         $data = $data;
         $this->filterInput($data);
 
-        if (array_key_exists('ids', $params) && is_array($params['ids'])) {
-            $ids = $params['ids'];
-            foreach ($ids as $id) {
-                $entity = $this->getEntity($id);
-                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                    $entity->set($data);
-                    try {
-                        $this->processValidation($entity, $data);
-                    } catch (\Exception $e) {
-                        continue;
-                    }
-                    if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity, ['massUpdate' => true])) {
-                            $updatedIdList[] = $entity->id;
-                            $count++;
+        $selectParams = $this->convertMassActionSelectParams($params);
 
-                            $this->processActionHistoryRecord('update', $entity);
-                        }
+        $collection = $this->getRepository()->find($selectParams);
+
+        foreach ($collection as $entity) {
+            if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
+                $entity->set($data);
+                try {
+                    $this->processValidation($entity, $data);
+                } catch (\Exception $e) {
+                    continue;
+                }
+                if ($this->checkAssignment($entity)) {
+                    if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
+                        $resultIdList[] = $entity->id;
+                        $count++;
+
+                        $this->processActionHistoryRecord('update', $entity);
                     }
                 }
             }
         }
 
-        if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-            $p = [];
-            $p['where'] = $where;
+        $this->afterMassUpdate($resultIdList, $data);
 
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
+        $result = ['count' => $count];
+        if (isset($params['ids'])) $result['ids'] = $resultIdList;
 
-            $selectParams = $this->getSelectParams($p);
-
-            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
-
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
-            $sth->execute();
-
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                    $entity->set($data);
-                    if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
-                            $updatedIdList[] = $entity->id;
-                            $count++;
-
-                            $this->processActionHistoryRecord('update', $entity);
-                        }
-                    }
-                }
-            }
-
-            $this->afterMassUpdate($updatedIdList, $data);
-
-            return (object) [
-                'count' => $count
-            ];
-        }
-
-        $this->afterMassUpdate($updatedIdList, $data);
-
-        return (object) [
-            'count' => $count,
-            'ids' => $updatedIdList
-        ];
+        return $result;
     }
 
     protected function checkEntityForMassRemove(Entity $entity)
@@ -1758,74 +1714,32 @@ class Record extends \Espo\Core\Services\Base
 
     public function massDelete(array $params)
     {
-        $removedIdList = [];
+        $resultIdList = [];
         $repository = $this->getRepository();
 
         $count = 0;
 
-        if (array_key_exists('ids', $params)) {
-            $ids = $params['ids'];
-            foreach ($ids as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
-                    if ($repository->remove($entity)) {
-                        $removedIdList[] = $entity->id;
-                        $count++;
+        $selectParams = $this->convertMassActionSelectParams($params);
+        $selectParams['skipTextColumns'] = true;
 
-                        $this->processActionHistoryRecord('delete', $entity);
-                    }
+        $collection = $this->getRepository()->find($selectParams);
+
+        foreach ($collection as $entity) {
+            if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
+                if ($repository->remove($entity)) {
+                    $resultIdList[] = $entity->id;
+                    $count++;
+                    $this->processActionHistoryRecord('delete', $entity);
                 }
             }
         }
 
-        if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-            $p = array();
-            $p['where'] = $where;
+        $this->afterMassDelete($resultIdList);
 
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
+        $result = ['count' => $count];
+        if (isset($params['ids'])) $result['ids'] = $resultIdList;
 
-            $selectParams = $this->getSelectParams($p);
-            $selectParams['skipTextColumns'] = true;
-
-            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
-
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
-            $sth->execute();
-
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
-                    if ($repository->remove($entity)) {
-                        $removedIdList[] = $entity->id;
-                        $count++;
-
-                        $this->processActionHistoryRecord('delete', $entity);
-                    }
-                }
-            }
-
-            $this->afterMassDelete($removedIdList);
-
-            return [
-                'count' => $count
-            ];
-        }
-
-        $this->afterMassDelete($removedIdList);
-
-        return [
-            'count' => $count,
-            'ids' => $removedIdList
-        ];
+        return $result;
     }
 
     public function massRecalculateFormula(array $params)
@@ -1833,24 +1747,8 @@ class Record extends \Espo\Core\Services\Base
         if (!$this->getUser()->isAdmin()) throw new Forbidden();
 
         $count = 0;
-        if (array_key_exists('ids', $params)) {
-            if (!is_array($params['ids'])) throw new BadRequest();
-            $selectParams = $this->getSelectParams([]);
-            $selectParams['whereClause'][] = [
-                'id' => $params['ids']
-            ];
 
-        } else if (array_key_exists('where', $params)) {
-            $p = ['where' => $params['where']];
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
-            $selectParams = $this->getSelectParams($p);
-        } else {
-            throw new BadRequest();
-        }
+        $selectParams = $this->convertMassActionSelectParams($params);
 
         $collection = $this->getRepository()->find($selectParams);
         foreach ($collection as $entity) {
@@ -1859,7 +1757,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return [
-            'count' => $count
+            'count' => $count,
         ];
     }
 
@@ -2644,27 +2542,10 @@ class Record extends \Espo\Core\Services\Base
         $count = 0;
 
         $idUpdatedList = [];
-        $repository = $this->getRepository();
 
-        if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-            $p = [];
-            $p['where'] = $where;
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
-            $selectParams = $this->getSelectParams($p);
-            $selectParams['returnSthCollection'] = true;
-        } else if (array_key_exists('ids', $params)) {
-            $selectParams = $this->getSelectParams([]);
-            $selectParams['whereClause'][] = ['id' => $params['ids']];
-        } else {
-            throw new Error();
-        }
+        $selectParams = $this->convertMassActionSelectParams($params);
 
-        $collection = $repository->find($selectParams);
+        $collection = $this->getRepository()->find($selectParams);
 
         foreach ($collection as $entity) {
             $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
@@ -2676,7 +2557,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return [
-            'count' => $count
+            'count' => $count,
         ];
     }
 

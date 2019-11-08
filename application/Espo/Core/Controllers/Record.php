@@ -254,28 +254,28 @@ class Record extends Base
         $byWhere = isset($data->byWhere) ? $data->byWhere : false;
         $selectData = isset($data->selectData) ? json_decode(json_encode($data->selectData), true) : null;
 
-        $params = array();
+        $actionParams = [];
         if ($byWhere) {
-            $params['selectData'] = $selectData;
-            $params['where'] = $where;
+            $actionParams['selectData'] = $selectData;
+            $actionParams['where'] = $where;
         } else {
-            $params['ids'] = $ids;
+            $actionParams['ids'] = $ids;
         }
 
         if (isset($data->attributeList)) {
-            $params['attributeList'] = $data->attributeList;
+            $actionParams['attributeList'] = $data->attributeList;
         }
 
         if (isset($data->fieldList)) {
-            $params['fieldList'] = $data->fieldList;
+            $actionParams['fieldList'] = $data->fieldList;
         }
 
         if (isset($data->format)) {
-            $params['format'] = $data->format;
+            $actionParams['format'] = $data->format;
         }
 
         return [
-            'id' => $this->getRecordService()->export($params)
+            'id' => $this->getRecordService()->export($actionParams),
         ];
     }
 
@@ -296,21 +296,11 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $params = array();
-        if (property_exists($data, 'where') && !empty($data->byWhere)) {
-            $params['where'] = json_decode(json_encode($data->where), true);
-            if (property_exists($data, 'selectData')) {
-                $params['selectData'] = json_decode(json_encode($data->selectData), true);
-            }
-        } else if (property_exists($data, 'ids')) {
-            $params['ids'] = $data->ids;
-        }
+        $actionParams = $this->getMassActionParamsFromData($data);
 
         $attributes = $data->attributes;
 
-        $idsUpdated = $this->getRecordService()->massUpdate($params, $attributes);
-
-        return $idsUpdated;
+        return $this->getRecordService()->massUpdate($actionParams, $attributes);
     }
 
     public function postActionMassDelete($params, $data, $request)
@@ -507,8 +497,7 @@ class Record extends Base
             if (property_exists($data, 'selectData')) {
                 $params['selectData'] = json_decode(json_encode($data->selectData), true);
             }
-        }
-        if (property_exists($data, 'ids')) {
+        } else if (property_exists($data, 'ids')) {
             $params['ids'] = $data->ids;
         }
 
@@ -538,27 +527,21 @@ class Record extends Base
         if (!$this->getAcl()->checkScope($this->name, 'edit')) throw new Forbidden();
         if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
 
+        $actionParams = $this->getMassActionParamsFromData($data);
+
         $fieldList = $data->fieldList ?? null;
         if (!empty($data->field)) {
             if (!is_array($fieldList)) $fieldList = [];
             $fieldList[] = $data->field;
         }
 
-        $params = [];
-        if (property_exists($data, 'where') && !empty($data->byWhere)) {
-            $params['where'] = json_decode(json_encode($data->where), true);
-            if (property_exists($data, 'selectData')) {
-                $params['selectData'] = json_decode(json_encode($data->selectData), true);
-            }
-        } else if (property_exists($data, 'ids')) {
-            $params['ids'] = $data->ids;
-        }
-
         if (empty($data->currencyRates)) throw new BadRequest();
         if (empty($data->targetCurrency)) throw new BadRequest();
         if (empty($data->baseCurrency)) throw new BadRequest();
 
-        return $this->getRecordService()->massConvertCurrency($params, $data->targetCurrency, $data->baseCurrency, $data->currencyRates, $fieldList);
+        return $this->getRecordService()->massConvertCurrency(
+            $actionParams, $data->targetCurrency, $data->baseCurrency, $data->currencyRates, $fieldList
+        );
     }
 
     public function postActionConvertCurrency($params, $data, $request)
@@ -576,6 +559,8 @@ class Record extends Base
         if (empty($data->targetCurrency)) throw new BadRequest();
         if (empty($data->baseCurrency)) throw new BadRequest();
 
-        return $this->getRecordService()->convertCurrency($data->id, $data->targetCurrency, $data->baseCurrency, $data->currencyRates, $fieldList);
+        return $this->getRecordService()->convertCurrency(
+            $data->id, $data->targetCurrency, $data->baseCurrency, $data->currencyRates, $fieldList
+        );
     }
 }
