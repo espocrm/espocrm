@@ -482,11 +482,9 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        if (property_exists($data, 'ids')) {
-            $params['ids'] = $data->ids;
-        }
+        $actionParams = $this->getMassActionParamsFromData($data);
 
-        return $this->getRecordService()->massFollow($params);
+        return $this->getRecordService()->massFollow($actionParams);
     }
 
     public function postActionMassUnfollow($params, $data, $request)
@@ -495,11 +493,9 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        if (property_exists($data, 'ids')) {
-            $params['ids'] = $data->ids;
-        }
+        $actionParams = $this->getMassActionParamsFromData($data);
 
-        return $this->getRecordService()->massUnfollow($params);
+        return $this->getRecordService()->massUnfollow($actionParams);
     }
 
     protected function getMassActionParamsFromData($data)

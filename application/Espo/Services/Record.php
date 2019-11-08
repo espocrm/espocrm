@@ -1895,56 +1895,80 @@ class Record extends \Espo\Core\Services\Base
     {
         $resultIdList = [];
 
-        if (empty($userId)) {
-            $userId = $this->getUser()->id;
-        }
+        if (empty($userId)) $userId = $this->getUser()->id;
 
         $streamService = $this->getStreamService();
 
-        if (array_key_exists('ids', $params)) {
-            $idList = $params['ids'];
-            foreach ($idList as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'stream')) {
-                    if ($streamService->followEntity($entity, $userId)) {
-                        $resultIdList[] = $entity->id;
-                    }
-                }
+        if (empty($userId)) $userId = $this->getUser()->id;
+
+        $selectParams = $this->convertMassActionSelectParams($params);
+
+        $collection = $this->getRepository()->find($selectParams);
+        foreach ($collection as $entity) {
+            if (!$this->getAcl()->check($entity, 'stream') || !$this->getAcl()->check($entity, 'read')) continue;
+            if ($streamService->followEntity($entity, $userId)) {
+                $resultIdList[] = $entity->id;
             }
         }
 
-        return [
-            'ids' => $resultIdList,
-            'count' => count($resultIdList)
+        $result = [
+            'count' => count($resultIdList),
         ];
+
+        if (isset($params['ids'])) $result['ids'] = $resultIdList;
+
+        return $result;
     }
 
     public function massUnfollow(array $params, $userId = null)
     {
         $resultIdList = [];
 
-        if (empty($userId)) {
-            $userId = $this->getUser()->id;
-        }
-
         $streamService = $this->getStreamService();
 
-        if (array_key_exists('ids', $params)) {
-            $idList = $params['ids'];
-            foreach ($idList as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity) {
-                    if ($streamService->unfollowEntity($entity, $userId)) {
-                        $resultIdList[] = $entity->id;
-                    }
-                }
+        if (empty($userId)) $userId = $this->getUser()->id;
+
+        $selectParams = $this->convertMassActionSelectParams($params);
+
+        $collection = $this->getRepository()->find($selectParams);
+        foreach ($collection as $entity) {
+            if ($streamService->unfollowEntity($entity, $userId)) {
+                $resultIdList[] = $entity->id;
             }
         }
 
-        return [
-            'ids' => $resultIdList,
-            'count' => count($resultIdList)
+        $result = [
+            'count' => count($resultIdList),
         ];
+
+        if (isset($params['ids'])) $result['ids'] = $resultIdList;
+
+        return $result;
+    }
+
+    protected function convertMassActionSelectParams($params)
+    {
+        if (array_key_exists('ids', $params)) {
+            if (!is_array($params['ids'])) throw new BadRequest();
+            $selectParams = $this->getSelectParams([]);
+            $selectParams['whereClause'][] = [
+                'id' => $params['ids']
+            ];
+        } else if (array_key_exists('where', $params)) {
+            $p = ['where' => $params['where']];
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $p[$k] = $v;
+                }
+            }
+            $selectParams = $this->getSelectParams($p);
+        } else {
+            throw new BadRequest();
+        }
+
+        $selectParams['returnSthCollection'] = true;
+
+        return $selectParams;
     }
 
     protected function getDuplicateWhereClause(Entity $entity, $data)

@@ -700,10 +700,7 @@ define('views/record/list', 'view', function (Dep) {
         massActionFollow: function () {
             var count = this.checkedList.length;
 
-            var idList = [];
-            for (var i in this.checkedList) {
-                idList.push(this.checkedList[i]);
-            }
+            var data = this.getMassActionSelectionPostData();
 
             var confirmMsg = this.translate('confirmMassFollow', 'messages').replace('{count}', count.toString());
             this.confirm({
@@ -711,9 +708,7 @@ define('views/record/list', 'view', function (Dep) {
                 confirmText: this.translate('Follow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massFollow', {
-                    ids: idList
-                }).then(function (result) {
+                this.ajaxPostRequest(this.entityType + '/action/massFollow', data).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massFollowResult';
                     if (resultCount) {
@@ -731,10 +726,7 @@ define('views/record/list', 'view', function (Dep) {
         massActionUnfollow: function () {
             var count = this.checkedList.length;
 
-            var idList = [];
-            for (var i in this.checkedList) {
-                idList.push(this.checkedList[i]);
-            }
+            var data = this.getMassActionSelectionPostData();
 
             var confirmMsg = this.translate('confirmMassUnfollow', 'messages').replace('{count}', count.toString());
             this.confirm({
@@ -742,9 +734,7 @@ define('views/record/list', 'view', function (Dep) {
                 confirmText: this.translate('Unfollow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massUnfollow', {
-                    ids: idList
-                }).then(function (result) {
+                this.ajaxPostRequest(this.entityType + '/action/massUnfollow', data).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massUnfollowResult';
                     if (resultCount) {
@@ -1005,7 +995,7 @@ define('views/record/list', 'view', function (Dep) {
                 this.getAcl().check(this.entityType, 'stream')
             ) {
                 this.addMassAction('follow');
-                this.addMassAction('unfollow');
+                this.addMassAction('unfollow', true);
             }
 
             if (
