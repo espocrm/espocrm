@@ -97,6 +97,7 @@ class Language extends \Espo\Core\Services\Base
             $scopeList = array_keys($this->getMetadata()->get(['scopes'], []));
 
             foreach ($scopeList as $scope) {
+                if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
                 if ($this->getMetadata()->get(['entityAcl', $scope, 'languageAclDisabled'])) continue;
 
                 if (!$this->getAcl()->check($scope)) {
