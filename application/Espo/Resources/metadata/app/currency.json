@@ -165,7 +165,9 @@
         "BTC":"฿"
     },
     "list": [
+        "AFN",
         "AED",
+        "ALL",
         "ANG",
         "ARS",
         "AUD",
@@ -257,6 +259,7 @@
         "VND",
         "YER",
         "ZAR",
-        "ZMK"
+        "ZMK",
+        "ZWD"
     ]
 }
