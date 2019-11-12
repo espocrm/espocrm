@@ -91,8 +91,10 @@ class DataManager
      */
     public function rebuildDatabase($entityList = null)
     {
+        $schema = $this->getContainer()->get('schema');
+
         try {
-            $result = $this->getContainer()->get('schema')->rebuild($entityList);
+            $result = $schema->rebuild($entityList);
         } catch (\Exception $e) {
             $result = false;
             $GLOBALS['log']->error('Fault to rebuild database schema'.'. Details: '.$e->getMessage());
@@ -100,6 +102,18 @@ class DataManager
 
         if ($result != true) {
             throw new Exceptions\Error("Error while rebuilding database. See log file for details.");
+        }
+
+        $config = $this->getContainer()->get('config');
+
+        $databaseType = strtolower($schema->getDatabaseHelper()->getDatabaseType());
+        if (!$config->get('actualDatabaseType') || $config->get('actualDatabaseType') != $databaseType) {
+            $config->set('actualDatabaseType', $databaseType);
+        }
+
+        $databaseVersion = $schema->getDatabaseHelper()->getDatabaseVersion();
+        if (!$config->get('actualDatabaseVersion') || $config->get('actualDatabaseVersion') != $databaseVersion) {
+            $config->set('actualDatabaseVersion', $databaseVersion);
         }
 
         $this->updateCacheTimestamp();
@@ -180,7 +194,7 @@ class DataManager
     public function updateCacheTimestamp()
     {
         $this->getContainer()->get('config')->updateCacheTimestamp();
-        $this->getContainer()->get('config')->save();
+        $this->getContainer()->get('config')->save(); /* correct rebuildDatabase() method when remove this line */
 
         return true;
     }

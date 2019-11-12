@@ -127,6 +127,8 @@ return [
         'webSocketUseSecureServer',
         'webSocketPort',
         'aclStrictMode',
+        'actualDatabaseType',
+        'actualDatabaseVersion',
     ],
     'adminItems' => [
         'devMode',
