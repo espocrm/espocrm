@@ -74,6 +74,17 @@ class Email extends \Espo\Core\SelectManagers\Base
             if ($folderId === 'important' || $folderId === 'drafts') {
                 $skipIndex = true;
             }
+
+            $actualDatabaseType = $this->getConfig()->get('actualDatabaseType');
+            $actualDatabaseVersion = $this->getConfig()->get('actualDatabaseVersion');
+
+            if (
+                !$skipIndex &&
+                ($actualDatabaseType !== 'mysql' || version_compare($actualDatabaseVersion, '8.0.0') < 0) &&
+                $this->hasLinkJoined('teams', $result)
+            ) {
+                $skipIndex = true;
+            }
             if (!$skipIndex) {
                 $result['useIndex'] = 'dateSent';
             }
