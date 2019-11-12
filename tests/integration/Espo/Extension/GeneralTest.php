@@ -38,6 +38,11 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
     protected $packagePath = 'Extension/General.zip';
 
+    protected function beforeSetUp()
+    {
+        $this->fullReset();
+    }
+
     public function testUpload()
     {
         $fileData = file_get_contents($this->normalizePath($this->packagePath));
@@ -49,8 +54,6 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertStringMatchesFormat('%x', $extensionId);
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
         $this->assertFileExists('data/upload/extensions/' . $extensionId); //directory
-
-        $this->enableFullReset();
 
         return $extensionId;
     }
@@ -75,8 +78,6 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileNotExists('extension.php');
         $this->assertFileNotExists('upgrade.php');
 
-        $this->enableFullReset();
-
         return $extensionId;
     }
 
@@ -100,8 +101,6 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileExists('extension.php');
         $this->assertFileExists('upgrade.php');
 
-        $this->enableFullReset();
-
         return $extensionId;
     }
 
@@ -124,7 +123,5 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileExists('vendor/zendframework'); //directory
         $this->assertFileExists('extension.php');
         $this->assertFileExists('upgrade.php');
-
-        $this->enableFullReset();
     }
 }

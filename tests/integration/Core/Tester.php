@@ -251,15 +251,18 @@ class Tester
         $fullReset = false;
 
         $modifiedTime = filemtime($latestEspoDir . '/application');
-        if (!isset($configData['lastModifiedTime']) || $configData['lastModifiedTime'] != $modifiedTime) {
+        if ($this->getParam('fullReset') || !isset($configData['lastModifiedTime']) || $configData['lastModifiedTime'] != $modifiedTime) {
             $fullReset = true;
             $this->saveTestConfigData('lastModifiedTime', $modifiedTime);
         }
 
         if ($fullReset) {
             Utils::dropTables($configData['database']);
-            $fileManager->removeInDir($this->installPath);
-            $fileManager->copy($latestEspoDir, $this->installPath, true);
+
+            //$fileManager->removeInDir($this->installPath);
+            //$fileManager->copy($latestEspoDir, $this->installPath, true);
+            shell_exec('rm -rf "' . $this->installPath . '"');
+            shell_exec('cp -r "' . $latestEspoDir . '" "' . $this->installPath . '"');
 
             return true;
         }
@@ -301,8 +304,8 @@ class Tester
     {
         $applyChanges = false;
 
-        if (!empty($this->params['pathToFiles'])) {
-            $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
+        if (!empty($this->params['pathToFiles']) && file_exists($this->params['pathToFiles'])) {
+            $result = $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
             $this->getApplication(true, true)->runRebuild();
         }
 
