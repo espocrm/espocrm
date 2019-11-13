@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/list-with-categories', 'views/list', function (Dep) {
+define('views/list-with-categories', 'views/list', function (Dep) {
 
     return Dep.extend({
 
@@ -122,6 +122,21 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
                 }
                 this.selectCurrentCategory();
             }
+        },
+
+        hasTextFilter: function () {
+            if (this.collection.where) {
+                for (var i = 0; i < this.collection.where.length; i++) {
+                    if (this.collection.where[i].type === 'textFilter') {
+                        return true;
+                        break;
+                    }
+                }
+            }
+            if (this.collection.data && this.collection.data.textFilter) {
+                return true;
+            }
+            return false;
         },
 
         hasIsExpandedStoredValue: function () {
@@ -263,7 +278,12 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
                 this.$listContainer.removeClass('hidden');
                 return;
             }
-            if (!this.collection.models.length && this.nestedCategoriesCollection && this.nestedCategoriesCollection.models.length) {
+            if (
+                !this.collection.models.length &&
+                this.nestedCategoriesCollection &&
+                this.nestedCategoriesCollection.models.length &&
+                !this.hasTextFilter()
+            ) {
                 this.$listContainer.addClass('hidden');
             } else {
                 this.$listContainer.removeClass('hidden');
@@ -396,27 +416,14 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             }, this);
         },
 
+
         applyCategoryToCollection: function () {
 
             this.collection.whereFunction = function () {
                 var filter;
                 var isExpanded = this.isExpanded;
 
-                var hasTextFilter = false;
-                if (this.collection.where) {
-                    for (var i = 0; i < this.collection.where.length; i++) {
-                        if (this.collection.where[i].type === 'textFilter') {
-                            hasTextFilter = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (this.collection.data && this.collection.data.textFilter) {
-                    hasTextFilter = true;
-                }
-
-                if (!isExpanded && !hasTextFilter) {
+                if (!isExpanded && !this.hasTextFilter()) {
                     if (this.isCategoryMultiple()) {
                         if (this.currentCategoryId) {
                             filter = {
@@ -491,7 +498,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
         actionManageCategories: function () {
             this.clearView('categories');
             this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
-        }
+        },
 
     });
 });

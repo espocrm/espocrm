@@ -116,8 +116,6 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->beforeSetUp();
-
         $params = array(
             'className' => get_class($this),
             'dataFile' => $this->dataFile,
@@ -126,6 +124,9 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         );
 
         $this->espoTester = new Tester($params);
+
+        $this->beforeSetUp();
+
         $this->espoTester->initialize();
         $this->auth($this->userName, $this->password, null, $this->authenticationMethod);
 
@@ -190,7 +191,7 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         $this->espoTester->setData($data);
     }
 
-    protected function enableFullReset()
+    protected function fullReset()
     {
         $this->espoTester->setParam('fullReset', true);
     }
