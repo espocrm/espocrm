@@ -377,4 +377,44 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $result = $fm->run($script, $lead);
         $this->assertFalse($result);
     }
+
+    public function testRecordRelate()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+        $o = $em->createEntity('Opportunity', [
+            'name' => '1',
+        ]);
+
+        $script = "record\\relate('Account', '".$a->id."', 'opportunities', '".$o->id."')";
+        $result = $fm->run($script, $contact);
+
+        $this->assertTrue($result);
+        $this->assertTrue($em->getRepository('Account')->isRelated($a, 'opportunities', $o));
+    }
+
+    public function testRecordUnrelate()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+        $o = $em->createEntity('Opportunity', [
+            'name' => '1',
+        ]);
+
+        $em->getRepository('Account')->relate($a, 'opportunities', $o);
+
+        $script = "record\\unrelate('Account', '".$a->id."', 'opportunities', '".$o->id."')";
+        $result = $fm->run($script, $contact);
+
+        $this->assertTrue($result);
+        $this->assertFalse($em->getRepository('Account')->isRelated($a, 'opportunities', $o));
+    }
 }
