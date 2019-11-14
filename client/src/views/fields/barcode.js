@@ -38,7 +38,7 @@ define('views/fields/barcode', ['views/fields/varchar', 'lib!JsBarcode'], functi
 
         setup: function () {
             this.params.trim = true;
-            
+
             var maxLength = 255;
 
             switch (this.params.codeType) {
