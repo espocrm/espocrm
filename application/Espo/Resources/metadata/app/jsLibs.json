@@ -43,5 +43,10 @@
         "path": "client/lib/exif-js.js",
         "exportsTo": "window",
         "exportsAs": "EXIF"
+    },
+    "JsBarcode": {
+        "path": "client/lib/JsBarcode.all.min.js",
+        "exportsTo": "window",
+        "exportsAs": "JsBarcode"
     }
 }

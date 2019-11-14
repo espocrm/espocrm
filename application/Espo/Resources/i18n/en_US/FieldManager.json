@@ -60,6 +60,15 @@
             "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 months",
             "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 months",
             "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 year"
+        },
+        "barcodeType": {
+            "EAN13": "EAN-13",
+            "EAN8": "EAN-8",
+            "EAN5": "EAN-5",
+            "EAN2": "EAN-2",
+            "UPC": "UPC (A)",
+            "UPCE": "UPC (E)",
+            "pharmacode": "Pharmacode"
         }
     },
     "tooltips": {
@@ -75,6 +84,7 @@
         "after": "The date value should be after the date value of the specified field.",
         "readOnly": "Field value can't be specified by user. But can be calculated by formula.",
         "fileAccept": "Which file types to accept. It's possible to add custom items.",
+        "barcodeLastChar": "For EAN-13 type.",
         "maxFileSize": "If empty or 0 then no limit."
     },
     "fieldParts": {

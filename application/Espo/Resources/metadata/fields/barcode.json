@@ -1,0 +1,50 @@
+{
+   "params": [
+      {
+         "name": "required",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name": "codeType",
+         "type": "enum",
+         "options": [
+            "CODE128",
+            "CODE128A",
+            "CODE128B",
+            "CODE128C",
+            "EAN13",
+            "EAN8",
+            "EAN5",
+            "EAN2",
+            "UPC",
+            "UPCE",
+            "ITF14",
+            "pharmacode"
+         ],
+         "translation": "FieldManager.options.barcodeType"
+      },
+      {
+         "name": "lastChar",
+         "type": "varchar",
+         "maxLength": 1,
+         "default": "",
+         "tooltip": "barcodeLastChar"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "validationList": [
+      "required"
+   ],
+   "filter": true,
+   "textFilter": true,
+   "textFilterForeign": true,
+   "fieldDefs":{
+      "type":"varchar",
+      "len": 255
+   },
+   "validatorClassName": "Espo\\Core\\FieldValidators\\VarcharType"
+}

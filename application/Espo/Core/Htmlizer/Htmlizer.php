@@ -40,7 +40,7 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
 
-require('vendor/zordius/lightncandy/src/lightncandy.php');
+use LightnCandy\LightnCandy as LightnCandy;
 
 class Htmlizer
 {
@@ -272,46 +272,38 @@ class Htmlizer
 
     public function render(Entity $entity, $template, $id = null, $additionalData = [], $skipLinks = false)
     {
-        $code = \LightnCandy::compile($template, [
-            'flags' => \LightnCandy::FLAG_HANDLEBARSJS,
+        $template = str_replace('<tcpdf ', '', $template);
+
+        $code = LightnCandy::compile($template, [
+            'flags' => LightnCandy::FLAG_HANDLEBARSJS | LightnCandy::FLAG_ERROR_EXCEPTION,
             'helpers' => [
-                'file' => function ($context, $options) {
-                    if (count($context) && $context[0]) {
-                        $id = $context[0];
-                        return "?entryPoint=attachment&id=" . $id;
-                    }
+                'file' => function () {
+                    $args = func_get_args();
+                    $id = $args[0] ?? null;
+                    if (!$id) return '';
+                    return "?entryPoint=attachment&id=" . $id;
                 },
-                'numberFormat' => function ($context, $options) {
-                    if ($context && isset($context[0])) {
-                        $number = $context[0];
+                'var' => function () {
+                    $args = func_get_args();
+                    $c = $args[1] ?? [];
+                    $key = $args[0] ?? null;
+                    if (is_null($key)) return null;
+                    return $c[$key] ?? null;
+                },
+                'numberFormat' => function () {
+                    $args = func_get_args();
+                    if (count($args) !== 2) return null;
+                    $context = $args[count($args) - 1];
+                    $number = $args[0] ?? null;
 
-                        $decimals = 0;
-                        $decimalPoint = '.';
-                        $thousandsSeparator = ',';
+                    if (is_null($number)) return '';
 
-                        if (isset($options['decimals'])) {
-                            $decimals = $options['decimals'];
-                        }
-                        if (isset($options['decimalPoint'])) {
-                            $decimalPoint = $options['decimalPoint'];
-                        }
-                        if (isset($options['thousandsSeparator'])) {
-                            $thousandsSeparator = $options['thousandsSeparator'];
-                        }
-                        return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
-                    }
-                    return '';
+                    $decimals = $context['hash']['decimals'] ?? 0;
+                    $decimalPoint = $context['hash']['decimalPoint'] ?? '.';
+                    $thousandsSeparator = $context['hash']['thousandsSeparator'] ?? ',';
+
+                    return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
                 },
-                'var' => function ($context, $options) {
-                    if ($context && isset($context[0]) && isset($context[1])) {
-                        if (isset($context[1][$context[0]])) {
-                            return $context[1][$context[0]];
-                        }
-                    }
-                    return;
-                },
-            ],
-            'hbhelpers' => [
                 'dateFormat' => function () {
                     $args = func_get_args();
                     if (count($args) !== 2) return null;
@@ -325,6 +317,54 @@ class Htmlizer
                     if (strlen($dateValue) > 11) return $dateTime->convertSystemDateTime($dateValue, $timezone, $format, $language);
 
                     return $dateTime->convertSystemDate($dateValue, $format, $language);
+                },
+                'barcodeImage' => function () {
+                    $args = func_get_args();
+                    if (count($args) !== 2) return null;
+                    $context = $args[count($args) - 1];
+                    $value = $args[0];
+
+                    $codeType = $context['hash']['type'] ?? 'CODE128';
+
+                    $typeMap = [
+                        "CODE128" => 'C128',
+                        "CODE128A" => 'C128A',
+                        "CODE128B" => 'C128B',
+                        "CODE128C" => 'C128C',
+                        "EAN13" => 'EAN13',
+                        "EAN8" => 'EAN8',
+                        "EAN5" => 'EAN5',
+                        "EAN2" => 'EAN2',
+                        "UPC" => 'UPCA',
+                        "UPCE" => 'UPCE',
+                        "ITF14" => 'I25',
+                        "pharmacode" => 'PHARMA',
+                    ];
+
+                    $params = [
+                        $value,
+                        $typeMap[$codeType] ?? null,
+                        '', '',
+                        $context['hash']['width'] ?? 60,
+                        $context['hash']['height'] ?? 30,
+                        0.4,
+                        [
+                            'position' => 'S',
+                            'border' => false,
+                            'padding' => $context['hash']['padding'] ?? 0,
+                            'fgcolor' => $context['hash']['color'] ?? [0,0,0],
+                            'bgcolor' => $context['hash']['bgcolor'] ?? [255,255,255],
+                            'text' => $context['hash']['text'] ?? true,
+                            'font' => 'helvetica',
+                            'fontsize' => $context['hash']['fontsize'] ?? 14,
+                            'stretchtext' => 4,
+                        ],
+                        'N',
+                    ];
+
+                    $paramsString = urlencode(json_encode($params));
+
+                    return new LightnCandy\SafeString("<tcpdf method=\"write1DBarcode\" params=\"{$paramsString}\" />");
                 },
                 'ifEqual' => function () {
                     $args = func_get_args();
@@ -356,23 +396,10 @@ class Htmlizer
                         return $context['inverse'] ? $context['inverse']() : '';
                     }
                 },
-            ]
+            ],
         ]);
 
-        $toRemove = false;
-        if ($id === null) {
-            $id = uniqid('', true);
-            $toRemove = true;
-        }
-
-        $fileName = 'data/cache/templates/' . $id . '.php';
-
-        $this->fileManager->putContents($fileName, $code);
-        $renderer = $this->fileManager->getPhpContents($fileName);
-
-        if ($toRemove) {
-            $this->fileManager->removeFile($fileName);
-        }
+        $renderer = LightnCandy::prepare($code);
 
         $data = $this->getDataFromEntity($entity, $skipLinks, 0, $template);
 
@@ -391,6 +418,7 @@ class Htmlizer
         }
 
         $data['__dateTime'] = $this->dateTime;
+        $data['__metadata'] = $this->metadata;
 
         $html = $renderer($data);
 
