@@ -238,6 +238,14 @@
         }
     },
     {
+        "route": "/CurrencyRate",
+        "method": "put",
+        "params": {
+            "controller": "CurrencyRate",
+            "action": "update"
+        }
+    },
+    {
         "route": "/:controller/:id",
         "method": "get",
         "params": {

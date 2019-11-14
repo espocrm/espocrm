@@ -50,6 +50,7 @@
         "LeadCaptureLogRecord": "Lead Capture Log Record",
         "ArrayValue": "Array Value",
         "DashboardTemplate": "Dashboard Template",
+        "Currency": "Currency",
         "Webhook": "Webhook"
     },
     "scopeNamesPlural": {
@@ -92,6 +93,7 @@
         "LeadCaptureLogRecord": "Lead Capture Log",
         "ArrayValue": "Array Values",
         "DashboardTemplate": "Dashboard Templates",
+        "Currency": "Currency",
         "Webhook": "Webhooks"
     },
     "labels": {

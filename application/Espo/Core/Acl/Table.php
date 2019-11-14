@@ -182,12 +182,13 @@ class Table
         return 'no';
     }
 
-    public function getHighestLevel($action)
+    public function getHighestLevel($scope, $action)
     {
         if (in_array($action, $this->booleanActionList)) {
             return 'yes';
         } else {
-            return 'all';
+            $level = $this->metadata->get(['scopes', $scope, $this->type . 'HighestLevel']);
+            return $level ?? 'all';
         }
     }
 

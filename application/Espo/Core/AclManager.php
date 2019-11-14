@@ -134,7 +134,7 @@ class AclManager
     public function getLevel(User $user, $scope, $action)
     {
         if ($user->isAdmin()) {
-            return $this->getTable($user)->getHighestLevel($action);
+            return $this->getTable($user)->getHighestLevel($scope, $action);
         }
         return $this->getTable($user)->getLevel($scope, $action);
     }
