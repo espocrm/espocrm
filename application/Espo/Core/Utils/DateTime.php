@@ -145,7 +145,7 @@ class DateTime
             $carbon = Carbon::instance($dateTime);
             $carbon->locale($language ?? $this->language);
 
-            return $carbon->isoFormat($format ?? $this->getDateFormat());
+            return $carbon->isoFormat($format ?? $this->getDateTimeFormat());
         }
         return null;
     }
