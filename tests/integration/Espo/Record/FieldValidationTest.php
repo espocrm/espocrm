@@ -89,7 +89,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test'
         ]);
 
-        $result = $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
+        $result = (object) $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
             [
                 'ids' => [$entity->id]
             ],
@@ -114,7 +114,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test'
         ]);
 
-        $result = $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
+        $result = (object) $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
             [
                 'ids' => [$entity->id]
             ],
