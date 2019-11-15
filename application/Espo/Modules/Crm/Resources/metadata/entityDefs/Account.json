@@ -204,9 +204,7 @@
             "directAccessDisabled": true
         },
         "originalLead": {
-            "type": "link",
-            "layoutMassUpdateDisabled": true,
-            "layoutListDisabled": true,
+            "type": "linkOne",
             "readOnly": true,
             "view": "views/fields/link-one"
         },

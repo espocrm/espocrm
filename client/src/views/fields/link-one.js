@@ -30,8 +30,6 @@ define('views/fields/link-one', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
-        readOnly: true,
-
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isOneOf'],
 
         fetchSearch: function () {

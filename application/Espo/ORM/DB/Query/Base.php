@@ -449,6 +449,7 @@ abstract class Base
             $havingPart,
             $indexKeyList
         );
+
         return $sql;
     }
 
@@ -1016,7 +1017,10 @@ abstract class Base
                         if (!empty($fieldDefs['select'])) {
                             $part = $this->getAttributeSql($entity, $attribute[0], 'select', $params);
                         } else {
-                            if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['noSelect'])) {
+                            if (!empty($fieldDefs['noSelect'])) {
+                                continue;
+                            }
+                            if (!empty($fieldDefs['notStorable'])) {
                                 continue;
                             }
                             $part = $this->getFieldPath($entity, $attribute[0], $params);
@@ -1041,7 +1045,7 @@ abstract class Base
             if (!empty($fieldDefs['select'])) {
                 $fieldPath = $this->getAttributeSql($entity, $attribute, 'select', $params);
             } else {
-                if (!empty($fieldDefs['notStorable'])) {
+                if (!empty($fieldDefs['notStorable']) && ($fieldDefs['type'] ?? null) !== 'foreign') {
                     continue;
                 }
                 if ($attributeType === null) {
@@ -1097,28 +1101,29 @@ abstract class Base
                 }
                 if ($entity->getAttributeType($field) == 'foreign' && $entity->getAttributeParam($field, 'relation')) {
                     $relationsToJoin[] = $entity->getAttributeParam($field, 'relation');
+                } else if (
+                    $entity->getAttributeParam($field, 'fieldType') == 'linkOne' && $entity->getAttributeParam($field, 'relation')
+                ) {
+                    $relationsToJoin[] = $entity->getAttributeParam($field, 'relation');
                 }
             }
         }
 
         foreach ($entity->relations as $relationName => $r) {
-            if ($r['type'] == IEntity::BELONGS_TO) {
-                if (!empty($r['noJoin'])) {
-                    continue;
-                }
-                if (in_array($relationName, $skipList)) {
-                    continue;
-                }
+            $type = $r['type'] ?? null;
+            if ($type == IEntity::BELONGS_TO || $type == IEntity::HAS_ONE) {
+                if (!empty($r['noJoin'])) continue;
 
-                if (is_array($select)) {
-                    if (!in_array($relationName, $relationsToJoin)) {
-                        continue;
-                    }
-                }
+                if (in_array($relationName, $skipList)) continue;
+                if (is_array($select) && !in_array($relationName, $relationsToJoin)) continue;
 
-                $join = $this->getBelongsToJoin($entity, $relationName, $r);
-                if ($join) {
+                if ($type == IEntity::BELONGS_TO) {
+                    $join = $this->getBelongsToJoin($entity, $relationName, $r);
+                    if (!$join) continue;
                     $joinsArr[] = 'LEFT ' . $join;
+                } else if ($type == IEntity::HAS_ONE) {
+                    $join =  $this->getJoin($entity, $relationName, true);
+                    $joinsArr[] = $join;
                 }
             }
         }
@@ -1296,7 +1301,7 @@ abstract class Base
         $occuranceHash = [];
 
         foreach ($entity->relations as $name => $r) {
-            if ($r['type'] == IEntity::BELONGS_TO) {
+            if ($r['type'] == IEntity::BELONGS_TO || $r['type'] == IEntity::HAS_ONE) {
 
                 if (!array_key_exists($name, $aliases)) {
                     if (array_key_exists($name, $occuranceHash)) {
@@ -1322,19 +1327,21 @@ abstract class Base
         if (isset($entity->fields[$field])) {
             $f = $entity->fields[$field];
 
+            $relationType = $f['type'];
+
             if (isset($f['source'])) {
                 if ($f['source'] != 'db') {
                     return false;
                 }
             }
 
-            if (!empty($f['notStorable'])) {
+            if (!empty($f['notStorable']) && $relationType !== 'foreign') {
                 return false;
             }
 
             $fieldPath = '';
 
-            switch ($f['type']) {
+            switch ($relationType) {
                 case 'foreign':
                     if (isset($f['relation'])) {
                         $relationName = $f['relation'];
@@ -1349,6 +1356,7 @@ abstract class Base
                                     $foreigh[$i] = $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
                                 }
                             }
+
                             $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreigh). '))';
                         } else {
                             $expression = $this->getAlias($entity, $relationName) . '.' . $foreigh;

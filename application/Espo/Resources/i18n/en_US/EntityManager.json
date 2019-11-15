@@ -50,6 +50,8 @@
             "manyToMany": "Many-to-Many",
             "oneToMany": "One-to-Many",
             "manyToOne": "Many-to-One",
+            "oneToOneRight": "One-to-One Right",
+            "oneToOneLeft": "One-to-One Left",
             "parentToChildren": "Parent-to-Children",
             "childrenToParent": "Children-to-Parent"
         },

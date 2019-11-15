@@ -693,6 +693,95 @@ class EntityManager
         }
 
         switch ($linkType) {
+            case 'oneToOneRight':
+            case 'oneToOneLeft':
+                if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign)) {
+                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+                }
+                if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Id')) {
+                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Id] already exists.');
+                }
+                if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Name')) {
+                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Name] already exists.');
+                }
+                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link)) {
+                    throw new Conflict('Field ['.$entity.'::'.$link.'] already exists.');
+                }
+                if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Id')) {
+                    throw new Conflict('Field ['.$entity.'::'.$link.'Id] already exists.');
+                }
+                if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Name')) {
+                    throw new Conflict('Field ['.$entity.'::'.$link.'Name] already exists.');
+                }
+
+                if ($linkType === 'oneToOneLeft') {
+                    $dataLeft = [
+                        'fields' => [
+                            $link => [
+                                'type' => 'linkOne',
+                                'isCustom' => true,
+                            ],
+                        ],
+                        'links' => [
+                            $link => [
+                                'type' => 'hasOne',
+                                'foreign' => $linkForeign,
+                                'entity' => $entityForeign,
+                                'isCustom' => true,
+                            ]
+                        ]
+                    ];
+                    $dataRight = [
+                        'fields' => [
+                            $linkForeign => [
+                                'type' => 'link',
+                                'isCustom' => true,
+                            ],
+                        ],
+                        'links' => [
+                            $linkForeign => [
+                                'type' => 'belongsTo',
+                                'foreign' => $link,
+                                'entity' => $entity,
+                                'isCustom' => true,
+                            ]
+                        ]
+                    ];
+                } else {
+                    $dataLeft = [
+                        'fields' => [
+                            $link => [
+                                'type' => 'link',
+                                'isCustom' => true,
+                            ],
+                        ],
+                        'links' => [
+                            $link => [
+                                'type' => 'belongsTo',
+                                'foreign' => $linkForeign,
+                                'entity' => $entityForeign,
+                                'isCustom' => true,
+                            ]
+                        ]
+                    ];
+                    $dataRight = [
+                        'fields' => [
+                            $linkForeign => [
+                                'type' => 'linkOne',
+                                'isCustom' => true,
+                            ],
+                        ],
+                        'links' => [
+                            $linkForeign => [
+                                'type' => 'hasOne',
+                                'foreign' => $link,
+                                'entity' => $entity,
+                                'isCustom' => true,
+                            ]
+                        ]
+                    ];
+                }
+                break;
             case 'oneToMany':
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign)) {
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
@@ -839,6 +928,8 @@ class EntityManager
                     $dataRight['links'][$linkForeign]['midKeys'] = ['rightId', 'leftId'];
                 }
                 break;
+            default:
+                throw new BadRequest();
         }
 
         $this->getMetadata()->set('entityDefs', $entity, $dataLeft);

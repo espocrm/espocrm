@@ -71,6 +71,8 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
             } else if (type == 'belongsTo') {
                 if (foreignType == 'hasMany') {
                     return 'manyToOne';
+                } else if (foreignType == 'hasOne') {
+                    return 'oneToOneRight';
                 } else {
                     return;
                 }
@@ -82,6 +84,11 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
             } else if (type == 'hasChildren') {
                 if (foreignType == 'belongsToParent') {
                     return 'parentToChildren'
+                }
+                return;
+            } else if (type === 'hasOne') {
+                if (foreignType == 'belongsTo') {
+                    return 'oneToOneLeft';
                 }
                 return;
             }

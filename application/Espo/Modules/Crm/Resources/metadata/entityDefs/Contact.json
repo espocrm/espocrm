@@ -340,17 +340,13 @@
             "directAccessDisabled": true
         },
         "portalUser": {
-            "type": "link",
-            "layoutMassUpdateDisabled": true,
-            "layoutListDisabled": true,
+            "type": "linkOne",
             "readOnly": true,
             "notStorable": true,
             "view": "views/fields/link-one"
         },
         "originalLead": {
-            "type": "link",
-            "layoutMassUpdateDisabled": true,
-            "layoutListDisabled": true,
+            "type": "linkOne",
             "readOnly": true,
             "view": "views/fields/link-one"
         },

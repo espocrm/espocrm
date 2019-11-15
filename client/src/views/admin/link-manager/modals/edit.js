@@ -166,7 +166,7 @@ define('views/admin/link-manager/modals/edit',
                     name: 'linkType',
                     params: {
                         required: true,
-                        options: ['', 'oneToMany', 'manyToOne', 'manyToMany']
+                        options: ['', 'oneToMany', 'manyToOne', 'manyToMany', 'oneToOneRight', 'oneToOneLeft']
                     }
                 },
                 readOnly: !isNew
@@ -348,6 +348,24 @@ define('views/admin/link-manager/modals/edit',
                     }
                     this.model.set('relationName', relationName);
                     break;
+                case 'oneToOneLeft':
+                    linkForeign = Espo.Utils.lowerCaseFirst(this.scope);
+                    link = Espo.Utils.lowerCaseFirst(entityForeign);
+                    if (entityForeign == this.scope) {
+                        if (linkForeign == Espo.Utils.lowerCaseFirst(this.scope)) {
+                            link = link + 'Parent';
+                        }
+                    }
+                    break;
+                case 'oneToOneRight':
+                    linkForeign = Espo.Utils.lowerCaseFirst(this.scope);
+                    link = Espo.Utils.lowerCaseFirst(entityForeign);
+                    if (entityForeign == this.scope) {
+                        if (linkForeign == Espo.Utils.lowerCaseFirst(this.scope)) {
+                            linkForeign = linkForeign + 'Parent';
+                        }
+                    }
+                    break;
             }
 
             var number = 1;
@@ -430,6 +448,9 @@ define('views/admin/link-manager/modals/edit',
                     this.hideField('linkMultipleField');
                     this.hideField('linkMultipleFieldForeign');
 
+                    this.hideField('audited');
+                    this.hideField('auditedForeign');
+
                     if (linkType == 'parentToChildren') {
                         this.showField('audited');
                         this.hideField('auditedForeign');
@@ -482,7 +503,7 @@ define('views/admin/link-manager/modals/edit',
                 'linkMultipleField',
                 'linkMultipleFieldForeign',
                 'audited',
-                'auditedForeign'
+                'auditedForeign',
             ];
 
             var notValid = false;

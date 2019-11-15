@@ -1,0 +1,25 @@
+{
+   "params": [
+      {
+         "name": "required",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name": "audited",
+         "type": "bool"
+      },
+      {
+         "name": "readOnly",
+         "type": "bool"
+      }
+   ],
+   "actualFields": [
+      "id"
+   ],
+   "notActualFields": [
+      "name"
+   ],
+   "filter": true,
+   "notCreatable": true
+}

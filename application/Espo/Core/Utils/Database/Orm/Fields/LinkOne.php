@@ -27,52 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Core\Utils\Database\Orm\Fields;
 
-class Contact extends \Espo\Core\SelectManagers\Base
+class LinkOne extends Base
 {
-    protected function filterPortalUsers(&$result)
+    protected function load($fieldName, $entityType)
     {
-        $this->addJoin([
-            'portalUser',
-            'portalUserFilter',
-        ], $result);
+        $fieldParams = $this->getFieldParams();
+
+        $data = [
+            $entityType => [
+                'fields' => [
+                    $fieldName.'Id' => [
+                        'type' => 'varchar',
+                        'notStorable' => true,
+                        'attributeRole' => 'id',
+                        'fieldType' => 'linkOne',
+                    ],
+                    $fieldName.'Name' => [
+                        'type' => 'varchar',
+                        'notStorable' => true,
+                        'attributeRole' => 'name',
+                        'fieldType' => 'linkOne',
+                    ]
+                ]
+            ],
+            'unset' => [
+                $entityType => [
+                    'fields.' . $fieldName,
+                ]
+            ]
+        ];
+
+        return $data;
     }
-
-    protected function filterNotPortalUsers(&$result)
-    {
-        $this->addLeftJoin([
-            'portalUser',
-            'portalUserFilter',
-        ], $result);
-
-        $this->addAndWhere(array(
-            'portalUserFilter.id' => null
-        ), $result);
-    }
-
-    protected function accessPortalOnlyContact(&$result)
-    {
-        $d = [];
-
-        $contactId = $this->getUser()->get('contactId');
-
-        if ($contactId) {
-            $result['whereClause'][] = array(
-                'id' => $contactId
-            );
-        } else {
-            $result['whereClause'][] = array(
-                'id' => null
-            );
-        }
-    }
-
-    protected function filterAccountActive(&$result)
-    {
-        if (!array_key_exists('additionalColumnsConditions', $result)) {
-            $result['additionalColumnsConditions'] = array();
-        }
-        $result['additionalColumnsConditions']['isInactive'] = false;
-    }
- }
+}

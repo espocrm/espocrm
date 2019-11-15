@@ -347,7 +347,8 @@
         },
         "preferences": {
             "type": "hasOne",
-            "entity": "Preferences"
+            "entity": "Preferences",
+            "noJoin": true
         },
         "meetings": {
             "type": "hasMany",

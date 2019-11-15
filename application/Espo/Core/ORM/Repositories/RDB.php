@@ -635,14 +635,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
                 $where = [];
                 $where[$foreignKey] = $entity->id;
-                $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->where($where)->findOne();
+
+                $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)
+                    ->select(['id'])->where($where)->findOne();
+
                 if ($previousForeignEntity) {
                     if (!$entity->isNew()) {
                         $entity->setFetched($idAttribute, $previousForeignEntity->id);
                     }
-                    if ($previousForeignEntity->id !== $entity->get($idAttribute)) {
+                    if (!$entity->get($idAttribute)) {
                         $previousForeignEntity->set($foreignKey, null);
-                        $this->getEntityManager()->saveEntity($previousForeignEntity);
+                        $this->getEntityManager()->saveEntity($previousForeignEntity, ['skipAll' => true]);
                     }
                 } else {
                     if (!$entity->isNew()) {
@@ -651,12 +654,29 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 }
 
                 if ($entity->get($idAttribute)) {
-                    $newForeignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $entity->get($idAttribute));
-                    if ($newForeignEntity) {
-                        $newForeignEntity->set($foreignKey, $entity->id);
-                        $this->getEntityManager()->saveEntity($newForeignEntity);
-                    } else {
+                    $relateResult = $this->relate($entity, $name, $entity->get($idAttribute));
+                    if (!$relateResult) {
                         $entity->set($idAttribute, null);
+                    }
+                }
+            } else if ($defs['type'] === $entity::BELONGS_TO) {
+                if (!$entity->get($name . 'Id')) continue;
+                if (!$entity->isAttributeChanged($name . 'Id')) continue;
+
+                $foreignEntityType = $defs['entity'] ?? null;
+                $foreignLink = $defs['foreign'] ?? null;
+
+                if (
+                    $this->getMetadata()->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']) === $entity::HAS_ONE
+                ) {
+                    $anotherEntity = $this->select(['id'])->where([
+                        $name . 'Id' => $entity->get($name . 'Id'),
+                        'id!=' => $entity->id,
+                    ])->findOne();
+
+                    if ($anotherEntity) {
+                        $anotherEntity->set($name . 'Id', null);
+                        $this->getEntityManager()->saveEntity($anotherEntity, ['skipAll' => true]);
                     }
                 }
             }

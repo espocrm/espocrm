@@ -31,34 +31,54 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class HasOne extends Base
 {
-    protected function load($linkName, $entityName)
+    protected function load($linkName, $entityType)
     {
         $linkParams = $this->getLinkParams();
         $foreignLinkName = $this->getForeignLinkName();
-        $foreignEntityName = $this->getForeignEntityName();
+        $foreignentityType = $this->getForeignEntityName();
 
-        $relation = array(
-            $entityName => array (
-                'fields' => array(
-                       $linkName.'Id' => array(
-                        'type' => 'varchar',
-                        'notStorable' => true
-                    ),
-                    $linkName.'Name' => array(
-                        'type' => 'varchar',
-                        'notStorable' => true
-                    )
-                ),
-                'relations' => array(
-                    $linkName => array(
+        $noForeignName = false;
+        if (!empty($linkParams['noForeignName'])) {
+            $noForeignName = true;
+        } else {
+            if (!empty($linkParams['foreignName'])) {
+                $foreign = $linkParams['foreignName'];
+            } else {
+                $foreign = $this->getForeignField('name', $foreignentityType);
+            }
+        }
+
+        $relation = [
+            $entityType => [
+                'fields' => [
+                    $linkName.'Id' => [
+                        'type' => 'foreign',
+                        'notStorable' => true,
+                        'relation' => $linkName,
+                        'foreign' => 'id',
+                    ],
+                    $linkName.'Name' => [
+                        'type' => 'foreign',
+                        'notStorable' => true,
+                        'relation' => $linkName,
+                        'foreign' => $foreign,
+                    ],
+                ],
+                'relations' => [
+                    $linkName => [
                         'type' => 'hasOne',
-                        'entity' => $foreignEntityName,
+                        'entity' => $foreignentityType,
                         'foreignKey' => lcfirst($foreignLinkName.'Id'),
-                        'foreign' => $foreignLinkName
-                    )
-                )
-            )
-        );
+                        'foreign' => $foreignLinkName,
+                    ],
+                ]
+            ]
+        ];
+
+        if (!empty($linkParams['noJoin'])) {
+            $relation[$entityType]['fields'][$linkName.'Name']['type'] = 'varchar';
+            $relation[$entityType]['fields'][$linkName.'Id']['type'] = 'varchar';
+        }
 
         return $relation;
     }

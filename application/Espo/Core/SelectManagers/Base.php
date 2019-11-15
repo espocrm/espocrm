@@ -166,7 +166,7 @@ class Base
         if (!empty($sortBy)) {
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
-            if (in_array($type, ['link', 'file', 'image'])) {
+            if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
                 $result['orderBy'] .= 'Name';
             } else if ($type === 'linkParent') {
                 $result['orderBy'] .= 'Type';

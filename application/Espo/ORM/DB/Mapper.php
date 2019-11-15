@@ -654,6 +654,23 @@ abstract class Mapper implements IMapper
                 return false;
 
             case IEntity::HAS_ONE:
+                $foreignKey = $keySet['foreignKey'];
+
+                if ($this->count($relEntity, ['whereClause' => ['id' => $id]]) === 0) return false;
+
+                $setPart = $this->toDb($foreignKey) . " = " . $this->quote(null);
+                $wherePart = $this->query->getWhere($relEntity, [$foreignKey => $entity->id, 'deleted' => 0]);
+                $sql = $this->composeUpdateQuery($this->toDb($foreignEntityType), $setPart, $wherePart);
+                $this->pdo->query($sql);
+
+                $setPart = $this->toDb($foreignKey) . " = " . $this->pdo->quote($entity->id);
+                $wherePart = $this->query->getWhere($relEntity, ['id' => $id, 'deleted' => 0]);
+                $sql = $this->composeUpdateQuery($this->toDb($foreignEntityType), $setPart, $wherePart);
+
+                if ($this->pdo->query($sql)) {
+                    return true;
+                }
+
                 return false;
 
             case IEntity::HAS_CHILDREN:
