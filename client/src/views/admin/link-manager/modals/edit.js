@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin/link-manager/index', 'model'], function (Dep, Index, Model) {
+define('views/admin/link-manager/modals/edit',
+    ['views/modal', 'views/admin/link-manager/index', 'model'], function (Dep, Index, Model) {
 
     return Dep.extend({
 
@@ -591,7 +592,5 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 }.bind(this), true);
             }.bind(this));
         },
-
     });
 });
-
