@@ -281,7 +281,7 @@ class Htmlizer
                     $args = func_get_args();
                     $id = $args[0] ?? null;
                     if (!$id) return '';
-                    return "?entryPoint=attachment&id=" . $id;
+                    return new LightnCandy\SafeString("?entryPoint=attachment&id=" . $id);
                 },
                 'var' => function () {
                     $args = func_get_args();
