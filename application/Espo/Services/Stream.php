@@ -406,7 +406,8 @@ class Stream extends \Espo\Core\Services\Base
                 ],
             ];
 
-            if ($this->getUserAclManager($user)->check($user, 'Email', 'read')) {
+            $aclManager = $this->getUserAclManager($user);
+            if ($aclManager && $aclManager->check($user, 'Email', 'read')) {
                 $selectParamsSubscription['leftJoins'][] = [
                     'noteUser', 'noteUser', [
                         'noteUser.noteId=:' => 'id',
@@ -1682,6 +1683,12 @@ class Stream extends \Espo\Core\Services\Base
 
         if ($user->isPortal() && !$this->getUser()->isPortal()) {
             $aclManager = new \Espo\Core\Portal\AclManager($this->getInjection('container'));
+            $portals = $user->get('portals');
+            if (count($portals)) {
+                $aclManager->setPortal($portals[0]);
+            } else {
+                $aclManager = null;
+            }
         }
 
         return $aclManager;
@@ -1714,15 +1721,6 @@ class Stream extends \Espo\Core\Services\Base
         $scopes = $this->getMetadata()->get('scopes', []);
 
         $aclManager = $this->getUserAclManager($user);
-
-        if ($user->isPortal() && !$this->getUser()->isPortal()) {
-            $portals = $user->get('portals');
-            if (count($portals)) {
-                $aclManager->setPortal($portals[0]);
-            } else {
-                $aclManager = null;
-            }
-        }
 
         foreach ($scopes as $scope => $item) {
             if (empty($item['entity'])) continue;
