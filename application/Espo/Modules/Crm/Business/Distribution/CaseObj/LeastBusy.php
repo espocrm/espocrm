@@ -32,39 +32,41 @@ namespace Espo\Modules\Crm\Business\Distribution\CaseObj;
 class LeastBusy
 {
     protected $entityManager;
+    protected $metadata;
 
-    public function __construct($entityManager)
+    public function __construct($entityManager, $metadata)
     {
         $this->entityManager = $entityManager;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
+        $this->metadata = $metadata;
     }
 
     public function getUser($team, $targetUserPosition = null)
     {
-        $params = array();
+        $selectParams = [
+            'whereClause' => ['isActive' => true],
+            'orderBy' => 'id',
+        ];
+
         if (!empty($targetUserPosition)) {
-            $params['additionalColumnsConditions'] = array(
-                'role' => $targetUserPosition
-            );
+            $selectParams['additionalColumnsConditions'] = ['role' => $targetUserPosition];
         }
 
-        $userList = $team->get('users', $params);
+        $userList = $team->get('users', $selectParams);
 
         if (count($userList) == 0) {
             return false;
         }
 
-        $countHash = array();
+        $countHash = [];
+
+        $notActualStatusList =
+            $this->metadata->get(['entityDefs', 'Case', 'fields', 'status', 'notActualOptions']) ?? [];
 
         foreach ($userList as $user) {
-            $count = $this->getEntityManager()->getRepository('Case')->where(array(
+            $count = $this->entityManager->getRepository('Case')->where([
                 'assignedUserId' => $user->id,
-                'status<>' => ['Closed', 'Rejected', 'Duplicated']
-            ))->count();
+                'status!=' => $notActualStatusList,
+            ])->count();
             $countHash[$user->id] = $count;
         }
 
@@ -83,8 +85,7 @@ class LeastBusy
         }
 
         if ($foundUserId !== false) {
-            return $this->getEntityManager()->getEntity('User', $foundUserId);
+            return $this->entityManager->getEntity('User', $foundUserId);
         }
     }
 }
-
