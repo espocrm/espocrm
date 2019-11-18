@@ -396,17 +396,32 @@ class Stream extends \Espo\Core\Services\Base
 
             $notAllEntityTypeList = $this->getNotAllEntityTypeList($user);
 
-            $selectParamsSubscription['whereClause'][] = [
-                'OR' => [
-                    [
-                        'relatedId' => null
-                    ],
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => $notAllEntityTypeList
-                    ]
-                ]
+            $orGroup = [
+                [
+                    'relatedId' => null,
+                ],
+                [
+                    'relatedId!=' => null,
+                    'relatedType!=' => $notAllEntityTypeList,
+                ],
             ];
+
+            if ($this->getUserAclManager($user)->check($user, 'Email', 'read')) {
+                $selectParamsSubscription['leftJoins'][] = [
+                    'noteUser', 'noteUser', [
+                        'noteUser.noteId=:' => 'id',
+                        'noteUser.deleted' => false,
+                        'note.relatedType' => 'Email',
+                    ]
+                ];
+                $orGroup[] = [
+                    'relatedId!=' => null,
+                    'relatedType' => 'Email',
+                    'noteUser.userId' => $user->id,
+                ];
+            }
+
+            $selectParamsSubscription['whereClause'][] = ['OR' => $orGroup];
 
             $selectParamsList[] = $selectParamsSubscription;
         } else {
@@ -776,7 +791,8 @@ class Stream extends \Espo\Core\Services\Base
             'offset' => $params['offset'],
             'limit' => $params['maxSize'],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'leftJoins' => [],
         ];
 
         $where = [
@@ -794,28 +810,43 @@ class Stream extends \Espo\Core\Services\Base
 
         if ($this->getUser()->isPortal()) {
             $where = [
-                'OR' => [
-                    [
-                        'parentType' => $scope,
-                        'parentId' => $id
-                    ]
-                ]
+                'parentType' => $scope,
+                'parentId' => $id,
             ];
+
             $notAllEntityTypeList = $this->getNotAllEntityTypeList($this->getUser());
-            $where[] = [
-                'OR' => [
-                    [
-                        'relatedId' => null
-                    ],
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => $notAllEntityTypeList
+
+            $orGroup = [
+                [
+                    'relatedId' => null
+                ],
+                [
+                    'relatedId!=' => null,
+                    'relatedType!=' => $notAllEntityTypeList,
+                ],
+            ];
+
+            if ($this->getAcl()->check('Email', 'read')) {
+                $selectParams['leftJoins'][] = [
+                    'noteUser', 'noteUser', [
+                        'noteUser.noteId=:' => 'id',
+                        'noteUser.deleted' => false,
+                        'note.relatedType' => 'Email',
                     ]
-                ]
+                ];
+                $orGroup[] = [
+                    'relatedId!=' => null,
+                    'relatedType' => 'Email',
+                    'noteUser.userId' => $this->getUser()->id,
+                ];
+            }
+            $where[] = [
+                'OR' => $orGroup,
             ];
         } else {
             if (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList)) {
-                $selectParams['leftJoins'] = ['teams', 'users'];
+                $selectParams['leftJoins'][] = ['teams'];
+                $selectParams['leftJoins'][] = ['users'];
                 $selectParams['distinct'] = true;
                 $where[] = [
                     'OR' => [
@@ -1645,9 +1676,22 @@ class Stream extends \Espo\Core\Services\Base
         return $list;
     }
 
+    protected function getUserAclManager(\Espo\Entities\User $user)
+    {
+        $aclManager = $this->getAclManager();
+
+        if ($user->isPortal() && !$this->getUser()->isPortal()) {
+            $aclManager = new \Espo\Core\Portal\AclManager($this->getInjection('container'));
+        }
+
+        return $aclManager;
+    }
+
     protected function getNotAllEntityTypeList(\Espo\Entities\User $user)
     {
         if (!$user->isPortal()) return [];
+
+        $aclManager = $this->getUserAclManager($user);
 
         $list = [];
         $scopes = $this->getMetadata()->get('scopes', []);
@@ -1656,7 +1700,7 @@ class Stream extends \Espo\Core\Services\Base
             if (empty($item['entity'])) continue;
             if (empty($item['object'])) continue;
             if (
-                $this->getAclManager()->getLevel($user, $scope, 'read') !== 'all'
+                $aclManager->getLevel($user, $scope, 'read') !== 'all'
             ) {
                 $list[] = $scope;
             }
@@ -1669,17 +1713,14 @@ class Stream extends \Espo\Core\Services\Base
         $ignoreScopeList = [];
         $scopes = $this->getMetadata()->get('scopes', []);
 
-        $aclManager = $this->getAclManager();
+        $aclManager = $this->getUserAclManager($user);
 
         if ($user->isPortal() && !$this->getUser()->isPortal()) {
-            $aclManager = new \Espo\Core\Portal\AclManager($this->getInjection('container'));
-
             $portals = $user->get('portals');
             if (count($portals)) {
                 $aclManager->setPortal($portals[0]);
             } else {
                 $aclManager = null;
-
             }
         }
 
