@@ -546,7 +546,7 @@ class InboundEmail extends \Espo\Services\Record
             $className = '\\Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\LeastBusy';
         }
 
-        $distribution = new $className($this->getEntityManager());
+        $distribution = new $className($this->getEntityManager(), $this->getMetadata());
 
         $user = $distribution->getUser($team, $targetUserPosition);
 

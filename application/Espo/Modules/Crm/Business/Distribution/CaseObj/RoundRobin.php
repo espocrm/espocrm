@@ -45,29 +45,30 @@ class RoundRobin
 
     public function getUser($team, $targetUserPosition = null)
     {
-        $params = array();
+        $selectParams = [
+            'whereClause' => ['isActive' => true],
+            'orderBy' => 'id',
+        ];
+
         if (!empty($targetUserPosition)) {
-            $params['additionalColumnsConditions'] = array(
-                'role' => $targetUserPosition
-            );
+            $selectParams['additionalColumnsConditions'] = ['role' => $targetUserPosition];
         }
 
-        $userList = $team->get('users', $params);
+        $userList = $team->get('users', $selectParams);
 
         if (count($userList) == 0) {
             return false;
         }
 
-        $userIdList = array();
+        $userIdList = [];
 
         foreach ($userList as $user) {
             $userIdList[] = $user->id;
         }
 
-
-        $case = $this->getEntityManager()->getRepository('Case')->where(array(
+        $case = $this->getEntityManager()->getRepository('Case')->where([
             'assignedUserId' => $userIdList,
-        ))->order('createdAt', 'DESC')->findOne();
+        ])->order('number', 'DESC')->findOne();
 
         if (empty($case)) {
             $num = 0;
@@ -80,7 +81,8 @@ class RoundRobin
             }
         }
 
-        return $this->getEntityManager()->getEntity('User', $userIdList[$num]);
+        $id = $userIdList[$num];
+
+        return $this->getEntityManager()->getEntity('User', $id);
     }
 }
-
