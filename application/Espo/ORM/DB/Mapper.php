@@ -379,17 +379,17 @@ abstract class Mapper implements IMapper
         return $this->selectRelated($entity, $relationName, $params, true);
     }
 
-    public function relate(IEntity $entityFrom, $relationName, IEntity $entityTo, $data = null)
+    public function relate(IEntity $entityFrom, string $relationName, IEntity $entityTo, ?array $data = null)
     {
         return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
     }
 
-    public function unrelate(IEntity $entityFrom, $relationName, IEntity $entityTo)
+    public function unrelate(IEntity $entityFrom, string $relationName, IEntity $entityTo)
     {
         return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
     }
 
-    public function updateRelation(IEntity $entity, $relationName, $id = null, $columnData)
+    public function updateRelation(IEntity $entity, string $relationName, ?string $id = null, array $columnData)
     {
         if (empty($id) || empty($relationName)) {
             return false;
@@ -574,7 +574,8 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function addRelation(IEntity $entity, string $relationName, $id = null, $relEntity = null, $data = null)
+    public function addRelation
+        (IEntity $entity, string $relationName, ?string $id = null, ?IEntity $relEntity = null, ?array $data = null)
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -791,7 +792,8 @@ abstract class Mapper implements IMapper
         return false;
     }
 
-    public function removeRelation(IEntity $entity, string $relationName, $id = null, $all = false, IEntity $relEntity = null)
+    public function removeRelation
+        (IEntity $entity, string $relationName, ?string $id = null, bool $all = false, IEntity $relEntity = null)
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -1062,7 +1064,7 @@ abstract class Mapper implements IMapper
         return $this->update($entity);
     }
 
-    protected function toValueMap(IEntity $entity, $onlyStorable = true)
+    protected function toValueMap(IEntity $entity, bool $onlyStorable = true)
     {
         $data = [];
         foreach ($entity->getAttributes() as $attribute => $defs) {
