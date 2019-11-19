@@ -264,7 +264,6 @@ abstract class Mapper implements IMapper
                 }
 
                 $ps = $this->pdo->query($sql);
-
                 if ($ps) {
                     if (!$returnTotalCount) {
                         $resultDataList = $ps->fetchAll();
@@ -611,8 +610,23 @@ abstract class Mapper implements IMapper
         switch ($relType) {
             case IEntity::BELONGS_TO:
                 $key = $relationName . 'Id';
+
+                $foreignRelationName = $entity->getRelationParam($relationName, 'foreign');
+                if ($foreignRelationName) {
+                    if ($relEntity->getRelationParam($foreignRelationName, 'type') === IEntity::HAS_ONE) {
+                        $setPart = $this->toDb($key) . " = " . $this->quote(null);
+                        $wherePart = $this->query->getWhere($entity, ['id!=' => $entity->id, $key => $id, 'deleted' => 0]);
+                        $sql = $this->composeUpdateQuery(
+                            $this->toDb($entity->getEntityType()),
+                            $setPart,
+                            $wherePart
+                        );
+                        $this->pdo->query($sql);
+                    }
+                }
+
                 $setPart = $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id);
-                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
 
                 $entity->set([
                     $key => $relEntity->id
@@ -830,7 +844,7 @@ abstract class Mapper implements IMapper
             case IEntity::BELONGS_TO:
                 $key = $relationName . 'Id';
                 $setPart = $this->toDb($key) . " = " . $this->quote(null);
-                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
 
                 $entity->set([
                     $key => null
@@ -859,7 +873,7 @@ abstract class Mapper implements IMapper
                 $setPart =
                     $this->toDb($key) . " = " . $this->quote(null) . ', ' .
                     $this->toDb($typeKey) . " = " . $this->quote(null);
-                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
 
                 $sql = $this->composeUpdateQuery(
                     $this->toDb($entity->getEntityType()),

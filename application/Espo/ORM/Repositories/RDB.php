@@ -298,7 +298,7 @@ class RDB extends \Espo\ORM\Repository
     public function isRelated(Entity $entity, $relationName, $foreign)
     {
         if (!$entity->id) {
-            return;
+            return null;
         }
 
         if ($foreign instanceof Entity) {
@@ -306,10 +306,34 @@ class RDB extends \Espo\ORM\Repository
         } else if (is_string($foreign)) {
             $id = $foreign;
         } else {
-            return;
+            return null;
         }
 
-        if (!$id) return;
+        if (!$id) return null;
+
+        if ($entity->getRelationType($relationName) === Entity::BELONGS_TO) {
+            $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+            if (!$foreignEntityType) return null;
+
+            $foreignId = $entity->get($relationName . 'Id');
+
+            if (!$foreignId) {
+                $e = $this->select([$relationName . 'Id'])->where(['id' => $entity->id])->findOne();
+                if ($e) {
+                    $foreignId = $e->get($relationName . 'Id');
+                }
+            }
+
+            if (!$foreignId) return false;
+
+            $foreignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->select(['id'])->where([
+                'id' => $foreignId,
+            ])->findOne();
+
+            if (!$foreignEntity) return false;
+
+            return $foreignEntity->id === $id;
+        }
 
         return !!$this->countRelated($entity, $relationName, [
             'whereClause' => [
