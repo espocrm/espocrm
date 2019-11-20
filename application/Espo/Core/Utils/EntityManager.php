@@ -719,7 +719,6 @@ class EntityManager
                         'fields' => [
                             $link => [
                                 'type' => 'linkOne',
-                                'isCustom' => true,
                             ],
                         ],
                         'links' => [
@@ -735,7 +734,6 @@ class EntityManager
                         'fields' => [
                             $linkForeign => [
                                 'type' => 'link',
-                                'isCustom' => true,
                             ],
                         ],
                         'links' => [
