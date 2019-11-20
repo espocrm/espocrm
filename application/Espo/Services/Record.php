@@ -96,6 +96,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $noEditAccessRequiredLinkList = [];
 
+    protected $noEditAccessRequiredForLink = false;
+
     protected $exportSkipAttributeList = [];
 
     protected $exportAdditionalAttributeList = [];
@@ -1438,8 +1440,11 @@ class Record extends \Espo\Core\Services\Base
         if (!$entity) {
             throw new NotFound();
         }
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
+
+        if ($this->noEditAccessRequiredForLink) {
+            if (!$this->getAcl()->check($entity, 'read')) throw new Forbidden();
+        } else {
+            if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
         }
 
         $methodName = 'link' . ucfirst($link);
@@ -1504,8 +1509,11 @@ class Record extends \Espo\Core\Services\Base
         if (!$entity) {
             throw new NotFound();
         }
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
+
+        if ($this->noEditAccessRequiredForLink) {
+            if (!$this->getAcl()->check($entity, 'read')) throw new Forbidden();
+        } else {
+            if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
         }
 
         $methodName = 'unlink' . ucfirst($link);
