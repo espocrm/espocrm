@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/field-manager/index', 'view', function (Dep) {
+define('views/admin/field-manager/index', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -170,5 +170,3 @@ Espo.define('views/admin/field-manager/index', 'view', function (Dep) {
         },
     });
 });
-
-

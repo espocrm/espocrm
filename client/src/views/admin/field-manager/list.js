@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
+define('views/admin/field-manager/list', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -44,49 +44,66 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
             'click [data-action="removeField"]': function (e) {
                 var field = $(e.currentTarget).data('name');
 
-                this.confirm(this.translate('confirmation', 'messages'), function () {
-                    Espo.Ui.notify(this.translate('Removing...'));
-                    Espo.Ajax.request('Admin/fieldManager/' + this.scope + '/' + field, 'delete').then(function () {
-                        Espo.Ui.success(this.translate('Removed'));
-
-                        $(e.currentTarget).closest('tr').remove();
-                        var data = this.getMetadata().data;
-
-                        delete data['entityDefs'][this.scope]['fields'][field];
-
-                        this.getMetadata().load(function () {
-                            this.getMetadata().storeToCache();
-                        }.bind(this), true);
-                    }.bind(this));
-                }.bind(this));
+                this.removeField(field);
             }
         },
 
         setup: function () {
             this.scope = this.options.scope;
 
-            this.wait(true);
-            this.getModelFactory().create(this.scope, function (model) {
-
-                this.fields = model.defs.fields;
-                this.fieldList = Object.keys(this.fields).sort();
-                this.fieldDefsArray = [];
-                this.fieldList.forEach(function (field) {
-                    var defs = this.fields[field];
-                    if (defs.customizationDisabled) return;
-                    this.fieldDefsArray.push({
-                        name: field,
-                        isCustom: defs.isCustom || false,
-                        type: defs.type
-                    });
-                }, this);
-
-
-                this.wait(false);
-            }.bind(this));
-
+            this.wait(
+                this.buildFieldDefs()
+            );
         },
 
-    });
+        buildFieldDefs: function () {
+            return this.getModelFactory().create(this.scope).then(
+                function (model) {
+                    this.fields = model.defs.fields;
+                    this.fieldList = Object.keys(this.fields).sort();
+                    this.fieldDefsArray = [];
+                    this.fieldList.forEach(function (field) {
+                        var defs = this.fields[field];
+                        if (defs.customizationDisabled) return;
+                        this.fieldDefsArray.push({
+                            name: field,
+                            isCustom: defs.isCustom || false,
+                            type: defs.type
+                        });
+                    }, this);
+                }.bind(this)
+            );
+        },
 
+        removeField: function (field) {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
+                Espo.Ui.notify(this.translate('Removing...'));
+
+                Espo.Ajax.request('Admin/fieldManager/' + this.scope + '/' + field, 'delete').then(function () {
+                    Espo.Ui.success(this.translate('Removed'));
+
+                    this.$el.find('tr[data-name="'+field+'"]').remove();
+                    var data = this.getMetadata().data;
+
+                    delete data['entityDefs'][this.scope]['fields'][field];
+
+                    this.getMetadata().load(function () {
+                        this.getMetadata().storeToCache();
+
+                        this.buildFieldDefs()
+                        .then(
+                            function () {
+                                return this.reRender()
+                            }.bind(this)
+                        )
+                        .then(
+                            function () {
+                                Espo.Ui.success(this.translate('Removed'));
+                            }.bind(this)
+                        );
+                    }.bind(this), true);
+                }.bind(this));
+            }.bind(this));
+        },
+    });
 });

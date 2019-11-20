@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     {{#each fieldDefsArray}}
-    <tr>
+    <tr data-name="{{name}}">
         <td><a href="#Admin/fieldManager/scope={{../scope}}&field={{name}}" class="field-link" data-scope="{{../scope}}" data-field="{{name}}">{{name}}</td>
         <td>{{translate name scope=../scope category='fields'}}</td>
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
