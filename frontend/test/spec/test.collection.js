@@ -51,10 +51,10 @@ describe('collection', function () {
 		collection.total = 15;
 	},
 
-	it ('#sort should set sort params', function () {
+	it ('#sort should set order params', function () {
 		collection.sort('test', true);
-		expect(collection.sortBy).toBe('test');
-		expect(collection.asc).toBe(true);
+		expect(collection.orderBy).toBe('test');
+		expect(collection.order).toBe('desc');
 	});
 
 	it ('#nextPage and #previousPage should change offset to the next and previous pages', function () {
@@ -80,6 +80,4 @@ describe('collection', function () {
 		collection.lastPage();
 		expect(collection.offset).toBe(15);
 	});
-
-
 });

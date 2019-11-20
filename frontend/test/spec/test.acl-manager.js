@@ -66,7 +66,7 @@ describe('acl-manager', function () {
 
 		expect(acl.check('Lead', 'delete')).toBe(false);
 
-		expect(acl.check('Account', 'edit')).toBe(true);
+		expect(acl.check('Account', 'edit')).toBe(false);
 
 		expect(acl.check('Opportunity', 'edit')).toBe(false);
 		expect(acl.check('Meeting', 'edit')).toBe(true);
