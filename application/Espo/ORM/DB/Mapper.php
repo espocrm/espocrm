@@ -887,8 +887,6 @@ abstract class Mapper implements IMapper
                 return false;
 
             case IEntity::HAS_ONE:
-                return false;
-
             case IEntity::HAS_MANY:
             case IEntity::HAS_CHILDREN:
                 $key = $keySet['key'];
@@ -897,7 +895,7 @@ abstract class Mapper implements IMapper
                 $setPart = $this->toDb($foreignKey) . " = " . "NULL";
 
                 $whereClause = ['deleted' => 0];
-                if (empty($all)) {
+                if (empty($all) && $relType != IEntity::HAS_ONE) {
                     $whereClause['id'] = $id;
                 } else {
                     $whereClause[$foreignKey] = $entity->id;

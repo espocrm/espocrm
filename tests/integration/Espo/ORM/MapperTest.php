@@ -268,4 +268,38 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $c = $em->getRepository('Lead')->where(['createdAccountId' => $a1->id])->count();
         $this->assertEquals(1, $c);
     }
+
+    public function testUnrelateOneToOne1()
+    {
+        $app = $this->createApplication();
+
+        $em = $app->getContainer()->get('entityManager');
+
+        $a1 = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+        $a2 = $em->createEntity('Account', [
+            'name' => '2',
+        ]);
+        $l1 = $em->createEntity('Lead', [
+            'lastName' => '1',
+        ]);
+        $l2 = $em->createEntity('Lead', [
+            'lastName' => '2',
+        ]);
+
+        $em->getRepository('Lead')->relate($l1, 'createdAccount', $a1);
+        $em->getRepository('Lead')->unrelate($l1, 'createdAccount', $a1);
+
+        $isRelated = $em->getRepository('Lead')->isRelated($l1, 'createdAccount', $a1);
+        $this->assertFalse($isRelated);
+
+        $em->getRepository('Lead')->relate($l1, 'createdAccount', $a1);
+        $em->getRepository('Lead')->unrelate($a1, 'originalLead', $l1);
+
+        $l1 = $em->getEntity('Lead', $l1->id);
+
+        $isRelated = $em->getRepository('Lead')->isRelated($l1, 'createdAccount', $a1);
+        $this->assertFalse($isRelated);
+    }
 }
