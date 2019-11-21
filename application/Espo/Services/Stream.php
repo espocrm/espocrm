@@ -276,6 +276,16 @@ class Stream extends \Espo\Core\Services\Base
             return false;
         }
 
+        $user = $this->getEntityManager()->getRepository('User')
+            ->select(['id', 'type', 'isActive'])
+            ->where([
+                'id' => $userId,
+                'isActive' => true,
+            ])->findOne();
+
+        if (!$user) return false;
+        if (!$this->getAclManager()->check($user, $entity, 'stream')) return false;
+
         $pdo = $this->getEntityManager()->getPDO();
 
         if (!$this->checkIsFollowed($entity, $userId)) {
@@ -1334,6 +1344,39 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('superParentId', $entity->get('accountId'));
             $note->set('superParentType', 'Account');
         }
+
+        $o = [];
+        if (!empty($options['createdById'])) {
+            $o['createdById'] = $options['createdById'];
+        }
+
+        $this->getEntityManager()->saveEntity($note, $o);
+    }
+
+    public function noteRelate(Entity $entity, $parentType, $parentId, array $options = [])
+    {
+        $entityType = $entity->getEntityType();
+
+        $existing = $this->getEntityManager()->getRepository('Note')->select(['id'])->where([
+            'type' => 'Relate',
+            'parentId' => $parentId,
+            'parentType' => $parentType,
+            'relatedId' => $entity->id,
+            'relatedType' => $entityType,
+        ])->findOne();
+        if ($existing) return false;
+
+        $note = $this->getEntityManager()->getEntity('Note');
+
+        $note->set([
+            'type' => 'Relate',
+            'parentId' => $parentId,
+            'parentType' => $parentType,
+            'relatedType' => $entityType,
+            'relatedId' => $entity->id,
+        ]);
+
+        $this->processNoteTeamsUsers($note, $entity);
 
         $o = [];
         if (!empty($options['createdById'])) {
