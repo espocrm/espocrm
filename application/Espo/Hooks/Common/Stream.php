@@ -371,48 +371,13 @@ class Stream extends \Espo\Core\Hooks\Base
 
             if (
                 $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])
-
             ) {
-                $n = $this->getEntityManager()->getRepository('Note')->where(array(
-                    'type' => 'Relate',
-                    'parentId' => $entity->id,
-                    'parentType' => $entityType,
-                    'relatedId' => $foreignEntity->id,
-                    'relatedType' => $foreignEntity->getEntityType()
-                ))->findOne();
-                if (!$n) {
-                    $note = $this->getEntityManager()->getEntity('Note');
-                    $note->set(array(
-                        'type' => 'Relate',
-                        'parentId' => $entity->id,
-                        'parentType' => $entityType,
-                        'relatedId' => $foreignEntity->id,
-                        'relatedType' => $foreignEntity->getEntityType()
-                    ));
-                    $this->getEntityManager()->saveEntity($note);
-                }
+                $this->getStreamService()->noteRelate($foreignEntity, $entityType, $entity->id);
             }
 
             $foreignLink = $entity->getRelationParam($link, 'foreign');
             if ($this->getMetadata()->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
-                $n = $this->getEntityManager()->getRepository('Note')->where(array(
-                    'type' => 'Relate',
-                    'parentId' => $foreignEntity->id,
-                    'parentType' => $foreignEntity->getEntityType(),
-                    'relatedId' => $entity->id,
-                    'relatedType' => $entityType
-                ))->findOne();
-                if (!$n) {
-                    $note = $this->getEntityManager()->getEntity('Note');
-                    $note->set(array(
-                        'type' => 'Relate',
-                        'parentId' => $foreignEntity->id,
-                        'parentType' => $foreignEntity->getEntityType(),
-                        'relatedId' => $entity->id,
-                        'relatedType' => $entityType
-                    ));
-                    $this->getEntityManager()->saveEntity($note);
-                }
+                $this->getStreamService()->noteRelate($entity, $foreignEntity->getEntityType(), $foreignEntity->id);
             }
         }
     }

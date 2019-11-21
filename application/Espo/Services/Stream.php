@@ -1321,6 +1321,39 @@ class Stream extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($note, $o);
     }
 
+    public function noteRelate(Entity $entity, $parentType, $parentId, array $options = [])
+    {
+        $entityType = $entity->getEntityType();
+
+        $existing = $this->getEntityManager()->getRepository('Note')->select(['id'])->where([
+            'type' => 'Relate',
+            'parentId' => $parentId,
+            'parentType' => $parentType,
+            'relatedId' => $entity->id,
+            'relatedType' => $entityType,
+        ])->findOne();
+        if ($existing) return false;
+
+        $note = $this->getEntityManager()->getEntity('Note');
+
+        $note->set([
+            'type' => 'Relate',
+            'parentId' => $parentId,
+            'parentType' => $parentType,
+            'relatedType' => $entityType,
+            'relatedId' => $entity->id,
+        ]);
+
+        $this->processNoteTeamsUsers($note, $entity);
+
+        $o = [];
+        if (!empty($options['createdById'])) {
+            $o['createdById'] = $options['createdById'];
+        }
+
+        $this->getEntityManager()->saveEntity($note, $o);
+    }
+
     public function noteAssign(Entity $entity, array $options = [])
     {
         $note = $this->getEntityManager()->getEntity('Note');
