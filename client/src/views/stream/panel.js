@@ -42,7 +42,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
         events: _.extend({
             'focus textarea[data-name="post"]': function (e) {
-                this.enablePostingMode();
+                this.enablePostingMode(true);
             },
             'click button.post': function () {
                 this.post();
@@ -79,14 +79,19 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             return data;
         },
 
-        enablePostingMode: function () {
+        enablePostingMode: function (byFocus) {
             this.$el.find('.buttons-panel').removeClass('hide');
 
             if (!this.postingMode) {
                 if (this.$textarea.val() && this.$textarea.val().length) {
                     this.getView('postField').controlTextareaHeight();
                 }
+                var isClicked = false;
                 $('body').on('click.stream-panel', function (e) {
+                    if (byFocus && !isClicked) {
+                        isClicked = true;
+                        return;
+                    }
                     var $target = $(e.target);
                     if ($target.parent().hasClass('remove-attachment')) return;
                     if ($.contains(this.$postContainer.get(0), e.target)) return;
