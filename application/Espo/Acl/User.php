@@ -39,6 +39,16 @@ class User extends \Espo\Core\Acl\Base
         return $user->id === $entity->id;
     }
 
+    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    {
+        if (!$user->isAdmin() && $entity->isPortal()) {
+            if ($this->getAclManager()->get($user, 'portalPermission') === 'yes') {
+                return true;
+            }
+        }
+        return $this->checkEntity($user, $entity, $data, 'read');
+    }
+
     public function checkEntityCreate(EntityUser $user, Entity $entity, $data)
     {
         if (!$user->isAdmin()) {

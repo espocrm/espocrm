@@ -57,7 +57,15 @@ define('controllers/portal-user', 'controllers/record', function (Dep) {
             options.attributes = options.attributes  || {};
             options.attributes.type = 'portal';
             Dep.prototype.actionCreate.call(this, options);
-        }
+        },
+
+        checkAccess: function (action) {
+
+            if (this.getAcl().get('portalPermission') === 'yes')
+                return true;
+
+            return false;
+        },
 
     });
 });
