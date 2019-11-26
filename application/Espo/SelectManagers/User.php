@@ -125,6 +125,16 @@ class User extends \Espo\Core\SelectManagers\Base
 
     protected function accessOnlyOwn(&$result)
     {
+        if ($this->getAcl()->get('portalPermission') == 'yes') {
+            $result['whereClause'][] = [
+                'OR' => [
+                    'id' => $this->getUser()->id,
+                    'type' => 'portal',
+                ],
+            ];
+            return;
+        }
+
         $result['whereClause'][] = [
             'id' => $this->getUser()->id
         ];
@@ -141,11 +151,18 @@ class User extends \Espo\Core\SelectManagers\Base
     {
         $this->setDistinct(true, $result);
         $this->addLeftJoin(['teams', 'teamsAccess'], $result);
+
+        $or = [
+            'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
+            'id' => $this->getUser()->id,
+        ];
+
+        if ($this->getAcl()->get('portalPermission') == 'yes') {
+            $or['type'] = 'portal';
+        }
+
         $result['whereClause'][] = [
-            'OR' => [
-                'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
-                'id' => $this->getUser()->id
-            ]
+            'OR' => $or,
         ];
     }
 }
