@@ -283,6 +283,9 @@ class Htmlizer
                     if (!$id) return '';
                     return new LightnCandy\SafeString("?entryPoint=attachment&id=" . $id);
                 },
+                'pagebreak' => function () {
+                    return new LightnCandy\SafeString('<br pagebreak="true">');
+                },
                 'imageTag' => function () {
                     $args = func_get_args();
                     $context = $args[count($args) - 1];
@@ -291,7 +294,6 @@ class Htmlizer
                     if (!$field) return null;
 
                     $id = $context['_this'][$field . 'Id'] ?? null;
-
                     if (!$id) return null;
 
                     $width = $context['hash']['width'] ?? null;
