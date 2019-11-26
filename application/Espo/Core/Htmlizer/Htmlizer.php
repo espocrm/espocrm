@@ -283,6 +283,32 @@ class Htmlizer
                     if (!$id) return '';
                     return new LightnCandy\SafeString("?entryPoint=attachment&id=" . $id);
                 },
+                'imageTag' => function () {
+                    $args = func_get_args();
+                    $context = $args[count($args) - 1];
+
+
+                    $field = $context['hash']['field'] ?? null;
+                    if (!$field) return null;
+
+                    $id = $context['_this'][$field . 'Id'] ?? null;
+
+                    if (!$id) return null;
+
+                    $width = $context['hash']['width'] ?? null;
+                    $height = $context['hash']['height'] ?? null;
+
+                    $attributesPart = "";
+                    if ($width)
+                        $attributesPart .= " width=\"" .strval($width) . "\"";
+
+                    if ($height)
+                        $attributesPart .= " height=\"" .strval($height) . "\"";
+
+                    $html = "<img src=\"?entryPoint=attachment&id={$id}\"{$attributesPart}>";
+
+                    return new LightnCandy\SafeString($html);
+                },
                 'var' => function () {
                     $args = func_get_args();
                     $c = $args[1] ?? [];
