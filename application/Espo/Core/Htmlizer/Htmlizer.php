@@ -287,7 +287,6 @@ class Htmlizer
                     $args = func_get_args();
                     $context = $args[count($args) - 1];
 
-
                     $field = $context['hash']['field'] ?? null;
                     if (!$field) return null;
 
