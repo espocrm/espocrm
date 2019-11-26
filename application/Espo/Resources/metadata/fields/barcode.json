@@ -20,7 +20,8 @@
             "UPC",
             "UPCE",
             "ITF14",
-            "pharmacode"
+            "pharmacode",
+            "QRcode"
          ],
          "translation": "FieldManager.options.barcodeType"
       },

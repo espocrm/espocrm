@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/barcode', ['views/fields/varchar', 'lib!JsBarcode'], function (Dep, JsBarcode) {
+define('views/fields/barcode', [
+    'views/fields/varchar', 'lib!JsBarcode', 'lib!client/lib/qrcode.min.js'], function (Dep, JsBarcode, Qrcode) {
 
     return Dep.extend({
 
@@ -58,10 +59,13 @@ define('views/fields/barcode', ['views/fields/varchar', 'lib!JsBarcode'], functi
                     maxLength = 14; break;
                 case 'pharmacode':
                     maxLength = 6; break;
-
             }
 
             this.params.maxLength = maxLength;
+
+            if (this.params.codeType !== 'QRcode') {
+                this.isSvg = true;
+            }
 
             Dep.prototype.setup.call(this);
 
@@ -75,20 +79,38 @@ define('views/fields/barcode', ['views/fields/varchar', 'lib!JsBarcode'], functi
             $(window).off('resize.' + this.cid);
         },
 
-
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'list' || this.mode === 'detail') {
                 var value = this.model.get(this.name);
                 if (value) {
-                    JsBarcode(this.getSelector() + ' .barcode', value, {
-                        format: this.params.codeType,
-                        height: 50,
-                        fontSize: 14,
-                        margin: 0,
-                        lastChar: this.params.lastChar,
-                    });
+                    if (this.params.codeType === 'QRcode') {
+                        var size = 128;
+                        if (this.isListMode()) {
+                            size = 64;
+                        }
+                        var containerWidth = this.$el.width() ;
+                        if (containerWidth < size && containerWidth) {
+                            size = containerWidth;
+                        }
+                        var qrCode = new QRCode(this.$el.find('.barcode').get(0), {
+                            text: value,
+                            width: size,
+                            height: size,
+                            colorDark : '#000000',
+                            colorLight : '#ffffff',
+                            correctLevel : QRCode.CorrectLevel.H,
+                        });
+                    } else {
+                        JsBarcode(this.getSelector() + ' .barcode', value, {
+                            format: this.params.codeType,
+                            height: 50,
+                            fontSize: 14,
+                            margin: 0,
+                            lastChar: this.params.lastChar,
+                        });
+                    }
                 }
                 this.controlWidth();
             }

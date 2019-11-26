@@ -68,7 +68,8 @@
             "EAN2": "EAN-2",
             "UPC": "UPC (A)",
             "UPCE": "UPC (E)",
-            "pharmacode": "Pharmacode"
+            "pharmacode": "Pharmacode",
+            "QRcode": "QR code"
         }
     },
     "tooltips": {
