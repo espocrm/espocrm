@@ -26,6 +26,15 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+ 
+/************************************************************************
+ * By Hans Dijkema, 11/2019
+ * 
+ * Changed this Mass Mailer to support Htmlizer, just like the PDF service
+ * This makes it possible to create emails for recipients, using the 
+ * relations of these recpients, using the handlebars markup instead of
+ * the simple markup of the current EspoCRM.
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Services;
 
@@ -34,6 +43,8 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\BadRequest;
 
 use \Espo\ORM\Entity;
+
+use \Espo\Core\Htmlizer\Htmlizer;
 
 class MassEmail extends \Espo\Services\Record
 {
@@ -51,6 +62,15 @@ class MassEmail extends \Espo\Services\Record
     {
         parent::init();
         $this->addDependency('container');
+
+        $this->addDependency('fileManager');
+        $this->addDependency('acl');
+        $this->addDependency('metadata');
+        $this->addDependency('serviceFactory');
+        $this->addDependency('dateTime');
+        $this->addDependency('number');
+        $this->addDependency('entityManager');
+
         $this->addDependency('defaultLanguage');
     }
 
@@ -357,6 +377,8 @@ class MassEmail extends \Espo\Services\Record
 
     protected function getPreparedEmail(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, $trackingUrlList = [])
     {
+        $htmlizer = $this->createHtmlizer();
+
         $templateParams = array(
             'parent' => $target
         );
@@ -395,6 +417,12 @@ class MassEmail extends \Espo\Services\Record
             }
         }
 
+
+		$subject = $emailData['subject'];
+		$subject = $htmlizer->render($target, $subject);
+		$emailData['subjec'] = $subject;
+
+		$body = $htmlizer->render($target, $body);
         $emailData['body'] = $body;
 
         $email = $this->getEntityManager()->getEntity('Email');
@@ -605,6 +633,20 @@ class MassEmail extends \Espo\Services\Record
         }
 
         return $dataList;
+    }
+    
+    protected function createHtmlizer()
+    {
+        return new Htmlizer(
+            $this->getFileManager(),
+            $this->getInjection('dateTime'),
+            $this->getInjection('number'),
+            $this->getAcl(),
+            $this->getInjection('entityManager'),
+            $this->getInjection('metadata'),
+            $this->getInjection('defaultLanguage'),
+            $this->getInjection('config')
+        );
     }
 
 }
