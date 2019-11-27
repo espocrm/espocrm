@@ -289,9 +289,9 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
                 for (var key in list) {
                     var keyVal = list[key];
-                    keyVal = self.escapeString(keyVal);
                     var label = translate(list[key]);
-                    label = self.escapeString(keyVal);
+                    keyVal = self.escapeString(keyVal);
+                    label = self.escapeString(label);
                     html += "<option value=\"" + keyVal + "\" " + (checkOption(list[key]) ? 'selected' : '') + ">" + label + "</option>"
                 }
                 return new Handlebars.SafeString(html);
