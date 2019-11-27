@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/template/fields/variables', 'views/fields/base', function (Dep) {
+
+define('views/template/fields/variables', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -72,6 +73,8 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
         },
 
         setupAttributeList: function () {
+            this.translatedOptions = {};
+
             var entityType = this.model.get('entityType');
 
             var fieldList = this.getFieldManager().getEntityTypeFieldList(entityType);
@@ -117,6 +120,9 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     attributeList.unshift('name');
                 }
             };
+
+            this.addAdditionalPlaceholders(entityType, attributeList);
+
             attributeList = attributeList.sort(function (v1, v2) {
                 return this.translate(v1, 'fields', entityType).localeCompare(this.translate(v2, 'fields', entityType));
             }.bind(this));
@@ -138,6 +144,10 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
             if (!~this.attributeList.indexOf('today')) {
                 this.attributeList.unshift('today');
             }
+
+            attributeList.unshift('pagebreak');
+
+            this.attributeList.unshift('');
 
             var links = this.getMetadata().get('entityDefs.' + entityType + '.links') || {};
 
@@ -200,14 +210,22 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 attributeList.push('id');
                 if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') == 'personName') {
                     attributeList.unshift('name');
-                };
+                }
+
+                var originalAttribueList = Espo.Utils.clone(attributeList);
+
+                this.addAdditionalPlaceholders(scope, attributeList, link, entityType);
 
                 attributeList.sort(function (v1, v2) {
                     return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
                 }.bind(this));
 
                 attributeList.forEach(function (item) {
-                    this.attributeList.push(link + '.' + item);
+                    if (~originalAttribueList.indexOf(item)) {
+                        this.attributeList.push(link + '.' + item);
+                    } else {
+                        this.attributeList.push(item);
+                    }
                 }, this);
 
                 attributeList.forEach(function (item) {
@@ -222,12 +240,58 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
             return this.attributeList;
         },
 
-        setupTranslatedOptions: function () {
-            this.translatedOptions = {};
+        addAdditionalPlaceholders: function (entityType, attributeList, link, superEntityType) {
 
+            function removeItem(attributeList, item) {
+                for (var i = 0; i < attributeList.length; i++) {
+                    if (attributeList[i] == item) {
+                        attributeList.splice(i, 1);
+                    }
+                }
+            }
+
+            var fieldDefs = this.getMetadata().get(['entityDefs', entityType, 'fields']) || {};
+            for (var field in fieldDefs) {
+                var fieldType = fieldDefs[field].type;
+
+                var item = field;
+                if (link) item = link + '.' + item;
+
+                var cAttributeList = Espo.Utils.clone(attributeList);
+
+                if (fieldType === 'image') {
+                    removeItem(attributeList, field + 'Name');
+                    removeItem(attributeList, field + 'Id');
+
+                    var value = 'imageTag '+item+'Id';
+                    attributeList.push(value);
+
+                    this.translatedOptions[value] = this.translate(field, 'fields', entityType);
+                    if (link) {
+                        this.translatedOptions[value] = this.translate(link, 'links', superEntityType) + '.' +
+                            this.translatedOptions[value];
+                    }
+                } else if (fieldType === 'barcode') {
+                    removeItem(attributeList, field);
+
+                    var barcodeType = this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'codeType']);
+                    var value = "barcodeImage "+item+" type='"+barcodeType+"'";
+
+                    attributeList.push(value);
+
+                    this.translatedOptions[value] = this.translate(field, 'fields', entityType);
+                    if (link) {
+                        this.translatedOptions[value] = this.translate(link, 'links', superEntityType) + '.' +
+                            this.translatedOptions[value];
+                    }
+                }
+            }
+        },
+
+        setupTranslatedOptions: function () {
             var entityType = this.model.get('entityType');
             this.attributeList.forEach(function (item) {
-                if (~['today', 'now'].indexOf(item)) {
+                if (~['today', 'now', 'pagebreak'].indexOf(item)) {
                     if (!this.getMetadata().get(['entityDefs', entityType, 'fields', item])) {
                         this.translatedOptions[item] = this.getLanguage().translateOption(item, 'placeholders', 'Template');
                         return;
@@ -242,6 +306,8 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     var link = item.split('.')[0];
                     scope = this.getMetadata().get('entityDefs.' + entityType + '.links.' + link + '.entity');
                 }
+
+                if (this.translatedOptions[item]) return;
 
                 this.translatedOptions[item] = this.translate(field, 'fields', scope);
 
@@ -278,8 +344,6 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                         this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('types', 'fields') + ')';
                     }
                 }
-
-
 
                 if (isForeign) {
                     this.translatedOptions[item] =  this.translate(link, 'links', entityType) + '.' + this.translatedOptions[item];

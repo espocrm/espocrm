@@ -32,6 +32,7 @@
             "Custom": "Custom"
         },
         "placeholders": {
+            "pagebreak": "Page break",
             "today": "Today (date)",
             "now": "Now (date-time)"
         },
