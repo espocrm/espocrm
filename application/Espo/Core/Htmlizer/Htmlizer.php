@@ -291,10 +291,14 @@ class Htmlizer
                     $context = $args[count($args) - 1];
 
                     $field = $context['hash']['field'] ?? null;
-                    if (!$field) return null;
-
-                    $id = $context['_this'][$field . 'Id'] ?? null;
-                    if (!$id) return null;
+                    if ($field) {
+                        $id = $context['_this'][$field . 'Id'] ?? null;
+                    } else {
+                        if (count($args) > 1) {
+                            $id = $args[0];
+                        }
+                    }
+                    if (!$id || !is_string($id)) return null;
 
                     $width = $context['hash']['width'] ?? null;
                     $height = $context['hash']['height'] ?? null;
