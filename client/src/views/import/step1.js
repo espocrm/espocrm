@@ -151,7 +151,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
 
             $('#import-idle-mode').get(0).checked = this.formData.idleMode || false;
 
-            $('#import-silent-mode').get(0).checked = this.formData.silentMode || false;
+            $('#import-silent-mode').get(0).checked = ('silentMode' in this.formData) ? this.formData.silentMode : true;
 
             $('#skip-duplicate-checking').get(0).checked = this.formData.skipDuplicateChecking || false;
 
