@@ -450,6 +450,54 @@ class Htmlizer
                         return $context['inverse'] ? $context['inverse']() : '';
                     }
                 },
+                'tableTag' => function () {
+                    $args = func_get_args();
+                    $context = $args[count($args) - 1];
+
+                    $border = $context['hash']['border'] ?? '0.5pt';
+                    $cellpadding = $context['hash']['cellpadding'] ?? '2';
+
+
+                    $width = $context['hash']['width'] ?? null;
+
+                    $attributesPart = "";
+                    if ($width) {
+                        $attributesPart .= " width=\"{$width}\"";
+                    }
+
+                    return
+                        new LightnCandy\SafeString("<table border=\"{$border}\" cellpadding=\"{$cellpadding}\" {$attributesPart}>") .
+                        $context['fn']() .
+                        new LightnCandy\SafeString("</table>");
+                },
+                'tdTag' => function () {
+                    $args = func_get_args();
+                    $context = $args[count($args) - 1];
+
+                    $align = strtolower($context['hash']['align'] ?? 'left');
+                    if (!in_array($align, ['left', 'right', 'center'])) $align = 'left';
+
+                    $width = $context['hash']['width'] ?? null;
+
+                    $attributesPart = "align=\"{$align}\"";
+                    if ($width) {
+                        $attributesPart .= " width=\"{$width}\"";
+                    }
+
+                    return
+                        new LightnCandy\SafeString("<td {$attributesPart}>") .
+                        $context['fn']() .
+                        new LightnCandy\SafeString("</td>");
+                },
+                'trTag' => function () {
+                    $args = func_get_args();
+                    $context = $args[count($args) - 1];
+
+                    return
+                        new LightnCandy\SafeString("<tr>") .
+                        $context['fn']() .
+                        new LightnCandy\SafeString("</tr>");
+                },
             ],
         ]);
 
