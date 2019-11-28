@@ -110,4 +110,16 @@ abstract class Base implements Injectable
     }
 
     public abstract function process(\StdClass $item);
+
+    protected function fetchArguments(\StdClass $item)
+    {
+        $args = $item->value ?? [];
+
+        $eArgs = [];
+        foreach ($args as $item) {
+            $eArgs[] = $this->evaluate($item);
+        }
+
+        return $eArgs;
+    }
 }
