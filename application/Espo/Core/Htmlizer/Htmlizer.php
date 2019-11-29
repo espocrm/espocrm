@@ -494,6 +494,33 @@ class Htmlizer
                     $context['fn']() .
                     new LightnCandy\SafeString("</tr>");
             },
+            'checkboxTag' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+
+                if (count($args) < 2) return null;
+
+                $color = $context['hash']['color'] ?? '#000';
+
+                $option = $context['hash']['option'] ?? null;
+
+                if (is_null($option)) return null;
+                $option = strval($option);
+
+                $list = $args[0] ?? [];
+
+                if (!is_array($list)) return null;
+
+                $css = "font-family: zapfdingbats; color: {$color}";
+
+                if (in_array($option, $list)) {
+                    $html = '<input type="checkbox" checked="checked" name="1" readonly="true" value="1" style="'.$css.'">';
+                } else {
+                    $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: '.$css.'">';
+                }
+
+                return new LightnCandy\SafeString($html);
+            },
         ];
 
         $additionalHelpers = $this->getMetadata()->get(['app', 'templateHelpers']) ?? [];
