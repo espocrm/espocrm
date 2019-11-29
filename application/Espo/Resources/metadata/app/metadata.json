@@ -8,6 +8,7 @@
         ["app", "emailNotifications", "handlerClassNameMap"],
         ["app", "client"],
         ["app", "language"],
+        ["app", "templateHelpers"],
         ["app", "auth2FAMethods", "__ANY__", "implementationClassName"],
         ["app", "auth2FAMethods", "__ANY__", "implementationUserClassName"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]
