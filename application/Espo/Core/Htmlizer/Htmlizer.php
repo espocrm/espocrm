@@ -523,9 +523,10 @@ class Htmlizer
             },
         ];
 
-        $additionalHelpers = $this->getMetadata()->get(['app', 'templateHelpers']) ?? [];
-
-        $helpers = array_merge($helpers, $additionalHelpers);
+        if ($this->metadata) {
+            $additionalHelpers = $this->metadata->get(['app', 'templateHelpers']) ?? [];
+            $helpers = array_merge($helpers, $additionalHelpers);
+        }
 
         return $helpers;
     }
