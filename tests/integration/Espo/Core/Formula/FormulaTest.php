@@ -417,4 +417,46 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertTrue($result);
         $this->assertFalse($em->getRepository('Account')->isRelated($a, 'opportunities', $o));
     }
+
+    public function testRecordRelationColumn()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+        $c = $em->createEntity('Contact', [
+            'lastName' => '1',
+        ]);
+
+        $em->getRepository('Account')->relate($a, 'contacts', $c->id, ['role' => 'test']);
+
+        $script = "record\\relationColumn('Account', '{$a->id}', 'contacts', '{$c->id}', 'role')";
+        $result = $fm->run($script);
+
+        $this->assertEquals( 'test', $result);
+    }
+
+    public function testRecordUpdateRelationColumn()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+        $c = $em->createEntity('Contact', [
+            'lastName' => '1',
+        ]);
+
+        $em->getRepository('Account')->relate($a, 'contacts', $c->id);
+
+        $script = "record\\updateRelationColumn('Account', '{$a->id}', 'contacts', '{$c->id}', 'role', 'test')";
+        $fm->run($script);
+
+        $value = $em->getRepository('Account')->getRelationColumn($a, 'contacts', $c->id, 'role');
+
+        $this->assertEquals('test', $value);
+    }
 }
