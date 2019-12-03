@@ -29,6 +29,7 @@
         "phpoffice/phpspreadsheet": "^1.10",
         "spatie/async": "dev-for-espocrm",
         "symfony/process": "4.1.7",
+        "symfony/http-foundation": "4.4.1",
         "cboden/ratchet": "^0.4.1",
         "react/zmq": "^0.4.0",
         "guzzlehttp/psr7": "^1.5",
