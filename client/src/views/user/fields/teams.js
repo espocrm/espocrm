@@ -113,6 +113,7 @@ define('views/user/fields/teams', 'views/fields/link-multiple-with-role', functi
                 roleList.unshift('');
                 roleList.forEach(function (role) {
                     var selectedHtml = (role == roleValue) ? 'selected': '';
+                    role = this.getHelper().escapeString(role);
                     var label = role;
                     if (role == '') {
                         label = '--' + this.translate('None', 'labels') + '--';
