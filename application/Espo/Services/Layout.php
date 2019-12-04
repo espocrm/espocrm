@@ -60,7 +60,9 @@ class Layout extends \Espo\Core\Services\Base
             if ($name === 'relationships') {
                 $data = json_decode($dataString);
                 if (is_array($data)) {
-                    foreach ($data as $i => $link) {
+                    foreach ($data as $i => $item) {
+                        $link = $item;
+                        if (is_object($item)) $link = $item->name ?? null;
                         $foreignEntityType = $this->getMetadata()->get(['entityDefs', $scope, 'links', $link, 'entity']);
                         if ($foreignEntityType) {
                             if (!$this->getAcl()->check($foreignEntityType)) {
