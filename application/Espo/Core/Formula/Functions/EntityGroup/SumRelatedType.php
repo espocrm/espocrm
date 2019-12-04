@@ -84,6 +84,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
         $foreignSelectManager = $this->getInjection('selectManagerFactory')->create($foreignEntityType);
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
+        $foreignLinkAlias = $foreignLink . 'SumRelated';
 
         if (empty($foreignLink)) {
             throw new Error("No foreign link for link {$link}.");
@@ -95,29 +96,29 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
             $foreignSelectManager->applyFilter($filter, $selectParams);
         }
 
-        $selectParams['select'] = [[$foreignLink . '.id', 'foreignId'], 'SUM:' . $field];
+        $selectParams['select'] = [[$foreignLinkAlias . '.id', 'foreignId'], 'SUM:' . $field];
 
         if ($entity->getRelationType($link) === 'hasChildren') {
             $foreignSelectManager->addJoin([
                 $entity->getEntityType(),
-                $foreignLink,
+                $foreignLinkAlias,
                 [
-                     $foreignLink . '.id:' => $foreignLink . 'Id',
+                     $foreignLinkAlias . '.id:' => $foreignLink . 'Id',
                     'deleted' => false,
-                    $foreignLink . '.id!=' => null,
+                    $foreignLinkAlias . '.id!=' => null,
                 ]
             ], $selectParams);
             $selectParams['whereClause'][] = [$foreignLink . 'Type'  => $entity->getEntityType()];
 
         } else {
-            $foreignSelectManager->addJoin($foreignLink, $selectParams);
+            $foreignSelectManager->addJoin([$foreignLink, $foreignLinkAlias], $selectParams);
         }
 
         if (!empty($selectParams['distinct'])) {
             $sqSelectParams = $selectParams;
 
             $sqSelectParams['whereClause'][] = [
-                $foreignLink . '.id' => $entity->id
+                $foreignLinkAlias . '.id' => $entity->id
             ];
 
             $sqSelectParams['select'] = ['id'];
@@ -133,11 +134,11 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
             ];
         } else {
             $selectParams['whereClause'][] = [
-                $foreignLink . '.id' => $entity->id
+                $foreignLinkAlias . '.id' => $entity->id
             ];
         }
 
-        $selectParams['groupBy'] = [$foreignLink . '.id'];
+        $selectParams['groupBy'] = [$foreignLinkAlias . '.id'];
 
         $entityManager->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 
