@@ -26,9 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', function (Dep) {
+define('views/user/fields/teams', 'views/fields/link-multiple-with-role', function (Dep) {
 
     return Dep.extend({
+
+        forceRoles: true,
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -42,7 +44,6 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
                     }
                 }
             }, this);
-
 
             this.listenTo(this.model, 'change:teamsIds', function () {
                 var toLoad = false;
@@ -85,7 +86,6 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
 
                 teams.fetch();
             }, this);
-
         },
 
         getDetailLinkHtml: function (id, name) {
@@ -94,6 +94,7 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
             var role = (this.columns[id] || {})[this.columnName] || '';
             var roleHtml = '';
             if (role != '') {
+                role = this.getHelper().escapeString(role);
                 roleHtml = '<span class="text-muted small"> &#187; ' + role + '</span>';
             }
             var lineHtml = '<div>' + '<a href="#' + this.foreignScope + '/view/' + id + '">' + name + '</a> ' + roleHtml + '</div>';
@@ -101,21 +102,18 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
         },
 
         getJQSelect: function (id, roleValue) {
-
-
             var roleList = Espo.Utils.clone((this.roleListMap[id] || []));
 
             if (!roleList.length) {
                 return;
             };
-
-
             if (roleList.length || roleValue) {
                 $role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
 
                 roleList.unshift('');
                 roleList.forEach(function (role) {
                     var selectedHtml = (role == roleValue) ? 'selected': '';
+                    role = this.getHelper().escapeString(role);
                     var label = role;
                     if (role == '') {
                         label = '--' + this.translate('None', 'labels') + '--';
@@ -127,8 +125,6 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
             } else {
                 return $('<div class="small pull-right text-muted">').html(roleValue);
             }
-        }
-
+        },
     });
-
 });
