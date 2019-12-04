@@ -48,7 +48,7 @@
             </a>
         </td>
         <td align="right" width="10%">
-            {{#if isCustom}}
+            {{#if isRemovable}}
             <a href="javascript:" data-action="removeLink" data-link="{{link}}">
                 {{translate 'Remove'}}
             </a>

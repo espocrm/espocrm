@@ -60,7 +60,7 @@ class EntityManager extends \Espo\Core\Controllers\Base
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
         $type = filter_var($type, \FILTER_SANITIZE_STRING);
 
-        $params = array();
+        $params = [];
 
         if (!empty($data['labelSingular'])) {
             $params['labelSingular'] = $data['labelSingular'];
@@ -187,19 +187,19 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         $paramList = [
         	'entity',
-        	'entityForeign',
         	'link',
         	'linkForeign',
         	'label',
-        	'labelForeign',
-        	'linkType'
+        	'linkType',
         ];
 
         $additionalParamList = [
+            'entityForeign',
             'relationName',
+            'labelForeign',
         ];
 
-        $params = array();
+        $params = [];
 
         foreach ($paramList as $item) {
         	if (empty($data[$item])) {
@@ -209,8 +209,10 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
 
         foreach ($additionalParamList as $item) {
-            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            $params[$item] = filter_var($data[$item] ?? null, \FILTER_SANITIZE_STRING);
         }
+
+        $params['labelForeign'] = $params['labelForeign'] ?? $params['linkForeign'];
 
         if (array_key_exists('linkMultipleField', $data)) {
             $params['linkMultipleField'] = $data['linkMultipleField'];
@@ -224,6 +226,12 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
         if (array_key_exists('auditedForeign', $data)) {
             $params['auditedForeign'] = $data['auditedForeign'];
+        }
+        if (array_key_exists('parentEntityTypeList', $data)) {
+            $params['parentEntityTypeList'] = $data['parentEntityTypeList'];
+        }
+        if (array_key_exists('foreignLinkEntityTypeList', $data)) {
+            $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
         $result = $this->getContainer()->get('entityManagerUtil')->createLink($params);
@@ -251,12 +259,12 @@ class EntityManager extends \Espo\Core\Controllers\Base
         	'link',
         	'linkForeign',
         	'label',
-        	'labelForeign'
+        	'labelForeign',
         ];
 
         $additionalParamList = [];
 
-        $params = array();
+        $params = [];
         foreach ($paramList as $item) {
             if (array_key_exists($item, $data)) {
                 $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
@@ -279,6 +287,12 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
         if (array_key_exists('auditedForeign', $data)) {
             $params['auditedForeign'] = $data['auditedForeign'];
+        }
+        if (array_key_exists('parentEntityTypeList', $data)) {
+            $params['parentEntityTypeList'] = $data['parentEntityTypeList'];
+        }
+        if (array_key_exists('foreignLinkEntityTypeList', $data)) {
+            $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
         $result = $this->getContainer()->get('entityManagerUtil')->updateLink($params);

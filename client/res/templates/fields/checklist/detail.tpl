@@ -5,3 +5,4 @@
     <label for="{{id}}" class="checklist-label">{{label}}</label>
 </div>
 {{/each}}
+{{#unless optionDataList.length}}{{translate 'None'}}{{/unless}}

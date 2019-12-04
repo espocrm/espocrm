@@ -85,7 +85,18 @@ define('views/admin/link-manager/modals/edit',
                 var type = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.type');
                 var foreignType = this.getMetadata().get('entityDefs.' + entityForeign + '.links.' + linkForeign + '.type');
 
-                var linkType = Index.prototype.computeRelationshipType.call(this, type, foreignType);
+                if (type === 'belongsToParent') {
+                    var linkType = 'childrenToParent';
+                    labelForeign = null;
+
+                    var entityTypeList = this.getMetadata().get(['entityDefs', entity, 'fields', link, 'entityList']) || [];
+                    this.model.set('parentEntityTypeList', entityTypeList);
+
+                    var foreignLinkEntityTypeList = this.getForeignLinkEntityTypeList(entity, link, entityTypeList);
+                    this.model.set('foreignLinkEntityTypeList', foreignLinkEntityTypeList);
+                } else {
+                    var linkType = Index.prototype.computeRelationshipType.call(this, type, foreignType);
+                }
 
                 this.model.set('linkType', linkType);
                 this.model.set('entityForeign', entityForeign);
@@ -166,7 +177,7 @@ define('views/admin/link-manager/modals/edit',
                     name: 'linkType',
                     params: {
                         required: true,
-                        options: ['', 'oneToMany', 'manyToOne', 'manyToMany', 'oneToOneRight', 'oneToOneLeft']
+                        options: ['', 'oneToMany', 'manyToOne', 'manyToMany', 'oneToOneRight', 'oneToOneLeft', 'childrenToParent']
                     }
                 },
                 readOnly: !isNew
@@ -285,8 +296,55 @@ define('views/admin/link-manager/modals/edit',
                 tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager')
             });
 
+            this.createView('parentEntityTypeList', 'views/fields/entity-type-list', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="parentEntityTypeList"]',
+                defs: {
+                    name: 'parentEntityTypeList',
+                },
+            });
+
+            this.createView('foreignLinkEntityTypeList', 'views/admin/link-manager/fields/foreign-link-entity-type-list', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="foreignLinkEntityTypeList"]',
+                defs: {
+                    name: 'foreignLinkEntityTypeList',
+                    params: {
+                        options: this.model.get('parentEntityTypeList') || [],
+                    },
+                },
+            });
 
             this.model.fetchedAttributes = this.model.getClonedAttributes();
+
+            this.listenTo(this.model, 'change', function () {
+                if (
+                    !this.model.hasChanged('parentEntityTypeList')
+                    &&
+                    !this.model.hasChanged('linkForeign')
+                    &&
+                    !this.model.hasChanged('link')
+                ) return;
+
+                var view = this.getView('foreignLinkEntityTypeList');
+                if (view) {
+                    view.setOptionList(this.model.get('parentEntityTypeList') || []);
+                }
+                var checkedList = Espo.Utils.clone(this.model.get('foreignLinkEntityTypeList') || []);
+
+                this.getForeignLinkEntityTypeList(
+                    this.model.get('entity'), this.model.get('link'), this.model.get('parentEntityTypeList') || [], true
+                ).forEach(function (item) {
+                    if (!~checkedList.indexOf(item)) {
+                        checkedList.push(item);
+                    }
+                }, this);
+
+                this.model.set('foreignLinkEntityTypeList', checkedList)
+
+            }, this);
         },
 
         toPlural: function (string) {
@@ -301,13 +359,32 @@ define('views/admin/link-manager/modals/edit',
             var entityForeign = this.model.get('entityForeign');
             var linkType = this.model.get('linkType');
 
-            if (!entityForeign || !linkType) {
-                this.model.set('link', '');
-                this.model.set('linkForeign', '');
+            if (linkType === 'childrenToParent') {
+                    this.model.set('link', 'parent');
+                    this.model.set('label', 'Parent');
 
-                this.model.set('label', '');
-                this.model.set('labelForeign', '');
-                return;
+                    var linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
+
+                    if (this.getMetadata().get(['entityDefs', this.scope, 'links', 'parent'])) {
+                        this.model.set('link', 'parentAnother');
+                        this.model.set('label', 'Parent Another');
+                        linkForeign += 'Another';
+                    }
+
+                    this.model.set('linkForeign', linkForeign);
+
+                    this.model.set('labelForeign', '');
+                    this.model.set('entityForeign', null);
+                    return;
+            } else {
+                if (!entityForeign || !linkType) {
+                    this.model.set('link', '');
+                    this.model.set('linkForeign', '');
+
+                    this.model.set('label', '');
+                    this.model.set('labelForeign', '');
+                    return;
+                }
             }
 
             var link;
@@ -423,9 +500,15 @@ define('views/admin/link-manager/modals/edit',
 
         handleLinkTypeChange: function () {
             var linkType = this.model.get('linkType');
+
+            this.showField('entityForeign');
+            this.showField('labelForeign');
+
+            this.hideField('parentEntityTypeList');
+            this.hideField('foreignLinkEntityTypeList');
+
             if (linkType === 'manyToMany') {
                 var relationNameView = this.getView('relationName');
-                this.showField('relationName');
                 this.showField('relationName');
 
                 this.showField('linkMultipleField');
@@ -457,6 +540,11 @@ define('views/admin/link-manager/modals/edit',
                     } else if (linkType == 'childrenToParent') {
                         this.hideField('audited');
                         this.showField('auditedForeign');
+                        this.hideField('entityForeign');
+                        this.hideField('labelForeign');
+
+                        this.showField('parentEntityTypeList');
+                        this.showField('foreignLinkEntityTypeList');
                     } else {
                         this.hideField('audited');
                         this.hideField('auditedForeign');
@@ -504,6 +592,8 @@ define('views/admin/link-manager/modals/edit',
                 'linkMultipleFieldForeign',
                 'audited',
                 'auditedForeign',
+                'parentEntityTypeList',
+                'foreignLinkEntityTypeList',
             ];
 
             var notValid = false;
@@ -548,6 +638,8 @@ define('views/admin/link-manager/modals/edit',
             var audited = this.model.get('audited');
             var auditedForeign = this.model.get('auditedForeign');
 
+            var linkType = this.model.get('linkType');
+
             var attributes = {
                 entity: entity,
                 entityForeign: entityForeign,
@@ -555,13 +647,14 @@ define('views/admin/link-manager/modals/edit',
                 linkForeign: linkForeign,
                 label: label,
                 labelForeign: labelForeign,
-                linkType: this.model.get('linkType'),
+                linkType: linkType,
                 relationName: relationName,
                 linkMultipleField: linkMultipleField,
                 linkMultipleFieldForeign: linkMultipleFieldForeign,
                 audited: audited,
-                auditedForeign: auditedForeign
+                auditedForeign: auditedForeign,
             };
+
 
             if (!this.isNew) {
                 if (attributes.label === this.model.fetchedAttributes.label) {
@@ -570,6 +663,13 @@ define('views/admin/link-manager/modals/edit',
                 if (attributes.labelForeign === this.model.fetchedAttributes.labelForeign) {
                     delete attributes.labelForeign;
                 }
+            }
+
+            if (linkType === 'childrenToParent') {
+                delete attributes.entityForeign;
+                delete attributes.labelForeign;
+                attributes.parentEntityTypeList = this.model.get('parentEntityTypeList');
+                attributes.foreignLinkEntityTypeList = this.model.get('foreignLinkEntityTypeList');
             }
 
             $.ajax({
@@ -603,15 +703,47 @@ define('views/admin/link-manager/modals/edit',
                 (data.fields || {})[link] = label;
                 (data.links || {})[link] = label;
 
-                data = ((this.getLanguage().data || {}) || {})[entityForeign];
-                (data.fields || {})[linkForeign] = labelForeign;
-                (data.links || {})[linkForeign] = labelForeign;
+                if (entityForeign) {
+                    data = ((this.getLanguage().data || {}) || {})[entityForeign];
+
+                    if (linkForeign) {
+                        (data.fields || {})[linkForeign] = labelForeign;
+                        (data.links || {})[linkForeign] = labelForeign;
+                    }
+                }
 
                 this.getMetadata().load(function () {
                     this.trigger('after:save');
                     this.close();
                 }.bind(this), true);
             }.bind(this));
+        },
+
+        getForeignLinkEntityTypeList: function (entityType, link, entityTypeList, onlyNotCustom) {
+            var list = [];
+
+            entityTypeList.forEach(function (item) {
+                var linkDefs = this.getMetadata().get(['entityDefs', item, 'links']) || {};
+
+                var isFound = false;
+                for (var i in linkDefs) {
+                    if (linkDefs[i].foreign == link && linkDefs[i].entity == entityType && linkDefs[i].type === 'hasChildren') {
+                        if (onlyNotCustom) {
+                            if (linkDefs[i].isCustom) {
+                                continue;
+                            }
+                        }
+                        isFound = true;
+                        break;
+                    }
+                }
+
+                if (isFound) {
+                    list.push(item);
+                }
+            }, this);
+
+            return list;
         },
     });
 });

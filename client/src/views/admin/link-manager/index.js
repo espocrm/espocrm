@@ -105,25 +105,30 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
             linkList.forEach(function (link) {
                 var d = links[link];
 
-                if (!d.foreign) return;
-                if (!d.entity) return;
+                var linkForeign = d.foreign;
 
-                var foreignType = this.getMetadata().get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
-
-                var type = this.computeRelationshipType(d.type, foreignType);
+                if (d.type === 'belongsToParent') {
+                    var type = 'childrenToParent';
+                } else {
+                    if (!d.entity) return;
+                    if (!linkForeign) return;
+                    var foreignType = this.getMetadata().get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
+                    var type = this.computeRelationshipType(d.type, foreignType);
+                }
 
                 if (!type) return;
 
                 this.linkDataList.push({
                     link: link,
                     isCustom: d.isCustom,
+                    isRemovable: d.isCustom,
                     customizable: d.customizable,
                     type: type,
                     entityForeign: d.entity,
                     entity: this.scope,
-                    linkForeign: d.foreign,
+                    linkForeign: linkForeign,
                     label: this.getLanguage().translate(link, 'links', this.scope),
-                    labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity)
+                    labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity),
                 });
 
             }, this);
@@ -182,7 +187,7 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
                 type: 'POST',
                 data: JSON.stringify({
                     entity: this.scope,
-                    link: link
+                    link: link,
                 })
             }).done(function () {
                 this.$el.find('table tr[data-link="'+link+'"]').remove();

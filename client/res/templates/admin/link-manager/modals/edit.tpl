@@ -81,3 +81,27 @@
 		</div>
 	</div>
 </div>
+
+<div class="row">
+	<div class="cell form-group col-md-4"></div>
+	<div class="cell form-group col-md-4" data-name="parentEntityTypeList">
+		<label class="control-label" data-name="parentEntityTypeList">
+			{{translate 'parentEntityTypeList' category='fields' scope='EntityManager'}}
+		</label>
+		<div class="field" data-name="parentEntityTypeList">
+			{{{parentEntityTypeList}}}
+		</div>
+	</div>
+
+</div>
+<div class="row">
+	<div class="cell form-group col-md-4"></div>
+	<div class="cell form-group col-md-4" data-name="foreignLinkEntityTypeList">
+		<label class="control-label" data-name="foreignLinkEntityTypeList">
+			{{translate 'foreignLinkEntityTypeList' category='fields' scope='EntityManager'}}
+		</label>
+		<div class="field" data-name="foreignLinkEntityTypeList">
+			{{{foreignLinkEntityTypeList}}}
+		</div>
+	</div>
+</div>

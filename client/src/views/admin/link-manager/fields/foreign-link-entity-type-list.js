@@ -26,34 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/entity-type-list', 'views/fields/multi-enum', function (Dep) {
+define('views/admin/link-manager/fields/foreign-link-entity-type-list', 'views/fields/checklist', function (Dep) {
 
     return Dep.extend({
 
-        checkAvailability: function (entityType) {
-            var defs = this.scopesMetadataDefs[entityType] || {};
-            if (defs.entity && defs.object) {
-                return true;
-            }
-        },
-
-        setupOptions: function () {
-            var scopes = this.scopesMetadataDefs = this.getMetadata().get('scopes');
-            this.params.options = Object.keys(scopes).filter(function (scope) {
-                if (this.checkAvailability(scope)) {
-                    return true;
-                }
-            }.bind(this)).sort(function (v1, v2) {
-                 return this.translate(v1, 'scopeNames').localeCompare(this.translate(v2, 'scopeNames'));
-            }.bind(this));
-        },
-
         setup: function () {
-            if (!this.params.translation) {
-                this.params.translation = 'Global.scopeNames';
-            }
-            this.setupOptions();
+            this.params.translation = 'Global.scopeNames';
             Dep.prototype.setup.call(this);
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            this.controlOptionsAviability();
+        },
+
+        controlOptionsAviability: function () {
+            this.params.options.forEach(function (item) {
+                var link = this.model.get('link');
+                var linkForeign = this.model.get('linkForeign');
+                var entityType = this.model.get('entity');
+
+                var linkDefs = this.getMetadata().get(['entityDefs', item, 'links']) || {};
+
+                var isFound = false;
+                for (var i in linkDefs) {
+                    if (linkDefs[i].foreign == link && !linkDefs[i].isCustom && linkDefs[i].entity == entityType) {
+                        isFound = true;
+                    } else if (i === linkForeign && linkDefs[i].type !== 'hasChildren') {
+                        isFound = true;
+                    }
+                }
+
+                if (isFound) {
+                    this.$el.find('input[data-name="checklistItem-foreignLinkEntityTypeList-'+item+'"]').attr('disabled', 'disabled');
+                }
+            }, this);
         },
 
     });

@@ -34,7 +34,9 @@
         "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
         "iconClass": "Icon",
         "countDisabled": "Disable record count",
-        "fullTextSearch": "Full-Text Search"
+        "fullTextSearch": "Full-Text Search",
+        "parentEntityTypeList": "Parent Entity Types",
+        "foreignLinkEntityTypeList": "Foreign Links"
     },
     "options": {
         "type": {
