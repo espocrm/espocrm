@@ -107,7 +107,7 @@
         "View Users": "View Users"
     },
     "messages": {
-        "noSmtpSetup": "No SMTP setup. {link}.",
+        "noSmtpSetup": "SMTP is not configured: {link}",
         "testEmailSent": "Test email has been sent",
         "emailSent": "Email has been sent",
         "savedAsDraft": "Saved as draft",
