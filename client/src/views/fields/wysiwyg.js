@@ -490,6 +490,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 if (code == '<p><br></p>') {
                     code = '';
                 }
+
+                var imageTagString = '<img src="' + window.location.origin + window.location.pathname + '?entryPoint=attachment';
+                code = code.replace(
+                    new RegExp(imageTagString.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'),
+                    '<img src="?entryPoint=attachment'
+                );
                 data[this.name] = code;
             } else {
                 data[this.name] = this.$element.val();
