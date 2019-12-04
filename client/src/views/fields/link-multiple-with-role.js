@@ -58,9 +58,8 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
                 this.roleFieldScope = this.model.name;
             }
 
-            if (this.roleType == 'enum') {
+            if (this.roleType == 'enum' && !this.forceRoles) {
                 this.roleList = this.getMetadata().get('entityDefs.' + this.roleFieldScope + '.fields.' + this.roleField + '.options');
-
                 if (!this.roleList) {
                     this.roleList = [];
                     this.skipRoles = true;
