@@ -61,9 +61,10 @@ class Container
             $obj = $this->$loadMethod();
             $this->data[$name] = $obj;
         } else {
+            $metadata = $this->get('metadata');
 
             try {
-                $className = $this->get('metadata')->get(['app', 'loaders', ucfirst($name)]);
+                $className = $metadata->get(['app', 'loaders', ucfirst($name)]);
             } catch (\Exception $e) {}
 
             if (!isset($className) || !class_exists($className)) {
@@ -73,19 +74,46 @@ class Container
                 }
             }
 
+            $object = null;
+
             if (class_exists($className)) {
-                 $loadClass = new $className($this);
-                 $this->data[$name] = $loadClass->load();
+                $loadClass = new $className($this);
+                $object = $loadClass->load();
+                $this->data[$name] = $object;
+            } else {
+                $className = $this->getServiceClassName($name);
+
+                if ($className && class_exists($className)) {
+
+                    $dependencyList = $metadata->get(['app', 'containerServices', $name, 'dependencyList']) ?? [];
+                    $dependencyObjectList = [];
+                    foreach ($dependencyList as $item) {
+                        $dependencyObjectList[] = $this->get($item);
+                    }
+                    $reflector = new \ReflectionClass($className);
+                    if ($reflector->isSubclassOf('\\Espo\\Core\\Interfaces\\InjectableService')) {
+                        $object = $reflector->newInstance();
+                        foreach ($dependencyObjectList as $i => $item) {
+                            $object->inject($dependencyList[$i], $item);
+                        }
+                    } else {
+                        $object = $reflector->newInstanceArgs($dependencyObjectList);
+                    }
+                    $this->data[$name] = $object;
+                }
             }
         }
 
         return null;
     }
 
-    public function getServiceClassName(string $name, string $default)
+    public function getServiceClassName(string $name, ?string $default = null)
     {
         $metadata = $this->get('metadata');
-        $className = $metadata->get(['app', 'serviceContainer', 'classNames',  $name], $default);
+
+        $className = $metadata->get(['app', 'containerServices',  $name, 'className']) ??
+            $metadata->get(['app', 'serviceContainer', 'classNames',  $name], $default);
+
         return $className;
     }
 

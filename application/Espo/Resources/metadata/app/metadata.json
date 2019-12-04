@@ -2,6 +2,9 @@
     "frontendHiddenPathList": [
         ["app", "metadata"],
         ["app", "loaders"],
+        ["app", "containerServices"],
+        ["app", "portalContainerServices"],
+        ["app", "serviceContainer"],
         ["app", "consoleCommands"],
         ["app", "formula", "functionClassNameMap"],
         ["app", "fileStorage", "implementationClassNameMap"],

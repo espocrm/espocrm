@@ -27,16 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Interfaces;
 
-class ClientManager extends Base
+interface InjectableService
 {
-    public function load()
-    {
-        return new \Espo\Core\Utils\ClientManager(
-            $this->getContainer()->get('config'),
-            $this->getContainer()->get('themeManager'),
-            $this->getContainer()->get('metadata')
-        );
-    }
+    public function inject(string $name, object $object);
 }
+

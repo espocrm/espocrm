@@ -48,6 +48,7 @@ class Application
         $GLOBALS['log'] = $this->getContainer()->get('log');
 
         $this->initAutoloads();
+        $this->initPreloads();
     }
 
     protected function initContainer()
@@ -344,6 +345,15 @@ class Application
     {
         $autoload = new \Espo\Core\Utils\Autoload($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
         $autoload->register();
+    }
+
+    protected function initPreloads()
+    {
+        foreach ($this->getMetadata()->get(['app', 'containerServices']) ?? [] as $name => $defs) {
+            if ($defs['preload'] ?? false) {
+                $this->getContainer()->get($name);
+            }
+        }
     }
 
     public function setBasePath($basePath)

@@ -1,0 +1,6 @@
+{
+    "clientManager": {
+        "className": "\\Espo\\Core\\Utils\\ClientManager",
+        "dependencyList": ["config", "themeManager", "metadata"]
+    }
+}
