@@ -25,13 +25,13 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 ob_start();
 $result = array('success' => true, 'errorMsg' => '');
 
 // save settings
-$data = array(
+$database = array(
     'driver' => 'pdo_mysql',
     'dbname' => $_SESSION['install']['db-name'],
     'user' => $_SESSION['install']['db-user-name'],
@@ -41,10 +41,22 @@ $host = $_SESSION['install']['host-name'];
 if (strpos($host,':') === false) {
         $host .= ":";
 }
-list($data['host'], $data['port']) = explode(':', $host);
+list($database['host'], $database['port']) = explode(':', $host);
 
-$lang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
-if (!$installer->saveData($data, $lang)) {
+$saveData = [
+    'database' => $database,
+    'language' => !empty($_SESSION['install']['user-lang']) ? $_SESSION['install']['user-lang'] : 'en_US',
+    'siteUrl' => !empty($_SESSION['install']['site-url']) ? $_SESSION['install']['site-url'] : null,
+];
+
+if (!empty($_SESSION['install']['default-permissions-user']) && !empty($_SESSION['install']['default-permissions-group'])) {
+    $saveData['defaultPermissions'] = [
+        'user' => $_SESSION['install']['default-permissions-user'],
+        'group' => $_SESSION['install']['default-permissions-group'],
+    ];
+}
+
+if (!$installer->saveData($saveData)) {
     $result['success'] = false;
     $result['errorMsg'] = $langs['messages']['Can not save settings'];
 }
