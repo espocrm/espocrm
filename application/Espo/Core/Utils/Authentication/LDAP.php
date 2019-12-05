@@ -281,7 +281,7 @@ class LDAP extends Espo
         $systemUser->set('ipAddress', $_SERVER['REMOTE_ADDR']);
         $entityManager->setUser($systemUser);
 
-        $user = $entityManager)->getEntity('User');
+        $user = $entityManager->getEntity('User');
         $user->set($data);
 
         $this->getEntityManager()->saveEntity($user);
