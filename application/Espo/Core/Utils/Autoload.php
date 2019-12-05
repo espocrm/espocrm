@@ -87,7 +87,7 @@ class Autoload
             return $this->data;
         }
 
-        return Utill::getValueByKey($this->data, $key, $returns);
+        return Util::getValueByKey($this->data, $key, $returns);
     }
 
     public function getAll()
