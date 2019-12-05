@@ -77,20 +77,7 @@ class Auth
 
     protected function getAuthenticationImpl(string $method) : \Espo\Core\Utils\Authentication\Base
     {
-        $className = $this->getMetadata()->get([
-            'authenticationMethods', $method, 'implementationClassName'
-        ]);
-
-        if (!$className) {
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
-
-            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\" . $sanitizedName;
-            if (!class_exists($className)) {
-                $className = "\\Espo\\Core\\Utils\\Authentication\\" . $sanitizedName;
-            }
-        }
-
-        return new $className($this->getConfig(), $this->getEntityManager(), $this, $this->getContainer());
+        return $this->getContainer()->get('authenticationFactory')->create($method);
     }
 
     protected function get2FAImpl(string $method) : \Espo\Core\Utils\Authentication\TwoFA\Base

@@ -27,41 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\Core\Utils\Authentication\Utils;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Container;
 
-class Hmac extends Base
+class AuthenticationFactory
 {
-    public function login(string $username, $password, $authToken = null, array $params = [], $request)
+    protected $container;
+
+    public function __construct(Container $container)
     {
-        $apiKey = $username;
-        $hash = $password;
+        $this->container = $container;
+    }
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne([
-            'whereClause' => [
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'Hmac'
-            ]
-        ]);
+    public function create(string $method) : \Espo\Core\Utils\Authentication\Base
+    {
+        $metadata = $this->container->get('metadata');
 
-        if (!$user) return;
+        $className = $metadata->get(['authenticationMethods', $method, 'implementationClassName']);
+        $dependencyList = $metadata->get(['authenticationMethods', $method, 'dependencyList']) ?? [];
 
-        if ($user) {
-            $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
-            $secretKey = $apiKeyUtil->getSecretKeyForUserId($user->id);
-            if (!$secretKey) return;
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
-            $string = $request->getMethod() . ' ' . $request->getResourceUri();
-
-            if ($hash === \Espo\Core\Utils\ApiKey::hash($secretKey, $string)) {
-                return $user;
+            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "\\Espo\\Core\\Utils\\Authentication\\" . $sanitizedName;
             }
-
-            return;
         }
 
-        return $user;
+        $config = $this->container->get('config');
+        $entityManager = $this->container->get('entityManager');
+
+        $impl = new $className($config, $entityManager);
+
+        foreach ($dependencyList as $item) {
+            $impl->inject($item, $this->container->get($item));
+        }
+
+        return $impl;
     }
 }

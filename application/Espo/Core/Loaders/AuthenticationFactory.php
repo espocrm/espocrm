@@ -27,41 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\Core\Loaders;
 
-use \Espo\Core\Exceptions\Error;
-
-class Hmac extends Base
+class AuthenticationFactory extends Base
 {
-    public function login(string $username, $password, $authToken = null, array $params = [], $request)
+    public function load()
     {
-        $apiKey = $username;
-        $hash = $password;
-
-        $user = $this->getEntityManager()->getRepository('User')->findOne([
-            'whereClause' => [
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'Hmac'
-            ]
-        ]);
-
-        if (!$user) return;
-
-        if ($user) {
-            $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
-            $secretKey = $apiKeyUtil->getSecretKeyForUserId($user->id);
-            if (!$secretKey) return;
-
-            $string = $request->getMethod() . ' ' . $request->getResourceUri();
-
-            if ($hash === \Espo\Core\Utils\ApiKey::hash($secretKey, $string)) {
-                return $user;
-            }
-
-            return;
-        }
-
-        return $user;
+        $obj = new \Espo\Core\Utils\Authentication\Utils\AuthenticationFactory(
+            $this->getContainer()
+        );
+        return $obj;
     }
 }

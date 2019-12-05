@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Auth;
+use Espo\Entities\AuthToken;
 
 class LDAP extends Espo
 {
@@ -74,9 +75,9 @@ class LDAP extends Espo
         'portalRolesIds' => 'portalUserRolesIds',
     );
 
-    public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
+    public function __construct(Config $config, EntityManager $entityManager)
     {
-        parent::__construct($config, $entityManager, $auth);
+        parent::__construct($config, $entityManager);
 
         $this->utils = new LDAP\Utils($config);
     }
@@ -101,16 +102,7 @@ class LDAP extends Espo
         return $this->ldapClient;
     }
 
-    /**
-     * LDAP login
-     *
-     * @param  string $username
-     * @param  string $password
-     * @param  \Espo\Entities\AuthToken $authToken
-     *
-     * @return \Espo\Entities\User | null
-     */
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $params = [], $request)
+    public function login(string $username, $password, ?AuthToken $authToken = null, $params = [], $request = null)
     {
         if (!$password) return;
 
@@ -279,9 +271,17 @@ class LDAP extends Espo
             $data[$fieldName] = $fieldValue;
         }
 
-        $this->getAuth()->useNoAuth();
+        $entityManager = $this->entityManager;
 
-        $user = $this->getEntityManager()->getEntity('User');
+        $systemUser = $entityManager->getRepository('User')->get('system');
+        if (!$systemUser) {
+            throw new Error("System user is not found");
+        }
+        $systemUser->set('isAdmin', true);
+        $systemUser->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+        $entityManager->setUser($systemUser);
+
+        $user = $entityManager)->getEntity('User');
         $user->set($data);
 
         $this->getEntityManager()->saveEntity($user);

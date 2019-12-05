@@ -33,7 +33,7 @@ use \Espo\Core\Exceptions\Error;
 
 class ApiKey extends Base
 {
-    public function login($username, $password, $authToken = null, $params = [], $request)
+    public function login(string $username, $password, $authToken = null, array $params = [], $request = null)
     {
         $apiKey = $username;
 
@@ -41,7 +41,7 @@ class ApiKey extends Base
             'whereClause' => [
                 'type' => 'api',
                 'apiKey' => $apiKey,
-                'authMethod' => 'ApiKey'
+                'authMethod' => 'ApiKey',
             ]
         ]);
 
