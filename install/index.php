@@ -27,11 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-session_start();
-require_once('../bootstrap.php');
+if (session_status() !== \PHP_SESSION_ACTIVE) {
+	session_start();
+}
+
+if (file_exists('../bootstrap.php')) {
+	require_once('../bootstrap.php');
+}
+
+if (!isset($postData)) {
+	require_once('core/PostData.php');
+	$postData = new PostData();
+}
+
+$allPostData = $postData->getAll();
 
 //action
-$action = (!empty($_POST['action']))? $_POST['action'] : 'main';
+$action = (!empty($allPostData['action']))? $allPostData['action'] : 'main';
 require_once('core/Utils.php');
 if (!Utils::checkActionExists($action)) {
 	die('This page does not exist.');
@@ -40,8 +52,8 @@ if (!Utils::checkActionExists($action)) {
 // temp save all settings
 $ignoredFields = array('installProcess', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDriver');
 
-if (!empty($_POST)) {
-	foreach ($_POST as $key => $val) {
+if (!empty($allPostData)) {
+	foreach ($allPostData as $key => $val) {
 		if (!in_array($key, $ignoredFields)) {
 			$_SESSION['install'][$key] = trim($val);
 		}
@@ -64,7 +76,7 @@ $systemHelper = new SystemHelper();
 
 $systemConfig = include('application/Espo/Core/defaults/systemConfig.php');
 if (isset($systemConfig['requiredPhpVersion']) && version_compare(PHP_VERSION, $systemConfig['requiredPhpVersion'], '<')) {
-    die(str_replace('{minVersion}', $systemConfig['requiredPhpVersion'], $sanitizedLangs['messages']['phpVersion']) . '.');
+    die(str_replace("{minVersion}", $systemConfig['requiredPhpVersion'], $sanitizedLangs['messages']['phpVersion']) . ".\n");
 }
 
 if (!$systemHelper->initWritable()) {
@@ -74,7 +86,7 @@ if (!$systemHelper->initWritable()) {
 	$message = str_replace('{*}', $dir, $message);
 	$message = str_replace('{C}', $systemHelper->getPermissionCommands(array($dir, ''), '775'), $message);
 	$message = str_replace('{CSU}', $systemHelper->getPermissionCommands(array($dir, ''), '775', true), $message);
-	die($message);
+	die($message . "\n");
 }
 
 require_once ('install/vendor/smarty/libs/Smarty.class.php');
