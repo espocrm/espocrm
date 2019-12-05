@@ -29,11 +29,13 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+
+use Espo\Entities\AuthToken;
 
 class ApiKey extends Base
 {
-    public function login(string $username, $password, $authToken = null, array $params = [], $request = null)
+    public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request = null)
     {
         $apiKey = $username;
 

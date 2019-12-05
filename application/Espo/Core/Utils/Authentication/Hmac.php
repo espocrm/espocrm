@@ -29,11 +29,13 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+
+use Espo\Entities\AuthToken;
 
 class Hmac extends Base
 {
-    public function login(string $username, $password, $authToken = null, array $params = [], $request)
+    public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request)
     {
         $apiKey = $username;
         $hash = $password;
