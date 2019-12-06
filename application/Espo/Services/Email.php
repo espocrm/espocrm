@@ -380,6 +380,12 @@ class Email extends Record
         }
 
         $this->loadAdditionalFields($entity);
+
+        if (!isset($data->from) && !isset($data->to) && !isset($data->cc)) {
+            $entity->clear('nameHash');
+            $entity->clear('idHash');
+            $entity->clear('typeHash');
+        }
     }
 
     public function loadFromField(Entity $entity)
