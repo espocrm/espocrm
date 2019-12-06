@@ -248,29 +248,33 @@ class Installer
      * @param  string $language
      * @return bool
      */
-    public function saveData($database, $language)
+    public function saveData(array $saveData)
     {
         $initData = include('install/core/afterInstall/config.php');
-        $siteUrl = $this->getSystemHelper()->getBaseUrl();
         $databaseDefaults = $this->app->getContainer()->get('config')->get('database');
 
         $data = [
-            'database' => array_merge($databaseDefaults, $database),
-            'language' => $language,
-            'siteUrl' => $siteUrl,
+            'database' => array_merge($databaseDefaults, $saveData['database']),
+            'language' => $saveData['language'],
+            'siteUrl' => !empty($saveData['siteUrl']) ? $saveData['siteUrl'] : $this->getSystemHelper()->getBaseUrl(),
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
             'hashSecretKey' => \Espo\Core\Utils\Util::generateSecretKey(),
         ];
 
-        $owner = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
-        $group = $this->getFileManager()->getPermissionUtils()->getDefaultGroup(true);
-
-        if (!empty($owner)) {
-            $data['defaultPermissions']['user'] = $owner;
+        if (empty($saveData['defaultPermissions']['user'])) {
+            $saveData['defaultPermissions']['user'] = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
         }
-        if (!empty($group)) {
-            $data['defaultPermissions']['group'] = $group;
+
+        if (empty($saveData['defaultPermissions']['group'])) {
+            $saveData['defaultPermissions']['group'] = $this->getFileManager()->getPermissionUtils()->getDefaultGroup(true);
+        }
+
+        if (!empty($saveData['defaultPermissions']['user'])) {
+            $data['defaultPermissions']['user'] = $saveData['defaultPermissions']['user'];
+        }
+        if (!empty($saveData['defaultPermissions']['group'])) {
+            $data['defaultPermissions']['group'] = $saveData['defaultPermissions']['group'];
         }
 
         $data = array_merge($data, $initData);

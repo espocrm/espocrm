@@ -27,26 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\Core\Loaders;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\Entities\AuthToken;
-
-class ApiKey extends Base
+class AuthenticationFactory extends Base
 {
-    public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request = null)
+    public function load()
     {
-        $apiKey = $username;
-
-        $user = $this->getEntityManager()->getRepository('User')->findOne([
-            'whereClause' => [
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'ApiKey',
-            ]
-        ]);
-
-        return $user;
+        $obj = new \Espo\Core\Utils\Authentication\Utils\AuthenticationFactory(
+            $this->getContainer()
+        );
+        return $obj;
     }
 }

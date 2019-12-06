@@ -50,16 +50,18 @@ foreach ($phpRequiredList as $name => $details) {
     }
 }
 
-if ($result['success'] && !empty($_REQUEST['dbName']) && !empty($_REQUEST['hostName']) && !empty($_REQUEST['dbUserName'])) {
+$allPostData = $postData->getAll();
+
+if ($result['success'] && !empty($allPostData['dbName']) && !empty($allPostData['hostName']) && !empty($allPostData['dbUserName'])) {
     $connect = false;
 
-    $dbName = trim($_REQUEST['dbName']);
-    if (strpos($_REQUEST['hostName'],':') === false) {
-        $_REQUEST['hostName'] .= ":";
+    $dbName = trim($allPostData['dbName']);
+    if (strpos($allPostData['hostName'],':') === false) {
+        $allPostData['hostName'] .= ":";
     }
-    list($hostName, $port) = explode(':', trim($_REQUEST['hostName']));
-    $dbUserName = trim($_REQUEST['dbUserName']);
-    $dbUserPass = trim($_REQUEST['dbUserPass']);
+    list($hostName, $port) = explode(':', trim($allPostData['hostName']));
+    $dbUserName = trim($allPostData['dbUserName']);
+    $dbUserPass = trim($allPostData['dbUserPass']);
 
     $databaseParams = [
         'host' => $hostName,
@@ -84,7 +86,7 @@ if ($result['success'] && !empty($_REQUEST['dbName']) && !empty($_REQUEST['hostN
         $databaseRequiredList = $installer->getSystemRequirementList('database', true, ['database' => $databaseParams]);
 
         foreach ($databaseRequiredList as $name => $details) {
-            if (!$details['acceptable']) {            
+            if (!$details['acceptable']) {
 
                 switch ($details['type']) {
                     case 'version':

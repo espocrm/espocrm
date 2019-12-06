@@ -45,6 +45,7 @@ class UserSecurity extends \Espo\Core\Services\Base
         $this->addDependency('metadata');
         $this->addDependency('totp');
         $this->addDependency('config');
+        $this->addDependency('container');
     }
 
     protected function getUser()
@@ -87,7 +88,7 @@ class UserSecurity extends \Espo\Core\Services\Base
         if (!$password) throw new Forbidden('Passport required.');
 
         if (!$this->getUser()->isAdmin() || $this->getUser()->id === $id) {
-            $this->checkPassport($id, $password);
+            $this->checkPassword($id, $password);
         }
 
         $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($id);
@@ -136,7 +137,7 @@ class UserSecurity extends \Espo\Core\Services\Base
         if (!$password) throw new Forbidden('Passport required.');
 
         if (!$this->getUser()->isAdmin() || $this->getUser()->id === $id) {
-            $this->checkPassport($id, $password);
+            $this->checkPassword($id, $password);
         }
 
         foreach (get_object_vars($data) as $attribute => $v) {
@@ -222,15 +223,21 @@ class UserSecurity extends \Espo\Core\Services\Base
         ];
     }
 
-    protected function checkPassport(string $id, string $password)
+    protected function checkPassword(string $id, string $password)
     {
-        $passwordHash = new \Espo\Core\Utils\PasswordHash($this->getConfig());
+        $method = $this->getConfig()->get('authenticationMethod', 'Espo');
+
+        $auth = $this->getInjection('container')->get('authenticationFactory')->create($method);
+
         $user = $this->getEntityManager()->getRepository('User')->where([
             'id' => $id,
-            'password' => $passwordHash->hash($password),
         ])->findOne();
-        if (!$user) {
-            throw new Forbidden('Passport is incorrect.');
+
+        if (!$user) throw new Forbidden('User is not found.');
+
+        if (!$auth->login($user->get('userName'), $password)) {
+            throw new Forbidden('Password is incorrect.');
         }
+        return true;
     }
 }

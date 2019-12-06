@@ -29,11 +29,13 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+
+use Espo\Entities\AuthToken;
 
 class Espo extends Base
 {
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $params = [], $request)
+    public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request = null)
     {
         if (!$password) return;
 
@@ -47,7 +49,7 @@ class Espo extends Base
             'whereClause' => [
                 'userName' => $username,
                 'password' => $hash,
-                'type!=' => ['api', 'system']
+                'type!=' => ['api', 'system'],
             ]
         ]);
 
