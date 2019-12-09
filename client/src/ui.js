@@ -160,9 +160,11 @@ define('ui', [], function () {
                 diffHeight = diffHeight + options.bodyDiffHeight;
             }
 
+            var h = $window.height();
+
             if (this.fitHeight || options.fullHeight) {
                 var processResize = function () {
-                    var windowHeight = $window.height();
+                    var windowHeight = window.innerHeight;
                     var windowWidth = $window.width();
 
                     if (!options.fullHeight && windowHeight < 512) {
@@ -178,6 +180,7 @@ define('ui', [], function () {
                     };
                     if (options.fullHeight) {
                         cssParams.height = (windowHeight - diffHeight) + 'px';
+
                         this.$el.css('paddingRight', 0);
                     } else {
                         if (windowWidth <= options.screenWidthXs) {
@@ -337,6 +340,7 @@ define('ui', [], function () {
         this.onRemove();
         this.$el.remove();
         $(this).off();
+        $(window).off('resize.modal-height');
     };
 
     var Ui = Espo.Ui = Espo.ui = {
