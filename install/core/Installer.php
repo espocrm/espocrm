@@ -311,9 +311,9 @@ class Installer
 
     public function setPreferences($preferences)
     {
-        $currencyList = $this->getCurrencyList();
-        if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
+        $currencyList = $this->getConfig()->get('currencyList', []);
 
+        if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
             $preferences['currencyList'] = array($preferences['defaultCurrency']);
             $preferences['baseCurrency'] = $preferences['defaultCurrency'];
         }
@@ -325,7 +325,6 @@ class Installer
 
         return $res;
     }
-
 
     protected function createRecords()
     {
