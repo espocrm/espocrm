@@ -56,13 +56,10 @@ class Installer
         'timeFormat',
         'timeZone',
         'weekStart',
-        'defaultCurrency' => array(
-            'currencyList', 'defaultCurrency',
-        ),
+        'defaultCurrency',
         'smtpSecurity',
         'language',
     );
-
 
     public function __construct()
     {
@@ -189,15 +186,20 @@ class Installer
         return $this->language;
     }
 
-    public function getLanguageList()
+    public function getLanguageList($isTranslated = true)
     {
-        $config = $this->app->getContainer()->get('config');
+        $languageList = $this->app->getContainer()->get('config')->get('languageList');
 
-        $languageList = $config->get('languageList');
+        if ($isTranslated) {
+            return $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
+        }
 
-        $translated = $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
+        return $languageList;
+    }
 
-        return $translated;
+    protected function getCurrencyList()
+    {
+        return $this->app->getMetadata()->get('app.currency.list');
     }
 
     public function getInstallerConfigData()
@@ -309,7 +311,7 @@ class Installer
 
     public function setPreferences($preferences)
     {
-        $currencyList = $this->getConfig()->get('currencyList', array());
+        $currencyList = $this->getCurrencyList();
         if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
 
             $preferences['currencyList'] = array($preferences['defaultCurrency']);
@@ -458,29 +460,25 @@ class Installer
 
     public function getSettingDefaults()
     {
-        $defaults = array();
-
         $settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');
 
-        foreach ($this->settingList as $fieldName => $field) {
+        $defaults = array();
 
-            if (is_array($field)) {
-                $fieldDefaults = array();
-                foreach ($field as $subField) {
-                    if (isset($settingDefs[$subField])) {
-                        $fieldDefaults = array_merge($fieldDefaults, $this->translateSetting($subField, $settingDefs[$subField]));
-                    }
-                }
-                $defaults[$fieldName] = $fieldDefaults;
+        foreach ($this->settingList as $fieldName) {
 
-            } else if (isset($settingDefs[$field])) {
+            if (!isset($settingDefs[$fieldName])) continue;
 
-                $defaults[$field] = $this->translateSetting($field, $settingDefs[$field]);
+            switch ($fieldName) {
+                case 'defaultCurrency':
+                    $settingDefs['defaultCurrency']['options'] = $this->getCurrencyList();
+                    break;
+
+                case 'language':
+                    $settingDefs['language']['options'] = $this->getLanguageList(false);
+                    break;
             }
-        }
 
-        if (isset($defaults['language'])) {
-            $defaults['language']['options'] = $this->getLanguageList();
+            $defaults[$fieldName] = $this->translateSetting($fieldName, $settingDefs[$fieldName]);
         }
 
         return $defaults;
