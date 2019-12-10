@@ -21,7 +21,6 @@
                 {
                     "name":"insertField",
                     "view": "views/email-template/fields/insert-field",
-                    "customLabel": "",
                     "fullWidth":true
                 }
             ],
