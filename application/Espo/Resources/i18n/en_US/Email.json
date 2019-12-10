@@ -111,6 +111,7 @@
         "testEmailSent": "Test email has been sent",
         "emailSent": "Email has been sent",
         "savedAsDraft": "Saved as draft",
+        "sendConfirm": "Send the email?",
         "confirmInsertTemplate": "The email body will be lost. Are you sure you want to insert the template?"
     },
     "presetFilters": {
