@@ -28,6 +28,12 @@
          "type":"bool"
       }
    ],
+   "validationList": [
+      "array"
+   ],
+   "mandatoryValidationList": [
+      "array"
+   ],
    "filter": true,
    "notCreatable": true,
    "fieldDefs":{

@@ -51,8 +51,12 @@
       }
    ],
    "validationList": [
+      "array",
       "required",
       "maxCount"
+   ],
+   "mandatoryValidationList": [
+      "array"
    ],
    "filter": true,
    "notCreatable": false,
