@@ -277,7 +277,7 @@ function buildUpgradePackage(versionFrom, params)
                             fs.unlinkSync(diffBeforeUpgradeFilePath);
                         }
 
-                        console.log("Upgrade package is built: "+name+"");
+                        console.log("Upgrade package has been built: "+name+"");
 
                         resolve();
                     });
