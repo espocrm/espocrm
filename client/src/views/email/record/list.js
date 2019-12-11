@@ -319,7 +319,7 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                     var model = this.collection.get(id);
                     if (!model) return;
 
-                    Espo.Ui.notify(' ... ');
+                    Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
 
                     model.save({
                         status: 'Sending',
@@ -330,6 +330,7 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                                 this.removeRecordFromList(id);
                                 this.uncheckRecord(id, null, true);
                             }
+                            this.collection.trigger('draft-sent');
                         }.bind(this)
                     );
                 }.bind(this)

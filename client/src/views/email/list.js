@@ -114,8 +114,6 @@ define('views/email/list', 'views/list', function (Dep) {
                 collection.url = 'EmailFolder/action/listAll';
                 collection.maxSize = 200;
 
-                collection.folderCollection = collection;
-
                 this.listenToOnce(collection, 'sync', function () {
                     callback.call(this, collection);
                 }, this);
@@ -126,6 +124,7 @@ define('views/email/list', 'views/list', function (Dep) {
         loadFolders: function () {
             var xhr = null;
             this.getFolderCollection(function (collection) {
+
                 this.createView('folders', 'views/email-folder/list-side', {
                     collection: collection,
                     emailCollection: this.collection,
@@ -142,7 +141,7 @@ define('views/email/list', 'views/list', function (Dep) {
                             xhr.abort();
                         }
 
-                        this.notify('Please wait...');
+                        this.notify(this.translate('pleaseWait', 'messages'));
                         xhr = this.collection.fetch({
                             success: function () {
                                 this.notify(false);
@@ -157,6 +156,7 @@ define('views/email/list', 'views/list', function (Dep) {
                         this.updateLastUrl();
                     }, this);
                 }, this);
+
             }, this);
         },
 

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/modals/detail', ['views/modals/detail', 'views/email/detail'], function (Dep, Detail) {
+define('views/email/modals/detail', ['views/modals/detail', 'views/email/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -36,8 +36,10 @@ Espo.define('views/email/modals/detail', ['views/modals/detail', 'views/email/de
             this.buttonList.unshift({
                 'name': 'reply',
                 'label': 'Reply',
-                'style': 'danger'
+                'style': 'danger',
+                'hidden': this.model.get('status') === 'Draft',
             });
+
             if (this.model) {
                 this.listenToOnce(this.model, 'sync', function () {
                     setTimeout(function () {
@@ -48,9 +50,19 @@ Espo.define('views/email/modals/detail', ['views/modals/detail', 'views/email/de
 
         },
 
+        controlRecordButtonsVisibility: function () {
+            Dep.prototype.controlRecordButtonsVisibility.call(this);
+
+            if (this.model.get('status') === 'Draft' || !this.getAcl().check('Email', 'create')) {
+                this.hideButton('reply');
+            } else {
+                this.showButton('reply');
+            }
+        },
+
         actionReply: function (data, e) {
             Detail.prototype.actionReply.call(this, {}, e, this.getPreferences().get('emailReplyToAllByDefault'));
-        }
+        },
 
     });
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-folder/list-side', 'view', function (Dep) {
+define('views/email-folder/list-side', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -62,6 +62,7 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
             this.loadNotReadCounts();
 
             this.listenTo(this.emailCollection, 'sync', this.loadNotReadCounts);
+            this.listenTo(this.emailCollection, 'folders-update', this.loadNotReadCounts);
 
             this.listenTo(this.emailCollection, 'all-marked-read', function (m) {
                 this.countsData = this.countsData || {};
@@ -71,6 +72,11 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
                     }
                     this.countsData[id] = 0;
                 }
+                this.renderCounts();
+            });
+
+            this.listenTo(this.emailCollection, 'draft-sent', function (m) {
+                this.decreaseNotReadCount('drafts');
                 this.renderCounts();
             });
 
@@ -190,8 +196,7 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
                 }
                 this.$el.find('li a.count[data-id="'+id+'"]').text(value);
             }
-        }
+        },
 
     });
 });
-

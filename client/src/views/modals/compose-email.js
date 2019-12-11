@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
+define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
     return Dep.extend({
 
@@ -132,7 +132,11 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             var afterSave = function () {
                 this.enableButton('send');
                 this.enableButton('saveDraft');
-                Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'));
+                Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'))
+
+                this.trigger('after:save', model);
+
+                this.$el.find('button[data-name="cancel"]').html(this.translate('Close'));
             }.bind(this);
 
             editView.once('after:save', afterSave , this);
@@ -145,8 +149,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             }, this);
 
             editView.saveDraft();
-        }
+        },
 
     });
 });
-
