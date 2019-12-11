@@ -34,8 +34,49 @@
         ],
         "dynamicLogic": {
             "fields": {
+                "ldapHost": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "LDAP"
+                            }
+                        ]
+                    }
+                },
+                "ldapUserNameAttribute": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "LDAP"
+                            }
+                        ]
+                    }
+                },
+                "ldapUserObjectClass": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "LDAP"
+                            }
+                        ]
+                    }
+                },
                 "ldapUsername": {
                     "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapAuth"
+                            }
+                        ]
+                    },
+                    "required": {
                         "conditionGroup": [
                             {
                                 "type": "isTrue",
@@ -94,10 +135,26 @@
                                 "attribute": "ldapCreateEspoUser"
                             }
                         ]
+                    },
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
                     }
                 },
                 "ldapUserFirstNameAttribute": {
                     "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    },
+                    "required": {
                         "conditionGroup": [
                             {
                                 "type": "isTrue",
@@ -114,6 +171,14 @@
                                 "attribute": "ldapCreateEspoUser"
                             }
                         ]
+                    },
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
                     }
                 },
                 "ldapUserEmailAddressAttribute": {
@@ -124,10 +189,26 @@
                                 "attribute": "ldapCreateEspoUser"
                             }
                         ]
+                    },
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
                     }
                 },
                 "ldapUserPhoneNumberAttribute": {
                     "visible": {
+                        "conditionGroup": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "ldapCreateEspoUser"
+                            }
+                        ]
+                    },
+                    "required": {
                         "conditionGroup": [
                             {
                                 "type": "isTrue",

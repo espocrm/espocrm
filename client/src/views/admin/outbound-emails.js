@@ -46,6 +46,18 @@ define('views/admin/outbound-emails', 'views/settings/record/edit', function (De
                                 attribute: 'smtpAuth',
                             }
                         ]
+                    },
+                    required: {
+                        conditionGroup: [
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            },
+                            {
+                                type: 'isTrue',
+                                attribute: 'smtpAuth',
+                            }
+                        ]
                     }
                 },
                 smtpPassword: {
@@ -64,6 +76,14 @@ define('views/admin/outbound-emails', 'views/settings/record/edit', function (De
                 },
                 smtpPort: {
                     visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            },
+                        ]
+                    },
+                    required: {
                         conditionGroup: [
                             {
                                 type: 'isNotEmpty',

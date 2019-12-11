@@ -101,12 +101,10 @@
             "type": "int",
             "min": 0,
             "max": 9999,
-            "required": true,
             "default": 587
         },
         "smtpAuth": {
-            "type": "bool",
-            "default": true
+            "type": "bool"
         },
         "smtpSecurity": {
             "type": "enum",
@@ -114,8 +112,7 @@
             "options": ["", "SSL", "TLS"]
         },
         "smtpUsername": {
-            "type": "varchar",
-            "required": true
+            "type": "varchar"
         },
         "smtpPassword": {
             "type": "password"
@@ -193,8 +190,7 @@
             "type": "bool"
         },
         "ldapHost": {
-            "type": "varchar",
-            "required": true
+            "type": "varchar"
         },
         "ldapPort": {
             "type": "varchar",
@@ -210,7 +206,6 @@
         },
         "ldapUsername": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapPassword": {
@@ -265,37 +260,30 @@
         },
         "ldapUserNameAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserObjectClass": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserFirstNameAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserLastNameAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserTitleAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserEmailAddressAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserPhoneNumberAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserDefaultTeam": {
