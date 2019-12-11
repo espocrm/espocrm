@@ -109,6 +109,7 @@ function buildUpgradePackage(versionFrom, params)
         var path = require('path');
         var fs = require('fs');
         var sys = require('util');
+        var cp = require('child_process');
 
         var version = (require('./package.json') || {}).version;
 
@@ -119,10 +120,28 @@ function buildUpgradePackage(versionFrom, params)
         var buildRelPath = 'build/EspoCRM-' + version;
         var buildPath = currentPath + '/' + buildRelPath;
         var diffFilePath = currentPath + '/build/diff';
+        var diffBeforeUpgradeFilePath = currentPath + '/build/diffBeforeUpgrade';
+
         var upgradePath = currentPath + '/build/EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
 
+        var upgradeDataFolder = versionFrom + '-' + version;
+        var isMinorVersion = false;
+        if (versionFrom.split('.')[1] !== version.split('.')[1] || versionFrom.split('.')[0] !== version.split('.')[0]) {
+            isMinorVersion = true;
+            upgradeDataFolder = version.split('.')[0] + '.' + version.split('.')[1];
+        }
+        var upgradeDataFolderPath = currentPath + '/upgrades/' + upgradeDataFolder;
+        var upgradeFolderExists = fs.existsSync(upgradeDataFolderPath);
+
+        var upgradeData = {};
+        if (upgradeFolderExists) {
+            upgradeData = require(upgradeDataFolderPath + '/data.json') || {};
+        }
+
+        var beforeUpgradeFileList = upgradeData.beforeUpgradeFiles || [];
+
         var deleteDirRecursively = function (path) {
-            if (fs.existsSync(path)) {
+            if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
                 fs.readdirSync(path).forEach(function(file, index) {
                     var curPath = path + "/" + file;
                     if (fs.lstatSync(curPath).isDirectory()) {
@@ -132,10 +151,13 @@ function buildUpgradePackage(versionFrom, params)
                     }
                 });
                 fs.rmdirSync(path);
+            } else if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
+                fs.unlinkSync(path);
             }
         };
 
         deleteDirRecursively(diffFilePath);
+        deleteDirRecursively(diffBeforeUpgradeFilePath);
         deleteDirRecursively(upgradePath);
 
         execute('git rev-parse --abbrev-ref HEAD', function (branch) {
@@ -146,6 +168,9 @@ function buildUpgradePackage(versionFrom, params)
         });
 
         execute('git diff --name-only ' + versionFrom, function (stdout) {
+            if (!fs.existsSync(buildPath)) {
+                throw new Error("EspoCRM is not built. Need to run grunt before.");
+            }
 
             if (!fs.existsSync(upgradePath)) {
                 fs.mkdirSync(upgradePath);
@@ -154,8 +179,10 @@ function buildUpgradePackage(versionFrom, params)
                 fs.mkdirSync(upgradePath + '/files');
             }
 
-            if (!fs.existsSync(buildPath)) {
-                throw new Error("EspoCRM is not built. Need to run grunt before.");
+            if (beforeUpgradeFileList.length) {
+                if (!fs.existsSync(upgradePath + '/beforeUpgradeFiles')) {
+                    fs.mkdirSync(upgradePath + '/beforeUpgradeFiles');
+                }
             }
 
             process.chdir(buildPath);
@@ -178,6 +205,10 @@ function buildUpgradePackage(versionFrom, params)
 
             fs.writeFileSync(diffFilePath, fileList.join('\n'));
 
+            if (beforeUpgradeFileList.length) {
+                fs.writeFileSync(diffBeforeUpgradeFilePath, beforeUpgradeFileList.join('\n'));
+            }
+
             execute('git diff --name-only --diff-filter=D ' + versionFrom, function (stdout) {
                 var deletedFileList = [];
 
@@ -188,7 +219,11 @@ function buildUpgradePackage(versionFrom, params)
                     deletedFileList.push(file);
                 });
 
-                execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files ' , function (stdout) {
+                if (beforeUpgradeFileList.length) {
+                    cp.execSync('xargs -a ' + diffBeforeUpgradeFilePath + ' cp --parents -t ' + upgradePath + '/beforeUpgradeFiles');
+                }
+
+                execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files' , function (stdout) {
                     var d = new Date();
 
                     var monthN = ((d.getMonth() + 1).toString());
@@ -216,7 +251,7 @@ function buildUpgradePackage(versionFrom, params)
 
                         var name = acceptedVersionName+" to "+version;
 
-                        var manifest = {
+                        var manifestData = {
                             "name": "EspoCRM Upgrade "+name,
                             "type": "upgrade",
                             "version": version,
@@ -228,9 +263,19 @@ function buildUpgradePackage(versionFrom, params)
                             "delete": deletedFileList,
                         };
 
-                        fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifest, null, '  '));
+                        var additionalManifestData = upgradeData.manifest || {};
+                        for (var item in additionalManifestData) {
+                            manifestData[item] = additionalManifestData[item];
+                        }
 
-                        fs.unlinkSync(diffFilePath);
+                        fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifestData, null, '  '));
+
+                        if (fs.existsSync(diffFilePath)) {
+                            fs.unlinkSync(diffFilePath);
+                        }
+                        if (fs.existsSync(diffFilePath)) {
+                            fs.unlinkSync(diffBeforeUpgradeFilePath);
+                        }
 
                         console.log("Upgrade package is built: "+name+"");
 

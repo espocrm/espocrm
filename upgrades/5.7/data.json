@@ -1,0 +1,7 @@
+{
+    "beforeUpgradeFiles": [
+        "application/Espo/Core/Utils/Database/Helper.php"
+    ],
+    "manifest": {
+    }
+}
