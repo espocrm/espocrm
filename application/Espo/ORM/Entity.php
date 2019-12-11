@@ -81,7 +81,7 @@ abstract class Entity implements IEntity
         }
     }
 
-    public function clear($name = null)
+    public function clear(?string $name = null)
     {
         if (is_null($name)) {
             $this->reset();
@@ -126,7 +126,7 @@ abstract class Entity implements IEntity
         }
     }
 
-    public function get($name, $params = [])
+    public function get(string $name, $params = [])
     {
         if ($name == 'id') {
             return $this->id;
@@ -148,7 +148,7 @@ abstract class Entity implements IEntity
         return null;
     }
 
-    public function has($name)
+    public function has(string $name)
     {
         if ($name == 'id') {
             return !!$this->id;
