@@ -329,8 +329,8 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                             if (this.collection.data.folderId === 'drafts') {
                                 this.removeRecordFromList(id);
                                 this.uncheckRecord(id, null, true);
+                                this.collection.trigger('draft-sent');
                             }
-                            this.collection.trigger('draft-sent');
                         }.bind(this)
                     );
                 }.bind(this)
