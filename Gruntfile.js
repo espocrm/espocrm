@@ -18,7 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
+
 module.exports = function (grunt) {
+
+    var runComposerInstall = false;
+    if (process.argv.length > 1) {
+        for (var i in process.argv) {
+            if (process.argv[i] === '--ci') {
+                runComposerInstall = true;
+            }
+        }
+    }
 
     var jsFilesToMinify = [
         'client/lib/jquery-2.1.4.min.js',
@@ -83,6 +93,11 @@ module.exports = function (grunt) {
     }
 
     var fs = require('fs');
+    var cp = require('child_process');
+
+    if (runComposerInstall) {
+        cp.execSync("composer install", {stdio: 'ignore'});
+    }
 
     var themeList = [];
     fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(function (file) {
@@ -294,6 +309,6 @@ module.exports = function (grunt) {
         'clean:beforeFinal',
         'copy:final',
         'chmod',
-        'clean:final'
+        'clean:final',
     ]);
 };
