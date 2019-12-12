@@ -33,6 +33,7 @@ var versionFrom = process.argv[2];
 var acceptedVersionName = versionFrom;
 var isDev = false;
 var isAll = false;
+var withVendor = false;
 
 if (process.argv.length > 1) {
     for (var i in process.argv) {
@@ -41,6 +42,9 @@ if (process.argv.length > 1) {
         }
         if (process.argv[i] === '--all') {
             isAll = true;
+        }
+        if (process.argv[i] === '--vendor') {
+            withVendor = true;
         }
         if (~process.argv[i].indexOf('--acceptedVersion=')) {
             acceptedVersionName = process.argv[i].substr(('--acceptedVersion=').length);
@@ -84,6 +88,7 @@ if (isAll) {
             for (const versionFrom of versionFromList) {
                 await buildUpgradePackage(versionFrom, {
                     isDev: isDev,
+                    withVendor: withVendor,
                 });
             }
         }
@@ -98,6 +103,7 @@ if (isAll) {
     buildUpgradePackage(versionFrom, {
         acceptedVersionName: acceptedVersionName,
         isDev: isDev,
+        withVendor: withVendor,
     });
 }
 
@@ -109,6 +115,8 @@ function buildUpgradePackage(versionFrom, params)
         var path = require('path');
         var fs = require('fs');
         var sys = require('util');
+        var cp = require('child_process');
+        var archiver = require('archiver');
 
         var version = (require('./package.json') || {}).version;
 
@@ -119,10 +127,34 @@ function buildUpgradePackage(versionFrom, params)
         var buildRelPath = 'build/EspoCRM-' + version;
         var buildPath = currentPath + '/' + buildRelPath;
         var diffFilePath = currentPath + '/build/diff';
-        var upgradePath = currentPath + '/build/EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
+        var diffBeforeUpgradeFolderPath = currentPath + '/build/diffBeforeUpgrade';
+
+        var tempFolderPath = currentPath + '/build/upgradeTmp';
+
+        var folderName = 'EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
+
+        var upgradePath = currentPath + '/build/' + folderName;
+
+        var zipPath = currentPath + '/build/' + folderName + '.zip';
+
+        var upgradeDataFolder = versionFrom + '-' + version;
+        var isMinorVersion = false;
+        if (versionFrom.split('.')[1] !== version.split('.')[1] || versionFrom.split('.')[0] !== version.split('.')[0]) {
+            isMinorVersion = true;
+            upgradeDataFolder = version.split('.')[0] + '.' + version.split('.')[1];
+        }
+        var upgradeDataFolderPath = currentPath + '/upgrades/' + upgradeDataFolder;
+        var upgradeFolderExists = fs.existsSync(upgradeDataFolderPath);
+
+        var upgradeData = {};
+        if (upgradeFolderExists) {
+            upgradeData = require(upgradeDataFolderPath + '/data.json') || {};
+        }
+
+        var beforeUpgradeFileList = upgradeData.beforeUpgradeFiles || [];
 
         var deleteDirRecursively = function (path) {
-            if (fs.existsSync(path)) {
+            if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
                 fs.readdirSync(path).forEach(function(file, index) {
                     var curPath = path + "/" + file;
                     if (fs.lstatSync(curPath).isDirectory()) {
@@ -132,11 +164,17 @@ function buildUpgradePackage(versionFrom, params)
                     }
                 });
                 fs.rmdirSync(path);
+            } else if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
+                fs.unlinkSync(path);
             }
         };
 
         deleteDirRecursively(diffFilePath);
+        deleteDirRecursively(diffBeforeUpgradeFolderPath);
         deleteDirRecursively(upgradePath);
+        deleteDirRecursively(tempFolderPath);
+
+        if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
 
         execute('git rev-parse --abbrev-ref HEAD', function (branch) {
             branch = branch.trim();
@@ -146,6 +184,9 @@ function buildUpgradePackage(versionFrom, params)
         });
 
         execute('git diff --name-only ' + versionFrom, function (stdout) {
+            if (!fs.existsSync(buildPath)) {
+                throw new Error("EspoCRM is not built. Need to run grunt before.");
+            }
 
             if (!fs.existsSync(upgradePath)) {
                 fs.mkdirSync(upgradePath);
@@ -154,8 +195,10 @@ function buildUpgradePackage(versionFrom, params)
                 fs.mkdirSync(upgradePath + '/files');
             }
 
-            if (!fs.existsSync(buildPath)) {
-                throw new Error("EspoCRM is not built. Need to run grunt before.");
+            if (beforeUpgradeFileList.length) {
+                if (!fs.existsSync(upgradePath + '/beforeUpgradeFiles')) {
+                    fs.mkdirSync(upgradePath + '/beforeUpgradeFiles');
+                }
             }
 
             process.chdir(buildPath);
@@ -178,6 +221,10 @@ function buildUpgradePackage(versionFrom, params)
 
             fs.writeFileSync(diffFilePath, fileList.join('\n'));
 
+            if (beforeUpgradeFileList.length) {
+                fs.writeFileSync(diffBeforeUpgradeFolderPath, beforeUpgradeFileList.join('\n'));
+            }
+
             execute('git diff --name-only --diff-filter=D ' + versionFrom, function (stdout) {
                 var deletedFileList = [];
 
@@ -188,7 +235,11 @@ function buildUpgradePackage(versionFrom, params)
                     deletedFileList.push(file);
                 });
 
-                execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files ' , function (stdout) {
+                if (beforeUpgradeFileList.length) {
+                    cp.execSync('xargs -a ' + diffBeforeUpgradeFolderPath + ' cp --parents -t ' + upgradePath + '/beforeUpgradeFiles');
+                }
+
+                execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files' , function (stdout) {
                     var d = new Date();
 
                     var monthN = ((d.getMonth() + 1).toString());
@@ -216,7 +267,7 @@ function buildUpgradePackage(versionFrom, params)
 
                         var name = acceptedVersionName+" to "+version;
 
-                        var manifest = {
+                        var manifestData = {
                             "name": "EspoCRM Upgrade "+name,
                             "type": "upgrade",
                             "version": version,
@@ -228,13 +279,109 @@ function buildUpgradePackage(versionFrom, params)
                             "delete": deletedFileList,
                         };
 
-                        fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifest, null, '  '));
+                        var additionalManifestData = upgradeData.manifest || {};
+                        for (var item in additionalManifestData) {
+                            manifestData[item] = additionalManifestData[item];
+                        }
 
-                        fs.unlinkSync(diffFilePath);
+                        fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifestData, null, '  '));
 
-                        console.log("Upgrade package is built: "+name+"");
+                        if (fs.existsSync(diffFilePath)) {
+                            fs.unlinkSync(diffFilePath);
+                        }
+                        if (fs.existsSync(diffBeforeUpgradeFolderPath)) {
+                            fs.unlinkSync(diffBeforeUpgradeFolderPath);
+                        }
 
-                        resolve();
+                        new Promise(function (resolve) {
+                            if (!withVendor) {
+                                resolve();
+                                return;
+                            }
+
+                            var output = cp.execSync("git show "+versionFrom+" --format=%H").toString();
+                            var commitHash = output.split("\n")[3];
+                            if (!commitHash) throw new Error("Couldn't find commit hash.");
+                            var composerLockOldContents = cp.execSync("git show "+commitHash+":composer.lock").toString();
+                            var composerLockNewContents = cp.execSync("cat "+currentPath+"/composer.lock").toString();
+                            var composerNewContents = cp.execSync("cat "+currentPath+"/composer.json").toString();
+
+                            if (composerLockNewContents === composerLockOldContents) {
+                                resolve();
+                                return;
+                            }
+
+                            var newPackages = JSON.parse(composerLockNewContents).packages;
+                            var oldPackages = JSON.parse(composerLockOldContents).packages;
+
+                            cp.execSync("mkdir "+tempFolderPath);
+                            cp.execSync("mkdir "+tempFolderPath + "/new");
+
+                            var vendorPath = tempFolderPath + "/new/vendor/";
+
+                            fs.writeFileSync(tempFolderPath + "/new/composer.lock", composerLockNewContents);
+                            fs.writeFileSync(tempFolderPath + "/new/composer.json", composerNewContents);
+
+                            cp.execSync("composer install", {cwd: tempFolderPath + "/new", stdio: 'ignore'});
+
+                            fs.mkdirSync(upgradePath + '/vendorFiles');
+
+                            cp.execSync("mv "+vendorPath+"/autoload.php "+ upgradePath + "/vendorFiles/autoload.php");
+                            cp.execSync("mv "+vendorPath+"/composer "+ upgradePath + "/vendorFiles/composer");
+                            cp.execSync("mv "+vendorPath+"/bin "+ upgradePath + "/vendorFiles/bin");
+
+                            var folderList = [];
+
+                            for (var item of newPackages) {
+                                var name = item.name;
+                                if (name.indexOf('composer/') === 0) continue;
+
+                                var isFound = false;
+                                var toAdd = false;
+
+                                for (var oItem of oldPackages) {
+                                    if (oItem.name !== name) continue;
+                                    isFound = true;
+                                    if (item.version !== oItem.version)
+                                         toAdd = true;
+                                }
+
+                                if (!isFound) {
+                                    toAdd = true;
+                                }
+
+                                if (toAdd) {
+                                    var folder = name.split('/')[0];
+                                    if (!~folderList.indexOf(folder))
+                                        folderList.push(folder);
+                                }
+                            }
+
+                            for (var folder of folderList) {
+                                if (fs.existsSync(vendorPath + '/'+ folder)) {
+                                    cp.execSync("mv "+vendorPath + '/'+ folder+" "+ upgradePath + '/vendorFiles/' + folder);
+                                }
+                            }
+
+                            deleteDirRecursively(tempFolderPath);
+
+                            resolve();
+
+                        }).then(function () {
+                            var zipOutput = fs.createWriteStream(zipPath);
+                            var archive = archiver('zip');
+                            archive.on('error', function (err) {
+                                throw err;
+                            });
+                            zipOutput.on('close', function () {
+                                console.log("Upgrade package has been built: "+name+"");
+                                deleteDirRecursively(upgradePath);
+                                resolve();
+                            });
+                            archive.directory(upgradePath, false).pipe(zipOutput);
+                            archive.finalize();
+                        });
+
                     });
 
                 });

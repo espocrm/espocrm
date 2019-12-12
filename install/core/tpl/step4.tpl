@@ -10,7 +10,7 @@
                         </label>
                         <div class="field field-dateFormat">
                             <select name="dateFormat" class="form-control main-element">
-                                {foreach from=$settingsDefaults['dateFormat'].options item=lbl key=val}
+                                {foreach from=$defaultSettings['dateFormat'].options item=lbl key=val}
                                     {if $val == $fields['dateFormat'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
                                     {else}
@@ -27,7 +27,7 @@
                         </label>
                         <div class="field field-timeFormat">
                             <select name="timeFormat" class="form-control main-element">
-                                {foreach from=$settingsDefaults['timeFormat'].options item=lbl key=val}
+                                {foreach from=$defaultSettings['timeFormat'].options item=lbl key=val}
                                     {if $val == $fields['timeFormat'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
                                     {else}
@@ -46,7 +46,7 @@
                         </label>
                         <div class="field field-timeZone">
                             <select name="timeZone" class="form-control main-element">
-                                {foreach from=$settingsDefaults['timeZone'].options item=lbl key=val}
+                                {foreach from=$defaultSettings['timeZone'].options item=lbl key=val}
                                     {if $val == $fields['timeZone'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
                                     {else}
@@ -63,7 +63,7 @@
                         </label>
                         <div class="field field-weekStart">
                             <select name="weekStart" class="form-control main-element">
-                                {foreach from=$settingsDefaults['weekStart'].options item=lbl key=val}
+                                {foreach from=$defaultSettings['weekStart'].options item=lbl key=val}
                                     {if $val == $fields['weekStart'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
                                     {else}
@@ -82,7 +82,7 @@
                         </label>
                         <div class="field field-defaultCurrency">
                             <select name="defaultCurrency" class="form-control main-element">
-                                {foreach from=$settingsDefaults['defaultCurrency'].options item=lbl key=val}
+                                {foreach from=$defaultSettings['defaultCurrency'].options item=lbl key=val}
                                     {if $val == $fields['defaultCurrency'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
                                     {else}
@@ -120,7 +120,7 @@
                         </label>
                         <div class="field field-language">
                             <select name="language" class="form-control main-element">
-                                {foreach from=$settingsDefaults['language'].options item=lbl key=val}
+                                {foreach from=$defaultSettings['language'].options item=lbl key=val}
                                     {if $val == $fields['language'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
                                     {else}

@@ -70,7 +70,7 @@
                         </label>
                         <div class="field field-smtpSecurity">
                             <select name="smtpSecurity" class="form-control main-element">
-                                {foreach from=$settingsDefaults['smtpSecurity'].options item=lbl key=val}
+                                {foreach from=$defaultSettings['smtpSecurity'].options item=lbl key=val}
                                     {if $val == $fields['smtpSecurity'].value}
                                     <option selected="selected" value="{$val}">{$lbl}</option>
                                     {else}

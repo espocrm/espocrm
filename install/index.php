@@ -142,13 +142,13 @@ switch ($action) {
 		break;
 
     case 'step4':
-    	$settingsDefaults = $installer->getSettingDefaults();
-		$smarty->assign("settingsDefaults", $settingsDefaults);
+		$defaultSettings = $installer->getDefaultSettings();
+		$smarty->assign("defaultSettings", $defaultSettings);
 		break;
 
     case 'step5':
-    	$settingsDefaults = $installer->getSettingDefaults();
-		$smarty->assign("settingsDefaults", $settingsDefaults);
+		$defaultSettings = $installer->getDefaultSettings();
+		$smarty->assign("defaultSettings", $defaultSettings);
 		break;
 }
 

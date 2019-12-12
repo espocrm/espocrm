@@ -1,0 +1,7 @@
+{
+    "manifest": {
+        "delete": [
+            "vendor/php-mime-mail-parser"
+        ]
+    }
+}

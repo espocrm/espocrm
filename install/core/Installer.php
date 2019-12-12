@@ -51,14 +51,26 @@ class Installer
 
     private $passwordHash;
 
-    protected $settingList = array(
+    protected $defaultSettings;
+
+    protected $permittedSettingList = array(
         'dateFormat',
         'timeFormat',
         'timeZone',
         'weekStart',
         'defaultCurrency',
-        'smtpSecurity',
         'language',
+        'thousandSeparator',
+        'decimalMark',
+        'smtpServer',
+        'smtpPort',
+        'smtpAuth',
+        'smtpSecurity',
+        'smtpUsername',
+        'smtpPassword',
+        'outboundEmailFromName',
+        'outboundEmailFromAddress',
+        'outboundEmailIsShared',
     );
 
     public function __construct()
@@ -311,6 +323,8 @@ class Installer
 
     public function setPreferences($preferences)
     {
+        $preferences = $this->normalizeSettingParams($preferences);
+
         $currencyList = $this->getConfig()->get('currencyList', []);
 
         if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
@@ -457,30 +471,76 @@ class Installer
         return $result;
     }
 
-    public function getSettingDefaults()
+    public function getDefaultSettings()
     {
-        $settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');
+        if (!$this->defaultSettings) {
 
-        $defaults = array();
+            $settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');
 
-        foreach ($this->settingList as $fieldName) {
+            $defaults = array();
+            foreach ($this->permittedSettingList as $fieldName) {
 
-            if (!isset($settingDefs[$fieldName])) continue;
+                if (!isset($settingDefs[$fieldName])) continue;
 
-            switch ($fieldName) {
-                case 'defaultCurrency':
-                    $settingDefs['defaultCurrency']['options'] = $this->getCurrencyList();
-                    break;
+                switch ($fieldName) {
+                    case 'defaultCurrency':
+                        $settingDefs['defaultCurrency']['options'] = $this->getCurrencyList();
+                        break;
 
-                case 'language':
-                    $settingDefs['language']['options'] = $this->getLanguageList(false);
-                    break;
+                    case 'language':
+                        $settingDefs['language']['options'] = $this->getLanguageList(false);
+                        break;
+                }
+
+                $defaults[$fieldName] = $this->translateSetting($fieldName, $settingDefs[$fieldName]);
             }
 
-            $defaults[$fieldName] = $this->translateSetting($fieldName, $settingDefs[$fieldName]);
+            $this->defaultSettings = $defaults;
         }
 
-        return $defaults;
+        return $this->defaultSettings;
+    }
+
+    protected function normalizeSettingParams(array $params)
+    {
+        $defaultSettings = $this->getDefaultSettings();
+
+        $normalizedParams = [];
+        foreach ($params as $name => $value) {
+            if (!isset($defaultSettings[$name])) continue;
+
+            $paramDefs = $defaultSettings[$name];
+            $paramType = isset($paramDefs['type']) ? $paramDefs['type'] : 'varchar';
+
+            switch ($paramType) {
+                case 'enumInt':
+                    $value = (int) $value;
+
+                case 'enum':
+                    if (isset($paramDefs['options']) && array_key_exists($value, $paramDefs['options'])) {
+                        $normalizedParams[$name] = $value;
+                    } else if (array_key_exists('default', $paramDefs)) {
+                        $normalizedParams[$name] = $paramDefs['default'];
+                        $GLOBALS['log']->warning('Incorrect value ['. $value .'] for Settings parameter ['. $name .']. Use default value ['. $paramDefs['default'] .'].');
+                    }
+                    break;
+
+                case 'bool':
+                    $normalizedParams[$name] = (bool) $value;
+                    break;
+
+                case 'int':
+                    $normalizedParams[$name] = (int) $value;
+                    break;
+
+                case 'varchar':
+                default:
+                    $normalizedParams[$name] = $value;
+                    break;
+            }
+        }
+
+        return $normalizedParams;
     }
 
     protected function translateSetting($name, array $settingDefs)

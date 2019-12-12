@@ -29,8 +29,9 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
 
 use Espo\ORM\Entity;
 
@@ -190,6 +191,10 @@ class Settings extends \Espo\Core\Services\Base
             unset($data->$item);
         }
 
+        $entity = $this->getEntityManager()->getEntity('Settings');
+        $entity->set($data);
+        $this->processValidation($entity, $data);
+
         if (
             (isset($data->useCache) && $data->useCache !== $this->getConfig()->get('useCache'))
             ||
@@ -296,5 +301,45 @@ class Settings extends \Espo\Core\Services\Base
         }
 
         return $itemList;
+    }
+
+    protected function processValidation(Entity $entity, $data)
+    {
+        $fieldList = $this->getFieldManagerUtil()->getEntityTypeFieldList('Settings');
+
+        foreach ($fieldList as $field) {
+            if (!$this->isFieldSetInData($data, $field)) continue;
+            $this->processValidationField($entity, $field, $data);
+        }
+    }
+
+    protected function processValidationField(Entity $entity, string $field, $data)
+    {
+        $fieldType = $this->getFieldManagerUtil()->getEntityTypeFieldParam('Settings', $field, 'type');
+        $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
+        $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
+        $fieldValidatorManager = $this->getInjection('container')->get('fieldValidatorManager');
+
+        foreach ($validationList as $type) {
+            $value = $this->getFieldManagerUtil()->getEntityTypeFieldParam('Settings', $field, $type);
+            if (is_null($value) && !in_array($type, $mandatoryValidationList)) continue;
+
+            if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
+                throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
+            }
+        }
+    }
+
+    protected function isFieldSetInData($data, $field)
+    {
+        $attributeList = $this->getFieldManagerUtil()->getActualAttributeList('Settings', $field);
+        $isSet = false;
+        foreach ($attributeList as $attribute) {
+            if (property_exists($data, $attribute)) {
+                $isSet = true;
+                break;
+            }
+        }
+        return $isSet;
     }
 }
