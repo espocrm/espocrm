@@ -110,6 +110,7 @@ function buildUpgradePackage(versionFrom, params)
         var fs = require('fs');
         var sys = require('util');
         var cp = require('child_process');
+        var archiver = require('archiver');
 
         var version = (require('./package.json') || {}).version;
 
@@ -122,7 +123,11 @@ function buildUpgradePackage(versionFrom, params)
         var diffFilePath = currentPath + '/build/diff';
         var diffBeforeUpgradeFilePath = currentPath + '/build/diffBeforeUpgrade';
 
-        var upgradePath = currentPath + '/build/EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
+        var folderName = 'EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
+
+        var upgradePath = currentPath + '/build/' + folderName;
+
+        var zipPath = currentPath + '/build/' + folderName + '.zip';
 
         var upgradeDataFolder = versionFrom + '-' + version;
         var isMinorVersion = false;
@@ -159,6 +164,8 @@ function buildUpgradePackage(versionFrom, params)
         deleteDirRecursively(diffFilePath);
         deleteDirRecursively(diffBeforeUpgradeFilePath);
         deleteDirRecursively(upgradePath);
+
+        if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
 
         execute('git rev-parse --abbrev-ref HEAD', function (branch) {
             branch = branch.trim();
@@ -273,13 +280,21 @@ function buildUpgradePackage(versionFrom, params)
                         if (fs.existsSync(diffFilePath)) {
                             fs.unlinkSync(diffFilePath);
                         }
-                        if (fs.existsSync(diffFilePath)) {
+                        if (fs.existsSync(diffBeforeUpgradeFilePath)) {
                             fs.unlinkSync(diffBeforeUpgradeFilePath);
                         }
-
-                        console.log("Upgrade package has been built: "+name+"");
-
-                        resolve();
+                        var zipOutput = fs.createWriteStream(zipPath);
+                        var archive = archiver('zip');
+                        archive.on('error', function (err) {
+                            throw err;
+                        });
+                        zipOutput.on('close', function () {
+                            console.log("Upgrade package has been built: "+name+"");
+                            deleteDirRecursively(upgradePath);
+                            resolve();
+                        });
+                        archive.directory(upgradePath, false).pipe(zipOutput);
+                        archive.finalize();
                     });
 
                 });
