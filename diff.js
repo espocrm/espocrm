@@ -33,6 +33,7 @@ var versionFrom = process.argv[2];
 var acceptedVersionName = versionFrom;
 var isDev = false;
 var isAll = false;
+var withVendor = false;
 
 if (process.argv.length > 1) {
     for (var i in process.argv) {
@@ -41,6 +42,9 @@ if (process.argv.length > 1) {
         }
         if (process.argv[i] === '--all') {
             isAll = true;
+        }
+        if (process.argv[i] === '--vendor') {
+            withVendor = true;
         }
         if (~process.argv[i].indexOf('--acceptedVersion=')) {
             acceptedVersionName = process.argv[i].substr(('--acceptedVersion=').length);
@@ -84,6 +88,7 @@ if (isAll) {
             for (const versionFrom of versionFromList) {
                 await buildUpgradePackage(versionFrom, {
                     isDev: isDev,
+                    withVendor: withVendor,
                 });
             }
         }
@@ -98,6 +103,7 @@ if (isAll) {
     buildUpgradePackage(versionFrom, {
         acceptedVersionName: acceptedVersionName,
         isDev: isDev,
+        withVendor: withVendor,
     });
 }
 
@@ -121,7 +127,9 @@ function buildUpgradePackage(versionFrom, params)
         var buildRelPath = 'build/EspoCRM-' + version;
         var buildPath = currentPath + '/' + buildRelPath;
         var diffFilePath = currentPath + '/build/diff';
-        var diffBeforeUpgradeFilePath = currentPath + '/build/diffBeforeUpgrade';
+        var diffBeforeUpgradeFolderPath = currentPath + '/build/diffBeforeUpgrade';
+
+        var tempFolderPath = currentPath + '/build/upgradeTmp';
 
         var folderName = 'EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
 
@@ -162,8 +170,9 @@ function buildUpgradePackage(versionFrom, params)
         };
 
         deleteDirRecursively(diffFilePath);
-        deleteDirRecursively(diffBeforeUpgradeFilePath);
+        deleteDirRecursively(diffBeforeUpgradeFolderPath);
         deleteDirRecursively(upgradePath);
+        deleteDirRecursively(tempFolderPath);
 
         if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
 
@@ -213,7 +222,7 @@ function buildUpgradePackage(versionFrom, params)
             fs.writeFileSync(diffFilePath, fileList.join('\n'));
 
             if (beforeUpgradeFileList.length) {
-                fs.writeFileSync(diffBeforeUpgradeFilePath, beforeUpgradeFileList.join('\n'));
+                fs.writeFileSync(diffBeforeUpgradeFolderPath, beforeUpgradeFileList.join('\n'));
             }
 
             execute('git diff --name-only --diff-filter=D ' + versionFrom, function (stdout) {
@@ -227,7 +236,7 @@ function buildUpgradePackage(versionFrom, params)
                 });
 
                 if (beforeUpgradeFileList.length) {
-                    cp.execSync('xargs -a ' + diffBeforeUpgradeFilePath + ' cp --parents -t ' + upgradePath + '/beforeUpgradeFiles');
+                    cp.execSync('xargs -a ' + diffBeforeUpgradeFolderPath + ' cp --parents -t ' + upgradePath + '/beforeUpgradeFiles');
                 }
 
                 execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files' , function (stdout) {
@@ -280,21 +289,99 @@ function buildUpgradePackage(versionFrom, params)
                         if (fs.existsSync(diffFilePath)) {
                             fs.unlinkSync(diffFilePath);
                         }
-                        if (fs.existsSync(diffBeforeUpgradeFilePath)) {
-                            fs.unlinkSync(diffBeforeUpgradeFilePath);
+                        if (fs.existsSync(diffBeforeUpgradeFolderPath)) {
+                            fs.unlinkSync(diffBeforeUpgradeFolderPath);
                         }
-                        var zipOutput = fs.createWriteStream(zipPath);
-                        var archive = archiver('zip');
-                        archive.on('error', function (err) {
-                            throw err;
-                        });
-                        zipOutput.on('close', function () {
-                            console.log("Upgrade package has been built: "+name+"");
-                            deleteDirRecursively(upgradePath);
+
+                        new Promise(function (resolve) {
+                            if (!withVendor) {
+                                resolve();
+                                return;
+                            }
+
+                            var output = cp.execSync("git show "+versionFrom+" --format=%H").toString();
+                            var commitHash = output.split("\n")[3];
+                            if (!commitHash) throw new Error("Couldn't find commit hash.");
+                            var composerLockOldContents = cp.execSync("git show "+commitHash+":composer.lock").toString();
+                            var composerLockNewContents = cp.execSync("cat "+currentPath+"/composer.lock").toString();
+                            var composerNewContents = cp.execSync("cat "+currentPath+"/composer.json").toString();
+
+                            if (composerLockNewContents === composerLockOldContents) {
+                                resolve();
+                                return;
+                            }
+
+                            var newPackages = JSON.parse(composerLockNewContents).packages;
+                            var oldPackages = JSON.parse(composerLockOldContents).packages;
+
+                            cp.execSync("mkdir "+tempFolderPath);
+                            cp.execSync("mkdir "+tempFolderPath + "/new");
+
+                            var vendorPath = tempFolderPath + "/new/vendor/";
+
+                            fs.writeFileSync(tempFolderPath + "/new/composer.lock", composerLockNewContents);
+                            fs.writeFileSync(tempFolderPath + "/new/composer.json", composerNewContents);
+
+                            cp.execSync("composer install", {cwd: tempFolderPath + "/new", stdio: 'ignore'});
+
+                            fs.mkdirSync(upgradePath + '/vendorFiles');
+
+                            cp.execSync("mv "+vendorPath+"/autoload.php "+ upgradePath + "/vendorFiles/autoload.php");
+                            cp.execSync("mv "+vendorPath+"/composer "+ upgradePath + "/vendorFiles/composer");
+                            cp.execSync("mv "+vendorPath+"/bin "+ upgradePath + "/vendorFiles/bin");
+
+                            var folderList = [];
+
+                            for (var item of newPackages) {
+                                var name = item.name;
+                                if (name.indexOf('composer/') === 0) continue;
+
+                                var isFound = false;
+                                var toAdd = false;
+
+                                for (var oItem of oldPackages) {
+                                    if (oItem.name !== name) continue;
+                                    isFound = true;
+                                    if (item.version !== oItem.version)
+                                         toAdd = true;
+                                }
+
+                                if (!isFound) {
+                                    toAdd = true;
+                                }
+
+                                if (toAdd) {
+                                    var folder = name.split('/')[0];
+                                    if (!~folderList.indexOf(folder))
+                                        folderList.push(folder);
+                                }
+                            }
+
+                            for (var folder of folderList) {
+                                if (fs.existsSync(vendorPath + '/'+ folder)) {
+                                    cp.execSync("mv "+vendorPath + '/'+ folder+" "+ upgradePath + '/vendorFiles/' + folder);
+                                }
+                            }
+
+                            deleteDirRecursively(tempFolderPath);
+
                             resolve();
+
+                        }).then(function () {
+                            var zipOutput = fs.createWriteStream(zipPath);
+                            var archive = archiver('zip');
+                            archive.on('error', function (err) {
+                                throw err;
+                            });
+                            zipOutput.on('close', function () {
+                                console.log("Upgrade package has been built: "+name+"");
+                                deleteDirRecursively(upgradePath);
+                                resolve();
+                            });
+                            archive.directory(upgradePath, false).pipe(zipOutput);
+                            archive.finalize();
                         });
-                        archive.directory(upgradePath, false).pipe(zipOutput);
-                        archive.finalize();
+
                     });
 
                 });
