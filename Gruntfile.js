@@ -93,6 +93,9 @@ module.exports = function (grunt) {
 
     var fs = require('fs');
     var cp = require('child_process');
+    var path = require('path');
+
+    var currentPath = path.dirname(fs.realpathSync(__filename));
 
     var themeList = [];
     fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(function (file) {
@@ -118,8 +121,10 @@ module.exports = function (grunt) {
         lessData[theme] = o;
     });
 
+    var pkg = grunt.file.readJSON('package.json');
+
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: pkg,
 
         mkdir: {
             tmp: {
@@ -135,8 +140,13 @@ module.exports = function (grunt) {
         clean: {
             start: ['build/EspoCRM-*'],
             final: ['build/tmp'],
+            release: ['build/EspoCRM-' + pkg.version],
             beforeFinal: {
-                src: ['build/tmp/custom/Espo/Custom/*', '!build/tmp/custom/Espo/Custom/.htaccess', 'build/tmp/install/config.php']
+                src: [
+                    'build/tmp/custom/Espo/Custom/*',
+                    '!build/tmp/custom/Espo/Custom/.htaccess',
+                    'build/tmp/install/config.php',
+                ]
             }
         },
         less: lessData,
@@ -268,17 +278,6 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        compress: {
-            final: {
-                options: {
-                    archive: 'build/EspoCRM-<%= pkg.version %>.zip',
-                    mode: 'zip'
-                },
-                src: ['**'],
-                cwd: 'build/EspoCRM-<%= pkg.version %>',
-                dest: 'EspoCRM-<%= pkg.version %>'
-            }
-        }
     });
 
     grunt.registerTask("composer", function() {
@@ -289,13 +288,39 @@ module.exports = function (grunt) {
         cp.execSync("node diff --all --vendor", {stdio: 'inherit'});
     });
 
-
     grunt.registerTask("unitTests", function() {
         cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/unit", {stdio: 'inherit'});
     });
 
     grunt.registerTask("integrationTests", function() {
         cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/integration", {stdio: 'inherit'});
+    });
+
+    grunt.registerTask("zip", function() {
+        var fs = require('fs');
+
+        var resolve = this.async();
+
+        var folder = 'EspoCRM-' + pkg.version;
+
+        var zipPath = 'build/' + folder +'.zip';
+        if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+
+        var archiver = require('archiver');
+        var archive = archiver('zip');
+
+        archive.on('error', function (err) {
+            grunt.fail.warn(err);
+        });
+        var zipOutput = fs.createWriteStream(zipPath);
+        zipOutput.on('close', function () {
+            console.log("EspoCRM package has been built.");
+            resolve();
+        });
+
+        archive.directory(currentPath + '/build/' + folder, folder).pipe(zipOutput);
+
+        archive.finalize();
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -305,7 +330,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-replace');
-    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-chmod');
 
     grunt.registerTask('offline', [
@@ -332,6 +356,8 @@ module.exports = function (grunt) {
     grunt.registerTask('release', [
         'default',
         'upgrade',
+        'zip',
+        'clean:release',
     ]);
 
     grunt.registerTask('tests', [
