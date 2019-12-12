@@ -25,22 +25,30 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 ob_start();
 $result = array('success' => false, 'errorMsg' => '');
 
 if (!empty($_SESSION['install'])) {
-    $preferences = array(
-        'dateFormat' => $_SESSION['install']['dateFormat'], 
-        'timeFormat' => $_SESSION['install']['timeFormat'],
-        'timeZone' => $_SESSION['install']['timeZone'],
-        'weekStart' => (int)$_SESSION['install']['weekStart'],
-        'defaultCurrency' => $_SESSION['install']['defaultCurrency'],
-        'thousandSeparator' => $_SESSION['install']['thousandSeparator'],
-        'decimalMark' => $_SESSION['install']['decimalMark'],
-        'language' => $_SESSION['install']['language'],
-    );
+    $paramList = [
+        'dateFormat',
+        'timeFormat',
+        'timeZone',
+        'weekStart',
+        'defaultCurrency',
+        'thousandSeparator',
+        'decimalMark',
+        'language',
+    ];
+
+    $preferences = [];
+    foreach ($paramList as $paramName) {
+        if (array_key_exists($paramName, $_SESSION['install'])) {
+            $preferences[$paramName] = $_SESSION['install'][$paramName];
+        }
+    }
+
     $res = $installer->setPreferences($preferences);
     if (!empty($res)) {
         $result['success'] = true;

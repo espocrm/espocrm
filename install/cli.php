@@ -95,8 +95,6 @@ if (preg_match('/"success":false/i', $result)) {
         exit;
     }
 
-    fwrite(\STDOUT, "Error: ". (!empty($resultData['errors']) ? print_r($resultData['errors'], true) : $resultData['errorMsg']) .".\n");
+    fwrite(\STDOUT, "Error: ". (!empty($resultData['errors']) ? print_r($resultData['errors'], true) : $resultData['errorMsg']) ."\n");
     exit;
 }
-
-fwrite(\STDOUT, "Done.\n");
