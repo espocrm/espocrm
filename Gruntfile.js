@@ -19,16 +19,15 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-module.exports = function (grunt) {
+ /**
+  * * `grunt` - full build
+  * * `grunt dev` - build only items needed for development
+  * * `grunt offline` - skips *composer install*
+  * * `grant release` - full build plus upgrade packages`
+  * * `grant tests` - build and run tests
+  */
 
-    var runComposerInstall = false;
-    if (process.argv.length > 1) {
-        for (var i in process.argv) {
-            if (process.argv[i] === '--ci') {
-                runComposerInstall = true;
-            }
-        }
-    }
+module.exports = function (grunt) {
 
     var jsFilesToMinify = [
         'client/lib/jquery-2.1.4.min.js',
@@ -94,10 +93,6 @@ module.exports = function (grunt) {
 
     var fs = require('fs');
     var cp = require('child_process');
-
-    if (runComposerInstall) {
-        cp.execSync("composer install", {stdio: 'ignore'});
-    }
 
     var themeList = [];
     fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(function (file) {
@@ -286,6 +281,23 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask("composer", function() {
+        cp.execSync("composer install", {stdio: 'ignore'});
+    });
+
+    grunt.registerTask("upgrade", function() {
+        cp.execSync("node diff --all --vendor", {stdio: 'inherit'});
+    });
+
+
+    grunt.registerTask("unitTests", function() {
+        cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/unit", {stdio: 'inherit'});
+    });
+
+    grunt.registerTask("integrationTests", function() {
+        cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/integration", {stdio: 'inherit'});
+    });
+
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadNpmTasks('grunt-contrib-less');
@@ -296,7 +308,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-chmod');
 
-    grunt.registerTask('default', [
+    grunt.registerTask('offline', [
         'clean:start',
         'mkdir:tmp',
         'less',
@@ -310,5 +322,26 @@ module.exports = function (grunt) {
         'copy:final',
         'chmod',
         'clean:final',
+    ]);
+
+    grunt.registerTask('default', [
+        'composer',
+        'offline',
+    ]);
+
+    grunt.registerTask('release', [
+        'default',
+        'upgrade',
+    ]);
+
+    grunt.registerTask('tests', [
+        'default',
+        'unitTests',
+        'integrationTests',
+    ]);
+
+    grunt.registerTask('dev', [
+        'composer',
+        'less',
     ]);
 };

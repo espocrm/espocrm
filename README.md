@@ -25,7 +25,7 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 
 [Download](https://www.espocrm.com/download/) the latest version. See the [instructions](https://www.espocrm.com/documentation/administration/installation/) about installation.
 
-### How to get started (for developers)
+### Getting started (for developers)
 
 1. Clone repository to your local computer.
 2. Change to the project's root directory.
@@ -48,7 +48,9 @@ You need to have nodejs and Grunt CLI installed.
 
 The build will be created in the `build` directory.
 
-### How to contribute
+Upgrade packages can be built with `grunt upgrade`.
+
+### How to contribute (for developers)
 
 Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
 
@@ -57,6 +59,22 @@ Branches:
 * hotfix/* – upcoming maintenance release; fixes should be pushed to this branch;
 * master – develop branch; new features should be pushed to this branch;
 * stable – last stable release.
+
+### Running tests (for developers)
+
+You need to have *phpunit* installed.
+
+Unit tests:
+
+```
+phpunit --bootstrap=vendor/autoload.php tests/unit
+```
+
+Integration tests:
+
+```
+phpunit --bootstrap=vendor/autoload.php tests/integration
+```
 
 ### How to make a translation
 
