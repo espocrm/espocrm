@@ -190,7 +190,6 @@
         "DKK",
         "DOP",
         "DZD",
-        "EEK",
         "EGP",
         "EUR",
         "FJD",
@@ -214,8 +213,6 @@
         "KZT",
         "LBP",
         "LKR",
-        "LTL",
-        "LVL",
         "MAD",
         "MDL",
         "MKD",
@@ -245,7 +242,6 @@
         "SCR",
         "SEK",
         "SGD",
-        "SKK",
         "SLL",
         "SVC",
         "THB",
@@ -262,7 +258,7 @@
         "VND",
         "YER",
         "ZAR",
-        "ZMK",
-        "ZWD"
+        "ZMW",
+        "ZWL"
     ]
 }
