@@ -236,10 +236,10 @@ function buildUpgradePackage(versionFrom, params)
                 });
 
                 if (beforeUpgradeFileList.length) {
-                    cp.execSync('xargs -a ' + diffBeforeUpgradeFolderPath + ' cp --parents -t ' + upgradePath + '/beforeUpgradeFiles');
+                    cp.execSync('xargs -a ' + diffBeforeUpgradeFolderPath + ' cp -p --parents -t ' + upgradePath + '/beforeUpgradeFiles');
                 }
 
-                execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files' , function (stdout) {
+                execute('xargs -a ' + diffFilePath + ' cp -p --parents -t ' + upgradePath + '/files' , function (stdout) {
                     var d = new Date();
 
                     var monthN = ((d.getMonth() + 1).toString());
