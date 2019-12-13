@@ -26,12 +26,9 @@ class AfterUpgrade
     {
         $this->container = $container;
 
-        $entityManager = $container->get('entityManager');
-
-        ///$this->populateOpportunityContactId($entityManager);
+        $this->populateOpportunityContactId($entityManager);
 
         $this->manageIndexes();
-
     }
 
     protected function populateOpportunityContactId($entityManager)
