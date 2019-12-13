@@ -396,7 +396,7 @@ class Stream extends \Espo\Core\Services\Base
             'orderBy' => 'number',
             'order' => 'DESC',
             'limit' => $sqLimit,
-            'useIndex' => 'createdByNumber',
+            'useIndex' => 'number',
         ];
 
         if ($user->isPortal()) {
@@ -510,7 +510,7 @@ class Stream extends \Espo\Core\Services\Base
             'orderBy' => 'number',
             'order' => 'DESC',
             'limit' => $sqLimit,
-            'useIndex' => 'createdByNumber',
+            'useIndex' => 'number',
         ];
 
         if ($user->isPortal()) {
