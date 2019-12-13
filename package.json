@@ -10,11 +10,11 @@
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
+    "archiver": "^3.1.1",
     "fstream": ">=1.0.12",
-    "grunt": "~1.0.3",
+    "grunt": "^1.0.4",
     "grunt-chmod": "~1.1.0",
     "grunt-contrib-clean": "~2.0.0",
-    "grunt-contrib-compress": "~1.4.3",
     "grunt-contrib-concat": "~1.0.1",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-cssmin": "~3.0.0",
@@ -26,7 +26,5 @@
     "pofile": "~1.0.11",
     "tar": "^4.4.8"
   },
-  "dependencies": {
-    "archiver": "^3.1.1"
-  }
+  "dependencies": {}
 }
