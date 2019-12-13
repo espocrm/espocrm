@@ -166,6 +166,9 @@ module.exports = function (grunt) {
             })
         },
         copy: {
+            options: {
+                mode: true,
+            },
             frontendFolders: {
                 expand: true,
                 cwd: 'client',
@@ -227,9 +230,6 @@ module.exports = function (grunt) {
             },
         },
         chmod: {
-            options: {
-                mode: '755'
-            },
             php: {
                 options: {
                     mode: '644'
@@ -258,7 +258,21 @@ module.exports = function (grunt) {
                     'build/EspoCRM-<%= pkg.version %>/api/v1/portal-access',
                     'build/EspoCRM-<%= pkg.version %>',
                 ]
-            }
+            },
+            foldersWritable: {
+                options: {
+                    mode: '775'
+                },
+                src: [
+                    'build/EspoCRM-<%= pkg.version %>/data',
+                    'build/EspoCRM-<%= pkg.version %>/custom',
+                    'build/EspoCRM-<%= pkg.version %>/custom/Espo',
+                    'build/EspoCRM-<%= pkg.version %>/custom/Espo/Custom',
+                    'build/EspoCRM-<%= pkg.version %>/client/custom',
+                    'build/EspoCRM-<%= pkg.version %>/client/modules',
+                    'build/EspoCRM-<%= pkg.version %>/application/Espo/Modules',
+                ]
+            },
         },
         replace: {
             version: {
@@ -280,6 +294,10 @@ module.exports = function (grunt) {
         },
     });
 
+    grunt.registerTask("chmod-folders", function() {
+        cp.execSync("find . -type d -exec chmod 755 {} + ", {stdio: 'ignore', cwd: 'build/EspoCRM-' + pkg.version});
+    });
+
     grunt.registerTask("composer", function() {
         cp.execSync("composer install", {stdio: 'ignore'});
     });
@@ -288,11 +306,11 @@ module.exports = function (grunt) {
         cp.execSync("node diff --all --vendor", {stdio: 'inherit'});
     });
 
-    grunt.registerTask("unitTests", function() {
+    grunt.registerTask("unit-tests", function() {
         cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/unit", {stdio: 'inherit'});
     });
 
-    grunt.registerTask("integrationTests", function() {
+    grunt.registerTask("integration-tests", function() {
         cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/integration", {stdio: 'inherit'});
     });
 
@@ -344,7 +362,10 @@ module.exports = function (grunt) {
         'replace',
         'clean:beforeFinal',
         'copy:final',
-        'chmod',
+        'chmod-folders',
+        'chmod:php',
+        'chmod:folders',
+        'chmod:foldersWritable',
         'clean:final',
     ]);
 
@@ -362,8 +383,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('tests', [
         'default',
-        'unitTests',
-        'integrationTests',
+        'unit-tests',
+        'integration-tests',
     ]);
 
     grunt.registerTask('dev', [
