@@ -42,7 +42,12 @@ class Lead extends \Espo\Core\Controllers\Record
         if (empty($data->records)) {
             $data->records = (object) [];
         }
-        $entity = $this->getRecordService()->convert($data->id, $data->records);
+
+        $additionalData = (object) [
+            'skipDuplicateCheck' => $data->skipDuplicateCheck ?? false,
+        ];
+
+        $entity = $this->getRecordService()->convert($data->id, $data->records, $additionalData);
 
         if (!empty($entity)) {
             return $entity->toArray();

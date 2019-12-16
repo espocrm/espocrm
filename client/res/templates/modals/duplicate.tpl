@@ -5,7 +5,8 @@
     {{#each duplicates}}
         <tr>
             <td>
-                <a href="#{{../scope}}/view/{{id}}" target="_BLANK">{{name}}</a>
+                <a href="#{{#if _entityType}}{{_entityType}}{{else}}{{../scope}}{{/if}}/view/{{id}}" target="_BLANK">{{name}}</a>
+                {{#if _entityType}}({{translate _entityType category='scopeNames'}}){{/if}}
             </td>
         </tr>
     {{/each}}

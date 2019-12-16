@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/lead/convert', 'view', function (Dep) {
+define('crm:views/lead/convert', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -152,33 +152,65 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
                 notValid = editView.validate() || notValid;
             }, this);
 
-            var self = this;
-
             var data = {
-                id: self.model.id,
-                records: {}
+                id: this.model.id,
+                records: {},
             };
-            scopeList.forEach(function (scope) {
-                data.records[scope] = self.getView(scope).model.attributes;
-            });
 
+            scopeList.forEach(function (scope) {
+                data.records[scope] = this.getView(scope).model.attributes;
+            }, this);
+
+            var process = function (data) {
+                this.$el.find('[data-action="convert"]').addClass('disabled');
+                this.notify(this.translate('pleaseWait', 'messages'));
+
+                Espo.Ajax.postRequest('Lead/action/convert', data)
+                .then(
+                    function () {
+                        this.getRouter().confirmLeaveOut = false;
+                        this.getRouter().navigate('#Lead/view/' + this.model.id, {trigger: true});
+                        this.notify('Converted', 'success');
+                    }.bind(this)
+                ).fail(
+                    function (xhr) {
+                        Espo.Ui.notify(false);
+                        this.$el.find('[data-action="convert"]').removeClass('disabled');
+
+                        var response = null;
+
+                        if (~[409].indexOf(xhr.status)) {
+                            var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                            if (statusReasonHeader) {
+                                try {
+                                    var response = JSON.parse(statusReasonHeader);
+                                } catch (e) {
+                                    console.error('Could not parse X-Status-Reason header');
+                                }
+                            }
+
+                            if (response && response.reason === 'duplicate') {
+                                xhr.errorIsHandled = true;
+
+                                this.createView('duplicate', 'views/modals/duplicate', {
+                                    duplicates: response.duplicates,
+                                }, function (view) {
+                                    view.render();
+
+                                    this.listenToOnce(view, 'save', function () {
+                                        data.skipDuplicateCheck = true;
+                                        process(data);
+                                    }, this);
+
+                                });
+                            }
+                        }
+                    }.bind(this)
+                );
+            }.bind(this);
 
             if (!notValid) {
-                this.$el.find('[data-action="convert"]').addClass('disabled');
-                this.notify('Please wait...');
-                $.ajax({
-                    url: 'Lead/action/convert',
-                    data: JSON.stringify(data),
-                    type: 'POST',
-                    success: function () {
-                        this.getRouter().confirmLeaveOut = false;
-                        self.getRouter().navigate('#Lead/view/' + self.model.id, {trigger: true});
-                        self.notify('Converted', 'success');
-                    }.bind(this),
-                    error: function () {
-                        self.$el.find('[data-action="convert"]').removeClass('disabled');
-                    }
-                });
+                process(data);
             } else {
                 this.notify('Not Valid', 'error');
             }
@@ -186,4 +218,3 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
 
     });
 });
-

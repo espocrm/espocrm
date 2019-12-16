@@ -183,42 +183,102 @@ class Lead extends \Espo\Core\Templates\Services\Person
         return $data;
     }
 
-    public function convert($id, $recordsData)
+    public function convert(string $id, object $recordsData, ?object $additionalData = null) : \Espo\Modules\Crm\Entities\Lead
     {
         $lead = $this->getEntity($id);
+
+        $additionalData = $additionalData ?? (object) [];
 
         if (!$this->getAcl()->check($lead, 'edit')) {
             throw new Forbidden();
         }
 
+        $duplicateList = [];
+        $duplicateCheck = !($additionalData->skipDuplicateCheck ?? false);
+
         $entityManager = $this->getEntityManager();
+
+        $skipSave = false;
 
         if (!empty($recordsData->Account)) {
             $account = $entityManager->getEntity('Account');
             $account->set(get_object_vars($recordsData->Account));
-            $entityManager->saveEntity($account);
-            $lead->set('createdAccountId', $account->id);
-        }
-        if (!empty($recordsData->Opportunity)) {
-            $opportunity = $entityManager->getEntity('Opportunity');
-            $opportunity->set(get_object_vars($recordsData->Opportunity));
-            if (isset($account)) {
-                $opportunity->set('accountId', $account->id);
+
+            if ($duplicateCheck) {
+                $rDuplicateList = $this->getServiceFactory()->create('Account')->findDuplicates($account, $recordsData->Account);
+                foreach ($rDuplicateList as $e) {
+                    $item = $e->getValueMap();
+                    $item->_entityType = $e->getEntityType();
+                    $duplicateList[] = $item;
+                    $skipSave = true;
+                }
             }
-            $entityManager->saveEntity($opportunity);
-            $lead->set('createdOpportunityId', $opportunity->id);
+
+            if (!$skipSave) {
+                $entityManager->saveEntity($account);
+                $lead->set('createdAccountId', $account->id);
+            }
         }
+
         if (!empty($recordsData->Contact)) {
             $contact = $entityManager->getEntity('Contact');
             $contact->set(get_object_vars($recordsData->Contact));
             if (isset($account)) {
                 $contact->set('accountId', $account->id);
             }
-            $entityManager->saveEntity($contact);
-            if (isset($opportunity)) {
-                $entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
+
+            if ($duplicateCheck) {
+                $rDuplicateList = $this->getServiceFactory()->create('Contact')->findDuplicates($contact, $recordsData->Contact);
+                foreach ($rDuplicateList as $e) {
+                    $item = $e->getValueMap();
+                    $item->_entityType = $e->getEntityType();
+                    $duplicateList[] = $item;
+                    $skipSave = true;
+                }
             }
-            $lead->set('createdContactId', $contact->id);
+
+            if (!$skipSave) {
+                $entityManager->saveEntity($contact);
+                $lead->set('createdContactId', $contact->id);
+            }
+        }
+
+        if (!empty($recordsData->Opportunity)) {
+            $opportunity = $entityManager->getEntity('Opportunity');
+            $opportunity->set(get_object_vars($recordsData->Opportunity));
+            if (isset($account)) {
+                $opportunity->set('accountId', $account->id);
+            }
+            if (isset($contact)) {
+                $opportunity->set('contactId', $contact->id);
+            }
+
+            if ($duplicateCheck) {
+                $rDuplicateList = $this->getServiceFactory()->create('Opportunity')
+                    ->findDuplicates($opportunity, $recordsData->Opportunity);
+                foreach ($rDuplicateList as $e) {
+                    $item = $e->getValueMap();
+                    $item->_entityType = $e->getEntityType();
+                    $duplicateList[] = $item;
+                    $skipSave = true;
+                }
+            }
+
+            if (!$skipSave) {
+                $entityManager->saveEntity($opportunity);
+                if (isset($contact)) {
+                    $entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
+                }
+                $lead->set('createdOpportunityId', $opportunity->id);
+            }
+        }
+
+        if ($duplicateCheck && count($duplicateList)) {
+            $reason = [
+                'reason' => 'duplicate',
+                'duplicates' => $duplicateList,
+            ];
+            throw new \Espo\Core\Exceptions\ConflictSilent(json_encode($reason));
         }
 
         $lead->set('status', 'Converted');
@@ -298,4 +358,3 @@ class Lead extends \Espo\Core\Templates\Services\Person
         return $lead;
     }
 }
-
