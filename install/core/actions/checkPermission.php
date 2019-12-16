@@ -50,7 +50,7 @@ if (!$installer->checkPermission()) {
             $changeOwner = false;
         }
     }
-    $result['errorMsg'] = $langs['messages']['Permission denied to'] . ':<br><pre>/'.implode('<br>/', $urls).'</pre>';
+    $result['errorMsg'] = $langs['messages']['Permission denied to'] . ':<br><pre>'.implode('<br>', $urls).'</pre>';
     $result['errorFixInstruction'] = str_replace( '"{C}"' , $instruction, $langs['messages']['permissionInstruction']) . "<br>" .
                                         str_replace( '{CSU}' , $instructionSU, $langs['messages']['operationNotPermitted']);
 }

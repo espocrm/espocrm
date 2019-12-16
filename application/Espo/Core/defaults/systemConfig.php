@@ -29,30 +29,8 @@
 
 return [
     'defaultPermissions' => [
-        'dir' => '0775',
-        'file' => '0664',
         'user' => '',
         'group' => ''
-    ],
-    'permissionMap' => [
-        /** array('0664', '0775') */
-        'writable' => [
-            'data',
-            'custom',
-            'application/Espo/Modules',
-            'client/modules'
-        ],
-        /** array('0644', '0755') */
-        'readable' => [
-            'api',
-            'application',
-            'client',
-            'vendor',
-            'index.php',
-            'cron.php',
-            'rebuild.php',
-            'clear_cache.php'
-        ],
     ],
     'jobMaxPortion' => 15, /** Max number of jobs per one execution. */
     'jobPeriod' => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
@@ -89,10 +67,8 @@ return [
         'crud',
         'logger',
         'isInstalled',
-        'defaultPermissions',
         'systemUser',
-        'permissionMap',
-        'permissionRules',
+        'defaultPermissions',
         'passwordSalt',
         'cryptKey',
         'apiSecretKeys',

@@ -159,11 +159,12 @@ class SystemRequirements
     {
         return $this->getRequiredList('permissionRequirements', [
             'permissionMap.writable',
-            'permissionMap.readable',
-        ], $additionalData);
+        ], $additionalData, [
+            'permissionMap.writable' => $this->getFileManager()->getPermissionUtils()->getWritableList(),
+        ]);
     }
 
-    protected function getRequiredList($type, $checkList, array $additionalData = null)
+    protected function getRequiredList($type, $checkList, array $additionalData = null, array $predefinedData = [])
     {
         $config = $this->getConfig();
 
@@ -172,7 +173,8 @@ class SystemRequirements
         foreach ($checkList as $itemName) {
             $methodName = 'check' . ucfirst($type);
             if (method_exists($this, $methodName)) {
-                $result = $this->$methodName($itemName, $config->get($itemName), $additionalData);
+                $itemValue = isset($predefinedData[$itemName]) ? $predefinedData[$itemName] : $config->get($itemName);
+                $result = $this->$methodName($itemName, $itemValue, $additionalData);
                 $list = array_merge($list, $result);
             }
         }
