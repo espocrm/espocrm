@@ -1601,10 +1601,14 @@ table.no-margin {
     border-color: #e0e0e0;
 }
 
-.panel-body > .list-container > .list > div.show-more,
-.list.no-bottom-margin > div.show-more {
-    display: inline-block;
-    width: 100%;
+.panel-body > .list-container > .list,
+.panel-body.dashlet-body > div > .list,
+.list.no-bottom-margin
+{
+    > div.show-more {
+        display: inline-block;
+        width: 100%;
+    }
 }
 
 .panel-body > div:first-child > .list-expanded:first-child {
