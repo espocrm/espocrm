@@ -223,9 +223,11 @@ class EmailTemplate extends Record
                 if (!$attributeType) continue;
 
                 if ($attributeType == 'date') {
-                    $value = $this->getDateTime()->convertSystemDate($value);
+                    if ($value)
+                        $value = $this->getDateTime()->convertSystemDate($value);
                 } else if ($attributeType == 'datetime') {
-                    $value = $this->getDateTime()->convertSystemDateTime($value);
+                    if ($value)
+                        $value = $this->getDateTime()->convertSystemDateTime($value);
                 } else if ($attributeType == 'text') {
                     if (!is_string($value)) {
                         $value = '';

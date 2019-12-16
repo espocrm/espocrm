@@ -79,40 +79,6 @@ class EmailReminder
         return $this->language;
     }
 
-    protected function parseInvitationTemplate($contents, $entity, $user = null)
-    {
-        $contents = str_replace('{eventType}', mb_strtolower($this->language->translate($entity->getEntityName(), 'scopeNames')), $contents);
-
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
-        $timezone = $preferences->get('timeZone');
-
-        foreach ($entity->getFields() as $field => $d) {
-            if (empty($d['type'])) continue;
-            $key = '{'.$field.'}';
-            switch ($d['type']) {
-                case 'datetime':
-                    $contents = str_replace($key, $this->dateTime->convertSystemDateTime($entity->get($field), $timezone), $contents);
-                    break;
-                case 'date':
-                    $contents = str_replace($key, $this->dateTime->convertSystemDate($entity->get($field)), $contents);
-                    break;
-                default:
-                    $contents = str_replace($key, $entity->get($field), $contents);
-            }
-        }
-
-        if ($user) {
-            $contents = str_replace('{userName}', $user->get('name'), $contents);
-        }
-
-        $siteUrl = rtrim($this->config->get('siteUrl'), '/');
-
-        $url = $siteUrl . '/#' . $entity->getEntityName() . '/view/' . $entity->id;
-        $contents = str_replace('{url}', $url, $contents);
-
-        return $contents;
-    }
-
     public function send(Entity $reminder)
     {
         $user = $this->getEntityManager()->getEntity('User', $reminder->get('userId'));
