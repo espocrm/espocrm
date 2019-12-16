@@ -315,7 +315,7 @@ class Installer
         return $result;
     }
 
-    public function setPreferences($preferences)
+    public function savePreferences($preferences)
     {
         $preferences = $this->normalizeSettingParams($preferences);
 

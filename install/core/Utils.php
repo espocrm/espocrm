@@ -34,15 +34,15 @@ class Utils
     static public function checkActionExists($actionName)
     {
         return in_array($actionName, [
-            'applySett',
+            'saveSettings',
             'buildDatabase',
             'checkPermission',
             'createUser',
             'errors',
             'finish',
             'main',
-            'setEmailSett',
-            'setPreferences',
+            'saveEmailSettings',
+            'savePreferences',
             'settingsTest',
             'setupConfirmation',
             'step1',
@@ -51,7 +51,6 @@ class Utils
             'step4',
             'step5'
         ]);
-
 
         return false;
     }
