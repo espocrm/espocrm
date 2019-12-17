@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class Opportunity extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function beforeSave(Entity $entity, array $options = array())
+    public function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
             if (!$entity->has('probability') && $entity->get('stage')) {
@@ -94,7 +94,7 @@ class Opportunity extends \Espo\Core\ORM\Repositories\RDB
         parent::beforeSave($entity, $options);
     }
 
-    public function afterSave(Entity $entity, array $options = array())
+    public function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
         if ($entity->isAttributeChanged('amount') || $entity->isAttributeChanged('probability')) {
@@ -102,6 +102,28 @@ class Opportunity extends \Espo\Core\ORM\Repositories\RDB
             $probability = $entity->get('probability');
             $amountWeightedConverted = round($amountConverted * $probability / 100, 2);
             $entity->set('amountWeightedConverted', $amountWeightedConverted);
+        }
+
+        $this->handleAfterSaveContacts($entity, $options);
+    }
+
+    protected function handleAfterSaveContacts(Entity $entity, array $options = [])
+    {
+        if ($entity->isAttributeChanged('contactId')) {
+            $contactId = $entity->get('contactId');
+            $contactIdList = $entity->get('contactsIds') ?? [];
+            $fetchedContactId = $entity->getFetched('contactId');
+
+            if (!$contactId) {
+                if ($fetchedContactId) {
+                    $this->unrelate($entity, 'contacts', $fetchedContactId);
+                }
+                return;
+            }
+
+            if (!in_array($contactId, $contactIdList) && !$this->isRelated($entity, 'contacts', $contactId)) {
+                $this->relate($entity, 'contacts', $contactId);
+            }
         }
     }
 }
