@@ -41,6 +41,8 @@ class SystemHelper extends \Espo\Core\Utils\System
 
     protected $combineOperator = '&&';
 
+    protected $writableMap;
+
     public function __construct()
     {
         $this->config = include('config.php');
@@ -50,6 +52,9 @@ class SystemHelper extends \Espo\Core\Utils\System
         }
 
         $this->apiPath = $this->config['apiPath'];
+
+        $permission = new \Espo\Core\Utils\File\Permission(new \Espo\Core\Utils\File\Manager());
+        $this->writableMap = $permission->getWritableMap();
     }
 
     protected function getMainConfig($optionName, $returns = null)
@@ -124,7 +129,7 @@ class SystemHelper extends \Espo\Core\Utils\System
         return $cd.$sudoStr.'chown -R '.$owner.':'.$group.' '.$path;
     }
 
-    public function getChmodCommand($path, $permissions = array('755'), $isSudo = false, $isFile = null, $isCd = true)
+    public function getChmodCommand($path, $permissions = ['755'], $isRecursive = true, $isSudo = false, $isFile = null)
     {
         $path = empty($path) ? '.' : $path;
         if (is_array($path)) {
@@ -133,26 +138,31 @@ class SystemHelper extends \Espo\Core\Utils\System
 
         $sudoStr = $isSudo ? 'sudo ' : '';
 
-        $cd = $isCd ? $this->getCd(true) : '';
-
         if (is_string($permissions)) {
             $permissions = (array) $permissions;
         }
 
         if (!isset($isFile) && count($permissions) == 1) {
-            return $cd. $sudoStr . 'find '.$path.' -type d -exec ' . $sudoStr . 'chmod '.$permissions[0].' {} +';
+            if ($isRecursive) {
+                return $sudoStr . 'find '. $path .' -type d -exec ' . $sudoStr . 'chmod '. $permissions[0] .' {} +';
+            }
+            return $sudoStr . 'chmod '. $permissions[0] .' '. $path;
         }
 
         $bufPerm = (count($permissions) == 1) ?  array_fill(0, 2, $permissions[0]) : $permissions;
 
         $commands = array();
 
-        if ($isCd) {
-            $commands[] = $this->getCd();
+        if ($isRecursive) {
+            $commands[] = $sudoStr. 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';
+            $commands[] = $sudoStr . 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';
+        } else {
+            if (file_exists($path) && is_file($path)) {
+                $commands[] = $sudoStr. 'chmod '. $bufPerm[0] .' '. $path;
+            } else {
+                $commands[] = $sudoStr. 'chmod '. $bufPerm[1] .' '. $path;
+            }
         }
-
-        $commands[] = $sudoStr. 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';//.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
-        $commands[] = $sudoStr . 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';//.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
 
         if (count($permissions) >= 2) {
             return implode(' ' . $this->combineOperator . ' ', $commands);
@@ -187,7 +197,7 @@ class SystemHelper extends \Espo\Core\Utils\System
      * @param  bool  $isFile
      * @return string
      */
-    public function getPermissionCommands($path, $permissions = array('644', '755'), $isSudo = false, $isFile = null, $changeOwner = true)
+    public function getPermissionCommands($path, $permissions = ['644', '755'], $isSudo = false, $isFile = null, $changeOwner = true, $isCd = true)
     {
         if (is_string($path)) {
             $path = array_fill(0, 2, $path);
@@ -195,7 +205,30 @@ class SystemHelper extends \Espo\Core\Utils\System
         list($chmodPath, $chownPath) = $path;
 
         $commands = array();
-        $commands[] = $this->getChmodCommand($chmodPath, $permissions, $isSudo, $isFile);
+
+        if ($isCd) {
+            $commands[] = $this->getCd();
+        }
+
+        $chmodPath = (array) $chmodPath;
+
+        $pathList = [];
+        $recursivePathList = [];
+        foreach ($chmodPath as $pathItem) {
+            if (isset($this->writableMap[$pathItem]) && !$this->writableMap[$pathItem]['recursive']) {
+                $pathList[] = $pathItem;
+                continue;
+            }
+            $recursivePathList[] = $pathItem;
+        }
+
+        if (!empty($pathList)) {
+            $commands[] = $this->getChmodCommand($pathList, $permissions, false, $isSudo, $isFile);
+        }
+
+        if (!empty($recursivePathList)) {
+            $commands[] = $this->getChmodCommand($recursivePathList, $permissions, true, $isSudo, $isFile);
+        }
 
         if ($changeOwner) {
             $chown = $this->getChownCommand($chownPath, $isSudo, false);

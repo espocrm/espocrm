@@ -45,8 +45,6 @@ class Installer
 
     protected $isAuth = false;
 
-    protected $permissionMap;
-
     protected $permissionError;
 
     private $passwordHash;
@@ -87,10 +85,6 @@ class Installer
 
         require_once('install/core/SystemHelper.php');
         $this->systemHelper = new SystemHelper();
-
-        $configPath = $this->getConfig()->getConfigPath();
-        $this->permissionMap = $this->getConfig()->get('permissionMap');
-        $this->permissionMap['writable'][] = $configPath;
 
         $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->getConfig());
     }
@@ -321,7 +315,7 @@ class Installer
         return $result;
     }
 
-    public function setPreferences($preferences)
+    public function savePreferences($preferences)
     {
         $preferences = $this->normalizeSettingParams($preferences);
 

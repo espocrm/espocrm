@@ -64,7 +64,7 @@ var InstallScript = function(opt) {
 			'break': true
 		},
 		{
-			'action': 'applySett',
+			'action': 'saveSettings',
 			'break': true
 		},
         {
@@ -256,7 +256,7 @@ InstallScript.prototype.step4 = function() {
 		}
 		var data = self.systemSettings;
 
-		data.action = 'setPreferences';
+		data.action = 'savePreferences';
 		$.ajax({
 			url: "index.php",
 			type: "POST",
@@ -287,14 +287,14 @@ InstallScript.prototype.step5 = function() {
 
 	$("#next").click(function(){
 		$(this).attr('disabled', 'disabled');
-		self.setEmailSett();
+		self.saveEmailSettings();
 		if (!self.validate()) {
 			$(this).removeAttr('disabled');
 			return;
 		}
 		var data = self.emailSettings;
 
-		data.action = 'setEmailSett';
+		data.action = 'saveEmailSettings';
 		$.ajax({
 			url: "index.php",
 			type: "POST",
@@ -384,7 +384,7 @@ InstallScript.prototype.setSystemSett = function() {
 	this.systemSettings.language = $('[name="language"]').val();
 }
 
-InstallScript.prototype.setEmailSett = function() {
+InstallScript.prototype.saveEmailSettings = function() {
 	this.emailSettings.smtpServer = $('[name="smtpServer"]').val();
 	this.emailSettings.smtpPort = $('[name="smtpPort"]').val();
 	this.emailSettings.smtpAuth = $('[name="smtpAuth"]').is(':checked');
@@ -626,7 +626,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 		this.checkModRewrite();
 		return;
 	}
-	if (checkAction == 'applySett') {
+	if (checkAction == 'saveSettings') {
 		data['user-name'] = this.userSett.name;
 		data['user-pass'] = this.userSett.pass;
 	}

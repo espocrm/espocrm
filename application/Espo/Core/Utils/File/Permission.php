@@ -28,8 +28,9 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
-use Espo\Core\Utils,
-    Espo\Core\Exceptions\Error;
+
+use Espo\Core\Utils;
+use Espo\Core\Exceptions\Error;
 
 class Permission
 {
@@ -44,58 +45,51 @@ class Permission
 
     protected $permissionErrorRules = null;
 
-    protected $params = array(
-        'defaultPermissions' => array (
-            'dir' => '0775',
-            'file' => '0664',
-            'user' => '',
-            'group' => '',
-        ),
-        'permissionMap' => array(
+    protected $writableMap = [
+        'data' => [
+            'recursive' => true,
+        ],
+        'application/Espo/Modules' => [
+            'recursive' => false,
+        ],
+        'client/modules' => [
+            'recursive' => false,
+        ],
+        'custom/Espo/Custom' => [
+            'recursive' => true,
+        ],
+    ];
 
-            /** array('0664', '0775') */
-            'writable' => array(
-                'data',
-                'custom',
-            ),
+    protected $defaultPermissions = [
+        'dir' => '0755',
+        'file' => '0644',
+        'user' => null,
+        'group' => null,
+    ];
 
-            /** array('0644', '0755') */
-            'readable' => array(
-                'api',
-                'application',
-                'client',
-                'vendor',
-                'index.php',
-                'cron.php',
-                'rebuild.php',
-                'main.html',
-                'reset.html',
-            ),
-        ),
-    );
-
-    protected $permissionRules = array(
-        'writable' => array('0664', '0775'),
-        'readable' => array('0644', '0755'),
-    );
-
+    protected $writablePermissions = [
+        'file' => '0664',
+        'dir' => '0775',
+    ];
 
     public function __construct(Manager $fileManager, array $params = null)
     {
         $this->fileManager = $fileManager;
-        if (isset($params)) {
-            $this->params = $params;
+
+        if ($params) {
+            foreach ($params as $paramName => $paramValue) {
+                switch ($paramName) {
+                    case 'defaultPermissions':
+                        $this->defaultPermissions = array_merge($this->defaultPermissions, $paramValue);
+                        break;
+                }
+            }
         }
     }
 
     protected function getFileManager()
     {
         return $this->fileManager;
-    }
-
-    protected function getParams()
-    {
-        return $this->params;
     }
 
     /**
@@ -105,14 +99,34 @@ class Permission
      */
     public function getDefaultPermissions()
     {
-        $params = $this->getParams();
-        return $params['defaultPermissions'];
+        return $this->defaultPermissions;
     }
 
-
-    public function getPermissionRules()
+    public function getWritableMap()
     {
-        return $this->permissionRules;
+        return $this->writableMap;
+    }
+
+    public function getWritableList()
+    {
+        return array_keys($this->writableMap);
+    }
+
+    public function getRequiredPermissions($path)
+    {
+        $permission = $this->getDefaultPermissions();
+
+        foreach ($this->getWritableMap() as $writablePath => $writableOptions) {
+            if (!$writableOptions['recursive'] && $path == $writablePath) {
+                return array_merge($permission, $this->writablePermissions);
+            }
+
+            if ($writableOptions['recursive'] && substr($path, 0, strlen($writablePath)) == $writablePath) {
+                return array_merge($permission, $this->writablePermissions);
+            }
+        }
+
+        return $permission;
     }
 
     /**
@@ -129,7 +143,7 @@ class Permission
             return false;
         }
 
-        $permission = $this->getDefaultPermissions();
+        $permission = $this->getRequiredPermissions($path);
 
         $result = $this->chmod($path, array($permission['file'], $permission['dir']), $recurse);
         if (!empty($permission['user'])) {
@@ -342,8 +356,8 @@ class Permission
      *
      * @return bool
      */
-    protected function chgrpRecurse($path, $group) {
-
+    protected function chgrpRecurse($path, $group)
+    {
         if (!file_exists($path)) {
             return false;
         }
@@ -461,59 +475,37 @@ class Permission
      *
      * @return  bool
      */
-    public function setMapPermission($mode = null)
+    public function setMapPermission()
     {
         $this->permissionError = array();
         $this->permissionErrorRules = array();
 
-        $params = $this->getParams();
-
-        $permissionRules = $this->permissionRules;
-        if (isset($mode)) {
-            foreach ($permissionRules as &$value) {
-                $value = $mode;
-            }
-        }
-
         $result = true;
-        foreach ($params['permissionMap'] as $type => $items) {
 
-            $permission = $permissionRules[$type];
+        foreach ($this->getWritableMap() as $path => $options) {
+            if (!file_exists($path)) continue;
 
-            foreach ($items as $item) {
+            try {
+                $this->chmod($path, $this->writablePermissions, $options['recursive']);
+            } catch (\Throwable $e) {}
 
-                if (file_exists($item)) {
+            /** check is writable */
+            $res = is_writable($path);
 
-                    try {
-                        $this->chmod($item, $permission, true);
-                    } catch (\Exception $e) {
-                    }
-
-                    $res = is_readable($item);
-
-                    /** check is wtitable */
-                    if ($type == 'writable') {
-
-                        $res &= is_writable($item);
-
-                        if (is_dir($item)) {
-                            $name = uniqid();
-
-                            try {
-                                $res &= $this->getFileManager()->putContents(array($item, $name), 'test');
-                                $res &= $this->getFileManager()->removeFile($name, $item);
-                            } catch (\Exception $e) {
-                                $res = false;
-                            }
-                        }
-                    }
-
-                    if (!$res) {
-                        $result = false;
-                        $this->permissionError[] = $item;
-                        $this->permissionErrorRules[$item] = $permission;
-                    }
+            if (is_dir($path)) {
+                try {
+                    $name = uniqid();
+                    $res &= $this->getFileManager()->putContents([$path, $name], 'test');
+                    $res &= $this->getFileManager()->removeFile($name, $path);
+                } catch (\Throwable $e) {
+                    $res = false;
                 }
+            }
+
+            if (!$res) {
+                $result = false;
+                $this->permissionError[] = $path;
+                $this->permissionErrorRules[$path] = $this->writablePermissions;
             }
         }
 
@@ -607,4 +599,3 @@ class Permission
     }
 
 }
-
