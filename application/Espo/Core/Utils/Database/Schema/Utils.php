@@ -38,31 +38,12 @@ class Utils
         $indexList = array();
 
         foreach ($ormMeta as $entityName => $entityParams) {
-            foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
-                if (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) {
-                    continue;
-                }
 
-                $indexType = static::getIndexTypeByFieldDefs($fieldParams);
-                if (!$indexType) {
-                    continue;
-                }
-
-                if (!isset($indexList[$entityName])) {
-                    $indexList[$entityName] = [];
-                }
-
-                $keyValue = $fieldParams[$indexType];
-                $columnName = Util::toUnderScore($fieldName);
-
-                if ($keyValue === true) {
-                    $tableIndexName = static::generateIndexName($columnName, $indexType);
-                    $indexList[$entityName][$tableIndexName]['type'] = $indexType;
-                    $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
-                } else if (is_string($keyValue)) {
-                    $tableIndexName = static::generateIndexName($keyValue, $indexType);
-                    $indexList[$entityName][$tableIndexName]['type'] = $indexType;
-                    $indexList[$entityName][$tableIndexName]['columns'][] = $columnName;
+            /* add indexes for additionalTables */
+            $entityIndexList = static::getEntityIndexListByFieldsDefs($entityParams['fields']);
+            foreach ($entityIndexList as $indexName => $indexParams) {
+                if (!isset($entityParams['indexes'][$indexName])) {
+                    $entityParams['indexes'][$indexName] = $indexParams;
                 }
             }
 
@@ -109,9 +90,59 @@ class Utils
         }
     }
 
+    public static function getIndexNameByFieldDefs($fieldName, array $fieldDefs, $default = null)
+    {
+        $indexType = static::getIndexTypeByFieldDefs($fieldDefs);
+
+        if ($indexType) {
+            $keyValue = $fieldDefs[$indexType];
+
+            if ($keyValue === true) {
+                return $fieldName;
+            }
+
+            if (is_string($keyValue)) {
+                return $keyValue;
+            }
+        }
+
+        return $default;
+    }
+
+    public static function getEntityIndexListByFieldsDefs(array $fieldsDefs, $isTableColumnNames = false)
+    {
+        $indexList = [];
+
+        foreach ($fieldsDefs as $fieldName => $fieldParams) {
+            if (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) {
+                continue;
+            }
+
+            $indexType = static::getIndexTypeByFieldDefs($fieldParams);
+            $indexName = static::getIndexNameByFieldDefs($fieldName, $fieldParams);
+
+            if (!$indexType || !$indexName) {
+                continue;
+            }
+
+            $keyValue = $fieldParams[$indexType];
+            $columnName = $isTableColumnNames ? Util::toUnderScore($fieldName) : $fieldName;
+
+            if ($keyValue === true) {
+                $indexList[$indexName]['type'] = $indexType;
+                $indexList[$indexName]['columns'] = array($columnName);
+            } else if (is_string($keyValue)) {
+                $indexList[$indexName]['type'] = $indexType;
+                $indexList[$indexName]['columns'][] = $columnName;
+            }
+        }
+
+        return $indexList;
+    }
+
     public static function getIndexTypeByIndexDefs(array $indexDefs)
     {
-        if (isset($indexDefs['unique']) && $indexDefs['unique']) {
+        if ((isset($indexDefs['type']) && $indexDefs['type'] == 'unique') || (isset($indexDefs['unique']) && $indexDefs['unique'])) {
             return 'unique';
         }
 
