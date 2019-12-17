@@ -560,6 +560,15 @@ class Converter
 
     protected function applyIndexes(&$ormMetadata, $entityType)
     {
+        if (isset($ormMetadata[$entityType]['fields'])) {
+            $indexList = SchemaUtils::getEntityIndexListByFieldsDefs($ormMetadata[$entityType]['fields']);
+            foreach ($indexList as $indexName => $indexParams) {
+                if (!isset($ormMetadata[$entityType]['indexes'][$indexName])) {
+                    $ormMetadata[$entityType]['indexes'][$indexName] = $indexParams;
+                }
+            }
+        }
+
         if (isset($ormMetadata[$entityType]['indexes'])) {
             foreach ($ormMetadata[$entityType]['indexes'] as $indexName => &$indexData) {
                 if (!isset($indexData['key'])) {
