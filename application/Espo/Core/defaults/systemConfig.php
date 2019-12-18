@@ -29,6 +29,8 @@
 
 return [
     'defaultPermissions' => [
+        'dir' => '0755',
+        'file' => '0644',
         'user' => '',
         'group' => ''
     ],
