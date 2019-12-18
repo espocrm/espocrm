@@ -198,8 +198,8 @@ class Email extends Record
         }
 
         if ($smtpParams) {
-            if ($emailAddress) {
-                $this->applySmtpHandler($this->getUser()->id, $emailAddress, $smtpParams);
+            if ($fromAddress) {
+                $this->applySmtpHandler($this->getUser()->id, $fromAddress, $smtpParams);
             }
             $emailSender->useSmtp($smtpParams);
         }

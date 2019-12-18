@@ -111,6 +111,8 @@ function buildUpgradePackage(versionFrom, params)
 {
     return new Promise(function (resolve) {
         var acceptedVersionName = params.acceptedVersionName || versionFrom;
+        var isDev = params.isDev;
+        var withVendor = params.withVendor;
 
         var path = require('path');
         var fs = require('fs');
@@ -237,6 +239,12 @@ function buildUpgradePackage(versionFrom, params)
 
                 if (beforeUpgradeFileList.length) {
                     cp.execSync('xargs -a ' + diffBeforeUpgradeFolderPath + ' cp -p --parents -t ' + upgradePath + '/beforeUpgradeFiles');
+                }
+
+                if (!isDev) {
+                    if (fs.existsSync(upgradeDataFolderPath + '/scripts')) {
+                        cp.execSync('cp -r ' + upgradeDataFolderPath + '/scripts ' + upgradePath + '/scripts');
+                    }
                 }
 
                 execute('xargs -a ' + diffFilePath + ' cp -p --parents -t ' + upgradePath + '/files' , function (stdout) {

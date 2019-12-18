@@ -44,7 +44,6 @@ class Manager
         if (isset($config)) {
             $params = array(
                 'defaultPermissions' => $config->get('defaultPermissions'),
-                'permissionMap' => $config->get('permissionMap'),
             );
         }
 
@@ -381,11 +380,11 @@ class Manager
     {
         $fullPath = $this->concatPaths($path);
 
-        if (file_exists($fullPath) && is_dir($path)) {
+        if (file_exists($fullPath) && is_dir($fullPath)) {
             return true;
         }
 
-        $defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();
+        $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($fullPath);
 
         if (!isset($permission)) {
             $permission = (string) $defaultPermissions['dir'];
@@ -393,7 +392,11 @@ class Manager
         }
 
         try {
+            $umask = @umask(0);
             $result = mkdir($fullPath, $permission, true);
+            if ($umask) {
+                @umask($umask);
+            }
 
             if (!empty($defaultPermissions['user'])) {
                 $this->getPermissionUtils()->chown($fullPath);
@@ -484,11 +487,11 @@ class Manager
      */
     public function checkCreateFile($filePath)
     {
-        $defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();
+        $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($filePath);
 
         if (file_exists($filePath)) {
             if (!is_writable($filePath) && !in_array($this->getPermissionUtils()->getCurrentPermission($filePath), array($defaultPermissions['file'], $defaultPermissions['dir']))) {
-                return $this->getPermissionUtils()->setDefaultPermissions($filePath, true);
+                return $this->getPermissionUtils()->setDefaultPermissions($filePath);
             }
             return true;
         }
@@ -504,7 +507,7 @@ class Manager
         }
 
         if (touch($filePath)) {
-            return $this->getPermissionUtils()->setDefaultPermissions($filePath, true);
+            return $this->getPermissionUtils()->setDefaultPermissions($filePath);
         }
 
         return false;

@@ -31,25 +31,41 @@ ob_start();
 $result = array('success' => false, 'errorMsg' => '');
 
 if (!empty($_SESSION['install'])) {
+
     $paramList = [
-        'dateFormat',
-        'timeFormat',
-        'timeZone',
-        'weekStart',
-        'defaultCurrency',
-        'thousandSeparator',
-        'decimalMark',
-        'language',
+        'smtpServer',
+        'smtpPort',
+        'smtpAuth',
+        'smtpSecurity',
+        'smtpUsername',
+        'smtpPassword',
+        'outboundEmailFromName',
+        'outboundEmailFromAddress',
+        'outboundEmailIsShared',
     ];
 
     $preferences = [];
     foreach ($paramList as $paramName) {
-        if (array_key_exists($paramName, $_SESSION['install'])) {
-            $preferences[$paramName] = $_SESSION['install'][$paramName];
+
+        switch ($paramName) {
+            case 'smtpAuth':
+                $preferences['smtpAuth'] = (empty($_SESSION['install']['smtpAuth']) || $_SESSION['install']['smtpAuth'] == 'false' || !$_SESSION['install']['smtpAuth']) ? false : true;
+                break;
+
+            case 'outboundEmailIsShared':
+                $preferences['outboundEmailIsShared'] = (empty($_SESSION['install']['smtpAuth']) || $_SESSION['install']['outboundEmailIsShared'] == 'false' || !$_SESSION['install']['smtpAuth']) ? false : true;
+                break;
+
+            default:
+                if (array_key_exists($paramName, $_SESSION['install'])) {
+                    $preferences[$paramName] = $_SESSION['install'][$paramName];
+                }
+                break;
         }
+
     }
 
-    $res = $installer->setPreferences($preferences);
+    $res = $installer->savePreferences($preferences);
     if (!empty($res)) {
         $result['success'] = true;
     }
