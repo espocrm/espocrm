@@ -1,4 +1,6 @@
-<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a> &raquo {{translate 'Integrations' scope='Admin'}}</h3></div>
+<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a>
+<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+{{translate 'Integrations' scope='Admin'}}</h3></div>
 
 <div class="row">
     <div id="integrations-menu" class="col-sm-3">

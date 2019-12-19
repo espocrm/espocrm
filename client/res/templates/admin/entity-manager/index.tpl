@@ -1,4 +1,6 @@
-<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a> &raquo {{translate 'Entity Manager' scope='Admin'}}</h3></div>
+<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a>
+<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+{{translate 'Entity Manager' scope='Admin'}}</h3></div>
 
 <div class="button-container">
     <button class="btn btn-primary" data-action="createEntity">{{translate 'Create Entity' scope='Admin'}}</button>

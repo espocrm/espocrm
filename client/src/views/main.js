@@ -111,7 +111,8 @@ define('views/main', 'view', function (Dep) {
                 a.push('<div class="breadcrumb-item">' + item + '</div>');
             }, this);
 
-            return '<div class="header-breadcrumbs">' + a.join('<div class="breadcrumb-separator">&rsaquo;</div>') + '</div>';
+            return '<div class="header-breadcrumbs">' +
+                a.join('<div class="breadcrumb-separator"><span class="chevron-right"></span></div>') + '</div>';
         },
 
         getHeaderIconHtml: function () {

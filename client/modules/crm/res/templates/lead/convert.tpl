@@ -1,8 +1,8 @@
 <div class="page-header">
     <h3><a href='#Lead'>{{translate scope category='scopeNamesPlural'}}</a>
-    &raquo
+    <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
     <a href='#Lead/view/{{this.model.id}}'>{{get this.model 'name'}}</a>
-    &raquo
+    <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
     {{translate 'convert' scope='Lead'}}</h3>
 </div>
 

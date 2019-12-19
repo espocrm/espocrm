@@ -1,4 +1,6 @@
-<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a> &raquo {{translate 'Extensions' scope='Admin'}}</h3></div>
+<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a>
+<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+{{translate 'Extensions' scope='Admin'}}</h3></div>
 
 <div class="panel panel-default upload">
     <div class="panel-heading">

@@ -225,7 +225,7 @@ define('views/modals/detail', 'views/modal', function (Dep) {
             this.headerHtml += this.getLanguage().translate(scope, 'scopeNames');
 
             if (model.get('name')) {
-                this.headerHtml += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
+                this.headerHtml += ' <span class="chevron-right"></span> ' + Handlebars.Utils.escapeExpression(model.get('name'));
             }
             if (!this.fullFormDisabled) {
                 this.headerHtml = '<a href="#' + scope + '/view/' + this.id+'" class="action font-size-flexible" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
