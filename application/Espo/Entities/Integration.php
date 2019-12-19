@@ -31,7 +31,7 @@ namespace Espo\Entities;
 
 class Integration extends \Espo\Core\ORM\Entity
 {
-    public function get($name, $params = [])
+    public function get(string $name, $params = [])
     {
         if ($name == 'id') {
             return $this->id;
@@ -54,7 +54,7 @@ class Integration extends \Espo\Core\ORM\Entity
         return null;
     }
 
-    public function clear($name = null)
+    public function clear(?string $name = null)
     {
         parent::clear($name);
 
