@@ -146,7 +146,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             var data = Dep.prototype.data.call(this);
 
             data.useIframe = this.useIframe;
-            data.isPlain = this.model.has('isHtml') && !this.model.get('isHtml');
+            data.isPlain = this.isPlain();
 
             return data;
         },
@@ -157,12 +157,19 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             },
         },
 
+        isPlain: function () {
+            return this.model.has('isHtml') && !this.model.get('isHtml');
+        },
+
         fixPopovers: function () {
             $('body > .note-popover').removeClass('hidden');
         },
 
          getValueForDisplay: function () {
             var value = Dep.prototype.getValueForDisplay.call(this);
+            if (this.isPlain()) {
+                return value;
+            }
             return this.sanitizeHtml(value);
         },
 
