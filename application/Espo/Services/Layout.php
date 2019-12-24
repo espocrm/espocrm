@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Exceptions\NotFound;
+
 class Layout extends \Espo\Core\Services\Base
 {
     protected function init()
