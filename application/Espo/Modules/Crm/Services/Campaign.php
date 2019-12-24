@@ -80,7 +80,19 @@ class Campaign extends \Espo\Services\Record
         $clickedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where([
             'campaignId' => $entity->id,
             'action' => 'Clicked',
-            'isTest' => false
+            'isTest' => false,
+            'id=s' => [
+                'entityType' => 'CampaignLogRecord',
+                'selectParams' => [
+                    'select' => ['MIN:id'],
+                    'whereClause' => [
+                        'action' => 'Clicked',
+                        'isTest' => false,
+                        'campaignId' => $entity->id,
+                    ],
+                    'groupBy' => ['queueItemId'],
+                ],
+            ],
         ])->count();
         $entity->set('clickedCount', $clickedCount);
 
