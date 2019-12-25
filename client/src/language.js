@@ -153,7 +153,22 @@ define('language', ['ajax'], function (Ajax) {
             return entityList.sort(function (v1, v2) {
                  return this.translate(v1, category).localeCompare(this.translate(v2, category));
             }.bind(this));
-        }
+        },
+
+        translatePath: function (path) {
+            if (typeof path === 'string' || path instanceof String) {
+                path = path.split('.');
+            }
+            var pointer = this.data;
+
+            path.forEach(function (key) {
+                if (key in pointer) {
+                    pointer = pointer[key];
+                }
+            }, this);
+
+            return pointer;
+        },
 
     }, Backbone.Events);
 

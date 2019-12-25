@@ -95,6 +95,12 @@ define('views/main', 'view', function (Dep) {
 
                         item.name = item.name || item.action;
                         item.action = item.action || this.name;
+
+                        if (item.labelTranslation) {
+                            item.html = this.getHelper().escapeString(
+                                this.getLanguage().translatePath(item.labelTranslation)
+                            );
+                        }
                         menu[type].push(item);
                     }, this);
                 }, this);
