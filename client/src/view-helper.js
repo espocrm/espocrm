@@ -251,7 +251,6 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 }
                 list = list || {};
                 var html = '';
-                var isArray = (Object.prototype.toString.call(list) === '[object Array]');
 
                 var multiple = (Object.prototype.toString.call(value) === '[object Array]');
                 var checkOption = function (name) {
@@ -267,6 +266,13 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 var scope = options.hash.scope || false;
                 var category = options.hash.category || false;
                 var field = options.hash.field || false;
+
+                if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
+                    if (!~list.indexOf(value)) {
+                        list = Espo.Utils.clone(list);
+                        list.push(value);
+                    }
+                }
 
                 var translationHash = options.hash.translationHash || options.hash.translatedOptions || null;
 

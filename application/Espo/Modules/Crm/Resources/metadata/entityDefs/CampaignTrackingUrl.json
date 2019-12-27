@@ -15,8 +15,7 @@
             "readOnly": true
         },
         "campaign": {
-            "type": "link",
-            "required": true
+            "type": "link"
         },
         "modifiedAt": {
             "type": "datetime",

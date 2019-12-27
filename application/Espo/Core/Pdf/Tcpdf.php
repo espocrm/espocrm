@@ -116,6 +116,12 @@ class Tcpdf extends \TCPDF
             $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
         }
 
+        if ($this->isUnicodeFont()) {
+            $html = str_replace('{totalPageNumber}', '{{:ptp:}}', $html);
+        } else {
+            $html = str_replace('{totalPageNumber}', '{:ptp:}', $html);
+        }
+
         $this->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, '', 0, false, 'T');
 
         $this->SetAutoPageBreak($autoPageBreak, $breakMargin);

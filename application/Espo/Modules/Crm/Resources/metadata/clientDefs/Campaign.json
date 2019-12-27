@@ -23,6 +23,13 @@
                     "link": "#EmailTemplate",
                     "acl": "read",
                     "aclScope": "EmailTemplate"
+                },
+                {
+                    "label": "Tracking URLs",
+                    "labelTranslation": "Campaign.links.trackingUrls",
+                    "link": "#CampaignTrackingUrl",
+                    "acl": "read",
+                    "aclScope": "CampaignTrackingUrl"
                 }
             ]
         }
