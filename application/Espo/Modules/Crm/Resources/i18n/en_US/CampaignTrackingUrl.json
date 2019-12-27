@@ -1,7 +1,9 @@
 {
     "fields": {
         "url": "URL",
+        "action": "Action",
         "urlToUse": "Code to insert instead of URL",
+        "message": "Message",
         "campaign": "Campaign"
     },
     "links": {
@@ -9,5 +11,15 @@
     },
     "labels": {
         "Create CampaignTrackingUrl": "Create Tracking URL"
+    },
+    "options": {
+        "action": {
+            "Redirect": "Redirect",
+            "Show Message": "Show Message"
+        }
+    },
+    "tooltips": {
+        "url": "The recipient will be redirected to this location after they follow the link.",
+        "message": "The message will be shown to the recipient after they follow the link. Markdown is supported."
     }
 }

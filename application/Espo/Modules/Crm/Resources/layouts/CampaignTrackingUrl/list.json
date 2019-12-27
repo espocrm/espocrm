@@ -1,7 +1,6 @@
 [
     {
         "name": "name",
-        "width": 25,
         "link": true
     },
     {
@@ -11,7 +10,8 @@
     },
     {
         "name": "campaign",
-        "notSortable": true
+        "notSortable": true,
+        "width": 20
     },
     {
         "name": "createdAt",

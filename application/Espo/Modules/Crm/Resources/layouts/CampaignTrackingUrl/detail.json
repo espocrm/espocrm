@@ -7,10 +7,17 @@
                 {"name": "campaign"}
             ],
             [
-                {"name": "url", "fullWidth": true}
+                {"name": "action"},
+                false
             ],
             [
-                {"name": "urlToUse", "fullWidth": true}
+                {"name": "url"}
+            ],
+            [
+                {"name": "message"}
+            ],
+            [
+                {"name": "urlToUse"}
             ]
         ]
     }

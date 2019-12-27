@@ -7,7 +7,7 @@
         },
         "url": {
             "type": "url",
-            "required": true
+            "tooltip": true
         },
         "urlToUse": {
             "type": "varchar",
@@ -16,6 +16,15 @@
         },
         "campaign": {
             "type": "link"
+        },
+        "action": {
+            "type": "enum",
+            "options": ["Redirect", "Show Message"],
+            "default": "Redirect"
+        },
+        "message": {
+            "type": "text",
+            "tooltip": true
         },
         "modifiedAt": {
             "type": "datetime",

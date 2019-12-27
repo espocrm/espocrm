@@ -64,6 +64,11 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
             $this->processWithQueueItem($trackingUrl, $queueItem);
         }
 
+        if ($trackingUrl->get('action') === 'Show Message') {
+            $this->displayMessage($trackingUrl->get('message'));
+            return;
+        }
+
         if ($trackingUrl->get('url')) {
             ob_clean();
             header('Location: ' . $trackingUrl->get('url') . '');
@@ -124,5 +129,25 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
                 'targetType' => $target->getEntityType(),
             ]);
         }
+    }
+
+    protected function displayMessage(?string $message)
+    {
+        $message = $message ?? '';
+
+        $data = [
+            'message' => $message,
+            'view' => $this->getMetadata()->get(['clientDefs', 'Campaign', 'trackinkUrlMessageView']),
+            'template' => $this->getMetadata()->get(['clientDefs', 'Campaign', 'trackinkUrlMessageTemplate']),
+        ];
+
+        $runScript = "
+            Espo.require('crm:controllers/tracking-url', function (Controller) {
+                var controller = new Controller(app.baseController.params, app.getControllerInjection());
+                controller.masterView = app.masterView;
+                controller.doAction('displayMessage', ".json_encode($data).");
+            });
+        ";
+        $this->getClientManager()->display($runScript);
     }
 }

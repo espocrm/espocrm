@@ -3,13 +3,19 @@
         "label": "",
         "rows": [
             [
-                {"name": "name", "fullWidth": true}
+                {"name": "name"}
             ],
             [
-                {"name": "url", "fullWidth": true}
+                {"name": "action"}
             ],
             [
-                {"name": "urlToUse", "fullWidth": true}
+                {"name": "url"}
+            ],
+            [
+                {"name": "message"}
+            ],
+            [
+                {"name": "urlToUse"}
             ]
         ]
     }
