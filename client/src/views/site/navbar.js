@@ -208,9 +208,17 @@ define('views/site/navbar', 'view', function (Dep) {
             this.tabList = tabList.filter(function (scope) {
                 if (scope === '_delimiter_' || scope === 'Home') return true;
                 if (!scopes[scope]) return false;
-                if ((scopes[scope] || {}).disabled) return;
-                if ((scopes[scope] || {}).acl) {
+
+                var defs = scopes[scope] || {};
+
+                if (defs.disabled) return;
+
+                if (defs.acl) {
                     return this.getAcl().check(scope);
+                }
+                if (defs.tabAclPermission) {
+                    var level = this.getAcl().get(defs.tabAclPermission);
+                    return level && level !== 'no';
                 }
                 return true;
             }, this);

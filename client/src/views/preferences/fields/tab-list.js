@@ -25,20 +25,31 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/preferences/fields/tab-list', 'views/settings/fields/tab-list', function (Dep) {
+
+define('views/preferences/fields/tab-list', 'views/settings/fields/tab-list', function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.params.options = this.params.options.filter(function (d) {
-                if (this.getAcl().checkScope(d)) {
-                    return true;
+            this.params.options = this.params.options.filter(function (scope) {
+                if (scope === '_delimiter_' || scope === 'Home') return true;
+                var defs = this.getMetadata().get(['scopes', scope]);
+                if (!defs) return;
+
+                if (defs.disabled) return;
+
+                if (defs.acl) {
+                    return this.getAcl().check(scope);
                 }
+                if (defs.tabAclPermission) {
+                    var level = this.getAcl().get(defs.tabAclPermission);
+                    return level && level !== 'no';
+                }
+                return true;
             }, this);
         },
 
     });
-
 });
