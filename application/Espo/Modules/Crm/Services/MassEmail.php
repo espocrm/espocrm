@@ -335,6 +335,9 @@ class MassEmail extends \Espo\Services\Record
             if (!$smtpParams) {
                 throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' has no SMTP params.");
             }
+            if ($inboundEmail->get('replyToAddress')) {
+                $smtpParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
+            }
         }
 
         foreach ($queueItemList as $queueItem) {
@@ -458,7 +461,11 @@ class MassEmail extends \Espo\Services\Record
 
         $email = $this->getPreparedEmail($queueItem, $massEmail, $emailTemplate, $target, $trackingUrlList);
 
-        $params = array();
+        if ($email->get('replyToAddress')) {
+            unset($smtpParams['replyToAddress']);
+        }
+
+        $params = [];
         if ($massEmail->get('fromName')) {
             $params['fromName'] = $massEmail->get('fromName');
         }
