@@ -1750,7 +1750,7 @@ class Stream extends \Espo\Core\Services\Base
             if (empty($item['entity'])) continue;
             if (empty($item['object'])) continue;
             if (
-                $aclManager->getLevel($user, $scope, 'read') !== 'all'
+                !$aclManager || $aclManager->getLevel($user, $scope, 'read') !== 'all'
             ) {
                 $list[] = $scope;
             }
