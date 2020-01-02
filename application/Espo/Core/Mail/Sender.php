@@ -177,13 +177,15 @@ class Sender
         return $this;
     }
 
-    public function send(Email $email, $params = [], $message = null, $attachmentList = [])
+    public function send(Email $email, ?array $params = [], $message = null, $attachmentList = [])
     {
         if (!$message) {
             $message = new Message();
         }
+        $params = $params ?? [];
+
         $config = $this->config;
-        $params = $this->params + $params;
+        $params = $params + $this->params;
 
         if ($email->get('from')) {
             $fromName = null;
