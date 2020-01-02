@@ -65,9 +65,11 @@ define('views/merge', 'views/main', function (Dep) {
         },
 
         getHeader: function () {
-            var html = '<a href="#' + this.models[0].name + '">' + this.getLanguage().translate(this.models[0].name, 'scopeNamesPlural') + '</a>';
-            html += ' &raquo ';
+            var html = '<a href="#' + this.models[0].name + '">' +
+            this.getLanguage().translate(this.models[0].name, 'scopeNamesPlural') + '</a>';
+            html += ' <span class="chevron-right"></span> ';
             html += this.getLanguage().translate('merge');
+
             return html;
         },
 

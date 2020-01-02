@@ -564,7 +564,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 scope: 'Note',
                 viewOptions: {
                     url: url,
-                    title: this.translate('Stream') + ' &raquo ' + this.translate('posts', 'filters', 'Note'),
+                    title: this.translate('Stream') +
+                        ' @right ' + this.translate('posts', 'filters', 'Note'),
                     forceSelectAllAttributes: true
                 }
             };

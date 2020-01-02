@@ -79,7 +79,8 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.selectData = this.options.selectData;
             this.byWhere = this.options.byWhere;
 
-            this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
+            this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') +
+                ' <span class="chevron-right"></span> ' + this.translate('Mass Update');
 
             var fobiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 

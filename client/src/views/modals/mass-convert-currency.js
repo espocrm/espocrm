@@ -47,7 +47,8 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
         ],
 
         setup: function () {
-            this.headerHtml = this.translate(this.options.entityType, 'scopeNamesPlural') + ' &raquo ' + this.translate('convertCurrency', 'massActions');
+            this.headerHtml = this.translate(this.options.entityType, 'scopeNamesPlural') +
+                ' <span class="chevron-right"></span> ' + this.translate('convertCurrency', 'massActions');
             this.addButton({
                 name: 'convert',
                 text: this.translate('Update'),

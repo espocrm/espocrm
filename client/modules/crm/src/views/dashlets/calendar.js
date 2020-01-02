@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', function (Dep) {
+define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', function (Dep) {
 
     return Dep.extend({
 
@@ -86,7 +86,7 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                         if (this.getOption('mode') === 'month') {
                             var title = this.getOption('title');
                             var $headerSpan = this.$el.closest('.panel').find('.panel-heading > .panel-title > span');
-                            title += ' &raquo; ' + view.getTitle();
+                            title += ' <span class="chevron-right"></span> ' + view.getTitle();
                             $headerSpan.html(title);
                         }
                     }, this);

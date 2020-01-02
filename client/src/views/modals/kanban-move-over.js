@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
+define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -54,7 +54,8 @@ Espo.define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
             this.headerHtml = '';
             this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNames');
             if (this.model.get('name')) {
-                this.headerHtml += ' &raquo; ' + Handlebars.Utils.escapeExpression(this.model.get('name'));
+                this.headerHtml += ' <span class="chevron-right"></span> ' +
+                    Handlebars.Utils.escapeExpression(this.model.get('name'));
             }
             this.headerHtml = iconHtml + this.headerHtml;
 
@@ -82,7 +83,7 @@ Espo.define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
                 Espo.Ui.success(this.translate('Done'));
             }.bind(this));
             this.close();
-        }
+        },
 
     });
 });
