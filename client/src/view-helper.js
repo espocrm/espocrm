@@ -249,7 +249,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (typeof value === 'undefined') {
                     value = false;
                 }
-                list = list || {};
+                list = list || [];
                 var html = '';
 
                 var multiple = (Object.prototype.toString.call(value) === '[object Array]');
