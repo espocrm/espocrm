@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
+
 class Base extends \Espo\Core\Utils\Database\Orm\Base
 {
     /**

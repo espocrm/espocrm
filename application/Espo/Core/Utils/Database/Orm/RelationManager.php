@@ -30,14 +30,17 @@
 namespace Espo\Core\Utils\Database\Orm;
 
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Config;
 
 class RelationManager
 {
     private $metadata;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata)
+    public function __construct(Metadata $metadata, Config $config)
     {
         $this->metadata = $metadata;
+        $this->config = $config;
     }
 
     protected function getMetadata()
@@ -132,7 +135,7 @@ class RelationManager
         }
 
         if (isset($className) && $className !== false) {
-            $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs);
+            $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
             return $helperClass->process($linkName, $entityName, $foreignLink['name'], $foreignEntityName);
         }
         //END: relationDefs defined in separate file

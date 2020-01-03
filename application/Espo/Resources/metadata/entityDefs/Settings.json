@@ -453,6 +453,10 @@
             "readOnly": true,
             "view": "views/settings/fields/address-preview"
         },
+        "personNameFormat": {
+            "type": "enum",
+            "options": ["firstLast", "lastFirst"]
+        },
         "currencyFormat": {
             "type": "enumInt",
             "options": [1, 2]

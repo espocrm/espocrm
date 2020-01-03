@@ -41,9 +41,11 @@ class EntityManager extends \Espo\ORM\EntityManager
 
     protected $container;
 
-    private $repositoryClassNameHash = array();
+    private $repositoryClassNameHash = [];
 
-    private $entityClassNameHash = array();
+    private $entityClassNameHash = [];
+
+    private $helper;
 
     public function setContainer(\Espo\Core\Container $container)
     {
@@ -108,5 +110,14 @@ class EntityManager extends \Espo\ORM\EntityManager
         }
         return $this->entityClassNameHash[$name];
     }
-}
 
+    public function setHelper(Helper $helper)
+    {
+        $this->helper = $helper;
+    }
+
+    public function getHelper()
+    {
+        return $this->helper;
+    }
+}

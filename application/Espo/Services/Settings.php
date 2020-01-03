@@ -197,8 +197,6 @@ class Settings extends \Espo\Core\Services\Base
 
         if (
             (isset($data->useCache) && $data->useCache !== $this->getConfig()->get('useCache'))
-            ||
-            (isset($data->aclStrictMode) && $data->aclStrictMode !== $this->getConfig()->get('aclStrictMode'))
         ) {
             $this->getContainer()->get('dataManager')->clearCache();
         }
@@ -209,6 +207,10 @@ class Settings extends \Espo\Core\Services\Base
 
         if ($result === false) {
             throw new Error('Cannot save settings');
+        }
+
+        if (isset($data->personNameFormat)) {
+            $this->getContainer()->get('dataManager')->clearCache();
         }
 
         if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {

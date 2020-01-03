@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Orm;
 
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Config;
 
 class Base
 {
@@ -43,11 +44,14 @@ class Base
 
     private $entityDefs;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, array $ormEntityDefs, array $entityDefs)
+    protected $config;
+
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, array $ormEntityDefs, array $entityDefs, Config $config)
     {
         $this->metadata = $metadata;
         $this->ormEntityDefs = $ormEntityDefs;
         $this->entityDefs = $entityDefs;
+        $this->config = $config;
     }
 
     protected function getMetadata()
@@ -216,20 +220,28 @@ class Base
         return $returns;
     }
 
-    /**
-     * Get Foreign field
-     *
-     * @param  string $name
-     * @param  string $entityName
-     * @return string
-     */
-    protected function getForeignField($name, $entityName)
+    protected function getForeignField(string $name, string $entityType)
     {
-        $foreignField = $this->getMetadata()->get('entityDefs.'.$entityName.'.fields.'.$name);
+        $foreignField = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $name]);
 
         if ($foreignField['type'] != 'varchar') {
             if ($foreignField['type'] == 'personName') {
-                return array('first' . ucfirst($name), ' ', 'last' . ucfirst($name));
+                $personNameFormat = $this->config->get('personNameFormat');
+
+                switch ($personNameFormat) {
+                    case 'lastFirst':
+                        return [
+                            'last' . ucfirst($name),
+                            ' ',
+                            'first' . ucfirst($name),
+                        ];
+                }
+
+                return [
+                    'first' . ucfirst($name),
+                    ' ',
+                    'last' . ucfirst($name),
+                ];
             }
         }
 
@@ -238,9 +250,6 @@ class Base
 
     /**
      * Set a value for all elements of array. So, in result all elements will have the same values
-     *
-     * @param string $value
-     * @param array  $array
      */
     protected function setArrayValue($inputValue, array $array)
     {
@@ -250,5 +259,4 @@ class Base
 
         return $array;
     }
-
 }

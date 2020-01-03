@@ -35,7 +35,16 @@ class PersonName extends Base
 {
     protected function load($fieldName, $entityName)
     {
-        $subList = ['first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)];
+        $format = $this->config->get('personNameFormat');
+
+        switch ($format) {
+            case 'lastFirst':
+                $subList = ['last' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName)];
+                break;
+
+            default:
+                $subList = ['first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)];
+        }
 
         $tableName = Util::toUnderScore($entityName);
 

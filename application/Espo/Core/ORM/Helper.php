@@ -27,25 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Entities;
+namespace Espo\Core\ORM;
 
-class Person extends \Espo\Core\ORM\Entity
+use Espo\Core\Utils\Config;
+
+use Espo\ORM\Entity;
+
+class Helper
 {
-    public function _setLastName($value)
+    protected $config;
+
+    public function __construct(Config $config)
     {
-        $this->setValue('lastName', $value);
-
-        $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
-
-        $this->setValue('name', $name);
+        $this->config = $config;
     }
 
-    public function _setFirstName($value)
+    public function formatPersonName(Entity $entity, string $field)
     {
-        $this->setValue('firstName', $value);
+        $format = $this->config->get('personNameFormat');
 
-        $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
+        $first = $entity->get('first' . ucfirst($field));
+        $last = $entity->get('last' . ucfirst($field));
 
-        $this->setValue('name', $name);
+        switch ($format) {
+            case 'lastFirst':
+                if (!$first && !$last) {
+                    return null;
+                }
+                if (!$first) {
+                    return $last;
+                }
+                if (!$last) {
+                    return $first;
+                }
+                return $last . ' ' . $first;
+
+            default:
+                if (!$first && !$last) {
+                    return null;
+                }
+                if (!$first) {
+                    return $last;
+                }
+                if (!$last) {
+                    return $first;
+                }
+                return $first . ' ' . $last;
+        }
+
+        return null;
     }
 }

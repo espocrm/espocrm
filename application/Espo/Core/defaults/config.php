@@ -179,5 +179,6 @@ return [
     'emailForceUseExternalClient' => false,
     'useWebSocket' => false,
     'auth2FAMethodList' => ['Totp'],
+    'personNameFormat' => 'firstLast',
     'isInstalled' => false,
 ];

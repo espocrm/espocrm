@@ -35,7 +35,7 @@ class EntityManager extends Base
     {
         $config = $this->getContainer()->get('config');
 
-        $params = array(
+        $params = [
             'host' => $config->get('database.host'),
             'port' => $config->get('database.port'),
             'dbname' => $config->get('database.dbname'),
@@ -50,15 +50,16 @@ class EntityManager extends Base
             'sslCert' => $config->get('database.sslCert'),
             'sslKey' => $config->get('database.sslKey'),
             'sslCAPath' => $config->get('database.sslCAPath'),
-            'sslCipher' => $config->get('database.sslCipher')
-        );
+            'sslCipher' => $config->get('database.sslCipher'),
+        ];
 
         $entityManager = new \Espo\Core\ORM\EntityManager($params);
+
         $entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
         $entityManager->setHookManager($this->getContainer()->get('hookManager'));
+        $entityManager->setHelper($this->getContainer()->get('entityManagerHelper'));
         $entityManager->setContainer($this->getContainer());
 
         return $entityManager;
     }
 }
-

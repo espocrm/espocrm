@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
+define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
@@ -35,6 +35,8 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         detailTemplate: 'fields/person-name/detail',
 
         editTemplate: 'fields/person-name/edit',
+
+        editTemplateLastFirst: 'fields/person-name/edit-last-first',
 
         data: function () {
             var data = Dep.prototype.data.call(this);
@@ -53,6 +55,11 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             } else if (this.mode === 'list' || this.mode === 'listLink') {
                 data.isNotEmpty = !!data.firstValue || !!data.lastValue;
             }
+
+            if (data.isNotEmpty && this.mode == 'detail' || this.mode == 'list' || this.mode === 'listLink') {
+                data.formattedValue = this.getFormattedValue();
+            }
+
             return data;
         },
 
@@ -81,6 +88,51 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
                     this.trigger('change');
                 }.bind(this));
             }
+        },
+
+        getFormattedValue: function () {
+            var salutation = this.model.get(this.salutationField);
+            var first = this.model.get(this.firstField);
+            var last = this.model.get(this.lastField);
+
+            if (salutation) {
+                salutation = this.getLanguage().translateOption(salutation, 'salutationName', this.model.entityType);
+            }
+
+            var value = '';
+
+            var format = this.getFormat();
+
+            switch (format) {
+                case 'lastFirst':
+                    if (salutation) value += salutation;
+                    if (last) value += ' ' + last;
+                    if (first) value += ' ' + first;
+                    break;
+
+                default:
+                    if (salutation) value += salutation;
+                    if (first) value += ' ' + first;
+                    if (last) value += ' ' + last;
+            }
+
+            value = value.trim();
+
+            return value;
+        },
+
+        _getTemplateName: function () {
+            if (this.mode == 'edit') {
+                var prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
+                if (prop in this) {
+                    return this[prop];
+                }
+            }
+            return Dep.prototype._getTemplateName.call(this);
+        },
+
+        getFormat: function () {
+            return this.getConfig().get('personNameFormat') || 'firstLast';
         },
 
         validateRequired: function () {
@@ -124,6 +176,6 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             data[this.firstField] = this.$first.val().trim();
             data[this.lastField] = this.$last.val().trim();
             return data;
-        }
+        },
     });
 });

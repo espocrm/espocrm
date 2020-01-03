@@ -116,7 +116,7 @@ class Converter
         $this->fileManager = $fileManager; //need to featue with ormHooks. Ex. isFollowed field
         $this->config = $config;
 
-        $this->relationManager = new RelationManager($this->metadata);
+        $this->relationManager = new RelationManager($this->metadata, $config);
 
         $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
         $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->config);
@@ -346,12 +346,8 @@ class Converter
 
     /**
      * Correct fields definitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
-     *
-     * @param  array  $ormMetadata
-     *
-     * @return array
      */
-    protected function correctFields($entityName, array $ormMetadata)
+    protected function correctFields($entityName, array $ormMetadata) : array
     {
         $entityDefs = $this->getEntityDefs();
 
@@ -367,7 +363,7 @@ class Converter
             }
 
             if (class_exists($className) && method_exists($className, 'load')) {
-                $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs);
+                $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
                 $fieldResult = $helperClass->process($fieldName, $entityName);
                 if (isset($fieldResult['unset'])) {
                     $ormMetadata = Util::unsetInArray($ormMetadata, $fieldResult['unset']);
