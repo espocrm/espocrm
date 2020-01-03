@@ -47,4 +47,3 @@ class CategoryTreeItem extends \Espo\Core\ORM\Entity
         return $data;
     }
 }
-
