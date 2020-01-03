@@ -64,7 +64,10 @@ class Container
             $metadata = $this->get('metadata');
 
             try {
-                $className = $metadata->get(['app', 'loaders', ucfirst($name)]);
+                $className = $metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
+                if (!$className) {
+                    $className = $metadata->get(['app', 'loaders', ucfirst($name)]);
+                }
             } catch (\Exception $e) {}
 
             if (!isset($className) || !class_exists($className)) {
