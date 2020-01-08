@@ -614,16 +614,27 @@ class Import extends \Espo\Services\Record
                         if ($type == 'personName') {
                             $firstNameAttribute = 'first' . ucfirst($attribute);
                             $lastNameAttribute = 'last' . ucfirst($attribute);
+                            $middleNameAttribute = 'middle' . ucfirst($attribute);
 
-                            $personName = $this->parsePersonName($value, $params['personNameFormat']);
+                            $personNameData = $this->parsePersonName($value, $params['personNameFormat']);
 
-                            if (!$entity->get($firstNameAttribute)) {
-                                $personName['firstName'] = $this->prepareAttributeValue($entity, $firstNameAttribute, $personName['firstName']);
-                                $entity->set($firstNameAttribute, $personName['firstName']);
+                            if (!$entity->get($firstNameAttribute) && isset($personNameData['firstName'])) {
+                                $personNameData['firstName'] = $this->prepareAttributeValue(
+                                    $entity, $firstNameAttribute, $personNameData['firstName']
+                                );
+                                $entity->set($firstNameAttribute, $personNameData['firstName']);
                             }
                             if (!$entity->get($lastNameAttribute)) {
-                                $personName['lastName'] = $this->prepareAttributeValue($entity, $lastNameAttribute, $personName['lastName']);
-                                $entity->set($lastNameAttribute, $personName['lastName']);
+                                $personNameData['lastName'] = $this->prepareAttributeValue(
+                                    $entity, $lastNameAttribute, $personNameData['lastName']
+                                );
+                                $entity->set($lastNameAttribute, $personNameData['lastName']);
+                            }
+                            if (!$entity->get($middleNameAttribute) && isset($personNameData['middleName'])) {
+                                $personNameData['middleName'] = $this->prepareAttributeValue(
+                                    $entity, $middleNameAttribute, $personNameData['middleName']
+                                );
+                                $entity->set($middleNameAttribute, $personNameData['middleName']);
                             }
                             continue;
                         }
@@ -786,8 +797,11 @@ class Import extends \Espo\Services\Record
 
     protected function parsePersonName($value, $format)
     {
-        $firstName = '';
+        $firstName = null;
         $lastName = $value;
+
+        $middleName = null;
+
         switch ($format) {
             case 'f l':
                 $pos = strpos($value, ' ');
@@ -810,8 +824,55 @@ class Import extends \Espo\Services\Record
                     $firstName = trim(substr($value, $pos + 1));
                 }
                 break;
+
+            case 'f m l':
+                $pos = strpos($value, ' ');
+                if ($pos) {
+                    $firstName = trim(substr($value, 0, $pos));
+                    $lastName = trim(substr($value, $pos + 1));
+
+                    $value = $lastName;
+
+                    $pos = strpos($value, ' ');
+                    if ($pos) {
+                        $middleName = trim(substr($value, 0, $pos));
+                        $lastName = trim(substr($value, $pos + 1));
+
+                        return [
+                            'firstName' => $firstName,
+                            'middleName' => $middleName,
+                            'lastName' => $lastName,
+                        ];
+                    }
+                }
+                break;
+
+            case 'l f m':
+                $pos = strpos($value, ' ');
+                if ($pos) {
+                    $lastName = trim(substr($value, 0, $pos));
+                    $firstName = trim(substr($value, $pos + 1));
+
+                    $value = $firstName;
+
+                    $pos = strpos($value, ' ');
+                    if ($pos) {
+                        $firstName = trim(substr($value, 0, $pos));
+                        $middleName = trim(substr($value, $pos + 1));
+
+                        return [
+                            'firstName' => $firstName,
+                            'middleName' => $middleName,
+                            'lastName' => $lastName,
+                        ];
+                    }
+                }
+                break;
         }
-        return ['firstName' => $firstName, 'lastName' => $lastName];
+        return [
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+        ];
     }
 
     protected function parseValue(Entity $entity, $attribute, $value, $params = [])

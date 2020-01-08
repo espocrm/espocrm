@@ -48,4 +48,13 @@ class Person extends \Espo\Core\ORM\Entity
 
         $this->setValue('name', $name);
     }
+
+    public function _setMiddleName($value)
+    {
+        $this->setValue('middleName', $value);
+
+        $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
+
+        $this->setValue('name', $name);
+    }
 }

@@ -48,6 +48,7 @@ class Helper
 
         $first = $entity->get('first' . ucfirst($field));
         $last = $entity->get('last' . ucfirst($field));
+        $middle = $entity->get('middle' . ucfirst($field));
 
         switch ($format) {
             case 'lastFirst':
@@ -61,6 +62,32 @@ class Helper
                     return $first;
                 }
                 return $last . ' ' . $first;
+
+            case 'lastFirstMiddle':
+                if (!$first && !$last && !$middle) {
+                    return null;
+                }
+
+                $arr = [];
+
+                if ($last) $arr[] = $last;
+                if ($first) $arr[] = $first;
+                if ($middle) $arr[] = $middle;
+
+                return implode(' ', $arr);
+
+            case 'firstMiddleLast':
+                if (!$first && !$last && !$middle) {
+                    return null;
+                }
+
+                $arr = [];
+
+                if ($first) $arr[] = $first;
+                if ($middle) $arr[] = $middle;
+                if ($last) $arr[] = $last;
+
+                return implode(' ', $arr);
 
             default:
                 if (!$first && !$last) {

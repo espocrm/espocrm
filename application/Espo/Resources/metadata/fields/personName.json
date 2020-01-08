@@ -2,7 +2,8 @@
     "actualFields":[
         "salutation",
         "first",
-        "last"
+        "last",
+        "middle"
     ],
     "notActualFields": [
         ""
@@ -25,6 +26,11 @@
         "last":{
             "type":"varchar",
             "trim": true
+        },
+        "middle":{
+            "type": "varchar",
+            "trim": true,
+            "maxLength": 100
         }
     },
     "naming":"prefix",

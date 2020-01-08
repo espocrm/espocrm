@@ -455,7 +455,12 @@
         },
         "personNameFormat": {
             "type": "enum",
-            "options": ["firstLast", "lastFirst"]
+            "options": [
+                "firstLast",
+                "lastFirst",
+                "firstMiddleLast",
+                "lastFirstMiddle"
+            ]
         },
         "currencyFormat": {
             "type": "enumInt",

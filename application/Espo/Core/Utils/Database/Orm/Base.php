@@ -224,25 +224,41 @@ class Base
     {
         $foreignField = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $name]);
 
-        if ($foreignField['type'] != 'varchar') {
-            if ($foreignField['type'] == 'personName') {
-                $personNameFormat = $this->config->get('personNameFormat');
+        if ($foreignField['type'] == 'personName') {
+            $personNameFormat = $this->config->get('personNameFormat');
 
-                switch ($personNameFormat) {
-                    case 'lastFirst':
-                        return [
-                            'last' . ucfirst($name),
-                            ' ',
-                            'first' . ucfirst($name),
-                        ];
-                }
+            switch ($personNameFormat) {
+                case 'lastFirst':
+                    return [
+                        'last' . ucfirst($name),
+                        ' ',
+                        'first' . ucfirst($name),
+                    ];
 
-                return [
-                    'first' . ucfirst($name),
-                    ' ',
-                    'last' . ucfirst($name),
-                ];
+                case 'lastFirstMiddle':
+                    return [
+                        'last' . ucfirst($name),
+                        ' ',
+                        'first' . ucfirst($name),
+                        ' ',
+                        'middle' . ucfirst($name),
+                    ];
+
+                case 'firstMiddleLast':
+                    return [
+                        'first' . ucfirst($name),
+                        ' ',
+                        'middle' . ucfirst($name),
+                        ' ',
+                        'last' . ucfirst($name),
+                    ];
             }
+
+            return [
+                'first' . ucfirst($name),
+                ' ',
+                'last' . ucfirst($name),
+            ];
         }
 
         return $name;

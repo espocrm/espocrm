@@ -141,7 +141,9 @@
         },
         "personNameFormat": {
             "firstLast": "First Last",
-            "lastFirst": "Last First"
+            "lastFirst": "Last First",
+            "firstMiddleLast": "First Middle Last",
+            "lastFirstMiddle": "Last First Middle"
         },
         "streamEmailNotificationsTypeList": {
             "Post": "Posts",

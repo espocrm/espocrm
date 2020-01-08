@@ -1346,20 +1346,28 @@ abstract class Base
                     if (isset($f['relation'])) {
                         $relationName = $f['relation'];
 
-                        $foreigh = $f['foreign'];
+                        $foreign = $f['foreign'];
 
-                        if (is_array($foreigh)) {
-                            foreach ($foreigh as $i => $value) {
+                        if (is_array($foreign)) {
+                            $wsCount = 0;
+                            foreach ($foreign as $i => $value) {
                                 if ($value == ' ') {
-                                    $foreigh[$i] = '\' \'';
+                                    $foreign[$i] = '\' \'';
+                                    $wsCount ++;
                                 } else {
-                                    $foreigh[$i] = $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
+                                    $item =  $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
+
+                                    $foreign[$i] = "IFNULL({$item}, '')";
                                 }
                             }
 
-                            $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreigh). '))';
+                            $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreign). '))';
+
+                            if ($wsCount > 1) {
+                               $fieldPath = "REPLACE({$fieldPath}, '  ', ' ')";
+                            }
                         } else {
-                            $expression = $this->getAlias($entity, $relationName) . '.' . $foreigh;
+                            $expression = $this->getAlias($entity, $relationName) . '.' . $foreign;
                             $fieldPath = $this->convertComplexExpression($entity, $expression, false, $params);
                         }
                     }

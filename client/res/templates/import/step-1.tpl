@@ -48,9 +48,9 @@
                         <label class="control-label">{{translate 'Person Name Format' scope='Import'}}</label>
                         <div>
                             <select class="form-control" id="import-person-name-format">
-                                <option value="f l">{{translate 'John Smith' scope='Import'}}</option>
-                                <option value="l f">{{translate 'Smith John' scope='Import'}}</option>
-                                <option value="l, f">{{translate 'Smith, John' scope='Import'}}</option>
+                            {{#each personNameFormatList}}
+                                <option value="{{./this}}">{{translateOption this scope='Import' field='personNameFormat'}}</option>
+                            {{/each}}
                             </select>
                         </div>
                     </div>

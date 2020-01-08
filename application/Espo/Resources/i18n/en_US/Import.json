@@ -81,6 +81,13 @@
             "Failed": "Failed",
             "In Process": "In Process",
             "Complete": "Complete"
+        },
+        "personNameFormat": {
+            "f l": "First Last",
+            "l f": "Last First",
+            "f m l": "First Middle Last",
+            "l f m": "Last First Middle",
+            "l, f": "Last, First"
         }
     }
 }

@@ -42,19 +42,38 @@ class PersonName extends Base
                 $subList = ['last' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName)];
                 break;
 
+            case 'lastFirstMiddle':
+                $subList = [
+                    'last' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName), ' ', 'middle' . ucfirst($fieldName)
+                ];
+                break;
+
+            case 'firstMiddleLast':
+                $subList = [
+                    'first' . ucfirst($fieldName), ' ', 'middle' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)
+                ];
+                break;
+
             default:
                 $subList = ['first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)];
         }
 
         $tableName = Util::toUnderScore($entityName);
 
-        $orderBy1Field = 'first' . ucfirst($fieldName);
-        $orderBy2Field = 'last' . ucfirst($fieldName);
+        if ($format === 'lastFirstMiddle' || $format === 'lastFirst') {
+            $orderBy1Field = 'last' . ucfirst($fieldName);
+            $orderBy2Field = 'first' . ucfirst($fieldName);
+        } else {
+            $orderBy1Field = 'first' . ucfirst($fieldName);
+            $orderBy2Field = 'last' . ucfirst($fieldName);
+        }
+
+        $uname = ucfirst($fieldName);
 
         $fullList = [];
         $fieldList = [];
-        $like = [];
-        $equal = [];
+
+        $parts = [];
 
         foreach ($subList as $subFieldName) {
             $fieldNameTrimmed = trim($subFieldName);
@@ -62,24 +81,48 @@ class PersonName extends Base
                 $columnName = $tableName . '.' . Util::toUnderScore($fieldNameTrimmed);
 
                 $fullList[] = $fieldList[] = $columnName;
-                $like[] = $columnName." LIKE {value}";
-                $equal[] = $columnName." = {value}";
+                $parts[] = $columnName." {operator} {value}";
             } else {
                 $fullList[] = "'" . $subFieldName . "'";
             }
         }
 
-        $fullListReverse = array_reverse($fullList);
+        $firstColumn = $tableName . '.' . Util::toUnderScore('first' . $uname);
+        $lastColumn = $tableName . '.' . Util::toUnderScore('last' . $uname);
+        $middleColumn = $tableName . '.' . Util::toUnderScore('middle' . $uname);
+
+        $whereString = "".implode(" OR ", $parts);
+
+        if ($format === 'firstMiddleLast') {
+            $whereString .=
+                " OR CONCAT({$firstColumn}, ' ', {$middleColumn}, ' ', {$lastColumn}) {operator} {value}" .
+                " OR CONCAT({$firstColumn}, ' ', {$lastColumn}) {operator} {value}" .
+                " OR CONCAT({$lastColumn}, ' ', {$firstColumn}) {operator} {value}";
+        } else if ($format === 'lastFirstMiddle') {
+            $whereString .=
+                " OR CONCAT({$lastColumn}, ' ', {$firstColumn}, ' ', {$middleColumn}) {operator} {value}" .
+                " OR CONCAT({$firstColumn}, ' ', {$lastColumn}) {operator} {value}" .
+                " OR CONCAT({$lastColumn}, ' ', {$firstColumn}) {operator} {value}";
+        } else {
+            $whereString .= " OR CONCAT({$firstColumn}, ' ', {$lastColumn}) {operator} {value}";
+            $whereString .= " OR CONCAT({$lastColumn}, ' ', {$firstColumn}) {operator} {value}";
+        }
+
+        $selectString = $this->getSelect($fullList);
+
+        if ($format === 'firstMiddleLast' || $format === 'lastFirstMiddle') {
+            $selectString = "REPLACE({$selectString}, '  ', ' ')";
+        }
 
         return [
             $entityName => [
                 'fields' => [
                     $fieldName => [
                         'type' => 'varchar',
-                        'select' => $this->getSelect($fullList),
+                        'select' => $selectString,
                         'where' => [
-                            'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE {value} OR CONCAT(".implode(", ", $fullListReverse).") LIKE {value})",
-                            '=' => "(".implode(" OR ", $equal)." OR CONCAT(".implode(", ", $fullList).") = {value} OR CONCAT(".implode(", ", $fullListReverse).") = {value})",
+                            'LIKE' => str_replace('{operator}', 'LIKE', $whereString),
+                            '=' => str_replace('{operator}', '=', $whereString),
                         ],
                         'orderBy' => "{$tableName}." . Util::toUnderScore($orderBy1Field) ." {direction}, {$tableName}." . Util::toUnderScore($orderBy2Field)
                     ]
@@ -103,5 +146,4 @@ class PersonName extends Base
 
         return $select;
     }
-
 }
