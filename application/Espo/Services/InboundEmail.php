@@ -311,9 +311,8 @@ class InboundEmail extends \Espo\Services\Record
                         $fromString = $message->getAttribute('from');
 
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
-                            $toSkip = true;
                             try {
-                                $this->processBouncedMessage($message);
+                                $toSkip = $this->processBouncedMessage($message) || $toSkip;
                             } catch (\Exception $e) {
                                 $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage());
                             }
@@ -801,7 +800,7 @@ class InboundEmail extends \Espo\Services\Record
         return;
     }
 
-    protected function processBouncedMessage($message)
+    protected function processBouncedMessage($message) : bool
     {
         $content = $message->getRawContent();
 
@@ -809,14 +808,16 @@ class InboundEmail extends \Espo\Services\Record
         if (preg_match('/permanent[ ]*[error|failure]/', $content)) {
             $isHard = true;
         }
+
         if (preg_match('/X-Queue-Item-Id: [a-z0-9\-]*/', $content, $m)) {
             $arr = preg_split('/X-Queue-Item-Id: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
 
             $queueItemId = $arr[0];
-            if (!$queueItemId) return;
+            if (!$queueItemId) return false;
 
             $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
-            if (!$queueItem) return;
+            if (!$queueItem) return false;
+
             $massEmailId = $queueItem->get('massEmailId');
             $massEmail = $this->getEntityManager()->getEntity('MassEmail', $massEmailId);
 
@@ -838,9 +839,14 @@ class InboundEmail extends \Espo\Services\Record
             }
 
             if ($campaignId && $target && $target->id) {
-                $this->getCampaignService()->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard, null, $queueItem->get('isTest'));
+                $this->getCampaignService()
+                    ->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard, null, $queueItem->get('isTest'));
             }
+
+            return true;
         }
+
+        return false;
     }
 
     protected function getCampaignService()
