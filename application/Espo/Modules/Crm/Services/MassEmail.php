@@ -501,6 +501,18 @@ class MassEmail extends \Espo\Services\Record
                 $sender->useGlobal();
             }
 
+            $fromAddress = $params['fromAddress'] ?? $this->getConfig()->get('outboundEmailFromAddress');
+
+            if ($this->getConfig()->get('massEmailVerp')) {
+                if ($fromAddress && strpos($fromAddress, '@')) {
+                    $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->id .
+                        '@' . explode('@', $fromAddress)[1];
+                    $sender->setEnvelopeOptions([
+                        'from' => $bounceAddress,
+                    ]);
+                }
+            }
+
             $sender->send($email, $params, $message, $attachmentList);
 
             $isSent = true;

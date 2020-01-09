@@ -29,12 +29,12 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\Team;
-use \Zend\Mail\Storage;
+use Espo\ORM\Entity;
+use Espo\Entities\Team;
+use Zend\Mail\Storage;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 
 class InboundEmail extends \Espo\Services\Record
 {
@@ -314,7 +314,10 @@ class InboundEmail extends \Espo\Services\Record
                             try {
                                 $toSkip = $this->processBouncedMessage($message) || $toSkip;
                             } catch (\Exception $e) {
-                                $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage());
+                                $GLOBALS['log']->error(
+                                    'InboundEmail ' . $emailAccount->id .
+                                    ' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage()
+                                );
                             }
                         }
                     }
@@ -324,7 +327,10 @@ class InboundEmail extends \Espo\Services\Record
                             $flags = $message->getFlags();
                         }
 
-                        $email = $this->importMessage($parserName, $importer, $emailAccount, $message, $teamIdList, $userId, $userIdList, $filterCollection, $fetchOnlyHeader, null);
+                        $email = $this->importMessage(
+                            $parserName, $importer, $emailAccount, $message, $teamIdList, $userId, $userIdList,
+                            $filterCollection, $fetchOnlyHeader, null
+                        );
 
                         if ($emailAccount->get('keepFetchedEmailsUnread')) {
                             if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
@@ -334,7 +340,10 @@ class InboundEmail extends \Espo\Services\Record
                         }
                     }
                 } catch (\Exception $e) {
-                    $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage());
+                    $GLOBALS['log']->error(
+                        'InboundEmail '.$emailAccount->id.
+                        ' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage()
+                    );
                 }
 
                 try {
@@ -809,44 +818,51 @@ class InboundEmail extends \Espo\Services\Record
             $isHard = true;
         }
 
+        $queueItemId = null;
+
         if (preg_match('/X-Queue-Item-Id: [a-z0-9\-]*/', $content, $m)) {
             $arr = preg_split('/X-Queue-Item-Id: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
-
             $queueItemId = $arr[0];
-            if (!$queueItemId) return false;
+        } else {
+            $to = $message->getAttribute('to');
 
-            $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
-            if (!$queueItem) return false;
-
-            $massEmailId = $queueItem->get('massEmailId');
-            $massEmail = $this->getEntityManager()->getEntity('MassEmail', $massEmailId);
-
-            $campaignId = null;
-            if ($massEmail) {
-                $campaignId = $massEmail->get('campaignId');
+            if (preg_match('/\+bounce-qid-[a-z0-9\-]*/', $to, $m)) {
+                $arr = preg_split('/\+bounce-qid-/', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
+                $queueItemId = $arr[0];
             }
-
-            $targetType = $queueItem->get('targetType');
-            $targetId = $queueItem->get('targetId');
-            $target = $this->getEntityManager()->getEntity($targetType, $targetId);
-
-            $emailAddress = $queueItem->get('emailAddress');
-
-            if ($isHard && $emailAddress) {
-                $emailAddressEntity = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
-                $emailAddressEntity->set('invalid', true);
-                $this->getEntityManager()->saveEntity($emailAddressEntity);
-            }
-
-            if ($campaignId && $target && $target->id) {
-                $this->getCampaignService()
-                    ->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard, null, $queueItem->get('isTest'));
-            }
-
-            return true;
         }
 
-        return false;
+        if (!$queueItemId) return false;
+
+        $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
+        if (!$queueItem) return false;
+
+        $massEmailId = $queueItem->get('massEmailId');
+        $massEmail = $this->getEntityManager()->getEntity('MassEmail', $massEmailId);
+
+        $campaignId = null;
+        if ($massEmail) {
+            $campaignId = $massEmail->get('campaignId');
+        }
+
+        $targetType = $queueItem->get('targetType');
+        $targetId = $queueItem->get('targetId');
+        $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+
+        $emailAddress = $queueItem->get('emailAddress');
+
+        if ($isHard && $emailAddress) {
+            $emailAddressEntity = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+            $emailAddressEntity->set('invalid', true);
+            $this->getEntityManager()->saveEntity($emailAddressEntity);
+        }
+
+        if ($campaignId && $target && $target->id) {
+            $this->getCampaignService()
+                ->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard, null, $queueItem->get('isTest'));
+        }
+
+        return true;
     }
 
     protected function getCampaignService()

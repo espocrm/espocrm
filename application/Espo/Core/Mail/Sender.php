@@ -29,17 +29,18 @@
 
 namespace Espo\Core\Mail;
 
-use \Espo\Entities\Email;
+use Espo\Entities\Email;
 
-use \Zend\Mime\Message as MimeMessage;
-use \Zend\Mime\Part as MimePart;
-use \Zend\Mime\Mime as Mime;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
+use Zend\Mime\Mime as Mime;
 
-use \Zend\Mail\Message;
-use \Zend\Mail\Transport\Smtp as SmtpTransport;
-use \Zend\Mail\Transport\SmtpOptions;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
+use Zend\Mail\Transport\Envelope;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
 class Sender
 {
@@ -70,19 +71,19 @@ class Sender
         return $this->entityManager;
     }
 
-    public function resetParams()
+    public function resetParams() : self
     {
         $this->params = [];
         return $this;
     }
 
-    public function setParams(array $params = [])
+    public function setParams(array $params = []) : self
     {
         $this->params = array_merge($this->params, $params);
         return $this;
     }
 
-    public function useSmtp(array $params = [])
+    public function useSmtp(array $params = []) : self
     {
         $this->isGlobal = false;
         $this->params = $params;
@@ -432,5 +433,11 @@ class Sender
         }
 
         return $messageId;
+    }
+
+    public function setEnvelopeOptions(array $options) : self
+    {
+        $this->transport->setEnvelope(new Envelope($options));
+        return $this;
     }
 }

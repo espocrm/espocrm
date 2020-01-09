@@ -127,6 +127,7 @@ return [
     'restrictedMode' => false,
     'theme' => 'HazyblueVertical',
     'massEmailMaxPerHourCount' => 100,
+    'massEmailVerp' => false,
     'personalEmailMaxPortionSize' => 50,
     'inboundEmailMaxPortionSize' => 50,
     'authTokenLifetime' => 0,
