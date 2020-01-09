@@ -923,35 +923,69 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         initDynamicHandler: function () {
-            var dynamicHandlerClassName = this.dynamicHandlerClassName || this.getMetadata().get(['clientDefs', this.model.name, 'dynamicHandler']);
-            if (dynamicHandlerClassName) {
-                this.addReadyCondition(function () {
-                    return !!this.dynamicHandler;
-                }.bind(this));
+            var dynamicHandlerClassName = this.dynamicHandlerClassName ||
+                this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandler']);
 
-                require(dynamicHandlerClassName, function (DynamicHandler) {
-                    this.dynamicHandler = new DynamicHandler(this);
-
-                    this.listenTo(this.model, 'change', function (model, o) {
-                        if ('onChange' in this.dynamicHandler) {
-                            this.dynamicHandler.onChange.call(this.dynamicHandler, model, o);
-                        }
-
-                        var changedAttributes = model.changedAttributes();
-                        for (var attribute in changedAttributes) {
-                            var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
-                            if (methodName in this.dynamicHandler) {
-                                this.dynamicHandler[methodName].call(this.dynamicHandler, model, changedAttributes[attribute], o);
-                            }
-                        }
-                    }, this);
-
-                    if ('init' in this.dynamicHandler) {
-                        this.dynamicHandler.init();
+            var init = function (dynamicHandler) {
+                this.listenTo(this.model, 'change', function (model, o) {
+                    if ('onChange' in dynamicHandler) {
+                        dynamicHandler.onChange.call(dynamicHandler, model, o);
                     }
 
-                    this.tryReady();
-                }.bind(this));
+                    var changedAttributes = model.changedAttributes();
+                    for (var attribute in changedAttributes) {
+                        var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
+                        if (methodName in dynamicHandler) {
+                            dynamicHandler[methodName].call(dynamicHandler, model, changedAttributes[attribute], o);
+                        }
+                    }
+                }, this);
+
+                if ('init' in dynamicHandler) {
+                    dynamicHandler.init();
+                }
+            }.bind(this);
+
+            if (dynamicHandlerClassName) {
+                this.wait(
+                    new Promise(
+                        function (resolve) {
+                            require(dynamicHandlerClassName, function (DynamicHandler) {
+                                var dynamicHandler = this.dynamicHandler = new DynamicHandler(this);
+                                init(dynamicHandler);
+                                resolve();
+                            }.bind(this));
+                        }.bind(this)
+                    )
+                );
+            }
+
+            var handlerList = this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandlerList']) || [];
+            if (handlerList.length) {
+                var self = this;
+                var promiseList = [];
+
+                handlerList.forEach(function (className, i) {
+                    promiseList.push(
+                        new Promise(
+                            function (resolve) {
+                                require(className, function (DynamicHandler) {
+                                    resolve(new DynamicHandler(self));
+                                });
+                            }
+                        )
+                    );
+                });
+
+                this.wait(
+                    Promise.all(promiseList).then(
+                        function (list) {
+                            list.forEach(function (dynamicHandler) {
+                                init(dynamicHandler);
+                            });
+                        }
+                    )
+                );
             }
         },
 
