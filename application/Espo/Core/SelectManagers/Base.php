@@ -437,7 +437,7 @@ class Base
     {
         if (isset($params['q']) && $params['q'] !== '') {
             $textFilter = $params['q'];
-            $this->textFilter($textFilter, $result);
+            $this->textFilter($textFilter, $result, true);
         }
     }
 
@@ -2193,7 +2193,7 @@ class Base
         return $result;
     }
 
-    protected function textFilter($textFilter, array &$result)
+    protected function textFilter($textFilter, array &$result, $noFullText = false)
     {
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
@@ -2236,6 +2236,8 @@ class Base
                 $skipFullTextSearch = true;
             }
         }
+
+        if ($noFullText) $skipFullTextSearch = true;
 
         $fullTextSearchData = null;
         if (!$skipFullTextSearch) {
