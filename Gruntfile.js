@@ -80,6 +80,7 @@ module.exports = function (grunt) {
         'client/src/theme-manager.js',
         'client/src/session-storage.js',
         'client/src/view-helper.js',
+        'client/src/page-title.js',
 
         'client/src/app.js'
     ];

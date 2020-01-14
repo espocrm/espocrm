@@ -359,6 +359,9 @@
             "type": "multiEnum",
             "options": ["Post", "Status", "EmailReceived"]
         },
+        "newNotificationCountInTitle": {
+            "type": "bool"
+        },
         "b2cMode": {
             "type": "bool",
             "default": false,

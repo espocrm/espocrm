@@ -181,5 +181,6 @@ return [
     'useWebSocket' => false,
     'auth2FAMethodList' => ['Totp'],
     'personNameFormat' => 'firstLast',
+    'newNotificationCountInTitle' => false,
     'isInstalled' => false,
 ];

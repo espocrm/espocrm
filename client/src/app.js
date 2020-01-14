@@ -54,6 +54,7 @@ define(
         'web-socket-manager',
         'ajax',
         'number',
+        'page-title',
     ],
     function (
         Ui,
@@ -79,7 +80,8 @@ define(
         ViewHelper,
         WebSocketManager,
         Ajax,
-        NumberUtil
+        NumberUtil,
+        PageTitle
     ) {
 
     var App = function (options, callback) {
@@ -420,6 +422,7 @@ define(
             helper.appParams = this.appParams;
             helper.webSocketManager = this.webSocketManager;
             helper.numberUtil = this.numberUtil;
+            helper.pageTitle = new PageTitle(this.settings);
 
             this.viewLoader = function (viewName, callback) {
                 Espo.require(Espo.Utils.composeViewClassName(viewName), callback);

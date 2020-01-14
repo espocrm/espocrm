@@ -129,11 +129,15 @@ define('views/notification/badge', 'view', function (Dep) {
             this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
 
             this.$number.removeClass('hidden').html(count.toString());
+
+            this.getHelper().pageTitle.setNotificationNumber(count);
         },
 
         hideNotRead: function () {
             this.$badge.attr('title', this.translate('Notifications'));
             this.$number.addClass('hidden').html('');
+
+            this.getHelper().pageTitle.setNotificationNumber(0);
         },
 
         checkBypass: function () {

@@ -167,7 +167,7 @@ define('view', [], function () {
         },
 
         setPageTitle: function (title) {
-            $('head title').text(title);
+            this.getHelper().pageTitle.setTitle(title);
         },
 
         translate: function (label, category, scope) {
