@@ -71,7 +71,14 @@ define('acl-manager', ['acl'], function (Acl) {
                 if (scope in this.implementationClassMap) {
                     implementationClass = this.implementationClassMap[scope];
                 }
-                var obj = new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
+                var forbiddenFieldList = this.getScopeForbiddenFieldList(scope);
+                var params = {
+                    aclAllowDeleteCreated: this.aclAllowDeleteCreated,
+                    teamsFieldIsForbidden: !!~forbiddenFieldList.indexOf('teams'),
+                    forbiddenFieldList: forbiddenFieldList,
+                };
+                var obj = new implementationClass(this.getUser(), scope, params);
+
                 this.implementationHash[scope] = obj;
             }
             return this.implementationHash[scope];

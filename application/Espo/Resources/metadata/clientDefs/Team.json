@@ -1,4 +1,5 @@
 {
+    "acl": "acl/team",
     "defaultSidePanel": {
         "edit": false,
         "editSmall": false
