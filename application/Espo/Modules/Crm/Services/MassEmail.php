@@ -29,11 +29,16 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
+
+use Espo\Modules\Crm\Entities\EmailQueueItem;
+use Espo\Modules\Crm\Entities\Campaign;
+use Espo\Core\Mail\Sender;
+use Zend\Mail\Message;
 
 class MassEmail extends \Espo\Services\Record
 {
@@ -358,7 +363,8 @@ class MassEmail extends \Espo\Services\Record
         }
     }
 
-    protected function getPreparedEmail(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, $trackingUrlList = [])
+    protected function getPreparedEmail(
+        Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, $trackingUrlList = [])
     {
         $templateParams = array(
             'parent' => $target
@@ -421,11 +427,39 @@ class MassEmail extends \Espo\Services\Record
         return $email;
     }
 
-    protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmentList = [], $campaign = null, $isTest = false, $smtpParams = false)
+    protected function prepareQueueItemMessage(EmailQueueItem $queueItem, Sender $sender, Message $message, array &$params)
+    {
+        $header = new \Espo\Core\Mail\Mail\Header\XQueueItemId();
+        $header->setId($queueItem->id);
+        $message->getHeaders()->addHeader($header);
+
+        $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
+
+        if (!$this->getConfig()->get('massEmailDisableMandatoryOptOutLink')) {
+            $optOutUrl = $this->getConfig()->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+            $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
+        }
+
+        $fromAddress = $params['fromAddress'] ?? $this->getConfig()->get('outboundEmailFromAddress');
+
+        if ($this->getConfig()->get('massEmailVerp')) {
+            if ($fromAddress && strpos($fromAddress, '@')) {
+                $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->id .
+                    '@' . explode('@', $fromAddress)[1];
+                $sender->setEnvelopeOptions([
+                    'from' => $bounceAddress,
+                ]);
+            }
+        }
+    }
+
+    protected function sendQueueItem(
+        Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmentList = [], ?Campaign $campaign = null,
+        bool $isTest = false, $smtpParams = null) : bool
     {
         $queueItemFetched = $this->getEntityManager()->getEntity($queueItem->getEntityType(), $queueItem->id);
         if ($queueItemFetched->get('status') !== 'Pending') {
-            return;
+            return false;
         }
 
         $queueItem->set('status', 'Sending');
@@ -435,7 +469,7 @@ class MassEmail extends \Espo\Services\Record
         if (!$target || !$target->id || !$target->get('emailAddress')) {
             $queueItem->set('status', 'Failed');
             $this->getEntityManager()->saveEntity($queueItem);
-            return;
+            return false;
         }
 
         $emailAddress = $target->get('emailAddress');
@@ -473,25 +507,10 @@ class MassEmail extends \Espo\Services\Record
             $params['replyToName'] = $massEmail->get('replyToName');
         }
 
-        $isSent = false;
-
         try {
             $attemptCount = $queueItem->get('attemptCount');
             $attemptCount++;
             $queueItem->set('attemptCount', $attemptCount);
-
-            $message = new \Zend\Mail\Message();
-
-            $header = new \Espo\Core\Mail\Mail\Header\XQueueItemId();
-            $header->setId($queueItem->id);
-            $message->getHeaders()->addHeader($header);
-
-            $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
-
-            if (!$this->getConfig()->get('massEmailDisableMandatoryOptOutLink')) {
-                $optOutUrl = $this->getConfig()->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
-                $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
-            }
 
             $sender = $this->getMailSender();
 
@@ -501,21 +520,12 @@ class MassEmail extends \Espo\Services\Record
                 $sender->useGlobal();
             }
 
-            $fromAddress = $params['fromAddress'] ?? $this->getConfig()->get('outboundEmailFromAddress');
+            $message = new Message();
 
-            if ($this->getConfig()->get('massEmailVerp')) {
-                if ($fromAddress && strpos($fromAddress, '@')) {
-                    $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->id .
-                        '@' . explode('@', $fromAddress)[1];
-                    $sender->setEnvelopeOptions([
-                        'from' => $bounceAddress,
-                    ]);
-                }
-            }
+            $this->prepareQueueItemMessage($queueItem, $sender, $message, $params);
 
             $sender->send($email, $params, $message, $attachmentList);
 
-            $isSent = true;
         } catch (\Exception $e) {
             $maxAttemptCount = $this->getConfig()->get('massEmailMaxAttemptCount', self::MAX_ATTEMPT_COUNT);
             if ($queueItem->get('attemptCount') >= $maxAttemptCount) {
@@ -525,25 +535,27 @@ class MassEmail extends \Espo\Services\Record
             }
             $this->getEntityManager()->saveEntity($queueItem);
             $GLOBALS['log']->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
+
             return false;
         }
 
-        if ($isSent) {
-            $emailObject = $emailTemplate;
-            if ($massEmail->get('storeSentEmails') && !$isTest) {
-                $this->getEntityManager()->saveEntity($email);
-                $emailObject = $email;
-            }
+        $emailObject = $emailTemplate;
+        if ($massEmail->get('storeSentEmails') && !$isTest) {
+            $this->getEntityManager()->saveEntity($email);
+            $emailObject = $email;
+        }
 
-            $queueItem->set('emailAddress', $target->get('emailAddress'));
+        $queueItem->set('emailAddress', $target->get('emailAddress'));
 
-            $queueItem->set('status', 'Sent');
-            $queueItem->set('sentAt', date('Y-m-d H:i:s'));
-            $this->getEntityManager()->saveEntity($queueItem);
+        $queueItem->set('status', 'Sent');
+        $queueItem->set('sentAt', date('Y-m-d H:i:s'));
+        $this->getEntityManager()->saveEntity($queueItem);
 
-            if ($campaign) {
-                $this->getCampaignService()->logSent($campaign->id, $queueItem->id, $target, $emailObject, $target->get('emailAddress'), null, $queueItem->get('isTest'));
-            }
+        if ($campaign) {
+            $this->getCampaignService()->logSent(
+                $campaign->id, $queueItem->id, $target, $emailObject, $target->get('emailAddress'), null,
+                $queueItem->get('isTest')
+            );
         }
 
         return true;
