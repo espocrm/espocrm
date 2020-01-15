@@ -33,6 +33,9 @@
       "bool",
       "email",
       "phone",
+      "array",
+      "multiEnum",
+      "checklist",
       "currencyConverted"
    ],
    "fieldTypeViewMap": {
@@ -50,6 +53,9 @@
       "bool": "views/fields/foreign-bool",
       "email": "views/fields/foreign-email",
       "phone": "views/fields/foreign-phone",
+      "array": "views/fields/foreign-array",
+      "checklist": "views/fields/foreign-checklist",
+      "multiEnum": "views/fields/foreign-multi-enum",
       "currencyConverted": "views/fields/foreign-currency-converted"
    },
    "filter": true,

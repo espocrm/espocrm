@@ -1753,9 +1753,16 @@ class Base
                     $arrayEntityType = $this->getEntityType();
                     $idPart = 'id';
 
-                    if (strpos($attribute, '.') > 0) {
-                        list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
-                        $seed = $this->getSeed();
+                    $seed = $this->getSeed();
+
+                    if (strpos($attribute, '.') > 0 || $seed->getAttributeType($attribute) === 'foreign') {
+                        if ($seed->getAttributeType($attribute) === 'foreign') {
+                            $arrayAttributeLink = $seed->getAttributeParam($attribute, 'relation');
+                            $arrayAttribute = $seed->getAttributeParam($attribute, 'foreign');
+                        } else {
+                            list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
+                        }
+
                         $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
 
                         $arrayLinkAlias = $arrayAttributeLink . 'Filter' . strval(rand(10000, 99999));

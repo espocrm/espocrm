@@ -26,34 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-enum', 'views/fields/enum', function (Dep) {
+define('views/fields/foreign-multi-enum', ['views/fields/multi-enum', 'views/fields/foreign-array'], function (Dep, ForeignArray) {
 
     return Dep.extend({
 
         type: 'foreign',
 
         setupOptions: function () {
-            this.params.options = [];
-
-            if (!this.params.field || !this.params.link) return;
-
-            var scope = this.getMetadata().get(['entityDefs', this.model.name, 'links', this.params.link, 'entity']);
-            if (!scope) {
-                return;
-            }
-
-            this.params.options = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'options']) || [];
-
-            this.params.isSorted = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'isSorted']) || false;
-            this.params.displayAsLabel = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'displayAsLabel'])
-                || false;
-
-            this.styleMap = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'style']) || {};
-
-            this.translatedOptions = {};
-            this.params.options.forEach(function(item) {
-                this.translatedOptions[item] = this.getLanguage().translateOption(item, this.params.field, scope);
-            }, this);
+            ForeignArray.prototype.setupOptions.call(this);
         },
 
     });

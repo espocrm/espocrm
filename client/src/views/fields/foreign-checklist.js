@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-enum', 'views/fields/enum', function (Dep) {
+define('views/fields/foreign-checklist', 'views/fields/checklist', function (Dep) {
 
     return Dep.extend({
 
@@ -42,13 +42,9 @@ define('views/fields/foreign-enum', 'views/fields/enum', function (Dep) {
                 return;
             }
 
-            this.params.options = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'options']) || [];
-
             this.params.isSorted = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'isSorted']) || false;
-            this.params.displayAsLabel = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'displayAsLabel'])
-                || false;
 
-            this.styleMap = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'style']) || {};
+            this.params.options = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'options']) || [];
 
             this.translatedOptions = {};
             this.params.options.forEach(function(item) {
