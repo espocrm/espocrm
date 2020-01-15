@@ -47,10 +47,16 @@ define('views/admin/field-manager/fields/foreign/link', 'views/fields/enum', fun
                 return true;
             }, this);
 
+            var scope = this.options.scope;
+
             this.translatedOptions = {};
             this.params.options.forEach(function (item) {
-                this.translatedOptions[item] = this.translate(item, 'links', this.options.scope);
+                this.translatedOptions[item] = this.translate(item, 'links', scope);
             }, this);
+
+            this.params.options = this.params.options.sort(function (v1, v2) {
+                return this.translate(v1, 'links', scope).localeCompare(this.translate(v2, 'links', scope));
+            }.bind(this));
 
             this.params.options.unshift('');
         },
