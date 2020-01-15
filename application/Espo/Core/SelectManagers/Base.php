@@ -2136,6 +2136,13 @@ class Base
             if (!count($fullTextSearchFieldList)) {
                 $useFullTextSearch = false;
             }
+
+            if (substr_count($textFilter, '\'') % 2 != 0) {
+                $useFullTextSearch = false;
+            }
+            if (substr_count($textFilter, '"') % 2 != 0) {
+                $useFullTextSearch = false;
+            }
         }
 
         if (empty($fullTextSearchColumnList)) {
