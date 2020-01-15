@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model) {
+define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -110,6 +110,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     this.hasPersonalData = true;
                 }
 
+                this.hasInlineEditDisabled = this.type !== 'foreign';
+
                 Promise.race([
                     new Promise(function (resolve) {
                         if (this.isNew) {
@@ -157,10 +159,12 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         });
                     }
 
-                    this.paramList.push({
-                        name: 'inlineEditDisabled',
-                        type: 'bool'
-                    });
+                    if (this.hasInlineEditDisabled) {
+                        this.paramList.push({
+                            name: 'inlineEditDisabled',
+                            type: 'bool'
+                        });
+                    }
 
                     this.paramList.forEach(function (o) {
                         this.model.defs.fields[o.name] = o;
@@ -183,7 +187,9 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         this.createFieldView('bool', 'isPersonalData', null, {});
                     }
 
-                    this.createFieldView('bool', 'inlineEditDisabled', null, {});
+                    if (this.hasInlineEditDisabled) {
+                        this.createFieldView('bool', 'inlineEditDisabled', null, {});
+                    }
 
                     this.createFieldView('text', 'tooltipText', null, {
                         trim: true,
