@@ -32,7 +32,8 @@
       "number",
       "bool",
       "email",
-      "phone"
+      "phone",
+      "currencyConverted"
    ],
    "fieldTypeViewMap": {
       "varchar": "views/fields/foreign-varchar",
@@ -48,7 +49,8 @@
       "number": "views/fields/foreign-varchar",
       "bool": "views/fields/foreign-bool",
       "email": "views/fields/foreign-email",
-      "phone": "views/fields/foreign-phone"
+      "phone": "views/fields/foreign-phone",
+      "currencyConverted": "views/fields/foreign-currency-converted"
    },
    "filter": true,
    "notCreatable": false,
