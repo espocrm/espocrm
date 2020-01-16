@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/portal-role/record/table', 'views/role/record/table', function (Dep) {
+define('views/portal-role/record/table', 'views/role/record/table', function (Dep) {
 
     return Dep.extend({
 
@@ -45,6 +45,8 @@ Espo.define('views/portal-role/record/table', 'views/role/record/table', functio
         levelList: ['all', 'account', 'contact', 'own', 'no'],
 
         type: 'aclPortal',
+
+        lowestLevelByDefault: true,
 
         setupScopeList: function () {
             this.aclTypeMap = {};
@@ -69,5 +71,3 @@ Espo.define('views/portal-role/record/table', 'views/role/record/table', functio
 
     });
 });
-
-

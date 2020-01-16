@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/role/record/table', 'view', function (Dep) {
+define('views/role/record/table', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -47,7 +47,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             'recordAllTeamNo': ['all', 'team', 'no'],
             'recordAllOwnNo': ['all', 'own', 'no'],
             'recordAllNo': ['all', 'no'],
-            'record': ['all', 'team', 'own', 'no']
+            'record': ['all', 'team', 'own', 'no'],
         },
 
         type: 'acl',
@@ -68,7 +68,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             no: '#F23333',
             enabled: '#6BC924',
             disabled: '#F23333',
-            'not-set': '#A8A8A8'
+            'not-set': '#A8A8A8',
         },
 
         mode: 'detail',
@@ -118,9 +118,13 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     $dropdowns.removeClass('hidden');
                     $dropdowns.each(function (i, select) {
                         $select = $(select);
-                        $select.find('option').last().prop('selected', true);
+                        if (this.lowestLevelByDefault) {
+                            $select.find('option').last().prop('selected', true);
+                        } else {
+                            $select.find('option').first().prop('selected', true);
+                        }
                         $select.trigger('change');
-                    });
+                    }.bind(this));
                 } else {
                     $dropdowns.attr('disabled', 'disabled');
                     $dropdowns.addClass('hidden');
@@ -566,5 +570,3 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         },
     });
 });
-
-
