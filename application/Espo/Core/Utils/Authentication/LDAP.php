@@ -41,6 +41,8 @@ class LDAP extends Espo
 
     private $ldapClient;
 
+    protected $injections = [];
+
     /**
      * User field name  => option name (LDAP attribute)
      *
@@ -82,6 +84,16 @@ class LDAP extends Espo
         $this->utils = new LDAP\Utils($config);
     }
 
+    public function inject($name, $object)
+    {
+        $this->injections[$name] = $object;
+    }
+
+    protected function getInjection($name)
+    {
+        return $this->injections[$name];
+    }
+
     protected function getUtils()
     {
         return $this->utils;
@@ -104,13 +116,13 @@ class LDAP extends Espo
 
     public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request = null)
     {
-        if (!$password) return;
-
         $isPortal = !empty($params['isPortal']);
 
         if ($authToken) {
             return $this->loginByToken($username, $authToken);
         }
+
+        if (!$password || $username == '**logout') return;
 
         if ($isPortal) {
             $useLdapAuthForPortalUser = $this->getUtils()->getOption('portalUserLdapAuth');
@@ -271,20 +283,18 @@ class LDAP extends Espo
             $data[$fieldName] = $fieldValue;
         }
 
-        $entityManager = $this->entityManager;
+        $entityManager = $this->getEntityManager();
 
-        $systemUser = $entityManager->getRepository('User')->get('system');
+        $systemUser = $entityManager->getEntity('User', 'system');
         if (!$systemUser) {
             throw new Error("System user is not found");
         }
-        $systemUser->set('isAdmin', true);
-        $systemUser->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+        $this->getInjection('container')->setUser($systemUser);
         $entityManager->setUser($systemUser);
 
         $user = $entityManager->getEntity('User');
         $user->set($data);
-
-        $this->getEntityManager()->saveEntity($user);
+        $entityManager->saveEntity($user);
 
         return $this->getEntityManager()->getEntity('User', $user->id);
     }
