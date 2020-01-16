@@ -259,5 +259,6 @@
                 }
             }
         }
-    }
+    },
+    "dependencyList": ["container"]
 }
