@@ -185,7 +185,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertTrue(!property_exists($resultData, 'type') || $resultData->type !== 'admin');
         $this->assertTrue(
-            !property_exists($resultData, 'teamsIds') || !is_array($resultData->teamsIds) || !in_array('id', $$resultData->teamsIds)
+            !property_exists($resultData, 'teamsIds') || !is_array($resultData->teamsIds) || !in_array('id', $resultData->teamsIds)
         );
     }
 
