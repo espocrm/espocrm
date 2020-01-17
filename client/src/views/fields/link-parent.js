@@ -106,6 +106,10 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
             this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
 
+            if (this.foreignScope && !~this.foreignScopeList.indexOf(this.foreignScope)) {
+                this.foreignScopeList.unshift(this.foreignScope);
+            }
+
             this.listenTo(this.model, 'change:' + this.typeName, function () {
                 this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
             }.bind(this));
