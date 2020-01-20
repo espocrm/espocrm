@@ -173,6 +173,10 @@
         "array": {
             "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
             "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
+        },
+        "checklist": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
+            "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
         }
     },
     "conditionTypes": {
