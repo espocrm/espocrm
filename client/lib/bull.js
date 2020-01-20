@@ -389,6 +389,9 @@ var Bull = Bull || {};
             if (this.isBeingRendered()) {
                 this._isRenderCanceled = true;
             }
+            if (this._renderPromise) {
+                this._renderPromise._isToReject = true;
+            }
         },
 
         uncancelRender: function () {
@@ -402,12 +405,16 @@ var Bull = Bull || {};
             this._isRendered = false;
             this._isFullyRendered = false;
 
-            return new Promise(function (resolve, reject) {
-                this._getHtml(function (html) {
-                    if (this._isRenderCanceled) {
+            var self = this;
+
+            this._renderPromise = new Promise(function (resolve, reject) {
+                var promise = this;
+                self._getHtml(function (html) {
+                    if (this._isRenderCanceled || promise._isToReject) {
                         this._isRenderCanceled = false;
                         this._isBeingRendered = false;
                         reject();
+                        delete this._renderPromise;
                         return;
                     }
                     if (this.$el.size()) {
@@ -422,9 +429,12 @@ var Bull = Bull || {};
                     if (typeof callback === 'function') {
                         callback();
                     }
+                    delete this._renderPromise;
                     resolve(this);
-                }.bind(this));
-            }.bind(this));
+                }.bind(self));
+            });
+
+            return this._renderPromise;
         },
 
         /**
@@ -824,6 +834,7 @@ var Bull = Bull || {};
                 if (wait) {
                     self.waitForView(key);
                 }
+
                 options = options || {};
                 if (!options.el) {
                     options.el = self.getSelector() + ' [data-view="'+key+'"]';
@@ -988,6 +999,7 @@ var Bull = Bull || {};
          * Remove view and all nested tree. Removes contents of el. Triggers 'remove' event.
          */
         remove: function (dontEmpty) {
+            this.cancelRender();
             for (var key in this.nestedViews) {
                 this.clearView(key);
             }
