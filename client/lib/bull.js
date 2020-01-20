@@ -810,31 +810,57 @@ var Bull = Bull || {};
          */
         createView: function (key, viewName, options, callback, wait) {
             this.clearView(key);
-            return new Promise(function (resolve) {
+
+            this._viewPromiseHash = this._viewPromiseHash || {};
+
+            var self = this;
+
+            var promise = this._viewPromiseHash[key] = new Promise(function (resolve, reject) {
+                var promise = this;
+                var context = self;
+
                 wait = (typeof wait === 'undefined') ? true : wait;
-                var context = this;
+
                 if (wait) {
-                    this.waitForView(key);
+                    self.waitForView(key);
                 }
                 options = options || {};
                 if (!options.el) {
-                    options.el = this.getSelector() + ' [data-view="'+key+'"]';
+                    options.el = self.getSelector() + ' [data-view="'+key+'"]';
                 }
-                this._factory.create(viewName, options, function (view) {
+
+                self._factory.create(viewName, options, function (view) {
+                    var previusView = this.getView(key);
+                    if (previusView) {
+                        previusView.cancelRender();
+                    }
+
+                    delete this._viewPromiseHash[key];
+
+                    if (promise._isToReject) {
+                        reject();
+                        return;
+                    }
+
                     var isSet = false;
                     if (this._isRendered || options.setViewBeforeCallback) {
                         this.setView(key, view);
                         isSet = true;
                     }
+
                     if (typeof callback === 'function') {
                         callback.call(context, view);
                     }
+
                     resolve(view);
+
                     if (!this._isRendered && !options.setViewBeforeCallback && !isSet) {
                         this.setView(key, view);
                     }
-                }.bind(this));
-            }.bind(this));
+                }.bind(self));
+            });
+
+            return promise;
         },
 
         /**
@@ -872,6 +898,12 @@ var Bull = Bull || {};
             if (key in this.nestedViews) {
                 this.nestedViews[key].remove();
                 delete this.nestedViews[key];
+            }
+
+            this._viewPromiseHash = this._viewPromiseHash || {};
+            var previousPromise = this._viewPromiseHash[key];
+            if (previousPromise) {
+                previousPromise._isToReject = true;
             }
         },
 
