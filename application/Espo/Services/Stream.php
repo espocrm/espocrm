@@ -267,7 +267,7 @@ class Stream extends \Espo\Core\Services\Base
         $pdo->query($sql);
     }
 
-    public function followEntity(Entity $entity, $userId)
+    public function followEntity(Entity $entity, $userId, bool $skipAclCheck = false)
     {
         if ($userId == 'system') {
             return;
@@ -276,15 +276,17 @@ class Stream extends \Espo\Core\Services\Base
             return false;
         }
 
-        $user = $this->getEntityManager()->getRepository('User')
-            ->select(['id', 'type', 'isActive'])
-            ->where([
-                'id' => $userId,
-                'isActive' => true,
-            ])->findOne();
+        if (!$skipAclCheck) {
+            $user = $this->getEntityManager()->getRepository('User')
+                ->select(['id', 'type', 'isActive'])
+                ->where([
+                    'id' => $userId,
+                    'isActive' => true,
+                ])->findOne();
 
-        if (!$user) return false;
-        if (!$this->getAclManager()->check($user, $entity, 'stream')) return false;
+            if (!$user) return false;
+            if (!$this->getAclManager()->check($user, $entity, 'stream')) return false;
+        }
 
         $pdo = $this->getEntityManager()->getPDO();
 
