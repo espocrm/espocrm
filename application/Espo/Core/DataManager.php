@@ -53,9 +53,9 @@ class DataManager
      */
     public function rebuild($entityList = null)
     {
-        $this->populateConfigParameters();
-
         $result = $this->clearCache();
+
+        $this->populateConfigParameters();
 
         $result &= $this->rebuildMetadata();
 
