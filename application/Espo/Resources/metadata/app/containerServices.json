@@ -2,9 +2,5 @@
     "clientManager": {
         "className": "\\Espo\\Core\\Utils\\ClientManager",
         "dependencyList": ["config", "themeManager", "metadata"]
-    },
-    "entityManagerHelper": {
-        "className": "\\Espo\\Core\\ORM\\Helper",
-        "dependencyList": ["config"]
     }
 }
