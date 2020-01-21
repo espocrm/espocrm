@@ -95,9 +95,9 @@ class DataManager
 
         try {
             $result = $schema->rebuild($entityList);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $result = false;
-            $GLOBALS['log']->error('Fault to rebuild database schema'.'. Details: '.$e->getMessage());
+            $GLOBALS['log']->error('Fault to rebuild database schema. Details: '. $e->getMessage());
         }
 
         if ($result != true) {

@@ -184,7 +184,13 @@ class Schema
         $metadataSchema = $this->schemaConverter->process($this->ormMetadata->getData(), $entityList);
 
         $this->initRebuildActions($currentSchema, $metadataSchema);
-        $this->executeRebuildActions('beforeRebuild');
+
+        try {
+            $this->executeRebuildActions('beforeRebuild');
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->alert('Rebuild database fault: '. $e);
+            return false;
+        }
 
         $queries = $this->getDiffSql($currentSchema, $metadataSchema);
 
@@ -194,13 +200,18 @@ class Schema
             $GLOBALS['log']->info('SCHEMA, Execute Query: '.$sql);
             try {
                 $result &= (bool) $connection->executeQuery($sql);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->alert('Rebuild database fault: '.$e);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->alert('Rebuild database fault: '. $e);
                 $result = false;
             }
         }
 
-        $this->executeRebuildActions('afterRebuild');
+        try {
+            $this->executeRebuildActions('afterRebuild');
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->alert('Rebuild database fault: '. $e);
+            return false;
+        }
 
         return (bool) $result;
     }

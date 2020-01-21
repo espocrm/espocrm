@@ -707,7 +707,7 @@ abstract class Base
         try {
             return $this->getContainer()->get('dataManager')->rebuild();
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error('Database rebuild failure, details: '.$e->getMessage().'.');
+            $GLOBALS['log']->error('Database rebuild failure, details: '. $e->getMessage() .'.');
         }
 
         return false;
