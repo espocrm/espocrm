@@ -99,6 +99,22 @@ class LDAP extends Espo
         return $this->utils;
     }
 
+    protected function getContainer()
+    {
+        return $this->getInjection('container');
+    }
+
+    protected function useSystemUser()
+    {
+        $systemUser = $this->getEntityManager()->getEntity('User', 'system');
+        if (!$systemUser) {
+            throw new Error("System user is not found.");
+        }
+
+        $this->getContainer()->setUser($systemUser);
+        $this->getEntityManager()->setUser($systemUser);
+    }
+
     protected function getLdapClient()
     {
         if (!isset($this->ldapClient)) {
@@ -183,7 +199,12 @@ class LDAP extends Espo
             ]
         ]);
 
-        if (!isset($user) && $this->getUtils()->getOption('createEspoUser')) {
+        if (!isset($user)) {
+            if (!$this->getUtils()->getOption('createEspoUser')) {
+                $this->useSystemUser();
+                throw new Error($this->getContainer()->get('language')->translate('ldapUserInEspoNotFound', 'messages', 'User'));
+            }
+
             $userData = $ldapClient->getEntry($userDn);
             $user = $this->createUser($userData, $isPortal);
         }
@@ -283,18 +304,11 @@ class LDAP extends Espo
             $data[$fieldName] = $fieldValue;
         }
 
-        $entityManager = $this->getEntityManager();
+        $this->useSystemUser();
 
-        $systemUser = $entityManager->getEntity('User', 'system');
-        if (!$systemUser) {
-            throw new Error("System user is not found");
-        }
-        $this->getInjection('container')->setUser($systemUser);
-        $entityManager->setUser($systemUser);
-
-        $user = $entityManager->getEntity('User');
+        $user = $this->getEntityManager()->getEntity('User');
         $user->set($data);
-        $entityManager->saveEntity($user);
+        $this->getEntityManager()->saveEntity($user);
 
         return $this->getEntityManager()->getEntity('User', $user->id);
     }

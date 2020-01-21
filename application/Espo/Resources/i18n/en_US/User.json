@@ -109,7 +109,8 @@
         "enterTotpCode": "Enter a code from your authenticator app.",
         "verifyTotpCode": "Scan the QR-code with your mobile authenticator app. If you have a trouble with scanning, you can enter the secret manually. After that you will see a 6-digit code in your application. Enter this code in the field below.",
         "generateAndSendNewPassword": "A new password will be generated and sent to the user's email address.",
-        "security2FaResetConfimation": "Are you sure you want to reset the current 2FA settings?"
+        "security2FaResetConfimation": "Are you sure you want to reset the current 2FA settings?",
+        "ldapUserInEspoNotFound": "User is not found in EspoCRM. Contact your administrator to create the user."
     },
     "options": {
         "gender": {
