@@ -77,7 +77,7 @@ class CaseObj extends \Espo\Core\ORM\Repositories\RDB
             ])->findOne();
 
             if ($portalUser) {
-                $this->getInjection('serviceFactory')->create('Stream')->followEntity($entity, $portalUser->id);
+                $this->getInjection('serviceFactory')->create('Stream')->followEntity($entity, $portalUser->id, true);
             }
 
             if (!in_array($contactId, $contactIdList) && !$this->isRelated($entity, 'contacts', $contactId)) {

@@ -186,7 +186,7 @@ class Stream extends \Espo\Core\Services\Base
         $sql = "
             SELECT id FROM subscription
             WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
+                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityType()) . " AND
                 user_id = " . $pdo->quote($userId) . "
         ";
 
@@ -267,24 +267,26 @@ class Stream extends \Espo\Core\Services\Base
         $pdo->query($sql);
     }
 
-    public function followEntity(Entity $entity, $userId)
+    public function followEntity(Entity $entity, $userId, bool $skipAclCheck = false)
     {
         if ($userId == 'system') {
             return;
         }
-        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
+        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityType() . '.stream')) {
             return false;
         }
 
-        $user = $this->getEntityManager()->getRepository('User')
-            ->select(['id', 'type', 'isActive'])
-            ->where([
-                'id' => $userId,
-                'isActive' => true,
-            ])->findOne();
+        if (!$skipAclCheck) {
+            $user = $this->getEntityManager()->getRepository('User')
+                ->select(['id', 'type', 'isActive'])
+                ->where([
+                    'id' => $userId,
+                    'isActive' => true,
+                ])->findOne();
 
-        if (!$user) return false;
-        if (!$this->getAclManager()->check($user, $entity, 'stream')) return false;
+            if (!$user) return false;
+            if (!$this->getAclManager()->check($user, $entity, 'stream')) return false;
+        }
 
         $pdo = $this->getEntityManager()->getPDO();
 
@@ -293,7 +295,7 @@ class Stream extends \Espo\Core\Services\Base
                 INSERT INTO subscription
                 (entity_id, entity_type, user_id)
                 VALUES
-                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityName()) . ", " . $pdo->quote($userId).")
+                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityType()) . ", " . $pdo->quote($userId).")
             ";
             $sth = $pdo->prepare($sql)->execute();
         }
@@ -302,7 +304,7 @@ class Stream extends \Espo\Core\Services\Base
 
     public function unfollowEntity(Entity $entity, $userId)
     {
-        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
+        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityType() . '.stream')) {
             return false;
         }
 
@@ -311,7 +313,7 @@ class Stream extends \Espo\Core\Services\Base
         $sql = "
             DELETE FROM subscription
             WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
+                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityType()) . " AND
                 user_id = " . $pdo->quote($userId) . "
         ";
         $sth = $pdo->prepare($sql)->execute();
@@ -1187,7 +1189,7 @@ class Stream extends \Espo\Core\Services\Base
         if ($from) {
             $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($from);
             if ($person) {
-                $data['personEntityType'] = $person->getEntityName();
+                $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
                 $data['personEntityId'] = $person->id;
             }
@@ -1244,7 +1246,7 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         if ($person) {
-            $data['personEntityType'] = $person->getEntityName();
+            $data['personEntityType'] = $person->getEntityType();
             $data['personEntityName'] = $person->get('name');
             $data['personEntityId'] = $person->id;
         }
