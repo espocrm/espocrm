@@ -29,13 +29,12 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\Entity;
-
-use \Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\Htmlizer\Htmlizer;
 
 class Pdf extends \Espo\Core\Services\Base
 {
@@ -308,7 +307,8 @@ class Pdf extends \Espo\Core\Services\Base
             $this->getInjection('entityManager'),
             $this->getInjection('metadata'),
             $this->getInjection('defaultLanguage'),
-            $this->getInjection('config')
+            $this->getInjection('config'),
+            $this->getInjection('serviceFactory')
         );
     }
 }

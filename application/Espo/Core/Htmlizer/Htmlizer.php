@@ -39,6 +39,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
+use Espo\Core\serviceFactory;
 
 use LightnCandy\LightnCandy as LightnCandy;
 
@@ -51,6 +52,7 @@ class Htmlizer
     protected $entityManager;
     protected $metadata;
     protected $language;
+    protected $serviceFactory;
 
     public function __construct(
         FileManager $fileManager,
@@ -60,7 +62,8 @@ class Htmlizer
         ?EntityManager $entityManager = null,
         ?Metadata $metadata = null,
         ?Language $language = null,
-        ?Config $config = null
+        ?Config $config = null,
+        ?ServiceFactory $serviceFactory = null
     )
     {
         $this->fileManager = $fileManager;
@@ -71,6 +74,7 @@ class Htmlizer
         $this->metadata = $metadata;
         $this->language = $language;
         $this->config = $config;
+        $this->serviceFactory = $serviceFactory;
     }
 
     protected function getAcl()
@@ -564,6 +568,7 @@ class Htmlizer
         $data['__metadata'] = $this->metadata;
         $data['__entityManager'] = $this->entityManager;
         $data['__language'] = $this->language;
+        $data['__serviceFactory'] = $this->serviceFactory;
 
         $html = $renderer($data);
 
