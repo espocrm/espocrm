@@ -22,7 +22,7 @@
             "type": "enum",
             "required": true,
             "translation": "Global.scopeNames",
-            "view": "views/fields/entity-type"
+            "view": "views/template/fields/entity-type"
         },
         "leftMargin": {
             "type": "float",
