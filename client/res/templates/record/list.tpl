@@ -89,13 +89,13 @@
 </div>
 {{/if}}
 
-<div class="list">
-    <table class="table">
+<div class="list{{#if tableMinWidth}} scrollable{{/if}}">
+    <table class="table"{{#if tableMinWidth}} style="min-width: {{tableMinWidth}}px;"{{/if}}>
         {{#if header}}
         <thead>
             <tr>
                 {{#if checkboxes}}
-                <th width="40" data-name="r-checkbox">
+                <th width="{{checkboxColumnWidth}}" data-name="r-checkbox">
                     <span class="select-all-container"><input type="checkbox" class="select-all"></span>
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">

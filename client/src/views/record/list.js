@@ -65,6 +65,8 @@ define('views/record/list', 'view', function (Dep) {
 
         rowActionsColumnWidth: 25,
 
+        checkboxColumnWidth: 40,
+
         buttonList: [],
 
         headerDisabled: false,
@@ -74,6 +76,8 @@ define('views/record/list', 'view', function (Dep) {
         portalLayoutDisabled: false,
 
         dropdownItemList: [],
+
+        minColumnWidth: 100,
 
         events: {
             'click a.link': function (e) {
@@ -377,6 +381,7 @@ define('views/record/list', 'view', function (Dep) {
                 displayActionsButtonGroup: this.checkboxes || this.massActionList || this.buttonList.length || this.dropdownItemList.length,
                 totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
                 moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
+                checkboxColumnWidth: this.checkboxColumnWidth,
             };
         },
 
@@ -1802,6 +1807,41 @@ define('views/record/list', 'view', function (Dep) {
             if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
                 this.reRender();
             }
+        },
+
+        getTableMinWidth: function () {
+            if (!this.listLayout) return;
+
+            var totalWidth = 0;
+            var totalWidthPx = 0;
+            var emptyCount = 0;
+            var columnCount = 0;
+
+            this.listLayout.forEach(function (item) {
+                columnCount ++;
+                if (item.widthPx) {totalWidthPx += item.widthPx; return;}
+                if (item.width) {totalWidth += item.width; return;}
+                emptyCount ++;
+            }, this);
+
+            if (this.rowActionsView && !this.rowActionsDisabled) {
+                totalWidthPx += this.rowActionsColumnWidth;
+            }
+
+            if (this.checkboxes) {
+                totalWidthPx += this.checkboxColumnWidth;
+            }
+
+            var minWidth;
+
+            if (totalWidth >= 100) {
+                minWidth = columnCount * this.minColumnWidth;
+            } else {
+                minWidth = (totalWidthPx + this.minColumnWidth * emptyCount) / (1 - totalWidth / 100);
+                minWidth = Math.round(minWidth);
+            }
+
+            return minWidth;
         },
     });
 });
