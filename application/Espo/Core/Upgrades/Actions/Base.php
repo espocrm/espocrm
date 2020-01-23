@@ -157,6 +157,7 @@ abstract class Base
         $this->deletePackageFiles();
         $this->deletePackageArchive();
         $this->disableMaintenanceMode();
+        $this->systemRebuild();
         throw new Error($errorMessage);
     }
 

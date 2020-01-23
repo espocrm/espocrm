@@ -158,6 +158,8 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     public function throwErrorAndRemovePackage($errorMessage = '')
     {
         $this->restoreFiles();
+        $this->disableMaintenanceMode();
+        $this->systemRebuild();
         throw new Error($errorMessage);
     }
 
