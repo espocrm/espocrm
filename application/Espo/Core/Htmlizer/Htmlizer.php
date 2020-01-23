@@ -535,7 +535,7 @@ class Htmlizer
         return $helpers;
     }
 
-    public function render(Entity $entity, $template, $id = null, $additionalData = [], $skipLinks = false)
+    public function render(Entity $entity, $template, $id = null, ?array $additionalData = null, $skipLinks = false)
     {
         $template = str_replace('<tcpdf ', '', $template);
 
@@ -559,6 +559,8 @@ class Htmlizer
             $data['now'] = $this->dateTime->getNowString();
             $data['now_RAW'] = date('Y-m-d H:i:s');
         }
+
+        $additionalData = $additionalData ?? [];
 
         foreach ($additionalData as $k => $value) {
             $data[$k] = $value;
