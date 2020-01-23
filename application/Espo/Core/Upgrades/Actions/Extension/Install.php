@@ -43,12 +43,15 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
             $this->compareVersion();
             $this->uninstallExtension();
-            $this->deleteExtension();
         }
     }
 
     protected function afterRunAction()
     {
+        if (!$this->isNew()) {
+            $this->deleteExtension();
+        }
+
         $this->storeExtension();
     }
 
@@ -177,22 +180,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
                 $this->throwErrorAndRemovePackage('You cannot install an older version of this extension.');
             }
         }
-    }
-
-    /**
-     * Throw an exception and remove package files.
-     * Redeclared to prevent of deleting a package of installed extension.
-     *
-     * @param  string $errorMessage
-     * @return void
-     */
-    public function throwErrorAndRemovePackage($errorMessage = '')
-    {
-        if (!$this->isNew()) {
-            throw new Error($errorMessage);
-        }
-
-        return parent::throwErrorAndRemovePackage($errorMessage);
     }
 
     /**

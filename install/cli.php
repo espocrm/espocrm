@@ -72,9 +72,9 @@ if (!$installerConfig->get('cliSessionId')) {
     session_start();
     $installerConfig->set('cliSessionId', session_id());
     $installerConfig->save();
+} else {
+    session_id($installerConfig->get('cliSessionId'));
 }
-
-$sessonId = session_id($installerConfig->get('cliSessionId'));
 
 ob_start();
 
