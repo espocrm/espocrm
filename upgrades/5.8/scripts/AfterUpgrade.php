@@ -26,14 +26,14 @@ class AfterUpgrade
     {
         $this->container = $container;
 
-        $this->populateOpportunityContactId($entityManager);
+        $this->populateOpportunityContactId();
 
         $this->manageIndexes();
     }
 
-    protected function populateOpportunityContactId($entityManager)
+    protected function populateOpportunityContactId()
     {
-        $pdo = $entityManager->getPdo();
+        $pdo = $this->container->get('entityManager')->getPdo();
 
         $sql = "
             SELECT opportunity.id AS 'opportunityId', contact.id AS `contactId` FROM `opportunity`
