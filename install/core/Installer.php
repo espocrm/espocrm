@@ -194,7 +194,7 @@ class Installer
 
     public function getLanguageList($isTranslated = true)
     {
-        $languageList = $this->app->getContainer()->get('config')->get('languageList');
+        $languageList = $this->app->getContainer()->get('metadata')->get(['app', 'language', 'list']);
 
         if ($isTranslated) {
             return $this->getLanguage()->translate('language', 'options', 'Global', $languageList);

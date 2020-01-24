@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/label-manager/index', 'view', function (Dep) {
+define('views/admin/label-manager/index', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -65,7 +65,7 @@ Espo.define('views/admin/label-manager/index', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.languageList = this.getConfig().get('languageList') || ['en_US'];
+            this.languageList = this.getMetadata().get(['app', 'language', 'list']) || ['en_US'];
             this.languageList.sort(function (v1, v2) {
                 return this.getLanguage().translateOption(v1, 'language').localeCompare(this.getLanguage().translateOption(v2, 'language'));
             }.bind(this));

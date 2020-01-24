@@ -1,0 +1,31 @@
+{
+    "list": [
+        "en_GB",
+        "en_US",
+        "es_MX",
+        "cs_CZ",
+        "da_DK",
+        "de_DE",
+        "es_ES",
+        "hr_HR",
+        "hu_HU",
+        "fa_IR",
+        "fr_FR",
+        "id_ID",
+        "it_IT",
+        "lt_LT",
+        "lv_LV",
+        "nb_NO",
+        "nl_NL",
+        "tr_TR",
+        "sk_SK",
+        "sr_RS",
+        "ro_RO",
+        "ru_RU",
+        "pl_PL",
+        "pt_BR",
+        "uk_UA",
+        "vi_VN",
+        "zh_CN"
+    ]
+}

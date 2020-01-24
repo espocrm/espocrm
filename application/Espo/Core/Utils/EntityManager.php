@@ -297,7 +297,7 @@ class EntityManager
             $labelPlural = $params['labelPlural'];
         }
 
-        $languageList = $this->getConfig()->get('languageList', []);
+        $languageList = $this->getMetadata()->get(['app', 'language', 'list'], []);
         foreach ($languageList as $language) {
             $filePath = $templatePath . '/i18n/' . $language . '/' . $type . '.json';
             if (!file_exists($filePath)) continue;
