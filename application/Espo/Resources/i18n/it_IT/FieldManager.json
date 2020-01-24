@@ -74,7 +74,8 @@
     "before": "Il valore della data deve essere precedente al valore della data del campo specificato.",
     "after": "Il valore della data deve essere successivo al valore della data del campo specificato.",
     "readOnly": "Il valore del campo non può essere specificato dall'utente. Ma può essere calcolato da una formula.",
-    "maxFileSize": "Se vuoto o 0 allora nessun limite."
+    "maxFileSize": "Se vuoto o 0 allora nessun limite.",
+    "fileAccept": "Quali tipi di file accettare. È possibile aggiungere elementi personalizzati."
   },
   "fieldParts": {
     "address": {

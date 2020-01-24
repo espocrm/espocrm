@@ -12,10 +12,16 @@
       "right": "Prawy"
     },
     "style": {
+      "default": "Domyślny",
       "success": "Powodzenie",
       "danger": "Niebezpieczeństwo",
       "info": "Informacje",
-      "warning": "Ostrzeżenie"
+      "warning": "Ostrzeżenie",
+      "primary": "Główny"
     }
+  },
+  "labels": {
+    "New panel": "Nowy panel",
+    "Layout": "Układ"
   }
 }

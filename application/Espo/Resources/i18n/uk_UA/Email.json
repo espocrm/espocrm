@@ -98,7 +98,6 @@
     "Folders": "Папка"
   },
   "messages": {
-    "noSmtpSetup": "Не налаштовано SMTP. {link}.",
     "testEmailSent": "Тестового листа було відправлено",
     "emailSent": "Листа було відправлено",
     "savedAsDraft": "Збережено як чернетку",

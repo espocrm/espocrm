@@ -3,6 +3,20 @@
     "user": "Użytkownik",
     "ipAddress": "IP Adres",
     "lastAccess": "Data ostatniego logowania",
-    "createdAt": "Data Logowania"
+    "createdAt": "Data Logowania",
+    "isActive": "Jest aktywny"
+  },
+  "links": {
+    "actionHistoryRecords": "Historia czynności"
+  },
+  "presetFilters": {
+    "active": "Aktywny",
+    "inactive": "Nieaktywny"
+  },
+  "labels": {
+    "Set Inactive": "Ustaw jako nieaktywny"
+  },
+  "massActions": {
+    "setInactive": "Ustaw jako nieaktywny"
   }
 }

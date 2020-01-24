@@ -7,20 +7,20 @@
   "fields": {
     "name": "Nome",
     "type": "Tipo",
-    "labelSingular": "Etichetta Singola",
-    "labelPlural": "Etichetta Multipla",
+    "labelSingular": "Etichetta singola",
+    "labelPlural": "Etichetta multipla",
     "stream": "Flusso attività",
     "label": "Etichetta",
     "entityForeign": "Entità esterna",
     "linkForeign": "Collegamento Esterno",
-    "labelForeign": "Label Esterna",
+    "labelForeign": "Label  esterna",
     "sortBy": "Impostazione predefinita ( campo)",
     "sortDirection": "Impostazione predefinita ( indirizzo)",
     "relationName": "Tab Secono Nome",
     "linkMultipleField": "Collegamento Multiplo ai Campi",
     "linkMultipleFieldForeign": "Collegamento Esterno Link Multiplo ai Campi",
     "disabled": "Disabilitato",
-    "textFilterFields": "Filtro testuale Campi",
+    "textFilterFields": "Filtro testuale campi",
     "audited": "Controllato",
     "auditedForeign": "Controllato esternamente",
     "statusField": "Campo di stato",
@@ -29,7 +29,8 @@
     "kanbanViewMode": "Vista Kanban",
     "kanbanStatusIgnoreList": "Gruppi ignorati in vista Kanban",
     "iconClass": "Icona",
-    "fullTextSearch": "Ricerca tutto il testo"
+    "fullTextSearch": "Ricerca tutto il testo",
+    "countDisabled": "Disabilita il conteggio dei record"
   },
   "options": {
     "type": {
@@ -40,9 +41,9 @@
       "Company": "Compagnia"
     },
     "linkType": {
-      "manyToMany": "Molti-a-Molti",
+      "manyToMany": "Molti-a-molti",
       "oneToMany": "Uno-a-Molti",
-      "manyToOne": "Molti-a-Uno",
+      "manyToOne": "Molti-a-uno",
       "parentToChildren": "Padre-a-Figlio",
       "childrenToParent": "Figlio-a-Padre"
     },
@@ -64,6 +65,7 @@
     "linkAudited": "La creazione di record correlati ed il collegamento con il record esistente verranno registrati nelle attività.",
     "linkMultipleField": "Collegare un campo multiplo è una via pratica per modificare le relazioni. Non utilizzarlo se prevedi un elevato numero di record correlati.",
     "entityType": "Base Plus - dispone di pannelli Attività, Storia e Compiti.\n\nEvento - disponibile nei pannelli Calendario ed Attività.",
-    "fullTextSearch": "È necessario eseguire la ricostruzione."
+    "fullTextSearch": "È necessario eseguire la ricostruzione.",
+    "countDisabled": "Il numero totale non verrà visualizzato nella visualizzazione elenco. Può ridurre il tempo di caricamento quando la tabella DB è grande."
   }
 }

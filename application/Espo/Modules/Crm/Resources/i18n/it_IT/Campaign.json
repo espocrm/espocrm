@@ -12,6 +12,7 @@
     "openedCount": "Aperto",
     "clickedCount": "Cliccato",
     "optedOutCount": "Rinuncia",
+    "leadCreatedCount": "Leads Creato",
     "revenue": "Entrata",
     "revenueConverted": "Entrata (convertita)",
     "budgetConverted": "Budget (convertito)",
@@ -20,7 +21,8 @@
     "accountsTemplate": "Modello di account",
     "usersTemplate": "Modello utenti",
     "mailMergeOnlyWithAddress": "Salta record senza indirizzo",
-    "optedInCount": "Iscritto"
+    "optedInCount": "Iscritto",
+    "budgetCurrency": "Valuta di bilancio"
   },
   "links": {
     "targetLists": "Liste di destinazione",
@@ -28,7 +30,7 @@
     "accounts": "Account",
     "contacts": "Contatti",
     "opportunities": "Opportunita'",
-    "massEmails": "Email Massiva",
+    "massEmails": "Email massiva",
     "contactsTemplate": "Modello contatti",
     "leadsTemplate": "Modello Leads",
     "accountsTemplate": "Modello di account",
@@ -46,13 +48,15 @@
     }
   },
   "labels": {
+    "Create Campaign": "Crea campagna",
     "Target Lists": "Liste di destinazione",
     "Statistics": "Statistiche",
-    "hard": "duro",
-    "soft": "leggeto",
+    "hard": "Duro",
+    "soft": "Leggeto",
     "Unsubscribe": "Annulla l'iscrizione",
-    "Mass Emails": "Email Massive",
+    "Mass Emails": "Email massive",
     "Email Templates": "Modelli Email",
+    "Subscribe again": "Iscriviti di nuovo",
     "Create Target List": "Elenco crea target",
     "Mail Merge": "Stampa unione",
     "Generate Mail Merge PDF": "Genera Stampa unione pdf"

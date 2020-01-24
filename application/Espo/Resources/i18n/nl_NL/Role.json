@@ -4,9 +4,9 @@
     "roles": "Functies",
     "portalPermission": "Portaal toestemming",
     "groupEmailAccountPermission": "Groep e-mailaccount toestemming",
-    "exportPermission": "Machtiging exporteren",
+    "exportPermission": "Exporteer rechten",
     "dataPrivacyPermission": "Data Privacy Toestemming",
-    "massUpdatePermission": "Massa update rechten"
+    "massUpdatePermission": "Toestemming voor massa-update"
   },
   "links": {
     "users": "Gebruikers",
@@ -19,7 +19,7 @@
     "groupEmailAccountPermission": "Definieert een toegang tot groeps E-mail accounts, een mogelijkheid om e-mails te verzenden vanuit groep SMTP.",
     "dataPrivacyPermission": "Toestaan ​​om persoonlijke gegevens te bekijken en te wissen.",
     "exportPermission": "Bepaalt of gebruikers de mogelijkheid hebben om records te exporteren.",
-    "massUpdatePermission": "Definieert of gebruikers de mogelijkheid hebben om massaal records bij te werken."
+    "massUpdatePermission": "Definieert of gebruikers de mogelijkheid hebben om een grote hoeveelheid records bij te werken."
   },
   "labels": {
     "Access": "Toegang",

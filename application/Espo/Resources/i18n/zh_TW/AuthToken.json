@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "使用者",
+    "ipAddress": "IP地址",
+    "lastAccess": "最後使用日期",
+    "createdAt": "登入日期",
+    "isActive": "活躍",
+    "portal": "導覧"
+  },
+  "links": {
+    "actionHistoryRecords": "動作記錄"
+  },
+  "presetFilters": {
+    "active": "啟用",
+    "inactive": "沒啟用"
+  },
+  "labels": {
+    "Set Inactive": "設為無效"
+  },
+  "massActions": {
+    "setInactive": "設為無效"
+  }
+}

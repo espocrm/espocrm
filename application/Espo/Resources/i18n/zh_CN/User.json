@@ -78,8 +78,14 @@
     "forbidden": "禁止访问，请稍后再试",
     "uniqueLinkHasBeenSent": "唯一网址已发送到指定的电子邮件地址。",
     "passwordChangedByRequest": "密码已被更改。",
-    "setupSmtpBefore": "您需要配置<a href=\"{url}\"> SMTP服务器</a>，以便系统能够通过电子邮件发送密码信息。",
     "userNameExists": "用户名已经存在"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "只有我的团队"
+  },
+  "presetFilters": {
+    "active": "激活",
+    "activePortal": "门户活动"
   },
   "options": {
     "gender": {
@@ -88,12 +94,5 @@
       "Female": "女士",
       "Neutral": "中立的"
     }
-  },
-  "boolFilters": {
-    "onlyMyTeam": "只有我的团队"
-  },
-  "presetFilters": {
-    "active": "激活",
-    "activePortal": "门户活动"
   }
 }

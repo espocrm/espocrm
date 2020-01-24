@@ -12,6 +12,9 @@
     "leads": "Iniziative",
     "reminders": "Promemoria",
     "acceptanceStatus": "Stato accettazione",
+    "dateStartDate": "Data inizio (tutto il giorno)",
+    "dateEndDate": "Data fine (tutto il giorno)",
+    "isAllDay": "È tutto il giorno",
     "Acceptance": "Accettazione"
   },
   "options": {
@@ -36,8 +39,9 @@
     "Set Held": "Trattenuto",
     "Set Not Held": "Non trattenuto",
     "Send Invitations": "Inviare inviti",
-    "on time": "puntuale",
-    "before": "prima"
+    "on time": "Puntuale",
+    "before": "prima",
+    "All-Day": "Tutto il giorno\n"
   },
   "presetFilters": {
     "planned": "Pianificato",
@@ -45,6 +49,7 @@
     "todays": "Di oggi"
   },
   "messages": {
-    "nothingHasBeenSent": "Nulla è stato inviato"
+    "nothingHasBeenSent": "Nulla è stato inviato",
+    "selectAcceptanceStatus": "Imposta il tuo stato di accettazione."
   }
 }

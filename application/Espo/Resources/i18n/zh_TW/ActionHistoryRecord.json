@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "user": "使用者",
+    "action": "行動",
+    "createdAt": "日期",
+    "target": "目標",
+    "targetType": "目標類型",
+    "authToken": "驗證憑信",
+    "ipAddress": "IP地址",
+    "authLogRecord": "授權日誌記錄",
+    "userType": "Webhooks"
+  },
+  "links": {
+    "authToken": "驗證憑信",
+    "user": "使用者",
+    "target": "目標",
+    "authLogRecord": "授權日誌"
+  },
+  "presetFilters": {
+    "onlyMy": "只有我的"
+  },
+  "options": {
+    "action": {
+      "read": "讀取",
+      "update": "更新資料",
+      "delete": "刪除",
+      "create": "新增"
+    }
+  }
+}

@@ -21,10 +21,10 @@
     "Portal": "Cổng thông tin",
     "Portals": "Cổng thông tin",
     "Portal Roles": "Quyền truy cập cổng thông tin",
-    "Outbound Emails": "Email đã gửi",
+    "Outbound Emails": "Cấu hình thư đi",
     "Group Email Accounts": "Nhóm tài khoản email",
     "Personal Email Accounts": "Tài khoản email cá nhân",
-    "Inbound Emails": "Email đã nhận",
+    "Inbound Emails": "Cấu hình email nhận",
     "Email Templates": "Mẫu email",
     "Import": "Nhập",
     "Layout Manager": "Quản lý giao diện",
@@ -52,10 +52,15 @@
     "Reset to Default": "Khôi phục giá trị mặc định",
     "Email Filters": "Lọc email",
     "Action History": "Lịch sử hoạt động",
+    "Lead Capture": "Thu thập khách tiềm năng",
+    "Attachments": "Đính kèm",
+    "System Requirements": "Yêu cầu hệ thống",
     "PHP Settings": "Cài đặt PHP",
     "Permissions": "Quyền truy cập",
     "Success": "Thành công",
-    "Fail": "Lỗi"
+    "Fail": "Lỗi",
+    "is recommended": "được khuyên dùng",
+    "extension is missing": "tiện ích mở rộng bị thiếu"
   },
   "layouts": {
     "list": "Danh sách",
@@ -87,7 +92,9 @@
     "attachmentMultiple": "Nhiều tệp cùng đính kèm",
     "wysiwyg": "Bộ gõ Wysiwyg",
     "map": "Bản đồ",
-    "int": "Int"
+    "colorpicker": "Chọn màu sắc",
+    "int": "Int",
+    "datetime": "Thời gian"
   },
   "fields": {
     "type": "Loại",
@@ -111,18 +118,19 @@
     "height": "Chiều cao (px)",
     "minHeight": "Chiều cao tối thiểu (px)",
     "typeList": "Loại danh sách",
-    "rows": "Số hàng của khung văn bản"
+    "rows": "Số hàng của khung văn bản",
+    "sourceList": "Danh sách nguồn dữ liệu",
+    "displayAsLabel": "Hiển thị như nhãn",
+    "allowCustomOptions": "Cho phép tùy chỉnh",
+    "accept": "Chấp nhận"
   },
   "messages": {
     "selectEntityType": "Chọn loại ở menu bên trái",
     "selectUpgradePackage": "Chọn gói nâng cấp",
-    "downloadUpgradePackage": "Tải về gói cập mới nhất <a href=\"{url}\">tại đây</a>.",
     "selectLayout": "Chọn giao diện cần sửa bên trái",
     "selectExtensionPackage": "Chọn gói tiện ích mở rộng",
     "extensionInstalled": "Tiện ích mở rộng {name} {version} đã được cài đặt",
     "installExtension": "Tiện ích mở rộng {name} {version} đã sẵn sàn để cài đặt",
-    "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
-    "upgradeDone": "Your EspoCRM has been upgraded to version <strong>{version}</strong>. Refresh your browser window.",
     "upgradeBackup": "We recommend you to make backup of your EspoCRM files and data before upgrade.",
     "thousandSeparatorEqualsDecimalMark": "Dấu phân cách không thể giống nhau",
     "userHasNoEmailAddress": "Người dùng chưa có địa chỉ email"
@@ -147,7 +155,10 @@
     "currency": "Cài đặt tiền tệ và tỷ giá",
     "extensions": "Cài đặt hoặc gỡ cài đặt tiện ích mở rộng",
     "integrations": "Kết nối với ứng dụng thứ 3",
-    "inboundEmails": "Nhóm tài khoản email IMAP. Nhập email và Email-to-Case."
+    "inboundEmails": "Nhóm tài khoản email IMAP. Nhập email và Email-to-Case.",
+    "actionHistory": "Nhật ký hoạt động thành viên",
+    "authLog": "Lịch sử đăng nhập",
+    "systemRequirements": "Yêu cầu hệ thống cho EspoCRM"
   },
   "options": {
     "previewSize": {
@@ -157,12 +168,21 @@
       "large": "Lớn"
     }
   },
+  "logicalOperators": {
+    "and": "VÀ",
+    "or": "HOẶC",
+    "not": "KHÔNG PHẢI"
+  },
   "systemRequirements": {
     "requiredPhpVersion": "Phiên bản PHP",
     "requiredMysqlVersion": "Phiên bản MySQL",
-    "host": "Tên host",
+    "host": "Tên máy chủ",
     "dbname": "Tên cơ sở dữ liệu",
     "user": "Tên đăng nhập",
     "requiredMariadbVersion": "phiên bản MariaDB"
+  },
+  "templates": {
+    "accessInfo": "Thông tin truy cập",
+    "passwordChangeLink": "Liên kết thay đổi mật khẩu"
   }
 }

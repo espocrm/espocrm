@@ -1,5 +1,9 @@
 {
   "fields": {
-    "data": "Dữ liệu"
+    "data": "Dữ liệu",
+    "leadCapture": "Thu thập khách tiềm năng"
+  },
+  "links": {
+    "leadCapture": "Thu thập khách tiềm năng"
   }
 }

@@ -1,12 +1,21 @@
 {
+  "labels": {
+    "Details": "Chi tiết"
+  },
   "fields": {
     "name": "Tên",
     "status": "Tình trạng",
     "file": "Tập tin",
     "type": "Loại",
-    "publishDate": "Ngày xuất bản"
+    "publishDate": "Ngày xuất bản",
+    "expirationDate": "Ngày hết hạn",
+    "description": "Mô tả",
+    "accounts": "Tài khoản",
+    "folder": "Thư mục"
   },
   "links": {
+    "accounts": "Tài khoản",
+    "opportunities": "Cơ hội",
     "folder": "Thư mục"
   },
   "options": {
@@ -16,7 +25,8 @@
       "Canceled": "Đã hủy"
     },
     "type": {
-      "": "Trống"
+      "": "Trống",
+      "License Agreement": "Thông tin bản quyền"
     }
   },
   "presetFilters": {

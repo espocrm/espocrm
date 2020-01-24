@@ -1,7 +1,8 @@
 {
   "fields": {
-    "panelName": "Paneelnaam",
+    "panelName": "Paneel naam",
     "style": "Stijl",
+    "sticked": "Vastgezet",
     "isLarge": "Grote lettergrootte",
     "dynamicLogicVisible": "Condities waardoor paneel zichtbaar is"
   },
@@ -18,5 +19,8 @@
   "labels": {
     "New panel": "Nieuw paneel",
     "Layout": "lay-out"
+  },
+  "tooltips": {
+    "link": "Als deze optie is aangevinkt, wordt een veldwaarde weergegeven als een link naar het detailaanzicht van het gegevensrecord. Meestal wordt het gebruikt voor *Name* velden."
   }
 }

@@ -1,5 +1,16 @@
 {
+  "fields": {
+    "username": "Tên đăng nhập",
+    "ipAddress": "Địa chỉ IP",
+    "requestTime": "Thời gian yêu cầu kết nối",
+    "createdAt": "Đã kết nối tại"
+  },
   "links": {
-    "user": "Người dùng"
+    "user": "Người dùng",
+    "actionHistoryRecords": "Lịch sử hoạt động"
+  },
+  "presetFilters": {
+    "denied": "Đã từ chối",
+    "accepted": "Đã chấp thuận"
   }
 }

@@ -3,6 +3,9 @@
     "name": "Tên",
     "portalRoles": "Quyền",
     "isActive": "Được kích hoạt",
+    "isDefault": "Mặc định",
+    "theme": "Chủ đề",
+    "language": "Ngôn ngữ",
     "dateFormat": "Định dạng ngày",
     "timeFormat": "Định dạng giờ",
     "timeZone": "Múi giờ",
@@ -10,9 +13,12 @@
     "customUrl": "Tùy chỉnh URL"
   },
   "links": {
-    "users": "Người dùng"
+    "users": "Người dùng",
+    "portalRoles": "Quyền",
+    "notes": "Ghi chú"
   },
   "labels": {
+    "General": "Tổng quan",
     "Settings": "Cài đặt"
   }
 }

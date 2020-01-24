@@ -5,7 +5,6 @@
     "variables": "Beschikbare placeholders",
     "pageOrientation": "Paginaoriëntatie",
     "pageFormat": "Papierformaat",
-    "fontFace": "doopvont",
     "pageWidth": "Paginabreedte (mm)",
     "pageHeight": "Pagina Hoogte (mm)"
   },
@@ -18,11 +17,10 @@
       "Landscape": "Landschap"
     },
     "placeholders": {
-      "today": "Datum van vandaag)",
+      "today": "Vandaag (date)",
       "now": "Nu (datum-tijd)"
     },
     "fontFace": {
-      "courier": "Koerier",
       "pdfasymbol": "PDFA-symbool",
       "symbol": "Symbool"
     },

@@ -23,10 +23,10 @@
   "options": {
     "targetType": {
       "self": "a me stesso",
-      "users": "a utente particolare",
-      "teams": "a team particolare",
-      "all": "a tutti gli utenti interni",
-      "portals": "agli utenti del portale"
+      "users": "A utente particolare",
+      "teams": "A team particolare",
+      "all": "A tutti gli utenti interni",
+      "portals": "Agli utenti del portale"
     }
   },
   "links": {

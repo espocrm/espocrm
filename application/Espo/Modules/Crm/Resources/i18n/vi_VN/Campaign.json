@@ -1,19 +1,34 @@
 {
   "fields": {
     "name": "Tên",
+    "status": "Tình trạng",
+    "type": "Phân loại",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày kết thúc",
+    "openedCount": "Đã mở",
+    "clickedCount": "Đã nhấp",
     "leadCreatedCount": "Tạo khách hàng tiềm năng"
   },
   "links": {
+    "contacts": "Danh bạ",
     "leads": "Khách hàng tiềm năng",
-    "opportunities": "Cơ hội"
+    "opportunities": "Cơ hội",
+    "campaignLogRecords": "Nhật ký"
   },
   "options": {
     "type": {
       "Television": "Truyền hình",
       "Newsletter": "Báo"
+    },
+    "status": {
+      "Active": "Kích hoạt",
+      "Inactive": "Không kích hoạt",
+      "Complete": "Hoàn thành"
     }
   },
   "labels": {
+    "Create Campaign": "Tạo chiến dịch",
+    "Statistics": "Thống kê",
     "hard": "cứng",
     "soft": "mềm",
     "Unsubscribe": "`"

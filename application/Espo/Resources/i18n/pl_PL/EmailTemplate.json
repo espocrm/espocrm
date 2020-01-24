@@ -5,7 +5,7 @@
     "body": "Treść",
     "subject": "Temat",
     "attachments": "Załączniki",
-    "insertField": "Wstaw pole"
+    "category": "Katgoria"
   },
   "labels": {
     "Create EmailTemplate": "Utwórz Szkic wiadomości"
@@ -15,5 +15,9 @@
   },
   "presetFilters": {
     "actual": "Bieżący"
+  },
+  "placeholderTexts": {
+    "today": "Dzisiejsza data",
+    "now": "Obecna data i czas"
   }
 }

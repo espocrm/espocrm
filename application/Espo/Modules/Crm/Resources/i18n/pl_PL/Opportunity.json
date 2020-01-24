@@ -12,7 +12,9 @@
     "description": "Opis ",
     "amountConverted": "Wartość (konwertowana)",
     "amountWeightedConverted": "Wartość ważona",
-    "campaign": "Kampania"
+    "campaign": "Kampania",
+    "contactRole": "Rola kontaktu",
+    "lastStage": "Ostatni etap"
   },
   "links": {
     "contacts": "Kontakty",

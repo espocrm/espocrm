@@ -74,7 +74,6 @@
     "View Users": "Gebruikers bekijken"
   },
   "messages": {
-    "noSmtpSetup": "Geen SMTP setup. {link}.",
     "testEmailSent": "Test email is verzonden",
     "confirmInsertTemplate": "Het e-mail opmaak gaat verloren. Weet je zeker dat je de sjabloon wilt invoegen?"
   },

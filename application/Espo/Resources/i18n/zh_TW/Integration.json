@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "已啟用",
+    "clientId": "客戶端 ID",
+    "clientSecret": "客戶端密碼",
+    "redirectUri": "重新導向 URI",
+    "apiKey": "API密鑰"
+  },
+  "messages": {
+    "selectIntegration": "請從選單選一個整合",
+    "noIntegrations": "沒有整合有效"
+  },
+  "titles": {
+    "GoogleMaps": "Google 地圖"
+  },
+  "help": {
+    "Google": "在[此處] (https://developers.google.com/maps/documentation/javascript/get-api-key)獲取API密鑰。",
+    "GoogleMaps": "建立潛在客戶前確認"
+  }
+}

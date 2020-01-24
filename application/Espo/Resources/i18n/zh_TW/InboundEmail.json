@@ -1,0 +1,86 @@
+{
+  "fields": {
+    "name": "姓名",
+    "emailAddress": "電子郵件地址",
+    "status": "狀態",
+    "assignToUser": "指定給使用者",
+    "host": "主機",
+    "username": "使用者",
+    "password": "密碼",
+    "port": "埠",
+    "monitoredFolders": "關注的資料夾",
+    "trashFolder": "垃圾桶",
+    "createCase": "新增案件",
+    "reply": "自動回复",
+    "caseDistribution": "案件分佈",
+    "replyEmailTemplate": "信件回覆樣版",
+    "replyFromAddress": "從位址回覆",
+    "replyToAddress": "回覆到位址",
+    "replyFromName": "回覆從姓名",
+    "targetUserPosition": "目標使用者位置",
+    "fetchSince": "最後截取",
+    "addAllTeamUsers": "給所有團隊使用者",
+    "team": "目標團隊",
+    "teams": "團隊",
+    "sentFolder": "儲存已發送的電子郵件",
+    "storeSentEmails": "使用SMTP",
+    "useSmtp": "SMTP主機",
+    "smtpHost": "SMTP埠",
+    "smtpPort": "SMTP驗證",
+    "smtpAuth": "SMTP安全",
+    "smtpSecurity": "SMTP使用者",
+    "smtpUsername": "SMTP密碼",
+    "smtpPassword": "從名字",
+    "fromName": "SMTP已共享",
+    "smtpIsShared": "SMTP用於大量電子郵件",
+    "smtpIsForMassEmail": "如果勾選，則使用者將能夠使用SMTP發送電子郵件。此功能是透過群組組電子郵件帳戶中的權限來控制。",
+    "useImap": "每小時發送的最大電子郵件數",
+    "keepFetchedEmailsUnread": "工作",
+    "smtpAuthMechanism": "純文字"
+  },
+  "tooltips": {
+    "reply": "通知收件者們己經收到信了。\n\n在一定的期間中就只會有一封信送給特定的使用者以避免重覆。",
+    "createCase": "從收到的信自動新增案件。",
+    "replyToAddress": "指定這個收件匣的電子信箱位址讓回覆會到這。",
+    "caseDistribution": "案件會如何指定。會指定到使用者或團隊。",
+    "assignToUser": "使用者案件將分配給。",
+    "team": "團隊案件將分配給。",
+    "teams": "團隊的電子郵件將被分配到。",
+    "addAllTeamUsers": "電子郵件將顯示在指定團隊的所有使用者的收件匣中。",
+    "targetUserPosition": "具有指定位置的使用者將被分配到案件。",
+    "monitoredFolders": "多個資料夾應以逗號分隔。",
+    "smtpIsShared": "如果勾選，則SMTP可用於發送群組電子郵件。",
+    "smtpIsForMassEmail": "發送的電子郵件將儲存在IMAP伺服器上。",
+    "storeSentEmails": "群組電子郵件帳戶權限"
+  },
+  "links": {
+    "filters": "篩選器",
+    "emails": "電子信箱",
+    "assignToUser": "發文"
+  },
+  "options": {
+    "status": {
+      "Active": "啟用",
+      "Inactive": "停用"
+    },
+    "caseDistribution": {
+      "": "無",
+      "Direct-Assignment": "直接指定",
+      "Round-Robin": "循環制",
+      "Least-Busy": "最閒置的"
+    },
+    "smtpAuthMechanism": {
+      "plain": "登錄",
+      "login": "CRAM-MD5",
+      "crammd5": "如果潛在客戶已在目標列表中，則跳過確認"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "新增電子郵件帳戶",
+    "Actions": "動作",
+    "Main": "主要"
+  },
+  "messages": {
+    "couldNotConnectToImap": "無法連線到 IMAP 伺服器"
+  }
+}

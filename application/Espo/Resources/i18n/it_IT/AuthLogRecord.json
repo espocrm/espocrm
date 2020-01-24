@@ -11,7 +11,8 @@
     "authToken": "Token autorizzazione creato",
     "requestUrl": "Url di richiesta",
     "requestMethod": "Metodo di richiesta",
-    "authTokenIsActive": "Il token di autorizzazione è attivo"
+    "authTokenIsActive": "Il token di autorizzazione è attivo",
+    "authenticationMethod": "Metodo di autenticazione"
   },
   "links": {
     "authToken": "Token di autorizzazione creato",

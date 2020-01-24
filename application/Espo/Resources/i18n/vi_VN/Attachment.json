@@ -5,7 +5,8 @@
   "fields": {
     "file": "Tập tin",
     "type": "Loại",
-    "field": "Trường"
+    "field": "Trường",
+    "size": "Kích thước (bytes)"
   },
   "options": {
     "role": {

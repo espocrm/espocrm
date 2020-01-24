@@ -29,9 +29,6 @@
     "Test settings": "测试连接",
     "Database Settings Description": "输入您的MySQL数据库连接信息（主机名，用户名和密码）。您可以像localhost:3306这样指定服务器地址和端口。",
     "Install": "安装",
-    "SetupConfirmation page title": "推荐设置",
-    "PHP Configuration": "推荐PHP设置",
-    "MySQL Configuration": "MySQL配置",
     "Configuration Instructions": "配置说明",
     "phpVersion": "PHP版本",
     "requiredMysqlVersion": "MySQL版本",
@@ -75,11 +72,9 @@
     "1045": "被拒绝访问的用户",
     "1049": "未知数据库",
     "2005": "未知的MySQL服务器主机",
-    "Bad init Permission": "权限被拒绝对“{*}”目录中。为请设置775“{*}”，或只是在终端执行此命令<pre> <B> {C}里</ B> </ pre>\n不允许操作？试试这个：{CSU}",
     "Some errors occurred!": "发生了一些错误！",
     "phpVersion": "你的PHP版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
-    "requiredMysqlVersion": "你的MySQL版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
-    "requiredMariadbVersion": "你的MariaDB版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
+    "requiredMysqlVersion": "你的PHP版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
     "The PHP extension was not found...": "未找到PHP错误：未找到扩展名<b> {extName} </ b>。",
     "All Settings correct": "所有设置正确",
     "Failed to connect to database": "无法连接到数据库",
@@ -92,12 +87,9 @@
     "buildDatabase error": "构建数据错误",
     "createUser error": "创建用户错误",
     "checkAjaxPermission error": "检查Ajax权限错误",
-    "Ajax failed": "Ajax失败",
     "Cannot create user": "无法创建用户",
     "Permission denied": "没有权限",
     "Permission denied to": "没有权限",
-    "permissionInstruction": "<br>在终端<pre> <b>\"{C}\"</ b> </ pre>中运行",
-    "operationNotPermitted": "不允许操作？请尝试以下操作：<br> {CSU}",
     "Can not save settings": "无法保存设置",
     "Cannot save preferences": "无法保存首选项",
     "Thousand Separator and Decimal Mark equal": "千分法和小数标记不能相等",
@@ -106,21 +98,20 @@
     "mysqlSettingError": "EspoCRM需要MySQL设置\"{NAME}\"设置为{VALUE}"
   },
   "options": {
-    "modRewriteTitle": {
-      "apache": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br> 可能出现的问题: 禁用 \"mod_rewrite\" 在Apache 服务器, 禁用 .分布式配置文件支持或者重写数据问题.<br>仅执行必要操作.完成每一步需确认问题是否被解决.",
-      "nginx": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br>将此代码添加入你的网页服务器配置文件(/etc/nginx/sites-available/YOUR_SITE) 在里面 \"服务器\" 部分:",
-      "microsoft-iis": "应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.<br>可能出现的问题: 禁用 \"网址重写\". 请核对并启用\"网址重写\" 模块在IIS服务器",
-      "default": "应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.<br>可能出现的问题: 禁用重写模块.请在你的服务器核对并启用重写模块 (e.g. mod_重写 在 Apache) 和.htaccess 支持."
-    },
     "modRewriteInstruction": {
       "apache": {
-        "linux": "<br><br>1. 可用 \"mod_重写\". 在终端运行这些指令:<pre>{APACHE1}</pre><br>2. 可用 .htaccess 支持. 添加/编辑服务器配置设置(/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n 后来在一个终端运行此命令:<pre>{APACHE3}</pre><br>3. 尝试添加重写基础路径, 打开一个文件{API_PATH}.htaccess 和替换下面这一行:<pre>{APACHE4}</pre>To<pre>{APACHE5}</pre><br> 获取更多信息请访问指导指南 <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM Apache服务器配置</a>.<br><br>",
         "windows": "结果<前> 1。查找httpd.conf文件（通常你会发现一个名为CONF，配置或类似的规定文件夹中）结果\n2.里面的httpd.conf文件注释行的LoadModule rewrite_module模块/ mod_rewrite.so（从行前面删除井'＃'号）结果\n3.又找到行ClearModuleList下面是注释掉然后查找并确保该行加入AddModule mod_rewrite.c没有被注释掉。\n</ PRE>"
       },
       "nginx": {
         "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>",
         "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>"
       }
+    },
+    "modRewriteTitle": {
+      "apache": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br> 可能出现的问题: 禁用 \"mod_rewrite\" 在Apache 服务器, 禁用 .分布式配置文件支持或者重写数据问题.<br>仅执行必要操作.完成每一步需确认问题是否被解决.",
+      "nginx": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br>将此代码添加入你的网页服务器配置文件(/etc/nginx/sites-available/YOUR_SITE) 在里面 \"服务器\" 部分:",
+      "microsoft-iis": "应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.<br>可能出现的问题: 禁用 \"网址重写\". 请核对并启用\"网址重写\" 模块在IIS服务器",
+      "default": "应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.<br>可能出现的问题: 禁用重写模块.请在你的服务器核对并启用重写模块 (e.g. mod_重写 在 Apache) 和.htaccess 支持."
     }
   }
 }

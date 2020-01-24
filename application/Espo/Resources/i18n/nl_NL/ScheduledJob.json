@@ -12,7 +12,8 @@
       "CheckInboundEmails": "Controleer Binnenkomende E-mails",
       "SendEmailReminders": "Stuur Herinnering Email",
       "SendEmailNotifications": "Verzend e-mailmeldingen",
-      "CheckNewVersion": "Controleer op nieuwe versie"
+      "CheckNewVersion": "Controleer op nieuwe versie",
+      "ProcessWebhookQueue": "Wachtrij proces Webhook"
     },
     "cronSetup": {
       "linux": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",

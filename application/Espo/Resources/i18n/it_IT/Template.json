@@ -5,21 +5,24 @@
     "entityType": "Tipo di entità",
     "header": "Intestazione",
     "footer": "Piè di pagina",
-    "leftMargin": "Margine Sinistro",
-    "topMargin": "Marigne Superiore",
-    "rightMargin": "Margine Destro",
-    "bottomMargin": "Margine Inferiore",
+    "leftMargin": "Margine sinistro",
+    "topMargin": "Marigne superiore",
+    "rightMargin": "Margine destro",
+    "bottomMargin": "Margine inferiore",
     "printFooter": "Stampa piè di Pagina",
     "footerPosition": "Posizione piè  di pagina",
     "variables": "Segnaposto disponibili",
     "pageOrientation": "Orientamento pagina",
-    "pageFormat": "Formato carta"
+    "pageFormat": "Formato carta",
+    "pageWidth": "Larghezza pagina",
+    "pageHeight": "Altezza della pagina"
   },
   "labels": {
     "Create Template": "Crea Modello"
   },
   "tooltips": {
-    "footer": "Utilizzare {pageNumber} per stampare il numero di pagina ."
+    "footer": "Utilizzare {pageNumber} per stampare il numero di pagina .",
+    "variables": "Copia e incolla il placeholder necessario in Intestazione, Corpo o Piè di pagina."
   },
   "options": {
     "pageOrientation": {
@@ -36,6 +39,9 @@
       "stsongstdlight": "STSong STD Light",
       "symbol": "Simbolo",
       "times": "Tempi"
+    },
+    "pageFormat": {
+      "Custom": "Personalizzato"
     }
   }
 }

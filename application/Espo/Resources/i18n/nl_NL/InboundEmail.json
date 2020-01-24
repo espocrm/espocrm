@@ -17,11 +17,12 @@
     "smtpSecurity": "SMTP-beveiliging",
     "smtpUsername": "SMTP-gebruikersnaam",
     "smtpPassword": "SMTP-wachtwoord",
-    "fromName": "Van naam",
+    "fromName": "Naam",
     "smtpIsShared": "SMTP is gedeeld",
-    "smtpIsForMassEmail": "SMTP Is voor massa-e-mail",
+    "smtpIsForMassEmail": "SMTP voor massa-e-mail",
     "useImap": "Ophalen van e-mails",
-    "keepFetchedEmailsUnread": "Ongelezen e-mailberichten ongelezen houden"
+    "keepFetchedEmailsUnread": "Ongelezen e-mailberichten ongelezen houden",
+    "smtpAuthMechanism": "SMTP Auth Mechanisme"
   },
   "tooltips": {
     "reply": "Notify email senders that their E-mails has been received.\n\n Only one email will be sent to a particular recipient during some period of time to prevent looping.",
@@ -46,6 +47,9 @@
       "Direct-Assignment": "Direct toewijzen",
       "Round-Robin": "Willekeurig",
       "Least-Busy": "Minst bezet"
+    },
+    "smtpAuthMechanism": {
+      "plain": "Plat"
     }
   },
   "labels": {
@@ -57,7 +61,7 @@
     "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server"
   },
   "links": {
-    "emails": "emails",
+    "emails": "E-mails",
     "assignToUser": "Toewijzen aan gebruiker"
   }
 }

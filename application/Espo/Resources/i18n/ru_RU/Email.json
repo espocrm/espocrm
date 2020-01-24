@@ -99,7 +99,6 @@
     "Folders": "Папки"
   },
   "messages": {
-    "noSmtpSetup": "Не настроен SMTP. {link}.",
     "testEmailSent": "Тестовое эл. письмо было отправлено",
     "emailSent": "Эл. письмо было отправлено",
     "savedAsDraft": "Сохранено как черновик",

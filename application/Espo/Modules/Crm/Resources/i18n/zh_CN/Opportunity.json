@@ -27,8 +27,6 @@
     "stage": {
       "Prospecting": "预期",
       "Qualification": "评价",
-      "Proposal": "提案",
-      "Negotiation": "协商",
       "Needs Analysis": "需求分析",
       "Value Proposition": "价值主张",
       "Id. Decision Makers": "Id决策者",
@@ -36,7 +34,9 @@
       "Proposal/Price Quote": "提案/报价",
       "Negotiation/Review": "协商/审核",
       "Closed Won": "赢得并结束",
-      "Closed Lost": "失去并结束"
+      "Closed Lost": "失去并结束",
+      "Proposal": "提案",
+      "Negotiation": "协商"
     }
   },
   "labels": {

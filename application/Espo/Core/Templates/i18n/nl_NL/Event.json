@@ -1,37 +1,38 @@
 {
   "fields": {
-    "parent": "Ouder",
-    "dateStart": "Datum Start",
-    "dateEnd": "Datum einde",
-    "duration": "Looptijd",
-    "status": "staat",
-    "reminders": "herinneringen",
+    "parent": "Bovenliggend",
+    "dateStart": "Start datum",
+    "dateEnd": "Eind datum",
+    "duration": "Duur",
+    "status": "StatUS",
+    "reminders": "Herinneringen",
     "dateStartDate": "Startdatum (de hele dag)",
     "dateEndDate": "Datum einde (hele dag)",
     "isAllDay": "Is de hele dag"
   },
   "links": {
-    "parent": "Ouder"
+    "parent": "Bovenliggend"
   },
   "options": {
     "status": {
       "Planned": "Gepland",
       "Held": "Vastgehouden",
-      "Not Held": "Niet vastgehouden"
+      "Not Held": "Niet gehouden"
     }
   },
   "labels": {
     "Create {entityType}": "Klant {entityTypeTranslated}",
     "Schedule {entityType}": "Schema {entityTypeTranslated}",
-    "Set Held": "Held instellen",
-    "Set Not Held": "Set not Held"
+    "Set Held": "Gedaan",
+    "Set Not Held": "Niet gedaan"
   },
   "massActions": {
-    "setHeld": "Held instellen",
-    "setNotHeld": "Set not Held"
+    "setHeld": "Gedaan",
+    "setNotHeld": "Niet gedaan"
   },
   "presetFilters": {
     "planned": "Gepland",
+    "held": "Gedaan",
     "todays": "Vandaag"
   }
 }

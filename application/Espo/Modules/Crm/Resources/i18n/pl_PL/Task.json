@@ -12,10 +12,13 @@
     "account": "Klient",
     "dateCompleted": "Data ukończenia",
     "attachments": "Załączniki",
-    "reminders": "Przypomnienia"
+    "reminders": "Przypomnienia",
+    "contact": "Kontakt"
   },
   "links": {
-    "attachments": "Załączniki"
+    "attachments": "Załączniki",
+    "account": "Klient",
+    "contact": "Kontakt"
   },
   "options": {
     "status": {

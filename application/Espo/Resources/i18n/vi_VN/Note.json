@@ -2,6 +2,7 @@
   "fields": {
     "post": "Gửi",
     "attachments": "Đính kèm",
+    "teams": "Nhóm",
     "users": "Người dùng",
     "type": "Loại"
   },

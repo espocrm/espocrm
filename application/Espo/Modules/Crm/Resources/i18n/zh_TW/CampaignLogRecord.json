@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "action": "動作",
+    "actionDate": "日期",
+    "data": "資料",
+    "campaign": "活動",
+    "parent": "目標",
+    "object": "目標",
+    "application": "應用程式",
+    "queueItem": "佇列物件",
+    "stringData": "字串資料",
+    "stringAdditionalData": "字串附加資料",
+    "isTest": "是噩測試"
+  },
+  "links": {
+    "queueItem": "佇列物件",
+    "parent": "上層",
+    "object": "物件",
+    "campaign": "活動"
+  },
+  "options": {
+    "action": {
+      "Sent": "傳送",
+      "Opened": "己開啟",
+      "Opted Out": "己排除",
+      "Bounced": "己退回",
+      "Clicked": "己點擊",
+      "Lead Created": "潛在客戶已新增",
+      "Opted In": "選擇加入"
+    }
+  },
+  "labels": {
+    "All": "所有"
+  },
+  "presetFilters": {
+    "sent": "己傳送",
+    "opened": "己開啟",
+    "optedOut": "己排除",
+    "bounced": "己退回",
+    "clicked": "己點擊",
+    "leadCreated": "潛在客戶已新增",
+    "optedIn": "指定使用者導覧是否有權限匯出記錄。"
+  }
+}

@@ -2,7 +2,6 @@
   "fields": {
     "name": "名称",
     "emailAddress": "电子邮件",
-    "title": "标题",
     "accountRole": "标题",
     "account": "客户",
     "accounts": "客户",
@@ -40,7 +39,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "—无—",
       "Decision Maker": "决策者",
       "Evaluator": "评估者",
       "Influencer": "影响者"

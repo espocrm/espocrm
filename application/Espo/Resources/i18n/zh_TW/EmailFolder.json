@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "跳過通知"
+  },
+  "labels": {
+    "Create EmailFolder": "新增資料夾",
+    "Manage Folders": "管理資料夾",
+    "Emails": "電子信箱"
+  }
+}

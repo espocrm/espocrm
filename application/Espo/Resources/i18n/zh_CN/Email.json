@@ -1,6 +1,5 @@
 {
   "fields": {
-    "name": "命名（主题）",
     "parent": "关联",
     "status": "状态",
     "dateSent": "发送日期",
@@ -15,8 +14,7 @@
     "subject": "主题",
     "attachments": "附件",
     "selectTemplate": "选择模板",
-    "fromEmailAddress": "发件人地址",
-    "toEmailAddresses": "收件人地址",
+    "fromAddress": "发件人地址",
     "emailAddress": "邮件地址",
     "deliveryDate": "邮寄日期",
     "account": "账户",
@@ -26,19 +24,24 @@
     "isRead": "已读",
     "isNotRead": "未读",
     "isImportant": "重要",
-    "isReplied": "已回复",
-    "isNotReplied": "未回复",
     "isUsers": "是用户的",
     "inTrash": "在垃圾箱",
-    "sentBy": "发送者",
+    "name": "命名（主题）",
+    "isReplied": "已回复",
+    "isNotReplied": "未回复",
     "folder": "文件夹",
     "inboundEmails": "组帐户",
     "emailAccounts": "个人帐户",
     "hasAttachment": "有附件",
+    "sentBy": "发送者",
     "assignedUsers": "已指派用户",
+    "bodyPlain": "正文 (纯文本格式)",
     "ccEmailAddresses": "CC地址",
-    "bccEmailAddresses": "BCC地址",
-    "fromName": "发件人"
+    "messageId": "信息 ID",
+    "messageIdInternal": "信息 ID (内部)",
+    "fromName": "发件人",
+    "toEmailAddresses": "收件人地址",
+    "bccEmailAddresses": "BCC地址"
   },
   "links": {
     "replied": "已回复",
@@ -92,7 +95,6 @@
     "Folders": "文件夹"
   },
   "messages": {
-    "noSmtpSetup": "无SMTP设置。{link}。",
     "testEmailSent": "测试邮件已发送",
     "emailSent": "邮件已发送",
     "savedAsDraft": "保存为草稿",

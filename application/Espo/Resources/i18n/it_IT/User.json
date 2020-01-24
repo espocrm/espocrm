@@ -1,8 +1,9 @@
 {
   "fields": {
     "name": "Nome",
-    "userName": "Nome Utente",
+    "userName": "Nome utente",
     "title": "Titolo",
+    "isAdmin": "Is admin",
     "phoneNumber": "Telefono",
     "roles": "Ruoli",
     "portals": "Portali",
@@ -12,7 +13,7 @@
     "passwordConfirm": "Conferma password",
     "newPassword": "Nuova password",
     "newPasswordConfirm": "Conferma la nuova password",
-    "isActive": "È Attivo",
+    "isActive": "È attivo",
     "isPortalUser": "È il portale per l'utente",
     "contact": "Contatti",
     "account": "Account (Primario)",
@@ -22,8 +23,16 @@
     "position": "Posizione nel team",
     "ipAddress": "Indirizzo IP",
     "passwordPreview": "Mostra password",
-    "isSuperAdmin": "è Super Amministratore",
-    "lastAccess": "Ultimo accesso"
+    "isSuperAdmin": "E' super amministratore",
+    "lastAccess": "Ultimo accesso",
+    "type": "Genere",
+    "secretKey": "Chiave segreta",
+    "authMethod": "Metodo di autenticazione",
+    "yourPassword": "La tua password attuale",
+    "dashboardTemplate": "Modello di dashboard",
+    "auth2FA": "Abilita autenticazione a 2 fattori",
+    "auth2FAMethod": "Metodo 2FA",
+    "auth2FATotpSecret": "2FA TOTP Secret\n"
   },
   "links": {
     "teams": "Team",
@@ -33,7 +42,8 @@
     "portalRoles": "Ruoli Portale",
     "contact": "Contatti",
     "account": "Account (Primario}",
-    "tasks": "Compiti"
+    "tasks": "Compiti",
+    "dashboardTemplate": "Modello di dashboard"
   },
   "labels": {
     "Create User": "Crea Utente",
@@ -44,11 +54,19 @@
     "Teams and Access Control": "Controllo Teams e Accessi",
     "Forgot Password?": "Password dimenticata?",
     "Password Change Request": "Richiesta di cambio password",
-    "Email Address": "Indirizzo Email",
+    "Email Address": "Indirizzo email",
     "External Accounts": "Account Esterni",
     "Portal": "Portale",
     "Create Portal User": "Crea Utente Portale",
-    "Proceed w/o Contact": "Procedi senza contatto"
+    "Proceed w/o Contact": "Procedi senza contatto",
+    "Generate New API Key": "Genera nuova API Key",
+    "Generate New Password": "Genera nuova password",
+    "Code": "Codice",
+    "Back to login form": "Torna al modulo di accesso",
+    "Requirements": "Requisiti",
+    "Security": "Sicurezza",
+    "Reset 2FA": "Ripristina 2FA",
+    "Secret": "Segreto"
   },
   "tooltips": {
     "defaultTeam": "Tutti i record creati da questo utente saranno inseriti di default in questo Team.",
@@ -63,27 +81,50 @@
   "messages": {
     "passwordWillBeSent": "La password verrà inviata all'indirizzo email dell'utente.",
     "passwordChanged": "La password è stata modificata",
-    "userCantBeEmpty": "Il Nome utente non può essere vuoto",
+    "userCantBeEmpty": "Il nome utente non può essere vuoto",
     "wrongUsernamePasword": "I dati forniti non sono corretti",
     "emailAddressCantBeEmpty": "L'indirizzo Email non può essere vuoto",
     "userNameEmailAddressNotFound": "Username/Indirizzo Email non trovato",
     "forbidden": "Vietato , riprova piu tardi",
     "uniqueLinkHasBeenSent": "L' URL univoco è stato inviato all'indirizzo di posta elettronica specificato .",
     "passwordChangedByRequest": "La password è stata modificata.",
-    "userNameExists": "Nome utente già esistente"
+    "userNameExists": "Nome utente già esistente",
+    "setupSmtpBefore": "È necessario configurare [Impostazioni SMTP] ({url}) per consentire al sistema di inviare la password via e-mail.",
+    "passwordStrengthLength": "Deve contenere almeno {lunghezza} caratteri.",
+    "passwordStrengthLetterCount": "Deve contenere almeno {count} lettere.",
+    "passwordStrengthNumberCount": "Deve contenere almeno {count} cifre.",
+    "passwordStrengthBothCases": "Deve contenere lettere maiuscole e minuscole.",
+    "wrongCode": "Codice errato",
+    "codeIsRequired": "Codice richiesto",
+    "enterTotpCode": "Inserisci un codice dalla tua app di autenticazione.",
+    "verifyTotpCode": "Scansiona il codice QR con l'app di autenticazione mobile. In caso di problemi con la scansione, è possibile inserire il segreto manualmente. Successivamente vedrai un codice di 6 cifre nella tua applicazione. Inserisci questo codice nel campo sottostante.",
+    "generateAndSendNewPassword": "Una nuova password verrà generata e inviata all'indirizzo e-mail dell'utente.",
+    "security2FaResetConfimation": "Sei sicuro di voler ripristinare le attuali impostazioni 2FA?"
   },
   "boolFilters": {
     "onlyMyTeam": "Solo per il mio Team"
   },
   "presetFilters": {
     "active": "Attivo",
-    "activePortal": "Portale Attivo"
+    "activePortal": "Portale attivo",
+    "activeApi": "API attiva"
   },
   "options": {
     "gender": {
       "": "Non impostato",
       "Male": "Maschio",
-      "Female": "Femmina"
+      "Female": "Femmina",
+      "Neutral": "Neutro"
+    },
+    "type": {
+      "regular": "Regolare",
+      "admin": "Admin\n\n",
+      "portal": "Portale",
+      "system": "Sistema",
+      "super-admin": "\nSuper-Admin\n"
+    },
+    "authMethod": {
+      "ApiKey": "Chiave API"
     }
   }
 }

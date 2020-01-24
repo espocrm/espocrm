@@ -23,12 +23,12 @@
     "isNotRead": "Non letto",
     "isImportant": "Importante",
     "isUsers": "Utente",
-    "inTrash": "Nel Cestino",
+    "inTrash": "Nel cestino",
     "name": "Nome (Oggetto)",
     "isReplied": "Risposto",
-    "isNotReplied": "Non Risposto",
+    "isNotReplied": "Non risposto",
     "folder": "Cartella",
-    "inboundEmails": "Gruppo di Account",
+    "inboundEmails": "Gruppo di account",
     "emailAccounts": "Account Personale",
     "hasAttachment": "Ha allegato",
     "sentBy": "Inviato da",
@@ -37,18 +37,21 @@
     "ccEmailAddresses": "Indirizzo email CC",
     "messageId": "ID messaggio",
     "messageIdInternal": "ID messaggio (Interno)",
-    "folderId": "ID Cartella",
-    "fromName": "DA Nome",
-    "fromString": "DA Stringa",
-    "isSystem": "È Sistema",
+    "folderId": "ID cartella",
+    "fromName": "Da nome",
+    "fromString": "Da stringa",
+    "isSystem": "È sistema",
     "toEmailAddresses": "A Email Destinatario",
     "bccEmailAddresses": "CCN Email Destinatario",
-    "replyToEmailAddresses": "Rispondi-A Indirizzo email"
+    "replyToEmailAddresses": "Rispondi-a indirizzo email",
+    "fromEmailAddress": "Dall'indirizzo (collegamento)",
+    "replyToName": "Nome di risposta",
+    "replyToAddress": "Indirizzo di risposta"
   },
   "links": {
     "replied": "Risposto",
     "replies": "Risposte",
-    "inboundEmails": "Gruppi di Account",
+    "inboundEmails": "Gruppi di account",
     "emailAccounts": "Account Personali",
     "assignedUsers": "Utenti assegnati",
     "sentBy": "Inviato da",
@@ -57,7 +60,7 @@
     "toEmailAddresses": "A Indirizzo email",
     "ccEmailAddresses": "CC Indirizzi Email",
     "bccEmailAddresses": "CCN Indirizzi email",
-    "replyToEmailAddresses": "Risposta-A Indirizzo Email"
+    "replyToEmailAddresses": "Risposta-a indirizzo email"
   },
   "options": {
     "status": {
@@ -92,13 +95,13 @@
     "Mark as Important": "Contrassegna come Importante",
     "Unmark Importance": "Deselezione come Importante",
     "Move to Trash": "Sposta nel Cestino",
-    "Retrieve from Trash": "Ripristina da Cestino",
+    "Retrieve from Trash": "Ripristina da cestino",
     "Move to Folder": "Sposta nella Cartella",
     "Filters": "Filtri",
-    "Folders": "Cartelle"
+    "Folders": "Cartelle",
+    "View Users": "Visualizza utenti"
   },
   "messages": {
-    "noSmtpSetup": "Nessun setup per l'SMTP. {link}.",
     "testEmailSent": "L'email di prova è stata inviata",
     "emailSent": "L'email è stata inviata",
     "savedAsDraft": "Salvato come bozza.",
@@ -119,6 +122,6 @@
     "markAsNotImportant": "Deseleziona come Importante",
     "moveToTrash": "Sposta nel Cestino",
     "moveToFolder": "Sposta nella Cartella",
-    "retrieveFromTrash": "Recupera dal Cestino"
+    "retrieveFromTrash": "Recupera dal cestino"
   }
 }

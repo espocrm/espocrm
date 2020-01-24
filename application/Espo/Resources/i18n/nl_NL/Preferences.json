@@ -19,7 +19,7 @@
     "useCustomTabList": "Eigen Tab List",
     "receiveAssignmentEmailNotifications": "Ontvang bevestiging toewijzingen per email.",
     "receiveMentionEmailNotifications": "E-mailmeldingen over vermeldingen in berichten",
-    "receiveStreamEmailNotifications": "E-mailmeldingen over berichten en status updates",
+    "receiveStreamEmailNotifications": "E-mailberichten over berichten en statusupdates over berichten en statusupdates",
     "dashboardLayout": "Dashboard indeling",
     "emailReplyForceHtml": "E-mailantwoord in HTML",
     "autoFollowEntityTypeList": "Auto-Follow",
@@ -30,7 +30,9 @@
     "followCreatedEntityTypeList": "Automatisch gemaakte records van specifieke entiteitstypen volgen",
     "emailUseExternalClient": "Gebruik een externe e-mailclient",
     "scopeColorsDisabled": "Schakel bereikkleuren uit",
-    "tabColorsDisabled": "Tabtabellen uitschakelen"
+    "tabColorsDisabled": "Tabtabellen uitschakelen",
+    "assignmentNotificationsIgnoreEntityTypeList": "Kennisgevingen van toewijzing in de applicatie",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Kennisgevingen van e-mailtoewijzingen"
   },
   "options": {
     "weekStart": {
@@ -43,12 +45,12 @@
     "User Interface": "Gebruikers Interface",
     "Misc": "Versch.",
     "Locale": "Lokaal",
-    "Reset Dashboard to Default": "Dashboard opnieuw instellen op standaard"
+    "Reset Dashboard to Default": "Dashboard instellen op standaard"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "User will automatically follow all new records of the selected entity types, will see information in the stream and receive notifications.",
-    "doNotFillAssignedUserIfNotRequired": "Wanneer Create record toegewezen gebruiker zal niet worden gevuld met eigen gebruiker, tenzij het veld is vereist.",
-    "followCreatedEntities": "Wanneer nieuwe records worden gemaakt, worden deze automatisch gevolgd, zelfs als deze aan een andere gebruiker zijn toegewezen.",
-    "followCreatedEntityTypeList": "Wanneer nieuwe records van geselecteerde entiteitstypen worden gemaakt, worden deze automatisch gevolgd, zelfs als deze aan een andere gebruiker zijn toegewezen."
+    "doNotFillAssignedUserIfNotRequired": "Bij het aanmaken van een record toegewezen gebruiker zal de gebruiker niet worden ingevuld met een eigen gebruikersnaam, tenzij het veld verplicht is.",
+    "followCreatedEntities": "Bij het aanmaken van nieuwe records worden deze automatisch gevolgd, zelfs als ze aan een andere gebruiker worden toegewezen.",
+    "followCreatedEntityTypeList": "Wanneer u nieuwe records van geselecteerde entiteittypes aanmaakt, worden deze automatisch gevolgd, zelfs als ze aan een andere gebruiker worden toegewezen."
   }
 }

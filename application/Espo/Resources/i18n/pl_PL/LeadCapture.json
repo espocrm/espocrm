@@ -1,1 +1,22 @@
-{}
+{
+  "fields": {
+    "name": "Nazwa",
+    "isActive": "Jest aktywny",
+    "apiKey": "Klucz API",
+    "exampleRequestMethod": "Metoda"
+  },
+  "links": {
+    "campaign": "Kampania"
+  },
+  "labels": {
+    "Create LeadCapture": "Utwórz punkt wejściowy(entry point)",
+    "Generate New API Key": "Generuj nowy klucz API",
+    "Request": "Żądanie"
+  },
+  "messages": {
+    "generateApiKey": "Utwórz nowy klucz API"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown jest wspierany."
+  }
+}

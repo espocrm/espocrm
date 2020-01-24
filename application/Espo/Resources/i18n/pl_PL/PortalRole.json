@@ -4,5 +4,8 @@
   },
   "labels": {
     "Access": "Dostęp"
+  },
+  "fields": {
+    "exportPermission": "Eksportuj uprawnienia"
   }
 }

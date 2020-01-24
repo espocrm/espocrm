@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "發送大量電子郵件",
+      "ControlKnowledgeBaseArticleStatus": "控制知識庫文章狀態"
+    }
+  }
+}

@@ -17,6 +17,7 @@
     "smtpPassword": "Mật khẩu",
     "smtpEmailAddress": "Địa chỉ email",
     "exportDelimiter": "Xuất dấu phân cách",
+    "theme": "Chủ đề",
     "followCreatedEntities": "Tự động theo dõi mục đã được tạo"
   },
   "options": {

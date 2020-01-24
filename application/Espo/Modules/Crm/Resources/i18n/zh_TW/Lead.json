@@ -1,0 +1,71 @@
+{
+  "labels": {
+    "Converted To": "轉換成",
+    "Create Lead": "建立潛在客戶",
+    "Convert": "轉換",
+    "convert": "轉換"
+  },
+  "fields": {
+    "name": "名稱",
+    "emailAddress": "電子郵件",
+    "title": "標題",
+    "website": "網站",
+    "phoneNumber": "電話",
+    "accountName": "用戶名",
+    "doNotCall": "不要通話",
+    "address": "地址",
+    "status": "狀態",
+    "source": "資源",
+    "opportunityAmount": "商機金額",
+    "opportunityAmountConverted": "商機金額 (已轉換)",
+    "description": "描述",
+    "createdAccount": "帳戶",
+    "createdContact": "聯絡人",
+    "createdOpportunity": "商機",
+    "campaign": "活動",
+    "targetLists": "目標清單",
+    "targetList": "目標清單",
+    "industry": "工業",
+    "acceptanceStatus": "接受狀態",
+    "opportunityAmountCurrency": "商機金額貨幣",
+    "acceptanceStatusMeetings": "接受狀態 (會議)",
+    "acceptanceStatusCalls": "接受狀態 (通話)",
+    "convertedAt": "您的使用者帳戶執行的操作不會顯示出來。"
+  },
+  "links": {
+    "targetLists": "目標清單",
+    "campaignLogRecords": "活動日誌",
+    "campaign": "活動",
+    "createdAccount": "帳戶",
+    "createdContact": "聯絡人",
+    "createdOpportunity": "商機",
+    "cases": "案件",
+    "documents": "文件"
+  },
+  "options": {
+    "status": {
+      "New": "新建",
+      "Assigned": "已指定",
+      "In Process": "進行中",
+      "Converted": "已轉換",
+      "Recycled": "已回收",
+      "Dead": "無結果"
+    },
+    "source": {
+      "": "無結果",
+      "Call": "通話",
+      "Email": "電子郵件",
+      "Existing Customer": "現有客戶",
+      "Partner": "夥伴",
+      "Public Relations": "公共關係",
+      "Web Site": "網站",
+      "Campaign": "活動",
+      "Other": "其他"
+    }
+  },
+  "presetFilters": {
+    "active": "啟用",
+    "actual": "實際",
+    "converted": "已轉換"
+  }
+}

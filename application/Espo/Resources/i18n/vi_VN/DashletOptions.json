@@ -6,7 +6,9 @@
     "displayRecords": "Số dòng hiển thị",
     "isDoubleHeight": "Cao 2x",
     "enabledScopeList": "Những gì sẽ được hiển thị",
-    "users": "Người dùng"
+    "users": "Người dùng",
+    "entityType": "Loại Entity ",
+    "expandedLayout": "Bố cục"
   },
   "options": {
     "mode": {

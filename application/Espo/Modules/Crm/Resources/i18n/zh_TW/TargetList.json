@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "name": "名稱",
+    "description": "描述",
+    "entryCount": "進入收量",
+    "campaigns": "活動",
+    "endDate": "結束日期",
+    "targetLists": "目標清單",
+    "includingActionList": "包含",
+    "excludingActionList": "排除",
+    "optedOutCount": "目標狀態",
+    "targetStatus": "是否排除",
+    "isOptedOut": "排除"
+  },
+  "links": {
+    "accounts": "帳戶",
+    "contacts": "聯絡人",
+    "leads": "潛在客戶",
+    "campaigns": "活動",
+    "massEmails": "大量電子郵件"
+  },
+  "options": {
+    "type": {
+      "Email": "電子郵件",
+      "Web": "網頁",
+      "Television": "電視",
+      "Radio": "廣播",
+      "Newsletter": "報章"
+    },
+    "targetStatus": {
+      "Opted Out": "己列表",
+      "Listed": "子清單"
+    }
+  },
+  "labels": {
+    "Create TargetList": "新增目標清單",
+    "Opted Out": "退出",
+    "Cancel Opt-Out": "取消退出",
+    "Opt-Out": "退出"
+  }
+}

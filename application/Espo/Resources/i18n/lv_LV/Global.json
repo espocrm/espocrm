@@ -238,7 +238,8 @@
     "View Personal Data": "Skatīt personas datus",
     "Personal Data": "Personas dati",
     "Erase": "Dzēst",
-    "Move Over": "Pāriet"
+    "Move Over": "Pāriet",
+    "Restore": "Atjaunot"
   },
   "messages": {
     "pleaseWait": "Lūdzu, uzgaidiet...",
@@ -294,9 +295,10 @@
     "fieldShouldBeLess": "{field} nedrīkst būt lielāks nekā {value}",
     "fieldShouldBeGreater": "{field} nedrīkst būt lielāks nekā {value}",
     "fieldIsUploading": "Notiek augšupielāde",
-    "streamPostInfo": "Ierakstiet <strong>@lietotājsvārds</strong>, lai publicējumā minētu lietotājus.\n\nPieejamā \"Markdown\" sintakse:\n`<code>kods</code>`\n```<code>vairākrindiņu kods</code>```\n**<strong>stingrais teksts</strong>**\n*<em>uzsvērts teksts</em>*\n~~<del>izdzēsts teksts</del>~~\n> citāta bloks\n[saites teksts](vietrādis URL)",
     "erasePersonalDataConfirmation": "Atzīmētie lauki tiks neatgriezeniski dzēstu. Vai tiešām vēlaties turpināt?",
-    "massPrintPdfMaxCountError": "Nevar izdrukāt vairāk kā {maxCount} ierakstus."
+    "massPrintPdfMaxCountError": "Nevar izdrukāt vairāk kā {maxCount} ierakstus.",
+    "fieldValueDuplicate": "Dublētais ieraksts",
+    "unlinkSelectedRecordsConfirmation": "Vai Jūs esat pārliecināts, ka gribat atvienot atzīmētos ieraks"
   },
   "boolFilters": {
     "onlyMy": "Tikai manējie",

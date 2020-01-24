@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "名稱",
+    "status": "狀態",
+    "storeSentEmails": "儲存已發送的電子郵件",
+    "startAt": "開始日期",
+    "fromAddress": "從地址",
+    "fromName": "從名字",
+    "replyToAddress": "回覆地址",
+    "replyToName": "回復名稱",
+    "campaign": "活動",
+    "emailTemplate": "電子郵件範本",
+    "inboundEmail": "電子信箱帳號",
+    "targetLists": "目標清單",
+    "excludingTargetLists": "排除目標清單",
+    "optOutEntirely": "完全退出",
+    "smtpAccount": "系統SMTP"
+  },
+  "links": {
+    "targetLists": "目標清單",
+    "excludingTargetLists": "排除目標清單",
+    "queueItems": "排隊項目",
+    "campaign": "活動",
+    "emailTemplate": "電子郵件範本",
+    "inboundEmail": "電子信箱帳號"
+  },
+  "options": {
+    "status": {
+      "Draft": "草稿",
+      "Pending": "等待中",
+      "In Process": "進行中",
+      "Complete": "完成",
+      "Canceled": "取消",
+      "Failed": "失敗"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "新增群組電子郵件",
+    "Send Test": "發送測試",
+    "System SMTP": "系統",
+    "system": "群組",
+    "group": "電子郵件將儲存在CRM中。"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "選擇至少一個目標。",
+    "testSent": "應該發送的測試電子郵件"
+  },
+  "tooltips": {
+    "optOutEntirely": "取消訂閱的收件人的電子郵件地址將被標記為退出，並且他們將不再收到任何大量電子郵件。",
+    "targetLists": "應該接收消息的目標。",
+    "excludingTargetLists": "不應接收消息的目標。",
+    "storeSentEmails": "欄位"
+  },
+  "presetFilters": {
+    "actual": "實際",
+    "complete": "完成"
+  }
+}

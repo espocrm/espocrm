@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "名稱",
+    "logo": "商標",
+    "companyLogo": "商標",
+    "url": "網址",
+    "portalRoles": "權限",
+    "isActive": "是否啟用",
+    "isDefault": "是否預設",
+    "tabList": "標籤列表",
+    "quickCreateList": "快速新增清單",
+    "theme": "主題",
+    "language": "語言",
+    "dashboardLayout": "主控台樣式",
+    "dateFormat": "日期格式",
+    "timeFormat": "時間格式",
+    "timeZone": "時區",
+    "weekStart": "一周的第一天",
+    "defaultCurrency": "預設貨幣",
+    "customUrl": "自定義網址",
+    "customId": "自訂編號"
+  },
+  "links": {
+    "users": "使用者",
+    "portalRoles": "權限",
+    "notes": "註解"
+  },
+  "tooltips": {
+    "portalRoles": "指定的導覧權限將套用在該導覧中的所有使用者。"
+  },
+  "labels": {
+    "Create Portal": "新增導覧",
+    "User Interface": "使用者界面",
+    "General": "一般",
+    "Settings": "設定值"
+  }
+}

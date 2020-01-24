@@ -41,6 +41,7 @@
     "todays": "Huidig"
   },
   "messages": {
-    "nothingHasBeenSent": "Er is niets verzonden"
+    "nothingHasBeenSent": "Er is niets verzonden",
+    "selectAcceptanceStatus": "Stel uw acceptatiestatus in."
   }
 }

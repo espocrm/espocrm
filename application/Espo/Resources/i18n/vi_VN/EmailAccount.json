@@ -9,7 +9,14 @@
     "emailAddress": "Địa chỉ email",
     "sentFolder": "Thư mục gửi thư",
     "storeSentEmails": "Lưu email đã gửi",
-    "keepFetchedEmailsUnread": "Giữ thư đã tải về dạng chưa đọc"
+    "keepFetchedEmailsUnread": "Giữ thư đã tải về dạng chưa đọc",
+    "useSmtp": "Sử dụng SMTP",
+    "smtpHost": "Máy chủ SMTP",
+    "smtpPort": "Cổng SMTP",
+    "smtpAuth": "Loại xác thực SMTP",
+    "smtpSecurity": "Bảo mật SMTP",
+    "smtpUsername": "Tên đăng nhập SMTP",
+    "smtpPassword": "Mật khẩu SMTP"
   },
   "links": {
     "filters": "Lọc"

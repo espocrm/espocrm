@@ -1,0 +1,48 @@
+{
+  "fields": {
+    "name": "活動",
+    "campaign": "啟用",
+    "isActive": "訂閱目標清單",
+    "subscribeToTargetList": "訂閱聯絡人 (如果存在)",
+    "subscribeContactToTargetList": "目標清單",
+    "targetList": "有效負載欄位",
+    "fieldList": "雙重選入",
+    "optInConfirmation": "選入確認電子郵件模範本",
+    "optInConfirmationEmailTemplate": "選入啟用確認壽命 (小時)",
+    "optInConfirmationLifetime": "加入確認後顯示的文字",
+    "optInConfirmationSuccessMessage": "潛在客戶來源",
+    "leadSource": "API密鑰",
+    "apiKey": "目標團隊",
+    "targetTeam": "方法",
+    "exampleRequestMethod": "網址",
+    "exampleRequestUrl": "有效負載",
+    "exampleRequestPayload": "目標清單",
+    "createLeadBeforeOptInConfirmation": "重複檢查",
+    "duplicateCheck": "您的帳戶規定的類型。有4個選項：\n\n- 'Dn'－以格式 'CN=tester,OU=espocrm,DC=test, DC=lan'.\n\n- 'Username'－以格式 'tester'.\n\n- 'Backslash'－以格式 'COMPANY\\tester'.\n\n- 'Principal'－以格式 'tester@company.com'.",
+    "skipOptInConfirmationIfSubscribed": "SMTP帳號",
+    "smtpAccount": "群組電子郵件帳戶",
+    "inboundEmail": "群組電子郵件帳戶"
+  },
+  "links": {
+    "targetList": "活動",
+    "campaign": "選擇確認電子郵件樣版",
+    "optInConfirmationEmailTemplate": "目標團隊",
+    "targetTeam": "日誌記錄",
+    "logRecords": "新增入口點",
+    "inboundEmail": "APP內指定通知"
+  },
+  "labels": {
+    "Create LeadCapture": "生成新的API密鑰",
+    "Generate New API Key": "請求",
+    "Request": "確認加入",
+    "Confirm Opt-In": "新增新的API密鑰"
+  },
+  "messages": {
+    "generateApiKey": "選入確認鏈接已失效。",
+    "optInConfirmationExpired": "選入己確認。",
+    "optInIsConfirmed": "支持 Markdown。"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "數字"
+  }
+}

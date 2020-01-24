@@ -1,5 +1,19 @@
 {
   "insertFromSourceLabels": {
     "Document": "Wstaw dokument"
+  },
+  "fields": {
+    "related": "Powiązane",
+    "file": "Plik",
+    "type": "Typ",
+    "field": "Pole",
+    "size": "Rozmiar (bajty)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Załącznik",
+      "Import File": "Importuj plik",
+      "Export File": "Eksportuj plik"
+    }
   }
 }

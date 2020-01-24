@@ -7,24 +7,28 @@
     "accountType": "Tipo di Account",
     "doNotCall": "Non chiamare",
     "address": "Indirizzo",
+    "opportunityRole": "Ruolo opportunità",
     "description": "Descrizione",
     "targetLists": "Liste di destinazione",
     "targetList": "Lista di destinazione",
+    "originalLead": "Lead originale",
     "acceptanceStatus": "Stato accettazione",
     "accountIsInactive": "Account inattivo",
     "acceptanceStatusMeetings": "Stato accettazione (riunioni)",
-    "acceptanceStatusCalls": "Stato accettazione (chiamate)"
+    "acceptanceStatusCalls": "Stato accettazione (chiamate)",
+    "title": "Titolo del conto principale"
   },
   "links": {
     "opportunities": "Opportunita'",
     "cases": "Ticket",
     "targetLists": "Liste di destinazione",
-    "campaignLogRecords": "Log Campagna",
+    "campaignLogRecords": "Log campagna",
     "campaign": "Campagna",
     "account": "Account (Primario)",
     "accounts": "Account",
     "casesPrimary": "Ticket (Primario)",
-    "portalUser": "Portale Utente",
+    "portalUser": "Portale utente",
+    "originalLead": "Lead originale",
     "documents": "Documenti",
     "tasksPrimary": "Attività (espanso)"
   },
@@ -38,8 +42,8 @@
     }
   },
   "presetFilters": {
-    "portalUsers": "Portale Utenti",
-    "notPortalUsers": "Nessun Portale Utenti",
+    "portalUsers": "Portale utenti",
+    "notPortalUsers": "Nessun portale utenti",
     "accountActive": "Attivo"
   }
 }

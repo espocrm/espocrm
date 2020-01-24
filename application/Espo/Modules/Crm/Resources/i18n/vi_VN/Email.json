@@ -1,6 +1,9 @@
 {
   "labels": {
     "Create Lead": "Chuyển khách hàng tiềm năng",
-    "Create Contact": "Tạo khách hàng"
+    "Create Contact": "Tạo khách hàng",
+    "Create Task": "Tạo nhiệm vụ",
+    "Add to Contact": "Thêm liên hệ",
+    "Add to Lead": "Thêm Lead"
   }
 }

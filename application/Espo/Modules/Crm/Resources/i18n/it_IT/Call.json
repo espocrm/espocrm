@@ -20,8 +20,8 @@
       "Not Held": "Lasciare"
     },
     "direction": {
-      "Outbound": "in Uscita",
-      "Inbound": "in Ingresso"
+      "Outbound": "In uscita",
+      "Inbound": "In ingresso"
     },
     "acceptanceStatus": {
       "None": "Nessuno",
@@ -32,15 +32,16 @@
   },
   "massActions": {
     "setHeld": "Trattenuto",
-    "setNotHeld": "Non Trattenuto"
+    "setNotHeld": "Non trattenuto"
   },
   "labels": {
     "Create Call": "Crea chiamata",
     "Set Held": "Trattenuto",
-    "Set Not Held": "Non Trattenuto",
+    "Set Not Held": "Non trattenuto",
     "Send Invitations": "Inviare inviti"
   },
   "presetFilters": {
-    "planned": "Pianificato"
+    "planned": "Pianificato",
+    "todays": "Di oggi"
   }
 }

@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create Document": "新增文件",
+    "Details": "細節"
+  },
+  "fields": {
+    "name": "名稱",
+    "status": "狀態",
+    "file": "檔案",
+    "type": "型別",
+    "publishDate": "發布日期",
+    "expirationDate": "截止日期",
+    "description": "描述",
+    "accounts": "帳戶",
+    "folder": "資料夾"
+  },
+  "links": {
+    "accounts": "帳戶",
+    "opportunities": "商機",
+    "folder": "資料夾",
+    "leads": "潛在客戶",
+    "contacts": "聯絡人"
+  },
+  "options": {
+    "status": {
+      "Active": "啟用",
+      "Draft": "草稿",
+      "Expired": "己過期",
+      "Canceled": "己取消"
+    },
+    "type": {
+      "": "無",
+      "Contract": "聯絡人",
+      "NDA": "保密協議",
+      "EULA": "最終用戶許可協議",
+      "License Agreement": "許可協議"
+    }
+  },
+  "presetFilters": {
+    "active": "啟用",
+    "draft": "草案"
+  }
+}

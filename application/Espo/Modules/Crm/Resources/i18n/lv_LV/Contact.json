@@ -41,7 +41,6 @@
   },
   "options": {
     "opportunityRole": {
-      "": "--Nav--",
       "Decision Maker": "Lēmumu pieņēmējs",
       "Evaluator": "Vērtētājs",
       "Influencer": "Padomnieks"

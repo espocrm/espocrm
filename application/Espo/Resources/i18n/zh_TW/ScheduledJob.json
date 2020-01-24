@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "名稱",
+    "status": "狀態",
+    "job": "工作",
+    "scheduling": "排程中"
+  },
+  "links": {
+    "log": "日誌記錄"
+  },
+  "labels": {
+    "Create ScheduledJob": "新增排定工作"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "清除",
+      "CheckInboundEmails": "檢查組電子郵件帳戶",
+      "CheckEmailAccounts": "檢查個人電子郵件帳戶",
+      "SendEmailReminders": "發送電子郵件提醒",
+      "AuthTokenControl": "授權憑信控制",
+      "SendEmailNotifications": "發送電子郵件通知",
+      "CheckNewVersion": "此使用者已存在",
+      "ProcessWebhookQueue": "停用密碼回復"
+    },
+    "cronSetup": {
+      "linux": "註：新增這行到 crontab 以排定 Espo 的工作：",
+      "mac": "註：新增這行到 crontab 以排定 Espo 的工作：",
+      "windows": "註：為下列指令新增一個批次檔並用 Windows 排定的工作以排定 Espo 的工作：",
+      "default": "註：新增這行指令到 Cron 工作  (排定的工作)："
+    },
+    "status": {
+      "Active": "啟用",
+      "Inactive": "不活躍"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Crontab 標註。指定工作執行頻率。\n\n*/5 * * * * - 每 5 分鐘\n\n0 */2 * * * - 每 2 小時\n\n30 1 * * * - 每天的 01:30\n\n0 0 1 * * - 一個月的一天"
+  }
+}

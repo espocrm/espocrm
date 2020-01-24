@@ -5,7 +5,11 @@
     "targetType": "Cel",
     "teams": "Zespoły",
     "users": "Użytkownicy",
-    "portals": "Portale"
+    "portals": "Portale",
+    "type": "Typ",
+    "isInternal": "Prywatny (dla użytkowników wewnętrznych)",
+    "related": "Powiązany",
+    "number": "Numer"
   },
   "filters": {
     "all": "Wszystko",
@@ -23,5 +27,8 @@
       "all": "Do wszystkich użytkowników wewnętrznych",
       "portals": "Do wszystkich użytkowników portalu"
     }
+  },
+  "links": {
+    "related": "Powiązane"
   }
 }

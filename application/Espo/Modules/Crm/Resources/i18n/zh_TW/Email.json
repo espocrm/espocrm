@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create Lead": "新增潛在客戶",
+    "Create Contact": "新增聯絡人",
+    "Create Task": "新增任務",
+    "Create Case": "新增案件",
+    "Add to Contact": "添加到聯絡人",
+    "Add to Lead": "添加到潛在客戶"
+  }
+}

@@ -9,11 +9,13 @@
     "doNotCall": "Không gọi",
     "address": "Địa chỉ",
     "opportunityRole": "Vai trò cơ hội",
-    "description": "Mô tả"
+    "description": "Mô tả",
+    "campaign": "Chiến dịch"
   },
   "links": {
     "opportunities": "Cơ hội",
-    "cases": "Trường hợp"
+    "cases": "Trường hợp",
+    "documents": "Tài liệu"
   },
   "labels": {
     "Create Contact": "Tạo liên hệ"

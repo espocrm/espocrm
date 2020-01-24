@@ -1,0 +1,15 @@
+{
+  "messages": {
+    "infoMention": "可用的markdown語法",
+    "infoSyntax": "代碼"
+  },
+  "syntaxItems": {
+    "code": "多行代碼",
+    "multilineCode": "強調文字",
+    "strongText": "強調文字",
+    "emphasizedText": "刪除的文字",
+    "deletedText": "引用區塊",
+    "blockquote": "鏈接",
+    "link": "您需要設置[SMTP設置] ({url})才能使系統能夠通過電子郵件發送密碼。"
+  }
+}

@@ -5,7 +5,7 @@
     "EmailTemplates": "E-mailsjablonen"
   },
   "fields": {
-    "order": "Bestellen",
+    "order": "Sortering",
     "childList": "Kinderlijst"
   },
   "links": {

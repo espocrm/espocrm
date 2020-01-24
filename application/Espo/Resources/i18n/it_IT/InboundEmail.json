@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Nome",
-    "emailAddress": "Indirizzo Email",
+    "emailAddress": "Indirizzo email",
     "status": "Stato",
     "assignToUser": "Assegna a utente",
     "port": "Porta",
@@ -15,7 +15,7 @@
     "replyToAddress": "Replica a (indirizzo)",
     "replyFromName": "Replica da (nome)",
     "targetUserPosition": "Obiettivo posizione utente",
-    "fetchSince": "Portare Dal",
+    "fetchSince": "Recupera da",
     "addAllTeamUsers": "Per tutti gli utenti del team",
     "team": "Team",
     "sentFolder": "Cartella inviate",
@@ -31,7 +31,8 @@
     "smtpIsShared": "SMTP è condiviso",
     "smtpIsForMassEmail": "SMTP è per le mail di massa",
     "useImap": "Scarica email",
-    "keepFetchedEmailsUnread": "Mantieni le email non lette"
+    "keepFetchedEmailsUnread": "Mantieni le email non lette",
+    "smtpAuthMechanism": "Meccanismo di autenticazione SMTP"
   },
   "tooltips": {
     "reply": "Notifica ai mittenti che le loro email sono state ricevute.\n\nVerrà inviata una sola email per destinatario, in un determinato periodo di tempo, per evitare loops.",
@@ -60,7 +61,12 @@
     },
     "caseDistribution": {
       "": "Nessuno",
-      "Direct-Assignment": "Assegnazione diretta"
+      "Direct-Assignment": "Assegnazione diretta",
+      "Least-Busy": "Least-Occupato"
+    },
+    "smtpAuthMechanism": {
+      "plain": "Semplice\n",
+      "login": "Login"
     }
   },
   "labels": {

@@ -19,7 +19,8 @@
     "smtpAuth": "SMTP授权",
     "smtpSecurity": "SMTP安全协议",
     "smtpUsername": "SMTP用户名",
-    "smtpPassword": "SMTP密码"
+    "smtpPassword": "SMTP密码",
+    "useImap": "获取邮件"
   },
   "links": {
     "filters": "过滤器",
@@ -35,7 +36,8 @@
     "Create EmailAccount": "创建邮件帐户",
     "Main": "主要",
     "Test Connection": "测试连接",
-    "Send Test Email": "发送编辑邮件"
+    "Send Test Email": "发送编辑邮件",
+    "SMTP": "简单邮件传输协议"
   },
   "messages": {
     "couldNotConnectToImap": "无法连接到IMAP服务器",

@@ -1,0 +1,63 @@
+{
+  "fields": {
+    "dateFormat": "日期格式",
+    "timeFormat": "時間格式",
+    "timeZone": "時區",
+    "weekStart": "一周的第一天",
+    "thousandSeparator": "千份位",
+    "decimalMark": "小數點",
+    "defaultCurrency": "預設貨幣",
+    "currencyList": "貨幣清單",
+    "language": "語言",
+    "smtpServer": "伺服器",
+    "smtpPort": "埠",
+    "smtpAuth": "授權",
+    "smtpSecurity": "安全性",
+    "smtpUsername": "使用者名",
+    "emailAddress": "電子郵件",
+    "smtpPassword": "密碼",
+    "smtpEmailAddress": "電子郵件地址",
+    "exportDelimiter": "匯出分隔字元",
+    "signature": "電子郵件簽名",
+    "dashboardTabList": "標籤列表",
+    "tabList": "標籤列表",
+    "defaultReminders": "預設通知",
+    "theme": "主題",
+    "useCustomTabList": "自定義標籤列表",
+    "receiveAssignmentEmailNotifications": "指定後的電子郵件通知",
+    "receiveMentionEmailNotifications": "在發文中提到的電子郵件通知",
+    "receiveStreamEmailNotifications": "在發文中狀態更新的電子郵件通知",
+    "dashboardLayout": "主控台配置",
+    "emailReplyForceHtml": "HTML電子郵件回覆",
+    "autoFollowEntityTypeList": "全域自動關注",
+    "emailReplyToAllByDefault": "預設情況下透過電子郵件回覆所有人",
+    "doNotFillAssignedUserIfNotRequired": "不要在記錄新增時預先填入指定的使用者",
+    "followEntityOnStreamPost": "在動態發布後自動關注紀錄",
+    "followCreatedEntities": "自動跟蹤新增的記錄",
+    "followCreatedEntityTypeList": "自動跟蹤新增的特定模組類型的記錄",
+    "emailUseExternalClient": "通知什麼",
+    "scopeColorsDisabled": "停用標籤顏色",
+    "tabColorsDisabled": "停用範圍顏色",
+    "assignmentNotificationsIgnoreEntityTypeList": "電子郵件指定通知",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "處理Webhook佇列"
+  },
+  "options": {
+    "weekStart": {
+      "0": "星期日",
+      "1": "星期一"
+    }
+  },
+  "labels": {
+    "Notifications": "通知事項",
+    "User Interface": "使用者界面",
+    "Misc": "綜合",
+    "Locale": "地域",
+    "Reset Dashboard to Default": "搬過來"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "自動跟蹤所選選單的所有新記錄 (由任何使用者新增的)。為了能夠查看動態訊息並接收有關系統中所有記錄的通知。",
+    "doNotFillAssignedUserIfNotRequired": "新增記錄時，除非這個欄位是必要的，否則指定的使用者將不會填入自己。",
+    "followCreatedEntities": "當新增選定選單類型的新記錄時，即使將它們指定給另一個使用者，也會自動跟蹤它們。",
+    "followCreatedEntityTypeList": "附加元件有新版本時會顯示通知"
+  }
+}

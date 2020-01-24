@@ -3,7 +3,7 @@
     "failedAttempts": "Pogingen Mislukt",
     "scheduledJob": "Geplande Opdracht",
     "method": "Method",
-    "scheduledJobJob": "Geplande taaknaam",
+    "scheduledJobJob": "Naam geplande taak",
     "executedAt": "Uitgevoerd bij",
     "startedAt": "Begonnen bij",
     "targetType": "Doeltype",

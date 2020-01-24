@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "名稱",
+    "parent": "上層",
+    "status": "狀態",
+    "dateStart": "開始日期",
+    "dateEnd": "結束日期",
+    "direction": "方向",
+    "duration": "持續時間",
+    "description": "描述",
+    "users": "使用者",
+    "contacts": "聯絡人",
+    "leads": "潛在客戶",
+    "reminders": "提醒",
+    "account": "帳戶",
+    "acceptanceStatus": "接受狀態"
+  },
+  "options": {
+    "status": {
+      "Planned": "己計畫",
+      "Held": "己保留",
+      "Not Held": "未保留"
+    },
+    "direction": {
+      "Outbound": "撥出",
+      "Inbound": "撥入"
+    },
+    "acceptanceStatus": {
+      "None": "無",
+      "Accepted": "己接受",
+      "Declined": "己拒絕",
+      "Tentative": "暫定"
+    }
+  },
+  "massActions": {
+    "setHeld": "設定保留",
+    "setNotHeld": "設定未保留"
+  },
+  "labels": {
+    "Create Call": "建立通話",
+    "Set Held": "設定保留",
+    "Set Not Held": "設定未保留",
+    "Send Invitations": "發送邀請"
+  },
+  "presetFilters": {
+    "planned": "己計畫",
+    "held": "保留",
+    "todays": "今天的"
+  }
+}

@@ -182,14 +182,13 @@
     "upgradeBackup": "Перед оновленням рекомендуємо створити резевну копію файлів EspoCRM та даних",
     "thousandSeparatorEqualsDecimalMark": "Розділювач тисячних не може бути таким самим, як розділювач десяткових.",
     "userHasNoEmailAddress": "В користувача не вказана адреса електронної скриньки.",
-    "newVersionIsAvailable": "Нова версія EspoCRM {latestVersion} доступна.",
     "uninstallConfirmation": "Ви впевнені, що хочете видалити розширення?",
     "cronIsNotConfigured": "Заплановані завдання не працюють. Отже, вхідні електронні листи, сповіщення та нагадування не працюють. Будь ласка, дотримуйтесь інструкцій (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), щоб налаштувати cron job.",
     "newExtensionVersionIsAvailable": "Нова {extensionName} версія {latestVersion} доступна.",
-    "upgradeVersion": "EspoCRM буде оновлено до версії ** {версія} **. Будьте терплячі, оскільки це може зайняти деякий час.",
+    "upgradeVersion": "EspoCRM буде оновлено до версії **{версія}**. Будьте терплячі, оскільки це може зайняти деякий час.",
     "upgradeDone": "EspoCRM оновлено до версії **{version}**.",
     "downloadUpgradePackage": "Завантажте апгрейд [звідси]({url})",
-    "upgradeInfo": "Перегляньте [документацію] ({url}) про те, як оновити EspoCRM.\n",
+    "upgradeInfo": "Перегляньте [документацію]({url}) про те, як оновити EspoCRM.\n",
     "upgradeRecommendation": "Такий спосіб оновлення не рекомендовано. Краще оновлювати через CLI."
   },
   "descriptions": {

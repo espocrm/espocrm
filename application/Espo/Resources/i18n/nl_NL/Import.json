@@ -7,9 +7,13 @@
     "Default Values": "Voorkeur waarden",
     "Add Field": "Veld toevoegen",
     "Created": "Gemaakt",
-    "Updated": "Geupdate",
+    "Updated": "Bijgewerkt",
     "Result": "Resultaat",
     "Show records": "Toon Velden",
+    "updatedCount": "Bijgewerkt (count)",
+    "Create and Update": "Creëren & bijwerken",
+    "Update Only": "Update alleen",
+    "Update by": "Update door",
     "Set as Not Duplicate": "Instellen als niet dupliceren",
     "File (CSV)": "Bestand (CSV)",
     "First Row Value": "Eerste rijwaarde",
@@ -47,16 +51,16 @@
     "Silent Mode": "Stille modus"
   },
   "fields": {
-    "file": "Bestand"
+    "file": "Bestand",
+    "updated": "Bijgewerkte records"
   },
   "messages": {
     "inIdle": "Uitvoeren in idle (voor big data; via cron)",
-    "revert": "Hiermee worden alle geïmporteerde records permanent verwijderd.",
-    "removeDuplicates": "Hiermee worden alle geïmporteerde records permanent verwijderd die als duplicaten werden herkend.",
-    "confirmRevert": "Hiermee worden alle geïmporteerde records permanent verwijderd. Weet je het zeker?",
-    "confirmRemoveDuplicates": "Hiermee worden alle geïmporteerde records permanent verwijderd die als duplicaten werden herkend. Weet je het zeker?",
-    "confirmRemoveImportLog": "Hiermee wordt het importlogboek verwijderd. Alle geïmporteerde records worden bewaard. U kunt de importresultaten niet terugdraaien. Weet je zeker dat je?",
-    "removeImportLog": "Hiermee wordt het importlogboek verwijderd. Alle geïmporteerde records worden bewaard. Gebruik het als u zeker weet dat het importeren goed gaat."
+    "revert": "Hierdoor worden alle geïmporteerde records definitief verwijderd.",
+    "removeDuplicates": "Hierdoor worden alle geïmporteerde records die als duplicaten werden herkend, permanent verwijderd.",
+    "confirmRevert": "Hierdoor worden alle geïmporteerde records definitief verwijderd. Weet u het zeker?",
+    "confirmRemoveDuplicates": "Hierdoor worden alle geïmporteerde records die als duplicaten werden herkend, permanent verwijderd. Weet u het zeker?",
+    "removeImportLog": "Dit zal het importlogboek verwijderen. Alle geïmporteerde gegevens worden bewaard. Gebruik het als u zeker weet dat het importeren in orde is."
   },
   "options": {
     "status": {

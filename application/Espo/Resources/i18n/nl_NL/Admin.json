@@ -51,14 +51,15 @@
     "Success": "Succesvol",
     "Fail": "Mislukt",
     "is recommended": "Aanbevolen",
-    "extension is missing": "Extensie ontbreekt"
+    "extension is missing": "Extensie ontbreekt",
+    "Dashboard Templates": "Dashboard Sjablonen"
   },
   "layouts": {
     "list": "Lijst",
     "listSmall": "Lijst (klein)",
     "detailSmall": "Detail (klein)",
     "filters": "Zoek Filters",
-    "massUpdate": "Massa Update",
+    "massUpdate": "Massa-update",
     "relationships": "Relaties",
     "sidePanelsDetail": "Zijpanelen (detail)",
     "sidePanelsEdit": "Zijpanelen (bewerken)",
@@ -68,7 +69,8 @@
     "detailSmallPortal": "Detail (klein, portaal)",
     "listSmallPortal": "Lijst (klein, portaal)",
     "listPortal": "Lijst (portaal)",
-    "relationshipsPortal": "Relatiepanelen (portaal)"
+    "relationshipsPortal": "Relatiepanelen (portaal)",
+    "defaultSidePanel": "Side Panel Velden"
   },
   "fieldTypes": {
     "address": "Adres",
@@ -128,14 +130,17 @@
     "maxFileSize": "Max. Bestandsgrootte (Mb)",
     "isPersonalData": "Zijn persoonlijke gegevens",
     "useIframe": "Gebruik iframe",
-    "useNumericFormat": "Gebruik numeriek formaat",
+    "useNumericFormat": "Gebruik Numeriek Formaat",
     "cutHeight": "Snijhoogte (px)",
     "minuteStep": "Aantal minuten",
     "inlineEditDisabled": "Inline-bewerking uitschakelen",
     "displayAsLabel": "Weergave als label",
     "allowCustomOptions": "Aangepaste opties toestaan",
     "maxCount": "Maximumpuntentelling",
-    "displayRawText": "Onbewerkte tekst weergeven (geen markering)"
+    "displayRawText": "Onbewerkte tekst weergeven (geen markering)",
+    "notActualOptions": "Niet werkelijke opties",
+    "accept": "Accepteer",
+    "displayAsList": "Weergeven als lijst"
   },
   "messages": {
     "selectEntityType": "Selecteer de eenheid soort in het linker menu.",
@@ -149,12 +154,13 @@
     "userHasNoEmailAddress": "Gebruiker heeft geen emailadres.",
     "uninstallConfirmation": "Weet je zeker dat je de extensie wilt verwijderen?",
     "cronIsNotConfigured": "Geplande taken zijn niet actief. Vandaar dat inkomende e-mails, meldingen en herinneringen niet werken. Volg de [instructies] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) om cron-taak in te stellen.",
-    "newExtensionVersionIsAvailable": "Nieuwe versie {extensionName} {latestVersion} is beschikbaar.",
-    "upgradeVersion": "EspoCRM wordt opgewaardeerd naar versie **{versie}**. Wees geduldig, want dit kan even duren.",
-    "upgradeDone": "EspoCRM is geüpgrade naar versie **{versie}**.",
+    "newExtensionVersionIsAvailable": "Nieuwe versie {latestVersion} van {extensionName} is beschikbaar.",
+    "upgradeVersion": "EspoCRM wordt opgewaardeerd naar versie **{version}**. Wees geduldig, want dit kan even duren.",
+    "upgradeDone": "EspoCRM is geüpgrade naar versie **{version}**.",
     "downloadUpgradePackage": "Download upgrade pakket(en) [hier]({url}).",
     "upgradeInfo": "Controleer de [documentatie]({url}) over hoe u uw EspoCRM-instantie kunt upgraden.",
-    "upgradeRecommendation": "Deze manier van upgraden wordt niet aanbevolen. Het is beter om te upgraden vanuit CLI."
+    "upgradeRecommendation": "Deze manier van upgraden wordt niet aanbevolen. Het is beter om te upgraden vanuit CLI.",
+    "newVersionIsAvailable": "Nieuwe EspoCRM-versie {latestVersion} is beschikbaar. Volg de [instructions] (https://www.espocrm.com/documentation/administration/upgrading/) om uw installatie te upgraden."
   },
   "descriptions": {
     "settings": "Systeem instellingen van het programma.",
@@ -170,7 +176,7 @@
     "personalEmailAccounts": "Gebruikers emailaccounts",
     "emailTemplates": "Templates voor uitgaande E-mails.",
     "import": "Importeer data vanuit CSV bestand.",
-    "layoutManager": "Bewerk layouts (lijst, detail, bewerk, zoeken, massa update).",
+    "layoutManager": "Lay-outs aanpassen (lijst, detail, bewerken, zoeken, grote wijzigingen).",
     "userInterface": "Configureer UI.",
     "authTokens": "Actieve bevestigde sessie. IP adres en laatste inlogdatum.",
     "authentication": "Verificatie-instellingen",
@@ -181,7 +187,7 @@
     "entityManager": "Create custom entities, edit existing ones. Manage field and relationships.",
     "emailFilters": "Emails messages that match specified filter won't be imported.",
     "actionHistory": "Log van gebruikersacties.",
-    "labelManager": "Toepassingslabels aanpassen.",
+    "labelManager": "Labels aanpassen.",
     "authLog": "Aanmeldingsgeschiedenis.",
     "leadCapture": "API-invoerpunten voor Web-naar-lead.",
     "attachments": "Alle bestandsbijlagen opgeslagen in het systeem.",
@@ -189,7 +195,9 @@
     "systemRequirements": "Systeem eisen voor EspoCRM.",
     "apiUsers": "Splits gebruikers voor integratiedoeleinden.",
     "jobs": "Jobs voert taken uit op de achtergrond.",
-    "pdfTemplates": "Sjablonen om af te drukken naar PDF."
+    "pdfTemplates": "Sjablonen om af te drukken naar PDF.",
+    "webhooks": "Beheer webhooks",
+    "dashboardTemplates": "Implementeer dashboards voor gebruikers."
   },
   "options": {
     "previewSize": {
@@ -222,7 +230,7 @@
     "noteEmailRecieved": "Opmerking ontvangen E-mail",
     "notePost": "Opmerking over bericht",
     "notePostNoParent": "Opmerking over bericht",
-    "noteStatus": "Opmerking over status update",
+    "noteStatus": "Opmerking over status-update",
     "passwordChangeLink": "Wachtwoord wijzigingslink"
   }
 }

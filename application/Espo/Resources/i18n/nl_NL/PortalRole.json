@@ -9,10 +9,10 @@
   },
   "fields": {
     "exportPermission": "Machtiging exporteren",
-    "massUpdatePermission": "Massa update rechten"
+    "massUpdatePermission": "Toestemming voor massa-update"
   },
   "tooltips": {
     "exportPermission": "Bepaalt of portaalgebruikers de mogelijkheid hebben om records te exporteren.",
-    "massUpdatePermission": "Definieert of portaalgebruikers de mogelijkheid hebben om massaal records bij te werken."
+    "massUpdatePermission": "Definieert of portaalgebruikers de mogelijkheid hebben om een grote hoeveelheid records bij te werken."
   }
 }

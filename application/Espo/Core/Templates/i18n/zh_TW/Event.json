@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "上層",
+    "dateStart": "開始日期",
+    "dateEnd": "結束日期",
+    "duration": "持續時間",
+    "status": "狀態",
+    "reminders": "提醒",
+    "dateStartDate": "結束日期 (全天)",
+    "dateEndDate": "是否全天",
+    "isAllDay": "預算貨幣"
+  },
+  "links": {
+    "parent": "上層"
+  },
+  "options": {
+    "status": {
+      "Planned": "己計劃",
+      "Held": "己保留",
+      "Not Held": "未保留"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "建立{entityTypeTranslated}",
+    "Schedule {entityType}": "時間表{entityTypeTranslated}",
+    "Log {entityType}": "日誌{entityTypeTranslated}",
+    "Set Held": "設定保留",
+    "Set Not Held": "設定未保留"
+  },
+  "massActions": {
+    "setHeld": "設定保留",
+    "setNotHeld": "設定未保留"
+  },
+  "presetFilters": {
+    "planned": "計劃",
+    "held": "保留",
+    "todays": "今天的"
+  }
+}

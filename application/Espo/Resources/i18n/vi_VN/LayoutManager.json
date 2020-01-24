@@ -1,5 +1,6 @@
 {
   "fields": {
+    "width": "Chiều ngang (%)",
     "link": "Liên kết",
     "isLarge": "Cỡ chữ lớn"
   },
@@ -18,6 +19,7 @@
     }
   },
   "labels": {
-    "New panel": "Khung mới"
+    "New panel": "Khung mới",
+    "Layout": "Bố cục"
   }
 }

@@ -1,4 +1,7 @@
 {
+  "links": {
+    "users": "Tài khoản"
+  },
   "labels": {
     "Access": "Truy cập"
   }

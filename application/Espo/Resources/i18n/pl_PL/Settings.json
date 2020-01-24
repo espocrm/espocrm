@@ -53,6 +53,7 @@
     "ldapUserFirstNameAttribute": "Imię użytkownika",
     "ldapUserLastNameAttribute": "Nazwisko użytkownika",
     "ldapUserEmailAddressAttribute": "E-mail użytkownika",
+    "ldapUserDefaultTeam": "Domyślny zespół",
     "ldapUserPhoneNumberAttribute": "Numer telefonu użytkownika",
     "assignmentNotificationsEntityList": "Jednostki o których powiadamiać przy przypisaniu",
     "assignmentEmailNotifications": "Wyślij powiadominie do użytkonika o przypisaniu",
@@ -61,9 +62,17 @@
     "mentionEmailNotifications": "Wyślij informacje na temat wzmianki w postach",
     "activitiesEntityList": "Aktywuj listę Jednostek",
     "historyEntityList": "Historia listy Jednostek",
+    "currencyFormat": "Format waluty",
     "followCreatedEntities": "Obserwuj utworzone ",
+    "adminNotifications": "Powiadomienia systemowe w panelu administracyjnym",
     "massEmailMaxPerHourCount": "Maksymalna ilość wiadomości wysłanych na godzinę",
-    "maxEmailAccountCount": "Max count of personal email accounts per user"
+    "maxEmailAccountCount": "Max count of personal email accounts per user",
+    "passwordStrengthLength": "Minimalna długość hasła",
+    "passwordStrengthLetterCount": "Ilość wymaganych liter w haśle",
+    "passwordStrengthNumberCount": "Liczba wymaganych cyfr w haśle",
+    "passwordStrengthBothCases": "Hasła musi zawierać zarówno duże jak i małe litery",
+    "auth2FA": "Włącz dwuetapową weryfikację",
+    "auth2FAMethodList": "Dostępne metody dwuetapowej weryfikacji"
   },
   "options": {
     "weekStart": {
@@ -89,7 +98,10 @@
     "Mass Email": "Poczta masowa",
     "Test Connection": "Testowanie połączenia",
     "Connecting": "Łączenie...",
-    "Activities": "Aktywności "
+    "Activities": "Aktywności ",
+    "Admin Notifications": "Powiadomienia administratora",
+    "Passwords": "Hasła",
+    "2-Factor Authentication": "Dwuetapowa weryfikacja"
   },
   "messages": {
     "ldapTestConnection": "Połączenie zostało nawiązane poprawnie."

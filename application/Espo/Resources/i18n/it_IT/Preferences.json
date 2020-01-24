@@ -1,22 +1,23 @@
 {
   "fields": {
-    "dateFormat": "Formato Data",
-    "timeFormat": "Formato Ora",
-    "weekStart": "Primo giorno della Settimana",
+    "dateFormat": "Formato data",
+    "timeFormat": "Formato ora",
+    "timeZone": "Fuso orario",
+    "weekStart": "Primo giorno della settimana",
     "thousandSeparator": "Separatore delle migliaia",
-    "decimalMark": "Marcatore dei Decimali",
+    "decimalMark": "Marcatore dei decimali",
     "defaultCurrency": "Valuta di default",
-    "currencyList": "Elenco Valute",
+    "currencyList": "Elenco valute",
     "language": "Lingua",
     "smtpPort": "Porta",
     "smtpAuth": "Autenticato",
     "smtpSecurity": "Sicurezza",
-    "smtpEmailAddress": "Indirizzo Email",
+    "smtpEmailAddress": "Indirizzo email",
     "exportDelimiter": "Delimitatore esportazione",
-    "signature": "Firma Email",
+    "signature": "Firma email",
     "dashboardTabList": "Elenco schede",
     "tabList": "Elenco schede",
-    "defaultReminders": "Promemoria di Defaul",
+    "defaultReminders": "Promemoria predefiniti",
     "theme": "Tema",
     "useCustomTabList": "Elenco schede personalizzate",
     "receiveAssignmentEmailNotifications": "Notifiche via email al momento dell' assegnazione",
@@ -24,12 +25,17 @@
     "receiveStreamEmailNotifications": "Notifiche via email per i messaggi e gli aggiornamenti di stato",
     "dashboardLayout": "Layout panoramica",
     "emailReplyForceHtml": "Email di risposta in HTML",
+    "autoFollowEntityTypeList": "Auto-follow globale",
     "emailReplyToAllByDefault": "Rispondi a tutte le email",
     "doNotFillAssignedUserIfNotRequired": "Non precompilare l'utente assegnato alla creazione del record",
     "followEntityOnStreamPost": "Segui automaticamente dopo la pubblicazione in Stream",
+    "followCreatedEntities": "Segui automaticamente i record creati",
+    "followCreatedEntityTypeList": "Segui automaticamente i record creati di tipi di entità specifici\n",
     "emailUseExternalClient": "Utilizzare un client di posta elettronica esterno",
     "scopeColorsDisabled": "Disabilita campo colori",
-    "tabColorsDisabled": "Disabilita tabella colori"
+    "tabColorsDisabled": "Disabilita tabella colori",
+    "assignmentNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione in-app",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione e-mail"
   },
   "options": {
     "weekStart": {
@@ -39,11 +45,13 @@
   },
   "labels": {
     "Notifications": "Notifica",
-    "User Interface": "Interfaccia Utente",
+    "User Interface": "Interfaccia utente",
     "Misc": "Varie",
     "Reset Dashboard to Default": "Reimposta dashboard su predefinito"
   },
   "tooltips": {
+    "autoFollowEntityTypeList": "Segui automaticamente TUTTI i nuovi record (creati da qualsiasi utente) dei tipi di entità selezionati. Per essere in grado di vedere le informazioni nel flusso e ricevere notifiche su tutti i record nel sistema.",
+    "doNotFillAssignedUserIfNotRequired": "Quando si crea un record, l'utente assegnato non verrà riempito con il proprio utente a meno che il campo non sia obbligatorio.",
     "followCreatedEntities": "Quando si creano nuovi record, verranno automaticamente seguiti anche se assegnati a un altro utente.",
     "followCreatedEntityTypeList": "Quando si creano nuovi record di tipi di entità selezionati, questi verranno seguiti automaticamente anche se assegnati a un altro utente."
   }

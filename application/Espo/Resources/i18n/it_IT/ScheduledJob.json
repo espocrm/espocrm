@@ -15,7 +15,8 @@
       "SendEmailReminders": "Inviare promemoria via email",
       "AuthTokenControl": "Controllo token di autenticazione",
       "SendEmailNotifications": "Invia notifiche email",
-      "CheckNewVersion": "Controlla nuove versioni"
+      "CheckNewVersion": "Controlla nuove versioni",
+      "ProcessWebhookQueue": "Elabora coda Webhook"
     },
     "cronSetup": {
       "linux": "Nota: aggiungi questa riga al file crontab per eseguire le attività pianificate di EspoCRM:",
@@ -27,5 +28,8 @@
       "Active": "Attivo",
       "Inactive": "Inattivo"
     }
+  },
+  "tooltips": {
+    "scheduling": "Notazione di Crontab. Definisce la frequenza delle esecuzioni dei lavori.\n\n* / 5 * * * * - ogni 5 minuti\n\n0 * / 2 * * * - ogni 2 ore\n\n30 1 * * * - alle 01:30 una volta al giorno\n\n0 0 1 * * - il primo giorno del mese"
   }
 }

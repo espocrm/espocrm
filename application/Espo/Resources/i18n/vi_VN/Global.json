@@ -6,7 +6,7 @@
     "EmailTemplate": "Mẫu email",
     "EmailAccount": "Email người dùng cá nhân",
     "EmailAccountScope": "Email người dùng cá nhân",
-    "OutboundEmail": "Email đã gửi",
+    "OutboundEmail": "Cấu hình thư đi",
     "ScheduledJob": "Công việc đã lên lịch",
     "ExternalAccount": "Tài khoản bên ngoài",
     "Extension": "Tiện ích mở rộng",
@@ -20,8 +20,10 @@
     "Portal": "Cổng thông tin",
     "PortalRole": "Quyền truy cập cổng thông tin",
     "Attachment": "Đính kèm",
+    "LastViewed": "Đã xem gần đây",
     "Settings": "Cài đặt",
-    "Export": "Xuất ra"
+    "Export": "Xuất ra",
+    "LeadCaptureLogRecord": "Lịch sử thu thập khách tiềm năng"
   },
   "scopeNamesPlural": {
     "Email": "Địa chỉ email",
@@ -31,7 +33,7 @@
     "EmailTemplate": "Mẫu email",
     "EmailAccount": "Email cá nhân",
     "EmailAccountScope": "Email cá nhân",
-    "OutboundEmail": "Email đã gửi",
+    "OutboundEmail": "Cấu hình thư đi",
     "ScheduledJob": "Công việc đã lên lịch",
     "ExternalAccount": "Tài khoản bên ngoài",
     "Extension": "Tiện ích mở rộng",
@@ -44,12 +46,18 @@
     "Portal": "Cổng thông tin",
     "PortalRole": "Quyền cổng thông tin",
     "Attachment": "Đính kèm",
-    "Import": "Nhập dữ liệu"
+    "PasswordChangeRequest": "Yêu cầu thay đổi mật khẩu",
+    "ActionHistoryRecord": "Lịch sử hoạt động",
+    "Import": "Nhập dữ liệu",
+    "LeadCapture": "Thu thập khách tiềm năng",
+    "LeadCaptureLogRecord": "Nhật ký thu thập khách tiềm năng",
+    "ApiUser": "API User"
   },
   "labels": {
     "Misc": "Khác",
     "Merge": "Gộp",
     "None": "Trống",
+    "Home": "Trang chính",
     "by": "bởi",
     "Saved": "Đã lưu",
     "Error": "Lỗi",
@@ -77,7 +85,7 @@
     "Unlinking...": "Đang bỏ liên kết...",
     "Posting...": "Đang gửi...",
     "Username can not be empty!": "Tên đăng nhập không được để trống!",
-    "Cache is not enabled": "Cache không được bật",
+    "Cache is not enabled": "Chưa bật cache",
     "Cache has been cleared": "Cache đã được xóa",
     "Rebuild has been done": "Tải lại thành công",
     "Saving...": "Đang lưu...",
@@ -175,7 +183,12 @@
     "Next Entry": "Entry Kế tiếp",
     "View List": "Xem dạng danh sách",
     "Attach File": "Đính kèm tập tin",
-    "Erase": "Xóa"
+    "Skip": "Bỏ qua",
+    "New notifications": "Thông báo mới",
+    "Manage Folders": "Quản lý thư mục",
+    "Erase": "Xóa",
+    "Restore": "Khôi phục",
+    "View Followers": "Xem người đã theo dõi"
   },
   "messages": {
     "pleaseWait": "Xin chờ...",
@@ -202,6 +215,7 @@
     "typeAndPressEnter": "Nhập và nhấn enter",
     "checkForNewNotifications": "Kiểm tra thông báo mới",
     "duplicate": "Bản ghi được tạo bị trùng",
+    "done": "Hoàn thành",
     "fieldShouldBeEmail": "Kiểm tra lại {field}",
     "fieldShouldBeFloat": "Kiểm tra lại {field}",
     "fieldShouldBeInt": "Kiểm tra lại {field}",
@@ -211,7 +225,8 @@
     "saving": "Đang lưu...",
     "fieldShouldBeLess": "{field} cần nhỏ hơn {value}",
     "fieldShouldBeGreater": "{field} cần lớn hơn {value}",
-    "fieldValueDuplicate": "Giá trị bị trùng"
+    "fieldValueDuplicate": "Giá trị bị trùng",
+    "maintenanceMode": "Ứng dụng đang được bảo trì. Chỉ có quản trị viên mới được phép truy cập phần này.\n\nNếu là quản trị viên, bạn có thể tắt tại Administration → Settings."
   },
   "boolFilters": {
     "onlyMy": "Chỉ mình tôi",
@@ -253,6 +268,7 @@
     "phoneNumberOffice": "Số điện thoại (văn phòng)",
     "phoneNumberOther": "Số điện thoại (khác)",
     "order": "Thứ tự",
+    "names": "Tên",
     "type": "Loại",
     "types": "Loại"
   },
@@ -269,11 +285,18 @@
     "Stream": "Luồng",
     "Emails": "Hộp thư của tôi"
   },
+  "notificationMessages": {
+    "emailReceived": "Email đã được nhận từ {from}",
+    "entityRemoved": "{user} đã xóa {entityType} {entity}"
+  },
   "streamMessages": {
     "post": "{user} đăng {entityType} {entity}",
     "attach": "{user} đính kèm ở {entityType} {entity}",
     "status": "{user} cập nhật {field} ở {entityType} {entity}",
     "update": "{user} cập nhật {entityType} {entity}",
+    "postTargetTeam": "{user} đã đăng đến nhóm {target}",
+    "postTargetTeams": "{user} posted to team {target}",
+    "postTargetPortal": "{user} đã đăng đến tường \n{target}",
     "postTargetPortals": "{user} đã đăng đến {target}",
     "postTarget": "{user} đã đăng đến {target}",
     "postTargetYou": "{user} đã đăng đến bạn",
@@ -294,6 +317,7 @@
     "emailReceivedFromThis": "Đã nhận email từ {from}",
     "emailReceivedInitialFromThis": "Đã nhận email từ {from}, muc {entityType} đã được tạo",
     "emailReceivedThis": "{entity} đã được nhận",
+    "emailReceivedInitialThis": "Đã nhận email, {entityType} đã được tạo",
     "emailReceived": "{entity} đã được nhận bởi {entityType} {entity}",
     "emailSentThis": "{by} gửi email"
   },
@@ -349,7 +373,8 @@
       "lastYear": "Năm trước",
       "lastSevenDays": "7 ngày trước",
       "lastXDays": "x ngày trước",
-      "nextXDays": "x ngày tiếp theo"
+      "nextXDays": "x ngày tiếp theo",
+      "nextMonth": "Tháng tới"
     },
     "searchRanges": {
       "is": "là",
@@ -357,6 +382,11 @@
       "isNotEmpty": "Không bị bỏ trống"
     },
     "varcharSearchRanges": {
+      "equals": "Bằng",
+      "like": "Tương tự",
+      "startsWith": "Bắt đầu bởi",
+      "endsWith": "Kết thúc bởi",
+      "contains": "Có chứa",
       "isEmpty": "Bị bỏ trống",
       "isNotEmpty": "Không bị bỏ trống"
     },
@@ -365,6 +395,10 @@
     },
     "phoneNumber": {
       "Other": "Khác"
+    },
+    "intSearchRanges": {
+      "isEmpty": "Bị bỏ trống",
+      "isNotEmpty": "Không bị bỏ trống"
     }
   },
   "sets": {
@@ -470,6 +504,7 @@
     "s": "giây"
   },
   "listViewModes": {
+    "list": "Danh sách",
     "kanban": "Dạng tiến trình"
   },
   "themes": {

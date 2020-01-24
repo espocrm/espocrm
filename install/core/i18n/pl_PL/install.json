@@ -32,7 +32,8 @@
     "SetupConfirmation page title": "Wymagania systemowe",
     "PHP Configuration": "Ustawienia PHP",
     "MySQL Configuration": "Ustawienia bazy danych",
-    "Permission Requirements": "Zezwolenie"
+    "Permission Requirements": "Zezwolenie",
+    "Success": "Sukces"
   },
   "fields": {
     "Choose your language": "Wybierz swój język",

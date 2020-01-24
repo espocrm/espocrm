@@ -131,7 +131,6 @@
     "ldapAuth": "LDAP servera piekļuves akreditācijas dati",
     "ldapUserNameAttribute": "Atribūts lietotāja identificēšanai. \nPiem., \"Active Directory\" vajadzībām izmanto \"userPrincipalName\" vai \"sAMAccountName\", \"OpenLDAP\" izmanto \"uid\".",
     "ldapUserObjectClass": "Objekta klases atribūts lietotāju meklēšanai. Piem., \"Active Directory\" izmanto \"person\", \"Open LDAP\" izmanto \"inetOrgPerson\".",
-    "ldapAccountCanonicalForm": "Jūsu konta tips kanoniskajā formātā. Jums ir 4 opcijas:<br>- \"Dn\" - forma \"CN=tester,OU=espocrm,DC=test, DC=lan\".<br>- \"Username\" - \"testētāja\" forma.<br>- \"Backslash\" - formā \"COMPANY\\tester\".<br>- \"Principal\" - formā \"tester@company.com\".",
     "ldapBindRequiresDn": "Opcija, kas ļauj pārveidot lietotājvārdu DN formātā.",
     "ldapBaseDn": "Noklusējuma pamata DN, kuru izmanto lietotāju meklēšanai. Piem., \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "Opcija lietotājvārda sadalīšanai ar domēna nosaukumu.",
@@ -173,7 +172,8 @@
     "Test Connection": "Testa savienojums",
     "Connecting": "Savienojas…",
     "Activities": "Aktivitātes",
-    "Admin Notifications": "Administratora paziņojumi"
+    "Admin Notifications": "Administratora paziņojumi",
+    "Search": "Meklēt"
   },
   "messages": {
     "ldapTestConnection": "Savienojums sekmīgi izveidots."

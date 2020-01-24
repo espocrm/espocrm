@@ -3,11 +3,12 @@
     "name": "Nome",
     "roles": "Ruoli",
     "assignmentPermission": "Assegnazione permessi",
-    "userPermission": "Autorizzazioni Utente",
-    "portalPermission": "Autorizzazione Portale",
+    "userPermission": "Autorizzazioni utente",
+    "portalPermission": "Autorizzazione portale",
     "groupEmailAccountPermission": "Permesso account email di gruppo",
-    "exportPermission": "Esporta Permessi",
-    "dataPrivacyPermission": "Autorizzazione privacy dati"
+    "exportPermission": "Esporta permessi",
+    "dataPrivacyPermission": "Autorizzazione privacy dati",
+    "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa"
   },
   "links": {
     "users": "Utenti"
@@ -24,21 +25,21 @@
   "labels": {
     "Access": "Accesso",
     "Create Role": "Crea Ruolo",
-    "Scope Level": "Livello Ambito",
-    "Field Level": "FLivello Campo"
+    "Scope Level": "Livello ambito",
+    "Field Level": "Livello di campo"
   },
   "options": {
     "accessList": {
-      "not-set": "non impostato",
+      "not-set": "Non impostato",
       "enabled": "abilitato",
-      "disabled": "disabilitato"
+      "disabled": "Disabilitato"
     },
     "levelList": {
-      "all": "tutti",
-      "contact": "contatto",
+      "all": "Tutti",
+      "contact": "Contatto",
       "own": "proprio",
-      "yes": "si",
-      "not-set": "non impostato"
+      "yes": "Si",
+      "not-set": "Non impostato"
     }
   },
   "actions": {

@@ -3,7 +3,8 @@
     "name": "Nazwa",
     "roles": "Rola",
     "assignmentPermission": "Uprawnienia przypisania",
-    "userPermission": "Uprawnienia użytkownika"
+    "userPermission": "Uprawnienia użytkownika",
+    "exportPermission": "Eksportuj uprawnienia"
   },
   "links": {
     "users": "Użytkownik",

@@ -8,7 +8,11 @@
     "isDoubleHeight": "Wysokość 2x",
     "mode": "Tryb",
     "enabledScopeList": "Co wyświetlić",
-    "users": "Użytkownicy"
+    "users": "Użytkownicy",
+    "entityType": "Typ modułu",
+    "primaryFilter": "Główny filter",
+    "boolFilterList": "Dodatkowe filtry",
+    "expandedLayout": "Układ"
   },
   "options": {
     "mode": {

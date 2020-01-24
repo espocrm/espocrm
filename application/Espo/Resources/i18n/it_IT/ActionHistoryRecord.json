@@ -2,14 +2,19 @@
   "fields": {
     "createdAt": "Data",
     "authToken": "Token di autenticazione",
-    "authLogRecord": "Record di log auth"
+    "authLogRecord": "Record di log auth",
+    "userType": "Tipologia di utente"
   },
   "links": {
     "authToken": "Token di autenticazione",
     "authLogRecord": "Record di log auth"
   },
+  "presetFilters": {
+    "onlyMy": "Solo il mio"
+  },
   "options": {
     "action": {
+      "read": "Leggere",
       "update": "Aggiorna",
       "delete": "Elimina",
       "create": "Crea"

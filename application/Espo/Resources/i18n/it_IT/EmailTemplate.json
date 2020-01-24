@@ -5,7 +5,6 @@
     "body": "Corpo",
     "subject": "Oggetto",
     "attachments": "Allegato",
-    "insertField": "Inserisci Campo",
     "category": "Categoria"
   },
   "labels": {
@@ -23,6 +22,9 @@
   },
   "placeholderTexts": {
     "optOutUrl": "URL per un link di cancellazione dell'iscrizione",
-    "optOutLink": "un link di cancellazione dell'iscrizione"
+    "optOutLink": "Un link di cancellazione dell'iscrizione",
+    "today": "Data odierna",
+    "now": "Data e ora attuali\n\n",
+    "currentYear": "Anno corrente"
   }
 }

@@ -17,7 +17,8 @@
     "targetUserPosition": "Pozycja użytkownika docelowego",
     "addAllTeamUsers": "Dla wszystkich członków zespołu",
     "team": "Zespół",
-    "teams": "Zespoły"
+    "teams": "Zespoły",
+    "useImap": "Pobierz wiadomości e-mail"
   },
   "tooltips": {
     "reply": "Powiadamiaj nadawcę o dostarczeniu jego wiadomości.\n\nZostanie wysłana tylko jedna wiadomość na jednego odbiorcę w jednostce czasu aby ustrzec przed powstaniem pętli.",
@@ -29,7 +30,8 @@
   },
   "links": {
     "filters": "Filtry",
-    "emails": "Wiadomości"
+    "emails": "Wiadomości",
+    "assignToUser": "Przypisz do użytkownika"
   },
   "options": {
     "status": {

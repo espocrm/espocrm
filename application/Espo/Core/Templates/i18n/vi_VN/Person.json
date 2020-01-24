@@ -1,5 +1,10 @@
 {
   "fields": {
     "address": "Địa chỉ"
+  },
+  "links": {
+    "meetings": "Cuộc hẹn",
+    "calls": "Cuộc gọi",
+    "tasks": "Nhiệm vụ"
   }
 }

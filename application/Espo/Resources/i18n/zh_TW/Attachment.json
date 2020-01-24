@@ -1,0 +1,28 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "插入文件"
+  },
+  "fields": {
+    "role": "有關",
+    "related": "文件",
+    "file": "類型",
+    "type": "欄位",
+    "field": "源ID",
+    "sourceId": "儲存區",
+    "storage": "大小 (字節)",
+    "size": "附件"
+  },
+  "options": {
+    "role": {
+      "Attachment": "內聯附件",
+      "Inline Attachment": "匯入檔案",
+      "Import File": "匯出檔案",
+      "Export File": "郵件合併",
+      "Mail Merge": "大量Pdf",
+      "Mass Pdf": "無關聯"
+    }
+  },
+  "presetFilters": {
+    "orphan": "用於檢查新版本的URL"
+  }
+}

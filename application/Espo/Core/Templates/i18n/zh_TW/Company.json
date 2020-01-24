@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "帳單地址",
+    "shippingAddress": "送貨地址",
+    "website": "網站"
+  },
+  "links": {
+    "meetings": "會議",
+    "calls": "通話",
+    "tasks": "任務"
+  },
+  "labels": {
+    "Create {entityType}": "建立{entityTypeTranslated}"
+  }
+}

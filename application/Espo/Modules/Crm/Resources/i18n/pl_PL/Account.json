@@ -13,7 +13,8 @@
     "contactRole": "Rola",
     "campaign": "Kampania",
     "targetLists": "Listy docelowe",
-    "targetList": "Lista docelowa"
+    "targetList": "Lista docelowa",
+    "contactIsInactive": "Nieaktywny"
   },
   "links": {
     "contacts": "Kontakty",
@@ -66,6 +67,7 @@
       "Mass Media": "Media",
       "Mining": "Kopalnie",
       "Music": "Muzyka",
+      "Shipping": "Dostawa",
       "Support": "Wsparcie",
       "Water": "Woda"
     }
@@ -75,6 +77,7 @@
   },
   "presetFilters": {
     "customers": "Klienci",
-    "partners": "Partnerzy"
+    "partners": "Partnerzy",
+    "recentlyCreated": "Ostatnio utworzone"
   }
 }

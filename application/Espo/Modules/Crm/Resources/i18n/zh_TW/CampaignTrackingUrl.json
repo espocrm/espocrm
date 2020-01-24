@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "網址",
+    "urlToUse": "要取代網址而插入的代碼",
+    "campaign": "活動"
+  },
+  "links": {
+    "campaign": "活動"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "新增跟蹤網址"
+  }
+}

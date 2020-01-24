@@ -38,10 +38,10 @@
       "Article": "文章"
     }
   },
-  "tooltips": {
-    "portals": "文章仅在特定门户网站上可用。"
-  },
   "presetFilters": {
     "published": "发布"
+  },
+  "tooltips": {
+    "portals": "文章仅在特定门户网站上可用。"
   }
 }

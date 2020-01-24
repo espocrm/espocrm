@@ -64,10 +64,10 @@
     "Mark as Important": "Đánh dấu quan trọng",
     "Unmark Importance": "Bỏ đánh dấu quan trọng",
     "Move to Trash": "Di chuyển đến thùng rác",
-    "Retrieve from Trash": "Khôi phục từ thùng rác"
+    "Retrieve from Trash": "Khôi phục từ thùng rác",
+    "View Users": "Xem thành viên"
   },
   "messages": {
-    "noSmtpSetup": "Không có cài đặt SMTP. {link}",
     "testEmailSent": "Thư kiểm tra đã được gửi",
     "emailSent": "Thư đã được gửi",
     "savedAsDraft": "Đã lưu nháp"

@@ -43,8 +43,8 @@
   "presetFilters": {
     "actual": "所有",
     "completed": "完成",
-    "deferred": "延期",
     "todays": "今天",
-    "overdue": "过期"
+    "overdue": "过期",
+    "deferred": "延期"
   }
 }

@@ -4,12 +4,12 @@
     "status": "Stato",
     "sentAt": "Data invio",
     "attemptCount": "Prove",
-    "emailAddress": "Indirizzo Email",
-    "massEmail": "Email Massiva",
-    "isTest": "è un test"
+    "emailAddress": "Indirizzo email",
+    "massEmail": "Email massiva",
+    "isTest": "E' un test"
   },
   "links": {
-    "massEmail": "Email Massiva"
+    "massEmail": "Email massiva"
   },
   "options": {
     "status": {

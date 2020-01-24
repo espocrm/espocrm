@@ -1,0 +1,59 @@
+{
+  "fields": {
+    "name": "名稱",
+    "roles": "權限",
+    "assignmentPermission": "指定權限",
+    "userPermission": "使用者權限",
+    "portalPermission": "導覧權限",
+    "groupEmailAccountPermission": "定義群組電子郵件帳戶的存取權限，從群組SMTP發送電子郵件的功能。",
+    "exportPermission": "新面板",
+    "dataPrivacyPermission": "允許查看和清除個人資料。",
+    "massUpdatePermission": "指定使用者是否有權限進行大量更新記錄。"
+  },
+  "links": {
+    "users": "使用者",
+    "teams": "團隊"
+  },
+  "tooltips": {
+    "assignmentPermission": "設定指定紀錄和發文給其他人的限制。\n\n全部－沒有限制\n\n團隊－可以指定和發文給團隊成員\n\n無－只能指定和發文給自己",
+    "userPermission": "設定檢視其他人活動、日曆和動態的限制。\n\n全部－可以看到全部的\n\n團隊－可以團隊成員的而己\n\n無－都不能看",
+    "portalPermission": "定義導覧訊息的存取，並能夠向導覧使用者發布消息。",
+    "groupEmailAccountPermission": "管理面板中的系統通知",
+    "dataPrivacyPermission": "過濾varchar欄位時使用「包含」篩選",
+    "exportPermission": "DejaVu Serif Condensed",
+    "massUpdatePermission": "導覧使用者LDAP認證"
+  },
+  "labels": {
+    "Access": "存取",
+    "Create Role": "新增權限",
+    "Scope Level": "範圍階層",
+    "Field Level": "現場水平"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "沒有設置",
+      "enabled": "已啟用",
+      "disabled": "己停用"
+    },
+    "levelList": {
+      "all": "全部",
+      "team": "球隊",
+      "account": "帳戶",
+      "contact": "聯絡人",
+      "own": "擁用者",
+      "no": "否",
+      "yes": "是",
+      "not-set": "沒有設置"
+    }
+  },
+  "actions": {
+    "read": "讀",
+    "edit": "編輯",
+    "delete": "刪除",
+    "stream": "動態",
+    "create": "新增"
+  },
+  "messages": {
+    "changesAfterClearCache": "所有在連接控制的變更會在快取清除後生效。"
+  }
+}

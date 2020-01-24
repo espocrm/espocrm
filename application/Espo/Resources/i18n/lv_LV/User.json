@@ -43,7 +43,8 @@
     "contact": "Kontakts",
     "accounts": "Konti",
     "account": "Konts (primārais)",
-    "tasks": "Uzdevumi"
+    "tasks": "Uzdevumi",
+    "defaultTeam": "Noklusējuma komanda"
   },
   "labels": {
     "Create User": "Izveidot lietotāju",
@@ -81,7 +82,6 @@
     "forbidden": "Aizliegts, lūdzu, mēģiniet vēlāk",
     "uniqueLinkHasBeenSent": "Unikālais vietrādis URL nosūtīts uz norādīto e-pasta adresi.",
     "passwordChangedByRequest": "Parole nomainīta.",
-    "setupSmtpBefore": "Lai sistēma varētu sūtīt paroli uz e-pastu, nepieciešams veikt <a href=\"{url}\">SMTP iestatījumus</a>.",
     "userNameExists": "Šāds lietotājvārds jau pastāv"
   },
   "boolFilters": {

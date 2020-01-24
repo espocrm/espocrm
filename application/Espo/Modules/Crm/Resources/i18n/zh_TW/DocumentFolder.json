@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "新增文件資料夾",
+    "Manage Categories": "管理資料夾",
+    "Documents": "文件"
+  },
+  "links": {
+    "documents": "文件"
+  }
+}

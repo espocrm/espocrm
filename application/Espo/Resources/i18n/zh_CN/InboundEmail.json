@@ -2,7 +2,6 @@
   "fields": {
     "name": "名称",
     "emailAddress": "电子邮件地址",
-    "team": "目标团队",
     "status": "状态",
     "assignToUser": "指派给用户",
     "host": "SMTP服务器",
@@ -21,7 +20,10 @@
     "targetUserPosition": "目标用户位置",
     "fetchSince": "获取自",
     "addAllTeamUsers": "为所有团队用户",
+    "team": "目标团队",
     "teams": "团队",
+    "sentFolder": "发件箱",
+    "storeSentEmails": "保存发送邮件",
     "useSmtp": "使用SMTP",
     "smtpHost": "SMTP主机",
     "smtpPort": "SMTP端口",
@@ -31,7 +33,8 @@
     "smtpPassword": "SMTP密码",
     "fromName": "发件人",
     "smtpIsShared": "共享",
-    "smtpIsForMassEmail": "SMTP可用于大规模电子邮件"
+    "smtpIsForMassEmail": "SMTP可用于大规模电子邮件",
+    "useImap": "获取邮件"
   },
   "tooltips": {
     "reply": "通知他们的电子邮件已收到电子邮件发件人。\n\n 只有一个电子邮件会期间的时间，以防止循环一段时间被发送到特定的收件人。",
@@ -41,8 +44,8 @@
     "assignToUser": "用户工单将会指派给。",
     "team": "团队工单将会指派给。",
     "teams": "团队电子邮件将会指派给。",
-    "targetUserPosition": "具有指定位置的用户将与工单一起分发。",
     "addAllTeamUsers": "电子邮件将出现在指定团队的所有用户的“收件箱”中。",
+    "targetUserPosition": "具有指定位置的用户将与工单一起分发。",
     "monitoredFolders": "多个文件夹用逗号分隔。",
     "smtpIsShared": "如果勾选此选项，用户就可以使用SMTP发送电子邮件。可用性由角色通过组电子邮件帐户权限控制",
     "smtpIsForMassEmail": "如果勾选的话，SMTP将可用于群发邮件",

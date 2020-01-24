@@ -3,12 +3,12 @@
     "name": "名称",
     "description": "描述",
     "entryCount": "条目计数",
-    "optedOutCount": "取消订阅",
     "campaigns": "营销活动",
     "endDate": "结束日期",
     "targetLists": "目标列表",
     "includingActionList": "包含",
-    "excludingActionList": "排除"
+    "excludingActionList": "排除",
+    "optedOutCount": "取消订阅"
   },
   "links": {
     "accounts": "客户",

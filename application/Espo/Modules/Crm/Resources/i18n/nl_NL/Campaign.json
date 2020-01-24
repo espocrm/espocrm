@@ -9,7 +9,7 @@
     "contactsTemplate": "Contacten-sjabloon",
     "leadsTemplate": "Leads sjabloon",
     "accountsTemplate": "Relaties-sjabloon",
-    "usersTemplate": "Gebruikers sjabloon",
+    "usersTemplate": "Gebruikers Sjabloon",
     "mailMergeOnlyWithAddress": "Records overslaan zonder ingevuld adres",
     "budgetCurrency": "Budgetvaluta"
   },
@@ -22,7 +22,7 @@
     "contactsTemplate": "Contacten-sjabloon",
     "leadsTemplate": "Leads sjabloon",
     "accountsTemplate": "Relaties-sjabloon",
-    "usersTemplate": "Gebruikers sjabloon"
+    "usersTemplate": "Gebruikers Sjabloon"
   },
   "options": {
     "type": {
@@ -38,7 +38,7 @@
     "Target Lists": "Doellijsten",
     "Mass Emails": "Massale E-mails",
     "Email Templates": "E-mailsjablonen",
-    "Unsubscribe again": "Afmelden opnieuw",
+    "Unsubscribe again": "Weer uitschrijven",
     "Subscribe again": "Abonneer opnieuw",
     "Create Target List": "Maak een doellijst",
     "Mail Merge": "Mailmerge",

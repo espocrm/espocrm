@@ -1,0 +1,11 @@
+{
+  "layouts": {
+    "detailConvert": "轉換潛在客戶",
+    "listForAccount": "清單  (帳戶用)",
+    "listForContact": "接下來的X天"
+  },
+  "templates": {
+    "invitation": "提醒",
+    "reminder": "主要帳戶標題"
+  }
+}

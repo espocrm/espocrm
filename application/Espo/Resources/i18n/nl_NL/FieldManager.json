@@ -60,7 +60,7 @@
     }
   },
   "tooltips": {
-    "audited": "Updates worden in de stream vastgelegd.",
+    "audited": "Updates zullen worden gelogd in stream.",
     "required": "Veld is verplicht. Mag niet leeg worden gelaten.",
     "default": "De waarde wordt standaard ingesteld bij het maken.",
     "min": "Minimale acceptabele waarde.",
@@ -71,7 +71,8 @@
     "before": "De datumwaarde moet vóór de datumwaarde van het opgegeven veld liggen.",
     "after": "De datumwaarde moet na de datumwaarde van het opgegeven veld liggen.",
     "readOnly": "Veldwaarde kan niet door de gebruiker worden opgegeven. Maar kan worden berekend door formule.",
-    "maxFileSize": "Indien leeg of 0 dan geen limiet."
+    "maxFileSize": "Indien leeg of 0 dan geen limiet.",
+    "fileAccept": "Welke bestandstypen te accepteren. Het is mogelijk om aangepaste items toe te voegen."
   },
   "fieldParts": {
     "address": {

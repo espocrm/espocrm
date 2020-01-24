@@ -14,7 +14,8 @@
       "CheckEmailAccounts": "Sprawdź osobiste konta pocztowe",
       "SendEmailReminders": "Wyślij przypomnienia",
       "AuthTokenControl": "Kontrola tokenu autentykacji",
-      "SendEmailNotifications": "Wysyłaj powiadomienia e-mail."
+      "SendEmailNotifications": "Wysyłaj powiadomienia e-mail.",
+      "CheckNewVersion": "Sprawdź nową wersję"
     },
     "cronSetup": {
       "linux": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",

@@ -51,10 +51,22 @@
     "Reset to Default": "Przywróć domyślne",
     "Email Filters": "Filtry wiadomości",
     "Portal Users": "Użytkownicy portali",
+    "Action History": "Historia czynności",
+    "Label Manager": "Menadżer tłumaczeń",
+    "Auth Log": "Historia logowania",
+    "Lead Capture": "Zdobywanie leadów",
+    "Attachments": "Załączniki",
+    "API Users": "Użytkownicy API",
+    "Template Manager": "Menadżer szablonów e-mail",
     "System Requirements": "Wymagania systemowe",
     "PHP Settings": "Ustawienia PHP",
     "Database Settings": "Ustawienia bazy danych",
-    "Permissions": "Zezwolenie"
+    "Permissions": "Zezwolenie",
+    "Success": "Sukces",
+    "is recommended": "zalecane",
+    "extension is missing": "Brakuje rozszerzenia",
+    "PDF Templates": "Szablony PDF",
+    "Dashboard Templates": "Szablony pulpitu"
   },
   "layouts": {
     "list": "Lista",
@@ -67,7 +79,11 @@
     "sidePanelsDetail": "Panel boczny (Detale)",
     "sidePanelsEdit": "Panel boczny (Edycja)",
     "sidePanelsDetailSmall": "Panel boczny (Detale Mała)",
-    "sidePanelsEditSmall": "Panel poczby (Edycja Mała)"
+    "sidePanelsEditSmall": "Panel poczby (Edycja Mała)",
+    "detailPortal": "Widok szczegółowy (Portal)",
+    "detailSmallPortal": "Widok szczegółowy (Mały, Portal)",
+    "listSmallPortal": "Lista (Mała, Portal)",
+    "listPortal": "Lista (Portal)"
   },
   "fieldTypes": {
     "address": "Adres",
@@ -102,7 +118,8 @@
     "wysiwyg": "edytor wysiwyg",
     "map": "Mapa",
     "currencyConverted": "Obecny (Konwertowany)",
-    "int": "Liczba całkowita (Int)"
+    "int": "Liczba całkowita (Int)",
+    "checklist": "Checklista"
   },
   "fields": {
     "type": "Rodzaj",
@@ -137,9 +154,15 @@
     "prefix": "Prefiks",
     "nextNumber": "Następny numer",
     "disableFormatting": "Wyłącz formatowanie",
+    "dynamicLogicVisible": "Warunki czyniące pole widocznym",
+    "dynamicLogicReadOnly": "Warunki czyniące pole tylko do podglądu(read-only)",
+    "dynamicLogicRequired": "Warunki czyniące pole wymaganym",
     "dynamicLogicOptions": "Opcje warunku",
     "readOnly": "Tylko do odczytu",
-    "noEmptyString": "Bez pustych znaków"
+    "noEmptyString": "Bez pustych znaków",
+    "useIframe": "Użyj iFrame",
+    "displayRawText": "Wyświetl surowy tekst(bez markdown)",
+    "accept": "Akceptuj"
   },
   "messages": {
     "selectEntityType": "Wybierz jednostkę z menu po lewej stonie.",
@@ -150,7 +173,13 @@
     "installExtension": "Rozszerzenie {name} {version} jest gotowe do instalacji.",
     "upgradeBackup": "Zalecamy abyś wykonał archiwizacje swoich danych, przed aktualizacją.",
     "thousandSeparatorEqualsDecimalMark": "Separator dziesiętny nie może być taki sam jak znak oddzielenia",
-    "userHasNoEmailAddress": "Użytkownik nie ma przypisanego adres e-mail."
+    "userHasNoEmailAddress": "Użytkownik nie ma przypisanego adres e-mail.",
+    "uninstallConfirmation": "Czy jesteś pewien, że chcesz usunąć rozszerzenie?",
+    "upgradeVersion": "EspoCRM zostanie zaktualizowane do wersji **{version}**. Bądź cierpliwy, może to zająć chwilę.",
+    "upgradeDone": "EspoCRM zostało zaktualizowane do wersji **{version}**.",
+    "downloadUpgradePackage": "Pliki do aktualizacji możesz pobrać [tutaj]({url}).",
+    "upgradeInfo": "Sprawdź [dokumentację]({url}) żeby sprawdzić jak przeprowadzić aktualizację.",
+    "upgradeRecommendation": "Najlepszym sposobem jest aktualizacja przez wiersz poleceń CLI. Nie zalecamy aktualizowania EspoCRM przez panel web."
   },
   "descriptions": {
     "settings": "Ustawienia systemu dla aplikacji.",
@@ -177,9 +206,16 @@
     "integrations": "Integracja z usługami dodatkowymi.",
     "notifications": "Ustawienia powiadomień wewnętrznych i email.",
     "inboundEmails": "Globalne ustawienia wiadomości przychodzących.",
+    "portalUsers": "Użytkownicy portalu",
     "entityManager": "Utwórz własne jednostki, edytuj istniejące. Zarzącaj polami i relacjami.",
     "emailFilters": "Wiadomości które pasują do określonych kryteriów nie będą importowane.",
-    "systemRequirements": "Wymagania systemowe dla EspoCRM"
+    "actionHistory": "Historia czynności użytkonika.",
+    "labelManager": "Dostosuj etykiety w aplikacji.",
+    "authLog": "Historia logowania.",
+    "templateManager": "Dostosuj szablony wiadomości",
+    "systemRequirements": "Wymagania systemowe dla EspoCRM",
+    "webhooks": "Zarządzaj webhookami.",
+    "dashboardTemplates": "Wdróż pulpity nawigacyjne dla użytkowników."
   },
   "options": {
     "previewSize": {
@@ -199,6 +235,15 @@
     "requiredMysqlVersion": "Wersja MySQL",
     "host": "Nazwa hosta",
     "dbname": "Nazwa Bazy Danych",
-    "user": "Nazwa Użytkownika"
+    "user": "Nazwa Użytkownika",
+    "writable": "Zapisywalny",
+    "readable": "Czytelny",
+    "requiredMariadbVersion": "Wersja MariaDB"
+  },
+  "templates": {
+    "accessInfo": "Informacje dostępowe",
+    "mention": "Wzmianka",
+    "noteEmailRecieved": "Notatka o otrzymanej wiadomości e-mail",
+    "notePost": "Notatka o wpisie"
   }
 }

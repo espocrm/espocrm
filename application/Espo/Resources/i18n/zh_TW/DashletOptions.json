@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "title": "標題",
+    "dateFrom": "起始日期",
+    "dateTo": "結束日期",
+    "autorefreshInterval": "自動重新整理間隔",
+    "displayRecords": "顯示記錄",
+    "isDoubleHeight": "高度2倍",
+    "mode": "模式",
+    "enabledScopeList": "要顯示的內容",
+    "users": "使用者",
+    "entityType": "模組類型",
+    "primaryFilter": "主過濾器",
+    "boolFilterList": "附加過濾器",
+    "sortBy": "訂單 (欄位)",
+    "sortDirection": "順序 (方向)",
+    "expandedLayout": "樣式",
+    "dateFilter": "副本電子郵件地址",
+    "skipOwn": "設置您的接受狀態。"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "週  (排程)",
+      "basicWeek": "週",
+      "month": "月",
+      "basicDay": "日",
+      "agendaDay": "日  (排程)",
+      "timeline": "時間軸"
+    }
+  },
+  "messages": {
+    "selectEntityType": "在主控台選擇模組類型。"
+  },
+  "tooltips": {
+    "skipOwn": "如果勾選，則欄位將顯示成指向記錄詳細視圖的鏈接結。通常它是*名稱*欄位。"
+  }
+}

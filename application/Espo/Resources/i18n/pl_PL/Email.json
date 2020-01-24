@@ -28,13 +28,19 @@
     "name": "Temat",
     "inboundEmails": "Konto grupowe",
     "emailAccounts": "Konto osobiste",
-    "hasAttachment": "Załącznik"
+    "hasAttachment": "Załącznik",
+    "messageId": "ID wiadomości",
+    "messageIdInternal": "ID wiadomości (wewnętrzne)",
+    "folderId": "ID folderu",
+    "fromName": "Pochodzi od"
   },
   "links": {
     "replied": "Odpowiedziano",
     "replies": "Odpowiedzi",
     "inboundEmails": "Konto grupowe",
-    "emailAccounts": "Konto osobiste"
+    "emailAccounts": "Konto osobiste",
+    "attachments": "Załączniki",
+    "fromEmailAddress": "Pochodzi z adresu e-mail"
   },
   "options": {
     "status": {
@@ -75,7 +81,6 @@
     "Folders": "Foldery"
   },
   "messages": {
-    "noSmtpSetup": "Brak konfiguracji SMTP {link}.",
     "testEmailSent": "Testowa wiadomość została wysłana",
     "emailSent": "Wiadomość została wysłana",
     "savedAsDraft": "Zapisz jako szablon"

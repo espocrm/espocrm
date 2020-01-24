@@ -9,13 +9,17 @@
     "description": "Mô tả",
     "users": "Người dùng",
     "contacts": "Sổ liên lạc",
-    "leads": "Trưởng nhóm"
+    "leads": "Trưởng nhóm",
+    "reminders": "Nhắc nhở"
   },
   "options": {
     "status": {
       "Planned": "Đã lên kế hoạch",
       "Held": "Đã được tổ chức",
       "Not Held": "Chưa được tổ chức"
+    },
+    "acceptanceStatus": {
+      "None": "trống"
     }
   },
   "labels": {

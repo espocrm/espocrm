@@ -1,7 +1,23 @@
 {
   "fieldParts": {
+    "address": {
+      "street": "Tên đường",
+      "city": "Thành phố",
+      "country": "Quốc gia",
+      "postalCode": "Mã vùng",
+      "map": "Bản đồ"
+    },
+    "currency": {
+      "converted": "(Đã chuyển)",
+      "currency": "(Tiền tệ)"
+    },
     "datetimeOptional": {
       "date": "Ngày"
     }
+  },
+  "labels": {
+    "Name": "Tên",
+    "Label": "Nhãn",
+    "Type": "Loại"
   }
 }

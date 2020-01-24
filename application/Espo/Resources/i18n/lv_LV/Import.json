@@ -62,7 +62,6 @@
     "removeDuplicates": "Šī izvēle neatgriezeniski noņems visus importētos ierakstus, kas atpazīti kā dublikāti.",
     "confirmRevert": "Šī izvēle neatgriezeniski noņems visus importētos ierakstus. Vai tiešām vēlaties turpināt?",
     "confirmRemoveDuplicates": "Šī izvēle neatgriezeniski noņems visus importētos ierakstus, kas būs atpazīti kā dublikāti. Vai tiešām vēlaties turpināt?",
-    "confirmRemoveImportLog": "Šī izvēle noņems importēto ierakstu reģistru. Visi importētie ieraksti tiks saglabāti. Vai tiešām vēlaties atjaunot importētos rezultātus?",
     "removeImportLog": "Šī izvēle noņems importēto ierakstu reģistru. Visi importētie ieraksti tiks saglabāti. Izmantojiet šo izvēli, ja vēlaties pieļaut importēšanu."
   },
   "fields": {

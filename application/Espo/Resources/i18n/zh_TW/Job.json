@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "status": "狀態",
+    "executeTime": "執行於",
+    "attempts": "嘗試剩",
+    "failedAttempts": "嘗試失敗",
+    "serviceName": "服務",
+    "methodName": "方法",
+    "scheduledJob": "排定的工作",
+    "data": "資料",
+    "method": "排定作業名稱",
+    "scheduledJobJob": "當有新的EspoCRM版本時顯示通知",
+    "executedAt": "開始於",
+    "startedAt": "目標類型",
+    "targetType": "目標編號",
+    "targetId": "數字",
+    "number": "佇列",
+    "queue": "作業並行執行",
+    "job": "電子郵件通知延遲 (以秒為單位)"
+  },
+  "options": {
+    "status": {
+      "Pending": "排定中",
+      "Success": "成功",
+      "Running": "運行中",
+      "Failed": "失敗"
+    }
+  }
+}

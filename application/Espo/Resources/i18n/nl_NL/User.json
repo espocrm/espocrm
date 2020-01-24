@@ -29,7 +29,12 @@
     "lastAccess": "Laatste toegang",
     "apiKey": "API sleutel",
     "secretKey": "Geheime sleutel",
-    "authMethod": "Authenticatie methode"
+    "authMethod": "Authenticatie methode",
+    "yourPassword": "Je huidige wachtwoord",
+    "dashboardTemplate": "Dashboard sjabloon",
+    "auth2FA": "2-Factor Authenticatie inschakelen",
+    "auth2FAMethod": "2FA-methode",
+    "auth2FATotpSecret": "2FA TOTP-geheim"
   },
   "links": {
     "teams": "Groepen",
@@ -40,7 +45,8 @@
     "accounts": "Relaties",
     "account": "Relatie (primair)",
     "tasks": "Taken",
-    "defaultTeam": "Standaard Team"
+    "defaultTeam": "Standaard Team",
+    "dashboardTemplate": "Dashboard sjabloon"
   },
   "labels": {
     "Create User": "Gebruiker Aanmaken",
@@ -56,7 +62,12 @@
     "Portal": "Portaal",
     "Create Portal User": "Maak een portaalgebruiker",
     "Proceed w/o Contact": "Ga verder zonder contact",
-    "Generate New API Key": "Genereer nieuwe API sleutel"
+    "Generate New API Key": "Genereer nieuwe API sleutel",
+    "Generate New Password": "Genereer een nieuw wachtwoord",
+    "Back to login form": "Terug naar het inlogformulier",
+    "Requirements": "Eisen",
+    "Security": "Beveiliging",
+    "Secret": "Geheim"
   },
   "tooltips": {
     "defaultTeam": "Alle records aangemaakt door gebruiker worden standaard aan de groep gekoppeld.",
@@ -78,11 +89,22 @@
     "uniqueLinkHasBeenSent": "Een unieke link is naar het gespecificeerde email adres gezonden.",
     "passwordChangedByRequest": "Het wachtwoord is aangepast",
     "userNameExists": "Gebruikersnaam bestaat al",
-    "setupSmtpBefore": "Je moet [SMTP-instellingen]({url}) instellen om het systeem in staat te stellen een wachtwoord in e-mail te verzenden."
+    "setupSmtpBefore": "Je moet [SMTP-instellingen]({url}) instellen om het systeem in staat te stellen een wachtwoord in e-mail te verzenden.",
+    "passwordStrengthLength": "Moet minstens {length} tekens lang zijn.",
+    "passwordStrengthLetterCount": "Moet ten minste {count} letter(s) bevatten.",
+    "passwordStrengthNumberCount": "Moet ten minste {count} cijfers bevatten.",
+    "passwordStrengthBothCases": "Moet zowel hoofdletters als kleine letters bevatten.",
+    "wrongCode": "Verkeerde code",
+    "codeIsRequired": "Code is vereist",
+    "enterTotpCode": "Voer een code van uw authenticatie-app in.",
+    "verifyTotpCode": "Scan de QR-code met uw mobiele authenticator app. Als je problemen hebt met scannen, kun je het geheim handmatig invoeren. Daarna ziet u een 6-cijferige code in uw applicatie. Voer deze code in het onderstaande veld in.",
+    "generateAndSendNewPassword": "Een nieuw wachtwoord zal worden gegenereerd en naar het e-mailadres van de gebruiker worden gestuurd.",
+    "security2FaResetConfimation": "Weet u zeker dat u de huidige 2FA-instellingen wilt resetten?"
   },
   "presetFilters": {
     "active": "Actief",
-    "activePortal": "Portaal actief"
+    "activePortal": "Portaal actief",
+    "activeApi": "API actief"
   },
   "options": {
     "gender": {

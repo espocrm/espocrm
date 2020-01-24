@@ -1,1 +1,9 @@
-{}
+{
+  "fields": {
+    "skipNotifications": "Bỏ qua thông báo"
+  },
+  "labels": {
+    "Create EmailFolder": "Tạo thư mục",
+    "Manage Folders": "Quản lý thư mục"
+  }
+}

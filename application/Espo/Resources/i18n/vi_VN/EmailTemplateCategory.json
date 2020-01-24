@@ -1,1 +1,8 @@
-{}
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Tạo chuyên mục"
+  },
+  "fields": {
+    "order": "Thứ tự"
+  }
+}

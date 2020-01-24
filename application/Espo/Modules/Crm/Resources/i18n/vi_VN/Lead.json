@@ -18,7 +18,11 @@
     "description": "Mô tả",
     "createdAccount": "Tài khoản",
     "createdContact": "Liên hệ",
-    "createdOpportunity": "Cơ hội"
+    "createdOpportunity": "Cơ hội",
+    "campaign": "Chiến dịch"
+  },
+  "links": {
+    "campaign": "Chiến dịch"
   },
   "options": {
     "status": {
@@ -30,6 +34,7 @@
       "Dead": "Chết"
     },
     "source": {
+      "": "trống",
       "Call": "Gọi",
       "Existing Customer": "Khách hàng hiện có",
       "Partner": "Đối tác",

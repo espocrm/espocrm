@@ -16,8 +16,8 @@
       "isNotEmpty": "Is niet leeg",
       "contains": "bevat",
       "has": "bevat",
-      "notContains": "Niet bevat",
-      "notHas": "Niet bevat"
+      "notContains": "Bevat niet",
+      "notHas": "Bevat niet"
     }
   },
   "labels": {

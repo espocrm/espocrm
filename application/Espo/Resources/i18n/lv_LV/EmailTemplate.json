@@ -6,7 +6,6 @@
     "body": "Pamatteksts",
     "subject": "Tēma",
     "attachments": "Pielikumi",
-    "insertField": "Ievietot lauku",
     "oneOff": "Pa vienam",
     "category": "Kategorija"
   },
@@ -26,6 +25,9 @@
   },
   "placeholderTexts": {
     "optOutUrl": "vietrādis URL atrakstīšanās saitei",
-    "optOutLink": "atrakstīšanās saite"
+    "optOutLink": "atrakstīšanās saite",
+    "today": "Šodienas datums",
+    "now": "Pašreizējais laiks un datums",
+    "currentYear": "Esošais gads"
   }
 }

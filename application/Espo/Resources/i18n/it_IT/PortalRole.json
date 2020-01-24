@@ -5,13 +5,15 @@
   "labels": {
     "Access": "Accesso",
     "Create PortalRole": "Crea Ruolo",
-    "Scope Level": "Livello Ambito",
-    "Field Level": "Livello del Campo"
+    "Scope Level": "Livello ambito",
+    "Field Level": "Livello del campo"
   },
   "fields": {
-    "exportPermission": "Esporta Permessi"
+    "exportPermission": "Esporta permessi",
+    "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa"
   },
   "tooltips": {
-    "exportPermission": "Definisce se gli utenti del portale hanno la possibilità di esportare record."
+    "exportPermission": "Definisce se gli utenti del portale hanno la possibilità di esportare record.",
+    "massUpdatePermission": "Definisce se gli utenti del portale hanno la possibilità di eseguire aggiornamenti di massa dei record.\n"
   }
 }

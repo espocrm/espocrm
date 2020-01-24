@@ -15,6 +15,7 @@
     "labelForeign": "Nhãn cho khóa phụ",
     "sortBy": "Sắp xếp mặc định (trường)",
     "sortDirection": "Sắp xếp theo mặc định (direction)",
+    "linkMultipleField": "Liên kết đến nhiều trường",
     "disabled": "Tắt",
     "color": "Màu",
     "kanbanViewMode": "Chế độ xem tiến trình"

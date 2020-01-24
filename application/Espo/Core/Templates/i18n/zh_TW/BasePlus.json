@@ -1,0 +1,10 @@
+{
+  "links": {
+    "meetings": "會議",
+    "calls": "通話",
+    "tasks": "任務"
+  },
+  "labels": {
+    "Create {entityType}": "建立{entityTypeTranslated}"
+  }
+}

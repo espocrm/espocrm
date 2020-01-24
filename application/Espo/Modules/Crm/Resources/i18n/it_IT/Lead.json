@@ -3,7 +3,7 @@
     "Converted To": "Convertito in",
     "Create Lead": "Crea Lead",
     "Convert": "Convertire",
-    "convert": "convertire"
+    "convert": "Convertire"
   },
   "fields": {
     "name": "Nome",
@@ -15,6 +15,8 @@
     "address": "Indirizzo",
     "status": "Stato",
     "source": "Provenienza",
+    "opportunityAmount": "Importo opportunità",
+    "opportunityAmountConverted": "Importo opportunità (convertito)",
     "description": "Descrizione",
     "createdContact": "Contatti",
     "createdOpportunity": "Opportunità",
@@ -25,11 +27,12 @@
     "acceptanceStatus": "Stato accettazione",
     "opportunityAmountCurrency": "Valuta dell'importo della proposta",
     "acceptanceStatusMeetings": "Stato accettazione (riunioni)",
-    "acceptanceStatusCalls": "Stato accettazione (chiamate)"
+    "acceptanceStatusCalls": "Stato accettazione (chiamate)",
+    "convertedAt": "Convertito a"
   },
   "links": {
     "targetLists": "Liste di destinazione",
-    "campaignLogRecords": "Log Campagna",
+    "campaignLogRecords": "Log campagna",
     "campaign": "Campagna",
     "createdContact": "Contatti",
     "createdOpportunity": "Opportunità",
@@ -49,7 +52,7 @@
       "": "Nessuno",
       "Call": "Chiamata",
       "Existing Customer": "Cliente esistente",
-      "Public Relations": "Pubbliche Relazioni",
+      "Public Relations": "Pubbliche relazioni",
       "Web Site": "Sito Web",
       "Campaign": "Campagna",
       "Other": "Altro"

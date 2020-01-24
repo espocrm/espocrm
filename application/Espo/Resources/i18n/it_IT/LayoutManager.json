@@ -1,7 +1,7 @@
 {
   "fields": {
     "width": "Larghezza (%)",
-    "notSortable": "Non Ordinabile",
+    "notSortable": "Non ordinabile",
     "align": "Allinea",
     "panelName": "Nome del pannello",
     "style": "Stile",
@@ -22,7 +22,10 @@
     }
   },
   "labels": {
-    "New panel": "Nuovo Pannello",
+    "New panel": "Nuovo pannello",
     "Layout": "Struttura"
+  },
+  "tooltips": {
+    "link": "Se selezionato, verrà visualizzato un valore di campo come collegamento che punta alla vista di dettaglio del record. Di solito è usato per i campi * Nome *."
   }
 }

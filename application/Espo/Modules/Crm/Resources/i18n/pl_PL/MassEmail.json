@@ -9,7 +9,8 @@
     "emailTemplate": "Szablon wiadomości",
     "inboundEmail": "Konto pocztowe",
     "targetLists": "Listy docelowe",
-    "optOutEntirely": "Wypisz się całkowicie"
+    "optOutEntirely": "Wypisz się całkowicie",
+    "smtpAccount": "Konto SMTP"
   },
   "links": {
     "targetLists": "Listy docelowe",
@@ -30,7 +31,8 @@
   },
   "labels": {
     "Create MassEmail": "Utwórz wiadomość masową",
-    "Send Test": "Wyślij test"
+    "Send Test": "Wyślij test",
+    "group": "grupa"
   },
   "messages": {
     "selectAtLeastOneTarget": "Wybierz przynajmniej jeden cel.",

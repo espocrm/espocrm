@@ -3,7 +3,11 @@
     "executeTime": "Wykonaj o",
     "attempts": "Pozostałe próby",
     "scheduledJob": "Zaplanowane zadanie",
-    "method": "Method"
+    "method": "Method",
+    "executedAt": "Wykonano",
+    "startedAt": "Rozpoczęto",
+    "number": "Numer",
+    "queue": "Kolejka"
   },
   "options": {
     "status": {

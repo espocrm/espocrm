@@ -19,7 +19,23 @@
     "PortalRole": "Rola portalu",
     "Attachment": "Załącznik",
     "EmailFolder": "Folder wiadomości",
-    "PortalUser": "Użytkownik portalu"
+    "PortalUser": "Użytkownik portalu",
+    "PasswordChangeRequest": "Żądanie zmiany hasła",
+    "AuthToken": "Token autoryzacyjny",
+    "UniqueId": "Unikalne ID",
+    "LastViewed": "Ostatnio przeglądane",
+    "Settings": "Ustawienia",
+    "FieldManager": "Menadżer pól",
+    "Integration": "Integracja",
+    "LayoutManager": "Menadżer widoku",
+    "EntityManager": "Menadżer jednostek",
+    "Export": "Eksport",
+    "Preferences": "Preferencje",
+    "EmailAddress": "Adres e-mail",
+    "PhoneNumber": "Numer telefonu",
+    "EmailTemplateCategory": "Kategorie szablonów e-mail",
+    "ApiUser": "Użytkownik API",
+    "DashboardTemplate": "Szablon pulpitu"
   },
   "scopeNamesPlural": {
     "Email": "Wiadomości",
@@ -41,7 +57,17 @@
     "PortalRole": "Role portalu",
     "Attachment": "Załączniki",
     "EmailFolder": "Foldery wiadomości",
-    "PortalUser": "Użytkownicy portalu"
+    "PortalUser": "Użytkownicy portalu",
+    "PasswordChangeRequest": "Żądania zmiany hasła",
+    "ActionHistoryRecord": "Historia czynności",
+    "AuthToken": "Tokeny autoryzacyjne",
+    "UniqueId": "Unikalne ID",
+    "LastViewed": "Ostatnio przeglądane",
+    "EmailTemplateCategory": "Kategorie szablonów e-mail",
+    "Import": "Importuj",
+    "ApiUser": "Użytkownicy API",
+    "DashboardTemplate": "Szablon pulpitu",
+    "Webhook": "Webhooki"
   },
   "labels": {
     "None": "Brak",
@@ -172,7 +198,14 @@
     "Function": "Funkcje",
     "Self-Assign": "Przypisz do siebie",
     "Self-Assigned": "Przypisany do Ciebie",
-    "Select All Results": "Zaznacz wszystkie wyniki"
+    "Return to Application": "Powróć do aplikacji",
+    "Select All Results": "Zaznacz wszystkie wyniki",
+    "Expand": "Rozwiń",
+    "Collapse": "Zwiń",
+    "New notifications": "Nowe powiadomienia",
+    "Manage Categories": "Zarządzaj kategoriami",
+    "Manage Folders": "Zarządzaj folderami",
+    "Convert Currency": "Przelicz walutę"
   },
   "messages": {
     "pleaseWait": "Proszę czekać...",
@@ -205,8 +238,10 @@
     "duplicate": "Dane które wprowadziłeś wyglądają na powielone",
     "writeMessageToSelf": "Napisz wiadomość do siebie",
     "checkForNewNotes": "Sprawdź czy są nowe wpisy",
+    "internalPost": "Post będzie widoczny tylko przez wewnętrznych użytkowników",
     "done": "Ukończone",
     "confirmMassFollow": "Czy na pewno chcesz śledzić wybrane rekordy?",
+    "confirmMassUnfollow": "Jesteś pewien, że chcesz przestać obserwować zaznaczone rekordy?",
     "massFollowResult": "{count} rekordów jest teraz śledzonych.",
     "massUnfollowResult": "{count} rekordów nie jest teraz śledzonych.",
     "massFollowResultSingle": "{count} rekordów są teraz śledzone",
@@ -218,12 +253,17 @@
     "fieldShouldBeInt": "{field} powinno być poprawną liczbą całkowitą",
     "fieldShouldBeDate": "{field} powinno być poprawną datą",
     "fieldShouldBeDatetime": "{field} powinno być poprawną datą/czasem",
+    "internalPostTitle": "Post jest widoczny tylko przez wewnętrznych użytkowników",
+    "loading": "Ładowanie...",
+    "saving": "Zapisywanie...",
     "fieldShouldBeLess": "{field} powinno być mniejsze niż {value}",
-    "fieldShouldBeGreater": "{field} powinno być większe niż {value}"
+    "fieldShouldBeGreater": "{field} powinno być większe niż {value}",
+    "fieldIsUploading": "Trwa wgrywanie"
   },
   "boolFilters": {
     "onlyMy": "Tylko Moje",
-    "followed": "Obserwowany"
+    "followed": "Obserwowany",
+    "onlyMyTeam": "Mój zespół"
   },
   "presetFilters": {
     "followed": "Obserwowany",
@@ -235,7 +275,8 @@
     "massUpdate": "Masowa aktualizacja",
     "export": "Eksport",
     "follow": "Śledź",
-    "unfollow": "Nie śledź"
+    "unfollow": "Nie śledź",
+    "printPdf": "Drukuj do PDF"
   },
   "fields": {
     "name": "Nazwa",
@@ -260,7 +301,8 @@
     "phoneNumberOffice": "Telefon (biuro)",
     "phoneNumberOther": "Telefon (inny)",
     "order": "Kolejność",
-    "parent": "Rodzic"
+    "parent": "Rodzic",
+    "type": "Typ"
   },
   "links": {
     "assignedUser": "Przypisany użytkownik",
@@ -274,7 +316,8 @@
   },
   "dashlets": {
     "Stream": "Komunikator",
-    "Emails": "Skrzynka odbiorcza"
+    "Emails": "Skrzynka odbiorcza",
+    "Records": "Lista rekordów"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} zostało do ciebie przypisane",
@@ -322,7 +365,10 @@
     "emailSent": "{by} wysłał wiadomość e-mail w sprawie {entityType} {entity}",
     "emailSentThis": "{by} wysłał wiadomość e-mail",
     "postTargetSelf": "{user} opublikował dla siebie",
-    "postTargetSelfAndOthers": "{user} opublikował dla {target} i siebie"
+    "postTargetSelfAndOthers": "{user} opublikował dla {target} i siebie",
+    "createAssignedYou": "{user} utworzył {entityType} {entity} i przypisał do Ciebie",
+    "createAssignedThisSelf": "{user} utworzył {entityType} i przypisał do siebie",
+    "createAssignedSelf": "{user} utworzył {entityType} {entity} i przypisał do siebie"
   },
   "lists": {
     "monthNames": [
@@ -410,13 +456,22 @@
       "lastXDays": "Ostatnie X dni",
       "nextXDays": "Kolejne X dni",
       "isEmpty": "Jest pusty",
-      "olderThanXDays": "Starszy niż X dni"
+      "olderThanXDays": "Starszy niż X dni",
+      "currentFiscalYear": "Obecny rok fisnalny",
+      "lastFiscalYear": "Poprzedni rok fiskalny",
+      "currentFiscalQuarter": "Obecny kwartał fiskalny",
+      "lastFiscalQuarter": "Poprzedni kwartał fiskalny"
     },
     "searchRanges": {
       "is": "Jest",
       "isEmpty": "Jest Puste",
       "isNotEmpty": "Nie jest puste",
-      "isFromTeams": "Jest z zespołu"
+      "isFromTeams": "Jest z zespołu",
+      "isOneOf": "Którykolwiek z",
+      "anyOf": "Którykolwiek z",
+      "isNot": "Nie jest",
+      "isNotOneOf": "Żaden z",
+      "noneOf": "Żaden z"
     },
     "varcharSearchRanges": {
       "equals": "Równy",

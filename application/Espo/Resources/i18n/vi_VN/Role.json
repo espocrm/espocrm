@@ -20,13 +20,17 @@
     "levelList": {
       "all": "tất cả",
       "team": "nhóm",
+      "account": "tài khoản",
+      "contact": "liên hệ",
       "own": "sở hữu",
-      "no": "không"
+      "no": "không",
+      "yes": "đồng ý"
     }
   },
   "actions": {
     "read": "Đọc",
     "edit": "Sửa",
-    "delete": "Xóa"
+    "delete": "Xóa",
+    "create": "Tạo"
   }
 }

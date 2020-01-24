@@ -1,6 +1,7 @@
 {
   "labels": {
     "Revert Import": "Khôi phục Import",
+    "Return to Import": "Quay lại trang nhập dữ liệu",
     "Run Import": "Chạy nhập dữ liệu",
     "Back": "Trở lại",
     "Field Mapping": "Ánh xạ các trường",
@@ -26,7 +27,9 @@
     "What to Import?": "Cần nhập những gì?",
     "Entity Type": "Loại Entity",
     "What to do?": "Cần làm gì",
+    "Properties": "Thông tin chi tiết",
     "Header Row": "Hàng đầu",
+    "Person Name Format": "Định dạng tên người dùng",
     "Date Format": "Định dạng ngày",
     "Time Format": "Định dạng thời gian",
     "Currency": "Tiền tệ",
@@ -35,13 +38,22 @@
     "Step 1": "Bước 1",
     "Step 2": "Bước 2",
     "Imported": "Đã nhập dữ liệu",
-    "Timezone": "Múi giờ"
+    "Duplicates": "Nhân bản",
+    "Timezone": "Múi giờ",
+    "New Import": "Nhập dữ liệu mới",
+    "Import Results": "Quy định nhập dữ liệu",
+    "Silent Mode": "Chế độ im lặng"
   },
   "messages": {
+    "utf8": "Được mã hóa UTF-8",
     "duplicatesRemoved": "Đã lọc trùng"
   },
   "fields": {
     "file": "Tập tin",
+    "entityType": "Loại Entity",
+    "imported": "Thông tin đã được nhập",
+    "duplicates": "Trường trùng lặp",
+    "updated": "Đã nhập nhật trường",
     "status": "Tình trạng"
   },
   "options": {

@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "名稱",
+    "number": "數字",
+    "status": "狀態",
+    "account": "帳戶",
+    "contact": "聯絡人",
+    "contacts": "聯絡人",
+    "priority": "優先度",
+    "type": "型別",
+    "description": "描述",
+    "lead": "潛在客戶",
+    "attachments": "附件",
+    "inboundEmail": "群組電子郵件帳戶"
+  },
+  "links": {
+    "account": "帳戶",
+    "contact": "聯繫人 (主要)",
+    "Contacts": "聯絡人",
+    "meetings": "會議",
+    "calls": "通話",
+    "tasks": "任務",
+    "emails": "電子信箱",
+    "articles": "知識庫文章",
+    "lead": "潛在客戶",
+    "attachments": "內文 (純文字)",
+    "inboundEmail": "任務  (己展開)"
+  },
+  "options": {
+    "status": {
+      "New": "新的",
+      "Assigned": "己指定",
+      "Pending": "排程中",
+      "Closed": "己關閉",
+      "Rejected": "己拒絕",
+      "Duplicate": "重覆"
+    },
+    "priority": {
+      "Low": "低",
+      "Normal": "中",
+      "High": "高",
+      "Urgent": "緊急"
+    },
+    "type": {
+      "Question": "詢問",
+      "Incident": "事件",
+      "Problem": "問題"
+    }
+  },
+  "labels": {
+    "Create Case": "新增案件",
+    "Close": "關閉",
+    "Reject": "拒絕",
+    "Closed": "己關閉",
+    "Rejected": "己拒絕"
+  },
+  "presetFilters": {
+    "open": "己開啟",
+    "closed": "己關閉"
+  }
+}

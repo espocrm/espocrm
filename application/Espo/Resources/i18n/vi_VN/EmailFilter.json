@@ -7,5 +7,10 @@
   },
   "labels": {
     "Create EmailFilter": "Tạo bộ lọc thư"
+  },
+  "options": {
+    "action": {
+      "Skip": "Đồng ý"
+    }
   }
 }

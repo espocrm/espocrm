@@ -11,10 +11,11 @@
     "entityType": "Type entiteit",
     "primaryFilter": "Primaire filter",
     "boolFilterList": "Extra filters",
-    "sortBy": "Bestelling (veld)",
-    "sortDirection": "Bestelling (richting)",
+    "sortBy": "Sortering (veld)",
+    "sortDirection": "Sortering (richting)",
     "expandedLayout": "lay-out",
-    "dateFilter": "Datumfilter"
+    "dateFilter": "Datumfilter",
+    "skipOwn": "Geen eigen records tonen"
   },
   "options": {
     "mode": {
@@ -25,5 +26,8 @@
   },
   "messages": {
     "selectEntityType": "Selecteer Entity Type in dashlet-opties."
+  },
+  "tooltips": {
+    "skipOwn": "Acties van uw gebruikersaccount worden niet weergegeven."
   }
 }

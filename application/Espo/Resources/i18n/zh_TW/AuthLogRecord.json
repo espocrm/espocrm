@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "username": "IP地址",
+    "ipAddress": "請求時間",
+    "requestTime": "己要求於",
+    "createdAt": "被拒絕",
+    "isDenied": "拒絕原因",
+    "denialReason": "導覧",
+    "portal": "使用者",
+    "user": "認證憑信已新增",
+    "authToken": "請求網址",
+    "requestUrl": "請求方法",
+    "requestMethod": "身份認證憑信有效",
+    "authTokenIsActive": "身份認證憑信已新增",
+    "authenticationMethod": "人員字符串資料"
+  },
+  "links": {
+    "authToken": "使用者",
+    "user": "導覧",
+    "portal": "動作記錄",
+    "actionHistoryRecords": "被拒絕"
+  },
+  "presetFilters": {
+    "denied": "被接受",
+    "accepted": "無效認證"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "無效的使用者",
+      "INACTIVE_USER": "導覧使用者",
+      "IS_PORTAL_USER": "不是導覧使用者",
+      "IS_NOT_PORTAL_USER": "使用者與導覧無關",
+      "USER_IS_NOT_IN_PORTAL": "電子郵件內文將捨棄。您確定要插入範本嗎？"
+    }
+  }
+}

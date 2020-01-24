@@ -11,7 +11,8 @@
     "authToken": "Autentifikācijas tokens izveidots",
     "requestUrl": "Pieprasījuma vietrādis URL",
     "requestMethod": "Pieprasījuma metode",
-    "authTokenIsActive": "Autentifikācijas tokens ir aktīvs"
+    "authTokenIsActive": "Autentifikācijas tokens ir aktīvs",
+    "authenticationMethod": "Autentifikācijas metode"
   },
   "links": {
     "authToken": "Autentifikācijas tokens ir izveidots",

@@ -2,20 +2,23 @@
   "fields": {
     "name": "Nome",
     "status": "Stato",
-    "storeSentEmails": "Archiviare Email Inviate",
+    "storeSentEmails": "Archiviare email inviate",
     "startAt": "Data inizio",
     "fromAddress": "Indirizzo mittente",
     "fromName": "Dal nome",
     "replyToAddress": "Rispondi aa Indirizzo",
-    "replyToName": "Rispondi a Nome",
+    "replyToName": "Rispondi a nome",
     "campaign": "Campagna",
     "emailTemplate": "Modello Email",
     "targetLists": "Liste di destinazione",
-    "excludingTargetLists": "Escludi Liste di Destinazione",
+    "excludingTargetLists": "Escludi liste di destinazione",
+    "optOutEntirely": "Disdetta interamente",
     "smtpAccount": "Account SMTP"
   },
   "links": {
     "targetLists": "Liste di Destinazione",
+    "excludingTargetLists": "Esclusi gli elenchi target",
+    "queueItems": "Articoli in coda",
     "campaign": "Campagna",
     "emailTemplate": "Modello Email"
   },
@@ -31,7 +34,7 @@
   },
   "labels": {
     "Create MassEmail": "Crea Email Massive",
-    "Send Test": "Invia Test",
+    "Send Test": "Invia test",
     "System SMTP": "Sistema SMTP",
     "system": "Sistema",
     "group": "Gruppo"

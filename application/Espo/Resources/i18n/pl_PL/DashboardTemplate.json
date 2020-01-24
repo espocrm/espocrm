@@ -1,1 +1,10 @@
-{}
+{
+  "fields": {
+    "layout": "Układ"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Utwórz szablon",
+    "Deploy to Users": "Wdróż u użytkowników",
+    "Deploy to Team": "Wdróż w zespole"
+  }
+}

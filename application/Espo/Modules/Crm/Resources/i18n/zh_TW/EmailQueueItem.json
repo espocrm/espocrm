@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "名稱",
+    "status": "狀態",
+    "target": "目標",
+    "sentAt": "傳送日期",
+    "attemptCount": "嘗試",
+    "emailAddress": "電子郵件地址",
+    "massEmail": "大量電子郵件",
+    "isTest": "是否為測試"
+  },
+  "links": {
+    "target": "目標",
+    "massEmail": "大量電子郵件"
+  },
+  "options": {
+    "status": {
+      "Pending": "等待中",
+      "Sent": "己傳送",
+      "Failed": "己失敗",
+      "Sending": "正在發送"
+    }
+  },
+  "presetFilters": {
+    "pending": "等待中",
+    "sent": "己傳送",
+    "failed": "己失敗"
+  }
+}

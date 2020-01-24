@@ -25,6 +25,7 @@
     "outboundEmailFromAddress": "Địa chỉ gửi",
     "outboundEmailIsShared": "Được chia sẻ",
     "recordsPerPage": "Số bản ghi trên mỗi trang",
+    "recordsPerPageSmall": "Số lượng kết quả trên 1 trang (chế độ xem nhỏ)",
     "tabList": "Danh sách Tab",
     "quickCreateList": "Tạo nhanh danh sách",
     "exportDelimiter": "Xuất dấu phân cách",
@@ -38,9 +39,11 @@
     "ldapOptReferrals": "Được giới thiệu",
     "b2cMode": "Chế độ B2C",
     "avatarsDisabled": "Tắt Avatars",
+    "displayListViewRecordCount": "Hiển thị tổng số lượng kết quả (ở chế độ xem dánh sách)",
     "theme": "Chủ đề",
     "userThemesDisabled": "Không cho phép người dùng thay đổi chủ đề",
     "emailMessageMaxSize": "Kích thước email tối đa (Mb)",
+    "siteUrl": "Địa chỉ trang",
     "addressPreview": "Xem trước địa chỉ",
     "addressFormat": "Định dạng địa chỉ",
     "notificationSoundsDisabled": "Tắt thông báo bằng âm thanh",
@@ -48,8 +51,16 @@
     "ldapUsername": "Tên đăng nhập",
     "ldapBindRequiresDn": "Yêu cầu Dn",
     "ldapBaseDn": "Dn gốc",
+    "currencyFormat": "Định dạng tiền tệ",
     "followCreatedEntities": "Theo dõi mục đã tạo",
-    "cronDisabled": "Tắt Cron"
+    "tabIconsDisabled": "Không sử dụng icon",
+    "fiscalYearShift": "Tháng đầu tiên của năm",
+    "cronDisabled": "Tắt Cron",
+    "maintenanceMode": "Chế độ bảo trì",
+    "useWebSocket": "Sử dụng WebSocket",
+    "passwordRecoveryDisabled": "Không cho phép quên mật khẩu (đối với thành viên)",
+    "passwordRecoveryForAdminDisabled": "Không cho phép quên mật khẩu (đối với quản trị viên)",
+    "passwordGenerateLength": "Chiều dài của mật khẩu tạo tự động"
   },
   "options": {
     "weekStart": {
@@ -71,6 +82,8 @@
     "Currency Settings": "Cài đặt tiền tệ",
     "Test Connection": "Kiểm tra kết nối",
     "Connecting": "Đang kết nối...",
-    "Search": "Tìm kiếm"
+    "Search": "Tìm kiếm",
+    "Passwords": "Mật khẩu",
+    "2-Factor Authentication": "Xác minh 2 bước`"
   }
 }

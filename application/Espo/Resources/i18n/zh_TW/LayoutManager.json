@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "width": "寬  (%)",
+    "link": "鏈接",
+    "notSortable": "無法排序",
+    "align": "對齊",
+    "panelName": "面板名稱",
+    "style": "樣式",
+    "sticked": "己黏貼",
+    "isLarge": "停用範圍顏色",
+    "dynamicLogicVisible": "按最後到達階段分組"
+  },
+  "options": {
+    "align": {
+      "left": "左",
+      "right": "右"
+    },
+    "style": {
+      "default": "預設",
+      "success": "成功",
+      "danger": "危險",
+      "info": "訊息",
+      "warning": "警告",
+      "primary": "主要"
+    }
+  },
+  "labels": {
+    "New panel": "配置",
+    "Layout": "細節 (導覧)"
+  },
+  "tooltips": {
+    "link": "不要顯示自己的記錄"
+  }
+}

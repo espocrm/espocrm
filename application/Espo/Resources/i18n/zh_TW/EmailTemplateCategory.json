@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "管理類別",
+    "Manage Categories": "電子郵件範本",
+    "EmailTemplates": "訂閱目標清單"
+  },
+  "fields": {
+    "order": "電子郵件範本",
+    "childList": "使面板顯示的條件"
+  },
+  "links": {
+    "emailTemplates": "電子郵件模板類別"
+  }
+}

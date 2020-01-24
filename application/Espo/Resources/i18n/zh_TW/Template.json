@@ -1,0 +1,71 @@
+{
+  "fields": {
+    "name": "名稱",
+    "body": "內文",
+    "entityType": "模組類型",
+    "header": "標頭",
+    "footer": "底部",
+    "leftMargin": "左邊界",
+    "topMargin": "上邊界",
+    "rightMargin": "右邊界",
+    "bottomMargin": "下邊界",
+    "printFooter": "列印底部",
+    "footerPosition": "底部位置",
+    "variables": "可用的保留位置",
+    "pageOrientation": "頁面格式",
+    "pageFormat": "直向",
+    "fontFace": "阿拉比亞",
+    "pageWidth": "頁面高度 (毫米)",
+    "pageHeight": "自訂"
+  },
+  "labels": {
+    "Create Template": "建立範本"
+  },
+  "tooltips": {
+    "footer": "使用 {pageNumber} 來印頁次。",
+    "variables": "將所需的保留位置複製貼上到頁首，內文或頁尾。"
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "橫向",
+      "Landscape": "您確定要卸載附加元件嗎？"
+    },
+    "placeholders": {
+      "today": "現在 (日期時間)",
+      "now": "最後存取"
+    },
+    "fontFace": {
+      "aealarabiya": "埃富拉特",
+      "aefurat": "CID-0 cs",
+      "cid0cs": "CID-0 ct",
+      "cid0ct": "CID-0 jp",
+      "cid0jp": "CID-0 kr",
+      "cid0kr": "Courier",
+      "courier": "DejaVu Sans",
+      "dejavusans": "DejaVu Sans Condensed",
+      "dejavusanscondensed": "DejaVu Sans ExtraLight",
+      "dejavusansextralight": "DejaVu Sans Mono",
+      "dejavusansmono": "DejaVu Serif",
+      "dejavuserif": "FreeMono",
+      "freemono": "FreeSans",
+      "freesans": "FreeSerif",
+      "freeserif": "Helvetica",
+      "helvetica": "Hysmyeongjostd Medium",
+      "hysmyeongjostdmedium": "Kozgo Pro Medium",
+      "kozgopromedium": "Kozmin Pro Regular",
+      "kozminproregular": "Msung Std Light",
+      "msungstdlight": "PDFA Courier",
+      "pdfacourier": "PDFA Helvetica",
+      "pdfahelvetica": "PDFA Symbol",
+      "pdfasymbol": "PDFA Times",
+      "pdfatimes": "STSong Std Light",
+      "stsongstdlight": "Symbol",
+      "symbol": "Times",
+      "times": "選擇加入",
+      "dejavuserifcondensed": "將主控台重設"
+    },
+    "pageFormat": {
+      "Custom": "PDF模板"
+    }
+  }
+}

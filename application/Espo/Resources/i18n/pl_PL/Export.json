@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "fieldList": "Lista pól",
+    "exportAllFields": "Eksportuj wszystkie pola"
+  }
+}

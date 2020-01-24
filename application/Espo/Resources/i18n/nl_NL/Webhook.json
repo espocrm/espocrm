@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "Create Webhook": "Creëer Webhook"
+  },
+  "fields": {
+    "event": "Actie",
+    "isActive": "Is actief",
+    "user": "API-gebruiker",
+    "entityType": "Entiteit Type",
+    "field": "Veld",
+    "secretKey": "Geheime sleutel"
+  },
+  "links": {
+    "user": "Gebruiker"
+  }
+}

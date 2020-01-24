@@ -1,1 +1,15 @@
-{}
+{
+  "messages": {
+    "infoMention": "Digita ** @ nome utente ** per menzionare l'utente nel post.",
+    "infoSyntax": "Sintassi di markdown disponibile"
+  },
+  "syntaxItems": {
+    "code": "Codice",
+    "multilineCode": "Codice multilinea",
+    "strongText": "Testo forte",
+    "emphasizedText": "Testo enfatizzato",
+    "deletedText": "Testo cancellato",
+    "blockquote": "Blockquote",
+    "link": "Link"
+  }
+}

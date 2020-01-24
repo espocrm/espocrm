@@ -1,0 +1,19 @@
+{
+  "links": {
+    "users": "使用者"
+  },
+  "labels": {
+    "Access": "存取",
+    "Create PortalRole": "新增導覧權限",
+    "Scope Level": "範圍階層",
+    "Field Level": "欄位階層"
+  },
+  "fields": {
+    "exportPermission": "匯出權限",
+    "massUpdatePermission": "指定導覧使用者是否有權限大量更新記錄。"
+  },
+  "tooltips": {
+    "exportPermission": "指定使用者是否有權限匯出記錄。",
+    "massUpdatePermission": "大量更新權限"
+  }
+}

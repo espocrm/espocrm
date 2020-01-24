@@ -17,7 +17,7 @@
     "PortalRole": "Portaal rol",
     "EmailFolder": "E-mail map",
     "PortalUser": "Portaalgebruiker",
-    "ScheduledJobLogRecord": "Geplande taaklogboekrecord",
+    "ScheduledJobLogRecord": "Geplande taak logboek record",
     "PasswordChangeRequest": "Wachtwoord wijzigingsverzoek",
     "AuthToken": "Auth Sleutel",
     "UniqueId": "Unieke ID",
@@ -28,15 +28,16 @@
     "Export": "Exporteren",
     "DynamicLogic": "Dynamische logica",
     "DashletOptions": "Dashlet-opties",
-    "Admin": "beheerder",
+    "Admin": "Beheerder",
     "Global": "Globaal",
-    "Preferences": "voorkeuren",
+    "Preferences": "Voorkeuren",
     "EmailAddress": "E-mailadres",
     "PhoneNumber": "Telefoonnummer",
     "EmailTemplateCategory": "E-mailsjablooncategorieën",
     "LeadCapture": "Invoerpunt voor leadvangst",
-    "ArrayValue": "Arraywaarde",
-    "ApiUser": "API gebruiker"
+    "ArrayValue": "Serie waarde",
+    "ApiUser": "API gebruiker",
+    "DashboardTemplate": "Dashboard sjabloon"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -53,7 +54,7 @@
     "PortalRole": "Portaal functies",
     "EmailFolder": "E-mailmappen",
     "PortalUser": "Portaal-gebruikers",
-    "ScheduledJobLogRecord": "Geplande taaklogboekrecords",
+    "ScheduledJobLogRecord": "Geplande taak logboek records",
     "PasswordChangeRequest": "Verzoeken om wachtwoordwijzigingen",
     "ActionHistoryRecord": "Actiegeschiedenis",
     "AuthToken": "Auth Sleutels",
@@ -61,8 +62,9 @@
     "LastViewed": "Laatst bekeken",
     "EmailTemplateCategory": "E-mailsjablooncategorieën",
     "Import": "Importeren",
-    "ArrayValue": "Arraywaarden",
-    "ApiUser": "API gebruikers"
+    "ArrayValue": "Serie waarden",
+    "ApiUser": "API gebruikers",
+    "DashboardTemplate": "Dashboard Sjablonen"
   },
   "labels": {
     "Misc": "Versch.",
@@ -128,7 +130,7 @@
     "Save": "Opslaan",
     "Edit": "Bewerken",
     "Cancel": "Annuleren",
-    "Mass Update": "Massa Update",
+    "Mass Update": "Massa-update",
     "Export": "Exporteer",
     "No Data": "Geen Data",
     "No Access": "Geen toegang",
@@ -168,10 +170,10 @@
     "Next Entry": "Volgende bijdrage",
     "View List": "Toon lijst",
     "Attach File": "Voeg bestand toe",
-    "Skip": "Overspringen",
+    "Skip": "Overslaan",
     "Attribute": "Attribuut",
     "Function": "Functie",
-    "Self-Assign": "Self-Wijs",
+    "Self-Assign": "Zelf toegewezen",
     "Self-Assigned": "Zelf Toegewezen",
     "Return to Application": "Keer terug naar de toepassing",
     "Select All Results": "Select All Result",
@@ -184,9 +186,10 @@
     "View Personal Data": "Bekijk persoonlijke gegevens",
     "Personal Data": "Persoonlijke gegevens",
     "Erase": "wissen",
-    "Move Over": "Verplaats over",
+    "Move Over": "Verplaats naar",
     "Restore": "Herstel",
-    "View Followers": "Bekijk volgers"
+    "View Followers": "Bekijk volgers",
+    "Convert Currency": "Valuta omrekenen"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -203,9 +206,9 @@
     "removeRecordConfirmation": "Record verwijderen?",
     "unlinkRecordConfirmation": "Relatie ontkoppelen?",
     "removeSelectedRecordsConfirmation": "Geselecteerde records verwijderen?",
-    "massUpdateResult": "{count} bestanden waren aangepast",
-    "massUpdateResultSingle": "{count} bestanden zijn aangepast ",
-    "noRecordsUpdated": "Geen bestanden aangepast",
+    "massUpdateResult": "{count} records zijn bijgewerkt",
+    "massUpdateResultSingle": "{count} record is bijgewerkt",
+    "noRecordsUpdated": "Er zijn geen records bijgewerkt",
     "massRemoveResult": "{count} bestanden waren verwijderd",
     "massRemoveResultSingle": "{count} bestanden zijn verwijderd",
     "noRecordsRemoved": "Er werden geen bestanden verwijderd ",
@@ -216,7 +219,7 @@
     "duplicate": "Het veld dat u maakt lijkt een duplicaat",
     "dropToAttach": "Laat vallen om toe te voegen",
     "writeMessageToSelf": "Schrijf een bericht op uw stream",
-    "checkForNewNotes": "Controleer op updates voor updates",
+    "checkForNewNotes": "Controleer stream voor updates",
     "internalPost": "Bericht wordt alleen door interne gebruikers gezien",
     "done": "Gedaan",
     "confirmMassFollow": "Weet u zeker dat u geselecteerde records wilt volgen?",
@@ -225,8 +228,8 @@
     "massUnfollowResult": "{count} records worden niet gevolgd",
     "massFollowResultSingle": "{count} record wordt nu gevolgd",
     "massUnfollowResultSingle": "{count} record wordt nu niet gevolgd",
-    "massFollowZeroResult": "Er is niets gevolgd",
-    "massUnfollowZeroResult": "Niets volgde",
+    "massFollowZeroResult": "Er wordt niets gevolgd",
+    "massUnfollowZeroResult": "Niets ontvolgt",
     "fieldShouldBeEmail": "{field} moet een geldig E-mailadres zijn",
     "fieldShouldBeFloat": "{field} moet een geldige waarde zijn",
     "fieldShouldBeInt": "{fiels} moet een geldige integer zijn",
@@ -234,7 +237,7 @@
     "fieldShouldBeDatetime": "{field} moet een geldige datum/tijd zijn",
     "internalPostTitle": "Bericht wordt alleen door interne gebruikers gezien",
     "loading": "Bezig met laden...",
-    "saving": "Besparing...",
+    "saving": "Opslaan...",
     "fieldMaxFileSizeError": "Bestand mag niet groter zijn dan {max} Mb",
     "fieldShouldBeLess": "{field} moet minder zijn dan {value}",
     "fieldShouldBeGreater": "{field} moet groter zijn dan {value}",
@@ -244,11 +247,14 @@
     "fieldValueDuplicate": "Dubbele waarde",
     "unlinkSelectedRecordsConfirmation": "Weet u zeker dat u geselecteerde records wilt ontkoppelen?",
     "recalculateFormulaConfirmation": "Weet u zeker dat u de formule voor geselecteerde records wilt herberekenen?",
-    "fieldExceedsMaxCount": "Aantal overschrijdt max. toegestaan {maxCount}"
+    "fieldExceedsMaxCount": "Aantal overschrijdt max. toegestaan {maxCount}",
+    "notUpdated": "Niet bijgewerkt",
+    "maintenanceMode": "De toepassing staat momenteel in de onderhoudsmodus. Alleen beheerders hebben toegang."
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
-    "followed": "Gevolgd"
+    "followed": "Gevolgd",
+    "onlyMyTeam": "Mijn team"
   },
   "presetFilters": {
     "followed": "Gevolgd",
@@ -257,10 +263,9 @@
   "massActions": {
     "remove": "Verwijderen",
     "merge": "Samenvoegen",
-    "massUpdate": "Massa Update",
+    "massUpdate": "Massa-update",
     "export": "Exporteer",
     "follow": "Volgen",
-    "unfollow": "Volg niet",
     "convertCurrency": "Valuta omrekenen",
     "printPdf": "Afdrukken naar PDF",
     "unlink": "Loskoppelen",
@@ -283,8 +288,8 @@
     "description": "Beschrijving",
     "address": "Adres",
     "phoneNumber": "Telefoon",
+    "order": "Sortering",
     "parent": "Behorende bij",
-    "id": "ID kaart",
     "emailAddressData": "E-mailadresgegevens",
     "phoneNumberData": "Telefoonnummergegevens",
     "names": "namen",
@@ -313,8 +318,8 @@
   "streamMessages": {
     "post": "{user} geplaatst op {entityType} {entity}",
     "attach": "{user} toegevoegd aan {entityType} {entity}",
-    "status": "{user} paste {field} aan op {entityType} {entity}",
-    "update": "{user} paste {entityType} {entity} aan",
+    "status": "{user} heeft {field} van {entityType} {entity} bijgewerkt",
+    "update": "{user} heeft {entityType} {entity} bijgewerkt",
     "postTargetTeam": "{user} gepost in team {target}",
     "postTargetTeams": "{user} gepost in teams {target}",
     "postTargetPortal": "{user} gepost naar portal {target}",
@@ -337,8 +342,8 @@
     "assignThis": "{user} wees deze {entityType} toe aan {assignee}",
     "postThis": "{user} gepost",
     "attachThis": "{user} toegevoegd",
-    "statusThis": "{user} paste {field} aan",
-    "updateThis": "{user} paste dit {entityType} aan",
+    "statusThis": "{user} heeft {field} bijgewerkt",
+    "updateThis": "{user} heeft deze {entityType} bijgewerkt",
     "createRelatedThis": "{user} maakte {relatedEntityType} {relatedEntity} en koppelde dit aan {entityType}",
     "createRelated": "{user} creërde {relatedEntityType} {relatedEntity} gekoppeld aan {entityType} {entity}",
     "relate": "{user} gekoppeld {relatedEntityType} {relatedEntity} met {entityType} {entity}",
@@ -351,7 +356,7 @@
     "emailReceivedInitial": "Email is ontvangen en gemaakt met {entityType} {entity}",
     "emailSent": "{by} sent E-mail gerelateerd aan {entityType} {entity}",
     "emailSentThis": "{by} sent E-mail",
-    "postTargetSelf": "{user} zichzelf gepost",
+    "postTargetSelf": "{user} zelf gepost",
     "postTargetSelfAndOthers": "{user} gepost op {target} en zichzelf",
     "createAssignedYou": "{user} heeft {entityType} {entity} aan u toegewezen",
     "createAssignedThisSelf": "{user} heeft dit {entityType} zelf toegewezen",
@@ -516,7 +521,9 @@
       "isFromTeams": "is lid van team",
       "isNot": "Is niet",
       "isNotOneOf": "Geen van",
-      "noneOf": "Geen van"
+      "noneOf": "Geen van",
+      "allOf": "Alle van",
+      "any": "Alle"
     },
     "varcharSearchRanges": {
       "like": "is als (%)",
@@ -524,7 +531,7 @@
       "isEmpty": "is leeg",
       "isNotEmpty": "is niet leeg",
       "notLike": "Niet zoals (%)",
-      "notContains": "Niet bevat",
+      "notContains": "Bevat niet",
       "notEquals": "Niet gelijk aan"
     },
     "intSearchRanges": {
@@ -643,17 +650,20 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} gepost op {target} en zichzelf"
   },
+  "durationUnits": {
+    "h": "u"
+  },
   "listViewModes": {
     "list": "Lijst"
   },
   "themes": {
     "Espo": "Klassieke Espo",
     "Sakura": "Klassieke Sakura",
-    "EspoVertical": "Verticale Espo",
-    "SakuraVertical": "Verticale Sakura",
+    "EspoVertical": "Verticaal Espo",
+    "SakuraVertical": "Verticaal Sakura",
     "Violet": "Klassiek viooltje",
-    "VioletVertical": "Verticale Violet",
+    "VioletVertical": "Verticaal Violet",
     "Hazyblue": "Klassieke Hazyblue",
-    "HazyblueVertical": "Verticale Hazyblue"
+    "HazyblueVertical": "Verticaal Hazyblue"
   }
 }

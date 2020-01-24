@@ -10,12 +10,20 @@
     "rightMargin": "Prawy margines",
     "bottomMargin": "Dolny margines",
     "printFooter": "Drukuj stopkę",
-    "footerPosition": "Pozycja stopki"
+    "footerPosition": "Pozycja stopki",
+    "pageFormat": "Format papieru",
+    "pageWidth": "Szerokość strony(mm)",
+    "pageHeight": "Wysokość strony(mm)"
   },
   "labels": {
     "Create Template": "Utwórz szablon"
   },
   "tooltips": {
     "footer": "Użyj {pageNumber} aby wydrukować numer strony."
+  },
+  "options": {
+    "pageFormat": {
+      "Custom": "Niestandardowe"
+    }
   }
 }

@@ -84,6 +84,13 @@
       "country": "国家",
       "postalCode": "邮编",
       "map": "地图"
+    },
+    "personName": {
+      "first": "名",
+      "last": "姓"
+    },
+    "datetimeOptional": {
+      "date": "日期"
     }
   }
 }

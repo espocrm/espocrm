@@ -2,11 +2,11 @@
   "fields": {
     "name": "Nome",
     "campaign": "MailChimp: ID campagna",
-    "isActive": "È Attivo",
+    "isActive": "È attivo",
     "subscribeToTargetList": "Iscriviti alla lista di destinazione",
     "subscribeContactToTargetList": "Iscriviti contatto se esiste",
     "targetList": "Lista target",
-    "fieldList": "Campi Carico utile",
+    "fieldList": "Campi carico utile",
     "optInConfirmation": "Doppia registrazione",
     "optInConfirmationEmailTemplate": "Modello email di conferma registrazione",
     "optInConfirmationLifetime": "Durata conferma registrazione durata (ore)",
@@ -15,13 +15,18 @@
     "apiKey": "Chiave API",
     "targetTeam": "Team Target",
     "exampleRequestMethod": "Metodo",
-    "exampleRequestPayload": "Carico utile"
+    "exampleRequestPayload": "Carico utile",
+    "createLeadBeforeOptInConfirmation": "Crea lead prima della conferma",
+    "skipOptInConfirmationIfSubscribed": "Salta la conferma se il lead è già nell'elenco di destinazione",
+    "smtpAccount": "Account SMTP",
+    "inboundEmail": "Account e-mail di gruppo"
   },
   "links": {
     "targetList": "LIsta target",
     "campaign": "Campagna",
     "optInConfirmationEmailTemplate": "Modello email conferma registrazione",
-    "targetTeam": "Team target"
+    "targetTeam": "Team target",
+    "inboundEmail": "Account e-mail di gruppo"
   },
   "labels": {
     "Create LeadCapture": "Crea punto d'ingresso",

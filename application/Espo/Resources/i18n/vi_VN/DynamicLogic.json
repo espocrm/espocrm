@@ -1,1 +1,16 @@
-{}
+{
+  "options": {
+    "operators": {
+      "equals": "BẰNG",
+      "notEquals": "KHÔNG BẰNG",
+      "greaterThan": "LỚN HƠN",
+      "lessThan": "NHỎ HƠN",
+      "isToday": "Là hôm nay",
+      "contains": "Có chứa",
+      "has": "Có chứa"
+    }
+  },
+  "labels": {
+    "Field": "Trường"
+  }
+}

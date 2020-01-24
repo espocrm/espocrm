@@ -9,8 +9,9 @@
     "contacts": "Contatti",
     "description": "Descrizione",
     "amountConverted": "Importo (convertito)",
-    "amountWeightedConverted": "Importo Ponderato",
+    "amountWeightedConverted": "Importo ponderato",
     "campaign": "Campagna",
+    "originalLead": "Lead originale",
     "amountCurrency": "Valuta dell'importo",
     "contactRole": "Ruolo contatto",
     "lastStage": "Ultimo Stadio"
@@ -18,17 +19,19 @@
   "links": {
     "contacts": "Contatti",
     "documents": "Documenti",
-    "campaign": "Campagna"
+    "campaign": "Campagna",
+    "originalLead": "Lead originale"
   },
   "options": {
     "stage": {
+      "Prospecting": "Prospezione",
       "Qualification": "Qualifica",
       "Needs Analysis": "Necessita di analisi",
-      "Value Proposition": "Proposta di Valore",
-      "Id. Decision Makers": "Id. Responsabile",
+      "Value Proposition": "Proposta di valore",
+      "Id. Decision Makers": "Id. responsabile",
       "Perception Analysis": "Percezione dell'Analisi",
-      "Proposal/Price Quote": "Proposta / Preventivo",
-      "Negotiation/Review": "Negoziazione/Revisione",
+      "Proposal/Price Quote": "Proposta / preventivo",
+      "Negotiation/Review": "Negoziazione/revisione",
       "Closed Won": "Chiuso Positivamente",
       "Closed Lost": "Chiuso Negativamente",
       "Proposal": "Proposta",

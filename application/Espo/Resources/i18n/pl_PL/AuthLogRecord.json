@@ -1,1 +1,31 @@
-{}
+{
+  "fields": {
+    "username": "Nazwa użytkownika",
+    "ipAddress": "Adres IP",
+    "requestTime": "Czas żądania",
+    "createdAt": "Zażądano ",
+    "isDenied": "Odmówiono",
+    "denialReason": "Powód odmowy",
+    "user": "Użytkownik",
+    "authToken": "Utworzony token autoryzacyjny",
+    "requestUrl": "Zażądany URL",
+    "requestMethod": "Metoda żądania",
+    "authTokenIsActive": "Token jest aktywny",
+    "authenticationMethod": "Metoda autoryzacji"
+  },
+  "links": {
+    "authToken": "Token został utworzony",
+    "user": "Użytkownik",
+    "actionHistoryRecords": "Historia czynności"
+  },
+  "presetFilters": {
+    "denied": "Odmówiono",
+    "accepted": "Zaakceptowano"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Błędne dane logowania",
+      "INACTIVE_USER": "Nieaktywny użytkownik"
+    }
+  }
+}

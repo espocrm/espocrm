@@ -1,0 +1,77 @@
+{
+  "labels": {
+    "Fields": "欄位",
+    "Relationships": "關係",
+    "Schedule": "時間表",
+    "Log": "日誌記錄",
+    "Formula": "公式"
+  },
+  "fields": {
+    "name": "名稱",
+    "type": "類型",
+    "labelSingular": "單數標籤",
+    "labelPlural": "複數標籤",
+    "stream": "動態",
+    "label": "標籤",
+    "linkType": "連結類型",
+    "entityForeign": "外部模組",
+    "linkForeign": "外部鏈結",
+    "link": "鏈結",
+    "labelForeign": "外國標籤",
+    "sortBy": "預設排序  (欄位)",
+    "sortDirection": "預設排序  (方向)",
+    "relationName": "中間表名稱",
+    "linkMultipleField": "連結多項欄位",
+    "linkMultipleFieldForeign": "外部鏈結多欄位",
+    "disabled": "己停用",
+    "textFilterFields": "文字過濾欄位",
+    "audited": "已審核",
+    "auditedForeign": "外部審計",
+    "statusField": "狀態欄",
+    "beforeSaveCustomScript": "保存自定義腳本之前",
+    "color": "看板視圖",
+    "kanbanViewMode": "看板視圖中被忽略的群組",
+    "kanbanStatusIgnoreList": "清單",
+    "iconClass": "查看個人資料",
+    "fullTextSearch": "需要執行重建。",
+    "countDisabled": "總數將不會顯示在列表視圖中。當資料庫資料表很多筆時，可以減少載入時間。"
+  },
+  "options": {
+    "type": {
+      "": "無",
+      "Base": "基本",
+      "Person": "人員",
+      "CategoryTree": "目錄樹",
+      "Event": "事件",
+      "BasePlus": "基底加",
+      "Company": "公司"
+    },
+    "linkType": {
+      "manyToMany": "多對多",
+      "oneToMany": "一對多",
+      "manyToOne": "多對一",
+      "parentToChildren": "上層對下層",
+      "childrenToParent": "下層對上層"
+    },
+    "sortDirection": {
+      "asc": "升幂",
+      "desc": "降幂"
+    }
+  },
+  "messages": {
+    "entityCreated": "模組已新增",
+    "linkAlreadyExists": "鏈接名稱衝突。",
+    "linkConflict": "名稱衝突：鏈結或欄位有重覆。"
+  },
+  "tooltips": {
+    "statusField": "此欄位的更新己在動態中紀錄。",
+    "textFilterFields": "文本搜索使用的字段。",
+    "stream": "模組是否有動態。",
+    "disabled": "如果系統不需要此模組，請勾選。",
+    "linkAudited": "新增相關記錄並與連結現有的動態。",
+    "linkMultipleField": "「連結多個」欄位提供一種方便的方式來編輯關係。如果擁有大量相關記錄，請不要使用。",
+    "entityType": "基底進階－含有活動、歷史紀錄和任務選單。\n\n事件－出現在日曆和活動頁面中。",
+    "fullTextSearch": "無法印出超過{maxCount}筆記錄。",
+    "countDisabled": "所有的"
+  }
+}

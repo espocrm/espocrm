@@ -23,7 +23,18 @@
     "account": "Klient",
     "sendAccessInfo": "Wyślij użytkownikowi wiadomość z danymi dostępu",
     "gender": "Płeć",
-    "position": "Pozycja w drużynie"
+    "position": "Pozycja w drużynie",
+    "ipAddress": "Adres IP",
+    "passwordPreview": "Podgląd hasła",
+    "isSuperAdmin": "Jest super adminem",
+    "type": "Typ",
+    "apiKey": "Klucz API",
+    "secretKey": "Sekretny klucz",
+    "authMethod": "Metoda autoryzacji",
+    "yourPassword": "Twoje obecne hasło",
+    "dashboardTemplate": "Szablon pulpitu",
+    "auth2FA": "Włącz dwuetapową weryfikację",
+    "auth2FAMethod": "Metoda 2FA"
   },
   "links": {
     "teams": "Zespoły",
@@ -32,7 +43,8 @@
     "contact": "Kontakt",
     "accounts": "Klienci",
     "account": "Konto (podstawowe)",
-    "tasks": "Zadania"
+    "tasks": "Zadania",
+    "dashboardTemplate": "Szablon pulpitu"
   },
   "labels": {
     "Create User": "Utwórz Użytkonika",
@@ -46,7 +58,15 @@
     "Email Address": "Adres e-mail",
     "External Accounts": "Konta zewnętrzne",
     "Email Accounts": "Konta pocztowe",
-    "Create Portal User": "Utwórz użytkownika portalu"
+    "Create Portal User": "Utwórz użytkownika portalu",
+    "Generate New API Key": "Generuj nowy klucz API",
+    "Generate New Password": "Generuj nowe hasło",
+    "Code": "Kod",
+    "Back to login form": "Powróć do formularza logowania",
+    "Requirements": "Wymagania",
+    "Security": "Bezpieczeństwo",
+    "Reset 2FA": "Resetuj dwuetapową weryfikację",
+    "Secret": "Sekret"
   },
   "tooltips": {
     "defaultTeam": "Wszystkie dane utworzone przez tego użytkonika zostaną przypisane do domyślnego zespołu.",
@@ -64,7 +84,13 @@
     "forbidden": "Zabronione, proszę spróbować później",
     "uniqueLinkHasBeenSent": "Unikalny adres URL został wysłany na podany adres email.",
     "passwordChangedByRequest": "Hasło zostało zmienione",
-    "userNameExists": "Nazwa Użytkownika"
+    "userNameExists": "Nazwa Użytkownika",
+    "wrongCode": "Błędny kod",
+    "codeIsRequired": "Kod jest wymagany",
+    "enterTotpCode": "Wprowadź kod z aplikacji.",
+    "verifyTotpCode": "Zeskanuj kod QR za pomocą aplikacji mobilnego uwierzytelniania. Jeśli masz problemy ze skanowaniem, możesz ręcznie wprowadzić sekret. Następnie zobaczysz w aplikacji 6-cyfrowy kod. Wpisz ten kod w polu poniżej.",
+    "generateAndSendNewPassword": "Nowe hasło zostanie wygenerowane i wysłane na adres e-mail użytkownika.",
+    "security2FaResetConfimation": "Czy na pewno chcesz zresetować bieżące ustawienia 2FA?"
   },
   "boolFilters": {
     "onlyMyTeam": "Tylko mój zespół"
@@ -78,6 +104,9 @@
       "Male": "Mężczyzna",
       "Female": "Kobieta",
       "Neutral": "Nautralne"
+    },
+    "authMethod": {
+      "ApiKey": "Klucz API"
     }
   }
 }

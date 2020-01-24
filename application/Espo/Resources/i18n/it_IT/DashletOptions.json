@@ -3,7 +3,7 @@
     "title": "Titolo",
     "dateFrom": "Data da",
     "dateTo": "Data a",
-    "autorefreshInterval": "Intervallo di Aggiornamento automatico",
+    "autorefreshInterval": "Intervallo di aggiornamento automatico",
     "displayRecords": "Visualizzare i record",
     "isDoubleHeight": "Altezza 2x",
     "mode": "Modo",
@@ -14,7 +14,8 @@
     "boolFilterList": "Filtri ulteriori",
     "sortBy": "Ordina (campo)",
     "sortDirection": "Ordina (direzione)",
-    "dateFilter": "Filtro data"
+    "dateFilter": "Filtro data",
+    "skipOwn": "Non mostrare i propri record"
   },
   "options": {
     "mode": {
@@ -28,5 +29,8 @@
   },
   "messages": {
     "selectEntityType": "Seleziona il tipo di entità nelle opzioni del dashlet."
+  },
+  "tooltips": {
+    "skipOwn": "Le azioni eseguite dal tuo account utente non verranno visualizzate."
   }
 }

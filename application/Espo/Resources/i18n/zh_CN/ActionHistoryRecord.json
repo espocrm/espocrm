@@ -11,9 +11,9 @@
   },
   "links": {
     "authToken": "授权令牌",
-    "authLogRecord": "身份验证日志记录",
     "user": "用户",
-    "target": "目标"
+    "target": "目标",
+    "authLogRecord": "身份验证日志记录"
   },
   "presetFilters": {
     "onlyMy": "只有我的"

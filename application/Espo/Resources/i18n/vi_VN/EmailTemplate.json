@@ -6,7 +6,7 @@
     "body": "Nội dung",
     "subject": "Chủ đề",
     "attachments": "Đính kèm",
-    "insertField": "Thêm trường"
+    "category": "Chuyên mục"
   },
   "labels": {
     "Create EmailTemplate": "Tạo mẫu email",

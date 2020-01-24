@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "建立文章",
+    "Any": "任何",
+    "Send in Email": "發送電子郵件",
+    "Move Up": "上升",
+    "Move Down": "下移",
+    "Move to Top": "移至頂部",
+    "Move to Bottom": "移至底部"
+  },
+  "fields": {
+    "name": "名稱",
+    "status": "狀態",
+    "type": "類型",
+    "attachments": "附件",
+    "publishDate": "發布日期",
+    "expirationDate": "截止日期",
+    "description": "描述",
+    "body": "內文",
+    "categories": "分類目錄",
+    "language": "語言",
+    "portals": "導覧"
+  },
+  "links": {
+    "cases": "案件",
+    "opportunities": "商機",
+    "categories": "分類目錄",
+    "portals": "導覧"
+  },
+  "options": {
+    "status": {
+      "In Review": "評論中",
+      "Draft": "草案",
+      "Archived": "已封存",
+      "Published": "已發表"
+    },
+    "type": {
+      "Article": "文章"
+    }
+  },
+  "presetFilters": {
+    "published": "已發表"
+  },
+  "tooltips": {
+    "portals": "文章僅在指定的導覧中可用。"
+  }
+}

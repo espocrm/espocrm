@@ -38,10 +38,13 @@
     "Next": "Następny",
     "Step 1": "Krok 1",
     "Step 2": "Krok 2",
-    "Duplicates": "Duplikaty"
+    "Duplicates": "Duplikaty",
+    "Remove Import Log": "Usuń historię importu"
   },
   "messages": {
-    "duplicatesRemoved": "Duplikaty usunięte"
+    "duplicatesRemoved": "Duplikaty usunięte",
+    "revert": "To usunie wszystkie zaimportowane rekordy permanentnie.",
+    "confirmRevert": "Zamierzasz permanentnie usunąć wszystkie zaimportowane rekordy. Jesteś pewien?"
   },
   "fields": {
     "file": "Plik",

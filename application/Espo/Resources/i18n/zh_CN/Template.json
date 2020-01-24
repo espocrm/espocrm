@@ -19,14 +19,14 @@
   "labels": {
     "Create Template": "创建模板"
   },
+  "tooltips": {
+    "footer": "使用{pageNumber}打印页码。",
+    "variables": "复制粘贴所需的占位符到标题，正文或页脚。"
+  },
   "options": {
     "pageOrientation": {
       "Portrait": "人物",
       "Landscape": "风景"
     }
-  },
-  "tooltips": {
-    "footer": "使用{pageNumber}打印页码。",
-    "variables": "复制粘贴所需的占位符到标题，正文或页脚。"
   }
 }

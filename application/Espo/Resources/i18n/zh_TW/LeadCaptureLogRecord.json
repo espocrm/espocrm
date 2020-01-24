@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "資料",
+    "data": "目標",
+    "target": "潛在客戶抓取",
+    "leadCapture": "輸入於",
+    "createdAt": "潛在客戶是否新增",
+    "isCreated": "潛在客戶抓取"
+  },
+  "links": {
+    "leadCapture": "目標",
+    "target": "新增新記錄時，即使將它們指定給另一個使用者，也會自動跟蹤它們。"
+  }
+}

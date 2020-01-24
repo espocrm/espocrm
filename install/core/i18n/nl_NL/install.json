@@ -37,7 +37,10 @@
     "Success": "Succesvol",
     "Fail": "Mislukt",
     "is recommended": "is aanbevolen",
-    "extension is missing": "extensie ontbreekt"
+    "extension is missing": "extensie ontbreekt",
+    "headerTitle": "EspoCRM-installatie",
+    "Crontab setup instructions": "Zonder het uitvoeren van geplande taken zullen inkomende e-mails, meldingen en herinneringen niet werken. Hier kunt u {SETUP_INSTRUCTIONS} lezen.",
+    "Setup instructions": "setup-instructies"
   },
   "fields": {
     "Choose your language": "Kies uw taal",
@@ -72,8 +75,8 @@
     "1049": "Onbekende database",
     "2005": "Onbekende MySQL server host",
     "Some errors occurred!": "Er zijn fouten gevonden!",
-    "phpVersion": "Uw PHP versie wordt niet ondersteund door EspoCRM, u moet minimaal updaten naar PHP {minVersion}",
-    "requiredMysqlVersion": "Uw MySQL versie wordt niet ondersteund door EspoCRM, u moet minimaal updaten naar MySQL {minVersion}",
+    "phpVersion": "Uw PHP-versie wordt niet ondersteund door EspoCRM, update ten minste naar PHP {minVersion}",
+    "requiredMysqlVersion": "Uw MySQL-versie wordt niet ondersteund door EspoCRM, update ten minste naar MySQL {minVersion}",
     "All Settings correct": "Alle Instellingen zijn juist",
     "Failed to connect to database": "Kan geen verbinding maken met de database",
     "PHP version": "PHP Versie",
@@ -94,8 +97,11 @@
     "extension": "{0} extensie ontbreekt",
     "option": "Aanbevolen waarde is {0}",
     "mysqlSettingError": "EspoCRM vraagde MySQL instelling \"{NAME}\" in te stellen op {VALUE}",
-    "requiredMariadbVersion": "Uw MariaDB-versie wordt niet ondersteund door EspoCRM, gelieve ten minste bij te werken naar MariaDB {minVersion}.",
-    "Ajax failed": "Er is een onverwachte fout opgetreden"
+    "requiredMariadbVersion": "Uw MariaDB-versie wordt niet ondersteund door EspoCRM, update ten minste naar MariaDB {minVersion}.",
+    "Ajax failed": "Er is een onverwachte fout opgetreden",
+    "Bad init Permission": "Toestemming geweigerd voor \"{*}\" directory. Stel 775 in op \"{*}\" of voer dit commando gewoon uit in de terminal <pre><b><b>{C}</b></pre> Bediening is niet toegestaan? Probeer deze: {CSU}",
+    "permissionInstruction": "<br>Voer dit commando uit in Terminal:<pre><b>\"{C}\"</b></pre>\".",
+    "operationNotPermitted": "Operatie is niet toegestaan? Probeer deze eens: <br><br><br>{CSU}"
   },
   "options": {
     "modRewriteTitle": {
@@ -105,9 +111,6 @@
       "default": "API-fout: EspoCRM API is niet beschikbaar. <br> Mogelijk probleem: uitgeschakeld Herschrijfmodule. Controleer en schakel de Rewrite-module in uw server (bijvoorbeeld mod_rewrite in Apache) en .htaccess-ondersteuning in."
     },
     "modRewriteInstruction": {
-      "apache": {
-        "linux": "<br> 1. Schakel \\\"mod_rewrite\\\" in. Om het te doen voer je deze commando's uit in een Terminal: <pre>{APACHE1}</pre> <br> 2. Schakel Htaccess-ondersteuning in. Serverconfiguratie-instellingen toevoegen / bewerken (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf): <pre>{APACHE2}</pre>\nVoer daarna dit commando uit in een Terminal: <pre>{APACHE3}</pre> <br> 3. Probeer het RewriteBase-pad toe te voegen, open een bestand {API_PATH} .htaccess en vervang de volgende regel: <pre>{APACHE4}</pre> Naar <pre>{APACHE5}</pre> <br> Ga voor meer informatie naar de richtlijn <a href=\\\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\\\" target=\\\"_blank\\\"> Apache-serverconfiguratie voor EspoCRM </a> <br> <br>"
-      },
       "nginx": {
         "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Ga voor meer informatie naar de handleiding <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>",
         "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Ga voor meer informatie naar de handleiding <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>"

@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "name": "名稱",
+    "version": "版本",
+    "description": "描述",
+    "isInstalled": "已安裝",
+    "checkVersionUrl": "潛在客戶抓取入口點"
+  },
+  "labels": {
+    "Uninstall": "卸載",
+    "Install": "安裝"
+  },
+  "messages": {
+    "uninstalled": "附加元件 {name} 已卸載"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "labels": {
+    "Create Webhook": "事件"
+  },
+  "fields": {
+    "event": "網址",
+    "url": "啟用",
+    "isActive": "API使用者",
+    "user": "模組類型",
+    "entityType": "欄位",
+    "field": "密鑰",
+    "secretKey": "使用者"
+  },
+  "links": {
+    "user": "EspoCRM安裝"
+  }
+}

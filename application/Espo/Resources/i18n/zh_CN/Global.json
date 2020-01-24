@@ -5,7 +5,6 @@
     "Team": "团队",
     "Role": "角色",
     "EmailTemplate": "邮件模板",
-    "EmailTemplateCategory": "邮件模板类别",
     "EmailAccount": "个人邮件帐户",
     "EmailAccountScope": "个人邮件帐户",
     "OutboundEmail": "外发邮件",
@@ -44,7 +43,8 @@
     "EmailAddress": "Email 地址",
     "PhoneNumber": "电话号码",
     "AuthLogRecord": "身份验证日志记录",
-    "AuthFailLogRecord": "认证失败日志记录"
+    "AuthFailLogRecord": "认证失败日志记录",
+    "EmailTemplateCategory": "邮件模板类别"
   },
   "scopeNamesPlural": {
     "Email": "电子邮件",
@@ -52,7 +52,6 @@
     "Team": "团队",
     "Role": "角色",
     "EmailTemplate": "邮件模板",
-    "EmailTemplateCategory": "邮件模板类别",
     "EmailAccount": "个人邮件帐户",
     "EmailAccountScope": "个人邮件帐户",
     "OutboundEmail": "外发邮件",
@@ -62,7 +61,6 @@
     "Dashboard": "仪表板",
     "InboundEmail": "邮件组帐户",
     "Stream": "信息流",
-    "Import": "导入结果",
     "Template": "模板",
     "Job": "工作",
     "EmailFilter": "邮件过滤器",
@@ -78,7 +76,9 @@
     "UniqueId": "唯一身份",
     "LastViewed": "最近看过",
     "AuthLogRecord": "身份验证登录",
-    "AuthFailLogRecord": "身份验证失败的日志"
+    "AuthFailLogRecord": "身份验证失败的日志",
+    "EmailTemplateCategory": "邮件模板类别",
+    "Import": "导入结果"
   },
   "labels": {
     "Misc": "杂项",
@@ -116,7 +116,6 @@
     "Cache is not enabled": "缓存未启用",
     "Cache has been cleared": "缓存已清除",
     "Rebuild has been done": "重建已经完成",
-    "Return to Application": "返回至应用",
     "Saving...": "保存中…",
     "Modified": "已修改",
     "Created": "已创建",
@@ -201,7 +200,6 @@
     "Close": "关闭",
     "Yes": "是",
     "No": "否",
-    "Select All Results": "选择所有结果",
     "Value": "值",
     "Current version": "当前版本",
     "List View": "列表视图",
@@ -223,6 +221,9 @@
     "Function": "功能",
     "Self-Assign": "自分配",
     "Self-Assigned": "指派给自己",
+    "Return to Application": "返回至应用",
+    "Select All Results": "选择所有结果",
+    "Collapse": "折叠",
     "New notifications": "新通知",
     "Manage Categories": "管理类别",
     "Manage Folders": "管理文件夹",
@@ -233,23 +234,12 @@
   "messages": {
     "pleaseWait": "请稍候...",
     "posting": "正在发信息...",
-    "loading": "载入中...",
-    "saving": "保存中…",
     "confirmLeaveOutMessage": "你确定要离开吗？",
     "notModified": "你没有修改记录",
-    "duplicate": "您创建的记录可能已经存在",
-    "dropToAttach": "降到附件",
     "fieldIsRequired": "{field} 是必选的",
-    "fieldShouldBeEmail": "{field}应该是一个有效的电子邮件",
-    "fieldShouldBeFloat": "{field}应该是一个有效的浮点数",
-    "fieldShouldBeInt": "{field}应该是一个有效的整数",
-    "fieldShouldBeDate": "{field}应该是有效的日期",
-    "fieldShouldBeDatetime": "{field}应该是有效的日期/时间",
     "fieldShouldAfter": "{field}应该在{otherField}之后",
     "fieldShouldBefore": "{field}应该在{otherField}之前",
     "fieldShouldBeBetween": "{field}应在{min}和{max}之间",
-    "fieldShouldBeLess": "{field}应小于{value}",
-    "fieldShouldBeGreater": "{field}应大于{value}",
     "fieldBadPasswordConfirm": "{field}未被妥善确认",
     "resetPreferencesDone": "属性已重置为默认值",
     "confirmation": "你确定吗？",
@@ -265,15 +255,15 @@
     "massRemoveResultSingle": "{count} 记录已删除",
     "noRecordsRemoved": "没有记录被删除",
     "clickToRefresh": "点击刷新",
-    "streamPostInfo": "输入<strong>@用户名</strong> 来提到用户。\n\n可用markdown语法：\n`<code>代码</code>`\n**<strong>粗体</strong>**\n*<em>强调文字</em>*\n~<del>删除文字</del>~\n> 引用\n(链接文本)[url]",
     "writeYourCommentHere": "在这里写评论",
     "writeMessageToUser": "写消息给{user}",
-    "writeMessageToSelf": "在你的信息流里写条信息",
     "typeAndPressEnter": "输入并按Enter键",
     "checkForNewNotifications": "检查新通知",
+    "duplicate": "您创建的记录可能已经存在",
+    "dropToAttach": "降到附件",
+    "writeMessageToSelf": "在你的信息流里写条信息",
     "checkForNewNotes": "检查",
     "internalPost": "邮件只能被内部用户",
-    "internalPostTitle": "邮件只能由内部用户看到",
     "done": "已做",
     "confirmMassFollow": "您确定要跟踪选定的记录吗？",
     "confirmMassUnfollow": "您确定要取消跟踪所选记录吗？",
@@ -282,7 +272,18 @@
     "massFollowResultSingle": "{count}记录现已被跟踪",
     "massUnfollowResultSingle": "{count}记录现已被取消跟踪",
     "massFollowZeroResult": "没有任何跟踪",
-    "massUnfollowZeroResult": "没有任何取消跟踪"
+    "massUnfollowZeroResult": "没有任何取消跟踪",
+    "fieldShouldBeEmail": "{field}应该是一个有效的电子邮件",
+    "fieldShouldBeFloat": "{field}应该是一个有效的浮点数",
+    "fieldShouldBeInt": "{field}应该是一个有效的整数",
+    "fieldShouldBeDate": "{field}应该是有效的日期",
+    "fieldShouldBeDatetime": "{field}应该是有效的日期/时间",
+    "internalPostTitle": "邮件只能由内部用户看到",
+    "loading": "载入中...",
+    "saving": "保存中…",
+    "fieldShouldBeLess": "{field}应小于{value}",
+    "fieldShouldBeGreater": "{field}应大于{value}",
+    "fieldIsUploading": "正在上传"
   },
   "boolFilters": {
     "onlyMy": "仅自己",
@@ -360,8 +361,6 @@
     "postTargetYou": "{user}发信息给您",
     "postTargetYouAndOthers": "{user}发信息给您和{target}",
     "postTargetAll": "{user}发信息到所有",
-    "postTargetSelf": "{user}给自己发信息",
-    "postTargetSelfAndOthers": "{user}发信息给{target}和用户他们自己",
     "mentionInPost": "{user}在{entityType}{entity}中提到{mentioned}",
     "mentionYouInPost": "{user}在{entityType}{entity}中提及了您",
     "mentionInPostTarget": "{user}在文章中提到",
@@ -372,16 +371,8 @@
     "createThis": "{user}创建{entityType}",
     "createAssignedThis": "{user}创建{entityType}并指派给{assignee}",
     "createAssigned": "{user}创建{entityType}{entity}并指派给{assignee}",
-    "createAssignedYou": "{user}创建{entityType}{entity}并指派给你",
-    "createAssignedThisSelf": "{user}创建{entityType}并指派给自己",
-    "createAssignedSelf": "{user}创建了{entityType}{entity}并指派给自己",
     "assign": "{user}指派{entityType}{entity}给{assignee}",
     "assignThis": "{user}指派{entityType}给{assignee}",
-    "assignYou": "{user}指派了{entityType}{entity}给你",
-    "assignThisVoid": "{user}取消{entityType}的指派",
-    "assignVoid": "{user}取消{entityType}{entity}的指派",
-    "assignThisSelf": "{user}把{entityType}指派给自己",
-    "assignSelf": "{user}把{entityType}{entity}指派给自己",
     "attachThis": "添加附件",
     "statusThis": "{user}更新{field}",
     "updateThis": "{user}更新{entityType}",
@@ -397,13 +388,17 @@
     "emailReceived": "收到的电子邮件与{entityType}{entity}有关",
     "emailReceivedInitial": "收到电子邮件：{entityType} {entity} created",
     "emailSent": "{by}发送与{entityType}{entity}相关的电子邮件",
-    "emailSentThis": "{by}发送电子邮件"
-  },
-  "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user}发信息给{target}和他自己"
-  },
-  "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user}发信息给{target}和她自己"
+    "emailSentThis": "{by}发送电子邮件",
+    "postTargetSelf": "{user}给自己发信息",
+    "postTargetSelfAndOthers": "{user}发信息给{target}和用户他们自己",
+    "createAssignedYou": "{user}创建{entityType}{entity}并指派给你",
+    "createAssignedThisSelf": "{user}创建{entityType}并指派给自己",
+    "createAssignedSelf": "{user}创建了{entityType}{entity}并指派给自己",
+    "assignYou": "{user}指派了{entityType}{entity}给你",
+    "assignThisVoid": "{user}取消{entityType}的指派",
+    "assignVoid": "{user}取消{entityType}{entity}的指派",
+    "assignThisSelf": "{user}把{entityType}指派给自己",
+    "assignSelf": "{user}把{entityType}{entity}指派给自己"
   },
   "lists": {
     "monthNames": [
@@ -439,12 +434,6 @@
       "周六"
     ]
   },
-  "durationUnits": {
-    "d": "天",
-    "h": "小时",
-    "m": "分",
-    "s": "秒"
-  },
   "options": {
     "salutationName": {
       "Mr.": "先生",
@@ -466,7 +455,6 @@
       "de_DE": "德语",
       "el_GR": "希腊语",
       "en_GB": "英语（英国）",
-      "es_MX": "西班牙（墨西哥）",
       "en_US": "英语（美国）",
       "es_ES": "西班牙语（西班牙）",
       "et_EE": "爱沙尼亚语",
@@ -524,7 +512,8 @@
       "vi_VN": "越南语",
       "zh_CN": "简体中文（中国大陆）",
       "zh_HK": "繁体中文（中国香港）",
-      "zh_TW": "繁体中文（中国台湾）"
+      "zh_TW": "繁体中文（中国台湾）",
+      "es_MX": "西班牙（墨西哥）"
     },
     "dateSearchRanges": {
       "on": "在",
@@ -537,7 +526,6 @@
       "future": "未来",
       "currentMonth": "这个月",
       "lastMonth": "上个月",
-      "nextMonth": "下个月",
       "currentQuarter": "当前季度",
       "lastQuarter": "上季度",
       "currentYear": "今年",
@@ -548,15 +536,16 @@
       "ever": "永远",
       "isEmpty": "为空",
       "olderThanXDays": "早于X天",
-      "afterXDays": "X天后"
+      "afterXDays": "X天后",
+      "nextMonth": "下个月"
     },
     "searchRanges": {
       "is": "是的",
       "isEmpty": "为空",
       "isNotEmpty": "不为空",
+      "isFromTeams": "来自团队",
       "isOneOf": "任何",
       "anyOf": "任何",
-      "isFromTeams": "来自团队",
       "isNot": "不是",
       "isNotOneOf": "没有",
       "noneOf": "没有"
@@ -567,9 +556,9 @@
       "startsWith": "以...开始",
       "endsWith": "以...结束",
       "contains": "包含",
-      "notContains": "不包含",
       "isEmpty": "为空",
       "isNotEmpty": "不为空",
+      "notContains": "不包含",
       "notEquals": "不等于"
     },
     "intSearchRanges": {
@@ -701,6 +690,18 @@
         "redo": "重做"
       }
     }
+  },
+  "streamMessagesMale": {
+    "postTargetSelfAndOthers": "{user}发信息给{target}和他自己"
+  },
+  "streamMessagesFemale": {
+    "postTargetSelfAndOthers": "{user}发信息给{target}和她自己"
+  },
+  "durationUnits": {
+    "d": "天",
+    "h": "小时",
+    "m": "分",
+    "s": "秒"
   },
   "themes": {
     "Espo": "Espo",

@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": "名稱",
+    "roles": "權限",
+    "positionList": "職位清單"
+  },
+  "links": {
+    "users": "使用者",
+    "notes": "筆記",
+    "roles": "權限",
+    "inboundEmails": "組電子郵件帳戶"
+  },
+  "tooltips": {
+    "roles": "存取權限。勾選的權限會使團隊中的使用者得到存取權限。",
+    "positionList": "團隊中可用的位階。如：銷售員、經理。"
+  },
+  "labels": {
+    "Create Team": "新增團隊"
+  }
+}

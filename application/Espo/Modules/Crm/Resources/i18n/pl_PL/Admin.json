@@ -1,1 +1,6 @@
-{}
+{
+  "templates": {
+    "invitation": "Zaproszenie",
+    "reminder": "Przypomnienie"
+  }
+}

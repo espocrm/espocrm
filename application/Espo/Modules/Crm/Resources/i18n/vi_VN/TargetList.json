@@ -1,1 +1,19 @@
-{}
+{
+  "fields": {
+    "name": "Tên",
+    "description": "Mô tả",
+    "endDate": "Ngày kết thúc"
+  },
+  "links": {
+    "accounts": "Tài khoản",
+    "leads": "Lead",
+    "campaigns": "Chiến dịch"
+  },
+  "options": {
+    "type": {
+      "Web": "Trang web",
+      "Television": "Tivi",
+      "Newsletter": "Thư"
+    }
+  }
+}

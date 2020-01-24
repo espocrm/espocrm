@@ -10,6 +10,7 @@
     "actionHistoryRecords": "Lịch sử hoạt động"
   },
   "presetFilters": {
-    "active": "Kích hoạt"
+    "active": "Kích hoạt",
+    "inactive": "Chưa kích hoạt"
   }
 }

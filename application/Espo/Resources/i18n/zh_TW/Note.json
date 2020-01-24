@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "post": "發文",
+    "attachments": "附加元件",
+    "targetType": "目標",
+    "teams": "團隊",
+    "users": "使用者",
+    "portals": "導覧",
+    "type": "類型",
+    "isGlobal": "是否全域",
+    "isInternal": "是否內部 (供內部使用者使用)",
+    "related": "有關的",
+    "createdByGender": "由性別新增",
+    "data": "數據",
+    "number": "數字"
+  },
+  "filters": {
+    "all": "全部",
+    "posts": "發文",
+    "updates": "更新"
+  },
+  "messages": {
+    "writeMessage": "在此寫下訊息"
+  },
+  "options": {
+    "targetType": {
+      "self": "給自己",
+      "users": "給特定使用者",
+      "teams": "特定團隊",
+      "all": "給所有內部使用者",
+      "portals": "導覧使用者"
+    },
+    "type": {
+      "Post": "最上層"
+    }
+  },
+  "links": {
+    "superParent": "有關的",
+    "related": "群組電子郵件帳戶"
+  }
+}

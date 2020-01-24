@@ -1,11 +1,17 @@
 {
   "labels": {
-    "Dynamic Logic": "Logika dynamiczna"
+    "Dynamic Logic": "Logika dynamiczna",
+    "Name": "Nazwa",
+    "Label": "Etykieta",
+    "Type": "Typ"
   },
   "options": {
     "dateTimeDefault": {
       "": "Nic",
       "javascript: return this.dateTime.getNow(1);": "Teraz",
+      "javascript: return this.dateTime.getNow(5);": "Teraz (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Teraz (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Teraz (30m)",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 godzina",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 godziny",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 godziny",
@@ -63,5 +69,10 @@
     "min": "Minimalna akceptowalna wartość.",
     "max": "Maksymalna akceptowalna wartość.",
     "maxLength": "Maksymalna akceptowalna długość pola testowego."
+  },
+  "fieldParts": {
+    "currency": {
+      "currency": "(Waluta)"
+    }
   }
 }

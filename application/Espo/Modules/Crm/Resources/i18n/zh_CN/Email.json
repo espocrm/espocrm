@@ -2,9 +2,9 @@
   "labels": {
     "Create Lead": "创建潜在客户",
     "Create Contact": "创建联系人",
-    "Add to Contact": "添加到联系人",
-    "Add to Lead": "添加至潜在客户",
     "Create Task": "创建任务",
-    "Create Case": "创建工单"
+    "Create Case": "创建工单",
+    "Add to Contact": "添加到联系人",
+    "Add to Lead": "添加至潜在客户"
   }
 }

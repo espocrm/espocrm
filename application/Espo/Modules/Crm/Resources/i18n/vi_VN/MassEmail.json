@@ -1,4 +1,21 @@
 {
+  "fields": {
+    "name": "Tên",
+    "status": "Tình trạng",
+    "startAt": "Ngày bắt đầu",
+    "smtpAccount": "Tài khoản SMTP"
+  },
+  "options": {
+    "status": {
+      "Draft": "Bản nháp"
+    }
+  },
+  "labels": {
+    "Send Test": "Gửi mail thử nghiệm",
+    "System SMTP": "Hệ thống SMTP",
+    "system": "hệ thống",
+    "group": "nhóm"
+  },
   "presetFilters": {
     "complete": "Hoàn thành"
   }

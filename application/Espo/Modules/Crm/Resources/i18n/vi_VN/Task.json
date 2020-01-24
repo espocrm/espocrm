@@ -8,7 +8,13 @@
     "priority": "Ưu tiên",
     "description": "Mô tả",
     "isOverdue": "Đã quá hạn",
+    "attachments": "Đính kèm",
     "reminders": "Nhắc nhở",
+    "contact": "Danh bạ"
+  },
+  "links": {
+    "attachments": "Đính kèm",
+    "account": "Tài khoản",
     "contact": "Danh bạ"
   },
   "options": {
@@ -26,15 +32,12 @@
     }
   },
   "labels": {
-    "Create Task": "Tạo nhiệm vụ"
+    "Create Task": "Tạo nhiệm vụ",
+    "Complete": "Hoàn thành"
   },
   "presetFilters": {
     "completed": "Hoàn thành",
     "todays": "Hôm nay",
     "overdue": "Quá hạn"
-  },
-  "links": {
-    "account": "Tài khoản",
-    "contact": "Danh bạ"
   }
 }

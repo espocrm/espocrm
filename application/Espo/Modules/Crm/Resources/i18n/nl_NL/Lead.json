@@ -24,7 +24,8 @@
     "acceptanceStatus": "Acceptatiestatus",
     "opportunityAmountCurrency": "Opportunity Bedrag Valuta",
     "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
-    "acceptanceStatusCalls": "Acceptatiestatus (oproepen)"
+    "acceptanceStatusCalls": "Acceptatiestatus (oproepen)",
+    "convertedAt": "Omgezet op"
   },
   "links": {
     "targetLists": "Doellijsten",

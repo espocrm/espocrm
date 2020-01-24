@@ -1,1 +1,34 @@
-{}
+{
+  "labels": {
+    "Any": "Bất kỳ",
+    "Move Up": "Di chuyển lên",
+    "Move Down": "Di chuyển xuống",
+    "Move to Top": "Di chuyển lên đầu",
+    "Move to Bottom": "Di chuyển cuối cùng"
+  },
+  "fields": {
+    "name": "Tên",
+    "status": "Tình trạng",
+    "type": "Loại",
+    "attachments": "Đính  kèm",
+    "publishDate": "Ngày xuất bản",
+    "expirationDate": "Ngày hết hạn",
+    "description": "Mô tả",
+    "body": "Nội dung",
+    "categories": "Chuyên mục",
+    "language": "Ngôn ngữ"
+  },
+  "links": {
+    "opportunities": "Cơ hội",
+    "categories": "Chuyên mục"
+  },
+  "options": {
+    "status": {
+      "Draft": "Bản nháp",
+      "Published": "Đã xuất bản"
+    }
+  },
+  "presetFilters": {
+    "published": "Đã xuất bản"
+  }
+}

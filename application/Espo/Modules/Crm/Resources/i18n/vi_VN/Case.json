@@ -5,12 +5,19 @@
     "status": "Trạng thái",
     "account": "Tài khoản",
     "contact": "Liên hệ",
+    "contacts": "Danh bạ",
     "priority": "Ưu tiên",
     "type": "Loại",
-    "description": "Mô tả"
+    "description": "Mô tả",
+    "attachments": "Đính kèm"
   },
   "links": {
-    "calls": "Cuộc gọi"
+    "account": "Tài khoản",
+    "Contacts": "Danh bạ",
+    "meetings": "Cuộc hẹn",
+    "calls": "Cuộc gọi",
+    "tasks": "Nhiệm vụ",
+    "attachments": "Đính kèm"
   },
   "options": {
     "status": {
@@ -34,7 +41,9 @@
     }
   },
   "labels": {
-    "Create Case": "Tạo trường hợp"
+    "Create Case": "Tạo trường hợp",
+    "Close": "Đóng",
+    "Closed": "Đã đóng"
   },
   "presetFilters": {
     "open": "Mở",

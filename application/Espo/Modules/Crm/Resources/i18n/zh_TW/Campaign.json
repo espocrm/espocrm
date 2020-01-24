@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "name": "名稱",
+    "description": "描述",
+    "status": "狀態",
+    "type": "類型",
+    "startDate": "開始日期",
+    "endDate": "結束日期",
+    "targetLists": "目標清單",
+    "excludingTargetLists": "排除目標清單",
+    "sentCount": "已發送",
+    "openedCount": "己開始",
+    "clickedCount": "己點擊",
+    "optedOutCount": "己排除",
+    "bouncedCount": "己退回",
+    "hardBouncedCount": "強性退回",
+    "softBouncedCount": "軟性退回",
+    "leadCreatedCount": "潛在客戶己新增",
+    "revenue": "收入",
+    "revenueConverted": "收入 (已轉換)",
+    "budget": "預算",
+    "budgetConverted": "預算 (已轉換)",
+    "contactsTemplate": "潛在客戶範本",
+    "leadsTemplate": "帳戶範本",
+    "accountsTemplate": "使用者範本",
+    "usersTemplate": "跳過沒有填寫地址的記錄",
+    "mailMergeOnlyWithAddress": "聯繫人範本",
+    "optedInCount": "選擇加入",
+    "budgetCurrency": "開始日期 (全天)"
+  },
+  "links": {
+    "targetLists": "目標清單",
+    "excludingTargetLists": "排除目標清單",
+    "accounts": "帳目",
+    "contacts": "聯絡人",
+    "leads": "潛在客戶",
+    "opportunities": "商機",
+    "campaignLogRecords": "日誌記錄",
+    "massEmails": "大量電子郵件",
+    "trackingUrls": "追蹤網址",
+    "contactsTemplate": "潛在客戶範本",
+    "leadsTemplate": "帳戶範本",
+    "accountsTemplate": "使用者範本",
+    "usersTemplate": "郵件合併"
+  },
+  "options": {
+    "type": {
+      "Email": "電子郵件",
+      "Web": "網頁",
+      "Television": "電視",
+      "Radio": "廣播",
+      "Newsletter": "報章",
+      "Mail": "信箱"
+    },
+    "status": {
+      "Planning": "計畫中",
+      "Active": "啟用",
+      "Inactive": "未啟用",
+      "Complete": "完成"
+    }
+  },
+  "labels": {
+    "Create Campaign": "新增活動",
+    "Target Lists": "目標清單",
+    "Statistics": "統計",
+    "hard": "強制",
+    "soft": "軟性",
+    "Unsubscribe": "取消訂閱",
+    "Mass Emails": "大量電子郵件",
+    "Email Templates": "電子郵件範本",
+    "Unsubscribe again": "再次退訂",
+    "Subscribe again": "再次訂閱",
+    "Create Target List": "新增目標清單",
+    "Mail Merge": "產生郵件合併PDF",
+    "Generate Mail Merge PDF": "潛在客戶抓取"
+  },
+  "presetFilters": {
+    "active": "啟用"
+  },
+  "messages": {
+    "unsubscribed": "目前己從郵件清單中取消訂閱。",
+    "subscribedAgain": "您已再次訂閱。"
+  },
+  "tooltips": {
+    "targetLists": "應該要收訊息的目標。",
+    "excludingTargetLists": "不應該要收訊息的目標。"
+  }
+}

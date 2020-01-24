@@ -10,7 +10,8 @@
     "Call": "Gọi",
     "Task": "Nhiệm vụ",
     "Case": "Trường hợp",
-    "Document": "Tài liệu"
+    "Document": "Tài liệu",
+    "Campaign": "Chiến dịch"
   },
   "scopeNamesPlural": {
     "Account": "Tài khoản",
@@ -22,7 +23,8 @@
     "Calendar": "Lịch",
     "Call": "Cuộc gọi",
     "Task": "Nhiệm vụ",
-    "Case": "Trường hợp"
+    "Case": "Trường hợp",
+    "Document": "Tài liệu"
   },
   "dashlets": {
     "Leads": "Chỉ dẫn của tôi",
@@ -59,7 +61,10 @@
     "billingAddressState": "Thành phố",
     "addressState": "Thành phố",
     "billingAddressStreet": "Đường",
-    "addressStreet": "Đường"
+    "addressStreet": "Đường",
+    "billingAddressMap": "Bản đồ",
+    "addressMap": "Bản đồ",
+    "shippingAddressMap": "Bản đồ (Địa chỉ thanh toán)"
   },
   "links": {
     "contacts": "Sổ liên lạc",
@@ -68,6 +73,7 @@
     "meetings": "Hẹn gặp",
     "calls": "Cuộc gọi",
     "tasks": "Nhiệm vụ",
-    "emails": "Địa chỉ email"
+    "emails": "Địa chỉ email",
+    "contact": "Danh bạ"
   }
 }

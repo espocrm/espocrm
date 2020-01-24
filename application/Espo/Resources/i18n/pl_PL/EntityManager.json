@@ -2,6 +2,7 @@
   "labels": {
     "Fields": "Pola",
     "Relationships": "Relacje",
+    "Schedule": "Harmonogram",
     "Log": "Dziennik",
     "Formula": "Formuła"
   },
@@ -19,7 +20,8 @@
     "linkMultipleField": "Połącz kilka pól",
     "disabled": "Wyłączony",
     "textFilterFields": "Pole filtrowania tekstowego",
-    "statusField": "Status pola"
+    "statusField": "Status pola",
+    "fullTextSearch": "Wyszukiwanie pełnotekstowe"
   },
   "options": {
     "type": {
@@ -43,6 +45,7 @@
     "linkConflict": "Konflikt nazw: pole ze wskazaną nazwą już istnieje."
   },
   "tooltips": {
-    "textFilterFields": "Pola używane przez wyszukiwarkę tekstową."
+    "textFilterFields": "Pola używane przez wyszukiwarkę tekstową.",
+    "fullTextSearch": "Wymagane jest przeładowanie całej aplikacji"
   }
 }

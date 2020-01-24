@@ -4,10 +4,14 @@
     "actionDate": "Data",
     "campaign": "Campagna",
     "object": "Oggetto",
-    "application": "Applicazione"
+    "application": "Applicazione",
+    "queueItem": "Articolo in coda",
+    "isTest": "E'Test"
   },
   "links": {
-    "parent": "Genitore"
+    "queueItem": "Articolo in coda",
+    "parent": "Genitore",
+    "object": "Oggetto"
   },
   "options": {
     "action": {
@@ -15,6 +19,7 @@
       "Opened": "Aperto",
       "Opted Out": "Rinuncia",
       "Clicked": "Cliccato",
+      "Lead Created": "Lead Creato",
       "Opted In": "Iscritto"
     }
   },
@@ -25,6 +30,7 @@
     "sent": "Inviato",
     "opened": "Aperto",
     "optedOut": "Rinuncia",
+    "clicked": "Cliccato",
     "optedIn": "Iscritto"
   }
 }

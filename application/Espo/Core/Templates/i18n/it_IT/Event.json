@@ -5,7 +5,10 @@
     "dateEnd": "Data termine",
     "duration": "Dirata",
     "status": "Stato",
-    "reminders": "Promemoria"
+    "reminders": "Promemoria",
+    "dateStartDate": "Data inizio (tutto il giorno)",
+    "dateEndDate": "Data fine (tutto il giorno)",
+    "isAllDay": "È tutto il giorno"
   },
   "links": {
     "parent": "Genitore"

@@ -9,12 +9,11 @@
     "priority": "优先",
     "type": "类型",
     "description": "描述",
-    "inboundEmail": "入站邮件",
     "lead": "潜在客户",
-    "attachments": "附件"
+    "attachments": "附件",
+    "inboundEmail": "入站邮件"
   },
   "links": {
-    "inboundEmail": "入站电子邮件",
     "account": "客户",
     "contact": "联系人（主）",
     "Contacts": "联系人",
@@ -24,7 +23,8 @@
     "emails": "电子邮件",
     "articles": "知识库文章",
     "lead": "潜在客户",
-    "attachments": "附件"
+    "attachments": "附件",
+    "inboundEmail": "入站电子邮件"
   },
   "options": {
     "status": {

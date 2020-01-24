@@ -8,16 +8,29 @@
     "phoneNumber": "Điện thoại",
     "roles": "Vai trò",
     "password": "Mật khẩu",
+    "currentPassword": "Mật khẩu hiện tại",
     "passwordConfirm": "Xác thực mật khẩu",
     "newPassword": "Mật khẩu mới",
+    "newPasswordConfirm": "Nhập lại mật khẩu mới",
     "avatar": "Ảnh đại diện",
     "isActive": "Được kích hoạt",
+    "contact": "Danh bạ",
+    "accounts": "Tài khoản",
     "ipAddress": "Địa chỉ IP",
-    "type": "Loại"
+    "lastAccess": "Lần truy cập gần nhất",
+    "type": "Loại",
+    "apiKey": "Khóa API",
+    "yourPassword": "Mật khẩu hiện tại của bạn",
+    "auth2FA": "Bật xác minh 2 bước"
   },
   "links": {
     "teams": "Nhóm",
-    "roles": "Vai trò"
+    "roles": "Vai trò",
+    "notes": "Ghi chú",
+    "contact": "Danh bạ",
+    "accounts": "Tài khoản",
+    "tasks": "Nhiệm vụ",
+    "defaultTeam": "Nhóm mặc định"
   },
   "labels": {
     "Create User": "Tạo người dùng",
@@ -25,7 +38,10 @@
     "Access": "Truy cập",
     "Preferences": "Tùy chỉnh",
     "Change Password": "Đổi mật khẩu",
-    "Forgot Password?": "Quên mật khẩu?"
+    "Forgot Password?": "Quên mật khẩu?",
+    "Generate New Password": "Tự động tạo mật khẩu",
+    "Back to login form": "Quay lại trang đăng nhập",
+    "Security": "Bảo mật"
   },
   "messages": {
     "passwordWillBeSent": "Mật khẩu sẽ được gửi tới email tài khoản",

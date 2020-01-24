@@ -1,1 +1,10 @@
-{}
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Utwórz kategorię",
+    "Manage Categories": "Zarządzaj kategoriami",
+    "EmailTemplates": "Szablony e-mail"
+  },
+  "links": {
+    "emailTemplates": "Szablony e-mail"
+  }
+}

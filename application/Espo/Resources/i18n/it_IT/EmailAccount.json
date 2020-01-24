@@ -17,7 +17,8 @@
     "smtpSecurity": "Sicurezza SMTP",
     "smtpUsername": "Nome utente SMTP",
     "smtpPassword": "Password SMTP",
-    "useImap": "Scarica email"
+    "useImap": "Scarica email",
+    "smtpAuthMechanism": "Meccanismo di autenticazione SMTP"
   },
   "links": {
     "filters": "Filtri"
@@ -26,6 +27,10 @@
     "status": {
       "Active": "Attivo",
       "Inactive": "Inattivo"
+    },
+    "smtpAuthMechanism": {
+      "plain": "Semplice",
+      "login": "Accesso"
     }
   },
   "labels": {
@@ -39,6 +44,7 @@
     "connectionIsOk": "La Connessione è Ok"
   },
   "tooltips": {
-    "monitoredFolders": "Cartelle multiple devono essere separate dalla virgola.\n\nÈ possibile aggiungere una cartella \"Inviata\" per sincronizzare le email inviate da un client di posta elettronica esterno."
+    "monitoredFolders": "Cartelle multiple devono essere separate dalla virgola.\n\nÈ possibile aggiungere una cartella \"Inviata\" per sincronizzare le email inviate da un client di posta elettronica esterno.",
+    "storeSentEmails": "Le e-mail inviate verranno archiviate sul server IMAP. Il campo Indirizzo e-mail deve corrispondere all'indirizzo da cui verranno inviate le e-mail."
   }
 }

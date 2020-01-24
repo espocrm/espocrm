@@ -6,7 +6,8 @@
     "target": "Doelwit",
     "targetType": "Doelwit Type",
     "authToken": "Auth Sleutel",
-    "ipAddress": "IP adres"
+    "ipAddress": "IP adres",
+    "userType": "Type gebruiker"
   },
   "links": {
     "authToken": "Auth Sleutel",
@@ -19,9 +20,8 @@
   "options": {
     "action": {
       "read": "Lezen",
-      "update": "Bijwerken",
       "delete": "Verwijder",
-      "create": "creëren"
+      "create": "Creëren"
     }
   }
 }

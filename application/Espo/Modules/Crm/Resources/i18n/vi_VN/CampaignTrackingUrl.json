@@ -1,5 +1,6 @@
 {
   "fields": {
-    "url": "Địa chỉ"
+    "url": "Địa chỉ",
+    "campaign": "Chiến dịch"
   }
 }

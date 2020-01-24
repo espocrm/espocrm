@@ -13,7 +13,8 @@
     "description": "Opis ",
     "campaign": "Kampania",
     "targetLists": "Listy docelowe",
-    "targetList": "Lista docelowa"
+    "targetList": "Lista docelowa",
+    "accountIsInactive": "Konto nieaktywne"
   },
   "links": {
     "opportunities": "Szanse sprzedaży",

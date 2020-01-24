@@ -9,10 +9,13 @@
     "doNotCall": "Không gọi",
     "closeDate": "Ngày kết thúc",
     "contacts": "Sổ liên lạc",
-    "description": "Mô tả"
+    "description": "Mô tả",
+    "campaign": "Chiến dịch"
   },
   "links": {
-    "contacts": "Sổ liên lạc"
+    "contacts": "Sổ liên lạc",
+    "documents": "Tài liệu",
+    "campaign": "Chiến dịch"
   },
   "options": {
     "stage": {
@@ -35,6 +38,7 @@
   },
   "presetFilters": {
     "open": "Mở",
-    "won": "Thắng"
+    "won": "Thắng",
+    "lost": "Thất bại"
   }
 }

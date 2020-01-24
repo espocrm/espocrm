@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "名稱",
+    "account": "帳號",
+    "stage": "階段",
+    "amount": "量",
+    "probability": "機率，％",
+    "leadSource": "潛在客戶來源",
+    "doNotCall": "不要通話",
+    "closeDate": "截止日期",
+    "contacts": "聯絡人",
+    "description": "描述",
+    "amountConverted": "金額 (換算)",
+    "amountWeightedConverted": "加權金額",
+    "campaign": "活動",
+    "originalLead": "原始潛在客戶",
+    "amountCurrency": "金額貨幣",
+    "contactRole": "聯繫人權限",
+    "lastStage": "全文搜索"
+  },
+  "links": {
+    "contacts": "聯絡人",
+    "documents": "文件",
+    "campaign": "活動",
+    "originalLead": "原始潛在客戶"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "勘探",
+      "Qualification": "資質",
+      "Needs Analysis": "需求分析",
+      "Value Proposition": "價值主張",
+      "Id. Decision Makers": "決定者ID",
+      "Perception Analysis": "知覺分析",
+      "Proposal/Price Quote": "提案/報價",
+      "Negotiation/Review": "談判/審查",
+      "Closed Won": "關閉贏得",
+      "Closed Lost": "關閉失去",
+      "Proposal": "談判",
+      "Negotiation": "日"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "建立商機"
+  },
+  "presetFilters": {
+    "open": "開啟中",
+    "won": "贏得",
+    "lost": "失去"
+  }
+}

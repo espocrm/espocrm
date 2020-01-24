@@ -21,7 +21,7 @@
     "infoText": "Beschikbare tijdelijke aanduidingen:\n\n{optOutUrl} & # 8211; URL voor een unsubsbribe-link;\n\n{optOutLink} & # 8211; een afmeldlink."
   },
   "placeholderTexts": {
-    "optOutUrl": "URL voor een unsubsbribe-link",
+    "optOutUrl": "URL voor een uitschrijvingslink",
     "optOutLink": "een afmeldlink",
     "today": "Datum van vandaag",
     "now": "Huidige datum en tijd",

@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "名稱",
+    "status": "狀態",
+    "host": "主辦",
+    "username": "使用者名",
+    "password": "密碼",
+    "port": "埠",
+    "monitoredFolders": "關注資料夾",
+    "fetchSince": "最後抓取",
+    "emailAddress": "電子郵件地址",
+    "sentFolder": "寄件備份",
+    "storeSentEmails": "存放己發送郵件",
+    "keepFetchedEmailsUnread": "保持抓取信件未讀",
+    "emailFolder": "放入資料夾",
+    "useSmtp": "使用SMTP",
+    "smtpHost": "SMTP主機",
+    "smtpPort": "SMTP埠",
+    "smtpAuth": "SMTP驗證",
+    "smtpSecurity": "SMTP安全",
+    "smtpUsername": "SMTP登入",
+    "smtpPassword": "SMTP密碼",
+    "useImap": "上傳中",
+    "smtpAuthMechanism": "純文字"
+  },
+  "links": {
+    "filters": "過濾器",
+    "emails": "電子信箱"
+  },
+  "options": {
+    "status": {
+      "Active": "啟用",
+      "Inactive": "停用"
+    },
+    "smtpAuthMechanism": {
+      "plain": "登錄",
+      "login": "CRAM-MD5",
+      "crammd5": "接受哪種文件類型。可以添加自定義項目。"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "新增電子郵件帳戶",
+    "Main": "主要",
+    "Test Connection": "測試連線",
+    "Send Test Email": "發送測試電子郵件"
+  },
+  "messages": {
+    "couldNotConnectToImap": "無法連接到IMAP服務器",
+    "connectionIsOk": "連接正常"
+  },
+  "tooltips": {
+    "monitoredFolders": "多個資料夾應以逗號分隔。\n\n您可以新增「已發送」資料夾來同步外部電子郵件發送的電子郵件。",
+    "storeSentEmails": "發送的電子郵件將儲存在IMAP伺服器上。電子郵件地址欄位應與發送電子郵件的地址相符。"
+  }
+}

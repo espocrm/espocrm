@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "billingAddress": "Địa chỉ thanh toán",
+    "shippingAddress": "Địa chỉ giao hàng"
+  },
+  "links": {
+    "meetings": "Cuộc hẹn",
+    "calls": "Cuộc gọi",
+    "tasks": "Nhiệm vụ"
+  },
+  "labels": {
+    "Create {entityType}": "Tạo {entityTypeTranslated}"
+  }
+}

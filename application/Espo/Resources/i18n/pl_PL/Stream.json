@@ -1,1 +1,11 @@
-{}
+{
+  "messages": {
+    "infoMention": "Napisz **@nazwaużytkownika** żeby o nim wspomnieć we wpisie."
+  },
+  "syntaxItems": {
+    "code": "kod",
+    "strongText": "wytłuszczony tekst",
+    "deletedText": "przekreślony tekst",
+    "blockquote": "cytat"
+  }
+}

@@ -4,9 +4,9 @@
     "shippingAddress": "Verzending adres"
   },
   "links": {
-    "meetings": "vergaderingen",
-    "calls": "gesprekken",
-    "tasks": "taken"
+    "meetings": "Vergaderingen",
+    "calls": "Gesprekken",
+    "tasks": "Taken"
   },
   "labels": {
     "Create {entityType}": "Klant {entityTypeTranslated}"

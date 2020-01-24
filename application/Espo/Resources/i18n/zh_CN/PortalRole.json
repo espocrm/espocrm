@@ -1,17 +1,17 @@
 {
-  "fields": {
-    "exportPermission": "导出权限"
-  },
   "links": {
     "users": "用户"
-  },
-  "tooltips": {
-    "exportPermission": "门户用户是否具有导出记录的权限"
   },
   "labels": {
     "Access": "访问",
     "Create PortalRole": "创建门户角色",
     "Scope Level": "范围级别",
     "Field Level": "现场级"
+  },
+  "fields": {
+    "exportPermission": "导出权限"
+  },
+  "tooltips": {
+    "exportPermission": "门户用户是否具有导出记录的权限"
   }
 }

@@ -18,6 +18,9 @@
     "posts": "帖子",
     "updates": "更新"
   },
+  "messages": {
+    "writeMessage": "在这里写信息"
+  },
   "options": {
     "targetType": {
       "self": "给我自己",
@@ -29,8 +32,5 @@
     "type": {
       "Post": "帖子"
     }
-  },
-  "messages": {
-    "writeMessage": "在这里写信息"
   }
 }

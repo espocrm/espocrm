@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "event": "Sự kiện",
+    "url": "Url",
+    "isActive": "Kích hoạt"
+  },
+  "links": {
+    "user": "Người dùng"
+  }
+}

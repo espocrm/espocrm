@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "name": "名稱",
+    "emailAddress": "電子郵件",
+    "accountRole": "標題",
+    "account": "帳號",
+    "accounts": "帳號",
+    "phoneNumber": "電話",
+    "accountType": "帳號型態",
+    "doNotCall": "不要通話",
+    "address": "地址",
+    "opportunityRole": "商機權限",
+    "description": "描述",
+    "campaign": "活動",
+    "targetLists": "目標清單",
+    "targetList": "目標清單",
+    "portalUser": "導覧使用者",
+    "originalLead": "原始潛在客戶",
+    "acceptanceStatus": "接受狀態",
+    "accountIsInactive": "帳戶無效",
+    "acceptanceStatusMeetings": "接受狀態 (會議)",
+    "acceptanceStatusCalls": "接受狀態 (通話)",
+    "title": "切割高度 (像素)"
+  },
+  "links": {
+    "opportunities": "商機",
+    "cases": "案件",
+    "targetLists": "目標清單",
+    "campaignLogRecords": "活動日誌",
+    "campaign": "活動",
+    "account": "帳戶 (主要)",
+    "accounts": "帳目",
+    "casesPrimary": "案件 (主要)",
+    "portalUser": "導覧使用者",
+    "originalLead": "原始潛在客戶",
+    "documents": "文件資料",
+    "tasksPrimary": "聯繫"
+  },
+  "labels": {
+    "Create Contact": "建立聯絡人"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "決策者",
+      "Evaluator": "評估者",
+      "Influencer": "影響者"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "導覧使用者",
+    "notPortalUsers": "不是導覧使用者",
+    "accountActive": "啟用"
+  }
+}

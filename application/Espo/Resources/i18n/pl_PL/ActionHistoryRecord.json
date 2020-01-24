@@ -6,7 +6,8 @@
     "target": "Element",
     "targetType": "Moduł",
     "authToken": "Token Autoryzacyjny",
-    "ipAddress": "Adres IP"
+    "ipAddress": "Adres IP",
+    "userType": "Typ użytkownika"
   },
   "links": {
     "authToken": "Token Autoryzacyjny",

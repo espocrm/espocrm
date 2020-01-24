@@ -16,7 +16,8 @@
     "smtpAuth": "Autoryzacja SMTP",
     "smtpSecurity": "Zabezpieczenia SMTP",
     "smtpUsername": "Nazwa użytkownika SMTP",
-    "smtpPassword": "Hasło SMTP"
+    "smtpPassword": "Hasło SMTP",
+    "useImap": "Pobierz wiadomości e-mail"
   },
   "links": {
     "filters": "Filtry",

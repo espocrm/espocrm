@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "名稱",
+    "parent": "上層",
+    "status": "狀態",
+    "dateStart": "開始日期",
+    "dateEnd": "截止日期",
+    "dateStartDate": "開始日期 (全天)",
+    "dateEndDate": "結束日期 (全天)",
+    "priority": "優先",
+    "description": "描述",
+    "isOverdue": "是否過期",
+    "account": "帳戶",
+    "dateCompleted": "完成日期",
+    "attachments": "附件",
+    "reminders": "提醒事項",
+    "contact": "帳戶"
+  },
+  "links": {
+    "attachments": "附件",
+    "account": "聯繫",
+    "contact": "從電子郵件地址"
+  },
+  "options": {
+    "status": {
+      "Not Started": "尚未開始",
+      "Started": "已開始",
+      "Completed": "已完成",
+      "Canceled": "取消",
+      "Deferred": "遞延"
+    },
+    "priority": {
+      "Low": "低",
+      "Normal": "中",
+      "High": "高",
+      "Urgent": "緊急"
+    }
+  },
+  "labels": {
+    "Create Task": "新增任務",
+    "Complete": "完成"
+  },
+  "presetFilters": {
+    "actual": "實際",
+    "completed": "已完成",
+    "todays": "今天的",
+    "overdue": "逾期",
+    "deferred": "遞延"
+  }
+}

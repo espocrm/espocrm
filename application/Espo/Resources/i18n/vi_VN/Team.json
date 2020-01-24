@@ -4,7 +4,8 @@
     "roles": "Vai trò"
   },
   "links": {
-    "users": "Người dùng"
+    "users": "Người dùng",
+    "roles": "Vai trò"
   },
   "labels": {
     "Create Team": "Tạo nhóm"

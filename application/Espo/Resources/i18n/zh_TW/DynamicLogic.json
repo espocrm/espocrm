@@ -1,0 +1,28 @@
+{
+  "options": {
+    "operators": {
+      "equals": "等於",
+      "notEquals": "不等於",
+      "greaterThan": "大於",
+      "lessThan": "小於",
+      "greaterThanOrEquals": "大於等於",
+      "lessThanOrEquals": "小於等於",
+      "in": "在",
+      "notIn": "不在",
+      "inPast": "是否過去",
+      "inFuture": "是否未來",
+      "isToday": "是否今天",
+      "isTrue": "是否真",
+      "isFalse": "是否假",
+      "isEmpty": "是否空",
+      "isNotEmpty": "是否不為空",
+      "contains": "包含",
+      "has": "包含",
+      "notContains": "不包含",
+      "notHas": "不包含"
+    }
+  },
+  "labels": {
+    "Field": "名稱"
+  }
+}

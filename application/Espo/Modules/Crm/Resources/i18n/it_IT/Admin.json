@@ -5,6 +5,7 @@
     "listForContact": "Lista (per contatto)"
   },
   "templates": {
+    "invitation": "Invito",
     "reminder": "Promemoria"
   }
 }

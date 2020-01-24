@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "layout": "追加 (不刪除使用者的標籤)",
+    "append": "建立範本"
+  },
+  "labels": {
+    "Create DashboardTemplate": "部署到使用者",
+    "Deploy to Users": "部署到團隊",
+    "Deploy to Team": "SMTP認證機制"
+  }
+}

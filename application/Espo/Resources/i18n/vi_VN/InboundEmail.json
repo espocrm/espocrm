@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Tên",
+    "emailAddress": "Địa chỉ Email",
     "status": "Trạng thái",
     "assignToUser": "Chỉ định",
     "host": "Máy chủ",
@@ -14,8 +15,14 @@
     "caseDistribution": "Trường hợp phân phối",
     "replyEmailTemplate": "Mẫu email trả lời",
     "replyFromAddress": "Địa chỉ email trả lời",
+    "replyToAddress": "Trả lời sang mail",
     "replyFromName": "Tên người gửi",
-    "team": "Nhóm"
+    "team": "Nhóm",
+    "teams": "Nhóm",
+    "smtpHost": "Máy chủ SMTP",
+    "smtpPort": "Cổng SMTP",
+    "smtpUsername": "Tên đăng nhập SMTP",
+    "smtpPassword": "Mật khẩu SMTP"
   },
   "options": {
     "status": {

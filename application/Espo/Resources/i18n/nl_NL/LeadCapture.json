@@ -4,7 +4,7 @@
     "campaign": "Campagne",
     "isActive": "Is actief",
     "subscribeToTargetList": "Abonneer je op de doellijst",
-    "subscribeContactToTargetList": "Abonneren Contactpersoon als dit bestaat",
+    "subscribeContactToTargetList": "Abonneren Contactpersoon als die bestaat",
     "targetList": "Doellijst",
     "fieldList": "Payload-velden",
     "optInConfirmationEmailTemplate": "Opt-in bevestiging e-mailsjabloon",
@@ -15,16 +15,20 @@
     "exampleRequestMethod": "Methode",
     "exampleRequestPayload": "payload",
     "createLeadBeforeOptInConfirmation": "Lead aanmaken voor bevestiging",
-    "duplicateCheck": "Dubbele controle"
+    "duplicateCheck": "Dubbele controle",
+    "skipOptInConfirmationIfSubscribed": "Bevestiging overslaan als het lood al in de doellijst is opgenomen",
+    "smtpAccount": "SMTP-account",
+    "inboundEmail": "Groeps e-mailaccount"
   },
   "links": {
     "targetList": "Doellijst",
     "campaign": "Campagne",
     "optInConfirmationEmailTemplate": "Opt-in bevestiging e-mailsjabloon",
-    "targetTeam": "Target team"
+    "targetTeam": "Target team",
+    "inboundEmail": "Groeps e-mailaccount"
   },
   "labels": {
-    "Create LeadCapture": "Creëer ingangspunt",
+    "Create LeadCapture": "Creëer toegangspunt",
     "Generate New API Key": "Genereer nieuwe API-sleutel",
     "Request": "Verzoek",
     "Confirm Opt-In": "Opt-in bevestigen"

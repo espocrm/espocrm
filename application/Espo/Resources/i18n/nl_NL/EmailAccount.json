@@ -16,12 +16,17 @@
     "smtpSecurity": "SMTP-beveiliging",
     "smtpUsername": "SMTP-gebruikersnaam",
     "smtpPassword": "SMTP-wachtwoord",
-    "useImap": "Ophalen van e-mails"
+    "useImap": "Ophalen van e-mails",
+    "smtpAuthMechanism": "SMTP Auth Mechanisme"
   },
   "options": {
     "status": {
       "Active": "Actief",
       "Inactive": "Inactief"
+    },
+    "smtpAuthMechanism": {
+      "plain": "Plat",
+      "login": "Login"
     }
   },
   "labels": {

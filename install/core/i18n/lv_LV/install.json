@@ -82,7 +82,6 @@
     "1045": "Piekļuve liegta lietotājam",
     "1049": "Nezināma datubāze",
     "2005": "Nezināms MySQL servera resursdators",
-    "Bad init Permission": "\"{*}\" direktorijam atļauja ir liegta. Lūdzu, iestatiet \"{*}\" kā 775 vai vienkārši izpildiet šo komandu terminālī <pre><b>{C}</b></pre>\nOperācija nav atļauta? Mēģiniet veikt šo: {CSU}",
     "Some errors occurred!": "Ir radušās kļūdas!",
     "phpVersion": "\"EspoCRM\" neatbalsta jūsu PHP versiju, lūdzu atjauniniet. Izmantojiet vismaz PHP {minVersion}",
     "requiredMysqlVersion": "\"EspoCRM\" neatbalsta jūsu MySQL versiju, lūdzu atjauniniet. Izmantojiet vismaz MySQL {minVersion}",
@@ -101,8 +100,6 @@
     "Cannot create user": "Nevar izveidot lietotāju",
     "Permission denied": "Atļauja liegta",
     "Permission denied to": "Atļauja liegta",
-    "permissionInstruction": "<br>Izpildīt šo darbību terminālī<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Operācija nav atļauta? Mēģiniet veikt šo: <br>{CSU}",
     "Can not save settings": "Nevar saglabāt iestatījumus",
     "Cannot save preferences": "Nevar saglabāt preferences",
     "Thousand Separator and Decimal Mark equal": "Tūkstošu atdalītājs un decimālzīme nedrīkst būt vienādi",
@@ -113,8 +110,7 @@
   "options": {
     "modRewriteInstruction": {
       "apache": {
-        "windows": "<br> <pre>1. Atrodiet failu \"httpd.conf\" (parasti to var atrast mapē ar nosaukumu \"conf\", \"config\" u. tml.)<br>\n2. Failā \"httpd.conf\" atkomentējiet rindu \"LoadModule rewrite_module modules/mod_rewrite.so\" (noņemiet rindas sākumā esošās restītes \"#\" )<br>\n3. Tāpat pārliecinieties, ka rinda \"ClearModuleList\" ir atkomentēta un rinda \"AddModule mod_rewrite.c\" nav atzīmēta ar zvaigznīti.\n</pre>",
-        "linux": "<br><br>1. Iespējojiet \"mod_rewrite\". To var izdarīt, izpildot komandas terminālī:<pre>{APACHE1}</pre><br>2. Iespējojiet \".htaccess\" atbalstu. Pievienojiet/rediģējiet servera konfigurācija iestatījumus (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Pēc tam izpildiet šo komandu terminālī:<pre>{APACHE3}</pre><br>3. Mēģiniet pievienot \"RewriteBase\" ceļu, atveriet failu {API_PATH}.htaccess un aizstājiet šo rindu:<pre>{APACHE4}</pre>To<pre>{APACHE5}</pre><br> Vairāk informācijas atradīsiet vadlīnijās <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuartion/\" target=\"_blank\">Apache server configuration for EspoCRM</a>.<br><br>"
+        "windows": "<br> <pre>1. Atrodiet failu \"httpd.conf\" (parasti to var atrast mapē ar nosaukumu \"conf\", \"config\" u. tml.)<br>\n2. Failā \"httpd.conf\" atkomentējiet rindu \"LoadModule rewrite_module modules/mod_rewrite.so\" (noņemiet rindas sākumā esošās restītes \"#\" )<br>\n3. Tāpat pārliecinieties, ka rinda \"ClearModuleList\" ir atkomentēta un rinda \"AddModule mod_rewrite.c\" nav atzīmēta ar zvaigznīti.\n</pre>"
       },
       "nginx": {
         "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Vairāk informācijas atradīsiet vadlīnijās <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>",

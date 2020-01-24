@@ -5,7 +5,7 @@
   "fields": {
     "role": "Rol",
     "related": "Verwant",
-    "file": "het dossier",
+    "file": "Bestand",
     "field": "Veld",
     "sourceId": "Bron ID",
     "storage": "opslagruimte",
@@ -13,7 +13,7 @@
   },
   "options": {
     "role": {
-      "Attachment": "gehechtheid",
+      "Attachment": "Bijlage",
       "Inline Attachment": "Inline bijlage",
       "Import File": "Importeer bestand",
       "Export File": "Bestand exporteren",

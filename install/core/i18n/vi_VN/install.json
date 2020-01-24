@@ -30,11 +30,15 @@
     "dbName": "Tên cơ sở dữ liệu",
     "dbUserName": "Tên truy cập csdl",
     "OK": "Đồng ý",
+    "SetupConfirmation page title": "Yêu cầu hệ thống",
     "PHP Configuration": "Cài đặt PHP",
     "MySQL Configuration": "Cài đặt cơ sở dữ liệu",
     "Permission Requirements": "Quyền hạng",
     "Success": "Thành công",
-    "Fail": "Lỗi"
+    "Fail": "Lỗi",
+    "is recommended": "được khuyên dùng",
+    "extension is missing": "Tiện ích mở rộng bị thiếu",
+    "headerTitle": "Cài đặt Espocrm"
   },
   "fields": {
     "Choose your language": "Chọn ngôn ngữ",
@@ -86,7 +90,6 @@
     "Cannot create user": "Không thể tạo người dùng",
     "Permission denied": "Từ chối truy cập",
     "Permission denied to": "Từ chối truy cập",
-    "permissionInstruction": "<br>Chạy lệnh sau trong Terminal<pre><b>\"{C}\"</b></pre>",
     "Can not save settings": "Không thể lưu thay đổi",
     "Cannot save preferences": "Không thể lưu thay đổi",
     "Thousand Separator and Decimal Mark equal": "Dấu phân cách thập phân và phần nghìn không thể giống nhau",
@@ -94,6 +97,9 @@
     "option": "Giá trị khuyến nghị là {0}"
   },
   "systemRequirements": {
+    "requiredPhpVersion": "Phiên bản PHP",
+    "requiredMysqlVersion": "Phiên bản MySQL",
+    "host": "Tên máy chủ",
     "dbname": "Tên cơ sở dữ liệu",
     "user": "Tên đăng nhập",
     "requiredMariadbVersion": "Phiên bản MariaDB"

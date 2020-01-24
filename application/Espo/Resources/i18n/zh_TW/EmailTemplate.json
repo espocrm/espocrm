@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "name": "名稱",
+    "status": "狀態",
+    "isHtml": "是HTML",
+    "body": "內文",
+    "subject": "主旨",
+    "attachments": "附件",
+    "oneOff": "一次性",
+    "category": "新增類別"
+  },
+  "labels": {
+    "Create EmailTemplate": "新增電子郵件範本",
+    "Info": "訊息",
+    "Available placeholders": "可用的預留位置：\n\n{optOutUrl}＆＃8211; 取消訂閱鏈接的網址；\n\n{optOutLink}＆＃8211; 取消訂閱鏈接。"
+  },
+  "tooltips": {
+    "oneOff": "如果只使用本樣版一次，請勾選。如：大量發送郵件。"
+  },
+  "presetFilters": {
+    "actual": "實際"
+  },
+  "messages": {
+    "infoText": "取消訂閱鏈接的URL"
+  },
+  "placeholderTexts": {
+    "optOutUrl": "退訂鏈接",
+    "optOutLink": "電子郵件地址已選擇排除",
+    "today": "當前日期和時間",
+    "now": "重複值",
+    "currentYear": "恢復"
+  }
+}

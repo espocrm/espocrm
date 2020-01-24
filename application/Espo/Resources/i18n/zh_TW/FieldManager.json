@@ -1,0 +1,102 @@
+{
+  "labels": {
+    "Dynamic Logic": "動態邏輯",
+    "Name": "標籤",
+    "Label": "類型",
+    "Type": "擴展"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "沒有",
+      "javascript: return this.dateTime.getNow(1);": "現在",
+      "javascript: return this.dateTime.getNow(5);": "現在 (5m)",
+      "javascript: return this.dateTime.getNow(15);": "現在 (15m)",
+      "javascript: return this.dateTime.getNow(30);": "現在 (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12小時",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1天",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2天",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3天",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4天",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5天",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6天",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1週"
+    },
+    "dateDefault": {
+      "": "無",
+      "javascript: return this.dateTime.getToday();": "今天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10天",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1週",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2週",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3週",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11個月",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1年"
+    }
+  },
+  "tooltips": {
+    "audited": "更新將記錄在動態中。",
+    "required": "欄位必填。不能留空。",
+    "default": "數值將在新增時使用預設值。",
+    "min": "最小可接受值。",
+    "max": "最高可接受值。",
+    "seeMoreDisabled": "如果未選中，則長文字將被截斷。",
+    "lengthOfCut": "文字將依多長被截斷。",
+    "maxLength": "文字最大可接受的長度。",
+    "before": "日期應在指定欄位的日期之前。",
+    "after": "日期應在指定欄位的日期之後。",
+    "readOnly": "使用者無法指定欄位值。但是可以透過公式計算。",
+    "maxFileSize": "如果為空或0，則沒有限制。",
+    "fileAccept": "主控台模板"
+  },
+  "fieldParts": {
+    "address": {
+      "street": "街",
+      "city": "市",
+      "state": "州",
+      "country": "國家",
+      "postalCode": "郵政編碼",
+      "map": "地圖"
+    },
+    "personName": {
+      "salutation": "稱呼",
+      "first": "名",
+      "last": "姓"
+    },
+    "currency": {
+      "converted": "日期",
+      "currency": "如果未勾選，則會使用「開始於」篩選。您可以使用萬用字元'％'。"
+    },
+    "datetimeOptional": {
+      "date": "檔案不得超過{max} Mb"
+    }
+  }
+}

@@ -176,22 +176,19 @@
     "isPersonalData": "Ir personas dati",
     "useIframe": "Izmantot \"Iframe\"",
     "useNumericFormat": "Izmantot skaitlisko formātu",
-    "strip": "Virkne"
+    "strip": "Virkne",
+    "accept": "Piekrist"
   },
   "messages": {
     "selectEntityType": "Atlasīt vienību tipu kreisajā izvēlnē.",
     "selectUpgradePackage": "Atlasīt jauninājumu pakotni",
-    "downloadUpgradePackage": "Lejupielādēt jauninājumu pakotni(-es) <a href=\"{url}\">here</a>.",
     "selectLayout": "Kreisajā izvēlnē atlasīt nepieciešamo izkārtojumu un to rediģēt.",
     "selectExtensionPackage": "Atlasīt paplašinājumu pakotni",
     "extensionInstalled": "Paplašinājums {name} {version} tika instalēts.",
     "installExtension": "Paplašinājums {name} {version} ir gatavs instalēšanai.",
-    "upgradeVersion": "Tiks veikta \"EspoCRM\" jaunināšana, ieviešot versiju <strong>{version}</strong>. Jaunināšana nedaudz ieilgs, lūdzam jūsu pacietību.",
-    "upgradeDone": "\"EspoCRM\" jaunināšana ir veikta, ieviešot versiju <strong>{version}</strong>.",
     "upgradeBackup": "Pirms jaunināšanas iesakām \"EspoCRM\" failiem izveidot dublējumkopiju.",
     "thousandSeparatorEqualsDecimalMark": "Tūkstošu atdalīšanas simbolsa nedrīkst būt tāds pats kā decimāldaļu atdalītājs.",
     "userHasNoEmailAddress": "Lietotājam nav e-pasta adreses.",
-    "newVersionIsAvailable": "Ir pieejama \"EspoCRM\" jaunā versija {latestVersion}.",
     "uninstallConfirmation": "Vai tiešām vēlaties atinstalēt paplašinājumu?",
     "cronIsNotConfigured": "Ieplānotie darbi netiek izpildīti. Līdz ar to ienākošie e-pasti, paziņojumi un atgādinājumi nedarbojas. Sekojiet instrukcijai [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), lai iestatītu uzdevumu plānotāja darbu.",
     "newExtensionVersionIsAvailable": "Ir pieejama jauna {extensionName} versija {latestVersion}."
@@ -253,7 +250,8 @@
     "dbname": "Datubāzes nosaukums",
     "user": "Lietotāja vārds",
     "writable": "Rakstiski",
-    "readable": "Lasāmi"
+    "readable": "Lasāmi",
+    "requiredMariadbVersion": "MariaDB versija"
   },
   "templates": {
     "accessInfo": "Piekļuves informācija",

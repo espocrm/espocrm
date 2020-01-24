@@ -14,7 +14,7 @@
     "subject": "Tēma",
     "attachments": "Pielikumi",
     "selectTemplate": "Atlasīt veidni",
-    "fromEmailAddress": "No adreses",
+    "fromAddress": "No adreses",
     "emailAddress": "E-pasta adrese",
     "deliveryDate": "Piegādes datums",
     "account": "Konts",
@@ -45,7 +45,10 @@
     "isSystem": "Ir sistēma",
     "toEmailAddresses": "Uz e-pasta adresēm",
     "bccEmailAddresses": "Diskrētā kopija (BCC) uz e-pasta adresēm",
-    "replyToEmailAddresses": "Atbildēt uz e-pasta adresi"
+    "replyToEmailAddresses": "Atbildēt uz e-pasta adresi",
+    "personStringData": "Peronas teksta dati",
+    "replyToName": "Vārds Atbildēt",
+    "replyToAddress": "Atbildes adrese"
   },
   "links": {
     "replied": "Atbildēts",
@@ -97,10 +100,10 @@
     "Retrieve from Trash": "Izgūt no atkritni",
     "Move to Folder": "Pārvietot uz mapi",
     "Filters": "Filtri",
-    "Folders": "Mapes"
+    "Folders": "Mapes",
+    "View Users": "Skatīt lietotājus"
   },
   "messages": {
-    "noSmtpSetup": "SMTP nav uzstādīts. {link}.",
     "testEmailSent": "Nosūtīts testa e-pasts",
     "emailSent": "Nosūtīts e-pasts",
     "savedAsDraft": "Saglabāts kā melnraksts",

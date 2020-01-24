@@ -8,7 +8,22 @@
     "object": "Chủ đề",
     "application": "Ứng dụng"
   },
+  "links": {
+    "object": "Chủ đề"
+  },
+  "options": {
+    "action": {
+      "Sent": "Gửi",
+      "Opened": "Đã mở",
+      "Clicked": "Đã nhấp chuột"
+    }
+  },
+  "labels": {
+    "All": "Tất cả"
+  },
   "presetFilters": {
+    "sent": "Gửi",
+    "opened": "Đã mở",
     "clicked": "Đã click",
     "leadCreated": "Đã tạo khách hàng tiềm năng"
   }

@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "從",
+    "to": "到",
+    "subject": "主題",
+    "bodyContains": "內文包含",
+    "action": "行動",
+    "isGlobal": "是全域的",
+    "emailFolder": "資料夾"
+  },
+  "labels": {
+    "Create EmailFilter": "新增郵件過濾",
+    "Emails": "電子信箱"
+  },
+  "tooltips": {
+    "from": "信件是從指定的位址發送。不需要的話請留白。您可以使用萬用字元 *。",
+    "to": "信件是送到指定的位址。不需要的話請留白。您可以使用萬用字元 *。",
+    "name": "為過濾器指定描述。",
+    "subject": "使用萬用字元 *：\n\n文字*－以文字做開頭，\n*文字*－包含文字，\n*文字－以文字結束。",
+    "bodyContains": "電子郵件的內文包含指定的任何單字或片語。",
+    "isGlobal": "將此過濾器套用在所有往系統送信的電子郵件。"
+  },
+  "options": {
+    "action": {
+      "Skip": "忽略",
+      "Move to Folder": "放入資料夾"
+    }
+  }
+}

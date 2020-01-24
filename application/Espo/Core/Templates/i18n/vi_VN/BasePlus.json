@@ -1,1 +1,10 @@
-{}
+{
+  "links": {
+    "meetings": "Cuộc hẹn",
+    "calls": "Cuộc gọi",
+    "tasks": "Nhiệm vụ"
+  },
+  "labels": {
+    "Create {entityType}": "Tạo {entityTypeTranslated}"
+  }
+}
