@@ -1,0 +1,28 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Се равнява",
+      "notEquals": "Не е равно на",
+      "greaterThan": "По-голям от",
+      "lessThan": "По-малко от",
+      "greaterThanOrEquals": "-Голямо или равно",
+      "lessThanOrEquals": "По-малко или равно на",
+      "in": "в",
+      "notIn": "Не в",
+      "inPast": "В минало",
+      "inFuture": "е готов за бъдещи",
+      "isToday": "днес",
+      "isTrue": "Истина е",
+      "isFalse": "е лъжа",
+      "isEmpty": "Празно е",
+      "isNotEmpty": "Не е празна",
+      "contains": "Съдържа",
+      "has": "Съдържа",
+      "notContains": "Не Съдържа",
+      "notHas": "Не Съдържа"
+    }
+  },
+  "labels": {
+    "Field": "поле"
+  }
+}

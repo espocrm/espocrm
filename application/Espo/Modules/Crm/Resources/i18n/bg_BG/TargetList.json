@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "име",
+    "description": "описание",
+    "entryCount": "Влизане граф",
+    "campaigns": "Кампании",
+    "endDate": "Крайна дата",
+    "targetLists": "Целеви списъци",
+    "includingActionList": "Включително",
+    "excludingActionList": "с изключение на",
+    "optedOutCount": "Отказахте се граф",
+    "targetStatus": "Целева Статус",
+    "isOptedOut": "Е изключена"
+  },
+  "links": {
+    "accounts": "сметки",
+    "contacts": "Контакти",
+    "campaigns": "Кампании",
+    "massEmails": "Масови имейли"
+  },
+  "options": {
+    "type": {
+      "Email": "електронна поща",
+      "Web": "мрежа",
+      "Television": "телевизия",
+      "Radio": "радио"
+    },
+    "targetStatus": {
+      "Opted Out": "Отказахте се",
+      "Listed": "изброени"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Създаване на Target Списък",
+    "Opted Out": "Отказахте се",
+    "Cancel Opt-Out": "Отказ за отказване",
+    "Opt-Out": "Отказване"
+  }
+}

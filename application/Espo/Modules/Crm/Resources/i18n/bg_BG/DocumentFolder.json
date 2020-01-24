@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Създаване на папка за документи",
+    "Manage Categories": "Управление на папки",
+    "Documents": "Документи"
+  },
+  "links": {
+    "documents": "Документи"
+  }
+}

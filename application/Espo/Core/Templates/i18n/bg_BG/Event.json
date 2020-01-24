@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "родител",
+    "dateStart": "Дата Старт",
+    "dateEnd": "Крайна дата",
+    "duration": "продължителност",
+    "status": "Статус",
+    "reminders": "Напомняния",
+    "dateStartDate": "Дата Start (цял ден)",
+    "dateEndDate": "Крайна дата (цял ден)",
+    "isAllDay": "Дали през целия ден"
+  },
+  "links": {
+    "parent": "родител"
+  },
+  "options": {
+    "status": {
+      "Planned": "Планирано",
+      "Held": "Държани",
+      "Not Held": "Не държани"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Създаване {entityTypeTranslated}",
+    "Schedule {entityType}": "График {entityTypeTranslated}",
+    "Log {entityType}": "Вход {entityTypeTranslated}",
+    "Set Held": "Задайте държани",
+    "Set Not Held": "Задайте не се държат"
+  },
+  "massActions": {
+    "setHeld": "Задайте държани",
+    "setNotHeld": "Задайте не се държат"
+  },
+  "presetFilters": {
+    "planned": "Планирано",
+    "held": "Държани",
+    "todays": "Днешните"
+  }
+}

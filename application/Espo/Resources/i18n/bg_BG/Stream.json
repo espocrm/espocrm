@@ -1,0 +1,15 @@
+{
+  "messages": {
+    "infoMention": "Вид ** @ потребителско име ** да се споменава за употреба в гредата.",
+    "infoSyntax": "Предлага синтаксис евтино"
+  },
+  "syntaxItems": {
+    "code": "код",
+    "multilineCode": "многоредово код",
+    "strongText": "силен текст",
+    "emphasizedText": "подчерта текст",
+    "deletedText": "заличава текст",
+    "blockquote": "блоков цитат",
+    "link": "връзка"
+  }
+}

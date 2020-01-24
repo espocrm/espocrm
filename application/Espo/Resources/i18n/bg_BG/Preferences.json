@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "dateFormat": "Формат на датата",
+    "timeFormat": "Времеви формат",
+    "timeZone": "Часова зона",
+    "weekStart": "Първи ден от седмицата",
+    "thousandSeparator": "Хиляда Separator",
+    "decimalMark": "десетичния знак",
+    "defaultCurrency": "По подразбиране валути",
+    "currencyList": "Валутна Списък",
+    "language": "език",
+    "smtpServer": "Сървър",
+    "smtpPort": "порт",
+    "smtpAuth": "упълномощаване",
+    "smtpSecurity": "Сигурност",
+    "smtpUsername": "Потребител",
+    "emailAddress": "електронна поща",
+    "smtpPassword": "парола",
+    "smtpEmailAddress": "Имейл адрес",
+    "exportDelimiter": "износ разделител",
+    "signature": "Email подпис",
+    "dashboardTabList": "Tab Списък",
+    "tabList": "Tab Списък",
+    "defaultReminders": "По подразбиране напомняния",
+    "theme": "тема",
+    "useCustomTabList": "Персонализирания раздел Списък",
+    "receiveAssignmentEmailNotifications": "Известия за имейл по възлагане",
+    "receiveMentionEmailNotifications": "Известията по имейл за споменавания в публикациите",
+    "receiveStreamEmailNotifications": "Имейл известия за публикации и статуси",
+    "emailReplyForceHtml": "Email отговор в HTML",
+    "emailReplyToAllByDefault": "Email Отговор до всички по подразбиране",
+    "doNotFillAssignedUserIfNotRequired": "Не се запълнят предварително определен потребител на запис създаване",
+    "followEntityOnStreamPost": "Автоматично проследяване рекорд след публикуване на живо",
+    "followCreatedEntities": "Auto-следват създадените записи",
+    "followCreatedEntityTypeList": "Auto-следват създадените записи на специфични видове предприятието",
+    "emailUseExternalClient": "Използвайте външен имейл клиент",
+    "scopeColorsDisabled": "Забранете цветове обхват",
+    "tabColorsDisabled": "Забранете цветове раздела",
+    "assignmentNotificationsIgnoreEntityTypeList": "уведомления за присвояване в приложението",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "известия по имейл за присвояване"
+  },
+  "options": {
+    "weekStart": {
+      "0": "неделя",
+      "1": "понеделник"
+    }
+  },
+  "labels": {
+    "Notifications": "Известия",
+    "User Interface": "Потребителски интерфейс",
+    "Misc": "Разни",
+    "Locale": "място",
+    "Reset Dashboard to Default": "Възстановяване на таблото за управление по подразбиране"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Следва автоматично всички нови записи (създадени от всеки потребител) на избраните типове обекти. За да можете да видите информацията в потока и да получават уведомления за всички записи в системата.",
+    "doNotFillAssignedUserIfNotRequired": "Когато създадете запис определен потребител няма да бъде изпълнен със собствен потребителски освен ако е необходимо терена.",
+    "followCreatedEntities": "Когато се създават нови записи, те ще бъдат автоматично последвано дори ако се определя към друг потребител.",
+    "followCreatedEntityTypeList": "Когато се създават нови записи на избрани видовете юридически лица, те ще бъдат последвани автоматично, дори и ако се определя към друг потребител."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Целеви списъци"
+  },
+  "fields": {
+    "acceptanceStatus": "Приемане Статус",
+    "acceptanceStatusMeetings": "Приемане Статус (срещи)",
+    "acceptanceStatusCalls": "Приемане Статус (призовава)"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "status": "Статус",
+    "executeTime": "Изпълнение На",
+    "attempts": "Опитите Left",
+    "failedAttempts": "Неуспешни опити",
+    "serviceName": "Обслужване",
+    "methodName": "метод",
+    "scheduledJob": "Планирана работа",
+    "data": "Данни",
+    "method": "Метод (оттеглено)",
+    "scheduledJobJob": "Планирана Име на заданието",
+    "executedAt": "изпълнено на",
+    "startedAt": "Започната В",
+    "number": "номер",
+    "queue": "Опашка",
+    "job": "работа"
+  },
+  "options": {
+    "status": {
+      "Pending": "Предстоящо",
+      "Success": "успех",
+      "Running": "Работещи",
+      "Failed": "Се провали"
+    }
+  }
+}

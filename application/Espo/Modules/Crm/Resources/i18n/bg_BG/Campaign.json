@@ -1,0 +1,86 @@
+{
+  "fields": {
+    "name": "име",
+    "description": "описание",
+    "status": "Статус",
+    "type": "Тип",
+    "startDate": "Начална дата",
+    "endDate": "Крайна дата",
+    "targetLists": "Целеви списъци",
+    "excludingTargetLists": "С изключение на целевите списъци",
+    "sentCount": "Изпратено",
+    "openedCount": "Отворен",
+    "clickedCount": "Кликване",
+    "optedOutCount": "Отказахте се",
+    "bouncedCount": "Върната",
+    "hardBouncedCount": "Hard Върната",
+    "softBouncedCount": "Мека Върната",
+    "leadCreatedCount": "Създадена Потенциална Продажба",
+    "revenue": "приход",
+    "revenueConverted": "Приходите (изчислена)",
+    "budget": "бюджет",
+    "budgetConverted": "Бюджет (изчислена)",
+    "contactsTemplate": "Контакти с шаблони",
+    "leadsTemplate": "Leads Шаблон",
+    "accountsTemplate": "сметки за шаблони",
+    "usersTemplate": "Потребителите на шаблона",
+    "mailMergeOnlyWithAddress": "Напред записи / М попълнено адрес",
+    "optedInCount": "Избрал участие",
+    "budgetCurrency": "Бюджет на валута"
+  },
+  "links": {
+    "targetLists": "Целеви списъци",
+    "excludingTargetLists": "С изключение на целевите списъци",
+    "accounts": "сметки",
+    "contacts": "Контакти",
+    "leads": "Потенциална Продажба",
+    "opportunities": "възможности",
+    "campaignLogRecords": "Вход",
+    "massEmails": "Масови имейли",
+    "trackingUrls": "Проследяване на URL адреси",
+    "contactsTemplate": "Контакти с шаблони",
+    "leadsTemplate": "Leads Шаблон",
+    "accountsTemplate": "сметки за шаблони",
+    "usersTemplate": "Потребителите на шаблона"
+  },
+  "options": {
+    "type": {
+      "Email": "електронна поща",
+      "Web": "мрежа",
+      "Television": "телевизия",
+      "Radio": "радио",
+      "Mail": "поща"
+    },
+    "status": {
+      "Planning": "планиране",
+      "Active": "Активен",
+      "Inactive": "неактивен",
+      "Complete": "пълен"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Създаване на кампания",
+    "Target Lists": "Целеви списъци",
+    "Statistics": "Статистика",
+    "hard": "твърд",
+    "soft": "мек",
+    "Unsubscribe": "Отписване",
+    "Mass Emails": "Масови имейли",
+    "Email Templates": "Шаблони за имейл",
+    "Unsubscribe again": "Отписване отново",
+    "Subscribe again": "Абонирайте се отново",
+    "Create Target List": "Създаване на Target Списък",
+    "Generate Mail Merge PDF": "Генериране на циркулярни PDF"
+  },
+  "presetFilters": {
+    "active": "Активен"
+  },
+  "messages": {
+    "unsubscribed": "Отписахте се от нашия пощенски списък.",
+    "subscribedAgain": "Абонирани сте отново."
+  },
+  "tooltips": {
+    "targetLists": "Цели, които трябва да получават съобщения.",
+    "excludingTargetLists": "Цели, които не трябва да получават съобщения."
+  }
+}

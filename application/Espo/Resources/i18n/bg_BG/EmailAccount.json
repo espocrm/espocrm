@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "name": "име",
+    "status": "Статус",
+    "host": "домакин",
+    "username": "Потребител",
+    "password": "парола",
+    "port": "порт",
+    "monitoredFolders": "наблюдавани папки",
+    "fetchSince": "Изважда От",
+    "emailAddress": "Имейл адрес",
+    "sentFolder": "Изпратени Папка",
+    "storeSentEmails": "Магазин изпращат съобщения",
+    "keepFetchedEmailsUnread": "Дръжте Извлечени са имейли непрочетена",
+    "emailFolder": "Сложете в папка",
+    "useSmtp": "Използване на SMTP",
+    "smtpAuth": "SMTP удостоверяване",
+    "smtpSecurity": "SMTP сигурност",
+    "smtpUsername": "SMTP име",
+    "smtpPassword": "SMTP парола",
+    "useImap": "Изважда имейли",
+    "smtpAuthMechanism": "Механизъм SMTP удостоверяване"
+  },
+  "links": {
+    "filters": "Филтри",
+    "emails": "имейли"
+  },
+  "options": {
+    "status": {
+      "Active": "Активен",
+      "Inactive": "неактивен"
+    },
+    "smtpAuthMechanism": {
+      "plain": "ОБИКНОВЕН",
+      "login": "ВЛИЗАНЕ"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Създаване на имейл акаунт",
+    "Main": "основен",
+    "Test Connection": "Тестване на свързване",
+    "Send Test Email": "Изпрати Тест Email"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Не може да се свърже с IMAP сървъра",
+    "connectionIsOk": "Връзката е ОК"
+  },
+  "tooltips": {
+    "monitoredFolders": "Множество папки трябва да бъдат разделени със запетая. Можете да добавите \"Изпратени\" папка за синхронизиране на имейли, изпратени от външен имейл клиент.",
+    "storeSentEmails": "Изпратени имейли ще се съхраняват на сървър IMAP. E-mail адрес поле трябва да съвпада с адреса имейли ще бъде изпратен от."
+  }
+}

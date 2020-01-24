@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "номер",
+    "data": "Данни",
+    "target": "Цел",
+    "leadCapture": "Водещ Capture",
+    "createdAt": "Влиза В",
+    "isCreated": "Е създадена Lead"
+  },
+  "links": {
+    "leadCapture": "Водещ Capture",
+    "target": "Цел"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Primary": "първичен",
+    "Opted Out": "Отказахте се",
+    "Invalid": "невалиден"
+  },
+  "fields": {
+    "optOut": "Отказахте се",
+    "invalid": "невалиден"
+  },
+  "presetFilters": {
+    "orphan": "сирак"
+  }
+}

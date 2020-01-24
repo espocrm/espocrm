@@ -1,0 +1,83 @@
+{
+  "fields": {
+    "name": "име",
+    "emailAddress": "Имейл адрес",
+    "status": "Статус",
+    "assignToUser": "Assign за потребителя",
+    "host": "домакин",
+    "username": "Потребител",
+    "password": "парола",
+    "port": "порт",
+    "monitoredFolders": "наблюдавани папки",
+    "trashFolder": "кошчето",
+    "createCase": "Създаване на дело",
+    "reply": "Автоматичен отговор",
+    "caseDistribution": "дело Разпределение",
+    "replyEmailTemplate": "Отговор Шаблон за имейл",
+    "replyFromAddress": "Отговор на адрес на подателя",
+    "replyToAddress": "Отговори Адрес",
+    "replyFromName": "Отговор от име",
+    "targetUserPosition": "Целева Потребителят Позиция",
+    "fetchSince": "Изважда От",
+    "addAllTeamUsers": "За всички потребители на екипа",
+    "team": "Целева Екип",
+    "teams": "Отбори",
+    "sentFolder": "Изпратени Папка",
+    "storeSentEmails": "Магазин изпращат съобщения",
+    "useSmtp": "Използване на SMTP",
+    "smtpAuth": "SMTP удостоверяване",
+    "smtpSecurity": "SMTP сигурност",
+    "smtpUsername": "SMTP име",
+    "smtpPassword": "SMTP парола",
+    "fromName": "От име",
+    "smtpIsShared": "SMTP е споделена",
+    "smtpIsForMassEmail": "SMTP е за Маса Email",
+    "useImap": "Изважда имейли",
+    "keepFetchedEmailsUnread": "Дръжте Извлечени са имейли непрочетена",
+    "smtpAuthMechanism": "Механизъм SMTP удостоверяване"
+  },
+  "tooltips": {
+    "reply": "Изпращайте имейл податели, че техните имейли е получена. Само един ще бъде изпратен имейл с конкретен получател по време на определен период от време, за да се предотврати примка.",
+    "createCase": "Автоматично създаване на случай от входящите имейли.",
+    "replyToAddress": "Посочете имейл адрес на тази пощенска кутия, за да отговорите идват тук.",
+    "caseDistribution": "Как случаи ще бъдат възложени. Целеви директно към потребителя или сред екипа.",
+    "assignToUser": "случаи потребителят ще бъде възложени.",
+    "team": "Екип случаи ще бъдат възложени.",
+    "teams": "Екипи писма ще бъдат причислени към.",
+    "addAllTeamUsers": "Имейлите ще се появяват в Входящи на всички потребители на определени отбори.",
+    "targetUserPosition": "Потребителите със специфична позиция ще бъдат разпределени с дела.",
+    "monitoredFolders": "Множество папки трябва да бъдат разделени със запетая.",
+    "smtpIsShared": "Ако е отметнато, потребителите ще могат да изпращат имейли, използващи тази SMTP. Наличност се контролира от Роли чрез разрешение имейл акаунт на групата.",
+    "smtpIsForMassEmail": "Ако е избрано след SMTP ще бъде на разположение за Маса Email.",
+    "storeSentEmails": "Изпратени имейли ще се съхраняват на сървър IMAP."
+  },
+  "links": {
+    "filters": "Филтри",
+    "emails": "имейли",
+    "assignToUser": "Assign за потребителя"
+  },
+  "options": {
+    "status": {
+      "Active": "Активен",
+      "Inactive": "неактивен"
+    },
+    "caseDistribution": {
+      "": "Нито един",
+      "Direct-Assignment": "Директно Задание",
+      "Round-Robin": "Кръгла Робин",
+      "Least-Busy": "Най-слабо Зает"
+    },
+    "smtpAuthMechanism": {
+      "plain": "ОБИКНОВЕН",
+      "login": "ВЛИЗАНЕ"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Създаване на имейл акаунт",
+    "Actions": "мерки",
+    "Main": "основен"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Не може да се свърже с IMAP сървъра"
+  }
+}

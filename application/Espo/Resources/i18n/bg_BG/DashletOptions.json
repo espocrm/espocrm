@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "title": "Заглавие",
+    "dateFrom": "Дата от",
+    "dateTo": "До дата",
+    "autorefreshInterval": "Автоматично опресняване интервал",
+    "isDoubleHeight": "Ръст 2x",
+    "mode": "вид",
+    "enabledScopeList": "Какво да се дисплей",
+    "users": "Потребители",
+    "entityType": "Тип на обекта",
+    "primaryFilter": "Основно Филтър",
+    "boolFilterList": "Допълнителни филтри",
+    "sortBy": "Поръчка (област)",
+    "sortDirection": "Поръчка (посока)",
+    "expandedLayout": "оформление",
+    "dateFilter": "Дата Филтър",
+    "skipOwn": "Да не се показват собствени записи"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Седмица (програма)",
+      "basicWeek": "седмица",
+      "month": "месец",
+      "basicDay": "ден",
+      "agendaDay": "Ден (програма)"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Изберете типа на обекта в опции dashlet."
+  },
+  "tooltips": {
+    "skipOwn": "няма да бъдат показвани Действия, извършени от вашия потребителски акаунт."
+  }
+}

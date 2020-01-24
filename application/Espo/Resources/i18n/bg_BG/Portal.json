@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "name": "име",
+    "portalRoles": "Роли",
+    "isActive": "е активен",
+    "isDefault": "Дали по подразбиране",
+    "tabList": "Tab Списък",
+    "quickCreateList": "Бързо Създаване на списък",
+    "theme": "тема",
+    "language": "език",
+    "dateFormat": "Формат на датата",
+    "timeFormat": "Времеви формат",
+    "timeZone": "Часова зона",
+    "weekStart": "Първи ден от седмицата",
+    "defaultCurrency": "По подразбиране валути",
+    "customUrl": "персонализиран URL адрес",
+    "customId": "персонализиран идентификатор"
+  },
+  "links": {
+    "users": "Потребители",
+    "portalRoles": "Роли",
+    "notes": "бележки"
+  },
+  "tooltips": {
+    "portalRoles": "Определени Portal роли ще се прилагат за всички потребители на този портал."
+  },
+  "labels": {
+    "Create Portal": "Създаване на Portal",
+    "User Interface": "Потребителски интерфейс",
+    "General": "Общ",
+    "Settings": "Настройки"
+  }
+}

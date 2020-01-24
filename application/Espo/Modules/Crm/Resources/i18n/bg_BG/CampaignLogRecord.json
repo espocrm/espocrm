@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "action": "действие",
+    "actionDate": "Дата",
+    "data": "Данни",
+    "campaign": "кампания",
+    "parent": "Цел",
+    "object": "обект",
+    "application": "Приложение",
+    "queueItem": "опашка Точка",
+    "stringAdditionalData": "String Допълнителна данни"
+  },
+  "links": {
+    "queueItem": "опашка Точка",
+    "parent": "родител",
+    "object": "обект",
+    "campaign": "кампания"
+  },
+  "options": {
+    "action": {
+      "Sent": "Изпратено",
+      "Opened": "Отворен",
+      "Opted Out": "Отказахте се",
+      "Bounced": "Върната",
+      "Clicked": "Кликване",
+      "Lead Created": "Създадена Потенциална Продажба",
+      "Opted In": "Избрал участие"
+    }
+  },
+  "labels": {
+    "All": "всичко"
+  },
+  "presetFilters": {
+    "sent": "Изпратено",
+    "opened": "Отворен",
+    "optedOut": "Отказахте се",
+    "bounced": "Върната",
+    "clicked": "Кликване",
+    "leadCreated": "Създадена Потенциална Продажба",
+    "optedIn": "Избрал участие"
+  }
+}

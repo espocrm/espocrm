@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "name": "име",
+    "status": "Статус",
+    "body": "тяло",
+    "subject": "Предмет",
+    "attachments": "Прикачени",
+    "oneOff": "Еднократни",
+    "category": "категория"
+  },
+  "labels": {
+    "Create EmailTemplate": "Създаване Шаблон за имейл",
+    "Info": "Информация",
+    "Available placeholders": "Налични контейнери"
+  },
+  "tooltips": {
+    "oneOff": "Проверете, ако ще се използва този шаблон само веднъж. Например за Маса Email."
+  },
+  "presetFilters": {
+    "actual": "действителен"
+  },
+  "messages": {
+    "infoText": "Предлагани заместители: {optOutUrl} & # 8211; URL за unsubsbribe връзка; {OptOutLink} & # 8211; за връзка за отписване."
+  },
+  "placeholderTexts": {
+    "optOutUrl": "URL за unsubsbribe връзка",
+    "optOutLink": "за връзка за отписване",
+    "today": "Днешната дата",
+    "now": "Текуща дата и време",
+    "currentYear": "Текуща година"
+  }
+}

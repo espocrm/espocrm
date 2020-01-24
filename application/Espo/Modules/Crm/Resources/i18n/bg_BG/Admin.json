@@ -1,0 +1,11 @@
+{
+  "layouts": {
+    "detailConvert": "Конвертиране",
+    "listForAccount": "Списък (за сметка)",
+    "listForContact": "Списък (за контакти)"
+  },
+  "templates": {
+    "invitation": "покана",
+    "reminder": "напомняне"
+  }
+}

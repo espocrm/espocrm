@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create Lead": "Създаване на олово",
+    "Create Contact": "Създаване на контакт",
+    "Create Task": "Създаване на Task",
+    "Create Case": "Създаване на дело",
+    "Add to Contact": "Добави към контакти",
+    "Add to Lead": "Добави в Lead"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "име",
+    "parent": "родител",
+    "status": "Статус",
+    "dateStart": "Дата Старт",
+    "dateEnd": "Дата до",
+    "dateStartDate": "Дата Start (цял ден)",
+    "dateEndDate": "Крайна дата (цял ден)",
+    "priority": "приоритет",
+    "description": "описание",
+    "isOverdue": "е просрочено",
+    "account": "Сметка",
+    "dateCompleted": "Дата Завършен",
+    "attachments": "Прикачени",
+    "reminders": "Напомняния",
+    "contact": "контакт"
+  },
+  "links": {
+    "attachments": "Прикачени",
+    "account": "Сметка",
+    "contact": "контакт"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Не е започнало",
+      "Started": "Започната",
+      "Completed": "завършен",
+      "Canceled": "Отменен",
+      "Deferred": "Разсрочено"
+    },
+    "priority": {
+      "Low": "ниско",
+      "Normal": "нормален",
+      "High": "Високо",
+      "Urgent": "спешно"
+    }
+  },
+  "labels": {
+    "Create Task": "Създаване на Task",
+    "Complete": "пълен"
+  },
+  "presetFilters": {
+    "actual": "действителен",
+    "completed": "завършен",
+    "todays": "Днешните",
+    "overdue": "просрочен",
+    "deferred": "Разсрочено"
+  }
+}

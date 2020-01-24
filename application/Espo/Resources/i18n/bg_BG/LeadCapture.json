@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": "име",
+    "campaign": "кампания",
+    "isActive": "е активен",
+    "subscribeToTargetList": "Абонирайте се за Target Списък",
+    "subscribeContactToTargetList": "Абонамент Контакт ако съществува",
+    "targetList": "Целева Списък",
+    "fieldList": "полезен товар",
+    "optInConfirmation": "Двойна Opt-In",
+    "optInConfirmationEmailTemplate": "Opt-в потвърждение на имейл адреса шаблон",
+    "optInConfirmationLifetime": "Включване в живота потвърждение (часа)",
+    "optInConfirmationSuccessMessage": "Текст за шоу след неучастие в потвърждение",
+    "leadSource": "Водещ Източник",
+    "targetTeam": "Целева Екип",
+    "exampleRequestMethod": "метод",
+    "exampleRequestPayload": "полезен товар",
+    "createLeadBeforeOptInConfirmation": "Създаване на олово преди потвърждение",
+    "skipOptInConfirmationIfSubscribed": "Напред потвърждение, ако олово вече е в целевата списък",
+    "smtpAccount": "SMTP профил",
+    "inboundEmail": "Група имейл акаунт"
+  },
+  "links": {
+    "targetList": "Целева Списък",
+    "campaign": "кампания",
+    "optInConfirmationEmailTemplate": "Opt-в потвърждение на имейл адреса шаблон",
+    "targetTeam": "Целева Екип",
+    "logRecords": "Вход",
+    "inboundEmail": "Група имейл акаунт"
+  },
+  "labels": {
+    "Create LeadCapture": "Създаване на точка за достъп",
+    "Generate New API Key": "Генериране на ново API Key",
+    "Request": "поискване",
+    "Confirm Opt-In": "Потвърждаване на Opt-In"
+  },
+  "messages": {
+    "generateApiKey": "Създаване на нов ключ API",
+    "optInConfirmationExpired": "Връзката се потвърждение е с изтекла валидност.",
+    "optInIsConfirmed": "Opt-в е потвърдена."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown се поддържа."
+  }
+}

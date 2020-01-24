@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "име",
+    "parent": "родител",
+    "status": "Статус",
+    "dateStart": "Дата Старт",
+    "dateEnd": "Крайна дата",
+    "direction": "Посока",
+    "duration": "продължителност",
+    "description": "описание",
+    "users": "Потребители",
+    "contacts": "Контакти",
+    "leads": "Потенциална Продажба",
+    "reminders": "Напомняния",
+    "account": "Сметка",
+    "acceptanceStatus": "Приемане Статус"
+  },
+  "options": {
+    "status": {
+      "Planned": "Планирано",
+      "Held": "Държани",
+      "Not Held": "Не държани"
+    },
+    "direction": {
+      "Outbound": "Изходяща",
+      "Inbound": "Входящ"
+    },
+    "acceptanceStatus": {
+      "None": "Нито един",
+      "Accepted": "общоприет",
+      "Declined": "Отхвърлена",
+      "Tentative": "Експериментален"
+    }
+  },
+  "massActions": {
+    "setHeld": "Задайте държани",
+    "setNotHeld": "Задайте не се държат"
+  },
+  "labels": {
+    "Create Call": "Създаване на Call",
+    "Set Held": "Задайте държани",
+    "Set Not Held": "Задайте не се държат",
+    "Send Invitations": "Изпращането на покани"
+  },
+  "presetFilters": {
+    "planned": "Планирано",
+    "held": "Държани",
+    "todays": "Днешните"
+  }
+}

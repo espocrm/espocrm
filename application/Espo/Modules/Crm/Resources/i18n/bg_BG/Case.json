@@ -1,0 +1,60 @@
+{
+  "fields": {
+    "name": "име",
+    "number": "номер",
+    "status": "Статус",
+    "account": "Сметка",
+    "contact": "контакт",
+    "contacts": "Контакти",
+    "priority": "приоритет",
+    "type": "Тип",
+    "description": "описание",
+    "lead": "Потенциална Продажба",
+    "attachments": "Прикачени",
+    "inboundEmail": "Група имейл акаунт"
+  },
+  "links": {
+    "account": "Сметка",
+    "contact": "Свържи (Основно)",
+    "Contacts": "Контакти",
+    "meetings": "срещи",
+    "calls": "призовава",
+    "tasks": "Задачи",
+    "emails": "имейли",
+    "articles": "Статии от базата знания",
+    "lead": "Потенциална Продажба",
+    "attachments": "Прикачени",
+    "inboundEmail": "Група имейл акаунт"
+  },
+  "options": {
+    "status": {
+      "New": "нов",
+      "Assigned": "целеви",
+      "Pending": "Предстоящо",
+      "Closed": "Затворена",
+      "Rejected": "Отхвърлени"
+    },
+    "priority": {
+      "Low": "ниско",
+      "Normal": "нормален",
+      "High": "Високо",
+      "Urgent": "спешно"
+    },
+    "type": {
+      "Question": "въпрос",
+      "Incident": "Инцидент",
+      "Problem": "проблем"
+    }
+  },
+  "labels": {
+    "Create Case": "Създаване на дело",
+    "Close": "Близо",
+    "Reject": "Отхвърляне",
+    "Closed": "Затворена",
+    "Rejected": "Отхвърлени"
+  },
+  "presetFilters": {
+    "open": "отворено",
+    "closed": "Затворена"
+  }
+}

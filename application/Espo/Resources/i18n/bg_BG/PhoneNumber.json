@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "type": "Тип",
+    "optOut": "Отказахте се",
+    "invalid": "невалиден"
+  },
+  "presetFilters": {
+    "orphan": "сирак"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "modes": {
+    "month": "месец",
+    "week": "седмица",
+    "agendaWeek": "седмица",
+    "day": "ден",
+    "agendaDay": "ден"
+  },
+  "labels": {
+    "Today": "днес",
+    "Create": "създавам",
+    "Shared": "Споделено",
+    "Add User": "Добавяне на потребител",
+    "current": "текущ",
+    "time": "път",
+    "User List": "Списък с потребители",
+    "Manage Users": "Управление на потребителите",
+    "View Calendar": "Вижте Календар",
+    "Create Shared View": "Създаване на споделена View"
+  }
+}

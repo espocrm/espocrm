@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "clientSecret": "Клиент Secret",
+    "redirectUri": "Пренасочване URI"
+  },
+  "messages": {
+    "selectIntegration": "Изберете интеграция от менюто.",
+    "noIntegrations": "Не интеграции е на разположение."
+  },
+  "help": {
+    "Google": "** Снабдете OAuth 2.0 пълномощията от конзолата за програмисти в Google. ** посещение [програмисти на Google] (https://console.developers.google.com/project), за да се получи OAuth 2.0 пълномощията като клиентски идентификационен номер и за клиенти, които са тайна е известно, че и двете приложение Google и EspoCRM.",
+    "GoogleMaps": "Снабдете ключ API [тук] (https://developers.google.com/maps/documentation/javascript/get-api-key)."
+  }
+}

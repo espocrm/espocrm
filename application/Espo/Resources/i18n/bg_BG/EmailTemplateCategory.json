@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Създаване на Категория",
+    "Manage Categories": "Управление на категории",
+    "EmailTemplates": "Шаблони за имейл"
+  },
+  "fields": {
+    "order": "Поръчка",
+    "childList": "Списък на детето"
+  },
+  "links": {
+    "emailTemplates": "Шаблони за имейл"
+  }
+}

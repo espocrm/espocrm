@@ -1,0 +1,79 @@
+{
+  "labels": {
+    "Fields": "Полетата",
+    "Relationships": "Връзки",
+    "Schedule": "разписание",
+    "Log": "Вход",
+    "Formula": "формула"
+  },
+  "fields": {
+    "name": "име",
+    "type": "Тип",
+    "labelSingular": "Обозначете Singular",
+    "labelPlural": "етикет за множествено число",
+    "stream": "поток",
+    "label": "етикет",
+    "entityForeign": "чуждестранно лице",
+    "linkForeign": "чуждестранна Link",
+    "link": "връзка",
+    "labelForeign": "чуждестранна Label",
+    "sortBy": "По подразбиране Поръчка (област)",
+    "sortDirection": "По подразбиране Поръчка (посока)",
+    "relationName": "Бащино име на маса",
+    "linkMultipleField": "Линк Множествена поле",
+    "linkMultipleFieldForeign": "Чуждестранна Link Множествена поле",
+    "disabled": "хора с увреждания",
+    "textFilterFields": "Текст полета за филтриране",
+    "audited": "одитирания",
+    "auditedForeign": "чуждестранна одитирания",
+    "statusField": "Статус поле",
+    "beforeSaveCustomScript": "Преди Save персонализирана Script",
+    "color": "цвят",
+    "kanbanStatusIgnoreList": "Пропуснати групи в Канбан изглед",
+    "iconClass": "икона",
+    "fullTextSearch": "Пълен текст Търсене",
+    "countDisabled": "Изключване на броя на запис",
+    "parentEntityTypeList": "Предприятието майка, Видове",
+    "foreignLinkEntityTypeList": "Чуждестранни връзки"
+  },
+  "options": {
+    "type": {
+      "": "Нито един",
+      "Base": "база",
+      "Person": "човек",
+      "CategoryTree": "Категория Tree",
+      "Event": "събитие",
+      "BasePlus": "база Plus",
+      "Company": "Търговско дружество"
+    },
+    "linkType": {
+      "manyToMany": "Много към много",
+      "oneToMany": "Едно към много",
+      "manyToOne": "Много-в-One",
+      "parentToChildren": "Родител към деца",
+      "childrenToParent": "Деца до майка",
+      "oneToOneRight": "Едно към едно с десния",
+      "oneToOneLeft": "Едно към едно Left"
+    },
+    "sortDirection": {
+      "asc": "Възходящ",
+      "desc": "Низходящ"
+    }
+  },
+  "messages": {
+    "entityCreated": "Entity е създаден",
+    "linkAlreadyExists": "Връзка име конфликт.",
+    "linkConflict": "Името на конфликт: линк или област със същото име вече съществува."
+  },
+  "tooltips": {
+    "statusField": "Актуализациите на тази област са влизали в поток.",
+    "textFilterFields": "Полетата, използван от търсене на текст.",
+    "stream": "Независимо дали предприятието има поток.",
+    "disabled": "Проверете дали не е нужно това лице във вашата система.",
+    "linkAudited": "Създаване на документация, свързана и свързване с съществуващ запис ще бъде записано в поток.",
+    "linkMultipleField": "Линк Множествена поле осигурява удобен начин за редактиране на отношенията. Не го използвайте, ако може да има голям брой свързани записи.",
+    "entityType": "База Plus - има дейности, история и задачи панели. Събитие - на разположение в Календар и дейности панел.",
+    "fullTextSearch": "Работещи възстановяване се изисква.",
+    "countDisabled": "Общ брой няма да се показва на екрана със списъка. Може да намали времето на зареждане, когато масата на DB е голям."
+  }
+}

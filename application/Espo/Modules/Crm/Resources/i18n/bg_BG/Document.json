@@ -1,0 +1,41 @@
+{
+  "labels": {
+    "Create Document": "Създаване на документ",
+    "Details": "детайли"
+  },
+  "fields": {
+    "name": "име",
+    "status": "Статус",
+    "file": "досие",
+    "type": "Тип",
+    "publishDate": "Дата на публикуване",
+    "expirationDate": "Срок на годност",
+    "description": "описание",
+    "accounts": "сметки",
+    "folder": "папка"
+  },
+  "links": {
+    "accounts": "сметки",
+    "opportunities": "възможности",
+    "folder": "папка",
+    "contacts": "Контакти"
+  },
+  "options": {
+    "status": {
+      "Active": "Активен",
+      "Draft": "проект",
+      "Expired": "Просрочен",
+      "Canceled": "Отменен"
+    },
+    "type": {
+      "": "Нито един",
+      "Contract": "Договор",
+      "NDA": "ЕБК",
+      "License Agreement": "Лицензионно споразумение"
+    }
+  },
+  "presetFilters": {
+    "active": "Активен",
+    "draft": "проект"
+  }
+}

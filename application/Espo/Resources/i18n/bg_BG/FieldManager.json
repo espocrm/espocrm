@@ -1,0 +1,108 @@
+{
+  "options": {
+    "dateTimeDefault": {
+      "": "Нито един",
+      "javascript: return this.dateTime.getNow(1);": "Сега",
+      "javascript: return this.dateTime.getNow(5);": "Сега (5 М)",
+      "javascript: return this.dateTime.getNow(15);": "Сега (петнайсетm)",
+      "javascript: return this.dateTime.getNow(30);": "Сега (трийсетм)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "едночас",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "еднаден",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 дни",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 дни",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 дни",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 дни",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 дни",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "една седмица"
+    },
+    "dateDefault": {
+      "": "Нито един",
+      "javascript: return this.dateTime.getToday();": "днес",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "еднаден",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 дни",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "една седмица",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 седмици",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 седмици",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "милиардмесец",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 месеца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "милион години"
+    },
+    "barcodeType": {
+      "UPC": "UPC (А)",
+      "UPCE": "UPC (Е)",
+      "QRcode": "QR код"
+    }
+  },
+  "tooltips": {
+    "audited": "Актуализациите ще бъде записано в поток.",
+    "required": "Невярно ще бъде задължително. Не може да бъде оставено празно.",
+    "default": "Стойността ще бъде зададена по подразбиране при създаване.",
+    "min": "Мин приемлива стойност.",
+    "max": "Макс приемлива стойност.",
+    "seeMoreDisabled": "Ако не се проверява след дълги текстове ще бъдат съкратени.",
+    "lengthOfCut": "Колко дълго може да бъде текст, преди това ще бъдат отрязани.",
+    "maxLength": "Макс приемлива продължителност на текст.",
+    "before": "Стойността на датата трябва да е преди датата на стойността на указаното поле.",
+    "after": "Стойността на датата трябва да е след датата, стойността на указаното поле.",
+    "readOnly": "Стойността на полето не може да бъде определен от потребителя. Но може да бъде изчислена по формула.",
+    "maxFileSize": "Ако празно или 0 след няма ограничение.",
+    "fileAccept": "Кои типове файлове да приеме. Това е възможно да се добавят и други елементи.",
+    "barcodeLastChar": "За EAN-13 тип."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "улица",
+      "city": "град",
+      "state": "състояние",
+      "country": "Страна",
+      "postalCode": "пощенски код",
+      "map": "карта"
+    },
+    "personName": {
+      "salutation": "поздрав",
+      "first": "първи",
+      "last": "последно",
+      "middle": "среден"
+    },
+    "currency": {
+      "converted": "(Конвертиран)",
+      "currency": "(Валута)"
+    },
+    "datetimeOptional": {
+      "date": "Дата"
+    }
+  },
+  "labels": {
+    "Name": "име",
+    "Label": "етикет",
+    "Type": "Тип"
+  }
+}

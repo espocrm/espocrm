@@ -1,0 +1,68 @@
+{
+  "labels": {
+    "Converted To": "превръща в",
+    "Create Lead": "Създаване на олово",
+    "convert": "конвертиране"
+  },
+  "fields": {
+    "name": "име",
+    "emailAddress": "електронна поща",
+    "title": "Заглавие",
+    "website": "уебсайт",
+    "phoneNumber": "телефон",
+    "accountName": "Име на акаунта",
+    "doNotCall": "Не звъни",
+    "address": "адрес",
+    "status": "Статус",
+    "source": "източник",
+    "opportunityAmount": "възможност сума",
+    "opportunityAmountConverted": "Възможност сума (изчислена)",
+    "description": "описание",
+    "createdAccount": "Сметка",
+    "createdContact": "контакт",
+    "campaign": "кампания",
+    "targetLists": "Целеви списъци",
+    "targetList": "Целева Списък",
+    "industry": "промишленост",
+    "acceptanceStatus": "Приемане Статус",
+    "opportunityAmountCurrency": "Възможност сума във валута",
+    "acceptanceStatusMeetings": "Приемане Статус (срещи)",
+    "acceptanceStatusCalls": "Приемане Статус (призовава)",
+    "convertedAt": "конвертирани по"
+  },
+  "links": {
+    "targetLists": "Целеви списъци",
+    "campaignLogRecords": "кампания Вход",
+    "campaign": "кампания",
+    "createdAccount": "Сметка",
+    "createdContact": "контакт",
+    "cases": "случаи",
+    "documents": "Документи"
+  },
+  "options": {
+    "status": {
+      "New": "нов",
+      "Assigned": "целеви",
+      "In Process": "В процес",
+      "Converted": "покръстен",
+      "Recycled": "Рециклирана",
+      "Dead": "мъртъв"
+    },
+    "source": {
+      "": "Нито един",
+      "Call": "Обадете се",
+      "Email": "електронна поща",
+      "Existing Customer": "Съществуващ клиент",
+      "Partner": "партньор",
+      "Public Relations": "Връзки с обществеността",
+      "Web Site": "уеб сайт",
+      "Campaign": "кампания",
+      "Other": "друг"
+    }
+  },
+  "presetFilters": {
+    "active": "Активен",
+    "actual": "действителен",
+    "converted": "покръстен"
+  }
+}

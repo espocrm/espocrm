@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "име",
+    "version": "версия",
+    "description": "описание",
+    "isInstalled": "Инсталирана",
+    "checkVersionUrl": "Един URL за проверка на нови версии"
+  },
+  "labels": {
+    "Install": "Инсталирай"
+  },
+  "messages": {
+    "uninstalled": "Удължаване {име} е деинсталирана"
+  }
+}

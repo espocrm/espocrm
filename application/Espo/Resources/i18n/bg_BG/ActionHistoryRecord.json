@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "user": "потребител",
+    "action": "действие",
+    "createdAt": "Дата",
+    "target": "Цел",
+    "authToken": "Означението за удостоверяване",
+    "ipAddress": "IP адрес",
+    "authLogRecord": "Упълномощаване Вход Record",
+    "userType": "Тип потребител"
+  },
+  "links": {
+    "authToken": "Означението за удостоверяване",
+    "user": "потребител",
+    "target": "Цел",
+    "authLogRecord": "Упълномощаване Вход Record"
+  },
+  "presetFilters": {
+    "onlyMy": "Само ми"
+  },
+  "options": {
+    "action": {
+      "read": "Прочети",
+      "update": "Актуализация",
+      "delete": "Изтрий",
+      "create": "създавам"
+    }
+  }
+}

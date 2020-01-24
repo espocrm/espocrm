@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "name": "име",
+    "emailAddress": "електронна поща",
+    "accountRole": "Заглавие",
+    "account": "Сметка",
+    "accounts": "сметки",
+    "phoneNumber": "телефон",
+    "accountType": "Тип на профила",
+    "doNotCall": "Не звъни",
+    "address": "адрес",
+    "opportunityRole": "възможност Роля",
+    "description": "описание",
+    "campaign": "кампания",
+    "targetLists": "Целеви списъци",
+    "targetList": "Целева Списък",
+    "portalUser": "портал за потребителя",
+    "originalLead": "Оригинален Lead",
+    "acceptanceStatus": "Приемане Статус",
+    "accountIsInactive": "неактивен акаунт",
+    "acceptanceStatusMeetings": "Приемане Статус (срещи)",
+    "acceptanceStatusCalls": "Приемане Статус (призовава)",
+    "title": "Основно заглавие на профила"
+  },
+  "links": {
+    "opportunities": "възможности",
+    "cases": "случаи",
+    "targetLists": "Целеви списъци",
+    "campaignLogRecords": "кампания Вход",
+    "campaign": "кампания",
+    "account": "Сметката (Основно)",
+    "accounts": "сметки",
+    "casesPrimary": "Случаи (Основно)",
+    "portalUser": "портал за потребителя",
+    "originalLead": "Оригинален Lead",
+    "documents": "Документи",
+    "tasksPrimary": "Задачи (разширена)",
+    "opportunitiesPrimary": "Възможности (Основно)"
+  },
+  "labels": {
+    "Create Contact": "Създаване на контакт"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "Решение Maker",
+      "Evaluator": "оценител"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "потребители на портала",
+    "notPortalUsers": "Не потребители на портала",
+    "accountActive": "Активен"
+  }
+}

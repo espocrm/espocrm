@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Създаване на член",
+    "Any": "който и да е",
+    "Send in Email": "Изпрати на Email",
+    "Move Up": "Премести нагоре",
+    "Move Down": "Премести надолу",
+    "Move to Top": "Преминаване към Top",
+    "Move to Bottom": "Преместване най-долу"
+  },
+  "fields": {
+    "name": "име",
+    "status": "Статус",
+    "type": "Тип",
+    "attachments": "Прикачени",
+    "publishDate": "Дата на публикуване",
+    "expirationDate": "Срок на годност",
+    "description": "описание",
+    "body": "тяло",
+    "categories": "Категории",
+    "language": "език",
+    "portals": "Портали"
+  },
+  "links": {
+    "cases": "случаи",
+    "opportunities": "възможности",
+    "categories": "Категории",
+    "portals": "Портали"
+  },
+  "options": {
+    "status": {
+      "In Review": "В Преглед",
+      "Draft": "проект",
+      "Archived": "Архив",
+      "Published": "Публикуван"
+    },
+    "type": {
+      "Article": "статия"
+    }
+  },
+  "presetFilters": {
+    "published": "Публикуван"
+  },
+  "tooltips": {
+    "portals": "Член ще бъде достъпен само в определени портали."
+  }
+}

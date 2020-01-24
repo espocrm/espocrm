@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "username": "Потребител",
+    "ipAddress": "IP адрес",
+    "requestTime": "Заявка за времето",
+    "createdAt": "поискано",
+    "isDenied": "е отказан",
+    "denialReason": "отказ Причина",
+    "portal": "портал",
+    "user": "потребител",
+    "authToken": "Означението за удостоверяване Създадена",
+    "requestUrl": "URL адрес на заявката",
+    "requestMethod": "Заявка Метод",
+    "authTokenIsActive": "Означението за удостоверяване е активен",
+    "authenticationMethod": "Метод за удостоверяване"
+  },
+  "links": {
+    "authToken": "Означението за удостоверяване Създадена",
+    "user": "потребител",
+    "portal": "портал",
+    "actionHistoryRecords": "История за действие"
+  },
+  "presetFilters": {
+    "denied": "Отказан",
+    "accepted": "общоприет"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Невалидни идентификационни данни",
+      "INACTIVE_USER": "Inactive потребител",
+      "IS_PORTAL_USER": "портал на потребителя",
+      "IS_NOT_PORTAL_USER": "Не портал на потребителя",
+      "USER_IS_NOT_IN_PORTAL": "Потребителят не е свързан с портала"
+    }
+  }
+}
