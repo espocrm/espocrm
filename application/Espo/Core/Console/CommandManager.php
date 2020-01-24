@@ -67,6 +67,7 @@ class CommandManager
 
         $className = '\\Espo\\Core\\Console\\Commands\\' . $command;
         $className = $this->container->get('metadata')->get(['app', 'consoleCommands', $command, 'className'], $className);
+        if (!class_exists($className)) $className = '\\Espo\\Custom\\Core\\Console\\Commands\\' . $command;
         if (!class_exists($className)) {
             $msg = "Command '{$command}' does not exist.";
             echo $msg . "\n";
