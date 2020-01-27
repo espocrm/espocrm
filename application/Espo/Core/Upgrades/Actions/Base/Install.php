@@ -87,6 +87,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $this->setProcessId($processId);
 
+        if (isset($data['parentProcessId'])) {
+            $this->setParentProcessId($data['parentProcessId']);
+        }
+
         /** check if an archive is unzipped, if no then unzip */
         $packagePath = $this->getPackagePath();
         if (!file_exists($packagePath)) {
@@ -264,9 +268,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
-    public function throwErrorAndRemovePackage($errorMessage = '')
+    public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
     {
         $this->restoreFiles();
-        parent::throwErrorAndRemovePackage($errorMessage);
+        parent::throwErrorAndRemovePackage($errorMessage, $deletePackage, $systemRebuild);
     }
 }

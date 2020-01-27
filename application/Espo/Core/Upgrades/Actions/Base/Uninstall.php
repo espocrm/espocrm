@@ -46,6 +46,10 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->setProcessId($processId);
 
+        if (isset($data['parentProcessId'])) {
+            $this->setParentProcessId($data['parentProcessId']);
+        }
+
         $this->initialize();
 
         $this->checkIsWritable();
@@ -155,12 +159,10 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
-    public function throwErrorAndRemovePackage($errorMessage = '')
+    public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
     {
         $this->restoreFiles();
-        $this->disableMaintenanceMode();
-        $this->systemRebuild();
-        throw new Error($errorMessage);
+        parent::throwErrorAndRemovePackage($errorMessage, false, $systemRebuild);
     }
 
     protected function getCopyFileList()
