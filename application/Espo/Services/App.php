@@ -107,7 +107,12 @@ class App extends \Espo\Core\Services\Base
         foreach (($this->getMetadata()->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
             $className = $item['className'] ?? null;
             if (!$className) continue;
-            $itemParams = $this->getInjection('injectableFactory')->createByClassName($className)->get();
+            try {
+                $itemParams = $this->getInjection('injectableFactory')->createByClassName($className)->get();
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("appParam {$paramKey}: " . $e->getMessage());
+                continue;
+            }
             $appParams[$paramKey] = $itemParams;
         }
 
