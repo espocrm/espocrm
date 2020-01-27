@@ -37,8 +37,16 @@ define('views/header', 'view', function (Dep) {
             if ('getHeader' in this.getParentView()) {
                 data.header = this.getParentView().getHeader();
             }
+
             data.scope = this.scope || this.getParentView().scope;
             data.items = this.getItems();
+
+            var dropdown = (data.items || {}).dropdown || [];
+
+            data.hasVisibleDropdownItems = false;
+            dropdown.forEach(function (item) {
+                if (!item.hidden) data.hasVisibleDropdownItems = true;
+            });
 
             data.noBreakWords = this.options.fontSizeFlexible;
 

@@ -25,7 +25,7 @@
             {{/if}}
 
             {{#if items.dropdown}}
-                <div class="btn-group" role="group">
+                <div class="btn-group dropdown-group{{#unless ../hasVisibleDropdownItems}} hidden{{/unless}}" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <span class="fas fa-ellipsis-h"></span>
                 </button>

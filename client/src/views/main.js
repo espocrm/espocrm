@@ -49,13 +49,20 @@ define('views/main', 'view', function (Dep) {
             this.options.params = this.options.params || {};
 
             if (this.name && this.scope) {
-                this.menu = this.getMetadata().get('clientDefs.' + this.scope + '.menu.' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
+                this.menu = this.getMetadata().get([
+                    'clientDefs', this.scope, 'menu', this.name.charAt(0).toLowerCase() + this.name.slice(1)
+                ]) || {};
             }
 
             this.menu = Espo.Utils.cloneDeep(this.menu);
 
+            var globalMenu = this.getMetadata().get([
+                'clientDefs', 'Global', 'menu', this.name.charAt(0).toLowerCase() + this.name.slice(1)
+            ]) || {};
+
             ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                 this.menu[type] = this.menu[type] || [];
+                this.menu[type] = this.menu[type].concat(globalMenu[type] || []);
 
                 var itemList = this.menu[type];
                 itemList.forEach(function (item) {
@@ -237,6 +244,8 @@ define('views/main', 'view', function (Dep) {
             if (!this.isRendered()) return;
             this.$el.find('.page-header li > .action[data-name="'+name+'"]').parent().addClass('hidden');
             this.$el.find('.page-header a.action[data-name="'+name+'"]').addClass('hidden');
+
+            this.controlMenuDropdownVisibility();
         },
 
         showHeaderActionItem: function (name) {
@@ -251,7 +260,27 @@ define('views/main', 'view', function (Dep) {
             if (!this.isRendered()) return;
             this.$el.find('.page-header li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
             this.$el.find('.page-header a.action[data-name="'+name+'"]').removeClass('hidden');
-        }
+
+            this.controlMenuDropdownVisibility();
+        },
+
+        hasMenuVisibleDropdownItems: function () {
+            var hasItems = false;
+            this.menu.dropdown.forEach(function (item) {
+                if (!item.hidden) hasItems = true;
+            });
+            return hasItems;
+        },
+
+        controlMenuDropdownVisibility: function () {
+            var $d = this.$el.find('.page-header .dropdown-group');
+
+            if (this.hasMenuVisibleDropdownItems()) {
+                $d.removeClass('hidden');
+            } else {
+                $d.addClass('hidden');
+            }
+        },
 
     });
 });
