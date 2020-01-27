@@ -34,6 +34,7 @@ var acceptedVersionName = versionFrom;
 var isDev = false;
 var isAll = false;
 var withVendor = false;
+var forceScripts = false;
 
 if (process.argv.length > 1) {
     for (var i in process.argv) {
@@ -45,6 +46,9 @@ if (process.argv.length > 1) {
         }
         if (process.argv[i] === '--vendor') {
             withVendor = true;
+        }
+        if (process.argv[i] === '--scripts') {
+            forceScripts = true;
         }
         if (~process.argv[i].indexOf('--acceptedVersion=')) {
             acceptedVersionName = process.argv[i].substr(('--acceptedVersion=').length);
@@ -89,6 +93,7 @@ if (isAll) {
                 await buildUpgradePackage(versionFrom, {
                     isDev: isDev,
                     withVendor: withVendor,
+                    forceScripts: forceScripts,
                 });
             }
         }
@@ -104,6 +109,7 @@ if (isAll) {
         acceptedVersionName: acceptedVersionName,
         isDev: isDev,
         withVendor: withVendor,
+        forceScripts: forceScripts,
     });
 }
 
@@ -241,7 +247,7 @@ function buildUpgradePackage(versionFrom, params)
                     cp.execSync('xargs -a ' + diffBeforeUpgradeFolderPath + ' cp -p --parents -t ' + upgradePath + '/beforeUpgradeFiles');
                 }
 
-                if (!isDev) {
+                if (!isDev || forceScripts) {
                     if (fs.existsSync(upgradeDataFolderPath + '/scripts')) {
                         cp.execSync('cp -r ' + upgradeDataFolderPath + '/scripts ' + upgradePath + '/scripts');
                     }
