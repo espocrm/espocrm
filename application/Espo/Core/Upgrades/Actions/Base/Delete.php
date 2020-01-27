@@ -44,6 +44,10 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
 
         $this->setProcessId($processId);
 
+        if (isset($data['parentProcessId'])) {
+            $this->setParentProcessId($data['parentProcessId']);
+        }
+
         $this->beforeRunAction();
 
         /* delete a package */

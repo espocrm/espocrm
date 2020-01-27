@@ -56,9 +56,14 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
     {
         /** Set extension entity, isInstalled = false */
         $extensionEntity = $this->getExtensionEntity();
-
         $extensionEntity->set('isInstalled', false);
-        $this->getEntityManager()->saveEntity($extensionEntity);
+
+        try {
+            $this->getEntityManager()->saveEntity($extensionEntity);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('Error saving Extension entity. The error occurred by existing Hook, more details: ' . $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine());
+            $this->throwErrorAndRemovePackage('Error saving Extension entity. Check logs for details.', false);
+        }
     }
 
     protected function getRestoreFileList()

@@ -147,8 +147,8 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $this->objects['config']
             ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue([]));
+            ->method('has')
+            ->will($this->returnValue(false));
 
         $this->reflection->invokeMethod('getManifest', array());
     }
@@ -229,8 +229,8 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $this->objects['config']
             ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue([]));
+            ->method('has')
+            ->will($this->returnValue(false));
 
         $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error'));
     }
@@ -274,8 +274,8 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $this->objects['config']
             ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue([]));
+            ->method('has')
+            ->will($this->returnValue(false));
 
         $this->reflection->setProperty('data', array('manifest' => array('type' => 'upgrade')));
 
