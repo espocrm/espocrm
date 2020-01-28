@@ -158,6 +158,14 @@
         "fromName": {
             "type": "varchar"
         },
+        "imapHandler": {
+            "type": "varchar",
+            "readOnly": true
+        },
+        "smtpHandler": {
+            "type": "varchar",
+            "readOnly": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

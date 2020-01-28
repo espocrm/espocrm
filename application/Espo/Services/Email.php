@@ -209,6 +209,10 @@ class Email extends Record
             $inboundEmail = $inboundEmailService->findSharedAccountForUser($this->getUser(), $originalFromAddress);
             if ($inboundEmail) {
                 $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
+
+                if ($inboundEmail->get('smtpHandler')) {
+                    $this->applyGroupSmtpHandler($inboundEmail, $smtpParams);
+                }
             }
             if ($smtpParams) {
                 $emailSender->useSmtp($smtpParams);
@@ -315,6 +319,23 @@ class Email extends Record
                     }
                 }
             }
+        }
+    }
+
+    protected function applyGroupSmtpHandler(\Espo\Entities\InboundEmail $inboundEmail, array &$params)
+    {
+        $handlerClassName = $inboundEmail->get('smtpHandler');
+        if (!$handlerClassName) return;
+
+        try {
+            $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error(
+                "Send Email: Could not create Smtp Handler for inbound email {$inboundEmail->id}. Error: " . $e->getMessage()
+            );
+        }
+        if (method_exists($handler, 'applyParams')) {
+            $handler->applyParams($inboundEmail->id, $params);
         }
     }
 

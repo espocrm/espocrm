@@ -76,29 +76,17 @@ class InboundEmail extends \Espo\Services\Record
 
     public function getFolders($params)
     {
-        $password = $params['password'];
-
         if (!empty($params['id'])) {
-            $entity = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
-            if ($entity) {
-                $password = $this->getCrypt()->decrypt($entity->get('password'));
+            $account = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+            if ($account) {
+                $params['password'] = $this->getCrypt()->decrypt($account->get('password'));
+                $params['imapHandler'] = $account->get('imapHandler');
             }
-        }
-
-        $imapParams = [
-            'host' => $params['host'],
-            'port' => $params['port'],
-            'user' => $params['username'],
-            'password' => $password,
-        ];
-
-        if (!empty($params['ssl'])) {
-            $imapParams['ssl'] = 'SSL';
         }
 
         $foldersArr = [];
 
-        $storage = $this->createStorage($imapParams);
+        $storage = $this->createStorage($params);
 
         $folders = new \RecursiveIteratorIterator($storage->getFolders(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($folders as $name => $folder) {
@@ -109,18 +97,14 @@ class InboundEmail extends \Espo\Services\Record
 
     public function testConnection(array $params)
     {
-        $imapParams = [
-            'host' => $params['host'],
-            'port' => $params['port'],
-            'user' => $params['username'],
-            'password' => $params['password']
-        ];
-
-        if (!empty($params['ssl'])) {
-            $imapParams['ssl'] = 'SSL';
+        if (!empty($params['id'])) {
+            $account = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+            if ($account) {
+                $params['imapHandler'] = $account->get('imapHandler');
+            }
         }
 
-        $storage = $this->createStorage($imapParams);
+        $storage = $this->createStorage($params);
 
         if ($storage->getFolders()) {
             return true;
@@ -201,18 +185,7 @@ class InboundEmail extends \Espo\Services\Record
         $fetchData->lastDate = clone $fetchData->lastDate;
         $fetchData->byDate = clone $fetchData->byDate;
 
-        $imapParams = [
-            'host' => $emailAccount->get('host'),
-            'port' => $emailAccount->get('port'),
-            'user' => $emailAccount->get('username'),
-            'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
-        ];
-
-        if ($emailAccount->get('ssl')) {
-            $imapParams['ssl'] = 'SSL';
-        }
-
-        $storage = $this->createStorage($imapParams);
+        $storage = $this->getStorage($emailAccount);
 
         $monitoredFolders = $emailAccount->get('monitoredFolders');
         if (empty($monitoredFolders)) {
@@ -913,25 +886,57 @@ class InboundEmail extends \Espo\Services\Record
 
     protected function getStorage(\Espo\Entities\InboundEmail $emailAccount)
     {
-        $imapParams = [
+        $params = [
             'host' => $emailAccount->get('host'),
             'port' => $emailAccount->get('port'),
-            'user' => $emailAccount->get('username'),
+            'username' => $emailAccount->get('username'),
             'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
         ];
 
         if ($emailAccount->get('ssl')) {
-            $imapParams['ssl'] = 'SSL';
+            $params['ssl'] = 'SSL';
         }
 
-        $storage = $this->createStorage($imapParams);
+        $params['imapHandler'] = $emailAccount->get('imapHandler');
+        $params['id'] = $emailAccount->id;
+
+        $storage = $this->createStorage($params);
 
         return $storage;
     }
 
     protected function createStorage(array $params)
     {
-        return new $this->storageClassName($params);
+        $imapParams = null;
+
+        $handlerClassName = $params['imapHandler'] ?? null;
+
+        if ($handlerClassName && !empty($params['id'])) {
+            try {
+                $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error(
+                    "InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage()
+                );
+            }
+            if (method_exists($handler, 'prepareProtocol')) {
+                $imapParams = $handler->prepareProtocol($params['id'], $params);
+            }
+        }
+
+        if (!$imapParams) {
+            $imapParams = [
+                'host' => $params['host'],
+                'port' => $params['port'],
+                'user' => $params['username'],
+                'password' => $params['password'],
+            ];
+            if (!empty($params['ssl'])) {
+                $imapParams['ssl'] = 'SSL';
+            }
+        }
+
+        return new $this->storageClassName($imapParams);
     }
 
     public function storeSentMessage(\Espo\Entities\InboundEmail $emailAccount, $message)
