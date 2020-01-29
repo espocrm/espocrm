@@ -433,6 +433,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 if ('showPanel' in bottomView) {
                     bottomView.showPanel(name);
                 }
+            } else if (this.bottomView) {
+                this.once('after:render', function () {
+                    var bottomView = this.getView('bottom');
+                    if (bottomView && 'showPanel' in bottomView) {
+                        bottomView.showPanel(name);
+                    }
+                }, this);
             }
 
             var sideView = this.getView('side');
@@ -440,6 +447,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 if ('showPanel' in sideView) {
                     sideView.showPanel(name);
                 }
+            } else if (this.sideView) {
+                this.once('after:render', function () {
+                    var sideView = this.getView('side');
+                    if (sideView && 'showPanel' in sideView) {
+                        sideView.showPanel(name);
+                    }
+                }, this);
             }
         },
 
@@ -456,6 +470,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 if ('hidePanel' in bottomView) {
                     bottomView.hidePanel(name);
                 }
+            } else if (this.bottomView) {
+                this.once('after:render', function () {
+                    var bottomView = this.getView('bottom');
+                    if (bottomView && 'showPanel' in bottomView) {
+                        bottomView.hidePanel(name);
+                    }
+                }, this);
             }
 
             var sideView = this.getView('side');
@@ -463,6 +484,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 if ('hidePanel' in sideView) {
                     sideView.hidePanel(name);
                 }
+            } else if (this.sideView) {
+                this.once('after:render', function () {
+                    var sideView = this.getView('side');
+                    if (sideView && 'hidePanel' in sideView) {
+                        sideView.hidePanel(name);
+                    }
+                }, this);
             }
         },
 
