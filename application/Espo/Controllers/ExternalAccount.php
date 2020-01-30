@@ -75,7 +75,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
         $id = $request->get('id');
         list($integration, $userId) = explode('__', $id);
 
-        if ($this->getUser()->id != $userId) {
+        if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -93,7 +93,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
     {
         list($integration, $userId) = explode('__', $params['id']);
 
-        if ($this->getUser()->id != $userId) {
+        if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -114,7 +114,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 
         list($integration, $userId) = explode('__', $params['id']);
 
-        if ($this->getUser()->id != $userId) {
+        if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -140,7 +140,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 
         list($integration, $userId) = explode('__', $id);
 
-        if ($this->getUser()->id != $userId) {
+        if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
