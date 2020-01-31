@@ -36,9 +36,10 @@ class BeforeUpgrade
         ];
 
         $databaseHelper = new \Espo\Core\Utils\Database\Helper($this->container->get('config'));
+        $pdo = $this->container->get('entityManager')->getPDO();
 
         $databaseType = $databaseHelper->getDatabaseType();
-        $fullVersion = $databaseHelper->getPdoDatabaseVersion($this->container->get('entityManager')->getPDO());
+        $fullVersion = $databaseHelper->getPdoDatabaseVersion($pdo);
 
         if (preg_match('/[0-9]+\.[0-9]+\.[0-9]+/', $fullVersion, $match)) {
             $version = $match[0];
@@ -52,5 +53,11 @@ class BeforeUpgrade
                 }
             }
         }
+
+        $query = "
+            ALTER TABLE `user` ADD `middle_name` VARCHAR(100) DEFAULT NULL COLLATE utf8mb4_unicode_ci
+        ";
+        $sth = $pdo->prepare($query);
+        $sth->execute();
     }
 }
