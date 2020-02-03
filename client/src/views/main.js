@@ -56,9 +56,13 @@ define('views/main', 'view', function (Dep) {
 
             this.menu = Espo.Utils.cloneDeep(this.menu);
 
-            var globalMenu = Espo.Utils.cloneDeep(this.getMetadata().get([
-                'clientDefs', 'Global', 'menu', this.name.charAt(0).toLowerCase() + this.name.slice(1)
-            ]) || {});
+            var globalMenu = {};
+
+            if (this.name) {
+                globalMenu = Espo.Utils.cloneDeep(this.getMetadata().get([
+                    'clientDefs', 'Global', 'menu', this.name.charAt(0).toLowerCase() + this.name.slice(1)
+                ]) || {});
+            }
 
             ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                 this.menu[type] = this.menu[type] || [];
