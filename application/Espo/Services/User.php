@@ -676,8 +676,22 @@ class User extends Record
         $subjectTpl = $templateFileManager->getTemplate('passwordChangeLink', 'subject', 'User');
         $bodyTpl = $templateFileManager->getTemplate('passwordChangeLink', 'body', 'User');
 
+        $siteUrl = $this->getConfig()->getSiteUrl();
+
+        if ($user->isPortal()) {
+            $portal = $this->getEntityManager()->getRepository('Portal')->distinct()->join('users')->where([
+                'isActive' => true,
+                'users.id' => $user->id,
+            ])->findOne();
+            if ($portal) {
+                if ($portal->get('customUrl')) {
+                    $siteUrl = $portal->get('customUrl');
+                }
+            }
+        }
+
         $data = [];
-        $link = $this->getConfig()->getSiteUrl() . '?entryPoint=changePassword&id=' . $requestId;
+        $link = $siteUrl . '?entryPoint=changePassword&id=' . $requestId;
         $data['link'] = $link;
 
         $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->getFileManager(), $this->getDateTime(), $this->getNumber(), null);

@@ -39,6 +39,10 @@ $requestUri = $url;
 
 $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
 
+if (strpos($requestUri, '=') !== false) {
+    $portalId = null;
+}
+
 if (!isset($portalId)) {
     $url = $_SERVER['REDIRECT_URL'];
     $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
