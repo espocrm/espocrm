@@ -29,6 +29,10 @@ class AfterUpgrade
         $this->populateOpportunityContactId();
 
         $this->manageIndexes();
+
+        $config = $container->get('config');
+        $config->set('personNameFormat', 'firstLast');
+        $config->save();
     }
 
     protected function populateOpportunityContactId()
