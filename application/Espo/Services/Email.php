@@ -891,6 +891,16 @@ class Email extends Record
             }
         }
 
+        $type = $data['type'] ?? null;
+        $id = $data['id'] ?? null;
+
+        if ($type === 'inboundEmail' && $id) {
+            $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $id);
+            if ($inboundEmail && $inboundEmail->get('smtpHandler')) {
+                $this->applyGroupSmtpHandler($inboundEmail, $smtpParams);
+            }
+        }
+
         $emailSender = $this->getMailSender();
         $emailSender->useSmtp($smtpParams)->send($email);
 
