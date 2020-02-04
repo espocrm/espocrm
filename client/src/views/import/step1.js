@@ -125,7 +125,7 @@ define('views/import/step1', 'view', function (Dep) {
                 'l, f',
             ];
 
-            var personNameFormat = this.getConfig().get('personNameFormat');
+            var personNameFormat = this.getConfig().get('personNameFormat') || 'firstLast';
             if (~personNameFormat.toString().toLowerCase().indexOf('middle')) {
                 this.personNameFormatList.push('f m l');
                 this.personNameFormatList.push('l f m');
