@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/import/list', 'views/list', function (Dep) {
+define('views/import/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
@@ -36,12 +36,11 @@ Espo.define('views/import/list', 'views/list', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.menu.buttons.unshift({
-                html: 'New Import',
+                html: '<span class="fas fa-plus fa-sm"></span> ' + this.translate('New Import', 'labels', 'Import'),
                 link: '#Import',
-                style: 'primary',
-                acl: 'edit'
+                acl: 'edit',
             });
-        }
+        },
 
     });
 });
