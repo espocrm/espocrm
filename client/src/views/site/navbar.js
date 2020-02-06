@@ -379,7 +379,7 @@ define('views/site/navbar', 'view', function (Dep) {
 
         adjustVertical: function () {
             var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 73;
+            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 85;
 
             var $window = $(window);
 
