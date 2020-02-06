@@ -113,7 +113,15 @@ class Meeting extends \Espo\Core\Repositories\Event
 
         if ($entity->isNew()) {
             $currentUserId = $this->getEntityManager()->getUser()->id;
-            if ($entity->hasLinkMultipleId('users', $currentUserId)) {
+            if (
+                $entity->hasLinkMultipleId('users', $currentUserId)
+                &&
+                (
+                    !$entity->getLinkMultipleColumn('users', 'status', $currentUserId)
+                    ||
+                    $entity->getLinkMultipleColumn('users', 'status', $currentUserId) === 'None'
+                )
+            ) {
                 $entity->setLinkMultipleColumn('users', 'status', $currentUserId, 'Accepted');
             }
         }
