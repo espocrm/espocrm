@@ -540,7 +540,7 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
         actionViewRelatedList: function (data) {
             data.url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name + '/list/' + data.scope;
             data.title = this.translate(this.defs.label) +
-            ' <span class="chevron-right"></span> ' + this.translate(data.scope, 'scopeNamesPlural');
+            ' @right ' + this.translate(data.scope, 'scopeNamesPlural');
 
             data.viewOptions = data.viewOptions || {};
             data.viewOptions.massUnlinkDisabled = true;
