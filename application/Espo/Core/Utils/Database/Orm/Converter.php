@@ -81,13 +81,7 @@ class Converter
         'index' => 'index',
         /*'conditions' => 'conditions',
         'additionalColumns' => 'additionalColumns',    */
-        'default' => array(
-           'condition' => '^javascript:',
-           'conditionEquals' => false,
-           'value' => array(
-                'default' => '{0}',
-           ),
-        ),
+        'default' => 'default',
         'select' => 'select',
         'orderBy' => 'orderBy',
         'where' => 'where',
@@ -480,26 +474,24 @@ class Converter
 
     protected function getInitValues(array $fieldParams)
     {
-        $values = array();
+        $values = [];
+
         foreach($this->fieldAccordances as $espoType => $ormType) {
 
-            if (isset($fieldParams[$espoType])) {
+            if (!array_key_exists($espoType, $fieldParams)) {
+                continue;
+            }
 
-                if (is_array($ormType))  {
-
-                    $conditionRes = false;
-                    if (!is_array($fieldParams[$espoType])) {
-                        $conditionRes = preg_match('/'.$ormType['condition'].'/i', $fieldParams[$espoType]);
+            switch ($espoType) {
+                case 'default':
+                    if (is_array($fieldParams[$espoType]) || !preg_match('/^javascript:/i', $fieldParams[$espoType])) {
+                        $values[$ormType] = $fieldParams[$espoType];
                     }
+                    break;
 
-                    if (!$conditionRes || ($conditionRes && $conditionRes === $ormType['conditionEquals']) )  {
-                        $value = is_array($fieldParams[$espoType]) ? json_encode($fieldParams[$espoType]) : $fieldParams[$espoType];
-                        $values = Util::merge( $values, Util::replaceInArray('{0}', $value, $ormType['value']) );
-                    }
-                } else {
+                default:
                     $values[$ormType] = $fieldParams[$espoType];
-                }
-
+                    break;
             }
         }
 
