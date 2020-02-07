@@ -224,7 +224,7 @@ class Base
     {
         $foreignField = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $name]);
 
-        if ($foreignField['type'] == 'personName') {
+        if (isset($foreignField['type']) && $foreignField['type'] == 'personName') {
             $personNameFormat = $this->config->get('personNameFormat');
 
             switch ($personNameFormat) {
