@@ -57,7 +57,10 @@ class BeforeUpgrade
         $query = "
             ALTER TABLE `user` ADD `middle_name` VARCHAR(100) DEFAULT NULL COLLATE utf8mb4_unicode_ci
         ";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+
+        try {
+            $sth = $pdo->prepare($query);
+            $sth->execute();
+        } catch (\Exception $e) {}
     }
 }
