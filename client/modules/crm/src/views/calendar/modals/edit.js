@@ -89,6 +89,10 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                         this.model.set('dateStartDate', this.options.dateStartDate);
                         this.model.set('dateEndDate', this.options.dateEndDate);
                         this.model.set('isAllDay', true);
+                    } else {
+                        this.model.set('isAllDay', false);
+                        this.model.set('dateStartDate', null);
+                        this.model.set('dateEndDate', null);
                     }
                 }
             }
