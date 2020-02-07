@@ -44,6 +44,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
 
+        recordsPerPage: null,
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -157,7 +159,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
-                collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                collection.maxSize = this.recordsPerPage || this.getConfig().get('recordsPerPageSmall') || 5;
 
                 if (this.defs.filters) {
                     var searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
