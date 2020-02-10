@@ -29,11 +29,12 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
 class UserSecurity extends \Espo\Core\Services\Base
 {
@@ -218,8 +219,14 @@ class UserSecurity extends \Espo\Core\Services\Base
     {
         $secret = $this->getInjection('totp')->createSecret();
 
+        $user = $this->getEntityManager()->getEntity('User', $userData->get('userId'));
+        if (!$user) throw new Error();
+
+        $label = rawurlencode($this->getConfig()->get('applicationName')) . ':' . rawurlencode($user->get('userName'));
+
         return (object) [
             'auth2FATotpSecret' => $secret,
+            'label' => $label,
         ];
     }
 
