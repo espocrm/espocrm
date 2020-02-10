@@ -4,26 +4,48 @@
         "detail": "views/template/record/detail",
         "edit": "views/template/record/edit"
     },
-    "formDependency": {
-        "printFooter": {
-            "map": {
-                "true" : [
-                    {
-                        "action": "show",
-                        "fields": ["footer", "footerPosition"]
-                    }
-                ]
-            },
-            "default": [
-                {
-                    "action": "hide",
-                    "fields": ["footer", "footerPosition"]
-                }
-            ]
-        }
-    },
     "dynamicLogic": {
         "fields": {
+            "footer": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "printFooter"
+                        }
+                    ]
+                }
+            },
+            "footerPosition": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "printFooter"
+                        }
+                    ]
+                }
+            },
+            "header": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "printHeader"
+                        }
+                    ]
+                }
+            },
+            "headerPosition": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "printHeader"
+                        }
+                    ]
+                }
+            },
             "body": {
                 "visible": {
                     "conditionGroup": [
