@@ -97,17 +97,20 @@ class Meeting extends \Espo\Core\Repositories\Event
 
         parent::beforeSave($entity, $options);
 
-        if ($entity->hasLinkMultipleField('assignedUsers')) {
-            $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
-            foreach ($assignedUserIdList as $assignedUserId) {
-                $entity->addLinkMultipleId('users', $assignedUserId);
-                $entity->setLinkMultipleName('users', $assignedUserId, $entity->getLinkMultipleName('assignedUsers', $assignedUserId));
-            }
-        } else {
-            $assignedUserId = $entity->get('assignedUserId');
-            if ($assignedUserId) {
-                $entity->addLinkMultipleId('users', $assignedUserId);
-                $entity->setLinkMultipleName('users', $assignedUserId, $entity->get('assignedUserName'));
+
+        if (!$this->getConfig()->get('eventAssignedUserIsAttendeeDisabled')) {
+            if ($entity->hasLinkMultipleField('assignedUsers')) {
+                $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
+                foreach ($assignedUserIdList as $assignedUserId) {
+                    $entity->addLinkMultipleId('users', $assignedUserId);
+                    $entity->setLinkMultipleName('users', $assignedUserId, $entity->getLinkMultipleName('assignedUsers', $assignedUserId));
+                }
+            } else {
+                $assignedUserId = $entity->get('assignedUserId');
+                if ($assignedUserId) {
+                    $entity->addLinkMultipleId('users', $assignedUserId);
+                    $entity->setLinkMultipleName('users', $assignedUserId, $entity->get('assignedUserName'));
+                }
             }
         }
 
