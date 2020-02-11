@@ -4,7 +4,7 @@
             "MassEmail": "Campaign",
             "CampaignLogRecord": "Campaign",
             "CampaignTrackingUrl": "Campaign",
-            "EmailQueueItem": false
+            "EmailQueueItem": "Campaign"
         }
     }
 }
