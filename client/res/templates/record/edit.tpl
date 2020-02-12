@@ -1,4 +1,4 @@
-<div class="edit" id="{{id}}">
+<div class="edit" id="{{id}}" data-scope="{{scope}}">
     {{#unless buttonsDisabled}}
     <div class="detail-button-container button-container record-buttons clearfix">
         <div class="btn-group actions-btn-group" role="group">
