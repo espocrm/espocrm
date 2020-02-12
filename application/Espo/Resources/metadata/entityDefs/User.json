@@ -135,7 +135,11 @@
                     "distinct": true
                 }
             },
+            "directUpdateDisabled": true,
             "trim": true,
+            "readOnly": true,
+            "importDisabled": true,
+            "exportDisabled": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "textFilterDisabled": true
@@ -184,6 +188,7 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
+            "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
@@ -194,6 +199,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
+            "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,

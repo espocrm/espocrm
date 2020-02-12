@@ -37,6 +37,7 @@
         "title": {
             "type": "varchar",
             "maxLength": 100,
+            "directUpdateDisabled": true,
             "notStorable": true,
             "select": {
                 "sql": "accountContact.role",
@@ -153,6 +154,7 @@
         "accountRole": {
             "type": "varchar",
             "notStorable": true,
+            "directUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
@@ -273,6 +275,7 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
+            "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
@@ -283,6 +286,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
+            "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
