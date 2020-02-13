@@ -1,0 +1,5 @@
+{
+    "functionClassNameMap": {
+        "ext\\account\\findByEmailAddress": "\\Espo\\Modules\\Crm\\Core\\Formula\\Functions\\ExtGroup\\AccountGroup\\FindByEmailAddressType"
+    }
+}
