@@ -121,4 +121,11 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $actual = $this->evaluator->process($expression);
         $this->assertEquals('0110', $actual);
     }
+
+    function testArrayAt()
+    {
+        $expression = "array\\at(list(1, 2, 4, 8, 16), 2)";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(4, $actual);
+    }
 }
