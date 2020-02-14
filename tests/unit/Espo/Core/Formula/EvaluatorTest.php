@@ -122,6 +122,36 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('0110', $actual);
     }
 
+    function testStringMatchAll()
+    {
+        $expression = "string\\matchAll('{token1} foo {token2} bar', '/{[^}]*}/')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(['{token1}', '{token2}'], $actual);
+
+        $expression = "string\\matchAll('foo bar', '/{[^}]*}/')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(null, $actual);
+
+        $expression = "string\\matchAll('{token1} foo {token2} bar', '/{[^}]*}/', 5)";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(['{token2}'], $actual);
+    }
+
+    function testStringMatch()
+    {
+        $expression = "string\\match('{token1} foo {token2} bar', '/{[^}]*}/')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('{token1}', $actual);
+
+        $expression = "string\\match('foo bar', '/{[^}]*}/')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(null, $actual);
+
+        $expression = "string\\match('{token1} foo {token2} bar', '/{[^}]*}/', 5)";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('{token2}', $actual);
+    }
+
     function testArrayAt()
     {
         $expression = "array\\at(list(1, 2, 4, 8, 16), 2)";
