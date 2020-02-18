@@ -59,8 +59,6 @@ class Stream extends \Espo\Core\Services\Base
         ]);
     }
 
-    protected $emailsWithContentEntityList = ['Case'];
-
     protected $auditedFieldsCache = [];
 
     private $notificationService = null;
