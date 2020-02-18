@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-template/fields/insert-field', 'views/fields/base', function (Dep) {
+define('views/email-template/fields/insert-field', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -126,6 +126,7 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
                 var fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])) return;
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'directAccessDisabled'])) return;
+                if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'templatePlaceholderDisabled'])) return;
 
                 if (fieldType === 'map') return;
                 if (fieldType === 'linkMultiple') return;

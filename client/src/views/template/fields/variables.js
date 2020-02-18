@@ -91,6 +91,8 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                     this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'disabled'])
                     ||
                     this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'directAccessDisabled'])
+                    ||
+                    this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'templatePlaceholderDisabled'])
                 ) ignoreFieldList.push(field);
             }, this);
 
@@ -185,6 +187,8 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                         this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])
                         ||
                         this.getMetadata().get(['entityDefs', scope, 'fields', field, 'directAccessDisabled'])
+                        ||
+                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'templatePlaceholderDisabled'])
                     ) ignoreFieldList.push(field);
                 }, this);
 
