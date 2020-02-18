@@ -70,7 +70,7 @@
         "smtpPort": {
             "type": "int",
             "min": 0,
-            "max": 9999,
+            "max": 65535,
             "default": 25
         },
         "smtpAuth": {

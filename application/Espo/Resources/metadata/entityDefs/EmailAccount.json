@@ -22,8 +22,10 @@
             "trim": true
         },
         "port": {
-            "type": "varchar",
-            "default": "143"
+            "type": "int",
+            "min": 0,
+            "max": 65535,
+            "default": 143
         },
         "ssl": {
             "type": "bool"
@@ -91,7 +93,7 @@
         "smtpPort": {
             "type": "int",
             "min": 0,
-            "max": 9999,
+            "max": 65535,
             "default": 587
         },
         "smtpAuth": {
