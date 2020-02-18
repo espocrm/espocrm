@@ -145,6 +145,7 @@ return [
     'tabColorsDisabled' => false,
     'massPrintPdfMaxCount' => 50,
     'emailKeepParentTeamsEntityList' => ['Case'],
+    'streamEmailWithContentEntityTypeList' => ['Case'],
     'recordListMaxSizeLimit' => 200,
     'noteDeleteThresholdPeriod' => '1 month',
     'noteEditThresholdPeriod' => '7 days',
