@@ -33,8 +33,6 @@ define('views/email/modals/detail', ['views/modals/detail', 'views/email/detail'
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            console.log(this.model);
-
             this.buttonList.unshift({
                 'name': 'reply',
                 'label': 'Reply',
