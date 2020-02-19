@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail'], function (Dep, Detail) {
+define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -44,6 +44,11 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
             }
 
             this.hideField('sendAccessInfo');
+
+            this.passwordInfoMessage = this.getPasswordSendingMessage();
+            if (!this.passwordInfoMessage) {
+                this.hideField('passwordInfo');
+            }
 
             var passwordChanged = false;
 
@@ -168,8 +173,9 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                                 },
                                 {
                                     name: 'passwordInfo',
+                                    type: 'text',
                                     customLabel: '',
-                                    customCode: this.getPasswordSendingMessage()
+                                    customCode: this.passwordInfoMessage
                                 }
 
                             ]
