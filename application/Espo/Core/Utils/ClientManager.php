@@ -153,6 +153,8 @@ class ClientManager
             'scriptsHtml' => $scriptsHtml,
             'additionalStyleSheetsHtml' => $additionalStyleSheetsHtml,
             'linksHtml' => $linksHtml,
+            'favicon196Path' => $this->getMetadata()->get(['app', 'client', 'favicon196']) ?? 'client/img/favicon196x196.png',
+            'faviconPath' => $this->getMetadata()->get(['app', 'client', 'favicon']) ?? 'client/img/favicon.ico',
         ];
 
         $html = file_get_contents($htmlFilePath);
