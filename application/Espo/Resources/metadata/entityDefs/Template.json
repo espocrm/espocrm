@@ -43,9 +43,16 @@
         "printFooter": {
             "type": "bool"
         },
+        "printHeader": {
+            "type": "bool"
+        },
         "footerPosition": {
             "type": "float",
             "default": 15
+        },
+        "headerPosition": {
+            "type": "float",
+            "default": 10
         },
         "teams": {
             "type": "linkMultiple"

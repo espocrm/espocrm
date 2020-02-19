@@ -459,4 +459,54 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals('test', $value);
     }
+
+    public function testExtAccountFindByEmailAddress()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a1 = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+        $a2 = $em->createEntity('Account', [
+            'name' => '2',
+            'emailAddress' => 'a@gmail.com',
+        ]);
+        $a3 = $em->createEntity('Account', [
+            'name' => '3',
+            'emailAddress' => 'a@hello-test.com',
+        ]);
+        $a4 = $em->createEntity('Account', [
+            'name' => '4',
+            'emailAddress' => 'a@brom.com',
+        ]);
+
+        $c2 = $em->createEntity('Contact', [
+            'lastName' => '2',
+            'emailAddress' => 'c@gmail.com',
+            'accountId' => $a2->id,
+        ]);
+        $c4 = $em->createEntity('Contact', [
+            'lastName' => '4',
+            'emailAddress' => 'c@brom.com',
+        ]);
+
+        $script = "ext\\account\\findByEmailAddress('b@hello-test.com')";
+        $this->assertEquals($a3->id, $fm->run($script));
+
+        $script = "ext\\account\\findByEmailAddress('b@gmail.com')";
+        $this->assertEquals(null, $fm->run($script));
+
+        $script = "ext\\account\\findByEmailAddress('c@gmail.com')";
+        $this->assertEquals($a2->id, $fm->run($script));
+
+        $script = "ext\\account\\findByEmailAddress('b@brom.com')";
+        $this->assertEquals($a4->id, $fm->run($script));
+
+        $script = "ext\\account\\findByEmailAddress('c@brom.com')";
+        $this->assertEquals($a4->id, $fm->run($script));
+
+        $script = "ext\\account\\findByEmailAddress('')";
+        $this->assertEquals(null, $fm->run($script));
+    }
 }

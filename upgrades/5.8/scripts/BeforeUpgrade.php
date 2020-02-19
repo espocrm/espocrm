@@ -62,5 +62,22 @@ class BeforeUpgrade
             $sth = $pdo->prepare($query);
             $sth->execute();
         } catch (\Exception $e) {}
+
+
+        $query = "
+            UPDATE email_account SET port = NULL WHERE port = ''
+        ";
+        try {
+            $sth = $pdo->prepare($query);
+            $sth->execute();
+        } catch (\Exception $e) {}
+
+        $query = "
+            UPDATE inbound_email SET port = NULL WHERE port = ''
+        ";
+        try {
+            $sth = $pdo->prepare($query);
+            $sth->execute();
+        } catch (\Exception $e) {}
     }
 }

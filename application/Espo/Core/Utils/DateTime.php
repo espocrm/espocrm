@@ -176,7 +176,7 @@ class DateTime
         $dateTime = new \DateTime();
         $dateTime->setTimezone($tz);
 
-        $format = $format ?? $this->getDateTimeFormat();
+        $format = $format ?? $this->getDateFormat();
 
         $carbon = Carbon::instance($dateTime);
         $carbon->locale($this->language);

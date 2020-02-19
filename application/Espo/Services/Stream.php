@@ -59,8 +59,6 @@ class Stream extends \Espo\Core\Services\Base
         ]);
     }
 
-    protected $emailsWithContentEntityList = ['Case'];
-
     protected $auditedFieldsCache = [];
 
     private $notificationService = null;
@@ -1169,7 +1167,7 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('superParentType', 'Account');
         }
 
-        $withContent = in_array($entityType, $this->emailsWithContentEntityList);
+        $withContent = in_array($entityType, $this->getConfig()->get('streamEmailWithContentEntityTypeList', []));
 
         if ($withContent) {
             $note->set('post', $email->getBodyPlain());
@@ -1220,7 +1218,7 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('superParentType', 'Account');
         }
 
-        $withContent = in_array($entityType, $this->emailsWithContentEntityList);
+        $withContent = in_array($entityType, $this->getConfig()->get('streamEmailWithContentEntityTypeList', []));
 
         if ($withContent) {
             $note->set('post', $email->getBodyPlain());

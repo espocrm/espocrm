@@ -47,13 +47,9 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected $cleanupAttachmentsFromPeriod = '3 months';
 
-    protected $cleanupRemindersPeriod = '15 days';
-
     protected $cleanupBackupPeriod = '2 month';
 
     protected $cleanupDeletedRecordsPeriod = '3 months';
-
-    protected $cleanupWebhookQueuePeriod = '10 days';
 
     public function run()
     {
@@ -68,7 +64,25 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $this->cleanupUpgradeBackups();
         $this->cleanupUniqueIds();
         $this->cleanupDeletedRecords();
-        $this->cleanupWebhookQueue();
+
+        $items = $this->getMetadata()->get(['app', 'cleanup']) ?? [];
+
+        usort($items, function ($a, $b) {
+            $o1 = $a['order'] ?? 0;
+            $o2 = $b['order'] ?? 0;
+            return $o1 > $o2;
+        });
+
+        $injectableFactory = $this->getContainer()->get('injectableFactory');
+
+        foreach ($items as $name => $item) {
+            try {
+                $className = $item['className'];
+                $injectableFactory->createByClassName($className)->process();
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("Cleanup: {$name}: " . $e->getMessage());
+            }
+        }
     }
 
     protected function cleanupJobs()
@@ -133,19 +147,6 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
         $query = "DELETE FROM `action_history_record` WHERE DATE(created_at) < " . $pdo->quote($datetime->format('Y-m-d')) . "";
 
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-    }
-
-    protected function cleanupReminders()
-    {
-        $period = '-' . $this->getConfig()->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
-        $datetime = new \DateTime();
-        $datetime->modify($period);
-
-        $query = "DELETE FROM `reminder` WHERE DATE(remind_at) < " . $pdo->quote($datetime->format('Y-m-d')) . "";
-
-        $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
         $sth->execute();
     }
@@ -479,29 +480,5 @@ class Cleanup extends \Espo\Core\Jobs\Base
                 $this->cleanupDeletedEntity($e);
             }
         }
-    }
-
-    protected function cleanupWebhookQueue()
-    {
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $period = '-' . $this->getConfig()->get('cleanupWebhookQueuePeriod', $this->cleanupWebhookQueuePeriod);
-        $datetime = new \DateTime();
-        $datetime->modify($period);
-        $from = $datetime->format('Y-m-d H:i:s');
-
-        $query = "
-            DELETE FROM `webhook_queue_item`
-            WHERE
-                DATE(created_at) < ".$pdo->quote($from)." AND
-                (status <> 'Pending' OR deleted = 1)
-        ";
-        $pdo->query($query);
-
-        $query = "
-            DELETE FROM `webhook_event_queue_item`
-            WHERE DATE(created_at) < ".$pdo->quote($from)." AND (is_processed = 1 OR deleted = 1)
-        ";
-        $pdo->query($query);
     }
 }

@@ -32,6 +32,7 @@ class AfterUpgrade
 
         $config = $container->get('config');
         $config->set('personNameFormat', 'firstLast');
+        $config->set('streamEmailWithContentEntityTypeList', ['Case']);
         $config->save();
     }
 

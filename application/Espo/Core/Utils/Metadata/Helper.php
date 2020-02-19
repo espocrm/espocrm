@@ -48,6 +48,7 @@ class Helper
         'layoutMassUpdateDisabled',
         'layoutFiltersDisabled',
         'directAccessDisabled',
+        'directUpdateDisabled',
         'customizationDisabled',
         'importDisabled',
         'exportDisabled',

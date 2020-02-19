@@ -56,6 +56,7 @@
         },
         "opportunityAmount": {
             "type": "currency",
+            "min": 0,
             "audited": true
         },
         "opportunityAmountConverted": {
@@ -146,6 +147,7 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
+            "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
@@ -156,6 +158,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
+            "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,

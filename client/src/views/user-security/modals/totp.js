@@ -61,6 +61,7 @@ define('views/user-security/modals/totp', ['views/modal', 'model', 'lib!client/l
                 }).then(function (data) {
                     this.secret = data.auth2FATotpSecret;
                     model.set('secret', data.auth2FATotpSecret);
+                    this.label = data.label;
                 }.bind(this))
             );
 
@@ -108,7 +109,7 @@ define('views/user-security/modals/totp', ['views/modal', 'model', 'lib!client/l
 
         afterRender: function () {
             var qrcode = new QRCode(this.$el.find('.qrcode').get(0), {
-                text: 'otpauth://totp/EspoCRM?secret=' + this.secret,
+                text: 'otpauth://totp/'+this.label+'?secret=' + this.secret,
                 width: 256,
                 height: 256,
                 colorDark : '#000000',

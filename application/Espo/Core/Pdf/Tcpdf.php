@@ -68,7 +68,11 @@ class Tcpdf extends \TCPDF
 {
     protected $footerHtml = '';
 
+    protected $headerHtml = '';
+
     protected $footerPosition = 15;
+
+    protected $headerPosition = 10;
 
     protected $useGroupNumbers = false;
 
@@ -87,6 +91,11 @@ class Tcpdf extends \TCPDF
         $this->useGroupNumbers = $value;
     }
 
+    public function setHeaderHtml($html)
+    {
+        $this->headerHtml = $html;
+    }
+
     public function setFooterHtml($html)
     {
         $this->footerHtml = $html;
@@ -95,6 +104,34 @@ class Tcpdf extends \TCPDF
     public function setFooterPosition($position)
     {
         $this->footerPosition = $position;
+    }
+
+    public function setHeaderPosition($position)
+    {
+        $this->headerPosition = $position;
+    }
+
+    public function Header()
+    {
+        $this->SetY($this->headerPosition);
+
+        $html = $this->headerHtml;
+
+        if ($this->useGroupNumbers) {
+            $html = str_replace('{pageNumber}', '{:png:}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
+        } else {
+            $html = str_replace('{pageNumber}', '{:pnp:}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
+        }
+
+        if ($this->isUnicodeFont()) {
+            $html = str_replace('{totalPageNumber}', '{{:ptp:}}', $html);
+        } else {
+            $html = str_replace('{totalPageNumber}', '{:ptp:}', $html);
+        }
+
+        $this->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, '', 0, false, 'T');
     }
 
     public function Footer()

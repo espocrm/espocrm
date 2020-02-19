@@ -162,6 +162,7 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
                     autoclose: true,
                     todayHighlight: true,
                     keyboardNavigation: false,
+                    todayBtn: this.getConfig().get('datepickerTodayButton') || false,
                 };
 
                 var language = this.getConfig().get('language');

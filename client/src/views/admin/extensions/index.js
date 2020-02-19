@@ -173,38 +173,39 @@ Espo.define('views/admin/extensions/index', 'view', function (Dep) {
             this.showError(false);
             this.showErrorNotification(false);
 
-            $.ajax({
-                url: 'Extension/action/install',
-                type: 'POST',
-                data: JSON.stringify({
+            Espo.Ajax.postRequest(
+                'Extension/action/install',
+                {
                     id: id
-                }),
-                timeout: 0,
-                async: false,
-                error: function (xhr) {
+                },
+                {
+                    timeout: 0,
+                }
+            ).then(
+                function () {
+                    var cache = this.getCache();
+                    if (cache) {
+                        cache.clear();
+                    }
+                    this.createView('popup', 'views/admin/extensions/done', {
+                        version: version,
+                        name: name,
+                    }, function (view) {
+                        this.collection.fetch();
+                        this.$el.find('.list-container').removeClass('hidden');
+                        this.$el.find('.panel.upload').removeClass('hidden');
+                        this.notify(false);
+                        view.render();
+                    });
+                }.bind(this)
+            ).fail(
+                function (xhr) {
                     this.$el.find('.panel.upload').removeClass('hidden');
                     var msg = xhr.getResponseHeader('X-Status-Reason');
                     this.showErrorNotification(this.translate('Error') + ': ' + msg);
                 }.bind(this)
-            }).done(function () {
-                var cache = this.getCache();
-                if (cache) {
-                    cache.clear();
-                }
-                this.createView('popup', 'views/admin/extensions/done', {
-                    version: version,
-                    name: name
-                }, function (view) {
-                    this.collection.fetch();
-                    this.$el.find('.list-container').removeClass('hidden');
-                    this.$el.find('.panel.upload').removeClass('hidden');
-                    this.notify(false);
-                    view.render();
-                }.bind(this));
-            }.bind(this));
+            );
         },
 
     });
-
 });
-

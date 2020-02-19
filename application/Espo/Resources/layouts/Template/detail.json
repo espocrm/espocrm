@@ -18,9 +18,9 @@
             [{"name":"fontFace"}, false],
             [{"name":"topMargin"}, {"name":"bottomMargin"}],
             [{"name":"leftMargin"}, {"name":"rightMargin"}],
-            [{"name":"printFooter"}, false],
-            [{"name":"footer","fullWidth":true}],
-            [{"name":"footerPosition"}, false]
+            [{"name":"printFooter"}, {"name":"printHeader"}],
+            [{"name":"footerPosition"}, {"name":"headerPosition"}],
+            [{"name":"footer","fullWidth":true}]
         ]
     }
 ]

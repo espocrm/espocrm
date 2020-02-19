@@ -89,7 +89,7 @@
 </div>
 {{/if}}
 
-<div class="list{{#if tableMinWidth}} scrollable{{/if}}">
+<div class="list{{#if tableMinWidth}} scrollable{{/if}}" data-scope="{{scope}}">
     <table class="table"{{#if tableMinWidth}} style="min-width: {{tableMinWidth}}px;"{{/if}}>
         {{#if header}}
         <thead>

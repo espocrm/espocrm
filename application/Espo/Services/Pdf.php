@@ -87,8 +87,6 @@ class Pdf extends \Espo\Core\Services\Base
 
         $pdf->setFont($fontFace, '', $this->fontSize, '', true);
 
-        $pdf->setPrintHeader(false);
-
         $pdf->setAutoPageBreak(true, $template->get('bottomMargin'));
         $pdf->setMargins($template->get('leftMargin'), $template->get('topMargin'), $template->get('rightMargin'));
 
@@ -117,10 +115,20 @@ class Pdf extends \Espo\Core\Services\Base
             $pageOrientationCode = 'L';
         }
 
-        $pdf->addPage($pageOrientationCode, $pageFormat);
-
         $htmlHeader = $htmlizer->render($entity, $template->get('header'), null, $additionalData);
-        $pdf->writeHTML($htmlHeader, true, false, true, false, '');
+
+        if ($template->get('printHeader')) {
+            $pdf->setHeaderFont([$fontFace, '', $this->fontSize]);
+            $pdf->setHeaderPosition($template->get('headerPosition'));
+            $pdf->setHeaderHtml($htmlHeader);
+
+            $pdf->addPage($pageOrientationCode, $pageFormat);
+        } else {
+            $pdf->addPage($pageOrientationCode, $pageFormat);
+            $pdf->setPrintHeader(false);
+            $pdf->writeHTML($htmlHeader, true, false, true, false, '');
+        }
+
 
         $htmlBody = $htmlizer->render($entity, $template->get('body'), null, $additionalData);
         $pdf->writeHTML($htmlBody, true, false, true, false, '');
