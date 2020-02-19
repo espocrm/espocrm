@@ -171,7 +171,9 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                 $("#layout-header").html("");
                 return;
             }
-            $("#layout-header").show().html(this.getLanguage().translate(this.scope, 'scopeNamesPlural') + " » " + this.getLanguage().translate(this.type, 'layouts', 'Admin'));
+            $("#layout-header").show().html(this.getLanguage().translate(this.scope, 'scopeNamesPlural') +
+                " <span class=\"breadcrumb-separator\"><span class=\"chevron-right\"></span></span> " +
+                this.getLanguage().translate(this.type, 'layouts', 'Admin'));
         },
 
         updatePageTitle: function () {
