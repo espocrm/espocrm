@@ -103,8 +103,12 @@ define('model', [], function () {
                     var defaultValue = this.getFieldParam(field, 'default');
 
                     if (defaultValue != null) {
-                        var defaultValue = this.parseDefaultValue(defaultValue);
-                        defaultHash[field] = defaultValue;
+                        try {
+                            var defaultValue = this.parseDefaultValue(defaultValue);
+                            defaultHash[field] = defaultValue;
+                        } catch (e) {
+                            console.error(e);
+                        }
                     }
 
                     var defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
