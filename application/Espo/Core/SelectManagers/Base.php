@@ -1863,6 +1863,7 @@ class Base
         $method = 'filter' . ucfirst($filter);
         if (method_exists($this, $method)) {
             $this->$method($result);
+            return;
         } else {
             $className = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'filters', $filter, 'className']);
             if ($className) {
@@ -1877,7 +1878,10 @@ class Base
                 }
                 $impl->applyFilter($this->entityType, $filter, $result, $this);
             }
+            return;
         }
+
+        $result['whereClause'][] = ['id' => null];
     }
 
     public function applyFilter(string $filter, array &$result)
