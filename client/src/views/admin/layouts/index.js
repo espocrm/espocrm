@@ -149,7 +149,7 @@ define('views/admin/layouts/index', 'view', function (Dep) {
 
             var typeReal = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
-            this.createView('content', 'Admin.Layouts.' + Espo.Utils.upperCaseFirst(typeReal), {
+            this.createView('content', 'views/admin/layouts/' + Espo.Utils.camelCaseToHyphen(typeReal), {
                 el: '#layout-content',
                 scope: scope,
                 type: type,
@@ -181,5 +181,3 @@ define('views/admin/layouts/index', 'view', function (Dep) {
         },
     });
 });
-
-
