@@ -198,6 +198,7 @@
         "viewMap": "View Map Button",
         "codeType": "Code Type",
         "lastChar": "Last Character",
+        "onlyDefaultCurrency": "Only default currency",
         "displayRawText": "Display raw text (no markdown)"
     },
     "messages": {

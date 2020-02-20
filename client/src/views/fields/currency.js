@@ -66,6 +66,11 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
             this.currencyFieldName = this.name + 'Currency';
             this.defaultCurrency = this.getConfig().get('defaultCurrency');
             this.currencyList = this.getConfig().get('currencyList') || [this.defaultCurrency];
+
+            if (this.params.onlyDefaultCurrency) {
+                this.currencyList = [this.defaultCurrency];
+            }
+
             this.isSingleCurrency = this.currencyList.length <= 1;
 
             var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.defaultCurrency;
