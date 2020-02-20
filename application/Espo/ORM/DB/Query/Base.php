@@ -308,6 +308,7 @@ abstract class Base
         if (empty($params['customJoin'])) {
             $params['customJoin'] = '';
         }
+        $params['additionalSelect'] = $params['additionalSelect'] ?? [];
 
         $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
 
@@ -318,8 +319,28 @@ abstract class Base
         }
 
         if (empty($params['aggregation'])) {
-            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength'], $params);
+            $selectPart = $this->getSelect(
+                $entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength'], $params
+            );
+
             $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order'], $params);
+
+            if (!empty($params['extraAdditionalSelect'])) {
+                $extraSelect = [];
+                foreach ($params['extraAdditionalSelect'] as $item) {
+                    if (!in_array($item, $params['select']) && !in_array($item, $params['additionalSelect'])) {
+                        $extraSelect[] = $item;
+                    }
+                }
+                if (count($extraSelect)) {
+                    $extraSelectPart = $this->getSelect(
+                        $entity, $extraSelect, false
+                    );
+                    if ($extraSelectPart) {
+                        $selectPart .= ', ' . $extraSelectPart;
+                    }
+                }
+            }
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
@@ -953,6 +974,16 @@ abstract class Base
                         }
                     }
                     $params['joins'][] = $j;
+                }
+            }
+
+            if (!empty($fieldDefs[$type]['additionalSelect'])) {
+                $params['extraAdditionalSelect'] = $params['extraAdditionalSelect'] ?? [];
+                foreach ($fieldDefs[$type]['additionalSelect'] as $value) {
+                    $value = str_replace('{alias}', $alias, $value);
+                    if (!in_array($value, $params['extraAdditionalSelect'])) {
+                        $params['extraAdditionalSelect'][] = $value;
+                    }
                 }
             }
         }
