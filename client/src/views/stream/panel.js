@@ -63,12 +63,18 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
                     this.post();
                 } else if (e.keyCode == 9) {
-                    $text = $(e.currentTarget)
+                    var $text = $(e.currentTarget)
                     if ($text.val() == '') {
                         this.disablePostingMode();
                     }
                 }
-            }
+            },
+            'keyup textarea[data-name="post"]': function (e) {
+                this.controlPreviewButton();
+            },
+            'click .action[data-action="preview"]': function () {
+                this.preview();
+            },
         }, Dep.prototype.events),
 
         data: function () {
@@ -77,6 +83,15 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             data.placeholderText = this.placeholderText;
             data.allowInternalNotes = this.allowInternalNotes;
             return data;
+        },
+
+        controlPreviewButton: function () {
+            this.$previewButton = this.$previewButton || this.$el.find('.stream-post-preview');
+            if (this.$textarea.val() == '') {
+                this.$previewButton.addClass('hidden');
+            } else {
+                this.$previewButton.removeClass('hidden');
+            }
         },
 
         enablePostingMode: function (byFocus) {
@@ -106,6 +121,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             }
 
             this.postingMode = true;
+
+            this.controlPreviewButton();
         },
 
         disablePostingMode: function () {
@@ -596,6 +613,17 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             if (this.hasView('list')) {
                 this.getView('list').showNewRecords();
             }
+        },
+
+        preview: function () {
+            this.createView('dialog', 'views/modal', {
+                templateContent: '<div class="complex-text">{{complexText viewObject.options.text}}</div>',
+                text: this.$textarea.val(),
+                headerText: this.translate('Preview'),
+                backdrop: true,
+            }, function (view) {
+                view.render();
+            });
         },
 
     });

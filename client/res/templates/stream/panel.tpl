@@ -14,7 +14,10 @@
             {{{attachments}}}
         </div>
         <a href="javascript:" class="text-muted pull-right stream-post-info">
-        <span class="fas fa-info-circle"></span>
+            <span class="fas fa-info-circle"></span>
+        </a>
+        <a href="javascript:" class="text-muted pull-right stream-post-preview hidden action" title="{{translate 'Preview'}}" data-action="preview">
+            <span class="fas fa-eye"></span>
         </a>
     </div>
 </div>

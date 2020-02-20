@@ -2554,7 +2554,7 @@ table.table td.cell .complex-text {
         margin-bottom: (@line-height-computed / 2);
     }
     h1 {
-        font-size: floor(@font-size-base * 1.1);
+        font-size: floor(@font-size-base * 1.2);
     }
     h2, h3, h4, h5, h6 {
         font-size: floor(@font-size-base);
@@ -2852,25 +2852,31 @@ h6 {
     font-size: 14px;
 }
 
-.post-container .internal-mode-switcher {
-    color: @gray-light;
-    margin-left: 10px;
-    display: inline-block;
-    position: relative;
-    top: 2px;
-}
+.post-container {
+    .internal-mode-switcher {
+        color: @gray-light;
+        margin-left: 10px;
+        display: inline-block;
+        position: relative;
+        top: 2px;
+    }
 
-.post-container .internal-mode-switcher.enabled {
-    color: @link-color;
+    .internal-mode-switcher.enabled {
+        color: @link-color;
+    }
+    .attachments {
+        width: 270px;
+    }
+
+    .stream-post-preview {
+        margin-right: 10px;
+    }
 }
 
 .post-control .attachments {
     width: 270px;
 }
 
-.post-container .attachments {
-    width: 270px;
-}
 
 .inline-cancel-link {
     margin-left: 8px;
