@@ -32,6 +32,11 @@ namespace Espo\Core\Console;
 class CommandManager
 {
     private $container;
+    
+    protected function getContainer()
+    {
+        return $this->container;
+    }
 
     public function __construct(\Espo\Core\Container $container)
     {
@@ -85,12 +90,12 @@ class CommandManager
     protected function getImplementation(string $command) {
         $command = ucfirst(\Espo\Core\Utils\Util::hyphenToCamelCase($command));
         $className = '\\Espo\\Core\\Console\\Commands\\' . $command;
-        $className = $this->container->get('metadata')->get(['app','consoleCommands',$command,'className'], $className);
+        $className = $this->getContainer()->get('metadata')->get(['app','consoleCommands',$command,'className'], $className);
         if (!class_exists($className)) {
             $msg = "Command '{$command}' does not exist.";
             echo $msg . "\n";
             throw new \Espo\Core\Exceptions\Error($msg);
         }
-        return new $className($this->container);
+        return new $className($this->getContainer());
     }
 }
