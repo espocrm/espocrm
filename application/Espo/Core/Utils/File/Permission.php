@@ -52,6 +52,9 @@ class Permission
         'application/Espo/Modules' => [
             'recursive' => false,
         ],
+        'client/custom' => [
+            'recursive' => true,
+        ],
         'client/modules' => [
             'recursive' => false,
         ],
