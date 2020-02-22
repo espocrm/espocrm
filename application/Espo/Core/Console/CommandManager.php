@@ -40,8 +40,16 @@ class CommandManager
 
     public function run(string $command)
     {
-        $command = ucfirst(\Espo\Core\Utils\Util::hyphenToCamelCase($command));
-
+        [$options, $flagList, $argumentList] = self::parseCommandLine();
+        $impl = $this->getImplementation($command);
+        return $impl->run($options, $flagList, $argumentList);
+    }    
+    
+    /**
+     * Reads the command line as array of options, flags and arguments
+     * @return array [$options, $flagList, $argumentList]
+     */
+    public static function parseCommandLine(): array {
         $argumentList = [];
         $options = [];
         $flagList = [];
@@ -64,15 +72,25 @@ class CommandManager
                 $argumentList[] = $item;
             }
         }
+        
+        return [$options, $flagList, $argumentList];
+    }
 
+    /**
+     * Instantiates the correct command implementation
+     * @param string $command
+     * @return mixed
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    protected function getImplementation(string $command) {
+        $command = ucfirst(\Espo\Core\Utils\Util::hyphenToCamelCase($command));
         $className = '\\Espo\\Core\\Console\\Commands\\' . $command;
-        $className = $this->container->get('metadata')->get(['app', 'consoleCommands', $command, 'className'], $className);
+        $className = $this->container->get('metadata')->get(['app','consoleCommands',$command,'className'], $className);
         if (!class_exists($className)) {
             $msg = "Command '{$command}' does not exist.";
             echo $msg . "\n";
             throw new \Espo\Core\Exceptions\Error($msg);
         }
-        $impl = new $className($this->container);
-        return $impl->run($options, $flagList, $argumentList);
+        return new $className($this->container);
     }
 }
