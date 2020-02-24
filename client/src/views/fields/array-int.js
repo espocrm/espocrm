@@ -65,7 +65,6 @@ define('views/fields/array-int', 'views/fields/array', function (Dep) {
             var index = this.selected.indexOf(value);
             this.selected.splice(index, 1);
             this.trigger('change');
-            //Dep.prototype.removeValue.call(this, value);
         },
 
     });
