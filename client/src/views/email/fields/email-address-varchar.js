@@ -318,7 +318,7 @@ define(
             var entityType = this.typeHash[address] || null;
             var id = this.idHash[address] || null;
 
-            var addressHtml = '<span>' + address + '</span>';
+            var addressHtml = this.getHelper().escapeString(address);
 
             if (name) {
                 name = this.getHelper().escapeString(name);
@@ -329,14 +329,15 @@ define(
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
             } else {
                 if (name) {
-                    lineHtml = '<span>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</span>';
+                    lineHtml = '<span class="email-address-line">' + name + ' <span class="text-muted">&#187;</span> <span>' +
+                        addressHtml + '</span></span>';
                 } else {
-                    lineHtml = addressHtml;
+                    lineHtml = '<span class="email-address-line">' + addressHtml + '</span>';
                 }
             }
             if (!id) {
                 if (this.getAcl().check('Contact', 'edit')) {
-                    lineHtml += From.prototype.getCreateHtml.call(this, address);
+                    lineHtml = From.prototype.getCreateHtml.call(this, address) + lineHtml;
                 }
             }
             lineHtml = '<div>' + lineHtml + '</div>';
@@ -344,5 +345,4 @@ define(
         },
 
     });
-
 });
