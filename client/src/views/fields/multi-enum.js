@@ -159,6 +159,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                     highlight: false,
                     searchField: ['label'],
                     plugins: pluginList,
+                    copyClassesToDropdown: true,
                     score: function (search) {
                         var score = this.getScoreFunction(search);
                         search = search.toLowerCase();
