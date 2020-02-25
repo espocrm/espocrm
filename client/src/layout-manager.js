@@ -50,8 +50,12 @@ define('layout-manager', [], function () {
             return this.applicationId + '-' + scope + '-' + type;
         },
 
-        getUrl: function (scope, type) {
-            return scope + '/layout/' + type;
+        getUrl: function (scope, type, setId) {
+            var url = scope + '/layout/' + type;
+            if (setId) {
+                url += '/' + setId;
+            }
+            return url;
         },
 
         get: function (scope, type, callback, cache) {
@@ -81,11 +85,8 @@ define('layout-manager', [], function () {
                 }
             }
 
-            this.ajax({
-                url: this.getUrl(scope, type),
-                type: 'GET',
-                dataType: 'json',
-                success: function (layout) {
+            Espo.Ajax.getRequest(this.getUrl(scope, type)).then(
+                function (layout) {
                     if (typeof callback === 'function') {
                         callback(layout);
                     }
@@ -94,54 +95,61 @@ define('layout-manager', [], function () {
                         this.cache.set('app-layout', key, layout);
                     }
                 }.bind(this)
-            });
+            );
         },
 
-        set: function (scope, type, layout, callback) {
-            var key = this.getKey(scope, type);
+        getOriginal: function (scope, type, setId, callback) {
+            var url = 'Layout/action/getOriginal?scope='+scope+'&name='+type;
+            if (setId) url += '&setId='+setId;
 
-            this.ajax({
-                url: this.getUrl(scope, type),
-                type: 'PUT',
-                data: JSON.stringify(layout),
-                success: function () {
-                    if (this.cache && key) {
-                        this.cache.set('app-layout', key, layout);
+            Espo.Ajax.getRequest(url).then(
+                function (layout) {
+                    if (typeof callback === 'function') {
+                        callback(layout);
                     }
-                    this.data[key] = layout;
+                }.bind(this)
+            );
+        },
+
+        set: function (scope, type, layout, callback, setId) {
+            Espo.Ajax.putRequest(this.getUrl(scope, type, setId), layout).then(
+                function () {
+                    var key = this.getKey(scope, type);
+                    if (this.cache && key) {
+                        this.cache.clear('app-layout', key);
+                    }
+                    delete this.data[key];
                     this.trigger('sync');
+
                     if (typeof callback === 'function') {
                         callback();
                     }
                 }.bind(this)
-            });
+            );
         },
 
-        resetToDefault: function (scope, type, callback) {
-            var key = this.getKey(scope, type);
-
-            this.ajax({
-                url: 'Layout/action/resetToDefault',
-                type: 'POST',
-                data: JSON.stringify({
-                    scope: scope,
-                    name: type
-                }),
-                success: function (layout) {
+        resetToDefault: function (scope, type, callback, setId) {
+            Espo.Ajax.postRequest('Layout/action/resetToDefault', {
+                scope: scope,
+                name: type,
+                setId: setId,
+            }).then(
+                function (layout) {
+                    var key = this.getKey(scope, type);
                     if (this.cache) {
                         this.cache.clear('app-layout', key);
                     }
-                    this.data[key] = layout;
+                    delete this.data[key];
                     this.trigger('sync');
+
                     if (typeof callback === 'function') {
                         callback();
                     }
                 }.bind(this)
-            });
-        }
+            );
+        },
 
     }, Backbone.Events);
 
     return LayoutManager;
-
 });

@@ -1,0 +1,17 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [{"name": "name"}, false],
+            [
+                {"name": "layoutList"},
+                {
+                    "name": "edit",
+                    "customLabel": "",
+                    "view": "views/layout-set/fields/edit",
+                    "inlineEditDisabled": true
+                }
+            ]
+        ]
+    }
+]

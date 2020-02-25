@@ -71,6 +71,7 @@
         "Permissions": "Permissions",
         "Email Addresses": "Email Addresses",
         "Phone Numbers": "Phone Numbers",
+        "Layout Sets": "Layout Sets",
         "Success": "Success",
         "Fail": "Fail",
         "is recommended": "is recommended",
@@ -262,6 +263,7 @@
         "emailAddresses": "All emailes addresses stored in the system.",
         "phoneNumbers": "All phone numbers stored in the system.",
         "dashboardTemplates": "Deploy dashboards to users.",
+        "layoutSets": "Collections of layouts that can be assigned to teams & portals.",
         "pdfTemplates": "Templates for printing to PDF."
     },
     "options": {

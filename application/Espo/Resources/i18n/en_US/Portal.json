@@ -17,12 +17,14 @@
         "timeZone": "Time Zone",
         "weekStart": "First Day of Week",
         "defaultCurrency": "Default Currency",
+        "layoutSet": "Layout Set",
         "customUrl": "Custom URL",
         "customId": "Custom ID"
     },
     "links": {
         "users": "Users",
         "portalRoles": "Roles",
+        "layoutSet": "Layout Set",
         "notes": "Notes"
     },
     "tooltips": {

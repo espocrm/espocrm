@@ -18,6 +18,9 @@
             "notStorable": true,
             "disabled": true
         },
+        "layoutSet": {
+            "type": "link"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -46,6 +49,11 @@
         "inboundEmails": {
             "type": "hasMany",
             "entity": "InboundEmail",
+            "foreign": "teams"
+        },
+        "layoutSet": {
+            "type": "belongsTo",
+            "entity": "LayoutSet",
             "foreign": "teams"
         }
     },

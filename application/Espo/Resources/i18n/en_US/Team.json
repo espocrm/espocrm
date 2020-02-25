@@ -2,12 +2,14 @@
     "fields": {
         "name": "Name",
         "roles": "Roles",
+        "layoutSet": "Layout Set",
         "positionList": "Position List"
     },
     "links": {
         "users": "Users",
         "notes": "Notes",
         "roles": "Roles",
+        "layoutSet": "Layout Set",
         "inboundEmails": "Group Email Accounts"
     },
     "tooltips": {

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,35 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/kanban', 'views/admin/layouts/list', function (Dep) {
+namespace Espo\Repositories;
 
-    return Dep.extend({
+use Espo\ORM\Entity;
 
-        dataAttributeList: ['name', 'link', 'align', 'view', 'isLarge'],
+class LayoutSet extends \Espo\Core\ORM\Repositories\RDB
+{
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity);
 
-        dataAttributesDefs: {
-            link: {type: 'bool'},
-            isLarge: {type: 'bool'},
-            width: {type: 'float'},
-            align: {
-                type: 'enum',
-                options: ["left", "right"]
-            },
-            view: {
-                type: 'varchar',
-                readOnly: true
-            },
-            name: {
-                type: 'varchar',
-                readOnly: true
+        if (!$entity->isNew() && $entity->has('layoutList')) {
+            $listBefore = $entity->getFetched('layoutList') ?? [];
+            $listNow = $entity->get('layoutList') ?? [];
+
+            foreach ($listBefore as $name) {
+                if (!in_array($name, $listNow)) {
+                    $layout = $this->getEntityManager()->getRepository('LayoutRecord')->where([
+                        'layoutSetId' => $entity->id,
+                        'name' => $name,
+                    ])->findOne();
+                    if ($layout) {
+                        $this->getEntityManager()->removeEntity($layout);
+                    }
+                }
             }
-        },
+        }
+    }
 
-        editable: true,
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $layoutList = $this->getEntityManager()->getRepository('LayoutRecord')->where([
+            'layoutSetId' => $entity->id,
+        ])->find();
 
-        ignoreList: [],
-
-        ignoreTypeList: [],
-
-    });
-});
+        foreach ($layoutList as $layout) {
+            $this->getEntityManager()->removeEntity($layout);
+        }
+    }
+}

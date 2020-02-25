@@ -29,10 +29,10 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
 class Avatar extends Image
 {
@@ -40,7 +40,7 @@ class Avatar extends Image
 
     public static $notStrictAuth = true;
 
-    protected $systemColor = [212,114,155];
+    protected $systemColor = '#a4b5bd';
 
     protected $colorList = [
         [111,168,214],
@@ -63,8 +63,10 @@ class Avatar extends Image
         }
         $x = intval($sum % 128) + 1;
 
-        $index = intval($x * count($this->colorList) / 128);
-        return $this->colorList[$index];
+        $colorList = $this->getMetadata()->get(['app', 'avatars', 'colorList']) ?? $this->colorList;
+
+        $index = intval($x * count($colorList) / 128);
+        return $colorList[$index];
     }
 
     public function run()
@@ -111,7 +113,7 @@ class Avatar extends Image
                 $hash = $userId;
                 $color = $this->getColor($userId);
                 if ($hash === 'system') {
-                    $color = $this->systemColor;
+                    $color = $this->getMetadata()->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
                 }
 
                 $imgContent = $identicon->getImageData($hash, $width, $color);
@@ -120,6 +122,4 @@ class Avatar extends Image
             }
         }
     }
-
 }
-

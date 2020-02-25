@@ -94,6 +94,9 @@
         "customUrl": {
             "type": "url"
         },
+        "layoutSet": {
+            "type": "link"
+        },
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true
@@ -135,6 +138,11 @@
         "notes": {
             "type": "hasMany",
             "entity": "Note",
+            "foreign": "portals"
+        },
+        "layoutSet": {
+            "type": "belongsTo",
+            "entity": "LayoutSet",
             "foreign": "portals"
         }
     },

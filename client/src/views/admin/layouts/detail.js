@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) {
+define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) {
 
     return Dep.extend({
 
@@ -91,7 +91,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             promiseList.push(
                 new Promise(function (resolve) {
                     this.getModelFactory().create(this.scope, function (m) {
-                        this.getHelper().layoutManager.get(this.scope, this.type, function (layoutLoaded) {
+                        this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, function (layoutLoaded) {
                             layout = layoutLoaded;
                             model = m;
                             resolve();
@@ -103,10 +103,14 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             if (~['detail', 'detailSmall'].indexOf(this.type)) {
                 promiseList.push(
                     new Promise(function (resolve) {
-                        this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutLoaded) {
-                            this.sidePanelsLayout = layoutLoaded;
-                            resolve();
-                        }.bind(this));
+                        this.getHelper().layoutManager.getOriginal(
+                            this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type),
+                            this.setId,
+                            function (layoutLoaded) {
+                                this.sidePanelsLayout = layoutLoaded;
+                                resolve();
+                            }.bind(this)
+                        );
                     }.bind(this))
                 );
             }
@@ -116,24 +120,26 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
                     function (resolve) {
                         if (this.getMetadata().get(['clientDefs', scope, 'layoutDefaultSidePanelDisabled'])) resolve();
 
-                        this.getHelper().layoutManager.get(this.scope, 'defaultSidePanel', function (layoutLoaded) {
-                            this.defaultSidePanelLayout = layoutLoaded;
+                        this.getHelper().layoutManager.getOriginal(this.scope, 'defaultSidePanel', this.setId,
+                            function (layoutLoaded) {
+                                this.defaultSidePanelLayout = layoutLoaded;
 
-                            this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
+                                this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
 
-                            layoutLoaded.forEach(function (item) {
-                                var field = item.name;
-                                if (!field) return;
-                                if (field === ':assignedUser') {
-                                    field = 'assignedUser';
-                                }
-                                if (!~this.defaultPanelFieldList.indexOf(field)) {
-                                    this.defaultPanelFieldList.push(field);
-                                }
-                            }, this);
+                                layoutLoaded.forEach(function (item) {
+                                    var field = item.name;
+                                    if (!field) return;
+                                    if (field === ':assignedUser') {
+                                        field = 'assignedUser';
+                                    }
+                                    if (!~this.defaultPanelFieldList.indexOf(field)) {
+                                        this.defaultPanelFieldList.push(field);
+                                    }
+                                }, this);
 
-                            resolve();
-                        }.bind(this));
+                                resolve();
+                            }.bind(this)
+                        );
                     }.bind(this)
                 )
             );

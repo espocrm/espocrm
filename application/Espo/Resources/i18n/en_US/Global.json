@@ -51,6 +51,7 @@
         "ArrayValue": "Array Value",
         "DashboardTemplate": "Dashboard Template",
         "Currency": "Currency",
+        "LayoutSet": "Layout Set",
         "Webhook": "Webhook"
     },
     "scopeNamesPlural": {
@@ -94,6 +95,7 @@
         "ArrayValue": "Array Values",
         "DashboardTemplate": "Dashboard Templates",
         "Currency": "Currency",
+        "LayoutSet": "Layout Sets",
         "Webhook": "Webhooks"
     },
     "labels": {

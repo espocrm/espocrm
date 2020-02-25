@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function (Dep) {
+define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function (Dep) {
 
     return Dep.extend({
 
@@ -65,7 +65,7 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
         loadLayout: function (callback) {
             this.getModelFactory().create(this.scope, function (model) {
-                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
+                this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, function (layout) {
 
                     var allFields = [];
                     for (var field in model.defs.links) {
@@ -125,7 +125,7 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
                     }
 
                     callback();
-                }.bind(this), false);
+                }.bind(this));
             }.bind(this));
         },
 
@@ -138,4 +138,3 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
         }
     });
 });
-

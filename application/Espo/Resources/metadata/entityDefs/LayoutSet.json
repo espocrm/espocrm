@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100,
+            "trim": true
+        },
+        "layoutList": {
+            "type": "multiEnum",
+            "displayAsList": true,
+            "view": "views/layout-set/fields/layout-list"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "layoutRecords": {
+            "type": "hasMany",
+            "entity": "LayoutRecord",
+            "foreign": "layoutSet"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "layoutSet"
+        },
+        "portals": {
+            "type": "hasMany",
+            "entity": "Portal",
+            "foreign": "layoutSet"
+        }
+    },
+    "collection": {
+        "orderBy": "name",
+        "order": "asc"
+    }
+}

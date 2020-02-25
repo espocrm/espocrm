@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
 
 class Layout extends \Espo\Core\Services\Base
 {
@@ -37,7 +38,10 @@ class Layout extends \Espo\Core\Services\Base
     {
         $this->addDependency('acl');
         $this->addDependency('layout');
+        $this->addDependency('entityManager');
         $this->addDependency('metadata');
+        $this->addDependency('dataManager');
+        $this->addDependency('user');
     }
 
     protected function getAcl()
@@ -52,10 +56,53 @@ class Layout extends \Espo\Core\Services\Base
 
     public function getForFrontend(string $scope, string $name)
     {
-        $dataString = $this->getInjection('layout')->get($scope, $name);
+        $layoutSetId = null;
+        $data = null;
+
+        $em = $this->getInjection('entityManager');
+        $user = $this->getInjection('user');
+
+        if ($user->isPortal()) {
+            $portalId = $user->get('portalId');
+            if ($portalId) {
+                $portal = $em->getRepository('Portal')->select(['layoutSetId'])->where(['id' => $portalId])->findOne();
+                if ($portal) {
+                    $layoutSetId = $portal->get('layoutSetId');
+                }
+            }
+        } else {
+            $teamId = $user->get('defaultTeamId');
+            if ($teamId) {
+                $team = $em->getRepository('Team')->select(['layoutSetId'])->where(['id' => $teamId])->findOne();
+                if ($team) {
+                    $layoutSetId = $team->get('layoutSetId');
+                }
+            }
+        }
+
+        if ($layoutSetId) {
+            $nameReal = $name;
+
+            if ($user->isPortal()) {
+                if (substr($name, -6) === 'Portal') {
+                    $nameReal = substr($name, 0, -6);
+                }
+            }
+
+            $layout = $this->getRecordFromSet($scope, $nameReal, $layoutSetId, true);
+            if ($layout) {
+                $data = $layout->get('data');
+            }
+        }
+
+        if (!$data) {
+            $dataString = $this->getInjection('layout')->get($scope, $name);
+        } else {
+            $dataString = json_encode($data);
+        }
 
         if (!$dataString) {
-            throw new NotFound("Layout {$scope}:{$scope} is not found.");
+            throw new NotFound("Layout {$scope}:{$name} is not found.");
         }
 
         if (!$this->getUser()->isAdmin()) {
@@ -79,5 +126,91 @@ class Layout extends \Espo\Core\Services\Base
         }
 
         return $dataString;
+    }
+
+    protected function getRecordFromSet(string $scope, string $name, string $setId, bool $skipCheck = false)
+    {
+        $em = $this->getInjection('entityManager');
+        $layoutSet = $em->getEntity('LayoutSet', $setId);
+        if (!$layoutSet) throw new NotFound();
+
+        $layoutList = $layoutSet->get('layoutList') ?? [];
+
+        $fullName = $scope . '.' . $name;
+
+        if (!in_array($fullName, $layoutList)) {
+            if ($skipCheck) return null;
+            throw new NotFound("Layout {$fullName} is no allowed in set.");
+        }
+
+        $layout = $em->getRepository('LayoutRecord')->where([
+            'layoutSetId' => $setId,
+            'name' => $fullName,
+        ])->findOne();
+
+        return $layout;
+    }
+
+    public function update(string $scope, string $name, ?string $setId, $data)
+    {
+        if ($setId) {
+            $layout = $this->getRecordFromSet($scope, $name, $setId);
+
+            $em = $this->getInjection('entityManager');
+
+            if (!$layout) {
+                $layout = $em->getEntity('LayoutRecord');
+                $layout->set([
+                    'layoutSetId' => $setId,
+                    'name' => $scope . '.' . $name,
+                ]);
+            }
+
+            $layout->set('data', $data);
+
+            $em->saveEntity($layout);
+
+            return $layout->get('data');
+        }
+
+        $layoutManager = $this->getInjection('layout');
+
+        $layoutManager->set($data, $scope, $name);
+        $result = $layoutManager->save();
+
+        if ($result === false) throw new Error("Error while saving layout.");
+
+        $this->getInjection('dataManager')->updateCacheTimestamp();
+
+        return $layoutManager->get($scope, $name);
+    }
+
+    public function resetToDefault(string $scope, string $name, ?string $setId = null)
+    {
+        $this->getInjection('dataManager')->updateCacheTimestamp();
+
+        if ($setId) {
+            $layout = $this->getRecordFromSet($scope, $name, $setId);
+            if ($layout) {
+                $em = $this->getInjection('entityManager');
+                $em->removeEntity($layout);
+            }
+            return $this->getInjection('layout')->get($scope, $name);
+        }
+
+        return $this->getInjection('layout')->resetToDefault($scope, $name);
+    }
+
+    public function getOriginal(string $scope, string $name, ?string $setId = null)
+    {
+        $this->getInjection('dataManager')->updateCacheTimestamp();
+
+        if ($setId) {
+            $layout = $this->getRecordFromSet($scope, $name, $setId, true);
+            if ($layout) {
+                return $layout->get('data');
+            }
+        }
+        return $this->getInjection('layout')->get($scope, $name);
     }
 }

@@ -102,8 +102,11 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
             if (this.$editor.length && (this.mode === 'edit' || this.mode == 'detail' || this.mode == 'list')) {
                 this.$editor
-                    .css('minHeight', this.height + 'px')
                     .css('fontSize', '14px');
+
+                if (this.mode === 'edit') {
+                    this.$editor.css('minHeight', this.height + 'px');
+                }
                 var editor = this.editor = ace.edit(this.containerId);
 
                 editor.setOptions({

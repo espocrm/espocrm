@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,35 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/kanban', 'views/admin/layouts/list', function (Dep) {
+namespace Espo\Entities;
 
-    return Dep.extend({
-
-        dataAttributeList: ['name', 'link', 'align', 'view', 'isLarge'],
-
-        dataAttributesDefs: {
-            link: {type: 'bool'},
-            isLarge: {type: 'bool'},
-            width: {type: 'float'},
-            align: {
-                type: 'enum',
-                options: ["left", "right"]
-            },
-            view: {
-                type: 'varchar',
-                readOnly: true
-            },
-            name: {
-                type: 'varchar',
-                readOnly: true
-            }
-        },
-
-        editable: true,
-
-        ignoreList: [],
-
-        ignoreTypeList: [],
-
-    });
-});
+class LayoutSet extends \Espo\Core\ORM\Entity
+{
+}

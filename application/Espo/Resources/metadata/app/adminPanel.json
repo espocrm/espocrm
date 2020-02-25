@@ -258,6 +258,13 @@
                 "description": "dashboardTemplates"
             },
             {
+                "url": "#LayoutSet",
+                "label": "Layout Sets",
+                "iconClass": "fas fa-table",
+                "description": "layoutSets"
+
+            },
+            {
                 "url": "#Attachment",
                 "label": "Attachments",
                 "iconClass": "fas fa-paperclip",

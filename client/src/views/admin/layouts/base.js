@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/layouts/base', 'view', function (Dep) {
+define('views/admin/layouts/base', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -92,13 +92,13 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
                 if (typeof callback == 'function') {
                     callback();
                 }
-            }.bind(this));
+            }.bind(this), this.setId);
         },
 
         resetToDefault: function () {
             this.getHelper().layoutManager.resetToDefault(this.scope, this.type, function () {
                 this.cancel();
-            }.bind(this));
+            }.bind(this), this.options.setId);
         },
 
         reset: function () {
@@ -112,6 +112,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             this.events = _.clone(this.events);
             this.scope = this.options.scope;
             this.type = this.options.type;
+            this.setId = this.options.setId;
 
             this.dataAttributeList =
                 this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.type, 'dataAttributeList'])

@@ -99,6 +99,7 @@ class Currency extends Base
                 'orderBy' => [
                     'sql' => $converedFieldName . " {direction}",
                     'leftJoins' => $leftJoins,
+                    'additionalSelect' => ["{$alias}.rate"],
                 ],
                 'attributeRole' => 'valueConverted',
                 'fieldType' => 'currency',
@@ -107,6 +108,7 @@ class Currency extends Base
             $defs[$entityType]['fields'][$fieldName]['orderBy'] = [
                 'sql' => $part . " * {$alias}.rate {direction}",
                 'leftJoins' => $leftJoins,
+                'additionalSelect' => ["{$alias}.rate"],
             ];
         }
 

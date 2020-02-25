@@ -58,6 +58,7 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                 typeList: this.typeList,
                 scope: this.scope,
                 layoutScopeDataList: this.getLayoutScopeDataList(),
+                headerHtml: this.getHeaderHtml(),
             };
         },
 
@@ -125,7 +126,8 @@ define('views/admin/layouts/index', 'view', function (Dep) {
             }, this);
 
             this.on('after:render', function () {
-                $("#layouts-menu button[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']").addClass('disabled');
+                $("#layouts-menu button[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']")
+                    .addClass('disabled');
                 this.renderLayoutHeader();
                 if (!this.options.scope) {
                     this.renderDefaultPage();
@@ -143,22 +145,27 @@ define('views/admin/layouts/index', 'view', function (Dep) {
             this.scope = scope;
             this.type = type;
 
-            this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type, {trigger: false});
+            this.navigate(scope, type);
 
             this.notify('Loading...');
 
             var typeReal = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
-            this.createView('content', 'Admin.Layouts.' + Espo.Utils.upperCaseFirst(typeReal), {
+            this.createView('content', 'views/admin/layouts/' + Espo.Utils.camelCaseToHyphen(typeReal), {
                 el: '#layout-content',
                 scope: scope,
                 type: type,
+                setId: this.setId,
             }, function (view) {
                 this.renderLayoutHeader();
                 view.render();
                 this.notify(false);
                 $(window).scrollTop(0);
             }.bind(this));
+        },
+
+        navigate: function (scope, type) {
+            this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type, {trigger: false});
         },
 
         renderDefaultPage: function () {
@@ -179,7 +186,14 @@ define('views/admin/layouts/index', 'view', function (Dep) {
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Layout Manager', 'labels', 'Admin'));
         },
+
+        getHeaderHtml: function () {
+            var separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
+
+            var html = "<a href=\"#Admin\">"+this.translate('Administration')+"</a> " + separatorHtml + ' ' +
+                this.translate('Layout Manager', 'labels', 'Admin');
+
+            return html;
+        },
     });
 });
-
-

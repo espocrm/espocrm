@@ -157,8 +157,8 @@
         }
     },
     {
-        "route": "/:controller/layout/:name",
-        "method": "patch",
+        "route": "/:controller/layout/:name/:setId",
+        "method": "put",
         "params": {
             "controller": "Layout",
             "scope": ":controller"

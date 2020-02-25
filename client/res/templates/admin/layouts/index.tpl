@@ -1,6 +1,4 @@
-<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a>
-<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
-{{translate 'Layout Manager' scope='Admin'}}</h3></div>
+<div class="page-header"><h3>{{{headerHtml}}}</h3></div>
 
 <div class="row">
     <div id="layouts-menu" class="col-sm-3">

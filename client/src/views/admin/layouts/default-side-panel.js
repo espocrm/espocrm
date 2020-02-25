@@ -66,12 +66,12 @@ define('views/admin/layouts/default-side-panel', 'views/admin/layouts/rows', fun
 
         loadLayout: function (callback) {
             this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), function (model) {
-                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
+                this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, function (layout) {
                     this.readDataFromLayout(model, layout);
                     if (callback) {
                         callback();
                     }
-                }.bind(this), false);
+                }.bind(this));
             }.bind(this));
         },
 

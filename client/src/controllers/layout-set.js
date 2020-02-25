@@ -26,35 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/kanban', 'views/admin/layouts/list', function (Dep) {
+define('controllers/layout-set', 'controllers/record', function (Dep) {
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'link', 'align', 'view', 'isLarge'],
+        actionEditLayouts: function (options) {
+            var id = options.id;
+            if (!id) throw new Error("ID not passed.");
 
-        dataAttributesDefs: {
-            link: {type: 'bool'},
-            isLarge: {type: 'bool'},
-            width: {type: 'float'},
-            align: {
-                type: 'enum',
-                options: ["left", "right"]
-            },
-            view: {
-                type: 'varchar',
-                readOnly: true
-            },
-            name: {
-                type: 'varchar',
-                readOnly: true
-            }
+            this.main('views/layout-set/layouts', {
+                layoutSetId: id,
+                scope: options.scope,
+                type: options.type,
+            });
         },
-
-        editable: true,
-
-        ignoreList: [],
-
-        ignoreTypeList: [],
 
     });
 });
