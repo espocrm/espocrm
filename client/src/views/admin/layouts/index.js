@@ -195,5 +195,6 @@ define('views/admin/layouts/index', 'view', function (Dep) {
 
             return html;
         },
+
     });
 });
