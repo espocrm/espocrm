@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('crm:views/campaign/detail', 'views/detail', function (Dep) {
+define('crm:views/campaign/detail', 'views/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -46,9 +45,7 @@ Espo.define('crm:views/campaign/detail', 'views/detail', function (Dep) {
                     name: this.model.get('name') + ' ' + this.getDateTime().getToday()
                 };
             }
-        }
+        },
 
     });
 });
-
-
