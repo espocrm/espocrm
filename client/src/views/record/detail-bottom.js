@@ -145,7 +145,7 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                     if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                         item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
                     } else {
-                        this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
+                        this.recordHelper.setPanelStateParam(p.name, 'hidden', item.hidden || false);
                     }
                     return item;
                 }, this);
@@ -232,7 +232,7 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
                 } else {
-                    this.recordHelper.setPanelStateParam(p.name, p.hidden || false);
+                    this.recordHelper.setPanelStateParam(p.name, 'hidden', p.hidden || false);
                 }
 
                 this.panelList.push(p);
