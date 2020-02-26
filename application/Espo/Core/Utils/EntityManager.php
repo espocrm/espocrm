@@ -937,7 +937,7 @@ class EntityManager
                     'fields' => [
                         $link => [
                             'type' => 'linkParent',
-                            'entityList' => $params['parentEntityTypeList'] ?? [],
+                            'entityList' => $params['parentEntityTypeList'] ?? null,
                         ],
                     ],
                     'links' => [
@@ -1093,7 +1093,8 @@ class EntityManager
 
         if ($linkType === 'belongsToParent') {
             $parentEntityTypeList = $params['parentEntityTypeList'] ?? null;
-            if ($parentEntityTypeList && is_array($parentEntityTypeList)) {
+
+            if (is_array($parentEntityTypeList)) {
                 $data = [
                     'fields' => [
                         $link => [

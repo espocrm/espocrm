@@ -74,6 +74,14 @@ define('views/admin/link-manager/modals/edit',
 
             this.model.set('entity', scope);
 
+            var allEntityList = this.getMetadata().getScopeEntityList().filter(function (item) {
+                return this.getMetadata().get(['scopes', item, 'customizable']);
+            }, this).sort(function (v1, v2) {
+                var t1 = this.translate(v1, 'scopeNames');
+                var t2 = this.translate(v2, 'scopeNames');
+                return t1.localeCompare(t2);
+            }.bind(this));
+
             var isCustom = true;
 
             if (!isNew) {
@@ -90,6 +98,12 @@ define('views/admin/link-manager/modals/edit',
                     labelForeign = null;
 
                     var entityTypeList = this.getMetadata().get(['entityDefs', entity, 'fields', link, 'entityList']) || [];
+
+                    if (this.getMetadata().get(['entityDefs', entity, 'fields', link, 'entityList']) === null) {
+                        entityTypeList = allEntityList;
+                        this.noParentEntityTypeList = true;
+                    }
+
                     this.model.set('parentEntityTypeList', entityTypeList);
 
                     var foreignLinkEntityTypeList = this.getForeignLinkEntityTypeList(entity, link, entityTypeList);
@@ -543,7 +557,9 @@ define('views/admin/link-manager/modals/edit',
                         this.hideField('entityForeign');
                         this.hideField('labelForeign');
 
-                        this.showField('parentEntityTypeList');
+                        if (!this.noParentEntityTypeList) {
+                            this.showField('parentEntityTypeList');
+                        }
                         this.showField('foreignLinkEntityTypeList');
                     } else {
                         this.hideField('audited');
@@ -670,6 +686,9 @@ define('views/admin/link-manager/modals/edit',
                 delete attributes.labelForeign;
                 attributes.parentEntityTypeList = this.model.get('parentEntityTypeList');
                 attributes.foreignLinkEntityTypeList = this.model.get('foreignLinkEntityTypeList');
+                if (this.noParentEntityTypeList) {
+                    attributes.parentEntityTypeList = null;
+                }
             }
 
             $.ajax({
