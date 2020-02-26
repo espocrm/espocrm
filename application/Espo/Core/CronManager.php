@@ -316,7 +316,7 @@ class CronManager
                 $job->set('attempts', 0);
                 $skipLog = true;
             } else {
-                $GLOBALS['log']->error('CronManager: Failed job running, job ['.$job->id.']. Error Details: '.$e->getMessage());
+                $GLOBALS['log']->error('CronManager: Failed job running, job ['. $job->id .']. Error Details: '. $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine());
             }
         }
 
