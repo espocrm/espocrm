@@ -980,7 +980,7 @@ class EntityManager
 
         if ($linkType === 'childrenToParent') {
             $foreignLinkEntityTypeList = $params['foreignLinkEntityTypeList'] ?? null;
-            if ($foreignLinkEntityTypeList && is_array($foreignLinkEntityTypeList)) {
+            if (is_array($foreignLinkEntityTypeList)) {
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, $foreignLinkEntityTypeList);
             }
         }
