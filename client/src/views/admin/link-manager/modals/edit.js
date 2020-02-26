@@ -503,7 +503,7 @@ define('views/admin/link-manager/modals/edit',
             if (view) {
                 view.disabled = true;
             }
-            this.$el.find('.cell[data-name=' + name+']').css('visibility', 'hidden');
+            this.$el.find('.cell[data-name=' + name+']').addClass('hidden');
         },
 
         showField: function (name) {
@@ -511,7 +511,7 @@ define('views/admin/link-manager/modals/edit',
             if (view) {
                 view.disabled = false;
             }
-            this.$el.find('.cell[data-name=' + name+']').css('visibility', 'visible');
+            this.$el.find('.cell[data-name=' + name+']').removeClass('hidden');
         },
 
         handleLinkTypeChange: function () {
