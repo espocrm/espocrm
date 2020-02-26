@@ -1,1 +1,7 @@
-["contacts","opportunities","cases","documents"]
+[
+    "contacts",
+    "opportunities",
+    "cases",
+    "_delimiter_",
+    "documents"
+]
