@@ -344,7 +344,9 @@ define('views/admin/link-manager/modals/edit',
 
                 var view = this.getView('foreignLinkEntityTypeList');
                 if (view) {
-                    view.setOptionList(this.model.get('parentEntityTypeList') || []);
+                    if (!this.noParentEntityTypeList) {
+                        view.setOptionList(this.model.get('parentEntityTypeList') || []);
+                    }
                 }
                 var checkedList = Espo.Utils.clone(this.model.get('foreignLinkEntityTypeList') || []);
 
