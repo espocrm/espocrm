@@ -111,7 +111,7 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
                 } else {
-                    this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
+                    this.recordHelper.setPanelStateParam(p.name, 'hidden', item.hidden || false);
                 }
                 return item;
             }, this);
