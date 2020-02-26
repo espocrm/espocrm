@@ -46,7 +46,7 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
             },
             name: {
                 readOnly: true
-            }
+            },
         },
 
         languageCategory: 'links',
@@ -79,6 +79,8 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
                         return this.translate(v1, 'links', this.scope).localeCompare(this.translate(v2, 'links', this.scope));
                     }.bind(this));
 
+                    allFields.push('_delimiter_');
+
                     this.enabledFieldsList = [];
 
                     this.enabledFields = [];
@@ -93,7 +95,13 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
                             };
                         } else {
                             o = item;
-                            o.label =  this.getLanguage().translate(o.name, 'links', this.scope);
+                            o.label = this.getLanguage().translate(o.name, 'links', this.scope);
+                        }
+                        if (o.name[0] === '_') {
+                            o.notEditable = true;
+                            if (o.name == '_delimiter_') {
+                                o.label = '. . .';
+                            }
                         }
                         this.dataAttributeList.forEach(function (attribute) {
                             if (attribute === 'name') return;
@@ -110,16 +118,29 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
 
                     for (var i in allFields) {
                         if (!_.contains(this.enabledFieldsList, allFields[i])) {
-                            this.disabledFields.push({
-                                name: allFields[i],
-                                label: this.getLanguage().translate(allFields[i], 'links', this.scope)
-                            });
+                            var name = allFields[i];
+                            var label = this.getLanguage().translate(name, 'links', this.scope);
+                            var o = {
+                                name: name,
+                                label: label,
+                            };
+                            if (o.name[0] === '_') {
+                                o.notEditable = true;
+                                if (o.name == '_delimiter_') {
+                                    o.label = '. . .';
+                                }
+                            }
+                            this.disabledFields.push(o);
                         }
                     }
                     this.rowLayout = this.enabledFields;
 
                     for (var i in this.rowLayout) {
-                        this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
+                        var o = this.rowLayout[i];
+                        o.label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
+                        if (o.name == '_delimiter_') {
+                            o.label = '. . .';
+                        }
 
                         this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);
                     }
@@ -135,6 +156,6 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
 
         isLinkEnabled: function (model, name) {
             return !model.getLinkParam(name, 'disabled') && !model.getLinkParam(name, 'layoutRelationshipsDisabled');
-        }
+        },
     });
 });

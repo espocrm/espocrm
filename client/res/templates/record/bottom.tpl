@@ -1,4 +1,11 @@
 {{#each panelList}}
+    {{#if isRightAfterDelimiter}}
+        <div class="panels-show-more-delimiter">
+            <a href="javascript:" data-action="showMorePanels" title="{{translate 'Show more'}}">
+                <span class="fas fa-ellipsis-h fa-lg"></span>
+            </a>
+        </div>
+    {{/if}}
     <div class="panel panel-{{#if style}}{{style}}{{else}}default{{/if}} panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}" data-name="{{name}}" data-name="{{name}}">
         <div class="panel-heading">
             <div class="pull-right btn-group panel-actions-container">{{{var actionsViewKey ../this}}}</div>

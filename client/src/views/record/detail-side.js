@@ -152,6 +152,8 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
                         if (this.layoutData)
                             this.alterPanels();
 
+                        this.setupFinal();
+
                         this.setupPanelViews();
                     }.bind(this)
                 )
@@ -160,6 +162,14 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
 
         alterPanels: function (layoutData) {
             layoutData = layoutData || this.layoutData || {};
+
+            for (var n in layoutData) {
+                if (n === '_delimiter_') {
+                    this.panelList.push({
+                        name: n,
+                    });
+                }
+            }
 
             var newList = [];
             this.panelList.forEach(function (item, i) {

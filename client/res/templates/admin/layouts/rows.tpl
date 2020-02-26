@@ -17,7 +17,9 @@
                             <span>{{label}}</span>
                         </div>
                         {{#if ../editable}}
+                        {{#unless notEditable}}
                         <div class="right" style="width: 17px;"><a href="javascript:" data-action="editItem" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
+                        {{/unless}}
                         {{/if}}
                     </li>
                 {{/each}}
@@ -34,7 +36,9 @@
                             <span>{{label}}</span>
                         </div>
                         {{#if ../editable}}
+                        {{#unless notEditable}}
                         <div class="right" style="width: 17px;"><a href="javascript:" data-action="editItem" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
+                        {{/unless}}
                         {{/if}}
                     </li>
                 {{/each}}

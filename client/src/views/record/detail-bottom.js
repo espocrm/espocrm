@@ -160,6 +160,8 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                     item.actionsViewKey = item.name + 'Actions';
                 }, this);
 
+                this.setupFinal();
+
                 this.setupPanelViews();
                 this.wait(false);
 
@@ -200,6 +202,13 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                     return;
                 }
 
+                p.order = 5;
+
+                if (p.name == '_delimiter_') {
+                    this.panelList.push(p);
+                    return;
+                }
+
                 var name = p.name;
 
                 var links = (this.model.defs || {}).links || {};
@@ -226,8 +235,6 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                 if (!p.view) {
                     p.view = 'views/record/panels/relationship';
                 }
-
-                p.order = 5;
 
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');

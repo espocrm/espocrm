@@ -47,7 +47,7 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             },
             name: {
                 readOnly: true
-            }
+            },
         },
 
         editable: true,
@@ -84,6 +84,8 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             var labels = {};
             var params = {};
 
+            layout = Espo.Utils.cloneDeep(layout);
+
             if (
                 this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) !== false
                 &&
@@ -107,6 +109,20 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
 
             this.rowLayout = [];
 
+            /*if (!~panelListAll.findIndex(function (o) {return o.name == '_delimiter_'}) {
+
+            }*/
+
+            panelListAll.push('_delimiter_');
+
+            if (!layout['_delimiter_']) {
+                layout['_delimiter_'] = {
+                    disabled: true,
+                };
+            }
+
+
+
             panelListAll.forEach(function (item, index) {
                 var disabled = false;
                 var itemData = layout[item] || {};
@@ -121,15 +137,28 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 }
 
                 if (disabled) {
-                    this.disabledFields.push({
+                    var o = {
                         name: item,
-                        label: labelText
-                    });
+                        label: labelText,
+                    };
+                    if (o.name[0] === '_') {
+                        o.notEditable = true;
+                        if (o.name == '_delimiter_') {
+                            o.label = '. . .';
+                        }
+                    }
+                    this.disabledFields.push(o);
                 } else {
                     var o = {
                         name: item,
-                        label: labelText
+                        label: labelText,
                     };
+                    if (o.name[0] === '_') {
+                        o.notEditable = true;
+                        if (o.name == '_delimiter_') {
+                            o.label = '. . .';
+                        }
+                    }
                     if (o.name in params) {
                         this.dataAttributeList.forEach(function (attribute) {
                             if (attribute === 'name') return;
@@ -148,6 +177,7 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                     this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
                 }
             }, this);
+
             this.rowLayout.sort(function (v1, v2) {
                 return v1.index - v2.index;
             });
