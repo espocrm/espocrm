@@ -33,8 +33,8 @@ class Phone extends Base
 {
     protected function load($fieldName, $entityType)
     {
-        $foreignJoinAlias = "{$fieldName}{$entityType}Foreign";
-        $foreignJoinMiddleAlias = "{$fieldName}{$entityType}ForeignMiddle";
+        $foreignJoinAlias = "{$fieldName}{$entityType}{alias}Foreign";
+        $foreignJoinMiddleAlias = "{$fieldName}{$entityType}{alias}ForeignMiddle";
 
         return [
             $entityType => [
