@@ -206,11 +206,13 @@ class Lead extends \Espo\Core\Templates\Services\Person
 
             if ($duplicateCheck) {
                 $rDuplicateList = $this->getServiceFactory()->create('Account')->findDuplicates($account, $recordsData->Account);
-                foreach ($rDuplicateList as $e) {
-                    $item = $e->getValueMap();
-                    $item->_entityType = $e->getEntityType();
-                    $duplicateList[] = $item;
-                    $skipSave = true;
+                if ($rDuplicateList) {
+                    foreach ($rDuplicateList as $e) {
+                        $item = $e->getValueMap();
+                        $item->_entityType = $e->getEntityType();
+                        $duplicateList[] = $item;
+                        $skipSave = true;
+                    }
                 }
             }
 
@@ -229,11 +231,13 @@ class Lead extends \Espo\Core\Templates\Services\Person
 
             if ($duplicateCheck) {
                 $rDuplicateList = $this->getServiceFactory()->create('Contact')->findDuplicates($contact, $recordsData->Contact);
-                foreach ($rDuplicateList as $e) {
-                    $item = $e->getValueMap();
-                    $item->_entityType = $e->getEntityType();
-                    $duplicateList[] = $item;
-                    $skipSave = true;
+                if ($rDuplicateList) {
+                    foreach ($rDuplicateList as $e) {
+                        $item = $e->getValueMap();
+                        $item->_entityType = $e->getEntityType();
+                        $duplicateList[] = $item;
+                        $skipSave = true;
+                    }
                 }
             }
 
@@ -256,11 +260,14 @@ class Lead extends \Espo\Core\Templates\Services\Person
             if ($duplicateCheck) {
                 $rDuplicateList = $this->getServiceFactory()->create('Opportunity')
                     ->findDuplicates($opportunity, $recordsData->Opportunity);
-                foreach ($rDuplicateList as $e) {
-                    $item = $e->getValueMap();
-                    $item->_entityType = $e->getEntityType();
-                    $duplicateList[] = $item;
-                    $skipSave = true;
+
+                if ($rDuplicateList) {
+                    foreach ($rDuplicateList as $e) {
+                        $item = $e->getValueMap();
+                        $item->_entityType = $e->getEntityType();
+                        $duplicateList[] = $item;
+                        $skipSave = true;
+                    }
                 }
             }
 
