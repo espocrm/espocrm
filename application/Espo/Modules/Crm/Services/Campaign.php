@@ -136,41 +136,45 @@ class Campaign extends \Espo\Services\Record
         }
         $entity->set('bouncedPercentage', $bouncedPercentage);
 
-        $leadCreatedCount = $this->getEntityManager()->getRepository('Lead')->where([
-            'campaignId' => $entity->id
-        ])->count();
-        if (!$leadCreatedCount) {
-            $leadCreatedCount = null;
-        }
-        $entity->set('leadCreatedCount', $leadCreatedCount);
-
-        $entity->set('revenueCurrency', $this->getConfig()->get('defaultCurrency'));
-
-        $params = [
-            'select' => ['SUM:amountConverted'],
-            'whereClause' => [
-                'stage' => 'Closed Won',
+        if ($this->getAcl()->check('Lead')) {
+            $leadCreatedCount = $this->getEntityManager()->getRepository('Lead')->where([
                 'campaignId' => $entity->id
-            ],
-            'groupBy' => ['opportunity.campaignId']
-        ];
-
-        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($params);
-
-        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $params);
-
-        $pdo = $this->getEntityManager()->getPDO();
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-
-        $revenue = null;
-        if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $revenue = floatval($row['SUM:amountConverted']);
-            if (!$revenue) {
-                $revenue = null;
+            ])->count();
+            if (!$leadCreatedCount) {
+                $leadCreatedCount = null;
             }
+            $entity->set('leadCreatedCount', $leadCreatedCount);
         }
-        $entity->set('revenue', $revenue);
+
+        if ($this->getAcl()->check('Opportunity')) {
+            $entity->set('revenueCurrency', $this->getConfig()->get('defaultCurrency'));
+
+            $params = [
+                'select' => ['SUM:amountConverted'],
+                'whereClause' => [
+                    'stage' => 'Closed Won',
+                    'campaignId' => $entity->id
+                ],
+                'groupBy' => ['opportunity.campaignId']
+            ];
+
+            $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($params);
+
+            $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $params);
+
+            $pdo = $this->getEntityManager()->getPDO();
+            $sth = $pdo->prepare($sql);
+            $sth->execute();
+
+            $revenue = null;
+            if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                $revenue = floatval($row['SUM:amountConverted']);
+                if (!$revenue) {
+                    $revenue = null;
+                }
+            }
+            $entity->set('revenue', $revenue);
+        }
     }
 
     public function logLeadCreated($campaignId, Entity $target, $actionDate = null, $isTest = false)

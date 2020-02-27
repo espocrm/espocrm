@@ -60,7 +60,7 @@ class Currency extends Base
             ]
         ];
 
-        $foreignAlias = "{$alias}{$entityType}Foreign";
+        $foreignAlias = "{$alias}{$entityType}{alias}Foreign";
 
         $params = $this->getFieldParams($fieldName);
         if (!empty($params['notStorable'])) {

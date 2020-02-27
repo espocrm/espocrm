@@ -73,6 +73,7 @@ define('views/admin/field-manager/fields/foreign/field', 'views/fields/enum', fu
                 var type = fields[item].type;
                 if (!~this.typeList.indexOf(type)) return;
                 if (fields[item].notStorable) return;
+                if (fields[item].disabled) return;
 
                 return true;
             }, this);

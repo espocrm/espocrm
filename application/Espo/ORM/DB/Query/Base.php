@@ -944,6 +944,8 @@ abstract class Base
             if (!empty($fieldDefs[$type]['leftJoins'])) {
                 foreach ($fieldDefs[$type]['leftJoins'] as $j) {
                     $jAlias = $this->obtainJoinAlias($j);
+                    if ($alias) $jAlias = str_replace('{alias}', $alias, $jAlias);
+                    if (isset($j[1])) $j[1] = $jAlias;
                     foreach ($params['leftJoins'] as $jE) {
                         $jEAlias = $this->obtainJoinAlias($jE);
                         if ($jEAlias === $jAlias) {
@@ -955,7 +957,9 @@ abstract class Base
                             $conditions = [];
                             foreach ($j[2] as $k => $value) {
                                 $value = str_replace('{alias}', $alias, $value);
-                                $conditions[$k] = $value;
+                                $left = $k;
+                                $left = str_replace('{alias}', $alias, $left);
+                                $conditions[$left] = $value;
                             }
                             $j[2] = $conditions;
                         }
@@ -967,6 +971,8 @@ abstract class Base
             if (!empty($fieldDefs[$type]['joins'])) {
                 foreach ($fieldDefs[$type]['joins'] as $j) {
                     $jAlias = $this->obtainJoinAlias($j);
+                    $jAlias = str_replace('{alias}', $alias, $jAlias);
+                    if (isset($j[1])) $j[1] = $jAlias;
                     foreach ($params['joins'] as $jE) {
                         $jEAlias = $this->obtainJoinAlias($jE);
                         if ($jEAlias === $jAlias) {
@@ -981,13 +987,13 @@ abstract class Base
                 $params['extraAdditionalSelect'] = $params['extraAdditionalSelect'] ?? [];
                 foreach ($fieldDefs[$type]['additionalSelect'] as $value) {
                     $value = str_replace('{alias}', $alias, $value);
+                    $value = str_replace('{attribute}', $attribute, $value);
                     if (!in_array($value, $params['extraAdditionalSelect'])) {
                         $params['extraAdditionalSelect'][] = $value;
                     }
                 }
             }
         }
-
         return $part;
     }
 

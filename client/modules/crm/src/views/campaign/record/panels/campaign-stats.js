@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('crm:views/campaign/record/panels/campaign-stats', 'views/record/panels/side', function (Dep) {
+define('crm:views/campaign/record/panels/campaign-stats', 'views/record/panels/side', function (Dep) {
 
     return Dep.extend({
 
@@ -65,6 +64,14 @@ Espo.define('crm:views/campaign/record/panels/campaign-stats', 'views/record/pan
             fieldList.forEach(function (item) {
                 this.options.recordViewObject.showField(item);
             }, this);
+
+            if (!this.getAcl().checkScope('Lead')) {
+                this.options.recordViewObject.hideField('leadCreatedCount');
+            }
+
+            if (!this.getAcl().checkScope('Opportunity')) {
+                this.options.recordViewObject.hideField('revenue');
+            }
     	},
 
     	setupFields: function () {
