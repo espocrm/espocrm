@@ -116,9 +116,11 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
 
         manage2FAFields: function () {
             if (this.model.get('auth2FA')) {
+                this.showField('auth2FAForced');
                 this.showField('auth2FAMethodList');
                 this.setFieldRequired('auth2FAMethodList');
             } else {
+                this.hideField('auth2FAForced');
                 this.hideField('auth2FAMethodList');
                 this.setFieldNotRequired('auth2FAMethodList');
             }

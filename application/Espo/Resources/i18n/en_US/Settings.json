@@ -130,6 +130,7 @@
         "passwordStrengthNumberCount": "Number of digits required in password",
         "passwordStrengthBothCases": "Password must contain letters of both upper and lower case",
         "auth2FA": "Enable 2-Factor Authentication",
+        "auth2FAForced": "Force regular users to set up 2FA",
         "auth2FAMethodList": "Available 2FA methods"
     },
     "options": {

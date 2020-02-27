@@ -97,11 +97,20 @@ class App extends \Espo\Core\Services\Base
 
         $language = \Espo\Core\Utils\Language::detectLanguage($this->getConfig(), $this->getPreferences());
 
+        $auth2FARequired = false;
+        if (
+            $user->isRegular() && $this->getConfig()->get('auth2FA') && $this->getConfig()->get('auth2FAForced') &&
+            !$user->get('auth2FA')
+        ) {
+            $auth2FARequired = true;
+        }
+
         $appParams = [
             'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
             'isRestrictedMode' => $this->getConfig()->get('restrictedMode'),
             'passwordChangeForNonAdminDisabled' => $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo',
             'timeZoneList' => $this->getMetadata()->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
+            'auth2FARequired' => $auth2FARequired,
         ];
 
         foreach (($this->getMetadata()->get(['app', 'appParams']) ?? []) as $paramKey => $item) {

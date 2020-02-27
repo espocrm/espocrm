@@ -208,6 +208,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
                         this.listenToOnce(view, 'done', function () {
                             Espo.Ui.success(this.translate('Done'));
+                            this.trigger('done');
                             view.close();
                             this.close();
                         }, this);

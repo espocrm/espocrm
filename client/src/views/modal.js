@@ -126,6 +126,7 @@ define('views/modal', 'view', function (Dep) {
                     fullHeight: !this.noFullHeight && this.getThemeManager().getParam('modalFullHeight'),
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     fixedHeaderHeight: this.fixedHeaderHeight,
+                    closeButton: !this.noCloseButton,
                     onRemove: function () {
                         this.onDialogClose();
                     }.bind(this)
