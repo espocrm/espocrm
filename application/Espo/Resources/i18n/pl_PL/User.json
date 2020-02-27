@@ -33,7 +33,7 @@
     "authMethod": "Metoda autoryzacji",
     "yourPassword": "Twoje obecne hasło",
     "dashboardTemplate": "Szablon pulpitu",
-    "auth2FA": "Włącz dwuetapową weryfikację",
+    "auth2FAEnable": "Włącz dwuetapową weryfikację",
     "auth2FAMethod": "Metoda 2FA"
   },
   "links": {

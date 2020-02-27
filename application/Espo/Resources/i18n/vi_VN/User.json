@@ -21,7 +21,7 @@
     "type": "Loại",
     "apiKey": "Khóa API",
     "yourPassword": "Mật khẩu hiện tại của bạn",
-    "auth2FA": "Bật xác minh 2 bước"
+    "auth2FAEnable": "Bật xác minh 2 bước"
   },
   "links": {
     "teams": "Nhóm",

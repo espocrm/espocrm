@@ -72,6 +72,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
                 fields: {
                     'auth2FA': {
                         type: 'bool',
+                        labelText: this.translate('auth2FAEnable', 'fields', 'User'),
                     },
                     'auth2FAMethod': {
                         type: 'enum',
@@ -99,7 +100,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
                                     [
                                         {
                                             name: 'auth2FA',
-                                            labelText: this.translate('auth2FA', 'fields', 'User'),
+                                            labelText: this.translate('auth2FAEnable', 'fields', 'User'),
                                         },
                                         {
                                             name: 'auth2FAMethod',

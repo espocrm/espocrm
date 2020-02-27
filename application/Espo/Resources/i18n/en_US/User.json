@@ -35,8 +35,9 @@
         "apiKey": "API Key",
         "secretKey": "Secret Key",
         "dashboardTemplate": "Dashboard Template",
+        "auth2FA": "2FA",
         "authMethod": "Authentication Method",
-        "auth2FA": "Enable 2-Factor Authentication",
+        "auth2FAEnable": "Enable 2-Factor Authentication",
         "auth2FAMethod": "2FA Method",
         "auth2FATotpSecret": "2FA TOTP Secret"
     },
@@ -51,6 +52,7 @@
         "accounts": "Accounts",
         "account": "Account (Primary)",
         "tasks": "Tasks",
+        "userData": "User Data",
         "dashboardTemplate": "Dashboard Template"
     },
     "labels": {

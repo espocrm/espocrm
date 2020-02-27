@@ -297,6 +297,17 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true
         },
+        "auth2FA": {
+            "type": "foreign",
+            "link": "userData",
+            "field": "auth2FA",
+            "readOnly": true,
+            "view": "views/fields/foreign-bool"
+        },
+        "userData": {
+            "type": "linkOne",
+            "disabled": true
+        },
         "lastAccess": {
             "type": "datetime",
             "notStorable": true,
@@ -355,6 +366,12 @@
             "type": "hasOne",
             "entity": "Preferences",
             "noJoin": true
+        },
+        "userData": {
+            "type": "hasOne",
+            "entity": "UserData",
+            "foreign": "user",
+            "foreignName": "id"
         },
         "meetings": {
             "type": "hasMany",

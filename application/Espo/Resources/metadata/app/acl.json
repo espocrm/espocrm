@@ -75,6 +75,7 @@
                 "dashboardTemplate": false,
                 "password": false,
                 "passwordConfirm": false,
+                "auth2FA": false,
                 "authMethod": false,
                 "apiKey": false,
                 "secretKey": false,

@@ -105,6 +105,7 @@
                 "portals": false,
                 "roles": false,
                 "defaultTeam": false,
+                "auth2FA": false,
                 "isActive": false
             }
         }

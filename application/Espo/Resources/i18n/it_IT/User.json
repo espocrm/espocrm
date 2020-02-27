@@ -30,7 +30,7 @@
     "authMethod": "Metodo di autenticazione",
     "yourPassword": "La tua password attuale",
     "dashboardTemplate": "Modello di dashboard",
-    "auth2FA": "Abilita autenticazione a 2 fattori",
+    "auth2FAEnable": "Abilita autenticazione a 2 fattori",
     "auth2FAMethod": "Metodo 2FA",
     "auth2FATotpSecret": "2FA TOTP Secret\n"
   },

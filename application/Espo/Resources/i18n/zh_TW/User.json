@@ -36,7 +36,7 @@
     "authMethod": "產生新的API密鑰",
     "yourPassword": "主控台模板",
     "dashboardTemplate": "啟用兩因素認證",
-    "auth2FA": "2FA方法",
+    "auth2FAEnable": "2FA方法",
     "auth2FAMethod": "2FA TOTP秘鑰",
     "auth2FATotpSecret": "主控台模板"
   },

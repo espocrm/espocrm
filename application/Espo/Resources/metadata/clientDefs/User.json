@@ -47,7 +47,8 @@
       "detail": [
         "avatar",
         "createdAt",
-        "lastAccess"
+        "lastAccess",
+        "auth2FA"
       ],
       "detailSmall": [
         "avatar",

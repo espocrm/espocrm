@@ -58,6 +58,12 @@
         },
         "type": {
             "nonAdminReadOnly": true
+        },
+        "auth2FA": {
+            "onlyAdmin": true
+        },
+        "userData": {
+            "internal": true
         }
     },
     "links": {
@@ -69,6 +75,9 @@
         },
         "preferences": {
             "onlyAdmin": true
+        },
+        "userData": {
+            "internal": true
         }
     }
 }

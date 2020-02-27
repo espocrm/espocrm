@@ -32,7 +32,7 @@
     "authMethod": "Authenticatie methode",
     "yourPassword": "Je huidige wachtwoord",
     "dashboardTemplate": "Dashboard sjabloon",
-    "auth2FA": "2-Factor Authenticatie inschakelen",
+    "auth2FAEnable": "2-Factor Authenticatie inschakelen",
     "auth2FAMethod": "2FA-methode",
     "auth2FATotpSecret": "2FA TOTP-geheim"
   },
