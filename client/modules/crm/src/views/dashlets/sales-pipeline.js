@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/chart', function (Dep) {
+define('crm:views/dashlets/sales-pipeline', ['crm:views/dashlets/abstract/chart', 'lib!espo-funnel-chart'], function (Dep) {
 
     return Dep.extend({
 
@@ -55,42 +55,20 @@ define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/chart',
         },
 
         prepareData: function (response) {
-            var d = [];
+            var list = [];
 
             this.isEmpty = true;
 
             response.dataList.forEach(function (item) {
                 if (item.value) this.isEmpty = false;
-                d.push({
+                list.push({
                     stageTranslated: this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'),
                     value: item.value,
-                    stage: item.stage
+                    stage: item.stage,
                 });
             }, this);
 
-            var data = [];
-            for (var i = 0; i < d.length; i++) {
-                var item = d[i];
-                var value = item.value;
-                var nextValue = ((i + 1) < d.length) ? d[i + 1].value : value;
-                data.push({
-                    data: [[i, value], [i + 1, nextValue]],
-                    label: item.stageTranslated,
-                    stage: item.stage
-                });
-            }
-
-            var max = 0;
-            if (d.length) {
-                d.forEach(function (item) {
-                    if ( item.value && item.value > max) {
-                        max = item.value;
-                    }
-                }, this);
-            }
-            this.max = max;
-
-            return data;
+            return list;
         },
 
         setup: function () {
@@ -112,73 +90,63 @@ define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/chart',
                 if (this.chartData.length == i + 1 && item.stage === 'Closed Won') {
                     colors[i] = this.successColor;
                 }
+                this.chartData[i].color = colors[i];
             }, this);
 
+            this.$container.empty();
 
-            this.flotr.draw(this.$container.get(0), this.chartData, {
-                colors: colors,
-                shadowSize: false,
-                lines: {
-                    show: true,
-                    fill: true,
-                    fillOpacity: 1
+            var funnel = new EspoFunnel.Funnel(
+                this.$container.get(0),
+                {
+                    colors: colors,
+                    callbacks: {
+                        tooltipHtml: function (i) {
+                            var value = self.chartData[i].value;
+                            return self.chartData[i].stageTranslated + '<br>' + self.currencySymbol + self.formatNumber(value, true)
+                        },
+                    },
+                    tooltipClassName: 'flotr-mouse-value',
+                    tootlipStyleString:
+                        'opacity:0.7;background-color:#000;color:#fff;position:absolute;'+
+                        'padding:2px 8px;-moz-border-radius:4px;border-radius:4px;white-space:nowrap;',
                 },
-                points: {
-                    show: true
-                },
-                grid: {
-                    color: this.tickColor,
-                    verticalLines: false,
-                    outline: '',
-                    tickColor: this.tickColor
-                },
-                yaxis: {
-                    min: 0,
-                    max: this.max + 0.08 * this.max,
-                    showLabels: true,
-                    color: this.textColor,
-                    tickFormatter: function (value) {
-                        if (value == 0) {
-                            return '';
-                        }
+                this.chartData
+            );
 
-                        if (value % 1 == 0) {
-                            return self.currencySymbol + self.formatNumber(Math.floor(value), false, true).toString();
-                        }
-                        return '';
-                    }
-                },
-                xaxis: {
-                    min: 0,
-                    showLabels: false
-                },
-                mouse: {
-                    track: true,
-                    relative: true,
-                    position: 'n',
-                    lineColor: this.hoverColor,
-                    trackFormatter: function (obj) {
-                        if (obj.x >= self.chartData.length) {
-                            return null;
-                        }
-                        var label = self.chartData[parseInt(obj.x)].label;
-                        var label = (label || self.translate('None'));
-                        return label  + '<br>' + self.currencySymbol + self.formatNumber(obj.y, true);
-                    }
-                },
-                legend: {
-                    show: true,
-                    noColumns: this.getLegendColumnNumber(),
-                    container: this.$el.find('.legend-container'),
-                    labelBoxMargin: 0,
-                    labelFormatter: self.labelFormatter.bind(self),
-                    labelBoxBorderColor: 'transparent',
-                    backgroundOpacity: 0
-                }
-            });
+            this.drawLegend();
 
             this.adjustLegend();
-        }
+        },
+
+        drawLegend: function () {
+            var number = this.getLegendColumnNumber();
+
+            var $container = this.$el.find('.legend-container');
+
+            var html = '<table style="font-size: smaller; color:'+this.textColor+'">';
+
+            this.chartData.forEach(function (item, i) {
+                if (i % number == 0) {
+                    if (i > 0) html += '</tr>';
+                    html += '<tr>';
+                }
+
+                var box = '<div style="border:1px solid transparent;padding:1px">'+
+                    '<div style="width:13px;height:9px;border:1px solid '+item.color+'">'+
+                    '<div style="width:14px;height:10px;background-color:'+item.color+';"></div></div></div>';
+
+                html += '<td class="flotr-legend-color-box">'+box+'</td>';
+
+                html += '<td class="flotr-legend-label"><span title="'+item.stageTranslated+'">'+
+                    item.stageTranslated+'</span></td>';
+            }, this);
+
+            html += '</tr>';
+
+            html += '</table>';
+
+            $container.html(html);
+        },
 
     });
 });

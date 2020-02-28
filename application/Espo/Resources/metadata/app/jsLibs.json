@@ -4,6 +4,11 @@
         "exportsTo": "window",
         "exportsAs": "Flotr"
     },
+    "espo-funnel-chart": {
+        "path": "client/lib/espo-funnel-chart.js",
+        "exportsTo": "window",
+        "exportsAs": "EspoFunnel"
+    },
     "Summernote": {
         "path": "client/lib/summernote.min.js",
         "exportsTo": "$",
