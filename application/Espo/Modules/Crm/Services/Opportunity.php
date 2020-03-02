@@ -41,7 +41,7 @@ class Opportunity extends \Espo\Services\Record
         'accountName'
     ];
 
-    public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null, $useLastStage = false)
+    public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null, $useLastStage = false, $teamId = null)
     {
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
             throw new Forbidden();
@@ -76,12 +76,22 @@ class Opportunity extends \Espo\Services\Record
             ];
         }
 
+        if ($teamId) {
+            $whereClause[] = [
+                'teamsFilter.id' => $teamId,
+            ];
+        }
+
         $selectParams = [
             'select' => [$stageField, ['SUM:amountConverted', 'amount']],
             'whereClause' => $whereClause,
             'orderBy' => 'LIST:'.$stageField.':' . implode(',', $options),
-            'groupBy' => [$stageField]
+            'groupBy' => [$stageField],
         ];
+
+        if ($teamId) {
+            $selectManager->addJoin(['teams', 'teamsFilter'], $selectParams);
+        }
 
         $selectManager->applyAccess($selectParams);
 

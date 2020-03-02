@@ -47,6 +47,10 @@ define('crm:views/dashlets/sales-pipeline', ['crm:views/dashlets/abstract/chart'
             if (this.getOption('useLastStage')) {
                 url += '&useLastStage=true';
             }
+
+            if (this.getOption('teamId')) {
+                url += '&teamId=' + this.getOption('teamId');
+            }
             return url;
         },
 

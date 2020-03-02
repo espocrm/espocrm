@@ -2,7 +2,7 @@
     "view":"crm:views/dashlets/sales-pipeline",
     "aclScope": "Opportunity",
     "options": {
-        "view": "crm:views/dashlets/options/chart",
+        "view": "crm:views/dashlets/options/sales-pipeline",
         "fields": {
             "title": {
                 "type": "varchar",
@@ -24,6 +24,11 @@
             },
             "useLastStage": {
                 "type": "bool"
+            },
+            "team": {
+                "type": "link",
+                "entity": "Team",
+                "view": "crm:views/dashlets/options/sales-pipeline/fields/team"
             }
         },
         "layout": [
@@ -39,12 +44,18 @@
                     [
                         {"name": "dateFrom"},
                         {"name": "dateTo"}
+                    ],
+                    [
+                        {"name": "team"},
+                        false
                     ]
                 ]
             }
         ],
         "defaults": {
-            "dateFilter": "currentYear"
+            "dateFilter": "currentYear",
+            "teamId": null,
+            "teamName": null
         }
     }
 }

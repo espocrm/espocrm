@@ -89,8 +89,9 @@ class Opportunity extends \Espo\Core\Controllers\Record
         $dateTo = $request->get('dateTo');
         $dateFilter = $request->get('dateFilter');
         $useLastStage = $request->get('useLastStage') === 'true';
+        $teamId = $request->get('teamId') ?? null;
 
-        return $this->getService('Opportunity')->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage);
+        return $this->getService('Opportunity')->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage, $teamId);
     }
 
     public function getActionEmailAddressList($params, $data, $request)
