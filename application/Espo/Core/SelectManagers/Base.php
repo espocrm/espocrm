@@ -163,7 +163,7 @@ class Base
             $desc = $desc === strtolower('desc');
         }
 
-        if (!empty($sortBy)) {
+        if ($sortBy) {
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
             if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
@@ -171,13 +171,11 @@ class Base
             } else if ($type === 'linkParent') {
                 $result['orderBy'] .= 'Type';
             } else if ($type === 'address') {
-                if (!$desc) {
-                    $orderPart = 'ASC';
-                } else {
-                    $orderPart = 'DESC';
-                }
-                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
-                return;
+                $result['orderBy'] = [
+                    [$sortBy . 'Country', $desc],
+                    [$sortBy . 'City', $desc],
+                    [$sortBy . 'Street', $desc],
+                ];
             } else if ($type === 'enum') {
                 $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
                 if ($list && is_array($list) && count($list)) {
@@ -190,8 +188,7 @@ class Base
                     foreach ($list as $i => $listItem) {
                         $list[$i] = str_replace(',', '_COMMA_', $listItem);
                     }
-                    $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
-                    return;
+                    $result['orderBy'] = [['LIST:' . $sortBy . ':' . implode(',', $list)]];
                 }
             } else {
                 if (strpos($sortBy, '.') === false && strpos($sortBy, ':') === false) {
@@ -200,7 +197,22 @@ class Base
                     }
                 }
             }
+
+            if (!is_array($result['orderBy'])) {
+                $result['orderBy'] = [[$result['orderBy'], $desc]];
+            }
+
+            if (
+                $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'orderById'])
+                &&
+                $this->getSeed()->hasAttribute('id')
+            ) {
+                $result['orderBy'][] = ['id', $desc];
+            }
+
+            return;
         }
+
         if (!$desc) {
             $result['order'] = 'ASC';
         } else {
