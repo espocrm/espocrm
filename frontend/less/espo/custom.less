@@ -29,6 +29,33 @@
         margin: 0;
         color: @navbar-inverse-link-color;
     }
+
+    @media screen and (min-width: @screen-sm-min) {
+        .tabs > .more {
+            li.show-more a {
+                text-align: center;
+            }
+
+            .after-show-more {
+                display: none;
+            }
+
+            .more-expanded {
+                .show-more {
+                    display: none;
+                }
+                .after-show-more {
+                    display: list-item;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: (@screen-sm-min - 1px)) {
+        li.show-more {
+            display: none;
+        }
+    }
 }
 
 @media screen and (min-width: @screen-sm-min) {

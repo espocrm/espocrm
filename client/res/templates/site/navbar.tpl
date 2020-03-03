@@ -12,8 +12,8 @@
             {{#each tabDefsList}}
             {{#unless isInMore}}
             <li data-name="{{name}}" class="not-in-more tab">
-                <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
-                    <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
+                <a href="{{link}}" class="{{aClassName}}"{{#if color}} style="border-color: {{color}}"{{/if}}>
+                    <span class="short-label"{{#if label}} title="{{label}}"{{/if}}{{#if color}} style="color: {{color}}"{{/if}}>
                         {{#if iconClass}}
                         <span class="{{iconClass}}"></span>
                         {{else}}
@@ -23,7 +23,10 @@
                         <span class="short-label-text">{{shortLabel}}</span>
                         {{/if}}
                     </span>
+                    {{#if label}}
                     <span class="full-label">{{label}}</span>
+                    {{/if}}
+                    {{#if html}}{{{html}}}{{/if}}
                 </a>
             </li>
             {{/unless}}
@@ -33,8 +36,8 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList}}
                 {{#if isInMore}}
-                    <li data-name="{{name}}" class="in-more tab">
-                        <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
+                    <li data-name="{{name}}" class="in-more tab{{#if className}} {{className}}{{/if}}">
+                        <a href="{{link}}" class="{{aClassName}}"{{#if color}} style="border-color: {{color}}"{{/if}}>
                             <span class="short-label"{{#if color}} style="color: {{color}}"{{/if}}>
                                 {{#if iconClass}}
                                 <span class="{{iconClass}}"></span>
@@ -45,7 +48,10 @@
                                 <span class="short-label-text">&nbsp;</span>
                                 {{/if}}
                             </span>
+                            {{#if label}}
                             <span class="full-label">{{label}}</span>
+                            {{/if}}
+                            {{#if html}}{{{html}}}{{/if}}
                         </a>
                     </li>
                 {{/if}}

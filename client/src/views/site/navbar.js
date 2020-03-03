@@ -87,6 +87,10 @@ define('views/site/navbar', 'view', function (Dep) {
             'click [data-action="toggleCollapsable"]': function () {
                 this.toggleCollapsable();
             },
+            'click li.show-more a': function (e) {
+                e.stopPropagation();
+                this.showMoreTabs();
+            },
         },
 
         isCollapsableVisible: function () {
@@ -206,7 +210,7 @@ define('views/site/navbar', 'view', function (Dep) {
             var scopes = this.getMetadata().get('scopes') || {};
 
             this.tabList = tabList.filter(function (scope) {
-                if (scope === '_delimiter_' || scope === 'Home') return true;
+                if (~['Home', '_delimiter_', '_delimiter-ext_'].indexOf(scope)) return true;
                 if (!scopes[scope]) return false;
 
                 var defs = scopes[scope] || {};
@@ -264,16 +268,48 @@ define('views/site/navbar', 'view', function (Dep) {
 
         adjustHorizontal: function () {
             var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
+            var navbarHeight = this.getNavbarHeight();
 
             var $window = $(window);
 
-            var $tabs = this.$el.find('ul.tabs');
-            var $moreDropdown = $tabs.find('li.more');
-            var $more = $tabs.find('li.more > ul');
+            var $tabs = this.$tabs;
+            var $more = this.$more;
+            var $moreDropdown = this.$moreDropdown;
 
             $window.on('resize.navbar', function() {
                 updateWidth();
             });
+
+            $window.on('scroll.navbar', function () {
+                if (!this.isMoreDropdownShown) return;
+                $more.scrollTop($window.scrollTop());
+            }.bind(this));
+
+            this.$moreDropdown.on('shown.bs.dropdown', function () {
+                $more.scrollTop($window.scrollTop());
+            });
+
+            this.on('show-more-tabs', function () {
+                $more.scrollTop($window.scrollTop());
+            });
+
+            var updateMoreHeight = function () {
+                var windowHeight = window.innerHeight;
+                var windowWidth = window.innerWidth;
+
+                if (windowWidth < smallScreenWidth) {
+                    $more.css('max-height', '');
+                    $more.css('overflow-y', '');
+                } else {
+                    $more.css('overflow-y', 'hidden');
+                    $more.css('max-height', (windowHeight - navbarHeight) + 'px');
+                }
+            }.bind(this);
+
+            $window.on('resize.navbar', function() {
+                updateMoreHeight();
+            });
+            updateMoreHeight();
 
             var hideOneTab = function () {
                 var count = $tabs.children().length;
@@ -298,12 +334,13 @@ define('views/site/navbar', 'view', function (Dep) {
                 $navbar.css('overflow', 'visible');
             }
 
-            var navbarHeight = this.getThemeManager().getParam('navbarHeight') || 43;
             var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 556;
 
             var tabCount = this.tabList.length;
 
             var navbarNeededHeight = navbarHeight + 1;
+
+            this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightHorizontal';
 
             $moreDd = $('#nav-more-tabs-dropdown');
             $moreLi = $moreDd.closest('li');
@@ -368,7 +405,7 @@ define('views/site/navbar', 'view', function (Dep) {
                         processUpdateWidth(true);
                     }, 1000);
                 }
-            };
+            }.bind(this);
 
             if ($navbar.height() <= navbarNeededHeight && $more.children().length === 0) {
                 $more.parent().addClass('hidden');
@@ -379,28 +416,32 @@ define('views/site/navbar', 'view', function (Dep) {
 
         adjustVertical: function () {
             var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 85;
+            var navbarStaticItemsHeight = this.getStaticItemsHeight();
 
             var $window = $(window);
 
-            var $tabs = this.$el.find('ul.tabs');
+            var $tabs = this.$tabs;
+            var $more = this.$more;
 
-            var minHeight = $tabs.height() + navbarStaticItemsHeight;
-
-            var $more = $tabs.find('li.more > ul');
-
-            minHeight = Math.max(minHeight, $more.height());
+            this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightVertical';
 
             if ($more.children().length === 0) {
                 $more.parent().addClass('hidden');
             }
 
-            $('body').css('minHeight', minHeight + 'px');
-
             $window.on('scroll.navbar', function () {
                 $tabs.scrollTop($window.scrollTop());
+                if (!this.isMoreDropdownShown) return;
                 $more.scrollTop($window.scrollTop());
             }.bind(this));
+
+            this.$moreDropdown.on('shown.bs.dropdown', function () {
+                $more.scrollTop($window.scrollTop());
+            });
+
+            this.on('show-more-tabs', function () {
+                $more.scrollTop($window.scrollTop());
+            });
 
             var updateSizeForVertical = function () {
                 var windowHeight = window.innerHeight;
@@ -423,8 +464,67 @@ define('views/site/navbar', 'view', function (Dep) {
             this.$el.find('.notifications-badge-container').insertAfter(this.$el.find('.quick-create-container'));
         },
 
+        getNavbarHeight: function () {
+            return this.getThemeManager().getParam('navbarHeight') || 43;
+        },
+
+        getStaticItemsHeight: function () {
+            return this.getThemeManager().getParam('navbarStaticItemsHeight') || 85;
+        },
+
+        adjustBodyMinHeight: function () {
+            if (!this.adjustBodyMinHeightMethodName) return;
+
+            this[this.adjustBodyMinHeightMethodName]();
+        },
+
+        adjustBodyMinHeightVertical: function () {
+            var minHeight = this.$tabs.height() + this.getStaticItemsHeight();
+
+            var moreHeight = 0;
+            this.$more.find('> li:visible').each(function (i, el) {
+                var $el = $(el);
+                moreHeight += $el.height();
+            }.bind(this));
+
+            minHeight = Math.max(minHeight, moreHeight);
+
+            this.$body.css('minHeight', minHeight + 'px');
+        },
+
+        adjustBodyMinHeightHorizontal: function () {
+            var height = this.getNavbarHeight();
+
+            this.$more.find('> li').each(function (i, el) {
+                var $el = $(el);
+                if (!this.isMoreTabsShown) {
+                    if ($el.hasClass('after-show-more')) return;
+                } else {
+                    if ($el.hasClass('show-more')) return;
+                }
+                height += $el.height();
+            }.bind(this));
+
+            this.$body.css('minHeight', height + 'px');
+        },
+
         afterRender: function () {
             this.$body = $('body');
+            this.$tabs = this.$el.find('ul.tabs');
+            this.$more = this.$tabs.find('li.more > ul');
+
+            var $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
+
+            $moreDd.on('shown.bs.dropdown', function () {
+                this.isMoreDropdownShown = true;
+                this.adjustBodyMinHeight();
+            }.bind(this));
+
+            $moreDd.on('hidden.bs.dropdown', function () {
+                this.isMoreDropdownShown = false;
+                this.hideMoreTabs();
+                this.adjustBodyMinHeight();
+            }.bind(this));
 
             this.selectTab(this.getRouter().getLast().controller);
 
@@ -505,6 +605,8 @@ define('views/site/navbar', 'view', function (Dep) {
         setupTabDefsList: function () {
             var tabDefsList = [];
             var moreIsMet = false;
+            var isHidden = false;
+
             var colorsDisabled =
                 this.getPreferences().get('scopeColorsDisabled') ||
                 this.getPreferences().get('tabColorsDisabled') ||
@@ -513,9 +615,22 @@ define('views/site/navbar', 'view', function (Dep) {
             var tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
 
             this.tabList.forEach(function (tab, i) {
-                if (tab === '_delimiter_') {
-                    moreIsMet = true;
-                    return;
+                if (tab === '_delimiter_' || tab === '_delimiter-ext_') {
+                    if (!moreIsMet) {
+                        moreIsMet = true;
+                        return;
+                    } else {
+                        if (i == this.tabList.length - 1) return;
+                        isHidden = true;
+                        tabDefsList.push({
+                            name: 'show-more',
+                            link: 'javascript:',
+                            isInMore: true,
+                            className: 'show-more',
+                            html: '<span class="fas fa-ellipsis-h more-icon"></span>',
+                        });
+                        return;
+                    }
                 }
 
                 var label;
@@ -548,8 +663,11 @@ define('views/site/navbar', 'view', function (Dep) {
                     name: tab,
                     isInMore: moreIsMet,
                     color: color,
-                    iconClass: iconClass
+                    iconClass: iconClass,
+                    isAfterShowMore: isHidden,
+                    aClassName: 'nav-link',
                 };
+                if (isHidden) o.className = 'after-show-more';
                 if (color && !iconClass) {
                     o.colorIconClass = 'color-icon fas fa-square-full';
                 }
@@ -642,7 +760,21 @@ define('views/site/navbar', 'view', function (Dep) {
                     this.clearView('dialog');
                 }, this);
             }, this);
-        }
-    });
+        },
 
+        showMoreTabs: function () {
+            this.isMoreTabsShown = true;
+            this.$more.addClass('more-expanded');
+            this.adjustBodyMinHeight();
+            this.trigger('show-more-tabs');
+        },
+
+        hideMoreTabs: function () {
+            if (!this.isMoreTabsShown) return;
+            this.$more.removeClass('more-expanded');
+            this.adjustBodyMinHeight();
+
+            this.isMoreTabsShown = false;
+        },
+    });
 });

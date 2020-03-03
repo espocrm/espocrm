@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
+
+define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
 
     return Dep.extend({
 
@@ -39,6 +40,7 @@ Espo.define('views/settings/fields/tab-list', 'views/fields/array', function (De
             }.bind(this));
 
             this.params.options.push('_delimiter_');
+            this.params.options.push('_delimiter-ext_');
 
             this.translatedOptions = {};
 
@@ -47,8 +49,8 @@ Espo.define('views/settings/fields/tab-list', 'views/fields/array', function (De
             }, this);
 
             this.translatedOptions['_delimiter_'] = '. . .';
-        }
+            this.translatedOptions['_delimiter-ext_'] = '. . .';
+        },
 
     });
-
 });
