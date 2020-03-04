@@ -203,6 +203,8 @@ class Base
             }
 
             if (
+                $sortBy != 'id'
+                &&
                 $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'orderById'])
                 &&
                 $this->getSeed()->hasAttribute('id')
