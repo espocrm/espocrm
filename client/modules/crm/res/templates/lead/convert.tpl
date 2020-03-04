@@ -7,7 +7,7 @@
 </div>
 
 {{#each scopeList}}
-<div>
+<div class="record">
     <label><h4><input type="checkbox" class="check-scope" data-scope="{{./this}}"> {{translate this category='scopeNames'}}</h4></label>
     <div class="edit-container-{{toDom this}} hide">
     {{{var this ../this}}}
@@ -15,7 +15,7 @@
 </div>
 {{/each}}
 
-<div class="button-container">
+<div class="button-container margin-top">
     <div class="btn-group">
         <button class="btn btn-primary" data-action="convert">{{translate 'Convert' scope='Lead'}}</button>
         <button class="btn btn-default" data-action="cancel">{{translate 'Cancel'}}</button>
