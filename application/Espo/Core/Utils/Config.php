@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Exceptions\Error;
+
 class Config
 {
     private $defaultConfigPath = 'application/Espo/Core/defaults/config.php';
@@ -181,7 +183,16 @@ class Config
 
         $removeData = empty($this->removeData) ? null : $this->removeData;
 
-        $data = include($this->configPath);
+        $configPath = $this->getConfigPath();
+
+        if (!file_exists($configPath)) {
+            throw new Error('Config file ['. $configPath .'] is not found.');
+        }
+
+        $data = include($configPath);
+        if (!is_array($data)) {
+            $data = include($configPath);
+        }
 
         if (is_array($values)) {
             foreach ($values as $key => $value) {
@@ -195,7 +206,12 @@ class Config
             }
         }
 
-        $result = $this->getFileManager()->putPhpContents($this->configPath, $data, true);
+        if (!is_array($data)) {
+            $GLOBALS['log']->error('Invalid config data ['. var_export($data, true) .'] while saving to ['. $configPath .'].');
+            throw new Error('Invalid config data while saving.');
+        }
+
+        $result = $this->getFileManager()->putPhpContents($configPath, $data, true);
 
         if ($result) {
             $this->changedData = array();
