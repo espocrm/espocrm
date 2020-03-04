@@ -369,6 +369,10 @@
         "createdAtStage": {
             "columns": ["createdAt", "stage"]
         },
+        "createdAtId": {
+            "unique": true,
+            "columns": ["createdAt", "id"]
+        },
         "assignedUserStage": {
             "columns": ["assignedUserId", "stage"]
         }

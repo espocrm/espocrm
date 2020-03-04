@@ -498,6 +498,10 @@
         "createdAt": {
             "columns": ["createdAt", "deleted"]
         },
+        "createdAtId": {
+            "unique": true,
+            "columns": ["createdAt", "id"]
+        },
         "firstName": {
             "columns": ["firstName", "deleted"]
         },

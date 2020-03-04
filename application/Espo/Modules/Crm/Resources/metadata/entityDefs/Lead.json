@@ -347,6 +347,10 @@
         "createdAtStatus": {
             "columns": ["createdAt", "status"]
         },
+        "createdAtId": {
+            "unique": true,
+            "columns": ["createdAt", "id"]
+        },
         "assignedUser": {
             "columns": ["assignedUserId", "deleted"]
         },

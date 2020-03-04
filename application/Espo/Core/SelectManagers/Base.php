@@ -198,14 +198,17 @@ class Base
                 }
             }
 
+            $orderByAttribute = null;
+
             if (!is_array($result['orderBy'])) {
+                $orderByAttribute = $result['orderBy'];
                 $result['orderBy'] = [[$result['orderBy'], $desc]];
             }
 
             if (
                 $sortBy != 'id'
                 &&
-                $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'orderById'])
+                (!$orderByAttribute || !$this->getSeed()->getAttributeParam($orderByAttribute, 'unique'))
                 &&
                 $this->getSeed()->hasAttribute('id')
             ) {
@@ -2295,7 +2298,7 @@ class Base
                 $result['order'] = null;
             } else {
                 if ($this->fullTextOrderType === self::FT_ORDER_COMBINTED) {
-                     $relevanceExpression =
+                    $relevanceExpression =
                         'ROUND:(DIV:(' . $fullTextSearchData['where'] . ','.$this->fullTextOrderRelevanceDivider.'))';
 
                     if (is_string($result['orderBy'])) {
@@ -2303,6 +2306,11 @@ class Base
                             [$relevanceExpression, 'desc'],
                             [$result['orderBy'], $result['order'] ?? 'asc'],
                         ];
+                    } else if (is_array($result['orderBy'])) {
+                        $result['orderBy'] = array_merge(
+                            [[$relevanceExpression, 'desc']],
+                            $result['orderBy']
+                        );
                     }
                 }
             }
