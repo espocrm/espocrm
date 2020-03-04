@@ -393,7 +393,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     status: o.status,
                     'date-start': o.dateStart,
                     'date-end': o.dateEnd,
-                    type: 'range'
+                    type: 'range',
+                    className: 'clickable',
                 };
             }
 
@@ -466,10 +467,10 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         handleStatus: function (event) {
             if (~this.canceledStatusList.indexOf(event.status)) {
-                event.className = 'event-canceled';
-            } else {
+                event.className += ' event-canceled';
+            } /*else {
                 event.className = '';
-            }
+            }*/
         },
 
         shadeColor: function (color, percent) {
@@ -544,7 +545,12 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                             time: this.translate('time', 'labels', 'Calendar')
                         }
                     },
-                    locale: 'mylocale'
+                    locale: 'mylocale',
+                    margin: {
+                        item: {
+                            vertical: 12,
+                        },
+                    },
                 });
 
                 timeline.on('click', function (e) {

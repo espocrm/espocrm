@@ -6,11 +6,19 @@
     border-bottom: 1px solid @input-border;
 }
 
-.vis-labelset .vis-label .vis-inner {
+.vis-content .vis-item.clickable .vis-item-content {
+    cursor: pointer !important;
+}
+.vis-item .vis-item-content:not(.clickable) {
+    cursor: default !important;
+}
+
+.vis-content .vis-labelset .vis-label .vis-inner {
     max-width: 200px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    padding: @table-cell-padding;
 }
 
 .vis-foreground .vis-group,
@@ -29,7 +37,6 @@
 
 .vis-item .vis-item-content {
     color: #FFF !important;
-    cursor: default !important;
 }
 
 .vis-item.vis-range .vis-item-content,
