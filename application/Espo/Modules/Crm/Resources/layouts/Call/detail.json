@@ -1,6 +1,6 @@
 [
     {
-        "label":"Overview",
+        "label": "",
         "rows": [
             [{"name":"name"},{"name":"parent"}],
             [{"name":"status"}, {"name":"direction"}],

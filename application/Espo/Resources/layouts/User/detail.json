@@ -1,6 +1,6 @@
 [
     {
-        "label": "Overview",
+        "label": "",
         "rows": [
             [{"name":"userName"}, false],
             [{"name": "name"}, {"name": "title"}],

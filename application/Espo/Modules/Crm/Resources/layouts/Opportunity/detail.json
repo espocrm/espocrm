@@ -1,6 +1,6 @@
 [
     {
-        "label":"Overview",
+        "label": "",
         "rows":[
             [{"name":"name"},{"name":"account"}],
             [{"name":"stage"},{"name":"amount"}],

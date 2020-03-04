@@ -1,6 +1,6 @@
 [
     {
-        "label":"",
+        "label": "",
         "rows":[
             [{"name":"name", "fullWidth": true}],
             [{"name":"account", "fullWidth": true}],
