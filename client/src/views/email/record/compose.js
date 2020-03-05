@@ -109,7 +109,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
                 body = this.appendSignature(body || '', data.isHtml);
             }
 
-            if (this.initialBody) {
+            if (this.initialBody && !this.isBodyChanged) {
                 var initialBody = this.initialBody;
                 if (data.isHtml !== this.initialIsHtml) {
                     if (data.isHtml) {
