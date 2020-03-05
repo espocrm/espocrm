@@ -74,6 +74,8 @@ define('views/detail', 'views/main', function (Dep) {
             this.setupHeader();
             this.setupRecord();
 
+            this.setupPageTitle();
+
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
                 if (this.model.has('isFollowed')) {
                     this.handleFollowButton();
@@ -83,6 +85,17 @@ define('views/detail', 'views/main', function (Dep) {
                     this.handleFollowButton();
                 }, this);
             }
+        },
+
+        setupPageTitle: function () {
+            this.listenTo(this.model, 'after:save', function () {
+                this.updatePageTitle();
+            }, this);
+            this.listenTo(this.model, 'sync', function (model) {
+                if (model && model.hasChanged('name')) {
+                    this.updatePageTitle();
+                }
+            }, this);
         },
 
         setupHeader: function () {
@@ -98,7 +111,6 @@ define('views/detail', 'views/main', function (Dep) {
                     if (this.getView('header')) {
                         this.getView('header').reRender();
                     }
-                    this.updatePageTitle();
                 }
             }, this);
         },

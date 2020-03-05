@@ -333,6 +333,10 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
             text = DOMPurify.sanitize(text).toString();
 
+            if (options.linksInNewTab) {
+                text = text.replace(/<a href=/gm, '<a target="_blank" rel="noopener noreferrer" href=');
+            }
+
             text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
 
             return new Handlebars.SafeString(text);
