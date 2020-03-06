@@ -104,6 +104,25 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
             });
         },
 
+        translateValueToEditLabel: function (value) {
+            var label = value;
+
+            if (~(this.params.options || []).indexOf(value)) {
+                label = this.getLanguage().translateOption(value, this.name, this.scope);
+            }
+
+            if (this.translatedOptions) {
+                if (value in this.translatedOptions) {
+                    label = this.translatedOptions[value];
+                }
+            }
+            if (label === '') {
+                label = this.translate('None');
+            }
+
+            return label;
+        },
+
         afterRender: function () {
             if (this.mode == 'edit') {
                 var $element = this.$element = this.$el.find('[data-name="' + this.name + '"]');
@@ -113,13 +132,14 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                 var valueList = Espo.Utils.clone(this.selected);
                 for (var i in valueList) {
                     var value = valueList[i];
-                    if (valueList[i] === '') {
-                        valueList[i] = '__emptystring__';
+                    var originalValue = value;
+                    if (value === '') {
+                        value = valueList[i] = '__emptystring__';
                     }
                     if (!~(this.params.options || []).indexOf(value)) {
                         data.push({
                             value: value,
-                            label: value
+                            label: this.translateValueToEditLabel(originalValue),
                         });
                     }
                 }
@@ -127,21 +147,13 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                 this.$element.val(valueList.join(':,:'));
 
                 (this.params.options || []).forEach(function (value) {
-                    var label = this.getLanguage().translateOption(value, this.name, this.scope);
-                    if (this.translatedOptions) {
-                        if (value in this.translatedOptions) {
-                            label = this.translatedOptions[value];
-                        }
-                    }
+                    var originalValue = value;
                     if (value === '') {
                         value = '__emptystring__';
                     }
-                    if (label === '') {
-                        label = this.translate('None');
-                    }
                     data.push({
                         value: value,
-                        label: label
+                        label: this.translateValueToEditLabel(originalValue),
                     });
                 }, this);
 
