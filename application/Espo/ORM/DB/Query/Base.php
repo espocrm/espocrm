@@ -1401,8 +1401,10 @@ abstract class Base
                             $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreign). '))';
 
                             if ($wsCount > 1) {
-                               $fieldPath = "REPLACE({$fieldPath}, '  ', ' ')";
+                                $fieldPath = "REPLACE({$fieldPath}, '  ', ' ')";
                             }
+
+                            $fieldPath = "NULLIF({$fieldPath}, '')";
                         } else {
                             $expression = $this->getAlias($entity, $relationName) . '.' . $foreign;
                             $fieldPath = $this->convertComplexExpression($entity, $expression, false, $params);
