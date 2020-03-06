@@ -35,13 +35,14 @@ define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (De
         templateContent: `
             <p>{{viewObject.message}}</p>
             {{#each viewObject.statusDataList}}
-                <p>
-                    <button class="action btn btn-{{style}} btn-x-wide" type="button" data-action="setStatus" data-status="{{name}}">
-                    {{#if selected}}<span style="text-decoration: underline;">{{/if}}
-                    {{label}}
-                    {{#if selected}}</span>{{/if}}
-                    </button>
-                </p>
+                <div class="margin-bottom">
+                    <div>
+                        <button class="action btn btn-{{style}} btn-x-wide" type="button" data-action="setStatus" data-status="{{name}}">
+                        {{label}}
+                        </button>
+                        {{#if selected}}<span class="check-icon fas fa-check" style="vertical-align: middle; margin: 0 10px;"></span>{{/if}}
+                    </div>
+                </div>
             {{/each}}
         `,
 
