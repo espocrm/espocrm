@@ -221,7 +221,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2, $selectParams['whereClause'][0]['int=']);
         $this->assertEquals(5, $selectParams['offset']);
         $this->assertEquals(10, $selectParams['limit']);
-        $this->assertEquals([['name', false]], $selectParams['orderBy']);
+        $this->assertEquals([['name', false], ['id', false]], $selectParams['orderBy']);
 
         $this->assertEquals('2016-10-10', $selectParams['whereClause'][1]['OR'][0]['date=']);
         $this->assertEquals('2016-10-10 10:10:00', $selectParams['whereClause'][1]['OR'][1]['dateTime>']);
