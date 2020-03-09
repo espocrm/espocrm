@@ -40,6 +40,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         fieldsMode: 'detail',
 
+        mode: 'detail',
+
         gridLayout: null,
 
         detailLayout: null,
@@ -519,6 +521,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     this.inlineEditModeIsOn = false;
                     this.setIsNotChanged();
                 }, this);
+                this.listenTo(fieldView, 'after:inline-edit-off', function () {
+                    if (this.updatedAttributes) {
+                        this.resetModelChanges();
+                    }
+                }, this);
             }
         },
 
@@ -652,6 +659,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         resetModelChanges: function () {
+            var skipReRender = true;
+            if (this.updatedAttributes) {
+                this.attributes = this.updatedAttributes;
+                this.updatedAttributes = null;
+                skipReRender = false;
+            }
+
             var attributes = this.model.attributes;
             for (var attr in attributes) {
                 if (!(attr in this.attributes)) {
@@ -659,7 +673,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
-            this.model.set(this.attributes, {skipReRender: true});
+            this.model.set(this.attributes, {skipReRender: skipReRender});
         },
 
         delete: function () {
@@ -914,6 +928,20 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
                 this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
             }, this);
+
+            if (
+                !this.isNew &&
+                this.getConfig().get('useWebSocket') &&
+                this.getMetadata().get(['scopes', this.entityType, 'object'])
+            ) {
+                this.subscribeToWebSocket();
+
+                this.once('remove', function () {
+                    if (this.isSubscribedToWebSocked) {
+                        this.unsubscribeFromWebSocket();
+                    }
+                }.bind(this));
+            }
         },
 
         setupBeforeFinal: function () {
@@ -1185,10 +1213,15 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
             this.enableButtons();
             this.setIsNotChanged();
+
+            setTimeout(function () {
+                this.unblockUpdateWebSocket();
+            }.bind(this), this.blockUpdateWebSocketPeriod || 500);
         },
 
         beforeSave: function () {
             this.notify('Saving...');
+            this.blockUpdateWebSocket();
         },
 
         beforeBeforeSave: function () {
@@ -1716,6 +1749,47 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             this.getRouter().navigate(url, {trigger: true});
+        },
+
+        subscribeToWebSocket: function () {
+            var topic = 'recordUpdate.' + this.entityType + '.' + this.model.id;
+            this.recordUpdateWebSocketTopic = topic;
+
+            this.isSubscribedToWebSocked = true;
+
+            this.getHelper().webSocketManager.subscribe(topic, function (t, data) {
+                this.handleRecordUpdate();
+            }.bind(this))
+        },
+
+        unsubscribeFromWebSocket: function () {
+            if (!this.isSubscribedToWebSocked) return;
+            this.getHelper().webSocketManager.unsubscribe(this.recordUpdateWebSocketTopic);
+        },
+
+        handleRecordUpdate: function () {
+            if (this.updateWebSocketIsBlocked) return;
+
+            if (this.inlineEditModeIsOn || this.mode == 'edit') {
+                var m = this.model.clone();
+                m.fetch().then(
+                    function () {
+                        if (this.inlineEditModeIsOn || this.mode == 'edit') {
+                            this.updatedAttributes = Espo.Utils.cloneDeep(m.attributes);
+                        }
+                    }.bind(this)
+                );
+            } else {
+                this.model.fetch({highlight: true});
+            }
+        },
+
+        blockUpdateWebSocket: function () {
+            this.updateWebSocketIsBlocked = true;
+        },
+
+        unblockUpdateWebSocket: function () {
+            this.updateWebSocketIsBlocked = false;
         },
 
     });

@@ -301,6 +301,21 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.setupSearch();
             }
 
+            this.on('highlight', function () {
+                var $cell = this.getCellElement();
+                $cell.addClass('highlighted');
+                $cell.addClass('transition');
+
+                setTimeout(function () {
+                    $cell.removeClass('highlighted');
+                }, this.highlightPeriod || 3000);
+
+                setTimeout(function () {
+                    $cell.removeClass('transition');
+                }, (this.highlightPeriod || 3000) + 2000);
+
+            }, this);
+
             this.on('invalid', function () {
                 var $cell = this.getCellElement();
                 $cell.addClass('has-error');
@@ -355,6 +370,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
                         if (changed && !options.skipReRender) {
                             this.reRender();
+                        }
+
+                        if (changed && options.highlight) {
+                            this.trigger('highlight');
                         }
                     }
                 }.bind(this));
@@ -595,6 +614,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             this.reRender(true);
+
+            this.trigger('after:inline-edit-off');
         },
 
         inlineEdit: function () {

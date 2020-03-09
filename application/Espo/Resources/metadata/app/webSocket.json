@@ -1,6 +1,10 @@
 {
     "categories": {
         "newNotification": {},
+        "recordUpdate": {
+            "paramList": ["scope", "id"],
+            "accessCheckCommand": "AclCheck --userId=:userId --scope=:scope --id=:id --action=read"
+        },
         "streamUpdate": {
             "paramList": ["scope", "id"],
             "accessCheckCommand": "AclCheck --userId=:userId --scope=:scope --id=:id --action=stream"

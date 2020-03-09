@@ -770,6 +770,20 @@ table.table > thead th {
     margin-bottom: 2px;
 }
 
+.cell.highlighted {
+    > label {
+        color: @state-warning-text;
+    }
+}
+
+.cell.transition {
+    > label {
+        -webkit-transition: color .5s ease;
+        -o-transition: color .5s ease;
+        transition: color .5s ease;
+    }
+}
+
 .filter .selectize-input {
     min-height: 30px;
 }

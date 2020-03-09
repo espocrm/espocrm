@@ -326,6 +326,11 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
         },
 
         resetModelChanges: function () {
+            if (this.updatedAttributes) {
+                this.attributes = this.updatedAttributes;
+                this.updatedAttributes = null;
+            }
+
             var attributes = this.model.attributes;
             for (var attr in attributes) {
                 if (!(attr in this.attributes)) {
@@ -333,7 +338,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                 }
             }
 
-            this.model.set(this.attributes);
+            this.model.set(this.attributes, {skipReRender: true});
         },
 
         setModelAttributes: function (setAttributes, options) {
