@@ -2293,11 +2293,22 @@ class Base
 
             $relevanceExpression = $fullTextSearchData['where'];
 
-            if (!isset($result['orderBy']) || $this->fullTextOrderType === self::FT_ORDER_RELEVANCE) {
+            $fullTextOrderType = $this->fullTextOrderType;
+
+            $orderTypeMap = [
+                'combined' => self::FT_ORDER_COMBINTED,
+                'relavance' => self::FT_ORDER_RELEVANCE,
+                'original' => self::FT_ORDER_ORIGINAL,
+            ];
+
+            $mOrderType = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'fullTextSearchOrderType']);
+            if ($mOrderType) $fullTextOrderType = $orderTypeMap[$mOrderType];
+
+            if (!isset($result['orderBy']) || $fullTextOrderType === self::FT_ORDER_RELEVANCE) {
                 $result['orderBy'] = [[$relevanceExpression, 'desc']];
                 $result['order'] = null;
             } else {
-                if ($this->fullTextOrderType === self::FT_ORDER_COMBINTED) {
+                if ($fullTextOrderType === self::FT_ORDER_COMBINTED) {
                     $relevanceExpression =
                         'ROUND:(DIV:(' . $fullTextSearchData['where'] . ','.$this->fullTextOrderRelevanceDivider.'))';
 
