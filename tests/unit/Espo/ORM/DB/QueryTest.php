@@ -764,6 +764,17 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction18()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => [["IFNULL:(name, '')", 'test']],
+            'withDeleted' => true
+        ]);
+        $expectedSql =
+            "SELECT IFNULL(comment.name, '') AS `test` FROM `comment`";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testFunctionTZ1()
     {
         $sql = $this->query->createSelectQuery('Comment', [

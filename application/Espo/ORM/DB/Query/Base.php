@@ -162,6 +162,8 @@ abstract class Base
         'NOT',
         'IN',
         'NOT_IN',
+        'IFNULL',
+        'NULLIF',
         'BINARY',
         'UNIX_TIMESTAMP',
         'TIMESTAMPDIFF_DAY',
@@ -195,6 +197,8 @@ abstract class Base
         'MUL',
         'DIV',
         'MOD',
+        'IFNULL',
+        'NULLIF',
         'TIMESTAMPDIFF_DAY',
         'TIMESTAMPDIFF_MONTH',
         'TIMESTAMPDIFF_YEAR',
@@ -1401,8 +1405,10 @@ abstract class Base
                             $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreign). '))';
 
                             if ($wsCount > 1) {
-                               $fieldPath = "REPLACE({$fieldPath}, '  ', ' ')";
+                                $fieldPath = "REPLACE({$fieldPath}, '  ', ' ')";
                             }
+
+                            $fieldPath = "NULLIF({$fieldPath}, '')";
                         } else {
                             $expression = $this->getAlias($entity, $relationName) . '.' . $foreign;
                             $fieldPath = $this->convertComplexExpression($entity, $expression, false, $params);

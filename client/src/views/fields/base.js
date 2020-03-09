@@ -381,7 +381,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }
 
                 tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
-                tooltipText = this.getHelper().transfromMarkdownText(tooltipText).toString();
+                tooltipText = this.getHelper().transfromMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
                 $a.popover({
                     placement: 'bottom',
