@@ -552,6 +552,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                         item: {
                             vertical: 12,
                         },
+                        axis: 6,
                     },
                 });
 
