@@ -311,7 +311,8 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 dateEnd: o.dateEnd,
                 dateStartDate: o.dateStartDate,
                 dateEndDate: o.dateEndDate,
-                status: o.status
+                status: o.status,
+                color: o.color,
             };
 
             if (this.teamIdList && o.userIdList) {
@@ -360,7 +361,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
         fillColor: function (event) {
             var color = this.colors[event.scope];
-            var d = event.dateEnd;
+
+            if (event.color) {
+                color = event.color;
+            }
 
             if (!color) {
                 color = this.getColorFromScopeName(event.scope);
@@ -764,14 +768,13 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 url += '&teamIdList=' + encodeURIComponent(this.teamIdList.join(','));
             }
 
-            $.ajax({
-                url: url,
-                success: function (data) {
+            Espo.Ajax.getRequest(url).then(
+                function (data) {
                     var events = this.convertToFcEvents(data);
                     callback(events);
-                    this.notify(false);
+                    Espo.Ui.notify(false);
                 }.bind(this)
-            });
+            );
         },
 
         addModel: function (model) {
@@ -841,7 +844,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             this.colors[scope] = additionalColorList[index];
 
             return this.colors[scope];
-        }
+        },
 
     });
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
+define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
     return Dep.extend({
 
@@ -395,6 +395,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     'date-end': o.dateEnd,
                     type: 'range',
                     className: 'clickable',
+                    color: o.color,
                 };
             }
 
@@ -446,7 +447,10 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         fillColor: function (event) {
             var color = this.colors[event.scope];
-            var d = event.dateEnd;
+
+            if (event.color) {
+                color = event.color;
+            }
 
             if (!color) {
                 color = this.getColorFromScopeName(event.scope);
@@ -468,9 +472,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         handleStatus: function (event) {
             if (~this.canceledStatusList.indexOf(event.status)) {
                 event.className += ' event-canceled';
-            } /*else {
-                event.className = '';
-            }*/
+            }
         },
 
         shadeColor: function (color, percent) {
