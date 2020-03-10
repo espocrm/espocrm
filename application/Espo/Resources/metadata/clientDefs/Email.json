@@ -22,6 +22,7 @@
     "quickCreateModalType":"compose",
     "defaultSidePanelFieldList": [
         "teams",
+        "status",
         "replied",
         "replies"
     ],

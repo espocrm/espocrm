@@ -2,8 +2,8 @@
     {
         "label":"",
         "rows":[
-            [{"name":"status"},{"name":"from"}],
-            [{"name":"dateSent"}, {"name":"to"}],
+            [{"name":"dateSent"},{"name":"from"}],
+            [false, {"name":"to"}],
             [{"name":"parent"}, {"name":"cc"}],
             [false, {"name":"bcc"}],
             [{"name":"subject","fullWidth":true}],

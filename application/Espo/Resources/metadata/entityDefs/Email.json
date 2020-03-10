@@ -211,7 +211,12 @@
             "type": "enum",
             "options": ["Draft", "Sending", "Sent", "Archived", "Failed"],
             "default": "Archived",
-            "clientReadOnly": true
+            "clientReadOnly": true,
+            "style": {
+                "Draft": "warning",
+                "Failed": "danger",
+                "Sending": "warning"
+            }
         },
         "attachments": {
             "type": "attachmentMultiple",
