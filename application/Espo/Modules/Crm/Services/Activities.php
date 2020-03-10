@@ -903,43 +903,50 @@ class Activities extends \Espo\Core\Services\Base
     {
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
 
-        $selectParams = array(
-            'select' => [
-                ['VALUE:Meeting', 'scope'],
-                'id',
-                'name',
-                ['dateStart', 'dateStart'],
-                ['dateEnd', 'dateEnd'],
-                'status',
-                ['dateStartDate', 'dateStartDate'],
-                ['dateEndDate', 'dateEndDate'],
-                'parentType',
-                'parentId',
-                'createdAt'
-            ],
+        $select = [
+            ['VALUE:Meeting', 'scope'],
+            'id',
+            'name',
+            ['dateStart', 'dateStart'],
+            ['dateEnd', 'dateEnd'],
+            'status',
+            ['dateStartDate', 'dateStartDate'],
+            ['dateEndDate', 'dateEndDate'],
+            'parentType',
+            'parentId',
+            'createdAt',
+        ];
+
+        $seed = $this->getEntityManager()->getEntity('Meeting');
+
+        foreach ($this->getMetadata()->get(['app', 'calendar', 'additionalAttributeList']) ?? [] as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ? [$attribute, $attribute] : ['VALUE:', $attribute];
+        }
+
+        $selectParams = [
+            'select' => $select,
             'leftJoins' => ['users'],
-            'whereClause' => array(
+            'whereClause' => [
                 'usersMiddle.userId' => $userId,
-                array(
-                    'OR' => array(
-                        array(
+                [
+                    'OR' => [
+                        [
                             'dateStart>=' => $from,
-                            'dateStart<' => $to
-                        ),
-                        array(
+                            'dateStart<' => $to,
+                        ],
+                        [
                             'dateEnd>=' => $from,
-                            'dateEnd<' => $to
-                        ),
-                        array(
+                            'dateEnd<' => $to,
+                        ],
+                        [
                             'dateStart<=' => $from,
-                            'dateEnd>=' => $to
-                        )
-                    )
-                ),
-                'usersMiddle.status!=' => 'Declined'
-            ),
-            'customJoin' => ''
-        );
+                            'dateEnd>=' => $to,
+                        ],
+                    ],
+                ],
+                'usersMiddle.status!=' => 'Declined',
+            ],
+        ];
 
         if (!$skipAcl) {
             $selectManager->applyAccess($selectParams);
@@ -952,43 +959,50 @@ class Activities extends \Espo\Core\Services\Base
     {
         $selectManager = $this->getSelectManagerFactory()->create('Call');
 
-        $selectParams = array(
-            'select' => [
-                ['VALUE:Call', 'scope'],
-                'id',
-                'name',
-                ['dateStart', 'dateStart'],
-                ['dateEnd', 'dateEnd'],
-                'status',
-                ['VALUE:', 'dateStartDate'],
-                ['VALUE:', 'dateEndDate'],
-                'parentType',
-                'parentId',
-                'createdAt'
-            ],
+        $select = [
+            ['VALUE:Call', 'scope'],
+            'id',
+            'name',
+            ['dateStart', 'dateStart'],
+            ['dateEnd', 'dateEnd'],
+            'status',
+            ['VALUE:', 'dateStartDate'],
+            ['VALUE:', 'dateEndDate'],
+            'parentType',
+            'parentId',
+            'createdAt',
+        ];
+
+        $seed = $this->getEntityManager()->getEntity('Call');
+
+        foreach ($this->getMetadata()->get(['app', 'calendar', 'additionalAttributeList']) ?? [] as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ? [$attribute, $attribute] : ['VALUE:', $attribute];
+        }
+
+        $selectParams = [
+            'select' => $select,
             'leftJoins' => ['users'],
-            'whereClause' => array(
+            'whereClause' => [
                 'usersMiddle.userId' => $userId,
-                array(
-                    'OR' => array(
-                        array(
+                [
+                    'OR' => [
+                        [
                             'dateStart>=' => $from,
-                            'dateStart<' => $to
-                        ),
-                        array(
+                            'dateStart<' => $to,
+                        ],
+                        [
                             'dateEnd>=' => $from,
-                            'dateEnd<' => $to
-                        ),
-                        array(
+                            'dateEnd<' => $to,
+                        ],
+                        [
                             'dateStart<=' => $from,
-                            'dateEnd>=' => $to
-                        )
-                    )
-                ),
-                'usersMiddle.status!=' => 'Declined'
-            ),
-            'customJoin' => ''
-        );
+                            'dateEnd>=' => $to,
+                        ],
+                    ]
+                ],
+                'usersMiddle.status!=' => 'Declined',
+            ],
+        ];
 
         if (!$skipAcl) {
             $selectManager->applyAccess($selectParams);
@@ -1001,8 +1015,7 @@ class Activities extends \Espo\Core\Services\Base
     {
         $selectManager = $this->getSelectManagerFactory()->create('Task');
 
-        $selectParams = array(
-            'select' => [
+        $select = [
                 ['VALUE:Task', 'scope'],
                 'id',
                 'name',
@@ -1013,29 +1026,38 @@ class Activities extends \Espo\Core\Services\Base
                 ['dateEndDate', 'dateEndDate'],
                 'parentType',
                 'parentId',
-                'createdAt'
-            ],
-            'whereClause' => array(
-                array(
-                    'OR' => array(
-                        array(
+                'createdAt',
+        ];
+
+        $seed = $this->getEntityManager()->getEntity('Task');
+
+        foreach ($this->getMetadata()->get(['app', 'calendar', 'additionalAttributeList']) ?? [] as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ? [$attribute, $attribute] : ['VALUE:', $attribute];
+        }
+
+        $selectParams = [
+            'select' => $select,
+            'whereClause' => [
+                [
+                    'OR' => [
+                        [
                             'dateEnd' => null,
                             'dateStart>=' => $from,
                             'dateStart<' => $to,
-                        ),
-                        array(
+                        ],
+                        [
                             'dateEnd>=' => $from,
                             'dateEnd<' => $to,
-                        ),
-                        array(
+                        ],
+                        [
                             'dateEndDate!=' => null,
                             'dateEndDate>=' => $from,
                             'dateEndDate<' => $to,
-                        )
-                    )
-                )
-            )
-        );
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
         if ($this->getMetadata()->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple') {
             $selectManager->setDistinct(true, $selectParams);
@@ -1069,8 +1091,12 @@ class Activities extends \Espo\Core\Services\Base
             ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
             ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
             ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
-            'createdAt'
+            'createdAt',
         ];
+
+        foreach ($this->getMetadata()->get(['app', 'calendar', 'additionalAttributeList']) ?? [] as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ? [$attribute, $attribute] : ['VALUE:', $attribute];
+        }
 
         $wherePart = [
             'assignedUserId' => $userId,

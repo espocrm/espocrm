@@ -4,5 +4,9 @@
         	"scope": "Opportunity",
         	"field": "leadSource"
         }
-    }
+    },
+    "frontendHiddenPathList": [
+        "__APPEND__",
+        ["app", "calendar", "additionalAttributeList"]
+    ]
 }
