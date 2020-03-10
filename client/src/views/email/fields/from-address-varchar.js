@@ -85,6 +85,10 @@ define(
             if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
                 EmailAddress.prototype.initSearchAutocomplete.call(this);
             }
+
+            if (this.mode == 'edit' && this.getAcl().check('Email', 'create')) {
+                EmailAddress.prototype.initSearchAutocomplete.call(this);
+            }
         },
 
         getAutocompleteMaxCount: function () {
