@@ -77,7 +77,8 @@
                             if ('customLabel' in cell) {
                                 print (cell.customLabel);
                             } else {
-                                print ("{{translate \""+cell.field+"\" scope=\""+model.name+"\" category='fields'}}");
+                                var label = cell.label || cell.field;
+                                print ("{{translate \""+label+"\" scope=\""+model.name+"\" category='fields'}}");
                             }
                         %></span></label><% } %>
                         <div class="field<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden{{/if}}<% } %>" data-name="<%= cell.field %>"><%

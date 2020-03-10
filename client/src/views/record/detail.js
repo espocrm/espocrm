@@ -1566,6 +1566,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         if ('customLabel' in cellDefs) {
                             cell.customLabel = cellDefs.customLabel;
                         }
+                        if ('label' in cellDefs) {
+                            cell.label = cellDefs.label;
+                        }
                         if ('customCode' in cellDefs) {
                             cell.customCode = cellDefs.customCode;
                         }

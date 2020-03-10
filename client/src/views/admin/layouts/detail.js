@@ -41,6 +41,10 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             name: {
                 readOnly: true
             },
+            label: {
+                type: 'varchar',
+                readOnly: true
+            },
             customLabel: {
                 type: 'varchar',
                 readOnly: true
