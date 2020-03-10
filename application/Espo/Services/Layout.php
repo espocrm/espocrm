@@ -203,8 +203,6 @@ class Layout extends \Espo\Core\Services\Base
 
     public function getOriginal(string $scope, string $name, ?string $setId = null)
     {
-        $this->getInjection('dataManager')->updateCacheTimestamp();
-
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId, true);
             if ($layout) {
