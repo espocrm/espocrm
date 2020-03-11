@@ -252,6 +252,7 @@
         "account": {
             "type": "link",
             "notStorable": true,
+            "directAccessDisabled": true,
             "foreignAccessDisabled": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
