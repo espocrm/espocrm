@@ -93,6 +93,8 @@ define(
         this.url = options.url || this.url;
         this.basePath = options.basePath || '';
 
+        this.ajaxTimeout = options.ajaxTimeout || 0;
+
         this.appParams = {};
 
         this.loader = Espo.loader;
@@ -644,7 +646,7 @@ define(
                     }
                 },
                 dataType: 'json',
-                timeout: 60000,
+                timeout: this.ajaxTimeout,
                 contentType: 'application/json'
             });
 
