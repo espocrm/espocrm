@@ -102,6 +102,7 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
                 }
                 item = Espo.Utils.clone(item);
                 item.viewKey = item.name + 'Field';
+                item.label = item.label || item.name;
 
                 if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
@@ -113,7 +114,10 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
 
             this.fieldList = this.fieldList.filter(function (item) {
                 if (!item.name) return;
-                if (!(item.name in (((this.model.defs || {}).fields) || {}))) return;
+
+                if (!item.isAdditional) {
+                    if (!(item.name in (((this.model.defs || {}).fields) || {}))) return;
+                }
                 return true;
             }, this);
 
@@ -208,16 +212,20 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
                 } else {
                    field = item;
                 }
-                if (!(field in this.model.defs.fields)) {
-                    return;
+
+                if (!item.isAdditional) {
+                    if (!(field in this.model.defs.fields)) {
+                        return;
+                    }
                 }
-                this.createField(field, view, null, null, readOnly);
+
+                this.createField(field, view, null, null, readOnly, item.options);
 
             }, this);
         },
 
         getFields: function () {
-            return this.getFields();
+            return this.getFieldViews();
         },
 
         getFieldViews: function () {

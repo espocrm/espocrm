@@ -26,11 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/panels/default-side', 'views/record/panels/side', function (Dep) {
+define('views/record/panels/default-side', 'views/record/panels/side', function (Dep) {
 
     return Dep.extend({
-
-        template: 'record/panels/default-side',
 
         data: function () {
             var data = Dep.prototype.data.call(this);
@@ -43,7 +41,7 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
         },
 
         setup: function () {
-            Dep.prototype.setup.call(this);
+            this.fieldList = Espo.Utils.cloneDeep(this.fieldList);
 
             this.hasComplexCreated =
                 !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'createdAt'])
@@ -55,10 +53,22 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
                 &&
                 !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedBy']);
 
+            Dep.prototype.setup.call(this);
+        },
+
+        setupFields: function () {
+            Dep.prototype.setupFields.call(this);
+
             if (!this.complexCreatedDisabled) {
                 if (this.hasComplexCreated) {
-                    this.createField('createdBy', null, null, null, true);
-                    this.createField('createdAt', null, null, null, true);
+                    this.fieldList.push({
+                        name: 'complexCreated',
+                        labelText: this.translate('Created'),
+                        isAdditional: true,
+                        view: 'views/fields/complex-created',
+                        readOnly: true,
+                    });
+
                     if (!this.model.get('createdById')) {
                         this.recordViewObject.hideField('complexCreated');
                     }
@@ -69,8 +79,16 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
 
             if (!this.complexModifiedDisabled) {
                 if (this.hasComplexModified) {
-                    this.createField('modifiedBy', null, null, null, true);
-                    this.createField('modifiedAt', null, null, null, true);
+                    this.fieldList.push({
+                        name: 'complexModified',
+                        labelText: this.translate('Modified'),
+                        isAdditional: true,
+                        view: 'views/fields/complex-created',
+                        readOnly: true,
+                        options: {
+                            baseName: 'modified',
+                        },
+                    });
                 }
                 if (!this.model.get('modifiedById')) {
                     this.recordViewObject.hideField('complexModified');
@@ -93,7 +111,13 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
             }
 
             if (this.getMetadata().get(['scopes', this.model.name ,'stream']) && !this.getUser().isPortal()) {
-                this.createField('followers', 'views/fields/followers', null, null, true);
+                this.fieldList.push({
+                    name: 'followers',
+                    labelText: this.translate('Followers'),
+                    isAdditional: true,
+                    view: 'views/fields/followers',
+                    readOnly: true,
+                });
                 this.controlFollowersField();
                 this.listenTo(this.model, 'change:followersIds', this.controlFollowersField, this);
             }
@@ -105,6 +129,7 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
             } else {
                 this.recordViewObject.hideField('followers');
             }
-        }
+        },
+
     });
 });

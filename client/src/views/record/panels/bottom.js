@@ -102,6 +102,7 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
                 }
                 item = Espo.Utils.clone(item);
                 item.viewKey = item.name + 'Field';
+                item.label = item.label || item.name;
 
                 if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
@@ -143,7 +144,7 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
         },
 
         getFields: function () {
-            return this.getFields();
+            return this.getFieldViews();
         },
 
         getFieldList: function () {
