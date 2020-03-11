@@ -267,12 +267,14 @@
         "replied": {
             "type": "link",
             "noJoin": true,
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/email/fields/replied"
         },
         "replies": {
             "type": "linkMultiple",
             "readOnly": true,
-            "orderBy": "dateSent"
+            "orderBy": "dateSent",
+            "view": "views/email/fields/replies"
         },
         "isSystem": {
             "type": "bool",
