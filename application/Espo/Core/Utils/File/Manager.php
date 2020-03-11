@@ -38,6 +38,8 @@ class Manager
 
     private $permissionDeniedList = array();
 
+    protected $tmpDir = 'data/tmp';
+
     public function __construct(\Espo\Core\Utils\Config $config = null)
     {
         $params = null;
@@ -195,7 +197,7 @@ class Manager
      *
      * @return bool
      */
-    public function putContents($path, $data, $flags = 0)
+    public function putContents($path, $data, $flags = 0, bool $useRenaming = false)
     {
         $fullPath = $this->concatPaths($path); //todo remove after changing the params
 
@@ -203,12 +205,48 @@ class Manager
             throw new Error('Permission denied for '. $fullPath);
         }
 
-        $res = (file_put_contents($fullPath, $data, $flags) !== FALSE);
-        if ($res && function_exists('opcache_invalidate')) {
+        $result = false;
+
+        if ($useRenaming) {
+            $result = $this->putContentsUseRenaming($fullPath, $data);
+        }
+
+        if (!$result) {
+            $result = (file_put_contents($fullPath, $data, $flags) !== FALSE);
+        }
+
+        if ($result && function_exists('opcache_invalidate')) {
             @opcache_invalidate($fullPath);
         }
 
-        return $res;
+        return $result;
+    }
+
+    protected function putContentsUseRenaming($path, $data)
+    {
+        $tmpDir = $this->tmpDir;
+        if (!$this->isDir($tmpDir)) $this->mkdir($tmpDir);
+        if (!$this->isDir($tmpDir)) return false;
+
+        $tmpPath = tempnam($tmpDir, 'tmp');
+
+        if (!$tmpPath) return false;
+        if (!$this->isFile($tmpPath)) return false;
+        if (!$this->isWritable($tmpPath)) return false;
+
+        $h = fopen($tmpPath, 'w');
+        fwrite($h, $data);
+        fclose($h);
+
+        $this->getPermissionUtils()->setDefaultPermissions($tmpPath);
+
+        if (!$this->isReadable($tmpPath)) return false;
+
+        $result = rename($tmpPath, $path);
+
+        if ($this->isFile($tmpPath)) $this->removeFile($tmpPath);
+
+        return $result;
     }
 
     /**
@@ -219,9 +257,9 @@ class Manager
      *
      * @return bool
      */
-    public function putPhpContents($path, $data, $withObjects = false)
+    public function putPhpContents($path, $data, $withObjects = false, bool $useRenaming = false)
     {
-        return $this->putContents($path, $this->wrapForDataExport($data, $withObjects), LOCK_EX);
+        return $this->putContents($path, $this->wrapForDataExport($data, $withObjects), LOCK_EX, $useRenaming);
     }
 
     /**

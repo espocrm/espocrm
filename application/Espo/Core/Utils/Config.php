@@ -211,7 +211,7 @@ class Config
             throw new Error('Invalid config data while saving.');
         }
 
-        $result = $this->getFileManager()->putPhpContents($configPath, $data, true);
+        $result = $this->getFileManager()->putPhpContents($configPath, $data, true, true);
 
         if ($result) {
             $this->changedData = array();
