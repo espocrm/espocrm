@@ -2694,9 +2694,9 @@ class Base
             }
         }
 
-        if (!empty($params['orderBy'])) {
-            $sortByField = $params['orderBy'];
+        $sortByField = $params['orderBy'] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
 
+        if ($sortByField) {
             $sortByAttributeList = $this->getFieldManagerUtil()->getAttributeList($this->getEntityType(), $sortByField);
             foreach ($sortByAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
