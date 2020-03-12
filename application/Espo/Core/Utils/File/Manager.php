@@ -229,6 +229,7 @@ class Manager
         if (!$this->isDir($tmpDir)) return false;
 
         $tmpPath = tempnam($tmpDir, 'tmp');
+        $tmpPath = $this->getRelativePath($tmpPath);
 
         if (!$tmpPath) return false;
         if (!$this->isFile($tmpPath)) return false;
@@ -977,5 +978,22 @@ class Manager
         }
 
         return $fullPath;
+    }
+
+    public function getRelativePath($path, $basePath = null, $dirSeparator = null)
+    {
+        if (!$basePath) {
+            $basePath = getcwd();
+        }
+
+        if (!$dirSeparator) {
+            $dirSeparator = Utils\Util::getSeparator();
+        }
+
+        if (substr($basePath, -1) != $dirSeparator) {
+            $basePath .= $dirSeparator;
+        }
+
+        return preg_replace('/^'. preg_quote($basePath, '/') . '/', '', $path);
     }
 }
