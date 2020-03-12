@@ -140,6 +140,8 @@ class Record extends \Espo\Core\Services\Base
 
     const FOLLOWERS_LIMIT = 4;
 
+    const FIND_DUPLICATES_LIMIT = 10;
+
     public function __construct()
     {
         parent::__construct();
@@ -1913,7 +1915,18 @@ class Record extends \Espo\Core\Services\Base
             }
             $select = $this->findDuplicatesSelectAttributeList;
 
-            $duplicateList = $this->getRepository()->select($select)->where($where)->limit(0, 20)->find();
+            $selectManager = $this->getSelectManager();
+
+            $selectParams = $selectManager->getEmptySelectParams();
+
+            $selectParams['select'] = $select;
+            $selectParams['whereClause'][] = $where;
+
+            $selectManager->applyAccess($selectParams);
+
+            $limit = self::FIND_DUPLICATES_LIMIT;
+
+            $duplicateList = $this->getRepository()->limit(0, $limit)->find($selectParams);
 
             if (count($duplicateList)) {
                 return $duplicateList;

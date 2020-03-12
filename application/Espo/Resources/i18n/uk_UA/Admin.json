@@ -252,7 +252,7 @@
   "templates": {
     "assignment": "Призначення",
     "mention": "Згадування",
-    "noteEmailRecieved": "Повідомлення про отриманий емейл",
+    "noteEmailReceived": "Повідомлення про отриманий емейл",
     "notePost": "Повідомлення про пост",
     "noteStatus": "Повідомлення про оновлення статусу",
     "passwordChangeLink": "Посилання на зміну паролю"

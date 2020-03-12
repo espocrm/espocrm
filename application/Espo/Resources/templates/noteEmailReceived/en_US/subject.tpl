@@ -1,0 +1,1 @@
+Email received: [{{{entityType}}}] {{{name}}}

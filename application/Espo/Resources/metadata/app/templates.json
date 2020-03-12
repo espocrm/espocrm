@@ -11,7 +11,7 @@
     "mention": {
         "scope": "Note"
     },
-    "noteEmailRecieved": {
+    "noteEmailReceived": {
         "scope": "Note"
     },
     "notePost": {
