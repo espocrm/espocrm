@@ -20,6 +20,7 @@
         "compose":"views/modals/compose-email"
     },
     "quickCreateModalType":"compose",
+    "defaultSidePanelView": "views/email/record/panels/default-side",
     "defaultSidePanelFieldList": [
         "teams",
         "status",

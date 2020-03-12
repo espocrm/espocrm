@@ -227,6 +227,9 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
 
             defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
 
+            defaultPanelDefs.view = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelView']) ||
+                defaultPanelDefs.view;
+
             var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
 
             if (!fieldList)
