@@ -669,13 +669,13 @@ class EmailNotification extends \Espo\Core\Services\Base
         $data['entityType'] = $this->getLanguage()->translate($data['parentType'], 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
-        $subjectTpl = $this->getTemplateFileManager()->getTemplate('noteEmailRecieved', 'subject', $parentType);
-        $bodyTpl = $this->getTemplateFileManager()->getTemplate('noteEmailRecieved', 'body', $parentType);
+        $subjectTpl = $this->getTemplateFileManager()->getTemplate('noteEmailReceived', 'subject', $parentType);
+        $bodyTpl = $this->getTemplateFileManager()->getTemplate('noteEmailReceived', 'body', $parentType);
 
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
-        $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-email-recieved-email-subject-' . $parentType, $data, true);
-        $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-email-recieved-email-body-' . $parentType, $data, true);
+        $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-email-received-email-subject-' . $parentType, $data, true);
+        $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-email-received-email-body-' . $parentType, $data, true);
 
         $email = $this->getEntityManager()->getEntity('Email');
 

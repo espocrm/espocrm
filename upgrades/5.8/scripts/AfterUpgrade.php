@@ -34,6 +34,12 @@ class AfterUpgrade
         $config->set('personNameFormat', 'firstLast');
         $config->set('streamEmailWithContentEntityTypeList', ['Case']);
         $config->save();
+
+        $from = 'custom/Espo/Custom/Resources/templates/noteEmailRecieved';
+        $to = 'custom/Espo/Custom/Resources/templates/noteEmailReceived';
+        if (is_dir($from)) {
+            rename($from, $to);
+        }
     }
 
     protected function populateOpportunityContactId()

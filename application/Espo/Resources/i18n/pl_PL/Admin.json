@@ -243,7 +243,7 @@
   "templates": {
     "accessInfo": "Informacje dostępowe",
     "mention": "Wzmianka",
-    "noteEmailRecieved": "Notatka o otrzymanej wiadomości e-mail",
+    "noteEmailReceived": "Notatka o otrzymanej wiadomości e-mail",
     "notePost": "Notatka o wpisie"
   }
 }
