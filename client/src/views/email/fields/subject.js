@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
+
+define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
@@ -38,6 +39,7 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
             data.isImportant = this.model.has('isImportant') && this.model.get('isImportant');
             data.hasAttachment = this.model.has('hasAttachment') && this.model.get('hasAttachment');
             data.isReplied = this.model.has('isReplied') && this.model.get('isReplied');
+            data.inTrash = this.model.has('inTrash') && this.model.get('inTrash');
 
             if (!data.isRead && !this.model.has('isRead')) {
                 data.isRead = true;
@@ -62,7 +64,7 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
         },
 
         getAttributeList: function () {
-            return ['name', 'isRead', 'isImportant', 'hasAttachment'];
+            return ['name', 'isRead', 'isImportant', 'hasAttachment', 'inTrash'];
         },
 
         setup: function () {
@@ -81,5 +83,4 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
         },
 
     });
-
 });

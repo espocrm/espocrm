@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, EmailHelper) {
+define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, EmailHelper) {
 
     return Dep.extend({
 
@@ -92,8 +92,10 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                 }
             }
 
-            this.listenTo(this.model, 'change:isImportant', function () {
+            this.listenTo(this.model, 'change', function () {
                 if (!this.isRendered()) return;
+                if (!this.model.hasChanged('isImportant') && !this.model.hasChanged('inTrash')) return;
+
                 var headerView = this.getView('header');
                 if (headerView) {
                     headerView.reRender();
@@ -374,19 +376,25 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
 
         getHeader: function () {
             var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
-            var nameHtml = name;
+            var nameHtml = '<span class="font-size-flexible title">' + name + '</span>'
+
+            var classPart = '';
             if (this.model.get('isImportant')) {
-                nameHtml = '<span class="text-warning font-size-flexible title">' + name + '</span>'
-            } else {
-                nameHtml = '<span class="font-size-flexible title">' + name + '</span>'
+                classPart += ' text-warning';
             }
+            if (this.model.get('inTrash')) {
+                classPart += ' text-muted';
+            }
+
+            nameHtml = '<span class="font-size-flexible title'+classPart+'">' + name + '</span>'
 
             var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
             var headerIconHtml = this.getHeaderIconHtml();
 
             return this.buildHeaderHtml([
-                headerIconHtml+ '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
+                headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' +
+                    this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
                 nameHtml
             ]);
         },
