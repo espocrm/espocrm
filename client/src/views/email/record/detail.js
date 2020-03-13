@@ -179,7 +179,6 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
             }.bind(this));
             this.model.set('inTrash', false);
-            this.model.set('inTrash', true);
             if (this.model.collection) {
                 this.model.collection.trigger('retrieving-from-trash', this.model.id);
             }
