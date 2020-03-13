@@ -270,7 +270,11 @@ define('acl-manager', ['acl'], function (Acl) {
         checkTeamAssignmentPermission: function (teamId) {
             if (this.get('assignmentPermission') === 'all') return true;
             return ~this.getUser().getLinkMultipleIdList('teams').indexOf(teamId);
-        }
+        },
+
+        checkField: function (scope, field, action) {
+            return !~this.getScopeForbiddenFieldList(scope, action).indexOf(field);
+        },
 
     });
 
