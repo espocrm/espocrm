@@ -162,6 +162,16 @@ define('router', [], function () {
             this.on('route', function (name, args) {
                 this.history.push(Backbone.history.fragment);
             });
+
+            window.addEventListener('beforeunload', function (e)  {
+                e = e || window.event;
+
+                if (this.confirmLeaveOut) {
+                    e.preventDefault();
+                    e.returnValue = this.confirmLeaveOutMessage;
+                    return this.confirmLeaveOutMessage;
+                }
+            }.bind(this));
         },
 
         getCurrentUrl: function () {
