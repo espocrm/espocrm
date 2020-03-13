@@ -421,6 +421,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                                 uploadedCount++;
                                 if (uploadedCount == totalCount && this.isUploading) {
                                     this.isUploading = false;
+                                    this.model.trigger('attachment-uploaded:' + this.name);
                                     this.afterAttachmentsUploaded.call(this);
                                 }
                             }

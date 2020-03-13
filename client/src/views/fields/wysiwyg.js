@@ -78,6 +78,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             if (!this.params.toolbar) {
                 if (this.params.attachmentField) {
+
                     this.toolbar.push([
                         'attachment',
                         ['attachment']
@@ -89,6 +90,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             tooltip: this.translate('Attach File'),
                             click: function () {
                                 this.attachFile();
+
+                                this.listenToOnce(this.model, 'attachment-uploaded:attachments', function () {
+                                    if (this.mode === 'edit') {
+                                        Espo.Ui.success(this.translate('Attached'));
+                                    }
+                                }, this);
                             }.bind(this)
                         });
                         return button.render();
