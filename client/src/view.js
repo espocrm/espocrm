@@ -242,6 +242,10 @@ define('view', [], function () {
                 var message = o.message;
             }
 
+            if (message) {
+                message = this.getHelper().transfromMarkdownText(message, {linksInNewTab: true}).toString();
+            }
+
             var confirmText = o.confirmText || this.translate('Yes');
             var confirmStyle = o.confirmStyle || null;
             var cancelText = o.cancelText || this.translate('Cancel');
