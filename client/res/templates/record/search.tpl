@@ -32,11 +32,11 @@
                 <button type="button" class="btn btn-default search btn-icon btn-icon-x-wide" data-action="search" title="{{translate 'Search'}}">
                     <span class="fa fa-search"></span>
                 </button>
-                <button type="button" class="btn btn-text btn-icon-wide" data-action="reset" title="{{translate 'Reset'}}">
-                    <span class="fas fa-redo-alt"></span>
-                </button>
                 <button type="button" class="btn btn-text btn-icon-wide dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1">
                     <span class="fas fa-ellipsis-v"></span>
+                </button>
+                <button type="button" class="btn btn-text btn-icon-wide" data-action="reset" title="{{translate 'Reset'}}">
+                    <span class="fas fa-redo-alt"></span>
                 </button>
                 <ul class="dropdown-menu pull-right filter-list">
                     <li class="dropdown-header">{{translate 'Add Field'}}</li>
