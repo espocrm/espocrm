@@ -271,6 +271,7 @@ define('views/record/search', 'view', function (Dep) {
                 this.handleLeftDropdownVisibility();
 
                 this.manageLabels();
+                this.controlResetButtonVisibility();
             },
             'click .advanced-filters a.remove-filter': function (e) {
                 var $target = $(e.currentTarget);
@@ -292,6 +293,7 @@ define('views/record/search', 'view', function (Dep) {
 
                 this.manageLabels();
                 this.handleLeftDropdownVisibility();
+                this.controlResetButtonVisibility();
             },
             'click button[data-action="reset"]': function (e) {
                 this.resetFilters();
@@ -474,6 +476,7 @@ define('views/record/search', 'view', function (Dep) {
         	this.$filtersLabel = this.$el.find('.search-row span.filters-label');
         	this.$filtersButton = this.$el.find('.search-row button.filters-button');
             this.$leftDropdown = this.$el.find('div.search-row div.left-dropdown');
+            this.$resetButton = this.$el.find('[data-action="reset"]');
 
             this.updateAddFilterButton();
 
@@ -481,6 +484,8 @@ define('views/record/search', 'view', function (Dep) {
             this.$advancedFiltersPanel = this.$el.find('.advanced-filters');
 
             this.manageLabels();
+
+            this.controlResetButtonVisibility();
         },
 
         manageLabels: function () {
@@ -494,6 +499,34 @@ define('views/record/search', 'view', function (Dep) {
             this.manageBoolFilters();
 
             this.$filtersLabel.html(this.currentFilterLabelList.join(', '));
+        },
+
+        controlResetButtonVisibility: function () {
+
+            var presetName = this.presetName || null;
+            var primary = this.primary;
+
+            var $resetButton = this.$resetButton;
+
+            var toShow = false;
+
+            if (this.textFilter) {
+                toShow = true;
+            } else {
+                if (presetName && presetName != primary) {
+
+                } else {
+                    if (Object.keys(this.advanced).length) {
+                        toShow = true;
+                    }
+                }
+            }
+
+            if (toShow) {
+                $resetButton.css('visibility', 'visible');
+            } else {
+                $resetButton.css('visibility', 'hidden');
+            }
         },
 
         addLabelHtml: function (label, style, id, noAction) {
@@ -603,6 +636,7 @@ define('views/record/search', 'view', function (Dep) {
             this.fetch();
             this.updateSearch();
             this.updateCollection();
+            this.controlResetButtonVisibility();
         },
 
         getFilterDataList: function () {
