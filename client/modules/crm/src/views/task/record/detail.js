@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/task/record/detail', 'views/record/detail', function (Dep) {
+define('crm:views/task/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -35,7 +35,10 @@ Espo.define('crm:views/task/record/detail', 'views/record/detail', function (Dep
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
             if (this.getAcl().checkModel(this.model, 'edit')) {
-                if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
+                if (
+                    !~['Completed', 'Canceled'].indexOf(this.model.get('status')) &&
+                    this.getAcl().checkField(this.entityType, 'status', 'edit')
+                ) {
                     this.dropdownItemList.push({
                         'label': 'Complete',
                         'name': 'setCompleted'
