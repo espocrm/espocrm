@@ -678,7 +678,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         delete: function () {
             this.confirm({
-                message: this.translate('removeRecordConfirmation', 'messages'),
+                message: this.translate('removeRecordConfirmation', 'messages', this.scope),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.trigger('before:delete');

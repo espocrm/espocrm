@@ -113,6 +113,8 @@
         "emailSent": "Email has been sent",
         "savedAsDraft": "Saved as draft",
         "sendConfirm": "Send the email?",
+        "removeSelectedRecordsConfirmation": "Are you sure you want to remove selected emails?\n\nThey will be removed for other users too.",
+        "removeRecordConfirmation": "Are you sure you want to remove the email?\n\nIt will be removed for other users too.",
         "confirmInsertTemplate": "The email body will be lost. Are you sure you want to insert the template?"
     },
     "presetFilters": {

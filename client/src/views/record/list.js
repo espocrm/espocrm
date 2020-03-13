@@ -632,7 +632,7 @@ define('views/record/list', 'view', function (Dep) {
             var deletedCount = 0;
 
             this.confirm({
-                message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
+                message: this.translate('removeSelectedRecordsConfirmation', 'messages', this.scope),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify('Removing...');
@@ -1761,7 +1761,7 @@ define('views/record/list', 'view', function (Dep) {
             }
 
             this.confirm({
-                message: this.translate('removeRecordConfirmation', 'messages'),
+                message: this.translate('removeRecordConfirmation', 'messages', this.scope),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.collection.trigger('model-removing', id);
