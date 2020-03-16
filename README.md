@@ -38,7 +38,14 @@ Note: Never update composer dependencies if you are going to contribute code bac
 
 Now you can build. Build will create compiled css files.
 
-To compose a proper *config.php* and populate database you can run install by opening `http(s)://{YOUR_CRM_URL}/install` location in a browser. Then open `data/config.php` file and add `isDeveloperMode => true`.
+To compose a proper *config.php* and populate database you can run install by opening `http(s)://{YOUR_CRM_URL}/install` location in a browser.
+
+Then open `data/config.php` file and add:
+
+```php
+'isDeveloperMode' => true,
+'useCacheInDeveloperMode' => true,
+```
 
 ### How to build (for developers)
 
