@@ -44,7 +44,6 @@ Then open `data/config.php` file and add:
 
 ```php
 'isDeveloperMode' => true,
-'useCacheInDeveloperMode' => true,
 ```
 
 ### How to build (for developers)
