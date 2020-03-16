@@ -50,6 +50,8 @@ You need to have nodejs and Grunt CLI installed.
 
 The build will be created in the `build` directory.
 
+Note: By default grunt installs composer dependencies. You can skip it by running `grunt offline`.
+
 Upgrade packages can be built with `grunt upgrade`.
 
 ### How to contribute (for developers)
