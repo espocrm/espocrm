@@ -211,7 +211,16 @@ class Config
             throw new Error('Invalid config data while saving.');
         }
 
-        $result = $this->getFileManager()->putPhpContents($configPath, $data, true);
+        $data['microtime'] = $microtime = microtime(true);
+
+        $result = $this->getFileManager()->putPhpContents($configPath, $data, true, true);
+
+        if ($result) {
+            $reloadedData = include($configPath);
+            if (!is_array($reloadedData) || $microtime !== ($reloadedData['microtime'] ?? null)) {
+                $result = $this->getFileManager()->putPhpContents($configPath, $data, true, false);
+            }
+        }
 
         if ($result) {
             $this->changedData = array();

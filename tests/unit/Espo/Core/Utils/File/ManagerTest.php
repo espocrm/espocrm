@@ -506,4 +506,28 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    public function relativePathData()
+    {
+        $tmpFile = tempnam('data/tmp', 'tmp');
+
+        return [
+            ['data/config.php', 'data/config.php'],
+            [realpath('data/config.php'), 'data/config.php'],
+            [$tmpFile, 'data/tmp/' . basename($tmpFile)],
+            [realpath('application/Espo/Core'), 'application/Espo/Core'],
+            [realpath('application/Espo/Core') . '/', 'application/Espo/Core/'],
+            [realpath('application/Espo/Core/Application.php'), 'application/Espo/Core/Application.php'],
+            ['C:\\espocrm\\data\\config.php', 'data\\config.php', 'C:\\espocrm', '\\'],
+            ['C:espocrm\\data\\config.php', 'data\\config.php', 'C:espocrm', '\\'],
+            ['C:\\espocrm\\data\\tmp\\' . basename($tmpFile), 'data\\tmp\\' . basename($tmpFile), 'C:\\espocrm', '\\'],
+        ];
+    }
+
+    /**
+     * @dataProvider relativePathData
+     */
+    public function testGetRelativePath($path, $expectedResult, $basePath = null, $dirSeparator = null)
+    {
+        $this->assertEquals($expectedResult, $this->object->getRelativePath($path, $basePath, $dirSeparator));
+    }
 }

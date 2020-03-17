@@ -4,6 +4,7 @@
 /data/preferences/*
 /data/.backup/*
 /data/config.php
+/data/tmp/*
 /build
 /node_modules
 npm-debug.log
