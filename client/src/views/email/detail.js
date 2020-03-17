@@ -103,7 +103,6 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                             hidden: this.model.get('attachmentsIds') === undefined,
                         });
 
-
                         if (this.model.get('attachmentsIds') === undefined) {
                             this.listenToOnce(this.model, 'sync', function () {
                                 if (this.model.getLinkMultipleIdList('attachments').length) {
@@ -169,7 +168,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:save', function () {
+                this.listenToOnce(view, 'after:save', function () {
                     this.model.fetch();
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
@@ -252,7 +251,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:save', function () {
+                this.listenToOnce(view, 'after:save', function () {
                     view.close();
                 }.bind(this));
             }.bind(this));
@@ -301,7 +300,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:save', function () {
+                this.listenToOnce(view, 'after:save', function () {
                     this.model.fetch();
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
