@@ -1259,6 +1259,45 @@ optgroup {
     z-index: 3;
 }
 
+.input-group {
+    .input-group-btn > {
+        .btn {
+            height: 33px;
+        }
+    }
+
+    &.input-group-sm {
+        .input-group-btn > {
+            .btn {
+                height: 30px;
+            }
+        }
+    }
+    &.input-group-lg {
+        .input-group-btn > {
+            .btn {
+                height: 46px;
+            }
+        }
+    }
+}
+
+.input-group.input-group-dt {
+    display: block;
+
+    input.form-control {
+        display: inline-block;
+        width: calc(50% - 35px);
+        float: left;
+    }
+
+    .input-group-btn {
+        display: inline-block;
+        width: 36px;
+        float: left;
+    }
+}
+
 h3 {
     font-size: 22px;
 }

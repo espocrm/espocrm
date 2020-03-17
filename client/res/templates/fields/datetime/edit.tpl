@@ -1,5 +1,5 @@
 
-<div class="input-group">
+<div class="input-group input-group-dt">
     <input class="main-element form-control" type="text" data-name="{{name}}" value="{{date}}" autocomplete="espo-{{name}}">
     <span class="input-group-btn">
         <button type="button" class="btn btn-default btn-icon date-picker-btn" tabindex="-1"><i class="far fa-calendar"></i></button>
