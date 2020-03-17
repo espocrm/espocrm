@@ -378,8 +378,11 @@ class EmailAccount extends Record
                         }
                     }
 
-                } catch (\Exception $e) {
-                    $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage());
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error(
+                        'EmailAccount '.$emailAccount->id.
+                        ' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage()
+                    );
                 }
 
                 if (!empty($email)) {
