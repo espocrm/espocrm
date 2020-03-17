@@ -62,14 +62,14 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                         this.addMenuItem('dropdown', {
                             label: 'Create Lead',
                             action: 'createLead',
-                            acl: 'edit',
+                            acl: 'create',
                             aclScope: 'Lead'
                         });
 
                         this.addMenuItem('dropdown', {
                             label: 'Create Contact',
                             action: 'createContact',
-                            acl: 'edit',
+                            acl: 'create',
                             aclScope: 'Contact'
                         });
                     }
@@ -78,7 +78,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                 this.addMenuItem('dropdown', {
                     label: 'Create Task',
                     action: 'createTask',
-                    acl: 'edit',
+                    acl: 'create',
                     aclScope: 'Task'
                 });
 
@@ -86,7 +86,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     this.addMenuItem('dropdown', {
                         label: 'Create Case',
                         action: 'createCase',
-                        acl: 'edit',
+                        acl: 'create',
                         aclScope: 'Case'
                     });
                 }

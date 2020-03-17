@@ -74,7 +74,7 @@ class CaseObj extends \Espo\Services\Record
         parent::afterCreateEntity($entity, $data);
         if (!empty($data->emailId)) {
             $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
-            if ($email && !$email->get('parentId')) {
+            if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
                 $email->set(array(
                     'parentType' => 'Case',
                     'parentId' => $entity->id
