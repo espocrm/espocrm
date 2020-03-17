@@ -250,6 +250,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     $ids = $this->getEntityManager()->getRepository('EmailAddress')->getIds([$from]);
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
+                        $entity->set('fromEmailAddressName', $from);
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
 
                         if (!$entity->get('sentById')) {

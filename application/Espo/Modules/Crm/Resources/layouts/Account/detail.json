@@ -10,8 +10,7 @@
     {
         "label":"Details",
         "rows": [
-            [{"name":"type"},{"name":"sicCode"}],
-            [{"name":"industry"},false],
+            [{"name":"type"},{"name":"industry"}],
             [{"name":"description","fullWidth": true}]
         ]
     }

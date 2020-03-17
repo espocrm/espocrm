@@ -57,19 +57,19 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 this.addMenuItem('dropdown', false);
 
-                if (status == 'Archived' || status == 'Recieved') {
+                if (status == 'Archived') {
                     if (!this.model.get('parentId')) {
                         this.addMenuItem('dropdown', {
                             label: 'Create Lead',
                             action: 'createLead',
-                            acl: 'edit',
+                            acl: 'create',
                             aclScope: 'Lead'
                         });
 
                         this.addMenuItem('dropdown', {
                             label: 'Create Contact',
                             action: 'createContact',
-                            acl: 'edit',
+                            acl: 'create',
                             aclScope: 'Contact'
                         });
                     }
@@ -78,7 +78,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                 this.addMenuItem('dropdown', {
                     label: 'Create Task',
                     action: 'createTask',
-                    acl: 'edit',
+                    acl: 'create',
                     aclScope: 'Task'
                 });
 
@@ -86,9 +86,31 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     this.addMenuItem('dropdown', {
                         label: 'Create Case',
                         action: 'createCase',
-                        acl: 'edit',
+                        acl: 'create',
                         aclScope: 'Case'
                     });
+                }
+
+                if (this.getAcl().checkScope('Document', 'create')) {
+                    if (
+                        this.model.get('attachmentsIds') === undefined || this.model.getLinkMultipleIdList('attachments').length
+                    ) {
+                        this.addMenuItem('dropdown', {
+                            html: this.translate('Create Document', 'labels', 'Document'),
+                            action: 'createDocument',
+                            acl: 'create',
+                            aclScope: 'Document',
+                            hidden: this.model.get('attachmentsIds') === undefined,
+                        });
+
+                        if (this.model.get('attachmentsIds') === undefined) {
+                            this.listenToOnce(this.model, 'sync', function () {
+                                if (this.model.getLinkMultipleIdList('attachments').length) {
+                                    this.showHeaderActionItem('createDocument');
+                                }
+                            }, this);
+                        }
+                    }
                 }
             }
 
@@ -146,7 +168,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:save', function () {
+                this.listenToOnce(view, 'after:save', function () {
                     this.model.fetch();
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
@@ -229,7 +251,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:save', function () {
+                this.listenToOnce(view, 'after:save', function () {
                     view.close();
                 }.bind(this));
             }.bind(this));
@@ -278,7 +300,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:save', function () {
+                this.listenToOnce(view, 'after:save', function () {
                     this.model.fetch();
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
@@ -411,7 +433,74 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                 this.getRouter().navigate(rootUrl, {trigger: false});
                 this.getRouter().dispatch(this.scope, null, options);
             }, this);
-        }
+        },
+
+        actionCreateDocument: function () {
+            var attachmentIdList = this.model.getLinkMultipleIdList('attachments');
+            if (!attachmentIdList.length) return;
+
+            var names = this.model.get('attachmentsNames') || {};
+            var types = this.model.get('attachmentsTypes') || {};
+
+            var proceed = function (id) {
+                var name = names[id] || id;
+                var type = types[id];
+
+                var attributes = {};
+
+                if (this.model.get('accountId')) {
+                    attributes.accountsIds = [this.model.get('accountId')];
+                    attributes.accountsNames = {};
+                    attributes.accountsNames[this.model.get('accountId')] = this.model.get('accountName');
+                }
+
+                Espo.Ui.notify(this.translate('loading', 'messages'))
+
+                this.ajaxPostRequest('Attachment/action/getCopiedAttachment', {
+                    id: id,
+                    relatedType: 'Document',
+                    field: 'file',
+                }).then(
+                    function (attachment) {
+                        attributes.fileId = attachment.id;
+                        attributes.fileName = attachment.name;
+                        attributes.name = attachment.name;
+
+                        var viewName = this.getMetadata().get('clientDefs.Document.modalViews.edit') || 'views/modals/edit';
+                        this.createView('quickCreate', viewName, {
+                            scope: 'Document',
+                            attributes: attributes,
+                        }, function (view) {
+                            view.render();
+                            Espo.Ui.notify(false);
+                            this.listenToOnce(view, 'after:save', function () {
+                                view.close();
+                            }, this);
+                        });
+                    }.bind(this)
+                );
+            }.bind(this);
+
+            if (attachmentIdList.length === 1) {
+                proceed(attachmentIdList[0]);
+            } else {
+                var dataList = [];
+                attachmentIdList.forEach(function (id) {
+                    dataList.push({
+                        id: id,
+                        name: names[id] || id,
+                        type: types[id],
+                    });
+                }, this);
+                this.createView('dialog', 'views/attachment/modals/select-one', {
+                    dataList: dataList,
+                    fieldLabel: this.translate('attachments', 'fields', 'Email'),
+                }, function (view) {
+                    view.render();
+                    this.listenToOnce(view, 'select', proceed.bind(this))
+                });
+            }
+        },
 
     });
 });

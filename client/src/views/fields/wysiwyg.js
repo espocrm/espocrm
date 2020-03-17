@@ -347,6 +347,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             });
                         }, 40);
 
+                        if (!this.model.get(this.name)) {
+                            $iframe.addClass('hidden');
+                        }
+
                         var windowWidth = $(window).width();
                         $(window).off('resize.' + this.cid);
                         $(window).on('resize.' + this.cid, function() {

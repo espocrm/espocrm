@@ -60,7 +60,7 @@ class Lead extends \Espo\Core\Templates\Services\Person
     {
         if (!empty($data->emailId)) {
             $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
-            if ($email && !$email->get('parentId')) {
+            if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
                 $email->set(array(
                     'parentType' => 'Lead',
                     'parentId' => $entity->id
