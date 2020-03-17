@@ -35,9 +35,12 @@ define(
 
         detailTemplate: 'email/fields/email-address-varchar/detail',
 
+        validations: ['required', 'email'],
+
         setup: function () {
-            this.params.required = false;
             Dep.prototype.setup.call(this);
+
+            this.erasedPlaceholder = 'ERASED:';
 
             this.on('render', function () {
                 if (this.mode === 'search') return;
@@ -366,6 +369,20 @@ define(
             }
 
             return false;
+        },
+
+        validateEmail: function () {
+            var address = this.model.get(this.name);
+            if (!address) return;
+            var addressLowerCase = String(address).toLowerCase();
+
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (!re.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
+                var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
+                this.showValidationMessage(msg);
+                return true;
+            }
         },
 
     });
