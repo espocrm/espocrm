@@ -186,7 +186,7 @@ class Converter
         $tables = array();
         foreach ($ormMeta as $entityName => $entityParams) {
 
-            if ($entityParams['skipRebuild']) continue;
+            if ($entityParams['skipRebuild'] ?? false) continue;
 
             $tableName = Util::toUnderScore($entityName);
 

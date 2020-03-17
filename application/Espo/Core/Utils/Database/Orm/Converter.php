@@ -172,7 +172,7 @@ class Converter
                 continue;
             }
 
-            $ormMetadata[$entityName]['skipRebuild'] = $entityMetadata['skipRebuild'] ?? false;
+            if ($entityMetadata['skipRebuild'] ?? false) $ormMetadata[$entityName]['skipRebuild'] = true;
 
             $ormMetadata = Util::merge($ormMetadata, $this->convertEntity($entityName, $entityMetadata));
         }
