@@ -106,7 +106,7 @@ class MailMimeParser
 
         foreach (['from', 'to', 'cc', 'reply-To'] as $type) {
             $header = $this->getMessage($message)->getHeader($type);
-            if ($header) {
+            if ($header && method_exists($header, 'getAddresses')) {
                 $list = $header->getAddresses();
                 foreach ($list as $item) {
                     $address = $item->getEmail();
@@ -125,7 +125,7 @@ class MailMimeParser
     {
         $addressList = [];
         $header = $this->getMessage($message)->getHeader($type);
-        if ($header) {
+        if ($header && method_exists($header, 'getAddresses')) {
             foreach ($header->getAddresses() as $item) {
                 return [
                     'address' => $item->getEmail(),
@@ -140,7 +140,7 @@ class MailMimeParser
     {
         $addressList = [];
         $header = $this->getMessage($message)->getHeader($type);
-        if ($header) {
+        if ($header && method_exists($header, 'getAddresses')) {
             $list = $header->getAddresses();
             foreach ($list as $address) {
                 $addressList[] = $address->getEmail();
