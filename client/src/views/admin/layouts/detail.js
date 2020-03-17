@@ -32,7 +32,7 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
 
         dataAttributeList: ['name', 'fullWidth', 'customLabel', 'noLabel'],
 
-        panelDataAttributeList: ['panelName', 'style', 'dynamicLogicVisible'],
+        panelDataAttributeList: ['panelName', 'style', 'dynamicLogicVisible', 'hidden'],
 
         dataAttributesDefs: {
             fullWidth: {
@@ -67,7 +67,11 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             dynamicLogicVisible: {
                 type: 'base',
                 view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
-            }
+            },
+            hidden: {
+                type: 'bool',
+                tooltip: 'hiddenPanel',
+            },
         },
 
         defaultPanelFieldList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy'],

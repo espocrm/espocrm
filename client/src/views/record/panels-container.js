@@ -196,6 +196,13 @@ define('views/record/panels-container', 'view', function (Dep) {
                     view.$el.closest('.panel').removeClass('hidden');
                     view.disabled = false;
                     view.trigger('show');
+
+                    var fields = view.getFieldViews();
+                    if (fields) {
+                        for (var i in fields) {
+                            fields[i].reRender();
+                        }
+                    }
                 }
                 if (callback) {
                     callback.call(this);

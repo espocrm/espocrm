@@ -67,12 +67,22 @@ table.table {
     background-color: @white-color;
 }
 
-.record .middle > .panel:first-child {
-    border-top-width: 0;
-}
+.record .middle {
+    > .panel {
+        border-top-width: 1px;
+    }
 
-.record .middle > .panel {
-    border-top-width: 1px;
+    > .panel:first-child {
+        border-top-width: 0;
+    }
+
+    > .panel.hidden + .panel {
+        border-top-width: 1px;
+    }
+
+    .panel + .panel.panels-show-more-delimiter {
+        border-top-width: 0;
+    }
 }
 
 .dashlet-body .list-container > .list,

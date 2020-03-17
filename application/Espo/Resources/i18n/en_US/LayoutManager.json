@@ -8,6 +8,7 @@
         "style": "Style",
         "sticked": "Sticked",
         "isLarge": "Large font size",
+        "hidden": "Hidden",
         "dynamicLogicVisible": "Conditions making panel visible"
     },
     "options": {
@@ -29,6 +30,7 @@
         "Layout": "Layout"
     },
     "tooltips": {
+        "hiddenPanel": "Need to click 'show more' to see the panel.",
         "link": "If checked, then a field value will be displayed as a link pointing to the detail view of the record. Usually it is used for *Name* fields."
     }
 }
