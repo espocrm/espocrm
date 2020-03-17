@@ -57,7 +57,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 this.addMenuItem('dropdown', false);
 
-                if (status == 'Archived' || status == 'Recieved') {
+                if (status == 'Archived') {
                     if (!this.model.get('parentId')) {
                         this.addMenuItem('dropdown', {
                             label: 'Create Lead',
