@@ -160,10 +160,6 @@ b, strong {
     font-size: @font-size-smaller;
 }
 
-.btn {
-    border-radius: @button-radius;
-}
-
 .panel-body {
     padding: @panel-padding;
     .clearfix();
@@ -1257,29 +1253,6 @@ optgroup {
 
 .input-group .form-control:focus {
     z-index: 3;
-}
-
-.input-group {
-    .input-group-btn > {
-        .btn {
-            height: 33px;
-        }
-    }
-
-    &.input-group-sm {
-        .input-group-btn > {
-            .btn {
-                height: 30px;
-            }
-        }
-    }
-    &.input-group-lg {
-        .input-group-btn > {
-            .btn {
-                height: 46px;
-            }
-        }
-    }
 }
 
 .input-group.input-group-dt {
@@ -3346,83 +3319,13 @@ a.field-info > span.fa-info-circle {
     }
 }
 
-.btn-icon {
-    width: 36px;
-    padding-left: 0;
-    padding-right: 0;
-
-    .fa, .fas {
-        position: relative;
-        width: 16px;
-        text-align: center;
-    }
-    .fa-sm {
-        top: -1px;
-    }
-}
-
-
-.btn-icon.btn-sm {
-    .fa-sm {
-        top: 0;
-    }
-}
-
-.btn-icon.btn-sm {
-    width: 34px;
-
-    .fa, .fas {
-        font-size: 12px;
-        width: 12px;
-    }
-}
-
 .btn > .fa-ellipsis-v {
     position: relative;
     top: 1px;
 }
 
-.btn.btn-icon-wide  {
-    width: 54px;
-}
-
-.btn.btn-icon-x-wide  {
-    width: 76px;
-}
-
-.btn.btn-icon-xx-wide  {
-    width: 100px;
-}
-
 .btn-icon > .fa-chevron-left {
     left: -1px;
-}
-
-.btn.btn-wide  {
-    min-width: 100px;
-}
-
-.btn.btn-x-wide  {
-    min-width: 150px;
-}
-
-.btn.btn-xx-wide  {
-    min-width: 200px;
-}
-
-.btn-default > .fa,
-.btn-default > .fas {
-    color: @gray-soft;
-}
-
-.btn-default > .fa.text-muted,
-.btn-default > .fas.text-muted {
-    color: @gray-light;
-}
-
-.btn-default.disabled > .fa,
-.btn-default.disabled > .fas {
-    color: @gray-light;
 }
 
 .btn-default > .fa-sm.fa-rss {
@@ -3678,3 +3581,6 @@ a.link-gray {
 .selectize-control.as-list .item {
     display: block;
 }
+
+@import "elements/side-modal.less";
+@import "elements/buttons.less";
