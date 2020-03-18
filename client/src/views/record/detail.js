@@ -125,7 +125,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         events: {
             'click .button-container .action': function (e) {
                 Espo.Utils.handleAction(this, e);
-            }
+            },
+            'click [data-action="showMoreDetailPanels"]': function () {
+                this.showMoreDetailPanels();
+            },
         },
 
         actionEdit: function () {
@@ -1451,6 +1454,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             var el = this.options.el || '#' + (this.id);
 
+            this.panelFieldListMap = {};
+
             for (var p in simplifiedLayout) {
                 var panel = {};
                 panel.label = simplifiedLayout[p].label || null;
@@ -1470,12 +1475,23 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     }
                 }
 
+                if (simplifiedLayout[p].hidden) {
+                    panel.hidden = true;
+                    panel.name = panel.name || 'panel-' + p.toString();
+                    this.hidePanel(panel.name);
+                    this.underShowMoreDetailPanelList = this.underShowMoreDetailPanelList || [];
+                    this.underShowMoreDetailPanelList.push(panel.name);
+                }
+
                 var lType = 'rows';
                 if (simplifiedLayout[p].columns) {
                     lType = 'columns';
                     panel.columns = [];
                 }
 
+                if (panel.name) {
+                    this.panelFieldListMap[panel.name] = [];
+                }
 
                 for (var i in simplifiedLayout[p][lType]) {
                     var row = [];
@@ -1493,6 +1509,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         }
 
                         var name = cellDefs.name;
+
+                        if (panel.name) {
+                            this.panelFieldListMap[panel.name].push(name);
+                        }
 
                         var type = cellDefs.type || this.model.getFieldType(name) || 'base';
                         var viewName = cellDefs.view || this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
@@ -1647,7 +1667,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         model: this.model,
                     },
                     recordHelper: this.recordHelper,
-                    recordViewObject: this
+                    recordViewObject: this,
+                    panelFieldListMap: this.panelFieldListMap,
                 }, callback);
             }.bind(this));
         },
@@ -1793,6 +1814,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         unblockUpdateWebSocket: function () {
             this.updateWebSocketIsBlocked = false;
+        },
+
+        showMoreDetailPanels: function () {
+            this.hidePanel('showMoreDelimiter');
+            this.underShowMoreDetailPanelList.forEach(function (item) {
+                this.showPanel(item)
+            }, this);
         },
 
     });

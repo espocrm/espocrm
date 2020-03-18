@@ -102,81 +102,31 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals( $result, $this->object->arrangePermissionList($this->fileList) );
     }
 
-    /*public function bestPossibleList()
+    public function requiredPermissionsData()
     {
-        $fileList = array(
-            'application/Espo/Controllers',
-            'application/Espo/Core',
-            'application/Espo/Core/Cron',
-            'application/Espo/Core/Loaders',
-            'application/Espo/Core/Mail',
-            'application/Espo/Core/Mail/Storage/Imap.php',
-            'application/Espo/Core/SelectManagers/Base.php',
-            'application/Espo/Core/Utils/Database/Orm',
-            'application/Espo/Core/Utils/Database/Orm/Fields',
-            'application/Espo/Core/Utils/Database/Orm/Relations',
-            'application/Espo/Core/Utils',
-            'application/Espo/Core/defaults/config.php',
-            'application/Espo/Entities',
-            'application/Espo/Hooks/Common/Stream.php',
-            'application/Espo/Modules/Crm/Controllers/Opportunity.php',
-            'application/Espo/Modules/Crm/Jobs/CheckInboundEmails.php',
-            'application/Espo/Modules/Crm/Resources/i18n/de_DE',
-            'application/Espo/Modules/Crm/Resources/i18n/en_US',
-            'application/Espo/Modules/Crm/Resources/i18n/nl_NL',
-            'application/Espo/Modules/Crm/Resources/i18n/pl_PL',
-            'application/Espo/Modules/Crm/Resources/layouts/InboundEmail',
-            'application/Espo/Modules/Crm/Resources/metadata/clientDefs/InboundEmail.json',
-            'application/Espo/Modules/Crm/Resources/metadata/entityDefs',
-            'application/Espo/Modules/Crm/Services',
-            'application/Espo/Repositories',
-            'application/Espo/Resources/i18n/de_DE',
-            'application/Espo/Resources/i18n/en_US',
-            'application/Espo/Resources/i18n/nl_NL',
-            'application/Espo/Resources/i18n/pl_PL',
-            'application/Espo/Resources/layouts/Email',
-            'application/Espo/Resources/layouts/EmailAccount',
-            'application/Espo/Resources/layouts/User/filters.json',
-            'application/Espo/Resources/metadata/app',
-            'application/Espo/Resources/metadata/clientDefs',
-            'application/Espo/Resources/metadata/entityDefs',
-            'application/Espo/Resources/metadata/integrations/Google.json',
-            'application/Espo/Resources/metadata/scopes',
-            'application/Espo/SelectManagers/EmailAccount.php',
-            'application/Espo/Services',
-            'install/core',
-            'install/core/actions/settingsTest.php',
-            'install/core/i18n/de_DE/install.json',
-            'install/core/i18n/en_US/install.json',
-            'install/core/i18n/es_ES/install.json',
-            'install/core/i18n/nl_NL/install.json',
-            'install/core/i18n/pl_PL/install.json',
-            'install/core/i18n/ro_RO/install.json',
-            'install/core/i18n/tr_TR/install.json',
-            'install/js/install.js',
-        );
+        return [
+            ['data/config.php', '0775', '0664'],
+            ['data/tmp/tmpivqW1X', '0775', '0664'],
+            ['application/Espo/Core/Application.php', '0755', '0644'],
+            ['custom/Espo/Custom/Resources/metadata/entityDefs', '0775', '0664'],
+            ['custom/Espo/Custom/Resources/metadata/entityDefs/Account.json', '0775', '0664'],
+            ['application/Espo/Modules', '0775', '0664'],
+            ['application/Espo/Modules/Crm/Resources', '0755', '0644'],
+            ['application/Espo/Modules/Crm/Resources/layouts/Account/detail.json', '0755', '0644'],
+            ['client/modules', '0775', '0664'],
+            ['client/modules/crm/src', '0755', '0644'],
+            ['client/modules/crm/src/views/account/detail.js', '0755', '0644'],
+        ];
+    }
 
-        $result = array(
-            'application/Espo/Controllers',
-            'application/Espo/Core',
-            'application/Espo/Entities',
-            'application/Espo/Hooks/Common/Stream.php',
-            'application/Espo/Modules/Crm',
-            'application/Espo/Repositories',
-            'application/Espo/Resources',
-            'application/Espo/SelectManagers/EmailAccount.php',
-            'application/Espo/Services',
-            'install/core',
-            'install/js/install.js',
-        );
-    }*/
+    /**
+     * @dataProvider requiredPermissionsData
+     */
+    public function testGetRequiredPermissions($path, $dirPermission, $filePermission)
+    {
+        $result = $this->object->getRequiredPermissions($path);
 
-
-
-
-
-
-
+        $this->assertEquals($dirPermission, $result['dir']);
+        $this->assertEquals($filePermission, $result['file']);
+    }
 }
-
-?>

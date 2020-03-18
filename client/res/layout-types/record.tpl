@@ -1,4 +1,7 @@
+<% var hasHiddenPanel = false; %>
+
 <% _.each(layout, function (panel, columnNumber) { %>
+    <% hasHiddenPanel = panel.hidden || hasHiddenPanel; %>
     <div class="panel panel-<%= panel.style %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"<% if (panel.name) print(' data-name="'+panel.name+'"') %>>
         <%
             var panelLabelString = null;
@@ -170,3 +173,15 @@
         </div>
     </div>
 <% }); %>
+
+<%
+if (hasHiddenPanel) {
+%>
+<div class="panel panel-default panels-show-more-delimiter" data-name="showMoreDelimiter">
+    <a href="javascript:" data-action="showMoreDetailPanels" title="{{translate 'Show more'}}">
+        <span class="fas fa-ellipsis-h fa-lg"></span>
+    </a>
+</div>
+<%
+}
+%>
