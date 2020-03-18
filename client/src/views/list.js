@@ -407,7 +407,7 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 returnDispatchParams: returnDispatchParams
             });
 
-            this.createView('quickCreate', 'views/modals/edit', options, function (view) {
+            this.createView('quickCreate', viewName, options, function (view) {
                 view.render();
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', function () {
