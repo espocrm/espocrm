@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional', function (Dep) {
+define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional', function (Dep) {
 
     return Dep.extend({
 
@@ -39,9 +39,18 @@ Espo.define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.isAllDayValue = this.model.get('isAllDay');
+
             this.listenTo(this.model, 'change:isAllDay', function (model, value, o) {
                 if (!o.ui) return;
                 if (!this.isEditMode()) return;
+
+                if (this.isAllDayValue === undefined && !value) {
+                    this.isAllDayValue = value;
+                    return;
+                }
+
+                this.isAllDayValue = value;
 
                 if (value) {
                     this.$time.val(this.noneOption);
@@ -51,11 +60,13 @@ Espo.define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional
                         dateTime = this.getDateTime().getNow(5);
                     }
                     var m = this.getDateTime().toMoment(dateTime);
-                    dateTime = m.format(this.getDateTime().internalDateTimeFormat);
+                    dateTime = m.format(this.getDateTime().getDateTimeFormat());
                     var index = dateTime.indexOf(' ');
                     var time = dateTime.substr(index + 1);
 
-                    this.$time.val(time);
+                    if (this.model.get('dateEnd')) {
+                        this.$time.val(time);
+                    }
                 }
                 this.trigger('change');
                 this.controlTimePartVisibility();
@@ -80,7 +91,7 @@ Espo.define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional
                 this.$time.removeClass('hidden');
                 this.$el.find('.time-picker-btn').removeClass('hidden');
             }
-        }
+        },
 
     });
 });

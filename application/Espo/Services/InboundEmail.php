@@ -286,7 +286,7 @@ class InboundEmail extends \Espo\Services\Record
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
                             try {
                                 $toSkip = $this->processBouncedMessage($message) || $toSkip;
-                            } catch (\Exception $e) {
+                            } catch (\Throwable $e) {
                                 $GLOBALS['log']->error(
                                     'InboundEmail ' . $emailAccount->id .
                                     ' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage()
@@ -312,7 +312,7 @@ class InboundEmail extends \Espo\Services\Record
                             }
                         }
                     }
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     $GLOBALS['log']->error(
                         'InboundEmail '.$emailAccount->id.
                         ' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage()
