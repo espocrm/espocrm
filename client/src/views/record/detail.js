@@ -468,7 +468,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
             if (locked) {
-                this.recordHelper.setPanelStateParam(name, 'hidden', true);
+                this.recordHelper.setPanelStateParam(name, 'hiddenLocked', true);
             }
 
             var middleView = this.getView('middle');
