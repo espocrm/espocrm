@@ -43,6 +43,8 @@ define('views/record/detail-middle', 'view', function (Dep) {
         },
 
         showPanel: function (name) {
+            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) return;
+
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
             }
