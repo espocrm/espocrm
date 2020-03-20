@@ -130,6 +130,28 @@ table.table {
     background-color: @white-color;
 }
 
+#main > .calendar-container {
+    .timeline {
+        border: 0;
+    }
+
+    .calendar {
+        overflow: hidden;
+        .fc-view-container {
+            margin: -1px;
+        }
+    }
+}
+
+.dashlet-body {
+    .fc-agenda-view {
+        table {
+            border-collapse: collapse;
+            border-style: hidden;
+        }
+    }
+}
+
 .field .list-group {
     background-color: @white-color;
 }
