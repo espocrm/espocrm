@@ -249,7 +249,7 @@ define('views/record/panels-container', 'view', function (Dep) {
             }
         },
 
-        setupFinal: function () {
+        setupPanelsFinal: function () {
             var afterDelimiter = false;
             var rightAfterDelimiter = false;
 
@@ -276,6 +276,10 @@ define('views/record/panels-container', 'view', function (Dep) {
             if (~index) {
                 this.panelList.splice(index, 1);
             }
+
+            this.panelList = this.panelList.filter(function (p) {
+                return !this.recordHelper.getPanelStateParam(p.name, 'hiddenLocked');
+            }, this);
         },
 
         actionShowMorePanels: function () {

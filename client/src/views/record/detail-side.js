@@ -152,7 +152,7 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
                         if (this.layoutData)
                             this.alterPanels();
 
-                        this.setupFinal();
+                        this.setupPanelsFinal();
 
                         this.setupPanelViews();
                     }.bind(this)
