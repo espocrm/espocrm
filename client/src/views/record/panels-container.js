@@ -179,6 +179,8 @@ define('views/record/panels-container', 'view', function (Dep) {
         },
 
         showPanel: function (name, callback) {
+            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) return;
+
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
             var isFound = false;

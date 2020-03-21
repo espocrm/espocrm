@@ -328,8 +328,7 @@ class Installer
 
         $res = $this->saveConfig($preferences);
 
-        /*save these settings for admin*/
-        $this->setAdminPreferences($preferences);
+        $this->saveAdminPreferences($preferences);
 
         return $res;
     }
@@ -408,20 +407,19 @@ class Installer
         return $result;
     }
 
-    protected function setAdminPreferences($preferences)
+    protected function saveAdminPreferences($preferences)
     {
-        $allowedPreferences = array(
-            'dateFormat',
-            'timeFormat',
-            'timeZone',
-            'weekStart',
-            'defaultCurrency',
-            'thousandSeparator',
-            'decimalMark',
-            'language',
-        );
+        $data = [
+            'dateFormat' => '',
+            'timeFormat' => '',
+            'timeZone' => '',
+            'weekStart' => -1,
+            'defaultCurrency' => '',
+            'language' => '',
+            'thousandSeparator' => $preferences['thousandSeparator'] ?? ',',
+            'decimalMark' => $preferences['decimalMark'] ?? '.',
+        ];
 
-        $data = array_intersect_key($preferences, array_flip($allowedPreferences));
         if (empty($data)) {
             return true;
         }

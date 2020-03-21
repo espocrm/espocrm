@@ -56,15 +56,17 @@ class Task extends \Espo\Core\Repositories\Event
 
     protected function convertDateTimeToDefaultTimezone($string)
     {
-        $dateTime = \DateTime::createFromFormat($this->getDateTime()->getInternalDateTimeFormat(), $string);
-        $timeZone = $this->getConfig()->get('timeZone');
-        if (empty($timeZone)) {
-            $timeZone = 'UTC';
-        }
-        $tz = $timezone = new \DateTimeZone($timeZone);
+        $timeZone = $this->getConfig()->get('timeZone') ?? 'UTC';
 
-        if ($dateTime) {
-            return $dateTime->setTimezone($tz)->format($this->getDateTime()->getInternalDateTimeFormat());
+        $tz = new \DateTimeZone($timeZone);
+
+        try {
+            $dt = \DateTime::createFromFormat($this->getDateTime()->getInternalDateTimeFormat(), $string, $tz);
+        } catch (\Exception $e) {}
+
+        if ($dt) {
+            $utcTz = new \DateTimeZone('UTC');
+            return $dt->setTimezone($utcTz)->format($this->getDateTime()->getInternalDateTimeFormat());
         }
         return null;
     }
