@@ -124,6 +124,13 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 if (itemData.disabled) {
                     disabled = true;
                 }
+
+                if (!layout[item]) {
+                    if ((params[item] || {}).disabled) {
+                        disabled = true;
+                    }
+                }
+
                 var labelText;
                 if (labels[item]) {
                     labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);

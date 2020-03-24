@@ -112,6 +112,12 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                     disabled = true;
                 }
 
+                if (!layout[item]) {
+                    if ((params[item] || {}).disabled) {
+                        disabled = true;
+                    }
+                }
+
                 if (this.links[item]) {
                     if (!layout[item]) {
                         disabled = true;

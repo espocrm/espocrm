@@ -296,13 +296,18 @@ define('views/record/panels-container', 'view', function (Dep) {
             var newList = [];
             this.panelList.forEach(function (item, i) {
                 item.index = ('index' in item) ? item.index : i;
+                var allowedInLayout = false;
                 if (item.name) {
                     var itemData = layoutData[item.name] || {};
                     if (itemData.disabled) return;
+                    if (layoutData[item.name]) {
+                        allowedInLayout = true;
+                    }
                     for (var i in itemData) {
                         item[i] = itemData[i];
                     }
                 }
+                if (item.disabled && !allowedInLayout) return;
                 newList.push(item);
             }, this);
 
