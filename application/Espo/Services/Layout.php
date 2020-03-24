@@ -255,6 +255,8 @@ class Layout extends \Espo\Core\Services\Base
             $item = clone $item;
             $item->order = 5 + 0.001 * $i;
 
+            if (!isset($item->name)) continue;
+
             $result->{$item->name} = $item;
         }
 
