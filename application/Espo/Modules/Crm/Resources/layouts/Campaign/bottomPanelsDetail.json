@@ -1,0 +1,14 @@
+{
+    "campaignLogRecords": {
+        "index": 0
+    },
+    "_delimiter_": {
+        "index": 1
+    },
+    "opportunities": {
+        "index": 2
+    },
+    "leads": {
+        "index": 3
+    }
+}

@@ -54,6 +54,30 @@ class Layout extends \Espo\Core\Services\Base
         return $this->getInjection('metadata');
     }
 
+    public function getOriginal(string $scope, string $name, ?string $setId = null)
+    {
+        if ($setId) {
+            $layout = $this->getRecordFromSet($scope, $name, $setId, true);
+            if ($layout) {
+                $result = $layout->get('data');
+            }
+        }
+
+        if (!$result) {
+            $result = $this->getInjection('layout')->get($scope, $name);
+            $result = json_decode($result);
+        }
+
+        if ($result === false) {
+            $methodName = 'getOriginal' . ucfirst($name);
+            if (method_exists($this, $methodName)) {
+                $result = $this->$methodName($scope, $setId);
+            }
+        }
+
+        return $result;
+    }
+
     public function getForFrontend(string $scope, string $name)
     {
         $layoutSetId = null;
@@ -97,17 +121,17 @@ class Layout extends \Espo\Core\Services\Base
 
         if (!$data) {
             $dataString = $this->getInjection('layout')->get($scope, $name);
+            $data = json_decode($dataString);
         } else {
             $dataString = json_encode($data);
         }
 
-        if (!$dataString) {
+        if (is_null($data)) {
             throw new NotFound("Layout {$scope}:{$name} is not found.");
         }
 
         if (!$this->getUser()->isAdmin()) {
             if ($name === 'relationships') {
-                $data = json_decode($dataString);
                 if (is_array($data)) {
                     foreach ($data as $i => $item) {
                         $link = $item;
@@ -120,12 +144,18 @@ class Layout extends \Espo\Core\Services\Base
                         }
                     }
                     $data = array_values($data);
-                    $dataString = json_encode($data);
                 }
             }
         }
 
-        return $dataString;
+        if ($data === false) {
+            $methodName = 'getForFrontend' . ucfirst($name);
+            if (method_exists($this, $methodName)) {
+                $data = $this->$methodName($scope);
+            }
+        }
+
+        return $data;
     }
 
     protected function getRecordFromSet(string $scope, string $name, string $setId, bool $skipCheck = false)
@@ -195,20 +225,49 @@ class Layout extends \Espo\Core\Services\Base
                 $em = $this->getInjection('entityManager');
                 $em->removeEntity($layout);
             }
-            return $this->getInjection('layout')->get($scope, $name);
+            return $this->getOriginal($scope, $name);
         }
 
-        return $this->getInjection('layout')->resetToDefault($scope, $name);
+        $this->getInjection('layout')->resetToDefault($scope, $name);
+
+        $methodName = 'resetToDefault' . ucfirst($name);
+        if (method_exists($this, $methodName)) {
+            $this->$methodName($scope);
+        }
+
+        return $this->getOriginal($scope, $name);
     }
 
-    public function getOriginal(string $scope, string $name, ?string $setId = null)
+    protected function getOriginalBottomPanelsDetail(string $scope, ?string $setId = null)
     {
-        if ($setId) {
-            $layout = $this->getRecordFromSet($scope, $name, $setId, true);
-            if ($layout) {
-                return $layout->get('data');
+        $relationships = $this->getOriginal($scope, 'relationships') ?? [];
+
+        $result = (object) [];
+
+        foreach ($relationships as $i => $item) {
+            if (is_string($item)) {
+                $item = (object) [
+                    'name' => $item,
+                ];
             }
+            if (!is_object($item)) continue;
+
+            $item = clone $item;
+            $item->order = 5 + 0.001 * $i;
+
+            $result->{$item->name} = $item;
         }
-        return $this->getInjection('layout')->get($scope, $name);
+
+        return $result;
+    }
+
+    protected function getForFrontendBottomPanelsDetail(string $scope)
+    {
+        return $this->getOriginalBottomPanelsDetail($scope);
+    }
+
+    protected function resetToDefaultBottomPanelsDetail(string $scope)
+    {
+        $this->getInjection('layout')->resetToDefault($scope, 'relationships');
     }
 }

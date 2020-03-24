@@ -26,58 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', function (Dep) {
+define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-panels-detail', function (Dep) {
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style', 'sticked', 'dynamicLogicVisible'],
+        hasStream: true,
 
-        dataAttributesDefs: {
-            style: {
-                type: 'enum',
-                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
-                translation: 'LayoutManager.options.style'
-            },
-            dynamicLogicVisible: {
-                type: 'base',
-                view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
-            },
-            sticked: {
-                type: 'bool'
-            },
-            name: {
-                readOnly: true
-            },
-        },
-
-        editable: true,
-
-        ignoreList: [],
-
-        ignoreTypeList: [],
-
-        viewType: 'detail',
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.dataAttributesDefs = Espo.Utils.cloneDeep(this.dataAttributesDefs);
-            this.dataAttributesDefs.dynamicLogicVisible.scope = this.scope;
-
-            this.wait(true);
-            this.loadLayout(function () {
-                this.wait(false);
-            }.bind(this));
-        },
-
-        loadLayout: function (callback) {
-            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, function (layout) {
-                this.readDataFromLayout(layout);
-                if (callback) {
-                    callback();
-                }
-            }.bind(this));
-        },
+        hasRelationships: true,
 
         readDataFromLayout: function (layout) {
             var panelListAll = [];
@@ -87,14 +42,17 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             layout = Espo.Utils.cloneDeep(layout);
 
             if (
-                this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) !== false
-                &&
-                !this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])
+                this.hasStream &&
+                this.getMetadata().get(['scopes', this.scope, 'stream'])
             ) {
-                panelListAll.push('default');
-                labels['default'] = 'Default';
+                panelListAll.push('stream');
+                labels['stream'] = this.translate('Stream');
+                params['stream'] = {
+                    name: 'stream',
+                    sticked: true,
+                };
             }
-            (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || []).forEach(function (item) {
+            (this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []).forEach(function (item) {
                 if (!item.name) return;
                 panelListAll.push(item.name);
                 if (item.label) {
@@ -103,12 +61,41 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 params[item.name] = item;
             }, this);
 
+            this.links = {};
+
+            if (this.hasRelationships) {
+                var linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
+                Object.keys(linkDefs).forEach(function (link) {
+                    if (linkDefs[link].disabled || linkDefs[link].layoutRelationshipsDisabled) return;
+                    if (!~['hasMany', 'hasChildren'].indexOf(linkDefs[link].type)) return;
+                    panelListAll.push(link);
+
+                    labels[link] = this.translate(link, 'links', this.scope);
+
+                    var item = {
+                        name: link,
+                    };
+                    this.dataAttributeList.forEach(function (attribute) {
+                        if (attribute in item) return;
+                        var value = this.getMetadata().get(
+                            ['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]
+                        );
+                        if (value === null) return;
+                        item[attribute] = value;
+                    }, this);
+
+                    this.links[link] = true;
+
+                    params[item.name] = item;
+
+                }, this);
+            }
+
             this.disabledFields = [];
 
             layout = layout || {};
 
             this.rowLayout = [];
-
 
             panelListAll.push('_delimiter_');
 
@@ -124,6 +111,13 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 if (itemData.disabled) {
                     disabled = true;
                 }
+
+                if (this.links[item]) {
+                    if (!layout[item]) {
+                        disabled = true;
+                    }
+                }
+
                 var labelText;
                 if (labels[item]) {
                     labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
@@ -179,35 +173,16 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
         },
 
         fetch: function () {
-            var layout = {};
-            $("#layout ul.disabled > li").each(function (i, el) {
-                var name = $(el).attr('data-name');
-                layout[name] = {
-                    disabled: true
-                };
-            }.bind(this));
+            var layout = Dep.prototype.fetch.call(this);
 
-            $("#layout ul.enabled > li").each(function (i, el) {
-                var $el = $(el);
-                var o = {};
-                var name = $el.attr('data-name');
+            var newLayout = {};
 
-                var attributes = this.itemsData[name] || {};
-                attributes.name = name;
+            for (var i in layout) {
+                if (layout[i].disabled && this.links[i]) continue;
+                newLayout[i] = layout[i];
+            }
 
-                this.dataAttributeList.forEach(function (attribute) {
-                    if (attribute === 'name') return;
-                    if (attribute in attributes) {
-                        o[attribute] = attributes[attribute];
-                    }
-                }, this);
-
-                o.index = i;
-
-                layout[name] = o;
-            }.bind(this))
-
-            return layout;
+            return newLayout;
         },
 
     });

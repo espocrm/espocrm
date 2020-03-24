@@ -26,40 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
+define('views/admin/layouts/bottom-panels-edit', 'views/admin/layouts/bottom-panels-detail', function (Dep) {
 
     return Dep.extend({
 
-        setupPanels: function () {
-            Dep.prototype.setupPanels.call(this);
+        hasStream: false,
 
-            var streamAllowed = this.getAcl().checkUserPermission(this.model);
-            if (!streamAllowed) {
-                if (this.getAcl().get('userPermission') === 'team') {
-                    if (!this.model.has('teamsIds')) {
-                        this.listenToOnce(this.model, 'sync', function () {
-                            if (this.getAcl().checkUserPermission(this.model)) {
-                                this.onPanelsReady(function () {
-                                    this.showPanel('stream', 'acl');
-                                });
-                            }
-                        }, this);
-                    }
-                }
-            }
+        hasRelationships: false,
 
-            this.panelList.push({
-                "name":"stream",
-                "label":"Stream",
-                "view":"views/user/record/panels/stream",
-                "sticked": true,
-                "hidden": !streamAllowed,
-            });
-
-            if (!streamAllowed) {
-                this.recordHelper.setPanelStateParam('stream', 'hiddenAclLocked', true);
-            }
-        },
+        viewType: 'edit',
 
     });
 });

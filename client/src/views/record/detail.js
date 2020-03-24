@@ -122,6 +122,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         saveAndContinueEditingAction: false,
 
+        panelSoftLockedTypeList: ['default', 'acl', 'delimiter', 'dynamicLogic'],
+
         events: {
             'click .button-container .action': function (e) {
                 Espo.Utils.handleAction(this, e);
@@ -425,8 +427,21 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
         },
 
-        showPanel: function (name) {
+        showPanel: function (name, softLockedType) {
             if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) return;
+
+            softLockedType = softLockedType || 'default';
+
+            this.recordHelper.setPanelStateParam(
+                name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false
+            );
+
+            for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
+                var iType = this.panelSoftLockedTypeList[i];
+                if (iType === softLockedType) continue;
+                var iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
+                if (this.recordHelper.getPanelStateParam(name, iParam)) return;
+            }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
@@ -464,11 +479,19 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
         },
 
-        hidePanel: function (name, locked) {
+        hidePanel: function (name, locked, softLockedType) {
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
+            softLockedType = softLockedType || 'default';
 
             if (locked) {
                 this.recordHelper.setPanelStateParam(name, 'hiddenLocked', true);
+            }
+
+            if (softLockedType) {
+                this.recordHelper.setPanelStateParam(
+                    name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', true
+                );
             }
 
             var middleView = this.getView('middle');

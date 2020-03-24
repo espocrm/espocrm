@@ -216,6 +216,12 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 this.subscribeToWebSocket();
             }
 
+            this.once('show', function () {
+                if (!this.isSubscribedToWebSocked) {
+                    this.subscribeToWebSocket();
+                }
+            }, this);
+
             this.once('remove', function () {
                 if (this.isSubscribedToWebSocked) {
                     this.unsubscribeFromWebSocket();
@@ -368,8 +374,13 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 }.bind(this), 500);
 
             }, this);
+
             if (!this.defs.hidden) {
                 collection.fetch();
+            } else {
+                this.once('show', function () {
+                    collection.fetch();
+                }, this);
             }
 
             var assignmentPermission = this.getAcl().get('assignmentPermission');
