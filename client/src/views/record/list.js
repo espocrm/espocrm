@@ -176,7 +176,11 @@ define('views/record/list', 'view', function (Dep) {
             while (this.collection.length > maxSizeLimit) {
                 this.collection.pop();
             }
+
             this.collection.sort(orderBy, order);
+
+            this.collection.trigger('order-changed');
+
             this.deactivate();
         },
 

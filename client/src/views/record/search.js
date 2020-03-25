@@ -169,6 +169,10 @@ define('views/record/search', 'view', function (Dep) {
             this.createFilters();
 
             this.setupViewModeDataList();
+
+            this.listenTo(this.collection, 'order-changed', function () {
+                this.controlResetButtonVisibility();
+            }, this);
         },
 
         setupViewModeDataList: function () {
@@ -386,6 +390,8 @@ define('views/record/search', 'view', function (Dep) {
         resetFilters: function () {
             this.trigger('reset');
 
+            this.collection.resetOrderToDefault();
+
             this.textFilter = '';
             this.selectPreset(this.presetName, true);
         },
@@ -502,7 +508,6 @@ define('views/record/search', 'view', function (Dep) {
         },
 
         controlResetButtonVisibility: function () {
-
             var presetName = this.presetName || null;
             var primary = this.primary;
 
@@ -519,6 +524,15 @@ define('views/record/search', 'view', function (Dep) {
                     if (Object.keys(this.advanced).length) {
                         toShow = true;
                     }
+                }
+            }
+
+            if (!toShow) {
+                if (
+                    this.collection.orderBy !== this.collection.defaultOrderBy ||
+                    this.collection.order !== this.collection.defaultOrder
+                ) {
+                    toShow = true;
                 }
             }
 

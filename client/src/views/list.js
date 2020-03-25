@@ -98,15 +98,14 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             this.setupHeader();
 
-            this.collection.orderBy = this.defaultOrderBy || this.collection.orderBy;
-            this.collection.order = this.defaultOrder || this.collection.order;
+            this.defaultOrderBy = this.defaultOrderBy || this.collection.orderBy;
+            this.defaultOrder = this.defaultOrder || this.collection.order;
+
+            this.collection.setOrder(this.defaultOrderBy, this.defaultOrder, true);
 
             if (this.searchPanel) {
                 this.setupSearchManager();
             }
-
-            this.defaultOrderBy = this.collection.orderBy;
-            this.defaultOrder = this.collection.order;
 
             this.setupSorting();
 
@@ -243,13 +242,10 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             this.collection.url = this.scope + '/action/listKanban';
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall');
 
-            this.collection.orderBy = this.collection.defaultOrderBy;
-            this.collection.order = this.collection.defaultOrder;
+            this.collection.resetOrderToDefault();
         },
 
         resetSorting: function () {
-            this.collection.orderBy = this.defaultOrderBy;
-            this.collection.order = this.defaultOrder;
             this.getStorage().clear('listSorting', this.collection.name);
         },
 

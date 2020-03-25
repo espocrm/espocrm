@@ -168,12 +168,11 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                 }
 
                 collection.url = collection.urlRoot = url;
+
                 if (this.defaultOrderBy) {
-                    collection.orderBy = this.defaultOrderBy;
+                    collection.setOrder(this.defaultOrderBy, this.defaultOrder || false, true);
                 }
-                if (this.defaultOrder) {
-                    collection.order = this.defaultOrder;
-                }
+
                 this.collection = collection;
 
                 collection.parentModel = this.model;
