@@ -38,6 +38,8 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
 
     protected $reminderSkippingStatusList = ['Held', 'Not Held'];
 
+    protected $preserveDuration = true;
+
     protected function init()
     {
         parent::init();
@@ -86,7 +88,13 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
         }
 
         if (!$entity->isNew()) {
-            if ($entity->isAttributeChanged('dateStart') && $entity->isAttributeChanged('dateStart') && !$entity->isAttributeChanged('dateEnd')) {
+            if (
+                $this->preserveDuration
+                &&
+                $entity->isAttributeChanged('dateStart') && $entity->get('dateStart')
+                &&
+                $entity->isAttributeChanged('dateStart') && !$entity->isAttributeChanged('dateEnd')
+            ) {
                 $dateEndPrevious = $entity->getFetched('dateEnd');
                 $dateStartPrevious = $entity->getFetched('dateStart');
                 if ($dateStartPrevious && $dateEndPrevious) {
