@@ -60,6 +60,7 @@
         "Activities": "My Activities"
     },
     "labels": {
+        "Scheduler": "Scheduler",
         "Create InboundEmail": "Create Inbound Email",
         "Activities": "Activities",
         "History": "History",

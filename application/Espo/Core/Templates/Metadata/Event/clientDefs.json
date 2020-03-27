@@ -8,6 +8,26 @@
         "activitiesCreate": true,
         "historyCreate": true
     },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "disabled": true,
+                "order": 3
+            }
+        ],
+        "edit": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "disabled": true,
+                "order": 1
+            }
+        ]
+    },
     "filterList": [
         {
             "name":"planned"

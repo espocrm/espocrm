@@ -132,6 +132,7 @@ return [
     'calendarEntityList' => ['Meeting', 'Call', 'Task'],
     'activitiesEntityList' => ['Meeting', 'Call'],
     'historyEntityList' => ['Meeting', 'Call', 'Email'],
+    'busyRangesEntityList' => ['Meeting', 'Call'],
     'cleanupJobPeriod' => '1 month',
     'cleanupActionHistoryPeriod' => '15 days',
     'cleanupAuthTokenPeriod' => '1 month',

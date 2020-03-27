@@ -38,7 +38,7 @@
         "label": "Activities",
         "rows": [
             [{"name": "calendarEntityList"}, {"name": "activitiesEntityList"}],
-            [false, {"name": "historyEntityList"}]
+            [{"name": "busyRangesEntityList"}, {"name": "historyEntityList"}]
         ]
     }
 ]

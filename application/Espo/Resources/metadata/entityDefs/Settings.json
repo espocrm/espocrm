@@ -497,6 +497,11 @@
             "type": "multiEnum",
             "view": "views/settings/fields/history-entity-list"
         },
+        "busyRangesEntityList": {
+            "type": "multiEnum",
+            "tooltip": true,
+            "view": "views/settings/fields/busy-ranges-entity-list"
+        },
         "googleMapsApiKey": {
             "type": "varchar",
             "onlyUser": true

@@ -88,6 +88,7 @@
         "newNotificationCountInTitle": "Display new notification number in page title",
         "applicationName": "Application Name",
         "calendarEntityList": "Calendar Entity List",
+        "busyRangesEntityList": "Free/Busy Entity List",
         "mentionEmailNotifications": "Send email notifications about mentions in posts",
         "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link",
         "massEmailOpenTracking": "Email Open Tracking",
@@ -158,6 +159,7 @@
         }
     },
     "tooltips": {
+        "busyRangesEntityList": "What will be taken into account when showing busy time ranges in scheduler & timeline.",
         "massEmailVerp": "Variable envelope return path. For better handling of bounced messages. Make sure that your SMTP provider supports it.",
         "recordsPerPage": "Number of records initially displayed in list views.",
         "recordsPerPageSmall": "Number of records initially displayed in relationship panels.",
