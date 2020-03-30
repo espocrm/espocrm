@@ -9,6 +9,7 @@
          "name": "nextNumber",
          "type": "int",
          "min": 0,
+         "max": 2147483647,
          "required": true,
          "default": 1
       },
