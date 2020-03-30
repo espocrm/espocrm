@@ -13,7 +13,7 @@
         "inboundEmails": "Group Email Accounts"
     },
     "tooltips": {
-        "layoutSet": "Provides the ability to have layouts that differs from standard ones. Layout Set will be applied to users who have this team set as Default Team.",
+        "layoutSet": "Provides the ability to have layouts that differ from standard ones. Layout Set will be applied to users who have this team set as Default Team.",
         "roles": "Access Roles. Users of this team obtain access control level from selected roles.",
         "positionList": "Available positions in this team. E.g. Salesperson, Manager."
     },
