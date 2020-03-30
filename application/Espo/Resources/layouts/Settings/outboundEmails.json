@@ -11,7 +11,7 @@
         "rows": [
             [{"name": "smtpServer"}, {"name": "smtpPort"}],
             [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "OutboundEmail.Fields.TestSend"}],
+            [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "views/outbound-email/fields/test-send"}],
             [{"name": "smtpPassword"}, false]
         ]
     },
