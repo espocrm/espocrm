@@ -84,7 +84,8 @@
             "default": true
         },
         "useSmtp": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "smtpIsShared": {
             "type": "bool",

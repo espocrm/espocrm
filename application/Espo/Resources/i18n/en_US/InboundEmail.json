@@ -40,6 +40,7 @@
         "smtpIsForMassEmail": "SMTP Is for Mass Email"
     },
     "tooltips": {
+        "useSmtp": "The ability to send emails.",
         "reply": "Notify email senders that their emails has been received.\n\n Only one email will be sent to a particular recipient during some period of time to prevent looping.",
         "createCase": "Automatically create case from incoming emails.",
         "replyToAddress": "Specify email address of this mailbox to make responses come here.",

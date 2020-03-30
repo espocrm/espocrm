@@ -85,7 +85,8 @@
             "default": true
         },
         "useSmtp": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "smtpHost": {
             "type": "varchar",
