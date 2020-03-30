@@ -92,10 +92,12 @@
         "outboundEmailFromAddress": {
             "type": "varchar",
             "default": "crm@example.com",
-            "trim": true
+            "trim": true,
+            "tooltip": true
         },
         "smtpServer": {
-            "type": "varchar"
+            "type": "varchar",
+            "tooltip": true
         },
         "smtpPort": {
             "type": "int",

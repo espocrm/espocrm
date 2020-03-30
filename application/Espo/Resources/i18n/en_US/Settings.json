@@ -159,6 +159,8 @@
         }
     },
     "tooltips": {
+        "outboundEmailFromAddress": "The system email address.",
+        "smtpServer": "If empty, then Group Email Account with the corresponding email address will be used.",
         "busyRangesEntityList": "What will be taken into account when showing busy time ranges in scheduler & timeline.",
         "massEmailVerp": "Variable envelope return path. For better handling of bounced messages. Make sure that your SMTP provider supports it.",
         "recordsPerPage": "Number of records initially displayed in list views.",

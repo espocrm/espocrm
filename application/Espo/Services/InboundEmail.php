@@ -962,7 +962,7 @@ class InboundEmail extends \Espo\Services\Record
             $smtpParams['password'] = $emailAccount->get('smtpPassword');
 
             if ($emailAccount->get('smtpAuth')) {
-                $smtpParams['smtpAuthMechanism'] = $emailAccount->get('smtpAuthMechanism');
+                $smtpParams['authMechanism'] = $emailAccount->get('smtpAuthMechanism');
             }
 
             if ($emailAccount->get('fromName')) {
@@ -974,8 +974,28 @@ class InboundEmail extends \Espo\Services\Record
             if (array_key_exists('password', $smtpParams) && is_string($smtpParams['password'])) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
             }
+
+            $this->applySmtpHandler($emailAccount, $smtpParams);
+
             return $smtpParams;
         }
         return;
+    }
+
+    public function applySmtpHandler(\Espo\Entities\InboundEmail $emailAccount, array &$params)
+    {
+        $handlerClassName = $emailAccount->get('smtpHandler');
+        if (!$handlerClassName) return;
+
+        try {
+            $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error(
+                "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()
+            );
+        }
+        if (method_exists($handler, 'applyParams')) {
+            $handler->applyParams($emailAccount->id, $params);
+        }
     }
 }

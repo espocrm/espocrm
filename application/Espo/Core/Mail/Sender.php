@@ -48,16 +48,26 @@ class Sender
 
     protected $entityManager;
 
+    protected $serviceFactory;
+
     protected $transport;
 
     protected $isGlobal = false;
 
     protected $params = [];
 
-    public function __construct($config, $entityManager)
+    private $systemInboundEmail = null;
+
+    private $inboundEmailService = null;
+
+    private $systemInboundEmailIsCached = false;
+
+    public function __construct($config, $entityManager, $serviceFactory = null)
     {
         $this->config = $config;
         $this->entityManager = $entityManager;
+        $this->serviceFactory = $serviceFactory;
+
         $this->useGlobal();
     }
 
@@ -86,6 +96,19 @@ class Sender
     public function useSmtp(array $params = []) : self
     {
         $this->isGlobal = false;
+        $this->applySmtp($params);
+        return $this;
+    }
+
+    public function useGlobal()
+    {
+        $this->params = [];
+        $this->isGlobal = true;
+        return $this;
+    }
+
+    protected function applySmtp(array $params = [])
+    {
         $this->params = $params;
 
         $this->transport = new SmtpTransport();
@@ -106,11 +129,12 @@ class Sender
             $options['connectionConfig'][$key] = $value;
         }
 
-        if ($params['auth']) {
-            if (!empty($params['smtpAuthMechanism'])) {
-                $smtpAuthMechanism = preg_replace("([\.]{2,})", '', $params['smtpAuthMechanism']);
-                if (in_array($smtpAuthMechanism, ['login', 'crammd5', 'plain'])) {
-                    $options['connectionClass'] = $smtpAuthMechanism;
+        if ($params['auth'] ?? false) {
+            $authMechanism = $params['authMechanism'] ?? $params['smtpAuthMechanism'] ?? null;
+            if ($authMechanism) {
+                $authMechanism = preg_replace("([\.]{2,})", '', $params['authMechanism']);
+                if (in_array($authMechanism, ['login', 'crammd5', 'plain'])) {
+                    $options['connectionClass'] = $authMechanism;
                 } else {
                     $options['connectionClass'] = 'login';
                 }
@@ -121,11 +145,12 @@ class Sender
             $options['connectionConfig']['password'] = $params['password'];
         }
 
-        if (!empty($params['smtpAuthClassName'])) {
-            $options['connectionClass'] = $params['smtpAuthClassName'];
+        $authClassName = $params['authClassName'] ?? $params['smtpAuthClassName'] ?? null;
+        if ($authClassName) {
+            $options['connectionClass'] = $authClassName;
         }
 
-        if ($params['security']) {
+        if ($params['security'] ?? null) {
             $options['connectionConfig']['ssl'] = strtolower($params['security']);
         }
 
@@ -138,48 +163,68 @@ class Sender
 
         $smtpOptions = new SmtpOptions($options);
         $this->transport->setOptions($smtpOptions);
-
-        return $this;
     }
 
-    public function useGlobal()
+    protected function applyGlobal()
     {
-        $this->params = [];
-        if ($this->isGlobal) {
-            return $this;
-        }
-
-        $this->transport = new SmtpTransport();
-
         $config = $this->config;
 
-        $localHostName = $config->get('smtpLocalHostName', gethostname());
+        if (!$config->get('smtpServer') && $config->get('outboundEmailFromAddress')) {
+            $inboundEmail = $this->getSystemInboundEmail();
+            if ($inboundEmail) {
+                $service = $this->getInboundEmailService();
+                if ($service) {
+                    $params = $service->getSmtpParamsFromAccount($inboundEmail);
+                    $this->applySmtp($params);
+                    return;
+                }
+            }
+        }
 
-        $options = [
-            'name' => $localHostName,
-            'host' => $config->get('smtpServer'),
+        $this->applySmtp([
+            'server' => $config->get('smtpServer'),
             'port' => $config->get('smtpPort'),
-            'connection_config' => [],
-        ];
-        if ($config->get('smtpAuth')) {
-            $options['connection_class'] = $config->get('smtpAuthMechanism', 'login');
-            $options['connection_config']['username'] = $config->get('smtpUsername');
-            $options['connection_config']['password'] = $config->get('smtpPassword');
+            'auth' => $config->get('smtpAuth'),
+            'authMechanism' => $config->get('smtpAuthMechanism', 'login'),
+            'username' => $config->get('smtpUsername'),
+            'password' => $config->get('smtpPassword'),
+            'security' => $config->get('smtpSecurity'),
+        ]);
+    }
+
+    protected function getSystemInboundEmail()
+    {
+        $address = $this->config->get('outboundEmailFromAddress');
+
+        if (!$this->systemInboundEmailIsCached && $address) {
+            $this->systemInboundEmail = $this->getEntityManager()->getRepository('InboundEmail')->where([
+                'status' => 'Active',
+                'useSmtp' => true,
+                'emailAddress' => $address,
+            ])->findOne();
+            $this->systemInboundEmailIsCached = true;
         }
-        if ($config->get('smtpSecurity')) {
-            $options['connection_config']['ssl'] = strtolower($config->get('smtpSecurity'));
+
+        return $this->systemInboundEmail;
+    }
+
+    protected function getInboundEmailService()
+    {
+        if (!$this->serviceFactory) return null;
+
+        if (!$this->inboundEmailService) {
+            $this->inboundEmailService = $this->serviceFactory->create('InboundEmail');
         }
 
-        $smtpOptions = new SmtpOptions($options);
-        $this->transport->setOptions($smtpOptions);
-
-        $this->isGlobal = true;
-
-        return $this;
+        return $this->inboundEmailService;
     }
 
     public function send(Email $email, ?array $params = [], $message = null, $attachmentList = [])
     {
+        if ($this->isGlobal) {
+            $this->applyGlobal();
+        }
+
         if (!$message) {
             $message = new Message();
         }

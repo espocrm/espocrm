@@ -119,6 +119,14 @@
             "options": ["login", "crammd5", "plain"],
             "default": "login"
         },
+        "imapHandler": {
+            "type": "varchar",
+            "readOnly": true
+        },
+        "smtpHandler": {
+            "type": "varchar",
+            "readOnly": true
+        },
         "createdBy": {
             "type": "link",
             "readOnly": true

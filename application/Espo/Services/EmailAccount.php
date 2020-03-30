@@ -496,13 +496,33 @@ class EmailAccount extends Record
             if ($emailAccount->get('smtpAuth')) {
                 $smtpParams['username'] = $emailAccount->get('smtpUsername');
                 $smtpParams['password'] = $emailAccount->get('smtpPassword');
-                $smtpParams['smtpAuthMechanism'] = $emailAccount->get('smtpAuthMechanism');
+                $smtpParams['authMechanism'] = $emailAccount->get('smtpAuthMechanism');
             }
             if (array_key_exists('password', $smtpParams)) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
             }
+
+            $this->applySmtpHandler($emailAccount, $smtpParams);
+
             return $smtpParams;
         }
         return;
+    }
+
+    public function applySmtpHandler(\Espo\Entities\EmailAccount $emailAccount, array &$params)
+    {
+        $handlerClassName = $emailAccount->get('smtpHandler');
+        if (!$handlerClassName) return;
+
+        try {
+            $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error(
+                "EmailAccount: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()
+            );
+        }
+        if (method_exists($handler, 'applyParams')) {
+            $handler->applyParams($emailAccount->id, $params);
+        }
     }
 }

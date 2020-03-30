@@ -35,7 +35,8 @@ class MailSender extends Base
     {
         return new \Espo\Core\Mail\Sender(
             $this->getContainer()->get('config'),
-            $this->getContainer()->get('entityManager')
+            $this->getContainer()->get('entityManager'),
+            $this->getContainer()->get('serviceFactory')
         );
     }
 }

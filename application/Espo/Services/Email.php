@@ -209,10 +209,6 @@ class Email extends Record
             $inboundEmail = $inboundEmailService->findSharedAccountForUser($this->getUser(), $originalFromAddress);
             if ($inboundEmail) {
                 $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
-
-                if ($inboundEmail->get('smtpHandler')) {
-                    $this->applyGroupSmtpHandler($inboundEmail, $smtpParams);
-                }
             }
             if ($smtpParams) {
                 $emailSender->useSmtp($smtpParams);
@@ -316,26 +312,10 @@ class Email extends Record
                     }
                     if (method_exists($handler, 'applyParams')) {
                         $handler->applyParams($userId, $emailAddress, $params);
+                        return;
                     }
                 }
             }
-        }
-    }
-
-    protected function applyGroupSmtpHandler(\Espo\Entities\InboundEmail $inboundEmail, array &$params)
-    {
-        $handlerClassName = $inboundEmail->get('smtpHandler');
-        if (!$handlerClassName) return;
-
-        try {
-            $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error(
-                "Send Email: Could not create Smtp Handler for inbound email {$inboundEmail->id}. Error: " . $e->getMessage()
-            );
-        }
-        if (method_exists($handler, 'applyParams')) {
-            $handler->applyParams($inboundEmail->id, $params);
         }
     }
 
@@ -865,7 +845,7 @@ class Email extends Record
         if (empty($smtpParams['auth'])) {
             unset($smtpParams['username']);
             unset($smtpParams['password']);
-            unset($smtpParams['smtpAuthMechanism']);
+            unset($smtpParams['authMechanism']);
         }
 
         $userId = $data['userId'] ?? null;
@@ -885,19 +865,26 @@ class Email extends Record
             'to' => $data['emailAddress'],
         ]);
 
-        if ($userId) {
-            if ($fromAddress) {
-                $this->applySmtpHandler($userId, $fromAddress, $smtpParams);
-            }
-        }
-
         $type = $data['type'] ?? null;
         $id = $data['id'] ?? null;
+
+        if ($type === 'emailAccount' && $id) {
+            $emailAccount = $this->getEntityManager()->getEntity('EmailAccount', $id);
+            if ($emailAccount && $emailAccount->get('smtpHandler')) {
+                $this->getServiceFactory()->create('EmailAccount')->applySmtpHandler($emailAccount, $smtpParams);
+            }
+        }
 
         if ($type === 'inboundEmail' && $id) {
             $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $id);
             if ($inboundEmail && $inboundEmail->get('smtpHandler')) {
-                $this->applyGroupSmtpHandler($inboundEmail, $smtpParams);
+                $this->getServiceFactory()->create('InboundEmail')->applySmtpHandler($inboundEmail, $smtpParams);
+            }
+        }
+
+        if ($userId) {
+            if ($fromAddress) {
+                $this->applySmtpHandler($userId, $fromAddress, $smtpParams);
             }
         }
 
