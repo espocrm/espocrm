@@ -41,11 +41,13 @@ class TargetList extends \Espo\Services\Record
 
     protected $duplicatingLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
+    protected $targetsLinkList = ['accounts', 'contacts', 'leads', 'users'];
+
     protected $entityTypeLinkMap = array(
         'Lead' => 'leads',
         'Account' => 'accounts',
         'Contact' => 'contacts',
-        'User' => 'users'
+        'User' => 'users',
     );
 
     protected $linkSelectParams = [
@@ -95,10 +97,9 @@ class TargetList extends \Espo\Services\Record
     protected function loadEntryCountField(Entity $entity)
     {
         $count = 0;
-        $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'contacts');
-        $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'leads');
-        $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'users');
-        $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'accounts');
+        foreach ($this->targetsLinkList as $link) {
+            $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, $link);
+        }
         $entity->set('entryCount', $count);
     }
 
@@ -106,25 +107,13 @@ class TargetList extends \Espo\Services\Record
     {
         $count = 0;
 
-        $count += $this->getEntityManager()->getRepository('Contact')->join(['targetLists'])->where([
-            'targetListsMiddle.targetListId' => $entity->id,
-            'targetListsMiddle.optedOut' => 1
-        ])->count();
-
-        $count += $this->getEntityManager()->getRepository('Lead')->join(['targetLists'])->where([
-            'targetListsMiddle.targetListId' => $entity->id,
-            'targetListsMiddle.optedOut' => 1
-        ])->count();
-
-        $count += $this->getEntityManager()->getRepository('Account')->join(['targetLists'])->where([
-            'targetListsMiddle.targetListId' => $entity->id,
-            'targetListsMiddle.optedOut' => 1
-        ])->count();
-
-        $count += $this->getEntityManager()->getRepository('User')->join(['targetLists'])->where([
-            'targetListsMiddle.targetListId' => $entity->id,
-            'targetListsMiddle.optedOut' => 1
-        ])->count();
+        foreach ($this->targetsLinkList as $link) {
+            $foreignEntityType = $entity->getRelationParam($link, 'entity');
+            $count += $this->getEntityManager()->getRepository($foreignEntityType)->join(['targetLists'])->where([
+                'targetListsMiddle.targetListId' => $entity->id,
+                'targetListsMiddle.optedOut' => 1,
+            ])->count();
+        }
 
         $entity->set('optedOutCount', $count);
     }
@@ -237,7 +226,7 @@ class TargetList extends \Espo\Services\Record
         }
         if ($sql) {
             if ($pdo->query($sql)) {
-                $this->getInjection('hookManager')->process('TargetList', 'afterUnlinkAll', $entity, array(), array('link' => $link));
+                $this->getInjection('hookManager')->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
                 return true;
             }
         }
@@ -324,12 +313,12 @@ class TargetList extends \Espo\Services\Record
         if (!$target) {
             throw new NotFound();
         }
-        $map = array(
+        $map = [
             'Account' => 'accounts',
             'Contact' => 'contacts',
             'Lead' => 'leads',
-            'User' => 'users'
-        );
+            'User' => 'users',
+        ];
 
         if (empty($map[$targetType])) {
             throw new Error();
@@ -363,12 +352,12 @@ class TargetList extends \Espo\Services\Record
         if (!$target) {
             throw new NotFound();
         }
-        $map = array(
+        $map = [
             'Account' => 'accounts',
             'Contact' => 'contacts',
             'Lead' => 'leads',
-            'User' => 'users'
-        );
+            'User' => 'users',
+        ];
 
         if (empty($map[$targetType])) {
             throw new Error();
