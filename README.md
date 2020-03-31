@@ -32,7 +32,7 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 3. Install [composer](https://getcomposer.org/doc/00-intro.md).
 4. Run `composer install` if composer is installed globally or `php composer.phar install` if locally.
 
-Note: Some dependencies require php extensions that you might don't have installed (e.g. zmq, ldap) and don't need to use. You can skip these requirements by installing with a flag *--ignore-platform-req*: `composer install --ignore-platform-req`.
+Note: Some dependencies require php extensions that you might don't have installed (e.g. zmq, ldap) and don't need to use. You can skip these requirements by installing with a flag *--ignore-platform-reqs*: `composer install --ignore-platform-reqs`.
 
 Note: Never update composer dependencies if you are going to contribute code back.
 
