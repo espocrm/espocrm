@@ -3,7 +3,8 @@
         "event": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true
+            "required": true,
+            "view": "views/webhook/fields/event"
         },
         "url": {
             "type": "varchar",
