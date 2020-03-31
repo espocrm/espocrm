@@ -300,6 +300,10 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("composer", function() {
+        cp.execSync("composer install --ignore-platform-reqs --no-dev", {stdio: 'ignore'});
+    });
+
+    grunt.registerTask("composer-dev", function() {
         cp.execSync("composer install --ignore-platform-reqs", {stdio: 'ignore'});
     });
 
@@ -383,13 +387,14 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('tests', [
-        'default',
+        'composer-dev',
+        'offline',
         'unit-tests',
         'integration-tests',
     ]);
 
     grunt.registerTask('dev', [
-        'composer',
+        'composer-dev',
         'less',
     ]);
 };
