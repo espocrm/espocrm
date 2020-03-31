@@ -60,7 +60,7 @@ if (process.argv.length > 1) {
 if (isAll) {
     var version = (require('./package.json') || {}).version;
 
-    execute('git tag -l --sort=-v:refname # reverse', function (tagsString) {
+    execute("git tag -l --sort=-v:refname", function (tagsString) {
         var tagList = tagsString.trim().split("\n");
         var versionFromList = [];
 
@@ -69,6 +69,7 @@ if (isAll) {
 
         for (var i = 0; i < tagList.length; i++) {
             var tag = tagList[i];
+            if (tag === '') continue;
             if (!~tag.indexOf('beta') && !~tag.indexOf('alpha')) {
                 var minorVersionNumberI = tag.split('.')[1];
                 if (minorVersionNumberI !== minorVersionNumber) {
