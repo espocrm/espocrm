@@ -300,7 +300,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("composer", function() {
-        cp.execSync("composer install", {stdio: 'ignore'});
+        cp.execSync("composer install --ignore-platform-reqs", {stdio: 'ignore'});
     });
 
     grunt.registerTask("upgrade", function() {
