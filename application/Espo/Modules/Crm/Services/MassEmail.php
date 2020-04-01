@@ -118,9 +118,12 @@ class MassEmail extends \Espo\Services\Record
             $excludingTargetListList = $massEmail->get('excludingTargetLists');
             foreach ($excludingTargetListList as $excludingTargetList) {
                 foreach ($this->targetsLinkList as $link) {
-                    $excludingList = $em->getRepository('TargetList')->select(['id', 'emailAddress'])->findRelated(
+                    $excludingList = $em->getRepository('TargetList')->findRelated(
                         $excludingTargetList,
-                        $link
+                        $link,
+                        [
+                            'select' => ['id', 'emailAddress'],
+                        ]
                     );
 
                     foreach ($excludingList as $excludingTarget) {
@@ -138,12 +141,13 @@ class MassEmail extends \Espo\Services\Record
 
             foreach ($targetListCollection as $targetList) {
                 foreach ($this->targetsLinkList as $link) {
-                    $recordList = $em->getRepository('TargetList')->select(['id', 'emailAddress'])->findRelated(
+                    $recordList = $em->getRepository('TargetList')->findRelated(
                         $targetList,
                         $link,
                         [
                             'additionalColumnsConditions' => ['optedOut' => false],
                             'returnSthCollection' => true,
+                            'select' => ['id', 'emailAddress'],
                         ]
                     );
 
