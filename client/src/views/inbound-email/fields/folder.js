@@ -63,7 +63,7 @@ Espo.define('views/inbound-email/fields/folder', 'views/fields/base', function (
                             this.addFolder(folder);
                         }, this);
                     });
-                }.bind(this)).fail(function () {
+                }.bind(this)).fail(function (xhr) {
                     Espo.Ui.error(this.translate('couldNotConnectToImap', 'messages', 'InboundEmail'));
                     xhr.errorIsHandled = true;
                 }.bind(this));

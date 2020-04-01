@@ -39,19 +39,8 @@ define('ajax', [], function () {
                 options.data = data;
             }
 
-            var xhr = $.ajax(options);
-
-            return xhr;
-
-            var obj = {
-                then: xhr.then,
-                fail: xhr.fail,
-                catch: xhr.fail
-            };
-
-            return obj;
+            return $.ajax(options);
         },
-
 
         postRequest: function (url, data, options) {
             if (data) {
