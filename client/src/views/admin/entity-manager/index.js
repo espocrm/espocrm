@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
+define('views/admin/entity-manager/index', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -133,14 +133,34 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
 
         editEntity: function (scope) {
             this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {
-                scope: scope
+                scope: scope,
             }, function (view) {
                 view.render();
 
-                this.listenTo(view, 'after:save', function () {
+                this.listenTo(view, 'after:save', function (o) {
                     this.clearView('edit');
                     this.setupScopeData();
                     this.render();
+
+                    if (o.rebuildRequired) {
+                        this.createView('dialog', 'views/modal', {
+                            templateContent:
+                                "{{complexText viewObject.options.msg}}" +
+                                "{{complexText viewObject.options.msgRebuild}}",
+                            headerText: this.translate('rebuildRequired', 'strings', 'Admin'),
+                            backdrop: 'static',
+                            msg: this.translate('rebuildRequired', 'messages', 'Admin'),
+                            msgRebuild: '```php rebuild.php```',
+                            buttonList: [
+                                {
+                                    name: 'close',
+                                    label: this.translate('Close'),
+                                }
+                            ],
+                        }, function (view) {
+                            view.render();
+                        });
+                    }
                 }, this);
 
                 this.listenTo(view, 'close', function () {

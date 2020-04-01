@@ -200,7 +200,11 @@
         "lastChar": "Last Character",
         "displayRawText": "Display raw text (no markdown)"
     },
+    "strings" : {
+        "rebuildRequired": "Rebuild is required"
+    },
     "messages": {
+        "rebuildRequired": "You need to run rebuild from CLI.",
         "upgradeVersion": "EspoCRM will be upgraded to version **{version}**. Please be patient as this may take a while.",
         "upgradeDone": "EspoCRM has been upgraded to version **{version}**.",
         "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
