@@ -73,7 +73,7 @@ define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', function
         },
 
         getValueForDisplay: function () {
-            if (!this.model.has(this.name)) {
+            if (!this.model.has(this.name) && this.isReadMode()) {
                 if (this.model.has('inboundEmailId')) {
                     if (this.model.get('inboundEmailId')) {
                         return 'inboundEmail:' + this.model.get('inboundEmailId');
