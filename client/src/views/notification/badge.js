@@ -150,7 +150,7 @@ define('views/notification/badge', 'view', function (Dep) {
         checkUpdates: function (isFirstCheck) {
             if (this.checkBypass()) return;
 
-            Espo.Ajax.getRequest('Notification/action/notReadCount').done(function (count) {
+            Espo.Ajax.getRequest('Notification/action/notReadCount').then(function (count) {
                 if (!isFirstCheck && count > this.unreadCount) {
                     var messageBlockPlayNotificationSound = localStorage.getItem('messageBlockPlayNotificationSound');
                     if (!messageBlockPlayNotificationSound) {
