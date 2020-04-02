@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activities', function (Dep) {
+define('crm:views/record/panels/history', 'crm:views/record/panels/activities', function (Dep) {
 
     return Dep.extend({
 
@@ -163,7 +163,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
             Espo.require('EmailHelper', function (EmailHelper) {
                 var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
 
-                this.notify('Please wait...');
+                Espo.Ui.notify(this.translate('loading', 'messages'));
 
                 this.getModelFactory().create('Email', function (model) {
                     model.id = id;

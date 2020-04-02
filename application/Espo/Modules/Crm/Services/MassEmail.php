@@ -52,6 +52,8 @@ class MassEmail extends \Espo\Services\Record
 
     protected $mandatorySelectAttributeList = ['campaignId'];
 
+    protected $targetsLinkList = ['accounts', 'contacts', 'leads', 'users'];
+
     protected function init()
     {
         parent::init();
@@ -80,10 +82,16 @@ class MassEmail extends \Espo\Services\Record
     protected function afterDeleteEntity(Entity $massEmail)
     {
         parent::afterDeleteEntity($massEmail);
-        $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
+
+        $this->cleanupQueueItems($massEmail);
+    }
+
+    protected function cleanupQueueItems(Entity $massEmail)
+    {
+        $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->select(['id'])->where([
             'status' => ['Pending', 'Failed'],
-            'massEmailId' => $massEmail->id
-        ))->find();
+            'massEmailId' => $massEmail->id,
+        ])->find();
         foreach ($existingQueueItemList as $existingQueueItem) {
             $this->getEntityManager()->getMapper('RDB')->deleteFromDb('EmailQueueItem', $existingQueueItem->id);
         }
@@ -95,27 +103,30 @@ class MassEmail extends \Espo\Services\Record
             throw new Error("Mass Email '".$massEmail->id."' should be 'Pending'.");
         }
 
+        $em = $this->getEntityManager();
+        $pdo = $this->getEntityManager()->getPDO();
+
         if (!$isTest) {
-            $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
-                'status' => ['Pending', 'Failed'],
-                'massEmailId' => $massEmail->id
-            ))->find();
-            foreach ($existingQueueItemList as $existingQueueItem) {
-                $this->getEntityManager()->getMapper('RDB')->deleteFromDb('EmailQueueItem', $existingQueueItem->id);
-            }
+            $this->cleanupQueueItems($massEmail);
         }
 
-        $metTargetHash = array();
-        $metEmailAddressHash = array();
-        $entityList = [];
-
-        $pdo = $this->getEntityManager()->getPDO();
+        $metTargetHash = [];
+        $metEmailAddressHash = [];
+        $itemList = [];
 
         if (!$isTest) {
             $excludingTargetListList = $massEmail->get('excludingTargetLists');
             foreach ($excludingTargetListList as $excludingTargetList) {
-                foreach (['accounts', 'contacts', 'leads', 'users'] as $link) {
-                    foreach ($excludingTargetList->get($link) as $excludingTarget) {
+                foreach ($this->targetsLinkList as $link) {
+                    $excludingList = $em->getRepository('TargetList')->findRelated(
+                        $excludingTargetList,
+                        $link,
+                        [
+                            'select' => ['id', 'emailAddress'],
+                        ]
+                    );
+
+                    foreach ($excludingList as $excludingTarget) {
                         $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->id;
                         $metTargetHash[$hashId] = true;
                         $emailAddress = $excludingTarget->get('emailAddress');
@@ -127,109 +138,50 @@ class MassEmail extends \Espo\Services\Record
             }
 
             $targetListCollection = $massEmail->get('targetLists');
+
             foreach ($targetListCollection as $targetList) {
-                $accountList = $targetList->get('accounts', array(
-                    'additionalColumnsConditions' => array(
-                        'optedOut' => false
-                    )
-                ));
-                foreach ($accountList as $account) {
-                    $hashId = $account->getEntityType() . '-'. $account->id;
-                    $emailAddress = $account->get('emailAddress');
-                    if (empty($emailAddress)) {
-                        continue;
-                    }
-                    if (!empty($metEmailAddressHash[$emailAddress])) {
-                        continue;
-                    }
-                    if (!empty($metTargetHash[$hashId])) {
-                        continue;
-                    }
+                foreach ($this->targetsLinkList as $link) {
+                    $recordList = $em->getRepository('TargetList')->findRelated(
+                        $targetList,
+                        $link,
+                        [
+                            'additionalColumnsConditions' => ['optedOut' => false],
+                            'returnSthCollection' => true,
+                            'select' => ['id', 'emailAddress'],
+                        ]
+                    );
 
-                    $entityList[] = $account;
-                    $metTargetHash[$hashId] = true;
-                    $metEmailAddressHash[$emailAddress] = true;
-                }
+                    foreach ($recordList as $record) {
+                        $hashId = $record->getEntityType() . '-'. $record->id;
+                        $emailAddress = $record->get('emailAddress');
 
-                $contactList = $targetList->get('contacts', array(
-                    'additionalColumnsConditions' => array(
-                        'optedOut' => false
-                    )
-                ));
-                foreach ($contactList as $contact) {
-                    $hashId = $contact->getEntityType() . '-'. $contact->id;
-                    $emailAddress = $contact->get('emailAddress');
-                    if (empty($emailAddress)) {
-                        continue;
-                    }
-                    if (!empty($metEmailAddressHash[$emailAddress])) {
-                        continue;
-                    }
-                    if (!empty($metTargetHash[$hashId])) {
-                        continue;
-                    }
+                        if (!$emailAddress) continue;
+                        if (!empty($metEmailAddressHash[$emailAddress])) continue;
+                        if (!empty($metTargetHash[$hashId])) continue;
 
-                    $entityList[] = $contact;
-                    $metTargetHash[$hashId] = true;
-                    $metEmailAddressHash[$emailAddress] = true;
-                }
+                        $item = $record->getValueMap();
+                        $item->entityType = $record->getEntityType();
 
-                $leadList = $targetList->get('leads', array(
-                    'additionalColumnsConditions' => array(
-                        'optedOut' => false
-                    )
-                ));
-                foreach ($leadList as $lead) {
-                    $hashId = $lead->getEntityType() . '-'. $lead->id;
-                    $emailAddress = $lead->get('emailAddress');
-                    if (empty($emailAddress)) {
-                        continue;
-                    }
-                    if (!empty($metEmailAddressHash[$emailAddress])) {
-                        continue;
-                    }
-                    if (!empty($metTargetHash[$hashId])) {
-                        continue;
-                    }
+                        $itemList[] = $item;
 
-                    $entityList[] = $lead;
-                    $metTargetHash[$hashId] = true;
-                    $metEmailAddressHash[$emailAddress] = true;
-                }
-
-                $userList = $targetList->get('users', array(
-                    'additionalColumnsConditions' => array(
-                        'optedOut' => false
-                    )
-                ));
-                foreach ($userList as $user) {
-                    $hashId = $user->getEntityType() . '-'. $user->id;
-                    $emailAddress = $user->get('emailAddress');
-                    if (empty($emailAddress)) {
-                        continue;
+                        $metTargetHash[$hashId] = true;
+                        $metEmailAddressHash[$emailAddress] = true;
                     }
-                    if (!empty($metEmailAddressHash[$emailAddress])) {
-                        continue;
-                    }
-                    if (!empty($metTargetHash[$hashId])) {
-                        continue;
-                    }
-
-                    $entityList[] = $user;
-                    $metTargetHash[$hashId] = true;
-                    $metEmailAddressHash[$emailAddress] = true;
                 }
             }
         }
 
-        foreach ($additionalTargetList as $target) {
-            $entityList[] = $target;
+        foreach ($additionalTargetList as $record) {
+            $item = $record->getValueMap();
+            $item->entityType = $record->getEntityType();
+            $itemList[] = $item;
         }
 
-        foreach ($entityList as $target) {
-            $emailAddress = $target->get('emailAddress');
-            if (!$target->get('emailAddress')) continue;
+        foreach ($itemList as $item) {
+            $emailAddress = $item->emailAddress ?? null;
+            if (!$emailAddress) continue;
             if (strpos($emailAddress, 'ERASED:') === 0) continue;
+
             $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
             if ($emailAddressRecord) {
                 if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
@@ -238,19 +190,19 @@ class MassEmail extends \Espo\Services\Record
             }
 
             $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem');
-            $queueItem->set(array(
+            $queueItem->set([
                 'massEmailId' => $massEmail->id,
                 'status' => 'Pending',
-                'targetId' => $target->id,
-                'targetType' => $target->getEntityType(),
-                'isTest' => $isTest
-            ));
+                'targetId' => $item->id,
+                'targetType' => $item->entityType,
+                'isTest' => $isTest,
+            ]);
             $this->getEntityManager()->saveEntity($queueItem);
         }
 
         if (!$isTest) {
             $massEmail->set('status', 'In Process');
-            if (empty($entityList)) {
+            if (empty($itemList)) {
                 $massEmail->set('status', 'Complete');
             }
 

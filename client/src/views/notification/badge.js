@@ -150,7 +150,7 @@ define('views/notification/badge', 'view', function (Dep) {
         checkUpdates: function (isFirstCheck) {
             if (this.checkBypass()) return;
 
-            Espo.Ajax.getRequest('Notification/action/notReadCount').done(function (count) {
+            Espo.Ajax.getRequest('Notification/action/notReadCount').then(function (count) {
                 if (!isFirstCheck && count > this.unreadCount) {
                     var messageBlockPlayNotificationSound = localStorage.getItem('messageBlockPlayNotificationSound');
                     if (!messageBlockPlayNotificationSound) {
@@ -206,27 +206,37 @@ define('views/notification/badge', 'view', function (Dep) {
 
             if (!url || !interval) return;
 
-            (new Promise(function (resolve) {
-                if (this.checkBypass()) {
-                    resolve();
-                    return;
-                }
-                var jqxhr = Espo.Ajax.getRequest(url).done(function (list) {
-                    list.forEach(function (item) {
-                        this.showPopupNotification(name, item, isNotFirstCheck);
-                    }, this);
-                }.bind(this));
+            (new Promise(
+                function (resolve) {
+                    if (this.checkBypass()) {
+                        resolve();
+                        return;
+                    }
 
-                jqxhr.always(function() {
-                    resolve();
-                });
-            }.bind(this))).then(function () {
-                if (useWebSocket) return;
+                    Espo.Ajax.getRequest(url)
+                    .then(
+                        function (list) {
+                            list.forEach(function (item) {
+                                this.showPopupNotification(name, item, isNotFirstCheck);
+                            }, this);
+                        }.bind(this)
+                    )
+                    .always(
+                        function() {
+                            resolve();
+                        }
+                    );
 
-                this.popoupTimeouts[name] = setTimeout(function () {
-                    this.checkPopupNotifications(name, isNotFirstCheck);
-                }.bind(this), interval * 1000);
-            }.bind(this));
+                }.bind(this)
+            )).then(
+                function () {
+                    if (useWebSocket) return;
+
+                    this.popoupTimeouts[name] = setTimeout(function () {
+                        this.checkPopupNotifications(name, isNotFirstCheck);
+                    }.bind(this), interval * 1000);
+                }.bind(this)
+            );
         },
 
         showPopupNotification: function (name, data, isNotFirstCheck) {

@@ -184,7 +184,7 @@ define('views/record/list-tree-item', 'view', function (Dep) {
                     collection.parentId = this.model.id;
                     collection.maxDepth = 1;
 
-                    this.notify('Please wait...');
+                    Espo.Ui.notify(this.translate('loading', 'messages'));
                     this.listenToOnce(collection, 'sync', function () {
                     this.notify(false);
                         this.model.set('childCollection', collection);

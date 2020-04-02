@@ -26,55 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('ajax', [], function () {
+define('views/webhook/fields/event', 'views/fields/varchar', function (Dep) {
 
-    var Ajax = Espo.Ajax = {
+    return Dep.extend({
 
-        request: function (url, type, data, options) {
-            var options = options || {};
-            options.type = type;
-            options.url = url;
+        setupOptions: function () {
+            var itemList = [];
 
-            if (data) {
-                options.data = data;
-            }
+            var scopeList = this.getMetadata().getScopeObjectList();
 
-            return $.ajax(options);
+            scopeList = scopeList.sort(function (v1, v2) {
+                return v1.localeCompare(v2);
+            }.bind(this));
+
+            scopeList.forEach(function (scope) {
+                itemList.push(scope + '.' + 'create');
+                itemList.push(scope + '.' + 'update');
+                itemList.push(scope + '.' + 'delete');
+            }, this);
+
+            this.params.options = itemList;
         },
 
-        postRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
-            return Ajax.request(url, 'POST', data, options);
-        },
-
-        patchRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
-            return Ajax.request(url, 'PATCH', data, options);
-        },
-
-        putRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
-            return Ajax.request(url, 'PUT', data, options);
-        },
-
-        deleteRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
-            return Ajax.request(url, 'DELETE', data, options);
-        },
-
-        getRequest: function (url, data, options) {
-            return Ajax.request(url, 'GET', data, options);
-        }
-    };
-
-    return Ajax;
-
+    });
 });

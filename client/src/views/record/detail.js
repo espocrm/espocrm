@@ -298,7 +298,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (this.type === 'detail' && this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])) {
-                if (this.getAcl().get('dataPrivacyPermission') !== 'no') {
+                if (this.getAcl().get('dataPrivacyPermission') == 'yes') {
                     this.dropdownItemList.push({
                         'label': 'View Personal Data',
                         'name': 'viewPersonalData'
