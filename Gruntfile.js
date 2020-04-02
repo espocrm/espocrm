@@ -21,10 +21,11 @@
 
  /**
   * * `grunt` - full build
-  * * `grunt dev` - build only items needed for development
-  * * `grunt offline` - skips *composer install*
+  * * `grunt dev` - build only items needed for development (takes less time)
+  * * `grunt offline` - build but skip *composer install*
   * * `grant release` - full build plus upgrade packages`
-  * * `grant tests` - build and run tests
+  * * `grant test` - build for test running
+  * * `grant run-tests` - build and run unit and integratino tests
   */
 
 module.exports = function (grunt) {
@@ -311,12 +312,12 @@ module.exports = function (grunt) {
         cp.execSync("node diff --all --vendor", {stdio: 'inherit'});
     });
 
-    grunt.registerTask("unit-tests", function() {
-        cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/unit", {stdio: 'inherit'});
+    grunt.registerTask("unit-tests-run", function() {
+        cp.execSync("vendor/bin/phpunit --bootstrap=vendor/autoload.php tests/unit", {stdio: 'inherit'});
     });
 
-    grunt.registerTask("integration-tests", function() {
-        cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/integration", {stdio: 'inherit'});
+    grunt.registerTask("integration-tests-run", function() {
+        cp.execSync("vendor/bin/phpunit --bootstrap=vendor/autoload.php tests/integration", {stdio: 'inherit'});
     });
 
     grunt.registerTask("zip", function() {
@@ -386,15 +387,29 @@ module.exports = function (grunt) {
         'clean:release',
     ]);
 
-    grunt.registerTask('tests', [
+    grunt.registerTask('run-tests', [
+        'test',
+        'unit-tests-run',
+        'integration-tests-run',
+    ]);
+
+    grunt.registerTask('run-unit-tests', [
         'composer-dev',
-        'offline',
-        'unit-tests',
-        'integration-tests',
+        'unit-tests-run',
+    ]);
+
+    grunt.registerTask('run-integration-tests', [
+        'test',
+        'integration-tests-run',
     ]);
 
     grunt.registerTask('dev', [
         'composer-dev',
         'less',
+    ]);
+
+    grunt.registerTask('test', [
+        'composer-dev',
+        'offline',
     ]);
 };

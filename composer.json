@@ -40,6 +40,9 @@
         "robthree/twofactorauth": "^1.6",
         "nesbot/carbon": "^2.26"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
     "autoload": {
         "psr-0": {
             "": "application/",

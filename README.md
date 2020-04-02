@@ -72,18 +72,22 @@ Branches:
 
 ### Running tests (for developers)
 
-You need to have *phpunit* installed.
+Before running tests, you need to build for testing:
+
+```
+grunt test
+```
 
 Unit tests:
 
 ```
-phpunit --bootstrap=vendor/autoload.php tests/unit
+vendor/bin/phpunit --bootstrap=vendor/autoload.php tests/unit
 ```
 
 Integration tests:
 
 ```
-phpunit --bootstrap=vendor/autoload.php tests/integration
+vendor/bin/phpunit --bootstrap=vendor/autoload.php tests/integration
 ```
 
 ### How to make a translation
