@@ -337,7 +337,7 @@ function buildUpgradePackage(versionFrom, params)
                             fs.writeFileSync(tempFolderPath + "/new/composer.lock", composerLockNewContents);
                             fs.writeFileSync(tempFolderPath + "/new/composer.json", composerNewContents);
 
-                            cp.execSync("composer install", {cwd: tempFolderPath + "/new", stdio: 'ignore'});
+                            cp.execSync("composer install --no-dev --ignore-platform-reqs", {cwd: tempFolderPath + "/new", stdio: 'ignore'});
 
                             fs.mkdirSync(upgradePath + '/vendorFiles');
 
