@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/detail-side', 'views/record/detail-side', function (Dep) {
+define('views/user/record/detail-side', 'views/record/detail-side', function (Dep) {
 
     return Dep.extend({
 
@@ -34,10 +34,10 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
             Dep.prototype.setupPanels.call(this);
 
             if (this.model.isApi() || this.model.isSystem()) {
-                this.hidePanel('activities');
-                this.hidePanel('history');
-                this.hidePanel('tasks');
-                this.hidePanel('stream');
+                this.hidePanel('activities', true);
+                this.hidePanel('history', true);
+                this.hidePanel('tasks', true);
+                this.hidePanel('stream', true);
                 return;
             }
 
@@ -48,17 +48,13 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
                     if (!this.model.has('teamsIds')) {
                         this.listenToOnce(this.model, 'sync', function () {
                             if (this.getAcl().checkUserPermission(this.model)) {
-                                this.showPanel('activities', function () {
-                                    this.getView('activities').actionRefresh();
+                                this.onPanelsReady(function () {
+                                    this.showPanel('activities', 'acl');
+                                    this.showPanel('history', 'acl');
+                                    if (!this.model.isPortal()) {
+                                        this.showPanel('tasks', 'acl');
+                                    }
                                 });
-                                this.showPanel('history', function () {
-                                    this.getView('history').actionRefresh();
-                                });
-                                if (!this.model.isPortal()) {
-                                    this.showPanel('tasks', function () {
-                                        this.getView('tasks').actionRefresh();
-                                    });
-                                }
                             }
                         }, this);
                     }
@@ -66,14 +62,15 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
             }
 
             if (!showActivities) {
-                this.hidePanel('activities');
-                this.hidePanel('history');
-                this.hidePanel('tasks');
+                this.hidePanel('activities', false, 'acl');
+                this.hidePanel('history', false, 'acl');
+                this.hidePanel('tasks', false, 'acl');
             }
 
             if (this.model.isPortal()) {
-                this.hidePanel('tasks');
+                this.hidePanel('tasks', true);
             }
-        }
+        },
+
     });
 });

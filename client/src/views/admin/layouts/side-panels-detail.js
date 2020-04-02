@@ -109,9 +109,6 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
 
             this.rowLayout = [];
 
-            /*if (!~panelListAll.findIndex(function (o) {return o.name == '_delimiter_'}) {
-
-            }*/
 
             panelListAll.push('_delimiter_');
 
@@ -121,14 +118,19 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 };
             }
 
-
-
             panelListAll.forEach(function (item, index) {
                 var disabled = false;
                 var itemData = layout[item] || {};
                 if (itemData.disabled) {
                     disabled = true;
                 }
+
+                if (!layout[item]) {
+                    if ((params[item] || {}).disabled) {
+                        disabled = true;
+                    }
+                }
+
                 var labelText;
                 if (labels[item]) {
                     labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
@@ -202,9 +204,8 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
 
                 this.dataAttributeList.forEach(function (attribute) {
                     if (attribute === 'name') return;
-                    var value = attributes[attribute] || null;
-                    if (value) {
-                        o[attribute] = value;
+                    if (attribute in attributes) {
+                        o[attribute] = attributes[attribute];
                     }
                 }, this);
 

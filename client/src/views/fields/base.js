@@ -224,6 +224,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
 
         setMode: function (mode) {
+            var modeIsChanged = this.mode !== mode;
+
             this.mode = mode;
             var property = mode + 'Template';
             if (!(property in this)) {
@@ -241,6 +243,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.compiledTemplatesCache[contentProperty] =
                         this.compiledTemplatesCache[contentProperty] || this._templator.compileTemplate(this[contentProperty]);
                 }
+            }
+
+            if (modeIsChanged) {
+                this.trigger('mode-changed');
             }
         },
 
@@ -402,6 +408,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
                 tooltipText = this.getHelper().transfromMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
+                var hidePopover = function () {
+                    $('body').off('click.popover-' + this.id);
+                    this.stopListening(this, 'mode-changed', hidePopover);
+                    $a.popover('hide');
+                }.bind(this);
+
                 $a.popover({
                     placement: 'bottom',
                     container: 'body',
@@ -409,12 +421,15 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     content: tooltipText,
                 }).on('shown.bs.popover', function () {
                     $('body').off('click.popover-' + this.id);
+                    this.stopListening(this, 'mode-changed', hidePopover);
+
                     $('body').on('click.popover-' + this.id , function (e) {
                         if ($(e.target).closest('.popover-content').get(0)) return;
                         if ($.contains($a.get(0), e.target)) return;
-                        $('body').off('click.popover-' + this.id);
-                        $a.popover('hide');
+                        hidePopover();
                     }.bind(this));
+
+                    this.listenToOnce(this, 'mode-changed', hidePopover);
                 }.bind(this));
 
                 $a.on('click', function () {

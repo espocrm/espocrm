@@ -257,12 +257,12 @@ define('dynamic-logic', [], function () {
             this.recordView.setFieldNotReadOnly(field);
         },
 
-        makePanelVisibleTrue: function (field) {
-            this.recordView.showPanel(field);
+        makePanelVisibleTrue: function (panel) {
+            this.recordView.showPanel(panel, 'dynamicLogic');
         },
 
-        makePanelVisibleFalse: function (field) {
-            this.recordView.hidePanel(field);
+        makePanelVisibleFalse: function (panel) {
+            this.recordView.hidePanel(panel, false, 'dynamicLogic');
         },
 
         addPanelVisibleCondition: function (name, item) {
@@ -271,7 +271,7 @@ define('dynamic-logic', [], function () {
                 visible: item
             };
             this.processPanel(name, 'visible');
-        }
+        },
 
     });
 

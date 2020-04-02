@@ -51,9 +51,6 @@
         },
         "listPortal": {
             "type": "list"
-        },
-        "relationshipsPortal": {
-            "type": "relationships"
         }
     },
     "iconClass": "fas fa-book"

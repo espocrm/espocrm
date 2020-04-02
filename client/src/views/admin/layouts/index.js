@@ -39,9 +39,9 @@ define('views/admin/layouts/index', 'view', function (Dep) {
             'detail',
             'listSmall',
             'detailSmall',
+            'bottomPanelsDetail',
             'filters',
             'massUpdate',
-            'relationships',
             'sidePanelsDetail',
             'sidePanelsEdit',
             'sidePanelsDetailSmall',
@@ -85,6 +85,12 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                 item.typeList = Espo.Utils.clone(this.typeList);
 
                 if (
+                    this.getMetadata().get(['clientDefs', scope, 'bottomPanels', 'edit'])
+                ) {
+                    item.typeList.push('bottomPanelsEdit');
+                }
+
+                if (
                     !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelDisabled'])
                     &&
                     !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelFieldList'])
@@ -92,13 +98,13 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                     item.typeList.push('defaultSidePanel');
                 }
 
+                if (this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode'])) {
+                    item.typeList.push('kanban');
+                }
+
                 var additionalLayouts = this.getMetadata().get(['clientDefs', scope, 'additionalLayouts']) || {};
                 for (var aItem in additionalLayouts) {
                     item.typeList.push(aItem);
-                }
-
-                if (this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode'])) {
-                    item.typeList.push('kanban');
                 }
 
                 item.typeList = item.typeList.filter(function (name) {

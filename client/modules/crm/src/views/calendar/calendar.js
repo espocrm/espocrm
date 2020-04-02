@@ -121,8 +121,8 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
             this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
-            this.canceledStatusList = this.getMetadata().get('clientDefs.Calendar.canceledStatusList') || this.canceledStatusList;
-            this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
+            this.canceledStatusList = this.getMetadata().get('app.calendar.canceledStatusList') || this.canceledStatusList;
+            this.completedStatusList = this.getMetadata().get('app.calendar.completedStatusList') || this.completedStatusList;
             this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
             this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
 

@@ -269,4 +269,19 @@ class Activities extends \Espo\Core\Controllers\Base
             'list' => $result->collection->getValueMapList()
         ];
     }
+
+    public function getActionBusyRanges($params, $data, $request)
+    {
+        $from = $request->get('from');
+        $to = $request->get('to');
+        $userIdList = $request->get('userIdList');
+
+        if (!$from || !$to || !$userIdList) throw new BadRequest();
+
+        $userIdList = explode(',', $userIdList);
+
+        return $this->getService('Activities')->getBusyRanges(
+            $userIdList, $from, $to, $request->get('entityType'), $request->get('entityId')
+        );
+    }
 }

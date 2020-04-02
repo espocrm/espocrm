@@ -19,7 +19,8 @@
             "disabled": true
         },
         "layoutSet": {
-            "type": "link"
+            "type": "link",
+            "tooltip": true
         },
         "createdAt": {
             "type": "datetime",

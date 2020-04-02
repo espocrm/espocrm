@@ -37,6 +37,7 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
     {
         $this->addDependency('entityManager');
         $this->addDependency('selectManagerFactory');
+        $this->addDependency('metadata');
     }
 
     public function process(\StdClass $item)
@@ -49,7 +50,7 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
             throw new Error();
         }
 
-        if (count($item->value) < 5) {
+        if (count($item->value) < 3) {
             throw new Error();
         }
 
@@ -58,8 +59,16 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
         $entityType = $this->evaluate($item->value[0]);
         $id = $this->evaluate($item->value[1]);
         $link = $this->evaluate($item->value[2]);
-        $orderBy = $this->evaluate($item->value[3]);
-        $order = $this->evaluate($item->value[4]) ?? 'asc';
+
+        $orderBy = null;
+        $order = null;
+
+        if (count($item->value) > 3) {
+            $orderBy = $this->evaluate($item->value[3]);
+        }
+        if (count($item->value) > 4) {
+            $order = $this->evaluate($item->value[4]) ?? null;
+        }
 
         if (!$entityType) throw new Error("Formula record\\findRelatedOne: Empty entityType.");
         if (!$id) return null;
@@ -68,6 +77,17 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
         $entity = $entityManager->getEntity($entityType, $id);
 
         if (!$entity) return null;
+
+        $metadata = $this->getInjection('metadata');
+
+        if (!$orderBy) {
+            $orderBy = $metadata->get(['entityDefs', $entityType, 'collection', 'orderBy']);
+            if (is_null($order)) {
+                $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'asc';
+            }
+        } else {
+            $order = $order ?? 'asc';
+        }
 
         $relationType = $entity->getRelationParam($link, 'type');
 

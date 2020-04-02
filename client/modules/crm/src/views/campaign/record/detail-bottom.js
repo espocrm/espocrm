@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
+define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
 
     return Dep.extend({
 
@@ -42,7 +41,8 @@ Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bott
                 hidden: true,
                 select: false,
                 recordListView: 'crm:views/mass-email/record/list-for-campaign',
-                rowActionsView: 'crm:views/mass-email/record/row-actions/for-campaign'
+                rowActionsView: 'crm:views/mass-email/record/row-actions/for-campaign',
+                index: -2,
             });
 
             this.panelList.unshift({
@@ -52,7 +52,8 @@ Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bott
                 sticked: true,
                 hidden: true,
                 select: false,
-                rowActionsView: 'views/record/row-actions/relationship-no-unlink'
+                rowActionsView: 'views/record/row-actions/relationship-no-unlink',
+                index: -1,
             });
 
             this.listenTo(this.model, 'change', function () {
@@ -75,10 +76,7 @@ Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bott
                 parentView.hidePanel('massEmails');
                 parentView.hidePanel('trackingUrls');
             }
-        }
-
+        },
 
     });
 });
-
-

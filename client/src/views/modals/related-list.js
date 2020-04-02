@@ -182,10 +182,9 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 collection.maxSize = this.getConfig().get('recordsPerPage');
                 collection.url = this.url;
 
-                this.collection = collection;
+                collection.setOrder(this.defaultOrderBy, this.defaultOrder, true);
 
-                collection.orderBy = this.defaultOrderBy;
-                collection.order = this.defaultOrder;
+                this.collection = collection;
 
                 if (this.panelCollection) {
                     this.listenTo(collection, 'change', function (model) {
@@ -249,8 +248,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                     filterList: filterList
                 }, function (view) {
                     this.listenTo(view, 'reset', function () {
-                        this.collection.orderBy = this.defaultOrderBy;
-                        this.collection.order = this.defaultOrder;
+
                     }, this);
                 });
             }

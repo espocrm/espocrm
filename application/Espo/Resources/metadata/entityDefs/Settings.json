@@ -92,10 +92,12 @@
         "outboundEmailFromAddress": {
             "type": "varchar",
             "default": "crm@example.com",
-            "trim": true
+            "trim": true,
+            "tooltip": true
         },
         "smtpServer": {
-            "type": "varchar"
+            "type": "varchar",
+            "tooltip": true
         },
         "smtpPort": {
             "type": "int",
@@ -496,6 +498,11 @@
         "historyEntityList": {
             "type": "multiEnum",
             "view": "views/settings/fields/history-entity-list"
+        },
+        "busyRangesEntityList": {
+            "type": "multiEnum",
+            "tooltip": true,
+            "view": "views/settings/fields/busy-ranges-entity-list"
         },
         "googleMapsApiKey": {
             "type": "varchar",

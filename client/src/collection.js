@@ -92,7 +92,7 @@ define('collection', [], function () {
                 this.sortBy = orderBy;
             }
 
-            this.fetch();
+            return this.fetch();
         },
 
         nextPage: function () {
@@ -191,7 +191,22 @@ define('collection', [], function () {
 
         getEntityType: function () {
             return this.name;
-        }
+        },
+
+        resetOrderToDefault: function () {
+            this.orderBy = this.defaultOrderBy;
+            this.order = this.defaultOrder;
+        },
+
+        setOrder: function (orderBy, order, setDefault) {
+            this.orderBy = orderBy;
+            this.order = order;
+
+            if (setDefault) {
+                this.defaultOrderBy = orderBy;
+                this.defaultOrder = order;
+            }
+        },
 
     });
 

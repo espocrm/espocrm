@@ -268,17 +268,39 @@ define('views/detail', 'views/main', function (Dep) {
 
             var massRelateEnabled = data.massSelect;
 
-            var self = this;
             var attributes = {};
 
-            var filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
-            for (var filterName in filters) {
-                if (typeof filters[filterName] == 'function') {
-                    var filtersData = filters[filterName].call(this);
-                    if (filtersData) {
-                        filters[filterName] = filtersData;
-                    } else {
-                        delete filters[filterName];
+            if (link in this.selectRelatedFilters) {
+                var filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
+                for (var filterName in filters) {
+                    if (typeof filters[filterName] == 'function') {
+                        var filtersData = filters[filterName].call(this);
+                        if (filtersData) {
+                            filters[filterName] = filtersData;
+                        } else {
+                            delete filters[filterName];
+                        }
+                    }
+                }
+            } else {
+                var foreignLink = this.model.defs['links'][link].foreign;
+                if (foreignLink && scope) {
+                    var foreignLinkType = this.getMetadata().get(['entityDefs', scope, 'links', foreignLink, 'type']);
+                    var foreignLinkFieldType = this.getMetadata().get(['entityDefs', scope, 'fields', foreignLink, 'type']);
+                    if (
+                        ~['belongsTo', 'belongsToParent'].indexOf(foreignLinkType) &&
+                        foreignLinkFieldType
+                    ) {
+                        var filters = {};
+                        if (foreignLinkFieldType === 'link' || foreignLinkFieldType === 'linkParent') {
+                            filters[foreignLink] = {
+                                type: 'isNull',
+                                attribute: foreignLink + 'Id',
+                                data: {
+                                    type: 'isEmpty',
+                                },
+                            };
+                        }
                     }
                 }
             }
@@ -331,7 +353,7 @@ define('views/detail', 'views/main', function (Dep) {
                         }
                     }
                     $.ajax({
-                        url: self.scope + '/' + self.model.id + '/' + link,
+                        url: this.scope + '/' + this.model.id + '/' + link,
                         type: 'POST',
                         data: JSON.stringify(data),
                         success: function () {

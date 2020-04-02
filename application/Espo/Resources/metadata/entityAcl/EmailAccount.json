@@ -6,6 +6,12 @@
         "smtpPassword": {
             "internal": true
         },
+        "imapHandler": {
+            "internal": true
+        },
+        "smtpHandler": {
+            "internal": true
+        },
         "fetchData": {
             "readOnly": true
         }

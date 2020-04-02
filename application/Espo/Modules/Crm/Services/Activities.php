@@ -55,6 +55,8 @@ class Activities extends \Espo\Core\Services\Base
 
     const REMINDER_PAST_HOURS = 24;
 
+    const BUSY_RANGES_MAX_RANGE_DAYS = 10;
+
     protected function getPDO()
     {
         return $this->getEntityManager()->getPDO();
@@ -1258,6 +1260,15 @@ class Activities extends \Espo\Core\Services\Base
 
     public function getUsersTimeline($userIdList, $from, $to, $scopeList = null)
     {
+        $brScopeList = $this->getConfig()->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
+        if ($scopeList) {
+            foreach ($scopeList as $s) {
+                if (!in_array($s, $brScopeList)) {
+                    $brScopeList[] = $s;
+                }
+            }
+        }
+
         $resultData = (object) [];
         foreach ($userIdList as $userId) {
             $userData = (object) [
@@ -1266,7 +1277,7 @@ class Activities extends \Espo\Core\Services\Base
             ];
             try {
                 $userData->eventList = $this->getEventList($userId, $from, $to, $scopeList);
-                $userData->busyRangeList = $this->getBusyRangeList($userId, $from, $to, $scopeList, $userData->eventList);
+                $userData->busyRangeList = $this->getBusyRangeList($userId, $from, $to, $brScopeList, $userData->eventList);
             } catch (\Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
@@ -1275,6 +1286,58 @@ class Activities extends \Espo\Core\Services\Base
             }
 
             $resultData->$userId = $userData;
+        }
+        return $resultData;
+    }
+
+    public function getBusyRanges(
+        array $userIdList, string $from, string $to,
+        ?string $entityType = null, ?string $ignoreId = null, ?array $scopeList = null)
+    {
+        $scopeList = $this->getConfig()->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
+
+        if ($entityType) {
+            if (!$this->getAcl()->check($entityType)) throw new Forbidden();
+            if (!in_array($entityType, $scopeList)) {
+                $scopeList[] = $entityType;
+            }
+        }
+
+        try {
+            $dtFrom = new \DateTime($from);
+            $dtTo = new \DateTime($to);
+            $diff = $dtTo->diff($dtFrom, true);
+            if ($diff->days > $this->getConfig()->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
+                return [];
+            }
+
+        } catch (\Exception $e) {
+            throw new Error("BusyRanges: Bad date range.");
+        }
+
+        $ignoreList = null;
+
+        if ($entityType && $ignoreId) {
+            $ignoreList = [
+                [
+                    'id' => $ignoreId,
+                    'scope' => $entityType,
+                ]
+            ];
+        }
+
+        $resultData = (object) [];
+        foreach ($userIdList as $userId) {
+            try {
+                $busyRangeList = $this->getBusyRangeList($userId, $from, $to, $scopeList, $ignoreList);
+            } catch (\Exception $e) {
+                if ($e instanceof Forbidden) {
+                    continue;
+                }
+                throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            }
+
+            $resultData->$userId = $busyRangeList;
         }
         return $resultData;
     }
@@ -1378,12 +1441,17 @@ class Activities extends \Espo\Core\Services\Base
             }
         }
 
+        $canceledStatusList = $this->getMetadata()->get('app.calendar.canceledStatusList') ?? [];
+
         foreach ($eventList as $i => $item) {
             $eventList[$i] = (object) $item;
         }
         foreach ($eventList as $event) {
             if (empty($event->dateStart) || empty($event->dateEnd)) continue;
+            if (in_array($event->status ?? null, $canceledStatusList)) continue;
+
             if (isset($ignoreHash->{$event->id})) continue;
+
             try {
                 $start = new \DateTime($event->dateStart);
                 $end = new \DateTime($event->dateEnd);

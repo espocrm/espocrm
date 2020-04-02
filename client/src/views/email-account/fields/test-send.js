@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-account/fields/test-send', 'views/outbound-email/fields/test-send', function (Dep) {
+define('views/email-account/fields/test-send', 'views/outbound-email/fields/test-send', function (Dep) {
 
     return Dep.extend({
 
@@ -55,7 +55,7 @@ Espo.define('views/email-account/fields/test-send', 'views/outbound-email/fields
                 'security': this.model.get('smtpSecurity'),
                 'username': this.model.get('smtpUsername'),
                 'password': this.model.get('smtpPassword') || null,
-                'smtpAuthMechanism': this.model.get('smtpAuthMechanism'),
+                'authMechanism': this.model.get('smtpAuthMechanism'),
                 'fromName': this.getUser().get('name'),
                 'fromAddress': this.model.get('emailAddress'),
                 'type': 'emailAccount',
@@ -63,7 +63,7 @@ Espo.define('views/email-account/fields/test-send', 'views/outbound-email/fields
                 'userId': this.model.get('assignedUserId'),
             };
             return data;
-        }
-    });
+        },
 
+    });
 });

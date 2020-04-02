@@ -95,7 +95,8 @@
             "type": "url"
         },
         "layoutSet": {
-            "type": "link"
+            "type": "link",
+            "tooltip": true
         },
         "modifiedAt": {
             "type": "datetime",

@@ -186,6 +186,8 @@ class Converter
         $tables = array();
         foreach ($ormMeta as $entityName => $entityParams) {
 
+            if ($entityParams['skipRebuild'] ?? false) continue;
+
             $tableName = Util::toUnderScore($entityName);
 
             if ($schema->hasTable($tableName)) {
@@ -315,7 +317,7 @@ class Converter
                 $table->addIndex(array($columnName), SchemaUtils::generateIndexName($columnName));
                 $uniqueIndex[] = $columnName;
             }
-        }        
+        }
         //END: add midKeys to a schema
 
         //add additionalColumns

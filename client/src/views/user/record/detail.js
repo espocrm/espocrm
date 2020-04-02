@@ -209,7 +209,6 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
             }
 
             if (!this.getConfig().get('auth2FA')) {
-                console.log(1);
                 this.hideField('auth2FA');
             }
         },

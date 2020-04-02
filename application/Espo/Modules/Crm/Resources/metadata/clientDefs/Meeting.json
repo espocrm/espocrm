@@ -6,7 +6,7 @@
     },
     "recordViews":{
         "list":"crm:views/meeting/record/list",
-        "detail":"crm:views/meeting/record/detail"
+        "detail": "crm:views/meeting/record/detail"
     },
     "modalViews": {
         "detail":"crm:views/meeting/modals/detail"
@@ -57,6 +57,24 @@
                 "sticked": true,
                 "isForm": true,
                 "notRefreshable": true
+            }
+        ]
+    },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "order": 3
+            }
+        ],
+        "edit": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "order": 1
             }
         ]
     },

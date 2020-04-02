@@ -10,6 +10,7 @@
             "required": true,
             "maxLength": 100,
             "trim": true,
+            "tooltip": true,
             "view": "views/email-account/fields/email-address"
         },
         "status": {
@@ -84,7 +85,8 @@
             "default": true
         },
         "useSmtp": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "smtpHost": {
             "type": "varchar",
@@ -116,6 +118,14 @@
             "type": "enum",
             "options": ["login", "crammd5", "plain"],
             "default": "login"
+        },
+        "imapHandler": {
+            "type": "varchar",
+            "readOnly": true
+        },
+        "smtpHandler": {
+            "type": "varchar",
+            "readOnly": true
         },
         "createdBy": {
             "type": "link",

@@ -52,6 +52,8 @@
         "connectionIsOk": "Connection is Ok"
     },
     "tooltips": {
+        "useSmtp": "The ability to send emails.",
+        "emailAddress": "The user record (assigned user) should have the same email address to be able to use this email account for sending.",
         "monitoredFolders": "Multiple folders should be separated by comma.\n\nYou can add a 'Sent' folder to sync emails sent from an external email client.",
         "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
     }

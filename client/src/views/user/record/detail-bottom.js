@@ -26,21 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
+define('views/user/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
 
     return Dep.extend({
 
         setupPanels: function () {
             Dep.prototype.setupPanels.call(this);
 
-            var showActivities = this.getAcl().checkUserPermission(this.model);
-            if (!showActivities) {
+            var streamAllowed = this.getAcl().checkUserPermission(this.model);
+            if (!streamAllowed) {
                 if (this.getAcl().get('userPermission') === 'team') {
                     if (!this.model.has('teamsIds')) {
                         this.listenToOnce(this.model, 'sync', function () {
                             if (this.getAcl().checkUserPermission(this.model)) {
-                                this.showPanel('stream', function () {
-                                    this.getView('stream').collection.fetch();
+                                this.onPanelsReady(function () {
+                                    this.showPanel('stream', 'acl');
                                 });
                             }
                         }, this);
@@ -53,11 +53,13 @@ Espo.define('views/user/record/detail-bottom', 'views/record/detail-bottom', fun
                 "label":"Stream",
                 "view":"views/user/record/panels/stream",
                 "sticked": true,
-                "hidden": !showActivities
+                "hidden": !streamAllowed,
             });
-        }
+
+            if (!streamAllowed) {
+                this.recordHelper.setPanelStateParam('stream', 'hiddenAclLocked', true);
+            }
+        },
 
     });
-
 });
-

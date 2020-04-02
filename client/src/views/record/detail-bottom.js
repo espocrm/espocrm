@@ -45,9 +45,11 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
         setupPanels: function () {
             var scope = this.scope;
 
-            this.panelList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.type) || this.panelList || []);
+            this.panelList = Espo.Utils.clone(
+                this.getMetadata().get(['clientDefs', scope, 'bottomPanels', this.type]) || this.panelList || []
+            );
 
-            if (this.streamPanel && this.getMetadata().get('scopes.' + scope + '.stream')) {
+            if (this.streamPanel && this.getMetadata().get(['scopes', scope, 'stream'])) {
                 this.setupStreamPanel();
             }
         },
@@ -58,22 +60,25 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                 this.listenToOnce(this.model, 'sync', function () {
                     streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
                     if (streamAllowed) {
-                        this.showPanel('stream', function () {
-                            this.getView('stream').collection.fetch();
-                            this.getView('stream').subscribeToWebSocket();
+                        this.onPanelsReady(function () {
+                            this.showPanel('stream', 'acl');
                         });
                     }
                 }, this);
             }
             if (streamAllowed !== false) {
                 this.panelList.push({
-                    "name":"stream",
-                    "label":"Stream",
-                    "view":"views/stream/panel",
-                    "sticked": true,
-                    "hidden": !streamAllowed,
-                    "order": 2
+                    name: 'stream',
+                    label: 'Stream',
+                    view: this.getMetadata().get(['clientDefs', this.scope, 'streamPanelView']) || 'views/stream/panel',
+                    sticked: true,
+                    hidden: !streamAllowed,
+                    order: 2,
                 });
+
+                if (!streamAllowed) {
+                    this.recordHelper.setPanelStateParam('stream', 'hiddenAclLocked', true);
+                }
             }
         },
 
@@ -104,16 +109,20 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
             Promise.all([
                 new Promise(function (resolve) {
-                    if (this.relationshipPanels) {
-                        this.loadRelationshipsLayout(function () {
+                    this.getHelper().layoutManager.get(
+                        this.scope,
+                        'bottomPanels' + Espo.Utils.upperCaseFirst(this.type),
+                        function (layoutData) {
+                            this.layoutData = layoutData;
                             resolve();
-                        });
-                    } else {
-                        resolve();
-                    }
+                        }.bind(this)
+                    )
                 }.bind(this))
             ]).then(function () {
+                var panelNameList = [];
+
                 this.panelList = this.panelList.filter(function (p) {
+                    panelNameList.push(p.name);
                     if (p.aclScope) {
                         if (!this.getAcl().checkScope(p.aclScope)) {
                             return;
@@ -128,16 +137,16 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                 }, this);
 
                 if (this.relationshipPanels) {
-                    this.setupRelationshipPanels();
-                }
-
-                if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
-                    var dynamicLogic = this.recordViewObject.dynamicLogic;
-                    this.panelList.forEach(function (item) {
-                        if (item.dynamicLogicVisible) {
-                            dynamicLogic.addPanelVisibleCondition(item.name, item.dynamicLogicVisible);
+                    var linkDefs = (this.model.defs || {}).links || {};
+                    if (this.layoutData) {
+                        for (var name in this.layoutData) {
+                            if (!linkDefs[name]) continue;
+                            var p = this.layoutData[name];
+                            if (!~panelNameList.indexOf(name) && !p.disbled) {
+                                this.addRelationshipPanel(name, p);
+                            }
                         }
-                    }, this);
+                    }
                 }
 
                 this.panelList = this.panelList.map(function (p) {
@@ -150,15 +159,11 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                     return item;
                 }, this);
 
-                this.panelList.sort(function(item1, item2) {
-                    var order1 = item1.order || 0;
-                    var order2 = item2.order || 0;
-                    return order1 - order2;
-                });
-
                 this.panelList.forEach(function (item) {
                     item.actionsViewKey = item.name + 'Actions';
                 }, this);
+
+                this.alterPanels();
 
                 this.setupPanelsFinal();
 
@@ -172,78 +177,60 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
             this.readOnly = true;
         },
 
-        loadRelationshipsLayout: function (callback) {
-            var layoutName = 'relationships';
-            if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
-                if (this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', layoutName + 'Portal'])) {
-                    layoutName += 'Portal';
-                }
-            }
-            this._helper.layoutManager.get(this.model.name, layoutName, function (layout) {
-                this.relationshipsLayout = layout;
-                callback.call(this);
-            }.bind(this));
-        },
-
-        setupRelationshipPanels: function () {
+        addRelationshipPanel: function (name, item) {
             var scope = this.scope;
-
             var scopesDefs = this.getMetadata().get('scopes') || {};
 
-            var panelList = this.relationshipsLayout;
-            panelList.forEach(function (item) {
-                var p;
-                if (typeof item == 'string' || item instanceof String) {
-                    p = {name: item};
-                } else {
-                    p = Espo.Utils.clone(item || {});
-                }
-                if (!p.name) {
-                    return;
-                }
+            var p;
 
-                p.order = 5;
+            if (typeof item == 'string' || item instanceof String) {
+                p = {name: item};
+            } else {
+                p = Espo.Utils.clone(item || {});
+            }
 
-                if (p.name == '_delimiter_') {
-                    this.panelList.push(p);
-                    return;
-                }
+            p.name = p.name || name;
+            if (!p.name) {
+                return;
+            }
 
-                var name = p.name;
+            if (typeof p.order === 'undefined') p.order = 5;
 
-                var links = (this.model.defs || {}).links || {};
-                if (!(name in links)) {
-                    return;
-                }
+            var name = p.name;
 
-                var foreignScope = links[name].entity;
+            var links = (this.model.defs || {}).links || {};
+            if (!(name in links)) {
+                return;
+            }
 
-                if ((scopesDefs[foreignScope] || {}).disabled) return;
+            var foreignScope = links[name].entity;
 
-                if (!this.getAcl().check(foreignScope, 'read')) {
-                    return;
-                }
+            if ((scopesDefs[foreignScope] || {}).disabled) return;
 
-                var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
-                defs = Espo.Utils.clone(defs);
+            if (!this.getAcl().check(foreignScope, 'read')) {
+                return;
+            }
 
-                for (var i in defs) {
-                    if (i in p) continue;
-                    p[i] = defs[i];
-                }
+            var defs = this.getMetadata().get(['clientDefs', scope, 'relationshipPanels', name]) || {};
+            defs = Espo.Utils.clone(defs);
 
-                if (!p.view) {
-                    p.view = 'views/record/panels/relationship';
-                }
+            for (var i in defs) {
+                if (i in p) continue;
+                p[i] = defs[i];
+            }
 
-                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
-                    p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
-                } else {
-                    this.recordHelper.setPanelStateParam(p.name, 'hidden', p.hidden || false);
-                }
+            if (!p.view) {
+                p.view = 'views/record/panels/relationship';
+            }
 
-                this.panelList.push(p);
-            }, this);
+            if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+            } else {
+                this.recordHelper.setPanelStateParam(p.name, 'hidden', p.hidden || false);
+            }
+
+            this.panelList.push(p);
         },
+
     });
 });

@@ -149,8 +149,7 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
                         if (this.defaultPanel)
                             this.setupDefaultPanel();
 
-                        if (this.layoutData)
-                            this.alterPanels();
+                        this.alterPanels();
 
                         this.setupPanelsFinal();
 
@@ -160,50 +159,6 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
             );
         },
 
-        alterPanels: function (layoutData) {
-            layoutData = layoutData || this.layoutData || {};
-
-            for (var n in layoutData) {
-                if (n === '_delimiter_') {
-                    this.panelList.push({
-                        name: n,
-                    });
-                }
-            }
-
-            var newList = [];
-            this.panelList.forEach(function (item, i) {
-                item.index = i;
-                if (item.name) {
-                    var itemData = layoutData[item.name] || {};
-                    if (itemData.disabled) return;
-                    for (var i in itemData) {
-                        item[i] = itemData[i];
-                    }
-                }
-
-                newList.push(item);
-            }, this);
-
-            newList.sort(function (v1, v2) {
-                return v1.index - v2.index;
-            });
-
-            this.panelList = newList;
-
-            if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
-                var dynamicLogic = this.recordViewObject.dynamicLogic;
-                this.panelList.forEach(function (item) {
-                    if (item.dynamicLogicVisible) {
-                        dynamicLogic.addPanelVisibleCondition(item.name, item.dynamicLogicVisible);
-
-                        if (this.recordHelper.getPanelStateParam(item.name, 'hidden')) {
-                            item.hidden = true;
-                        }
-                    }
-                }, this);
-            }
-        },
 
         setupDefaultPanel: function () {
             var met = false;
