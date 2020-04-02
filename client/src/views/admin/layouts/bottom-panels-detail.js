@@ -184,7 +184,7 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
             }, this);
 
             this.rowLayout.sort(function (v1, v2) {
-                return v1.index - v2.index;
+                return (v1.index || 0) - (v2.index || 0);
             });
         },
 
