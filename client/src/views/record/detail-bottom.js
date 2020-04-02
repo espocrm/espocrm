@@ -49,6 +49,14 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                 this.getMetadata().get(['clientDefs', scope, 'bottomPanels', this.type]) || this.panelList || []
             );
 
+            this.panelList.forEach(function (item) {
+                if ('index' in item) {
+                    item.index = item.index;
+                } else if ('order' in item) {
+                    item.index = item.order;
+                }
+            });
+
             if (this.streamPanel && this.getMetadata().get(['scopes', scope, 'stream'])) {
                 this.setupStreamPanel();
             }
@@ -73,7 +81,7 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                     view: this.getMetadata().get(['clientDefs', this.scope, 'streamPanelView']) || 'views/stream/panel',
                     sticked: true,
                     hidden: !streamAllowed,
-                    order: 2,
+                    index: 2,
                 });
 
                 if (!streamAllowed) {
