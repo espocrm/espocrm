@@ -50,6 +50,7 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 params['stream'] = {
                     name: 'stream',
                     sticked: true,
+                    index: 2,
                 };
             }
             (this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []).forEach(function (item) {
@@ -58,7 +59,11 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 if (item.label) {
                     labels[item.name] = item.label;
                 }
-                params[item.name] = item;
+                params[item.name] = Espo.Utils.clone(item);
+
+                if ('order' in item) {
+                    params[item.name].index = item.order;
+                }
             }, this);
 
             this.links = {};
@@ -74,6 +79,7 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
 
                     var item = {
                         name: link,
+                        index: 5,
                     };
                     this.dataAttributeList.forEach(function (attribute) {
                         if (attribute in item) return;
@@ -96,6 +102,10 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
             layout = layout || {};
 
             this.rowLayout = [];
+
+            panelListAll = panelListAll.sort(function (v1, v2) {
+                return params[v1].index - params[v2].index
+            }.bind(this));
 
             panelListAll.push('_delimiter_');
 
