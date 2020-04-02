@@ -404,7 +404,8 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
                         this.collection.abortLastFetch();
 
-                        this.notify('Please wait...');
+                        Espo.Ui.notify(this.translate('loading', 'messages'));
+
                         this.listenToOnce(this.collection, 'sync', function () {
                             this.notify(false);
                         }, this);

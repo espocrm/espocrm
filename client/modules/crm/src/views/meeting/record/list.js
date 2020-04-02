@@ -81,7 +81,8 @@ Espo.define('crm:views/meeting/record/list', 'views/record/list', function (Dep)
         },
 
         massActionSetHeld: function () {
-            this.notify('Please wait...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
+
             var data = {};
             data.ids = this.checkedList;
             $.ajax({
@@ -102,7 +103,8 @@ Espo.define('crm:views/meeting/record/list', 'views/record/list', function (Dep)
         },
 
         massActionSetNotHeld: function () {
-            this.notify('Please wait...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
+
             var data = {};
             data.ids = this.checkedList;
             $.ajax({

@@ -517,7 +517,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         actionUnlinkAllRelated: function (data) {
             this.confirm(this.translate('unlinkAllConfirmation', 'messages'), function () {
-                this.notify('Please wait...');
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
                 $.ajax({
                     url: this.model.name + '/action/unlinkAll',
                     type: 'POST',

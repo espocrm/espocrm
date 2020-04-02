@@ -114,7 +114,7 @@ define('views/record/list', 'view', function (Dep) {
                 if ($(e.currentTarget).parent().hasClass('disabled')) {
                     return;
                 }
-                this.notify('Please wait...');
+                Espo.Ui.notify(this.translate('loading', 'messages'));
                 this.collection.once('sync', function () {
                     this.notify(false);
                 }.bind(this));
@@ -166,7 +166,7 @@ define('views/record/list', 'view', function (Dep) {
             }
             var order = asc ? 'asc' : 'desc';
 
-            this.notify('Please wait...');
+            Espo.Ui.notify(this.translate('loading', 'messages'));
             this.collection.once('sync', function () {
                 this.notify(false);
                 this.trigger('sort', {orderBy: orderBy, order: order});
@@ -702,7 +702,7 @@ define('views/record/list', 'view', function (Dep) {
                 this.listenToOnce(view, 'select', function (templateModel) {
                     this.clearView('pdfTemplate');
 
-                    Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                    Espo.Ui.notify(this.translate('loading', 'messages'));
                     this.ajaxPostRequest('Pdf/action/massPrint', {
                         idList: idList,
                         entityType: this.entityType,
