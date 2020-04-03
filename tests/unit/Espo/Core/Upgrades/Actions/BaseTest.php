@@ -246,7 +246,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
     public function testGetPath()
     {
         $packageId = $this->reflection->invokeMethod('getProcessId');
-        $packagePath = Util::fixPath($this->actionManagerParams['packagePath'] . '/' . $packageId);
+        $packagePath = $this->actionManagerParams['packagePath'] . '/' . $packageId;
 
         $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array()) );
         $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array('packagePath')) );
@@ -254,7 +254,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $postfix = $this->reflection->getProperty('packagePostfix');
         $this->assertEquals( $packagePath.$postfix, $this->reflection->invokeMethod('getPath', array('packagePath', true)) );
 
-        $backupPath = Util::fixPath($this->actionManagerParams['backupPath'] . '/' . $packageId);
+        $backupPath = $this->actionManagerParams['backupPath'] . '/' . $packageId;
 
         $this->assertEquals( $backupPath, $this->reflection->invokeMethod('getPath', array('backupPath')) );
     }

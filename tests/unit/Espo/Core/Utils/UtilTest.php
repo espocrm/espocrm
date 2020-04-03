@@ -1053,19 +1053,21 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testConcatPath()
     {
         $result= Util::fixPath('dir1/dir2/file1.json');
-        $this->assertEquals($result, Util::concatPath('dir1/dir2', 'file1.json'));
+        $this->assertEquals($result, Util::concatPath(Util::fixPath('dir1/dir2'), 'file1.json'));
 
         $result= Util::fixPath('dir1/dir2/file1.json');
-        $this->assertEquals($result, Util::concatPath('dir1/dir2/', 'file1.json'));
+        $this->assertEquals($result, Util::concatPath(Util::fixPath('dir1/dir2/'), 'file1.json'));
 
         $result= Util::fixPath('dir1/dir2/file1.json');
-        $this->assertEquals($result, Util::concatPath('dir1/dir2/file1.json'));
+        $this->assertEquals($result, Util::concatPath(Util::fixPath('dir1/dir2/file1.json')));
 
         $input = array('dir1/dir2', 'file1.json');
-        $result= Util::fixPath('dir1/dir2/file1.json');
+        $input = array_map('\Espo\Core\Utils\Util::fixPath', $input);
+        $result = Util::fixPath('dir1/dir2/file1.json');
         $this->assertEquals($result, Util::concatPath($input));
 
         $input = array('dir1/', 'dir2', 'file1.json');
+        $input = array_map('\Espo\Core\Utils\Util::fixPath', $input);
         $result = Util::fixPath('dir1/dir2/file1.json');
         $this->assertEquals($result, Util::concatPath($input));
     }
