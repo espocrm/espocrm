@@ -59,8 +59,9 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
         actionLayouts: function (options) {
             var scope = options.scope || null;
             var type = options.type || null;
+            var em = options.em || false;
 
-            this.main('views/admin/layouts/index', {scope: scope, type: type});
+            this.main('views/admin/layouts/index', {scope: scope, type: type, em: em});
         },
 
         actionLabelManager: function (options) {

@@ -102,7 +102,7 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                     customizable: d.customizable,
                     type: d.type,
                     label: this.getLanguage().translate(scope, 'scopeNames'),
-                    layouts: d.layouts
+                    layouts: d.layouts,
                 });
 
             }, this);
@@ -112,7 +112,6 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
             this.scope = this.options.scope || null;
 
             this.setupScopeData();
-
         },
 
         createEntity: function () {

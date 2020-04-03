@@ -56,6 +56,11 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu pull-right">
+                        {{#if layouts}}
+                        <li>
+                            <a href="#Admin/layouts/scope={{name}}&em=true" data-scope="{{name}}">{{translate 'Layouts' scope='EntityManager'}}</a>
+                        </li>
+                        {{/if}}
                         <li><a href="javascript:" data-action="editFormula" data-scope="{{name}}">{{translate 'Formula' scope='EntityManager'}}</a></li>
                         {{#if isRemovable}}
                             <li><a href="javascript:" data-action="removeEntity" data-scope="{{name}}">{{translate 'Remove'}}</a></li>
@@ -68,4 +73,3 @@
     {{/each}}
     </tbody>
 </table>
-

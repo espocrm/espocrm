@@ -129,16 +129,16 @@
         "label": "Customization",
         "itemList": [
             {
-                "url": "#Admin/layouts",
-                "label": "Layout Manager",
-                "iconClass": "fas fa-table",
-                "description": "layoutManager"
-            },
-            {
                 "url": "#Admin/entityManager",
                 "label": "Entity Manager",
                 "iconClass": "fas fa-tools",
                 "description": "entityManager"
+            },
+            {
+                "url": "#Admin/layouts",
+                "label": "Layout Manager",
+                "iconClass": "fas fa-table",
+                "description": "layoutManager"
             },
             {
                 "url": "#Admin/labelManager",

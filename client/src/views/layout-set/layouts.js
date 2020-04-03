@@ -31,9 +31,11 @@ define('views/layout-set/layouts', 'views/admin/layouts/index', function (Dep) {
     return Dep.extend({
 
         setup: function () {
+            var setId = this.setId = this.options.layoutSetId;
+            this.baseUrl = '#LayoutSet/editLayouts/id=' + setId;
+
             Dep.prototype.setup.call(this);
 
-            var setId = this.setId = this.options.layoutSetId;
 
             this.wait(
                 this.getModelFactory().create('LayoutSet')
@@ -63,18 +65,30 @@ define('views/layout-set/layouts', 'views/admin/layouts/index', function (Dep) {
             scopeList.forEach(function (scope) {
                 var o = {};
                 o.scope = scope;
-                o.typeList = [];
+                o.url = this.baseUrl + '&scope=' + scope;
+                o.typeDataList = [];
+
+                var typeList = [];
 
                 list.forEach(function (item) {
                     var arr = item.split('.');
                     var scope = arr[0];
                     var type = arr[1];
                     if (scope !== o.scope) return;
-                    o.typeList.push(type);
+                    typeList.push(type);
                 });
 
+                typeList.forEach(function (type) {
+                    o.typeDataList.push({
+                        type: type,
+                        url: this.baseUrl + '&scope=' + scope + '&type=' + type,
+                    });
+                }, this);
+
+                o.typeList = typeList;
+
                 dataList.push(o);
-            });
+            }, this);
 
             return dataList;
         },
@@ -84,7 +98,7 @@ define('views/layout-set/layouts', 'views/admin/layouts/index', function (Dep) {
             var separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
 
             var html = "<a href=\"#LayoutSet\">"+this.translate('LayoutSet', 'scopeNamesPlural')+"</a> " + separatorHtml + ' ' +
-                "<a href=\"#LayoutSet/view/"+m.id+"\">"+Handlebars.Utils.escapeExpression(m.get('name'))+"</a> " + 
+                "<a href=\"#LayoutSet/view/"+m.id+"\">"+Handlebars.Utils.escapeExpression(m.get('name'))+"</a> " +
                 separatorHtml + ' ' + this.translate('Edit Layouts', 'labels', 'LayoutSet');
 
             return html;
