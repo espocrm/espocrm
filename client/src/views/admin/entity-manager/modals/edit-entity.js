@@ -581,29 +581,30 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     (global.scopeNames || {})[name] = this.model.get('labelSingular');
                     (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
 
-                    Promise.all([
-                        new Promise(
-                            function (resolve) {
-                                this.getMetadata().load(function () {
-                                    resolve();
-                                }, true);
-                            }.bind(this)
-                        ),
-                        new Promise(
-                            function (resolve) {
-                                this.getConfig().load(function () {
-                                    resolve();
-                                }, true);
-                            }.bind(this)
-                        ),
-                        new Promise(
-                            function (resolve) {
-                                this.getLanguage().load(function () {
-                                    resolve();
-                                }, true);
-                            }.bind(this)
-                        )
-                    ]).then(
+                    new Promise(
+                        function (resolve) {
+                            this.getMetadata().load(function () {
+                                resolve();
+                            }, true);
+                        }.bind(this)
+                    ).then(
+                        Promise.all([
+                            new Promise(
+                                function (resolve) {
+                                    this.getConfig().load(function () {
+                                        resolve();
+                                    }, true);
+                                }.bind(this)
+                            ),
+                            new Promise(
+                                function (resolve) {
+                                    this.getLanguage().load(function () {
+                                        resolve();
+                                    }, true);
+                                }.bind(this)
+                            )
+                        ])
+                    ).then(
                         function () {
                             var rebuildRequired = data.fullTextSearch && !fetchedAttributes.fullTextSearch;
                             var o = {
@@ -628,23 +629,28 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 this.ajaxPostRequest('EntityManager/action/resetToDefault', {
                     scope: this.scope
                 }).then(function () {
-                    Promise.all([
-                        new Promise(function (resolve) {
+                    new Promise(
+                        function (resolve) {
                             this.getMetadata().load(function () {
                                 this.getMetadata().storeToCache();
                                 resolve();
                             }.bind(this), true);
-                        }.bind(this)),
-                        new Promise(function (resolve) {
-                            this.getLanguage().load(function () {
-                                resolve();
-                            }.bind(this), true);
-                        }.bind(this))
-                    ]).then(function () {
-                        this.setupData();
-                        this.model.fetchedAttributes = this.model.getClonedAttributes();
-                        this.notify('Done', 'success');
-                    }.bind(this));
+                        }.bind(this)
+                    ).then(
+                        new Promise(
+                            function (resolve) {
+                                this.getLanguage().load(function () {
+                                    resolve();
+                                }.bind(this), true);
+                            }.bind(this)
+                        )
+                    ).then(
+                        function () {
+                            this.setupData();
+                            this.model.fetchedAttributes = this.model.getClonedAttributes();
+                            this.notify('Done', 'success');
+                        }.bind(this)
+                    );
                 }.bind(this));
             }, this);
         },
