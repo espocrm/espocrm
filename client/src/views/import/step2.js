@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/import/step2', 'view', function (Dep) {
+define('views/import/step2', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -385,7 +385,6 @@ Espo.define('views/import/step2', 'view', function (Dep) {
             this.getParentView().changeStep(1);
         },
 
-
         next: function () {
             if (!this.fetch()) {
                 return;
@@ -411,6 +410,8 @@ Espo.define('views/import/step2', 'view', function (Dep) {
 
 
             this.getParentView().formData = this.formData;
+
+            this.getParentView().trigger('change');
 
             this.disableButtons();
 
@@ -444,6 +445,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 timeout: 0,
                 success: function (result) {
                     var id = result.id;
+                    this.getParentView().trigger('done');
                     if (id) {
                         this.getRouter().navigate('#Import/view/' + id, {trigger: true});
                     } else {

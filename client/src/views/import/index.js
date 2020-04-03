@@ -42,10 +42,25 @@ define('views/import/index', 'view', function (Dep) {
         fileContents: null,
 
         setup: function () {
-            this.entityType = this.options.entityType || false;
+            this.entityType = this.options.entityType || null;
+
+            this.startFromStep = 1;
+
+            if (this.options.formData && this.options.fileContents) {
+                this.formData = this.options.formData;
+                this.fileContents = this.options.fileContents;
+
+                this.entityType = this.formData.entityType || null;
+
+                if (this.options.step) {
+                    this.startFromStep = this.options.step;
+                }
+            }
         },
 
         changeStep: function (num, result) {
+            this.step = num;
+
             this.createView('step', 'views/import/step' + num.toString(), {
                 el: this.options.el + ' > .import-container',
                 entityType: this.entityType,
@@ -54,10 +69,16 @@ define('views/import/index', 'view', function (Dep) {
             }, function (view) {
                 view.render();
             });
+
+            var url = '#Import';
+            if (this.step > 1) {
+                url += '/index/step=' + this.step;
+            }
+            this.getRouter().navigate(url, {trigger: false})
         },
 
         afterRender: function () {
-            this.changeStep(1);
+            this.changeStep(this.startFromStep);
         },
 
         updatePageTitle: function () {
