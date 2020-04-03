@@ -89,5 +89,8 @@
             "l f m": "Last First Middle",
             "l, f": "Last, First"
         }
+    },
+    "tooltips": {
+        "silentMode": "A majority of after-save scripts will be skipped, stream notes won't be created. Import will run faster."
     }
 }

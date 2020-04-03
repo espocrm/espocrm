@@ -120,20 +120,20 @@
                 <div class="row">
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'inIdle' scope='Import' category='messages'}}</label>
-                        <div>
-                            <input type="checkbox" id="import-idle-mode">
+                        <div data-name="idleMode" class="field">
+                            {{{idleModeField}}}
                         </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Skip searching for duplicates' scope='Import'}}</label>
-                        <div>
-                            <input type="checkbox" id="skip-duplicate-checking">
+                        <div data-name="skipDuplicateChecking" class="field">
+                            {{{skipDuplicateCheckingField}}}
                         </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Silent Mode' scope='Import'}}</label>
-                        <div>
-                            <input type="checkbox" id="import-silent-mode">
+                        <div data-name="silentMode" class="field">
+                            {{{silentModeField}}}
                         </div>
                     </div>
                 </div>

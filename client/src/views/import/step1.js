@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import/step1', 'view', function (Dep) {
+define('views/import/step1', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -117,6 +117,9 @@ define('views/import/step1', 'view', function (Dep) {
                 timezone: 'UTC',
                 decimalMark: '.',
                 personNameFormat: 'f l',
+                idleMode: false,
+                skipDuplicateChecking: false,
+                silentMode: true,
             };
 
             this.personNameFormatList = [
@@ -130,6 +133,35 @@ define('views/import/step1', 'view', function (Dep) {
                 this.personNameFormatList.push('f m l');
                 this.personNameFormatList.push('l f m');
             }
+
+            var model = this.model = new Model;
+
+            model.set({
+                silentMode: this.formData.silentMode,
+                idleMode: this.formData.idleMode,
+                skipDuplicateChecking: this.formData.skipDuplicateChecking,
+            });
+
+            this.createView('silentModeField', 'views/fields/bool', {
+                el: this.getSelector() + ' .field[data-name="silentMode"]',
+                model: this.model,
+                name: 'silentMode',
+                mode: 'edit',
+                tooltip: true,
+                tooltipText: this.translate('silentMode', 'tooltips', 'Import'),
+            });
+            this.createView('idleModeField', 'views/fields/bool', {
+                el: this.getSelector() + ' .field[data-name="idleMode"]',
+                model: this.model,
+                name: 'idleMode',
+                mode: 'edit',
+            });
+            this.createView('skipDuplicateCheckingField', 'views/fields/bool', {
+                el: this.getSelector() + ' .field[data-name="skipDuplicateChecking"]',
+                model: this.model,
+                name: 'skipDuplicateChecking',
+                mode: 'edit',
+            });
         },
 
         afterRender: function () {
@@ -152,22 +184,25 @@ define('views/import/step1', 'view', function (Dep) {
             this.formData.decimalMark = $('#import-decimal-mark').val();
             this.formData.currency = $('#import-currency').val();
             this.formData.personNameFormat = $('#import-person-name-format').val();
-            this.formData.skipDuplicateChecking = $('#skip-duplicate-checking').get(0).checked;
-            this.formData.idleMode = $('#import-idle-mode').get(0).checked;
-            this.formData.silentMode = $('#import-silent-mode').get(0).checked;
+
+            this.getView('silentModeField').fetchToModel();
+            this.getView('idleModeField').fetchToModel();
+            this.getView('skipDuplicateCheckingField').fetchToModel();
+
+            this.formData.silentMode = this.model.get('silentMode');
+            this.formData.idleMode = this.model.get('idleMode');
+            this.formData.skipDuplicateChecking = this.model.get('skipDuplicateChecking');
 
             this.getParentView().formData = this.formData;
             this.getParentView().changeStep(2);
         },
 
         setupFormData: function () {
+            this.model.set('silentMode', this.formData.silentMode);
+            this.model.set('idleMode', this.formData.idleMode);
+            this.model.set('skipDuplicateChecking', this.formData.skipDuplicateChecking);
+
             $('#import-header-row').get(0).checked = this.formData.headerRow || false;
-
-            $('#import-idle-mode').get(0).checked = this.formData.idleMode || false;
-
-            $('#import-silent-mode').get(0).checked = ('silentMode' in this.formData) ? this.formData.silentMode : true;
-
-            $('#skip-duplicate-checking').get(0).checked = this.formData.skipDuplicateChecking || false;
 
             if (this.formData.entityType) {
                 $('#import-entity-type').val(this.formData.entityType);
