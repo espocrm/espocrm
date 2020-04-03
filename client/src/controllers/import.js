@@ -46,9 +46,44 @@ define('controllers/import', 'controllers/record', function (Dep) {
             return false;
         },
 
-        actionIndex: function () {
-            this.main('views/import/index', null);
-        }
+        actionIndex: function (o, d) {
+            o = o || {};
+
+            var step = null;
+
+            if (o.step) {
+                step = parseInt(step);
+            }
+
+            var formData = null;
+            var fileContents = null;
+
+            if (this.storedData) {
+                formData = this.storedData.formData;
+                fileContents = this.storedData.fileContents;
+            }
+
+            if (!formData) {
+                step = null;
+            }
+
+            this.main('views/import/index', {
+                step: step,
+                formData: formData,
+                fileContents: fileContents,
+            }, function (view) {
+                this.listenTo(view, 'change', function () {
+                    this.storedData = {
+                        formData: view.formData,
+                        fileContents: view.fileContents,
+                    };
+                });
+                this.listenTo(view, 'done', function () {
+                    delete this.storedData;
+                });
+                view.render();
+            }.bind(this));
+        },
 
     });
 });

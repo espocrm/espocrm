@@ -194,6 +194,9 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             this.formData.skipDuplicateChecking = this.model.get('skipDuplicateChecking');
 
             this.getParentView().formData = this.formData;
+
+            this.getParentView().trigger('change');
+
             this.getParentView().changeStep(2);
         },
 
