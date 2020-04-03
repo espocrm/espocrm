@@ -264,7 +264,6 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
         );
-        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input)));
     }
@@ -292,8 +291,8 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $result = array (
-            Util::fixPath('custom/Espo/Custom/Modules/ExtensionTest/File.json'),
-            Util::fixPath('custom/Espo/Custom/Modules/ExtensionTest/File.php'),
+            'custom/Espo/Custom/Modules/ExtensionTest/File.json',
+            'custom/Espo/Custom/Modules/ExtensionTest/File.php',
         );
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input, true)));
@@ -328,7 +327,6 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'custom/Espo/Custom/Modules',
             'custom/Espo/Custom/Modules/ExtensionTest',
         );
-        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input, false)));
     }
@@ -378,7 +376,6 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.json',
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.php',
         );
-        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $res = $this->object->copy($path, $cachePath, true);
         if ($res) {
