@@ -37,7 +37,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     protected $objects;
 
-    protected $filesPath= 'tests/unit/testData/FileManager';
+    protected $filesPath = 'tests/unit/testData/FileManager';
     protected $cachePath = 'tests/unit/testData/cache/FileManager';
 
     protected $reflection;
@@ -69,29 +69,26 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testGetContents()
     {
-        $result = file_get_contents($this->filesPath.'/getContent/test.json');
+        $result = file_get_contents($this->filesPath . '/getContent/test.json');
         $this->assertEquals($result, $this->object->getContents( array($this->filesPath, 'getContent/test.json') ));
     }
 
     public function testPutContents()
     {
-        $testPath= $this->filesPath.'/setContent';
+        $testPath = $this->cachePath;
 
         $result= 'next value';
-        $this->assertTrue($this->object->putContents(array($testPath, 'test.json'), $result));
+        $this->assertTrue($this->object->putContents(array($testPath, 'setContent.json'), $result));
 
-        $this->assertEquals($result, $this->object->getContents( array($testPath, 'test.json')) );
-
-        $this->assertTrue($this->object->putContents(array($testPath, 'test.json'), 'initial value'));
+        $this->assertEquals($result, $this->object->getContents( array($testPath, 'setContent.json')) );
+        @unlink($testPath . '/setContent.json');
     }
 
     public function testConcatPaths()
     {
         $input = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
         $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-
         $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
-
 
         $input = array(
             'application',
@@ -100,25 +97,20 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'panel.json',
         );
         $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-
         $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
-
 
         $input = array(
             'application/Espo/Resources/metadata/app',
             'panel.json',
         );
         $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-
         $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
-
 
         $input = array(
             'application/Espo/Resources/metadata/app/',
             'panel.json',
         );
         $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-
         $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
     }
 
@@ -149,7 +141,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $result = 'logs';
         $this->assertEquals($result, $this->object->getDirName($input, false));
 
-        $input = 'tests/unit/testData/FileManager/getContent';
+        $input = $this->filesPath . '/getContent';
         $result = 'getContent';
         $this->assertEquals($result, $this->object->getDirName($input, false));
     }
@@ -181,14 +173,14 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $result = 'notRealPath/logs';
         $this->assertEquals($result, $this->object->getDirName($input));
 
-        $input = 'tests/unit/testData/FileManager/getContent';
-        $result = 'tests/unit/testData/FileManager/getContent';
+        $input = $this->filesPath . '/getContent';
+        $result = $this->filesPath . '/getContent';
         $this->assertEquals($result, $this->object->getDirName($input, true));
     }
 
     public function testUnsetContents()
     {
-        $testPath = $this->filesPath.'/unsets/test.json';
+        $testPath = $this->cachePath.'/unsets.json';
 
         $initData = '{"fields":{"someName":{"type":"varchar","maxLength":40},"someName2":{"type":"varchar","maxLength":36}}}';
         $this->object->putContents($testPath, $initData);
@@ -236,8 +228,8 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $result = 'notRealPath/logs';
         $this->assertEquals($result, $this->object->getParentDirName($input));
 
-        $input = 'tests/unit/testData/FileManager/getContent';
-        $result = 'tests/unit/testData/FileManager';
+        $input = $this->filesPath . '/getContent';
+        $result = $this->filesPath;
         $this->assertEquals($result, $this->object->getParentDirName($input, true));
     }
 
@@ -379,7 +371,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRemoveWithEmptyDirs($name, $result)
     {
-        $path = 'tests/unit/testData/FileManager/Remove/' . $name;
+        $path = $this->filesPath . '/Remove/' . $name;
         $cachePath = $this->cachePath . '/' . $name;
 
         $fileList = array (
@@ -416,7 +408,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCopyTestCase1()
     {
-        $path = 'tests/unit/testData/FileManager/copy/testCase1';
+        $path = $this->filesPath . '/copy/testCase1';
         $cachePath = $this->cachePath . '/copy/testCase1';
 
         $expectedResult = [
@@ -435,7 +427,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCopyTestCase2()
     {
-        $path = 'tests/unit/testData/FileManager/copy/testCase2';
+        $path = $this->filesPath . '/copy/testCase2';
         $cachePath = $this->cachePath . '/copy/testCase2';
 
         $expectedResult = [
@@ -455,7 +447,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCopyTestCase3()
     {
-        $path = 'tests/unit/testData/FileManager/copy/testCase3';
+        $path = $this->filesPath . '/copy/testCase3';
         $cachePath = $this->cachePath . '/copy/testCase3';
 
         $expectedResult = [
@@ -479,7 +471,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCopyTestCase4()
     {
-        $path = 'tests/unit/testData/FileManager/copy/testCase4';
+        $path = $this->filesPath . '/copy/testCase4';
         $cachePath = $this->cachePath . '/copy/testCase4';
 
         $expectedResult = [
