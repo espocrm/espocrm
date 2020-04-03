@@ -235,7 +235,7 @@ class Layout
             }
         }
 
-        $path = Util::concatPath($path, $entityType);
+        $path = Util::concatPath(Util::fixPath($path), $entityType);
 
         return $path;
     }
