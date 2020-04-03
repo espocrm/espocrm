@@ -1033,6 +1033,10 @@ abstract class Mapper implements IMapper
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
         } else if ($type == IEntity::JSON_OBJECT && (is_array($value) || $value instanceof \stdClass)) {
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
+        } else {
+            if (is_array($value) || is_object($value)) {
+                return null;
+            }
         }
 
         if (is_bool($value)) {
