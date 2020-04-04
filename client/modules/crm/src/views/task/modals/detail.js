@@ -31,7 +31,7 @@ define('crm:views/task/modals/detail', 'views/modals/detail', function (Dep) {
     return Dep.extend({
 
         setupRecordButtons: function () {
-            this.addButton({
+            this.addDropdownItem({
                 name: 'setCompleted',
                 label: 'Complete',
             }, true);
@@ -46,9 +46,9 @@ define('crm:views/task/modals/detail', 'views/modals/detail', function (Dep) {
                 &&
                 this.getAcl().check(this.model, 'edit')
             ) {
-                this.showButton('setCompleted');
+                this.showActionItem('setCompleted');
             } else {
-                this.hideButton('setCompleted');
+                this.hideActionItem('setCompleted');
             }
 
             Dep.prototype.controlRecordButtonsVisibility.call(this);
@@ -60,7 +60,7 @@ define('crm:views/task/modals/detail', 'views/modals/detail', function (Dep) {
             }, {
                 patch: true,
                 success: function () {
-                    this.hideButton('setCompleted');
+                    this.hideActionItem('setCompleted');
                     Espo.Ui.success(this.getLanguage().translateOption('Completed', 'status', 'Task'));
                     this.trigger('after:save', this.model);
                 }.bind(this),
