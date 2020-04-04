@@ -1,0 +1,94 @@
+.grid-auto-fill-xs,
+.grid-auto-fill-sm,
+.grid-auto-fill-md {
+    margin-left: ceil((@grid-gutter-width / -2));
+    margin-right: floor((@grid-gutter-width / -2));
+    &:extend(.clearfix all);
+    > div {
+        float: left;
+        position: relative;
+        min-height: 1px;
+        padding-left: ceil((@grid-gutter-width / 2));
+        padding-right: floor((@grid-gutter-width / 2));
+    }
+}
+
+.grid-auto-fill-xs {
+    > div {
+         width: 20%;
+    }
+}
+.grid-auto-fill-sm {
+    > div {
+        width: 25%;
+    }
+}
+.grid-auto-fill-md {
+    > div {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: (@screen-md-min - 1px)) {
+    .grid-auto-fill-xs {
+        > div {
+            width: 25%;
+        }
+    }
+    .grid-auto-fill-sm {
+        > div {
+            width: 33.33333333333333%;
+        }
+    }
+    .grid-auto-fill-md {
+        > div {
+            width: 50%;
+        }
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    .grid-auto-fill-xs {
+        > div {
+            width: 50%;
+        }
+    }
+    .grid-auto-fill-sm,
+    .grid-auto-fill-md {
+        > div {
+            width: 100%;
+        }
+    }
+}
+
+@supports (display: grid) {
+    .grid-auto-fill-xs,
+    .grid-auto-fill-sm,
+    .grid-auto-fill-md {
+        display: grid;
+        grid-column-gap: @grid-gutter-width;
+        margin-left: 0;
+        margin-right: 0;
+        > div {
+            width: unset !important;
+            padding-left: unset !important;
+            padding-right: unset !important;
+            min-height: unset !important;
+            position: unset !important;
+            float: unset !important;
+        }
+        &::before,
+        &::after {
+            display: none !important;
+        }
+    }
+    .grid-auto-fill-xs {
+        grid-template-columns: repeat(auto-fill, minmax(@grid-column-width-xsmall, 1fr));
+    }
+    .grid-auto-fill-sm {
+        grid-template-columns: repeat(auto-fill, minmax(@grid-column-width-small, 1fr));
+    }
+    .grid-auto-fill-md {
+        grid-template-columns: repeat(auto-fill, minmax(@grid-column-width-medium, 1fr));
+    }
+}
