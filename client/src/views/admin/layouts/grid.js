@@ -64,6 +64,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
         events: _.extend({
             'click #layout a[data-action="addPanel"]': function () {
                 this.addPanel();
+                this.setIsChanged();
                 this.makeDraggable();
             },
             'click #layout a[data-action="removePanel"]': function (e) {
@@ -89,11 +90,15 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 }
 
                 this.normilizeDisabledItemList();
+
+                this.setIsChanged();
             },
             'click #layout a[data-action="addRow"]': function (e) {
                 var tpl = this.unescape($("#layout-row-tpl").html());
                 var html = _.template(tpl);
                 $(e.target).closest('ul.panels > li').find('ul.rows').append(html);
+
+                this.setIsChanged();
                 this.makeDraggable();
             },
             'click #layout a[data-action="removeRow"]': function (e) {
@@ -104,6 +109,8 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 });
                 $(e.target).closest('ul.rows > li').remove();
                 this.normilizeDisabledItemList();
+
+                this.setIsChanged();
             },
             'click #layout a[data-action="removeField"]': function (e) {
                 var $li = $(e.target).closest('li');
@@ -130,6 +137,8 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 $ul.attr('data-cell-count', cellCount.toString());
                 $ul.closest('li').attr('data-cell-count', cellCount.toString());
 
+                this.setIsChanged();
+
                 this.makeDraggable();
             },
             'click #layout a[data-action="minusCell"]': function (e) {
@@ -141,6 +150,8 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 $li.remove();
 
                 var cellCount = parseInt($ul.children().length || 2);
+
+                this.setIsChanged();
 
                 this.makeDraggable();
 
@@ -157,6 +168,8 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 var cellCount = $ul.children().length;
                 $ul.attr('data-cell-count', cellCount.toString());
                 $ul.closest('li').attr('data-cell-count', cellCount.toString());
+
+                this.setIsChanged();
 
                 this.makeDraggable();
             },
@@ -194,8 +207,10 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                             this.panelsData[id][item] = attributes[item];
                         }, this);
                         view.close();
+
+                        this.setIsChanged();
                     }, this);
-                }, this);
+                });
             }
         }, Dep.prototype.events),
 
@@ -325,12 +340,23 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
         },
 
         makeDraggable: function () {
-            $('#layout ul.panels').sortable({distance: 4});
+            var self = this;
+
+            $('#layout ul.panels').sortable({
+                distance: 4,
+                update: function () {
+                    self.setIsChanged();
+                },
+            });
+
             $('#layout ul.panels').disableSelection();
 
             $('#layout ul.rows').sortable({
                 distance: 4,
                 connectWith: '.rows',
+                update: function () {
+                    self.setIsChanged();
+                },
             });
             $('#layout ul.rows').disableSelection();
 
@@ -338,7 +364,6 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
 
             $('#layout ul.cells > li').droppable().droppable('destroy');
 
-            var self = this;
             $('#layout ul.cells:not(.disabled) > li').droppable({
                 accept: '.cell',
                 zIndex: 10,
@@ -366,7 +391,6 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                     var $target = $(this);
                     var $draggable = $(ui.draggable);
 
-
                     ui.draggable.css({
                         top: 0,
                         left: 0,
@@ -377,6 +401,8 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                     }
 
                     self.makeDraggable();
+
+                    self.setIsChanged();
                 }
             });
         },
@@ -462,5 +488,3 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
         },
     });
 });
-
-

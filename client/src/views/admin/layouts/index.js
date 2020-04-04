@@ -76,9 +76,13 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                         return;
                     }
                 }
-                $("#layouts-menu a.layout-link").removeClass('disabled');
-                $(e.target).addClass('disabled');
-                this.openLayout(scope, type);
+
+                this.getRouter().checkConfirmLeaveOut(function () {
+                    $("#layouts-menu a.layout-link").removeClass('disabled');
+                    $(e.target).addClass('disabled');
+
+                    this.openLayout(scope, type);
+                }.bind(this));
             },
             'click a.accordion-toggle': function (e) {
                 e.preventDefault();

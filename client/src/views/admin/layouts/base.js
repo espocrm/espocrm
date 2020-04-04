@@ -78,6 +78,20 @@ define('views/admin/layouts/base', 'view', function (Dep) {
             this.$el.find('.button-container button').removeAttr('disabled');
         },
 
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+            this.setConfirmLeaveOut(true);
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
+            this.setConfirmLeaveOut(false);
+        },
+
         save: function (callback) {
             var layout = this.fetch();
 
@@ -88,6 +102,8 @@ define('views/admin/layouts/base', 'view', function (Dep) {
 
             this.getHelper().layoutManager.set(this.scope, this.type, layout, function () {
                 this.notify('Saved', 'success', 2000);
+
+                this.setIsNotChanged();
 
                 if (typeof callback == 'function') {
                     callback();
@@ -120,6 +136,10 @@ define('views/admin/layouts/base', 'view', function (Dep) {
                 this.dataAttributeList;
 
             this.dataAttributeList = Espo.Utils.clone(this.dataAttributeList);
+
+            this.once('remove', function () {
+                this.setIsNotChanged();
+            }, this);
         },
 
         unescape: function (string) {
@@ -161,12 +181,15 @@ define('views/admin/layouts/base', 'view', function (Dep) {
                         $li.find('.' + key + '-value').text(attributes[key]);
                     }
                     view.close();
+
+                    this.setIsChanged();
                 }, this);
             }.bind(this));
         },
 
         cancel: function () {
             this.loadLayout(function () {
+                this.setIsNotChanged();
                 this.reRender();
             }.bind(this));
         },
@@ -176,4 +199,3 @@ define('views/admin/layouts/base', 'view', function (Dep) {
         },
     });
 });
-

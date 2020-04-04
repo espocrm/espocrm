@@ -80,8 +80,15 @@ define('views/admin/layouts/rows', ['views/admin/layouts/base', 'res!client/css/
         },
 
         afterRender: function () {
+            var self = this;
             $('#layout ul.enabled, #layout ul.disabled').sortable({
-                connectWith: '#layout ul.connected'
+                connectWith: '#layout ul.connected',
+                update: function (e) {
+
+                    if (!$(e.target).hasClass('disabled')) {
+                        self.setIsChanged();
+                    }
+                },
             });
         },
 
