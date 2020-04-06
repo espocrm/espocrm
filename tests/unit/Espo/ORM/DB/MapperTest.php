@@ -490,4 +490,32 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
+    public function testMassDeleteFromDb()
+    {
+        $query = "DELETE FROM `post` WHERE post.name = 'test' AND post.deleted = '1'";
+
+        $sth = $this->getMockBuilder('\\PDOStatement')->disableOriginalConstructor()->getMock();
+
+        $this->pdo
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($query)
+            ->will($this->returnValue($sth));
+
+        $sth
+            ->expects($this->once())
+            ->method('execute')
+            ->will($this->returnValue(true));
+
+        $sth
+            ->expects($this->once())
+            ->method('rowCount')
+            ->will($this->returnValue(1));
+
+
+        $this->db->massDeleteFromDb('Post', [
+            'name' => 'test',
+            'deleted' => true,
+        ]);
+    }
 }

@@ -245,7 +245,7 @@ class User extends Record
             throw new Forbidden(json_encode(['reason' => 'Already-Sent']));
         }
 
-        $requestId = Util::generateId() . Util::generateKey();
+        $requestId = Util::generateCryptId();
 
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
         $passwordChangeRequest->set([
@@ -411,7 +411,7 @@ class User extends Record
         $entity->set('apiKey', $apiKey);
 
         if ($entity->get('authMethod') === 'Hmac') {
-            $secretKey = \Espo\Core\Utils\Util::generateKey();
+            $secretKey = \Espo\Core\Utils\Util::generateSecretKey();
             $entity->set('secretKey', $secretKey);
         }
 
@@ -508,7 +508,7 @@ class User extends Record
             $entity->set('apiKey', $apiKey);
 
             if ($entity->get('authMethod') === 'Hmac') {
-                $secretKey = \Espo\Core\Utils\Util::generateKey();
+                $secretKey = \Espo\Core\Utils\Util::generateSecretKey();
                 $entity->set('secretKey', $secretKey);
             }
         }
@@ -559,7 +559,7 @@ class User extends Record
 
         if ($entity->isApi()) {
             if ($entity->isAttributeChanged('authMethod') && $entity->get('authMethod') === 'Hmac') {
-                $secretKey = \Espo\Core\Utils\Util::generateKey();
+                $secretKey = \Espo\Core\Utils\Util::generateSecretKey();
                 $entity->set('secretKey', $secretKey);
             }
         }

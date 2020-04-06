@@ -1061,6 +1061,33 @@ abstract class Mapper implements IMapper
         return false;
     }
 
+    /**
+     * Mass delete from database by specified whereClause.
+     * @return Number of deleted records or null if failure.
+     */
+    public function massDeleteFromDb(string $entityType, array $whereClause) : ?int
+    {
+        $table = $this->toDb($entityType);
+
+        $sql = "DELETE FROM `{$table}`";
+
+        $entity = $this->entityFactory->create($entityType);
+        if (!$entity) return null;
+
+        $wherePart = $this->query->getWhere($entity, $whereClause);
+        if ($wherePart) {
+            $sql .= ' WHERE ' . $wherePart;
+        }
+
+        $sth = $this->pdo->prepare($sql);
+
+        if ($sth->execute()) {
+            return $sth->rowCount();
+        }
+
+        return null;
+    }
+
     public function restoreDeleted(string $entityType, $id)
     {
         if (empty($entityType) || empty($id)) return false;

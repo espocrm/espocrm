@@ -302,4 +302,37 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $isRelated = $em->getRepository('Lead')->isRelated($l1, 'createdAccount', $a1);
         $this->assertFalse($isRelated);
     }
+
+    public function testMassDeleteFromDb1()
+    {
+        $app = $this->createApplication();
+        $em = $app->getContainer()->get('entityManager');
+        $mapper = $em->getMapper('RDB');
+
+        $a1 = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+        $a2 = $em->createEntity('Account', [
+            'name' => '2',
+        ]);
+
+        $count = $mapper->massDeleteFromDb('Account', [
+            'name' => '1',
+        ]);
+
+        $this->assertEquals(1, $count);
+
+        $a1 = $em->getEntity('Account', $a1->id);
+        $this->assertNull($a1);
+
+        $a2 = $em->getEntity('Account', $a2->id);
+        $this->assertNotNull($a2);
+
+
+        $count = $mapper->massDeleteFromDb('Account', [
+            'name' => '3',
+        ]);
+
+        $this->assertEquals(0, $count);
+    }
 }
