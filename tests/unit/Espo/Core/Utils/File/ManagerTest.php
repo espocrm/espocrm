@@ -264,6 +264,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
         );
+        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input)));
     }
@@ -294,6 +295,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
         );
+        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input, true)));
     }
@@ -327,6 +329,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'custom/Espo/Custom/Modules',
             'custom/Espo/Custom/Modules/ExtensionTest',
         );
+        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input, false)));
     }
@@ -369,13 +372,14 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRemoveWithEmptyDirs($name, $result)
     {
-        $path = $this->filesPath . '/Remove/' . $name;
-        $cachePath = $this->cachePath . '/' . $name;
+        $path = Util::fixPath($this->filesPath . '/Remove/' . $name);
+        $cachePath = Util::fixPath($this->cachePath . '/' . $name);
 
         $fileList = array (
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.json',
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.php',
         );
+        $fileList = array_map('\Espo\Core\Utils\Util::fixPath', $fileList);
 
         $res = $this->object->copy($path, $cachePath, true);
         if ($res) {
@@ -405,14 +409,15 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCopyTestCase1()
     {
-        $path = $this->filesPath . '/copy/testCase1';
-        $cachePath = $this->cachePath . '/copy/testCase1';
+        $path = Util::fixPath($this->filesPath . '/copy/testCase1');
+        $cachePath = Util::fixPath($this->cachePath . '/copy/testCase1');
 
         $expectedResult = [
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
             'custom/Espo/Custom/Modules/TestModule/SubFolder/Tester.txt',
         ];
+        $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
         $result = $this->object->copy($path, $cachePath, true);
 
@@ -424,8 +429,8 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCopyTestCase2()
     {
-        $path = $this->filesPath . '/copy/testCase2';
-        $cachePath = $this->cachePath . '/copy/testCase2';
+        $path = Util::fixPath($this->filesPath . '/copy/testCase2');
+        $cachePath = Util::fixPath($this->cachePath . '/copy/testCase2');
 
         $expectedResult = [
             'custom/Espo/Custom/test1.php',
@@ -433,6 +438,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'data/upload/5a86d9bf1154968dc',
             'test0.php'
         ];
+        $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
         $result = $this->object->copy($path, $cachePath, true);
 
@@ -444,8 +450,8 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCopyTestCase3()
     {
-        $path = $this->filesPath . '/copy/testCase3';
-        $cachePath = $this->cachePath . '/copy/testCase3';
+        $path = Util::fixPath($this->filesPath . '/copy/testCase3');
+        $cachePath = Util::fixPath($this->cachePath . '/copy/testCase3');
 
         $expectedResult = [
             'custom/Espo/Custom/test1.php',
@@ -453,6 +459,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'data/upload/5a86d9bf1154968dc',
             'test0.php'
         ];
+        $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
         $fileList = $this->object->getFileList($path, true, '', true, true);
 
@@ -468,8 +475,8 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCopyTestCase4()
     {
-        $path = $this->filesPath . '/copy/testCase4';
-        $cachePath = $this->cachePath . '/copy/testCase4';
+        $path = Util::fixPath($this->filesPath . '/copy/testCase4');
+        $cachePath = Util::fixPath($this->cachePath . '/copy/testCase4');
 
         $expectedResult = [
             'custom',
@@ -482,6 +489,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'data/upload/5a86d9bf1154968dc',
             'test0.php'
         ];
+        $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
         $fileList = $this->object->getFileList($path, true, '', null, true);
 
