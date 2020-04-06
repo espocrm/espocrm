@@ -994,6 +994,6 @@ class Manager
             $basePath .= $dirSeparator;
         }
 
-        return preg_replace('/^'. preg_quote($basePath, '/') . '/', '', $path);
+        return preg_replace('/^'. preg_quote($basePath, $dirSeparator) . '/', '', $path);
     }
 }

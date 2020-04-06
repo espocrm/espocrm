@@ -110,6 +110,11 @@ class System
             return $_SERVER['PHP_PATH'];
         }
 
+        $phpBin = @exec('which php');
+        if (!empty($phpBin)) {
+            return $phpBin;
+        }
+
         return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
     }
 
