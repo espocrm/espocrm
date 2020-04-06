@@ -374,6 +374,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     {
         $path = Util::fixPath($this->filesPath . '/Remove/' . $name);
         $cachePath = Util::fixPath($this->cachePath . '/' . $name);
+        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $fileList = array (
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.json',
@@ -404,7 +405,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetExistsPath($input, $result)
     {
-        $this->assertEquals($result, $this->reflection->invokeMethod('getExistsPath', array($input)) );
+        $this->assertEquals(Util::fixPath($result), $this->reflection->invokeMethod('getExistsPath', array($input)) );
     }
 
     public function testCopyTestCase1()
