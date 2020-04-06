@@ -97,6 +97,6 @@ class Crypt
 
     public function generateKey()
     {
-        return \Espo\Core\Utils\Util::generateKey();
+        return \Espo\Core\Utils\Util::generateSecretKey();
     }
 }

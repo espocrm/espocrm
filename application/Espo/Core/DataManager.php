@@ -219,7 +219,7 @@ class DataManager
 
         $cryptKey = $config->get('cryptKey');
         if (!$cryptKey) {
-            $cryptKey = \Espo\Core\Utils\Util::generateKey();
+            $cryptKey = \Espo\Core\Utils\Util::generateSecretKey();
             $config->set('cryptKey', $cryptKey);
         }
 

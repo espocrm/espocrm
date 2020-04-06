@@ -44,7 +44,7 @@ class UniqueId extends \Espo\Core\ORM\Repositories\RDB
     public function getNew() : ?Entity
     {
         $entity = parent::getNew();
-        $entity->set('name', \Espo\Core\Utils\Util::generateId());
+        $entity->set('name', \Espo\Core\Utils\Util::generateMoreEntropyId());
         return $entity;
     }
 }

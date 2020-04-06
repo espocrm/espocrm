@@ -31,6 +31,8 @@ namespace Espo\Entities;
 
 class UniqueId extends \Espo\Core\ORM\Entity
 {
-
+    public function getIdValue() : ?string
+    {
+        return $this->get('name');
+    }
 }
-

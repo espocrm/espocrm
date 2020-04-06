@@ -555,28 +555,35 @@ class Util
         return true;
     }
 
-    public static function generateId()
+    public static function generateId() : string
     {
         return uniqid() . substr(md5(rand()), 0, 4);
     }
 
-    public static function generateApiKey()
+    public static function generateMoreEntropyId() : string
+    {
+        return substr(md5(uniqid(rand(), true)), 0, 16) . substr(md5(rand()), 0, 4);
+    }
+
+    public static function generateCryptId() : string
     {
         if (!function_exists('random_bytes')) {
-            return self::generateId();
+            return self::generateMoreEntropyId();
         }
         return bin2hex(random_bytes(16));
     }
 
-    public static function generateSecretKey()
+    public static function generateApiKey() : string
     {
-        if (!function_exists('random_bytes')) {
-            return self::generateId();
-        }
-        return bin2hex(random_bytes(16));
+        return self::generateCryptId();
     }
 
-    public static function generateKey()
+    public static function generateSecretKey() : string
+    {
+        return self::generateCryptId();
+    }
+
+    public static function generateKey() : string
     {
         return md5(uniqid(rand(), true));
     }

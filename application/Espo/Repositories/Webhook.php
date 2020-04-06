@@ -52,7 +52,7 @@ class Webhook extends \Espo\Core\ORM\Repositories\RDB
 
     protected function fillSecretKey(Entity $entity)
     {
-        $secretKey = \Espo\Core\Utils\Util::generateKey();
+        $secretKey = \Espo\Core\Utils\Util::generateSecretKey();
         $entity->set('secretKey', $secretKey);
     }
 
