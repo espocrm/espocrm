@@ -395,7 +395,7 @@ class Manager
     protected function concatPaths($paths)
     {
         if (is_string($paths)) {
-            return $paths;
+            return Utils\Util::fixPath($paths);
         }
 
         $fullPath = '';
