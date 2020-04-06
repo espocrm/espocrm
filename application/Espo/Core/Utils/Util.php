@@ -252,7 +252,8 @@ class Util
         if (substr($folderPath, -1) == static::getSeparator() || substr($folderPath, -1) == '/') {
             return static::fixPath($folderPath . $filePath);
         }
-        return $folderPath . static::getSeparator() . $filePath;
+
+        return static::fixPath($folderPath) . static::getSeparator() . $filePath;
     }
 
     /**
