@@ -986,6 +986,9 @@ class Manager
             $basePath = getcwd();
         }
 
+        $path = Utils\Util::fixPath($path);
+        $basePath = Utils\Util::fixPath($basePath);
+
         if (!$dirSeparator) {
             $dirSeparator = Utils\Util::getSeparator();
         }
