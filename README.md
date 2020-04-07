@@ -27,7 +27,7 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 
 ### Getting started (for developers)
 
-See in [documentation](https://github.com/espocrm/documentation/blob/master/development/how-to-start.md).
+See [here](https://github.com/espocrm/documentation/blob/master/development/how-to-start.md).
 
 ### How to contribute (for developers)
 
@@ -41,7 +41,7 @@ Branches:
 
 ### Running tests (for developers)
 
-See in [documentation](https://github.com/espocrm/documentation/blob/master/development/tests.md).
+See [here](https://github.com/espocrm/documentation/blob/master/development/tests.md).
 
 ### How to make a translation
 
