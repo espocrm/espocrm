@@ -61,9 +61,19 @@ class RelateType extends \Espo\Core\Formula\Functions\Base
         $entity = $em->getEntity($entityType, $id);
         if (!$entity) return null;
 
-        if ($em->getRepository($entityType)->isRelated($entity, $link, $foreignId)) 
+        if (is_array($foreignId)) {
+            foreach ($foreignId as $itemId) {
+                $em->getRepository($entityType)->relate($entity, $link, $itemId);
+            }
             return true;
 
-        return $em->getRepository($entityType)->relate($entity, $link, $foreignId);
+        } else if (is_string($foreignId)) {
+            if ($em->getRepository($entityType)->isRelated($entity, $link, $foreignId)) {
+                return true;
+            }
+            return $em->getRepository($entityType)->relate($entity, $link, $foreignId);
+        } else {
+            throw new Error("Formula record\\relate: foreignId type is wrong.");
+        }
     }
 }
