@@ -72,23 +72,7 @@ Branches:
 
 ### Running tests (for developers)
 
-Before running tests, you need to build for testing:
-
-```
-grunt test
-```
-
-Unit tests:
-
-```
-vendor/bin/phpunit --bootstrap=vendor/autoload.php tests/unit
-```
-
-Integration tests:
-
-```
-vendor/bin/phpunit --bootstrap=vendor/autoload.php tests/integration
-```
+See in [documentation](https://github.com/espocrm/documentation/blob/master/development/tests.md).
 
 ### How to make a translation
 
