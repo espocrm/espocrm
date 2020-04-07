@@ -140,19 +140,19 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $fm = $this->getContainer()->get('formulaManager');
 
         $script = "record\\exists('Meeting', 'status', 'Held')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertTrue($result);
 
         $script = "record\\exists('Meeting', 'status', 'Not Held')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertFalse($result);
 
         $script = "record\\exists('Meeting', 'status', list('Held', 'Planned'))";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertTrue($result);
 
         $script = "record\\exists('Meeting', 'status', list('Not Held'))";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertFalse($result);
     }
 
@@ -170,24 +170,24 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $fm = $this->getContainer()->get('formulaManager');
 
         $script = "record\\count('Meeting', 'status', 'Held')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals(1, $result);
 
         $script = "record\\count('Meeting', 'status', 'Not Held')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals(0, $result);
 
         $script = "record\\count('Meeting', 'status', list('Held', 'Planned'))";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals(2, $result);
 
         $script = "record\\count('Meeting', 'status', list('Not Held'))";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals(0, $result);
 
 
         $script = "record\\count('Meeting', 'planned')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals(1, $result);
     }
 
@@ -215,27 +215,27 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $script = "record\\findOne('Meeting', 'name', 'asc')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m1->id, $result);
 
         $script = "record\\findOne('Meeting', 'name', 'desc')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m4->id, $result);
 
         $script = "record\\findOne('Meeting', 'name', 'asc', 'planned')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m2->id, $result);
 
         $script = "record\\findOne('Meeting', 'name', 'asc', 'status=', 'Planned')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m2->id, $result);
 
         $script = "record\\findOne('Meeting', 'name', 'asc', 'status=', 'Planned', 'assignedUserId=', '1')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m4->id, $result);
 
         $script = "record\\findOne('Meeting', 'name', 'asc', 'status=', 'Not Held')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals(null, $result);
     }
 
@@ -289,27 +289,27 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $em->getRepository('Account')->relate($account, 'contacts', $c2);
 
         $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'asc')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m1->id, $result);
 
         $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'planned')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m4->id, $result);
 
         $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'status', 'Held')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m3->id, $result);
 
         $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetingsPrimary', 'name', 'asc')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($m1->id, $result);
 
         $script = "record\\findRelatedOne('Account', '".$account->id."', 'contacts', 'name', 'asc')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($c1->id, $result);
 
         $script = "record\\findRelatedOne('Account', '".$account->id."', 'contacts', 'name', 'asc', 'lastName', '2')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals($c2->id, $result);
     }
 
@@ -324,8 +324,32 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $script = "record\\attribute('Meeting', '".$m1->id."', 'name')";
-        $result = $fm->run($script, $contact);
+        $result = $fm->run($script);
         $this->assertEquals('1', $result);
+    }
+
+    public function testRecordCreateUpdate()
+    {
+        $em = $this->getContainer()->get('entityManager');
+        $fm = $this->getContainer()->get('formulaManager');
+
+        $script = "record\\create('Meeting', 'name', 'test', 'assignedUserId', '1')";
+        $id = $fm->run($script);
+
+        $this->assertIsString('string', $id);
+
+        $m = $em->getEntity('Meeting', $id);
+
+        $this->assertNotNull($m);
+        $this->assertEquals('1', $m->get('assignedUserId'));
+
+        $script = "record\\update('Meeting', '{$id}', 'name', 'test-chanhed', 'assignedUserId', '2')";
+        $result = $fm->run($script);
+
+        $this->assertTrue($result);
+
+        $m = $em->getEntity('Meeting', $id);
+        $this->assertEquals('2', $m->get('assignedUserId'));
     }
 
     public function testPasswordGenerate()
