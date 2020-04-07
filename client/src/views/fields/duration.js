@@ -237,6 +237,7 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
 
             setTimeout(function () {
                 this.model.set(this.endField, end, {updatedByDuration: true});
+                this.model.set(this.endField + 'Date', null);
             }.bind(this), 1);
         },
 
