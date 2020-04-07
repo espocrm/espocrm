@@ -27,38 +27,7 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 
 ### Getting started (for developers)
 
-1. Clone repository to your local computer.
-2. Change to the project's root directory.
-3. Install [composer](https://getcomposer.org/doc/00-intro.md).
-4. Run `composer install` if composer is installed globally or `php composer.phar install` if locally.
-
-Note: Some dependencies require php extensions that you might don't have installed (e.g. zmq, ldap) and don't need to use. You can skip these requirements by installing with a flag *--ignore-platform-reqs*: `composer install --ignore-platform-reqs`.
-
-Note: Never update composer dependencies if you are going to contribute code back.
-
-Now you can build. Build will create compiled css files.
-
-To compose a proper *config.php* and populate database you can run install by opening `http(s)://{YOUR_CRM_URL}/install` location in a browser.
-
-Then open `data/config.php` file and add:
-
-```php
-'isDeveloperMode' => true,
-```
-
-### How to build (for developers)
-
-You need to have nodejs and Grunt CLI installed.
-
-1. Change to the project's root directory.
-2. Install project dependencies with `npm install`.
-3. Run Grunt with `grunt`.
-
-The build will be created in the `build` directory.
-
-Note: By default grunt installs composer dependencies. You can skip it by running `grunt offline`.
-
-Upgrade packages can be built with `grunt upgrade`.
+See [here](https://github.com/espocrm/documentation/blob/master/development/how-to-start.md).
 
 ### How to contribute (for developers)
 
@@ -72,23 +41,7 @@ Branches:
 
 ### Running tests (for developers)
 
-Before running tests, you need to build for testing:
-
-```
-grunt test
-```
-
-Unit tests:
-
-```
-vendor/bin/phpunit --bootstrap=vendor/autoload.php tests/unit
-```
-
-Integration tests:
-
-```
-vendor/bin/phpunit --bootstrap=vendor/autoload.php tests/integration
-```
+See [here](https://github.com/espocrm/documentation/blob/master/development/tests.md).
 
 ### How to make a translation
 
