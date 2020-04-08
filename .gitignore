@@ -14,6 +14,7 @@ npm-debug.log
 /tests/unit/testData/cache/*
 !/tests/unit/testData/cache/.data
 /tests/integration/config.php
+.phpunit.result.cache
 composer.phar
 vendor/
 /custom/Espo/Custom/*
