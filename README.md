@@ -25,11 +25,13 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 
 [Download](https://www.espocrm.com/download/) the latest version. See the [instructions](https://www.espocrm.com/documentation/administration/installation/) about installation.
 
-### Getting started (for developers)
+### Development
 
-See [here](https://github.com/espocrm/documentation/blob/master/development/how-to-start.md).
+* [Getting started](https://github.com/espocrm/documentation/blob/master/development/how-to-start.md)
+* [Running tests](https://github.com/espocrm/documentation/blob/master/development/tests.md)
+* [Making translation](https://github.com/espocrm/documentation/blob/master/development/translation.md)
 
-### How to contribute (for developers)
+### How to contribute
 
 Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
 
@@ -38,25 +40,6 @@ Branches:
 * *hotfix/** – upcoming maintenance release; fixes should be pushed to this branch;
 * *master* – develop branch; new features should be pushed to this branch;
 * *stable* – last stable release.
-
-### Running tests (for developers)
-
-See [here](https://github.com/espocrm/documentation/blob/master/development/tests.md).
-
-### How to make a translation
-
-Build po file with command:
-`node po.js en_EN`
-(specify needed language instead of en_EN)
-
-After that translate the generated po file.
-
-Build json files from the translated po file:
-
-1. Put your po file espocrm-en_EN.po into `build` directory
-2. Run `node lang.js en_EN`
-
-Json files will be created in build directory grouped by folders.
 
 ### License
 
