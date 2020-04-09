@@ -278,6 +278,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         deleteLink: function (id) {
+            this.trigger('delete-link', id);
+            this.trigger('delete-link:' + id);
+
             this.deleteLinkHtml(id);
 
             var index = this.ids.indexOf(id);
@@ -286,7 +289,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.ids.splice(index, 1);
             }
             delete this.nameHash[id];
+
             this.afterDeleteLink(id);
+
             this.trigger('change');
         },
 
@@ -296,6 +301,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.nameHash[id] = name;
                 this.addLinkHtml(id, name);
                 this.afterAddLink(id);
+
+                this.trigger('add-link', id);
+                this.trigger('add-link:' + id);
             }
             this.trigger('change');
         },

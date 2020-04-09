@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', function (Dep) {
+define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
@@ -72,7 +72,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                     var fieldDefs = this.getMetadata().get(['entityDefs', o.scope, 'fields', field]) || {};
 
                     o.type = fieldDefs.type;
-                    if (o.type === 'enum') {
+                    if (o.type == 'enum' || o.type == 'varchar') {
                         o.options = fieldDefs.options;
                     }
                     if ('default' in fieldDefs) {
@@ -92,6 +92,9 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                     this.toggleBoolColumn(id, column);
                 }
             }
+
+            this.on('render', this.disposeColumnAutocompletes, this);
+            this.once('remove', this.disposeColumnAutocompletes, this);
         },
 
         toggleBoolColumn: function (id, column) {
@@ -150,6 +153,9 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
         },
 
         deleteLink: function (id) {
+            this.trigger('delete-link', id);
+            this.trigger('delete-link:' + id);
+
             this.deleteLinkHtml(id);
 
             var index = this.ids.indexOf(id);
@@ -159,6 +165,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
             delete this.nameHash[id];
             delete this.columns[id];
             this.afterDeleteLink(id);
+
             this.trigger('change');
         },
 
@@ -179,15 +186,23 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                     }
                 }, this);
 
+                this.addLinkHtml(id, name);
+
                 this.afterAddLink(id);
 
-                this.addLinkHtml(id, name);
+                this.trigger('add-link', id);
+                this.trigger('add-link:' + id);
             }
+
             this.trigger('change');
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+        },
+
+        afterAddLink: function (id) {
+            Dep.prototype.afterAddLink.call(this, id);
         },
 
         getJQSelect: function (column, id, value) {
@@ -296,8 +311,69 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                     }.bind(this));
                     fetch($column);
                 }, this);
+
+                this.initAutocomplete(id);
             }
+
             return $el;
+        },
+
+        initAutocomplete: function (id) {
+            this.disposeColumnAutocompletes();
+
+            this._autocompleteElementList = [];
+
+            this.columnList.forEach(function (column) {
+                var type = this.columnsDefs[column].type;
+                if (type === 'varchar') {
+                    var options = this.columnsDefs[column].options;
+                    if (options && options.length) {
+                        var $element = this.$el.find('[data-column="'+column+'"][data-id="'+id+'"]');
+                        if (!$element.length) return;
+                        $element.autocomplete({
+                            minChars: 0,
+                            lookup: options,
+                            maxHeight: 200,
+                            formatResult: function (suggestion) {
+                                return this.getHelper().escapeString(suggestion.value);
+                            }.bind(this),
+                            lookupFilter: function (suggestion, query, queryLowerCase) {
+                                if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
+                                    if (suggestion.value.length === queryLowerCase.length) return false;
+                                    return true;
+                                }
+                                return false;
+                            },
+                            onSelect: function () {
+                                this.trigger('change');
+                                $element.trigger('change');
+                            }.bind(this)
+                        });
+                        $element.attr('autocomplete', 'espo-' + this.name + '-' + column + '-' + id);
+
+                        $element.on('focus', function () {
+                            if ($element.val()) return;
+                            $element.autocomplete('onValueChange');
+                        });
+
+                        this._autocompleteElementList.push($element);
+
+                        this.once('delete-link:' + id, function () {
+                            $element.autocomplete('dispose');
+                        });
+                    }
+                }
+            }, this);
+        },
+
+        disposeColumnAutocompletes: function () {
+            if (this._autocompleteElementList && this._autocompleteElementList.length) {
+                this._autocompleteElementList.forEach(function ($el) {
+                    $el.autocomplete('dispose');
+                }, this);
+
+                this._autocompleteElementList = [];
+            }
         },
 
         fetch: function () {
@@ -308,5 +384,3 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
 
     });
 });
-
-

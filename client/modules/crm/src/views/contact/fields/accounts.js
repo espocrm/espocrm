@@ -126,6 +126,8 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
         },
 
         afterAddLink: function (id) {
+            Dep.prototype.afterAddLink.call(this, id);
+
             if (this.ids.length === 1) {
                 this.primaryId = id;
                 this.primaryName = this.nameHash[id];
@@ -134,6 +136,8 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
         },
 
         afterDeleteLink: function (id) {
+            Dep.prototype.afterDeleteLink.call(this, id);
+
             if (this.ids.length === 0) {
                 this.primaryId = null;
                 this.primaryName = null;

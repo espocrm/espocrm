@@ -124,6 +124,9 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
         },
 
         deleteLink: function (id) {
+            this.trigger('delete-link', id);
+            this.trigger('delete-link:' + id);
+
             this.deleteLinkHtml(id);
 
             var index = this.ids.indexOf(id);
@@ -132,6 +135,9 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
             }
             delete this.nameHash[id];
             delete this.columns[id];
+
+            this.afterDeleteLink(id);
+
             this.trigger('change');
         },
 
@@ -142,7 +148,11 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
                 this.columns[id] = {};
                 this.columns[id][this.columnName] = null;
                 this.addLinkHtml(id, name);
+
+                this.trigger('add-link', id);
+                this.trigger('add-link:' + id);
             }
+
             this.trigger('change');
         },
 

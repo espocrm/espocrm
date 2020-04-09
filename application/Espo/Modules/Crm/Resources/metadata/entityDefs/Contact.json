@@ -37,6 +37,7 @@
         "title": {
             "type": "varchar",
             "maxLength": 100,
+            "view": "crm:views/contact/fields/title",
             "directUpdateDisabled": true,
             "notStorable": true,
             "select": {
@@ -95,6 +96,7 @@
                 }
             },
             "trim": true,
+            "customizationOptionsDisabled": true,
             "textFilterDisabled": true
         },
         "description": {
@@ -162,6 +164,7 @@
             "exportDisabled": true,
             "importDisabled": true,
             "view": "crm:views/contact/fields/account-role",
+            "customizationOptionsDisabled": true,
             "textFilterDisabled": true
         },
         "accountIsInactive": {
