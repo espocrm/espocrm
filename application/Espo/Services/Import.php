@@ -347,6 +347,8 @@ class Import extends \Espo\Services\Record
             $enclosure = $params['textQualifier'];
         }
 
+        $delimiter = str_replace('\t', "\t", $delimiter);
+
         if (!$user) {
             $user = $this->getUser();
         }
