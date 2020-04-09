@@ -332,6 +332,9 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
                             minChars: 0,
                             lookup: options,
                             maxHeight: 200,
+                            beforeRender: function (c) {
+                                c.addClass('small');
+                            },
                             formatResult: function (suggestion) {
                                 return this.getHelper().escapeString(suggestion.value);
                             }.bind(this),

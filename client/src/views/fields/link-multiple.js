@@ -213,6 +213,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         paramName: 'q',
                         noCache: true,
                         triggerSelectOnValidInput: false,
+                        beforeRender: function ($c) {
+                            if (this.$element.hasClass('input-sm')) {
+                                $c.addClass('small');
+                            }
+                        }.bind(this),
                         formatResult: function (suggestion) {
                             return this.getHelper().escapeString(suggestion.name);
                         }.bind(this),
