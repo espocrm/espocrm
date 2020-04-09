@@ -197,7 +197,11 @@ define('views/detail', 'views/main', function (Dep) {
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.model.get('name'));
+            if (this.model.has('name')) {
+                this.setPageTitle(this.model.get('name'));
+            } else {
+                Dep.prototype.updatePageTitle.call(this);
+            }
         },
 
         updateRelationshipPanel: function (name) {

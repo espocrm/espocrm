@@ -154,9 +154,11 @@ class Import extends \Espo\Services\Record
     protected function readCsvString(&$string, $CSV_SEPARATOR = ';', $CSV_ENCLOSURE = '"', $CSV_LINEBREAK = "\n")
     {
         $o = [];
+
         $cnt = strlen($string);
         $esc = false;
         $escesc = false;
+
         $num = 0;
         $i = 0;
         while ($i < $cnt) {
@@ -164,38 +166,31 @@ class Import extends \Espo\Services\Record
             if ($s == $CSV_LINEBREAK) {
                 if ($esc) {
                     $o[$num].= $s;
-                }
-                else {
+                } else {
                     $i++;
                     break;
                 }
-            }
-            elseif ($s == $CSV_SEPARATOR) {
+            } else if ($s == $CSV_SEPARATOR) {
                 if ($esc) {
                     $o[$num].= $s;
-                }
-                else {
+                } else {
                     $num++;
                     $esc = false;
                     $escesc = false;
                 }
-            }
-            elseif ($s == $CSV_ENCLOSURE) {
+            } else if ($s == $CSV_ENCLOSURE) {
                 if ($escesc) {
                     $o[$num].= $CSV_ENCLOSURE;
                     $escesc = false;
                 }
-
                 if ($esc) {
                     $esc = false;
                     $escesc = true;
-                }
-                else {
+                } else {
                     $esc = true;
                     $escesc = false;
                 }
-            }
-            else {
+            } else {
                 if (!array_key_exists($num, $o)) {
                     $o[$num] = '';
                 }
@@ -205,10 +200,18 @@ class Import extends \Espo\Services\Record
                 }
                 $o[$num] .= $s;
             }
-
             $i++;
         }
         $string = substr($string, $i);
+
+        $keys = array_keys($o);
+        $maxKey = end($keys);
+        for ($i = 0; $i < $maxKey; $i++) {
+            if (!array_key_exists($i, $o)) {
+                $o[$i] = '';
+            }
+        }
+
         return $o;
     }
 
@@ -431,7 +434,8 @@ class Import extends \Espo\Services\Record
                 if ($i == 0 && !empty($params['headerRow'])) {
                     continue;
                 }
-                if (count($arr) == 1 && empty($arr[0])) {
+
+                if (count($arr) == 1 && empty($arr[0]) && count($importAttributeList) > 1) {
                     continue;
                 }
                 $r = $this->importRow($scope, $importAttributeList, $arr, $params, $user);
@@ -584,6 +588,8 @@ class Import extends \Espo\Services\Record
                     continue;
                 }
                 if (array_key_exists($attribute, $attributeDefs)) {
+                    $attributeType = $entity->getAttributeType($attribute);
+
                     if ($value !== '') {
                         $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $attribute, 'type']);
 
@@ -638,9 +644,17 @@ class Import extends \Espo\Services\Record
                             }
                             continue;
                         }
-
-                        $entity->set($attribute, $this->parseValue($entity, $attribute, $value, $params));
                     }
+
+                    if (
+                        $value === '' &&
+                        !in_array($attributeType, [Entity::BOOL])
+                    ) {
+                        continue;
+                    }
+
+                    $entity->set($attribute, $this->parseValue($entity, $attribute, $value, $params));
+
                 } else {
                     if (in_array($attribute, $phoneFieldList) && !empty($value)) {
                         $phoneNumberData = $entity->get('phoneNumberData');
@@ -905,7 +919,7 @@ class Import extends \Espo\Services\Record
                     return $dt->format('Y-m-d');
                 }
                 return null;
-                break;
+
             case Entity::DATETIME:
                 $timezone = new \DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
                 $dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
@@ -914,7 +928,7 @@ class Import extends \Espo\Services\Record
                     return $dt->format('Y-m-d H:i:s');
                 }
                 return null;
-                break;
+
             case Entity::FLOAT:
                 $a = explode($decimalMark, $value);
                 $a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
@@ -926,9 +940,17 @@ class Import extends \Espo\Services\Record
                 }
             case Entity::INT:
                 return intval($value);
+
+            case Entity::BOOL:
+                if ($value && strtolower($value) !== 'false' && $value !== '0') {
+                    return true;
+                }
+                return false;
+
             case Entity::JSON_OBJECT:
                 $value = \Espo\Core\Utils\Json::decode($value);
                 return $value;
+
             case Entity::JSON_ARRAY:
                 if (!is_string($value)) return;
                 if (!strlen($value)) return;
