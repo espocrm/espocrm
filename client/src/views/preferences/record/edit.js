@@ -259,6 +259,8 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                     }
                     this.getPreferences().set(this.model.toJSON());
                     this.getPreferences().trigger('update');
+
+                    this.setIsNotChanged();
                 }.bind(this));
             }, this);
         },
