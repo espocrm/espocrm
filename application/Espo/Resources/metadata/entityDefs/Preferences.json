@@ -98,7 +98,13 @@
             "type": "varchar",
             "default": ",",
             "required": true,
-            "maxLength": 1
+            "maxLength": 1,
+            "options": [
+                ",",
+                ";",
+                "\\t",
+                "|"
+            ]
         },
         "receiveAssignmentEmailNotifications": {
             "type": "bool",

@@ -286,6 +286,8 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             strDelimiter = (strDelimiter || ',');
             strQualifier = (strQualifier || '\"');
 
+            strDelimiter = strDelimiter.replace(/\\t/, '\t');
+
             var objPattern = new RegExp(
                 (
                     // Delimiters.

@@ -48,7 +48,7 @@ return [
     'weekStart' => 0,
     'thousandSeparator' => ',',
     'decimalMark' => '.',
-    'exportDelimiter' => ';',
+    'exportDelimiter' => ',',
     'currencyList' => ['USD'],
     'defaultCurrency' => 'USD',
     'baseCurrency' => 'USD',

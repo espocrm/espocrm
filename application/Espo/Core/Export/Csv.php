@@ -62,8 +62,10 @@ class Csv extends \Espo\Core\Injectable
 
         $delimiter = $this->getInjection('preferences')->get('exportDelimiter');
         if (empty($delimiter)) {
-            $delimiter = $this->getInjection('config')->get('exportDelimiter', ';');
+            $delimiter = $this->getInjection('config')->get('exportDelimiter', ',');
         }
+
+        $delimiter = str_replace('\t', "\t", $delimiter);
 
         $fp = fopen('php://temp', 'w');
         fputcsv($fp, $attributeList, $delimiter);
