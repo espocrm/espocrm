@@ -26,13 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/formula/modals/add-function', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/formula/modals/add-function', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
         template: 'admin/formula/modals/add-function',
 
         fitHeight: true,
+
+        backdrop: true,
 
         events: {
             'click [data-action="add"]': function (e) {
@@ -41,17 +43,23 @@ Espo.define('views/admin/formula/modals/add-function', ['views/modal', 'model'],
         },
 
         data: function () {
+            var text = this.translate('formulaFunctions', 'messages', 'Admin')
+                .replace('{documentationUrl}', this.documentationUrl);
+            text = this.getHelper().transfromMarkdownText(text, {linksInNewTab: true}).toString();
+
             return {
-                functionDataList: this.functionDataList
+                functionDataList: this.functionDataList,
+                text: text,
             };
         },
 
         setup: function () {
             this.header = this.translate('Function');
 
+            this.documentationUrl = 'https://www.espocrm.com/documentation/administration/formula/';
+
             this.functionDataList = this.getMetadata().get('app.formula.functionList') || [];
-        }
+        },
 
     });
 });
-

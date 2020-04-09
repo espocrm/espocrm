@@ -210,6 +210,7 @@
         "rebuildRequired": "Rebuild is required"
     },
     "messages": {
+        "formulaFunctions": "More functions can be found in [documentation]({documentationUrl}).",
         "rebuildRequired": "You need to run rebuild from CLI.",
         "upgradeVersion": "EspoCRM will be upgraded to version **{version}**. Please be patient as this may take a while.",
         "upgradeDone": "EspoCRM has been upgraded to version **{version}**.",

@@ -26,11 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/formula/modals/add-attribute', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/formula/modals/add-attribute', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
         _template: '<div class="attribute" data-name="attribute">{{{attribute}}}</div>',
+
+        backdrop: true,
 
         setup: function () {
             this.header = this.translate('Attribute');
@@ -54,8 +56,7 @@ Espo.define('views/admin/formula/modals/add-attribute', ['views/modal', 'model']
                     this.trigger('add', list[0]);
                 }, this);
             });
-        }
+        },
 
     });
 });
-
