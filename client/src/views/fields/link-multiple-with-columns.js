@@ -319,9 +319,7 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
         },
 
         initAutocomplete: function (id) {
-            this.disposeColumnAutocompletes();
-
-            this._autocompleteElementList = [];
+            if (!this._autocompleteElementList) this._autocompleteElementList = [];
 
             this.columnList.forEach(function (column) {
                 var type = this.columnsDefs[column].type;
