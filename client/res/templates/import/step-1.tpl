@@ -6,11 +6,9 @@
                 <div class="row">
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Entity Type' scope='Import'}}</label>
-                        <select id="import-entity-type" class="form-control">
-                            {{#each entityList}}
-                            <option value="{{./this}}" {{#ifEqual this ../entityType}}selected{{/ifEqual}}>{{translate this category='scopeNamesPlural'}}</option>
-                            {{/each}}
-                        </select>
+                        <div data-name="entityType" class="field">
+                            {{{entityTypeField}}}
+                        </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'File (CSV)' scope='Import'}}</label>
@@ -21,12 +19,8 @@
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'What to do?' scope='Import'}}</label>
-                        <div>
-                            <select class="form-control" id="import-action">
-                                <option value="create">{{translate 'Create Only' scope='Import'}}</option>
-                                <option value="createAndUpdate">{{translate 'Create and Update' scope='Import'}}</option>
-                                <option value="update">{{translate 'Update Only' scope='Import'}}</option>
-                            </select>
+                        <div data-name="action" class="field">
+                            {{{actionField}}}
                         </div>
                     </div>
                 </div>
@@ -40,67 +34,55 @@
                 <div class="row">
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Header Row' scope='Import'}}</label>
-                        <div>
-                            <input type="checkbox" id="import-header-row">
+                        <div data-name="headerRow" class="field">
+                            {{{headerRowField}}}
                         </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Person Name Format' scope='Import'}}</label>
-                        <div>
-                            <select class="form-control" id="import-person-name-format">
-                            {{#each personNameFormatList}}
-                                <option value="{{./this}}">{{translateOption this scope='Import' field='personNameFormat'}}</option>
-                            {{/each}}
-                            </select>
+                        <div data-name="personNameFormat" class="field">
+                            {{{personNameFormatField}}}
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Field Delimiter' scope='Import'}}</label>
-                        <select class="form-control" id="import-field-delimiter">
-                            <option value=",">,</option>
-                            <option value=";">;</option>
-                            <option value="\t">\t</option>
-                            <option value="|">|</option>
-                        </select>
+                        <div data-name="delimiter" class="field">
+                            {{{delimiterField}}}
+                        </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Date Format' scope='Import'}}</label>
-                        <select class="form-control" id="import-date-format">
-                            {{#each dateFormatDataList}}
-                                <option value="{{key}}">{{value}}</option>
-                            {{/each}}
-                        </select>
+                        <div data-name="dateFormat" class="field">
+                            {{{dateFormatField}}}
+                        </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Decimal Mark' scope='Import'}}</label>
-                        <input class="form-control" type="text" id="import-decimal-mark" maxlength="1" value=".">
+                        <div data-name="decimalMark" class="field">
+                            {{{decimalMarkField}}}
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Text Qualifier' scope='Import'}}</label>
-                        <select class="form-control" id="import-text-qualifier">
-                            <option value="&quot;">{{translate 'Double Quote' scope='Import'}}</option>
-                            <option value="'">{{translate 'Single Quote' scope='Import'}}</option>
-                        </select>
+                        <div data-name="textQualifier" class="field">
+                            {{{textQualifierField}}}
+                        </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Time Format' scope='Import'}}</label>
-                        <select class="form-control" id="import-time-format">
-                            {{#each timeFormatDataList}}
-                                <option value="{{key}}">{{value}}</option>
-                            {{/each}}
-                        </select>
+                        <div data-name="timeFormat" class="field">
+                            {{{timeFormatField}}}
+                        </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Currency' scope='Import'}}</label>
-                        <select class="form-control" id="import-currency">
-                            {{#each currencyList}}
-                            <option value="{{./this}}">{{./this}}</option>
-                            {{/each}}
-                        </select>
+                        <div data-name="currency" class="field">
+                            {{{currencyField}}}
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -108,11 +90,9 @@
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'Timezone' scope='Import'}}</label>
-                        <select class="form-control" id="import-timezone">
-                            {{#each timezoneList}}
-                            <option value="{{./this}}">{{./this}}</option>
-                            {{/each}}
-                        </select>
+                        <div data-name="timezone" class="field">
+                            {{{timezoneField}}}
+                        </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                     </div>

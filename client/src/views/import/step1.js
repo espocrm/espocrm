@@ -41,19 +41,9 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 }
             },
 
-            'change #import-field-delimiter': function (e) {
-                this.formData.delimiter = e.currentTarget.value;
-                this.preview();
-            },
-
-            'change #import-text-qualifier': function (e) {
-                this.formData.textQualifier = e.currentTarget.value;
-                this.preview();
-            },
-
             'click button[data-action="next"]': function () {
                 this.next();
-            }
+            },
         },
 
         getEntityList: function () {
@@ -73,47 +63,45 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
         },
 
         data: function () {
-            var entityList = this.getEntityList();
-
             return {
-                entityList: entityList,
-                currencyList: this.getConfig().get('currencyList'),
-                dateFormatDataList: [
-                    {key: "YYYY-MM-DD", value: '2017-12-27'},
-                    {key: "DD-MM-YYYY", value: '27-12-2017'},
-                    {key: "MM-DD-YYYY", value: '12-27-2017'},
-                    {key: "MM/DD/YYYY", value: '12/27/2017'},
-                    {key: "DD/MM/YYYY", value: '27/12/2017'},
-                    {key: "DD.MM.YYYY", value: '27.12.2017'},
-                    {key: "MM.DD.YYYY", value: '12.27.2017'},
-                    {key: "YYYY.MM.DD", value: '2017.12.27'}
-                ],
-                timeFormatDataList: [
-                    {key: "HH:mm:ss", value: '23:00:00'},
-                    {key: "HH:mm", value: '23:00'},
-                    {key: "hh:mm a", value: '11:00 pm'},
-                    {key: "hh:mma", value: '11:00pm'},
-                    {key: "hh:mm A", value: '11:00 PM'},
-                    {key: "hh:mmA", value: '11:00PM'},
-                    {key: "hh:mm:ss a", value: '11:00:00 pm'},
-                    {key: "hh:mm:ssa", value: '11:00:00pm'},
-                    {key: "hh:mm:ss A", value: '11:00:00 PM'},
-                    {key: "hh:mm:ssA", value: '11:00:00PM'},
-                ],
-                timezoneList: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options']),
-
-                personNameFormatList: this.personNameFormatList,
+                entityList: this.getEntityList(),
             };
         },
 
         setup: function () {
+            this.attributeList = [
+                'entityType',
+                'action',
+            ];
+
+            this.paramList = [
+                'headerRow',
+                'decimalMark',
+                'personNameFormat',
+                'delimiter',
+                'dateFormat',
+                'timeFormat',
+                'currency',
+                'timezone',
+                'textQualifier',
+                'silentMode',
+                'idleMode',
+                'skipDuplicateChecking',
+            ];
+
+            this.paramList.forEach(function (item) {
+                this.attributeList.push(item);
+            }, this);
+
             this.formData = this.options.formData || {
-                entityType: this.options.entityType || false,
+                entityType: this.options.entityType || null,
+                create: 'create',
                 headerRow: true,
                 delimiter: ',',
                 textQualifier: '"',
                 dateFormat: 'YYYY-MM-DD',
                 timeFormat: 'HH:mm:ss',
+                currency: this.getConfig().get('defaultCurrency'),
                 timezone: 'UTC',
                 decimalMark: '.',
                 personNameFormat: 'f l',
@@ -122,26 +110,193 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 silentMode: true,
             };
 
-            this.personNameFormatList = [
+            var model = this.model = new Model;
+
+            this.attributeList.forEach(function (a) {
+                model.set(a, this.formData[a]);
+            }, this);
+
+            this.attributeList.forEach(function (a) {
+                this.listenTo(model, 'change:' + a, function (m, v, o) {
+                    if (!o.ui) return;
+                    this.formData[a] = this.model.get(a);
+                    this.preview();
+                }, this);
+            }, this);
+
+            var personNameFormatList = [
                 'f l',
                 'l f',
                 'l, f',
             ];
-
             var personNameFormat = this.getConfig().get('personNameFormat') || 'firstLast';
             if (~personNameFormat.toString().toLowerCase().indexOf('middle')) {
-                this.personNameFormatList.push('f m l');
-                this.personNameFormatList.push('l f m');
+                personNameFormatList.push('f m l');
+                personNameFormatList.push('l f m');
             }
 
-            var model = this.model = new Model;
+            var dateFormatDataList = [
+                {key: "YYYY-MM-DD", label: '2020-12-27'},
+                {key: "DD-MM-YYYY", label: '27-12-2020'},
+                {key: "MM-DD-YYYY", label: '12-27-2020'},
+                {key: "MM/DD/YYYY", label: '12/27/2020'},
+                {key: "DD/MM/YYYY", label: '27/12/2020'},
+                {key: "DD.MM.YYYY", label: '27.12.2020'},
+                {key: "MM.DD.YYYY", label: '12.27.2020'},
+                {key: "YYYY.MM.DD", label: '2020.12.27'},
+            ];
+            var timeFormatDataList = [
+                {key: "HH:mm:ss", label: '23:00:00'},
+                {key: "HH:mm", label: '23:00'},
+                {key: "hh:mm a", label: '11:00 pm'},
+                {key: "hh:mma", label: '11:00pm'},
+                {key: "hh:mm A", label: '11:00 PM'},
+                {key: "hh:mmA", label: '11:00PM'},
+                {key: "hh:mm:ss a", label: '11:00:00 pm'},
+                {key: "hh:mm:ssa", label: '11:00:00pm'},
+                {key: "hh:mm:ss A", label: '11:00:00 PM'},
+                {key: "hh:mm:ssA", label: '11:00:00PM'},
+            ];
 
-            model.set({
-                silentMode: this.formData.silentMode,
-                idleMode: this.formData.idleMode,
-                skipDuplicateChecking: this.formData.skipDuplicateChecking,
+            var dateFormatList = [];
+            dateFormatDataList.forEach(function (item) {
+                dateFormatList.push(item.key);
+            }, this);
+
+            var timeFormatList = [];
+            var timeFormatOptions = {};
+            timeFormatDataList.forEach(function (item) {
+                timeFormatList.push(item.key);
+                timeFormatOptions[item.key] = item.label;
+            }, this);
+
+            this.createView('actionField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="action"]',
+                model: this.model,
+                name: 'action',
+                mode: 'edit',
+                params: {
+                    options: [
+                        'create',
+                        'createAndUpdate',
+                        'update',
+                    ],
+                    translatedOptions: {
+                        create: this.translate('Create Only', 'labels', 'Admin'),
+                        createAndUpdate: this.translate('Create and Update', 'labels', 'Admin'),
+                        update: this.translate('Update Only', 'labels', 'Admin'),
+                    },
+                },
             });
 
+            this.createView('entityTypeField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="entityType"]',
+                model: this.model,
+                name: 'entityType',
+                mode: 'edit',
+                params: {
+                    options: [''].concat(this.getEntityList()),
+                    translation: 'Global.scopeNamesPlural',
+                    required: true,
+                },
+                labelText: this.translate('Entity Type', 'labels', 'Import'),
+            });
+
+            this.createView('decimalMarkField', 'views/fields/varchar', {
+                el: this.getSelector() + ' .field[data-name="decimalMark"]',
+                model: this.model,
+                name: 'decimalMark',
+                mode: 'edit',
+                params: {
+                    options: [
+                        '.',
+                        ',',
+                    ],
+                    maxLength: 1,
+                    required: true,
+                },
+                labelText: this.translate('Decimal Mark', 'labels', 'Import'),
+            });
+            this.createView('personNameFormatField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="personNameFormat"]',
+                model: this.model,
+                name: 'personNameFormat',
+                mode: 'edit',
+                params: {
+                    options: personNameFormatList,
+                    translation: 'Import.options.personNameFormat',
+                },
+            });
+            this.createView('delimiterField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="delimiter"]',
+                model: this.model,
+                name: 'delimiter',
+                mode: 'edit',
+                params: {
+                    options: [
+                        ',',
+                        ';',
+                        '\\t',
+                        '|',
+                    ],
+                },
+            });
+            this.createView('textQualifierField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="textQualifier"]',
+                model: this.model,
+                name: 'textQualifier',
+                mode: 'edit',
+                params: {
+                    options: ['"', '\''],
+                    translatedOptions: {
+                        '"': this.translate('Double Quote', 'labels', 'Import'),
+                        '\'': this.translate('Single Quote', 'labels', 'Import'),
+                    },
+                },
+            });
+            this.createView('dateFormatField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="dateFormat"]',
+                model: this.model,
+                name: 'dateFormat',
+                mode: 'edit',
+                params: {
+                    options: dateFormatList,
+                },
+            });
+            this.createView('timeFormatField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="timeFormat"]',
+                model: this.model,
+                name: 'timeFormat',
+                mode: 'edit',
+                params: {
+                    options: timeFormatList,
+                    translatedOptions: timeFormatOptions,
+                },
+            });
+            this.createView('currencyField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="currency"]',
+                model: this.model,
+                name: 'currency',
+                mode: 'edit',
+                params: {
+                    options: this.getConfig().get('currencyList'),
+                },
+            });
+            this.createView('timezoneField', 'views/fields/enum', {
+                el: this.getSelector() + ' .field[data-name="timezone"]',
+                model: this.model,
+                name: 'timezone',
+                mode: 'edit',
+                params: {
+                    options: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options']),
+                },
+            });
+            this.createView('headerRowField', 'views/fields/bool', {
+                el: this.getSelector() + ' .field[data-name="headerRow"]',
+                model: this.model,
+                name: 'headerRow',
+                mode: 'edit',
+            });
             this.createView('silentModeField', 'views/fields/bool', {
                 el: this.getSelector() + ' .field[data-name="silentMode"]',
                 model: this.model,
@@ -173,25 +328,20 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
         },
 
         next: function () {
-            this.formData.headerRow = $('#import-header-row').get(0).checked;
-            this.formData.entityType = $('#import-entity-type').val();
-            this.formData.action = $('#import-action').val();
-            this.formData.delimiter = $('#import-field-delimiter').val();
-            this.formData.textQualifier = $('#import-text-qualifier').val();
-            this.formData.dateFormat = $('#import-date-format').val();
-            this.formData.timeFormat = $('#import-time-format').val();
-            this.formData.timezone = $('#import-timezone').val();
-            this.formData.decimalMark = $('#import-decimal-mark').val();
-            this.formData.currency = $('#import-currency').val();
-            this.formData.personNameFormat = $('#import-person-name-format').val();
+            this.attributeList.forEach(function (a) {
+                this.getView(a + 'Field').fetchToModel();
+                this.formData[a] = this.model.get(a);
+            }, this);
 
-            this.getView('silentModeField').fetchToModel();
-            this.getView('idleModeField').fetchToModel();
-            this.getView('skipDuplicateCheckingField').fetchToModel();
+            var isInvalid = false;
+            this.attributeList.forEach(function (a) {
+                isInvalid |= this.getView(a + 'Field').validate();
+            }, this);
 
-            this.formData.silentMode = this.model.get('silentMode');
-            this.formData.idleMode = this.model.get('idleMode');
-            this.formData.skipDuplicateChecking = this.model.get('skipDuplicateChecking');
+            if (isInvalid) {
+                Espo.Ui.error(this.translate('Not valid'));
+                return;
+            }
 
             this.getParentView().formData = this.formData;
 
@@ -201,32 +351,9 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
         },
 
         setupFormData: function () {
-            this.model.set('silentMode', this.formData.silentMode);
-            this.model.set('idleMode', this.formData.idleMode);
-            this.model.set('skipDuplicateChecking', this.formData.skipDuplicateChecking);
-
-            $('#import-header-row').get(0).checked = this.formData.headerRow || false;
-
-            if (this.formData.entityType) {
-                $('#import-entity-type').val(this.formData.entityType);
-            }
-            if (this.formData.action) {
-                $('#import-action').val(this.formData.action);
-            }
-
-            $('#import-field-delimiter').val(this.formData.delimiter);
-            $('#import-text-qualifier').val(this.formData.textQualifier);
-            $('#import-date-format').val(this.formData.dateFormat);
-            $('#import-time-format').val(this.formData.timeFormat);
-            $('#import-timezone').val(this.formData.timezone);
-            $('#import-decimal-mark').val(this.formData.decimalMark);
-            $('#import-person-name-format').val(this.formData.personNameFormat);
-
-            if (this.formData.currency) {
-                $('#import-currency').val(this.formData.currency);
-            } else {
-                $('#import-currency').val(this.getConfig().get('defaultCurrency'));
-            }
+            this.attributeList.forEach(function (a) {
+                this.model.set(a, this.formData[a]);
+            }, this);
         },
 
         loadFile: function (file) {
