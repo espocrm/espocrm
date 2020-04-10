@@ -25,7 +25,7 @@
         "zordius/lightncandy": "1.*",
         "composer/semver": "^1.4",
         "tecnickcom/tcpdf": "^6.2",
-        "zbateson/mail-mime-parser": "1.1.*",
+        "zbateson/mail-mime-parser": "1.2.*",
         "phpoffice/phpspreadsheet": "^1.10",
         "spatie/async": "dev-for-espocrm",
         "symfony/process": "4.1.7",

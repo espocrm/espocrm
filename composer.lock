@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "037b1ed7239323eeeb0226960deb6e3d",
+    "content-hash": "c46fc3dacef14e2bfc616c430a2de84c",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -2122,6 +2122,20 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-30T14:07:33+00:00"
         },
         {
@@ -2838,16 +2852,16 @@
         },
         {
             "name": "zbateson/mail-mime-parser",
-            "version": "1.1.5",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zbateson/mail-mime-parser.git",
-                "reference": "63bedd7d71fb3abff2381174a14637c5a4ddaa36"
+                "reference": "fd49e6f53184529a5ec4bc0b9edd98edeee53f5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zbateson/mail-mime-parser/zipball/63bedd7d71fb3abff2381174a14637c5a4ddaa36",
-                "reference": "63bedd7d71fb3abff2381174a14637c5a4ddaa36",
+                "url": "https://api.github.com/repos/zbateson/mail-mime-parser/zipball/fd49e6f53184529a5ec4bc0b9edd98edeee53f5a",
+                "reference": "fd49e6f53184529a5ec4bc0b9edd98edeee53f5a",
                 "shasum": ""
             },
             "require": {
@@ -2898,7 +2912,7 @@
                 "parser",
                 "php-imap"
             ],
-            "time": "2019-03-26T16:52:07+00:00"
+            "time": "2020-01-09T04:49:13+00:00"
         },
         {
             "name": "zbateson/mb-wrapper",
@@ -5161,5 +5175,6 @@
         "ext-curl": "*",
         "ext-exif": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
