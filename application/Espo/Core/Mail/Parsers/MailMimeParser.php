@@ -204,12 +204,27 @@ class MailMimeParser
 
             $attachment = $this->getEntityManager()->getEntity('Attachment');
 
+            $contentType = $attachmentObj->getHeaderValue('Content-Type');
+
             $filename = $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', null);
             if ($filename === null) {
                 $filename = $attachmentObj->getHeaderParameter('Content-Type', 'name', 'unnamed');
             }
             $attachment->set('name', $filename);
-            $attachment->set('type', $attachmentObj->getHeaderValue('Content-Type'));
+            $attachment->set('type', $contentType);
+
+            $charset = $attachmentObj->getHeaderParameter('Content-Type', 'charset');
+
+            if (!$charset && $content && in_array($contentType, ['text/plain', 'text/html'])) {
+                $binaryContentStream = $attachmentObj->getBinaryContentStream();
+                if ($binaryContentStream) {
+                    $rawContent = $binaryContentStream->getContents();
+                    $encoding = $this->detectEncodingByBom($rawContent);
+                    if ($encoding) {
+                        $content = $rawContent;
+                    }
+                }
+            }
 
             $contentId = $attachmentObj->getHeaderValue('Content-ID');
 
@@ -256,5 +271,28 @@ class MailMimeParser
             $email->set('body', $body);
         }
     }
-}
 
+    protected function detectEncodingByBom(string $contents) : ?string
+    {
+        $first2 = substr($contents, 0, 2);
+        $first3 = substr($contents, 0, 3);
+        $first4 = substr($contents, 0, 4);
+
+        if ($first3 == chr(0xEF) . chr(0xBB) . chr(0xBF))
+            return 'UTF-8';
+        else
+        if ($first4 == chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF))
+            return 'UTF-32BE';
+        else
+        if ($first4 == chr(0xFF) . chr(0xFE) . chr(0x00) . chr(0x00))
+            return 'UTF-32LE';
+        else
+        if ($first2 == chr(0xFE) . chr(0xFF))
+            return 'UTF-16BE';
+        else
+        if ($first2 == chr(0xFF) . chr(0xFE))
+            return 'UTF-16LE';
+
+        return null;
+    }
+}
