@@ -181,7 +181,6 @@ class Converter
         $schema = $this->getSchema(true);
 
         $indexList = SchemaUtils::getIndexList($ormMeta);
-        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength());
 
         $tables = array();
         foreach ($ormMeta as $entityName => $entityParams) {
@@ -225,10 +224,6 @@ class Converter
                 if (!in_array($fieldType, $this->typeList)) {
                     $GLOBALS['log']->debug('Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
                     continue;
-                }
-
-                if (isset($fieldListExceededIndexMaxLength[$entityName]) && in_array($fieldName, $fieldListExceededIndexMaxLength[$entityName])) {
-                    $fieldParams['utf8mb3'] = true;
                 }
 
                 $columnName = Util::toUnderScore($fieldName);
