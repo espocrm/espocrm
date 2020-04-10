@@ -91,7 +91,7 @@
         }
     },
     "strings": {
-        "saveAsDefault": "Save as sefault"
+        "saveAsDefault": "Save as default"
     },
     "tooltips": {
         "silentMode": "A majority of after-save scripts will be skipped, stream notes won't be created. Import will run faster."
