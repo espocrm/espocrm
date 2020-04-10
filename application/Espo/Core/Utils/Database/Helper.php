@@ -145,14 +145,21 @@ class Helper
 
         switch ($tableEngine) {
             case 'InnoDB':
-                $version = $this->getFullDatabaseVersion();
+                $databaseType = $this->getDatabaseType();
+                $version = $this->getDatabaseVersion();
 
-                if (version_compare($version, '10.0.0') >= 0) {
-                    return 767; //InnoDB, MariaDB
-                }
+                switch ($databaseType) {
+                    case 'MariaDB':
+                        if (version_compare($version, '10.2.2') >= 0) {
+                            return 3072; //InnoDB, MariaDB 10.2.2+
+                        }
+                        break;
 
-                if (version_compare($version, '5.7.0') >= 0) {
-                    return 3072; //InnoDB, MySQL 5.7+
+                    case 'MySQL':
+                        if (version_compare($version, '5.7.0') >= 0) {
+                            return 3072; //InnoDB, MySQL 5.7+
+                        }
+                        break;
                 }
 
                 return 767; //InnoDB

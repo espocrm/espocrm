@@ -238,7 +238,7 @@ class Utils
             'varchar' => 255,
         );
 
-        $type = static::getFieldType($ormFieldDefs);
+        $type = static::getDbFieldType($ormFieldDefs);
 
         $length = isset($defaultLength[$type]) ? $defaultLength[$type] : $length;
         $length = isset($ormFieldDefs['len']) ? $ormFieldDefs['len'] : $length;
@@ -252,8 +252,13 @@ class Utils
         return $length;
     }
 
-    protected static function getFieldType(array $ormFieldDefs)
+    protected static function getDbFieldType(array $ormFieldDefs)
     {
         return isset($ormFieldDefs['dbType']) ? $ormFieldDefs['dbType'] : $ormFieldDefs['type'];
+    }
+
+    protected static function getFieldType(array $ormFieldDefs)
+    {
+        return isset($ormFieldDefs['type']) ? $ormFieldDefs['type'] : static::getDbFieldType($ormFieldDefs);
     }
 }
