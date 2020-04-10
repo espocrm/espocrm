@@ -47,6 +47,9 @@
         "dashletsOptions": {
             "type": "jsonObject"
         },
+        "importParams": {
+            "type": "jsonObject"
+        },
         "sharedCalendarUserList": {
             "type": "jsonArray"
         },

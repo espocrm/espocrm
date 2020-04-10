@@ -44,6 +44,11 @@
                             {{{personNameFormatField}}}
                         </div>
                     </div>
+                    <div class="col-sm-4 form-group cell">
+                        <div class="pull-right">
+                            <button class="btn btn-link hidden" data-action="saveAsDefault">{{translate 'saveAsDefault' category='strings' scope='Import'}}</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4 form-group cell">

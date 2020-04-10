@@ -44,6 +44,10 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             'click button[data-action="next"]': function () {
                 this.next();
             },
+
+            'click button[data-action="saveAsDefault"]': function () {
+                this.saveAsDefault();
+            },
         },
 
         getEntityList: function () {
@@ -109,6 +113,15 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 skipDuplicateChecking: false,
                 silentMode: true,
             };
+
+            var defaults = Espo.Utils.cloneDeep(
+                (this.getPreferences().get('importParams') || {}).default || {}
+            );
+
+            for (var p in defaults) {
+                this.formData[p] = defaults[p];
+            }
+
 
             var model = this.model = new Model;
 
@@ -317,6 +330,21 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 name: 'skipDuplicateChecking',
                 mode: 'edit',
             });
+
+            this.listenTo(this.model, 'change', function (m, o) {
+                if (!o.ui) return;
+
+                var isParamChanged = false;
+                this.paramList.forEach(function (a) {
+                    if (m.hasChanged(a)) {
+                        isParamChanged = true;
+                    }
+                }, this);
+
+                if (isParamChanged) {
+                    this.showSaveAsDefaultButton();
+                }
+            }, this);
         },
 
         afterRender: function () {
@@ -325,6 +353,14 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 this.setFileIsLoaded();
                 this.preview();
             }
+        },
+
+        showSaveAsDefaultButton: function () {
+            this.$el.find('[data-action="saveAsDefault"]').removeClass('hidden');
+        },
+
+        hideSaveAsDefaultButton: function () {
+            this.$el.find('[data-action="saveAsDefault"]').addClass('hidden');
         },
 
         next: function () {
@@ -455,6 +491,30 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             }
 
             return arrData;
+        },
+
+        saveAsDefault: function () {
+            var preferences = this.getPreferences();
+
+            var importParams = Espo.Utils.cloneDeep(preferences.get('importParams') || {});
+
+            var data = {};
+
+            this.paramList.forEach(function (a) {
+                data[a] = this.model.get(a);
+            }, this);
+
+            importParams.default = data;
+
+            preferences.save({
+                'importParams': importParams,
+            }).then(
+                function () {
+                    Espo.Ui.success(this.translate('Saved'))
+                }.bind(this)
+            );
+
+            this.hideSaveAsDefaultButton();
         },
 
     });
