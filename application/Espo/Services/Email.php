@@ -153,39 +153,46 @@ class Email extends Record
         return $smtpParams;
     }
 
-    protected function send(Entities\Email $entity)
+    public function sendEntity(Entities\Email $entity, ?Entities\User $user = null)
     {
         $emailSender = $this->getMailSender();
 
         $userAddressList = [];
-        foreach ($this->getUser()->get('emailAddresses') as $ea) {
-            $userAddressList[] = $ea->get('lower');
+
+        if ($user) {
+            foreach ($user->get('emailAddresses') as $ea) {
+                $userAddressList[] = $ea->get('lower');
+            }
         }
 
-        $primaryUserAddress = strtolower($this->getUser()->get('emailAddress'));
+        $primaryUserAddress = strtolower($user->get('emailAddress'));
         $fromAddress = strtolower($entity->get('from'));
         $originalFromAddress = $entity->get('from');
 
-        if (empty($fromAddress)) {
-            throw new Error("Can't send with empty from address.");
+        if (!$fromAddress) {
+            throw new Error("Email sending: Can't send with empty 'from' address.");
         }
 
         $inboundEmail = null;
         $emailAccount = null;
 
         $smtpParams = null;
-        if (in_array($fromAddress, $userAddressList)) {
+
+        if ($user && in_array($fromAddress, $userAddressList)) {
             if ($primaryUserAddress === $fromAddress) {
-                $smtpParams = $this->getPreferences()->getSmtpParams();
-                if ($smtpParams) {
-                    if (array_key_exists('password', $smtpParams)) {
-                        $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                $preferences = $this->getEntityManager()->get('Preferences', $user->id);
+                if ($preferences) {
+                    $smtpParams = $preferences->getSmtpParams();
+                    if ($smtpParams) {
+                        if (array_key_exists('password', $smtpParams)) {
+                            $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                        }
                     }
                 }
             }
 
             $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
-            $emailAccount = $emailAccountService->findAccountForUser($this->getUser(), $originalFromAddress);
+            $emailAccount = $emailAccountService->findAccountForUser($user, $originalFromAddress);
 
             if (!$smtpParams) {
                 if ($emailAccount && $emailAccount->get('useSmtp')) {
@@ -193,20 +200,28 @@ class Email extends Record
                 }
             }
             if ($smtpParams) {
-                $smtpParams['fromName'] = $this->getUser()->get('name');
+                $smtpParams['fromName'] = $user->get('name');
             }
         }
 
-        if ($smtpParams) {
-            if ($fromAddress) {
-                $this->applySmtpHandler($this->getUser()->id, $fromAddress, $smtpParams);
+        if ($user) {
+            if ($smtpParams) {
+                if ($fromAddress) {
+                    $this->applySmtpHandler($user->id, $fromAddress, $smtpParams);
+                }
+                $emailSender->useSmtp($smtpParams);
             }
-            $emailSender->useSmtp($smtpParams);
         }
 
         if (!$smtpParams) {
             $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
-            $inboundEmail = $inboundEmailService->findSharedAccountForUser($this->getUser(), $originalFromAddress);
+
+            if ($user) {
+                $inboundEmail = $inboundEmailService->findSharedAccountForUser($user, $originalFromAddress);
+            } else {
+                $inboundEmail = $inboundEmailService->findAccountForSending($originalFromAddress);
+            }
+
             if ($inboundEmail) {
                 $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
             }
@@ -217,7 +232,7 @@ class Email extends Record
 
         if (!$smtpParams && $fromAddress === strtolower($this->getConfig()->get('outboundEmailFromAddress'))) {
             if (!$this->getConfig()->get('outboundEmailIsShared')) {
-                throw new Error('Can not use system SMTP. System account is not shared.');
+                throw new Error("Email sending: Can not use system SMTP. System SMTP is not shared.");
             }
             $emailSender->setParams([
                 'fromName' => $this->getConfig()->get('outboundEmailFromName')
@@ -225,13 +240,13 @@ class Email extends Record
         }
 
         if (!$smtpParams && !$this->getConfig()->get('outboundEmailIsShared')) {
-            throw new Error('No SMTP params found for '.$fromAddress.'.');
+            throw new Error("Email sending: No SMTP params found for {$fromAddress}.");
         }
 
         if (!$smtpParams) {
-            if (in_array($fromAddress, $userAddressList)) {
+            if ($user && in_array($fromAddress, $userAddressList)) {
                 $emailSender->setParams([
-                    'fromName' => $this->getUser()->get('name')
+                    'fromName' => $user->get('name')
                 ]);
             }
         }
@@ -276,7 +291,10 @@ class Email extends Record
                         $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
                         $inboundEmailService->storeSentMessage($inboundEmail, $message);
                     } catch (\Exception $e) {
-                        $GLOBALS['log']->error("Could not store sent email (Group Email Account {$inboundEmail->id}): " . $e->getMessage());
+                        $GLOBALS['log']->error(
+                            "Email sending: Could not store sent email (Group Email Account {$inboundEmail->id}): " .
+                            $e->getMessage() . "."
+                        );
                     }
                 }
             } else if ($emailAccount) {
@@ -286,7 +304,10 @@ class Email extends Record
                         $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
                         $emailAccountService->storeSentMessage($emailAccount, $message);
                     } catch (\Exception $e) {
-                        $GLOBALS['log']->error("Could not store sent email (Email Account {$emailAccount->id}): " . $e->getMessage());
+                        $GLOBALS['log']->error(
+                            "Email sending: Could not store sent email (Email Account {$emailAccount->id}): " .
+                            $e->getMessage() . "."
+                        );
                     }
                 }
             }
@@ -308,7 +329,9 @@ class Email extends Record
                     try {
                         $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
                     } catch (\Throwable $e) {
-                        $GLOBALS['log']->error("Send Email: Could not create Smtp Handler for {$emailAddress}. Error: " . $e->getMessage());
+                        $GLOBALS['log']->error(
+                            "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " . $e->getMessage() . "."
+                        );
                     }
                     if (method_exists($handler, 'applyParams')) {
                         $handler->applyParams($userId, $emailAddress, $params);
@@ -360,7 +383,7 @@ class Email extends Record
         $entity = parent::create($data);
 
         if ($entity && $entity->get('status') == 'Sending') {
-            $this->send($entity);
+            $this->sendEntity($entity, $this->getUser());
         }
 
         return $entity;
@@ -377,7 +400,7 @@ class Email extends Record
     protected function afterUpdateEntity(Entity $entity, $data)
     {
         if ($entity && $entity->get('status') == 'Sending') {
-            $this->send($entity);
+            $this->sendEntity($entity, $this->getUser());
         }
 
         $this->loadAdditionalFields($entity);

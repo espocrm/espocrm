@@ -846,6 +846,18 @@ class InboundEmail extends \Espo\Services\Record
         return $this->campaignService;
     }
 
+    public function findAccountForSending(string $emailAddress) : ?\Espo\Entities\InboundEmail
+    {
+        $inboundEmail = $this->getEntityManager()->getRepository('InboundEmail')->where([
+            'status' => 'Active',
+            'useSmtp' => true,
+            'smtpHost!=' => null,
+            'emailAddress' => $emailAddress,
+        ])->findOne();
+
+        return $inboundEmail;
+    }
+
     public function findSharedAccountForUser(\Espo\Entities\User $user, $emailAddress)
     {
         $groupEmailAccountPermission = $this->getAclManager()->get($user, 'groupEmailAccountPermission');
