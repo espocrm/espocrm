@@ -64,7 +64,7 @@ define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
         },
 
         getAttributeList: function () {
-            return ['name', 'isRead', 'isImportant', 'hasAttachment', 'inTrash'];
+            return ['name', 'subject', 'isRead', 'isImportant', 'hasAttachment', 'inTrash'];
         },
 
         setup: function () {
@@ -80,6 +80,13 @@ define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+        },
+
+
+        fetch: function () {
+            var data = Dep.prototype.fetch.call(this);
+            data.name = data.subject;
+            return data;
         },
 
     });
