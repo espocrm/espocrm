@@ -62,7 +62,7 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
         },
 
         getAttributeList: function () {
-            return ['name', 'isRead', 'isImportant', 'hasAttachment'];
+            return ['name', 'subject', 'isRead', 'isImportant', 'hasAttachment'];
         },
 
         setup: function () {
@@ -80,6 +80,11 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
             Dep.prototype.afterRender.call(this);
         },
 
-    });
+        fetch: function () {
+            var data = Dep.prototype.fetch.call(this);
+            data.name = data.subject;
+            return data;
+        },
 
+    });
 });
