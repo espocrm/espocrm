@@ -37,6 +37,7 @@ class SendType extends \Espo\Core\Formula\Functions\Base
     {
         $this->addDependency('entityManager');
         $this->addDependency('serviceFactory');
+        $this->addDependency('config');
     }
 
     public function process(\StdClass $item)
@@ -65,8 +66,25 @@ class SendType extends \Espo\Core\Formula\Functions\Base
             return false;
         }
 
+        $service = $this->getInjection('serviceFactory')->create('Email');
+        $service->loadAdditionalFields($email);
+
+        $toSave = false;
+
         if ($status !== 'Sending') {
             $email->set('status', 'Sending');
+            $toSave = true;
+        }
+
+        if (!$email->get('from')) {
+            $from = $this->getInjection('config')->get('outboundEmailFromAddress');
+            if ($from) {
+                $email->set('from', $from);
+                $toSave = true;
+            }
+        }
+
+        if ($toSave) {
             $em->saveEntity($email, [
                 'modifiedById' => 'system',
                 'silent' => true,
@@ -74,8 +92,8 @@ class SendType extends \Espo\Core\Formula\Functions\Base
         }
 
         try {
-            $service = $this->getInjection('serviceFactory')->create('Email');
-            $service->loadAdditionalFields($email);
+
+
             $service->sendEntity($email);
         } catch (\Exception $e) {
             $GLOBALS['log']->error("Formula ext\\email\send: Error while sending. Message: " . $e->getMessage());
