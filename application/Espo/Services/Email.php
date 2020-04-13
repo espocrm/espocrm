@@ -165,7 +165,6 @@ class Email extends Record
             }
         }
 
-        $primaryUserAddress = strtolower($user->get('emailAddress'));
         $fromAddress = strtolower($entity->get('from'));
         $originalFromAddress = $entity->get('from');
 
@@ -179,6 +178,7 @@ class Email extends Record
         $smtpParams = null;
 
         if ($user && in_array($fromAddress, $userAddressList)) {
+            $primaryUserAddress = strtolower($user->get('emailAddress'));
             if ($primaryUserAddress === $fromAddress) {
                 $preferences = $this->getEntityManager()->get('Preferences', $user->id);
                 if ($preferences) {
