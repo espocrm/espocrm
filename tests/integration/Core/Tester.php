@@ -236,7 +236,9 @@ class Tester
         require_once('install/core/Installer.php');
 
         $installer = new \Installer();
-        $installer->saveData(array(), 'en_US');
+        $installer->saveData(array_merge($configData, [
+            'language' => 'en_US'
+        ]));
         $installer->saveConfig($configData);
 
         $installer = new \Installer(); //reload installer to get all config data
@@ -415,11 +417,11 @@ class Tester
     {
         $entityName = $isPortal ? 'PortalRole' : 'Role';
 
-        if (is_array($roleData['data'])) {
+        if (isset($roleData['data']) && is_array($roleData['data'])) {
             $roleData['data'] = json_encode($roleData['data']);
         }
 
-        if (is_array($roleData['fieldData'])) {
+        if (isset($roleData['fieldData']) && is_array($roleData['fieldData'])) {
             $roleData['fieldData'] = json_encode($roleData['fieldData']);
         }
 
