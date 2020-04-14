@@ -603,14 +603,20 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(2, count($attachmentsIds));
 
 
+        $case = $em->createEntity('Case', [
+            'name' => 'Case 1',
+        ]);
+
         $email = $em->createEntity('Email', [
             'to' => 'test@tester.com',
             'status' => 'Draft',
+            'parentId' => $case->id,
+            'parentType' => 'Case',
         ]);
         $emailTemplate = $em->createEntity('EmailTemplate', [
             'name' => '1',
             'subject' => 'Test',
-            'body' => 'Test {Person.name} Hello',
+            'body' => 'Test {Person.name} Hello, {Case.name}',
             'isHtml' => false,
         ]);
 
@@ -620,6 +626,6 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $email = $em->getEntity('Email', $email->id);
 
         $this->assertEquals('Test', $email->get('name'));
-        $this->assertEquals('Test Contact 1 Hello', $email->get('body'));
+        $this->assertEquals('Test Contact 1 Hello, Case 1', $email->get('body'));
     }
 }

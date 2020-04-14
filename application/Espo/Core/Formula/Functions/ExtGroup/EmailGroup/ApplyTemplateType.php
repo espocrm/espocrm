@@ -87,6 +87,11 @@ class ApplyTemplateType extends \Espo\Core\Formula\Functions\Base
 
         $params = [];
 
+        if (!$parentType || !$parentId) {
+            $parentType = $email->get('parentType');
+            $parentId = $email->get('parentId');
+        }
+
         if ($parentType && $parentId) {
             $params['parentType'] = $parentType;
             $params['parentId'] = $parentId;
