@@ -263,7 +263,7 @@ class Installer
 
         $data = [
             'database' => array_merge($databaseDefaults, $saveData['database']),
-            'language' => $saveData['language'],
+            'language' => $saveData['language'] ?? 'en_US',
             'siteUrl' => !empty($saveData['siteUrl']) ? $saveData['siteUrl'] : $this->getSystemHelper()->getBaseUrl(),
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
