@@ -92,8 +92,6 @@ class SendType extends \Espo\Core\Formula\Functions\Base
         }
 
         try {
-
-
             $service->sendEntity($email);
         } catch (\Exception $e) {
             $GLOBALS['log']->error("Formula ext\\email\send: Error while sending. Message: " . $e->getMessage());
