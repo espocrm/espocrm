@@ -67,6 +67,8 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
     protected $initData = null;
 
+    protected $authenticationMethod = null;
+
     protected function createApplication($clearCache = true, $portalId = null)
     {
         return $this->espoTester->getApplication(true, $clearCache, $portalId);
