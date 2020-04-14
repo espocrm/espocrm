@@ -628,4 +628,46 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals('Test', $email->get('name'));
         $this->assertEquals('Test Contact 1 Hello, Case 1', $email->get('body'));
     }
+
+    public function testExtPdfGenerate()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+
+        $template = $em->createEntity('Template', [
+            'body' => 'Test {{name}} hello',
+            'entityType' => 'Account',
+        ]);
+
+        $script = "ext\\pdf\\generate('Account', '{$a->id}', '{$template->id}', 'test')";
+        $id = $fm->run($script);
+
+        $this->assertIsString($id);
+
+        $attachment = $em->getEntity('Attachment', $id);
+
+        $this->assertNotNull($attachment);
+        $this->assertEquals('test.pdf', $attachment->get('name'));
+        $this->assertTrue(file_exists('data/upload/' . $attachment->id));
+
+
+        $script = "ext\\pdf\\generate('Account', '{$a->id}', '{$template->id}', 'test.pdf')";
+        $id = $fm->run($script);
+
+        $attachment = $em->getEntity('Attachment', $id);
+
+        $this->assertEquals('test.pdf', $attachment->get('name'));
+
+
+        $script = "ext\\pdf\\generate('Account', '{$a->id}', '{$template->id}')";
+        $id = $fm->run($script);
+
+        $attachment = $em->getEntity('Attachment', $id);
+
+        $this->assertEquals('1.pdf', $attachment->get('name'));
+    }
 }
