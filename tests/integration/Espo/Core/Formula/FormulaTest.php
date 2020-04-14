@@ -552,4 +552,74 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $script = "ext\\account\\findByEmailAddress('')";
         $this->assertEquals(null, $fm->run($script));
     }
+
+    public function testExtEmailApplyTemplate()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a = $em->createEntity('Account', [
+            'name' => '1',
+        ]);
+
+        $c = $em->createEntity('Contact', [
+            'lastName' => 'Contact 1',
+            'emailAddress' => 'test@tester.com',
+        ]);
+
+        $attachment1 = $em->createEntity('Attachment', [
+            'name' => 'a1',
+            'contents' => '1',
+        ]);
+        $attachment2 = $em->createEntity('Attachment', [
+            'name' => 'a2',
+            'contents' => '2',
+        ]);
+
+        $emailTemplate = $em->createEntity('EmailTemplate', [
+            'name' => '1',
+            'subject' => 'Test',
+            'body' => 'Test {Account.name} Hello',
+            'isHtml' => false,
+            'attachmentsIds' => [$attachment2->id],
+        ]);
+
+        $email = $em->createEntity('Email', [
+            'to' => 'test@tester.com',
+            'status' => 'Draft',
+            'attachmentsIds' => [$attachment1->id],
+        ]);
+
+        $script = "ext\\email\\applyTemplate('{$email->id}', '{$emailTemplate->id}', 'Account', '{$a->id}')";
+        $fm->run($script);
+
+        $email = $em->getEntity('Email', $email->id);
+
+        $attachmentsIds = $email->getLinkMultipleIdList('attachments');
+
+        $this->assertEquals('Test', $email->get('name'));
+        $this->assertEquals('Test 1 Hello', $email->get('body'));
+        $this->assertEquals(false, $email->get('isHtml'));
+        $this->assertEquals(2, count($attachmentsIds));
+
+
+        $email = $em->createEntity('Email', [
+            'to' => 'test@tester.com',
+            'status' => 'Draft',
+        ]);
+        $emailTemplate = $em->createEntity('EmailTemplate', [
+            'name' => '1',
+            'subject' => 'Test',
+            'body' => 'Test {Person.name} Hello',
+            'isHtml' => false,
+        ]);
+
+        $script = "ext\\email\\applyTemplate('{$email->id}', '{$emailTemplate->id}')";
+        $fm->run($script);
+
+        $email = $em->getEntity('Email', $email->id);
+
+        $this->assertEquals('Test', $email->get('name'));
+        $this->assertEquals('Test Contact 1 Hello', $email->get('body'));
+    }
 }
