@@ -246,6 +246,14 @@
         }
     },
     {
+        "route": "/Attachment/file/:id",
+        "method": "get",
+        "params": {
+            "controller": "Attachment",
+            "action": "file"
+        }
+    },
+    {
         "route": "/:controller/:id",
         "method": "get",
         "params": {

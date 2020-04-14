@@ -304,13 +304,16 @@ class Application
         });
 
         $this->getSlim()->hook('slim.after.router', function () use (&$slim) {
-            $slim->contentType('application/json');
+            $response = $slim->response();
 
-            $res = $slim->response();
-            $res->header('Expires', '0');
-            $res->header('Last-Modified', gmdate("D, d M Y H:i:s") . " GMT");
-            $res->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-            $res->header('Pragma', 'no-cache');
+            if (!$response->headers->has('Content-Type')) {
+                $response->headers->set('Content-Type', 'application/json');
+            }
+
+            $response->headers->set('Expires', '0');
+            $response->headers->set('Last-Modified', gmdate("D, d M Y H:i:s") . " GMT");
+            $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+            $response->headers->set('Pragma', 'no-cache');
         });
     }
 

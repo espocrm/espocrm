@@ -355,4 +355,19 @@ class Attachment extends Record
         }
         return null;
     }
+
+    public function getFileData(string $id)
+    {
+        $attachment = $this->getEntity($id);
+        if (!$attachment) throw new NotFound();
+
+        $data = (object) [
+            'name' => $attachment->get('name'),
+            'type' => $attachment->get('type'),
+            'contents' => $this->getRepository()->getContents($attachment),
+            'size' => $attachment->get('size'),
+        ];
+
+        return $data;
+    }
 }
