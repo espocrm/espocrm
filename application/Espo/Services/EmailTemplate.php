@@ -29,16 +29,14 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Entities\Person;
+use Espo\ORM\Entity;
+use Espo\Core\Entities\Person;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
-
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
 
 class EmailTemplate extends Record
 {
-
     protected function init()
     {
         parent::init();
@@ -47,6 +45,7 @@ class EmailTemplate extends Record
         $this->addDependency('dateTime');
         $this->addDependency('language');
         $this->addDependency('number');
+        $this->addDependency('htmlizerFactory');
     }
 
     protected function getFileStorageManager()
@@ -71,7 +70,8 @@ class EmailTemplate extends Record
 
     public function parseTemplate(Entity $emailTemplate, array $params = [], $copyAttachments = false, $skipAcl = false)
     {
-        $entityHash = array();
+        $entityHash = [];
+
         if (!empty($params['entityHash']) && is_array($params['entityHash'])) {
             $entityHash = $params['entityHash'];
         }
@@ -123,8 +123,28 @@ class EmailTemplate extends Record
             }
         }
 
-        $subject = $emailTemplate->get('subject');
-        $body = $emailTemplate->get('body');
+        $subject = $emailTemplate->get('subject') ?? '';
+        $body = $emailTemplate->get('body') ?? '';
+
+        $parent = $entityHash['Parent'] ?? null;
+
+        $htmlizer = null;
+
+        if ($parent && !$this->getConfig()->get('emailTemplateHtmlizerDisabled')) {
+            $handlebarsInSubject = strpos($subject, '{{') !== false && strpos($subject, '}}') !== false;
+            $handlebarsInBody = strpos($body, '{{') !== false && strpos($body, '}}') !== false;
+
+            if ($handlebarsInSubject || $handlebarsInBody) {
+                $htmlizer = $this->getInjection('htmlizerFactory')->create($skipAcl);
+
+                if ($handlebarsInSubject) {
+                    $subject = $htmlizer->render($parent, $subject);
+                }
+                if ($handlebarsInBody) {
+                    $body = $htmlizer->render($parent, $body);
+                }
+            }
+        }
 
         foreach ($entityHash as $type => $entity) {
             $subject = $this->parseText($type, $entity, $subject, false, null, $skipAcl);
@@ -133,8 +153,8 @@ class EmailTemplate extends Record
             $body = $this->parseText($type, $entity, $body, false, null, $skipAcl);
         }
 
-        $attachmentsIds = array();
-        $attachmentsNames = new \StdClass();
+        $attachmentsIds = [];
+        $attachmentsNames = (object) [];
 
         if ($copyAttachments) {
             $attachmentList = $emailTemplate->get('attachments');
@@ -169,7 +189,7 @@ class EmailTemplate extends Record
         ];
     }
 
-    public function parse($id, array $params = array(), $copyAttachments = false)
+    public function parse($id, array $params = [], bool $copyAttachments = false)
     {
         $emailTemplate = $this->getEntity($id);
         if (empty($emailTemplate)) {
