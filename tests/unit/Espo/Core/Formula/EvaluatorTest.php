@@ -152,6 +152,13 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('{token2}', $actual);
     }
 
+    function testStringReplace()
+    {
+        $expression = "string\\replace('hello {test} hello', '{test}', 'hello')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('hello hello hello', $actual);
+    }
+
     function testArrayAt()
     {
         $expression = "array\\at(list(1, 2, 4, 8, 16), 2)";
