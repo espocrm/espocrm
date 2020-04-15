@@ -47,14 +47,13 @@ class Pdf extends \Espo\Core\Services\Base
 
     protected function init()
     {
-        $this->addDependency('fileManager');
         $this->addDependency('acl');
         $this->addDependency('metadata');
         $this->addDependency('serviceFactory');
-        $this->addDependency('dateTime');
-        $this->addDependency('number');
         $this->addDependency('entityManager');
         $this->addDependency('defaultLanguage');
+
+        $this->addDependency('htmlizerFactory');
     }
 
     protected function getAcl()
@@ -70,11 +69,6 @@ class Pdf extends \Espo\Core\Services\Base
     protected function getServiceFactory()
     {
         return $this->getInjection('serviceFactory');
-    }
-
-    protected function getFileManager()
-    {
-        return $this->getInjection('fileManager');
     }
 
     protected function printEntity(Entity $entity, Entity $template, Htmlizer $htmlizer, \Espo\Core\Pdf\Tcpdf $pdf,
@@ -308,16 +302,6 @@ class Pdf extends \Espo\Core\Services\Base
 
     protected function createHtmlizer()
     {
-        return new Htmlizer(
-            $this->getFileManager(),
-            $this->getInjection('dateTime'),
-            $this->getInjection('number'),
-            $this->getAcl(),
-            $this->getInjection('entityManager'),
-            $this->getInjection('metadata'),
-            $this->getInjection('defaultLanguage'),
-            $this->getInjection('config'),
-            $this->getInjection('serviceFactory')
-        );
+        return $this->getInjection('htmlizerFactory')->create();
     }
 }

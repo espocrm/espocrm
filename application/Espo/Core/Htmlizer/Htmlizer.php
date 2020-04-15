@@ -39,7 +39,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
-use Espo\Core\serviceFactory;
+use Espo\Core\ServiceFactory;
 
 use LightnCandy\LightnCandy as LightnCandy;
 
