@@ -209,25 +209,17 @@ class Cleanup extends \Espo\Core\Jobs\Base
         }
 
         if ($this->getConfig()->get('cleanupOrphanAttachments')) {
-            $collection = $this->getEntityManager()->getRepository('Attachment')->where([
-                [
-                    'role' => 'Attachment',
-                ],
-                'OR' => [
-                    [
-                        'parentId' => null,
-                        'parentType!=' => null,
-                        'relatedType=' => null,
-                    ],
-                    [
-                        'parentType' => null,
-                        'relatedId' => null,
-                        'relatedType!=' => null,
-                    ]
-                ],
+            $selectManager = $this->getContainer()->get('selectManagerFactory')->create('Attachment');
+
+            $selectParams = $selectManager->getEmptySelectParams();
+            $selectManager->applyFilter('orphan', $selectParams);
+
+            $selectParams['whereClause'][] = [
                 'createdAt<' => $datetime->format('Y-m-d H:i:s'),
                 'createdAt>' => '2018-01-01 00:00:00',
-            ])->limit(0, 5000)->find();
+            ];
+
+            $collection = $this->getEntityManager()->getRepository('Attachment')->limit(0, 5000)->find($selectParams);
 
             foreach ($collection as $e) {
                 $this->getEntityManager()->removeEntity($e);
