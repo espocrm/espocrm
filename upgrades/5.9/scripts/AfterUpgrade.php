@@ -35,6 +35,8 @@ class AfterUpgrade
 
     protected function fixCollation($container)
     {
+        $ignotedEntityList = ['Job', 'LayoutRecord'];
+
         $pdo = $container->get('entityManager')->getPDO();
         $ormMeta = $container->get('ormMetadata')->getData(true);
 
@@ -42,6 +44,7 @@ class AfterUpgrade
 
         foreach ($ormMeta as $entityName => $entityParams) {
 
+            if (in_array($entityName, $ignotedEntityList)) continue;
             if (!isset($fieldListExceededIndexMaxLength[$entityName])) continue;
 
             $tableName = \Espo\Core\Utils\Util::toUnderScore($entityName);
