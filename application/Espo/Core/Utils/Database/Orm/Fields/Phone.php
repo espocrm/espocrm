@@ -53,6 +53,7 @@ class Phone extends Base
                                     [
                                         "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
                                         "{$foreignJoinMiddleAlias}.primary" => 1,
+                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
                                     ]
                                 ],
                                 [
@@ -60,6 +61,7 @@ class Phone extends Base
                                     $foreignJoinAlias,
                                     [
                                         "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
+                                        "{$foreignJoinAlias}.deleted" => 0,
                                     ]
                                 ]
                             ],
