@@ -159,6 +159,7 @@
         }
     },
     "tooltips": {
+        "emailNotificationsDelay": "A message can be edited within the specified timeframe before the notification is sent.",
         "outboundEmailFromAddress": "The system email address.",
         "smtpServer": "If empty, then Group Email Account with the corresponding email address will be used.",
         "busyRangesEntityList": "What will be taken into account when showing busy time ranges in scheduler & timeline.",

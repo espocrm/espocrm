@@ -318,7 +318,8 @@
         "emailNotificationsDelay": {
             "type": "int",
             "min": 0,
-            "max": 18000
+            "max": 18000,
+            "tooltip": true
         },
         "assignmentEmailNotifications": {
             "type": "bool",
