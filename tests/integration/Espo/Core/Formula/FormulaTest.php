@@ -313,6 +313,23 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals($c2->id, $result);
     }
 
+    public function testRecordFindRelatedOne1()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a = $em->createEntity('Account', [
+        ]);
+
+        $o = $em->createEntity('Opportunity', [
+            'accountId' => $a->id,
+        ]);
+
+        $script = "record\\findRelatedOne('Opportunity', '".$o->id."', 'account')";
+        $result = $fm->run($script);
+        $this->assertEquals($a->id, $result);
+    }
+
     public function testRecordAttribute()
     {
         $fm = $this->getContainer()->get('formulaManager');

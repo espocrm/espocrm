@@ -80,6 +80,18 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
 
         $metadata = $this->getInjection('metadata');
 
+        $relationType = $entity->getRelationParam($link, 'type');
+
+        if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
+            $relatedEntity = $entityManager->getRepository($entityType)->findRelated($entity, $link, [
+                'select' => ['id'],
+            ]);
+            if (!$relatedEntity) {
+                return null;
+            }
+            return $relatedEntity->id;
+        }
+
         if (!$orderBy) {
             $orderBy = $metadata->get(['entityDefs', $entityType, 'collection', 'orderBy']);
             if (is_null($order)) {
@@ -89,8 +101,6 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
             $order = $order ?? 'asc';
         }
 
-        $relationType = $entity->getRelationParam($link, 'type');
-
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
         if (!$foreignEntityType) throw new Error("Formula record\\findRelatedOne: Bad or not supported link '{$link}'.");
 
@@ -99,7 +109,6 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
 
         $selectManager = $this->getInjection('selectManagerFactory')->create($foreignEntityType);
         $selectParams = $selectManager->getEmptySelectParams();
-
 
         if ($relationType === 'hasChildren') {
             $selectParams['whereClause'][] = [$foreignLink . 'Id' => $entity->id];
