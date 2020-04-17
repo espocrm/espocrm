@@ -12,7 +12,7 @@
             ],
             [
                 {"name":"teams"},
-                {"name":"fetchSince"}
+                false
             ],
             [
                 {"name":"addAllTeamUsers"},
@@ -23,7 +23,7 @@
     {
         "label": "IMAP",
         "rows": [
-            [{"name": "useImap"}, false],
+            [{"name": "useImap"}, {"name":"fetchSince"}],
             [
                 {"name":"host"},{"name":"ssl"}
             ],

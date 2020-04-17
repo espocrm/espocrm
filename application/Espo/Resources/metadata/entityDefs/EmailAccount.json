@@ -56,8 +56,7 @@
             "type": "bool"
         },
         "fetchSince": {
-            "type": "date",
-            "required": true
+            "type": "date"
         },
         "fetchData": {
             "type": "jsonObject",

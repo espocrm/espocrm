@@ -29,11 +29,13 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Zend\Mail\Storage;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+
+use Zend\Mail\Storage;
 
 class EmailAccount extends Record
 {
@@ -61,6 +63,17 @@ class EmailAccount extends Record
         }
         if (property_exists($data, 'smtpPassword')) {
             $data->smtpPassword = $this->getCrypt()->encrypt($data->smtpPassword);
+        }
+    }
+
+    public function processValidation(Entity $entity, $data)
+    {
+        parent::processValidation($entity, $data);
+
+        if ($entity->get('useImap')) {
+            if (!$entity->get('fetchSince')) {
+                throw new BadRequest("EmailAccount validation: fetchSince is required.");
+            }
         }
     }
 

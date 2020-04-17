@@ -8,14 +8,14 @@
             ],
             [
                 {"name":"name"},
-                {"name":"fetchSince"}
+                false
             ]
         ]
     },
     {
         "label":"IMAP",
         "rows":[
-            [{"name": "useImap"}, false],
+            [{"name": "useImap"}, {"name":"fetchSince"}],
             [
                 {"name":"host"},{"name":"ssl"}
             ],

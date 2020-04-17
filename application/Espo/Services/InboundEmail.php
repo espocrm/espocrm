@@ -35,6 +35,7 @@ use Zend\Mail\Storage;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 class InboundEmail extends \Espo\Services\Record
 {
@@ -71,6 +72,17 @@ class InboundEmail extends \Espo\Services\Record
         }
         if (property_exists($data, 'smtpPassword')) {
             $data->smtpPassword = $this->getCrypt()->encrypt($data->smtpPassword);
+        }
+    }
+
+    public function processValidation(Entity $entity, $data)
+    {
+        parent::processValidation($entity, $data);
+
+        if ($entity->get('useImap')) {
+            if (!$entity->get('fetchSince')) {
+                throw new BadRequest("EmailAccount validation: fetchSince is required.");
+            }
         }
     }
 
