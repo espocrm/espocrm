@@ -101,6 +101,7 @@ return [
     'massEmailVerp' => false,
     'personalEmailMaxPortionSize' => 50,
     'inboundEmailMaxPortionSize' => 50,
+    'emailAddressLookupEntityTypeList' => ['User', 'Contact', 'Lead', 'Account'],
     'authTokenLifetime' => 0,
     'authTokenMaxIdleTime' => 120,
     'userNameRegularExpression' => '[^a-z0-9\-@_\.\s]',

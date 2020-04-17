@@ -23,6 +23,7 @@
         "outboundEmailFromName": "From Name",
         "outboundEmailFromAddress": "From Address",
         "outboundEmailIsShared": "Is Shared",
+        "emailAddressLookupEntityTypeList": "Email address look-up scopes",
         "recordsPerPage": "Records Per Page",
         "recordsPerPageSmall": "Records Per Page (Small)",
         "tabList": "Tab List",
@@ -159,6 +160,7 @@
         }
     },
     "tooltips": {
+        "emailAddressLookupEntityTypeList": "For email address autocomplete.",
         "emailNotificationsDelay": "A message can be edited within the specified timeframe before the notification is sent.",
         "outboundEmailFromAddress": "The system email address.",
         "smtpServer": "If empty, then Group Email Account with the corresponding email address will be used.",

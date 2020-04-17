@@ -28,6 +28,7 @@ class AfterUpgrade
 
         $config = $container->get('config');
         $config->set('busyRangesEntityList', ['Meeting', 'Call']);
+        $config->set('emailAddressLookupEntityTypeList', ['User', 'Contact', 'Lead', 'Account']);
         $config->save();
 
         $this->fixCollation($container);

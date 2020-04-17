@@ -3,7 +3,8 @@
         "label": "Configuration",
         "rows": [
             [{"name": "outboundEmailFromAddress"}, {"name": "outboundEmailIsShared"}],
-            [{"name": "outboundEmailFromName"}, {"name": "outboundEmailBccAddress"}]
+            [{"name": "outboundEmailFromName"}, {"name": "outboundEmailBccAddress"}],
+            [false, {"name": "emailAddressLookupEntityTypeList"}]
         ]
     },
     {

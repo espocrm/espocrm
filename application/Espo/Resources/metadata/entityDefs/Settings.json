@@ -95,6 +95,11 @@
             "trim": true,
             "tooltip": true
         },
+        "emailAddressLookupEntityTypeList": {
+            "type": "multiEnum",
+            "tooltip": true,
+            "view": "views/settings/fields/email-address-lookup-entity-type-list"
+        },
         "smtpServer": {
             "type": "varchar",
             "tooltip": true
