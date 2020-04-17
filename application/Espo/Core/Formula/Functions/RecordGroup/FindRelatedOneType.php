@@ -121,7 +121,7 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
         if (count($item->value) <= 6) {
             $filter = null;
             if (count($item->value) == 6) {
-                $filter = $this->evaluate($item->value[3]);
+                $filter = $this->evaluate($item->value[5]);
             }
             if ($filter) {
                 if (!is_string($filter)) throw new Error("Formula record\\findRelatedOne: Bad filter.");

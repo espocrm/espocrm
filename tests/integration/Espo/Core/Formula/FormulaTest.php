@@ -296,6 +296,10 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $result = $fm->run($script);
         $this->assertEquals($m4->id, $result);
 
+        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'held')";
+        $result = $fm->run($script);
+        $this->assertEquals($m3->id, $result);
+
         $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'status', 'Held')";
         $result = $fm->run($script);
         $this->assertEquals($m3->id, $result);
