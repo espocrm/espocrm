@@ -334,6 +334,59 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals($a->id, $result);
     }
 
+    public function testRecordFindRelatedMany()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getContainer()->get('entityManager');
+
+        $a = $em->createEntity('Account', []);
+
+        $o1 = $em->createEntity('Opportunity', [
+            'accountId' => $a->id,
+            'stage' => 'Prospecting',
+            'name' => '1',
+        ]);
+        $o2 = $em->createEntity('Opportunity', [
+            'accountId' => $a->id,
+            'stage' => 'Closed Won',
+            'name' => '2',
+        ]);
+        $o3 = $em->createEntity('Opportunity', [
+            'accountId' => $a->id,
+            'stage' => 'Prospecting',
+            'name' => '3',
+        ]);
+
+        $ow1 = $em->createEntity('Opportunity', []);
+
+
+        $script = "record\\findRelatedMany('Account', '".$a->id."', 'opportunities', 2, null, null, 'open')";
+        $result = $fm->run($script);
+        $this->assertIsArray($result);
+        $this->assertEquals(2, count($result));
+        $this->assertEquals(true, in_array($o1->id, $result));
+        $this->assertEquals(true, in_array($o3->id, $result));
+
+        $script = "record\\findRelatedMany('Account', '".$a->id."', 'opportunities', 3)";
+        $result = $fm->run($script);
+        $this->assertIsArray($result);
+        $this->assertEquals(3, count($result));
+        $this->assertEquals(true, in_array($o1->id, $result));
+        $this->assertEquals(true, in_array($o2->id, $result));
+
+
+        $script = "record\\findRelatedMany('Account', '".$a->id."', 'opportunities', 3, 'name', 'asc')";
+        $result = $fm->run($script);
+        $this->assertIsArray($result);
+        $this->assertEquals(3, count($result));
+        $this->assertEquals([$o1->id, $o2->id, $o3->id], $result);
+
+        $script = "record\\findRelatedMany('Account', '".$a->id."', 'opportunities', 3, 'name', 'asc', 'stage=', 'Prospecting')";
+        $result = $fm->run($script);
+        $this->assertIsArray($result);
+        $this->assertEquals([$o1->id, $o3->id], $result);
+    }
+
     public function testRecordAttribute()
     {
         $fm = $this->getContainer()->get('formulaManager');
