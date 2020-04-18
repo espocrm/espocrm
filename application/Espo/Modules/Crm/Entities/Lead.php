@@ -43,7 +43,7 @@ class Lead extends \Espo\Core\Entities\Person
                 return $this->get('phoneNumber');
             }
         }
-        return $this->valuesContainer['name'];
+        return $this->valuesContainer['name'] ?? null;
     }
 
     protected function _hasName()
