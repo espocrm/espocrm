@@ -37,7 +37,9 @@
                 </td>
                 {{#each columns}}
                 <td>
-                    <input type="radio" name="{{../name}}" value="{{id}}" data-id="{{id}}" class="pull-right field-radio">
+                    {{#unless isReadOnly}}
+                    <input type="radio" name="{{../../name}}" value="{{../id}}" data-id="{{../id}}" class="pull-right field-radio">
+                    {{/unless}}
                 </td>
                 <td data-id="{{id}}">
                     <div class="field" data-name="{{../name}}">

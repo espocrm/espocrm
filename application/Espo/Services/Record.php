@@ -2218,22 +2218,22 @@ class Record extends \Espo\Core\Services\Base
             throw new NotFound();
         }
         if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
+            throw new Forbidden("Merge: No edit access.");
         }
 
         $this->filterInput($attributes);
 
         $entity->set($attributes);
         if (!$this->checkAssignment($entity)) {
-            throw new Forbidden();
+            throw new Forbidden("Merge: Assignment permission restriction.");
         }
 
-        $sourceList = array();
+        $sourceList = [];
         foreach ($sourceIdList as $sourceId) {
             $source = $this->getEntity($sourceId);
             $sourceList[] = $source;
             if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
-                throw new Forbidden();
+                throw new Forbidden("Merge: No edit or delete access.");
             }
         }
 

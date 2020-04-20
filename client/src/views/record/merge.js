@@ -46,17 +46,19 @@ define('views/record/merge', 'view', function (Dep) {
                     o.columns.push({
                         id: m.id,
                         fieldVariable: m.id + '-' + field,
+                        isReadOnly: this.readOnlyFields[field] || false,
                     });
-                });
+                }, this);
                 rows.push(o);
-            }.bind(this));
+            }, this);
+
             return {
                 rows: rows,
                 modelList: this.models,
                 scope: this.scope,
                 hasCreatedAt: this.hasCreatedAt,
                 width: Math.round(((80 - this.models.length * 5) / this.models.length * 10)) / 10,
-                dataList: this.getDataList()
+                dataList: this.getDataList(),
             };
         },
 
@@ -140,13 +142,16 @@ define('views/record/merge', 'view', function (Dep) {
             var differentFieldList = [];
             var fieldsDefs = this.models[0].defs.fields;
 
+            this.readOnlyFields = {};
+
             for (var field in fieldsDefs) {
                 var type = fieldsDefs[field].type;
                 if (type === 'linkMultiple') continue;
                 if (fieldsDefs[field].disabled) continue
                 if (fieldsDefs[field].mergeDisabled) continue
+                if (field === 'createdAt' || field === 'modifiedAt') continue;
 
-                if (fieldManager.isMergeable(type) && !this.models[0].isFieldReadOnly(field)) {
+                if (fieldManager.isMergeable(type)) {
                     var actualAttributeList = fieldManager.getActualAttributeList(type, field);
 
                     var differs = false;
@@ -164,9 +169,23 @@ define('views/record/merge', 'view', function (Dep) {
                     }.bind(this));
                     if (differs) {
                         differentFieldList.push(field);
+
+                        if (this.models[0].isFieldReadOnly(field)) {
+                            this.readOnlyFields[field] = true;
+                        }
                     }
                 }
             }
+
+            differentFieldList.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
+            }.bind(this));
+
+            differentFieldList = differentFieldList.sort(function (v1, v2) {
+                if (!this.readOnlyFields[v1] && this.readOnlyFields[v2]) return -1;
+                return 1;
+            }.bind(this));
+
             this.fields = differentFieldList;
 
             this.fields.forEach(function (field) {
