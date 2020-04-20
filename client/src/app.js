@@ -681,12 +681,18 @@ define(
                         } else {
                             var msg = self.language.translate('Error') + ' ' + xhr.status;
                             msg += ': ' + self.language.translate('Access denied');
+                            if (statusReason) {
+                                msg += ': ' + statusReason;
+                            }
                             Espo.Ui.error(msg);
                         }
                         break;
                     case 400:
                         var msg = self.language.translate('Error') + ' ' + xhr.status;
                         msg += ': ' + self.language.translate('Bad request');
+                        if (statusReason) {
+                            msg += ': ' + statusReason;
+                        }
                         Espo.Ui.error(msg);
                         break;
                     case 404:
