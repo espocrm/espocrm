@@ -29,18 +29,18 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Conflict;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\NotFoundSilent;
-use \Espo\Core\Exceptions\ForbiddenSilent;
-use \Espo\Core\Exceptions\ConflictSilent;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\ConflictSilent;
 
-use \Espo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 class Record extends \Espo\Core\Services\Base
 {
@@ -309,7 +309,7 @@ class Record extends \Espo\Core\Services\Base
     public function read($id)
     {
         if (empty($id)) {
-            throw new Error();
+            throw new Error("No ID passed.");
         }
         $entity = $this->getEntity($id);
 
@@ -334,7 +334,7 @@ class Record extends \Espo\Core\Services\Base
 
         if ($entity && !is_null($id)) {
             $this->loadAdditionalFields($entity);
-            if (!$this->getAcl()->check($entity, 'read')) throw new ForbiddenSilent();
+            if (!$this->getAcl()->check($entity, 'read')) throw new ForbiddenSilent("No read access.");
             $this->prepareEntityForOutput($entity);
         }
 
@@ -910,7 +910,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function create($data)
     {
-        if (!$this->getAcl()->check($this->getEntityType(), 'create')) throw new ForbiddenSilent();
+        if (!$this->getAcl()->check($this->getEntityType(), 'create'))
+            throw new ForbiddenSilent("No create access.");
 
         $entity = $this->getRepository()->get();
 
@@ -930,7 +931,7 @@ class Record extends \Espo\Core\Services\Base
 
         $this->populateDefaults($entity, $data);
 
-        if (!$this->getAcl()->check($entity, 'create')) throw new ForbiddenSilent();
+        if (!$this->getAcl()->check($entity, 'create')) throw new ForbiddenSilent("No create access.");
 
         $this->processValidation($entity, $data);
 
@@ -961,7 +962,7 @@ class Record extends \Espo\Core\Services\Base
     {
         unset($data->deleted);
 
-        if (empty($id)) throw new BadRequest();
+        if (empty($id)) throw new BadRequest("No ID passed.");
 
         $this->filterInput($data);
         $this->filterUpdateInput($data);
@@ -981,9 +982,9 @@ class Record extends \Espo\Core\Services\Base
             $entity = $this->getRepository()->get($id);
         }
 
-        if (!$entity) throw new NotFound();
+        if (!$entity) throw new NotFound("Record not found.");
 
-        if (!$this->getAcl()->check($entity, 'edit')) throw new ForbiddenSilent();
+        if (!$this->getAcl()->check($entity, 'edit')) throw new ForbiddenSilent("No edit access.");
 
         $entity->set($data);
 
@@ -1046,13 +1047,13 @@ class Record extends \Espo\Core\Services\Base
 
     public function delete($id)
     {
-        if (empty($id)) throw new BadRequest();
+        if (empty($id)) throw new BadRequest("No ID passed.");
 
         $entity = $this->getRepository()->get($id);
 
-        if (!$entity) throw new NotFound();
+        if (!$entity) throw new NotFound("Record not found.");
 
-        if (!$this->getAcl()->check($entity, 'delete')) throw new ForbiddenSilent();
+        if (!$this->getAcl()->check($entity, 'delete')) throw new ForbiddenSilent("No delete access.");
 
         $this->beforeDeleteEntity($entity);
 
@@ -2204,10 +2205,10 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function merge($id, array $sourceIdList = array(), $attributes)
+    public function merge($id, array $sourceIdList = [], $attributes)
     {
         if (empty($id)) {
-            throw new Error();
+            throw new Error("No ID passed.");
         }
 
         $repository = $this->getRepository();
@@ -2215,17 +2216,17 @@ class Record extends \Espo\Core\Services\Base
         $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
 
         if (!$entity) {
-            throw new NotFound();
+            throw new NotFound("Record not found.");
         }
         if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden("Merge: No edit access.");
+            throw new Forbidden("No edit access.");
         }
 
         $this->filterInput($attributes);
 
         $entity->set($attributes);
         if (!$this->checkAssignment($entity)) {
-            throw new Forbidden("Merge: Assignment permission restriction.");
+            throw new Forbidden("Assignment permission failure.");
         }
 
         $sourceList = [];
@@ -2233,7 +2234,7 @@ class Record extends \Espo\Core\Services\Base
             $source = $this->getEntity($sourceId);
             $sourceList[] = $source;
             if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
-                throw new Forbidden("Merge: No edit or delete access.");
+                throw new Forbidden("No edit or delete access.");
             }
         }
 
@@ -2396,13 +2397,13 @@ class Record extends \Espo\Core\Services\Base
     public function getDuplicateAttributes($id)
     {
         if (empty($id)) {
-            throw new BadRequest();
+            throw new BadRequest("No ID passed.");
         }
 
         $entity = $this->getEntity($id);
 
         if (!$entity) {
-            throw new NotFound();
+            throw new NotFound("Record not found.");
         }
 
         $attributes = $entity->getValueMap();
@@ -2539,26 +2540,26 @@ class Record extends \Espo\Core\Services\Base
 
     public function massConvertCurrency($params, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
     {
-        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden("No mass-update permission.");
 
-        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden();
+        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden("No edit access.");
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
 
         $allFields = !$fieldList;
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
 
         if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
-            throw new Error("Convert currency: targetCurrency rate is not specified.");
+            throw new Error("targetCurrency rate is not specified.");
 
         foreach ($fieldList as $i => $field) {
             if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
             if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency')
-                throw new Error("Can't convert not currency field.");
+                throw new Error("Can't convert field not of currency type.");
         }
 
         $fieldList = array_values($fieldList);
 
-        if (empty($fieldList)) throw new Forbidden();
+        if (empty($fieldList)) throw new Forbidden("No fields to convert.");
 
         $count = 0;
 
@@ -2591,7 +2592,7 @@ class Record extends \Espo\Core\Services\Base
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
 
         if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
-            throw new Error("Convert currency: targetCurrency rate is not specified.");
+            throw new Error("targetCurrency rate is not specified.");
 
         foreach ($fieldList as $i => $field) {
             if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
@@ -2601,7 +2602,7 @@ class Record extends \Espo\Core\Services\Base
 
         $fieldList = array_values($fieldList);
 
-        if (empty($fieldList)) throw new Forbidden();
+        if (empty($fieldList)) throw new Forbidden("No fields to convert.");
 
         $entity = $this->getEntity($id);
 
