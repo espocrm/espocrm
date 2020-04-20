@@ -170,6 +170,7 @@
         "accountIsInactive": {
             "type": "bool",
             "notStorable": true,
+            "mergeDisabled": true,
             "select": {
                 "sql": "accountContact.is_inactive",
                 "leftJoins": [
