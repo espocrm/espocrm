@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\ArrayGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
 class AtType extends \Espo\Core\Formula\Functions\Base
 {
@@ -45,7 +45,7 @@ class AtType extends \Espo\Core\Formula\Functions\Base
         if (!is_int($index)) throw new Error("Formula: array\\at: Second argument must be integer.");
 
         if (!array_key_exists($index, $array)) {
-            $GLOBALS['log']->notics("Formula: array\\at: Index doesn't exist.");
+            $GLOBALS['log']->notice("Formula: array\\at: Index doesn't exist.");
             return null;
         }
 
