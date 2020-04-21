@@ -28,6 +28,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Definerer hvornår og hvor ofte et cronjob kører.\n\n*/5 * * * * - hver 5 minutter\n\n0 */2 * * * - hver 2 timer\n\n30 1 * * * - kl. 01:30 en gang om dagen\n\n0 0 1 * * - den første dag i måneden"
+    "scheduling": "Definerer hvornår og hvor ofte et cronjob kører.\n\n`*/5 * * * *` - hver 5 minutter\n\n`0 */2 * * *` - hver 2 timer\n\n`30 1 * * *` - kl. 01:30 en gang om dagen\n\n`0 0 1 * *` - den første dag i måneden"
   }
 }
