@@ -30,6 +30,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Notazione di Crontab. Definisce la frequenza delle esecuzioni dei lavori.\n\n* / 5 * * * * - ogni 5 minuti\n\n0 * / 2 * * * - ogni 2 ore\n\n30 1 * * * - alle 01:30 una volta al giorno\n\n0 0 1 * * - il primo giorno del mese"
+    "scheduling": "Notazione di Crontab. Definisce la frequenza delle esecuzioni dei lavori.\n\n`* /5 * * * *` - ogni 5 minuti\n\n`0 * /2 * * *` - ogni 2 ore\n\n`30 1 * * *` - alle 01:30 una volta al giorno\n\n`0 0 1 * *` - il primo giorno del mese"
   }
 }
