@@ -268,7 +268,7 @@ class Email extends Record
             }
         }
 
-        $message = new \Zend\Mail\Message();
+        $message = new \Laminas\Mail\Message();
 
         $this->validateEmailAddresses($entity);
 

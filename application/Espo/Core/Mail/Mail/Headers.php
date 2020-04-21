@@ -40,9 +40,9 @@ use ArrayIterator;
 use Countable;
 use Iterator;
 use Traversable;
-use Zend\Loader\PluginClassLocator;
+use Laminas\Loader\PluginClassLocator;
 
-class Headers extends \Zend\Mail\Headers
+class Headers extends \Laminas\Mail\Headers
 {
 
 }

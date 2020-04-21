@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Mail;
 
-use \Zend\Mime\Mime as Mime;
+use Laminas\Mime\Mime as Mime;
 
 use \Espo\ORM\Entity;
 use \Espo\ORM\Email;
@@ -72,7 +72,15 @@ class Importer
         return $this->notificator;
     }
 
-    public function importMessage($parserType = 'ZendMail', $message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null)
+    public function importMessage(
+        string $parserType,
+        $message,
+        $assignedUserId = null,
+        $teamsIdList = [],
+        $userIdList = [],
+        $filterList = [],
+        $fetchOnlyHeader = false,
+        $folderData = null)
     {
         $parser = $message->getParser();
         $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserType;

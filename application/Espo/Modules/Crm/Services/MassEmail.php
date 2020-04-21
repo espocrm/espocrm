@@ -38,7 +38,7 @@ use Espo\ORM\Entity;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Core\Mail\Sender;
-use Zend\Mail\Message;
+use Laminas\Mail\Message;
 
 class MassEmail extends \Espo\Services\Record
 {

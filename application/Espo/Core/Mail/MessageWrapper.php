@@ -43,7 +43,7 @@ class MessageWrapper
 
     private $zendMessage = null;
 
-    protected $zendMessageClass = '\Zend\Mail\Storage\Message';
+    protected $zendMessageClass = '\Laminas\Mail\Storage\Message';
 
     protected $fullRawContent = null;
 

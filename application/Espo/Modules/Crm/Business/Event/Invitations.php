@@ -161,7 +161,7 @@ class Invitations
             'contents' => $this->getIscContents($entity),
         ]);
 
-        $message = new \Zend\Mail\Message();
+        $message = new \Laminas\Mail\Message();
 
         $emailSender = $this->mailSender;
 

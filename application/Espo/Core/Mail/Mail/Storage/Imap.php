@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Mail\Mail\Storage;
 
-class Imap extends \Zend\Mail\Storage\Imap
+class Imap extends \Laminas\Mail\Storage\Imap
 {
     public function getIdsFromUID($uid)
     {

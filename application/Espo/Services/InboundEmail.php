@@ -31,7 +31,7 @@ namespace Espo\Services;
 
 use Espo\ORM\Entity;
 use Espo\Entities\Team;
-use Zend\Mail\Storage;
+use Laminas\Mail\Storage;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;

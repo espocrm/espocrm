@@ -32,18 +32,11 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Espo\Core\Mail\Mail\Header;
 
-use \Zend\Mail\Header;
-use Zend\Mime\Mime;
+use Laminas\Mail\Header;
+use Laminas\Mime\Mime;
 
 class XQueueItemId implements Header\HeaderInterface
 {

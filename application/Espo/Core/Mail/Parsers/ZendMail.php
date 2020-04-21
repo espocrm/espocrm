@@ -283,7 +283,7 @@ class ZendMail
 
     protected function getContentFromPart($part)
     {
-        if ($part instanceof \Zend\Mime\Part) {
+        if ($part instanceof \Laminas\Mime\Part) {
             $content = $part->getRawContent();
             if (strtolower($part->charset) != 'utf-8') {
                 $content = mb_convert_encoding($content, 'UTF-8', $part->charset);

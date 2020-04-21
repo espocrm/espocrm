@@ -30,13 +30,13 @@
 namespace Espo\Core\Mail\Mail\Storage;
 
 use Espo\Core\Mail\Mail\Headers;
-use Zend\Mail\Header\HeaderInterface;
-use Zend\Mime;
-use Zend\Mail\Storage\Exception;
-use Zend\Mail\Storage\AbstractStorage;
-use Zend\Stdlib\ErrorHandler;
+use Laminas\Mail\Header\HeaderInterface;
+use Laminas\Mime;
+use Laminas\Mail\Storage\Exception;
+use Laminas\Mail\Storage\AbstractStorage;
+use Laminas\Stdlib\ErrorHandler;
 
-class Message extends \Zend\Mail\Storage\Message
+class Message extends \Laminas\Mail\Storage\Message
 {
     public function __construct(array $params)
     {
@@ -79,7 +79,7 @@ class Message extends \Zend\Mail\Storage\Message
                 $this->headers = new Headers();
                 $this->headers->addHeaders($params['headers']);
             } else {
-                if ($params['headers'] instanceof \Zend\Mail\Headers) {
+                if ($params['headers'] instanceof \Laminas\Mail\Headers) {
                     $this->headers = $params['headers'];
                 } else {
                     if (empty($params['noToplines'])) {
@@ -160,4 +160,3 @@ class Message extends \Zend\Mail\Storage\Message
         $headers = Headers::fromString($headers, $EOL);
     }
 }
-

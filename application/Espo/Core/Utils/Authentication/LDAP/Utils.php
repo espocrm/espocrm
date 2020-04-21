@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Authentication\LDAP;
+
 use \Espo\Core\Utils\Config;
 
 class Utils
@@ -95,7 +96,7 @@ class Utils
     );
 
     /**
-     * accountCanonicalForm Map between Espo and Zend value
+     * accountCanonicalForm Map between Espo and Laminas value
      *
      * @var array
      */
@@ -181,7 +182,7 @@ class Utils
     }
 
     /**
-     * Get Zend options for using Zend\Ldap
+     * Get Laminas options for using Laminas\Ldap
      *
      * @return array
      */

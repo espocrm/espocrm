@@ -31,14 +31,14 @@ namespace Espo\Core\Mail;
 
 use Espo\Entities\Email;
 
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
-use Zend\Mime\Mime as Mime;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Part as MimePart;
+use Laminas\Mime\Mime as Mime;
 
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
-use Zend\Mail\Transport\SmtpOptions;
-use Zend\Mail\Transport\Envelope;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\Smtp as SmtpTransport;
+use Laminas\Mail\Transport\SmtpOptions;
+use Laminas\Mail\Transport\Envelope;
 
 use Espo\Core\Exceptions\Error;
 
@@ -271,7 +271,7 @@ class Sender
         }
         $email->set('fromString', $fromString);
 
-        $sender = new \Zend\Mail\Header\Sender();
+        $sender = new \Laminas\Mail\Header\Sender();
         $sender->setAddress($email->get('from'));
         $message->getHeaders()->addHeader($sender);
 
@@ -428,7 +428,7 @@ class Sender
             $message->getHeaders()->addHeaderLine('Content-Type', 'text/plain; charset=UTF-8');
         } else {
             if (!$message->getHeaders()->has('content-type')) {
-                $contentTypeHeader = new \Zend\Mail\Header\ContentType();
+                $contentTypeHeader = new \Laminas\Mail\Header\ContentType();
                 $message->getHeaders()->addHeader($contentTypeHeader);
             }
             $message->getHeaders()->get('content-type')->setType($messageType);
@@ -448,7 +448,7 @@ class Sender
                 $messageId = substr($messageId, 1, strlen($messageId) - 2);
             }
 
-            $messageIdHeader = new \Zend\Mail\Header\MessageId();
+            $messageIdHeader = new \Laminas\Mail\Header\MessageId();
             $messageIdHeader->setId($messageId);
             $message->getHeaders()->addHeader($messageIdHeader);
 
