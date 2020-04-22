@@ -240,8 +240,8 @@ class Preferences extends \Espo\Core\ORM\Repository
     {
         if (!$entity->id) return;
         $this->deleteFromDb($entity->id);
-        if (isset($this->data[$userId])) {
-            unset($this->data[$userId]);
+        if (isset($this->data[$entity->id])) {
+            unset($this->data[$entity->id]);
         }
     }
 
