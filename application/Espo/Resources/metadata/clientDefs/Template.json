@@ -6,6 +6,16 @@
     },
     "dynamicLogic": {
         "fields": {
+            "entityType": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+                }
+            },
             "footer": {
                 "visible": {
                     "conditionGroup": [
