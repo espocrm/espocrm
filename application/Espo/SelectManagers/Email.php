@@ -52,7 +52,7 @@ class Email extends \Espo\Core\SelectManagers\Base
 
         $textFilter = $params['textFilter'] ?? null;
 
-        if (!$textFilter && !empty($result['orderBy']) && $result['orderBy'] === 'dateSent') {
+        if (!$textFilter && $this->hasInOrderBy('dateSent', $params)) {
             $skipIndex = false;
             if (isset($params['where'])) {
                 foreach ($params['where'] as $item) {

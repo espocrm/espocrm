@@ -2717,4 +2717,27 @@ class Base
 
         return $attributeList;
     }
+
+    protected function hasInOrderBy(string $attribute, array &$result)
+    {
+        $orderBy = $result['orderBy'] ?? null;
+
+        if (!$orderBy) return false;
+
+        if (is_string($orderBy)) {
+            return $attribute === $orderBy;
+        }
+
+        if (is_array($orderBy)) {
+            foreach ($orderBy as $item) {
+                if (is_array($item) && count($item)) {
+                    if ($item[0] === $attribute) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
