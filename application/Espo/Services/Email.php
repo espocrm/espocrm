@@ -180,7 +180,7 @@ class Email extends Record
         if ($user && in_array($fromAddress, $userAddressList)) {
             $primaryUserAddress = strtolower($user->get('emailAddress'));
             if ($primaryUserAddress === $fromAddress) {
-                $preferences = $this->getEntityManager()->get('Preferences', $user->id);
+                $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
                 if ($preferences) {
                     $smtpParams = $preferences->getSmtpParams();
                     if ($smtpParams) {
