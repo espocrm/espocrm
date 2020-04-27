@@ -32,7 +32,9 @@ Espo.define('views/site-portal/header', 'views/site/header', function (Dep) {
 
         template: 'site/header',
 
-        navbarView: 'views/site-portal/navbar'
+        navbarView: 'views/site-portal/navbar',
+
+        customViewPath: ['clientDefs', 'App', 'portalNavbarView'],
 
     });
 

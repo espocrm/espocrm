@@ -40,8 +40,10 @@ define('views/site/header', 'view', function (Dep) {
 
         navbarView: 'views/site/navbar',
 
+        customViewPath: ['clientDefs', 'App', 'navbarView'],
+
         setup: function () {
-            var navbarView = this.getMetadata().get(['clientDefs', 'App', 'navbarView']) || this.navbarView;
+            var navbarView = this.getMetadata().get(this.customViewPath) || this.navbarView;
 
             this.createView('navbar', navbarView, {el: '#navbar', title: this.title});
         },
