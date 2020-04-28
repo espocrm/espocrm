@@ -86,7 +86,7 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
             $length1 = $column1->getLength() ?: 16777215/* mediumtext length*/;
             $length2 = $column2->getLength() ?: 16777215;
 
-            if ($length2 > $length1) {
+            if ($length1 != -1 && $length2 != -1 && $length2 > $length1) {
                 $changedProperties[] = 'length';
             }
         }
