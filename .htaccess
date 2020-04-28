@@ -20,5 +20,5 @@ DirectoryIndex index.php index.html
 
   RewriteRule .* - [E=HTTP_ESPO_CGI_AUTH:%{HTTP:Authorization}]
 
-  RewriteRule reset/?$ reset.html [QSA,L]
+  RewriteRule /?web\.config - [F]
 </IfModule>
