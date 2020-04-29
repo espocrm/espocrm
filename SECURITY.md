@@ -6,4 +6,4 @@ If you believe you have discovered a vulnerability in EspoCRM please contacts us
 
 ## Supported versions
 
-For severe vulnerabilities we provide fixes for 5 minor versions (the second number in the version string) back from the current stable version.
+For severe vulnerabilities we provide fixes for 2 minor versions (the second number in the version string) back from the current stable version. Separate patches or manual fix guidelines will be provided for more old versions.
