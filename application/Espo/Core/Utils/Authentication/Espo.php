@@ -53,6 +53,12 @@ class Espo extends Base
             ]
         ]);
 
+        if ($user && $authToken) {
+            if ($user->id !== $authToken->get('userId')) {
+                return null;
+            }
+        }
+
         return $user;
     }
 }
