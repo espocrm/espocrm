@@ -261,6 +261,8 @@ class Upgrade extends Base
 
         try {
             foreach ($stepList as $stepName) {
+                fwrite(\STDOUT, ".");
+
                 $upgradeManager = $this->getUpgradeManager(true);
                 $upgradeManager->runInstallStep($stepName, ['id' => $upgradeId]);
             }
@@ -277,8 +279,9 @@ class Upgrade extends Base
         $phpExecutablePath = $this->getPhpExecutablePath();
 
         foreach ($stepList as $stepName) {
-            $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) ." --id=". $upgradeId;
+            fwrite(\STDOUT, ".");
 
+            $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) ." --id=". $upgradeId;
             $shellResult = shell_exec($command);
             if ($shellResult !== 'true') {
                 $GLOBALS['log']->error('Upgrade Error: ' . $shellResult);
