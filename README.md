@@ -1,21 +1,21 @@
 ## EspoCRM
 
-<a href='https://www.espocrm.com'>EspoCRM is an Open Source CRM</a> (Customer Relationship Management) software that allows you to see, enter and evaluate all your company relationships regardless of the type. People, companies or opportunities - all in an easy and intuitive interface.
+[EspoCRM is an Open Source CRM](https://www.espocrm.com) (Customer Relationship Management) software that allows you to see, enter and evaluate all your company relationships regardless of the type. People, companies or opportunities - all in an easy and intuitive interface.
 
-It's a web application with a frontend designed as a single page application based on backbone.js and a REST API backend written in PHP.
+It's a web application with a frontend designed as a single page application and REST API backend written in PHP.
 
-Download the latest release from our [website](https://www.espocrm.com).
+[Download](https://www.espocrm.com/download/) the latest release from our website.
 
 ### Requirements
 
 * PHP 7.2 and later (with pdo, json, gd, openssl, zip, imap, mbstring, curl extensions);
 * MySQL 5.7 (and later), or MariaDB 10.1 (and later).
 
-For more information about server configuration see [this article](https://www.espocrm.com/documentation/administration/server-configuration/).
+For more information about server configuration see [this article](https://docs.espocrm.com/administration/server-configuration/).
 
 ### Documentation
 
-Documentation for administrators, users and developers is available [here](https://www.espocrm.com/documentation/).
+Documentation for administrators, users and developers is available [here](https://docs.espocrm.com).
 
 ### How to report a bug
 
@@ -23,13 +23,13 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 
 ### How to install a stable version
 
-[Download](https://www.espocrm.com/download/) the latest version. See the [instructions](https://www.espocrm.com/documentation/administration/installation/) about installation.
+[Download](https://www.espocrm.com/download/) the latest version. See the [instructions](https://docs.espocrm.com/administration/installation/) about installation.
 
 ### Development
 
-* [Getting started](https://github.com/espocrm/documentation/blob/master/development/how-to-start.md)
-* [Running tests](https://github.com/espocrm/documentation/blob/master/development/tests.md)
-* [Making translation](https://github.com/espocrm/documentation/blob/master/development/translation.md)
+* [Getting started](https://docs.espocrm.com/development/how-to-start)
+* [Running tests](https://docs.espocrm.com/development/tests)
+* [Making translation](https://docs.espocrm.com/development/translation)
 
 ### How to contribute
 
