@@ -29,12 +29,17 @@
 
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-class JsonObjectType extends TextType
-{
-    const JSON_OBJECT = 'jsonObject';
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-    public function getName()
+class TextType extends \Doctrine\DBAL\Types\TextType
+{
+    public static function getDbTypeName()
     {
-        return self::JSON_OBJECT;
+        return 'mediumtext';
+    }
+
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    {
+        return 'MEDIUMTEXT';
     }
 }

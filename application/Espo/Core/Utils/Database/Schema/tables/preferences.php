@@ -46,8 +46,7 @@ return [
                 'type' => 'id',
             ],
             'data' => [
-                'type' => 'text',
-                'len' => 16777216,
+                'type' => 'text'
             ]
         ]
     ],
