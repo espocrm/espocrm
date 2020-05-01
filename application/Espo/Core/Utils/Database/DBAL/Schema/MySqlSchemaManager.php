@@ -209,7 +209,7 @@ class MySqlSchemaManager extends \Doctrine\DBAL\Schema\MySqlSchemaManager
             case 'text':
             case 'mediumtext':
             case 'longtext':
-                $length = $this->_platform->getClobTypeLength($dbType);
+                $length = null;
                 break;
             /* Espo: end */
         }

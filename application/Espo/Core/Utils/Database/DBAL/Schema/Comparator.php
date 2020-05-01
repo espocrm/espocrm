@@ -39,6 +39,7 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
     public function diffColumn(Column $column1, Column $column2)
     {
         $changedProperties = array();
+
         if ( $column1->getType() != $column2->getType() ) {
 
             //espo: fix problem with executing query for custom types
@@ -82,15 +83,6 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
             }
         }
 
-        if ($column1->getType() instanceof \Doctrine\DBAL\Types\TextType) {
-            $length1 = $column1->getLength() ?: 16777215/* mediumtext length*/;
-            $length2 = $column2->getLength() ?: 16777215;
-
-            if ($length1 != -1 && $length2 != -1 && $length2 > $length1) {
-                $changedProperties[] = 'length';
-            }
-        }
-
         if ($column1->getType() instanceof \Doctrine\DBAL\Types\DecimalType) {
             if (($column1->getPrecision()?:10) != ($column2->getPrecision()?:10)) {
                 $changedProperties[] = 'precision';
@@ -124,7 +116,7 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
 
         $changedProperties = array_merge($changedProperties, $diffKeys);
 
-        /** Espo: do not change a field length while changing other parameters */
+        /** Espo: do not change a field length downwards */
         if (!empty($changedProperties) && !in_array('length', $changedProperties) && $column1->getType() instanceof \Doctrine\DBAL\Types\StringType) {
             $length1 = $column1->getLength() ?: 255;
             $length2 = $column2->getLength() ?: 255;
@@ -132,6 +124,15 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
             if ($length1 > $length2) {
                 $changedProperties[] = 'length';
                 $column2->setLength($length1);
+            }
+        }
+
+        if (in_array('type', $changedProperties) && $column1->getType() instanceof \Doctrine\DBAL\Types\TextType && isset($column1DbTypeName) && isset($column2DbTypeName)) {
+            $constName1 = '\Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform::LENGTH_LIMIT_' . strtoupper($column1DbTypeName);
+            $constName2 = '\Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform::LENGTH_LIMIT_' . strtoupper($column2DbTypeName);
+
+            if (defined($constName1) && defined($constName2) && constant($constName1) >= constant($constName2)) {
+                $changedProperties = array_diff($changedProperties, ['type']);
             }
         }
         /** Espo: end */
