@@ -122,6 +122,28 @@ class Phone extends Base
                         'type' => 'bool',
                         'notStorable' => true,
                         'select' => 'phoneNumbers.opt_out',
+                        'selectForeign' => [
+                            'sql' => "{$foreignJoinAlias}.opt_out",
+                            'leftJoins' => [
+                                [
+                                    'EntityPhoneNumber',
+                                    $foreignJoinMiddleAlias,
+                                    [
+                                        "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
+                                        "{$foreignJoinMiddleAlias}.primary" => 1,
+                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
+                                    ]
+                                ],
+                                [
+                                    'PhoneNumber',
+                                    $foreignJoinAlias,
+                                    [
+                                        "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
+                                        "{$foreignJoinAlias}.deleted" => 0,
+                                    ]
+                                ]
+                            ],
+                        ],
                         'where' => [
                             '= TRUE' => [
                                 'sql' => 'phoneNumbers.opt_out = true AND phoneNumbers.opt_out IS NOT NULL',

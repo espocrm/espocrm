@@ -121,6 +121,28 @@ class Email extends Base
                         'type' => 'bool',
                         'notStorable' => true,
                         'select' => 'emailAddresses.opt_out',
+                        'selectForeign' => [
+                            'sql' => "{$foreignJoinAlias}.opt_out",
+                            'leftJoins' => [
+                                [
+                                    'EntityEmailAddress',
+                                    $foreignJoinMiddleAlias,
+                                    [
+                                        "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
+                                        "{$foreignJoinMiddleAlias}.primary" => 1,
+                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
+                                    ]
+                                ],
+                                [
+                                    'EmailAddress',
+                                    $foreignJoinAlias,
+                                    [
+                                        "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
+                                        "{$foreignJoinAlias}.deleted" => 0,
+                                    ]
+                                ]
+                            ],
+                        ],
                         'where' => [
                             '= TRUE' => [
                                 'sql' => 'emailAddresses.opt_out = true AND emailAddresses.opt_out IS NOT NULL',

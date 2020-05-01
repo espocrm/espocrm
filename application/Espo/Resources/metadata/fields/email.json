@@ -24,7 +24,6 @@
          "layoutDetailDisabled": true,
          "layoutDefaultSidePanelDisabled": true,
          "mergeDisabled": true,
-         "foreignAccessDisabled": true,
          "customizationDefaultDisabled": true,
          "customizationReadOnlyDisabled": true
       }

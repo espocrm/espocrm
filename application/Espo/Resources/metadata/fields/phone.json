@@ -34,7 +34,6 @@
          "notStorable": true,
          "layoutDetailDisabled": true,
          "layoutDefaultSidePanelDisabled": true,
-         "foreignAccessDisabled": true,
          "mergeDisabled": true,
          "customizationDefaultDisabled": true,
          "customizationReadOnlyDisabled": true
