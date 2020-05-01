@@ -645,7 +645,7 @@ class Record extends \Espo\Core\Services\Base
 
         if ($toProcess) {
             if (empty($userIdList)) {
-                if ($assignmentPermission == 'no') {
+                if ($assignmentPermission == 'no' && !$this->getUser()->isApi()) {
                     return false;
                 }
                 return true;
