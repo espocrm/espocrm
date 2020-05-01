@@ -13,6 +13,21 @@
         "edit": false,
         "editSmall": false
     },
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "labelTranslation": "Global.scopeNamesPlural.EmailQueueItem",
+                    "link": "#EmailQueueItem",
+                    "accessDataList": [
+                        {
+                            "isAdminOnly": true
+                        }
+                    ]
+                }
+            ]
+        }
+    },
     "dynamicLogic": {
         "fields": {
             "status": {
