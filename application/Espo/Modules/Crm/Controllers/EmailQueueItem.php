@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Exceptions\Forbidden;
+
 class EmailQueueItem extends \Espo\Core\Controllers\Record
 {
     protected function checkControllerAccess()
