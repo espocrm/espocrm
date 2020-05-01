@@ -33,7 +33,8 @@
             "tooltip": true
         },
         "parent": {
-            "type": "linkParent"
+            "type": "linkParent",
+            "view": "views/email-filter/fields/parent"
         },
         "action": {
             "type": "enum",
