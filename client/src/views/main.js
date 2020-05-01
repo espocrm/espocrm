@@ -104,6 +104,12 @@ define('views/main', 'view', function (Dep) {
                         if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) return;
                         if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) return;
 
+                        if (item.accessDataList) {
+                            if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                                return;
+                            }
+                        }
+
                         item.name = item.name || item.action;
                         item.action = item.action || this.name;
 
