@@ -318,6 +318,15 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
                         attributes.parentType = 'Account',
                         attributes.parentId = this.model.get('accountId');
                         attributes.parentName = this.model.get('accountName');
+                        if (
+                            scope &&
+                            !this.getMetadata().get(['entityDefs', scope, 'links', 'contacts']) &&
+                            !this.getMetadata().get(['entityDefs', scope, 'links', 'contact'])
+                        ) {
+                            delete attributes.parentType;
+                            delete attributes.parentId;
+                            delete attributes.parentName;
+                        }
                     }
                 } else if (this.model.name == 'Lead') {
                     attributes.parentType = 'Lead',
