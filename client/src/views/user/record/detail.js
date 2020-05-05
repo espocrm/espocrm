@@ -208,7 +208,11 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 }
             }
 
-            if (!this.getConfig().get('auth2FA')) {
+            if (
+                !this.getConfig().get('auth2FA')
+                ||
+                !(this.model.isRegular() || this.model.isAdmin())
+            ) {
                 this.hideField('auth2FA');
             }
         },
