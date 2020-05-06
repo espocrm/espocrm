@@ -103,6 +103,7 @@ define('views/header', 'view', function (Dep) {
                                 isInitialized = true;
                                 Espo.Ui.popover($el, {
                                     content: text,
+                                    noToggleInit: true,
                                 }, this);
                             }
                             $el.popover('toggle');

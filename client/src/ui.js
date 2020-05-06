@@ -429,6 +429,12 @@ define('ui', [], function () {
                 }
             });
 
+            if (!o.noToggleInit) {
+                $el.on('click', function () {
+                    $(this).popover('toggle');
+                });
+            }
+
             if (view) {
                 view.on('remove', function () {
                     $el.popover('destroy');

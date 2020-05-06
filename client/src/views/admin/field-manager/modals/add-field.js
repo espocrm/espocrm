@@ -75,5 +75,26 @@ define('views/admin/field-manager/modals/add-field', 'views/modal', function (De
             this.remove();
         },
 
+        afterRender: function () {
+            this.typeList.forEach(function (type) {
+                var text = this.translate(type, 'fieldInfo', 'FieldManager');
+
+                var $el = this.$el.find('a.info[data-name="'+type+'"]');
+
+                if (text === type) {
+                    $el.addClass('hidden');
+                    return;
+                }
+
+                var text = this.getHelper().transfromMarkdownText(text, {linksInNewTab: true}).toString();
+
+                Espo.Ui.popover($el, {
+                    content: text,
+                    placement: 'left',
+                    container: this.$el.find('.modal-body'),
+                }, this);
+            }, this);
+        },
+
     });
 });

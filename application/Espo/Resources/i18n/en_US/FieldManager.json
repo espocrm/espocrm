@@ -110,5 +110,34 @@
         "datetimeOptional": {
             "date": "Date"
         }
+    },
+    "fieldInfo": {
+        "varchar": "A single-line text.",
+        "enum": "Selectbox, only one value can be selected.",
+        "text": "A multiline text with markdown support.",
+        "date": "Date w/o time.",
+        "datetime": "Date and time",
+        "currency": "A currency value. A float number with a currency code.",
+        "int": "A whole number.",
+        "float": "A number with a decimal part.",
+        "bool": "A checkbox. Two possible values: true and false.",
+        "multiEnum": "A list of values, multiple values can be selected. The list is ordered.",
+        "checklist": "A list of checkboxes.",
+        "array": "A list of values, similar to Multi-Enum field.",
+        "address": "An address with street, city, state, postal code and country.",
+        "url": "For storing links.",
+        "wysiwyg": "A text with HTML support.",
+        "file": "For file uploading.",
+        "image": "For image uploading.",
+        "attachmentMultiple": "Allows to upload multiple files.",
+        "number": "An auto-incrementing number of string type with a possible prefix and specific length.",
+        "autoincrement": "A generated read-only auto-incrementing integer number.",
+        "barcode": "A barcode. Can be printed to PDF.",
+        "email": "A set of email addresses with their parameters: Opted-out, Invalid, Primary.",
+        "phone": "A set of phone numbers with their parameters: Type, Opted-out, Invalid, Primary.",
+        "foreign": "A field of a related record. Read-only.",
+        "link": "A record related through Belongs-To (many-to-one or one-to-one) relationship.",
+        "linkParent": "A record related through Belongs-To-Parent relationship. Can be of different entity types.",
+        "linkMultiple": "A set of records related through Has-Many (many-to-many or one-to-many) relationship. Not all relatioships have their link-multiple fields. Only those do, where Link-Multiple parameter(s) is enabled."
     }
 }
