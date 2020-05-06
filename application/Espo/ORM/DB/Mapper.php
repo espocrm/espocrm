@@ -546,6 +546,9 @@ abstract class Mapper implements IMapper
 
                 $params['select'][] = 'id';
 
+                unset($params['orderBy']);
+                unset($params['order']);
+
                 $subSql = $this->query->createSelectQuery($foreignEntityType, $params);
 
                 $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = '0'";
