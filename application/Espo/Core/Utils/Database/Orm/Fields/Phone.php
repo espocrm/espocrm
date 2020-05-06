@@ -111,6 +111,7 @@ class Phone extends Base
                         'orderBy' => [
                             'sql' => 'phoneNumbers.name {direction}',
                             'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            'additionalSelect' => ['phoneNumbers.name'],
                         ],
                     ),
                     $fieldName .'Data' => array(
@@ -154,7 +155,11 @@ class Phone extends Base
                                 'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
                             ]
                         ],
-                        'orderBy' => 'phoneNumbers.opt_out {direction}'
+                       'orderBy' => [
+                            'sql' => 'phoneNumbers.opt_out {direction}',
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            'additionalSelect' => ['phoneNumbers.opt_out'],
+                        ],
                     ],
                     $fieldName . 'Numeric' => [
                         'type' => 'varchar',

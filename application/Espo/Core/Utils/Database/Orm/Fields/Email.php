@@ -110,6 +110,7 @@ class Email extends Base
                         'orderBy' => [
                             'sql' => 'emailAddresses.lower {direction}',
                             'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            'additionalSelect' => ['emailAddresses.lower'],
                         ],
                     ],
                     $fieldName .'Data' => [
@@ -153,7 +154,11 @@ class Email extends Base
                                 'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
                             ]
                         ],
-                        'orderBy' => 'emailAddresses.opt_out {direction}'
+                        'orderBy' => [
+                            'sql' => 'emailAddresses.opt_out {direction}',
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            'additionalSelect' => ['emailAddresses.opt_out'],
+                        ],
                     ]
                 ],
                 'relations' => [
