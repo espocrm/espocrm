@@ -353,6 +353,34 @@
             "notStorable": true,
             "view": "views/fields/link-one"
         },
+        "hasPortalUser": {
+            "type": "bool",
+            "notStorable": true,
+            "readOnly": true,
+            "mergeDisabled": true,
+            "customizationDefaultDisabled": true,
+            "customizationReadOnlyDisabled": true,
+            "foreignAccessDisabled": true,
+            "select": {
+                "sql": "portalUser.id IS NOT NULL",
+                "leftJoins": [["portalUser", "portalUser"]]
+            },
+            "where": {
+                "= TRUE": {
+                    "sql": "portalUser.id IS NOT NULL",
+                    "leftJoins": [["portalUser", "portalUser"]]
+                },
+                "= FALSE": {
+                    "sql": "portalUser.id IS NULL",
+                    "leftJoins": [["portalUser", "portalUser"]]
+                }
+            },
+            "orderBy": {
+                "sql": "portalUser.id {direction}",
+                "leftJoins": [["portalUser", "portalUser"]],
+                "additionalSelect": ["portalUser.id"]
+            }
+        },
         "originalLead": {
             "type": "linkOne",
             "readOnly": true,

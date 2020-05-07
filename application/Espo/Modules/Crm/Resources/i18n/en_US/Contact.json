@@ -16,6 +16,7 @@
         "targetLists": "Target Lists",
         "targetList": "Target List",
         "portalUser": "Portal User",
+        "hasPortalUser": "Has Portal User",
         "originalLead": "Original Lead",
         "acceptanceStatus": "Acceptance Status",
         "accountIsInactive": "Account Inactive",
