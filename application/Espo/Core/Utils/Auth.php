@@ -398,11 +398,19 @@ class Auth
 
         $requestTimeFrom = (new \DateTime('@' . intval($_SERVER['REQUEST_TIME_FLOAT'])))->modify('-' . $failedAttemptsPeriod);
 
-        $failAttemptCount = $this->getEntityManager()->getRepository('AuthLogRecord')->where([
+        $failAttemptCount = 0;
+
+        $where = [
             'requestTime>' => $requestTimeFrom->format('U'),
             'ipAddress' => $_SERVER['REMOTE_ADDR'],
-            'isDenied' => true
-        ])->count();
+            'isDenied' => true,
+        ];
+
+        $wasFailed = !!$this->getEntityManager()->getRepository('AuthLogRecord')->select(['id'])->where($where)->findOne();
+
+        if ($wasFailed) {
+            $failAttemptCount = $this->getEntityManager()->getRepository('AuthLogRecord')->where($where)->count();
+        }
 
         if ($failAttemptCount > $maxFailedAttempts) {
             $GLOBALS['log']->warning("AUTH: Max failed login attempts exceeded for IP '".$_SERVER['REMOTE_ADDR']."'.");
