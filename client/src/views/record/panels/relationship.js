@@ -230,7 +230,10 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
             }, this);
 
             this.setupFilterActions();
+            this.setupLast();
         },
+
+        setupLast: function () {},
 
         setupTitle: function () {
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
