@@ -1156,6 +1156,15 @@ abstract class Base
                 if (!empty($r['noJoin'])) continue;
 
                 if (in_array($relationName, $skipList)) continue;
+
+                foreach ($skipList as $sItem) {
+                    if (is_array($sItem) && count($sItem) > 1) {
+                        if ($sItem[1] === $relationName) {
+                            continue 2;
+                        }
+                    }
+                }
+
                 if (is_array($select) && !in_array($relationName, $relationsToJoin)) continue;
 
                 if ($type == IEntity::BELONGS_TO) {
