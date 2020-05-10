@@ -72,9 +72,9 @@ class Application
         return $this->metadata;
     }
 
-    protected function createAuth()
+    protected function createAuth($allowAnyAccess = false)
     {
-        return new \Espo\Core\Utils\Auth($this->container);
+        return new \Espo\Core\Utils\Auth($this->container, $allowAnyAccess);
     }
 
     public function getContainer()
@@ -124,8 +124,8 @@ class Application
                     exit;
                 }
             }
-            $auth = new \Espo\Core\Utils\Auth($this->container, $authNotStrict);
-            $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $authRequired, true);
+            $auth = $this->createAuth($authNotStrict);
+            $apiAuth = $this->createApiAuth($auth, $authRequired, true);
             $slim->add($apiAuth);
 
             $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container, $data) {
@@ -236,9 +236,9 @@ class Application
         return false;
     }
 
-    protected function createApiAuth($auth)
+    protected function createApiAuth($auth, $authRequired = null, $showDialog = false)
     {
-        return new \Espo\Core\Utils\Api\Auth($auth);
+        return new \Espo\Core\Utils\Api\Auth($auth, $authRequired, $showDialog);
     }
 
     protected function routeHooks()
