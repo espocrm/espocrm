@@ -29,6 +29,8 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Utils\Api\Slim;
+
 class Application
 {
     private $metadata;
@@ -56,7 +58,7 @@ class Application
         $this->container = new Container();
     }
 
-    public function getSlim()
+    public function getSlim(): Slim
     {
         if (empty($this->slim)) {
             $this->slim = $this->container->get('slim');
@@ -67,7 +69,7 @@ class Application
     public function getMetadata()
     {
         if (empty($this->metadata)) {
-            $this->metadata = $this->container->get('metadata');
+            $this->metadata = $this->getContainer()->get('metadata');
         }
         return $this->metadata;
     }
@@ -77,7 +79,7 @@ class Application
         return new \Espo\Core\Utils\Auth($this->container, $allowAnyAccess);
     }
 
-    public function getContainer()
+    public function getContainer(): Container
     {
         return $this->container;
     }
