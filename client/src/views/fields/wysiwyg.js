@@ -459,6 +459,18 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             this.$toolbar = this.$el.find('.note-toolbar');
             this.$area = this.$el.find('.note-editing-area');
+
+            this.$area.on('paste', function (e) {
+                var items = e.originalEvent.clipboardData.items;
+                if (items) {
+                    for (var i = 0; i < items.length; i++) {
+                        if (!~items[i].type.indexOf('image')) continue;
+                        var blob = items[i].getAsFile();
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }
+            }.bind(this));
         },
 
         destroySummernote: function () {
