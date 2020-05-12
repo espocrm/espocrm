@@ -203,6 +203,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
             var postView = this.getFieldView('post');
             if (postView) {
+                this.stopListening(postView, 'add-files');
                 this.listenTo(postView, 'add-files', function (files) {
                     this.enablePostingMode();
                     var attachmentsView = this.getFieldView('attachments');
