@@ -87,7 +87,8 @@
     },
     "links": {
         "parent": {
-            "type": "belongsToParent"
+            "type": "belongsToParent",
+            "foreign": "{entityTypeLowerFirst}Children"
         },
         "createdBy": {
             "type": "belongsTo",

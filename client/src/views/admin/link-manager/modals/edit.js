@@ -562,7 +562,12 @@ define('views/admin/link-manager/modals/edit',
                         if (!this.noParentEntityTypeList) {
                             this.showField('parentEntityTypeList');
                         }
-                        this.showField('foreignLinkEntityTypeList');
+
+                        if (!this.model.get('linkForeign')) {
+                            this.hideField('foreignLinkEntityTypeList');
+                        } else {
+                            this.showField('foreignLinkEntityTypeList');
+                        }
                     } else {
                         this.hideField('audited');
                         this.hideField('auditedForeign');

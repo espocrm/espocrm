@@ -341,6 +341,7 @@ class EntityManager
         $filePath = $templatePath . "/Metadata/{$type}/entityDefs.json";
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
+        $entityDefsDataContents = str_replace('{entityTypeLowerFirst}', lcfirst($name), $entityDefsDataContents);
         $entityDefsDataContents = str_replace('{tableName}', $this->getEntityManager()->getQuery()->toDb($name), $entityDefsDataContents);
         foreach ($replaceData as $key => $value) {
             $entityDefsDataContents = str_replace('{'.$key.'}', $value, $entityDefsDataContents);
@@ -980,7 +981,7 @@ class EntityManager
 
         if ($linkType === 'childrenToParent') {
             $foreignLinkEntityTypeList = $params['foreignLinkEntityTypeList'] ?? null;
-            if (is_array($foreignLinkEntityTypeList)) {
+            if ($linkForeign && is_array($foreignLinkEntityTypeList)) {
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, $foreignLinkEntityTypeList);
             }
         }
@@ -1107,7 +1108,7 @@ class EntityManager
             }
 
             $foreignLinkEntityTypeList = $params['foreignLinkEntityTypeList'] ?? null;
-            if (is_array($foreignLinkEntityTypeList)) {
+            if ($linkForeign && is_array($foreignLinkEntityTypeList)) {
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, $foreignLinkEntityTypeList);
             }
         }
@@ -1186,7 +1187,9 @@ class EntityManager
                 'links.' . $link,
             ]);
             $this->getMetadata()->save();
-            $this->updateParentForeignLinks($entity, $link, $linkForeign, []);
+            if ($linkForeign) {
+                $this->updateParentForeignLinks($entity, $link, $linkForeign, []);
+            }
             return true;
         }
 
