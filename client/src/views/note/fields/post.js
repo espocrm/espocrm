@@ -30,14 +30,7 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
 
     return Dep.extend({
 
-        rowsDefault: 1,
-
-        seeMoreText: false,
-
         events: _.extend({
-            'input textarea': function (e) {
-                this.controlTextareaHeight();
-            },
             'paste textarea': function (e) {
                 if (!e.originalEvent.clipboardData) return;
                 var text = e.originalEvent.clipboardData.getData('text/plain');
@@ -52,22 +45,6 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
             Dep.prototype.setup.call(this);
 
             this.insertedImagesData = {};
-        },
-
-        controlTextareaHeight: function (lastHeight) {
-            var scrollHeight = this.$element.prop('scrollHeight');
-            var clientHeight = this.$element.prop('clientHeight');
-
-            if (clientHeight === lastHeight) return;
-
-            if (scrollHeight > clientHeight) {
-                this.$element.attr('rows', this.$element.prop('rows') + 1);
-                this.controlTextareaHeight(clientHeight);
-            }
-
-            if (this.$element.val().length === 0) {
-                this.$element.attr('rows', 1);
-            }
         },
 
         afterRender: function () {

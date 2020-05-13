@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
+define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
     return Dep.extend({
 
@@ -161,7 +161,11 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.createField('users', 'views/fields/users', {});
             this.createField('teams', 'views/fields/teams', {});
             this.createField('portals', 'views/fields/link-multiple', {});
-            this.createField('post', 'views/note/fields/post', {required: true, rows: 1});
+            this.createField('post', 'views/note/fields/post', {
+                required: true,
+                rowsMin: 1,
+                rows: 25,
+            });
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
 
             this.listenTo(this.model, 'change', function () {

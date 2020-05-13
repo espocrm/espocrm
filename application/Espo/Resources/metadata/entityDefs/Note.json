@@ -2,7 +2,7 @@
     "fields": {
         "post": {
             "type": "text",
-            "rows": 30,
+            "rows": 100000,
             "view": "views/note/fields/post"
         },
         "data": {

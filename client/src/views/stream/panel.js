@@ -202,7 +202,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     mode: 'edit',
                     params: {
                         required: true,
-                        rows: 1
+                        rowsMin: 1,
+                        rows: 25,
                     },
                     model: this.seed,
                     placeholderText: this.placeholderText
