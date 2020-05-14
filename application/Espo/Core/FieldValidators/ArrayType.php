@@ -46,9 +46,11 @@ class ArrayType extends BaseType
 
     public function checkArray(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
     {
-        if (!$entity->has($field) || $entity->get($field) === null) return true;
+        if (isset($data->$field) && $data->$field !== null && !is_array($data->$field)) {
+            return false;
+        }
 
-        return is_array($entity->get($field));
+        return true;
     }
 
     protected function isNotEmpty(\Espo\ORM\Entity $entity, $field)
