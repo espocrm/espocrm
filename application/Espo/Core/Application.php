@@ -260,6 +260,9 @@ class Application
             $route = $slim->router()->getCurrentRoute();
             $conditions = $route->getConditions();
 
+            $response = $slim->response();
+            $response->headers->set('Content-Type', 'application/json');
+
             if (isset($conditions['useController']) && $conditions['useController'] == false) {
                 return;
             }
