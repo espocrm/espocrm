@@ -38,6 +38,8 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
         editTemplate: 'fields/multi-enum/edit',
 
+        matchAnyWord: false,
+
         events: {
         },
 
@@ -172,7 +174,10 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                     searchField: ['label'],
                     plugins: pluginList,
                     copyClassesToDropdown: true,
-                    score: function (search) {
+                };
+
+                if (!this.matchAnyWord) {
+                    selectizeOptions.score = function (search) {
                         var score = this.getScoreFunction(search);
                         search = search.toLowerCase();
                         return function (item) {
@@ -181,8 +186,8 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                             }
                             return 0;
                         };
-                    }
-                };
+                    };
+                }
 
                 if (this.allowCustomOptions) {
                     selectizeOptions.persist = false;

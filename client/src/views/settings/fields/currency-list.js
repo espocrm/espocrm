@@ -30,6 +30,8 @@ define('views/settings/fields/currency-list', 'views/fields/multi-enum', functio
 
     return Dep.extend({
 
+        matchAnyWord: true,
+
         setupOptions: function () {
             this.params.options = this.getMetadata().get(['app', 'currency', 'list']) || [];
 
