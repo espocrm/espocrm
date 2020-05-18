@@ -214,10 +214,12 @@ define('views/record/panels-container', 'view', function (Dep) {
                     view.disabled = false;
                     view.trigger('show');
 
-                    var fields = view.getFieldViews();
-                    if (fields) {
-                        for (var i in fields) {
-                            fields[i].reRender();
+                    if (view.getFieldViews) {
+                        var fields = view.getFieldViews();
+                        if (fields) {
+                            for (var i in fields) {
+                                fields[i].reRender();
+                            }
                         }
                     }
                 }
