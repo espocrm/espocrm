@@ -29,11 +29,12 @@
 
 namespace Espo\Core\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\ForbiddenSilent;
 
 class Record extends Base
 {
@@ -88,7 +89,7 @@ class Record extends Base
         }
 
         if (!$this->getAcl()->check($this->name, 'create')) {
-            throw new Forbidden();
+            throw new Forbidden("No create access for {$this->name}.");
         }
 
         $service = $this->getRecordService();
@@ -109,7 +110,7 @@ class Record extends Base
         }
 
         if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
+            throw new Forbidden("No edit access for {$this->name}.");
         }
 
         $id = $params['id'];
@@ -124,7 +125,7 @@ class Record extends Base
     public function actionList($params, $data, $request)
     {
         if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
+            throw new Forbidden("No read access for {$this->name}.");
         }
 
         $params = [];
@@ -156,7 +157,7 @@ class Record extends Base
     public function getActionListKanban($params, $data, $request)
     {
         if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
+            throw new Forbidden("No read access for {$this->name}.");
         }
 
         $params = [];
@@ -286,14 +287,14 @@ class Record extends Base
         }
 
         if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
+            throw new Forbidden("No edit access for {$this->name}.");
         }
         if (empty($data->attributes)) {
             throw new BadRequest();
         }
 
         if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
-            throw new Forbidden();
+            throw new Forbidden("No massUpdatePermission.");
         }
 
         $actionParams = $this->getMassActionParamsFromData($data);
@@ -313,7 +314,7 @@ class Record extends Base
 
         if (array_key_exists('where', $actionParams)) {
             if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
-                throw new Forbidden();
+                throw new Forbidden("No massUpdatePermission.");
             }
         }
 
@@ -412,7 +413,7 @@ class Record extends Base
             throw new BadRequest();
         }
         if (!$this->getAcl()->check($this->name, 'stream')) {
-            throw new Forbidden();
+            throw new Forbidden("No stream access for {$this->name}.");
         }
         $id = $params['id'];
         return $this->getRecordService()->follow($id);
@@ -424,7 +425,7 @@ class Record extends Base
             throw new BadRequest();
         }
         if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
+            throw new Forbidden("No read access for {$this->name}.");
         }
         $id = $params['id'];
         return $this->getRecordService()->unfollow($id);
@@ -444,7 +445,7 @@ class Record extends Base
         $attributes = $data->attributes;
 
         if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
+            throw new Forbidden("No edit access for {$this->name}.");
         }
 
         return $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
@@ -480,7 +481,7 @@ class Record extends Base
     public function postActionMassUnfollow($params, $data, $request)
     {
         if (!$this->getAcl()->check($this->name, 'stream')) {
-            throw new Forbidden();
+            throw new Forbidden("No stream access for {$this->name}.");
         }
 
         $actionParams = $this->getMassActionParamsFromData($data);
