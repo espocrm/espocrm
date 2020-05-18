@@ -29,11 +29,11 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
 
 class ExternalAccount extends Record
 {
@@ -92,6 +92,7 @@ class ExternalAccount extends Record
                 $entity->clear('accessToken');
                 $entity->clear('refreshToken');
                 $entity->clear('tokenType');
+                $entity->clear('expiresAt');
                 foreach ($result as $name => $value) {
                     $entity->set($name, $value);
                 }
@@ -108,5 +109,30 @@ class ExternalAccount extends Record
         } else {
             throw new Error("Could not load client for {$integration}.");
         }
+    }
+
+    public function read($id)
+    {
+        list($integration, $userId) = explode('__', $id);
+
+        if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        $entity = $this->getEntityManager()->getEntity('ExternalAccount', $id);
+
+        if (!$entity) throw new NotFoundSilent("Record does not exist.");
+
+        list($integration, $id) = explode('__', $entity->id);
+
+        $externalAccountSecretAttributeList = $this->getMetadata()->get(
+            ['integrations', $integration, 'externalAccountSecretAttributeList']) ?? [];
+
+        foreach ($externalAccountSecretAttributeList as $a) {
+            $entity->clear($a);
+        }
+
+        return $entity;
+
     }
 }

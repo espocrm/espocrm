@@ -93,12 +93,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
     {
         list($integration, $userId) = explode('__', $params['id']);
 
-        if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $entity = $this->getEntityManager()->getEntity('ExternalAccount', $params['id']);
-        return $entity->toArray();
+        return $this->getRecordService()->read($params['id'])->getValueMap();
     }
 
     public function actionUpdate($params, $data, $request)

@@ -62,6 +62,8 @@ class Client
 
     protected $accessToken = null;
 
+    protected $expiresAt = null;
+
     protected $authType = self::AUTH_TYPE_URI;
 
     protected $tokenType = self::TOKEN_TYPE_URI;
@@ -72,9 +74,9 @@ class Client
 
     protected $certificateFile = null;
 
-    protected $curlOptions = array();
+    protected $curlOptions = [];
 
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (!extension_loaded('curl')) {
             throw new \Exception('CURL extension not found.');
@@ -121,12 +123,17 @@ class Client
         $this->tokenType = $tokenType;
     }
 
+    public function setExpiresAt($value)
+    {
+        $this->expiresAt = $value;
+    }
+
     public function setAccessTokenSecret($accessTokenSecret)
     {
         $this->accessTokenSecret = $accessTokenSecret;
     }
 
-    public function request($url, $params = null, $httpMethod = self::HTTP_METHOD_GET, array $httpHeaders = array())
+    public function request($url, $params = null, $httpMethod = self::HTTP_METHOD_GET, array $httpHeaders = [])
     {
         if ($this->accessToken) {
             switch ($this->tokenType) {
@@ -148,7 +155,7 @@ class Client
         return $this->execute($url, $params, $httpMethod, $httpHeaders);
     }
 
-    private function execute($url, $params = null, $httpMethod, array $httpHeaders = array())
+    private function execute($url, $params = null, $httpMethod, array $httpHeaders = [])
     {
         $curlOptions = array(
             CURLOPT_RETURNTRANSFER => true,
@@ -243,7 +250,7 @@ class Client
     {
         $params['grant_type'] = $grantType;
 
-        $httpHeaders = array();
+        $httpHeaders = [];
         switch ($this->tokenType) {
             case self::AUTH_TYPE_URI:
             case self::AUTH_TYPE_FORM:
@@ -261,4 +268,3 @@ class Client
         return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders);
     }
 }
-
