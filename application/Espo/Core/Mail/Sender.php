@@ -62,6 +62,8 @@ class Sender
 
     private $systemInboundEmailIsCached = false;
 
+    private $envelope = null;
+
     public function __construct($config, $entityManager, $serviceFactory = null)
     {
         $this->config = $config;
@@ -84,6 +86,7 @@ class Sender
     public function resetParams() : self
     {
         $this->params = [];
+        $this->envelope = null;
         return $this;
     }
 
@@ -163,6 +166,10 @@ class Sender
 
         $smtpOptions = new SmtpOptions($options);
         $this->transport->setOptions($smtpOptions);
+
+        if ($this->envelope) {
+            $this->transport->setEnvelope($this->envelope);
+        }
     }
 
     protected function applyGlobal()
@@ -457,10 +464,12 @@ class Sender
             $email->set('status', 'Sent');
             $email->set('dateSent', date("Y-m-d H:i:s"));
         } catch (\Exception $e) {
+            $this->resetParams();
             $this->useGlobal();
             throw new Error($e->getMessage(), 500);
         }
 
+        $this->resetParams();
         $this->useGlobal();
     }
 
@@ -482,7 +491,8 @@ class Sender
 
     public function setEnvelopeOptions(array $options) : self
     {
-        $this->transport->setEnvelope(new Envelope($options));
+        $this->envelope = new Envelope($options);
+
         return $this;
     }
 }

@@ -29,8 +29,8 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
 
@@ -88,15 +88,6 @@ class GlobalSearch extends \Espo\Core\Services\Base
 
             $fullTextSearchData = $selectManager->getFullTextSearchDataForTextFilter($query);
 
-            if ($fullTextSearchData) {
-                $hasFullTextSearch = true;
-                $selectParams['select'][] = [$fullTextSearchData['where'], '_relevance'];
-                $selectParams['orderBy'] = [[$fullTextSearchData['where'], 'desc'], ['name']];
-            } else {
-                $selectParams['select'][] = ['VALUE:1.1', '_relevance'];
-                $selectParams['orderBy'] = [['name']];
-            }
-
             if ($this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName') {
                 $selectParams['select'][] = 'firstName';
                 $selectParams['select'][] = 'lastName';
@@ -113,6 +104,15 @@ class GlobalSearch extends \Espo\Core\Services\Base
             $selectManager->applyTextFilter($query, $selectParams);
 
             unset($selectParams['additionalSelect']);
+
+            if ($fullTextSearchData) {
+                $hasFullTextSearch = true;
+                $selectParams['select'][] = [$fullTextSearchData['where'], '_relevance'];
+                $selectParams['orderBy'] = [[$fullTextSearchData['where'], 'desc'], ['name']];
+            } else {
+                $selectParams['select'][] = ['VALUE:1.1', '_relevance'];
+                $selectParams['orderBy'] = [['name']];
+            }
 
             $itemSql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $selectParams);
 
