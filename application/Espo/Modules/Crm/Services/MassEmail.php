@@ -325,14 +325,14 @@ class MassEmail extends \Espo\Services\Record
 
         $body = $emailData['body'];
 
-        $optOutUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+        $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
         $optOutLink = '<a href="'.$optOutUrl.'">'.$this->getLanguage()->translate('Unsubscribe', 'labels', 'Campaign').'</a>';
 
         $body = str_replace('{optOutUrl}', $optOutUrl, $body);
         $body = str_replace('{optOutLink}', $optOutLink, $body);
 
         foreach ($trackingUrlList as $trackingUrl) {
-            $url = $this->getConfig()->get('siteUrl') . '?entryPoint=campaignUrl&id=' . $trackingUrl->id . '&queueItemId=' . $queueItem->id;
+            $url = $this->getSiteUrl() . '?entryPoint=campaignUrl&id=' . $trackingUrl->id . '&queueItemId=' . $queueItem->id;
             $body = str_replace($trackingUrl->get('urlToUse'), $url, $body);
         }
 
@@ -346,7 +346,7 @@ class MassEmail extends \Espo\Services\Record
 
         $trackImageAlt = $this->getLanguage()->translate('Campaign', 'scopeNames');
 
-        $trackOpenedUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
+        $trackOpenedUrl = $this->getSiteUrl() . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
         $trackOpenedHtml = '<img alt="'.$trackImageAlt.'" width="1" height="1" border="0" src="'.$trackOpenedUrl.'">';
 
         if ($massEmail->get('campaignId') && $this->getConfig()->get('massEmailOpenTracking')) {
@@ -387,7 +387,7 @@ class MassEmail extends \Espo\Services\Record
         $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
 
         if (!$this->getConfig()->get('massEmailDisableMandatoryOptOutLink')) {
-            $optOutUrl = $this->getConfig()->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+            $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
             $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
         }
 
@@ -589,4 +589,8 @@ class MassEmail extends \Espo\Services\Record
         return $dataList;
     }
 
+    protected function getSiteUrl()
+    {
+        return $this->getConfig()->get('massEmailSiteUrl') ?? $this->getConfig()->get('siteUrl');
+    }
 }
