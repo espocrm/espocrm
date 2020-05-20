@@ -439,7 +439,7 @@ class User extends Record
             throw new Forbidden("Generate new password: Can't process because user desn't have email address.");
         }
 
-        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->getMailSender()->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
             throw new Forbidden("Generate new password: Can't process because SMTP is not configured.");
         }
 
@@ -585,7 +585,7 @@ class User extends Record
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->getMailSender()->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
             return;
         }
 
@@ -643,7 +643,7 @@ class User extends Record
             'to' => $emailAddress
         ]);
 
-        if ($this->getConfig()->get('smtpServer')) {
+        if ($this->getMailSender()->hasSystemSmtp()) {
             $this->getMailSender()->useGlobal();
         } else {
             $this->getMailSender()->useSmtp(array(
@@ -667,7 +667,7 @@ class User extends Record
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->getMailSender()->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
             throw new Error("SMTP credentials are not defined.");
         }
 
@@ -706,7 +706,7 @@ class User extends Record
             'isSystem' => true
         ]);
 
-        if ($this->getConfig()->get('smtpServer')) {
+        if ($this->getMailSender()->hasSystemSmtp()) {
             $this->getMailSender()->useGlobal();
         } else {
             $this->getMailSender()->useSmtp([

@@ -199,6 +199,14 @@ class Sender
         ]);
     }
 
+    public function hasSystemSmtp()
+    {
+        if ($this->config->get('smtpServer')) return true;
+        if ($this->getSystemInboundEmail()) return true;
+
+        return false;
+    }
+
     protected function getSystemInboundEmail()
     {
         $address = $this->config->get('outboundEmailFromAddress');
