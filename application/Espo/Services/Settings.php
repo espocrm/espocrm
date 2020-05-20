@@ -146,7 +146,7 @@ class Settings extends \Espo\Core\Services\Base
         }
 
         if (
-            ($this->getConfig()->get('smtpServer') || $this->getConfig()->get('internalSmtpServer'))
+            ($this->getConfig()->get('outboundEmailFromAddress') || $this->getConfig()->get('internalSmtpServer'))
             &&
             !$this->getConfig()->get('passwordRecoveryDisabled')
         ) {
