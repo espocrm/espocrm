@@ -165,4 +165,27 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(4, $actual);
     }
+
+    public function testWhile()
+    {
+        $expression = "
+            \$source = list(0, 1, 2);
+            \$target = list();
+
+            \$i = 0;
+            while(\$i < array\\length(\$source),
+                \$target = array\\push(
+                    \$target,
+                    array\\at(\$source, \$i)
+                );
+                \$i = \$i + 1;
+            );
+        ";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals([0, 1, 2], $vars->target);
+    }
 }

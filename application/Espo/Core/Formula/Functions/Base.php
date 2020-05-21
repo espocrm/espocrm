@@ -122,4 +122,9 @@ abstract class Base implements Injectable
 
         return $eArgs;
     }
+
+    protected function fetchRawArguments(\StdClass $item)
+    {
+        return $item->value ?? [];
+    }
 }
