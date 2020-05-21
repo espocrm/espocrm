@@ -58,6 +58,10 @@ define('views/role/record/table', 'view', function (Dep) {
 
         booleanActionList: ['create'],
 
+        defaultLevels: {
+            delete: 'no',
+        },
+
         colors: {
             yes: '#6BC924',
             all: '#6BC924',
@@ -121,15 +125,37 @@ define('views/role/record/table', 'view', function (Dep) {
                         if (this.lowestLevelByDefault) {
                             $select.find('option').last().prop('selected', true);
                         } else {
-                            $select.find('option').first().prop('selected', true);
+                            var setFirst = true;
+                            var action = $select.data('role-action');
+                            var defaultLevel = null;
+                            if (action) defaultLevel = this.defaultLevels[action];
+                            if (defaultLevel) {
+                                var $option = $select.find('option[value="'+defaultLevel+'"]');
+                                if ($option.length) {
+                                    $option.prop('selected', true);
+                                    setFirst = false;
+                                }
+                            }
+                            if (setFirst) {
+                                $select.find('option').first().prop('selected', true);
+                            }
                         }
                         $select.trigger('change');
+                        this.controlSelectColor($select);
                     }.bind(this));
                 } else {
                     $dropdowns.attr('disabled', 'disabled');
                     $dropdowns.addClass('hidden');
                 }
-            }
+
+                this.controlSelectColor($(e.currentTarget));
+            },
+            'change select.scope-action': function (e) {
+                this.controlSelectColor($(e.currentTarget));
+            },
+            'change select.field-action': function (e) {
+                this.controlSelectColor($(e.currentTarget));
+            },
         },
 
         getTableDataList: function () {
@@ -250,6 +276,13 @@ define('views/role/record/table', 'view', function (Dep) {
             if (this.mode == 'edit') {
                 this.template = 'role/table-edit';
             }
+
+            this.once('remove', function () {
+                $(window).off('scroll.scope-' + this.cid);
+                $(window).off('resize.scope-' + this.cid);
+                $(window).off('scroll.field-' + this.cid);
+                $(window).off('resize.field-' + this.cid);
+            }, this);
         },
 
         setupData: function () {
@@ -427,6 +460,11 @@ define('views/role/record/table', 'view', function (Dep) {
                     }, this);
 
                 }, this);
+
+                this.initStickyHeader('scope');
+                this.initStickyHeader('field');
+
+                this.setSelectColors();
             }
         },
 
@@ -447,6 +485,8 @@ define('views/role/record/table', 'view', function (Dep) {
                     $o.removeAttr('disabled');
                 }
             }.bind(this));
+
+            this.controlSelectColor($edit);
         },
 
         controlEditSelect: function (scope, value, dontChange) {
@@ -466,6 +506,8 @@ define('views/role/record/table', 'view', function (Dep) {
                     $o.removeAttr('disabled');
                 }
             }.bind(this));
+
+            this.controlSelectColor($edit);
         },
 
         controlStreamSelect: function (scope, value, dontChange) {
@@ -485,6 +527,8 @@ define('views/role/record/table', 'view', function (Dep) {
                     $o.removeAttr('disabled');
                 }
             }.bind(this));
+
+            this.controlSelectColor($stream);
         },
 
         controlDeleteSelect: function (scope, value, dontChange) {
@@ -504,6 +548,8 @@ define('views/role/record/table', 'view', function (Dep) {
                     $o.removeAttr('disabled');
                 }
             }.bind(this));
+
+            this.controlSelectColor($delete);
         },
 
         showAddFieldModal: function (scope) {
@@ -567,6 +613,98 @@ define('views/role/record/table', 'view', function (Dep) {
                 };
 
             }, this);
+        },
+
+        initStickyHeader: function (type) {
+            var $sticky = this.$el.find('.sticky-header-' + type);
+            var $window = $(window);
+
+            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+
+            var $buttonContainer = $('.detail-button-container');
+
+            var $table = this.$el.find('table.'+type+'-level');
+
+            if (!$buttonContainer.length) return;
+
+            var handle = function (e) {
+                if ($(window.document).width() < screenWidthXs) {
+                    $sticky.addClass('hidden');
+                    return;
+                }
+                var stickTopPosition = $buttonContainer.get(0).getBoundingClientRect().top + $buttonContainer.outerHeight();
+
+
+                var topEdge = $table.position().top;
+                topEdge += $buttonContainer.height();
+                topEdge += $table.find('tr > th').height();
+
+                var bottomEdge = topEdge + $table.outerHeight(true);
+
+                var scrollTop = $window.scrollTop();
+
+                var width = $table.width();
+
+                if (scrollTop > topEdge && scrollTop < bottomEdge) {
+                    $sticky.css({
+                        position: 'fixed',
+                        marginTop: stickTopPosition + 'px',
+                        top: 0,
+                        width: width + 'px',
+                        marginLeft: '1px',
+                    });
+
+                    $sticky.removeClass('hidden');
+                } else {
+                    $sticky.addClass('hidden');
+                }
+            }.bind(this);
+
+
+            $window.off('scroll.' + type + '-' + this.cid);
+            $window.on('scroll.' + type + '-' + this.cid, handle);
+
+            $window.off('resize.' + type + '-' + this.cid);
+            $window.on('resize.' + type + '-' + this.cid, handle);
+        },
+
+        setSelectColors: function () {
+            this.$el.find('select[data-type="access"]').each(function (i, el) {
+                var $select = $(el);
+                this.controlSelectColor($select);
+            }.bind(this));
+
+            this.$el.find('select.scope-action').each(function (i, el) {
+                var $select = $(el);
+                this.controlSelectColor($select);
+            }.bind(this));
+
+            this.$el.find('select.field-action').each(function (i, el) {
+                var $select = $(el);
+                this.controlSelectColor($select);
+            }.bind(this));
+        },
+
+        controlSelectColor: function ($select) {
+            var level = $select.val();
+            var color = this.colors[level] || '';
+
+            if (level === 'not-set') color = '';
+            $select.css('color', color);
+
+            $select.children().each(function (j, el) {
+                var $o = $(el);
+                var level = $o.val();
+
+                var color = this.colors[level] || '';
+                if (level === 'not-set') color = '';
+
+                if ($o.attr('disabled')) {
+                    color = '';
+                }
+
+                $o.css('color', color);
+            }.bind(this));
         },
     });
 });

@@ -25,7 +25,10 @@
                         {{#each ../list}}
                             <td>
                                 {{#ifNotEqual ../../access 'not-set'}}
-                                    <span style="color: {{prop ../../../../colors level}};">{{translateOption level field='levelList' scope='Role'}}</span>
+                                    <span
+                                        style="color: {{prop ../../../../colors level}};"
+                                        title="{{translate action scope='Role' category='actions'}}"
+                                    >{{translateOption level field='levelList' scope='Role'}}</span>
                                 {{/ifNotEqual}}
                             </td>
                         {{/each}}
@@ -68,7 +71,9 @@
                         <td><b>{{translate name category='fields' scope=../name}}</b></td>
                         {{#each list}}
                         <td>
-                            <span style="color: {{prop ../../../colors value}};">{{translateOption value scope='Role' field='accessList'}}</span>
+                            <span
+                                title="{{translate name scope='Role' category='actions'}}"
+                                style="color: {{prop ../../../colors value}};">{{translateOption value scope='Role' field='accessList'}}</span>
                         </td>
                         {{/each}}
                         <td colspan="3"></td>

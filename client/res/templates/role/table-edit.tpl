@@ -5,7 +5,7 @@
     </div>
     <div class="panel-body">
         <div class="no-margin">
-            <table class="table table-bordered no-margin">
+            <table class="table table-bordered no-margin scope-level">
                 <tr>
                     <th></th>
                     <th width="20%">{{translate 'Access' scope='Role'}}</th>
@@ -25,7 +25,12 @@
                         {{#each ../list}}
                             <td>
                                 {{#if levelList}}
-                                <select name="{{name}}" class="form-control{{#ifNotEqual ../../../access 'enabled'}} hidden{{/ifNotEqual}}" data-scope="{{../../name}}"{{#ifNotEqual ../../access 'enabled'}} disabled{{/ifNotEqual}} title="{{translate action scope='Role' category='actions'}}">
+                                <select name="{{name}}"
+                                    class="form-control scope-action{{#ifNotEqual ../../../access 'enabled'}} hidden{{/ifNotEqual}}"
+                                    data-scope="{{../../name}}"
+                                    {{#ifNotEqual ../../access 'enabled'}} disabled{{/ifNotEqual}}
+                                    title="{{translate action scope='Role' category='actions'}}"
+                                    data-role-action="{{action}}">
                                 {{options levelList level field='levelList' scope='Role'}}
                                 </select>
                                 {{/if}}
@@ -35,6 +40,18 @@
                 </tr>
                 {{/each}}
             </table>
+
+            <div class="sticky-header-scope hidden sticky-head">
+                <table class="table borderless no-margin">
+                    <tr>
+                        <th></th>
+                        <th width="20%">{{translate 'Access' scope='Role'}}</th>
+                        {{#each actionList}}
+                            <th width="11%">{{translate this scope='Role' category='actions'}}</th>
+                        {{/each}}
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -46,7 +63,7 @@
     </div>
     <div class="panel-body">
         <div class="no-margin">
-            <table class="table table-bordered no-margin">
+            <table class="table table-bordered no-margin field-level">
                 <tr>
                     <th></th>
                     <th width="20%"></th>
@@ -67,7 +84,13 @@
                         <td><b>{{translate name category='fields' scope=../name}}</b></td>
                         {{#each list}}
                         <td>
-                            <select name="field-{{../../name}}-{{../name}}" class="form-control" data-field="{{../name}}" data-scope="{{../../name}}" data-action="{{name}}" title="{{translate name scope='Role' category='actions'}}">{{options ../../../fieldLevelList value scope='Role' field='accessList'}}</select>
+                            <select
+                                name="field-{{../../name}}-{{../name}}"
+                                class="form-control field-action"
+                                data-field="{{../name}}"
+                                data-scope="{{../../name}}"
+                                data-action="{{name}}"
+                                title="{{translate name scope='Role' category='actions'}}">{{options ../../../fieldLevelList value scope='Role' field='accessList'}}</select>
                         </td>
                         {{/each}}
                         <td colspan="2">
@@ -77,6 +100,19 @@
                     {{/each}}
                 {{/each}}
             </table>
+
+            <div class="sticky-header-field hidden sticky-head">
+                <table class="table borderless no-margin">
+                    <tr>
+                        <th></th>
+                        <th width="20%"></th>
+                        {{#each fieldActionList}}
+                            <th width="11%">{{translate this scope='Role' category='actions'}}</th>
+                        {{/each}}
+                        <th width="33%"></th>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
