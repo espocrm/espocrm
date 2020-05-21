@@ -1412,6 +1412,28 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(3, $actual);
     }
 
+    function testNumberRandomInt()
+    {
+        $item = json_decode('
+            {
+                "type": "number\\\\randomInt",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": 0
+                    },
+                    {
+                        "type": "value",
+                        "value": 10
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+
+        $this->assertIsInt($actual);
+    }
+
     function testDatetime()
     {
         $item = json_decode('
