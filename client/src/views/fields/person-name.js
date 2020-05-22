@@ -51,7 +51,7 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             data.middleValue = this.model.get(this.middleField);
             data.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
 
-            if (this.model === 'edit') {
+            if (this.mode === 'edit') {
                 data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
                 data.lastMaxLength = this.model.getFieldParam(this.lastField, 'maxLength');
                 data.middleMaxLength = this.model.getFieldParam(this.middleField, 'maxLength');
