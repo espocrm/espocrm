@@ -181,15 +181,11 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
 
                 options.language = language;
 
-                var $datePicker = this.$element.datepicker(options).on('show', function (e) {
-                    $('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
-                }.bind(this));
+                this.$element.datepicker(options);
 
                 if (this.mode == 'search') {
                     var $elAdd = this.$el.find('input.additional');
-                    $elAdd.datepicker(options).on('show', function (e) {
-                        $('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
-                    }.bind(this));
+                    $elAdd.datepicker(options);
                     $elAdd.parent().find('button.date-picker-btn').on('click', function (e) {
                         $elAdd.datepicker('show');
                     });
