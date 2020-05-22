@@ -610,7 +610,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
         preview: function () {
             this.createView('dialog', 'views/modal', {
-                templateContent: '<div class="complex-text">{{complexText viewObject.options.text}}</div>',
+                templateContent: '<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>',
                 text: this.$textarea.val(),
                 headerText: this.translate('Preview'),
                 backdrop: true,
