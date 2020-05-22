@@ -567,11 +567,13 @@ class Htmlizer
             $data[$k] = $value;
         }
 
+        $data['__config'] = $this->config;
         $data['__dateTime'] = $this->dateTime;
         $data['__metadata'] = $this->metadata;
         $data['__entityManager'] = $this->entityManager;
         $data['__language'] = $this->language;
         $data['__serviceFactory'] = $this->serviceFactory;
+        $data['__entityType'] = $entity->getEntityType();
 
         $html = $renderer($data);
 
