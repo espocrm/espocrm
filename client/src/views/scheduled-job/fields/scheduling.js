@@ -25,14 +25,64 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/scheduled-job/fields/scheduling', 'views/fields/base', function (Dep) {
+
+define('views/scheduled-job/fields/scheduling',
+    ['views/fields/base', 'lib!client/lib/cronstrue-i18n.min.js'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
-        }
+
+            if (this.isEditMode() || this.isDetailMode()) {
+                this.listenTo(this.model, 'change:' + this.name, function () {
+                    this.showText();
+                }, this);
+            }
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.isEditMode() || this.isDetailMode()) {
+                var $text = this.$text = $('<div class="small text-danger"/>');
+                this.$el.append($text);
+                this.showText();
+            }
+        },
+
+        showText: function () {
+            if (!this.$text || !this.$text.length) return;
+
+            var exp = this.model.get(this.name);
+
+            if (!exp) {
+                this.$text.text('');
+                return;
+            }
+
+            var locale = 'en';
+            var localeList = Object.keys(cronstrue.default.locales);
+            var language = this.getLanguage().name;
+
+            if (~localeList.indexOf(language)) {
+                locale = language;
+            } else if (~localeList.indexOf(language.split('_')[0])) {
+                locale = language.split('_')[0];
+            }
+
+            try {
+                var text = cronstrue.toString(exp, {
+                    use24HourTimeFormat: !this.getDateTime().hasMeridian(),
+                    locale: locale,
+                });
+
+            } catch (e) {
+                text = this.translate('Not valid');
+            }
+
+            this.$text.text(text);
+        },
 
     });
-
 });
