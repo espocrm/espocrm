@@ -31,6 +31,7 @@ namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
 class EmailAccount extends \Espo\Core\Controllers\Record
 {
