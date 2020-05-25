@@ -45,7 +45,7 @@ define('views/scheduled-job/fields/scheduling',
             Dep.prototype.afterRender.call(this);
 
             if (this.isEditMode() || this.isDetailMode()) {
-                var $text = this.$text = $('<div class="small text-danger"/>');
+                var $text = this.$text = $('<div class="small text-success"/>');
                 this.$el.append($text);
                 this.showText();
             }
