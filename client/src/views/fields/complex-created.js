@@ -41,13 +41,16 @@ define('views/fields/complex-created', 'views/fields/base', function (Dep) {
             return [this.fieldAt, this.fieldBy];
         },
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
+        init: function () {
             this.baseName = this.options.baseName || this.baseName;
-
             this.fieldAt = this.baseName + 'At';
             this.fieldBy = this.baseName + 'By';
+
+            Dep.prototype.init.call(this);
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
             this.createField('at');
             this.createField('by');

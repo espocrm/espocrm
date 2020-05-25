@@ -359,20 +359,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             if (this.mode != 'search') {
-                this.attributeList = this.getAttributeList();
+                this.attributeList = this.getAttributeList(); // for backward compatibility, to be removed
 
                 this.listenTo(this.model, 'change', function (model, options) {
                     if (this.isRendered() || this.isBeingRendered()) {
                         if (options.ui) {
                             return;
                         }
-
                         var changed = false;
-                        this.attributeList.forEach(function (attribute) {
+                        this.getAttributeList().forEach(function (attribute) {
                             if (model.hasChanged(attribute)) {
                                 changed = true;
                             }
-                        });
+                        }, this);
 
                         if (changed && !options.skipReRender) {
                             this.reRender();
