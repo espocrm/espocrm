@@ -1837,8 +1837,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
         },
 
-        blockUpdateWebSocket: function () {
+        blockUpdateWebSocket: function (toUnblock) {
             this.updateWebSocketIsBlocked = true;
+
+            if (toUnblock) {
+                setTimeout(function () {
+                    this.unblockUpdateWebSocket();
+                }.bind(this), this.blockUpdateWebSocketPeriod || 500);
+            }
         },
 
         unblockUpdateWebSocket: function () {

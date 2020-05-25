@@ -168,6 +168,9 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             }, function (view) {
                 view.render();
                 view.notify(false);
+                this.listenTo(view, 'before:save', function () {
+                    this.getView('record').blockUpdateWebSocket(true);
+                }, this);
                 this.listenToOnce(view, 'after:save', function () {
                     this.model.fetch();
                     this.removeMenuItem('createContact');
@@ -226,6 +229,9 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                         this.model.fetch();
                         this.removeMenuItem('createCase');
                         view.close();
+                    }, this);
+                    this.listenTo(view, 'before:save', function () {
+                        this.getView('record').blockUpdateWebSocket(true);
                     }, this);
                 });
             }.bind(this));
@@ -306,6 +312,9 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     this.removeMenuItem('createLead');
                     view.close();
                 }.bind(this));
+                    this.listenTo(view, 'before:save', function () {
+                        this.getView('record').blockUpdateWebSocket(true);
+                    }, this);
             }.bind(this));
 
         },

@@ -169,6 +169,10 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 this.dialog.close();
             }, this);
 
+            editView.once('before:save', function () {
+                this.trigger('before:save', model);
+            }, this);
+
             var $buttons = this.dialog.$el.find('.modal-footer button');
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 
