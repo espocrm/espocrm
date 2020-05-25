@@ -156,6 +156,7 @@ return [
         'ldapUserObjectClass',
         'maxEmailAccountCount',
         'massEmailMaxPerHourCount',
+        'massEmailSiteUrl',
         'personalEmailMaxPortionSize',
         'inboundEmailMaxPortionSize',
         'authTokenLifetime',
