@@ -451,6 +451,16 @@ class Htmlizer
                     return $context['inverse'] ? $context['inverse']() : '';
                 }
             },
+            'ifMultipleOf' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+
+                if ($args[0] % $args[1] === 0) {
+                    return $context['fn']();
+                } else {
+                    return $context['inverse'] ? $context['inverse']() : '';
+                }
+            },
             'tableTag' => function () {
                 $args = func_get_args();
                 $context = $args[count($args) - 1];
