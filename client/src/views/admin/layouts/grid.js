@@ -297,10 +297,10 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
 
             data.isCustomLabel = false;
             if (data.customLabel) {
-                data.label = data.customLabel;
+                data.labelTranslated = data.customLabel;
                 data.isCustomLabel = true;
             } else {
-                data.label = this.translate(data.label, 'labels', this.scope);
+                data.labelTranslated = this.translate(data.label, 'labels', this.scope);
             }
 
             data.style = data.style || null;
@@ -437,7 +437,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 if ($label.attr('data-is-custom')) {
                     o.customLabel = $label.text();
                 } else {
-                    o.label = $label.text();
+                    o.label = $label.data('label');
                 }
                 $(el).find('ul.rows > li').each(function (i, li) {
                     var row = [];

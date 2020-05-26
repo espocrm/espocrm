@@ -1,5 +1,5 @@
 <header data-name="{{name}}">
-    <label data-is-custom="{{#if isCustomLabel}}true{{/if}}">{{label}}</label>&nbsp;
+    <label data-is-custom="{{#if isCustomLabel}}true{{/if}}" data-label="{{label}}">{{labelTranslated}}</label>&nbsp;
     <a href="javascript:" data-action="edit-panel-label" class="edit-panel-label"><i class="fas fa-pencil-alt fa-sm"></i></a>
     <a href="javascript:" style="float: right;" data-action="removePanel" class="remove-panel" data-number="{{number}}"><i class="fas fa-times"></i></a>
 </header>
