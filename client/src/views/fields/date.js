@@ -163,7 +163,6 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
                     todayHighlight: true,
                     keyboardNavigation: true,
                     todayBtn: this.getConfig().get('datepickerTodayButton') || false,
-                    orientation: 'bottom',
                 };
 
                 var language = this.getConfig().get('language');
