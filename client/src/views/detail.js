@@ -255,6 +255,9 @@ define('views/detail', 'views/main', function (Dep) {
                 view.render();
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', function () {
+                    if (data.fromSelectRelated) {
+                        this.clearView('dialogSelectRelated');
+                    }
                     this.updateRelationshipPanel(link);
                     this.model.trigger('after:relate');
                 }, this);
@@ -329,18 +332,27 @@ define('views/detail', 'views/main', function (Dep) {
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
 
             this.notify('Loading...');
-            this.createView('dialog', viewName, {
+            this.createView('dialogSelectRelated', viewName, {
                 scope: scope,
                 multiple: true,
-                createButton: false,
+                createButton: data.createButton || false,
+                triggerCreateEvent: true,
                 filters: filters,
                 massRelateEnabled: massRelateEnabled,
                 primaryFilterName: primaryFilterName,
-                boolFilterList: boolFilterList
+                boolFilterList: boolFilterList,
             }, function (dialog) {
                 dialog.render();
-                this.notify(false);
-                dialog.once('select', function (selectObj) {
+                Espo.Ui.notify(false);
+
+                this.listenTo(dialog, 'create', function () {
+                    this.actionCreateRelated({
+                        link: data.link,
+                        fromSelectRelated: true,
+                    });
+                }, this);
+
+                this.listenToOnce(dialog, 'select', function (selectObj) {
                     var data = {};
                     if (Object.prototype.toString.call(selectObj) === '[object Array]') {
                         var ids = [];
@@ -356,21 +368,21 @@ define('views/detail', 'views/main', function (Dep) {
                             data.id = selectObj.id;
                         }
                     }
-                    $.ajax({
-                        url: this.scope + '/' + this.model.id + '/' + link,
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        success: function () {
+                    Espo.Ajax.postRequest(this.scope + '/' + this.model.id + '/' + link, data)
+                    .then(
+                        function () {
                             this.notify('Linked', 'success');
                             this.updateRelationshipPanel(link);
                             this.model.trigger('after:relate');
-                        }.bind(this),
-                        error: function () {
+                        }.bind(this)
+                    )
+                    .fail(
+                        function () {
                             this.notify('Error occurred', 'error');
                         }.bind(this)
-                    });
-                }.bind(this));
-            }.bind(this));
+                    );
+                }, this);
+            });
         },
 
         actionDuplicate: function () {

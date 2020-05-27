@@ -57,7 +57,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
 
         events: {
             'click button[data-action="create"]': function () {
-        this.create();
+                this.create();
             },
             'click .list a': function (e) {
                 e.preventDefault();
@@ -256,6 +256,11 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
         },
 
         create: function () {
+            if (this.options.triggerCreateEvent) {
+                this.trigger('create');
+                return;
+            }
+
             var self = this;
 
             this.notify('Loading...');
@@ -285,4 +290,3 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
         },
     });
 });
-

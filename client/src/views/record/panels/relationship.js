@@ -92,6 +92,8 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                 this.defs.view = false;
             }
 
+            var hasCreate = false;
+
             if (this.defs.create) {
                 if (this.getAcl().check(this.scope, 'create') && !~this.noCreateScopeList.indexOf(this.scope)) {
                     this.buttonList.push({
@@ -104,6 +106,7 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                             link: this.link,
                         }
                     });
+                    hasCreate = true;
                 }
             }
 
@@ -116,6 +119,7 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                     data.boolFilterList = this.defs.selectBoolFilterList;
                 }
                 data.massSelect = this.defs.massSelect;
+                data.createButton = hasCreate;
 
                 this.actionList.unshift({
                     label: 'Select',
