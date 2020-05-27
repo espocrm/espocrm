@@ -181,7 +181,9 @@ class MailMimeParser
         if ($bodyHtml) {
             $email->set('isHtml', true);
             $email->set('body', $bodyHtml);
-            $email->set('bodyPlain', $bodyPlain);
+            if ($bodyPlain) {
+                $email->set('bodyPlain', $bodyPlain);
+            }
         } else {
             $email->set('isHtml', false);
             $email->set('body', $bodyPlain);
