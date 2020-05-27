@@ -140,7 +140,7 @@ class Email extends \Espo\Core\ORM\Entity
 
         $body = $this->get('body');
 
-        $breaks = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
+        $breaks = ["<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;"];
         $body = str_ireplace($breaks, "\r\n", $body);
         $body = strip_tags($body);
 
@@ -154,7 +154,7 @@ class Email extends \Espo\Core\ORM\Entity
             '/&(cent|#162);/i',
             '/&(pound|#163);/i',
             '/&(copy|#169);/i',
-            '/&(reg|#174);/i'
+            '/&(reg|#174);/i',
         ];
         $replaceList = [
             '',
@@ -166,7 +166,7 @@ class Email extends \Espo\Core\ORM\Entity
             chr(162),
             chr(163),
             chr(169),
-            chr(174)
+            chr(174),
         ];
 
         $body = mb_ereg_replace($reList, $replaceList, $body);
