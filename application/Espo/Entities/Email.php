@@ -169,7 +169,7 @@ class Email extends \Espo\Core\ORM\Entity
             chr(174)
         ];
 
-        $body = preg_replace($reList, $replaceList, $body);
+        $body = mb_ereg_replace($reList, $replaceList, $body);
 
         return $body;
     }
