@@ -9,6 +9,7 @@
         "log": "Log"
     },
     "labels": {
+        "As often as possible": "As often as possible",
         "Create ScheduledJob": "Create Scheduled Job"
     },
     "options": {

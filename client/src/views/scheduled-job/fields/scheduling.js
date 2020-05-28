@@ -27,9 +27,11 @@
  ************************************************************************/
 
 define('views/scheduled-job/fields/scheduling',
-    ['views/fields/base', 'lib!client/lib/cronstrue-i18n.min.js'], function (Dep) {
+    ['views/fields/varchar', 'lib!client/lib/cronstrue-i18n.min.js'], function (Dep) {
 
     return Dep.extend({
+
+        forceTrim: true,
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -58,6 +60,11 @@ define('views/scheduled-job/fields/scheduling',
 
             if (!exp) {
                 this.$text.text('');
+                return;
+            }
+
+            if (exp == '* * * * *') {
+                this.$text.text(this.translate('As often as possible', 'labels', 'ScheduledJob'));
                 return;
             }
 
