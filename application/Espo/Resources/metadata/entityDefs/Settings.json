@@ -175,6 +175,14 @@
         "passwordRecoveryForAdminDisabled": {
             "type": "bool"
         },
+        "passwordRecoveryForInternalUsersDisabled": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "passwordRecoveryNoExposure": {
+            "type": "bool",
+            "tooltip": true
+        },
         "passwordGenerateLength": {
             "type": "int",
             "min": 6,

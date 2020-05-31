@@ -19,7 +19,8 @@
             [{"name": "passwordGenerateLength"}, false],
             [{"name": "passwordStrengthLength"}, {"name": "passwordStrengthLetterCount"}],
             [{"name": "passwordStrengthBothCases"}, {"name": "passwordStrengthNumberCount"}],
-            [{"name": "passwordRecoveryDisabled"}, {"name": "passwordRecoveryForAdminDisabled"}]
+            [{"name": "passwordRecoveryDisabled"}, {"name": "passwordRecoveryForAdminDisabled"}],
+            [{"name": "passwordRecoveryNoExposure"}, {"name": "passwordRecoveryForInternalUsersDisabled"}]
         ]
     }
 ]

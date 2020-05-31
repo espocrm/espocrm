@@ -182,7 +182,10 @@ return [
         'authTokenPreventConcurrent',
         'emailParser',
         'passwordRecoveryDisabled',
+        'passwordRecoveryNoExposure',
         'passwordRecoveryForAdminDisabled',
+        'passwordRecoveryForInternalUsersDisabled',
+        'passwordRecoveryRequestDelay',
         'latestVersion',
     ],
     'superAdminItems' => [

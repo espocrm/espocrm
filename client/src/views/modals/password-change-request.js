@@ -144,6 +144,8 @@ define('views/modals/password-change-request', 'views/modal', function (Dep) {
 
                 var msg = this.translate('uniqueLinkHasBeenSent', 'messages', 'User');
 
+                msg += ' ' + this.translate('passwordRecoverySentIfMatched', 'messages', 'User');
+
                 this.$el.find('.cell-userName').addClass('hidden');
                 this.$el.find('.cell-emailAddress').addClass('hidden');
 

@@ -126,6 +126,8 @@
         "useWebSocket": "Use WebSocket",
         "passwordRecoveryDisabled": "Disable password recovery",
         "passwordRecoveryForAdminDisabled": "Disable password recovery for admin users",
+        "passwordRecoveryForInternalUsersDisabled": "Disable password recovery for internal users",
+        "passwordRecoveryNoExposure": "Prevent email address exposure on password recovery form",
         "passwordGenerateLength": "Length of generated passwords",
         "passwordStrengthLength": "Minimum password length",
         "passwordStrengthLetterCount": "Number of letters required in password",
@@ -160,6 +162,8 @@
         }
     },
     "tooltips": {
+        "passwordRecoveryForInternalUsersDisabled": "Only portal users will be able to recover password.",
+        "passwordRecoveryNoExposure": "It won't be possible to determine whether a specific email address is registered in the system.",
         "emailAddressLookupEntityTypeList": "For email address autocomplete.",
         "emailNotificationsDelay": "A message can be edited within the specified timeframe before the notification is sent.",
         "outboundEmailFromAddress": "The system email address.",

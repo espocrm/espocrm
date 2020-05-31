@@ -29,17 +29,15 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class User extends Record
 {
-    const PASSWORD_CHANGE_REQUEST_LIFETIME = 360; // minutes
-
     protected function init()
     {
         parent::init();
@@ -209,81 +207,28 @@ class User extends Record
 
     public function passwordChangeRequest($userName, $emailAddress, $url = null)
     {
-        if ($this->getConfig()->get('passwordRecoveryDisabled')) {
-            throw new Forbidden("Password recovery disabled");
-        }
-
-        $user = $this->getEntityManager()->getRepository('User')->where([
-            'userName' => $userName,
-            'emailAddress' => $emailAddress
-        ])->findOne();
-
-        if (empty($user)) {
-            throw new NotFound();
-        }
-
-        if (!$user->isActive()) {
-            throw new NotFound();
-        }
-
-        if ($user->isApi()) {
-            throw new NotFound();
-        }
-
-        if ($this->getConfig()->get('passwordRecoveryForAdminDisabled')) {
-            if ($user->isAdmin()) {
-                throw new NotFound();
-            }
-        }
-
-        $userId = $user->id;
-
-        $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
-            'userId' => $userId
-        ])->findOne();
-        if ($passwordChangeRequest) {
-            throw new Forbidden(json_encode(['reason' => 'Already-Sent']));
-        }
-
-        $requestId = Util::generateCryptId();
-
-        $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
-        $passwordChangeRequest->set([
-            'userId' => $userId,
-            'requestId' => $requestId,
-            'url' => $url
-        ]);
-
-        if (!$user->isAdmin() && $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo') {
-            throw new Forbidden();
-        }
-
-        $this->sendChangePasswordLink($requestId, $emailAddress, $user);
-
-        $this->getEntityManager()->saveEntity($passwordChangeRequest);
-
-        if (!$passwordChangeRequest->id) {
-            throw new Error();
-        }
-
-        $dt = new \DateTime();
-        $dt->add(new \DateInterval('PT'. self::PASSWORD_CHANGE_REQUEST_LIFETIME . 'M'));
-
-        $job = $this->getEntityManager()->getEntity('Job');
-
-        $job->set([
-            'serviceName' => 'User',
-            'methodName' => 'removeChangePasswordRequestJob',
-            'data' => [
-                'id' => $passwordChangeRequest->id
-            ],
-            'executeTime' => $dt->format('Y-m-d H:i:s'),
-            'queue' => 'q1'
-        ]);
-
-        $this->getEntityManager()->saveEntity($job);
-
+        $recovery = $this->getContainer()->get('injectableFactory')->createByClassName('\\Espo\\Core\\Password\\Recovery');
+        $recovery->request($emailAddress, $userName, $url);
         return true;
+    }
+
+    public function changePasswordByRequest(string $requestId, string $password)
+    {
+        $recovery = $this->getContainer()->get('injectableFactory')->createByClassName('\\Espo\\Core\\Password\\Recovery');
+
+        $request = $recovery->getRequest($requestId);
+
+        $userId = $request->get('userId');
+
+        if (!$userId) throw new Error();
+
+        $this->changePassword($userId, $password);
+
+        $recovery->removeRequest($requestId);
+
+        return (object) [
+            'url' => $request->get('url'),
+        ];
     }
 
     public function removeChangePasswordRequestJob($data)
@@ -659,69 +604,7 @@ class User extends Record
         $this->getMailSender()->send($email);
     }
 
-    protected function sendChangePasswordLink($requestId, $emailAddress, Entity $user)
-    {
-        if (empty($emailAddress)) {
-            return;
-        }
 
-        $email = $this->getEntityManager()->getEntity('Email');
-
-        if (!$this->getMailSender()->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
-            throw new Error("SMTP credentials are not defined.");
-        }
-
-        $templateFileManager = $this->getContainer()->get('templateFileManager');
-
-        $subjectTpl = $templateFileManager->getTemplate('passwordChangeLink', 'subject', 'User');
-        $bodyTpl = $templateFileManager->getTemplate('passwordChangeLink', 'body', 'User');
-
-        $siteUrl = $this->getConfig()->getSiteUrl();
-
-        if ($user->isPortal()) {
-            $portal = $this->getEntityManager()->getRepository('Portal')->distinct()->join('users')->where([
-                'isActive' => true,
-                'users.id' => $user->id,
-            ])->findOne();
-            if ($portal) {
-                if ($portal->get('customUrl')) {
-                    $siteUrl = $portal->get('customUrl');
-                }
-            }
-        }
-
-        $data = [];
-        $link = $siteUrl . '?entryPoint=changePassword&id=' . $requestId;
-        $data['link'] = $link;
-
-        $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->getFileManager(), $this->getDateTime(), $this->getNumber(), null);
-
-        $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
-        $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
-
-        $email->set([
-            'subject' => $subject,
-            'body' => $body,
-            'to' => $emailAddress,
-            'isSystem' => true
-        ]);
-
-        if ($this->getMailSender()->hasSystemSmtp()) {
-            $this->getMailSender()->useGlobal();
-        } else {
-            $this->getMailSender()->useSmtp([
-                'server' => $this->getConfig()->get('internalSmtpServer'),
-                'port' => $this->getConfig()->get('internalSmtpPort'),
-                'auth' => $this->getConfig()->get('internalSmtpAuth'),
-                'username' => $this->getConfig()->get('internalSmtpUsername'),
-                'password' => $this->getConfig()->get('internalSmtpPassword'),
-                'security' => $this->getConfig()->get('internalSmtpSecurity'),
-                'fromAddress' => $this->getConfig()->get('internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
-            ]);
-        }
-
-        $this->getMailSender()->send($email);
-    }
 
     public function delete($id)
     {
