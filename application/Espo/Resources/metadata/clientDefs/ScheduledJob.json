@@ -4,6 +4,9 @@
         "log": {
             "readOnly": true,
             "view": "views/scheduled-job/record/panels/log",
+            "createDisabled": true,
+            "selectDisabled": true,
+            "viewDisabled": true,
             "unlinkDisabled": true
         }
     },
