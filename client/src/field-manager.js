@@ -184,7 +184,7 @@
         },
 
         getEntityTypeFieldParam: function (entityType, field, param) {
-            this.metadata.get(['entityDefs', entityType, 'fields', field, param]);
+            return this.metadata.get(['entityDefs', entityType, 'fields', field, param]);
         },
 
         getViewName: function (fieldType) {
