@@ -1,0 +1,178 @@
+.modal-header.fixed-height {
+    height: 40px;
+    max-height: 40px;
+    overflow: hidden;
+
+    .modal-title {
+        width: ~"calc(100% - 20px)";
+        > .modal-title-text {
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        &.overlapped {
+            > .modal-title-text {
+                &:before {
+                    content: " ";
+                    position: absolute;
+                    right: 34px;
+                    background: linear-gradient(to right, transparent, @modal-header-bg);
+                    height: 30px;
+                    width: 60px;
+                }
+            }
+        }
+    }
+}
+
+.modal-header a {
+    color: @text-color;
+}
+
+.modal-container.overlaid .modal-content {
+    .box-shadow(none);
+}
+
+.modal-header {
+    background-color: @modal-header-bg;
+}
+
+.modal-header {
+    padding: @modal-title-padding @panel-padding;
+    border-bottom: 0 solid @modal-header-border-color;
+    min-height: (@modal-title-padding + @modal-title-line-height);
+}
+
+.modal-header .close {
+    font-size: 31px;
+    font-weight: normal;
+    margin-top: -4px;
+    max-height: @font-size-h3;
+    > span {
+        position: relative;
+        max-height: @font-size-h3;
+        height: @font-size-h3;
+        display: inline-block;
+    }
+    opacity: 0.4;
+}
+
+.modal-footer {
+    margin-top: @modal-title-padding;
+    padding: @panel-padding @panel-padding @panel-padding;
+}
+
+.modal-footer > .main-btn-group {
+    float: right;
+}
+
+.modal-footer > .additional-btn-group {
+    float: left;
+}
+
+.modal-dialog > .modal-content {
+    background-clip: border-box;
+    border-color: @default-border-color;
+    border-width: 0;
+}
+
+.modal-footer {
+    margin-top: 0;
+}
+
+.modal-header {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.modal-footer > .main-btn-group {
+    float: left;
+}
+
+.modal-footer > .additional-btn-group {
+    float: right;
+}
+
+.dialog-confirm .modal-footer > .main-btn-group {
+    float: right;
+}
+
+.dialog-confirm .modal-footer > .additional-btn-group {
+    float: left;
+}
+
+.modal-footer {
+    padding-top: @modal-title-padding;
+    padding-bottom: @modal-title-padding;
+}
+
+@media (min-width: @screen-sm-min) {
+    .modal-dialog {
+        margin: 0 0 0 auto;
+    }
+    .modal-content .note-editor > .modal > .modal-dialog {
+        margin: 0 0 0 -@container-padding;
+    }
+
+    .dialog-confirm > .modal-dialog {
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: @screen-sm-min) {
+    .modal-dialog {
+        margin: 0 0 0 0;
+    }
+}
+
+.modal-dialog .modal-body .list-buttons-container .sticked-bar {
+    top: 94px !important;
+    width: 100% !important;
+    right: 0 !important;
+    left: unset;
+    padding-top: 0;
+    padding-left: @container-padding - 1px;
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    .modal-dialog {
+        margin: 0 0;
+    }
+    .modal-dialog .image-container {
+        margin-left: -@panel-padding;
+        margin-right: -@panel-padding;
+    }
+}
+
+.dialog-confirm > .modal-dialog > .modal-content {
+    text-align: center;
+}
+
+@media screen and (min-width: @screen-sm-min) {
+    .modal-dialog {
+        width: 740px;
+    }
+}
+
+@media screen and (min-width: @screen-md-min) {
+    .modal-dialog,
+    .dialog-centered {
+        width: 900px;
+    }
+    .dialog-confirm > .modal-dialog,
+    .dialog-centered > .modal-dialog {
+        width: 550px;
+    }
+}
+
+.modal-body > .no-side-margin {
+    margin-left: -@panel-padding;
+    margin-right: -@panel-padding;
+}
+
+.modal.in .modal.in {
+    overflow: visible !important;
+    overflow-y: visible !important;
+}

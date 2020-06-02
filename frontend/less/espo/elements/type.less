@@ -1,0 +1,145 @@
+.margin {
+    margin: @table-cell-padding 0;
+}
+
+.margin-top {
+    margin-top: @table-cell-padding;
+}
+
+.margin-bottom {
+    margin-bottom: @table-cell-padding;
+}
+
+.margin-bottom-2x {
+    margin-bottom: @table-cell-padding * 2;
+}
+
+.margin-bottom.margin {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+h2 {
+    font-size: 26px;
+}
+
+h3 {
+    font-size: 22px;
+}
+
+h4 {
+    font-size: 18px;
+}
+
+h5 {
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: @gray-soft;
+}
+
+h6 {
+    font-weight: 600;
+    color: @gray-soft;
+    font-size: 14px;
+}
+
+code {
+    font-style: italic;
+}
+
+b, strong {
+    font-weight: 600;
+}
+
+.text-primary {
+    color: @state-primary-text;
+}
+
+.text-soft {
+    color: @gray-soft;
+}
+
+.text-smaller {
+    font-size: @font-size-smaller;
+}
+
+.text-bold {
+    font-weight: 600;
+}
+
+pre > code {
+    font-style: normal;
+}
+
+hr {
+    border-top: 1px solid @panel-default-border;
+}
+
+blockquote {
+    font-size: @font-size-base;
+    border-left-width: 3px;
+}
+
+.well > p:last-child {
+    margin-bottom: 0;
+}
+
+.well {
+    padding: @well-padding;
+}
+
+.badge {
+    font-weight: 600;
+}
+
+.badge-circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    text-align: center;
+    display: table-cell;
+    font-size: 5px;
+    line-height: 8px;
+    text-align: center;
+    background-color: @main-gray;
+}
+
+.badge-circle.badge-circle-danger {
+    background-color: @brand-danger;
+}
+
+.badge-circle.badge-circle-warning {
+    background-color: @brand-warning;
+}
+
+.label {
+    padding: .09em .5em .2em;
+    position: relative;
+    top: -1px;
+    font-weight: 600;
+}
+
+.label-md {
+    font-weight: normal;
+    font-size: 100%;
+    padding: @label-padding-medium;
+    top: 0;
+}
+
+.label-sm {
+    font-weight: normal;
+    font-size: 75%;
+    padding: @label-padding-small;
+}
+
+.small .label-md,
+.label-lg.small {
+    font-size: 75%;
+    padding: @label-padding-small;
+    top: -1px;
+}

@@ -1,0 +1,191 @@
+#navbar .navbar {
+    border-bottom-width: 0 !important;
+
+    img.logo {
+        max-height: 100%;
+    }
+
+    .navbar-brand {
+        padding: 0;
+    }
+
+    .navbar-right {
+        margin-right: -2px !important;
+
+        > li > a {
+            text-align: center;
+        }
+    }
+
+    .navbar-form.global-search-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .navbar-toggle {
+        float: left;
+        text-align: center;
+        width: 38px;
+        margin: 0;
+        color: @navbar-inverse-link-color;
+    }
+
+    .tab span.color-icon {
+        left: 0;
+        font-size: 75%;
+        top: -2px;
+    }
+
+    @media screen and (min-width: @screen-sm-min) {
+        .tabs > .more {
+            li.show-more a {
+                text-align: center;
+            }
+
+            .after-show-more {
+                display: none;
+            }
+
+            .more-expanded {
+                .show-more {
+                    display: none;
+                }
+                .after-show-more {
+                    display: list-item;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: (@screen-sm-min - 1px)) {
+        li.show-more {
+            display: none;
+        }
+    }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+    #navbar .navbar {
+        .navbar-body {
+            -webkit-overflow-scrolling: unset;
+        }
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    #navbar .navbar {
+
+        min-height: @navbar-height-xsmall;
+
+        .navbar-form.global-search-container {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .navbar-form.global-search-container > .input-group {
+            margin-left: 14px;
+        }
+
+        .navbar-right {
+            > li {
+                display: inline-block;
+            }
+
+            > li.notifications-badge-container {
+                display: inline-block;
+                float: right;
+            }
+        }
+
+        .notifications-badge-container > .notifications-button > .number-badge {
+            left: unset;
+            right: 4px;
+        }
+
+        .navbar-body {
+            overflow-x: hidden !important;
+        }
+
+        .navbar-brand {
+            height: @navbar-height-xsmall;
+
+            > img.logo {
+                height: @navbar-logo-height-xsmall;
+            }
+        }
+
+        ul.tabs {
+            li > a {
+                padding-top: 9px;
+                padding-bottom: 9px;
+            }
+
+            > li.more {
+                &.open {
+                    > ul {
+                        li > a {
+                            padding-top: 9px;
+                            padding-bottom: 9px;
+                            padding-left: 15px;
+                            padding-right: 15px;
+                        }
+                    }
+                }
+            }
+        }
+
+        @supports (display: grid) {
+            ul.tabs {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+                &::before {
+                    content: none;
+                    display: none;
+                }
+
+                &::after {
+                    content: none;
+                    display: none;
+                }
+
+                > li.more {
+                    grid-column: ~"1 / -1";
+
+                    &.open {
+                        > ul {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                        }
+                    }
+                }
+            }
+        }
+
+        .navbar-toggle {
+            padding-top: 9px;
+            padding-bottom: 9px;
+            border: 0;
+        }
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    #navbar .navbar {
+        .navbar-body:not(.in) {
+            border-top-width: 0;
+            box-shadow: none;
+
+            height: 0;
+            overflow: hidden;
+        }
+
+        .navbar-right-container {
+            li.notifications-badge-container {
+                position: absolute;
+                top: -1px;
+                right: 0;
+            }
+        }
+    }
+}
