@@ -112,3 +112,56 @@
     color: @gray-light;
 }
 
+.btn-text {
+    color: @gray-dark;
+    border-radius: 0;
+
+    .far,
+    .fas {
+        color: @gray-soft;
+    }
+
+    &,
+    &:active,
+    &.active,
+    &[disabled],
+    fieldset[disabled] & {
+        background-color: transparent;
+        .box-shadow(none);
+    }
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: transparent;
+    }
+    &:hover,
+    &:focus {
+        color: @gray-dark;
+        text-decoration: none;
+        background-color: transparent;
+        .far,
+        .fas {
+            color: @gray-dark;
+        }
+    }
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover,
+        &:focus {
+            color: @gray-light;
+            text-decoration: none;
+        }
+        color: @gray-light;
+        .far,
+        .fas {
+            color: @gray-light;
+        }
+    }
+    &.active {
+        border-bottom: 1px solid @gray-light;
+    }
+
+    font-weight: 400;
+}
