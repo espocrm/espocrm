@@ -115,6 +115,10 @@ abstract class OAuth2Abstract implements IClient
 
         $data['expiresAt'] = null;
 
+        if (isset($result['refresh_token']) && $result['refresh_token'] !== $this->refreshToken) {
+            $data['refreshToken'] = $result['refresh_token'];
+        }
+
         if (isset($result['expires_in']) && is_numeric($result['expires_in'])) {
             $data['expiresAt'] = (new \DateTime())
                 ->modify('+' . $result['expires_in'] . ' seconds')

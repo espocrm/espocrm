@@ -71,11 +71,18 @@ class ClientManager
             $externalAccountEntity->set('tokenType', $data['tokenType']);
             $externalAccountEntity->set('expiresAt', $data['expiresAt'] ?? null);
 
+            if ($data['refreshToken'] ?? null) {
+                $externalAccountEntity->set('refreshToken', $data['refreshToken']);
+            }
+
             $copy = $this->getEntityManager()->getEntity('ExternalAccount', $externalAccountEntity->id);
             if ($copy) {
                 $copy->set('accessToken', $data['accessToken']);
                 $copy->set('tokenType', $data['tokenType']);
                 $copy->set('expiresAt', $data['expiresAt'] ?? null);
+                if ($data['refreshToken'] ?? null) {
+                    $copy->set('refreshToken', $data['refreshToken'] ?? null);
+                }
                 $this->getEntityManager()->saveEntity($copy, ['isTokenRenewal' => true]);
             }
         }
