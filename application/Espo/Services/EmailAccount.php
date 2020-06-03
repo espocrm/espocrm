@@ -92,6 +92,7 @@ class EmailAccount extends Record
             $entity = $this->getEntityManager()->getEntity('EmailAccount', $params['id']);
             if ($entity) {
                 $params['password'] = $this->getCrypt()->decrypt($entity->get('password'));
+                $params['imapHandler'] = $entity->get('imapHandler');
             }
         }
 
@@ -108,6 +109,13 @@ class EmailAccount extends Record
 
     public function testConnection(array $params)
     {
+        if (!empty($params['id'])) {
+            $account = $this->getEntityManager()->getEntity('EmailAccount', $params['id']);
+            if ($account) {
+                $params['imapHandler'] = $account->get('imapHandler');
+            }
+        }
+
         $storage = $this->createStorage($params);
 
         $userId = $params['userId'] ?? null;
@@ -132,7 +140,22 @@ class EmailAccount extends Record
 
         $imapParams = null;
 
-        if ($emailAddress && $userId) {
+        $handlerClassName = $params['imapHandler'] ?? null;
+
+        if ($handlerClassName && !empty($params['id'])) {
+            try {
+                $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error(
+                    "EmailAccount: Could not create Imap Handler. Error: " . $e->getMessage()
+                );
+            }
+            if (method_exists($handler, 'prepareProtocol')) {
+                $imapParams = $handler->prepareProtocol($params['id'], $params);
+            }
+        }
+
+        if ($emailAddress && $userId && !$handlerClassName) {
             $emailAddress = strtolower($emailAddress);
             $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($userId);
             if ($userData) {
@@ -217,6 +240,9 @@ class EmailAccount extends Record
         if ($emailAccount->get('ssl')) {
             $params['ssl'] = true;
         }
+
+        $params['imapHandler'] = $emailAccount->get('imapHandler');
+        $params['id'] = $emailAccount->id;
 
         $storage = $this->createStorage($params);
 
