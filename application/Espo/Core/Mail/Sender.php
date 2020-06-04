@@ -135,7 +135,7 @@ class Sender
         if ($params['auth'] ?? false) {
             $authMechanism = $params['authMechanism'] ?? $params['smtpAuthMechanism'] ?? null;
             if ($authMechanism) {
-                $authMechanism = preg_replace("([\.]{2,})", '', $params['authMechanism']);
+                $authMechanism = preg_replace("([\.]{2,})", '', $authMechanism);
                 if (in_array($authMechanism, ['login', 'crammd5', 'plain'])) {
                     $options['connectionClass'] = $authMechanism;
                 } else {
