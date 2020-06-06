@@ -290,7 +290,7 @@ define('views/detail', 'views/main', function (Dep) {
                     }
                 }
             } else {
-                var foreignLink = this.model.defs['links'][link].foreign;
+                var foreignLink = (this.model.defs['links'][link] || {}).foreign;
                 if (foreignLink && scope) {
                     var foreignLinkType = this.getMetadata().get(['entityDefs', scope, 'links', foreignLink, 'type']);
                     var foreignLinkFieldType = this.getMetadata().get(['entityDefs', scope, 'fields', foreignLink, 'type']);
