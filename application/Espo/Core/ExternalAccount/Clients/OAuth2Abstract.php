@@ -63,6 +63,8 @@ abstract class OAuth2Abstract implements IClient
 
     protected $expiresAt = null;
 
+    const ACCESS_TOKEN_EXPIRATION_MARGIN = '10 seconds';
+
     public function __construct($client, array $params = [], $manager = null)
     {
         $this->client = $client;
@@ -170,12 +172,12 @@ abstract class OAuth2Abstract implements IClient
         }
     }
 
-    protected function handleAccessTokenActuality()
+    public function handleAccessTokenActuality()
     {
         if ($this->getParam('expiresAt')) {
             try {
                 $dt = new \DateTime($this->getParam('expiresAt'));
-                $dt->modify('-10 seconds');
+                $dt->modify('-' . self::ACCESS_TOKEN_EXPIRATION_MARGIN);
             } catch (\Exception $e) {
                 return;
             }
