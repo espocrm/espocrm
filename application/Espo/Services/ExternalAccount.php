@@ -56,7 +56,9 @@ class ExternalAccount extends Record
             throw new Error("{$integration} is disabled.");
         }
 
-        $factory = new \Espo\Core\ExternalAccount\ClientManager($this->getEntityManager(), $this->getMetadata(), $this->getConfig());
+        $factory = new \Espo\Core\ExternalAccount\ClientManager(
+            $this->getEntityManager(), $this->getMetadata(), $this->getConfig(), $this->getInjection('injectableFactory')
+        );
         return $factory->create($integration, $id);
     }
 

@@ -122,7 +122,6 @@ abstract class OAuth2Abstract implements IClient
         if (isset($result['expires_in']) && is_numeric($result['expires_in'])) {
             $data['expiresAt'] = (new \DateTime())
                 ->modify('+' . $result['expires_in'] . ' seconds')
-                ->modify('-1 seconds')
                 ->format('Y-m-d H:i:s');
         }
 
@@ -171,9 +170,28 @@ abstract class OAuth2Abstract implements IClient
         }
     }
 
+    protected function handleAccessTokenActuality()
+    {
+        if ($this->getParam('expiresAt')) {
+            try {
+                $dt = new \DateTime($this->getParam('expiresAt'));
+                $dt->modify('-10 seconds');
+            } catch (\Exception $e) {
+                return;
+            }
+
+            if ($dt->format('U') <= (new \DateTime())->format('U')) {
+                $GLOBALS['log']->debug("Oauth: Refreshing expired token for client {$this->clientId}");
+                $this->refreshToken();
+            }
+        }
+    }
+
     public function request($url, $params = null, $httpMethod = Client::HTTP_METHOD_GET, $contentType = null, $allowRenew = true)
     {
-        $httpHeaders = array();
+        $this->handleAccessTokenActuality();
+
+        $httpHeaders = [];
         if (!empty($contentType)) {
             $httpHeaders['Content-Type'] = $contentType;
             switch ($contentType) {

@@ -29,9 +29,11 @@
 
 namespace Espo\Core\ExternalAccount;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+
+use Espo\Core\InjectableFactory;
 
 class ClientManager
 {
@@ -39,13 +41,17 @@ class ClientManager
 
     protected $metadata;
 
-    protected $clientMap = array();
+    protected $clientMap = [];
 
-    public function __construct($entityManager, $metadata, $config)
+    protected $injectableFactory = null;
+
+    public function __construct(
+        $entityManager, $metadata, $config, ?InjectableFactory $injectableFactory = null)
     {
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
         $this->config = $config;
+        $this->injectableFactory = $injectableFactory;
     }
 
     protected function getMetadata()
@@ -88,14 +94,44 @@ class ClientManager
         }
     }
 
-    public function create($integration, $userId)
+    public function create(string $integration, string $userId)
     {
         $authMethod = $this->getMetadata()->get("integrations.{$integration}.authMethod");
         $methodName = 'create' . ucfirst($authMethod);
-        return $this->$methodName($integration, $userId);
+
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($integration, $userId);
+        }
+
+        if (!$this->injectableFactory) {
+            throw new Error();
+        }
+
+        $integrationEntity = $this->getEntityManager()->getEntity('Integration', $integration);
+        $externalAccountEntity = $this->getEntityManager()->getEntity('ExternalAccount', $integration . '__' . $userId);
+
+        if (!$externalAccountEntity) {
+            throw new Error("External Account {$integration} not found for {$userId}");
+        }
+
+        if (!$integrationEntity->get('enabled')) return null;
+        if (!$externalAccountEntity->get('enabled')) return null;
+
+        $className = $this->getMetadata()->get("integrations.{$integration}.clientClassName");
+        $client = $this->injectableFactory->createByClassName($className);
+
+        $client->setup(
+            $userId,
+            $integrationEntity,
+            $externalAccountEntity
+        );
+
+        $this->addToClientMap($client, $integrationEntity, $externalAccountEntity, $userId);
+
+        return $client;
     }
 
-    protected function createOAuth2($integration, $userId)
+    protected function createOAuth2(string $integration, string $userId)
     {
         $integrationEntity = $this->getEntityManager()->getEntity('Integration', $integration);
         $externalAccountEntity = $this->getEntityManager()->getEntity('ExternalAccount', $integration . '__' . $userId);
@@ -122,7 +158,7 @@ class ClientManager
 
         $oauth2Client = new \Espo\Core\ExternalAccount\OAuth2\Client();
 
-        $client = new $className($oauth2Client, array(
+        $client = new $className($oauth2Client, [
             'endpoint' => $this->getMetadata()->get("integrations.{$integration}.params.endpoint"),
             'tokenEndpoint' => $this->getMetadata()->get("integrations.{$integration}.params.tokenEndpoint"),
             'clientId' => $integrationEntity->get('clientId'),
@@ -131,7 +167,8 @@ class ClientManager
             'accessToken' => $externalAccountEntity->get('accessToken'),
             'refreshToken' => $externalAccountEntity->get('refreshToken'),
             'tokenType' => $externalAccountEntity->get('tokenType'),
-        ), $this);
+            'expiresAt' => $externalAccountEntity->get('expiresAt'),
+        ], $this);
 
         $this->addToClientMap($client, $integrationEntity, $externalAccountEntity, $userId);
 
@@ -149,4 +186,3 @@ class ClientManager
         );
     }
 }
-
