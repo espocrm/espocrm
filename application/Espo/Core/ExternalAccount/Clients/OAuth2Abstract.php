@@ -286,15 +286,20 @@ abstract class OAuth2Abstract implements IClient
     {
         if (empty($this->refreshToken)) {
             throw new Error(
-                "Outlook: Could not refresh token for client {$this->clientId}, because refreshToken is empty."
+                "Oauth: Could not refresh token for client {$this->clientId}, because refreshToken is empty."
             );
         }
 
         $this->lock();
 
-        $r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_REFRESH_TOKEN, [
-            'refresh_token' => $this->refreshToken,
-        ]);
+        try {
+            $r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_REFRESH_TOKEN, [
+                'refresh_token' => $this->refreshToken,
+            ]);
+        } catch (\Exception $e) {
+            $this->unlock();
+            throw new Error("Oauth: Error while refreshing token: " . $e->getMessage());
+        }
 
         if ($r['code'] == 200) {
             if (is_array($r['result'])) {
@@ -314,6 +319,8 @@ abstract class OAuth2Abstract implements IClient
         $this->unlock();
 
         $GLOBALS['log']->error("Oauth: Refreshing token failed for client {$this->clientId}: " . json_encode($r));
+
+        return false;
     }
 
     protected function handleErrorResponse($r)
