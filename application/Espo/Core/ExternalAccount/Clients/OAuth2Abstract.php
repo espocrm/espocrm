@@ -63,7 +63,11 @@ abstract class OAuth2Abstract implements IClient
 
     protected $expiresAt = null;
 
-    const ACCESS_TOKEN_EXPIRATION_MARGIN = '10 seconds';
+    const ACCESS_TOKEN_EXPIRATION_MARGIN = '20 seconds';
+
+    const LOCK_TIMEOUT = 5;
+
+    const LOCK_CHECK_STEP = 0.5;
 
     public function __construct($client, array $params = [], $manager = null)
     {
@@ -95,7 +99,7 @@ abstract class OAuth2Abstract implements IClient
     public function setParams(array $params)
     {
         foreach ($this->paramList as $name) {
-            if (!empty($params[$name])) {
+            if (array_key_exists($name, $params)) {
                 $this->setParam($name, $params[$name]);
             }
         }
@@ -183,10 +187,51 @@ abstract class OAuth2Abstract implements IClient
             }
 
             if ($dt->format('U') <= (new \DateTime())->format('U')) {
-                $GLOBALS['log']->debug("Oauth: Refreshing expired token for client {$this->clientId}");
+                $GLOBALS['log']->debug("Oauth: Refreshing expired token for client {$this->clientId}.");
+
+                $until = microtime(true) + self::LOCK_TIMEOUT;
+
+                if ($this->isLocked()) {
+                    while (true) {
+                        usleep(self::LOCK_CHECK_STEP * 1000000);
+
+                        if (!$this->isLocked()) {
+                            $GLOBALS['log']->debug("Oauth: Waited until unlocked for client {$this->clientId}.");
+                            $this->reFetch();
+                            return;
+                        }
+
+                        if (microtime(true) > $until) {
+                            $GLOBALS['log']->debug("Oauth: Waited until unlocked but timed out for client {$this->clientId}.");
+                            $this->unlock();
+                            break;
+                        }
+                    }
+                }
+
                 $this->refreshToken();
             }
         }
+    }
+
+    protected function isLocked()
+    {
+        return $this->manager->isClientLocked($this);
+    }
+
+    protected function lock()
+    {
+        $this->manager->lockClient($this);
+    }
+
+    protected function unlock()
+    {
+        $this->manager->unlockClient($this);
+    }
+
+    protected function reFetch()
+    {
+        $this->manager->reFetchClient($this);
     }
 
     public function request($url, $params = null, $httpMethod = Client::HTTP_METHOD_GET, $contentType = null, $allowRenew = true)
@@ -239,27 +284,36 @@ abstract class OAuth2Abstract implements IClient
 
     protected function refreshToken()
     {
-        if (!empty($this->refreshToken)) {
-            $r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_REFRESH_TOKEN, [
-                'refresh_token' => $this->refreshToken,
-            ]);
-            if ($r['code'] == 200) {
-                if (is_array($r['result'])) {
-                    if (!empty($r['result']['access_token'])) {
-                        $data = $this->getAccessTokenDataFromResponseResult($r['result']);
+        if (empty($this->refreshToken)) {
+            throw new Error(
+                "Outlook: Could not refresh token for client {$this->clientId}, because refreshToken is empty."
+            );
+        }
 
-                        $this->setParams($data);
-                        $this->afterTokenRefreshed($data);
-                        return true;
-                    }
+        $this->lock();
+
+        $r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_REFRESH_TOKEN, [
+            'refresh_token' => $this->refreshToken,
+        ]);
+
+        if ($r['code'] == 200) {
+            if (is_array($r['result'])) {
+                if (!empty($r['result']['access_token'])) {
+                    $data = $this->getAccessTokenDataFromResponseResult($r['result']);
+
+                    $this->setParams($data);
+                    $this->afterTokenRefreshed($data);
+
+                    $this->unlock();
+
+                    return true;
                 }
             }
-            $GLOBALS['log']->notice("Oauth: Refreshing token failed for client {$this->clientId}: " . json_encode($r));
-        } else {
-            $GLOBALS['log']->notice(
-                "Oauth: Could not refresh token for client {$this->clientId}, because refreshToken is empty.");
-
         }
+
+        $this->unlock();
+
+        $GLOBALS['log']->error("Oauth: Refreshing token failed for client {$this->clientId}: " . json_encode($r));
     }
 
     protected function handleErrorResponse($r)

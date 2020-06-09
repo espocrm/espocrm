@@ -83,6 +83,10 @@ class ClientManager
 
             $copy = $this->getEntityManager()->getEntity('ExternalAccount', $externalAccountEntity->id);
             if ($copy) {
+                if (!$copy->get('enabled')) {
+                    throw new Error("External Account Client Manager: Account got disabled.");
+                }
+
                 $copy->set('accessToken', $data['accessToken']);
                 $copy->set('tokenType', $data['tokenType']);
                 $copy->set('expiresAt', $data['expiresAt'] ?? null);
@@ -184,5 +188,83 @@ class ClientManager
             'integrationEntity' => $integrationEntity,
             'externalAccountEntity' => $externalAccountEntity,
         );
+    }
+
+    protected function getClientRecord($client) : \Espo\ORM\Entity
+    {
+        $data = $this->clientMap[spl_object_hash($client)];
+
+        if (!$data) {
+            throw new Error("External Account Client Manager: Client not found in hash.");
+        }
+
+        return $data['externalAccountEntity'];
+    }
+
+    public function isClientLocked($client) : bool
+    {
+        $externalAccountEntity = $this->getClientRecord($client);
+        $id = $externalAccountEntity->id;
+
+        $e = $this->getEntityManager()->getRepository('ExternalAccount')
+            ->select(['id', 'isLocked'])->where(['id' => $id])->findOne();
+
+        if (!$e) {
+            throw new Error("External Account Client Manager: Client {$id} not found in DB.");
+        }
+
+        return $e->get('isLocked');
+    }
+
+    public function lockClient($client)
+    {
+        $externalAccountEntity = $this->getClientRecord($client);
+        $id = $externalAccountEntity->id;
+
+        $e = $this->getEntityManager()->getRepository('ExternalAccount')
+            ->select(['id', 'isLocked'])->where(['id' => $id])->findOne();
+
+        if (!$e) {
+            throw new Error("External Account Client Manager: Client {$id} not found in DB.");
+        }
+
+        $e->set('isLocked', true);
+
+        $this->getEntityManager()->saveEntity($e);
+    }
+
+    public function unlockClient($client)
+    {
+        $externalAccountEntity = $this->getClientRecord($client);
+        $id = $externalAccountEntity->id;
+
+        $e = $this->getEntityManager()->getRepository('ExternalAccount')
+            ->select(['id', 'isLocked'])->where(['id' => $id])->findOne();
+
+        if (!$e) {
+            throw new Error("External Account Client Manager: Client {$id} not found in DB.");
+        }
+
+        $e->set('isLocked', false);
+
+        $this->getEntityManager()->saveEntity($e);
+    }
+
+    public function reFetchClient($client)
+    {
+        $externalAccountEntity = $this->getClientRecord($client);
+        $id = $externalAccountEntity->id;
+
+        $e = $this->getEntityManager()->getEntity('ExternalAccount', $id);
+
+        if (!$e) {
+            throw new Error("External Account Client Manager: Client {$id} not found in DB.");
+        }
+
+        $data = $e->getValueMap();
+
+        $externalAccountEntity->set($data);
+
+        $client->setParams(get_object_vars($data));
     }
 }

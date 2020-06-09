@@ -9,6 +9,9 @@
         },
         "enabled": {
             "type": "bool"
+        },
+        "isLocked": {
+            "type": "bool"
         }
     }
 }
