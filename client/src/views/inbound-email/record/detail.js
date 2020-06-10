@@ -47,7 +47,7 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
             this.controlSmtpFields();
             this.controlSentFolderField();
             this.listenTo(this.model, 'change:useSmtp', this.controlSmtpFields, this);
-            this.listenTo(this.model, 'change:smtpAuth', this.controlSmtpAuthField, this);
+            this.listenTo(this.model, 'change:smtpAuth', this.controlSmtpFields, this);
             this.listenTo(this.model, 'change:storeSentEmails', this.controlSentFolderField, this);
         },
 

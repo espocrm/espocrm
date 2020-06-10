@@ -111,7 +111,7 @@ define('views/email-account/record/detail', 'views/record/detail', function (Dep
         initSmtpFieldsControl: function () {
             this.controlSmtpFields();
             this.listenTo(this.model, 'change:useSmtp', this.controlSmtpFields, this);
-            this.listenTo(this.model, 'change:smtpAuth', this.controlSmtpAuthField, this);
+            this.listenTo(this.model, 'change:smtpAuth', this.controlSmtpFields, this);
         },
 
         controlSmtpFields: function () {
