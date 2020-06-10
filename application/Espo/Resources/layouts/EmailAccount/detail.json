@@ -43,10 +43,11 @@
         "label":"SMTP",
         "rows": [
             [{"name": "useSmtp"}, false],
-            [{"name": "smtpHost"}, {"name": "smtpPort"}],
-            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}, {"name": "smtpAuthMechanism"}],
-            [{"name": "smtpPassword"}, false],
+            [{"name": "smtpHost"}, {"name": "smtpSecurity"}],
+            [{"name": "smtpPort"}, {"name": "smtpAuth"}],
+            [false, {"name": "smtpAuthMechanism"}],
+            [false, {"name": "smtpUsername"}],
+            [false, {"name": "smtpPassword"}],
             [
                 {"name": "smtpTestSend", "customLabel": null, "view": "views/email-account/fields/test-send"}, false
             ]
