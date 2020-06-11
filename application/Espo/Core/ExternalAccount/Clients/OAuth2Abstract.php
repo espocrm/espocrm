@@ -181,7 +181,7 @@ abstract class OAuth2Abstract implements IClient
         if ($this->getParam('expiresAt')) {
             try {
                 $dt = new \DateTime($this->getParam('expiresAt'));
-                $dt->modify('-' . self::ACCESS_TOKEN_EXPIRATION_MARGIN);
+                $dt->modify('-' . $this::ACCESS_TOKEN_EXPIRATION_MARGIN);
             } catch (\Exception $e) {
                 return;
             }
@@ -189,11 +189,11 @@ abstract class OAuth2Abstract implements IClient
             if ($dt->format('U') <= (new \DateTime())->format('U')) {
                 $GLOBALS['log']->debug("Oauth: Refreshing expired token for client {$this->clientId}.");
 
-                $until = microtime(true) + self::LOCK_TIMEOUT;
+                $until = microtime(true) + $this::LOCK_TIMEOUT;
 
                 if ($this->isLocked()) {
                     while (true) {
-                        usleep(self::LOCK_CHECK_STEP * 1000000);
+                        usleep($this::LOCK_CHECK_STEP * 1000000);
 
                         if (!$this->isLocked()) {
                             $GLOBALS['log']->debug("Oauth: Waited until unlocked for client {$this->clientId}.");

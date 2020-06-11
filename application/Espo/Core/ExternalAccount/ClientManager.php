@@ -127,7 +127,8 @@ class ClientManager
         $client->setup(
             $userId,
             $integrationEntity,
-            $externalAccountEntity
+            $externalAccountEntity,
+            $this
         );
 
         $this->addToClientMap($client, $integrationEntity, $externalAccountEntity, $userId);
@@ -162,7 +163,7 @@ class ClientManager
 
         $oauth2Client = new \Espo\Core\ExternalAccount\OAuth2\Client();
 
-        $client = new $className($oauth2Client, [
+        $params = [
             'endpoint' => $this->getMetadata()->get("integrations.{$integration}.params.endpoint"),
             'tokenEndpoint' => $this->getMetadata()->get("integrations.{$integration}.params.tokenEndpoint"),
             'clientId' => $integrationEntity->get('clientId'),
@@ -172,7 +173,15 @@ class ClientManager
             'refreshToken' => $externalAccountEntity->get('refreshToken'),
             'tokenType' => $externalAccountEntity->get('tokenType'),
             'expiresAt' => $externalAccountEntity->get('expiresAt'),
-        ], $this);
+        ];
+
+        foreach (get_object_vars($integrationEntity->getValueMap()) as $k => $v) {
+            if (array_key_exists($k, $params)) continue;
+            if ($integrationEntity->hasAttribute($k)) continue;
+            $params[$k] = $v;
+        }
+
+        $client = new $className($oauth2Client, $params, $this);
 
         $this->addToClientMap($client, $integrationEntity, $externalAccountEntity, $userId);
 
