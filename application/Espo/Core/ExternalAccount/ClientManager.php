@@ -93,7 +93,7 @@ class ClientManager
                 if ($data['refreshToken'] ?? null) {
                     $copy->set('refreshToken', $data['refreshToken'] ?? null);
                 }
-                $this->getEntityManager()->saveEntity($copy, ['isTokenRenewal' => true]);
+                $this->getEntityManager()->saveEntity($copy, ['isTokenRenewal' => true, 'skipHooks' => true]);
             }
         }
     }
@@ -239,7 +239,7 @@ class ClientManager
 
         $e->set('isLocked', true);
 
-        $this->getEntityManager()->saveEntity($e);
+        $this->getEntityManager()->saveEntity($e, ['skipHooks' => true, 'silent' => true]);
     }
 
     public function unlockClient($client)
@@ -256,7 +256,7 @@ class ClientManager
 
         $e->set('isLocked', false);
 
-        $this->getEntityManager()->saveEntity($e);
+        $this->getEntityManager()->saveEntity($e, ['skipHooks' => true, 'silent' => true]);
     }
 
     public function reFetchClient($client)
