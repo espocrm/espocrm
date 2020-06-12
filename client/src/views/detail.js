@@ -256,7 +256,9 @@ define('views/detail', 'views/main', function (Dep) {
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', function () {
                     if (data.fromSelectRelated) {
-                        this.clearView('dialogSelectRelated');
+                        setTimeout(function () {
+                            this.clearView('dialogSelectRelated');
+                        }.bind(this), 25);
                     }
                     this.updateRelationshipPanel(link);
                     this.model.trigger('after:relate');
