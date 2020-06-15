@@ -164,7 +164,7 @@ class Layout extends \Espo\Core\Services\Base
     {
         $em = $this->getInjection('entityManager');
         $layoutSet = $em->getEntity('LayoutSet', $setId);
-        if (!$layoutSet) throw new NotFound();
+        if (!$layoutSet) throw new NotFound("LayoutSet {$setId} not found.");
 
         $layoutList = $layoutSet->get('layoutList') ?? [];
 
