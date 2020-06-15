@@ -63,46 +63,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             this.useIframe = this.params.useIframe || this.useIframe;
 
-            this.toolbar = this.params.toolbar || this.toolbar || [
-                ['style', ['style']],
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['height', ['height']],
-                ['table', ['table', 'espoLink', 'espoImage', 'hr']],
-                ['misc', ['codeview', 'fullscreen']]
-            ];
-
-            this.buttons = {};
-
-            if (!this.params.toolbar) {
-                if (this.params.attachmentField) {
-
-                    this.toolbar.push([
-                        'attachment',
-                        ['attachment']
-                    ]);
-                    var AttachmentButton = function (context) {
-                        var ui = $.summernote.ui;
-                        var button = ui.button({
-                            contents: '<i class="fas fa-paperclip"></i>',
-                            tooltip: this.translate('Attach File'),
-                            click: function () {
-                                this.attachFile();
-
-                                this.listenToOnce(this.model, 'attachment-uploaded:attachments', function () {
-                                    if (this.mode === 'edit') {
-                                        Espo.Ui.success(this.translate('Attached'));
-                                    }
-                                }, this);
-                            }.bind(this)
-                        });
-                        return button.render();
-                    }.bind(this);
-                    this.buttons['attachment'] = AttachmentButton;
-                }
-            }
+            this.setupToolbar();
 
             this.listenTo(this.model, 'change:isHtml', function (model, value, o) {
                 if (o.ui && this.mode == 'edit') {
@@ -162,6 +123,48 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             'click .note-editable': function () {
                 this.fixPopovers();
             },
+        },
+
+        setupToolbar: function () {
+            this.buttons = {};
+
+            this.toolbar = this.params.toolbar || this.toolbar || [
+                ['style', ['style']],
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table', 'espoLink', 'espoImage', 'hr']],
+                ['misc', ['codeview', 'fullscreen']]
+            ];
+
+            if (!this.params.toolbar) {
+                if (this.params.attachmentField) {
+                    this.toolbar.push([
+                        'attachment',
+                        ['attachment']
+                    ]);
+                    var AttachmentButton = function (context) {
+                        var ui = $.summernote.ui;
+                        var button = ui.button({
+                            contents: '<i class="fas fa-paperclip"></i>',
+                            tooltip: this.translate('Attach File'),
+                            click: function () {
+                                this.attachFile();
+
+                                this.listenToOnce(this.model, 'attachment-uploaded:attachments', function () {
+                                    if (this.mode === 'edit') {
+                                        Espo.Ui.success(this.translate('Attached'));
+                                    }
+                                }, this);
+                            }.bind(this)
+                        });
+                        return button.render();
+                    }.bind(this);
+                    this.buttons['attachment'] = AttachmentButton;
+                }
+            }
         },
 
         isPlain: function () {

@@ -195,4 +195,15 @@ class FieldManagerUtil
     {
         return $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, $param]);
     }
+
+    public function getEntityTypeAttributeList($entityType)
+    {
+        $attributeList = [];
+
+        foreach ($this->getEntityTypeFieldList($entityType) as $field) {
+            $attributeList = array_merge($attributeList, $this->getAttributeList($entityType, $field));
+        }
+
+        return $attributeList;
+    }
 }

@@ -230,4 +230,15 @@ class Email extends \Espo\Core\Controllers\Record
         }
         return $this->getRecordService()->moveToFolderByIdList($idList, $data->folderId);
     }
+
+    public function getActionGetInsertFieldData($params, $data, $request)
+    {
+        if (!$this->getAcl()->checkScope('Email', 'create')) throw new Forbidden();
+
+        return $this->getServiceFactory()->create('EmailTemplate')->getInsertFieldData([
+            'parentId' => $request->get('parentId'),
+            'parentType' => $request->get('parentType'),
+            'to' => $request->get('to'),
+        ]);
+    }
 }

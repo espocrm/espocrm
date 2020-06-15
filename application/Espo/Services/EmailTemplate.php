@@ -46,6 +46,7 @@ class EmailTemplate extends Record
         $this->addDependency('language');
         $this->addDependency('number');
         $this->addDependency('htmlizerFactory');
+        $this->addDependency('fieldManagerUtil');
     }
 
     protected function getFileStorageManager()
@@ -85,7 +86,9 @@ class EmailTemplate extends Record
                 'lower' => $params['emailAddress']
             ])->findOne();
 
-            $entity = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($params['emailAddress']);
+            $entity = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($params['emailAddress'],
+                null, ['Contact', 'Lead', 'Account', 'User']
+            );
 
             if ($entity) {
                 if ($entity instanceof Person) {
@@ -221,60 +224,20 @@ class EmailTemplate extends Record
             if (in_array($attribute, $forbiddenAttributeList)) continue;
 
             $value = $entity->get($attribute);
-            if (is_object($value)) {
-                continue;
+            if (is_object($value)) continue;
+
+            if (!$entity->getAttributeType($attribute)) continue;
+
+            $value = $this->formatAttributeValue($entity, $attribute);
+
+            if (is_null($value)) continue;
+
+            $variableName = $attribute;
+            if (!is_null($prefixLink)) {
+                $variableName = $prefixLink . '.' . $attribute;
             }
 
-            $fieldType = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'type']);
-
-            if ($fieldType === 'enum') {
-                $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
-            } else if ($fieldType === 'array' || $fieldType === 'multiEnum') {
-                $valueList = [];
-                if (is_array($value)) {
-                    foreach ($value as $v) {
-                        $valueList[] = $this->getLanguage()->translateOption($v, $attribute, $entity->getEntityType());
-                    }
-                }
-                $value = implode(', ', $valueList);
-                $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
-            } else {
-                $attributeType = $entity->getAttributeType($attribute);
-                if (!$attributeType) continue;
-
-                if ($attributeType == 'date') {
-                    if ($value)
-                        $value = $this->getDateTime()->convertSystemDate($value);
-                } else if ($attributeType == 'datetime') {
-                    if ($value)
-                        $value = $this->getDateTime()->convertSystemDateTime($value);
-                } else if ($attributeType == 'text') {
-                    if (!is_string($value)) {
-                        $value = '';
-                    }
-                    $value = nl2br($value);
-                } else if ($attributeType == 'float') {
-                    if (is_float($value)) {
-                        $decimalPlaces = 2;
-                        if ($fieldType === 'currency') {
-                            $decimalPlaces = $this->getConfig()->get('currencyDecimalPlaces');
-                        }
-                        $value = $this->getNumber()->format($value, $decimalPlaces);
-                    }
-                } else if ($attributeType == 'int') {
-                    if (is_int($value)) {
-                        $value = $this->getNumber()->format($value);
-                    }
-                }
-            }
-
-            if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                $variableName = $attribute;
-                if (!is_null($prefixLink)) {
-                    $variableName = $prefixLink . '.' . $attribute;
-                }
-                $text = str_replace('{' . $type . '.' . $variableName . '}', $value, $text);
-            }
+            $text = str_replace('{' . $type . '.' . $variableName . '}', $value, $text);
         }
 
         if (!$skipLinks) {
@@ -311,5 +274,149 @@ class EmailTemplate extends Record
         }
 
         return $text;
+    }
+
+    public function formatAttributeValue(Entity $entity, string $attribute) : ?string
+    {
+        $value = $entity->get($attribute);
+
+        $fieldType = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'type']);
+
+        $attributeType = $entity->getAttributeType($attribute);
+
+        if ($fieldType === 'enum') {
+            $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
+        } else if ($fieldType === 'array' || $fieldType === 'multiEnum' || $fieldType === 'checklist') {
+            $valueList = [];
+            if (is_array($value)) {
+                foreach ($value as $v) {
+                    $valueList[] = $this->getLanguage()->translateOption($v, $attribute, $entity->getEntityType());
+                }
+            }
+            $value = implode(', ', $valueList);
+            $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
+        } else {
+            if ($attributeType == 'date') {
+                if ($value) {
+                    $value = $this->getDateTime()->convertSystemDate($value);
+                }
+            } else if ($attributeType == 'datetime') {
+                if ($value) {
+                    $value = $this->getDateTime()->convertSystemDateTime($value);
+                }
+            } else if ($attributeType == 'text') {
+                if (!is_string($value)) {
+                    $value = '';
+                }
+                $value = nl2br($value);
+            } else if ($attributeType == 'float') {
+                if (is_float($value)) {
+                    $decimalPlaces = 2;
+                    if ($fieldType === 'currency') {
+                        $decimalPlaces = $this->getConfig()->get('currencyDecimalPlaces');
+                    }
+                    $value = $this->getNumber()->format($value, $decimalPlaces);
+                }
+            } else if ($attributeType == 'int') {
+                if (is_int($value)) {
+                    $value = $this->getNumber()->format($value);
+                }
+            }
+        }
+
+        if (!is_string($value) && is_scalar($value) || is_callable([$value, '__toString'])) {
+            $value = strval($value);
+        } else if ($value === null) {
+            $value = '';
+        }
+
+        if (!is_string($value)) return null;
+
+        return $value;
+    }
+
+    public function getInsertFieldData(array $params)
+    {
+        $to = $params['to'] ?? null;
+        $parentId = $params['parentId'] ?? null;
+        $parentType = $params['parentType'] ?? null;
+
+        $result = (object) [];
+
+        $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
+
+        $dataList = [];
+
+        if ($parentId && $parentType) {
+            $e = $this->getEntityManager()->getEntity($parentType, $parentId);
+            if ($e && $this->getAcl()->check($e)) {
+                $dataList[] = [
+                    'type' => 'parent',
+                    'entity' => $e,
+                ];
+            }
+        }
+
+        if ($to) {
+            $e = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($to, null,
+                ['Contact', 'Lead', 'Account']
+            );
+            if ($e && $e->getEntityType() !== 'User' && $this->getAcl()->check($e)) {
+                $dataList[] = [
+                    'type' => 'to',
+                    'entity' => $e,
+                ];
+            }
+        }
+
+        $fm = $this->getInjection('fieldManagerUtil');
+
+        foreach ($dataList as $item) {
+            $type = $item['type'];
+            $e = $item['entity'];
+
+            $entityType = $e->getEntityType();
+
+            $recordService = $this->getServiceFactory()->create($entityType);
+
+            $recordService->prepareEntityForOutput($e);
+
+            $ignoreTypeList = ['image', 'file', 'map', 'wysiwyg', 'linkMultiple', 'attachmentMultiple', 'bool'];
+
+            foreach ($fm->getEntityTypeFieldList($entityType) as $field) {
+                $fieldType = $fm->getEntityTypeFieldParam($entityType, $field, 'type');
+                $fieldAttributeList = $fm->getAttributeList($entityType, $field);
+                if (
+                    $fm->getEntityTypeFieldParam($entityType, $field, 'disabled') ||
+                    $fm->getEntityTypeFieldParam($entityType, $field, 'directAccessDisabled') ||
+                    $fm->getEntityTypeFieldParam($entityType, $field, 'templatePlaceholderDisabled') ||
+                    in_array($fieldType, $ignoreTypeList)
+                ) {
+                    foreach ($fieldAttributeList as $a) {
+                        $e->clear($a);
+                    }
+                }
+            }
+
+            $attributeList = $fm->getEntityTypeAttributeList($entityType);
+
+            $values = (object) [];
+            foreach ($attributeList as $a) {
+                if (!$e->has($a)) continue;
+                $value = $emailTemplateService->formatAttributeValue($e, $a);
+                if ($value != '') {
+                    $values->$a = $value;
+                }
+            }
+
+            $result->$type = (object) [
+                'entityType' => $e->getEntityType(),
+                'id' => $e->id,
+                'values' => $values,
+                'name' => $e->get('name'),
+            ];
+        }
+
+        return $result;
     }
 }
