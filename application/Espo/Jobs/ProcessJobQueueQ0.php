@@ -35,7 +35,7 @@ class ProcessJobQueueQ0 extends \Espo\Core\Jobs\Base
 {
     public function run()
     {
-        $limit = $this->getConfig()->get('jobQ1MaxPortion', 200);
+        $limit = $this->getConfig()->get('jobQ0MaxPortion', 200);
 
         $cronManager = new \Espo\Core\CronManager($this->getContainer());
 
