@@ -8,7 +8,7 @@
         },
         "status": {
             "type": "enum",
-            "options": ["In Process", "Complete", "Failed"],
+            "options": ["Standby", "Pending", "In Process", "Complete", "Failed"],
             "readOnly": true,
             "style": {
                 "Complete": "success",
@@ -34,6 +34,18 @@
             "type": "int",
             "readOnly": true,
             "notStorable": true
+        },
+        "lastIndex": {
+            "type": "int",
+            "readOnly": true
+        },
+        "params": {
+            "type": "jsonObject",
+            "readOnly": true
+        },
+        "attributeList": {
+            "type": "jsonArray",
+            "readOnly": true
         },
         "createdAt": {
             "type": "datetime",

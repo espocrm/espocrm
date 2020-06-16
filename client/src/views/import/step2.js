@@ -43,7 +43,6 @@ define('views/import/step2', 'view', function (Dep) {
             },
             'click a[data-action="addField"]': function (e) {
                 var field = $(e.currentTarget).data('name');
-                $(e.currentTarget).parent().addClass('hidden');
                 this.addField(field);
             },
 
@@ -97,6 +96,9 @@ define('views/import/step2', 'view', function (Dep) {
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
+                if (this.formData.defaultValues) {
+                    this.model.set(this.formData.defaultValues);
+                }
                 this.wait(false);
             }, this);
 
@@ -130,7 +132,18 @@ define('views/import/step2', 'view', function (Dep) {
                     $cell = $('<td>').html(d.name);
                     $row.append($cell);
                 }
-                $select = this.getFieldDropdown(i, d.name);
+                var selectedName = d.name;
+
+                if (this.formData.attributeList) {
+                    if (this.formData.attributeList[i]) {
+                        selectedName = this.formData.attributeList[i];
+                    } else {
+                        selectedName = null;
+                    }
+                }
+
+
+                $select = this.getFieldDropdown(i, selectedName);
                 $cell = $('<td>').append($select);
                 $row.append($cell);
 
@@ -144,8 +157,14 @@ define('views/import/step2', 'view', function (Dep) {
 
                 if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
                     var $checkbox = $('<input>').attr('type', 'checkbox').attr('id', 'update-by-' + i.toString());
-                    if (d.name == 'id') {
-                        $checkbox.attr('checked', true);
+                    if (!this.formData.updateBy) {
+                        if (d.name == 'id') {
+                            $checkbox.attr('checked', true);
+                        }
+                    } else {
+                        if (~this.formData.updateBy.indexOf(i)) {
+                            $checkbox.attr('checked', true);
+                        }
                     }
                     $cell = $('<td>').append($checkbox);
                     $row.append($cell);
@@ -157,6 +176,12 @@ define('views/import/step2', 'view', function (Dep) {
             $container.empty();
             $container.append($table);
 
+
+            if (this.formData.defaultFieldList) {
+                this.formData.defaultFieldList.forEach(function (name) {
+                    this.addField(name);
+                }, this);
+            }
         },
 
         getFieldList: function () {
@@ -201,11 +226,18 @@ define('views/import/step2', 'view', function (Dep) {
 
                 if (d.type == 'phone') {
                     attributeList.push(field);
-                    (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList') || []).map(function (item) {
-                        return item.replace(/\s/g, '_');
-                    }, this).forEach(function (item) {
-                        attributeList.push(field + Espo.Utils.upperCaseFirst(item));
-                    }, this);
+                    (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList') || [])
+                    .map(
+                        function (item) {
+                            return item.replace(/\s/g, '_');
+                        }, this
+                    )
+                    .forEach(
+                        function (item) {
+                            attributeList.push(field + Espo.Utils.upperCaseFirst(item));
+                        }, this
+                    );
+
                     continue;
                 }
 
@@ -284,7 +316,8 @@ define('views/import/step2', 'view', function (Dep) {
                         var phoneNumberType = field.substr(11);
                         var phoneNumberTypeLabel = this.getLanguage().translateOption(phoneNumberType, 'phoneNumber', scope);
                         label = this.translate('phoneNumber', 'fields', scope) + ' (' + phoneNumberTypeLabel + ')';
-                    } else if (field.indexOf('emailAddress') === 0 && parseInt(field.substr(12)).toString() === field.substr(12)) {
+                    } else if (
+                        field.indexOf('emailAddress') === 0 && parseInt(field.substr(12)).toString() === field.substr(12)) {
                         var emailAddressNum = field.substr(12);
                         label = this.translate('emailAddress', 'fields', scope) + ' ' + emailAddressNum.toString();;
                     } else if (field.indexOf('Ids') === field.length - 3) {
@@ -317,14 +350,19 @@ define('views/import/step2', 'view', function (Dep) {
         },
 
         addField: function (name) {
+            this.$el.find('[data-action="addField"][data-name="'+name+'"]').parent().addClass('hidden');
+
             $(this.containerSelector + ' button[data-name="update"]').removeClass('disabled');
 
             this.notify('Loading...');
             var label = this.translate(name, 'fields', this.scope);
 
-            var removeLink = '<a href="javascript:" class="pull-right" data-action="removeField" data-name="'+name+'"><span class="fas fa-times"></span></a>';
+            var removeLink = '<a href="javascript:" class="pull-right" data-action="removeField" data-name="'+name+'">'+
+                '<span class="fas fa-times"></span></a>';
 
-            var html = '<div class="cell form-group col-sm-3">'+removeLink+'<label class="control-label">' + label + '</label><div class="field" data-name="'+name+'"/></div>';
+            var html = '<div class="cell form-group col-sm-3">'+removeLink+'<label class="control-label">' + label +
+                '</label><div class="field" data-name="'+name+'"/></div>';
+
             $('#default-values-container').append(html);
 
             var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
@@ -359,8 +397,7 @@ define('views/import/step2', 'view', function (Dep) {
             this.$el.find('button[data-action="back"]').removeClass('disabled');
         },
 
-        fetch: function () {
-
+        fetch: function (skipValidation) {
             var attributes = {};
             this.additionalFields.forEach(function (field) {
                 var view = this.getView(field);
@@ -375,20 +412,16 @@ define('views/import/step2', 'view', function (Dep) {
                 notValid = view.validate() || notValid;
             }, this);
 
+
             if (!notValid) {
                 this.formData.defaultValues = attributes;
-                return true;
             }
-        },
 
-        back: function () {
-            this.getParentView().changeStep(1);
-        },
-
-        next: function () {
-            if (!this.fetch()) {
-                return;
+            if (notValid && !skipValidation) {
+                return false;
             }
+
+            this.formData.defaultFieldList = Espo.Utils.clone(this.additionalFields);
 
             var attributeList = [];
 
@@ -408,29 +441,43 @@ define('views/import/step2', 'view', function (Dep) {
                 this.formData.updateBy = updateBy;
             }
 
-
             this.getParentView().formData = this.formData;
 
             this.getParentView().trigger('change');
+
+            return true;
+        },
+
+        back: function () {
+            this.fetch(true);
+
+            this.getParentView().changeStep(1);
+        },
+
+        next: function () {
+            if (!this.fetch()) {
+                return;
+            }
+
+
 
             this.disableButtons();
 
             this.notify('File uploading...');
 
-            $.ajax({
-                type: 'POST',
-                url: 'Import/action/uploadFile',
+            Espo.Ajax.postRequest('Import/action/uploadFile', null, {
+                timeout: 0,
                 contentType: 'text/csv',
                 data: this.getParentView().fileContents,
-                timeout: 0,
-                success: function (data) {
-                    if (data.attachmentId) {
-                        this.runImport(data.attachmentId);
-                    } else {
+            }).then(
+                function (result) {
+                    if (!result.attachmentId) {
                         this.notify('Bad response', 'error');
+                        return;
                     }
+                    this.runImport(result.attachmentId);
                 }.bind(this)
-            });
+            );
         },
 
         runImport: function (attachmentId) {
@@ -438,26 +485,47 @@ define('views/import/step2', 'view', function (Dep) {
 
             this.notify('Import running...');
 
-            $.ajax({
-                type: 'POST',
-                url: 'Import',
-                data: JSON.stringify(this.formData),
-                timeout: 0,
-                success: function (result) {
-                    var id = result.id;
-                    this.getParentView().trigger('done');
-                    if (id) {
-                        this.getRouter().navigate('#Import/view/' + id, {trigger: true});
-                    } else {
-                        this.notify('Error', 'error');
+            Espo.Ajax.postRequest('Import', this.formData, {timeout: 0})
+                .then(
+                    function (result) {
+                        var id = result.id;
+                        this.getParentView().trigger('done');
+                        if (id) {
+                            if (this.formData.manualMode) {
+                                this.createView('dialog', 'views/modal', {
+                                    templateContent: "{{complexText viewObject.options.msg}}",
+                                    headerText: ' ',
+                                    backdrop: 'static',
+                                    msg:
+                                        this.translate('commandToRun', 'strings', 'Import') + ':\n\n' +
+                                        '```php command.php import --id='+id+'```',
+                                    buttonList: [
+                                        {
+                                            name: 'close',
+                                            label: this.translate('Close'),
+                                        }
+                                    ],
+                                }, function (view) {
+                                    view.render();
+                                    this.listenToOnce(view, 'close', function () {
+                                        this.getRouter().navigate('#Import/view/' + id, {trigger: true});
+                                    }, this);
+                                });
+                            } else {
+                                this.getRouter().navigate('#Import/view/' + id, {trigger: true});
+                            }
+                        } else {
+                            this.notify('Error', 'error');
+                            this.enableButtons();
+                        }
+                        this.notify(false);
+                    }.bind(this)
+                )
+                .fail(
+                    function () {
                         this.enableButtons();
-                    }
-                    this.notify(false);
-                }.bind(this),
-                error: function () {
-                    this.enableButtons();
-                }.bind(this),
-            });
+                    }.bind(this)
+                );
         }
 
     });

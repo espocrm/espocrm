@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/import/detail', 'views/detail', function (Dep) {
+define('views/import/detail', 'views/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -52,52 +52,65 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
                     this.getView('header').reRender();
                 }
             }, this);
+
+            this.listenTo(this.model, 'sync', function (m) {
+                this.controlButtons(m);
+            }, this);
         },
 
         setupMenu: function () {
-            if (this.model.get('importedCount')) {
-                var i = 0;
-                this.menu.buttons.forEach(function (item) {
-                    if (item.action == 'revert') {
-                        i = 1;
-                    }
-                }, this);
-                if (!i) {
-                    this.menu.buttons.unshift({
-                       "label": "Revert Import",
-                       "action": "revert",
-                       "style": "danger",
-                       "acl": "edit",
-                        title: this.translate('revert', 'messages', 'Import')
-                    });
-                }
-            }
-            if (this.model.get('duplicateCount')) {
-                var i = 0;
-                this.menu.buttons.forEach(function (item) {
-                    if (item.action == 'removeDuplicates') {
-                        i = 1;
-                    }
-                }, this);
-                if (!i) {
-                    this.menu.buttons.unshift({
-                       "label": "Remove Duplicates",
-                       "action": "removeDuplicates",
-                       "style": "default",
-                       "acl": "edit",
-                        title: this.translate('removeDuplicates', 'messages', 'Import')
-                    });
-                }
-            }
-
             this.addMenuItem('buttons', {
                 label: "Remove Import Log",
                 action: "removeImportLog",
                 name: 'removeImportLog',
                 style: "default",
                 acl: "delete",
-                title: this.translate('removeImportLog', 'messages', 'Import')
+                title: this.translate('removeImportLog', 'messages', 'Import'),
             }, true);
+
+            this.addMenuItem('buttons', {
+                label: "Revert Import",
+                name: 'revert',
+                action: "revert",
+                style: "danger",
+                acl: "edit",
+                title: this.translate('revert', 'messages', 'Import'),
+                hidden: !this.model.get('importedCount'),
+            }, true);
+
+            this.addMenuItem('buttons', {
+                label: "Remove Duplicates",
+                name: 'removeDuplicates',
+                action: "removeDuplicates",
+                style: "default",
+                acl: "edit",
+                title: this.translate('removeDuplicates', 'messages', 'Import'),
+                hidden: !this.model.get('duplicateCount'),
+            }, true);
+
+            this.addMenuItem('dropdown', {
+                label: 'New import with same params',
+                name: 'createWithSameParams',
+                action: 'createWithSameParams',
+            });
+        },
+
+        controlButtons: function (model) {
+            if (!model || model.hasChanged('importedCount')) {
+                if (this.model.get('importedCount')) {
+                    this.showHeaderActionItem('revert');
+                } else {
+                    this.hideHeaderActionItem('revert');
+                }
+            }
+
+            if (!model || model.hasChanged('duplicateCount')) {
+                if (this.model.get('duplicateCount')) {
+                    this.showHeaderActionItem('removeDuplicates');
+                } else {
+                    this.hideHeaderActionItem('removeDuplicates');
+                }
+            }
         },
 
         actionRemoveImportLog: function () {
@@ -162,8 +175,21 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
                     Espo.Ui.success(this.translate('duplicatesRemoved', 'messages', 'Import'))
 	        	}.bind(this));
         	}, this);
-        }
+        },
+
+        actionCreateWithSameParams: function () {
+            var formData = this.model.get('params') || {};
+
+            formData.entityType = this.model.get('entityType');
+            formData.attributeList = this.model.get('attributeList') || [];
+
+            formData = Espo.Utils.cloneDeep(formData);
+
+            this.getRouter().navigate('#Import', {trigger: false});
+            this.getRouter().dispatch('Import', 'index', {
+                formData: formData,
+            });
+        },
 
     });
 });
-

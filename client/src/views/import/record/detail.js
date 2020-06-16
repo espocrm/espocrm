@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/import/record/detail', 'views/record/detail', function (Dep) {
+define('views/import/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -34,17 +34,28 @@ Espo.define('views/import/record/detail', 'views/record/detail', function (Dep) 
 
         returnUrl: '#Import/list',
 
+        checkInterval: 5,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.model.get('status') === 'In Process') {
-                setTimeout(this.runChecking.bind(this), 3000);
-                this.on('remove', function () {
-                    this.stopChecking = true;
-                }, this);
-            }
+            this.setupChecking();
 
             this.hideActionItem('delete');
+        },
+
+        setupChecking: function () {
+            if (!this.model.has('status')) {
+                this.listenToOnce(this.model, 'sync', this.setupChecking.bind(this));
+                return;
+            }
+            if (!~['In Process', 'Pending', 'Standby'].indexOf(this.model.get('status'))) {
+                return;
+            }
+            setTimeout(this.runChecking.bind(this), this.checkInterval * 1000);
+            this.on('remove', function () {
+                this.stopChecking = true;
+            }, this);
         },
 
         runChecking: function () {
@@ -70,13 +81,11 @@ Espo.define('views/import/record/detail', 'views/record/detail', function (Dep) 
                     }
                 }
 
-                if (this.model.get('status') !== 'In Process') {
+                if (!~['In Process', 'Pending', 'Standby'].indexOf(this.model.get('status'))) {
                     return;
                 }
-                setTimeout(this.runChecking.bind(this), 5000);
+                setTimeout(this.runChecking.bind(this), this.checkInterval * 1000);
             }.bind(this));
-        }
-
+        },
     });
-
 });

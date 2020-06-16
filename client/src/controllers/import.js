@@ -67,6 +67,8 @@ define('controllers/import', 'controllers/record', function (Dep) {
                 step = null;
             }
 
+            formData = formData || o.formData;
+
             this.main('views/import/index', {
                 step: step,
                 formData: formData,

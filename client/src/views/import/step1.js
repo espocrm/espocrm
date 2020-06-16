@@ -91,6 +91,7 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 'silentMode',
                 'idleMode',
                 'skipDuplicateChecking',
+                'manualMode',
             ];
 
             this.paramList.forEach(function (item) {
@@ -112,16 +113,18 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 idleMode: false,
                 skipDuplicateChecking: false,
                 silentMode: true,
+                manualMode: false,
             };
 
             var defaults = Espo.Utils.cloneDeep(
                 (this.getPreferences().get('importParams') || {}).default || {}
             );
 
-            for (var p in defaults) {
-                this.formData[p] = defaults[p];
+            if (!this.options.formData) {
+                for (var p in defaults) {
+                    this.formData[p] = defaults[p];
+                }
             }
-
 
             var model = this.model = new Model;
 
@@ -330,6 +333,14 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 name: 'skipDuplicateChecking',
                 mode: 'edit',
             });
+            this.createView('manualModeField', 'views/fields/bool', {
+                el: this.getSelector() + ' .field[data-name="manualMode"]',
+                model: this.model,
+                name: 'manualMode',
+                mode: 'edit',
+                tooltip: true,
+                tooltipText: this.translate('manualMode', 'tooltips', 'Import'),
+            });
 
             this.listenTo(this.model, 'change', function (m, o) {
                 if (!o.ui) return;
@@ -345,6 +356,23 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                     this.showSaveAsDefaultButton();
                 }
             }, this);
+
+            this.listenTo(this.model, 'change', function (m, o) {
+                if (this.isRendered()) {
+                    this.controlFieldVisibility();
+                }
+            }, this);
+
+            this.listenTo(this.model, 'change:entityType', function () {
+                delete this.formData.defaultFieldList;
+                delete this.formData.defaultValues;
+                delete this.formData.attributeList;
+                delete this.formData.updateBy;
+            }, this);
+
+            this.listenTo(this.model, 'change:action', function () {
+                delete this.formData.updateBy;
+            }, this);
         },
 
         afterRender: function () {
@@ -353,6 +381,7 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 this.setFileIsLoaded();
                 this.preview();
             }
+            this.controlFieldVisibility();
         },
 
         showSaveAsDefaultButton: function () {
@@ -515,6 +544,28 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             );
 
             this.hideSaveAsDefaultButton();
+        },
+
+        controlFieldVisibility: function () {
+            if (this.model.get('idleMode')) {
+                this.hideField('manualMode');
+            } else {
+                this.showField('manualMode');
+            }
+
+            if (this.model.get('manualMode')) {
+                this.hideField('idleMode');
+            } else {
+                this.showField('idleMode');
+            }
+        },
+
+        hideField: function (name) {
+            this.$el.find('.field[data-name="'+name+'"]').parent().addClass('hidden-cell');
+        },
+
+        showField: function (name) {
+            this.$el.find('.field[data-name="'+name+'"]').parent().removeClass('hidden-cell');
         },
 
     });

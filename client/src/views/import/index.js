@@ -46,9 +46,9 @@ define('views/import/index', 'view', function (Dep) {
 
             this.startFromStep = 1;
 
-            if (this.options.formData && this.options.fileContents) {
-                this.formData = this.options.formData;
-                this.fileContents = this.options.fileContents;
+            if (this.options.formData || this.options.fileContents) {
+                this.formData = this.options.formData || {};
+                this.fileContents = this.options.fileContents || null;
 
                 this.entityType = this.formData.entityType || null;
 

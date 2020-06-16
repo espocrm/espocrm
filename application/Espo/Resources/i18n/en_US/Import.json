@@ -1,5 +1,6 @@
 {
     "labels": {
+        "New import with same params": "New import with same params",
         "Revert Import": "Revert Import",
         "Return to Import": "Return to Import",
         "Run Import": "Run Import",
@@ -55,6 +56,7 @@
         "Remove Import Log": "Remove Import Log",
         "New Import": "New Import",
         "Import Results": "Import Results",
+        "Run Manually": "Run Manually",
         "Silent Mode": "Silent Mode"
     },
     "messages": {
@@ -79,6 +81,8 @@
     "options": {
         "status": {
             "Failed": "Failed",
+            "Standby": "Standby",
+            "Pending": "Pending",
             "In Process": "In Process",
             "Complete": "Complete"
         },
@@ -91,9 +95,11 @@
         }
     },
     "strings": {
+        "commandToRun": "Command to run (from CLI)",
         "saveAsDefault": "Save as default"
     },
     "tooltips": {
+        "manualMode": "If checked, you will need to run import manually from CLI. Command will be shown after setting up the import.",
         "silentMode": "A majority of after-save scripts will be skipped, stream notes won't be created. Import will run faster."
     }
 }

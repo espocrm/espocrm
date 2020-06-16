@@ -122,6 +122,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-4 form-group cell">
+                        <label class="control-label">{{translate 'Run Manually' scope='Import' category='messages'}}</label>
+                        <div data-name="manualMode" class="field">
+                            {{{manualModeField}}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
