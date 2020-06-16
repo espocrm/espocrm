@@ -299,7 +299,7 @@ class Import extends \Espo\Services\Record
             if ($entity) {
                 $this->getEntityManager()->removeEntity($entity);
             }
-            $this->getEntityManager()->getRepository($entity->getEntityType())->deleteFromDb($entityId);
+            $this->getEntityManager()->getRepository($entityType)->deleteFromDb($entityId);
         }
 
         return true;
