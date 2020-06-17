@@ -262,16 +262,18 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
         send: function () {
             var model = this.model;
             model.set('status', 'Sending');
+            this.isSending = true;
 
             var afterSend = function () {
-                Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
                 model.trigger('after:send');
                 this.trigger('after:send');
+                this.isSending = false;
             };
 
             this.once('after:save', afterSend, this);
             this.once('cancel:save', function () {
                 this.off('after:save', afterSend);
+                this.isSending = false;
             }, this);
 
             this.once('before:save', function () {
@@ -345,6 +347,16 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     this.clearView('modalRelatedList');
                 }, this);
             });
+        },
+
+        errorHandlerSendingFail: function (data) {
+            if (!this.model.id) {
+                this.model.id = data.id;
+            }
+            var msg = this.translate('sendingFailed', 'strings', 'Email');
+            if (data.message) msg += ': ' + data.message;
+            Espo.Ui.error(msg);
+            console.error(msg);
         },
 
     });

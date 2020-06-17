@@ -192,6 +192,14 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
             return value;
         },
 
+        afterSave: function () {
+            Dep.prototype.afterSave.call(this);
+
+            if (this.isNew && this.isSending && this.model.get('status') === 'Sent') {
+                Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
+            }
+        },
+
         send: function () {
             Detail.prototype.send.call(this);
         },
@@ -230,6 +238,10 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
             html = html || '';
             var value = html.replace(/\n/g, '<br>');
             return value;
+        },
+
+        errorHandlerSendingFail: function (data) {
+            Detail.prototype.errorHandlerSendingFail.call(this, data);
         },
 
     });

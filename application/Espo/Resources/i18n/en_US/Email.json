@@ -108,6 +108,9 @@
         "No Subject": "No Subject",
         "View Users": "View Users"
     },
+    "strings": {
+        "sendingFailed": "Email sending failed"
+    },
     "messages": {
         "noSmtpSetup": "SMTP is not configured: {link}",
         "testEmailSent": "Test email has been sent",

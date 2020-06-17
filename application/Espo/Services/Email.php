@@ -33,6 +33,7 @@ use Espo\ORM\Entity;
 use Espo\Entities;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\ErrorSilent;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
@@ -275,9 +276,19 @@ class Email extends Record
         try {
             $emailSender->send($entity, $params, $message);
         } catch (\Exception $e) {
-            $entity->set('status', 'Failed');
+            $entity->set('status', 'Draft');
             $this->getEntityManager()->saveEntity($entity, ['silent' => true]);
-            throw new Error($e->getMessage(), $e->getCode());
+
+            $GLOBALS['log']->error("Email sending:" . $e->getMessage() . "; " . $e->getCode());
+
+            $reason = [
+                'reason' => 'SendingFail',
+                'data' => [
+                    'id' => $entity->id,
+                    'message' => $e->getMessage(),
+                ],
+            ];
+            throw new ErrorSilent(json_encode($reason));
         }
 
         $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);

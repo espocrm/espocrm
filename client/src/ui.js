@@ -142,6 +142,7 @@ define('ui', [], function () {
         if (this.removeOnClose) {
             this.$el.on('hidden.bs.modal', function (e) {
                 if (this.$el.get(0) == e.target) {
+                    if (this.skipRemove) return;
                     this.remove();
                 }
             }.bind(this));
@@ -324,6 +325,16 @@ define('ui', [], function () {
         $('body > .popover').addClass('hidden');
     };
     Dialog.prototype.hide = function () {
+        var $modalBackdrop = $('.modal-backdrop');
+        $modalBackdrop.last().addClass('hidden');
+
+        this.skipRemove = true;
+        setTimeout(function () {
+            this.skipRemove = false;
+        }.bind(this), 50);
+
+        this.$el.modal('hide');
+
         this.$el.find('.modal-content').addClass('hidden');
     };
     Dialog.prototype.close = function () {

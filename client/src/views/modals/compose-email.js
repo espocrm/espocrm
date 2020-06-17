@@ -102,19 +102,37 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 this.trigger('after:save', model);
                 this.trigger('after:send', model);
                 dialog.close();
-            };
 
-            editView.once('after:send', afterSend, this);
+                this.stopListening(editView, 'before:save', beforeSave);
+                this.stopListening(editView, 'error:save', errorSave);
+            }.bind(this);
+            var beforeSave = function () {
+                dialog.hide();
+                editView.setConfirmLeaveOut(false);
+            };
+            var errorSave = function () {
+                if (this.isRendered()) {
+                    dialog.show();
+                }
+            }.bind(this);
+
+            this.listenToOnce(editView, 'after:send', afterSend);
 
             this.disableButton('send');
             this.disableButton('saveDraft');
 
-            editView.once('cancel:save', function () {
+            this.listenToOnce(editView, 'cancel:save', function () {
                 this.enableButton('send');
                 this.enableButton('saveDraft');
 
-                editView.off('after:save', afterSend);
+                this.stopListening(editView, 'after:send', afterSend);
+
+                this.stopListening(editView, 'before:save', beforeSave);
+                this.stopListening(editView, 'error:save', errorSave);
             }, this);
+
+            this.listenToOnce(editView, 'before:save', beforeSave);
+            this.listenToOnce(editView, 'error:save', errorSave);
 
             editView.send();
         },

@@ -536,7 +536,8 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
                     this.setModelAttributes(beforeSaveAttributes);
 
-                    self.trigger('cancel:save');
+                    this.trigger('error:save');
+                    this.trigger('cancel:save');
 
                     if (errorCallback) {
                         errorCallback.call(this, xhr);
