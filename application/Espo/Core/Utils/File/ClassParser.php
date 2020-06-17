@@ -28,7 +28,13 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
-use \Espo\Core\Utils\Util;
+
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+
+use Espo\Core\Exceptions\Error;
 
 class ClassParser
 {
@@ -38,13 +44,7 @@ class ClassParser
 
     private $metadata;
 
-    protected $cacheFile = null;
-
-    protected $allowedMethods = array(
-        'run',
-    );
-
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata)
+    public function __construct(FileManager $fileManager, Config $config, Metadata $metadata)
     {
         $this->fileManager = $fileManager;
         $this->config = $config;
@@ -66,53 +66,54 @@ class ClassParser
         return $this->metadata;
     }
 
-    public function setAllowedMethods($methods)
-    {
-        $this->allowedMethods = $methods;
-    }
-
     /**
-     * Return path data of classes
+     * Return paths to class files.
      *
-     * @param  string  $cacheFile full path for a cache file, ex. data/cache/application/entryPoints.php
-     * @param  string | array $paths in format array(
+     * @param  string | array $paths in format [
      *    'corePath' => '',
      *    'modulePath' => '',
      *    'customPath' => '',
-     * );
-     * @return array
+     * ]
+     * @param $cacheFile Full path for a cache file, ex. data/cache/application/entryPoints.php.
+     * @param $allowedMethods If specified, classes w/o specified method will be ignored.
      */
-    public function getData($paths, $cacheFile = false)
+    public function getData($paths, ?string $cacheFile = null, ?array $allowedMethods = null) : array
     {
         $data = null;
 
         if (is_string($paths)) {
-            $paths = array(
+            $paths = [
                 'corePath' => $paths,
-            );
+            ];
         }
 
         if ($cacheFile && file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
             $data = $this->getFileManager()->getPhpContents($cacheFile);
-        } else {
-            $data = $this->getClassNameHash($paths['corePath']);
+
+            if (!is_array($data)) {
+                $GLOBALS['log']->error("ClassParser: Non-array value stored in {$cacheFile}.");
+            }
+        }
+
+        if (!is_array($data)) {
+            $data = $this->getClassNameHash($paths['corePath'], $allowedMethods);
 
             if (isset($paths['modulePath'])) {
                 foreach ($this->getMetadata()->getModuleList() as $moduleName) {
                     $path = str_replace('{*}', $moduleName, $paths['modulePath']);
 
-                    $data = array_merge($data, $this->getClassNameHash($path));
+                    $data = array_merge($data, $this->getClassNameHash($path, $allowedMethods));
                 }
             }
 
             if (isset($paths['customPath'])) {
-                $data = array_merge($data, $this->getClassNameHash($paths['customPath']));
+                $data = array_merge($data, $this->getClassNameHash($paths['customPath'], $allowedMethods));
             }
 
             if ($cacheFile && $this->getConfig()->get('useCache')) {
                 $result = $this->getFileManager()->putPhpContents($cacheFile, $data);
                 if ($result == false) {
-                    throw new \Espo\Core\Exceptions\Error();
+                    throw new Error("ClassParser: Could not save file {$cacheFile}.");
                 }
             }
         }
@@ -120,13 +121,13 @@ class ClassParser
         return $data;
     }
 
-    protected function getClassNameHash($dirs)
+    protected function getClassNameHash($dirs, ?array $allowedMethods = [])
     {
         if (is_string($dirs)) {
             $dirs = (array) $dirs;
         }
 
-        $data = array();
+        $data = [];
         foreach ($dirs as $dir) {
             if (file_exists($dir)) {
                 $fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', true);
@@ -139,12 +140,12 @@ class ClassParser
                     $scopeName = ucfirst($fileName);
                     $normalizedScopeName = Util::normilizeScopeName($scopeName);
 
-                    if (empty($this->allowedMethods)) {
+                    if (empty($allowedMethods)) {
                         $data[$normalizedScopeName] = $className;
                         continue;
                     }
 
-                    foreach ($this->allowedMethods as $methodName) {
+                    foreach ($allowedMethods as $methodName) {
                         if (method_exists($className, $methodName)) {
                             $data[$normalizedScopeName] = $className;
                         }
@@ -156,5 +157,4 @@ class ClassParser
 
         return $data;
     }
-
 }

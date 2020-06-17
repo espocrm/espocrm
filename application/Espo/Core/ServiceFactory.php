@@ -67,7 +67,6 @@ class ServiceFactory
     protected function init()
     {
         $classParser = $this->getContainer()->get('classParser');
-        $classParser->setAllowedMethods(null);
         $this->data = $classParser->getData($this->paths, $this->cacheFile);
     }
 

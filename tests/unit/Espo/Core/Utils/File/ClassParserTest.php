@@ -31,7 +31,6 @@ namespace tests\unit\Espo\Core\Utils\File;
 
 use tests\unit\ReflectionHelper;
 
-
 class ClassParserTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -40,14 +39,14 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-
     protected function setUp() : void
     {
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
         $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
         $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\File\ClassParser($this->objects['fileManager'], $this->objects['config'], $this->objects['metadata']);
+        $this->object = new \Espo\Core\Utils\File\ClassParser(
+            $this->objects['fileManager'], $this->objects['config'], $this->objects['metadata']);
 
         $this->reflection = new ReflectionHelper($this->object);
     }
@@ -57,22 +56,20 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
         $this->object = NULL;
     }
 
-
     function testGetClassNameHash()
     {
-        $paths = array(
+        $paths = [
             'tests/unit/testData/EntryPoints/Espo/EntryPoints',
-             'tests/unit/testData/EntryPoints/Espo/Modules/Crm/EntryPoints',
-        );
+            'tests/unit/testData/EntryPoints/Espo/Modules/Crm/EntryPoints',
+        ];
 
-        $result = array(
+        $result = [
             'Download' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
             'Test' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
             'InModule' => '\tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
-        );
-        $this->assertEquals( $result, $this->reflection->invokeMethod('getClassNameHash', array($paths)) );
+        ];
+        $this->assertEquals($result, $this->reflection->invokeMethod('getClassNameHash', [$paths, ['run']]));
     }
-
 
     function testGetDataWithCache()
     {
@@ -82,17 +79,17 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue(true));
 
         $cacheFile = 'tests/unit/testData/EntryPoints/cache/entryPoints.php';
-        $paths = array(
+        $paths = [
             'corePath' => 'tests/unit/testData/EntryPoints/Espo/EntryPoints',
-             'modulePath' => 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
+            'modulePath' => 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
             'customPath' => 'tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
-        );
+        ];
 
-        $result = array (
-          'Download' => '\\tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
-        );
+        $result = [
+            'Download' => '\\tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
+        ];
 
-        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($paths, $cacheFile)) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheFile, ['run']]) );
     }
 
     function testGetDataWithNoCache()
@@ -106,27 +103,26 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('getModuleList')
             ->will($this->returnValue(
-                array(
+                [
                     'Crm',
-                )
+                ]
             ));
 
         $cacheFile = 'tests/unit/testData/EntryPoints/cache/entryPoints.php';
-        $paths = array(
+        $paths = [
             'corePath' => 'tests/unit/testData/EntryPoints/Espo/EntryPoints',
-             'modulePath' => 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
+            'modulePath' => 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
             'customPath' => 'tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
-        );
+        ];
 
-        $result = array(
+        $result = [
             'Download' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
             'Test' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
             'InModule' => '\tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
-        );
+        ];
 
-        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($paths, $cacheFile)) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheFile, ['run']]));
     }
-
 
     function testGetDataWithNoCacheString()
     {
@@ -139,22 +135,21 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
             ->expects($this->never())
             ->method('getModuleList')
             ->will($this->returnValue(
-                array(
+                [
                     'Crm',
-                )
+                ]
             ));
 
         $cacheFile = 'tests/unit/testData/EntryPoints/cache/entryPoints.php';
         $path = 'tests/unit/testData/EntryPoints/Espo/EntryPoints';
 
-        $result = array(
+        $result = [
             'Download' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
             'Test' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
-        );
+        ];
 
-        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($path, $cacheFile)) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$path, $cacheFile, ['run']]));
     }
-
 
     function testGetDataWithCacheFalse()
     {
@@ -167,26 +162,21 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
             ->expects($this->never())
             ->method('getModuleList')
             ->will($this->returnValue(
-                array(
+                [
                     'Crm',
-                )
+                ]
             ));
 
-        $paths = array(
+        $paths = [
             'corePath' => 'tests/unit/testData/EntryPoints/Espo/EntryPoints',
             'customPath' => 'tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
-        );
+        ];
 
-        $result = array(
+        $result = [
             'Download' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
             'Test' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
-        );
+        ];
 
-        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($paths)) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, null, ['run']]));
     }
-
-
-
 }
-
-?>

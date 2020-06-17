@@ -25,12 +25,12 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core;
-use \Espo\Core\Exceptions\NotFound,
-    \Espo\Core\Utils\Util;
 
+use Espo\Core\Exceptions\NotFound,
+    Espo\Core\Utils\Util;
 
 class EntryPointManager
 {
@@ -42,19 +42,18 @@ class EntryPointManager
 
     protected $cacheFile = 'data/cache/application/entryPoints.php';
 
-    protected $allowedMethods = array(
+    protected $allowedMethods = [
         'run',
-    );
+    ];
 
     /**
      * @var array - path to entryPoint files
      */
-    private $paths = array(
+    private $paths = [
         'corePath' => 'application/Espo/EntryPoints',
         'modulePath' => 'application/Espo/Modules/{*}/EntryPoints',
         'customPath' => 'custom/Espo/Custom/EntryPoints',
-    );
-
+    ];
 
     public function __construct(\Espo\Core\Container $container)
     {
@@ -117,13 +116,9 @@ class EntryPointManager
         return false;
     }
 
-
     protected function init()
     {
         $classParser = $this->getContainer()->get('classParser');
-        $classParser->setAllowedMethods($this->allowedMethods);
-        $this->data = $classParser->getData($this->paths, $this->cacheFile);
+        $this->data = $classParser->getData($this->paths, $this->cacheFile, $this->allowedMethods);
     }
-
 }
-

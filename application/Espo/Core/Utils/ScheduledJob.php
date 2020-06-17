@@ -55,18 +55,18 @@ class ScheduledJob
     /**
      * @var array - path to cron job files
      */
-    private $paths = array(
+    private $paths = [
         'corePath' => 'application/Espo/Jobs',
         'modulePath' => 'application/Espo/Modules/{*}/Jobs',
         'customPath' => 'custom/Espo/Custom/Jobs',
-    );
+    ];
 
-    protected $cronSetup = array(
+    protected $cronSetup = [
         'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
         'windows' => '{PHP-BINARY} -f {FULL-CRON-PATH}',
         'mac' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
         'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-    );
+    ];
 
     public function __construct(\Espo\Core\Container $container)
     {
@@ -169,8 +169,7 @@ class ScheduledJob
     protected function init()
     {
         $classParser = $this->getContainer()->get('classParser');
-        $classParser->setAllowedMethods( array($this->allowedMethod) );
-        $this->data = $classParser->getData($this->paths, $this->cacheFile);
+        $this->data = $classParser->getData($this->paths, $this->cacheFile, [$this->allowedMethod]);
     }
 
     public function getSetupMessage()

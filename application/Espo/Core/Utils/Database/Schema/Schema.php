@@ -50,19 +50,19 @@ class Schema
 
     private $databaseHelper;
 
-    protected $fieldTypePaths = array(
+    protected $fieldTypePaths = [
         'application/Espo/Core/Utils/Database/DBAL/FieldTypes',
         'custom/Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
-    );
+    ];
 
     /**
      * Paths of rebuild action folders
      * @var array
      */
-    protected $rebuildActionsPath = array(
+    protected $rebuildActionsPath = [
         'corePath' => 'application/Espo/Core/Utils/Database/Schema/rebuildActions',
         'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/rebuildActions',
-    );
+    ];
 
     /**
      * Array of rebuildActions classes in format:
@@ -74,7 +74,10 @@ class Schema
      */
     protected $rebuildActionClasses = null;
 
-    public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager, \Espo\Core\Utils\File\ClassParser $classParser, \Espo\Core\Utils\Metadata\OrmMetadata $ormMetadata)
+    public function __construct(
+        \Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata,
+        \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager,
+        \Espo\Core\Utils\File\ClassParser $classParser, \Espo\Core\Utils\Metadata\OrmMetadata $ormMetadata)
     {
         $this->config = $config;
         $this->metadata = $metadata;
@@ -145,7 +148,7 @@ class Schema
 
     protected function initFieldTypes()
     {
-        foreach($this->fieldTypePaths as $path) {
+        foreach ($this->fieldTypePaths as $path) {
 
             $typeList = $this->getFileManager()->getFileList($path, false, '\.php$');
             if ($typeList !== false) {
@@ -257,12 +260,11 @@ class Schema
      */
     protected function initRebuildActions($currentSchema = null, $metadataSchema = null)
     {
-        $methods = array('beforeRebuild', 'afterRebuild');
+        $methods = ['beforeRebuild', 'afterRebuild'];
 
-        $this->getClassParser()->setAllowedMethods($methods);
-        $rebuildActions = $this->getClassParser()->getData($this->rebuildActionsPath);
+        $rebuildActions = $this->getClassParser()->getData($this->rebuildActionsPath, null, $methods);
 
-        $classes = array();
+        $classes = [];
         foreach ($rebuildActions as $actionName => $actionClass) {
             $rebuildActionClass = new $actionClass($this->metadata, $this->config, $this->entityManager);
             if (isset($currentSchema)) {
