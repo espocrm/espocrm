@@ -27,59 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
-
-class ServiceFactory
+class ClassFinder
 {
-    private $container;
+    protected $classParser;
 
-    public function __construct(Container $container)
+    protected $pathsTemplate = [
+        'corePath' => 'application/Espo/{category}',
+        'modulePath' => 'application/Espo/Modules/{*}/{category}',
+        'customPath' => 'custom/Espo/Custom/{category}',
+    ];
+
+    protected $dataHash = [];
+
+    public function __construct(File\ClassParser $classParser)
     {
-        $this->container = $container;
+        $this->classParser = $classParser;
     }
 
-    protected function getContainer()
+    /**
+     * Find class name by category (e.g. Controllers, Services) and name.
+     */
+    public function find(string $category, string $name) : ?string
     {
-        return $this->container;
-    }
-
-    protected function getClassName($name)
-    {
-        return $this->getContainer()->get('classFinder')->find('Services', $name);
-    }
-
-    public function checkExists($name) {
-        $className = $this->getClassName($name);
-        if (!$className) {
-            return false;
+        if (!array_key_exists($category, $this->dataHash)) {
+            $path = $this->buildPaths($category);
+            $cacheFile = $this->buildCacheFilePath($category);
+            $this->dataHash[$category] = $this->classParser->getData($path, $cacheFile);
         }
-        return true;
+
+        $className = $this->dataHash[$category][$name] ?? null;
+
+        return $className;
     }
 
-    public function create($name)
+    protected function buildPaths(string $category) : array
     {
-        $className = $this->getClassName($name);
-        if (!$className) {
-            throw new Error("Service '{$name}' was not found.");
+        $paths = [];
+        foreach ($this->pathsTemplate as $key => $value) {
+            $path[$key] = str_replace('{category}', $category, $value);
         }
-        return $this->createByClassName($className);
+        return $path;
     }
 
-    protected function createByClassName($className)
+    protected function buildCacheFilePath(string $category) : string
     {
-        if (class_exists($className)) {
-            $service = new $className();
-            $dependencyList = $service->getDependencyList();
-            foreach ($dependencyList as $name) {
-                $service->inject($name, $this->container->get($name));
-            }
-            if (method_exists($service, 'prepare')) {
-                $service->prepare();
-            }
-            return $service;
-        }
-        throw new Error("Class '$className' does not exist.");
+        $path = 'data/cache/application/' . str_replace('/', '_', strtolower($category)) . '.php';
+        return $path;
     }
 }
