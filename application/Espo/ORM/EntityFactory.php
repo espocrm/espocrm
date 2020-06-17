@@ -40,9 +40,10 @@ class EntityFactory
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
     }
+
     public function create($name)
     {
-        $className = $this->entityManager->normalizeEntityName($name);
+        $className = $this->entityManager->getEntityClassName($name);
         if (!class_exists($className)) {
             return null;
         }
@@ -53,6 +54,4 @@ class EntityFactory
         $entity = new $className($defs, $this->entityManager);
         return $entity;
     }
-
 }
-

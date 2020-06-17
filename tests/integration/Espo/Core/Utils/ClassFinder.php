@@ -45,6 +45,6 @@ class ClassFinder extends \tests\integration\Core\BaseTestCase
             $classFinder->find('Services', 'Record')
         );
 
-        $this->assertTrue(file_exists('data/cache/application/services.php'));
+        $this->assertTrue(file_exists('data/cache/application/classmap_services.php'));
     }
 }

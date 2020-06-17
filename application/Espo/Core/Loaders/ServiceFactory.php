@@ -29,20 +29,12 @@
 
 namespace Espo\Core\Loaders;
 
-class SelectManagerFactory extends Base
+class ServiceFactory extends Base
 {
     public function load()
     {
-        return new \Espo\Core\SelectManagerFactory(
-            $this->getContainer()->get('entityManager'),
-            $this->getContainer()->get('user'),
-            $this->getContainer()->get('acl'),
-            $this->getContainer()->get('aclManager'),
-            $this->getContainer()->get('metadata'),
-            $this->getContainer()->get('config'),
-            $this->getContainer()->get('fieldManagerUtil'),
-            $this->getContainer()->get('injectableFactory'),
-            $this->getContainer()->get('classFinder')
+        return new \Espo\Core\ServiceFactory(
+            $this->getContainer()
         );
     }
 }

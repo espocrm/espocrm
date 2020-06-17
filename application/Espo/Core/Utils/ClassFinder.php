@@ -51,15 +51,27 @@ class ClassFinder
      */
     public function find(string $category, string $name) : ?string
     {
-        if (!array_key_exists($category, $this->dataHash)) {
-            $path = $this->buildPaths($category);
-            $cacheFile = $this->buildCacheFilePath($category);
-            $this->dataHash[$category] = $this->classParser->getData($path, $cacheFile);
-        }
-
-        $className = $this->dataHash[$category][$name] ?? null;
-
+        $map = $this->getMap($category);
+        $className = $map[$name] ?? null;
         return $className;
+    }
+
+    /**
+     * Get [name => class-name] map.
+     */
+    public function getMap(string $category) : array
+    {
+        if (!array_key_exists($category, $this->dataHash)) {
+            $this->load($category);
+        }
+        return $this->dataHash[$category] ?? [];
+    }
+
+    protected function load(string $category)
+    {
+        $path = $this->buildPaths($category);
+        $cacheFile = $this->buildCacheFilePath($category);
+        $this->dataHash[$category] = $this->classParser->getData($path, $cacheFile);
     }
 
     protected function buildPaths(string $category) : array
@@ -73,7 +85,7 @@ class ClassFinder
 
     protected function buildCacheFilePath(string $category) : string
     {
-        $path = 'data/cache/application/' . str_replace('/', '_', strtolower($category)) . '.php';
+        $path = 'data/cache/application/classmap_' . str_replace('/', '_', strtolower($category)) . '.php';
         return $path;
     }
 }

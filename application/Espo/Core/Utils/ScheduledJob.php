@@ -37,13 +37,7 @@ class ScheduledJob
 
     private $systemUtil;
 
-    protected $data = null;
-
-    protected $cacheFile = 'data/cache/application/jobs.php';
-
     protected $cronFile = 'cron.php';
-
-    protected $allowedMethod = 'run';
 
     /**
      * Period to check if crontab is configured properly
@@ -51,15 +45,6 @@ class ScheduledJob
      * @var string
      */
     protected $checkingCronPeriod = '25 hours';
-
-    /**
-     * @var array - path to cron job files
-     */
-    private $paths = [
-        'corePath' => 'application/Espo/Jobs',
-        'modulePath' => 'application/Espo/Modules/{*}/Jobs',
-        'customPath' => 'custom/Espo/Custom/Jobs',
-    ];
 
     protected $cronSetup = [
         'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
@@ -89,87 +74,18 @@ class ScheduledJob
         return $this->systemUtil;
     }
 
-    public function getMethodName()
-    {
-        return $this->allowedMethod;
-    }
-
-    /**
-     * Get list of all jobs
-     *
-     * @return array
-     */
-    public function getAll()
-    {
-        if (!isset($this->data)) {
-            $this->init();
-        }
-
-        return $this->data;
-    }
-
-    /**
-     * Get class name of a job by name
-     *
-     * @param  string $name
-     * @return string
-     */
-    public function get($name)
-    {
-        return $this->getClassName($name);
-    }
-
     public function getAvailableList()
     {
-        $data = $this->getAll();
-
-        $list = array_keys($data);
-
+        $map = $this->getContainer()->get('classFinder')->getMap('Jobs');
+        $list = array_keys($map);
         return $list;
     }
 
-    /**
-     * Get list of all job names
-     *
-     * @return array
-     */
-    public function getAllNamesOnly()
+    public function getJobClassName(string $name) : ?string
     {
-        $data = $this->getAll();
-
-        $namesOnly = array_keys($data);
-
-        return $namesOnly;
-    }
-
-    /**
-     * Get class name of a job
-     *
-     * @param  string $name
-     * @return string
-     */
-    protected function getClassName($name)
-    {
-        $name = Util::normilizeClassName($name);
-
-        $data = $this->getAll();
-
         $name = ucfirst($name);
-        if (isset($data[$name])) {
-            return $data[$name];
-        }
-
-        return false;
-    }
-
-    /**
-     * Load scheduler classes. It loads from ...Jobs, ex. \Espo\Jobs
-     * @return null
-     */
-    protected function init()
-    {
-        $classParser = $this->getContainer()->get('classParser');
-        $this->data = $classParser->getData($this->paths, $this->cacheFile, [$this->allowedMethod]);
+        $className = $this->getContainer()->get('classFinder')->find('Jobs', $name);
+        return $className;
     }
 
     public function getSetupMessage()
@@ -194,14 +110,14 @@ class ScheduledJob
             $command = str_replace('{'.$name.'}', $value, $command);
         }
 
-        return array(
+        return [
             'message' => $message,
             'command' => $command,
-        );
+        ];
     }
 
     /**
-     * Check if crontab is configured properly
+     * Check if crontab is configured properly.
      *
      * @return boolean
      */
@@ -232,7 +148,6 @@ class ScheduledJob
                 ]
             ]
         ];
-
 
         return !!$this->getEntityManager()->getRepository('Job')->findOne($selectParams);
     }

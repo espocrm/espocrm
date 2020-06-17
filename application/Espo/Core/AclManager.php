@@ -29,11 +29,11 @@
 
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\User;
-use \Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
+use Espo\Entities\User;
+use Espo\Core\Utils\Util;
 
 class AclManager
 {
@@ -48,6 +48,8 @@ class AclManager
     protected $tableClassName = '\\Espo\\Core\\Acl\\Table';
 
     protected $userAclClassName = '\\Espo\\Core\\Acl';
+
+    protected $baseImplementationClassName = '\\Espo\\Core\\Acl\\Base';
 
     protected $globalRestricton;
 
@@ -77,31 +79,22 @@ class AclManager
     public function getImplementation($scope)
     {
         if (empty($this->implementationHashMap[$scope])) {
-            $normalizedName = Util::normilizeClassName($scope);
+            $className = $this->getContainer()->get('classFinder')->find('Acl', $scope);
 
-            $className = '\\Espo\\Custom\\Acl\\' . $normalizedName;
+            if (!$className) {
+                $className = $this->baseImplementationClassName;
+            }
+
             if (!class_exists($className)) {
-                $moduleName = $this->metadata->getScopeModuleName($scope);
-                if ($moduleName) {
-                    $className = '\\Espo\\Modules\\' . $moduleName . '\\Acl\\' . $normalizedName;
-                } else {
-                    $className = '\\Espo\\Acl\\' . $normalizedName;
-                }
-                if (!class_exists($className)) {
-                    $className = '\\Espo\\Core\\Acl\\Base';
-                }
+                throw new Error("{$className} does not exist.");
             }
 
-            if (class_exists($className)) {
-                $acl = new $className($scope);
-                $dependencyList = $acl->getDependencyList();
-                foreach ($dependencyList as $name) {
-                    $acl->inject($name, $this->getContainer()->get($name));
-                }
-                $this->implementationHashMap[$scope] = $acl;
-            } else {
-                throw new Error();
+            $acl = new $className($scope);
+            $dependencyList = $acl->getDependencyList();
+            foreach ($dependencyList as $name) {
+                $acl->inject($name, $this->getContainer()->get($name));
             }
+            $this->implementationHashMap[$scope] = $acl;
         }
 
         return $this->implementationHashMap[$scope];

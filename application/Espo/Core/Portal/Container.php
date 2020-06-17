@@ -31,10 +31,22 @@ namespace Espo\Core\Portal;
 
 class Container extends \Espo\Core\Container
 {
-    public function getServicePortalClassName(string $name, ?string $default = null)
+    protected function getServiceClassName(string $name, ?string $default = null)
+    {
+        return $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'className']) ??
+            parent::getServiceClassName($name, $default);
+    }
+
+    protected function getServicePortalClassName(string $name, ?string $default = null)
     {
         $metadata = $this->get('metadata');
         return $metadata->get(['app', 'portalContainerServices',  $name, 'className'], $default);
+    }
+
+    protected function getServiceDependencyList(string $name) : array
+    {
+        return $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'dependencyList']) ??
+            parent::getServiceDependencyList($name);
     }
 
     protected function getServiceMainClassName(string $name, ?string $default = null)
@@ -73,15 +85,6 @@ class Container extends \Espo\Core\Container
             $this->get('config'),
             $this->get('metadata'),
             $this->get('portal')
-        );
-    }
-
-    protected function loadLayout()
-    {
-        return new \Espo\Core\Portal\Utils\Layout(
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('user')
         );
     }
 

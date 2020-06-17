@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Portal;
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\User;
-use \Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
+use Espo\Entities\User;
+use Espo\Core\Utils\Util;
 
 class AclManager extends \Espo\Core\AclManager
 {
@@ -43,34 +43,27 @@ class AclManager extends \Espo\Core\AclManager
 
     protected $userAclClassName = '\\Espo\\Core\\Portal\\Acl';
 
+    protected $baseImplementationClassName = '\\Espo\\Core\\AclPortal\\Base';
+
     public function getImplementation($scope)
     {
         if (empty($this->implementationHashMap[$scope])) {
-            $normalizedName = Util::normilizeClassName($scope);
+            $className = $this->getContainer()->get('classFinder')->find('AclPortal', $scope);
 
-            $className = '\\Espo\\Custom\\AclPortal\\' . $normalizedName;
+            if (!$className) {
+                $className = $this->baseImplementationClassName;
+            }
+
             if (!class_exists($className)) {
-                $moduleName = $this->getMetadata()->getScopeModuleName($scope);
-                if ($moduleName) {
-                    $className = '\\Espo\\Modules\\' . $moduleName . '\\AclPortal\\' . $normalizedName;
-                } else {
-                    $className = '\\Espo\\AclPortal\\' . $normalizedName;
-                }
-                if (!class_exists($className)) {
-                    $className = '\\Espo\\Core\\AclPortal\\Base';
-                }
+                throw new Error("{$className} does not exist.");
             }
 
-            if (class_exists($className)) {
-                $acl = new $className($scope);
-                $dependencyList = $acl->getDependencyList();
-                foreach ($dependencyList as $name) {
-                    $acl->inject($name, $this->getContainer()->get($name));
-                }
-                $this->implementationHashMap[$scope] = $acl;
-            } else {
-                throw new Error();
+            $acl = new $className($scope);
+            $dependencyList = $acl->getDependencyList();
+            foreach ($dependencyList as $name) {
+                $acl->inject($name, $this->getContainer()->get($name));
             }
+            $this->implementationHashMap[$scope] = $acl;
         }
 
         return $this->implementationHashMap[$scope];
@@ -113,7 +106,8 @@ class AclManager extends \Espo\Core\AclManager
             $fieldManager = $this->getContainer()->get('fieldManagerUtil');
             $portal = $this->getPortal();
 
-            $this->tableHashMap[$key] = new $this->tableClassName($user, $portal, $config, $fileManager, $metadata, $fieldManager);
+            $this->tableHashMap[$key] = new $this->tableClassName(
+                $user, $portal, $config, $fileManager, $metadata, $fieldManager);
         }
 
         return $this->tableHashMap[$key];

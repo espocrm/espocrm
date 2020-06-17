@@ -1,0 +1,6 @@
+{
+    "layout": {
+        "className": "\\Espo\\Core\\Portal\\Utils\\Layout",
+        "dependencyList": ["fileManager", "metadata", "user"]
+    }
+}

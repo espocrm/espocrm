@@ -29,10 +29,13 @@
 
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
 
-use \Espo\Core\InjectableFactory;
+use Espo\Core\InjectableFactory;
+use Espo\Core\SelectManagers\Base as BaseSelectManager;
+use Espo\Entities\User;
+use Espo\Core\ORM\EntityManager;
 
 class SelectManagerFactory
 {
@@ -46,18 +49,22 @@ class SelectManagerFactory
 
     private $injectableFactory;
 
-    private $FieldManagerUtil;
+    private $fieldManagerUtil;
+
+    private $classFinder;
+
+    protected $baseClassName = '\\Espo\\Core\\SelectManagers\\Base';
 
     public function __construct(
-        $entityManager,
-        \Espo\Entities\User $user,
+        EntityManager $entityManager,
+        User $user,
         Acl $acl,
         AclManager $aclManager,
         Utils\Metadata $metadata,
         Utils\Config $config,
         Utils\FieldManagerUtil $fieldManagerUtil,
-        InjectableFactory $injectableFactory
-    )
+        InjectableFactory $injectableFactory,
+        Utils\ClassFinder $classFinder)
     {
         $this->entityManager = $entityManager;
         $this->user = $user;
@@ -67,23 +74,15 @@ class SelectManagerFactory
         $this->config = $config;
         $this->fieldManagerUtil = $fieldManagerUtil;
         $this->injectableFactory = $injectableFactory;
+        $this->classFinder = $classFinder;
     }
 
-    public function create(string $entityType, ?\Espo\Entities\User $user = null) : \Espo\Core\SelectManagers\Base
+    public function create(string $entityType, ?User $user = null) : BaseSelectManager
     {
-        $normalizedName = Util::normilizeClassName($entityType);
+        $className = $this->classFinder->find('SelectManagers', $entityType);
 
-        $className = '\\Espo\\Custom\\SelectManagers\\' . $normalizedName;
-        if (!class_exists($className)) {
-            $moduleName = $this->metadata->getScopeModuleName($entityType);
-            if ($moduleName) {
-                $className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . $normalizedName;
-            } else {
-                $className = '\\Espo\\SelectManagers\\' . $normalizedName;
-            }
-            if (!class_exists($className)) {
-                $className = '\\Espo\\Core\\SelectManagers\\Base';
-            }
+        if (!$className || !class_exists($className)) {
+            $className = $this->baseClassName;
         }
 
         if ($user) {

@@ -568,28 +568,6 @@ class Metadata
     }
 
     /**
-     * Get Entity path, ex. Espo.Entities.Account or Modules\Crm\Entities\MyModule
-     *
-     * @param string $entityName
-     * @param bool $delim - delimiter
-     *
-     * @return string
-     */
-    public function getEntityPath($entityName, $delim = '\\')
-    {
-        $path = $this->getScopePath($entityName, $delim);
-
-        return implode($delim, array($path, 'Entities', Util::normilizeClassName(ucfirst($entityName))));
-    }
-
-    public function getRepositoryPath($entityName, $delim = '\\')
-    {
-        $path = $this->getScopePath($entityName, $delim);
-
-        return implode($delim, array($path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))));
-    }
-
-    /**
      * Load modules
      *
      * @return void
@@ -636,27 +614,6 @@ class Metadata
     public function getScopeModuleName($scopeName)
     {
         return $this->get('scopes.' . $scopeName . '.module', false);
-    }
-
-    /**
-     * Get Scope path, ex. "Modules/Crm" for Account
-     *
-     * @param string $scopeName
-     * @param string $delim - delimiter
-     *
-     * @return string
-     */
-    public function getScopePath($scopeName, $delim = '/')
-    {
-        $moduleName = $this->getScopeModuleName($scopeName);
-
-        $path = ($moduleName !== false) ? 'Espo/Modules/'.$moduleName : 'Espo';
-
-        if ($delim != '/') {
-           $path = str_replace('/', $delim, $path);
-        }
-
-        return $path;
     }
 
     /**

@@ -342,7 +342,7 @@ class CronManager
     {
         $jobName = $job->get('scheduledJobJob');
 
-        $className = $this->getScheduledJobUtil()->get($jobName);
+        $className = $this->getScheduledJobUtil()->getJobClassName($jobName);
 
         if ($className === false) throw new Error("No class name for job {$jobName}.");
 
@@ -386,7 +386,7 @@ class CronManager
     {
         $jobName = $job->get('job');
 
-        $className = $this->getScheduledJobUtil()->get($jobName);
+        $className = $this->getScheduledJobUtil()->getJobClassName($jobName);
 
         if ($className === false) throw new Error("No class name for job {$jobName}.");
 
@@ -430,7 +430,7 @@ class CronManager
                 if ($existingJob) continue;
             }
 
-            $className = $this->getScheduledJobUtil()->get($scheduledJob->get('job'));
+            $className = $this->getScheduledJobUtil()->getJobClassName($scheduledJob->get('job'));
             if ($className) {
                 if (method_exists($className, 'prepare')) {
                     $implementation = new $className($this->container);

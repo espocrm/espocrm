@@ -2,5 +2,9 @@
     "clientManager": {
         "className": "\\Espo\\Core\\Utils\\ClientManager",
         "dependencyList": ["config", "themeManager", "metadata"]
+    },
+    "layout": {
+        "className": "\\Espo\\Core\\Utils\\Layout",
+        "dependencyList": ["fileManager", "metadata", "user"]
     }
 }

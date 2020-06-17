@@ -29,7 +29,7 @@
 
 namespace Espo\ORM;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
 class EntityManager
 {
@@ -234,12 +234,12 @@ class EntityManager
         return $this->pdo;
     }
 
-    public function normalizeRepositoryName($name)
+    public function getRepositoryClassName($name)
     {
         return $name;
     }
 
-    public function normalizeEntityName($name)
+    public function getEntityClassName($name)
     {
         return $name;
     }

@@ -45,7 +45,7 @@ class RepositoryFactory
 
     public function create($name)
     {
-        $className = $this->entityManager->normalizeRepositoryName($name);
+        $className = $this->entityManager->getRepositoryClassName($name);
 
         if (!class_exists($className)) {
             $className = $this->defaultRepositoryClassName;
@@ -53,11 +53,6 @@ class RepositoryFactory
 
         $repository = new $className($name, $this->entityManager, $this->entityFactroy);
         return $repository;
-    }
-
-    protected function normalizeName($name)
-    {
-        return $name;
     }
 
     public function setDefaultRepositoryClassName($defaultRepositoryClassName)

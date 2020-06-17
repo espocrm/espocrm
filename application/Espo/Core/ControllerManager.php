@@ -29,15 +29,11 @@
 
 namespace Espo\Core;
 
-use \Espo\Core\Utils\Util;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\NotFound;
 
 class ControllerManager
 {
-    private $config;
-
-    private $metadata;
-
     private $container;
 
     private $controllersHash = null;
@@ -46,41 +42,27 @@ class ControllerManager
     {
         $this->container = $container;
 
-        $this->config = $this->container->get('config');
-        $this->metadata = $this->container->get('metadata');
-
         $this->controllersHash = (object) [];
     }
 
-    protected function getConfig()
+    protected function getContainer()
     {
-        return $this->config;
+        return $this->container;
     }
 
-    protected function getMetadata()
+    protected function getControllerClassName(string $name) : string
     {
-        return $this->metadata;
-    }
+        $className = $this->getContainer()->get('classFinder')->find('Controllers', $name);
 
-    protected function getControllerClassName($controllerName)
-    {
-        $customClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($controllerName);
-        if (class_exists($customClassName)) {
-            $controllerClassName = $customClassName;
-        } else {
-            $moduleName = $this->metadata->getScopeModuleName($controllerName);
-            if ($moduleName) {
-                $controllerClassName = '\\Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normilizeClassName($controllerName);
-            } else {
-                $controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($controllerName);
-            }
+        if (!$className) {
+            throw new NotFound("Controller '{$name}' does not exist.");
         }
 
-        if (!class_exists($controllerClassName)) {
-            throw new NotFound("Controller '$controllerName' is not found");
+        if (!class_exists($className)) {
+            throw new NotFound("Class not found for controller '{$name}'.");
         }
 
-        return $controllerClassName;
+        return $className;
     }
 
     public function createController($name)
@@ -129,9 +111,12 @@ class ControllerManager
             throw new NotFound("Action {$requestMethod} '{$actionName}' does not exist in controller '".$controller->getName()."'.");
         }
 
-        // TODO Remove in 5.1.0
+        // TODO Remove in 6.0.0
         if ($data instanceof \stdClass) {
-            if ($this->getMetadata()->get(['app', 'deprecatedControllerActions', $controller->getName(), $primaryActionMethodName])) {
+            if (
+                $this->container->get('metadata')->get(
+                    ['app', 'deprecatedControllerActions', $controller->getName(), $primaryActionMethodName])
+            ) {
                 $data = get_object_vars($data);
             }
         }

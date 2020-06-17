@@ -29,9 +29,11 @@
 
 namespace Espo\Core;
 
+/**
+ * DI container. Lazy initialization is used. See https://docs.espocrm.com/development/di/.
+ */
 class Container
 {
-
     private $data = [];
 
     public function __construct()
@@ -47,6 +49,11 @@ class Container
             return $this->data[$name];
         }
         return null;
+    }
+
+    public function setUser(\Espo\Entities\User $user)
+    {
+        $this->set('user', $user);
     }
 
     protected function set($name, $obj)
@@ -88,7 +95,7 @@ class Container
 
                 if ($className && class_exists($className)) {
 
-                    $dependencyList = $metadata->get(['app', 'containerServices', $name, 'dependencyList']) ?? [];
+                    $dependencyList = $this->getServiceDependencyList($name);
                     $dependencyObjectList = [];
                     foreach ($dependencyList as $item) {
                         $dependencyObjectList[] = $this->get($item);
@@ -110,7 +117,12 @@ class Container
         return null;
     }
 
-    public function getServiceClassName(string $name, ?string $default = null)
+    protected function getServiceDependencyList(string $name) : array
+    {
+        return $this->get('metadata')->get(['app', 'containerServices', $name, 'dependencyList']) ?? [];
+    }
+
+    protected function getServiceClassName(string $name, ?string $default = null)
     {
         $metadata = $this->get('metadata');
 
@@ -221,34 +233,11 @@ class Container
         );
     }
 
-    protected function loadServiceFactory()
-    {
-        return new \Espo\Core\ServiceFactory(
-            $this
-        );
-    }
-
-    protected function loadNotificatorFactory()
-    {
-        return new \Espo\Core\NotificatorFactory(
-            $this
-        );
-    }
-
     protected function loadMetadata()
     {
         return new \Espo\Core\Utils\Metadata(
             $this->get('fileManager'),
             $this->get('config')->get('useCache')
-        );
-    }
-
-    protected function loadLayout()
-    {
-        return new \Espo\Core\Utils\Layout(
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('user')
         );
     }
 
@@ -385,10 +374,5 @@ class Container
         return new \Espo\Core\InjectableFactory(
             $this
         );
-    }
-
-    public function setUser(\Espo\Entities\User $user)
-    {
-        $this->set('user', $user);
     }
 }
