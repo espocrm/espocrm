@@ -43,7 +43,7 @@ class Container extends \Espo\Core\Container
         return $metadata->get(['app', 'portalContainerServices',  $name, 'className'], $default);
     }
 
-    protected function getServiceDependencyList(string $name) : array
+    protected function getServiceDependencyList(string $name) : ?array
     {
         return $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'dependencyList']) ??
             parent::getServiceDependencyList($name);

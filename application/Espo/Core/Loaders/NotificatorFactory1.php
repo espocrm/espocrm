@@ -34,7 +34,8 @@ class NotificatorFactory extends Base
     public function load()
     {
         return new \Espo\Core\NotificatorFactory(
-            $this->getContainer()
+            $this->getContainer()->get('injectableFactory'),
+            $this->getContainer()->get('classFinder')
         );
     }
 }

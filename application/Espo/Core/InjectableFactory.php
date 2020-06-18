@@ -29,8 +29,12 @@
 
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
+/**
+ * Creates instance by class name. Uses either Injectable interface or constructor param names to detect
+ * which dependencies are needed. Only container services supported as dependencies.
+ */
 class InjectableFactory
 {
     private $container;
@@ -40,28 +44,71 @@ class InjectableFactory
         $this->container = $container;
     }
 
-    public function createByClassName($className)
+    public function create(string $className) : object
     {
-        if (class_exists($className)) {
-            $service = new $className();
-            if (!($service instanceof \Espo\Core\Interfaces\Injectable)) {
-                throw new Error("Class '$className' is not instance of Injectable interface");
-            }
-            $dependencyList = $service->getDependencyList();
-            foreach ($dependencyList as $name) {
-                $service->inject($name, $this->container->get($name));
-            }
-            if (method_exists($service, 'prepare')) {
-                $service->prepare();
-            }
-            return $service;
-        }
-        throw new Error("Class '$className' does not exist");
+        return $this->createByClassName($className);
     }
 
-    protected function getMetadata()
+    public function createByClassName(string $className) : object
     {
-        return $this->getContainer()->get('metadata');
+        if (!class_exists($className)) {
+            throw new Error("Class '{$className}' does not exist.");
+        }
+
+        $class = new \ReflectionClass($className);
+        if ($class->implementsInterface('\\Espo\\Core\\Interfaces\\Injectable')) {
+            return $this->createByClassNameInjectable($className);
+        }
+
+        return $this->createByClassNameByConstructorParams($className);
+    }
+
+    protected function createByClassNameByConstructorParams(string $className)
+    {
+        $class = new \ReflectionClass($className);
+
+        $dependencyList = [];
+
+        $constructor = $class->getConstructor();
+        if (!is_null($constructor)) {
+            $params = $constructor->getParameters();
+
+            foreach ($params as $param) {
+                $dependencyClassName = $param->getClass();
+                if (is_null($dependencyClassName)) {
+                    if ($param->isDefaultValueAvailable()) {
+                        $dependencyList[] = $param->getDefaultValue();
+                        continue;
+                    }
+                }
+
+                $name = $param->getName();
+                $dependency = $this->getContainer()->get($name);
+
+                if (!$dependency) {
+                    throw new Error("InjectableFactory: Could not create {$className}, dependency {$name} not found.");
+                }
+
+                $dependencyList[] = $dependency;
+            }
+        }
+
+        return $class->newInstanceArgs($dependencyList);
+    }
+
+    protected function createByClassNameInjectable(string $className)
+    {
+        $obj = new $className();
+
+        $dependencyList = $obj->getDependencyList();
+        foreach ($dependencyList as $name) {
+            $obj->inject($name, $this->container->get($name));
+        }
+        if (method_exists($obj, 'prepare')) {
+            $obj->prepare();
+        }
+
+        return $obj;
     }
 
     protected function getContainer()

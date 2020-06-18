@@ -29,29 +29,37 @@
 
 namespace Espo\Core\AppParams;
 
-class TemplateEntityTypeList extends \Espo\Core\Injectable
+use Espo\Core\Acl;
+use Espo\Core\SelectManagerFactory;
+use Espo\ORM\EntityManager;
+
+class TemplateEntityTypeList
 {
-    protected function init()
+    protected $acl;
+    protected $selectManagerFactory;
+    protected $entityManager;
+
+    public function __construct(Acl $acl, SelectManagerFactory $selectManagerFactory, EntityManager $entityManager)
     {
-        $this->addDependency('acl');
-        $this->addDependency('selectManagerFactory');
-        $this->addDependency('entityManager');
+        $this->acl = $acl;
+        $this->selectManagerFactory = $selectManagerFactory;
+        $this->entityManager = $entityManager;
     }
 
     public function get()
     {
-        if (!$this->getInjection('acl')->checkScope('Template')) {
+        if (!$this->acl->checkScope('Template')) {
             return [];
         }
 
         $list = [];
 
-        $selectManager = $this->getInjection('selectManagerFactory')->create('Template');
+        $selectManager = $this->selectManagerFactory->create('Template');
 
         $selectParams = $selectManager->getEmptySelectParams();
         $selectManager->applyAccess($selectParams);
 
-        $templateList = $this->getInjection('entityManager')->getRepository('Template')
+        $templateList = $this->entityManager->getRepository('Template')
             ->select(['entityType'])
             ->groupBy(['entityType'])
             ->find($selectParams);

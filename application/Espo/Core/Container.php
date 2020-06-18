@@ -71,8 +71,10 @@ class Container
             $metadata = $this->get('metadata');
 
             try {
+                // deprecated
                 $className = $metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
                 if (!$className) {
+                    // deprecated
                     $className = $metadata->get(['app', 'loaders', ucfirst($name)]);
                 }
             } catch (\Exception $e) {}
@@ -84,6 +86,7 @@ class Container
                 }
             }
 
+
             $object = null;
 
             if (class_exists($className)) {
@@ -94,21 +97,18 @@ class Container
                 $className = $this->getServiceClassName($name);
 
                 if ($className && class_exists($className)) {
-
                     $dependencyList = $this->getServiceDependencyList($name);
-                    $dependencyObjectList = [];
-                    foreach ($dependencyList as $item) {
-                        $dependencyObjectList[] = $this->get($item);
-                    }
-                    $reflector = new \ReflectionClass($className);
-                    if ($reflector->isSubclassOf('\\Espo\\Core\\Interfaces\\InjectableService')) {
-                        $object = $reflector->newInstance();
-                        foreach ($dependencyObjectList as $i => $item) {
-                            $object->inject($dependencyList[$i], $item);
+                    if (!is_null($dependencyList)) {
+                        $dependencyObjectList = [];
+                        foreach ($dependencyList as $item) {
+                            $dependencyObjectList[] = $this->get($item);
                         }
-                    } else {
+                        $reflector = new \ReflectionClass($className);
                         $object = $reflector->newInstanceArgs($dependencyObjectList);
+                    } else {
+                        $object = $this->get('injectableFactory')->create($className);
                     }
+
                     $this->data[$name] = $object;
                 }
             }
@@ -117,9 +117,9 @@ class Container
         return null;
     }
 
-    protected function getServiceDependencyList(string $name) : array
+    protected function getServiceDependencyList(string $name) : ?array
     {
-        return $this->get('metadata')->get(['app', 'containerServices', $name, 'dependencyList']) ?? [];
+        return $this->get('metadata')->get(['app', 'containerServices', $name, 'dependencyList']) ?? null;
     }
 
     protected function getServiceClassName(string $name, ?string $default = null)

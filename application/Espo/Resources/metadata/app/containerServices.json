@@ -1,4 +1,7 @@
 {
+    "notificatorFactory": {
+        "className": "\\Espo\\Core\\NotificatorFactory"
+    },
     "clientManager": {
         "className": "\\Espo\\Core\\Utils\\ClientManager",
         "dependencyList": ["config", "themeManager", "metadata"]
