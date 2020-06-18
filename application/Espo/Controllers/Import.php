@@ -78,24 +78,13 @@ class Import extends \Espo\Core\Controllers\Record
         return $this->getContainer()->get('entityManager');
     }
 
-    public function actionUploadFile($params, $data, $request)
+    public function postActionUploadFile($params, $data)
     {
         $contents = $data;
 
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $attachmentId = $this->getService('Import')->uploadFile($contents);
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment');
-        $attachment->set('type', 'text/csv');
-        $attachment->set('role', 'Import File');
-        $attachment->set('name', 'import-file.csv');
-        $attachment->set('contents', $contents);
-        $this->getEntityManager()->saveEntity($attachment);
-
-        return [
-            'attachmentId' => $attachment->id
-        ];
+        return ['attachmentId' => $attachmentId];
     }
 
     public function actionRevert($params, $data, $request)

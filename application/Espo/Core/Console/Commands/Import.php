@@ -34,11 +34,41 @@ class Import extends Base
     public function run($options, $flagList, $argumentList)
     {
         $id = $options['id'] ?? null;
+        $filePath = $options['file'] ?? null;
+        $paramsId = $options['paramsId'] ?? null;
 
         $service = $this->getContainer()->get('serviceFactory')->create('Import');
 
         $forceResume = in_array('r', $flagList);
         $revert = in_array('u', $flagList);
+
+        if (!$id && $filePath) {
+            if (!$paramsId) {
+                $this->out("You need to specify --params-id option.\n");
+                return;
+            }
+
+            if (!file_exists($filePath)) {
+                $this->out("File not found.\n");
+                return;
+            }
+
+            $contents = file_get_contents($filePath);
+
+            try {
+                $results = $service->importFileWithParamsId($contents, $paramsId);
+
+                $resultId = $results['id'];
+                $countCreated = $results['countCreated'];
+                $countUpdated = $results['countUpdated'];
+            } catch (\Throwable $e) {
+                $this->out("Error occured: ".$e->getMessage()."\n");
+                return;
+            }
+
+            $this->out("Finished. Import ID: {$resultId}. Created: {$countCreated}. Updated: {$countUpdated}.\n");
+            return;
+        }
 
         if ($id && $revert) {
             $this->out("Reverting import...\n");

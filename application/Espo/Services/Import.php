@@ -152,6 +152,18 @@ class Import extends \Espo\Services\Record
         ];
     }
 
+    public function uploadFile($contents)
+    {
+        $attachment = $this->getEntityManager()->getEntity('Attachment');
+        $attachment->set('type', 'text/csv');
+        $attachment->set('role', 'Import File');
+        $attachment->set('name', 'import-file.csv');
+        $attachment->set('contents', $contents);
+        $this->getEntityManager()->saveEntity($attachment);
+
+        return $attachment->id;
+    }
+
     protected function readCsvString(&$string, $CSV_SEPARATOR = ';', $CSV_ENCLOSURE = '"', $CSV_LINEBREAK = "\n")
     {
         $o = [];
@@ -366,6 +378,32 @@ class Import extends \Espo\Services\Record
         $params['startFromLastIndex'] = $startFromLastIndex;
 
         return $this->import($entityType, $attributeList, $import->get('fileId'), $params, $id);
+    }
+
+    public function importFileWithParamsId(string $contents, string $importParamsId)
+    {
+        if (!$contents) {
+            throw new Error("File contents is empty.");
+        }
+
+        $source = $this->getEntityManager()->getEntity('Import', $importParamsId);
+
+        if (!$source) {
+            throw new Error("Import {$importParamsId} not found.");
+        }
+
+        $entityType = $source->get('entityType');
+        $attributeList = $source->get('attributeList') ?? [];
+
+        $params = $source->get('params') ?? (object) [];
+        $params = json_decode(json_encode($params), true);
+
+        unset($params['idleMode']);
+        unset($params['manualMode']);
+
+        $attachmentId = $this->uploadFile($contents);
+
+        return $this->import($entityType, $attributeList, $attachmentId, $params);
     }
 
     /**
