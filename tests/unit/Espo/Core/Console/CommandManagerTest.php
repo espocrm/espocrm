@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Console;
 
 use tests\unit\ReflectionHelper;
 
-class CommandMagagerTest extends \PHPUnit\Framework\TestCase
+class CommandManagerTest extends \PHPUnit\Framework\TestCase
 {
 
     protected function setUp() : void
