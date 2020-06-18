@@ -58,6 +58,8 @@ class CommandManager
                 list($name, $value) = explode('=', substr($item, 2));
                 $name = \Espo\Core\Utils\Util::hyphenToCamelCase($name);
                 $options[$name] = $value;
+            } else if (strpos($item, '--') === 0) {
+                $flagList[] = substr($item, 2);
             } else if (strpos($item, '-') === 0) {
                 $flagList[] = substr($item, 1);
             } else {
