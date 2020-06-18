@@ -39,8 +39,8 @@ class Import extends Base
 
         $service = $this->getContainer()->get('serviceFactory')->create('Import');
 
-        $forceResume = in_array('r', $flagList);
-        $revert = in_array('u', $flagList);
+        $forceResume = in_array('resume', $flagList);
+        $revert = in_array('revert', $flagList);
 
         if (!$id && $filePath) {
             if (!$paramsId) {
