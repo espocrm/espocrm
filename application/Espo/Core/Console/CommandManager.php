@@ -29,9 +29,11 @@
 
 namespace Espo\Core\Console;
 
+use Espo\Core\Utils\Util;
+
 class CommandManager
 {
-    private $container;
+    protected $container;
 
     public function __construct(\Espo\Core\Container $container)
     {
@@ -40,33 +42,22 @@ class CommandManager
 
     public function run(string $command)
     {
-        $command = ucfirst(\Espo\Core\Utils\Util::hyphenToCamelCase($command));
+        $command = ucfirst(Util::hyphenToCamelCase($command));
 
-        $argumentList = [];
-        $options = [];
-        $flagList = [];
+        $params = $this->getParams($_SERVER['argv']);
 
-        $skipIndex = 1;
-        if (isset($_SERVER['argv'][0]) && $_SERVER['argv'][0] === 'command.php') {
-            $skipIndex = 2;
-        }
+        $options = $params['options'];
+        $flagList = $params['flagList'];
+        $argumentList = $params['argumentList'];
 
-        foreach ($_SERVER['argv'] as $i => $item) {
-            if ($i < $skipIndex) continue;
+        $className = $this->getClassName($command);
 
-            if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
-                list($name, $value) = explode('=', substr($item, 2));
-                $name = \Espo\Core\Utils\Util::hyphenToCamelCase($name);
-                $options[$name] = $value;
-            } else if (strpos($item, '--') === 0) {
-                $flagList[] = substr($item, 2);
-            } else if (strpos($item, '-') === 0) {
-                $flagList[] = substr($item, 1);
-            } else {
-                $argumentList[] = $item;
-            }
-        }
+        $impl = new $className($this->container);
+        return $impl->run($options, $flagList, $argumentList);
+    }
 
+    protected function getClassName(string $command)
+    {
         $className = '\\Espo\\Core\\Console\\Commands\\' . $command;
         $className = $this->container->get('metadata')->get(['app', 'consoleCommands', $command, 'className'], $className);
         if (!class_exists($className)) {
@@ -74,7 +65,41 @@ class CommandManager
             echo $msg . "\n";
             throw new \Espo\Core\Exceptions\Error($msg);
         }
-        $impl = new $className($this->container);
-        return $impl->run($options, $flagList, $argumentList);
+
+        return $className;
+    }
+
+    protected function getParams(array $argv)
+    {
+        $argumentList = [];
+        $options = [];
+        $flagList = [];
+
+        $skipIndex = 1;
+        if (isset($argv[0]) && $argv[0] === 'command.php') {
+            $skipIndex = 2;
+        }
+
+        foreach ($argv as $i => $item) {
+            if ($i < $skipIndex) continue;
+
+            if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
+                list($name, $value) = explode('=', substr($item, 2));
+                $name = Util::hyphenToCamelCase($name);
+                $options[$name] = $value;
+            } else if (strpos($item, '--') === 0) {
+                $flagList[] = Util::hyphenToCamelCase(substr($item, 2));
+            } else if (strpos($item, '-') === 0) {
+                $flagList[] = substr($item, 1);
+            } else {
+                $argumentList[] = $item;
+            }
+        }
+
+        return [
+            'argumentList' => $argumentList,
+            'options' => $options,
+            'flagList' => $flagList,
+        ];
     }
 }
