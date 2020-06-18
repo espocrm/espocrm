@@ -38,6 +38,21 @@ class Import extends Base
         $service = $this->getContainer()->get('serviceFactory')->create('Import');
 
         $forceResume = in_array('r', $flagList);
+        $revert = in_array('u', $flagList);
+
+        if ($id && $revert) {
+            $this->out("Reverting import...\n");
+
+            try {
+                $results = $service->revert($id);
+            } catch (\Throwable $e) {
+                $this->out("Error occured: ".$e->getMessage()."\n");
+                return;
+            }
+
+            $this->out("Finished.\n");
+            return;
+        }
 
         if ($id) {
             $this->out("Running import, this may take a while...\n");

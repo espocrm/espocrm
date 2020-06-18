@@ -220,11 +220,11 @@ class Import extends \Espo\Services\Record
     {
         $import = $this->getEntityManager()->getEntity('Import', $id);
         if (empty($import)) {
-            throw new NotFound();
+            throw new NotFound("Could not find import record.");
         }
 
         if (!$this->getAcl()->check($import, 'delete')) {
-            throw new Forbidden();
+            throw new Forbidden("No access import record.");
         }
 
         $pdo = $this->getEntityManager()->getPDO();
