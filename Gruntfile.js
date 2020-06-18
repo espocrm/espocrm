@@ -313,11 +313,11 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("unit-tests-run", function() {
-        cp.execSync("vendor/bin/phpunit --bootstrap=./vendor/autoload.php tests/unit", {stdio: 'inherit'});
+        cp.execSync("vendor/bin/phpunit --bootstrap=./vendor/autoload.php ./tests/unit", {stdio: 'inherit'});
     });
 
     grunt.registerTask("integration-tests-run", function() {
-        cp.execSync("vendor/bin/phpunit --bootstrap=./vendor/autoload.php tests/integration", {stdio: 'inherit'});
+        cp.execSync("vendor/bin/phpunit --bootstrap=./vendor/autoload.php ./tests/integration", {stdio: 'inherit'});
     });
 
     grunt.registerTask("zip", function() {
