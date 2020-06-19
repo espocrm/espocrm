@@ -49,9 +49,9 @@ class ClassFinder
     /**
      * Find class name by category (e.g. Controllers, Services) and name.
      */
-    public function find(string $category, string $name) : ?string
+    public function find(string $category, string $name, bool $subDirs = false) : ?string
     {
-        $map = $this->getMap($category);
+        $map = $this->getMap($category, $subDirs);
         $className = $map[$name] ?? null;
         return $className;
     }
@@ -59,19 +59,19 @@ class ClassFinder
     /**
      * Get [name => class-name] map.
      */
-    public function getMap(string $category) : array
+    public function getMap(string $category, bool $subDirs = false) : array
     {
         if (!array_key_exists($category, $this->dataHash)) {
-            $this->load($category);
+            $this->load($category, $subDirs);
         }
         return $this->dataHash[$category] ?? [];
     }
 
-    protected function load(string $category)
+    protected function load(string $category, bool $subDirs = false)
     {
         $path = $this->buildPaths($category);
         $cacheFile = $this->buildCacheFilePath($category);
-        $this->dataHash[$category] = $this->classParser->getData($path, $cacheFile);
+        $this->dataHash[$category] = $this->classParser->getData($path, $cacheFile, null, $subDirs);
     }
 
     protected function buildPaths(string $category) : array

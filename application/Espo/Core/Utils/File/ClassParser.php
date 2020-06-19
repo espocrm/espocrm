@@ -77,7 +77,7 @@ class ClassParser
      * @param $cacheFile Full path for a cache file, ex. data/cache/application/entryPoints.php.
      * @param $allowedMethods If specified, classes w/o specified method will be ignored.
      */
-    public function getData($paths, ?string $cacheFile = null, ?array $allowedMethods = null) : array
+    public function getData($paths, ?string $cacheFile = null, ?array $allowedMethods = null, bool $subDirs = false) : array
     {
         $data = null;
 
@@ -96,18 +96,18 @@ class ClassParser
         }
 
         if (!is_array($data)) {
-            $data = $this->getClassNameHash($paths['corePath'], $allowedMethods);
+            $data = $this->getClassNameHash($paths['corePath'], $allowedMethods, $subDirs);
 
             if (isset($paths['modulePath'])) {
                 foreach ($this->getMetadata()->getModuleList() as $moduleName) {
                     $path = str_replace('{*}', $moduleName, $paths['modulePath']);
 
-                    $data = array_merge($data, $this->getClassNameHash($path, $allowedMethods));
+                    $data = array_merge($data, $this->getClassNameHash($path, $allowedMethods, $subDirs));
                 }
             }
 
             if (isset($paths['customPath'])) {
-                $data = array_merge($data, $this->getClassNameHash($paths['customPath'], $allowedMethods));
+                $data = array_merge($data, $this->getClassNameHash($paths['customPath'], $allowedMethods, $subDirs));
             }
 
             if ($cacheFile && $this->getConfig()->get('useCache')) {
@@ -121,7 +121,7 @@ class ClassParser
         return $data;
     }
 
-    protected function getClassNameHash($dirs, ?array $allowedMethods = [])
+    protected function getClassNameHash($dirs, ?array $allowedMethods = [], bool $subDirs = false)
     {
         if (is_string($dirs)) {
             $dirs = (array) $dirs;
@@ -130,31 +130,44 @@ class ClassParser
         $data = [];
         foreach ($dirs as $dir) {
             if (file_exists($dir)) {
-                $fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', true);
+                $fileList = $this->getFileManager()->getFileList($dir, $subDirs, '\.php$', true);
 
-                foreach ($fileList as $file) {
-                    $filePath = Util::concatPath($dir, $file);
-                    $className = Util::getClassName($filePath);
-                    $fileName = $this->getFileManager()->getFileName($filePath);
-
-                    $scopeName = ucfirst($fileName);
-                    $normalizedScopeName = Util::normilizeScopeName($scopeName);
-
-                    if (empty($allowedMethods)) {
-                        $data[$normalizedScopeName] = $className;
-                        continue;
-                    }
-
-                    foreach ($allowedMethods as $methodName) {
-                        if (method_exists($className, $methodName)) {
-                            $data[$normalizedScopeName] = $className;
-                        }
-                    }
-
-                }
+                $this->fillHashFromFileList($fileList, $dir, $allowedMethods, $data);
             }
         }
 
         return $data;
+    }
+
+    protected function fillHashFromFileList(
+        array $fileList, string $dir, ?array $allowedMethods, array &$data, string $category = ''
+    ) {
+        foreach ($fileList as $key => $file) {
+            if (is_string($key)) {
+                if (is_array($file)) {
+                    $this->fillHashFromFileList($file, $dir . '/'. $key, $allowedMethods, $data, $category . $key . '\\');
+                }
+                continue;
+            }
+
+            $filePath = Util::concatPath($dir, $file);
+            $className = Util::getClassName($filePath);
+            $fileName = $this->getFileManager()->getFileName($filePath);
+
+            $name = Util::normilizeScopeName(ucfirst($fileName));
+
+            $name = $category . $name;
+
+            if (empty($allowedMethods)) {
+                $data[$name] = $className;
+                continue;
+            }
+
+            foreach ($allowedMethods as $methodName) {
+                if (method_exists($className, $methodName)) {
+                    $data[$name] = $className;
+                }
+            }
+        }
     }
 }

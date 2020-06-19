@@ -34,7 +34,8 @@ class ServiceFactory extends Base
     public function load()
     {
         return new \Espo\Core\ServiceFactory(
-            $this->getContainer()
+            $this->getContainer()->get('classFinder'),
+            $this->getContainer()->get('injectableFactory')
         );
     }
 }
