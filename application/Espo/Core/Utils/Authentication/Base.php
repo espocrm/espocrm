@@ -29,11 +29,11 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Utils\Config;
-use \Espo\Core\ORM\EntityManager;
-use \Espo\Core\Utils\Auth;
+use Espo\Core\Utils\Config;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Auth;
 
-abstract class Base
+abstract class Base implements AuthInterface
 {
     protected $config;
 

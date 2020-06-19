@@ -27,27 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\TwoFA;
+namespace Espo\Core\Utils\Authentication\TwoFA\Utils;
 
-use \Espo\Core\Utils\Config;
-use \Espo\Core\ORM\EntityManager;
-use \Espo\Core\Utils\Auth;
-use \Espo\Core\Container;
-use \Espo\Entities\User;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
-abstract class Base implements \Espo\Core\Interfaces\Injectable
+class UserFactory
 {
-    use \Espo\Core\Traits\Injectable;
+    protected $injectableFactory;
+    protected $config;
 
-    protected $dependencyList = [
-        'config',
-        'entityManager',
-    ];
-
-    abstract public function verifyCode(User $user, string $code) : bool;
-
-    public function getLoginData(User $user) : array
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        return [];
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
+    }
+
+    public function create(string $method) : object
+    {
+        $className = $this->metadata->get([
+            'app', 'auth2FAMethods', $method, 'implementationUserClassName'
+        ]);
+
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+
+            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\TwoFA\\User\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "\\Espo\\Core\\Utils\\Authentication\\TwoFA\\User\\" . $sanitizedName;
+            }
+        }
+
+        return $this->injectableFactory->create($className);
     }
 }

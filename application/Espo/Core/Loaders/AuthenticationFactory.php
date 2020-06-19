@@ -34,7 +34,8 @@ class AuthenticationFactory extends Base
     public function load()
     {
         $obj = new \Espo\Core\Utils\Authentication\Utils\AuthenticationFactory(
-            $this->getContainer()
+            $this->getContainer()->get('injectableFactory'),
+            $this->getContainer()->get('metadata')
         );
         return $obj;
     }

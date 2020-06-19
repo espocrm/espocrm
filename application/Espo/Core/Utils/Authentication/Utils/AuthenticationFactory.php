@@ -29,23 +29,24 @@
 
 namespace Espo\Core\Utils\Authentication\Utils;
 
-use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Authentication\AuthInterface;
 
 class AuthenticationFactory
 {
-    protected $container;
+    protected $injectableFactory;
+    protected $metadata;
 
-    public function __construct(Container $container)
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        $this->container = $container;
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
-    public function create(string $method) : \Espo\Core\Utils\Authentication\Base
+    public function create(string $method) : AuthInterface
     {
-        $metadata = $this->container->get('metadata');
-
-        $className = $metadata->get(['authenticationMethods', $method, 'implementationClassName']);
-        $dependencyList = $metadata->get(['authenticationMethods', $method, 'dependencyList']) ?? [];
+        $className = $this->metadata->get(['authenticationMethods', $method, 'implementationClassName']);
 
         if (!$className) {
             $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
@@ -56,15 +57,6 @@ class AuthenticationFactory
             }
         }
 
-        $config = $this->container->get('config');
-        $entityManager = $this->container->get('entityManager');
-
-        $impl = new $className($config, $entityManager);
-
-        foreach ($dependencyList as $item) {
-            $impl->inject($item, $this->container->get($item));
-        }
-
-        return $impl;
+        return $this->injectableFactory->create($className);
     }
 }

@@ -29,13 +29,14 @@
 
 namespace Espo\Core\Loaders;
 
-class NotificatorFactory extends Base
+class Auth2FAUserFactory extends Base
 {
     public function load()
     {
-        return new \Espo\Core\NotificatorFactory(
+        $obj = new \Espo\Core\Utils\Authentication\TwoFA\Utils\UserFactory(
             $this->getContainer()->get('injectableFactory'),
-            $this->getContainer()->get('classFinder')
+            $this->getContainer()->get('metadata')
         );
+        return $obj;
     }
 }

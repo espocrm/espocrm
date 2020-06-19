@@ -27,43 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\TwoFA;
+namespace Espo\Core\Loaders;
 
-use Espo\Entities\User;
-
-use Espo\ORM\EntityManager;
-use Espo\Core\Utils\Authentication\TwoFA\Utils\Totp as TotpUtils;
-
-class Totp implements CodeInterface
+class Auth2FAFactory extends Base
 {
-    protected $entityManager;
-    protected $totp;
-
-    public function __construct(EntityManager $entityManager, TotpUtils $totp)
+    public function load()
     {
-        $this->entityManager = $entityManager;
-        $this->totp = $totp;
-    }
-
-    public function verifyCode(User $user, string $code) : bool
-    {
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
-
-        if (!$userData) return false;
-        if (!$userData->get('auth2FA')) return false;
-        if ($userData->get('auth2FAMethod') != 'Totp') return false;
-
-        $secret = $userData->get('auth2FATotpSecret');
-
-        if (!$secret) return false;
-
-        return $this->totp->verifyCode($secret, $code);
-    }
-
-    public function getLoginData(User $user) : array
-    {
-        return [
-            'message' => 'enterTotpCode',
-        ];
+        $obj = new \Espo\Core\Utils\Authentication\TwoFA\Utils\Factory(
+            $this->getContainer()->get('injectableFactory'),
+            $this->getContainer()->get('metadata')
+        );
+        return $obj;
     }
 }

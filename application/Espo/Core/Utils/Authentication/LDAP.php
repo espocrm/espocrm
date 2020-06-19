@@ -35,13 +35,27 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Auth;
 use Espo\Entities\AuthToken;
 
+use Espo\Core\Container;
+
+
 class LDAP extends Espo
 {
     private $utils;
 
     private $ldapClient;
 
-    protected $injections = [];
+    protected $config;
+    protected $entityManager;
+    protected $container;
+
+    public function __construct(Config $config, EntityManager $entityManager, Container $container)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+        $this->container = $container;
+
+        $this->utils = new LDAP\Utils($config);
+    }
 
     /**
      * User field name  => option name (LDAP attribute)
@@ -77,23 +91,6 @@ class LDAP extends Espo
         'portalRolesIds' => 'portalUserRolesIds',
     );
 
-    public function __construct(Config $config, EntityManager $entityManager)
-    {
-        parent::__construct($config, $entityManager);
-
-        $this->utils = new LDAP\Utils($config);
-    }
-
-    public function inject($name, $object)
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function getInjection($name)
-    {
-        return $this->injections[$name];
-    }
-
     protected function getUtils()
     {
         return $this->utils;
@@ -101,7 +98,7 @@ class LDAP extends Espo
 
     protected function getContainer()
     {
-        return $this->getInjection('container');
+        return $this->container;
     }
 
     protected function useSystemUser()

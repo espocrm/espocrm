@@ -29,10 +29,13 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 
-use \Espo\Entities\Portal;
+use Espo\Entities\Portal;
+
+use Espo\Core\Utils\Authentication\AuthInterface;
+use Espo\Core\Utils\Authentication\TwoFA\CodeInterface as TwoFACodeInterface;
 
 class Auth
 {
@@ -75,27 +78,14 @@ class Auth
         return $this->getConfig()->get('authenticationMethod', 'Espo');
     }
 
-    protected function getAuthenticationImpl(string $method) : \Espo\Core\Utils\Authentication\Base
+    protected function getAuthenticationImpl(string $method) : AuthInterface
     {
         return $this->getContainer()->get('authenticationFactory')->create($method);
     }
 
-    protected function get2FAImpl(string $method) : \Espo\Core\Utils\Authentication\TwoFA\Base
+    protected function get2FAImpl(string $method) : TwoFACodeInterface
     {
-        $className = $this->getMetadata()->get([
-            'app', 'auth2FAMethods', $method, 'implementationClassName'
-        ]);
-
-        if (!$className) {
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
-
-            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
-            if (!class_exists($className)) {
-                $className = "\\Espo\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
-            }
-        }
-
-        return $this->getContainer()->get('injectableFactory')->createByClassName($className);
+        return $this->getContainer()->get('auth2FAFactory')->create($method);
     }
 
     protected function setPortal(Portal $portal)
