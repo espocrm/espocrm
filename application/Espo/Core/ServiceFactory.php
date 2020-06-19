@@ -68,6 +68,7 @@ class ServiceFactory
 
         $obj = $this->injectableFactory->create($className);
 
+        // deprecated
         if (method_exists($obj, 'prepare')) {
             $obj->prepare();
         }

@@ -67,7 +67,7 @@ class InjectableFactory
     {
         $class = new \ReflectionClass($className);
 
-        $dependencyList = [];
+        $injectionList = [];
 
         $constructor = $class->getConstructor();
         if (!is_null($constructor)) {
@@ -77,38 +77,65 @@ class InjectableFactory
                 $dependencyClassName = $param->getClass();
                 if (is_null($dependencyClassName)) {
                     if ($param->isDefaultValueAvailable()) {
-                        $dependencyList[] = $param->getDefaultValue();
+                        $injectionList[] = $param->getDefaultValue();
                         continue;
                     }
                 }
 
                 $name = $param->getName();
-                $dependency = $this->getContainer()->get($name);
+                $injection = $this->getContainer()->get($name);
 
-                if (!$dependency) {
+                if (!$injection) {
                     throw new Error("InjectableFactory: Could not create {$className}, dependency {$name} not found.");
                 }
 
-                $dependencyList[] = $dependency;
+                $injectionList[] = $injection;
             }
         }
 
-        return $class->newInstanceArgs($dependencyList);
+        return $class->newInstanceArgs($injectionList);
     }
 
     protected function createByClassNameInjectable(string $className)
     {
         $obj = new $className();
+        $class = new \ReflectionClass($className);
 
         $dependencyList = $obj->getDependencyList();
         foreach ($dependencyList as $name) {
-            $obj->inject($name, $this->container->get($name));
-        }
-        if (method_exists($obj, 'prepare')) {
-            $obj->prepare();
+            $injection = $this->container->get($name);
+            if ($this->classHasDependencySetter($class, $name)) {
+                $methodName = 'set' . ucfirst($name);
+                $obj->$methodName($injection);
+            }
+            $obj->inject($name, $injection);
         }
 
         return $obj;
+    }
+
+    protected function classHasDependencySetter(\ReflectionClass $class, string $name) : bool
+    {
+        $methodName = 'set' . ucfirst($name);
+
+        if (!$class->hasMethod($methodName) || !$class->getMethod($methodName)->isPublic()) {
+            return false;
+        }
+
+        $params = $class->getMethod($methodName)->getParameters();
+        if (!$params || !count($params)) {
+            return false;
+        }
+
+        $injection = $this->container->get($name);
+
+        $paramClass = $params[0]->getClass();
+
+        if ($paramClass && $paramClass->isInstance($injection)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function getContainer()

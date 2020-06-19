@@ -41,6 +41,9 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\ConflictSilent;
 
 use Espo\Core\Utils\Util;
+use Espo\Core\AclManager;
+use Espo\Core\Acl;
+use Espo\Entities\User;
 
 class Record extends \Espo\Core\Services\Base
 {
@@ -136,6 +139,8 @@ class Record extends \Espo\Core\Services\Base
 
     private $user = null;
 
+    private $aclManager = null;
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -157,11 +162,9 @@ class Record extends \Espo\Core\Services\Base
         $this->entityName = $this->entityType;
     }
 
-    public function prepare()
+    public function setAclManager(AclManager $aclManager)
     {
-        parent::prepare();
-
-        $aclManager = $this->getInjection('aclManager');
+        $this->aclManager = $aclManager;
 
         foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'forbidden') as $item) {
             if (!in_array($item, $this->forbiddenAttributeList)) $this->forbiddenAttributeList[] = $item;
@@ -231,18 +234,26 @@ class Record extends \Espo\Core\Services\Base
         return $this->getInjection('user');
     }
 
-    public function setAcl(\Espo\Core\Acl $acl)
+    public function setAcl(Acl $acl)
     {
         $this->acl = $acl;
+
+        // for backward compatibility
+        $this->inject('acl', $acl);
     }
 
-    public function setUser(\Espo\Entities\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
+
+        // for backward compatibility
+        $this->inject('user', $user);
     }
 
     protected function getAclManager()
     {
+        if ($this->aclManager) return $this->aclManager;
+
         return $this->getInjection('aclManager');
     }
 

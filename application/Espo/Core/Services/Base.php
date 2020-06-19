@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Services;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Interfaces\Injectable;
 
 abstract class Base implements Injectable
 {
@@ -56,6 +56,7 @@ abstract class Base implements Injectable
     {
     }
 
+    /** Deprecated */
     public function prepare()
     {
     }
