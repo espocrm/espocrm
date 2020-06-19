@@ -29,53 +29,65 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\{
+    Forbidden,
+    Error,
+    NotFound,
+};
 
-use \Espo\Core\Utils\Util;
+use Espo\Core\{
+    Acl,
+    AclManager,
+    SelectManagerFactory,
+    DataManager,
+    InjectableFactory,
+    ServiceFactory,
+    Utils\Metadata,
+    Utils\Config,
+    Utils\Util,
+    Utils\Language,
+};
 
-class App extends \Espo\Core\Services\Base
+use Espo\Entities\User;
+use Espo\Entities\Preferences;
+use Espo\ORM\EntityManager;
+
+class App
 {
-    protected function init()
-    {
-        $this->addDependency('preferences');
-        $this->addDependency('acl');
-        $this->addDependency('container');
-        $this->addDependency('entityManager');
-        $this->addDependency('metadata');
-        $this->addDependency('selectManagerFactory');
-        $this->addDependency('injectableFactory');
-    }
-
-    protected function getPreferences()
-    {
-        return $this->getInjection('preferences');
-    }
-
-    protected function getAcl()
-    {
-        return $this->getInjection('acl');
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getInjection('entityManager');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
+    public function __construct(
+        Config $config,
+        EntityManager $entityManager,
+        Metadata $metadata,
+        Acl $acl,
+        AclManager $aclManager,
+        DataManager $dataManager,
+        SelectManagerFactory $selectManagerFactory,
+        InjectableFactory $injectableFactory,
+        ServiceFactory $serviceFactory,
+        User $user,
+        Preferences $preferences
+    ) {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
+        $this->acl = $acl;
+        $this->aclManager = $aclManager;
+        $this->dataManager = $dataManager;
+        $this->selectManagerFactory = $selectManagerFactory;
+        $this->injectableFactory = $injectableFactory;
+        $this->serviceFactory = $serviceFactory;
+        $this->user = $user;
+        $this->preferences = $preferences;
     }
 
     public function getUserData()
     {
-        $preferencesData = $this->getPreferences()->getValueMap();
+        $preferencesData = $this->preferences->getValueMap();
         unset($preferencesData->smtpPassword);
 
-        $settingsService = $this->getServiceFactory()->create('Settings');
+        $settingsService = $this->serviceFactory->create('Settings');
 
-        $user = $this->getUser();
+        $user = $this->user;
 
         if (!$user->has('teamsIds')) {
             $user->loadLinkMultipleField('teams');
@@ -85,21 +97,21 @@ class App extends \Espo\Core\Services\Base
             $user->loadLinkMultipleField('accounts');
         }
 
-        $settings = $this->getServiceFactory()->create('Settings')->getConfigData();
+        $settings = $this->serviceFactory->create('Settings')->getConfigData();
 
         if ($user->get('dashboardTemplateId')) {
-            $dashboardTemplate = $this->getEntityManager()->getEntity('DashboardTemplate', $user->get('dashboardTemplateId'));
+            $dashboardTemplate = $this->entityManager->getEntity('DashboardTemplate', $user->get('dashboardTemplateId'));
             if ($dashboardTemplate) {
                 $settings->forcedDashletsOptions = $dashboardTemplate->get('dashletsOptions') ?? (object) [];
                 $settings->forcedDashboardLayout = $dashboardTemplate->get('layout') ?? [];
             }
         }
 
-        $language = \Espo\Core\Utils\Language::detectLanguage($this->getConfig(), $this->getPreferences());
+        $language = Language::detectLanguage($this->config, $this->preferences);
 
         $auth2FARequired = false;
         if (
-            $user->isRegular() && $this->getConfig()->get('auth2FA') && $this->getConfig()->get('auth2FAForced') &&
+            $user->isRegular() && $this->config->get('auth2FA') && $this->config->get('auth2FAForced') &&
             !$user->get('auth2FA')
         ) {
             $auth2FARequired = true;
@@ -107,17 +119,17 @@ class App extends \Espo\Core\Services\Base
 
         $appParams = [
             'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
-            'isRestrictedMode' => $this->getConfig()->get('restrictedMode'),
-            'passwordChangeForNonAdminDisabled' => $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo',
-            'timeZoneList' => $this->getMetadata()->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
+            'isRestrictedMode' => $this->config->get('restrictedMode'),
+            'passwordChangeForNonAdminDisabled' => $this->config->get('authenticationMethod', 'Espo') !== 'Espo',
+            'timeZoneList' => $this->metadata->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
             'auth2FARequired' => $auth2FARequired,
         ];
 
-        foreach (($this->getMetadata()->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
+        foreach (($this->metadata->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
             $className = $item['className'] ?? null;
             if (!$className) continue;
             try {
-                $itemParams = $this->getInjection('injectableFactory')->createByClassName($className)->get();
+                $itemParams = $this->injectableFactory->createByClassName($className)->get();
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error("appParam {$paramKey}: " . $e->getMessage());
                 continue;
@@ -129,7 +141,7 @@ class App extends \Espo\Core\Services\Base
             'user' => $this->getUserDataForFrontend(),
             'acl' => $this->getAclDataForFrontend(),
             'preferences' => $preferencesData,
-            'token' => $this->getUser()->get('token'),
+            'token' => $this->user->get('token'),
             'settings' => $settings,
             'language' => $language,
             'appParams' => $appParams,
@@ -138,7 +150,7 @@ class App extends \Espo\Core\Services\Base
 
     protected function getUserDataForFrontend()
     {
-        $user = $this->getUser();
+        $user = $this->user;
 
         $emailAddressData = $this->getEmailAddressData();
 
@@ -150,7 +162,7 @@ class App extends \Espo\Core\Services\Base
         unset($data->authTokenId);
         unset($data->password);
 
-        $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList('User');
+        $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList('User');
 
         $isPortal = $user->isPortal();
 
@@ -169,14 +181,14 @@ class App extends \Espo\Core\Services\Base
 
     protected function getAclDataForFrontend()
     {
-        $data = $this->getAcl()->getMap();
+        $data = $this->acl->getMap();
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             $data = unserialize(serialize($data));
 
-            $scopeList = array_keys($this->getMetadata()->get(['scopes'], []));
+            $scopeList = array_keys($this->metadata->get(['scopes'], []));
             foreach ($scopeList as $scope) {
-                if (!$this->getAcl()->check($scope)) {
+                if (!$this->acl->check($scope)) {
                     unset($data->table->$scope);
                     unset($data->fieldTable->$scope);
                     unset($data->fieldTableQuickAccess->$scope);
@@ -189,7 +201,7 @@ class App extends \Espo\Core\Services\Base
 
     protected function getEmailAddressData()
     {
-        $user = $this->getUser();
+        $user = $this->user;
 
         $emailAddressList = [];
         $userEmailAddressList = [];
@@ -204,10 +216,10 @@ class App extends \Espo\Core\Services\Base
             array_unshift($emailAddressList, $user->get('emailAddress'));
         }
 
-        $entityManager = $this->getEntityManager();
+        $entityManager = $this->entityManager;
 
         $teamIdList = $user->getLinkMultipleIdList('teams');
-        $groupEmailAccountPermission = $this->getAcl()->get('groupEmailAccountPermission');
+        $groupEmailAccountPermission = $this->acl->get('groupEmailAccountPermission');
         if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
             if ($groupEmailAccountPermission === 'team') {
                 if (count($teamIdList)) {
@@ -257,7 +269,7 @@ class App extends \Espo\Core\Services\Base
         if ($postMaxSize > 0) {
             $maxSize = $postMaxSize;
         }
-        $attachmentUploadMaxSize = $this->getConfig()->get('attachmentUploadMaxSize');
+        $attachmentUploadMaxSize = $this->config->get('attachmentUploadMaxSize');
         if ($attachmentUploadMaxSize && (!$maxSize || $attachmentUploadMaxSize < $maxSize)) {
             $maxSize = $attachmentUploadMaxSize;
         }
@@ -289,18 +301,18 @@ class App extends \Espo\Core\Services\Base
 
     protected function getTemplateEntityTypeList()
     {
-        if (!$this->getAcl()->checkScope('Template')) {
+        if (!$this->acl->checkScope('Template')) {
             return [];
         }
 
         $list = [];
 
-        $selectManager = $this->getInjection('selectManagerFactory')->create('Template');
+        $selectManager = $this->selectManagerFactory->create('Template');
 
         $selectParams = $selectManager->getEmptySelectParams();
         $selectManager->applyAccess($selectParams);
 
-        $templateList = $this->getEntityManager()->getRepository('Template')
+        $templateList = $this->entityManager->getRepository('Template')
             ->select(['entityType'])
             ->groupBy(['entityType'])
             ->find($selectParams);
@@ -314,36 +326,36 @@ class App extends \Espo\Core\Services\Base
 
     public function jobClearCache()
     {
-        $this->getInjection('container')->get('dataManager')->clearCache();
+        $this->dataManager->clearCache();
     }
 
     public function jobRebuild()
     {
-        $this->getInjection('container')->get('dataManager')->rebuild();
+        $this->dataManager->rebuild();
     }
 
     // TODO remove in 5.5.0
     public function jobPopulatePhoneNumberNumeric()
     {
-        $numberList = $this->getEntityManager()->getRepository('PhoneNumber')->find();
+        $numberList = $this->entityManager->getRepository('PhoneNumber')->find();
         foreach ($numberList as $number) {
-            $this->getEntityManager()->saveEntity($number);
+            $this->entityManager->saveEntity($number);
         }
     }
 
     // TODO remove in 5.5.0
     public function jobPopulateArrayValues()
     {
-        $scopeList = array_keys($this->getMetadata()->get(['scopes']));
+        $scopeList = array_keys($this->metadata->get(['scopes']));
 
         $sql = "DELETE FROM array_value";
-        $this->getEntityManager()->getPdo()->query($sql);
+        $this->entityManager->getPdo()->query($sql);
 
         foreach ($scopeList as $scope) {
-            if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
-            if ($this->getMetadata()->get(['scopes', $scope, 'disabled'])) continue;
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
+            if ($this->metadata->get(['scopes', $scope, 'disabled'])) continue;
 
-            $seed = $this->getEntityManager()->getEntity($scope);
+            $seed = $this->entityManager->getEntity($scope);
             if (!$seed) continue;
 
             $attributeList = [];
@@ -361,22 +373,22 @@ class App extends \Espo\Core\Services\Base
                 $orGroup[$attribute . '!='] = null;
             }
 
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($scope, [
+            $sql = $this->entityManager->getQuery()->createSelectQuery($scope, [
                 'select' => $select,
                 'whereClause' => [
                     'OR' => $orGroup
                 ]
             ]);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
+            $sth = $this->entityManager->getPdo()->prepare($sql);
             $sth->execute();
 
             while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($scope);
+                $entity = $this->entityManager->getEntityFactory()->create($scope);
                 $entity->set($dataRow);
                 $entity->setAsFetched();
 
                 foreach ($attributeList as $attribute) {
-                    $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute, true);
+                    $this->entityManager->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute, true);
                 }
             }
         }
@@ -385,9 +397,9 @@ class App extends \Espo\Core\Services\Base
     // TODO remove in 5.5.0
     public function jobPopulateNotesTeamUser()
     {
-        $aclManager = $this->getInjection('container')->get('aclManager');
+        $aclManager = $this->aclManager;
 
-        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Note', [
+        $sql = $this->entityManager->getQuery()->createSelectQuery('Note', [
             'whereClause' => [
                 'parentId!=' => null,
                 'type=' => ['Relate', 'CreateRelated', 'EmailReceived', 'EmailSent', 'Assign', 'Create'],
@@ -395,13 +407,13 @@ class App extends \Espo\Core\Services\Base
             'limit' => 100000,
             'orderBy' => [['number', 'DESC']]
         ]);
-        $sth = $this->getEntityManager()->getPdo()->prepare($sql);
+        $sth = $this->entityManager->getPdo()->prepare($sql);
         $sth->execute();
 
         $i = 0;
         while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $i++;
-            $note = $this->getEntityManager()->getEntityFactory()->create('Note');
+            $note = $this->entityManager->getEntityFactory()->create('Note');
             $note->set($dataRow);
             $note->setAsFetched();
 
@@ -415,10 +427,10 @@ class App extends \Espo\Core\Services\Base
                 continue;
             }
 
-            if (!$this->getEntityManager()->hasRepository($targetType)) continue;
+            if (!$this->entityManager->hasRepository($targetType)) continue;
 
             try {
-                $entity = $this->getEntityManager()->getEntity($targetType, $targetId);
+                $entity = $this->entityManager->getEntity($targetType, $targetId);
                 if (!$entity) continue;
                 $ownerUserIdAttribute = $aclManager->getImplementation($targetType)->getOwnerUserIdAttribute($entity);
                 $toSave = false;
@@ -447,7 +459,7 @@ class App extends \Espo\Core\Services\Base
                     }
                 }
                 if ($toSave) {
-                    $this->getEntityManager()->saveEntity($note);
+                    $this->entityManager->saveEntity($note);
                 }
             } catch (\Exception $e) {}
         }
@@ -458,17 +470,17 @@ class App extends \Espo\Core\Services\Base
         $entityTypeList = ['Contact', 'Lead'];
 
         foreach ($entityTypeList as $entityType) {
-            $entityList = $this->getEntityManager()->getRepository($entityType)->where([
+            $entityList = $this->entityManager->getRepository($entityType)->where([
                 'doNotCall' => true,
                 'phoneNumber!=' => null,
             ])->select(['id', 'phoneNumber'])->find();
             foreach ($entityList as $entity) {
                 $phoneNumber = $entity->get('phoneNumber');
                 if (!$phoneNumber) continue;
-                $phoneNumberEntity = $this->getEntityManager()->getRepository('PhoneNumber')->getByNumber($phoneNumber);
+                $phoneNumberEntity = $this->entityManager->getRepository('PhoneNumber')->getByNumber($phoneNumber);
                 if (!$phoneNumberEntity) continue;
                 $phoneNumberEntity->set('optOut', true);
-                $this->getEntityManager()->saveEntity($phoneNumberEntity);
+                $this->entityManager->saveEntity($phoneNumberEntity);
 
             }
         }

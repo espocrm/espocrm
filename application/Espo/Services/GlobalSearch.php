@@ -29,58 +29,51 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\{
+    Forbidden,
+    NotFound
+};
 
-use Espo\ORM\Entity;
+use Espo\ORM\{
+    Entity,
+    EntityManager,
+};
 
-class GlobalSearch extends \Espo\Core\Services\Base
+use Espo\Core\{
+    Acl,
+    SelectManagerFactory,
+    Utils\Metadata,
+    Utils\Config,
+};
+
+class GlobalSearch
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependencyList([
-            'entityManager',
-            'user',
-            'metadata',
-            'acl',
-            'selectManagerFactory',
-            'config'
-        ]);
-    }
-
-    protected function getSelectManagerFactory()
-    {
-        return $this->injections['selectManagerFactory'];
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->injections['entityManager'];
-    }
-
-    protected function getAcl()
-    {
-        return $this->injections['acl'];
-    }
-
-    protected function getMetadata()
-    {
-        return $this->injections['metadata'];
+    public function __construct(
+        EntityManager $entityManager,
+        Metadata $metadata,
+        Acl $acl,
+        SelectManagerFactory $selectManagerFactory,
+        Config $config
+    ) {
+        $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
+        $this->acl = $acl;
+        $this->selectManagerFactory = $selectManagerFactory;
+        $this->config = $config;
     }
 
     public function find(string $query, int $offset, int $maxSize)
     {
-        $entityTypeList = $this->getConfig()->get('globalSearchEntityList') ?? [];
+        $entityTypeList = $this->config->get('globalSearchEntityList') ?? [];
         $hasFullTextSearch = false;
         $relevanceSelectPosition = 4;
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
-            if (!$this->getAcl()->checkScope($entityType, 'read')) continue;
-            if (!$this->getMetadata()->get(['scopes', $entityType])) continue;
+            if (!$this->acl->checkScope($entityType, 'read')) continue;
+            if (!$this->metadata->get(['scopes', $entityType])) continue;
 
-            $selectManager = $this->getSelectManagerFactory()->create($entityType);
+            $selectManager = $this->selectManagerFactory->create($entityType);
 
             $selectParams = [
                 'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']],
@@ -88,7 +81,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
 
             $fullTextSearchData = $selectManager->getFullTextSearchDataForTextFilter($query);
 
-            if ($this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName') {
+            if ($this->metadata->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName') {
                 $selectParams['select'][] = 'firstName';
                 $selectParams['select'][] = 'lastName';
             } else {
@@ -114,7 +107,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
                 $selectParams['orderBy'] = [['name']];
             }
 
-            $itemSql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $selectParams);
+            $itemSql = $this->entityManager->getQuery()->createSelectQuery($entityType, $selectParams);
 
             $unionPartList[] = "(\n" . $itemSql . "\n)";
         }
@@ -125,7 +118,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
             ];
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
         $sql = implode(' UNION ALL ', $unionPartList);
 
@@ -143,7 +136,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
             $sql .= "\nORDER BY name";
         }
 
-        $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
+        $sql = $this->entityManager->getQuery()->limit($sql, $offset, $maxSize + 1);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -152,7 +145,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
         $resultList = [];
 
         foreach ($rows as $row) {
-            $entity = $this->getEntityManager()->getRepository($row['entityType'])
+            $entity = $this->entityManager->getRepository($row['entityType'])
                 ->select(['id', 'name'])
                 ->where(['id' => $row['id']])
                 ->findOne();
