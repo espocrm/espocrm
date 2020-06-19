@@ -29,17 +29,25 @@
 
 namespace Espo\Core\FileStorage\Storages;
 
-use \Espo\Entities\Attachment;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Entities\Attachment;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\FileStorage\StorageInterface;
 
-class EspoUploadDir extends Base
+use Espo\Core\Exceptions\Error;
+
+class EspoUploadDir implements StorageInterface
 {
-    protected $dependencyList = ['fileManager'];
+    protected $fileManager;
+
+    public function __construct(FileManager $fileManager)
+    {
+        $this->fileManager = $fileManager;
+    }
 
     protected function getFileManager()
     {
-        return $this->getInjection('fileManager');
+        return $this->fileManager;
     }
 
     public function unlink(Attachment $attachment)
@@ -47,7 +55,7 @@ class EspoUploadDir extends Base
         return $this->getFileManager()->unlink($this->getFilePath($attachment));
     }
 
-    public function isFile(Attachment $attachment)
+    public function isFile(Attachment $attachment) : bool
     {
         return $this->getFileManager()->isFile($this->getFilePath($attachment));
     }
@@ -62,7 +70,7 @@ class EspoUploadDir extends Base
         return $this->getFileManager()->putContents($this->getFilePath($attachment), $contents);
     }
 
-    public function getLocalFilePath(Attachment $attachment)
+    public function getLocalFilePath(Attachment $attachment) : string
     {
         return $this->getFilePath($attachment);
     }
@@ -73,12 +81,12 @@ class EspoUploadDir extends Base
         return 'data/upload/' . $sourceId;
     }
 
-    public function getDownloadUrl(Attachment $attachment)
+    public function getDownloadUrl(Attachment $attachment) : string
     {
         throw new Error();
     }
 
-    public function hasDownloadUrl(Attachment $attachment)
+    public function hasDownloadUrl(Attachment $attachment) : bool
     {
         return false;
     }

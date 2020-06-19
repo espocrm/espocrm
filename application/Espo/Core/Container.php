@@ -146,7 +146,7 @@ class Container
     {
         return new \Espo\Core\FileStorage\Manager(
             $this->get('metadata')->get(['app', 'fileStorage', 'implementationClassNameMap']),
-            $this
+            $this->get('injectableFactory')
         );
     }
 

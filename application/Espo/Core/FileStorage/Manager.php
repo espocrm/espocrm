@@ -29,49 +29,44 @@
 
 namespace Espo\Core\FileStorage;
 
-use \Espo\Entities\Attachment;
+use Espo\Core\InjectableFactory;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Entities\Attachment;
+
+use Espo\Core\Exceptions\Error;
 
 class Manager
 {
-    private $implementations = array();
+    private $implementations = [];
 
-    private $implementationClassNameMap = array();
+    private $implementationClassNameMap = [];
 
-    private $container;
+    private $injectableFactory;
 
-    public function __construct(array $implementationClassNameMap, $container)
+    public function __construct(array $implementationClassNameMap, InjectableFactory $injectableFactory)
     {
         $this->implementationClassNameMap = $implementationClassNameMap;
-        $this->container = $container;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    private function getImplementation($storage = null)
+    private function getImplementation(?string $storage = null)
     {
         if (!$storage) {
             $storage = 'EspoUploadDir';
         }
 
-        if (array_key_exists($storage, $this->implementations)) {
-            return $this->implementations[$storage];
+        if (!array_key_exists($storage, $this->implementations)) {
+            if (!array_key_exists($storage, $this->implementationClassNameMap)) {
+                throw new Error("FileStorageManager: Unknown storage '{$storage}'");
+            }
+            $className = $this->implementationClassNameMap[$storage];
+            $this->implementations[$storage] = $this->injectableFactory->create($className);
         }
 
-        if (!array_key_exists($storage, $this->implementationClassNameMap)) {
-            throw new Error("FileStorageManager: Unknown storage '{$storage}'");
-        }
-        $className = $this->implementationClassNameMap[$storage];
-
-        $implementation = new $className();
-        foreach ($implementation->getDependencyList() as $dependencyName) {
-            $implementation->inject($dependencyName, $this->container->get($dependencyName));
-        }
-        $this->implementations[$storage] = $implementation;
-
-        return $implementation;
+        return $this->implementations[$storage];
     }
 
-    public function isFile(Attachment $attachment)
+    public function isFile(Attachment $attachment) : bool
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->isFile($attachment);
@@ -95,19 +90,19 @@ class Manager
         return $implementation->unlink($attachment);
     }
 
-    public function getLocalFilePath(Attachment $attachment)
+    public function getLocalFilePath(Attachment $attachment) : string
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->getLocalFilePath($attachment);
     }
 
-    public function hasDownloadUrl(Attachment $attachment)
+    public function hasDownloadUrl(Attachment $attachment) : bool
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->hasDownloadUrl($attachment);
     }
 
-    public function getDownloadUrl(Attachment $attachment)
+    public function getDownloadUrl(Attachment $attachment) : string
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->getDownloadUrl($attachment);

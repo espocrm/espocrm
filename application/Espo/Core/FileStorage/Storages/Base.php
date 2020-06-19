@@ -31,6 +31,7 @@ namespace Espo\Core\FileStorage\Storages;
 
 use \Espo\Core\Interfaces\Injectable;
 
+/** Deprecated */
 abstract class Base implements Injectable
 {
     protected $dependencyList = [];
