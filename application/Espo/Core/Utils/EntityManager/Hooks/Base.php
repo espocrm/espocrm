@@ -67,7 +67,7 @@ abstract class Base
 
     protected function getInjection($name)
     {
-        return $this->injections[$name];
+        return $this->injections[$name] ?? $this->$name ?? null;
     }
 
     public function inject($name, $object)

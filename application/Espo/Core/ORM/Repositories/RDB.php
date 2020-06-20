@@ -78,7 +78,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function getInjection($name)
     {
-        return $this->injections[$name];
+        return $this->injections[$name] ?? $this->$name ?? null;
     }
 
     public function getDependencyList()

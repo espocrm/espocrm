@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+/** Deprecated */
 abstract class Injectable implements \Espo\Core\Interfaces\Injectable
 {
     protected $dependencyList = [];
@@ -62,7 +63,7 @@ abstract class Injectable implements \Espo\Core\Interfaces\Injectable
 
     protected function getInjection($name)
     {
-        return $this->injections[$name];
+        return $this->injections[$name] ?? $this->$name ?? null;
     }
 
     protected function addDependency($name)

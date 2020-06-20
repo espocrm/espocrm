@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Traits;
 
+/** Deprecated */
 trait Injectable
 {
     private $injections = [];
@@ -45,7 +46,7 @@ trait Injectable
 
     protected function getInjection(string $name)
     {
-        return $this->injections[$name];
+        return $this->injections[$name] ?? $this->$name ?? null;
     }
 
     protected function addDependency(string $name)

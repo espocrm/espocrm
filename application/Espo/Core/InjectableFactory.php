@@ -31,13 +31,15 @@ namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
 
+use ReflectionClass;
+
 /**
  * Creates instance by class name. Uses either Injectable interface or constructor param names to detect
  * which dependencies are needed. Only container services supported as dependencies.
  */
 class InjectableFactory
 {
-    private $container;
+    protected $container;
 
     public function __construct(Container $container)
     {
@@ -55,7 +57,7 @@ class InjectableFactory
             throw new Error("Class '{$className}' does not exist.");
         }
 
-        $class = new \ReflectionClass($className);
+        $class = new ReflectionClass($className);
         if ($class->implementsInterface('\\Espo\\Core\\Interfaces\\Injectable')) {
             return $this->createByClassNameInjectable($className);
         }
@@ -65,7 +67,7 @@ class InjectableFactory
 
     protected function createByClassNameByConstructorParams(string $className)
     {
-        $class = new \ReflectionClass($className);
+        $class = new ReflectionClass($className);
 
         $injectionList = [];
 
@@ -83,7 +85,7 @@ class InjectableFactory
                 }
 
                 $name = $param->getName();
-                $injection = $this->getContainer()->get($name);
+                $injection = $this->container->get($name);
 
                 if (!$injection) {
                     throw new Error("InjectableFactory: Could not create {$className}, dependency {$name} not found.");
@@ -93,13 +95,20 @@ class InjectableFactory
             }
         }
 
-        return $class->newInstanceArgs($injectionList);
+        $obj = $class->newInstanceArgs($injectionList);
+
+        $this->processSetterInjections($class, $obj);
+
+        return $obj;
     }
 
+    /** Deprecated */
     protected function createByClassNameInjectable(string $className)
     {
         $obj = new $className();
-        $class = new \ReflectionClass($className);
+        $class = new ReflectionClass($className);
+
+        $setList = [];
 
         $dependencyList = $obj->getDependencyList();
         foreach ($dependencyList as $name) {
@@ -107,14 +116,37 @@ class InjectableFactory
             if ($this->classHasDependencySetter($class, $name)) {
                 $methodName = 'set' . ucfirst($name);
                 $obj->$methodName($injection);
+                $setList[] = $name;
             }
             $obj->inject($name, $injection);
         }
 
+        $this->processSetterInjections($class, $obj, $setList);
+
         return $obj;
     }
 
-    protected function classHasDependencySetter(\ReflectionClass $class, string $name) : bool
+    protected function processSetterInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
+    {
+        foreach ($class->getInterfaces() as $interface) {
+            $interfaceName = $interface->getShortName();
+
+            if (substr($interfaceName, -5) !== 'Aware' || strlen($interfaceName) <= 5) continue;
+
+            $name = lcfirst(substr($interfaceName, 0, -5));
+
+            if (in_array($name, $ignoreList)) continue;
+
+            if (!$this->classHasDependencySetter($class, $name, true)) continue;
+
+            $injection = $this->container->get($name);
+
+            $methodName = 'set' . ucfirst($name);
+            $obj->$methodName($injection);
+        }
+    }
+
+    protected function classHasDependencySetter(ReflectionClass $class, string $name, bool $skipInstanceCheck = false) : bool
     {
         $methodName = 'set' . ucfirst($name);
 
@@ -131,15 +163,10 @@ class InjectableFactory
 
         $paramClass = $params[0]->getClass();
 
-        if ($paramClass && $paramClass->isInstance($injection)) {
+        if ($skipInstanceCheck || $paramClass && $paramClass->isInstance($injection)) {
             return true;
         }
 
         return false;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
     }
 }

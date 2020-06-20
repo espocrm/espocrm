@@ -31,36 +31,27 @@ namespace Espo\Services;
 
 use Espo\Core\Exceptions\{
     Forbidden,
-    NotFound
+    NotFound,
 };
 
 use Espo\ORM\{
     Entity,
-    EntityManager,
 };
 
-use Espo\Core\{
-    Acl,
-    SelectManagerFactory,
-    Utils\Metadata,
-    Utils\Config,
-};
+use Espo\Core\Di;
 
-class GlobalSearch
+class GlobalSearch implements
+    Di\EntityManagerAware,
+    Di\MetadataAware,
+    Di\AclAware,
+    Di\ConfigAware,
+    Di\SelectManagerFactoryAware
 {
-    public function __construct(
-        EntityManager $entityManager,
-        Metadata $metadata,
-        Acl $acl,
-        SelectManagerFactory $selectManagerFactory,
-        Config $config
-    ) {
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-        $this->acl = $acl;
-        $this->selectManagerFactory = $selectManagerFactory;
-        $this->config = $config;
-    }
+    use Di\EntityManagerSetter;
+    use Di\MetadataSetter;
+    use Di\AclSetter;
+    use Di\ConfigSetter;
+    use Di\SelectManagerFactorySetter;
 
     public function find(string $query, int $offset, int $maxSize)
     {
