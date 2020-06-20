@@ -246,7 +246,7 @@ class Container
 
     protected function loadAclManager()
     {
-        $className = $this->getServiceClassName('acl', '\\Espo\\Core\\AclManager');
+        $className = $this->getServiceClassName('aclManager', '\\Espo\\Core\\AclManager');
         return new $className(
             $this->get('container')
         );
@@ -254,10 +254,7 @@ class Container
 
     protected function loadInternalAclManager()
     {
-        $className = $this->getServiceClassName('acl', '\\Espo\\Core\\AclManager');
-        return new $className(
-            $this->get('container')
-        );
+        return $this->loadAclManager();
     }
 
     protected function loadAcl()

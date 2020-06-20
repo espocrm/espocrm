@@ -70,6 +70,14 @@ class Container extends \Espo\Core\Container
         return $obj;
     }
 
+    protected function loadInternalAclManager()
+    {
+        $className = $this->getServiceMainClassName('aclManager', '\\Espo\\Core\\AclManager');
+        return new $className(
+            $this->get('container')
+        );
+    }
+
     protected function loadAcl()
     {
         $className = $this->getServicePortalClassName('acl', '\\Espo\\Core\\Portal\\Acl');
