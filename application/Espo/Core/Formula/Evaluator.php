@@ -29,11 +29,13 @@
 
 namespace Espo\Core\Formula;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+
+use Espo\Core\InjectableFactory;
 
 class Evaluator
 {
-    private $functionFactory;
+    private $functionFactory = null;
 
     private $formula;
 
@@ -43,10 +45,11 @@ class Evaluator
 
     private $parsedHash;
 
-    public function __construct($container = null, array $functionClassNameMap = [], array $parsedHash = [])
-    {
+    public function __construct(
+        ?InjectableFactory $injectableFactory = null, array $functionClassNameMap = [], array $parsedHash = []
+    ) {
         $this->attributeFetcher = new AttributeFetcher();
-        $this->functionFactory = new FunctionFactory($container, $this->attributeFetcher, $functionClassNameMap);
+        $this->functionFactory = new FunctionFactory($injectableFactory, $this->attributeFetcher, $functionClassNameMap);
         $this->formula = new Formula($this->functionFactory);
         $this->parser = new Parser();
         $this->parsedHash = [];

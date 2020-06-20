@@ -35,7 +35,12 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
-        $this->evaluator = new \Espo\Core\Formula\Evaluator();
+        $container = $this->container =
+            $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+
+        $injectableFactory = $injectableFactory = new \Espo\Core\InjectableFactory($container);
+
+        $this->evaluator = new \Espo\Core\Formula\Evaluator($injectableFactory);
     }
 
     protected function tearDown() : void

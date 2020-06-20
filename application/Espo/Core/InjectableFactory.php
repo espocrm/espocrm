@@ -34,8 +34,8 @@ use Espo\Core\Exceptions\Error;
 use ReflectionClass;
 
 /**
- * Creates instance by class name. Uses either Injectable interface or constructor param names to detect
- * which dependencies are needed. Only container services supported as dependencies.
+ * Creates instance by class name. Uses constructor param names to detect which
+ * dependencies are needed. Only container services supported as dependencies.
  */
 class InjectableFactory
 {
@@ -51,7 +51,15 @@ class InjectableFactory
         return $this->createByClassName($className);
     }
 
-    public function createByClassName(string $className) : object
+    /**
+     * Allows passing specific constructor parameters. Defined in an associative  array. A key should match the parameter name.
+     */
+    public function createWith(string $className, array $with = []) : object
+    {
+        return $this->createByClassName($className, $with);
+    }
+
+    public function createByClassName(string $className, ?array $with = null) : object
     {
         if (!class_exists($className)) {
             throw new Error("Class '{$className}' does not exist.");
@@ -59,36 +67,40 @@ class InjectableFactory
 
         $class = new ReflectionClass($className);
         if ($class->implementsInterface('\\Espo\\Core\\Interfaces\\Injectable')) {
-            return $this->createByClassNameInjectable($className);
+            return $this->createInjectable($className, $with);
         }
 
-        return $this->createByClassNameByConstructorParams($className);
+        return $this->createByConstructorParams($className, $with);
     }
 
-    protected function createByClassNameByConstructorParams(string $className)
+    protected function createByConstructorParams(string $className, ?array $with = null)
     {
         $class = new ReflectionClass($className);
 
         $injectionList = [];
 
         $constructor = $class->getConstructor();
-        if (!is_null($constructor)) {
+        if ($constructor) {
             $params = $constructor->getParameters();
 
             foreach ($params as $param) {
-                $dependencyClassName = $param->getClass();
-                if (is_null($dependencyClassName)) {
-                    if ($param->isDefaultValueAvailable()) {
-                        $injectionList[] = $param->getDefaultValue();
-                        continue;
-                    }
-                }
-
                 $name = $param->getName();
-                $injection = $this->container->get($name);
 
-                if (!$injection) {
-                    throw new Error("InjectableFactory: Could not create {$className}, dependency {$name} not found.");
+                if ($with && array_key_exists($name, $with)) {
+                    $injection = $with[$name];
+                } else {
+                    $dependencyClassName = $param->getClass();
+                    if (is_null($dependencyClassName)) {
+                        if ($param->isDefaultValueAvailable()) {
+                            $injectionList[] = $param->getDefaultValue();
+                            continue;
+                        }
+                    }
+                    $injection = $this->container->get($name);
+
+                    if (!$injection) {
+                        throw new Error("InjectableFactory: Could not create {$className}, dependency {$name} not found.");
+                    }
                 }
 
                 $injectionList[] = $injection;
@@ -97,16 +109,43 @@ class InjectableFactory
 
         $obj = $class->newInstanceArgs($injectionList);
 
-        $this->processSetterInjections($class, $obj);
+        $this->processAwareInjections($class, $obj);
 
         return $obj;
     }
 
     /** Deprecated */
-    protected function createByClassNameInjectable(string $className)
+    protected function createInjectable(string $className, ?array $with = null)
     {
-        $obj = new $className();
         $class = new ReflectionClass($className);
+
+        if ($with) {
+            $args = [];
+            $constructor = $class->getConstructor();
+            if ($constructor) {
+                $params = $constructor->getParameters();
+
+                foreach ($params as $param) {
+                    $name = $param->getName();
+
+                    if (array_key_exists($name, $with)) {
+                        $args[] = $with[$name];
+                    } else {
+                        $dependencyClassName = $param->getClass();
+                        if (is_null($dependencyClassName)) {
+                            if ($param->isDefaultValueAvailable()) {
+                                $args[] = $param->getDefaultValue();
+                                continue;
+                            }
+                        }
+                        $args[] = null;
+                    }
+                }
+            }
+            $obj = $class->newInstanceArgs($args);
+        } else {
+            $obj = new $className();
+        }
 
         $setList = [];
 
@@ -121,12 +160,12 @@ class InjectableFactory
             $obj->inject($name, $injection);
         }
 
-        $this->processSetterInjections($class, $obj, $setList);
+        $this->processAwareInjections($class, $obj, $setList);
 
         return $obj;
     }
 
-    protected function processSetterInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
+    protected function processAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
     {
         foreach ($class->getInterfaces() as $interface) {
             $interfaceName = $interface->getShortName();

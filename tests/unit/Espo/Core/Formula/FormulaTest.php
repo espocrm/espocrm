@@ -29,18 +29,20 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class FormulaTest extends \PHPUnit\Framework\TestCase
 {
-
     protected function setUp() : void
     {
-        $container = $this->container = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+        $container = $this->container =
+            $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+
+        $injectableFactory = $injectableFactory = new \Espo\Core\InjectableFactory($container);
 
         $attributeFetcher = new \Espo\Core\Formula\AttributeFetcher();
 
-        $this->functionFactory = new \Espo\Core\Formula\FunctionFactory($container, $attributeFetcher);
+        $this->functionFactory = new \Espo\Core\Formula\FunctionFactory($injectableFactory, $attributeFetcher);
         $this->formula = new \Espo\Core\Formula\Formula($this->functionFactory);
 
         $this->entity = $this->getEntityMock();
@@ -80,6 +82,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
     protected function tearDown() : void
     {
         $this->container = null;
+        $this->injectableFactory = null;
         $this->functionFactory = null;
         $this->formula = null;
         $this->entity = null;

@@ -29,10 +29,10 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Interfaces\Injectable;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
 
 abstract class Base implements Injectable
 {
@@ -40,7 +40,7 @@ abstract class Base implements Injectable
 
     protected $itemFactory;
 
-    protected $injections = array();
+    protected $injections = [];
 
     private $entity;
 

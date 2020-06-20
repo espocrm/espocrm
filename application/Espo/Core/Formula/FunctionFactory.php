@@ -29,18 +29,20 @@
 
 namespace Espo\Core\Formula;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
+
+use Espo\Core\InjectableFactory;
 
 class FunctionFactory
 {
-    private $container;
+    private $injectableFactory;
 
     private $classNameMap;
 
-    public function __construct($container, AttributeFetcher $attributeFetcher, $classNameMap = null)
+    public function __construct(InjectableFactory $injectableFactory, AttributeFetcher $attributeFetcher, $classNameMap = null)
     {
-        $this->container = $container;
+        $this->injectableFactory = $injectableFactory;
         $this->attributeFetcher = $attributeFetcher;
         $this->classNameMap = $classNameMap;
     }
@@ -75,15 +77,11 @@ class FunctionFactory
             throw new Error('Class ' . $className . ' was not found.');
         }
 
-        $object = new $className($this, $entity, $variables);
-
-        $dependencyList = $object->getDependencyList();
-        foreach ($dependencyList as $name) {
-            if (!$this->container) {
-                throw new Error('Container required but not passed.');
-            }
-            $object->inject($name, $this->container->get($name));
-        }
+        $object = $this->injectableFactory->createWith($className, [
+            'itemFactory' => $this,
+            'entity' => $entity,
+            'variables' => $variables,
+        ]);
 
         if (property_exists($className, 'hasAttributeFetcher')) {
             $object->setAttributeFetcher($this->attributeFetcher);
