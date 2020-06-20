@@ -30,7 +30,7 @@
 namespace Espo\Core;
 
 /**
- * DI container. Lazy initialization is used. See https://docs.espocrm.com/development/di/.
+ * DI container for services. Lazy initialization is used. See https://docs.espocrm.com/development/di/.
  */
 class Container
 {
