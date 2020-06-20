@@ -154,6 +154,9 @@ class ClassParser
             $className = Util::getClassName($filePath);
             $fileName = $this->getFileManager()->getFileName($filePath);
 
+            $class = new \ReflectionClass($className);
+            if (!$class->isInstantiable()) continue;
+
             $name = Util::normilizeScopeName(ucfirst($fileName));
 
             $name = $category . $name;
