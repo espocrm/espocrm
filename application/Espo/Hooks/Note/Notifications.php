@@ -53,11 +53,6 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $this->getInjection('container')->get('internalAclManager');
     }
 
-    protected function getPortalAclManager()
-    {
-        return $this->getInjection('container')->get('portalAclManager');
-    }
-
     protected function getMentionedUserIdList($entity)
     {
         $mentionedUserList = array();
