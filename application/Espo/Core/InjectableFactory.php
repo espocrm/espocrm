@@ -52,7 +52,7 @@ class InjectableFactory
     }
 
     /**
-     * Allows passing specific constructor parameters. Defined in an associative  array. A key should match the parameter name.
+     * Allows passing specific constructor parameters. Defined in an associative array. A key should match the parameter name.
      */
     public function createWith(string $className, array $with = []) : object
     {
