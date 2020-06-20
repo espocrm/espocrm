@@ -29,29 +29,27 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\NotFound,
-    Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\NotFound;
+
+use Espo\Core\{
+    InjectableFactory,
+    Utils\ClassFinder,
+};
 
 class EntryPointManager
 {
-    private $container;
+    private $injectableFactory;
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
+        $this->injectableFactory = $injectableFactory;
+        $this->classFinder = $classFinder;
     }
 
     public function checkAuthRequired(string $name) : bool
     {
         $className = $this->getClassName($name);
         if (!$className) {
-            echo $name;
-            die;
             throw new NotFound();
         }
         return $className::$authRequired;
@@ -72,7 +70,8 @@ class EntryPointManager
         if (!$className) {
             throw new NotFound();
         }
-        $entryPoint = new $className($this->container);
+
+        $entryPoint = $this->injectableFactory->create($className);
 
         $entryPoint->run($data);
     }
@@ -80,6 +79,6 @@ class EntryPointManager
     protected function getClassName(string $name) : ?string
     {
         $name = ucfirst($name);
-        return $this->getContainer()->get('classFinder')->find('EntryPoints', $name);
+        return $this->classFinder->find('EntryPoints', $name);
     }
 }

@@ -111,7 +111,10 @@ class Application
 
         $slim->any('.*', function() {});
 
-        $entryPointManager = new \Espo\Core\EntryPointManager($container);
+        $injectableFactory = $container->get('injectableFactory');
+        $classFinder = $container->get('classFinder');
+
+        $entryPointManager = new \Espo\Core\EntryPointManager($injectableFactory, $classFinder);
 
         try {
             $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
