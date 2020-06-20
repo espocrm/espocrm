@@ -97,17 +97,6 @@ class SelectManagerFactory
             'acl' => $acl,
         ]);
 
-        /*$selectManager = new $className(
-            $this->entityManager,
-            $user,
-            $acl,
-            $this->aclManager,
-            $this->metadata,
-            $this->config,
-            $this->fieldManagerUtil,
-            $this->injectableFactory
-        );*/
-
         $selectManager->setEntityType($entityType);
 
         return $selectManager;
