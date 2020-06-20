@@ -30,12 +30,12 @@
 namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Util;
 
 use Espo\Core\InjectableFactory;
-use Espo\Core\SelectManagers\Base as BaseSelectManager;
-use Espo\Entities\User;
+use Espo\Core\SelectManager;
 use Espo\Core\ORM\EntityManager;
+use Espo\Entities\User;
+use Espo\Core\Utils\Util;
 
 class SelectManagerFactory
 {
@@ -53,7 +53,7 @@ class SelectManagerFactory
 
     private $classFinder;
 
-    protected $baseClassName = '\\Espo\\Core\\SelectManagers\\Base';
+    protected $baseClassName = '\\Espo\\Core\\SelectManager';
 
     public function __construct(
         EntityManager $entityManager,
@@ -77,7 +77,7 @@ class SelectManagerFactory
         $this->classFinder = $classFinder;
     }
 
-    public function create(string $entityType, ?User $user = null) : BaseSelectManager
+    public function create(string $entityType, ?User $user = null) : SelectManager
     {
         $className = $this->classFinder->find('SelectManagers', $entityType);
 
