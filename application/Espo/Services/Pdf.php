@@ -29,52 +29,65 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\{
+    Forbidden,
+    NotFound,
+    Error,
+};
 
-use Espo\ORM\Entity;
-use Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\{
+    ServiceFactory,
+    Acl,
+    Utils\Config,
+    Utils\Metadata,
+    Utils\Language,
+    Utils\Util,
+    Htmlizer\Htmlizer,
+    Htmlizer\Factory as HtmlizerFactory,
+    ORM\EntityManager,
+    ORM\Entity,
+    Pdf\Tcpdf,
+};
 
-class Pdf extends \Espo\Core\Services\Base
+class Pdf
 {
-
     protected $fontFace = 'freesans';
 
     protected $fontSize = 12;
 
     protected $removeMassFilePeriod = '1 hour';
 
-    protected function init()
-    {
-        $this->addDependency('acl');
-        $this->addDependency('metadata');
-        $this->addDependency('serviceFactory');
-        $this->addDependency('entityManager');
-        $this->addDependency('defaultLanguage');
+    protected $config;
+    protected $serviceFactory;
+    protected $metadata;
+    protected $entityManager;
+    protected $acl;
+    protected $defaultLanguage;
+    protected $htmlizerFactory;
 
-        $this->addDependency('htmlizerFactory');
+    public function __construct(
+        Config $config,
+        ServiceFactory $serviceFactory,
+        Metadata $metadata,
+        EntityManager $entityManager,
+        Acl $acl,
+        Language $defaultLanguage,
+        HtmlizerFactory $htmlizerFactory
+    ) {
+        $this->config = $config;
+        $this->serviceFactory = $serviceFactory;
+        $this->metadata = $metadata;
+        $this->entityManager = $entityManager;
+        $this->acl = $acl;
+        $this->defaultLanguage = $defaultLanguage;
+        $this->htmlizerFactory = $htmlizerFactory;
     }
 
-    protected function getAcl()
-    {
-        return $this->getInjection('acl');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getServiceFactory()
-    {
-        return $this->getInjection('serviceFactory');
-    }
-
-    protected function printEntity(Entity $entity, Entity $template, Htmlizer $htmlizer, \Espo\Core\Pdf\Tcpdf $pdf,
-        ?array $additionalData = null)
-    {
-        $fontFace = $this->getConfig()->get('pdfFontFace', $this->fontFace);
+    protected function printEntity(
+        Entity $entity, Entity $template, Htmlizer $htmlizer, Tcpdf $pdf,
+        ?array $additionalData = null
+    ) {
+        $fontFace = $this->config->get('pdfFontFace', $this->fontFace);
         if ($template->get('fontFace')) {
             $fontFace = $template->get('fontFace');
         }
@@ -131,13 +144,13 @@ class Pdf extends \Espo\Core\Services\Base
     public function generateMailMerge($entityType, $entityList, Entity $template, $name, $campaignId = null)
     {
         $htmlizer = $this->createHtmlizer();
-        $pdf = new \Espo\Core\Pdf\Tcpdf();
+        $pdf = new Tcpdf();
         $pdf->setUseGroupNumbers(true);
 
-        if ($this->getServiceFactory()->checkExists($entityType)) {
-            $service = $this->getServiceFactory()->create($entityType);
+        if ($this->serviceFactory->checkExists($entityType)) {
+            $service = $this->serviceFactory->create($entityType);
         } else {
-            $service = $this->getServiceFactory()->create('Record');
+            $service = $this->serviceFactory->create('Record');
         }
 
         foreach ($entityList as $entity) {
@@ -149,9 +162,9 @@ class Pdf extends \Espo\Core\Services\Base
             $this->printEntity($entity, $template, $htmlizer, $pdf);
         }
 
-        $filename = \Espo\Core\Utils\Util::sanitizeFileName($name) . '.pdf';
+        $filename = Util::sanitizeFileName($name) . '.pdf';
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment');
+        $attachment = $this->entityManager->getEntity('Attachment');
 
         $content = $pdf->output('', 'S');
 
@@ -164,52 +177,52 @@ class Pdf extends \Espo\Core\Services\Base
             'contents' => $content
         ]);
 
-        $this->getEntityManager()->saveEntity($attachment);
+        $this->entityManager->saveEntity($attachment);
 
         return $attachment->id;
     }
 
     public function massGenerate($entityType, $idList, $templateId, $checkAcl = false)
     {
-        if ($this->getServiceFactory()->checkExists($entityType)) {
-            $service = $this->getServiceFactory()->create($entityType);
+        if ($this->serviceFactory->checkExists($entityType)) {
+            $service = $this->serviceFactory->create($entityType);
         } else {
-            $service = $this->getServiceFactory()->create('Record');
+            $service = $this->serviceFactory->create('Record');
         }
 
-        $maxCount = $this->getConfig()->get('massPrintPdfMaxCount');
+        $maxCount = $this->config->get('massPrintPdfMaxCount');
         if ($maxCount) {
             if (count($idList) > $maxCount) {
                 throw new Error("Mass print to PDF max count exceeded.");
             }
         }
 
-        $template = $this->getEntityManager()->getEntity('Template', $templateId);
+        $template = $this->entityManager->getEntity('Template', $templateId);
 
         if (!$template) {
             throw new NotFound();
         }
 
         if ($checkAcl) {
-            if (!$this->getAcl()->check($template)) {
+            if (!$this->acl->check($template)) {
                 throw new Forbidden();
             }
-            if (!$this->getAcl()->checkScope($entityType)) {
+            if (!$this->acl->checkScope($entityType)) {
                 throw new Forbidden();
             }
         }
 
         $htmlizer = $this->createHtmlizer();
-        $pdf = new \Espo\Core\Pdf\Tcpdf();
+        $pdf = new Tcpdf();
         $pdf->setUseGroupNumbers(true);
 
-        $entityList = $this->getEntityManager()->getRepository($entityType)->where([
+        $entityList = $this->entityManager->getRepository($entityType)->where([
             'id' => $idList
         ])->find();
 
         foreach ($entityList as $entity) {
             if ($checkAcl) {
-                if (!$this->getAcl()->check($entity)) continue;
+                if (!$this->acl->check($entity)) continue;
             }
             $service->loadAdditionalFields($entity);
             if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
@@ -221,19 +234,19 @@ class Pdf extends \Espo\Core\Services\Base
 
         $content = $pdf->output('', 'S');
 
-        $entityTypeTranslated = $this->getInjection('defaultLanguage')->translate($entityType, 'scopeNamesPlural');
-        $filename = \Espo\Core\Utils\Util::sanitizeFileName($entityTypeTranslated) . '.pdf';
+        $entityTypeTranslated = $this->defaultLanguage->translate($entityType, 'scopeNamesPlural');
+        $filename = Util::sanitizeFileName($entityTypeTranslated) . '.pdf';
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment');
+        $attachment = $this->entityManager->getEntity('Attachment');
         $attachment->set([
             'name' => $filename,
             'type' => 'application/pdf',
             'role' => 'Mass Pdf',
             'contents' => $content
         ]);
-        $this->getEntityManager()->saveEntity($attachment);
+        $this->entityManager->saveEntity($attachment);
 
-        $job = $this->getEntityManager()->getEntity('Job');
+        $job = $this->entityManager->getEntity('Job');
         $job->set([
             'serviceName' => 'Pdf',
             'methodName' => 'removeMassFileJob',
@@ -243,7 +256,7 @@ class Pdf extends \Espo\Core\Services\Base
             'executeTime' => (new \DateTime())->modify('+' . $this->removeMassFilePeriod)->format('Y-m-d H:i:s'),
             'queue' => 'q1'
         ]);
-        $this->getEntityManager()->saveEntity($job);
+        $this->entityManager->saveEntity($job);
 
         return $attachment->id;
     }
@@ -253,20 +266,20 @@ class Pdf extends \Espo\Core\Services\Base
         if (empty($data->id)) {
             return;
         }
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $data->id);
+        $attachment = $this->entityManager->getEntity('Attachment', $data->id);
         if (!$attachment) return;
         if ($attachment->get('role') !== 'Mass Pdf') return;
-        $this->getEntityManager()->removeEntity($attachment);
+        $this->entityManager->removeEntity($attachment);
     }
 
     public function buildFromTemplate(Entity $entity, Entity $template, $displayInline = false, ?array $additionalData = null)
     {
         $entityType = $entity->getEntityType();
 
-        if ($this->getServiceFactory()->checkExists($entityType)) {
-            $service = $this->getServiceFactory()->create($entityType);
+        if ($this->serviceFactory->checkExists($entityType)) {
+            $service = $this->serviceFactory->create($entityType);
         } else {
-            $service = $this->getServiceFactory()->create('Record');
+            $service = $this->serviceFactory->create('Record');
         }
 
         $service->loadAdditionalFields($entity);
@@ -279,18 +292,18 @@ class Pdf extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        if (!$this->getAcl()->check($entity, 'read') || !$this->getAcl()->check($template, 'read')) {
+        if (!$this->acl->check($entity, 'read') || !$this->acl->check($template, 'read')) {
             throw new Forbidden();
         }
 
         $htmlizer = $this->createHtmlizer();
-        $pdf = new \Espo\Core\Pdf\Tcpdf();
+        $pdf = new Tcpdf();
 
         $this->printEntity($entity, $template, $htmlizer, $pdf, $additionalData);
 
         if ($displayInline) {
             $name = $entity->get('name');
-            $name = \Espo\Core\Utils\Util::sanitizeFileName($name);
+            $name = Util::sanitizeFileName($name);
             $fileName = $name . '.pdf';
 
             $pdf->output($fileName, 'I');
@@ -302,6 +315,6 @@ class Pdf extends \Espo\Core\Services\Base
 
     protected function createHtmlizer()
     {
-        return $this->getInjection('htmlizerFactory')->create();
+        return $this->htmlizerFactory->create();
     }
 }
