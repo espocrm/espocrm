@@ -29,32 +29,26 @@
 
 namespace Espo\Core\SelectManagers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\{
+    Error,
+    Forbidden,
+};
 
-use \Espo\Core\Acl;
-use \Espo\Core\AclManager;
-use \Espo\Core\Utils\Metadata;
-use \Espo\Core\Utils\Config;
-use \Espo\Core\InjectableFactory;
-use \Espo\Core\Utils\FieldManagerUtil;
-use \Espo\ORM\EntityManager;
+use Espo\Core\{
+    Acl,
+    AclManager,
+    InjectableFactory,
+    Utils\Metadata,
+    Utils\Config,
+    Utils\FieldManagerUtil,
+    ORM\EntityManager,
+};
+
+use Espo\Entities\User;
 
 class Base
 {
-    protected $container;
-
-    protected $user;
-
-    protected $acl;
-
-    protected $entityManager;
-
     protected $entityType;
-
-    protected $metadata;
-
-    private $config;
 
     private $seed = null;
 
@@ -85,8 +79,25 @@ class Base
 
     protected $fullTextSearchDataCacheHash = [];
 
-    public function __construct(EntityManager $entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, FieldManagerUtil $fieldManagerUtil, InjectableFactory $injectableFactory)
-    {
+    protected $entityManager;
+    protected $user;
+    protected $acl;
+    protected $aclManager;
+    protected $metadata;
+    protected $config;
+    protected $fieldManagerUtil;
+    protected $injectableFactory;
+
+    public function __construct(
+        EntityManager $entityManager,
+        User $user,
+        Acl $acl,
+        AclManager $aclManager,
+        Metadata $metadata,
+        Config $config,
+        FieldManagerUtil $fieldManagerUtil,
+        InjectableFactory $injectableFactory
+    ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->acl = $acl;

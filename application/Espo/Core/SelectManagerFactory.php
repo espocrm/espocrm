@@ -92,7 +92,12 @@ class SelectManagerFactory
             $user = $this->user;
         }
 
-        $selectManager = new $className(
+        $selectManager = $this->injectableFactory->createWith($className, [
+            'user' => $user,
+            'acl' => $acl,
+        ]);
+
+        /*$selectManager = new $className(
             $this->entityManager,
             $user,
             $acl,
@@ -101,7 +106,8 @@ class SelectManagerFactory
             $this->config,
             $this->fieldManagerUtil,
             $this->injectableFactory
-        );
+        );*/
+
         $selectManager->setEntityType($entityType);
 
         return $selectManager;
