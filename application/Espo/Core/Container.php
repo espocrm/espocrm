@@ -204,7 +204,10 @@ class Container
     protected function loadHookManager()
     {
         return new \Espo\Core\HookManager(
-            $this
+            $this->get('injectableFactory'),
+            $this->get('fileManager'),
+            $this->get('metadata'),
+            $this->get('config'),
         );
     }
 
