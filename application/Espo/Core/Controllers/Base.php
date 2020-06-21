@@ -28,9 +28,8 @@
  ************************************************************************/
 
 namespace Espo\Core\Controllers;
-use \Espo\Core\Container;
-use \Espo\Core\ServiceFactory;
-use \Espo\Core\Utils\Util;
+
+use Espo\Core\Container;
 
 abstract class Base
 {
@@ -55,7 +54,7 @@ abstract class Base
         $this->checkControllerAccess();
     }
 
-    public function getName()
+    protected function getName()
     {
         return $this->name;
     }
@@ -110,4 +109,3 @@ abstract class Base
         return $this->getServiceFactory()->create($name);
     }
 }
-

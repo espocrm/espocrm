@@ -185,7 +185,9 @@ class Container
     protected function loadControllerManager()
     {
         return new \Espo\Core\ControllerManager(
-            $this
+            $this->get('injectableFactory'),
+            $this->get('classFinder'),
+            $this->get('metadata') // TODO remove
         );
     }
 

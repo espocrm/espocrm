@@ -29,30 +29,42 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Utils\Util;
 use Espo\Core\Exceptions\NotFound;
+
+use Espo\Core\{
+    InjectableFactory,
+    Utils\ClassFinder,
+    Utils\Metadata,
+    Utils\Json,
+    Utils\Util,
+};
 
 class ControllerManager
 {
-    private $container;
+    protected $injectableFactory;
+    protected $classFinder;
+    protected $metadata; // TODO remove
 
-    private $controllersHash = null;
+    private $controllersHash;
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder, Metadata $metadata)
     {
-        $this->container = $container;
+        $this->injectableFactory = $injectableFactory;
+        $this->classFinder = $classFinder;
+        $this->metadata = $metadata;
 
         $this->controllersHash = (object) [];
     }
 
-    protected function getContainer()
+    public function process(string $controllerName, string $actionName, $params, $data, $request, $response = null)
     {
-        return $this->container;
+        $controller = $this->getController($controllerName);
+        return $this->processRequest($controller, $controllerName, $actionName, $params, $data, $request, $response);
     }
 
     protected function getControllerClassName(string $name) : string
     {
-        $className = $this->getContainer()->get('classFinder')->find('Controllers', $name);
+        $className = $this->classFinder->find('Controllers', $name);
 
         if (!$className) {
             throw new NotFound("Controller '{$name}' does not exist.");
@@ -65,15 +77,18 @@ class ControllerManager
         return $className;
     }
 
-    public function createController($name)
+    protected function createController(string $name) : object
     {
-        $controllerClassName = $this->getControllerClassName($name);
-        $controller = new $controllerClassName($this->container);
+        $className = $this->getControllerClassName($name);
+
+        $controller = $this->injectableFactory->createWith($className, [
+            'name' => $name,
+        ]);
 
         return $controller;
     }
 
-    public function getController($name)
+    protected function getController(string $name) : object
     {
         if (!property_exists($this->controllersHash, $name)) {
             $this->controllersHash->$name = $this->createController($name);
@@ -81,14 +96,15 @@ class ControllerManager
         return $this->controllersHash->$name;
     }
 
-    public function processRequest(\Espo\Core\Controllers\Base $controller, $actionName, $params, $data, $request, $response = null)
-    {
+    protected function processRequest(
+        object $controller, string $controllerName, string $actionName, $params, $data, $request, $response = null
+    ) {
         if ($data && stristr($request->getContentType(), 'application/json')) {
             $data = json_decode($data);
         }
 
         if ($actionName == 'index') {
-            $actionName = $controller::$defaultAction;
+            $actionName = $controller::$defaultAction ?? 'index';
         }
 
         $requestMethod = $request->getMethod();
@@ -108,14 +124,16 @@ class ControllerManager
         }
 
         if (!method_exists($controller, $primaryActionMethodName)) {
-            throw new NotFound("Action {$requestMethod} '{$actionName}' does not exist in controller '".$controller->getName()."'.");
+            throw new NotFound(
+                "Action {$requestMethod} '{$actionName}' does not exist in controller '{$controllerName}'."
+            );
         }
 
         // TODO Remove in 6.0.0
-        if ($data instanceof \stdClass) {
+        if ($data instanceof \StdClass) {
             if (
-                $this->container->get('metadata')->get(
-                    ['app', 'deprecatedControllerActions', $controller->getName(), $primaryActionMethodName])
+                $this->metadata->get(
+                    ['app', 'deprecatedControllerActions', $controllerName, $primaryActionMethodName])
             ) {
                 $data = get_object_vars($data);
             }
@@ -132,15 +150,9 @@ class ControllerManager
         }
 
         if (is_array($result) || is_bool($result) || $result instanceof \StdClass) {
-            return \Espo\Core\Utils\Json::encode($result);
+            return Json::encode($result);
         }
 
         return $result;
-    }
-
-    public function process($controllerName, $actionName, $params, $data, $request, $response = null)
-    {
-        $controller = $this->getController($controllerName);
-        return $this->processRequest($controller, $actionName, $params, $data, $request, $response);
     }
 }

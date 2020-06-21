@@ -29,19 +29,19 @@
 
 namespace Espo\Core\Portal;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
 
 class Application extends \Espo\Core\Application
 {
-    public function __construct($portalId)
+    public function __construct(?string $portalId)
     {
         date_default_timezone_set('UTC');
 
         $this->initContainer();
 
-        if (empty($portalId)) {
+        if (!$portalId) {
             throw new Error("Portal id was not passed to ApplicationPortal.");
         }
 

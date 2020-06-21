@@ -29,6 +29,10 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Exceptions\{
+    Error,
+};
+
 class Application
 {
     private $metadata;
@@ -103,7 +107,7 @@ class Application
     public function runEntryPoint($entryPoint, $data = [], $final = false)
     {
         if (empty($entryPoint)) {
-            throw new \Error();
+            throw new Error();
         }
 
         $slim = $this->getSlim();
@@ -297,12 +301,17 @@ class Application
             } else {
                 $httpMethod = strtolower($slim->request()->getMethod());
                 $crudList = $container->get('config')->get('crud');
-                $actionName = $crudList[$httpMethod];
+                $actionName = $crudList[$httpMethod] ?? null;
+                if (!$actionName) {
+                    throw new Error("No action for {$httpMethod} request.");
+                }
             }
 
             try {
                 $controllerManager = $this->getContainer()->get('controllerManager');
-                $result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
+                $result = $controllerManager->process(
+                    $controllerName, $actionName, $params, $data, $slim->request(), $slim->response()
+                );
                 $container->get('output')->render($result);
             } catch (\Exception $e) {
                 $container->get('output')->processError($e->getMessage(), $e->getCode(), false, $e);
@@ -336,7 +345,9 @@ class Application
         foreach ($this->getRouteList() as $route) {
             $method = strtolower($route['method']);
             if (!in_array($method, $crudList) && $method !== 'options') {
-                $GLOBALS['log']->error('Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']');
+                $GLOBALS['log']->error(
+                    'Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']'
+                );
                 continue;
             }
 
@@ -365,17 +376,17 @@ class Application
         }
     }
 
-    public function setBasePath($basePath)
+    public function setBasePath(string $basePath)
     {
         $this->getContainer()->get('clientManager')->setBasePath($basePath);
     }
 
-    public function getBasePath()
+    public function getBasePath() : string
     {
         return $this->getContainer()->get('clientManager')->getBasePath();
     }
 
-    public function detectedPortalId()
+    public function detectedPortalId() : ?string
     {
         if (!empty($_GET['portalId'])) {
             return $_GET['portalId'];
