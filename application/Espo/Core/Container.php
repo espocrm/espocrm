@@ -71,9 +71,9 @@ class Container
         $loadMethodName = 'load' . ucfirst($name);
         if (method_exists($this, $loadMethodName)) return true;
 
-        if ($this->getLoaderClassName($name)) return true;
+        if ($this->configuration->getLoaderClassName($name)) return true;
 
-        if ($this->getServiceClassName($name)) return true;
+        if ($this->configuration->getServiceClassName($name)) return true;
 
         return false;
     }
@@ -100,7 +100,7 @@ class Container
             return;
         }
 
-        $loaderClassName = $this->getLoaderClassName($name);
+        $loaderClassName = $this->configuration->getLoaderClassName($name);
 
         $object = null;
 
@@ -109,10 +109,10 @@ class Container
             $object = $loadClass->load();
             $this->data[$name] = $object;
         } else {
-            $className = $this->getServiceClassName($name);
+            $className = $this->configuration->getServiceClassName($name);
 
             if ($className && class_exists($className)) {
-                $dependencyList = $this->getServiceDependencyList($name);
+                $dependencyList = $this->configuration->getServiceDependencyList($name);
                 if (!is_null($dependencyList)) {
                     $dependencyObjectList = [];
                     foreach ($dependencyList as $item) {
@@ -127,55 +127,6 @@ class Container
                 $this->data[$name] = $object;
             }
         }
-    }
-
-    protected function getLoaderClassName(string $name) : ?string
-    {
-        return $this->configuration->getLoaderClassName($name);
-
-        $metadata = $this->get('metadata');
-
-        try {
-            $className = $metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
-            if (!$className) {
-                // deprecated
-                $className = $metadata->get(['app', 'loaders', ucfirst($name)]);
-            }
-        } catch (\Exception $e) {}
-
-        if (!isset($className) || !class_exists($className)) {
-            $className = '\Espo\Custom\Core\Loaders\\'.ucfirst($name);
-            if (!class_exists($className)) {
-                $className = '\Espo\Core\Loaders\\'.ucfirst($name);
-            }
-        }
-
-        if (!class_exists($className)) {
-            return null;
-        }
-
-        return $className;
-    }
-
-    protected function getServiceDependencyList(string $name) : ?array
-    {
-        return $this->configuration->getServiceDependencyList($name);
-
-        return $this->get('metadata')->get(['app', 'containerServices', $name, 'dependencyList']) ?? null;
-    }
-
-    protected function getServiceClassName(string $name) : ?string
-    {
-        return $this->configuration->getServiceClassName($name);
-
-        $metadata = $this->get('metadata');
-
-        $className =
-            $metadata->get(['app', 'containerServices',  $name, 'className']) ??
-            $metadata->get(['app', 'serviceContainer', 'classNames',  $name]) ?? // deprecated
-            null;
-
-        return $className;
     }
 
     protected function loadContainer()
