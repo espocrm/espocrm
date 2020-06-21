@@ -29,50 +29,52 @@
 
 namespace Espo\Core\Portal;
 
+use Espo\Entities\Portal as PortalEntity;
+
 class Container extends \Espo\Core\Container
 {
-    protected function getServiceClassName(string $name, ?string $default = null)
+    protected function getServiceClassName(string $name) : ?string
     {
-        return $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'className']) ??
-            parent::getServiceClassName($name, $default);
-    }
-
-    protected function getServicePortalClassName(string $name, ?string $default = null)
-    {
-        $metadata = $this->get('metadata');
-        return $metadata->get(['app', 'portalContainerServices',  $name, 'className'], $default);
+        return
+            $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'className']) ??
+            parent::getServiceClassName($name) ??
+            null;
     }
 
     protected function getServiceDependencyList(string $name) : ?array
     {
-        return $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'dependencyList']) ??
+        return
+            $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'dependencyList']) ??
             parent::getServiceDependencyList($name);
     }
 
-    protected function getServiceMainClassName(string $name, ?string $default = null)
+    protected function getServicePortalClassName(string $name) : ?string
     {
-        return parent::getServiceClassName($name, $default);
+        return $this->get('metadata')->get(['app', 'portalContainerServices',  $name, 'className']) ?? null;
+    }
+
+    protected function getServiceMainClassName(string $name) : ?string
+    {
+        return parent::getServiceClassName($name);
     }
 
     protected function loadAclManager()
     {
-        $className = $this->getServicePortalClassName('aclManager', '\\Espo\\Core\\Portal\\AclManager');
-        $mainClassName = $this->getServiceMainClassName('aclManager', '\\Espo\\Core\\AclManager');
+        $className = $this->getServicePortalClassName('aclManager') ?? 'Espo\\Core\\Portal\\AclManager';
+        $internalAclManager = $this->get('internalAclManager');
 
-        $obj = new $className(
+        $aclManager = new $className(
             $this->get('container')
         );
-        $objMain = new $mainClassName(
-            $this->get('container')
-        );
-        $obj->setMainManager($objMain);
 
-        return $obj;
+        $aclManager->setMainManager($internalAclManager);
+
+        return $aclManager;
     }
 
     protected function loadInternalAclManager()
     {
-        $className = $this->getServiceMainClassName('aclManager', '\\Espo\\Core\\AclManager');
+        $className = $this->getServiceMainClassName('aclManager') ?? 'Espo\\Core\\AclManager';
         return new $className(
             $this->get('container')
         );
@@ -80,19 +82,10 @@ class Container extends \Espo\Core\Container
 
     protected function loadAcl()
     {
-        $className = $this->getServicePortalClassName('acl', '\\Espo\\Core\\Portal\\Acl');
+        $className = $this->getServicePortalClassName('acl') ?? 'Espo\\Core\\Portal\\Acl';
         return new $className(
             $this->get('aclManager'),
             $this->get('user')
-        );
-    }
-
-    protected function loadThemeManager()
-    {
-        return new \Espo\Core\Portal\Utils\ThemeManager(
-            $this->get('config'),
-            $this->get('metadata'),
-            $this->get('portal')
         );
     }
 
@@ -108,7 +101,7 @@ class Container extends \Espo\Core\Container
         return $language;
     }
 
-    public function setPortal(\Espo\Entities\Portal $portal)
+    public function setPortal(PortalEntity $portal)
     {
         $this->set('portal', $portal);
 

@@ -1,6 +1,8 @@
 {
     "layout": {
-        "className": "\\Espo\\Core\\Portal\\Utils\\Layout",
-        "dependencyList": ["fileManager", "metadata", "user"]
+        "className": "Espo\\Core\\Portal\\Utils\\Layout"
+    },
+    "themeManager": {
+        "className": "Espo\\Core\\Portal\\Utils\\ThemeManager"
     }
 }

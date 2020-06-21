@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+use Espo\Core\InjectableFactory;
 use Espo\Entities\User;
 
 /**
@@ -156,12 +157,14 @@ class Container
         return $this->get('metadata')->get(['app', 'containerServices', $name, 'dependencyList']) ?? null;
     }
 
-    protected function getServiceClassName(string $name, ?string $default = null)
+    protected function getServiceClassName(string $name) : ?string
     {
         $metadata = $this->get('metadata');
 
-        $className = $metadata->get(['app', 'containerServices',  $name, 'className']) ??
-            $metadata->get(['app', 'serviceContainer', 'classNames',  $name], $default);
+        $className =
+            $metadata->get(['app', 'containerServices',  $name, 'className']) ??
+            $metadata->get(['app', 'serviceContainer', 'classNames',  $name]) ?? // deprecated
+            null;
 
         return $className;
     }
@@ -282,7 +285,7 @@ class Container
 
     protected function loadAclManager()
     {
-        $className = $this->getServiceClassName('aclManager', '\\Espo\\Core\\AclManager');
+        $className = $this->getServiceClassName('aclManager') ?? 'Espo\\Core\\AclManager';
         return new $className(
             $this->get('container')
         );
@@ -295,7 +298,7 @@ class Container
 
     protected function loadAcl()
     {
-        $className = $this->getServiceClassName('acl', '\\Espo\\Core\\Acl');
+        $className = $this->getServiceClassName('acl') ?? 'Espo\\Core\\Acl';
         return new $className(
             $this->get('aclManager'),
             $this->get('user')
@@ -397,17 +400,9 @@ class Container
         );
     }
 
-    protected function loadThemeManager()
-    {
-        return new \Espo\Core\Utils\ThemeManager(
-            $this->get('config'),
-            $this->get('metadata')
-        );
-    }
-
     protected function loadInjectableFactory()
     {
-        return new \Espo\Core\InjectableFactory(
+        return new InjectableFactory(
             $this
         );
     }

@@ -1,13 +1,14 @@
 {
     "notificatorFactory": {
-        "className": "\\Espo\\Core\\NotificatorFactory"
+        "className": "Espo\\Core\\NotificatorFactory"
     },
     "clientManager": {
-        "className": "\\Espo\\Core\\Utils\\ClientManager",
-        "dependencyList": ["config", "themeManager", "metadata"]
+        "className": "Espo\\Core\\Utils\\ClientManager"
     },
     "layout": {
-        "className": "\\Espo\\Core\\Utils\\Layout",
-        "dependencyList": ["fileManager", "metadata", "user"]
+        "className": "Espo\\Core\\Utils\\Layout"
+    },
+    "themeManager": {
+        "className": "Espo\\Core\\Utils\\ThemeManager"
     }
 }

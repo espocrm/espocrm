@@ -29,6 +29,10 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
+
 class Layout
 {
     private $fileManager;
@@ -47,7 +51,7 @@ class Layout
         'customPath' => 'custom/Espo/Custom/Resources/layouts',
     ];
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata, \Espo\Entities\User $user)
+    public function __construct(FileManager $fileManager, Metadata $metadata, User $user)
     {
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
