@@ -129,7 +129,7 @@ class App
             $className = $item['className'] ?? null;
             if (!$className) continue;
             try {
-                $itemParams = $this->injectableFactory->createByClassName($className)->get();
+                $itemParams = $this->injectableFactory->create($className)->get();
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error("appParam {$paramKey}: " . $e->getMessage());
                 continue;

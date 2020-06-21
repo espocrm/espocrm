@@ -144,7 +144,7 @@ class EmailAccount extends Record
 
         if ($handlerClassName && !empty($params['id'])) {
             try {
-                $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+                $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error(
                     "EmailAccount: Could not create Imap Handler. Error: " . $e->getMessage()
@@ -164,7 +164,7 @@ class EmailAccount extends Record
                     if (isset($imapHandlers->$emailAddress)) {
                         $handlerClassName = $imapHandlers->$emailAddress;
                         try {
-                            $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+                            $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
                         } catch (\Throwable $e) {
                             $GLOBALS['log']->error("EmailAccount: Could not create Imap Handler for {$emailAddress}. Error: " . $e->getMessage());
                         }
@@ -554,7 +554,7 @@ class EmailAccount extends Record
         if (!$handlerClassName) return;
 
         try {
-            $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+            $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
         } catch (\Throwable $e) {
             $GLOBALS['log']->error(
                 "EmailAccount: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()

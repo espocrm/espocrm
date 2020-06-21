@@ -78,7 +78,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         foreach ($items as $name => $item) {
             try {
                 $className = $item['className'];
-                $injectableFactory->createByClassName($className)->process();
+                $injectableFactory->create($className)->process();
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error("Cleanup: {$name}: " . $e->getMessage());
             }

@@ -407,7 +407,7 @@ class EmailNotification extends \Espo\Core\Services\Base
             $this->emailNotificationEntityHandlerHash[$entityType] = null;
             $className = $this->getMetadata()->get(['app', 'emailNotifications', 'handlerClassNameMap', $entityType]);
             if ($className && class_exists($className)) {
-                $handler = $this->getInjection('injectableFactory')->createByClassName($className);
+                $handler = $this->getInjection('injectableFactory')->create($className);
                 if ($handler) {
                     $this->emailNotificationEntityHandlerHash[$entityType] = $handler;
                 }

@@ -207,14 +207,14 @@ class User extends Record
 
     public function passwordChangeRequest($userName, $emailAddress, $url = null)
     {
-        $recovery = $this->getContainer()->get('injectableFactory')->createByClassName('\\Espo\\Core\\Password\\Recovery');
+        $recovery = $this->getContainer()->get('injectableFactory')->create('\\Espo\\Core\\Password\\Recovery');
         $recovery->request($emailAddress, $userName, $url);
         return true;
     }
 
     public function changePasswordByRequest(string $requestId, string $password)
     {
-        $recovery = $this->getContainer()->get('injectableFactory')->createByClassName('\\Espo\\Core\\Password\\Recovery');
+        $recovery = $this->getContainer()->get('injectableFactory')->create('\\Espo\\Core\\Password\\Recovery');
 
         $request = $recovery->getRequest($requestId);
 

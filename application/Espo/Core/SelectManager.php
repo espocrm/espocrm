@@ -1899,7 +1899,7 @@ class SelectManager
                     $GLOBALS['log']->error("Could find class for filter {$filter}.");
                     return;
                 }
-                $impl = $this->getInjectableFactory()->createByClassName($className);
+                $impl = $this->getInjectableFactory()->create($className);
                 if (!$impl) {
                     $GLOBALS['log']->error("Could not create filter {$filter} implementation.");
                     return;

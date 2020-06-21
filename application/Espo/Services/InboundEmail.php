@@ -937,7 +937,7 @@ class InboundEmail extends \Espo\Services\Record
 
         if ($handlerClassName && !empty($params['id'])) {
             try {
-                $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+                $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error(
                     "InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage()
@@ -1012,7 +1012,7 @@ class InboundEmail extends \Espo\Services\Record
         if (!$handlerClassName) return;
 
         try {
-            $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+            $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
         } catch (\Throwable $e) {
             $GLOBALS['log']->error(
                 "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()

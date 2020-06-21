@@ -338,7 +338,7 @@ class Email extends Record
                 if (isset($smtpHandlers->$emailAddress)) {
                     $handlerClassName = $smtpHandlers->$emailAddress;
                     try {
-                        $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+                        $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
                     } catch (\Throwable $e) {
                         $GLOBALS['log']->error(
                             "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " . $e->getMessage() . "."

@@ -1989,7 +1989,7 @@ class Record extends \Espo\Core\Services\Base
         if (empty($className)) {
             throw new Error();
         }
-        $exportObj = $this->getInjection('injectableFactory')->createByClassName($className);
+        $exportObj = $this->getInjection('injectableFactory')->create($className);
 
         $collection = null;
 

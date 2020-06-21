@@ -122,7 +122,7 @@ class ClientManager
         if (!$externalAccountEntity->get('enabled')) return null;
 
         $className = $this->getMetadata()->get("integrations.{$integration}.clientClassName");
-        $client = $this->injectableFactory->createByClassName($className);
+        $client = $this->injectableFactory->create($className);
 
         $client->setup(
             $userId,
