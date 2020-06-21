@@ -27,10 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Interfaces;
+namespace Espo\Core\Loaders;
 
 interface Loader
 {
     public function load();
 }
-

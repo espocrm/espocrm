@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Interfaces\Loader;
 use Espo\Core\Container;
 
 abstract class Base implements Loader
