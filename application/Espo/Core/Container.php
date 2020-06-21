@@ -29,8 +29,11 @@
 
 namespace Espo\Core;
 
+use Espo\Entities\User;
+
 /**
- * DI container for services. Lazy initialization is used. See https://docs.espocrm.com/development/di/.
+ * DI container for services. Lazy initialization is used. Services are instantiated only once.
+ * See https://docs.espocrm.com/development/di/.
  */
 class Container
 {
@@ -40,7 +43,10 @@ class Container
     {
     }
 
-    public function get(string $name)
+    /**
+     * Obtain a service.
+     */
+    public function get(string $name) : ?object
     {
         if (empty($this->data[$name])) {
             $this->load($name);
@@ -51,70 +57,98 @@ class Container
         return null;
     }
 
-    public function setUser(\Espo\Entities\User $user)
+    /**
+     * Check whether a service can be obtained.
+     */
+    public function has(string $name) : bool
+    {
+        if (isset($this->data[$name])) return true;
+
+        $loadMethodName = 'load' . ucfirst($name);
+        if (method_exists($this, $loadMethodName)) return true;
+
+        if ($this->getLoaderClassName($name)) return true;
+
+        if ($this->getServiceClassName($name)) return true;
+
+        return false;
+    }
+
+    /**
+     * Inject a user after authentication.
+     */
+    public function setUser(User $user)
     {
         $this->set('user', $user);
     }
 
-    protected function set($name, $obj)
+    protected function set(string $name, object $obj)
     {
         $this->data[$name] = $obj;
     }
 
-    private function load($name)
+    private function load(string $name)
     {
-        $loadMethod = 'load' . ucfirst($name);
-        if (method_exists($this, $loadMethod)) {
-            $obj = $this->$loadMethod();
+        $loadMethodName = 'load' . ucfirst($name);
+        if (method_exists($this, $loadMethodName)) {
+            $obj = $this->$loadMethodName();
             $this->data[$name] = $obj;
+            return;
+        }
+
+        $loaderClassName = $this->getLoaderClassName($name);
+
+        $object = null;
+
+        if ($loaderClassName) {
+            $loadClass = new $loaderClassName($this);
+            $object = $loadClass->load();
+            $this->data[$name] = $object;
         } else {
-            $metadata = $this->get('metadata');
+            $className = $this->getServiceClassName($name);
 
-            try {
-                // deprecated
-                $className = $metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
-                if (!$className) {
-                    // deprecated
-                    $className = $metadata->get(['app', 'loaders', ucfirst($name)]);
-                }
-            } catch (\Exception $e) {}
-
-            if (!isset($className) || !class_exists($className)) {
-                $className = '\Espo\Custom\Core\Loaders\\'.ucfirst($name);
-                if (!class_exists($className)) {
-                    $className = '\Espo\Core\Loaders\\'.ucfirst($name);
-                }
-            }
-
-
-            $object = null;
-
-            if (class_exists($className)) {
-                $loadClass = new $className($this);
-                $object = $loadClass->load();
-                $this->data[$name] = $object;
-            } else {
-                $className = $this->getServiceClassName($name);
-
-                if ($className && class_exists($className)) {
-                    $dependencyList = $this->getServiceDependencyList($name);
-                    if (!is_null($dependencyList)) {
-                        $dependencyObjectList = [];
-                        foreach ($dependencyList as $item) {
-                            $dependencyObjectList[] = $this->get($item);
-                        }
-                        $reflector = new \ReflectionClass($className);
-                        $object = $reflector->newInstanceArgs($dependencyObjectList);
-                    } else {
-                        $object = $this->get('injectableFactory')->create($className);
+            if ($className && class_exists($className)) {
+                $dependencyList = $this->getServiceDependencyList($name);
+                if (!is_null($dependencyList)) {
+                    $dependencyObjectList = [];
+                    foreach ($dependencyList as $item) {
+                        $dependencyObjectList[] = $this->get($item);
                     }
-
-                    $this->data[$name] = $object;
+                    $reflector = new \ReflectionClass($className);
+                    $object = $reflector->newInstanceArgs($dependencyObjectList);
+                } else {
+                    $object = $this->get('injectableFactory')->create($className);
                 }
+
+                $this->data[$name] = $object;
+            }
+        }
+    }
+
+    protected function getLoaderClassName(string $name) : ?string
+    {
+        $metadata = $this->get('metadata');
+
+        try {
+            $className = $metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
+            if (!$className) {
+                // deprecated
+                $className = $metadata->get(['app', 'loaders', ucfirst($name)]);
+            }
+        } catch (\Exception $e) {}
+
+        if (!isset($className) || !class_exists($className)) {
+            $className = '\Espo\Custom\Core\Loaders\\'.ucfirst($name);
+            if (!class_exists($className)) {
+                $className = '\Espo\Core\Loaders\\'.ucfirst($name);
             }
         }
 
-        return null;
+        if (!class_exists($className)) {
+            return null;
+        }
+
+        return $className;
     }
 
     protected function getServiceDependencyList(string $name) : ?array
