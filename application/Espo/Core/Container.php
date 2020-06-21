@@ -102,7 +102,7 @@ class Container
         $object = null;
 
         if ($loaderClassName) {
-            $loadClass = new $loaderClassName($this);
+            $loadClass = $this->get('injectableFactory')->create($loaderClassName);
             $object = $loadClass->load();
             $this->data[$name] = $object;
         } else {
@@ -402,8 +402,6 @@ class Container
 
     protected function loadInjectableFactory()
     {
-        return new InjectableFactory(
-            $this
-        );
+        return new InjectableFactory($this);
     }
 }
