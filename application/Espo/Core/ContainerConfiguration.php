@@ -41,7 +41,7 @@ class ContainerConfiguration
 
     public function __construct(Log $log, Metadata $metadata)
     {
-        // log must be loaded before enything
+        // log must be loaded before anything
         $this->log = $log;
         $this->metadata = $metadata;
     }
