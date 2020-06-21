@@ -32,9 +32,10 @@ namespace Espo\Core;
 use Espo\Core\Exceptions\Error;
 
 use ReflectionClass;
+use Espo\Core\Interfaces\Injectable;
 
 /**
- * Creates instance by class name. Uses constructor param names to detect which
+ * Creates an instance by a class name. Uses constructor param names to detect which
  * dependencies are needed. Only container services supported as dependencies.
  */
 class InjectableFactory
@@ -59,6 +60,9 @@ class InjectableFactory
         return $this->createByClassName($className, $with);
     }
 
+    /**
+     * Use create or createWith instead. Left public for backward compatibility.
+     */
     public function createByClassName(string $className, ?array $with = null) : object
     {
         if (!class_exists($className)) {
@@ -66,17 +70,45 @@ class InjectableFactory
         }
 
         $class = new ReflectionClass($className);
-        if ($class->implementsInterface('\\Espo\\Core\\Interfaces\\Injectable')) {
-            return $this->createInjectable($className, $with);
+
+        $injectionList = $this->getConstructorInjectionList($class, $with);
+
+        $obj = $class->newInstanceArgs($injectionList);
+
+        if ($class->implementsInterface(Injectable::class)) {
+            $this->applyInjectable($class, $obj);
+            return $obj;
         }
 
-        return $this->createByConstructorParams($className, $with);
+        $this->applyAwareInjections($class, $obj);
+
+        return $obj;
     }
 
-    protected function createByConstructorParams(string $className, ?array $with = null)
+    /** Deprecated */
+    protected function applyInjectable(ReflectionClass $class, object $obj)
     {
-        $class = new ReflectionClass($className);
+        $setList = [];
 
+        $dependencyList = $obj->getDependencyList();
+
+        foreach ($dependencyList as $name) {
+            $injection = $this->container->get($name);
+            if ($this->classHasDependencySetter($class, $name)) {
+                $methodName = 'set' . ucfirst($name);
+                $obj->$methodName($injection);
+                $setList[] = $name;
+            }
+            $obj->inject($name, $injection);
+        }
+
+        $this->applyAwareInjections($class, $obj, $setList);
+
+        return $obj;
+    }
+
+    protected function getConstructorInjectionList(ReflectionClass $class, ?array $with = null)
+    {
         $injectionList = [];
 
         $constructor = $class->getConstructor();
@@ -107,65 +139,10 @@ class InjectableFactory
             }
         }
 
-        $obj = $class->newInstanceArgs($injectionList);
-
-        $this->processAwareInjections($class, $obj);
-
-        return $obj;
+        return $injectionList;
     }
 
-    /** Deprecated */
-    protected function createInjectable(string $className, ?array $with = null)
-    {
-        $class = new ReflectionClass($className);
-
-        if ($with) {
-            $args = [];
-            $constructor = $class->getConstructor();
-            if ($constructor) {
-                $params = $constructor->getParameters();
-
-                foreach ($params as $param) {
-                    $name = $param->getName();
-
-                    if (array_key_exists($name, $with)) {
-                        $args[] = $with[$name];
-                    } else {
-                        $dependencyClassName = $param->getClass();
-                        if (is_null($dependencyClassName)) {
-                            if ($param->isDefaultValueAvailable()) {
-                                $args[] = $param->getDefaultValue();
-                                continue;
-                            }
-                        }
-                        $args[] = null;
-                    }
-                }
-            }
-            $obj = $class->newInstanceArgs($args);
-        } else {
-            $obj = new $className();
-        }
-
-        $setList = [];
-
-        $dependencyList = $obj->getDependencyList();
-        foreach ($dependencyList as $name) {
-            $injection = $this->container->get($name);
-            if ($this->classHasDependencySetter($class, $name)) {
-                $methodName = 'set' . ucfirst($name);
-                $obj->$methodName($injection);
-                $setList[] = $name;
-            }
-            $obj->inject($name, $injection);
-        }
-
-        $this->processAwareInjections($class, $obj, $setList);
-
-        return $obj;
-    }
-
-    protected function processAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
+    protected function applyAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
     {
         foreach ($class->getInterfaces() as $interface) {
             $interfaceName = $interface->getShortName();
