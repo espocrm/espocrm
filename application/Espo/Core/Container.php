@@ -40,8 +40,11 @@ class Container
 {
     private $data = [];
 
-    public function __construct()
+    protected $configuration;
+
+    public function __construct(string $configurationClassName)
     {
+        $this->configuration = $this->get('injectableFactory')->create($configurationClassName);
     }
 
     /**
@@ -128,6 +131,8 @@ class Container
 
     protected function getLoaderClassName(string $name) : ?string
     {
+        return $this->configuration->getLoaderClassName($name);
+
         $metadata = $this->get('metadata');
 
         try {
@@ -154,11 +159,15 @@ class Container
 
     protected function getServiceDependencyList(string $name) : ?array
     {
+        return $this->configuration->getServiceDependencyList($name);
+
         return $this->get('metadata')->get(['app', 'containerServices', $name, 'dependencyList']) ?? null;
     }
 
     protected function getServiceClassName(string $name) : ?string
     {
+        return $this->configuration->getServiceClassName($name);
+
         $metadata = $this->get('metadata');
 
         $className =
@@ -208,6 +217,8 @@ class Container
         $errorHandler = new \Monolog\ErrorHandler($log);
         $errorHandler->registerExceptionHandler(null, false);
         $errorHandler->registerErrorHandler([], false);
+
+        $GLOBALS['log'] = $log;
 
         return $log;
     }
@@ -280,28 +291,6 @@ class Container
         return new \Espo\Core\Utils\Metadata(
             $this->get('fileManager'),
             $this->get('config')->get('useCache')
-        );
-    }
-
-    protected function loadAclManager()
-    {
-        $className = $this->getServiceClassName('aclManager') ?? 'Espo\\Core\\AclManager';
-        return new $className(
-            $this->get('container')
-        );
-    }
-
-    protected function loadInternalAclManager()
-    {
-        return $this->loadAclManager();
-    }
-
-    protected function loadAcl()
-    {
-        $className = $this->getServiceClassName('acl') ?? 'Espo\\Core\\Acl';
-        return new $className(
-            $this->get('aclManager'),
-            $this->get('user')
         );
     }
 

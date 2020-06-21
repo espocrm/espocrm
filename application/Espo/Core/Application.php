@@ -33,11 +33,22 @@ use Espo\Core\Exceptions\{
     Error,
 };
 
+use Espo\Core\{
+    ContainerConfiguration,
+    EntryPointManager,
+    CronManager,
+    Utils\Auth,
+    Utils\Api\Auth as ApiAuth,
+    Utils\Route,
+    Utils\Autoload,
+    Portal\Application as PortalApplication,
+};
+
 class Application
 {
-    private $metadata;
-
     protected $container;
+
+    private $metadata;
 
     private $slim;
 
@@ -49,28 +60,28 @@ class Application
 
         $this->initContainer();
 
-        $GLOBALS['log'] = $this->getContainer()->get('log');
-
         $this->initAutoloads();
         $this->initPreloads();
     }
 
     protected function initContainer()
     {
-        $this->container = new Container();
+        $this->container = new Container(ContainerConfiguration::class);
     }
 
+    // TODO make protected
     public function getSlim()
     {
-        if (empty($this->slim)) {
+        if (!$this->slim) {
             $this->slim = $this->container->get('slim');
         }
         return $this->slim;
     }
 
+    // TODO make protected
     public function getMetadata()
     {
-        if (empty($this->metadata)) {
+        if (!$this->metadata) {
             $this->metadata = $this->container->get('metadata');
         }
         return $this->metadata;
@@ -78,10 +89,10 @@ class Application
 
     protected function createAuth()
     {
-        return new \Espo\Core\Utils\Auth($this->container);
+        return new Auth($this->container);
     }
 
-    public function getContainer()
+    public function getContainer() : Container
     {
         return $this->container;
     }
@@ -91,7 +102,7 @@ class Application
         return $this->getContainer()->get('config');
     }
 
-    public function run($name = 'default')
+    public function run(string $name = 'default')
     {
         $this->routeHooks();
         $this->initRoutes();
@@ -104,7 +115,7 @@ class Application
         exit;
     }
 
-    public function runEntryPoint($entryPoint, $data = [], $final = false)
+    public function runEntryPoint(string $entryPoint, array $data = [], bool $final = false)
     {
         if (empty($entryPoint)) {
             throw new Error();
@@ -118,21 +129,21 @@ class Application
         $injectableFactory = $container->get('injectableFactory');
         $classFinder = $container->get('classFinder');
 
-        $entryPointManager = new \Espo\Core\EntryPointManager($injectableFactory, $classFinder);
+        $entryPointManager = new EntryPointManager($injectableFactory, $classFinder);
 
         try {
             $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
             $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
             if ($authRequired && !$authNotStrict) {
-                if (!$final && $portalId = $this->detectedPortalId()) {
-                    $app = new \Espo\Core\Portal\Application($portalId);
+                if (!$final && $portalId = $this->detectPortalId()) {
+                    $app = new PortalApplication($portalId);
                     $app->setBasePath($this->getBasePath());
                     $app->runEntryPoint($entryPoint, $data, true);
                     exit;
                 }
             }
-            $auth = new \Espo\Core\Utils\Auth($this->container, $authNotStrict);
-            $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $authRequired, true);
+            $auth = new Auth($this->container, $authNotStrict);
+            $apiAuth = new ApiAuth($auth, $authRequired, true);
             $slim->add($apiAuth);
 
             $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container, $data) {
@@ -157,7 +168,7 @@ class Application
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $cronManager = new \Espo\Core\CronManager($this->container);
+        $cronManager = new CronManager($this->container);
         $cronManager->run();
     }
 
@@ -202,12 +213,12 @@ class Application
         }
     }
 
-    public function runJob($id)
+    public function runJob(string $id)
     {
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $cronManager = new \Espo\Core\CronManager($this->container);
+        $cronManager = new CronManager($this->container);
         $cronManager->runJobById($id);
     }
 
@@ -232,7 +243,7 @@ class Application
         return $consoleCommandManager->run($command);
     }
 
-    public function isInstalled()
+    public function isInstalled() : bool
     {
         $config = $this->getConfig();
 
@@ -243,9 +254,9 @@ class Application
         return false;
     }
 
-    protected function createApiAuth($auth)
+    protected function createApiAuth(Auth $auth) : ApiAuth
     {
-        return new \Espo\Core\Utils\Api\Auth($auth);
+        return new ApiAuth($auth);
     }
 
     protected function routeHooks()
@@ -334,7 +345,7 @@ class Application
 
     protected function getRouteList()
     {
-        $routes = new \Espo\Core\Utils\Route($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $routes = new Route($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
         return $routes->getAll();
     }
 
@@ -363,7 +374,7 @@ class Application
 
     protected function initAutoloads()
     {
-        $autoload = new \Espo\Core\Utils\Autoload($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $autoload = new Autoload($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
         $autoload->register();
     }
 
@@ -386,7 +397,7 @@ class Application
         return $this->getContainer()->get('clientManager')->getBasePath();
     }
 
-    public function detectedPortalId() : ?string
+    public function detectPortalId() : ?string
     {
         if (!empty($_GET['portalId'])) {
             return $_GET['portalId'];

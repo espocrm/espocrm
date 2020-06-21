@@ -31,64 +31,10 @@ namespace Espo\Core\Portal;
 
 use Espo\Entities\Portal as PortalEntity;
 
-class Container extends \Espo\Core\Container
+use Espo\Core\Container as BaseContainer;
+
+class Container extends BaseContainer
 {
-    protected function getServiceClassName(string $name) : ?string
-    {
-        return
-            $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'className']) ??
-            parent::getServiceClassName($name) ??
-            null;
-    }
-
-    protected function getServiceDependencyList(string $name) : ?array
-    {
-        return
-            $this->get('metadata')->get(['app', 'portalContainerServices', $name, 'dependencyList']) ??
-            parent::getServiceDependencyList($name);
-    }
-
-    protected function getServicePortalClassName(string $name) : ?string
-    {
-        return $this->get('metadata')->get(['app', 'portalContainerServices',  $name, 'className']) ?? null;
-    }
-
-    protected function getServiceMainClassName(string $name) : ?string
-    {
-        return parent::getServiceClassName($name);
-    }
-
-    protected function loadAclManager()
-    {
-        $className = $this->getServicePortalClassName('aclManager') ?? 'Espo\\Core\\Portal\\AclManager';
-        $internalAclManager = $this->get('internalAclManager');
-
-        $aclManager = new $className(
-            $this->get('container')
-        );
-
-        $aclManager->setMainManager($internalAclManager);
-
-        return $aclManager;
-    }
-
-    protected function loadInternalAclManager()
-    {
-        $className = $this->getServiceMainClassName('aclManager') ?? 'Espo\\Core\\AclManager';
-        return new $className(
-            $this->get('container')
-        );
-    }
-
-    protected function loadAcl()
-    {
-        $className = $this->getServicePortalClassName('acl') ?? 'Espo\\Core\\Portal\\Acl';
-        return new $className(
-            $this->get('aclManager'),
-            $this->get('user')
-        );
-    }
-
     protected function loadLanguage()
     {
         $language = new \Espo\Core\Portal\Utils\Language(

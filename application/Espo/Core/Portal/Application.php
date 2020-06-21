@@ -29,9 +29,16 @@
 
 namespace Espo\Core\Portal;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\{
+    Error,
+    NotFound,
+    Forbidden,
+};
+
+use Espo\Core\{
+    Portal\Container as PortalContainer,
+    Portal\ContainerConfiguration as PortalContainerConfiguration,
+};
 
 class Application extends \Espo\Core\Application
 {
@@ -42,24 +49,22 @@ class Application extends \Espo\Core\Application
         $this->initContainer();
 
         if (!$portalId) {
-            throw new Error("Portal id was not passed to ApplicationPortal.");
+            throw new Error("Portal ID was not passed to Portal\Application.");
         }
 
-        $GLOBALS['log'] = $this->getContainer()->get('log');
+        $entityManager = $this->getContainer()->get('entityManager');
 
-        $portal = $this->getContainer()->get('entityManager')->getEntity('Portal', $portalId);
+        $portal = $entityManager->getEntity('Portal', $portalId);
 
         if (!$portal) {
-            $portal = $this->getContainer()->get('entityManager')->getRepository('Portal')->where([
-                'customId' => $portalId
-            ])->findOne();
+            $portal = $entityManager->getRepository('Portal')->where(['customId' => $portalId])->findOne();
         }
 
         if (!$portal) {
-            throw new NotFound();
+            throw new NotFound("Portal {$portalId} not found.");
         }
         if (!$portal->get('isActive')) {
-            throw new Forbidden("Portal is not active.");
+            throw new Forbidden("Portal {$portalId} is not active.");
         }
 
         $this->portal = $portal;
@@ -69,14 +74,14 @@ class Application extends \Espo\Core\Application
         $this->initAutoloads();
     }
 
+    protected function initContainer()
+    {
+        $this->container = new PortalContainer(PortalContainerConfiguration::class);
+    }
+
     protected function getPortal()
     {
         return $this->portal;
-    }
-
-    protected function initContainer()
-    {
-        $this->container = new Container();
     }
 
     protected function getRouteList()
