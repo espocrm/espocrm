@@ -188,4 +188,100 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals([0, 1, 2], $vars->target);
     }
+
+    public function testComment1()
+    {
+        $expression = "
+            // test
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment2()
+    {
+        $expression = "
+            // test'test
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment3()
+    {
+        $expression = "
+            // test\"test
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment4()
+    {
+        $expression = "
+            // test)(test
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment5()
+    {
+        $expression = "
+            /* test'test
+            */
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment6()
+    {
+        $expression = "
+            /* test(test
+            */
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment7()
+    {
+        $expression = "
+            \$test = '/* 1 */';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('/* 1 */', $vars->test);
+    }
+
+    public function testComment8()
+    {
+        $expression = "
+            \$test = '// 1 */';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('// 1 */', $vars->test);
+    }
 }

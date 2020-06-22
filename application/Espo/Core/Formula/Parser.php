@@ -109,6 +109,8 @@ class Parser
     {
         $isString = false;
         $isSingleQuote = false;
+        $isComment = false;
+        $isLineComment = false;
 
         $modifiedString = $string;
 
@@ -116,27 +118,31 @@ class Parser
 
         for ($i = 0; $i < strlen($string); $i++) {
             $isStringStart = false;
-            if ($string[$i] === "'" && ($i === 0 || $string[$i - 1] !== "\\")) {
-                if (!$isString) {
-                    $isString = true;
-                    $isSingleQuote = true;
-                    $isStringStart = true;
-                } else {
-                    if ($isSingleQuote) {
-                        $isString = false;
+
+            if (!$isLineComment && !$isComment) {
+                if ($string[$i] === "'" && ($i === 0 || $string[$i - 1] !== "\\")) {
+                    if (!$isString) {
+                        $isString = true;
+                        $isSingleQuote = true;
+                        $isStringStart = true;
+                    } else {
+                        if ($isSingleQuote) {
+                            $isString = false;
+                        }
                     }
-                }
-            } else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
-                if (!$isString) {
-                    $isString = true;
-                    $isStringStart = true;
-                    $isSingleQuote = false;
-                } else {
-                    if (!$isSingleQuote) {
-                        $isString = false;
+                } else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
+                    if (!$isString) {
+                        $isString = true;
+                        $isStringStart = true;
+                        $isSingleQuote = false;
+                    } else {
+                        if (!$isSingleQuote) {
+                            $isString = false;
+                        }
                     }
                 }
             }
+
             if ($isString) {
                 if ($string[$i] === '(' || $string[$i] === ')') {
                     $modifiedString[$i] = '_';
@@ -144,23 +150,50 @@ class Parser
                     $modifiedString[$i] = ' ';
                 }
             } else {
-                if ($string[$i] === '(') {
-                    $braceCounter++;
-                }
-                if ($string[$i] === ')') {
-                    $braceCounter--;
-                }
+                if (!$isLineComment && !$isComment) {
 
-                if ($braceCounter === 0) {
-                    if (!is_null($splitterIndexList)) {
-                        if ($string[$i] === ';') {
-                            $splitterIndexList[] = $i;
+                    if (!$isComment) {
+                        if ($i && $string[$i] === '/' && $string[$i - 1] === '/') {
+                            $isLineComment = true;
                         }
                     }
-                    if ($intoOneLine) {
-                        if ($string[$i] === "\r" || $string[$i] === "\n" || $string[$i] === "\t") {
-                            $string[$i] = ' ';
+
+                    if (!$isLineComment) {
+                        if ($i && $string[$i] === '*' && $string[$i - 1] === '/') {
+                            $isComment = true;
                         }
+                    }
+
+                    if ($string[$i] === '(') {
+                        $braceCounter++;
+                    }
+                    if ($string[$i] === ')') {
+                        $braceCounter--;
+                    }
+
+                    if ($braceCounter === 0) {
+                        if (!is_null($splitterIndexList)) {
+                            if ($string[$i] === ';') {
+                                $splitterIndexList[] = $i;
+                            }
+                        }
+                        if ($intoOneLine) {
+                            if ($string[$i] === "\r" || $string[$i] === "\n" || $string[$i] === "\t") {
+                                $string[$i] = ' ';
+                            }
+                        }
+                    }
+                }
+
+                if ($isLineComment) {
+                    if ($string[$i] === "\n") {
+                        $isLineComment = false;
+                    }
+                }
+
+                if ($isComment) {
+                    if ($string[$i - 1] === "*" && $string[$i] === "/") {
+                        $isComment = false;
                     }
                 }
             }
@@ -181,6 +214,7 @@ class Parser
 
         $this->processStrings($expression, $modifiedExpression, $splitterIndexList, true);
 
+        //echo $modifiedExpression;
         $this->stripComments($expression, $modifiedExpression);
 
         foreach ($splitterIndexList as $i => $index) {
