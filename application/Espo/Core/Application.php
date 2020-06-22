@@ -80,39 +80,6 @@ class Application
         $this->container = new Container(ContainerConfiguration::class, $this->loaderClassNames);
     }
 
-    // TODO make protected
-    public function getSlim()
-    {
-        if (!$this->slim) {
-            $this->slim = $this->container->get('slim');
-        }
-        return $this->slim;
-    }
-
-    // TODO make protected
-    public function getMetadata()
-    {
-        if (!$this->metadata) {
-            $this->metadata = $this->container->get('metadata');
-        }
-        return $this->metadata;
-    }
-
-    protected function createAuth()
-    {
-        return new Auth($this->container);
-    }
-
-    public function getContainer() : Container
-    {
-        return $this->container;
-    }
-
-    protected function getConfig()
-    {
-        return $this->container->get('config');
-    }
-
     public function run(string $name = 'default')
     {
         $this->routeHooks();
@@ -263,6 +230,37 @@ class Application
         }
 
         return false;
+    }
+
+    public function getContainer() : Container
+    {
+        return $this->container;
+    }
+
+    protected function getSlim()
+    {
+        if (!$this->slim) {
+            $this->slim = $this->container->get('slim');
+        }
+        return $this->slim;
+    }
+
+    protected function getMetadata()
+    {
+        if (!$this->metadata) {
+            $this->metadata = $this->container->get('metadata');
+        }
+        return $this->metadata;
+    }
+
+    protected function createAuth()
+    {
+        return new Auth($this->container);
+    }
+
+    protected function getConfig()
+    {
+        return $this->container->get('config');
     }
 
     protected function createApiAuth(Auth $auth) : ApiAuth
