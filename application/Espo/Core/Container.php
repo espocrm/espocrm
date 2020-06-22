@@ -170,7 +170,7 @@ class Container
             $this->get('injectableFactory'),
             $this->get('fileManager'),
             $this->get('metadata'),
-            $this->get('config'),
+            $this->get('config')
         );
     }
 
