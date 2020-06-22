@@ -137,7 +137,7 @@ class Auth
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
         $entityManager->setUser($user);
-        $this->getContainer()->setUser($user);
+        $this->getContainer()->set('user', $user);
     }
 
     public function login($username, $password = null, $authenticationMethod = null)
@@ -272,7 +272,7 @@ class Auth
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
         $this->getEntityManager()->setUser($user);
-        $this->getContainer()->setUser($user);
+        $this->getContainer()->set('user', $user);
 
         $secondStepRequired = false;
 

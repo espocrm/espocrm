@@ -32,6 +32,8 @@ namespace Espo\Core;
 use Espo\Core\InjectableFactory;
 use Espo\Entities\User;
 
+use Espo\Core\Exceptions\Error;
+
 /**
  * DI container for services. Lazy initialization is used. Services are instantiated only once.
  * See https://docs.espocrm.com/development/di/.
@@ -81,15 +83,15 @@ class Container
         return false;
     }
 
-    /**
-     * Inject a user after authentication.
-     */
-    public function setUser(User $user)
+    public function set(string $name, object $obj)
     {
-        $this->set('user', $user);
+        if (!$this->configuration->isSettable($name)) {
+            throw new Error("Service '{$name}' is not settable.");
+        }
+        $this->setForced($name, $obj);
     }
 
-    protected function set(string $name, object $obj)
+    protected function setForced(string $name, object $obj)
     {
         $this->data[$name] = $obj;
     }

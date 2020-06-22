@@ -108,7 +108,7 @@ class LDAP extends Espo
             throw new Error("System user is not found.");
         }
 
-        $this->getContainer()->setUser($systemUser);
+        $this->getContainer()->set('user', $systemUser);
         $this->getEntityManager()->setUser($systemUser);
     }
 

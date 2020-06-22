@@ -10,5 +10,8 @@
     },
     "themeManager": {
         "className": "Espo\\Core\\Utils\\ThemeManager"
+    },
+    "user": {
+        "settable": true
     }
 }

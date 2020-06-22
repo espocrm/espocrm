@@ -49,7 +49,7 @@ class Container extends BaseContainer
 
     public function setPortal(PortalEntity $portal)
     {
-        $this->set('portal', $portal);
+        $this->setForced('portal', $portal);
 
         $data = [];
         foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {

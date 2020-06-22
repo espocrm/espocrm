@@ -87,4 +87,11 @@ class ContainerConfiguration extends BaseContainerConfiguration
             $this->metadata->get(['app', 'portalContainerServices', $name, 'dependencyList']) ??
             parent::getServiceDependencyList($name);
     }
+
+    public function isSettable(string $name) : bool
+    {
+        return
+            $this->metadata->get(['app', 'portalContainerServices', $name, 'settable']) ??
+            parent::isSettable($name);
+    }
 }

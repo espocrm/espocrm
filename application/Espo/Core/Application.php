@@ -110,7 +110,7 @@ class Application
 
     protected function getConfig()
     {
-        return $this->getContainer()->get('config');
+        return $this->container->get('config');
     }
 
     public function run(string $name = 'default')
@@ -122,7 +122,7 @@ class Application
 
     public function runClient()
     {
-        $this->getContainer()->get('clientManager')->display();
+        $this->container->get('clientManager')->display();
         exit;
     }
 
@@ -133,7 +133,7 @@ class Application
         }
 
         $slim = $this->getSlim();
-        $container = $this->getContainer();
+        $container = $this->container;
 
         $slim->any('.*', function() {});
 
@@ -235,13 +235,13 @@ class Application
 
     public function runRebuild()
     {
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->container->get('dataManager');
         $dataManager->rebuild();
     }
 
     public function runClearCache()
     {
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->container->get('dataManager');
         $dataManager->clearCache();
     }
 
@@ -250,7 +250,7 @@ class Application
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $consoleCommandManager = $this->getContainer()->get('consoleCommandManager');
+        $consoleCommandManager = $this->container->get('consoleCommandManager');
         return $consoleCommandManager->run($command);
     }
 
@@ -272,7 +272,7 @@ class Application
 
     protected function routeHooks()
     {
-        $container = $this->getContainer();
+        $container = $this->container;
         $slim = $this->getSlim();
 
         try {
@@ -330,7 +330,7 @@ class Application
             }
 
             try {
-                $controllerManager = $this->getContainer()->get('controllerManager');
+                $controllerManager = $this->container->get('controllerManager');
                 $result = $controllerManager->process(
                     $controllerName, $actionName, $params, $data, $slim->request(), $slim->response()
                 );
@@ -356,7 +356,7 @@ class Application
 
     protected function getRouteList()
     {
-        $routes = new Route($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $routes = new Route($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
         return $routes->getAll();
     }
 
@@ -385,7 +385,7 @@ class Application
 
     protected function initAutoloads()
     {
-        $autoload = new Autoload($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $autoload = new Autoload($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
         $autoload->register();
     }
 
@@ -393,19 +393,19 @@ class Application
     {
         foreach ($this->getMetadata()->get(['app', 'containerServices']) ?? [] as $name => $defs) {
             if ($defs['preload'] ?? false) {
-                $this->getContainer()->get($name);
+                $this->container->get($name);
             }
         }
     }
 
     public function setBasePath(string $basePath)
     {
-        $this->getContainer()->get('clientManager')->setBasePath($basePath);
+        $this->container->get('clientManager')->setBasePath($basePath);
     }
 
     public function getBasePath() : string
     {
-        return $this->getContainer()->get('clientManager')->getBasePath();
+        return $this->container->get('clientManager')->getBasePath();
     }
 
     public function detectPortalId() : ?string
@@ -415,7 +415,7 @@ class Application
         }
         if (!empty($_COOKIE['auth-token'])) {
             $token =
-                $this->getContainer()->get('entityManager')
+                $this->container->get('entityManager')
                     ->getRepository('AuthToken')->where(['token' => $_COOKIE['auth-token']])->findOne();
 
             if ($token && $token->get('portalId')) {
@@ -427,10 +427,10 @@ class Application
 
     public function setupSystemUser()
     {
-        $user = $this->getContainer()->get('entityManager')->getEntity('User', 'system');
+        $user = $this->container->get('entityManager')->getEntity('User', 'system');
         $user->set('isAdmin', true); // TODO remove in 5.7
         $user->set('type', 'system');
-        $this->getContainer()->setUser($user);
-        $this->getContainer()->get('entityManager')->setUser($user);
+        $this->container->set('user', $user);
+        $this->container->get('entityManager')->setUser($user);
     }
 }

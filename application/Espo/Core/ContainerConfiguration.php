@@ -86,4 +86,9 @@ class ContainerConfiguration
     {
         return $this->metadata->get(['app', 'containerServices', $name, 'dependencyList']) ?? null;
     }
+
+    public function isSettable(string $name) : bool
+    {
+        return $this->metadata->get(['app', 'containerServices', $name, 'settable']) ?? false;
+    }
 }
