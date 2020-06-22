@@ -38,9 +38,10 @@ use Espo\Core\Exceptions\{
 use Espo\Core\{
     Portal\Container as PortalContainer,
     Portal\ContainerConfiguration as PortalContainerConfiguration,
+    Application as BaseApplication,
 };
 
-class Application extends \Espo\Core\Application
+class Application extends BaseApplication
 {
     public function __construct(?string $portalId)
     {
@@ -48,11 +49,24 @@ class Application extends \Espo\Core\Application
 
         $this->initContainer();
 
+        $this->initPortal($portalId);
+
+        $this->initAutoloads();
+        $this->initPreloads();
+    }
+
+    protected function initContainer()
+    {
+        $this->container = new PortalContainer(PortalContainerConfiguration::class, $this->loaderClassNames);
+    }
+
+    protected function initPortal(?string $portalId)
+    {
         if (!$portalId) {
             throw new Error("Portal ID was not passed to Portal\Application.");
         }
 
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->container->get('entityManager');
 
         $portal = $entityManager->getEntity('Portal', $portalId);
 
@@ -69,14 +83,7 @@ class Application extends \Espo\Core\Application
 
         $this->portal = $portal;
 
-        $this->getContainer()->setPortal($portal);
-
-        $this->initAutoloads();
-    }
-
-    protected function initContainer()
-    {
-        $this->container = new PortalContainer(PortalContainerConfiguration::class, $this->loaderClassNames);
+        $this->container->setPortal($portal);
     }
 
     protected function getPortal()
@@ -101,12 +108,21 @@ class Application extends \Espo\Core\Application
 
     public function runClient()
     {
-        $this->getContainer()->get('clientManager')->display(null, null, [
+        $this->container->get('clientManager')->display(null, null, [
             'portalId' => $this->getPortal()->id,
             'applicationId' => $this->getPortal()->id,
             'apiUrl' => 'api/v1/portal-access/' . $this->getPortal()->id,
             'appClientClassName' => 'app-portal'
         ]);
         exit;
+    }
+
+    protected function initPreloads()
+    {
+        foreach ($this->getMetadata()->get(['app', 'portalContainerServices']) ?? [] as $name => $defs) {
+            if ($defs['preload'] ?? false) {
+                $this->container->get($name);
+            }
+        }
     }
 }
