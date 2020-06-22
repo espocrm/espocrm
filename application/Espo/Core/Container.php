@@ -40,10 +40,13 @@ class Container
 {
     private $data = [];
 
+    private $loaderClassNames;
+
     protected $configuration;
 
-    public function __construct(string $configurationClassName)
+    public function __construct(string $configurationClassName, array $loaderClassNames = [])
     {
+        $this->loaderClassNames = $loaderClassNames;
         $this->configuration = $this->get('injectableFactory')->create($configurationClassName);
     }
 
@@ -100,7 +103,7 @@ class Container
             return;
         }
 
-        $loaderClassName = $this->configuration->getLoaderClassName($name);
+        $loaderClassName = $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);
 
         $object = null;
 
@@ -147,40 +150,6 @@ class Container
         );
     }
 
-    protected function loadLog()
-    {
-        $config = $this->get('config');
-
-        $path = $config->get('logger.path', 'data/logs/espo.log');
-        $rotation = $config->get('logger.rotation', true);
-
-        $log = new \Espo\Core\Utils\Log('Espo');
-        $levelCode = $log::toMonologLevel($config->get('logger.level', 'WARNING'));
-
-        if ($rotation) {
-            $maxFileNumber = $config->get('logger.maxFileNumber', 30);
-            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler($path, $maxFileNumber, $levelCode);
-        } else {
-            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\StreamHandler($path, $levelCode);
-        }
-        $log->pushHandler($handler);
-
-        $errorHandler = new \Monolog\ErrorHandler($log);
-        $errorHandler->registerExceptionHandler(null, false);
-        $errorHandler->registerErrorHandler([], false);
-
-        $GLOBALS['log'] = $log;
-
-        return $log;
-    }
-
-    protected function loadFileManager()
-    {
-        return new \Espo\Core\Utils\File\Manager(
-            $this->get('config')
-        );
-    }
-
     protected function loadControllerManager()
     {
         return new \Espo\Core\ControllerManager(
@@ -193,13 +162,6 @@ class Container
     protected function loadPreferences()
     {
         return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);
-    }
-
-    protected function loadConfig()
-    {
-        return new \Espo\Core\Utils\Config(
-            new \Espo\Core\Utils\File\Manager()
-        );
     }
 
     protected function loadHookManager()
@@ -234,14 +196,6 @@ class Container
         return new \Espo\Core\Utils\NumberUtil(
             $this->get('config')->get('decimalMark'),
             $this->get('config')->get('thousandSeparator')
-        );
-    }
-
-    protected function loadMetadata()
-    {
-        return new \Espo\Core\Utils\Metadata(
-            $this->get('fileManager'),
-            $this->get('config')->get('useCache')
         );
     }
 

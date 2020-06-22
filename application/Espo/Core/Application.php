@@ -42,6 +42,10 @@ use Espo\Core\{
     Utils\Route,
     Utils\Autoload,
     Portal\Application as PortalApplication,
+    Loaders\Config as ConfigLoader,
+    Loaders\Log as LogLoader,
+    Loaders\FileManager as FileManagerLoader,
+    Loaders\Metadata as MetadataLoader,
 };
 
 class Application
@@ -53,6 +57,13 @@ class Application
     private $slim;
 
     private $auth;
+
+    protected $loaderClassNames = [
+        'config' => ConfigLoader::class,
+        'log' => LogLoader::class,
+        'fileManager' => FileManagerLoader::class,
+        'metadata' => MetadataLoader::class,
+    ];
 
     public function __construct()
     {
@@ -66,7 +77,7 @@ class Application
 
     protected function initContainer()
     {
-        $this->container = new Container(ContainerConfiguration::class);
+        $this->container = new Container(ContainerConfiguration::class, $this->loaderClassNames);
     }
 
     // TODO make protected

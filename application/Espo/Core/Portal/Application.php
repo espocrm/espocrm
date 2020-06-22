@@ -76,7 +76,7 @@ class Application extends \Espo\Core\Application
 
     protected function initContainer()
     {
-        $this->container = new PortalContainer(PortalContainerConfiguration::class);
+        $this->container = new PortalContainer(PortalContainerConfiguration::class, $this->loaderClassNames);
     }
 
     protected function getPortal()
