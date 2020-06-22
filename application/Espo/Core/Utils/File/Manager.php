@@ -29,24 +29,26 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\Utils;
 use Espo\Core\Exceptions\Error;
+
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils;
 
 class Manager
 {
     private $permission;
 
-    private $permissionDeniedList = array();
+    private $permissionDeniedList = [];
 
     protected $tmpDir = 'data/tmp';
 
-    public function __construct(\Espo\Core\Utils\Config $config = null)
+    public function __construct(?Config $config = null)
     {
         $params = null;
         if (isset($config)) {
-            $params = array(
+            $params = [
                 'defaultPermissions' => $config->get('defaultPermissions'),
-            );
+            ];
         }
 
         $this->permission = new Permission($this, $params);
@@ -58,13 +60,14 @@ class Manager
     }
 
     /**
-     * Get a list of files in specified directory
+     * Get a list of files in specified directory.
      *
-     * @param string $path string - Folder path, Ex. myfolder
-     * @param bool | int $recursively - Find files in subfolders
-     * @param string $filter - Filter for files. Use regular expression, Ex. \.json$
-     * @param bool $onlyFileType [null, true, false] - Filter for type of files/directories. If TRUE - returns only file list, if FALSE - only directory list
-     * @param bool $isReturnSingleArray - if need to return a single array of file list
+     * @param string $path string - Folder path.
+     * @param bool | int $recursively - Find files in subfolders.
+     * @param string $filter - Filter for files. Use regular expression, Ex. \.json$.
+     * @param bool $onlyFileType [null, true, false] - Filter for type of files/directories.
+     * If TRUE - returns only file list, if FALSE - only directory list.
+     * @param bool $isReturnSingleArray - if need to return a single array of file list.
      *
      * @return array
      */
@@ -72,7 +75,7 @@ class Manager
     {
         $path = $this->concatPaths($path);
 
-        $result = array();
+        $result = [];
 
         if (!file_exists($path) || !is_dir($path)) {
             return $result;
@@ -81,7 +84,7 @@ class Manager
         $cdir = scandir($path);
         foreach ($cdir as $key => $value)
         {
-            if (!in_array($value,array(".", "..")))
+            if (!in_array($value, [".", ".."]))
             {
                 $add = false;
                 if (is_dir($path . Utils\Util::getSeparator() . $value)) {
@@ -125,11 +128,11 @@ class Manager
      * @param bool $onlyFileType [null, true, false] - Filter for type of files/directories.
      * @param string $parentDirName
      *
-     * @return aray
+     * @return array
      */
     protected function getSingeFileList(array $fileList, $onlyFileType = null, $basePath = null, $parentDirName = '')
     {
-        $singleFileList = array();
+        $singleFileList = [];
         foreach($fileList as $dirName => $fileName) {
 
             if (is_array($fileName)) {
@@ -445,7 +448,9 @@ class Manager
                 $this->getPermissionUtils()->chgrp($fullPath);
             }
         } catch (\Exception $e) {
-            $GLOBALS['log']->critical('Permission denied: unable to create the folder on the server - '.$fullPath);
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->critical('Permission denied: unable to create the folder on the server: '.$fullPath);
+            }
         }
 
         return isset($result) ? $result : false;
@@ -472,14 +477,14 @@ class Manager
         }
 
         /** Check permission before copying */
-        $permissionDeniedList = array();
+        $permissionDeniedList = [];
         foreach ($fileList as $file) {
 
             if ($copyOnlyFiles) {
                 $file = pathinfo($file, PATHINFO_BASENAME);
             }
 
-            $destFile = $this->concatPaths(array($destPath, $file));
+            $destFile = $this->concatPaths([$destPath, $file]);
 
             $isFileExists = file_exists($destFile);
 
@@ -503,8 +508,8 @@ class Manager
                 $file = pathinfo($file, PATHINFO_BASENAME);
             }
 
-            $sourceFile = is_file($sourcePath) ? $sourcePath : $this->concatPaths(array($sourcePath, $file));
-            $destFile = $this->concatPaths(array($destPath, $file));
+            $sourceFile = is_file($sourcePath) ? $sourcePath : $this->concatPaths([$sourcePath, $file]);
+            $destFile = $this->concatPaths([$destPath, $file]);
 
             if (file_exists($sourceFile) && is_file($sourceFile)) {
                 $res &= copy($sourceFile, $destFile);
@@ -529,7 +534,13 @@ class Manager
         $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($filePath);
 
         if (file_exists($filePath)) {
-            if (!is_writable($filePath) && !in_array($this->getPermissionUtils()->getCurrentPermission($filePath), array($defaultPermissions['file'], $defaultPermissions['dir']))) {
+            if (
+                !is_writable($filePath) &&
+                !in_array(
+                    $this->getPermissionUtils()->getCurrentPermission($filePath),
+                    [$defaultPermissions['file'], $defaultPermissions['dir']]
+                )
+            ) {
                 return $this->getPermissionUtils()->setDefaultPermissions($filePath);
             }
             return true;
@@ -658,8 +669,8 @@ class Manager
             $items = (array) $items;
         }
 
-        $removeList = array();
-        $permissionDeniedList = array();
+        $removeList = [];
+        $permissionDeniedList = [];
         foreach ($items as $item) {
             if (isset($dirPath)) {
                 $item = Utils\Util::concatPath($dirPath, $item);
@@ -885,7 +896,7 @@ class Manager
         if ($variable instanceof \StdClass) {
             $result = "(object) " . $this->varExport(get_object_vars($variable), $level);
         } else if (is_array($variable)) {
-            $array = array();
+            $array = [];
             foreach ($variable as $key => $value) {
                 $array[] = var_export($key, true) . " => " . $this->varExport($value, $level + 1);
             }
@@ -906,7 +917,7 @@ class Manager
      */
     public function isWritableList(array $paths)
     {
-        $permissionDeniedList = array();
+        $permissionDeniedList = [];
 
         $result = true;
         foreach ($paths as $path) {
