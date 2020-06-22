@@ -29,7 +29,13 @@
 
 namespace Espo\Core\Webhook;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    Utils\Config,
+    Utils\File\Manager as FileManager,
+    Utils\FieldManagerUtil,
+    ORM\EntityManager,
+    ORM\Entity,
+};
 
 class Manager
 {
@@ -45,10 +51,10 @@ class Manager
     private $data = null;
 
     public function __construct(
-        \Espo\Core\Utils\Config $config,
-        \Espo\Core\Utils\File\Manager $fileManager,
-        \Espo\ORM\EntityManager $entityManager,
-        \Espo\Core\Utils\FieldManagerUtil $fieldManager
+        Config $config,
+        FileManager $fileManager,
+        EntityManager $entityManager,
+        FieldManagerUtil $fieldManager
     ) {
         $this->config = $config;
         $this->fileManager = $fileManager;

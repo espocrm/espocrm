@@ -29,8 +29,15 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use Doctrine\DBAL\Types\Type,
-    Espo\Core\Utils\Util;
+use Doctrine\DBAL\Types\Type;
+
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\File\ClassParser;
+use Espo\Core\Utils\Metadata\OrmMetadata;
+use Espo\Core\Utils\Util;
 
 class Schema
 {
@@ -75,10 +82,13 @@ class Schema
     protected $rebuildActionClasses = null;
 
     public function __construct(
-        \Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata,
-        \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager,
-        \Espo\Core\Utils\File\ClassParser $classParser, \Espo\Core\Utils\Metadata\OrmMetadata $ormMetadata)
-    {
+        Config $config,
+        Metadata $metadata,
+        FileManager $fileManager,
+        EntityManager $entityManager,
+        ClassParser $classParser,
+        OrmMetadata $ormMetadata
+    ) {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;

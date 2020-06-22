@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Console\Commands;
 
+/** Deprecated */
 abstract class Base
 {
     private $container;

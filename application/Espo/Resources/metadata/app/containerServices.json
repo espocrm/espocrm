@@ -1,4 +1,37 @@
 {
+    "slim": {
+        "className": "Espo\\Core\\Utils\\Api\\Slim"
+    },
+    "output": {
+        "className": "Espo\\Core\\Utils\\Api\\Output"
+    },
+    "schema": {
+        "className": "Espo\\Core\\Utils\\Database\\Schema\\Schema"
+    },
+    "ormMetadata": {
+        "className": "Espo\\Core\\Utils\\Metadata\\OrmMetadata"
+    },
+    "classParser": {
+        "className": "Espo\\Core\\Utils\\File\\ClassParser"
+    },
+    "classFinder": {
+        "className": "Espo\\Core\\Utils\\ClassFinder"
+    },
+    "crypt": {
+        "className": "Espo\\Core\\Utils\\Crypt"
+    },
+    "number": {
+        "loaderClassName": "Espo\\Core\\Loaders\\NumberUtil"
+    },
+    "controllerManager": {
+        "className": "Espo\\Core\\ControllerManager"
+    },
+    "scheduledJob": {
+        "className": "Espo\\Core\\Utils\\ScheduledJob"
+    },
+    "hookManager": {
+        "className": "Espo\\Core\\HookManager"
+    },
     "notificatorFactory": {
         "className": "Espo\\Core\\NotificatorFactory"
     },
@@ -10,6 +43,36 @@
     },
     "themeManager": {
         "className": "Espo\\Core\\Utils\\ThemeManager"
+    },
+    "fieldManager": {
+        "className": "Espo\\Core\\Utils\\FieldManager"
+    },
+    "fieldManagerUtil": {
+        "className": "Espo\\Core\\Utils\\FieldManagerUtil"
+    },
+    "mailSender": {
+        "className": "Espo\\Core\\Mail\\Sender"
+    },
+    "htmlizerFactory": {
+        "className": "Espo\\Core\\Htmlizer\\Factory"
+    },
+    "fieldValidatorManager": {
+        "className": "Espo\\Core\\Utils\\FieldValidatorManager"
+    },
+    "hasher": {
+        "className": "Espo\\Core\\Utils\\Hasher"
+    },
+    "authenticationFactory": {
+        "className": "Espo\\Core\\Utils\\Authentication\\Utils\\AuthenticationFactory"
+    },
+    "auth2FAFactory": {
+        "className": "Espo\\Core\\Utils\\Authentication\\TwoFA\\Utils\\Factory"
+    },
+    "auth2FAUserFactory": {
+        "className": "Espo\\Core\\Utils\\Authentication\\TwoFA\\Utils\\UserFactory"
+    },
+    "totp": {
+        "className": "Espo\\Core\\Utils\\Authentication\\TwoFA\\Utils\\Totp"
     },
     "user": {
         "settable": true

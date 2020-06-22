@@ -53,7 +53,7 @@ class Container
     }
 
     /**
-     * Obtain a service.
+     * Obtain a service object.
      */
     public function get(string $name) : ?object
     {
@@ -77,23 +77,25 @@ class Container
         if (method_exists($this, $loadMethodName)) return true;
 
         if ($this->configuration->getLoaderClassName($name)) return true;
-
         if ($this->configuration->getServiceClassName($name)) return true;
 
         return false;
     }
 
-    public function set(string $name, object $obj)
+    /**
+     * Set a service object. Must be configured as settable.
+     */
+    public function set(string $name, object $object)
     {
         if (!$this->configuration->isSettable($name)) {
             throw new Error("Service '{$name}' is not settable.");
         }
-        $this->setForced($name, $obj);
+        $this->setForced($name, $object);
     }
 
-    protected function setForced(string $name, object $obj)
+    protected function setForced(string $name, object $object)
     {
-        $this->data[$name] = $obj;
+        $this->data[$name] = $object;
     }
 
     private function load(string $name)
@@ -139,9 +141,9 @@ class Container
         return $this;
     }
 
-    protected function loadSlim()
+    protected function loadInjectableFactory()
     {
-        return new \Espo\Core\Utils\Api\Slim();
+        return new InjectableFactory($this);
     }
 
     protected function loadFileStorageManager()
@@ -152,35 +154,9 @@ class Container
         );
     }
 
-    protected function loadControllerManager()
-    {
-        return new \Espo\Core\ControllerManager(
-            $this->get('injectableFactory'),
-            $this->get('classFinder'),
-            $this->get('metadata') // TODO remove
-        );
-    }
-
     protected function loadPreferences()
     {
         return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);
-    }
-
-    protected function loadHookManager()
-    {
-        return new \Espo\Core\HookManager(
-            $this->get('injectableFactory'),
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('config')
-        );
-    }
-
-    protected function loadOutput()
-    {
-        return new \Espo\Core\Utils\Api\Output(
-            $this->get('slim')
-        );
     }
 
     protected function loadDateTime()
@@ -190,44 +166,6 @@ class Container
             $this->get('config')->get('timeFormat'),
             $this->get('config')->get('timeZone'),
             $this->get('config')->get('language')
-        );
-    }
-
-    protected function loadNumber()
-    {
-        return new \Espo\Core\Utils\NumberUtil(
-            $this->get('config')->get('decimalMark'),
-            $this->get('config')->get('thousandSeparator')
-        );
-    }
-
-    protected function loadSchema()
-    {
-        return new \Espo\Core\Utils\Database\Schema\Schema(
-            $this->get('config'),
-            $this->get('metadata'),
-            $this->get('fileManager'),
-            $this->get('entityManager'),
-            $this->get('classParser'),
-            $this->get('ormMetadata')
-        );
-    }
-
-    protected function loadOrmMetadata()
-    {
-        return new \Espo\Core\Utils\Metadata\OrmMetadata(
-            $this->get('metadata'),
-            $this->get('fileManager'),
-            $this->get('config')
-        );
-    }
-
-    protected function loadClassParser()
-    {
-        return new \Espo\Core\Utils\File\ClassParser(
-            $this->get('fileManager'),
-            $this->get('config'),
-            $this->get('metadata')
         );
     }
 
@@ -259,45 +197,5 @@ class Container
             $this->get('metadata'),
             $this->get('config')->get('useCache')
         );
-    }
-
-    protected function loadCrypt()
-    {
-        return new \Espo\Core\Utils\Crypt(
-            $this->get('config')
-        );
-    }
-
-    protected function loadScheduledJob()
-    {
-        return new \Espo\Core\Utils\ScheduledJob(
-            $this
-        );
-    }
-
-    protected function loadDataManager()
-    {
-        return new \Espo\Core\DataManager(
-            $this
-        );
-    }
-
-    protected function loadFieldManager()
-    {
-        return new \Espo\Core\Utils\FieldManager(
-            $this
-        );
-    }
-
-    protected function loadFieldManagerUtil()
-    {
-        return new \Espo\Core\Utils\FieldManagerUtil(
-            $this->get('metadata')
-        );
-    }
-
-    protected function loadInjectableFactory()
-    {
-        return new InjectableFactory($this);
     }
 }

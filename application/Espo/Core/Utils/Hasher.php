@@ -29,13 +29,18 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Utils\Config;
+
+/**
+ * Hash a string. E.g. hash an email address to use it in opt-out URL to recognize a recipient who clicked opt-out.
+ */
 class Hasher
 {
     protected $config;
 
     protected $secretKeyParam = 'hashSecretKey';
 
-    public function __construct(\Espo\Core\Utils\Config $config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
     }

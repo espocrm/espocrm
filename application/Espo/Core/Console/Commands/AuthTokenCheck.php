@@ -29,27 +29,36 @@
 
 namespace Espo\Core\Console\Commands;
 
-class AuthTokenCheck extends Base
+use Espo\Core\ORM\EntityManager;
+
+class AuthTokenCheck implements Command
 {
-    public function run($options, $flagList, $argumentList)
+    protected $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    public function run(array $options, array $flagList, array $argumentList) : ?string
     {
         $token = $argumentList[0] ?? null;
-        if (empty($token)) return;
+        if (empty($token)) return null;
 
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->entityManager;
 
         $authToken = $entityManager->getRepository('AuthToken')->where([
             'token' => $token,
             'isActive' => true,
         ])->findOne();
 
-        if (!$authToken) return;
-        if (!$authToken->get('userId')) return;
+        if (!$authToken) return null;
+        if (!$authToken->get('userId')) return null;
 
         $userId = $authToken->get('userId');
 
         $user = $entityManager->getEntity('User', $userId);
-        if (!$user) return;
+        if (!$user) return null;
 
         return $user->id;
     }

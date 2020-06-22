@@ -29,12 +29,22 @@
 
 namespace Espo\Core\Loaders;
 
-class ClassFinder extends Base
+use Espo\Core\{
+    Utils\Config,
+    Utils\NumberUtil as NumberUtilService,
+};
+
+class NumberUtil implements Loader
 {
+    protected $config;
+
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
     public function load()
     {
-        return new \Espo\Core\Utils\ClassFinder(
-            $this->getContainer()->get('classParser')
-        );
+        return new NumberUtilService($this->config->get('decimalMark'), $this->config->get('thousandSeparator'));
     }
 }

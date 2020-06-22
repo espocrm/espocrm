@@ -29,12 +29,20 @@
 
 namespace Espo\Core\Loaders;
 
-class Hasher extends Base
+use Espo\Core\{
+    Container,
+    DataManager as DataManagerService,
+};
+
+class DataManager implements Loader
 {
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
     public function load()
     {
-        return new \Espo\Core\Utils\Hasher(
-            $this->getContainer()->get('config')
-        );
+        return new DataManagerService($this->container);
     }
 }

@@ -29,29 +29,23 @@
 
 namespace Espo\Core\Htmlizer;
 
-use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
 
 class Factory
 {
-    protected $container;
+    protected $injectableFactory;
 
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    public function __construct(InjectableFactory $injectableFactory) {
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function create(bool $skipAcl = false)
+    public function create(bool $skipAcl = false) : Htmlizer
     {
-        return new Htmlizer(
-            $this->container->get('fileManager'),
-            $this->container->get('dateTime'),
-            $this->container->get('number'),
-            !$skipAcl ? $this->container->get('acl') : null,
-            $this->container->get('entityManager'),
-            $this->container->get('metadata'),
-            $this->container->get('defaultLanguage'),
-            $this->container->get('config'),
-            $this->container->get('serviceFactory')
-        );
+        $with = [];
+        if ($skipAcl) {
+            $with['acl'] = null;
+        }
+
+        return $this->injectableFactory->createWith(Htmlizer::class, $with);
     }
 }

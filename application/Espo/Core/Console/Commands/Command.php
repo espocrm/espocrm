@@ -27,16 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Console\Commands;
 
-class Auth2FAUserFactory extends Base
+interface Command
 {
-    public function load()
-    {
-        $obj = new \Espo\Core\Utils\Authentication\TwoFA\Utils\UserFactory(
-            $this->getContainer()->get('injectableFactory'),
-            $this->getContainer()->get('metadata')
-        );
-        return $obj;
-    }
+
 }

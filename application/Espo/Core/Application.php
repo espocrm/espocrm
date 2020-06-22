@@ -45,6 +45,7 @@ use Espo\Core\{
     Loaders\Config as ConfigLoader,
     Loaders\Log as LogLoader,
     Loaders\FileManager as FileManagerLoader,
+    Loaders\DataManager as DataManagerLoader,
     Loaders\Metadata as MetadataLoader,
 };
 
@@ -62,6 +63,7 @@ class Application
         'config' => ConfigLoader::class,
         'log' => LogLoader::class,
         'fileManager' => FileManagerLoader::class,
+        'dataManager' => DataManagerLoader::class,
         'metadata' => MetadataLoader::class,
     ];
 

@@ -39,7 +39,7 @@ class Crypt
 
     private $iv = null;
 
-    public function __construct($config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
         $this->cryptKey = $config->get('cryptKey', '');
@@ -97,6 +97,6 @@ class Crypt
 
     public function generateKey()
     {
-        return \Espo\Core\Utils\Util::generateSecretKey();
+        return Util::generateSecretKey();
     }
 }

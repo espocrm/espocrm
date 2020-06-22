@@ -29,15 +29,24 @@
 
 namespace Espo\Core\Console\Commands;
 
-class Import extends Base
+use Espo\Core\ServiceFactory;
+
+class Import implements Command
 {
-    public function run($options, $flagList, $argumentList)
+    protected $serviceFactory;
+
+    public function __construct(ServiceFactory $serviceFactory)
+    {
+        $this->serviceFactory = $serviceFactory;
+    }
+
+    public function run(array $options, array $flagList)
     {
         $id = $options['id'] ?? null;
         $filePath = $options['file'] ?? null;
         $paramsId = $options['paramsId'] ?? null;
 
-        $service = $this->getContainer()->get('serviceFactory')->create('Import');
+        $service = $this->serviceFactory->create('Import');
 
         $forceResume = in_array('resume', $flagList);
         $revert = in_array('revert', $flagList);

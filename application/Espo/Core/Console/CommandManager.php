@@ -29,15 +29,23 @@
 
 namespace Espo\Core\Console;
 
-use Espo\Core\Utils\Util;
+use Espo\Core\{
+    InjectableFactory,
+    Utils\Metadata,
+    Utils\Util,
+};
+
+use Espo\Core\Exceptions\Error;
 
 class CommandManager
 {
-    protected $container;
+    protected $injectableFactory;
+    protected $metadata;
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        $this->container = $container;
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
     public function run(string $command)
@@ -52,24 +60,27 @@ class CommandManager
 
         $className = $this->getClassName($command);
 
-        $impl = new $className($this->container);
-        return $impl->run($options, $flagList, $argumentList);
+        $obj = $this->injectableFactory->create($className);
+
+        return $obj->run($options, $flagList, $argumentList);
     }
 
-    protected function getClassName(string $command)
+    protected function getClassName(string $command) : string
     {
-        $className = '\\Espo\\Core\\Console\\Commands\\' . $command;
-        $className = $this->container->get('metadata')->get(['app', 'consoleCommands', $command, 'className'], $className);
+        $className =
+            $this->metadata->get(['app', 'consoleCommands', $command, 'className']) ??
+            'Espo\\Core\\Console\\Commands\\' . $command;
+
         if (!class_exists($className)) {
             $msg = "Command '{$command}' does not exist.";
             echo $msg . "\n";
-            throw new \Espo\Core\Exceptions\Error($msg);
+            throw new Error($msg);
         }
 
         return $className;
     }
 
-    protected function getParams(array $argv)
+    protected function getParams(array $argv) : array
     {
         $argumentList = [];
         $options = [];

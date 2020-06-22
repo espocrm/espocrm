@@ -42,6 +42,12 @@ use Laminas\Mail\Transport\Envelope;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\{
+    Utils\Config,
+    ORM\EntityManager,
+    ServiceFactory,
+};
+
 class Sender
 {
     protected $config;
@@ -64,7 +70,7 @@ class Sender
 
     private $envelope = null;
 
-    public function __construct($config, $entityManager, $serviceFactory = null)
+    public function __construct(Config $config, EntityManager $entityManager, ?ServiceFactory $serviceFactory = null)
     {
         $this->config = $config;
         $this->entityManager = $entityManager;

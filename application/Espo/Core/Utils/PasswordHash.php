@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
+
 use Espo\Core\Exceptions\Error;
 
 class PasswordHash
@@ -52,12 +53,9 @@ class PasswordHash
     }
 
     /**
-     * Get hash of a pawword
-     *
-     * @param  string $password
-     * @return string
+     * Hash a password.
      */
-    public function hash($password, $useMd5 = true)
+    public function hash(string $password, bool $useMd5 = true) : string
     {
         $salt = $this->getSalt();
 
@@ -72,7 +70,7 @@ class PasswordHash
     }
 
     /**
-     * Get a salt from config and normalize it
+     * Get a salt from config and normalize it.
      *
      * @return string
      */
@@ -89,7 +87,7 @@ class PasswordHash
     }
 
     /**
-     * Convert salt in format in accordance to $saltFormat
+     * Convert salt in format in accordance to $saltFormat.
      *
      * @param  string $salt
      * @return string
@@ -100,11 +98,9 @@ class PasswordHash
     }
 
     /**
-     * Generate a new salt
-     *
-     * @return string
+     * Generate a new salt.
      */
-    public function generateSalt()
+    public function generateSalt() : string
     {
         return substr(md5(uniqid()), 0, 16);
     }
