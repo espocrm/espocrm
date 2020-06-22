@@ -27,53 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Jobs;
 
-use Espo\Core\CronManager;
-use Espo\Core\Utils\Util;
-use Espo\Core\ORM\EntityManager;
-
-class RunJob implements Command
+interface Job
 {
-    protected $cronManager;
-    protected $entityManager;
-
-    public function __construct(CronManager $cronManager, EntityManager $entityManager)
-    {
-        $this->cronManager = $cronManager;
-        $this->entityManager = $entityManager;
-    }
-
-    public function run(array $options, array $flags, array $argumentList)
-    {
-        $jobName = $options['job'] ?? null;
-        $targetId = $options['targetId'] ?? null;
-        $targetType = $options['targetType'] ?? null;
-
-        if (!$jobName && count($argumentList)) {
-            $jobName = $argumentList[0];
-        }
-
-        if (!$jobName) echo "No job specified.\n";
-
-        $jobName = ucfirst(Util::hyphenToCamelCase($jobName));
-
-
-        $entityManager = $this->entityManager;
-
-        $job = $entityManager->createEntity('Job', [
-            'name' => $jobName,
-            'job' => $jobName,
-            'targetType' => $targetType,
-            'targetId' => $targetId,
-        ]);
-
-        $result = $this->cronManager->runJob($job);
-
-        if ($result) {
-            echo "Job '{$jobName}' has been executed.\n";
-        } else {
-            echo "Job '{$jobName}' failed to execute.\n";
-        }
-    }
+    public function run();
 }

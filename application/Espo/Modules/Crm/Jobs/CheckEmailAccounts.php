@@ -29,20 +29,37 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use Espo\Core\CronManager;
+use Espo\Core\Exceptions\Error;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    CronManager,
+    ServiceFactory,
+    ORM\EntityManager,
+};
 
-class CheckEmailAccounts extends \Espo\Core\Jobs\Base
+use Espo\Jobs\JobTargeted;
+
+use Espo\Entities\ScheduledJob;
+
+class CheckEmailAccounts implements JobTargeted
 {
-    public function run($data, $targetId)
+    protected $serviceFactory;
+    protected $entityManager;
+
+    public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
+    {
+        $this->serviceFactory = $serviceFactory;
+        $this->entityManager = $entityManager;
+    }
+
+    public function run(?object $data, string $targetId, string $targetType)
     {
         if (!$targetId) {
             throw new Error();
         }
 
-        $service = $this->getServiceFactory()->create('EmailAccount');
-        $entity = $this->getEntityManager()->getEntity('EmailAccount', $targetId);
+        $service = $this->serviceFactory->create('EmailAccount');
+        $entity = $this->entityManager->getEntity('EmailAccount', $targetId);
 
         if (!$entity) {
             throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount does not exist.", -1);
@@ -60,16 +77,16 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
         return true;
     }
 
-    public function prepare($scheduledJob, $executeTime)
+    public function prepare(ScheduledJob $scheduledJob, string $executeTime)
     {
-        $collection = $this->getEntityManager()->getRepository('EmailAccount')->join([['assignedUser', 'assignedUserAdditional']])->where([
+        $collection = $this->entityManager->getRepository('EmailAccount')->join([['assignedUser', 'assignedUserAdditional']])->where([
             'status' => 'Active',
             'useImap' => true,
-            'assignedUserAdditional.isActive' => true
+            'assignedUserAdditional.isActive' => true,
         ])->find();
 
         foreach ($collection as $entity) {
-            $running = $this->getEntityManager()->getRepository('Job')->where([
+            $running = $this->entityManager->getRepository('Job')->where([
                 'scheduledJobId' => $scheduledJob->id,
                 'status' => [CronManager::RUNNING, CronManager::READY],
                 'targetType' => 'EmailAccount',
@@ -77,7 +94,7 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
             ])->findOne();
             if ($running) continue;
 
-            $countPending = $this->getEntityManager()->getRepository('Job')->where([
+            $countPending = $this->entityManager->getRepository('Job')->where([
                 'scheduledJobId' => $scheduledJob->id,
                 'status' => CronManager::PENDING,
                 'targetType' => 'EmailAccount',
@@ -85,7 +102,7 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
             ])->count();
             if ($countPending > 1) continue;
 
-            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity = $this->entityManager->getEntity('Job');
             $jobEntity->set([
                 'name' => $scheduledJob->get('name'),
                 'scheduledJobId' => $scheduledJob->id,
@@ -93,7 +110,7 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
                 'targetType' => 'EmailAccount',
                 'targetId' => $entity->id
             ]);
-            $this->getEntityManager()->saveEntity($jobEntity);
+            $this->entityManager->saveEntity($jobEntity);
         }
 
         return true;

@@ -148,7 +148,7 @@ class Application
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $cronManager = new CronManager($this->container);
+        $cronManager = $this->container->get('cronManager');
         $cronManager->run();
     }
 
@@ -198,7 +198,7 @@ class Application
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $cronManager = new CronManager($this->container);
+        $cronManager = $this->container->get('cronManager');
         $cronManager->runJobById($id);
     }
 

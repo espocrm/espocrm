@@ -17,6 +17,9 @@
     "classFinder": {
         "className": "Espo\\Core\\Utils\\ClassFinder"
     },
+    "cronManager": {
+        "className": "Espo\\Core\\CronManager"
+    },
     "crypt": {
         "className": "Espo\\Core\\Utils\\Crypt"
     },

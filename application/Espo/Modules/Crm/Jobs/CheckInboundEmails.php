@@ -29,20 +29,37 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use Espo\Core\CronManager;
+use Espo\Core\Exceptions\Error;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    CronManager,
+    ServiceFactory,
+    ORM\EntityManager,
+};
 
-class CheckInboundEmails extends \Espo\Core\Jobs\Base
+use Espo\Jobs\JobTargeted;
+
+use Espo\Entities\ScheduledJob;
+
+class CheckInboundEmails implements JobTargeted
 {
-    public function run($data, $targetId)
+    protected $serviceFactory;
+    protected $entityManager;
+
+    public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
+    {
+        $this->serviceFactory = $serviceFactory;
+        $this->entityManager = $entityManager;
+    }
+
+    public function run(?object $data, string $targetId, string $targetType)
     {
         if (!$targetId) {
             throw new Error();
         }
 
-        $service = $this->getServiceFactory()->create('InboundEmail');
-        $entity = $this->getEntityManager()->getEntity('InboundEmail', $targetId);
+        $service = $this->serviceFactory->create('InboundEmail');
+        $entity = $this->entityManager->getEntity('InboundEmail', $targetId);
 
         if (!$entity) {
             throw new Error("Job CheckInboundEmails '".$targetId."': InboundEmail does not exist.", -1);
@@ -62,13 +79,13 @@ class CheckInboundEmails extends \Espo\Core\Jobs\Base
 
     public function prepare($scheduledJob, $executeTime)
     {
-        $collection = $this->getEntityManager()->getRepository('InboundEmail')->where([
+        $collection = $this->entityManager->getRepository('InboundEmail')->where([
             'status' => 'Active',
             'useImap' => true
         ])->find();
 
         foreach ($collection as $entity) {
-            $running = $this->getEntityManager()->getRepository('Job')->where([
+            $running = $this->entityManager->getRepository('Job')->where([
                 'scheduledJobId' => $scheduledJob->id,
                 'status' => [CronManager::RUNNING, CronManager::READY],
                 'targetType' => 'InboundEmail',
@@ -76,7 +93,7 @@ class CheckInboundEmails extends \Espo\Core\Jobs\Base
             ])->findOne();
             if ($running) continue;
 
-            $countPending = $this->getEntityManager()->getRepository('Job')->where([
+            $countPending = $this->entityManager->getRepository('Job')->where([
                 'scheduledJobId' => $scheduledJob->id,
                 'status' => CronManager::PENDING,
                 'targetType' => 'InboundEmail',
@@ -84,7 +101,7 @@ class CheckInboundEmails extends \Espo\Core\Jobs\Base
             ])->count();
             if ($countPending > 1) continue;
 
-            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity = $this->entityManager->getEntity('Job');
             $jobEntity->set([
                 'name' => $scheduledJob->get('name'),
                 'scheduledJobId' => $scheduledJob->id,
@@ -92,7 +109,7 @@ class CheckInboundEmails extends \Espo\Core\Jobs\Base
                 'targetType' => 'InboundEmail',
                 'targetId' => $entity->id
             ]);
-            $this->getEntityManager()->saveEntity($jobEntity);
+            $this->entityManager->saveEntity($jobEntity);
         }
 
         return true;
