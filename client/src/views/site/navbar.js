@@ -462,6 +462,8 @@ define('views/site/navbar', 'view', function (Dep) {
             updateSizeForVertical();
 
             this.$el.find('.notifications-badge-container').insertAfter(this.$el.find('.quick-create-container'));
+
+            this.adjustBodyMinHeight();
         },
 
         getNavbarHeight: function () {
@@ -479,7 +481,7 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         adjustBodyMinHeightVertical: function () {
-            var minHeight = this.$tabs.height() + this.getStaticItemsHeight();
+            var minHeight = this.$tabs.get(0).scrollHeight + this.getStaticItemsHeight();
 
             var moreHeight = 0;
             this.$more.find('> li:visible').each(function (i, el) {
