@@ -31,7 +31,9 @@ namespace Espo\Core\Console\Commands;
 
 use Espo\Core\Exceptions\Error;
 
-class Upgrade extends Base
+use Espo\Core\Container;
+
+class Upgrade implements Command
 {
     protected $upgradeManager;
 
@@ -48,7 +50,19 @@ class Upgrade extends Base
         'rebuild',
     ];
 
-    public function run($options, $flagList, $argumentList)
+    private $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    public function run(array $options, array $flagList, array $argumentList)
     {
         $params = $this->normalizeParams($options, $flagList, $argumentList);
 

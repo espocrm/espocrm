@@ -29,9 +29,23 @@
 
 namespace Espo\Core\Console\Commands;
 
-class UpgradeStep extends Base
+use Espo\Core\Container;
+
+class UpgradeStep implements Command
 {
-    public function run($options, $flagList, $argumentList)
+    private $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    public function run(array $options)
     {
         if (empty($options['step'])) {
             echo "Step is not specified.\n";
