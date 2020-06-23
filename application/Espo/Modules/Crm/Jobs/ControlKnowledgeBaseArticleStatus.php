@@ -22,23 +22,32 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\{
+    ORM\EntityManager,
+    Jobs\Job,
+};
 
-class ControlKnowledgeBaseArticleStatus extends \Espo\Core\Jobs\Base
+class ControlKnowledgeBaseArticleStatus implements Job
 {
+    protected $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function run()
     {
-        $list = $this->getEntityManager()->getRepository('KnowledgeBaseArticle')->where(array(
+        $list = $this->entityManager->getRepository('KnowledgeBaseArticle')->where([
             'expirationDate<=' => date('Y-m-d'),
-            'status' => 'Published'
-        ))->find();
+            'status' => 'Published',
+        ])->find();
 
         foreach ($list as $e) {
             $e->set('status', 'Archived');
-            $this->getEntityManager()->saveEntity($e);
+            $this->entityManager->saveEntity($e);
         }
 
         return true;
     }
 }
-

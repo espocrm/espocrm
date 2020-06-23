@@ -29,21 +29,37 @@
 
 namespace Espo\Jobs;
 
-use Espo\Core\Exceptions;
+use Espo\Core\{
+    Jobs\Job,
+    AclManager,
+    Utils\Config,
+    ORM\EntityManager,
+    Webhook\Sender,
+    Webhook\Queue,
+};
 
-class ProcessWebhookQueue extends \Espo\Core\Jobs\Base
+class ProcessWebhookQueue implements Job
 {
+    protected $config;
+    protected $entityManager;
+    protected $aclManager;
+
+    public function __construct(Config $config, EntityManager $entityManager, AclManager $aclManager)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+        $this->aclManager = $aclManager;
+    }
+
     public function run()
     {
-        $sender = new \Espo\Core\Webhook\Sender(
-            $this->getContainer()->get('config')
-        );
+        $sender = new Sender($this->config);
 
-        $webhookQueue = new \Espo\Core\Webhook\Queue(
+        $webhookQueue = new Queue(
             $sender,
-            $this->getContainer()->get('config'),
-            $this->getContainer()->get('entityManager'),
-            $this->getContainer()->get('aclManager')
+            $this->config,
+            $this->entityManager,
+            $this->aclManager
         );
 
         $webhookQueue->process();

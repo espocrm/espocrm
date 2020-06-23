@@ -58,7 +58,6 @@ class RunJob implements Command
 
         $jobName = ucfirst(Util::hyphenToCamelCase($jobName));
 
-
         $entityManager = $this->entityManager;
 
         $job = $entityManager->createEntity('Job', [

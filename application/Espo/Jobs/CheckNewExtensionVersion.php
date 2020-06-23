@@ -35,19 +35,19 @@ class CheckNewExtensionVersion extends CheckNewVersion
 {
     public function run()
     {
-        if (!$this->getConfig()->get('adminNotifications') || !$this->getConfig()->get('adminNotificationsNewExtensionVersion')) {
+        if (!$this->config->get('adminNotifications') || !$this->config->get('adminNotificationsNewExtensionVersion')) {
             return true;
         }
 
-        $job = $this->getEntityManager()->getEntity('Job');
-        $job->set(array(
+        $job = $this->entityManager->getEntity('Job');
+        $job->set([
             'name' => 'Check for new versions of installed extensions (job)',
             'serviceName' => 'AdminNotifications',
             'methodName' => 'jobCheckNewExtensionVersion',
-            'executeTime' => $this->getRunTime()
-        ));
+            'executeTime' => $this->getRunTime(),
+        ]);
 
-        $this->getEntityManager()->saveEntity($job);
+        $this->entityManager->saveEntity($job);
 
         return true;
     }

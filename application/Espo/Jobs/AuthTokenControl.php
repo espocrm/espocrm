@@ -29,14 +29,27 @@
 
 namespace Espo\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\{
+    Utils\Config,
+    ORM\EntityManager,
+    Jobs\Job,
+};
 
-class AuthTokenControl extends \Espo\Core\Jobs\Base
+class AuthTokenControl implements Job
 {
+    protected $config;
+    protected $entityManager;
+
+    public function __construct(Config $config, EntityManager $entityManager)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+    }
+
     public function run()
     {
-        $authTokenLifetime = $this->getConfig()->get('authTokenLifetime');
-        $authTokenMaxIdleTime = $this->getConfig()->get('authTokenMaxIdleTime');
+        $authTokenLifetime = $this->config->get('authTokenLifetime');
+        $authTokenMaxIdleTime = $this->config->get('authTokenMaxIdleTime');
 
         if (!$authTokenLifetime && !$authTokenMaxIdleTime) {
             return;
@@ -62,12 +75,11 @@ class AuthTokenControl extends \Espo\Core\Jobs\Base
             $whereClause['lastAccess<'] = $authTokenMaxIdleTimeThreshold;
         }
 
-        $tokenList = $this->getEntityManager()->getRepository('AuthToken')->where($whereClause)->limit(0, 500)->find();
+        $tokenList = $this->entityManager->getRepository('AuthToken')->where($whereClause)->limit(0, 500)->find();
 
         foreach ($tokenList as $token) {
             $token->set('isActive', false);
-            $this->getEntityManager()->saveEntity($token);
+            $this->entityManager->saveEntity($token);
         }
     }
 }
-

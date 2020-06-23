@@ -73,7 +73,6 @@ class CheckInboundEmails implements JobTargeted
         } catch (\Exception $e) {
             throw new Error('Job CheckInboundEmails '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
         }
-        return true;
     }
 
     public function prepare($scheduledJob, $executeTime)
@@ -110,7 +109,5 @@ class CheckInboundEmails implements JobTargeted
             ]);
             $this->entityManager->saveEntity($jobEntity);
         }
-
-        return true;
     }
 }

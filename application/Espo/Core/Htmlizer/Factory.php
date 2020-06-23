@@ -30,20 +30,29 @@
 namespace Espo\Core\Htmlizer;
 
 use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\DateTime;
 
 class Factory
 {
     protected $injectableFactory;
+    protected $dateTime;
 
-    public function __construct(InjectableFactory $injectableFactory) {
+    public function __construct(InjectableFactory $injectableFactory, DateTime $dateTime) {
         $this->injectableFactory = $injectableFactory;
+        $this->dateTime = $dateTime;
     }
 
-    public function create(bool $skipAcl = false) : Htmlizer
+    public function create(bool $skipAcl = false, ?string $timezone = null) : Htmlizer
     {
         $with = [];
         if ($skipAcl) {
             $with['acl'] = null;
+        }
+
+        if ($timezone) {
+            $dateTime = clone($this->dateTime);
+            $dateTime->setTimezone($timezone);
+            $with['dateTime'] = $dateTime;
         }
 
         return $this->injectableFactory->createWith(Htmlizer::class, $with);

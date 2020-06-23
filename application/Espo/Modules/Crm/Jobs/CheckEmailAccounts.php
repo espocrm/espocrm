@@ -73,7 +73,6 @@ class CheckEmailAccounts implements JobTargeted
         } catch (\Exception $e) {
             throw new Error('Job CheckEmailAccounts '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
         }
-        return true;
     }
 
     public function prepare(ScheduledJob $scheduledJob, string $executeTime)
@@ -111,7 +110,5 @@ class CheckEmailAccounts implements JobTargeted
             ]);
             $this->entityManager->saveEntity($jobEntity);
         }
-
-        return true;
     }
 }
