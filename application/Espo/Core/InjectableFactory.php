@@ -121,13 +121,26 @@ class InjectableFactory
                 if ($with && array_key_exists($name, $with)) {
                     $injection = $with[$name];
                 } else {
-                    $dependencyClassName = $param->getClass();
-                    if (is_null($dependencyClassName)) {
+                    $dependencyClassName = null;
+
+                    if ($param->getType()) {
+                        try {
+                            $dependencyClassName = $param->getClass();
+                        } catch (\Throwable $e) {
+                            $badClassName = $param->getType()->getName();
+                            // this trick allows to log syntax errors
+                            new $badClassName();
+                            throw new Error("InjectableFactory: " . $e->getMessage());
+                        }
+                    }
+
+                    if (!$dependencyClassName) {
                         if ($param->isDefaultValueAvailable()) {
                             $injectionList[] = $param->getDefaultValue();
                             continue;
                         }
                     }
+
                     $injection = $this->container->get($name);
 
                     if (!$injection) {
