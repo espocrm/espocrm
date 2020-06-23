@@ -73,16 +73,13 @@ class Image implements EntryPoint,
 
     protected $allowedFieldList = null;
 
-    public function run()
+    public function run($request)
     {
-        if (empty($_GET['id'])) {
-            throw new BadRequest();
-        }
-        $id = $_GET['id'];
+        $id = $request->get('id');
+        $size = $request->get('size') ?? null;
 
-        $size = null;
-        if (!empty($_GET['size'])) {
-            $size = $_GET['size'];
+        if (!$id) {
+            throw new BadRequest();
         }
 
         $this->show($id, $size, false);

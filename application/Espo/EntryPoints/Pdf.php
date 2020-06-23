@@ -52,14 +52,15 @@ class Pdf implements EntryPoint
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run()
+    public function run($request)
     {
-        if (empty($_GET['entityId']) || empty($_GET['entityType']) || empty($_GET['templateId'])) {
+        $entityId = $request->get('entityId');
+        $entityType = $request->get('entityType');
+        $templateId = $request->get('templateId');
+
+        if (!$entityId || !$entityType || !$templateId) {
             throw new BadRequest();
         }
-        $entityId = $_GET['entityId'];
-        $entityType = $_GET['entityType'];
-        $templateId = $_GET['templateId'];
 
         $entity = $this->entityManager->getEntity($entityType, $entityId);
         $template = $this->entityManager->getEntity('Template', $templateId);

@@ -75,11 +75,11 @@ class SubscribeAgain implements EntryPoint, NoAuth
         $this->hasher = $hasher;
     }
 
-    public function run()
+    public function run($request)
     {
-        $id = $_GET['id'] ?? null;
-        $emailAddress = $_GET['emailAddress'] ?? null;
-        $hash = $_GET['hash'] ?? null;
+        $id = $request->get('id') ?? null;
+        $emailAddress = $request->get('emailAddress') ?? null;
+        $hash = $request->get('hash') ?? null;
 
         if ($emailAddress && $hash) {
             $this->processWithHash($emailAddress, $hash);

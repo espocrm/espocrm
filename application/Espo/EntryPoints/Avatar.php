@@ -71,13 +71,14 @@ class Avatar extends Image implements NotStrictAuth,
         return $colorList[$index];
     }
 
-    public function run()
+    public function run($request)
     {
-        if (empty($_GET['id'])) {
+        $userId = $request->get('id');
+        $size = $request->get('size') ?? null;
+
+        if (!$userId) {
             throw new BadRequest();
         }
-
-        $userId = $_GET['id'];
 
         $user = $this->entityManager->getEntity('User', $userId);
         if (!$user) {
@@ -93,11 +94,6 @@ class Avatar extends Image implements NotStrictAuth,
         }
 
         $id = $user->get('avatarId');
-
-        $size = null;
-        if (!empty($_GET['size'])) {
-            $size = $_GET['size'];
-        }
 
         if (!empty($id)) {
             $this->show($id, $size, true);

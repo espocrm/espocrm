@@ -57,13 +57,12 @@ class CampaignTrackOpened implements EntryPoint, NoAuth
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run()
+    public function run($request)
     {
-        if (empty($_GET['id'])) {
-            throw new BadRequest();
-        }
+        $id = $request->get('id');
+        if (!$id) throw new BadRequest();
 
-        $queueItemId = $_GET['id'];
+        $queueItemId = $id;
 
         $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
 

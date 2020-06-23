@@ -73,12 +73,12 @@ class CampaignUrl implements EntryPoint, NoAuth
         $this->metadata = $metadata;
     }
 
-    public function run()
+    public function run($request)
     {
-        $queueItemId = $_GET['queueItemId'] ?? null;
-        $trackingUrlId = $_GET['id'] ?? null;
-        $emailAddress = $_GET['emailAddress'] ?? null;
-        $hash = $_GET['hash'] ?? null;
+        $queueItemId = $request->get('queueItemId') ?? null;
+        $trackingUrlId = $request->get('id') ?? null;
+        $emailAddress = $request->get('emailAddress') ?? null;
+        $hash = $request->get('hash') ?? null;
 
         if (!$trackingUrlId) throw new Exceptions\BadRequest();
         $trackingUrl = $this->entityManager->getEntity('CampaignTrackingUrl', $trackingUrlId);

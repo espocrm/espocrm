@@ -49,23 +49,19 @@ class LogoImage extends Image implements NoAuth,
 
     protected $allowedFieldList = ['companyLogo'];
 
-    public function run()
+    public function run($request)
     {
+        $id = $request->get('id');
+        $size = $request->get('size') ?? null;
+
         $this->imageSizes['small-logo'] = [181, 44];
 
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else {
+        if (!$id) {
             $id = $this->config->get('companyLogoId');
         }
 
-        if (empty($id)) {
+        if (!$id) {
             throw new NotFound();
-        }
-
-        $size = null;
-        if (!empty($_GET['size'])) {
-            $size = $_GET['size'];
         }
 
         $this->show($id, $size);

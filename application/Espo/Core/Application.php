@@ -126,8 +126,10 @@ class Application
             $apiAuth = new ApiAuth($auth, $authRequired, true);
             $slim->add($apiAuth);
 
-            $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container, $data) {
-                $entryPointManager->run($entryPoint, $data);
+            $request = $slim->request();
+
+            $slim->hook('slim.before.dispatch', function () use ($entryPointManager, $entryPoint, $request, $data) {
+                $entryPointManager->run($entryPoint, $request, $data);
             });
 
             $slim->run();

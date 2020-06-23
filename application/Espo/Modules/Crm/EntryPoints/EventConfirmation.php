@@ -59,10 +59,10 @@ class EventConfirmation implements EntryPoint, NoAuth
         $this->hookManager = $hookManager;
     }
 
-    public function run()
+    public function run($request)
     {
-        $uid = $_GET['uid'] ?? null;
-        $action = $_GET['action'] ?? null;
+        $uid = $request->get('uid') ?? null;
+        $action = $request->get('action') ?? null;
 
         if (empty($uid) || empty($action)) {
             throw new BadRequest();

@@ -65,12 +65,11 @@ class Download implements EntryPoint
         $this->entityManager = $entityManager;
     }
 
-    public function run()
+    public function run($request)
     {
-        if (empty($_GET['id'])) {
-            throw new BadRequest();
-        }
-        $id = $_GET['id'];
+        $id = $request->get('id');
+
+        if (!$id) throw new BadRequest();
 
         $attachment = $this->entityManager->getEntity('Attachment', $id);
 

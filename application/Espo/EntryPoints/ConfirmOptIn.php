@@ -55,11 +55,11 @@ class ConfirmOptIn implements EntryPoint, NoAuth
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run()
+    public function run($request)
     {
-        if (empty($_GET['id'])) throw new BadRequest();
+        $id = $request->get('id');
 
-        $id = $_GET['id'];
+        if (!$id) throw new BadRequest();
 
         $data = $this->serviceFactory->create('LeadCapture')->confirmOptIn($id);
 

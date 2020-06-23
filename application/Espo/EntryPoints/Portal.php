@@ -53,13 +53,11 @@ class Portal implements EntryPoint, NoAuth
         $this->config = $config;
     }
 
-    public function run($data = [])
+    public function run($request, $data = [])
     {
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else if (!empty($data['id'])) {
-            $id = $data['id'];
-        } else {
+        $id = $request->get('id') ?? $data['id'] ?? null;
+
+        if (!$id) {
             $url = $_SERVER['REQUEST_URI'];
             $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
 

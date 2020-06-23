@@ -38,9 +38,12 @@ use Espo\Core\{
     EntryPoints\NoAuth,
 };
 
+use Slim\Http\Request;
+
 class EntryPointManager
 {
-    private $injectableFactory;
+    protected $injectableFactory;
+    protected $classFinder;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
@@ -80,7 +83,7 @@ class EntryPointManager
         return $className::$notStrictAuth ?? false;
     }
 
-    public function run(string $name, array $data = [])
+    public function run(string $name, Request $request, array $data = [])
     {
         $className = $this->getClassName($name);
         if (!$className) {
@@ -89,7 +92,7 @@ class EntryPointManager
 
         $entryPoint = $this->injectableFactory->create($className);
 
-        $entryPoint->run($data);
+        $entryPoint->run($request, $data);
     }
 
     protected function getClassName(string $name) : ?string

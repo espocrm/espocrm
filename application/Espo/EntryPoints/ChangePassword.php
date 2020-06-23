@@ -57,9 +57,9 @@ class ChangePassword implements EntryPoint, NoAuth
         $this->entityManager = $entityManager;
     }
 
-    public function run()
+    public function run($request)
     {
-        $requestId = $_GET['id'] ?? null;
+        $requestId = $request->get('id');
 
         if (!$requestId) throw new BadRequest();
 
