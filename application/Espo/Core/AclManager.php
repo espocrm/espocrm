@@ -35,6 +35,8 @@ use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Core\Utils\Util;
 
+use Espo\Core\Acl\GlobalRestricton;
+
 class AclManager
 {
     private $container;
@@ -45,11 +47,11 @@ class AclManager
 
     private $tableHashMap = [];
 
-    protected $tableClassName = '\\Espo\\Core\\Acl\\Table';
+    protected $tableClassName = 'Espo\\Core\\Acl\\Table';
 
-    protected $userAclClassName = '\\Espo\\Core\\Acl';
+    protected $userAclClassName = 'Espo\\Core\\Acl';
 
-    protected $baseImplementationClassName = '\\Espo\\Core\\Acl\\Base';
+    protected $baseImplementationClassName = 'Espo\\Core\\Acl\\Base';
 
     protected $globalRestricton;
 
@@ -58,7 +60,7 @@ class AclManager
         $this->container = $container;
         $this->metadata = $container->get('metadata');
 
-        $this->globalRestricton = new \Espo\Core\Acl\GlobalRestricton(
+        $this->globalRestricton = new GlobalRestricton(
             $container->get('metadata'),
             $container->get('fileManager'),
             $container->get('fieldManagerUtil'),
@@ -76,7 +78,7 @@ class AclManager
         return $this->metadata;
     }
 
-    public function getImplementation($scope)
+    public function getImplementation(string $scope)
     {
         if (empty($this->implementationHashMap[$scope])) {
             $className = $this->getContainer()->get('classFinder')->find('Acl', $scope);
@@ -89,11 +91,10 @@ class AclManager
                 throw new Error("{$className} does not exist.");
             }
 
-            $acl = new $className($scope);
-            $dependencyList = $acl->getDependencyList();
-            foreach ($dependencyList as $name) {
-                $acl->inject($name, $this->getContainer()->get($name));
-            }
+            $acl = $this->getContainer()->get('injectableFactory')->createWith($className, [
+                'scope' => $scope,
+            ]);
+
             $this->implementationHashMap[$scope] = $acl;
         }
 

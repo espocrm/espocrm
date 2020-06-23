@@ -57,10 +57,10 @@ class Base implements Injectable
         $this->injections[$name] = $object;
     }
 
-    public function __construct($scope)
+    public function __construct(string $scope)
     {
-        $this->init();
         $this->scope = $scope;
+        $this->init();
     }
 
     protected function init()

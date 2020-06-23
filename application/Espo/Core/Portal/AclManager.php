@@ -35,17 +35,17 @@ use Espo\Core\Utils\Util;
 
 class AclManager extends \Espo\Core\AclManager
 {
-    protected $tableClassName = '\\Espo\\Core\\AclPortal\\Table';
+    protected $tableClassName = 'Espo\\Core\\AclPortal\\Table';
 
     private $mainManager = null;
 
     private $portal = null;
 
-    protected $userAclClassName = '\\Espo\\Core\\Portal\\Acl';
+    protected $userAclClassName = 'Espo\\Core\\Portal\\Acl';
 
-    protected $baseImplementationClassName = '\\Espo\\Core\\AclPortal\\Base';
+    protected $baseImplementationClassName = 'Espo\\Core\\AclPortal\\Base';
 
-    public function getImplementation($scope)
+    public function getImplementation(string $scope)
     {
         if (empty($this->implementationHashMap[$scope])) {
             $className = $this->getContainer()->get('classFinder')->find('AclPortal', $scope);
@@ -58,11 +58,10 @@ class AclManager extends \Espo\Core\AclManager
                 throw new Error("{$className} does not exist.");
             }
 
-            $acl = new $className($scope);
-            $dependencyList = $acl->getDependencyList();
-            foreach ($dependencyList as $name) {
-                $acl->inject($name, $this->getContainer()->get($name));
-            }
+            $acl = $this->getContainer()->get('injectableFactory')->createWith($className, [
+                'scope' => $scope,
+            ]);
+
             $this->implementationHashMap[$scope] = $acl;
         }
 
