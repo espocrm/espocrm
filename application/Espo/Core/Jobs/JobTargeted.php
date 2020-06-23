@@ -27,9 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Jobs;
 
-interface Job
+use Espo\Entities\ScheduledJob;
+
+interface JobTargeted
 {
-    public function run();
+    public function run(?object $data, string $targetId, string $targetType);
+
+    public function prepare(ScheduledJob $scheduledJob, string $executeTime);
 }

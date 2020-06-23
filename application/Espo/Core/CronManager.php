@@ -358,7 +358,7 @@ class CronManager
         $obj->run($data, $job->get('targetId'), $job->get('targetType'));
     }
 
-    protected function runService(JonEntity $job)
+    protected function runService(JobEntity $job)
     {
         $serviceName = $job->get('serviceName');
 

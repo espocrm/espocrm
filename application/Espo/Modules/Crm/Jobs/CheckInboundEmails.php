@@ -35,9 +35,8 @@ use Espo\Core\{
     CronManager,
     ServiceFactory,
     ORM\EntityManager,
+    Jobs\JobTargeted,
 };
-
-use Espo\Jobs\JobTargeted;
 
 use Espo\Entities\ScheduledJob;
 

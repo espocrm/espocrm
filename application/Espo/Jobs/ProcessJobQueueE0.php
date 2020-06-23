@@ -32,6 +32,7 @@ namespace Espo\Jobs;
 use Espo\Core\{
     CronManager,
     Utils\Config,
+    Jobs\Job,
 };
 
 class ProcessJobQueueE0 implements Job

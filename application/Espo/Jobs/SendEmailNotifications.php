@@ -29,7 +29,7 @@
 
 namespace Espo\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\Exceptions;
 
 class SendEmailNotifications extends \Espo\Core\Jobs\Base
 {
