@@ -145,49 +145,4 @@ class Container
     {
         return new InjectableFactory($this);
     }
-
-    protected function loadPreferences()
-    {
-        return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);
-    }
-
-    protected function loadDateTime()
-    {
-        return new \Espo\Core\Utils\DateTime(
-            $this->get('config')->get('dateFormat'),
-            $this->get('config')->get('timeFormat'),
-            $this->get('config')->get('timeZone'),
-            $this->get('config')->get('language')
-        );
-    }
-
-    protected function loadLanguage()
-    {
-        return new \Espo\Core\Utils\Language(
-            \Espo\Core\Utils\Language::detectLanguage($this->get('config'), $this->get('preferences')),
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('config')->get('useCache')
-        );
-    }
-
-    protected function loadBaseLanguage()
-    {
-        return new \Espo\Core\Utils\Language(
-            'en_US',
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('config')->get('useCache')
-        );
-    }
-
-    protected function loadDefaultLanguage()
-    {
-        return new \Espo\Core\Utils\Language(
-            \Espo\Core\Utils\Language::detectLanguage($this->get('config')),
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('config')->get('useCache')
-        );
-    }
 }

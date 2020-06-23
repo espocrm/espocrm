@@ -35,18 +35,6 @@ use Espo\Core\Container as BaseContainer;
 
 class Container extends BaseContainer
 {
-    protected function loadLanguage()
-    {
-        $language = new \Espo\Core\Portal\Utils\Language(
-            \Espo\Core\Utils\Language::detectLanguage($this->get('config'), $this->get('preferences')),
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('config')->get('useCache')
-        );
-        $language->setPortal($this->get('portal'));
-        return $language;
-    }
-
     public function setPortal(PortalEntity $portal)
     {
         $this->setForced('portal', $portal);
