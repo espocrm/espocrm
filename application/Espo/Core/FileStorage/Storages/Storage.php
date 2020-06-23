@@ -27,17 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\FileStorage\Storages;
 
-class EmailFilterManager extends Base
+use Espo\Entities\Attachment;
+
+interface Storage
 {
-    public function load()
-    {
-        $emailFilterManager = new \Espo\Core\Utils\EmailFilterManager(
-            $this->getContainer()->get('entityManager')
-        );
+    public function hasDownloadUrl(Attachment $attachment) : bool;
 
-        return $emailFilterManager;
-    }
+    public function getDownloadUrl(Attachment $attachment) : string;
+
+    public function unlink(Attachment $attachment);
+
+    public function getContents(Attachment $attachment);
+
+    public function isFile(Attachment $attachment) : bool;
+
+    public function putContents(Attachment $attachment, $contents);
+
+    public function getLocalFilePath(Attachment $attachment) : string;
 }
-

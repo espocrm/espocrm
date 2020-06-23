@@ -29,8 +29,8 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\ORM\EntityManager;
-use \Espo\Entities\Email;
+use Espo\Core\ORM\EntityManager;
+use Espo\Entities\Email;
 
 class EmailFilterManager
 {

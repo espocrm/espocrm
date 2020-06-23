@@ -66,7 +66,7 @@ class InjectableFactory
     public function createByClassName(string $className, ?array $with = null) : object
     {
         if (!class_exists($className)) {
-            throw new Error("Class '{$className}' does not exist.");
+            throw new Error("InjectableFactory: Class '{$className}' does not exist.");
         }
 
         $class = new ReflectionClass($className);
@@ -131,6 +131,7 @@ class InjectableFactory
                     $injection = $this->container->get($name);
 
                     if (!$injection) {
+                        $className = $class->getName();
                         throw new Error("InjectableFactory: Could not create {$className}, dependency {$name} not found.");
                     }
                 }

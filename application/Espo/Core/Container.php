@@ -146,14 +146,6 @@ class Container
         return new InjectableFactory($this);
     }
 
-    protected function loadFileStorageManager()
-    {
-        return new \Espo\Core\FileStorage\Manager(
-            $this->get('metadata')->get(['app', 'fileStorage', 'implementationClassNameMap']),
-            $this->get('injectableFactory')
-        );
-    }
-
     protected function loadPreferences()
     {
         return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);

@@ -29,11 +29,11 @@
 
 namespace Espo\ORM\Repositories;
 
-use \Espo\ORM\EntityManager;
-use \Espo\ORM\EntityFactory;
-use \Espo\ORM\EntityCollection;
-use \Espo\ORM\Entity;
-use \Espo\ORM\IEntity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityCollection;
+use Espo\ORM\Entity;
+use Espo\ORM\IEntity;
 
 
 class RDB extends \Espo\ORM\Repository
@@ -60,7 +60,7 @@ class RDB extends \Espo\ORM\Repository
 
     private $isTableLocked = false;
 
-    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    public function __construct(string $entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         $this->entityType = $entityType;
         $this->entityName = $entityType;

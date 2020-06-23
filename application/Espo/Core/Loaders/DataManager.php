@@ -36,6 +36,8 @@ use Espo\Core\{
 
 class DataManager implements Loader
 {
+    protected $container;
+
     public function __construct(Container $container)
     {
         $this->container = $container;

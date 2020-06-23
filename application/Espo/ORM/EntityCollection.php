@@ -172,7 +172,7 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         }
     }
 
-    public function getEntityType()
+    public function getEntityType() : ?string
     {
         return $this->entityType;
     }

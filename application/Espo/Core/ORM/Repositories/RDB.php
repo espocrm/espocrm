@@ -29,20 +29,24 @@
 
 namespace Espo\Core\ORM\Repositories;
 
-use \Espo\ORM\EntityManager;
-use \Espo\ORM\EntityFactory;
-use \Espo\ORM\Entity;
-use \Espo\ORM\IEntity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\EntityFactory;
+
+use Espo\ORM\Entity;
+
+use Espo\ORM\IEntity;
 use Espo\Core\Utils\Util;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Interfaces\Injectable;
 
-class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
+use Espo\ORM\Repositories\RDB as BaseRDB;
+
+class RDB extends BaseRDB implements Injectable
 {
     protected $dependencyList = [
         'metadata',
         'config',
-        'fieldManagerUtil'
+        'fieldManagerUtil',
     ];
 
     protected $dependencies = []; // for backward compatibility
@@ -101,7 +105,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $this->getInjection('fieldManagerUtil');
     }
 
-    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    public function __construct(string $entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
         $this->init();

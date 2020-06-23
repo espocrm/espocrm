@@ -37,6 +37,9 @@ use Espo\Entities\User;
 
 class Acl implements Loader
 {
+    protected $aclManager;
+    protected $user;
+
     public function __construct(AclManager $aclManager, User $user)
     {
         $this->aclManager = $aclManager;

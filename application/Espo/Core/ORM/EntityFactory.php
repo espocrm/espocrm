@@ -27,21 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\ORM;
 
-class EntityManagerUtil extends Base
+use Espo\Core\{
+    InjectableFactory,
+    Utils\ClassFinder,
+};
+
+use Espo\ORM\Metadata;
+use Espo\ORM\IEntity;
+use Espo\ORM\EntityManager;
+
+use Espo\Core\Exceptions\Error;
+
+use Espo\ORM\EntityFactory as EntityFactoryInterface;
+
+class EntityFactory implements EntityFactoryInterface
 {
-    public function load()
-    {
-        $entityManager = new \Espo\Core\Utils\EntityManager(
-            $this->getContainer()->get('metadata'),
-            $this->getContainer()->get('language'),
-            $this->getContainer()->get('fileManager'),
-            $this->getContainer()->get('config'),
-            $this->getContainer()
-        );
+    protected $classFinder;
 
-        return $entityManager;
+    protected $entityManager = null;
+
+    public function __construct(ClassFinder $classFinder)
+    {
+        $this->classFinder = $classFinder;
+    }
+
+    protected function getClassName(string $name) : ?string
+    {
+        return $this->classFinder->find('Entities', $name);
+    }
+
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        if ($this->entityManager) {
+            throw new Error("EntityManager can be set only once.");
+        }
+        $this->entityManager = $entityManager;
+    }
+
+    public function create(string $name) : IEntity
+    {
+        $className = $this->getClassName($name);
+        if (!class_exists($className)) {
+            $className = Entity::class;
+        }
+
+        $defs = $this->entityManager->getMetadata()->get($name);
+
+        if (is_null($defs)) {
+            throw new Error("Entity '{$name}' is not defined in metadata.");
+        }
+
+        return new $className($defs, $this->entityManager);
     }
 }
-

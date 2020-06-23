@@ -77,6 +77,12 @@
     "totp": {
         "className": "Espo\\Core\\Utils\\Authentication\\TwoFA\\Utils\\Totp"
     },
+    "emailFilterManager": {
+        "className": "Espo\\Core\\Utils\\EmailFilterManager"
+    },
+    "entityManagerUtil": {
+        "className": "Espo\\Core\\Utils\\EntityManager"
+    },
     "user": {
         "settable": true
     }

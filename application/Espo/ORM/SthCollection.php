@@ -55,12 +55,12 @@ class SthCollection implements \IteratorAggregate, ICollection
         return $this->entityManager->getQuery();
     }
 
-    protected function getPdo()
+    protected function getPdo() : \PDO
     {
         return $this->entityManager->getPdo();
     }
 
-    protected function getEntityFactory()
+    protected function getEntityFactory() : object
     {
         return $this->entityManager->getEntityFactory();
     }
@@ -116,7 +116,7 @@ class SthCollection implements \IteratorAggregate, ICollection
     {
     }
 
-    public function toArray($itemsAsObjects = false)
+    public function toArray(bool $itemsAsObjects = false) : array
     {
         $arr = [];
         foreach ($this as $entity) {
@@ -130,11 +130,10 @@ class SthCollection implements \IteratorAggregate, ICollection
         return $arr;
     }
 
-    public function getValueMapList()
+    public function getValueMapList() : array
     {
         return $this->toArray(true);
     }
-
 
     public function setAsFetched()
     {
@@ -146,12 +145,12 @@ class SthCollection implements \IteratorAggregate, ICollection
         $this->isFetched = false;
     }
 
-    public function isFetched()
+    public function isFetched() : bool
     {
         return $this->isFetched;
     }
 
-    public function getEntityType()
+    public function getEntityType() : string
     {
         return $this->entityType;
     }

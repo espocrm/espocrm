@@ -32,11 +32,9 @@ namespace Espo\Core\FileStorage\Storages;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Entities\Attachment;
 
-use Espo\Core\FileStorage\StorageInterface;
-
 use Espo\Core\Exceptions\Error;
 
-class EspoUploadDir implements StorageInterface
+class EspoUploadDir implements Storage
 {
     protected $fileManager;
 

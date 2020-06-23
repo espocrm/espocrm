@@ -429,7 +429,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                     WHERE
                         entity_id = ".$pdo->quote($entity->id)." AND
                         entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        phone_number_id = ".$pdo->quote($phoneNumber->id)." AND 
+                        phone_number_id = ".$pdo->quote($phoneNumber->id)." AND
                         deleted = 0
                 ";
                 $sth = $pdo->prepare($query);
@@ -468,7 +468,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                     if ($entity->has('phoneNumberIsOptedOut')) {
                         $phoneNumberNew->set('optOut', !!$entity->get('phoneNumberIsOptedOut'));
                     }
-                    $defaultType = $this->getEntityManager()->getEspoMetadata()->get('entityDefs.' .  $entity->getEntityType() . '.fields.phoneNumber.defaultType');
+                    $defaultType = $this->getMetadata()->get('entityDefs.' .  $entity->getEntityType() . '.fields.phoneNumber.defaultType');
 
                     $phoneNumberNew->set('type', $defaultType);
 

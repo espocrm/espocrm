@@ -35,6 +35,8 @@ use Espo\Core\{
 
 class AclManager implements Loader
 {
+    protected $container;
+
     public function __construct(Container $container)
     {
         $this->container = $container;

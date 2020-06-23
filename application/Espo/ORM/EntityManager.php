@@ -56,7 +56,7 @@ class EntityManager
         'mysqli' => 'Mysql',
     ];
 
-    public function __construct($params)
+    public function __construct(array $params, RepositoryFactory $repositoryFactory, EntityFactory $entityFactory)
     {
         $this->params = $params;
 
@@ -77,17 +77,10 @@ class EntityManager
             $this->setMetadata($params['metadata']);
         }
 
-        $entityFactoryClassName = '\\Espo\\ORM\\EntityFactory';
-        if (!empty($params['entityFactoryClassName'])) {
-            $entityFactoryClassName = $params['entityFactoryClassName'];
-        }
-        $this->entityFactory = new $entityFactoryClassName($this, $this->metadata);
+        $this->entityFactory = $entityFactory;
+        $this->entityFactory->setEntityManager($this);
 
-        $repositoryFactoryClassName = '\\Espo\\ORM\\RepositoryFactory';
-        if (!empty($params['repositoryFactoryClassName'])) {
-            $repositoryFactoryClassName = $params['repositoryFactoryClassName'];
-        }
-        $this->repositoryFactory = new $repositoryFactoryClassName($this, $this->entityFactory);
+        $this->repositoryFactory = $repositoryFactory;
 
         $this->init();
     }
@@ -96,27 +89,27 @@ class EntityManager
     {
         if (empty($this->query)) {
             $platform = $this->params['platform'];
-            $className = '\\Espo\\ORM\\DB\\Query\\' . ucfirst($platform);
+            $className = 'Espo\\ORM\\DB\\Query\\' . ucfirst($platform);
             $this->query = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
         }
         return $this->query;
     }
 
-    protected function getMapperClassName($name)
+    protected function getMapperClassName(string $name)
     {
         $className = null;
 
         switch ($name) {
             case 'RDB':
                 $platform = $this->params['platform'];
-                $className = '\\Espo\\ORM\\DB\\' . ucfirst($platform) . 'Mapper';
+                $className = 'Espo\\ORM\\DB\\' . ucfirst($platform) . 'Mapper';
                 break;
         }
 
         return $className;
     }
 
-    public function getMapper($name)
+    public function getMapper(string $name)
     {
         if ($name{0} == '\\') {
             $className = $name;
@@ -125,7 +118,8 @@ class EntityManager
         }
 
         if (empty($this->mappers[$className])) {
-            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery(), $this->metadata);
+            $this->mappers[$className] = new $className(
+                $this->getPDO(), $this->entityFactory, $this->getQuery(), $this->metadata);
         }
         return $this->mappers[$className];
     }
@@ -155,11 +149,14 @@ class EntityManager
             $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
         }
 
-        $this->pdo = new \PDO($platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'], $params['user'], $params['password'], $options);
+        $this->pdo = new \PDO(
+            $platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'],
+            $params['user'], $params['password'], $options
+        );
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
-    public function getEntity($entityType, $id = null)
+    public function getEntity(string $entityType, ?string $id = null) : ?Entity
     {
         if (!$this->hasRepository($entityType)) {
             throw new Error("ORM: Repository '{$entityType}' does not exist.");
@@ -180,7 +177,7 @@ class EntityManager
         return $this->getRepository($entityType)->remove($entity, $options);
     }
 
-    public function createEntity($entityType, $data, array $options = [])
+    public function createEntity(string $entityType, $data, array $options = [])
     {
         $entity = $this->getEntity($entityType);
         $entity->set($data);
@@ -194,7 +191,7 @@ class EntityManager
         return $this->getEntity($entityType, $id);
     }
 
-    public function getRepository($entityType)
+    public function getRepository(string $entityType) : ?object
     {
         if (!$this->hasRepository($entityType)) {
             // TODO Throw error
@@ -203,7 +200,7 @@ class EntityManager
         if (empty($this->repositoryHash[$entityType])) {
             $this->repositoryHash[$entityType] = $this->repositoryFactory->create($entityType);
         }
-        return $this->repositoryHash[$entityType];
+        return $this->repositoryHash[$entityType] ?? null;
     }
 
     public function setMetadata(array $data)
@@ -211,7 +208,7 @@ class EntityManager
         $this->metadata->setData($data);
     }
 
-    public function hasRepository($entityType)
+    public function hasRepository(string $entityType) : bool
     {
         return $this->getMetadata()->has($entityType);
     }
@@ -226,7 +223,7 @@ class EntityManager
         return $this->getMetadata();
     }
 
-    public function getPDO()
+    public function getPDO() : \PDO
     {
         if (empty($this->pdo)) {
             $this->initPDO();
@@ -234,17 +231,7 @@ class EntityManager
         return $this->pdo;
     }
 
-    public function getRepositoryClassName($name)
-    {
-        return $name;
-    }
-
-    public function getEntityClassName($name)
-    {
-        return $name;
-    }
-
-    public function createCollection($entityType, $data = [])
+    public function createCollection(?string $entityType = null, $data = [])
     {
         $collection = new EntityCollection($data, $entityType, $this->entityFactory);
         return $collection;
@@ -255,12 +242,12 @@ class EntityManager
         return new SthCollection($entityType, $this, $selectParams);
     }
 
-    public function getEntityFactory()
+    public function getEntityFactory() : object
     {
         return $this->entityFactory;
     }
 
-    public function runQuery($query, $rerunIfDeadlock = false)
+    public function runQuery(createCollection $query, bool $rerunIfDeadlock = false)
     {
         try {
             return $this->getPDO()->query($query);
