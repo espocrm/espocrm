@@ -20,14 +20,32 @@
     "cronManager": {
         "className": "Espo\\Core\\CronManager"
     },
+    "webSocketSubmission": {
+        "className": "Espo\\Core\\WebSocket\\Submission"
+    },
     "crypt": {
         "className": "Espo\\Core\\Utils\\Crypt"
+    },
+    "passwordHash": {
+        "className": "Espo\\Core\\Utils\\PasswordHash"
     },
     "number": {
         "loaderClassName": "Espo\\Core\\Loaders\\NumberUtil"
     },
     "controllerManager": {
         "className": "Espo\\Core\\ControllerManager"
+    },
+    "selectManagerFactory": {
+        "className": "Espo\\Core\\SelectManagerFactory"
+    },
+    "serviceFactory": {
+        "className": "Espo\\Core\\ServiceFactory"
+    },
+    "templateFileManager": {
+        "className": "Espo\\Core\\Utils\\TemplateFileManager"
+    },
+    "webhookManager": {
+        "className": "Espo\\Core\\Webhook\\Manager"
     },
     "scheduledJob": {
         "className": "Espo\\Core\\Utils\\ScheduledJob"
@@ -82,6 +100,12 @@
     },
     "entityManagerUtil": {
         "className": "Espo\\Core\\Utils\\EntityManager"
+    },
+    "externalAccountClientManager": {
+        "className": "Espo\\Core\\ExternalAccount\\ClientManager"
+    },
+    "formulaManager": {
+        "className": "Espo\\Core\\Formula\\Manager"
     },
     "user": {
         "settable": true

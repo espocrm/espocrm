@@ -33,6 +33,7 @@ use \Espo\Core\Interfaces\Injectable;
 
 use \Espo\ORM\EntityFactory;
 
+/** Deprecated */
 abstract class Repository extends \Espo\ORM\Repository implements Injectable
 {
     protected $dependencyList = [];

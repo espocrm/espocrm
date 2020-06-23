@@ -40,20 +40,14 @@ use Espo\Core\Utils\Util;
 class SelectManagerFactory
 {
     private $entityManager;
-
     private $user;
-
     private $acl;
-
     private $metadata;
-
     private $injectableFactory;
-
     private $fieldManagerUtil;
-
     private $classFinder;
 
-    protected $baseClassName = '\\Espo\\Core\\SelectManager';
+    protected $baseClassName = SelectManager::class;
 
     public function __construct(
         EntityManager $entityManager,
@@ -64,8 +58,8 @@ class SelectManagerFactory
         Utils\Config $config,
         Utils\FieldManagerUtil $fieldManagerUtil,
         InjectableFactory $injectableFactory,
-        Utils\ClassFinder $classFinder)
-    {
+        Utils\ClassFinder $classFinder
+    ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->acl = $acl;

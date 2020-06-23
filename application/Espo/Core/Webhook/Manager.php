@@ -42,7 +42,7 @@ class Manager
     protected $config;
     protected $fileManager;
     protected $entityManager;
-    protected $fieldManager;
+    protected $fieldManagerUtil;
 
     private $cacheFile = 'data/cache/application/webhooks.php';
 
@@ -54,12 +54,12 @@ class Manager
         Config $config,
         FileManager $fileManager,
         EntityManager $entityManager,
-        FieldManagerUtil $fieldManager
+        FieldManagerUtil $fieldManagerUtil
     ) {
         $this->config = $config;
         $this->fileManager = $fileManager;
         $this->entityManager = $entityManager;
-        $this->fieldManager = $fieldManager;
+        $this->fieldManagerUtil = $fieldManagerUtil;
 
         $this->loadData();
     }
@@ -202,11 +202,11 @@ class Manager
             $this->logDebugEvent($event, $entity);
         }
 
-        foreach ($this->fieldManager->getEntityTypeFieldList($entity->getEntityType()) as $field) {
+        foreach ($this->fieldManagerUtil->getEntityTypeFieldList($entity->getEntityType()) as $field) {
             $itemEvent = $entity->getEntityType() . '.fieldUpdate.' . $field;
             if (!$this->eventExists($itemEvent)) continue;
 
-            $attributeList = $this->fieldManager->getActualAttributeList($entity->getEntityType(), $field);
+            $attributeList = $this->fieldManagerUtil->getActualAttributeList($entity->getEntityType(), $field);
             $isChanged = false;
             foreach ($attributeList as $attribute) {
                 if (in_array($attribute, $this->skipAttributeList)) continue;
@@ -219,7 +219,7 @@ class Manager
             if ($isChanged) {
                 $itemData = (object) [];
                 $itemData->id = $entity->id;
-                $attributeList = $this->fieldManager->getAttributeList($entity->getEntityType(), $field);
+                $attributeList = $this->fieldManagerUtil->getAttributeList($entity->getEntityType(), $field);
                 foreach ($attributeList as $attribute) {
                     if (in_array($attribute, $this->skipAttributeList)) continue;
                     $itemData->$attribute = $entity->get($attribute);

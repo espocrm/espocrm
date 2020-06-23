@@ -33,6 +33,8 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\InjectableFactory;
 
+use Espo\Core\ORM\Entity;
+
 class Evaluator
 {
     private $functionFactory = null;
@@ -55,7 +57,7 @@ class Evaluator
         $this->parsedHash = [];
     }
 
-    public function process($expression, $entity = null, $variables = null)
+    public function process(string $expression, ?Entity $entity = null, ?object $variables = null)
     {
         if (!array_key_exists($expression, $this->parsedHash)) {
             $item = $this->parser->parse($expression);

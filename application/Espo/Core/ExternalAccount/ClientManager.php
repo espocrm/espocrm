@@ -33,21 +33,28 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
-use Espo\Core\InjectableFactory;
+use Espo\Core\{
+    ORM\EntityManager,
+    Utils\Metadata,
+    Utils\Config,
+    InjectableFactory,
+};
 
 class ClientManager
 {
     protected $entityManager;
-
     protected $metadata;
+    protected $config;
+    protected $injectableFactory = null;
 
     protected $clientMap = [];
 
-    protected $injectableFactory = null;
-
     public function __construct(
-        $entityManager, $metadata, $config, ?InjectableFactory $injectableFactory = null)
-    {
+        EntityManager $entityManager,
+        Metadata $metadata,
+        Config $config,
+        ?InjectableFactory $injectableFactory = null
+    ) {
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
         $this->config = $config;

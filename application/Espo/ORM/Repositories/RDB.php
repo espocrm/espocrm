@@ -35,7 +35,6 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 
-
 class RDB extends \Espo\ORM\Repository
 {
     /**
@@ -110,7 +109,7 @@ class RDB extends \Espo\ORM\Repository
         }
     }
 
-    public function getById($id, array $params = []) : ?Entity
+    public function getById(string $id, array $params = []) : ?Entity
     {
         $entity = $this->entityFactory->create($this->entityType);
         if (!$entity) return null;
@@ -122,7 +121,7 @@ class RDB extends \Espo\ORM\Repository
         return $this->getMapper()->selectById($entity, $id, $params);
     }
 
-    public function get($id = null) : ?Entity
+    public function get(?string $id = null) : ?Entity
     {
         if (is_null($id)) {
             return $this->getNew();
@@ -170,7 +169,7 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    public function restoreDeleted($id)
+    public function restoreDeleted(string $id)
     {
         return $this->getMapper()->restoreDeleted($this->entityType, $id);
     }
@@ -193,7 +192,7 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    public function deleteFromDb($id, $onlyDeleted = false)
+    public function deleteFromDb(string $id, bool $onlyDeleted = false)
     {
         return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
@@ -282,7 +281,7 @@ class RDB extends \Espo\ORM\Repository
         }
     }
 
-    public function countRelated(Entity $entity, $relationName, array $params = [])
+    public function countRelated(Entity $entity, string $relationName, array $params = [])
     {
         if (!$entity->id) {
             return;
@@ -295,7 +294,7 @@ class RDB extends \Espo\ORM\Repository
         return intval($this->getMapper()->countRelated($entity, $relationName, $params));
     }
 
-    public function isRelated(Entity $entity, $relationName, $foreign)
+    public function isRelated(Entity $entity, string $relationName, $foreign)
     {
         if (!$entity->id) {
             return null;
@@ -342,7 +341,7 @@ class RDB extends \Espo\ORM\Repository
         ]);
     }
 
-    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    public function relate(Entity $entity, string $relationName, $foreign, $data = null, array $options = [])
     {
         if (!$entity->id) {
             return;
@@ -383,7 +382,7 @@ class RDB extends \Espo\ORM\Repository
     }
 
 
-    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
     {
         if (!$entity->id) {
             return;
@@ -451,7 +450,7 @@ class RDB extends \Espo\ORM\Repository
     {
     }
 
-    public function updateRelation(Entity $entity, $relationName, $foreign, $data)
+    public function updateRelation(Entity $entity, string $relationName, $foreign, $data)
     {
         if (!$entity->id) {
             return;
@@ -470,7 +469,7 @@ class RDB extends \Espo\ORM\Repository
         return null;
     }
 
-    public function massRelate(Entity $entity, $relationName, array $params = [], array $options = [])
+    public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
     {
         if (!$entity->id) {
             return;

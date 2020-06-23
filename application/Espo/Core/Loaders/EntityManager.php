@@ -36,6 +36,7 @@ use Espo\Core\{
     ORM\EntityManager as EntityManagerService,
     ORM\RepositoryFactory,
     ORM\EntityFactory,
+    ORM\Helper,
 };
 
 class EntityManager implements Loader
@@ -58,6 +59,8 @@ class EntityManager implements Loader
         $repositoryFactory = $this->injectableFactory->createWith(RepositoryFactory::class, [
             'entityFactory' => $entityFactory,
         ]);
+
+        $helper = $this->injectableFactory->create(Helper::class);
 
         $config = $this->config;
 
@@ -82,6 +85,7 @@ class EntityManager implements Loader
             'params' => $params,
             'repositoryFactory' => $repositoryFactory,
             'entityFactory' => $entityFactory,
+            'helper' => $helper,
         ]);
 
         return $entityManager;

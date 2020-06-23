@@ -54,12 +54,12 @@ class EntityManager extends BaseEntityManager
         RepositoryFactory $repositoryFactory,
         EntityFactory $entityFactory,
         HookManager $hookManager,
-        Helper $entityManagerHelper
+        Helper $helper
     ) {
         parent::__construct($params, $repositoryFactory, $entityFactory);
 
         $this->hookManager = $hookManager;
-        $this->helper = $entityManagerHelper;
+        $this->helper = $helper;
     }
 
     // TODO Check whether setUser is needed here

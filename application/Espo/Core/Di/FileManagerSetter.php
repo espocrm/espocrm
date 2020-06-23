@@ -27,17 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Di;
 
-class FormulaManager extends Base
+use Espo\Core\Utils\File\Manager as FileManager;
+
+trait FileManagerSetter
 {
-    public function load()
-    {
-        $formulaManager = new \Espo\Core\Formula\Manager(
-            $this->getContainer()->get('injectableFactory'),
-            $this->getContainer()->get('metadata')
-        );
+    protected $fileManager;
 
-        return $formulaManager;
+    public function setFileManager(FileManager $fileManager)
+    {
+        $this->fileManager = $fileManager;
     }
 }

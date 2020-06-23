@@ -81,7 +81,7 @@ abstract class Repository
         return $this->entityType;
     }
 
-    abstract public function get($id = null);
+    abstract public function get(?string $id = null);
 
     abstract public function save(Entity $entity);
 

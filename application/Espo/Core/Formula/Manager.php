@@ -34,8 +34,13 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 
+use Espo\Core\ORM\Entity;
+
 class Manager
 {
+    protected $injectableFactory;
+    protected $metadata;
+
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
         $functionClassNameMap = $metadata->get(['app', 'formula', 'functionClassNameMap'], []);
@@ -43,7 +48,7 @@ class Manager
         $this->evaluator = new Evaluator($injectableFactory, $functionClassNameMap);
     }
 
-    public function run($script, $entity = null, $variables = null)
+    public function run(string $script, ?Entity $entity = null, ?object $variables = null)
     {
         return $this->evaluator->process($script, $entity, $variables);
     }

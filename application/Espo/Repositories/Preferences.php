@@ -30,53 +30,63 @@
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\ORM\Repository;
 use Espo\Core\Utils\Json;
 
-class Preferences extends \Espo\Core\ORM\Repository
+use Espo\Core\Di\{
+    FileManagerAware,
+    FileManagerSetter,
+    MetadataAware,
+    MetadataSetter,
+    ConfigAware,
+    ConfigSetter,
+    EntityManagerAware,
+    EntityManagerSetter,
+};
+
+class Preferences extends Repository implements
+    FileManagerAware,
+    MetadataAware,
+    ConfigAware,
+    EntityManagerAware
 {
+    use FileManagerSetter;
+    use MetadataSetter;
+    use ConfigSetter;
+    use EntityManagerSetter;
+
     protected $defaultAttributeListFromSettings = [
         'decimalMark',
         'thousandSeparator',
         'exportDelimiter',
-        'followCreatedEntities'
+        'followCreatedEntities',
     ];
 
-    protected $data = array();
+    protected $data = [];
 
     protected $entityType = 'Preferences';
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependencyList([
-            'fileManager',
-            'metadata',
-            'config',
-            'entityManager'
-        ]);
-    }
-
     protected function getFileManager()
     {
-        return $this->getInjection('fileManager');
+        return $this->fileManager;
     }
 
     protected function getEntityManger()
     {
-        return $this->getInjection('entityManager');
+        return $this->entityManager;
     }
 
     protected function getMetadata()
     {
-        return $this->getInjection('metadata');
+        return $this->metadata;
     }
 
     protected function getConfig()
     {
-        return $this->getInjection('config');
+        return $this->config;
     }
 
-    public function get($id = null)
+    public function get(?string $id = null)
     {
         if ($id) {
             $entity = $this->entityFactory->create('Preferences');
@@ -236,7 +246,7 @@ class Preferences extends \Espo\Core\ORM\Repository
         $ps = $pdo->query($sql);
     }
 
-    public function remove(Entity $entity, array $options = array())
+    public function remove(Entity $entity, array $options = [])
     {
         if (!$entity->id) return;
         $this->deleteFromDb($entity->id);
