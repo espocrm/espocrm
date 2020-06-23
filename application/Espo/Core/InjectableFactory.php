@@ -129,7 +129,7 @@ class InjectableFactory
                         } catch (\Throwable $e) {
                             $badClassName = $param->getType()->getName();
                             // this trick allows to log syntax errors
-                            new $badClassName();
+                            class_exists($badClassName);
                             throw new Error("InjectableFactory: " . $e->getMessage());
                         }
                     }
