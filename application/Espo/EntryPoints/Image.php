@@ -29,15 +29,23 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\NotFoundSilent;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
-class Image extends \Espo\Core\EntryPoints\Base
+use Espo\Core\EntryPoints\EntryPoint;
+use Espo\Core\Di;
+
+class Image implements EntryPoint,
+    Di\EntityManagerAware,
+    Di\AclAware,
+    Di\FileManagerAware
 {
-    public static $authRequired = true;
+    use Di\EntityManagerSetter;
+    use Di\AclSetter;
+    use Di\FileManagerSetter;
 
     protected $allowedFileTypes = [
         'image/jpeg',
@@ -82,19 +90,19 @@ class Image extends \Espo\Core\EntryPoints\Base
 
     protected function show($id, $size, $disableAccessCheck = false)
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+        $attachment = $this->entityManager->getEntity('Attachment', $id);
 
         if (!$attachment) {
             throw new NotFoundSilent();
         }
 
-        if (!$disableAccessCheck && !$this->getAcl()->checkEntity($attachment)) {
+        if (!$disableAccessCheck && !$this->acl->checkEntity($attachment)) {
             throw new Forbidden();
         }
 
         $sourceId = $attachment->getSourceId();
 
-        $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
+        $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
 
         $fileType = $attachment->get('type');
 
@@ -143,7 +151,7 @@ class Image extends \Espo\Core\EntryPoints\Base
                     $contents = ob_get_contents();
                     ob_end_clean();
                     imagedestroy($targetImage);
-                    $this->getContainer()->get('fileManager')->putContents($thumbFilePath, $contents);
+                    $this->fileManager->putContents($thumbFilePath, $contents);
                 }
                 $filePath = $thumbFilePath;
 

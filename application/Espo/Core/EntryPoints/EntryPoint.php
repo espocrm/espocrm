@@ -27,57 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+namespace Espo\Core\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-
-use Espo\Core\EntryPoints\{
-    EntryPoint,
-    NoAuth,
-};
-
-use Espo\Core\{
-    Utils\ClientManager,
-    Utils\Config,
-    Portal\Application as PortalApplication,
-};
-
-class Portal implements EntryPoint, NoAuth
+interface EntryPoint
 {
-    protected $clientManager;
-    protected $config;
 
-    public function __construct(ClientManager $clientManager, Config $config)
-    {
-        $this->clientManager = $clientManager;
-        $this->config = $config;
-    }
-
-    public function run($data = [])
-    {
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else if (!empty($data['id'])) {
-            $id = $data['id'];
-        } else {
-            $url = $_SERVER['REQUEST_URI'];
-            $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-
-            if (!isset($id)) {
-                $url = $_SERVER['REDIRECT_URL'];
-                $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-            }
-
-            if (!$id) {
-                $id = $this->config->get('defaultPortalId');
-            }
-            if (!$id) {
-                throw new NotFound();
-            }
-        }
-
-        $application = new PortalApplication($id);
-        $application->setBasePath($this->clientManager->getBasePath());
-        $application->runClient();
-    }
 }

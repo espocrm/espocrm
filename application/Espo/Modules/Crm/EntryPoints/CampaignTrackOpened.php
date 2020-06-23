@@ -29,16 +29,33 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use \Espo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
-class CampaignTrackOpened extends \Espo\Core\EntryPoints\Base
+use Espo\Core\EntryPoints\{
+    EntryPoint,
+    NoAuth,
+};
+
+use Espo\Core\{
+    ORM\EntityManager,
+    ServiceFactory,
+};
+
+class CampaignTrackOpened implements EntryPoint, NoAuth
 {
-    public static $authRequired = false;
+    protected $entityManager;
+    protected $serviceFactory;
+
+    public function __construct(EntityManager $entityManager, ServiceFactory $serviceFactory)
+    {
+        $this->entityManager = $entityManager;
+        $this->serviceFactory = $serviceFactory;
+    }
 
     public function run()
     {
@@ -48,7 +65,7 @@ class CampaignTrackOpened extends \Espo\Core\EntryPoints\Base
 
         $queueItemId = $_GET['id'];
 
-        $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
+        $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
 
         if (!$queueItem) {
             throw new NotFound();
@@ -61,25 +78,25 @@ class CampaignTrackOpened extends \Espo\Core\EntryPoints\Base
         $targetId = $queueItem->get('targetId');
 
         if ($targetType && $targetId) {
-            $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+            $target = $this->entityManager->getEntity($targetType, $targetId);
         }
 
         $massEmailId = $queueItem->get('massEmailId');
         if (!$massEmailId) return;
-        $massEmail = $this->getEntityManager()->getEntity('MassEmail', $massEmailId);
+        $massEmail = $this->entityManager->getEntity('MassEmail', $massEmailId);
         if (!$massEmail) return;
 
         $campaignId = $massEmail->get('campaignId');
         if (!$campaignId) return;
 
-        $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
+        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
         if (!$campaign) return;
 
 
         if (!$target) {
             return;
         }
-        $campaignService = $this->getServiceFactory()->create('Campaign');
+        $campaignService = $this->serviceFactory->create('Campaign');
         $campaignService->logOpened($campaignId, $queueItemId, $target, null, $queueItem->get('isTest'));
 
         header('Content-Type: image/png');
@@ -94,4 +111,3 @@ class CampaignTrackOpened extends \Espo\Core\EntryPoints\Base
         imagedestroy($img);
     }
 }
-

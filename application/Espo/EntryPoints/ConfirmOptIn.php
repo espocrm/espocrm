@@ -29,14 +29,31 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
-class ConfirmOptIn extends \Espo\Core\EntryPoints\Base
+use Espo\Core\EntryPoints\{
+    EntryPoint,
+    NoAuth,
+};
+
+use Espo\Core\{
+    Utils\ClientManager,
+    ServiceFactory,
+};
+
+class ConfirmOptIn implements EntryPoint, NoAuth
 {
-    public static $authRequired = false;
+    protected $clientManager;
+    protected $serviceFactory;
+
+    public function __construct(ClientManager $clientManager, ServiceFactory $serviceFactory)
+    {
+        $this->clientManager = $clientManager;
+        $this->serviceFactory = $serviceFactory;
+    }
 
     public function run()
     {
@@ -44,7 +61,7 @@ class ConfirmOptIn extends \Espo\Core\EntryPoints\Base
 
         $id = $_GET['id'];
 
-        $data = $this->getServiceFactory()->create('LeadCapture')->confirmOptIn($id);
+        $data = $this->serviceFactory->create('LeadCapture')->confirmOptIn($id);
 
         if ($data->status === 'success') {
             $action = 'optInConfirmationSuccess';
@@ -62,6 +79,6 @@ class ConfirmOptIn extends \Espo\Core\EntryPoints\Base
             });
         ";
 
-        $this->getClientManager()->display($runScript);
+        $this->clientManager->display($runScript);
     }
 }

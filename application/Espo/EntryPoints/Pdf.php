@@ -29,17 +29,31 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
 
-class Pdf extends \Espo\Core\EntryPoints\Base
+use Espo\Core\EntryPoints\{
+    EntryPoint,
+};
+
+use Espo\Core\{
+    ORM\EntityManager,
+    ServiceFactory,
+};
+
+class Pdf implements EntryPoint
 {
-    public static $authRequired = true;
+    protected $entityManager;
+    protected $serviceFactory;
+
+    public function __construct(EntityManager $entityManager, ServiceFactory $serviceFactory)
+    {
+        $this->entityManager = $entityManager;
+        $this->serviceFactory = $serviceFactory;
+    }
 
     public function run()
     {
-
         if (empty($_GET['entityId']) || empty($_GET['entityType']) || empty($_GET['templateId'])) {
             throw new BadRequest();
         }
@@ -47,16 +61,15 @@ class Pdf extends \Espo\Core\EntryPoints\Base
         $entityType = $_GET['entityType'];
         $templateId = $_GET['templateId'];
 
-        $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
-        $template = $this->getEntityManager()->getEntity('Template', $templateId);
+        $entity = $this->entityManager->getEntity($entityType, $entityId);
+        $template = $this->entityManager->getEntity('Template', $templateId);
 
         if (!$entity || !$template) {
             throw new NotFound();
         }
 
-        $this->getContainer()->get('serviceFactory')->create('Pdf')->buildFromTemplate($entity, $template, true);
+        $this->serviceFactory->create('Pdf')->buildFromTemplate($entity, $template, true);
 
         exit;
     }
 }
-

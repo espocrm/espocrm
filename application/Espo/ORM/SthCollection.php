@@ -55,12 +55,12 @@ class SthCollection implements \IteratorAggregate, ICollection
         return $this->entityManager->getQuery();
     }
 
-    protected function getPdo() : \PDO
+    protected function getPdo()
     {
         return $this->entityManager->getPdo();
     }
 
-    protected function getEntityFactory() : object
+    protected function getEntityFactory()
     {
         return $this->entityManager->getEntityFactory();
     }

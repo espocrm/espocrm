@@ -34,6 +34,8 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
+    EntryPoints\NotStrictAuth,
+    EntryPoints\NoAuth,
 };
 
 class EntryPointManager
@@ -52,7 +54,14 @@ class EntryPointManager
         if (!$className) {
             throw new NotFound();
         }
-        return $className::$authRequired;
+
+        $class = new \ReflectionClass($className);
+
+        if ($class->implementsInterface(NoAuth::class)) {
+            return false;
+        }
+
+        return $className::$authRequired ?? true;
     }
 
     public function checkNotStrictAuth(string $name) : bool
@@ -61,7 +70,14 @@ class EntryPointManager
         if (!$className) {
             throw new NotFound();
         }
-        return $className::$notStrictAuth;
+
+        $class = new \ReflectionClass($className);
+
+        if ($class->implementsInterface(NotStrictAuth::class)) {
+            return true;
+        }
+
+        return $className::$notStrictAuth ?? false;
     }
 
     public function run(string $name, array $data = [])

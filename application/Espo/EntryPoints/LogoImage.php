@@ -29,14 +29,21 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
-class LogoImage extends Image
+use Espo\Core\EntryPoints\{
+    NoAuth,
+};
+
+use Espo\Core\Di;
+
+class LogoImage extends Image implements NoAuth,
+    Di\ConfigAware
 {
-    public static $authRequired = false;
+    use Di\ConfigSetter;
 
     protected $allowedRelatedTypeList = ['Settings', 'Portal'];
 
@@ -44,12 +51,12 @@ class LogoImage extends Image
 
     public function run()
     {
-        $this->imageSizes['small-logo'] = array(181, 44);
+        $this->imageSizes['small-logo'] = [181, 44];
 
         if (!empty($_GET['id'])) {
             $id = $_GET['id'];
         } else {
-            $id = $this->getConfig()->get('companyLogoId');
+            $id = $this->config->get('companyLogoId');
         }
 
         if (empty($id)) {
@@ -64,4 +71,3 @@ class LogoImage extends Image
         $this->show($id, $size);
     }
 }
-

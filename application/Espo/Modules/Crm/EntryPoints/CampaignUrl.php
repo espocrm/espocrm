@@ -34,13 +34,43 @@ use Espo\Core\Exceptions;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
 use Espo\Modules\Crm\Entities\CampaignTrackingUrl;
 
-class CampaignUrl extends \Espo\Core\EntryPoints\Base
-{
-    public static $authRequired = false;
+use Espo\Core\EntryPoints\{
+    EntryPoint,
+    NoAuth,
+};
 
-    protected function getHookManager()
-    {
-        return $this->getContainer()->get('hookManager');
+use Espo\Core\{
+    ORM\EntityManager,
+    ServiceFactory,
+    Utils\Hasher,
+    HookManager,
+    Utils\ClientManager,
+    Utils\Metadata,
+};
+
+class CampaignUrl implements EntryPoint, NoAuth
+{
+    protected $entityManager;
+    protected $serviceFactory;
+    protected $hasher;
+    protected $hookManager;
+    protected $clientManager;
+    protected $metadata;
+
+    public function __construct(
+        EntityManager $entityManager,
+        ServiceFactory $serviceFactory,
+        Hasher $hasher,
+        HookManager $hookManager,
+        ClientManager $clientManager,
+        Metadata $metadata
+    ) {
+        $this->entityManager = $entityManager;
+        $this->serviceFactory = $serviceFactory;
+        $this->hasher = $hasher;
+        $this->hookManager = $hookManager;
+        $this->clientManager = $clientManager;
+        $this->metadata = $metadata;
     }
 
     public function run()
@@ -51,14 +81,14 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
         $hash = $_GET['hash'] ?? null;
 
         if (!$trackingUrlId) throw new Exceptions\BadRequest();
-        $trackingUrl = $this->getEntityManager()->getEntity('CampaignTrackingUrl', $trackingUrlId);
+        $trackingUrl = $this->entityManager->getEntity('CampaignTrackingUrl', $trackingUrlId);
         if (!$trackingUrl) throw new Exceptions\NotFound();
 
         if ($emailAddress && $hash) {
             $this->processWithHash($trackingUrl, $emailAddress, $hash);
         } else {
             if (!$queueItemId) throw new Exceptions\BadRequest();
-            $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
+            $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
             if (!$queueItem) throw new Exceptions\NotFound();
 
             $this->processWithQueueItem($trackingUrl, $queueItem);
@@ -85,36 +115,36 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
         $targetId = $queueItem->get('targetId');
 
         if ($targetType && $targetId) {
-            $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+            $target = $this->entityManager->getEntity($targetType, $targetId);
         }
 
         $campaignId = $trackingUrl->get('campaignId');
         if ($campaignId) {
-            $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
+            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
         }
 
         if ($target) {
-            $this->getHookManager()->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
+            $this->hookManager->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
                 'targetId' => $targetId,
                 'targetType' => $targetType,
             ]);
         }
 
         if ($campaign && $target) {
-            $campaignService = $this->getServiceFactory()->create('Campaign');
+            $campaignService = $this->serviceFactory->create('Campaign');
             $campaignService->logClicked($campaignId, $queueItem->id, $target, $trackingUrl, null, $queueItem->get('isTest'));
         }
     }
 
     protected function processWithHash(CampaignTrackingUrl $trackingUrl, string $emailAddress, string $hash)
     {
-        $hash2 = $this->getContainer()->get('hasher')->hash($emailAddress);
+        $hash2 = $this->hasher->hash($emailAddress);
 
         if ($hash2 !== $hash) {
             throw new Exceptions\NotFound();
         }
 
-        $eaRepository = $this->getEntityManager()->getRepository('EmailAddress');
+        $eaRepository = $this->entityManager->getRepository('EmailAddress');
 
         $ea = $eaRepository->getByAddress($emailAddress);
         if (!$ea) {
@@ -124,7 +154,7 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
         $entityList = $eaRepository->getEntityListByAddressId($ea->id);
 
         foreach ($entityList as $target) {
-            $this->getHookManager()->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
+            $this->hookManager->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
                 'targetId' => $target->id,
                 'targetType' => $target->getEntityType(),
             ]);
@@ -137,8 +167,8 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
 
         $data = [
             'message' => $message,
-            'view' => $this->getMetadata()->get(['clientDefs', 'Campaign', 'trackinkUrlMessageView']),
-            'template' => $this->getMetadata()->get(['clientDefs', 'Campaign', 'trackinkUrlMessageTemplate']),
+            'view' => $this->metadata->get(['clientDefs', 'Campaign', 'trackinkUrlMessageView']),
+            'template' => $this->metadata->get(['clientDefs', 'Campaign', 'trackinkUrlMessageTemplate']),
         ];
 
         $runScript = "
@@ -148,6 +178,6 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
                 controller.doAction('displayMessage', ".json_encode($data).");
             });
         ";
-        $this->getClientManager()->display($runScript);
+        $this->clientManager->display($runScript);
     }
 }

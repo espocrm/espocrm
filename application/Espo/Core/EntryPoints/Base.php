@@ -29,17 +29,24 @@
 
 namespace Espo\Core\EntryPoints;
 
-use \Espo\Core\Container;
+use Espo\Core\Container;
+use Espo\Core\EntryPoint;
 
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Forbidden;
 
+/** Deprecated */
 abstract class Base
 {
-    private $container;
-
     public static $authRequired = true;
 
     public static $notStrictAuth = false;
+
+    private $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     protected function getContainer()
     {
@@ -100,11 +107,4 @@ abstract class Base
     {
         return $this->getContainer()->get('clientManager');
     }
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
 }
-

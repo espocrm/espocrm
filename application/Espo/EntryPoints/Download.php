@@ -29,15 +29,23 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
-class Download extends \Espo\Core\EntryPoints\Base
+use Espo\Core\EntryPoints\{
+    EntryPoint,
+    NoAuth,
+};
+
+use Espo\Core\{
+    Acl,
+    ORM\EntityManager,
+};
+
+class Download implements EntryPoint
 {
-    public static $authRequired = true;
-
-    protected $fileTypesToShowInline = array(
+    protected $fileTypesToShowInline = [
         'application/pdf',
         'application/vnd.ms-word',
         'application/vnd.ms-excel',
@@ -45,8 +53,17 @@ class Download extends \Espo\Core\EntryPoints\Base
         'application/vnd.oasis.opendocument.spreadsheet',
         'text/plain',
         'application/msword',
-        'application/msexcel'
-    );
+        'application/msexcel',
+    ];
+
+    protected $acl;
+    protected $entityManager;
+
+    public function __construct(Acl $acl, EntityManager $entityManager)
+    {
+        $this->acl = $acl;
+        $this->entityManager = $entityManager;
+    }
 
     public function run()
     {
@@ -55,25 +72,25 @@ class Download extends \Espo\Core\EntryPoints\Base
         }
         $id = $_GET['id'];
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+        $attachment = $this->entityManager->getEntity('Attachment', $id);
 
         if (!$attachment) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->checkEntity($attachment)) {
+        if (!$this->acl->checkEntity($attachment)) {
             throw new Forbidden();
         }
 
         $sourceId = $attachment->getSourceId();
 
-        if ($this->getEntityManager()->getRepository('Attachment')->hasDownloadUrl($attachment)) {
-            $downloadUrl = $this->getEntityManager()->getRepository('Attachment')->getDownloadUrl($attachment);
+        if ($this->entityManager->getRepository('Attachment')->hasDownloadUrl($attachment)) {
+            $downloadUrl = $this->entityManager->getRepository('Attachment')->getDownloadUrl($attachment);
             header('Location: ' . $downloadUrl);
             exit;
         }
 
-        $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
+        $fileName = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
 
         if (!file_exists($fileName)) {
             throw new NotFound();
@@ -103,4 +120,3 @@ class Download extends \Espo\Core\EntryPoints\Base
         exit;
     }
 }
-
