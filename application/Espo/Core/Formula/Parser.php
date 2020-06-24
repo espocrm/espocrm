@@ -214,7 +214,6 @@ class Parser
 
         $this->processStrings($expression, $modifiedExpression, $splitterIndexList, true);
 
-        //echo $modifiedExpression;
         $this->stripComments($expression, $modifiedExpression);
 
         foreach ($splitterIndexList as $i => $index) {
