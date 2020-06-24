@@ -27,11 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\AclPortal;
+namespace Espo\Core\Acl;
 
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
-/** Deprecated */
-class Base extends \Espo\Core\Acl\Base implements PortalScopeAcl
+interface ScopeAcl
 {
-    use Portal;
+
 }

@@ -746,5 +746,4 @@ class Table
     {
         $this->fileManager->putPhpContents($this->cacheFilePath, $this->data, true);
     }
-
 }

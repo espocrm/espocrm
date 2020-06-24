@@ -57,102 +57,102 @@ class Acl
         return $this->user;
     }
 
-    public function getMap()
+    public function getMap() : object
     {
         return $this->getAclManager()->getMap($this->getUser());
     }
 
-    public function getLevel($scope, $action)
+    public function getLevel(string $scope, string $action) : string
     {
         return $this->getAclManager()->getLevel($this->getUser(), $scope, $action);
     }
 
-    public function get($permission)
+    public function get(string $permission) : ?string
     {
         return $this->getAclManager()->get($this->getUser(), $permission);
     }
 
-    public function checkReadNo($scope)
+    public function checkReadNo(string $scope) : bool
     {
         return $this->getAclManager()->checkReadNo($this->getUser(), $scope);
     }
 
-    public function checkReadOnlyTeam($scope)
+    public function checkReadOnlyTeam(string $scope) : bool
     {
         return $this->getAclManager()->checkReadOnlyTeam($this->getUser(), $scope);
     }
 
-    public function checkReadOnlyOwn($scope)
+    public function checkReadOnlyOwn(string $scope) : bool
     {
         return $this->getAclManager()->checkReadOnlyOwn($this->getUser(), $scope);
     }
 
-    public function check($subject, $action = null)
+    public function check($subject, ?string $action = null) : bool
     {
         return $this->getAclManager()->check($this->getUser(), $subject, $action);
     }
 
-    public function checkScope($scope, $action = null)
+    public function checkScope(string $scope, ?string $action = null) : bool
     {
         return $this->getAclManager()->checkScope($this->getUser(), $scope, $action);
     }
 
-    public function checkEntity(Entity $entity, $action = 'read')
+    public function checkEntity(Entity $entity, string $action = 'read') : bool
     {
         return $this->getAclManager()->checkEntity($this->getUser(), $entity, $action);
     }
 
-    public function checkUser($permission, User $entity)
+    public function checkUser(string $permission, User $entity) : bool
     {
         return $this->getAclManager()->checkUser($this->getUser(), $permission, $entity);
     }
 
-    public function checkIsOwner(Entity $entity)
+    public function checkIsOwner(Entity $entity) : bool
     {
         return $this->getAclManager()->checkIsOwner($this->getUser(), $entity);
     }
 
-    public function checkInTeam(Entity $entity)
+    public function checkInTeam(Entity $entity) : bool
     {
         return $this->getAclManager()->checkInTeam($this->getUser(), $entity);
     }
 
-    public function getScopeForbiddenAttributeList($scope, $action = 'read', $thresholdLevel = 'no')
+    public function getScopeForbiddenAttributeList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
     {
         return $this->getAclManager()->getScopeForbiddenAttributeList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
-    public function getScopeForbiddenFieldList($scope, $action = 'read', $thresholdLevel = 'no')
+    public function getScopeForbiddenFieldList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
     {
         return $this->getAclManager()->getScopeForbiddenFieldList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
-    public function getScopeForbiddenLinkList($scope, $action = 'read', $thresholdLevel = 'no')
+    public function getScopeForbiddenLinkList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
     {
         return $this->getAclManager()->getScopeForbiddenLinkList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
-    public function checkUserPermission($target, $permissionType = 'userPermission')
+    public function checkUserPermission($target, string $permissionType = 'userPermission') : bool
     {
         return $this->getAclManager()->checkUserPermission($this->getUser(), $target, $permissionType);
     }
 
-    public function checkAssignmentPermission($target)
+    public function checkAssignmentPermission($target) : bool
     {
         return $this->getAclManager()->checkAssignmentPermission($this->getUser(), $target);
     }
 
-    public function getScopeRestrictedFieldList($scope, $type)
+    public function getScopeRestrictedFieldList(string $scope, $type) : array
     {
         return $this->getAclManager()->getScopeRestrictedFieldList($scope, $type);
     }
 
-    public function getScopeRestrictedAttributeList($scope, $type)
+    public function getScopeRestrictedAttributeList(string $scope, $type) : array
     {
         return $this->getAclManager()->getScopeRestrictedAttributeList($scope, $type);
     }
 
-    public function getScopeRestrictedLinkList($scope, $type)
+    public function getScopeRestrictedLinkList(string $scope, $type) : array
     {
         return $this->getAclManager()->getScopeRestrictedLinkList($scope, $type);
     }

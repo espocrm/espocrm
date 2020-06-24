@@ -38,7 +38,7 @@ use Espo\Core\{
     Utils\Config,
 };
 
-class Acl
+class Acl implements ScopeAcl, EntityAcl
 {
     protected $scope;
 

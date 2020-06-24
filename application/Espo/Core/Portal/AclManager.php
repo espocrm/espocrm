@@ -35,19 +35,30 @@ use Espo\Core\Utils\Util;
 
 use Espo\Entities\Portal;
 
-class AclManager extends \Espo\Core\AclManager
+use Espo\Core\{
+    AclPortal\Table as AclPortalTable,
+    AclPortal\Acl as BasePortalAcl,
+    AclPortal\PortalScopeAcl,
+    Acl\ScopeAcl,
+    Portal\Acl as UserAclWrapper,
+    AclManager as BaseAclManager,
+};
+
+use Espo\Core\Exceptions\Error;
+
+class AclManager extends BaseAclManager
 {
-    protected $tableClassName = 'Espo\\Core\\AclPortal\\Table';
+    protected $tableClassName = AclPortalTable::class;
 
     private $mainManager = null;
 
     private $portal = null;
 
-    protected $userAclClassName = 'Espo\\Core\\Portal\\Acl';
+    protected $userAclClassName = UserAclWrapper::class;
 
-    protected $baseImplementationClassName = 'Espo\\Core\\AclPortal\\Base';
+    protected $baseImplementationClassName = BasePortalAcl::class;
 
-    public function getImplementation(string $scope)
+    public function getImplementation(string $scope) : ScopeAcl
     {
         if (empty($this->implementationHashMap[$scope])) {
             $className = $this->classFinder->find('AclPortal', $scope);
@@ -65,12 +76,16 @@ class AclManager extends \Espo\Core\AclManager
             ]);
 
             $this->implementationHashMap[$scope] = $acl;
+
+            if (!$acl instanceof PortalScopeAcl) {
+                throw new Error("Portal\AclManager: Implementation should be instance of PortalScopeAcl.");
+            }
         }
 
         return $this->implementationHashMap[$scope];
     }
 
-    public function setMainManager($mainManager)
+    public function setMainManager(BaseAclManager $mainManager)
     {
         $this->mainManager = $mainManager;
     }
@@ -107,7 +122,7 @@ class AclManager extends \Espo\Core\AclManager
         return $this->tableHashMap[$key];
     }
 
-    public function checkReadOnlyAccount(User $user, $scope)
+    public function checkReadOnlyAccount(User $user, string $scope) : bool
     {
         if ($user->isAdmin()) {
             return false;
@@ -116,7 +131,7 @@ class AclManager extends \Espo\Core\AclManager
         return $this->getImplementation($scope)->checkReadOnlyAccount($user, $data);
     }
 
-    public function checkReadOnlyContact(User $user, $scope)
+    public function checkReadOnlyContact(User $user, string $scope) : bool
     {
         if ($user->isAdmin()) {
             return false;
@@ -125,17 +140,17 @@ class AclManager extends \Espo\Core\AclManager
         return $this->getImplementation($scope)->checkReadOnlyContact($user, $data);
     }
 
-    public function checkInAccount(User $user, Entity $entity, $action)
+    public function checkInAccount(User $user, Entity $entity) : bool
     {
-        return $this->getImplementation($entity->getEntityType())->checkInAccount($user, $entity);
+        return (bool) $this->getImplementation($entity->getEntityType())->checkInAccount($user, $entity);
     }
 
-    public function checkIsOwnContact(User $user, Entity $entity, $action)
+    public function checkIsOwnContact(User $user, Entity $entity) : bool
     {
-        return $this->getImplementation($entity->getEntityType())->checkIsOwnContact($user, $entity);
+        return (bool) $this->getImplementation($entity->getEntityType())->checkIsOwnContact($user, $entity);
     }
 
-    public function getMap(User $user)
+    public function getMap(User $user) : object
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getMap($user);
@@ -143,7 +158,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::getMap($user);
     }
 
-    public function getLevel(User $user, $scope, $action)
+    public function getLevel(User $user, string $scope, string $action) : string
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getLevel($user, $scope, $action);
@@ -151,7 +166,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::getLevel($user, $scope, $action);
     }
 
-    public function get(User $user, $permission)
+    public function get(User $user, string $permission) : ?string
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->get($user, $permission);
@@ -159,7 +174,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::get($user, $permission);
     }
 
-    public function checkReadOnlyTeam(User $user, $scope)
+    public function checkReadOnlyTeam(User $user, string $scope) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             $data = $this->getTable($user)->getScopeData($scope);
@@ -168,7 +183,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::checkReadOnlyTeam($user, $scope);
     }
 
-    public function checkReadNo(User $user, $scope)
+    public function checkReadNo(User $user, string $scope) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             $data = $this->getTable($user)->getScopeData($scope);
@@ -177,7 +192,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::checkReadNo($user, $scope);
     }
 
-    public function checkReadOnlyOwn(User $user, $scope)
+    public function checkReadOnlyOwn(User $user, string $scope) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             $data = $this->getTable($user)->getScopeData($scope);
@@ -186,7 +201,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::checkReadOnlyOwn($user, $scope);
     }
 
-    public function check(User $user, $subject, $action = null)
+    public function check(User $user, $subject, ?string $action = null) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->check($user, $subject, $action);
@@ -194,7 +209,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::check($user, $subject, $action);
     }
 
-    public function checkEntity(User $user, Entity $entity, $action = 'read')
+    public function checkEntity(User $user, Entity $entity, string $action = 'read') : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkEntity($user, $entity, $action);
@@ -202,7 +217,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::checkEntity($user, $entity, $action);
     }
 
-    public function checkIsOwner(User $user, Entity $entity)
+    public function checkIsOwner(User $user, Entity $entity) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkIsOwner($user, $entity);
@@ -210,7 +225,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::checkIsOwner($user, $entity);
     }
 
-    public function checkInTeam(User $user, Entity $entity)
+    public function checkInTeam(User $user, Entity $entity) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkInTeam($user, $entity);
@@ -218,7 +233,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::checkInTeam($user, $entity);
     }
 
-    public function checkScope(User $user, $scope, $action = null)
+    public function checkScope(User $user, string $scope, ?string $action = null) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkScope($user, $scope, $action);
@@ -226,7 +241,7 @@ class AclManager extends \Espo\Core\AclManager
         return parent::checkScope($user, $scope, $action);
     }
 
-    public function checkUser(User $user, $permission, User $entity)
+    public function checkUser(User $user, string $permission, User $entity) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkUser($user, $permission, $entity);
@@ -234,23 +249,25 @@ class AclManager extends \Espo\Core\AclManager
         return parent::checkUser($user, $permission, $entity);
     }
 
-    public function getScopeForbiddenAttributeList(User $user, $scope, $action = 'read', $thresholdLevel = 'no')
-    {
+    public function getScopeForbiddenAttributeList(
+        User $user, string $scope, string $action = 'read', string $thresholdLevel = 'no'
+    ) : array {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getScopeForbiddenAttributeList($user, $scope, $action, $thresholdLevel);
         }
         return parent::getScopeForbiddenAttributeList($user, $scope, $action, $thresholdLevel);
     }
 
-    public function getScopeForbiddenFieldList(User $user, $scope, $action = 'read', $thresholdLevel = 'no')
-    {
+    public function getScopeForbiddenFieldList(
+        User $user, string $scope, string $action = 'read', string $thresholdLevel = 'no'
+    ) : array {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getScopeForbiddenFieldList($user, $scope, $action, $thresholdLevel);
         }
         return parent::getScopeForbiddenFieldList($user, $scope, $action, $thresholdLevel);
     }
 
-    protected function checkUserIsNotPortal($user)
+    protected function checkUserIsNotPortal(User $user) : bool
     {
         return !$user->isPortal();
     }

@@ -29,29 +29,28 @@
 
 namespace Espo\Core\Portal;
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\Entities\User;
 
 class Acl extends \Espo\Core\Acl
 {
-    public function checkReadOnlyAccount($scope)
+    public function checkReadOnlyAccount(string $scope) : bool
     {
         return $this->getAclManager()->checkReadOnlyAccount($this->getUser(), $scope);
     }
 
-    public function checkReadOnlyContact($scope)
+    public function checkReadOnlyContact(string $scope) : bool
     {
         return $this->getAclManager()->checkReadOnlyContact($this->getUser(), $scope);
     }
 
-    public function checkInAccount(Entity $entity)
+    public function checkInAccount(Entity $entity) : bool
     {
         return $this->getAclManager()->checkInAccount($this->getUser(), $entity);
     }
 
-    public function checkIsOwnContact(Entity $entity)
+    public function checkIsOwnContact(Entity $entity) : bool
     {
         return $this->getAclManager()->checkIsOwnContact($this->getUser(), $entity);
     }
 }
-

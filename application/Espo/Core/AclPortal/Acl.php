@@ -31,7 +31,7 @@ namespace Espo\Core\AclPortal;
 
 use Espo\Core\Acl\Acl as BaseAcl;
 
-class Acl extends BaseAcl
+class Acl extends BaseAcl implements PortalScopeAcl
 {
     use Portal;
 }
