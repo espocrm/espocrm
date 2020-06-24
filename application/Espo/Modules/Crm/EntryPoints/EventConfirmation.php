@@ -47,8 +47,10 @@ use Espo\Core\{
     HookManager,
 };
 
-class EventConfirmation implements EntryPoint, NoAuth
+class EventConfirmation implements EntryPoint
 {
+    use NoAuth;
+
     protected $entityManager;
     protected $clientManager;
     protected $hookManager;

@@ -42,8 +42,10 @@ use Espo\Core\{
     Portal\Application as PortalApplication,
 };
 
-class Portal implements EntryPoint, NoAuth
+class Portal implements EntryPoint
 {
+    use NoAuth;
+
     protected $clientManager;
     protected $config;
 

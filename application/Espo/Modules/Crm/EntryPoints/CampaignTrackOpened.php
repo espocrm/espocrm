@@ -46,8 +46,10 @@ use Espo\Core\{
     ServiceFactory,
 };
 
-class CampaignTrackOpened implements EntryPoint, NoAuth
+class CampaignTrackOpened implements EntryPoint
 {
+    use NoAuth;
+
     protected $entityManager;
     protected $serviceFactory;
 

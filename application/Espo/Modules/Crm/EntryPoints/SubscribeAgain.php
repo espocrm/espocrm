@@ -50,8 +50,10 @@ use Espo\Core\{
     Utils\Hasher,
 };
 
-class SubscribeAgain implements EntryPoint, NoAuth
+class SubscribeAgain implements EntryPoint
 {
+    use NoAuth;
+
     protected $entityManager;
     protected $clientManager;
     protected $hookManager;

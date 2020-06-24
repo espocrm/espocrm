@@ -37,10 +37,10 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\EntryPoints\NotStrictAuth;
 use Espo\Core\Di;
 
-class Avatar extends Image implements NotStrictAuth,
-    Di\MetadataAware
+class Avatar extends Image implements Di\MetadataAware
 {
     use Di\MetadataSetter;
+    use NotStrictAuth;
 
     protected $systemColor = '#a4b5bd';
 

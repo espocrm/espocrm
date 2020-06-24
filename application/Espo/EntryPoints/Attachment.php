@@ -50,10 +50,11 @@ class Attachment implements EntryPoint,
         'image/webp',
     ];
 
-    public function run()
+    public function run($request)
     {
-        $id = $_GET['id'];
-        if (empty($id)) {
+        $id = $request->get('id');
+
+        if (!$id) {
             throw new BadRequest();
         }
 

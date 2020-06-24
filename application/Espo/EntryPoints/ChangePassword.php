@@ -44,8 +44,10 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-class ChangePassword implements EntryPoint, NoAuth
+class ChangePassword implements EntryPoint
 {
+    use NoAuth;
+
     protected $config;
     protected $clientManager;
     protected $entityManager;

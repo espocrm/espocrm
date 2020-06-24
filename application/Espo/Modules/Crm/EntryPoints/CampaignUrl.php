@@ -48,8 +48,10 @@ use Espo\Core\{
     Utils\Metadata,
 };
 
-class CampaignUrl implements EntryPoint, NoAuth
+class CampaignUrl implements EntryPoint
 {
+    use NoAuth;
+
     protected $entityManager;
     protected $serviceFactory;
     protected $hasher;

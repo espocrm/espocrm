@@ -44,8 +44,10 @@ use Espo\Core\{
     ServiceFactory,
 };
 
-class ConfirmOptIn implements EntryPoint, NoAuth
+class ConfirmOptIn implements EntryPoint
 {
+    use NoAuth;
+
     protected $clientManager;
     protected $serviceFactory;
 

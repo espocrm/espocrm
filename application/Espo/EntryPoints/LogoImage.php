@@ -40,9 +40,9 @@ use Espo\Core\EntryPoints\{
 
 use Espo\Core\Di;
 
-class LogoImage extends Image implements NoAuth,
-    Di\ConfigAware
+class LogoImage extends Image implements Di\ConfigAware
 {
+    use NoAuth;
     use Di\ConfigSetter;
 
     protected $allowedRelatedTypeList = ['Settings', 'Portal'];

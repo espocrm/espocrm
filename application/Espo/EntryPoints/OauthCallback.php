@@ -34,8 +34,10 @@ use Espo\Core\EntryPoints\{
     NoAuth,
 };
 
-class OauthCallback implements EntryPoint, NoAuth
+class OauthCallback implements EntryPoint
 {
+    use NoAuth;
+
     public function run()
     {
         echo "EspoCRM rocks! If this window is not closed automatically, it's probable that URL you use to access ".

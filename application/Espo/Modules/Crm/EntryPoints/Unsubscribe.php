@@ -51,8 +51,10 @@ use Espo\Core\{
     ServiceFactory,
 };
 
-class Unsubscribe implements EntryPoint, NoAuth
+class Unsubscribe implements EntryPoint
 {
+    use NoAuth;
+
     protected $entityManager;
     protected $clientManager;
     protected $hookManager;

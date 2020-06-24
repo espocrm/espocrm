@@ -29,7 +29,7 @@
 
 namespace Espo\Core\EntryPoints;
 
-interface NoAuth
+trait NoAuth
 {
-
+    public static $noAuth = true;
 }

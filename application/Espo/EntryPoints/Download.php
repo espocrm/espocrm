@@ -35,7 +35,6 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\EntryPoints\{
     EntryPoint,
-    NoAuth,
 };
 
 use Espo\Core\{

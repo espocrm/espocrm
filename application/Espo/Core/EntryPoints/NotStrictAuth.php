@@ -29,7 +29,7 @@
 
 namespace Espo\Core\EntryPoints;
 
-interface NotStrictAuth
+trait NotStrictAuth
 {
-
+    public static $notStrictAuth = true;
 }

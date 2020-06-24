@@ -55,15 +55,14 @@ class EntryPointManager
     {
         $className = $this->getClassName($name);
         if (!$className) {
-            throw new NotFound();
+            throw new NotFound("EntryPoint {$name} not found.");
         }
 
-        $class = new \ReflectionClass($className);
-
-        if ($class->implementsInterface(NoAuth::class)) {
+        if ($className::$noAuth ?? false) {
             return false;
         }
 
+        // for backward compatibility
         return $className::$authRequired ?? true;
     }
 
@@ -71,13 +70,7 @@ class EntryPointManager
     {
         $className = $this->getClassName($name);
         if (!$className) {
-            throw new NotFound();
-        }
-
-        $class = new \ReflectionClass($className);
-
-        if ($class->implementsInterface(NotStrictAuth::class)) {
-            return true;
+            throw new NotFound("EntryPoint {$name} not found.");
         }
 
         return $className::$notStrictAuth ?? false;
@@ -87,7 +80,7 @@ class EntryPointManager
     {
         $className = $this->getClassName($name);
         if (!$className) {
-            throw new NotFound();
+            throw new NotFound("EntryPoint {$name} not found.");
         }
 
         $entryPoint = $this->injectableFactory->create($className);
