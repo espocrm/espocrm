@@ -33,6 +33,8 @@ use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Core\Utils\Util;
 
+use Espo\Entities\Portal;
+
 class AclManager extends \Espo\Core\AclManager
 {
     protected $tableClassName = 'Espo\\Core\\AclPortal\\Table';
@@ -48,7 +50,7 @@ class AclManager extends \Espo\Core\AclManager
     public function getImplementation(string $scope)
     {
         if (empty($this->implementationHashMap[$scope])) {
-            $className = $this->getContainer()->get('classFinder')->find('AclPortal', $scope);
+            $className = $this->classFinder->find('AclPortal', $scope);
 
             if (!$className) {
                 $className = $this->baseImplementationClassName;
@@ -58,7 +60,7 @@ class AclManager extends \Espo\Core\AclManager
                 throw new Error("{$className} does not exist.");
             }
 
-            $acl = $this->getContainer()->get('injectableFactory')->createWith($className, [
+            $acl = $this->injectableFactory->createWith($className, [
                 'scope' => $scope,
             ]);
 
@@ -78,17 +80,14 @@ class AclManager extends \Espo\Core\AclManager
         return $this->mainManager;
     }
 
-    public function setPortal($portal)
+    public function setPortal(Portal $portal)
     {
         $this->portal = $portal;
     }
 
-    protected function getPortal()
+    protected function getPortal() : Portal
     {
-        if ($this->portal) {
-            return $this->portal;
-        }
-        return $this->getContainer()->get('portal');
+        return $this->portal ?? null;
     }
 
     protected function getTable(User $user)
@@ -99,14 +98,10 @@ class AclManager extends \Espo\Core\AclManager
         }
 
         if (empty($this->tableHashMap[$key])) {
-            $config = $this->getContainer()->get('config');
-            $fileManager = $this->getContainer()->get('fileManager');
-            $metadata = $this->getContainer()->get('metadata');
-            $fieldManager = $this->getContainer()->get('fieldManagerUtil');
-            $portal = $this->getPortal();
-
-            $this->tableHashMap[$key] = new $this->tableClassName(
-                $user, $portal, $config, $fileManager, $metadata, $fieldManager);
+            $this->tableHashMap[$key] = $this->injectableFactory->createWith($this->tableClassName, [
+                'user' => $user,
+                'portal' => $this->getPortal(),
+            ]);
         }
 
         return $this->tableHashMap[$key];
@@ -259,5 +254,4 @@ class AclManager extends \Espo\Core\AclManager
     {
         return !$user->isPortal();
     }
-
 }

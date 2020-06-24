@@ -55,7 +55,8 @@ class Stream extends \Espo\Core\Services\Base
             'metadata',
             'acl',
             'aclManager',
-            'container'
+            'container',
+            'portalAclManagerContainer',
         ]);
     }
 
@@ -1725,10 +1726,9 @@ class Stream extends \Espo\Core\Services\Base
         $aclManager = $this->getAclManager();
 
         if ($user->isPortal() && !$this->getUser()->isPortal()) {
-            $aclManager = new \Espo\Core\Portal\AclManager($this->getInjection('container'));
             $portals = $user->get('portals');
             if (count($portals)) {
-                $aclManager->setPortal($portals[0]);
+                $aclManager = $this->getInjection('portalAclManagerContainer')->get($portals[0]);
             } else {
                 $aclManager = null;
             }

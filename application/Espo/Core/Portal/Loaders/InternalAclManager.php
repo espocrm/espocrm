@@ -30,19 +30,35 @@
 namespace Espo\Core\Portal\Loaders;
 
 use Espo\Core\{
-    Container,
     Loaders\Loader,
+};
+
+use Espo\Core\{
+    InjectableFactory,
+    Utils\ClassFinder,
+    Utils\Config,
+    ORM\EntityManager,
+    AclManager as InternalAclManagerService,
 };
 
 class InternalAclManager implements Loader
 {
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    protected $injectableFactory;
+    protected $classFinder;
+    protected $config;
+    protected $entityManager;
+
+    public function __construct(
+        InjectableFactory $injectableFactory, ClassFinder $classFinder, Config $config, EntityManager $entityManager
+    ) {
+        $this->injectableFactory = $injectableFactory;
+        $this->classFinder = $classFinder;
+        $this->config = $config;
+        $this->entityManager = $entityManager;
     }
 
     public function load()
     {
-        return new \Espo\Core\AclManager($this->container);
+        return new InternalAclManagerService($this->injectableFactory, $this->classFinder, $this->config, $this->entityManager);
     }
 }

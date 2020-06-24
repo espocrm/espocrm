@@ -29,9 +29,12 @@
 
 namespace Espo\Core;
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\Entities\User;
 
+/**
+ * A wrapper for AclManager. To check access for a current user.
+ */
 class Acl
 {
     private $user;

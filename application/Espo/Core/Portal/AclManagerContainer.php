@@ -27,34 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Portal;
+
+use Espo\Entities\Portal;
 
 use Espo\Core\{
     InjectableFactory,
-    Utils\ClassFinder,
-    Utils\Config,
-    ORM\EntityManager,
-    AclManager as AclManagerService,
+    Portal\AclManager,
 };
 
-class AclManager implements Loader
-{
-    protected $injectableFactory;
-    protected $classFinder;
-    protected $config;
-    protected $entityManager;
+use Espo\Core\Exceptions\Error;
 
-    public function __construct(
-        InjectableFactory $injectableFactory, ClassFinder $classFinder, Config $config, EntityManager $entityManager
-    ) {
+/** Used when logged to CRM (not to portal) to provide an access checking ability for a specific portal.
+ * E.g. check whether a portal user has an access to some record within a specific portal.
+ */
+class AclManagerContainer
+{
+    protected $data = [];
+
+    protected $injectableFactory;
+
+    public function __construct(InjectableFactory $injectableFactory) {
         $this->injectableFactory = $injectableFactory;
-        $this->classFinder = $classFinder;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
     }
 
-    public function load()
+    public function get(Portal $portal)
     {
-        return new AclManagerService($this->injectableFactory, $this->classFinder, $this->config, $this->entityManager);
+        $id = $portal->id;
+
+        if (!$id) throw new Error("AclManagerContainer: portal should have ID.");
+
+        if (!isset($this->data[$id])) {
+            $aclManager = $this->injectableFactory->create(AclManager::class);
+            $aclManager->setPortal($portal);
+
+            $this->data[$id] = $aclManager;
+        }
+
+        return $this->data[$id];
     }
 }

@@ -37,12 +37,17 @@ use Espo\Core\Utils\Util;
 
 use Espo\Core\Acl\GlobalRestricton;
 
+use Espo\Core\{
+    Utils\ClassFinder,
+    Utils\Config,
+    ORM\EntityManager,
+};
+
+/**
+ * Used to check access for a specific user.
+ */
 class AclManager
 {
-    private $container;
-
-    private $metadata;
-
     private $implementationHashMap = [];
 
     private $tableHashMap = [];
@@ -55,33 +60,28 @@ class AclManager
 
     protected $globalRestricton;
 
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-        $this->metadata = $container->get('metadata');
+    protected $injectableFactory;
+    protected $classFinder;
+    protected $config;
+    protected $entityManager;
 
-        $this->globalRestricton = new GlobalRestricton(
-            $container->get('metadata'),
-            $container->get('fileManager'),
-            $container->get('fieldManagerUtil'),
-            $container->get('config')->get('useCache')
-        );
-    }
+    public function __construct(
+        InjectableFactory $injectableFactory, ClassFinder $classFinder, Config $config, EntityManager $entityManager
+    ) {
+        $this->injectableFactory = $injectableFactory;
+        $this->classFinder = $classFinder;
+        $this->config = $config;
+        $this->entityManager = $entityManager;
 
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
+        $this->globalRestricton = $this->injectableFactory->createWith(GlobalRestricton::class, [
+            'useCache' => $config->get('useCache'),
+        ]);
     }
 
     public function getImplementation(string $scope)
     {
         if (empty($this->implementationHashMap[$scope])) {
-            $className = $this->getContainer()->get('classFinder')->find('Acl', $scope);
+            $className = $this->classFinder->find('Acl', $scope);
 
             if (!$className) {
                 $className = $this->baseImplementationClassName;
@@ -91,7 +91,7 @@ class AclManager
                 throw new Error("{$className} does not exist.");
             }
 
-            $acl = $this->getContainer()->get('injectableFactory')->createWith($className, [
+            $acl = $this->injectableFactory->createWith($className, [
                 'scope' => $scope,
             ]);
 
@@ -109,12 +109,9 @@ class AclManager
         }
 
         if (empty($this->tableHashMap[$key])) {
-            $config = $this->getContainer()->get('config');
-            $fileManager = $this->getContainer()->get('fileManager');
-            $metadata = $this->getContainer()->get('metadata');
-            $fieldManager = $this->getContainer()->get('fieldManagerUtil');
-
-            $this->tableHashMap[$key] = new $this->tableClassName($user, $config, $fileManager, $metadata, $fieldManager);
+            $this->tableHashMap[$key] = $this->injectableFactory->createWith($this->tableClassName, [
+                'user' => $user,
+            ]);
         }
 
         return $this->tableHashMap[$key];
@@ -342,7 +339,7 @@ class AclManager
 
         if ($permission === 'team') {
             $teamIdList = $user->getLinkMultipleIdList('teams');
-            if (!$this->getContainer()->get('entityManager')->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
+            if (!$this->entityManager->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
                 return false;
             }
         }

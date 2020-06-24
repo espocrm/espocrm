@@ -75,5 +75,7 @@ class Container extends BaseContainer
         foreach ($data as $attribute => $value) {
             $this->get('config')->set($attribute, $value, true);
         }
+
+        $this->get('aclManager')->setPortal($portal);
     }
 }

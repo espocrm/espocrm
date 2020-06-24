@@ -29,6 +29,12 @@
 
 namespace Espo\Core\Acl;
 
+use Espo\Core\{
+    Utils\Metadata,
+    Utils\File\Manager as FileManager,
+    Utils\FieldManagerUtil,
+};
+
 class GlobalRestricton
 {
     protected $fieldTypeList = [
@@ -58,12 +64,8 @@ class GlobalRestricton
     private $data;
 
     public function __construct(
-        \Espo\Core\Utils\Metadata $metadata,
-        \Espo\Core\Utils\File\Manager $fileManager,
-        \Espo\Core\Utils\FieldManagerUtil $fieldManagerUtil,
-        bool $useCache = true
-    )
-    {
+        Metadata $metadata, FileManager $fileManager, FieldManagerUtil $fieldManagerUtil, bool $useCache = true
+    ) {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->fieldManagerUtil = $fieldManagerUtil;
