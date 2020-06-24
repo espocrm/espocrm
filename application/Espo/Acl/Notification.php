@@ -29,10 +29,10 @@
 
 namespace Espo\Acl;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class Notification extends \Espo\Core\Acl\Base
+class Notification extends \Espo\Core\Acl\Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
@@ -42,4 +42,3 @@ class Notification extends \Espo\Core\Acl\Base
         return false;
     }
 }
-

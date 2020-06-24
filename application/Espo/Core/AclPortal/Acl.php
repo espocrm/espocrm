@@ -29,9 +29,9 @@
 
 namespace Espo\Core\AclPortal;
 
+use Espo\Core\Acl\Acl as BaseAcl;
 
-/** Deprecated */
-class Base extends \Espo\Core\Acl\Base
+class Acl extends BaseAcl
 {
     use Portal;
 }

@@ -29,12 +29,12 @@
 
 namespace Espo\Acl;
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
 
-class User extends \Espo\Core\Acl\Base
+class User extends \Espo\Core\Acl\Acl
 {
-    public function checkIsOwner(\Espo\Entities\User $user, Entity $entity)
+    public function checkIsOwner(EntityUser $user, Entity $entity)
     {
         return $user->id === $entity->id;
     }

@@ -29,10 +29,10 @@
 
 namespace Espo\Acl;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class EmailFilter extends \Espo\Core\Acl\Base
+class EmailFilter extends \Espo\Core\Acl\Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
@@ -53,4 +53,3 @@ class EmailFilter extends \Espo\Core\Acl\Base
         return;
     }
 }
-

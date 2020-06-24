@@ -29,12 +29,13 @@
 
 namespace Espo\Modules\Crm\AclPortal;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class KnowledgeBaseArticle extends \Espo\Core\AclPortal\Base
+use Espo\Core\AclPortal\Acl;
+
+class KnowledgeBaseArticle extends Acl
 {
-
     public function checkEntityRead(EntityUser $user, Entity $entity, $data)
     {
         if (!$this->checkEntity($user, $entity, $data, 'read')) {
@@ -52,4 +53,3 @@ class KnowledgeBaseArticle extends \Espo\Core\AclPortal\Base
         return true;
     }
 }
-

@@ -29,10 +29,10 @@
 
 namespace Espo\Acl;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class ScheduledJob extends \Espo\Core\Acl\Base
+class ScheduledJob extends \Espo\Core\Acl\Acl
 {
     public function checkEntityRead(EntityUser $user, Entity $entity, $data)
     {
@@ -58,4 +58,3 @@ class ScheduledJob extends \Espo\Core\Acl\Base
         return $this->checkEntity($user, $entity, $data, 'create');
     }
 }
-

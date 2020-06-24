@@ -29,10 +29,12 @@
 
 namespace Espo\Modules\Crm\AclPortal;
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
-class Contact extends \Espo\Core\AclPortal\Base
+use Espo\Core\AclPortal\Acl;
+
+class Contact extends Acl
 {
     public function checkIsOwnContact(User $user, Entity $entity)
     {
@@ -45,4 +47,3 @@ class Contact extends \Espo\Core\AclPortal\Base
         return false;
     }
 }
-

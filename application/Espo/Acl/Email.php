@@ -29,10 +29,10 @@
 
 namespace Espo\Acl;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class Email extends \Espo\Core\Acl\Base
+class Email extends \Espo\Core\Acl\Acl
 {
     protected $ownerUserIdAttribute = 'usersIds';
 
