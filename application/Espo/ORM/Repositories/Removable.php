@@ -27,57 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ORM;
+namespace Espo\ORM\Repositories;
 
-use Espo\Entities\User;
+use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Utils\Metadata as EspoMetadata,
-    HookManager,
-    Utils\Util,
-};
-
-use Espo\ORM\EntityManager as BaseEntityManager;
-
-class EntityManager extends BaseEntityManager
+interface Removable
 {
-    private $hookManager;
-
-    private $helper;
-
-    protected $user = null;
-
-    public function __construct(
-        array $params,
-        RepositoryFactory $repositoryFactory,
-        EntityFactory $entityFactory,
-        HookManager $hookManager,
-        Helper $helper
-    ) {
-        parent::__construct($params, $repositoryFactory, $entityFactory);
-
-        $this->hookManager = $hookManager;
-        $this->helper = $helper;
-    }
-
-    // TODO Check whether setUser is needed here
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    public function getUser() : ?User
-    {
-        return $this->user ?? null;
-    }
-
-    public function getHookManager() : HookManager
-    {
-        return $this->hookManager;
-    }
-
-    public function getHelper() : ?Helper
-    {
-        return $this->helper ?? null;
-    }
+    public function remove(Entity $entity);
 }

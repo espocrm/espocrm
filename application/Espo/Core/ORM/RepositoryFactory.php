@@ -32,13 +32,14 @@ namespace Espo\Core\ORM;
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
+    Repositories\Database as DatabaseRepository,
 };
 
 use Espo\ORM\RepositoryFactory as RepositoryFactoryInterface;
 
 class RepositoryFactory implements RepositoryFactoryInterface
 {
-    protected $defaultClassName = Repositories\RDB::class;
+    protected $defaultClassName = DatabaseRepository::class;
 
     protected $entityFactory;
     protected $injectableFactory;

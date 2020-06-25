@@ -34,8 +34,11 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
+use Espo\ORM\Repository;
 
-class RDB extends \Espo\ORM\Repository
+use Espo\ORM\DB\IMapper as Mapper;
+
+class RDB extends Repository implements Findable, Relatable, Removable
 {
     /**
      * @var Object Mapper.
@@ -70,7 +73,7 @@ class RDB extends \Espo\ORM\Repository
         $this->entityManager = $entityManager;
     }
 
-    protected function getMapper()
+    protected function getMapper() : Mapper
     {
         if (empty($this->mapper)) {
             $this->mapper = $this->getEntityManager()->getMapper('RDB');
@@ -80,16 +83,6 @@ class RDB extends \Espo\ORM\Repository
 
     public function handleSelectParams(&$params)
     {
-    }
-
-    protected function getEntityFactory()
-    {
-        return $this->entityFactory;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
     }
 
     public function reset()
@@ -197,7 +190,7 @@ class RDB extends \Espo\ORM\Repository
         return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 
-    public function find(array $params = [])
+    public function find(array $params = []) : \Traversable
     {
         $params = $this->getSelectParams($params);
 
@@ -221,7 +214,7 @@ class RDB extends \Espo\ORM\Repository
         return $collection;
     }
 
-    public function findOne(array $params = [])
+    public function findOne(array $params = []) : ?Entity
     {
         $collection = $this->limit(0, 1)->find($params);
         if (count($collection)) {
@@ -246,7 +239,7 @@ class RDB extends \Espo\ORM\Repository
         return $collection;
     }
 
-    public function findRelated(Entity $entity, $relationName, array $params = [])
+    public function findRelated(Entity $entity, string $relationName, array $params = [])
     {
         if (!$entity->id) {
             return [];
@@ -281,10 +274,10 @@ class RDB extends \Espo\ORM\Repository
         }
     }
 
-    public function countRelated(Entity $entity, string $relationName, array $params = [])
+    public function countRelated(Entity $entity, string $relationName, array $params = []) : int
     {
         if (!$entity->id) {
-            return;
+            return 0;
         }
         $entityType = $entity->relations[$relationName]['entity'];
         if (empty($params['skipAdditionalSelectParams'])) {
@@ -294,10 +287,10 @@ class RDB extends \Espo\ORM\Repository
         return intval($this->getMapper()->countRelated($entity, $relationName, $params));
     }
 
-    public function isRelated(Entity $entity, string $relationName, $foreign)
+    public function isRelated(Entity $entity, string $relationName, $foreign) : bool
     {
         if (!$entity->id) {
-            return null;
+            return false;
         }
 
         if ($foreign instanceof Entity) {
@@ -305,14 +298,14 @@ class RDB extends \Espo\ORM\Repository
         } else if (is_string($foreign)) {
             $id = $foreign;
         } else {
-            return null;
+            return false;
         }
 
-        if (!$id) return null;
+        if (!$id) return false;
 
         if ($entity->getRelationType($relationName) === Entity::BELONGS_TO) {
             $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
-            if (!$foreignEntityType) return null;
+            if (!$foreignEntityType) return false;
 
             $foreignId = $entity->get($relationName . 'Id');
 
@@ -334,9 +327,9 @@ class RDB extends \Espo\ORM\Repository
             return $foreignEntity->id === $id;
         }
 
-        return !!$this->countRelated($entity, $relationName, [
+        return (bool) $this->countRelated($entity, $relationName, [
             'whereClause' => [
-                'id' => $id
+                'id' => $id,
             ]
         ]);
     }
@@ -483,13 +476,14 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
+    /** Deprecated */
     public function getAll()
     {
         $this->reset();
         return $this->find();
     }
 
-    public function count(array $params = [])
+    public function count(array $params = []) : int
     {
         if (empty($params['skipAdditionalSelectParams'])) {
             $this->handleSelectParams($params);
@@ -501,19 +495,19 @@ class RDB extends \Espo\ORM\Repository
         return intval($count);
     }
 
-    public function max($field)
+    public function max(string $field)
     {
         $params = $this->getSelectParams();
         return $this->getMapper()->max($this->seed, $params, $field);
     }
 
-    public function min($field)
+    public function min(string $field)
     {
         $params = $this->getSelectParams();
         return $this->getMapper()->min($this->seed, $params, $field);
     }
 
-    public function sum($field)
+    public function sum(string $field)
     {
         $params = $this->getSelectParams();
         return $this->getMapper()->sum($this->seed, $params, $field);

@@ -33,27 +33,20 @@ use Espo\ORM\Entity;
 use Espo\ORM\Repository;
 use Espo\Core\Utils\Json;
 
-use Espo\Core\Di\{
-    FileManagerAware,
-    FileManagerSetter,
-    MetadataAware,
-    MetadataSetter,
-    ConfigAware,
-    ConfigSetter,
-    EntityManagerAware,
-    EntityManagerSetter,
+use Espo\ORM\Repositories\{
+    Removable,
 };
 
-class Preferences extends Repository implements
-    FileManagerAware,
-    MetadataAware,
-    ConfigAware,
-    EntityManagerAware
+use Espo\Core\Di;
+
+class Preferences extends Repository implements Removable,
+    Di\MetadataAware,
+    Di\ConfigAware,
+    Di\EntityManagerAware
 {
-    use FileManagerSetter;
-    use MetadataSetter;
-    use ConfigSetter;
-    use EntityManagerSetter;
+    use Di\MetadataSetter;
+    use Di\ConfigSetter;
+    use Di\EntityManagerSetter;
 
     protected $defaultAttributeListFromSettings = [
         'decimalMark',
@@ -66,33 +59,13 @@ class Preferences extends Repository implements
 
     protected $entityType = 'Preferences';
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getEntityManger()
-    {
-        return $this->entityManager;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    public function get(?string $id = null)
+    public function get(?string $id = null) : ?Entity
     {
         if ($id) {
             $entity = $this->entityFactory->create('Preferences');
             $entity->id = $id;
             if (empty($this->data[$id])) {
-                $pdo = $this->getEntityManger()->getPDO();
+                $pdo = $this->entityManager->getPDO();
                 $sql = "SELECT `id`, `data` FROM `preferences` WHERE id = ".$pdo->quote($id);
                 $ps = $pdo->query($sql);
 
@@ -110,18 +83,18 @@ class Preferences extends Repository implements
                 if ($data) {
                     $this->data[$id] = $data;
                 } else {
-                    $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
-                    $defaults = array();
+                    $fields = $this->metadata->get('entityDefs.Preferences.fields');
+                    $defaults = [];
 
-                    $dashboardLayout = $this->getConfig()->get('dashboardLayout');
+                    $dashboardLayout = $this->config->get('dashboardLayout');
                     $dashletsOptions = null;
                     if (!$dashboardLayout) {
-                        $dashboardLayout = $this->getMetadata()->get('app.defaultDashboardLayouts.Standard');
-                        $dashletsOptions = $this->getMetadata()->get('app.defaultDashboardOptions.Standard');
+                        $dashboardLayout = $this->metadata->get('app.defaultDashboardLayouts.Standard');
+                        $dashletsOptions = $this->metadata->get('app.defaultDashboardOptions.Standard');
                     }
 
                     if ($dashletsOptions === null) {
-                        $dashletsOptions = $this->getConfig()->get('dashletsOptions', (object) []);
+                        $dashletsOptions = $this->config->get('dashletsOptions', (object) []);
                     }
 
                     $defaults['dashboardLayout'] = $dashboardLayout;
@@ -133,7 +106,7 @@ class Preferences extends Repository implements
                         }
                     }
                     foreach ($this->defaultAttributeListFromSettings as $attr) {
-                        $defaults[$attr] = $this->getConfig()->get($attr);
+                        $defaults[$attr] = $this->config->get($attr);
                     }
 
                     $this->data[$id] = $defaults;
@@ -156,7 +129,7 @@ class Preferences extends Repository implements
         $id = $entity->id;
 
         $autoFollowEntityTypeList = [];
-        $pdo = $this->getEntityManger()->getPDO();
+        $pdo = $this->entityManager->getPDO();
         $sql = "
             SELECT `entity_type` AS 'entityType' FROM `autofollow`
             WHERE `user_id` = ".$pdo->quote($id)."
@@ -189,11 +162,11 @@ class Preferences extends Repository implements
         if ($was == $became) {
             return;
         }
-        $pdo = $this->getEntityManger()->getPDO();
+        $pdo = $this->entityManager->getPDO();
         $sql = "DELETE FROM autofollow WHERE user_id = ".$pdo->quote($id)."";
         $pdo->query($sql);
 
-        $scopes = $this->getMetadata()->get('scopes');
+        $scopes = $this->metadata->get('scopes');
         foreach ($became as $entityType) {
             if (isset($scopes[$entityType]) && !empty($scopes[$entityType]['stream'])) {
                 $sql = "
@@ -205,15 +178,15 @@ class Preferences extends Repository implements
         }
     }
 
-    public function save(Entity $entity, array $options = array())
+    public function save(Entity $entity, array $options = [])
     {
         if (!$entity->id) return;
 
         $this->data[$entity->id] = $entity->toArray();
 
-        $fields = $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
+        $fields = $fields = $this->metadata->get('entityDefs.Preferences.fields');
 
-        $data = array();
+        $data = [];
         foreach ($this->data[$entity->id] as $field => $value) {
             if (empty($fields[$field]['notStorable'])) {
                 $data[$field] = $value;
@@ -222,7 +195,7 @@ class Preferences extends Repository implements
 
         $dataString = Json::encode($data, \JSON_PRETTY_PRINT);
 
-        $pdo = $this->getEntityManger()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
         $sql = "
             INSERT INTO `preferences` (`id`, `data`) VALUES (".$pdo->quote($entity->id).", ".$pdo->quote($dataString).")
@@ -231,7 +204,7 @@ class Preferences extends Repository implements
 
         $pdo->query($sql);
 
-        $user = $this->getEntityManger()->getEntity('User', $entity->id);
+        $user = $this->entityManager->getEntity('User', $entity->id);
         if ($user && !$user->isPortal()) {
             $this->storeAutoFollowEntityTypeList($entity);
         }
@@ -239,9 +212,9 @@ class Preferences extends Repository implements
         return $entity;
     }
 
-    public function deleteFromDb($id)
+    public function deleteFromDb(string $id)
     {
-        $pdo = $this->getEntityManger()->getPDO();
+        $pdo = $this->entityManager->getPDO();
         $sql = "DELETE  FROM `preferences` WHERE `id` = " . $pdo->quote($id);
         $ps = $pdo->query($sql);
     }
@@ -255,7 +228,7 @@ class Preferences extends Repository implements
         }
     }
 
-    public function resetToDefaults($userId)
+    public function resetToDefaults(string $userId)
     {
         $this->deleteFromDb($userId);
         if (isset($this->data[$userId])) {
@@ -264,21 +237,5 @@ class Preferences extends Repository implements
         if ($entity = $this->get($userId)) {
             return $entity->toArray();
         }
-    }
-
-    public function find(array $params)
-    {
-    }
-
-    public function findOne(array $params)
-    {
-    }
-
-    public function getAll()
-    {
-    }
-
-    public function count(array $params)
-    {
     }
 }
