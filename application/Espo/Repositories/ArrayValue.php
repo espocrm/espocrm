@@ -39,8 +39,6 @@ class ArrayValue extends \Espo\Core\Repositories\Database
 
     protected $processFieldsAfterSaveDisabled = true;
 
-    protected $processFieldsBeforeSaveDisabled = true;
-
     protected $processFieldsAfterRemoveDisabled = true;
 
     public function storeEntityAttribute(Entity $entity, string $attribute, bool $populateMode = false)

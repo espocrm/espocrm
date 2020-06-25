@@ -37,12 +37,9 @@ class ScheduledJob extends \Espo\Core\ORM\Repositories\RDB
 
     protected $processFieldsAfterSaveDisabled = true;
 
-    protected $processFieldsBeforeSaveDisabled = true;
-
     protected $processFieldsAfterRemoveDisabled = true;
 
-
-    protected function afterSave(Entity $entity, array $options = array())
+    protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 

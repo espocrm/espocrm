@@ -31,13 +31,11 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class AuthFailLogRecord extends \Espo\Core\ORM\Repositories\RDB
+class AuthFailLogRecord extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
     protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsBeforeSaveDisabled = true;
 
     protected $processFieldsAfterRemoveDisabled = true;
 }

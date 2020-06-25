@@ -41,8 +41,6 @@ use Espo\Core\ORM\{
 
 use Espo\Core\{
     Utils\Metadata,
-    Utils\Config,
-    Utils\FieldManagerUtil,
     Utils\Util,
 };
 
@@ -51,8 +49,6 @@ class Database extends RDB
     protected $hooksDisabled = false;
 
     protected $processFieldsAfterSaveDisabled = false;
-
-    protected $processFieldsBeforeSaveDisabled = false;
 
     protected $processFieldsAfterRemoveDisabled = false;
 
@@ -66,15 +62,11 @@ class Database extends RDB
         string $entityType,
         EntityManager $entityManager,
         EntityFactory $entityFactory,
-        Metadata $metadata,
-        Config $config,
-        FieldManagerUtil $fieldManagerUtil
+        Metadata $metadata
     ) {
-        parent::__construct($entityType, $entityManager, $entityFactory, $metadata, $config, $fieldManagerUtil);
+        parent::__construct($entityType, $entityManager, $entityFactory, $metadata);
 
         $this->metadata = $metadata;
-        $this->config = $config;
-        $this->fieldManagerUtil = $fieldManagerUtil;
     }
 
     protected function getMetadata()
@@ -258,10 +250,6 @@ class Database extends RDB
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeSave', $entity, $options);
         }
-
-        if (!$this->processFieldsBeforeSaveDisabled) {
-            $this->processCurrencyFieldsBeforeSave($entity);
-        }
     }
 
     protected function afterSave(Entity $entity, array $options = [])
@@ -338,31 +326,6 @@ class Database extends RDB
         $result = parent::save($entity, $options);
 
         return $result;
-    }
-
-    protected function getFieldByTypeList($type)
-    {
-        return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
-    }
-
-    protected function processCurrencyFieldsBeforeSave(Entity $entity)
-    {
-        foreach ($this->getFieldByTypeList('currency') as $field) {
-            $currencyAttribute = $field . 'Currency';
-            $defaultCurrency = $this->getConfig()->get('defaultCurrency');
-            if ($entity->isNew()) {
-                if ($entity->get($field) && !$entity->get($currencyAttribute)) {
-                    $entity->set($currencyAttribute, $defaultCurrency);
-                }
-            } else {
-                if (
-                    $entity->isAttributeChanged($field) && $entity->has($currencyAttribute) &&
-                    !$entity->get($currencyAttribute)
-                ) {
-                    $entity->set($currencyAttribute, $defaultCurrency);
-                }
-            }
-        }
     }
 
     protected function processFileFieldsSave(Entity $entity)

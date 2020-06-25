@@ -27,38 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Core\Di;
 
-use Espo\ORM\Entity;
+use Espo\Core\FileStorage\Manager as FileStorageManager;
 
-class Job extends \Espo\Core\ORM\Repositories\RDB
+trait FileStorageManagerSetter
 {
-    protected $hooksDisabled = true;
+    protected $fileStorageManager;
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
-
-    protected function init()
+    public function setFileStorageManager(FileStorageManager $fileStorageManager)
     {
-        parent::init();
-        $this->addDependency('config');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
-    public function beforeSave(Entity $entity, array $options = array())
-    {
-        if (!$entity->has('executeTime') && $entity->isNew()) {
-            $entity->set('executeTime', date('Y-m-d H:i:s'));
-        }
-
-        if (!$entity->has('attempts') && $entity->isNew()) {
-            $attempts = $this->getConfig()->get('jobRerunAttemptNumber', 0);
-            $entity->set('attempts', $attempts);
-        }
+        $this->fileStorageManager = $fileStorageManager;
     }
 }

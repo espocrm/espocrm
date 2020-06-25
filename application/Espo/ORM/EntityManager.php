@@ -247,7 +247,7 @@ class EntityManager
         return $this->entityFactory;
     }
 
-    public function runQuery(createCollection $query, bool $rerunIfDeadlock = false)
+    public function runQuery(string $query, bool $rerunIfDeadlock = false)
     {
         try {
             return $this->getPDO()->query($query);

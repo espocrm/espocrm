@@ -76,7 +76,7 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         return $sql;
     }
 
-    public function countRelated(Entity $entity, $relationName, array $params = array())
+    public function countRelated(Entity $entity, $relationName, array $params = []) : int
     {
         $entityType = $entity->get('entityType');
 
@@ -88,7 +88,7 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         return $this->getEntityManager()->getRepository($entityType)->count($params);
     }
 
-    protected function afterRemove(Entity $entity, array $options = array())
+    protected function afterRemove(Entity $entity, array $options = [])
     {
         if ($entity->get('fileId')) {
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('fileId'));
@@ -106,6 +106,4 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         parent::afterRemove($entity, $options);
 
     }
-
 }
-

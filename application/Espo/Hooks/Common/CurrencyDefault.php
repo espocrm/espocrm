@@ -27,38 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 
-class Job extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Utils\{
+    Config,
+    FieldManagerUtil,
+};
+
+class CurrencyDefault
 {
-    protected $hooksDisabled = true;
+    public static $order = 200;
 
-    protected $processFieldsAfterSaveDisabled = true;
+    protected $config;
+    protected $fieldManagerUtil;
 
-    protected $processFieldsAfterRemoveDisabled = true;
-
-    protected function init()
+    public function __construct(Config $config, FieldManagerUtil $fieldManagerUtil)
     {
-        parent::init();
-        $this->addDependency('config');
+        $this->config = $config;
+        $this->fieldManagerUtil = $fieldManagerUtil;
     }
 
-    protected function getConfig()
+    public function beforeSave(Entity $entity, array $options = [])
     {
-        return $this->getInjection('config');
-    }
+        $fieldList = $this->fieldManagerUtil->getFieldByTypeList($entity->getEntityType(), 'currency');
 
-    public function beforeSave(Entity $entity, array $options = array())
-    {
-        if (!$entity->has('executeTime') && $entity->isNew()) {
-            $entity->set('executeTime', date('Y-m-d H:i:s'));
-        }
+        $defaultCurrency = $this->config->get('defaultCurrency');
 
-        if (!$entity->has('attempts') && $entity->isNew()) {
-            $attempts = $this->getConfig()->get('jobRerunAttemptNumber', 0);
-            $entity->set('attempts', $attempts);
+        foreach ($fieldList as $field) {
+            $currencyAttribute = $field . 'Currency';
+            if ($entity->isNew()) {
+                if ($entity->get($field) && !$entity->get($currencyAttribute)) {
+                    $entity->set($currencyAttribute, $defaultCurrency);
+                }
+            } else {
+                if (
+                    $entity->isAttributeChanged($field) && $entity->has($currencyAttribute) &&
+                    !$entity->get($currencyAttribute)
+                ) {
+                    $entity->set($currencyAttribute, $defaultCurrency);
+                }
+            }
         }
     }
 }

@@ -45,7 +45,9 @@ use Espo\Core\{
 /** Deprecated */
 class RDB extends \Espo\Core\Repositories\Database implements Injectable
 {
-    protected $dependencyList = [];
+    protected $dependencyList = [
+        'config',
+    ];
 
     protected $dependencies = [];
 
@@ -88,24 +90,15 @@ class RDB extends \Espo\Core\Repositories\Database implements Injectable
         return $this->getInjection('config');
     }
 
-    protected function getFieldManagerUtil()
-    {
-        return $this->getInjection('fieldManagerUtil');
-    }
-
     public function __construct(
         string $entityType,
         EntityManager $entityManager,
         EntityFactory $entityFactory,
-        Metadata $metadata,
-        Config $config,
-        FieldManagerUtil $fieldManagerUtil
+        Metadata $metadata
     ) {
-        parent::__construct($entityType, $entityManager, $entityFactory, $metadata, $config, $fieldManagerUtil);
+        parent::__construct($entityType, $entityManager, $entityFactory, $metadata);
 
         $this->metadata = $metadata;
-        $this->config = $config;
-        $this->fieldManagerUtil = $fieldManagerUtil;
 
         $this->init();
     }

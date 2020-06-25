@@ -31,13 +31,12 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class Email extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Di;
+
+class Email extends \Espo\Core\Repositories\Database implements
+    Di\EmailFilterManagerAware
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('emailFilterManager');
-    }
+    use Di\EmailFilterManagerSetter;
 
     protected function prepareAddressess(Entity $entity, $type, $addAssignedUser = false)
     {
@@ -254,7 +253,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
 
                         if (!$entity->get('sentById')) {
-                            $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($entity->get('fromEmailAddressId'), 'User', true);
+                            $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId(
+                                $entity->get('fromEmailAddressId'), 'User', true
+                            );
                             if ($user) {
                                 $entity->set('sentById', $user->id);
                             }
@@ -283,7 +284,6 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 $entity->addLinkMultipleId('users', $assignedUserId);
             }
         }
-
 
         parent::beforeSave($entity, $options);
 
@@ -400,6 +400,6 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
     protected function getEmailFilterManager()
     {
-        return $this->getInjection('emailFilterManager');
+        return $this->emailFilterManager;
     }
 }
