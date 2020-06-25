@@ -29,28 +29,18 @@
 
 namespace Espo\Core\Formula\Functions\DateTimeGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class ClosestType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class ClosestType extends \Espo\Core\Formula\Functions\FunctionBase implements Di\ConfigAware
 {
-    protected function init()
-    {
-        $this->addDependency('dateTime');
-        $this->addDependency('config');
-    }
+    use Di\ConfigSetter;
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            return true;
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 3) {
-             throw new Error();
+            throw new Error("Closest function: Too few arguments.");
         }
 
         $value = $this->evaluate($item->value[0]);
@@ -80,7 +70,7 @@ class ClosestType extends \Espo\Core\Formula\Functions\Base
         }
 
         if (!$timezone) {
-            $timezone = $this->getInjection('config')->get('timeZone');
+            $timezone = $this->config->get('timeZone');
         }
 
         $isDate = false;

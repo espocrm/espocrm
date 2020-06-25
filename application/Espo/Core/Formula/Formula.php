@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Formula;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
+
+use StdClass;
 
 class Formula
 {
@@ -40,7 +42,7 @@ class Formula
         $this->functionFactory = $functionFactory;
     }
 
-    public function process(\StdClass $item, $entity = null, $variables = null)
+    public function process(StdClass $item, ?Entity $entity = null, ?StdClass $variables = null)
     {
         if (is_null($variables)) {
             $variables = (object)[];

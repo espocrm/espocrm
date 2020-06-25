@@ -29,27 +29,18 @@
 
 namespace Espo\Core\Formula\Functions\DateTimeGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class FormatType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class FormatType extends \Espo\Core\Formula\Functions\FunctionBase implements Di\DateTimeAware
 {
-    protected function init()
-    {
-        $this->addDependency('dateTime');
-    }
+    use Di\DateTimeSetter;
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            return true;
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 1) {
-             throw new Error();
+             throw new Error("Format function: Too few arguments.");
         }
 
         $timezone = null;
@@ -64,9 +55,9 @@ class FormatType extends \Espo\Core\Formula\Functions\Base
         }
 
         if (strlen($value) > 11) {
-            return $this->getInjection('dateTime')->convertSystemDateTime($value, $timezone, $format);
+            return $this->dateTime->convertSystemDateTime($value, $timezone, $format);
         } else {
-            return $this->getInjection('dateTime')->convertSystemDate($value, $format);
+            return $this->dateTime->convertSystemDate($value, $format);
         }
     }
 }

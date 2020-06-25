@@ -29,29 +29,21 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class CountType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class CountType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware,
+    Di\SelectManagerFactoryAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('selectManagerFactory');
-    }
+    use Di\EntityManagerSetter;
+    use Di\SelectManagerFactorySetter;
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 1) {
-            throw new Error();
+            throw new Error("record\\count: too few arguments.");
         }
 
         $entityType = $this->evaluate($item->value[0]);
@@ -62,7 +54,7 @@ class CountType extends \Espo\Core\Formula\Functions\Base
                 $filter = $this->evaluate($item->value[1]);
             }
 
-            $selectManager = $this->getInjection('selectManagerFactory')->create($entityType);
+            $selectManager = $this->selectManagerFactory->create($entityType);
             $selectParams = $selectManager->getEmptySelectParams();
 
             if ($filter) {
@@ -73,7 +65,7 @@ class CountType extends \Espo\Core\Formula\Functions\Base
                 }
             }
 
-            return $this->getInjection('entityManager')->getRepository($entityType)->count($selectParams);
+            return $this->entityManager->getRepository($entityType)->count($selectParams);
         }
 
         $whereClause = [];
@@ -86,6 +78,6 @@ class CountType extends \Espo\Core\Formula\Functions\Base
             $i = $i + 2;
         }
 
-        return $this->getInjection('entityManager')->getRepository($entityType)->where($whereClause)->count();
+        return $this->entityManager->getRepository($entityType)->where($whereClause)->count();
     }
 }

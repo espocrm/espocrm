@@ -31,33 +31,26 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class FindOneType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class FindOneType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware,
+    Di\SelectManagerFactoryAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('selectManagerFactory');
-    }
+    use Di\EntityManagerSetter;
+    use Di\SelectManagerFactorySetter;
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 3) {
-            throw new Error();
+            throw new Error("record\\findOne: too few arguments.");
         }
 
         $entityType = $this->evaluate($item->value[0]);
         $orderBy = $this->evaluate($item->value[1]);
         $order = $this->evaluate($item->value[2]) ?? 'asc';
 
-        $selectManager = $this->getInjection('selectManagerFactory')->create($entityType);
+        $selectManager = $this->selectManagerFactory->create($entityType);
         $selectParams = $selectManager->getEmptySelectParams();
 
         if (count($item->value) <= 4) {
@@ -85,7 +78,7 @@ class FindOneType extends \Espo\Core\Formula\Functions\Base
             $selectManager->applyOrder($orderBy, $order, $selectParams);
         }
 
-        $e = $this->getInjection('entityManager')->getRepository($entityType)->select(['id'])->findOne($selectParams);
+        $e = $this->entityManager->getRepository($entityType)->select(['id'])->findOne($selectParams);
 
         if ($e) return $e->id;
 

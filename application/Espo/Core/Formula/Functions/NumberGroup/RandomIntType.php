@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\NumberGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class RandomIntType extends \Espo\Core\Formula\Functions\Base
+class RandomIntType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {

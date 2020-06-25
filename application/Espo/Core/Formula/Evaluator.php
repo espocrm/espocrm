@@ -35,6 +35,8 @@ use Espo\Core\InjectableFactory;
 
 use Espo\Core\ORM\Entity;
 
+use StdClass;
+
 class Evaluator
 {
     private $functionFactory = null;
@@ -57,17 +59,13 @@ class Evaluator
         $this->parsedHash = [];
     }
 
-    public function process(string $expression, ?Entity $entity = null, ?object $variables = null)
+    public function process(string $expression, ?Entity $entity = null, ?StdClass $variables = null)
     {
         if (!array_key_exists($expression, $this->parsedHash)) {
             $item = $this->parser->parse($expression);
             $this->parsedHash[$expression] = $item;
         } else {
             $item = $this->parsedHash[$expression];
-        }
-
-        if (!$item || !($item instanceof \StdClass)) {
-            throw new Error();
         }
 
         $result = $this->formula->process($item, $entity, $variables);

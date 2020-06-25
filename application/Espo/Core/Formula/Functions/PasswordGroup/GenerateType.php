@@ -29,19 +29,16 @@
 
 namespace Espo\Core\Formula\Functions\PasswordGroup;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Di;
 
-class GenerateType extends \Espo\Core\Formula\Functions\Base
+class GenerateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\ConfigAware
 {
-    protected function init()
-    {
-        $this->addDependency('config');
-    }
+    use Di\ConfigSetter;
 
     public function process(\StdClass $item)
     {
-        $config = $this->getInjection('config');
+        $config = $this->config;
 
         $length = $config->get('passwordGenerateLength', 10);
         $letterCount = $config->get('passwordGenerateLetterCount', 4);

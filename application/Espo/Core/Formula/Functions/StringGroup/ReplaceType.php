@@ -31,33 +31,34 @@ namespace Espo\Core\Formula\Functions\StringGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class ReplaceType extends \Espo\Core\Formula\Functions\Base
+class ReplaceType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
         $args = $this->fetchArguments($item);
 
-        if (count($args) < 3) throw new Error("Formula: string\\replace: Too few arguments.");
+        if (count($args) < 3) throw new Error("string\\replace: Too few arguments.");
 
         $string = $args[0];
         $search = $args[1];
         $replace = $args[2];
 
         if (!is_string($string)) {
-            $GLOBALS['log']->warning("Formula: string\\replace: 1st argument should be string.");
+            $GLOBALS['log']->warning("string\\replace: 1st argument should be string.");
             return '';
         }
 
         if (!is_string($search)) {
-            $GLOBALS['log']->warning("Formula: string\\replace: 2nd argument should be string.");
+            $GLOBALS['log']->warning("string\\replace: 2nd argument should be string.");
             return $string;
         }
 
         if (!is_string($replace)) {
-            $GLOBALS['log']->warning("Formula: string\\replace: 3rd argument should be string.");
+            $GLOBALS['log']->warning("string\\replace: 3rd argument should be string.");
             return $string;
         }
 
         return str_replace($search, $replace, $string);
     }
 }
+

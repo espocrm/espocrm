@@ -31,34 +31,34 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class CreateType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class CreateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-    }
+    use Di\EntityManagerSetter;
 
     public function process(\StdClass $item)
     {
         $args = $this->fetchArguments($item);
 
-        if (count($args) < 1) throw new Error("Formula record\create: Too few arguments.");
+        if (count($args) < 1) throw new Error("record\create: Too few arguments.");
         $entityType = $args[0];
 
-        if (!is_string($entityType)) throw new Error("Formula record\create: First argument should be a string.");
+        if (!is_string($entityType)) throw new Error("record\create: First argument should be a string.");
 
         $data = [];
 
         $i = 1;
         while ($i < count($args) - 1) {
             $attribute = $args[$i];
-            if (!is_string($entityType)) throw new Error("Formula record\create: Attribute should be a string.");
+            if (!is_string($entityType)) throw new Error("record\create: Attribute should be a string.");
             $value = $args[$i + 1];
             $data[$attribute] = $value;
             $i = $i + 2;
         }
 
-        $entity = $this->getInjection('entityManager')->createEntity($entityType, $data);
+        $entity = $this->entityManager->createEntity($entityType, $data);
 
         if ($entity) {
             return $entity->id;

@@ -34,20 +34,25 @@ use Espo\ORM\Entity;
 
 use Espo\Core\InjectableFactory;
 
+use StdClass;
+
 class FunctionFactory
 {
     private $injectableFactory;
 
+    private $attributeFetcher;
+
     private $classNameMap;
 
-    public function __construct(InjectableFactory $injectableFactory, AttributeFetcher $attributeFetcher, $classNameMap = null)
-    {
+    public function __construct(
+        InjectableFactory $injectableFactory, AttributeFetcher $attributeFetcher, ?array $classNameMap = null
+    ) {
         $this->injectableFactory = $injectableFactory;
         $this->attributeFetcher = $attributeFetcher;
         $this->classNameMap = $classNameMap;
     }
 
-    public function create(\StdClass $item, $entity, \StdClass $variables)
+    public function create(StdClass $item, ?Entity $entity = null, ?StdClass $variables = null)
     {
         if (!isset($item->type)) {
             throw new Error('Missing type');
@@ -70,7 +75,7 @@ class FunctionFactory
                 $arr[$i] = ucfirst($part);
             }
             $name = implode('\\', $arr);
-            $className = '\\Espo\\Core\\Formula\\Functions\\' . $name . 'Type';
+            $className = 'Espo\\Core\\Formula\\Functions\\' . $name . 'Type';
         }
 
         if (!class_exists($className)) {
@@ -83,9 +88,10 @@ class FunctionFactory
             'variables' => $variables,
         ]);
 
-        if (property_exists($className, 'hasAttributeFetcher')) {
+        if (property_exists($className, 'hasAttributeFetcher') || method_exists($className, 'setAttributeFetcher')) {
             $object->setAttributeFetcher($this->attributeFetcher);
         }
+
         return $object;
     }
 }

@@ -31,24 +31,26 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class FindRelatedManyType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware,
+    Di\SelectManagerFactoryAware,
+    Di\MetadataAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('selectManagerFactory');
-        $this->addDependency('metadata');
-    }
+    use Di\EntityManagerSetter;
+    use Di\SelectManagerFactorySetter;
+    use Di\MetadataSetter;
 
     public function process(\StdClass $item)
     {
         $args = $this->fetchArguments($item);
 
         if (count($args) < 4) {
-            throw new Error("Formula record\\findRelatedMany: Too few arguments.");
+            throw new Error("record\\findRelatedMany: Too few arguments.");
         }
 
-        $entityManager = $this->getInjection('entityManager');
+        $entityManager = $this->entityManager;
 
         $entityType = $args[0];
         $id = $args[1];
@@ -65,28 +67,28 @@ class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base
             $order = $args[5];
         }
 
-        if (!$entityType) throw new Error("Formula record\\findRelatedMany: Empty entityType.");
-        if (!is_string($entityType)) throw new Error("Formula record\\findRelatedMany: entityType should be string.");
+        if (!$entityType) throw new Error("record\\findRelatedMany: Empty entityType.");
+        if (!is_string($entityType)) throw new Error("record\\findRelatedMany: entityType should be string.");
 
         if (!$id) {
-            $GLOBALS['log']->warning("Formula record\\findRelatedMany: Empty id.");
+            $GLOBALS['log']->warning("record\\findRelatedMany: Empty id.");
             return [];
         }
-        if (!is_string($id)) throw new Error("Formula record\\findRelatedMany: id should be string.");
+        if (!is_string($id)) throw new Error("record\\findRelatedMany: id should be string.");
 
-        if (!$link) throw new Error("Formula record\\findRelatedMany: Empty link.");
-        if (!is_string($link)) throw new Error("Formula record\\findRelatedMany: link should be string.");
+        if (!$link) throw new Error("record\\findRelatedMany: Empty link.");
+        if (!is_string($link)) throw new Error("record\\findRelatedMany: link should be string.");
 
-        if (!is_int($limit)) throw new Error("Formula record\\findRelatedMany: limit should be int.");
+        if (!is_int($limit)) throw new Error("record\\findRelatedMany: limit should be int.");
 
         $entity = $entityManager->getEntity($entityType, $id);
 
         if (!$entity) {
-            $GLOBALS['log']->notice("Formula record\\findRelatedMany: Entity {$entity} {$id} not found.");
+            $GLOBALS['log']->notice("record\\findRelatedMany: Entity {$entity} {$id} not found.");
             return [];
         }
 
-        $metadata = $this->getInjection('metadata');
+        $metadata = $this->metadata;
 
         if (!$orderBy) {
             $orderBy = $metadata->get(['entityDefs', $entityType, 'collection', 'orderBy']);
@@ -100,16 +102,16 @@ class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base
         $relationType = $entity->getRelationParam($link, 'type');
 
         if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
-            throw new Error("Formula record\\findRelatedMany: Not supported link type '{$relationType}'.");
+            throw new Error("record\\findRelatedMany: Not supported link type '{$relationType}'.");
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
-        if (!$foreignEntityType) throw new Error("Formula record\\findRelatedMany: Bad or not supported link '{$link}'.");
+        if (!$foreignEntityType) throw new Error("record\\findRelatedMany: Bad or not supported link '{$link}'.");
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
-        if (!$foreignLink) throw new Error("Formula record\\findRelatedMany: Not supported link '{$link}'.");
+        if (!$foreignLink) throw new Error("record\\findRelatedMany: Not supported link '{$link}'.");
 
-        $selectManager = $this->getInjection('selectManagerFactory')->create($foreignEntityType);
+        $selectManager = $this->selectManagerFactory->create($foreignEntityType);
         $selectParams = $selectManager->getEmptySelectParams();
 
         if ($relationType === 'hasChildren') {
@@ -126,7 +128,7 @@ class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base
                 $filter = $args[6];
             }
             if ($filter) {
-                if (!is_string($filter)) throw new Error("Formula record\\findRelatedMany: Bad filter.");
+                if (!is_string($filter)) throw new Error("record\\findRelatedMany: Bad filter.");
                 $selectManager->applyFilter($filter, $selectParams);
             }
         } else {

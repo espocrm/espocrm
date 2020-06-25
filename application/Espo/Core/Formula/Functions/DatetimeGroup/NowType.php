@@ -29,17 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Di;
 
-class NowType extends \Espo\Core\Formula\Functions\Base
+class NowType extends \Espo\Core\Formula\Functions\FunctionBase implements Di\DateTimeAware
 {
-    protected function init()
-    {
-        $this->addDependency('dateTime');
-    }
+    use Di\DateTimeSetter;
 
     public function process(\StdClass $item)
     {
-        return $this->getInjection('dateTime')->getInternalNowString();
+        return $this->dateTime->getInternalNowString();
     }
 }

@@ -31,18 +31,18 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class RelationColumnType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class RelationColumnType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-    }
+    use Di\EntityManagerSetter;
 
     public function process(\StdClass $item)
     {
         $args = $this->fetchArguments($item);
 
-        if (count($args) < 5) throw new Error("Formula: record\\relationColumn: Not enough arguments.");
+        if (count($args) < 5) throw new Error("record\\relationColumn: Not enough arguments.");
 
         $entityType = $args[0];
         $id = $args[1];
@@ -50,15 +50,15 @@ class RelationColumnType extends \Espo\Core\Formula\Functions\Base
         $foreignId = $args[3];
         $column = $args[4];
 
-        if (!$entityType) throw new Error("Formula record\\relationColumn: Empty entityType.");
+        if (!$entityType) throw new Error("record\\relationColumn: Empty entityType.");
         if (!$id) return null;
-        if (!$link) throw new Error("Formula record\\relationColumn: Empty link.");
+        if (!$link) throw new Error("record\\relationColumn: Empty link.");
         if (!$foreignId) return null;
-        if (!$column) throw new Error("Formula record\\relationColumn: Empty column.");
+        if (!$column) throw new Error("record\\relationColumn: Empty column.");
 
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
 
-        if (!$em->hasRepository($entityType)) throw new Error("Formula: record\\relationColumn: Repository does not exist.");
+        if (!$em->hasRepository($entityType)) throw new Error("record\\relationColumn: Repository does not exist.");
 
         $entity = $em->getEntity($entityType, $id);
         if (!$entity) return null;

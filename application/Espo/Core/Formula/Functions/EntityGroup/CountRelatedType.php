@@ -29,35 +29,27 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class CountRelatedType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class CountRelatedType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware,
+    Di\SelectManagerFactoryAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('selectManagerFactory');
-    }
+    use Di\EntityManagerSetter;
+    use Di\SelectManagerFactorySetter;
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 1) {
-            throw new Error();
+            throw new Error("countRelated: roo few arguments.");
         }
 
         $link = $this->evaluate($item->value[0]);
 
         if (empty($link)) {
-            throw new Error("No link passed to countRelated function.");
+            throw new Error("countRelated: no link passed.");
         }
 
         $filter = null;
@@ -67,7 +59,7 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base
 
         $entity = $this->getEntity();
 
-        $entityManager = $this->getInjection('entityManager');
+        $entityManager = $this->entityManager;
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
@@ -75,7 +67,7 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base
             throw new Error();
         }
 
-        $foreignSelectManager = $this->getInjection('selectManagerFactory')->create($foreignEntityType);
+        $foreignSelectManager = $this->selectManagerFactory->create($foreignEntityType);
 
         $selectParams = $foreignSelectManager->getEmptySelectParams();
 

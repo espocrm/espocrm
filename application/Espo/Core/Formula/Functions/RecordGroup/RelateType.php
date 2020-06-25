@@ -31,32 +31,32 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class RelateType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class RelateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-    }
+    use Di\EntityManagerSetter;
 
     public function process(\StdClass $item)
     {
         $args = $item->value ?? [];
 
-        if (count($args) < 4) throw new Error("Formula: record\\relate: Not enough arguments.");
+        if (count($args) < 4) throw new Error("record\\relate: Not enough arguments.");
 
         $entityType = $this->evaluate($args[0]);
         $id = $this->evaluate($args[1]);
         $link = $this->evaluate($item->value[2]);
         $foreignId = $this->evaluate($item->value[3]);
 
-        if (!$entityType) throw new Error("Formula record\\relate: Empty entityType.");
+        if (!$entityType) throw new Error("record\\relate: Empty entityType.");
         if (!$id) return null;
-        if (!$link) throw new Error("Formula record\\relate: Empty link.");
+        if (!$link) throw new Error("record\\relate: Empty link.");
         if (!$foreignId) return null;
 
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
 
-        if (!$em->hasRepository($entityType)) throw new Error("Formula: record\\relate: Repository does not exist.");
+        if (!$em->hasRepository($entityType)) throw new Error("record\\relate: Repository does not exist.");
 
         $entity = $em->getEntity($entityType, $id);
         if (!$entity) return null;
@@ -73,7 +73,7 @@ class RelateType extends \Espo\Core\Formula\Functions\Base
             }
             return $em->getRepository($entityType)->relate($entity, $link, $foreignId);
         } else {
-            throw new Error("Formula record\\relate: foreignId type is wrong.");
+            throw new Error("record\\relate: foreignId type is wrong.");
         }
     }
 }

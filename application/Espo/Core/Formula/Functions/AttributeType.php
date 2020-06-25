@@ -29,16 +29,16 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
+
+use Espo\Core\Formula\AttributeFetcher;
 
 class AttributeType extends Base
 {
-    static public $hasAttributeFetcher = true;
-
     protected $attributeFetcher;
 
-    public function setAttributeFetcher(\Espo\Core\Formula\AttributeFetcher $attributeFetcher)
+    public function setAttributeFetcher(AttributeFetcher $attributeFetcher)
     {
         $this->attributeFetcher = $attributeFetcher;
     }

@@ -29,29 +29,20 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class SetAttributeType extends Base
+class SetAttributeType extends FunctionBase
 {
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 2) {
-            throw new Error();
+            throw new Error("SetAttribute: Too few arguments.");
         }
 
         $name = $this->evaluate($item->value[0]);
 
         if (!is_string($name)) {
-            throw new Error();
+            throw new Error("SetAttribute: First argument is not string.");
         }
 
         $value = $this->evaluate($item->value[1]);

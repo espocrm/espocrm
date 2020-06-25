@@ -29,10 +29,9 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class BundleType extends Base
+class BundleType extends FunctionBase
 {
     public function process(\StdClass $item)
     {

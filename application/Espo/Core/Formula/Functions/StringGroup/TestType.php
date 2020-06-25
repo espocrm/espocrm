@@ -29,18 +29,16 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class TestType extends \Espo\Core\Formula\Functions\Base
+class TestType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value') || !is_array($item->value)) {
-            throw new Error('Value for \'String\\Test\' item is not an array.');
-        }
         if (count($item->value) < 2) {
-            throw new Error('Bad arguments passed to \'String\\Test\'.');
+            throw new Error('string\\test: too few arguments.');
         }
+
         $string = $this->evaluate($item->value[0]);
         $regexp = $this->evaluate($item->value[1]);
 

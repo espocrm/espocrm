@@ -27,37 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula;
+namespace Espo\Core\Di;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\NumberUtil;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Metadata;
-
-use Espo\Core\ORM\Entity;
-
-use StdClass;
-
-/**
- * The entry point for formula execution.
- */
-class Manager
+interface NumberAware
 {
-    protected $injectableFactory;
-    protected $metadata;
-
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
-    {
-        $functionClassNameMap = $metadata->get(['app', 'formula', 'functionClassNameMap'], []);
-
-        $this->evaluator = new Evaluator($injectableFactory, $functionClassNameMap);
-    }
-
-    /**
-     * Executes a script and returns its result.
-     */
-    public function run(string $script, ?Entity $entity = null, ?StdClass $variables = null)
-    {
-        return $this->evaluator->process($script, $entity, $variables);
-    }
+    public function setNumber(NumberUtil $number);
 }

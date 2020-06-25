@@ -29,28 +29,19 @@
 
 namespace Espo\Core\Formula\Functions\EnvGroup;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class UserAttributeType extends \Espo\Core\Formula\Functions\AttributeType
+use Espo\Core\Di;
+
+class UserAttributeType extends \Espo\Core\Formula\Functions\AttributeType implements
+    Di\UserAware
 {
-    protected function init()
-    {
-        $this->addDependency('user');
-    }
+    use Di\UserSetter;
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 1) {
-            throw new Error();
+            throw new Error("userAttribute: too few arguments.");
         }
 
         $attribute = $this->evaluate($item->value[0]);
@@ -59,6 +50,6 @@ class UserAttributeType extends \Espo\Core\Formula\Functions\AttributeType
             throw new Error();
         }
 
-        return $this->getInjection('user')->get($attribute);
+        return $this->user->get($attribute);
     }
 }

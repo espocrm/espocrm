@@ -29,21 +29,19 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class GetLinkColumnType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-    }
+    use Di\EntityManagerSetter;
 
     public function process(\StdClass $item)
     {
         $args = $item->value ?? [];
 
-        if (!is_array($args)) throw new Error();
         if (count($args) < 3) throw new Error("Formula: entity\\isRelated: no argument.");
 
         $link = $this->evaluate($args[0]);
@@ -51,7 +49,7 @@ class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base
         $column = $this->evaluate($args[2]);
 
         $entityType = $this->getEntity()->getEntityType($entityType);
-        $repository = $this->getInjection('entityManager')->getRepository($entityType);
+        $repository = $this->entityManager->getRepository($entityType);
 
         return $repository->getRelationColumn($this->getEntity(), $link, $id, $column);
     }

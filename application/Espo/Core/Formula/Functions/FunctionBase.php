@@ -27,35 +27,71 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\RecordGroup;
+namespace Espo\Core\Formula\Functions;
 
+
+use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
 
-use Espo\Core\Di;
+use Espo\Core\Formula\FunctionFactory;
 
-class ExistsType extends \Espo\Core\Formula\Functions\FunctionBase implements
-    Di\EntityManagerAware
+use StdClass;
+
+abstract class FunctionBase
 {
-    use Di\EntityManagerSetter;
+    protected $itemFactory;
 
-    public function process(\StdClass $item)
+    private $entity;
+
+    private $variables;
+
+    protected function getVariables() : StdClass
     {
-        if (count($item->value) < 3) {
-            throw new Error("record\\exists: too few arguments.");
+        return $this->variables;
+    }
+
+    protected function getEntity() : Entity
+    {
+        if (!$this->entity) {
+            throw new Error('Formula: Entity required but not passed.');
+        }
+        return $this->entity;
+    }
+
+    public function __construct(FunctionFactory $itemFactory, ?Entity $entity = null, ?StdClass $variables = null)
+    {
+        $this->itemFactory = $itemFactory;
+        $this->entity = $entity;
+        $this->variables = $variables;
+    }
+
+    protected function getFactory() : FunctionFactory
+    {
+        return $this->itemFactory;
+    }
+
+    protected function evaluate(StdClass $item)
+    {
+        $function = $this->getFactory()->create($item, $this->entity, $this->variables);
+        return $function->process($item);
+    }
+
+    public abstract function process(StdClass $item);
+
+    protected function fetchArguments(StdClass $item) : array
+    {
+        $args = $item->value ?? [];
+
+        $eArgs = [];
+        foreach ($args as $item) {
+            $eArgs[] = $this->evaluate($item);
         }
 
-        $entityType = $this->evaluate($item->value[0]);
+        return $eArgs;
+    }
 
-        $whereClause = [];
-
-        $i = 1;
-        while ($i < count($item->value) - 1) {
-            $key = $this->evaluate($item->value[$i]);
-            $value = $this->evaluate($item->value[$i + 1]);
-            $whereClause[$key] = $value;
-            $i = $i + 2;
-        }
-
-        return !!$this->entityManager->getRepository($entityType)->where($whereClause)->findOne();
+    protected function fetchRawArguments(StdClass $item) : array
+    {
+        return $item->value ?? [];
     }
 }

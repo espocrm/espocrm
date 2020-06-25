@@ -29,14 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\NumberGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class FormatType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class FormatType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\NumberAware
 {
-    protected function init()
-    {
-        $this->addDependency('number');
-    }
+    use Di\NumberSetter;
 
     public function process(\StdClass $item)
     {
@@ -69,6 +69,6 @@ class FormatType extends \Espo\Core\Formula\Functions\Base
 
         $value = $this->evaluate($item->value[0]);
 
-        return $this->getInjection('number')->format($value, $decimals, $decimalMark, $thousandSeparator);
+        return $this->number->format($value, $decimals, $decimalMark, $thousandSeparator);
     }
 }

@@ -31,25 +31,17 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class AttributeType extends \Espo\Core\Formula\Functions\AttributeType
+use Espo\Core\Di;
+
+class AttributeType extends \Espo\Core\Formula\Functions\AttributeType implements
+    Di\EntityManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-    }
+    use Di\EntityManagerSetter;
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 3) {
-            throw new Error();
+            throw new Error("record\\attribute: too few arguments.");
         }
 
         $entityType = $this->evaluate($item->value[0]);
@@ -60,7 +52,7 @@ class AttributeType extends \Espo\Core\Formula\Functions\AttributeType
         if (!$id) return null;
         if (!$attribute) throw new Error("Formula record\\attribute: Empty attribute.");
 
-        $entity = $this->getInjection('entityManager')->getEntity($entityType, $id);
+        $entity = $this->entityManager->getEntity($entityType, $id);
 
         if (!$entity) return null;
 

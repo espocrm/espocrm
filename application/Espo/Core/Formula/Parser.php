@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Formula;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+
+use StdClass;
 
 class Parser
 {
@@ -38,7 +40,7 @@ class Parser
         ['||', '&&'],
         ['==', '!=', '>', '<', '>=', '<='],
         ['+', '-'],
-        ['*', '/', '%']
+        ['*', '/', '%'],
     ];
 
     protected $operatorMap = [
@@ -55,15 +57,15 @@ class Parser
         '>' => 'comparison\\greaterThan',
         '<' => 'comparison\\lessThan',
         '>=' => 'comparison\\greaterThanOrEquals',
-        '<=' => 'comparison\\lessThanOrEquals'
+        '<=' => 'comparison\\lessThanOrEquals',
     ];
 
-    public function parse($expression)
+    public function parse(string $expression) : StdClass
     {
         return $this->split($expression);
     }
 
-    protected function applyOperator($operator, $firstPart, $secondPart)
+    protected function applyOperator(string $operator, string $firstPart, string $secondPart) : StdClass
     {
         if ($operator === '=') {
             if (strlen($firstPart)) {
@@ -85,7 +87,7 @@ class Parser
                     'value' => [
                         (object) [
                             'type' => 'value',
-                            'value' => $firstPart
+                            'value' => $firstPart,
                         ],
                         $this->split($secondPart)
                     ]
@@ -100,13 +102,14 @@ class Parser
             'type' => $functionName,
             'value' => [
                 $this->split($firstPart),
-                $this->split($secondPart)
+                $this->split($secondPart),
             ]
         ];
     }
 
-    protected function processStrings(&$string, &$modifiedString, &$splitterIndexList = null, $intoOneLine = false)
-    {
+    protected function processStrings(
+        string &$string, string &$modifiedString, ?array &$splitterIndexList = null, bool $intoOneLine = false
+    ) {
         $isString = false;
         $isSingleQuote = false;
         $isComment = false;
@@ -202,7 +205,7 @@ class Parser
         return $isString;
     }
 
-    protected function split($expression)
+    protected function split(string $expression) : StdClass
     {
         $expression = trim($expression);
 
@@ -243,7 +246,7 @@ class Parser
             }
         }
         if ($braceCounter !== 0) {
-            throw new Error('Incorrect round brackets in expression ' . $expression . '.');
+            throw new Error('Formula Parser: Incorrect round brackets in expression ' . $expression . '.');
         }
 
         if (strlen($expression) > 1 && $expression[0] === '(' && $expression[strlen($expression) - 1] === ')' && $hasExcessBraces) {
@@ -267,7 +270,7 @@ class Parser
             }
             return (object) [
                 'type' => 'bundle',
-                'value' => $parsedPartList
+                'value' => $parsedPartList,
             ];
         }
 
@@ -276,7 +279,7 @@ class Parser
 
         if ($expression === '') return (object) [
             'type' => 'value',
-            'value' => null
+            'value' => null,
         ];
 
         foreach ($this->priorityList as $operationList) {
@@ -445,12 +448,12 @@ class Parser
 
             return (object) [
                 'type' => 'attribute',
-                'value' => $expression
+                'value' => $expression,
             ];
         }
     }
 
-    protected function stripComments(&$expression, &$modifiedExpression)
+    protected function stripComments(string &$expression, string &$modifiedExpression)
     {
         $commentIndexStart = null;
 
@@ -487,7 +490,7 @@ class Parser
         }
     }
 
-    protected function parseArgumentListFromFunctionContent($functionContent)
+    protected function parseArgumentListFromFunctionContent(string $functionContent) : array
     {
         $functionContent = trim($functionContent);
 
