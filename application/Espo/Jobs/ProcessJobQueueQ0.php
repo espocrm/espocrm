@@ -48,7 +48,7 @@ class ProcessJobQueueQ0 implements Job
 
     public function run()
     {
-        $limit = $this->config->get('jobQ1MaxPortion', 200);
+        $limit = $this->config->get('jobQ0MaxPortion', 200);
 
         $this->cronManager->processPendingJobs('q0', $limit, true, true);
     }

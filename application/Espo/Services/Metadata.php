@@ -102,11 +102,14 @@ class Metadata extends \Espo\Core\Services\Base
                     }
 
                     $foreignEntityType = $defs['entity'] ?? null;
-                    if ($this->getAcl()->check($foreignEntityType)) continue;
 
-                    if ($this->getUser()->isPortal()) {
-                        if ($foreignEntityType === 'Account' || $foreignEntityType === 'Contact') {
-                            continue;
+                    if ($foreignEntityType) {
+                        if ($this->getAcl()->check($foreignEntityType)) continue;
+
+                        if ($this->getUser()->isPortal()) {
+                            if ($foreignEntityType === 'Account' || $foreignEntityType === 'Contact') {
+                                continue;
+                            }
                         }
                     }
 

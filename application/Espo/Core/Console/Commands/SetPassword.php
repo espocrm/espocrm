@@ -70,6 +70,8 @@ class SetPassword implements Command
 
         $password = $this->ask();
 
+        $password = trim($password);
+
         if (!$password) {
             $this->out("Password can not be empty.\n");
             die;
