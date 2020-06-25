@@ -41,28 +41,22 @@ class CronManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
-
         $this->objects['serviceFactory'] = $this->getMockBuilder('\\Espo\\Core\\ServiceFactory')->disableOriginalConstructor()->getMock();
         $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
         $this->objects['fileManager'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
         $this->objects['scheduledJob'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\ScheduledJob')->disableOriginalConstructor()->getMock();
         $this->objects['entityManager'] = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
 
-        $map = array(
-          array('config', $this->objects['config']),
-          array('fileManager', $this->objects['fileManager']),
-          array('serviceFactory', $this->objects['serviceFactory']),
-          array('entityManager', $this->objects['entityManager']),
-          array('scheduledJob', $this->objects['scheduledJob']),
+        $this->objects['injectableFactory'] = $this->getMockBuilder('\\Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
+
+        $this->object = new \Espo\Core\CronManager(
+            $this->objects['config'],
+            $this->objects['fileManager'],
+            $this->objects['entityManager'],
+            $this->objects['serviceFactory'],
+            $this->objects['injectableFactory'],
+            $this->objects['scheduledJob']
         );
-
-        $this->objects['container']
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap($map));
-
-        $this->object = new \Espo\Core\CronManager( $this->objects['container'] );
 
         $this->reflection = new ReflectionHelper($this->object);
     }

@@ -41,24 +41,26 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
-        $this->objects['metadata'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
-        $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $this->objects['metadata'] =
+            $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
+
+        $this->objects['config'] =
+            $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+
+        $this->objects['injectableFactory'] =
+            $this->getMockBuilder('\\Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
+
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
 
-        $map = array(
-          array('metadata', $this->objects['metadata']),
-          array('config', $this->objects['config']),
-          array('fileManager', $this->objects['fileManager']),
+
+        $this->object = new \Espo\Core\HookManager(
+            $this->objects['injectableFactory'],
+            $this->objects['fileManager'],
+            $this->objects['metadata'],
+            $this->objects['config']
         );
 
-        $this->objects['container']
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap($map));
-
-        $this->object = new \Espo\Core\HookManager($this->objects['container']);
         $this->reflection = new ReflectionHelper($this->object);
     }
 
