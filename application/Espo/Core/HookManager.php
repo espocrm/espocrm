@@ -45,6 +45,8 @@ use Espo\Core\{
  */
 class HookManager
 {
+    const DEFAULT_ORDER = 9;
+
     private $data;
 
     private $hookListHash = [];
@@ -172,7 +174,7 @@ class HookManager
                         if (!$this->hookExists($className, $entityHookData)) {
                             $hookData[$normalizedScopeName][$hookType][] = [
                                 'className' => $className,
-                                'order' => $className::$order,
+                                'order' => $className::$order ?? self::DEFAULT_ORDER,
                             ];
                         }
                     }

@@ -31,18 +31,29 @@ namespace Espo\Hooks\Integration;
 
 use Espo\ORM\Entity;
 
-class GoogleMaps extends \Espo\Core\Hooks\Base
+use Espo\Core\{
+    Utils\Config,
+};
+
+class GoogleMaps
 {
+    protected $config;
+
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
     public function afterSave(Entity $entity)
     {
         if ($entity->id === 'GoogleMaps') {
             if (!$entity->get('enabled') || !$entity->get('apiKey')) {
-                $this->getConfig()->set('googleMapsApiKey', null);
-                $this->getConfig()->save();
+                $this->config->set('googleMapsApiKey', null);
+                $this->config->save();
                 return;
             }
-            $this->getConfig()->set('googleMapsApiKey', $entity->get('apiKey'));
-            $this->getConfig()->save();
+            $this->config->set('googleMapsApiKey', $entity->get('apiKey'));
+            $this->config->save();
         }
     }
 }

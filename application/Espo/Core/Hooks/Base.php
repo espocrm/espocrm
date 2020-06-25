@@ -31,6 +31,7 @@ namespace Espo\Core\Hooks;
 
 use Espo\Core\Interfaces\Injectable;
 
+/** Deprecated */
 abstract class Base implements Injectable
 {
     protected $injections = [];

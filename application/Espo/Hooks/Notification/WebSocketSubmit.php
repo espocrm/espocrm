@@ -31,22 +31,31 @@ namespace Espo\Hooks\Notification;
 
 use Espo\ORM\Entity;
 
-class WebSocketSubmit extends \Espo\Core\Hooks\Base
+use Espo\Core\{
+    Utils\Config,
+    WebSocket\Submission as WebSocketSubmission,
+};
+
+class WebSocketSubmit
 {
     public static $order = 20;
 
-    protected function init()
+    protected $webSocketSubmission;
+    protected $config;
+
+    public function __construct(WebSocketSubmission $webSocketSubmission, Config $config)
     {
-        $this->addDependency('webSocketSubmission');
+        $this->webSocketSubmission = $webSocketSubmission;
+        $this->config = $config;
     }
 
     public function afterSave(Entity $entity, array $options = [])
     {
-        if (!$this->getConfig()->get('useWebSocket')) return;
+        if (!$this->config->get('useWebSocket')) return;
         if (!$entity->isNew()) return;
         $userId = $entity->get('userId');
         if (!$userId) return;
 
-        $this->getInjection('webSocketSubmission')->submit('newNotification', $userId);
+        $this->webSocketSubmission->submit('newNotification', $userId);
     }
 }
