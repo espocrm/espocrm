@@ -27,42 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Core\Di;
 
-use Espo\ORM\Entity;
+use Espo\Core\ServiceFactory;
 
-class LayoutSet extends \Espo\Core\Repositories\Database
+interface ServiceFactoryAware
 {
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity);
-
-        if (!$entity->isNew() && $entity->has('layoutList')) {
-            $listBefore = $entity->getFetched('layoutList') ?? [];
-            $listNow = $entity->get('layoutList') ?? [];
-
-            foreach ($listBefore as $name) {
-                if (!in_array($name, $listNow)) {
-                    $layout = $this->getEntityManager()->getRepository('LayoutRecord')->where([
-                        'layoutSetId' => $entity->id,
-                        'name' => $name,
-                    ])->findOne();
-                    if ($layout) {
-                        $this->getEntityManager()->removeEntity($layout);
-                    }
-                }
-            }
-        }
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $layoutList = $this->getEntityManager()->getRepository('LayoutRecord')->where([
-            'layoutSetId' => $entity->id,
-        ])->find();
-
-        foreach ($layoutList as $layout) {
-            $this->getEntityManager()->removeEntity($layout);
-        }
-    }
+    public function setServiceFactory(ServiceFactory $serviceFactory);
 }

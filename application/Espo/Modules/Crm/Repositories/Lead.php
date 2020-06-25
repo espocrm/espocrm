@@ -31,7 +31,7 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
-class Lead extends \Espo\Core\ORM\Repositories\RDB
+class Lead extends \Espo\Core\Repositories\Database
 {
     public function beforeSave(Entity $entity, array $options = [])
     {

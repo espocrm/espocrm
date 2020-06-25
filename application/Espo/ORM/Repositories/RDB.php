@@ -239,7 +239,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $collection;
     }
 
-    public function findRelated(Entity $entity, string $relationName, array $params = [])
+    public function findRelated(Entity $entity, string $relationName, array $params = []) : \Traversable
     {
         if (!$entity->id) {
             return [];

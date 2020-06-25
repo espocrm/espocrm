@@ -31,9 +31,9 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class Import extends \Espo\Core\ORM\Repositories\RDB
+class Import extends \Espo\Core\Repositories\Database
 {
-    public function findRelated(Entity $entity, $relationName, array $params = array())
+    public function findRelated(Entity $entity, string $relationName, array $params = []) : \Traversable
     {
         $entityType = $entity->get('entityType');
 
@@ -45,7 +45,7 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         return $this->getEntityManager()->getRepository($entityType)->find($params);
     }
 
-    protected function getRelatedJoin(Entity $entity, $link)
+    protected function getRelatedJoin(Entity $entity, string $link)
     {
         $entityType = $entity->get('entityType');
         $pdo = $this->getEntityManager()->getPDO();
@@ -64,7 +64,6 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
                 break;
         }
 
-
         $sql = "
             JOIN import_entity ON
                 import_entity.import_id = " . $pdo->quote($entity->id) . " AND
@@ -76,7 +75,7 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         return $sql;
     }
 
-    public function countRelated(Entity $entity, $relationName, array $params = []) : int
+    public function countRelated(Entity $entity, string $relationName, array $params = []) : int
     {
         $entityType = $entity->get('entityType');
 
@@ -104,6 +103,5 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         $sth->execute();
 
         parent::afterRemove($entity, $options);
-
     }
 }

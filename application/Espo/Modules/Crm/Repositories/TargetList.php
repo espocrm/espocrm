@@ -31,13 +31,13 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
-class TargetList extends \Espo\Core\ORM\Repositories\RDB
+class TargetList extends \Espo\Core\Repositories\Database
 {
     protected $entityTypeLinkMap = array(
         'Lead' => 'leads',
         'Account' => 'accounts',
         'Contact' => 'contacts',
-        'User' => 'users'
+        'User' => 'users',
     );
 
     public function relateTarget(Entity $entity, Entity $target, $data = null)
@@ -50,4 +50,3 @@ class TargetList extends \Espo\Core\ORM\Repositories\RDB
         $this->relate($entity, $relation, $target, $data);
     }
 }
-

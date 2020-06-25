@@ -31,13 +31,14 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class EmailFolder extends \Espo\Core\ORM\Repositories\RDB
+class EmailFolder extends \Espo\Core\Repositories\Database
 {
-    protected function beforeSave(Entity $entity, array $options = array())
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
         $order = $entity->get('order');
         if (is_null($order)) {
             $order = $this->max('order');
@@ -49,4 +50,3 @@ class EmailFolder extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 }
-

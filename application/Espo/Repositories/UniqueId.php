@@ -31,7 +31,9 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class UniqueId extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Utils\Util;
+
+class UniqueId extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
@@ -42,7 +44,7 @@ class UniqueId extends \Espo\Core\ORM\Repositories\RDB
     public function getNew() : ?Entity
     {
         $entity = parent::getNew();
-        $entity->set('name', \Espo\Core\Utils\Util::generateMoreEntropyId());
+        $entity->set('name', Util::generateMoreEntropyId());
         return $entity;
     }
 }

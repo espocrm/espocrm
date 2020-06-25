@@ -31,7 +31,9 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class ScheduledJob extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\CronManager;
+
+class ScheduledJob extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
@@ -46,7 +48,7 @@ class ScheduledJob extends \Espo\Core\ORM\Repositories\RDB
         if ($entity->isAttributeChanged('scheduling')) {
             $jobList = $this->getEntityManager()->getRepository('Job')->where([
                 'scheduledJobId' => $entity->id,
-                'status' => \Espo\Core\CronManager::PENDING
+                'status' => CronManager::PENDING,
             ])->find();
 
             foreach ($jobList as $job) {

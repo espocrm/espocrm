@@ -31,9 +31,9 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
-class Contact extends \Espo\Core\ORM\Repositories\RDB
+class Contact extends \Espo\Core\Repositories\Database
 {
-    public function afterSave(Entity $entity, array $options = array())
+    public function afterSave(Entity $entity, array $options = [])
     {
         $result = parent::afterSave($entity, $options);
         $this->handleAfterSaveAccounts($entity, $options);
@@ -45,7 +45,7 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
         return $result;
     }
 
-    protected function handleAfterSaveAccounts(Entity $entity, array $options = array())
+    protected function handleAfterSaveAccounts(Entity $entity, array $options = [])
     {
         $accountIdChanged = $entity->has('accountId') && $entity->get('accountId') != $entity->getFetched('accountId');
         $titleChanged = $entity->has('title') && $entity->get('title') != $entity->getFetched('title');
@@ -96,4 +96,3 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 }
-

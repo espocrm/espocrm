@@ -31,9 +31,9 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
-class Account extends \Espo\Core\ORM\Repositories\RDB
+class Account extends \Espo\Core\Repositories\Database
 {
-    public function afterSave(Entity $entity, array $options = array())
+    public function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 
@@ -42,7 +42,7 @@ class Account extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    protected function afterRelateContacts(Entity $entity, $foreign, $data, array $options = array())
+    protected function afterRelateContacts(Entity $entity, $foreign, $data, array $options = [])
     {
         if (!($foreign instanceof Entity)) return;
 
@@ -52,7 +52,7 @@ class Account extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    protected function afterUnrelateContacts(Entity $entity, $foreign, array $options = array())
+    protected function afterUnrelateContacts(Entity $entity, $foreign, array $options = [])
     {
         if (!($foreign instanceof Entity)) return;
 
@@ -62,4 +62,3 @@ class Account extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 }
-

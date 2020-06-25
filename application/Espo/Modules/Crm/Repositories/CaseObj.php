@@ -31,58 +31,65 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
-class CaseObj extends \Espo\Core\ORM\Repositories\RDB
-{
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('serviceFactory');
-    }
+use Espo\Core\Di;
 
-    public function afterSave(Entity $entity, array $options = [])
+class CaseObj extends \Espo\Core\Repositories\Database implements
+    Di\ServiceFactoryAware
+{
+    use Di\ServiceFactorySetter;
+
+    protected $streamService;
+
+   public function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
         $this->handleAfterSaveContacts($entity, $options);
     }
 
+    protected function getStreamService()
+    {
+        $this->streamService = $this->streamService ?? $this->serviceFactory->create('Stream');
+        return $this->streamService;
+    }
+
     protected function handleAfterSaveContacts(Entity $entity, array $options = [])
     {
-        if ($entity->isAttributeChanged('contactId')) {
-            $contactId = $entity->get('contactId');
-            $contactIdList = $entity->get('contactsIds') ?? [];
-            $fetchedContactId = $entity->getFetched('contactId');
+        if (!$entity->isAttributeChanged('contactId')) return;
 
-            if ($fetchedContactId) {
-                $previousPortalUser = $this->getEntityManager()->getRepository('User')->select(['id'])->where([
-                    'contactId' => $fetchedContactId,
-                    'type' => 'portal',
-                ])->findOne();
+        $contactId = $entity->get('contactId');
+        $contactIdList = $entity->get('contactsIds') ?? [];
+        $fetchedContactId = $entity->getFetched('contactId');
 
-                if ($previousPortalUser) {
-                    $this->getInjection('serviceFactory')->create('Stream')->unfollowEntity($entity, $previousPortalUser->id);
-                }
-            }
-
-            if (!$contactId) {
-                if ($fetchedContactId) {
-                    $this->unrelate($entity, 'contacts', $fetchedContactId);
-                }
-                return;
-            }
-
-            $portalUser = $this->getEntityManager()->getRepository('User')->select(['id'])->where([
-                'contactId' => $contactId,
+        if ($fetchedContactId) {
+            $previousPortalUser = $this->getEntityManager()->getRepository('User')->select(['id'])->where([
+                'contactId' => $fetchedContactId,
                 'type' => 'portal',
-                'isActive' => true,
             ])->findOne();
 
-            if ($portalUser) {
-                $this->getInjection('serviceFactory')->create('Stream')->followEntity($entity, $portalUser->id, true);
+            if ($previousPortalUser) {
+                $this->getStreamService()->unfollowEntity($entity, $previousPortalUser->id);
             }
+        }
 
-            if (!in_array($contactId, $contactIdList) && !$this->isRelated($entity, 'contacts', $contactId)) {
-                $this->relate($entity, 'contacts', $contactId);
+        if (!$contactId) {
+            if ($fetchedContactId) {
+                $this->unrelate($entity, 'contacts', $fetchedContactId);
             }
+            return;
+        }
+
+        $portalUser = $this->getEntityManager()->getRepository('User')->select(['id'])->where([
+            'contactId' => $contactId,
+            'type' => 'portal',
+            'isActive' => true,
+        ])->findOne();
+
+        if ($portalUser) {
+            $this->getStreamService()->create('Stream')->followEntity($entity, $portalUser->id, true);
+        }
+
+        if (!in_array($contactId, $contactIdList) && !$this->isRelated($entity, 'contacts', $contactId)) {
+            $this->relate($entity, 'contacts', $contactId);
         }
     }
 }

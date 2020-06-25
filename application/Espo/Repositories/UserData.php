@@ -29,9 +29,9 @@
 
 namespace Espo\Repositories;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-class UserData extends \Espo\Core\ORM\Repositories\RDB
+class UserData extends \Espo\Core\Repositories\Database
 {
     public function getByUserId(string $userId) : ?Entity
     {

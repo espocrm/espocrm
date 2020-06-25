@@ -32,23 +32,29 @@ namespace Espo\Core\Repositories;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 
-class Event extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Di;
+
+class Event extends \Espo\Core\Repositories\Database implements
+    Di\DateTimeAware,
+    Di\ConfigAware
 {
+    use Di\DateTimeSetter;
+    use Di\ConfigSetter;
+
     protected $reminderDateAttribute = 'dateStart';
 
     protected $reminderSkippingStatusList = ['Held', 'Not Held'];
 
     protected $preserveDuration = true;
 
-    protected function init()
+    protected function getConfig()
     {
-        parent::init();
-        $this->addDependency('dateTime');
+        return $this->config;
     }
 
     protected function getDateTime()
     {
-        return $this->getInjection('dateTime');
+        return $this->dateTime;
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
