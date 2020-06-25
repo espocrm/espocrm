@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class AuthLogRecord extends \Espo\Core\SelectManagers\Base
+class AuthLogRecord extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function filterDenied(&$result)
     {

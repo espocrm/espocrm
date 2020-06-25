@@ -29,8 +29,6 @@
 
 namespace Espo\Core\SelectManagers;
 
-use Espo\Core\SelectManager;
-
 /** Deprecated */
 class Base extends SelectManager
 {

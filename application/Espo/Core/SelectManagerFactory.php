@@ -32,7 +32,7 @@ namespace Espo\Core;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\InjectableFactory;
-use Espo\Core\SelectManager;
+use Espo\Core\SelectManagers\SelectManager;
 use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Core\Utils\Util;

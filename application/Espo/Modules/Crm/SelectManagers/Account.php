@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Account extends \Espo\Core\SelectManagers\Base
+class Account extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function filterPartners(&$result)
     {

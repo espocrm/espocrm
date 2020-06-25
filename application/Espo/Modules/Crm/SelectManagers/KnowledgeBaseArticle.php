@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
+class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function filterPublished(&$result)
     {

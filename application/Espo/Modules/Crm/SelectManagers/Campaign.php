@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Campaign extends \Espo\Core\SelectManagers\Base
+class Campaign extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function filterActive(&$result)
     {
@@ -37,5 +37,4 @@ class Campaign extends \Espo\Core\SelectManagers\Base
             'status' => 'Active'
         );
     }
-
  }

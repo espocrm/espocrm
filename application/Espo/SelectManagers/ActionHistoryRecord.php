@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class ActionHistoryRecord extends \Espo\Core\SelectManagers\Base
+class ActionHistoryRecord extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function boolFilterOnlyMy(&$result)
     {
