@@ -193,7 +193,7 @@ class EmailAccount extends Record
         return $storage;
     }
 
-    public function create($data)
+    public function create(\StdClass $data) : Entity
     {
         if (!$this->getUser()->isAdmin()) {
             $count = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
@@ -211,6 +211,7 @@ class EmailAccount extends Record
             }
             $this->getEntityManager()->saveEntity($entity);
         }
+
         return $entity;
     }
 

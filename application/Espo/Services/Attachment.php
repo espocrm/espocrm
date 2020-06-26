@@ -51,7 +51,7 @@ class Attachment extends Record
         'image/webp',
     ];
 
-    public function upload($fileData)
+    public function upload($fileData) : Entity
     {
         if (!$this->getAcl()->checkScope('Attachment', 'create')) {
             throw new Forbidden();
@@ -72,7 +72,14 @@ class Attachment extends Record
         return $attachment;
     }
 
-    public function create($data)
+    protected function afterCreateEntity(Entity $entity, $data)
+    {
+        if (!empty($data->file)) {
+            $entity->clear('contents');
+        }
+    }
+
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
         if (!empty($data->file)) {
             $arr = explode(',', $data->file);
@@ -134,17 +141,6 @@ class Attachment extends Record
             }
         }
 
-        $entity = parent::create($data);
-
-        if (!empty($data->file)) {
-            $entity->clear('contents');
-        }
-
-        return $entity;
-    }
-
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
         $storage = $entity->get('storage');
         if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
             $entity->clear('storage');

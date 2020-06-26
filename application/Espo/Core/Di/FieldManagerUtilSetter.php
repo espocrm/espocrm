@@ -27,35 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\Core\Di;
 
-use Espo\Core\Utils\Util;
+use Espo\Core\Utils\FieldManagerUtil;
 
-class Metadata
+trait FieldManagerUtilSetter
 {
-    protected $data = [];
+    protected $fieldManagerUtil;
 
-    public function setData($data)
+    public function setFieldManagerUtil(FieldManagerUtil $fieldManagerUtil)
     {
-        $this->data = $data;
-    }
-
-    public function get(string $entityType, $key = null, $default = null)
-    {
-        if (!array_key_exists($entityType, $this->data)) {
-            return null;
-        }
-        $data = $this->data[$entityType];
-        if (!$key) return $data;
-
-        return Util::getValueByKey($data, $key, $default);
-    }
-
-    public function has(string $entityType) : bool
-    {
-        if (!array_key_exists($entityType, $this->data)) {
-            return false;
-        }
-        return true;
+        $this->fieldManagerUtil = $fieldManagerUtil;
     }
 }

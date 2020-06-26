@@ -32,7 +32,7 @@ namespace Espo\Core\Traits;
 /** Deprecated */
 trait Injectable
 {
-    private $injections = [];
+    protected $injections = [];
 
     public function inject($name, $object)
     {

@@ -389,7 +389,7 @@ class Email extends Record
         return $this->streamService;
     }
 
-    public function create($data)
+    public function create(\StdClass $data) : Entity
     {
         $entity = parent::create($data);
 
@@ -448,11 +448,11 @@ class Email extends Record
         $this->getEntityManager()->getRepository('Email')->loadReplyToField($entity);
     }
 
-    public function getEntity($id = null)
+    public function getEntity(?string $id = null) : ?Entity
     {
         $entity = parent::getEntity($id);
 
-        if (!empty($entity) && !empty($id) && !$entity->get('isRead')) {
+        if ($entity && $id && !$entity->get('isRead')) {
             $this->markAsRead($entity->id);
         }
 

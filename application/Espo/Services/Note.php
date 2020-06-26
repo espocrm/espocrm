@@ -39,27 +39,10 @@ class Note extends Record
 {
     protected $noteNotificationPeriod = '1 hour';
 
-    public function getEntity($id = null)
+    public function loadAdditionalFields(Entity $entity)
     {
-        $entity = parent::getEntity($id);
-        if (!empty($id)) {
-            $entity->loadAttachments();
-        }
-        return $entity;
-    }
-
-    public function create($data)
-    {
-        if (!empty($data->parentType) && !empty($data->parentId)) {
-            $entity = $this->getEntityManager()->getEntity($data->parentType, $data->parentId);
-            if ($entity) {
-                if (!$this->getAcl()->check($entity, 'read')) {
-                    throw new Forbidden();
-                }
-            }
-        }
-
-        return parent::create($data);
+        parent::loadAdditionalFields($entity);
+        $entity->loadAttachments();
     }
 
     protected function afterCreateEntity(Entity $entity, $data)
@@ -81,6 +64,15 @@ class Note extends Record
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
+        if (!empty($data->parentType) && !empty($data->parentId)) {
+            $entity = $this->getEntityManager()->getEntity($data->parentType, $data->parentId);
+            if ($entity) {
+                if (!$this->getAcl()->check($entity, 'read')) {
+                    throw new Forbidden();
+                }
+            }
+        }
+
         parent::beforeCreateEntity($entity, $data);
 
         if ($entity->get('type') === 'Post') {

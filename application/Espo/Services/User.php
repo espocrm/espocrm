@@ -36,6 +36,8 @@ use Espo\Core\Utils\Util;
 
 use Espo\ORM\Entity;
 
+use StdClass;
+
 class User extends Record
 {
     protected function init()
@@ -95,7 +97,7 @@ class User extends Record
         return $this->injections['container'];
     }
 
-    public function getEntity($id = null)
+    public function getEntity(? string $id = null) : Entity
     {
         if (isset($id) && $id == 'system') {
             throw new Forbidden();
@@ -111,8 +113,9 @@ class User extends Record
         return $entity;
     }
 
-    public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword = null)
-    {
+    public function changePassword(
+        string $userId, string $password, bool $checkCurrentPassword = false, bool $currentPassword = null
+    ) {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
             throw new NotFound();
@@ -268,7 +271,7 @@ class User extends Record
         }
     }
 
-    public function create($data)
+    public function create(StdClass $data) : Entity
     {
         $newPassword = null;
         if (property_exists($data, 'password')) {
@@ -290,7 +293,7 @@ class User extends Record
         return $user;
     }
 
-    public function update($id, $data)
+    public function update(string $id, StdClass $data) : Entity
     {
         if ($id == 'system') {
             throw new Forbidden();

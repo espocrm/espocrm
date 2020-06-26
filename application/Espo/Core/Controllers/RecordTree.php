@@ -39,7 +39,7 @@ class RecordTree extends Record
 {
     public static $defaultAction = 'list';
 
-    protected $defaultRecordServiceName = 'RecordTree';
+   // protected $defaultRecordServiceName = 'RecordTree';
 
     public function actionListTree($params, $data, $request)
     {

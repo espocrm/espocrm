@@ -42,27 +42,16 @@ class Record extends Base
 
     public static $defaultAction = 'list';
 
-    protected $defaultRecordServiceName = 'Record';
-
     protected function getEntityManager()
     {
         return $this->getContainer()->get('entityManager');
     }
 
-    protected function getRecordService($name = null)
+    protected function getRecordService(?string $name = null) : object
     {
-        if (empty($name)) {
-            $name = $this->name;
-        }
+        $name = $name ?? $this->name;
 
-        if ($this->getServiceFactory()->checkExists($name)) {
-            $service = $this->getServiceFactory()->create($name);
-        } else {
-            $service = $this->getServiceFactory()->create($this->defaultRecordServiceName);
-            $service->setEntityType($name);
-        }
-
-        return $service;
+        return $this->getContainer()->get('recordServiceContainer')->get($name);
     }
 
     public function actionRead($params, $data, $request)
@@ -224,10 +213,9 @@ class Record extends Base
 
         $id = $params['id'];
 
-        if ($this->getRecordService()->delete($id)) {
-            return true;
-        }
-        throw new Error();
+        $this->getRecordService()->delete($id);
+
+        return true;
     }
 
     public function actionExport($params, $data, $request)

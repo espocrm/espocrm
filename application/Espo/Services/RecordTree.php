@@ -49,6 +49,7 @@ class RecordTree extends Record
     public function __construct()
     {
         parent::__construct();
+
         if (!$this->subjectEntityType) {
             $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) -8 );
         }
@@ -174,7 +175,7 @@ class RecordTree extends Record
         }
     }
 
-    public function update($id, $data)
+    public function update(string $id, \StdClass $data) : Entity
     {
         if (!empty($data->parentId) && $data->parentId == $id) {
             throw new Forbidden();
@@ -183,7 +184,7 @@ class RecordTree extends Record
         return parent::update($id, $data);
     }
 
-    public function link($id, $link, $foreignId)
+    public function link(string $id, string $link, string $foreignId)
     {
         if ($id == $foreignId ) {
             throw new Forbidden();

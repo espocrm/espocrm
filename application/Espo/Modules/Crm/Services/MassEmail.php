@@ -40,6 +40,8 @@ use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Core\Mail\Sender;
 use Laminas\Mail\Message;
 
+use StdClass;
+
 class MassEmail extends \Espo\Services\Record
 {
     const MAX_ATTEMPT_COUNT = 3;
@@ -528,7 +530,7 @@ class MassEmail extends \Espo\Services\Record
         return $this->campaignService;
     }
 
-    protected function findLinkedQueueItems($id, $params)
+    protected function findLinkedQueueItems(string $id, array $params) : StdClass
     {
         $link = 'queueItems';
 
@@ -540,13 +542,13 @@ class MassEmail extends \Espo\Services\Record
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
 
-        $selectParams['whereClause'][] = array(
+        $selectParams['whereClause'][] = [
             'isTest' => false
-        );
+        ];
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
-        $recordService = $this->getRecordService('EmailQueueItem');
+        $recordService = $this->recordServiceContainer->get('EmailQueueItem');
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -555,10 +557,10 @@ class MassEmail extends \Espo\Services\Record
 
         $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
 
-        return array(
+        return (object) [
             'total' => $total,
             'collection' => $collection
-        );
+        ];
     }
 
     public function getSmtpAccountDataList()

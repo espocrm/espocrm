@@ -113,7 +113,7 @@ class ExternalAccount extends Record
         }
     }
 
-    public function read($id)
+    public function read(string $id) : Entity
     {
         list($integration, $userId) = explode('__', $id);
 
@@ -135,6 +135,5 @@ class ExternalAccount extends Record
         }
 
         return $entity;
-
     }
 }
