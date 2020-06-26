@@ -35,7 +35,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 
-use StdClass;
+use Espo\Core\Record\Collection as RecordCollection;
 
 class TargetList extends \Espo\Services\Record
 {
@@ -234,7 +234,7 @@ class TargetList extends \Espo\Services\Record
         }
     }
 
-    protected function findLinkedOptedOut(string $id, array $params) : StdClass
+    protected function findLinkedOptedOut(string $id, array $params) : RecordCollection
     {
         $pdo = $this->getEntityManager()->getPDO();
         $query = $this->getEntityManager()->getQuery();
@@ -299,10 +299,15 @@ class TargetList extends \Espo\Services\Record
         $row = $sth->fetch(\PDO::FETCH_ASSOC);
         $count = $row['count'];
 
-        return (object) [
-            'total' => $count,
-            'list' => $arr
-        ];
+        $collection = $this->getEntityManager()->createCollection();
+
+        foreach ($arr as $row) {
+            $e = $this->getEntityManager()->getEntity($row['_scope']);
+            $e->set($row);
+            $collection[] = $e;
+        }
+
+        return new RecordCollection($collection, $count);
     }
 
     public function optOut(string $id, string $targetType, string $targetId)

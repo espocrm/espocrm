@@ -29,79 +29,55 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
 
-use \Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\Di;
 
-class DataPrivacy extends \Espo\Core\Services\Base
+class DataPrivacy implements
+
+    Di\AclAware,
+    Di\AclManagerAware,
+    Di\MetadataAware,
+    Di\ServiceFactoryAware,
+    Di\EntityManagerAware,
+    Di\FieldManagerUtilAware,
+    Di\UserAware
 {
-    protected function init()
-    {
-        $this->addDependency('fileManager');
-        $this->addDependency('acl');
-        $this->addDependency('aclManager');
-        $this->addDependency('metadata');
-        $this->addDependency('serviceFactory');
-        $this->addDependency('dateTime');
-        $this->addDependency('number');
-        $this->addDependency('entityManager');
-        $this->addDependency('defaultLanguage');
-        $this->addDependency('fieldManagerUtil');
-        $this->addDependency('user');
-    }
+    use Di\AclSetter;
+    use Di\AclManagerSetter;
+    use Di\MetadataSetter;
+    use Di\ServiceFactorySetter;
+    use Di\EntityManagerSetter;
+    use Di\FieldManagerUtilSetter;
+    use Di\UserSetter;
 
-    protected function getAcl()
+    public function erase(string $entityType, string $id, array $fieldList)
     {
-        return $this->getInjection('acl');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getServiceFactory()
-    {
-        return $this->getInjection('serviceFactory');
-    }
-
-    protected function getFileManager()
-    {
-        return $this->getInjection('fileManager');
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getInjection('entityManager');
-    }
-
-    public function erase($entityType, $id, array $fieldList)
-    {
-        if ($this->getAcl()->get('dataPrivacyPermission') === 'no') {
+        if ($this->acl->get('dataPrivacyPermission') === 'no') {
             throw new Forbidden();
         }
 
-        if ($this->getServiceFactory()->checkExists($entityType)) {
-            $service = $this->getServiceFactory()->create($entityType);
+        if ($this->serviceFactory->checkExists($entityType)) {
+            $service = $this->serviceFactory->create($entityType);
         } else {
-            $service = $this->getServiceFactory()->create('Record');
+            $service = $this->serviceFactory->create('Record');
             $service->setEntityType($entityType);
         }
 
-        $entity = $this->getEntityManager()->getEntity($entityType, $id);
+        $entity = $this->entityManager->getEntity($entityType, $id);
 
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden("No edit access.");
         }
 
-        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($entityType, 'edit');
+        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, 'edit');
 
         foreach ($fieldList as $field) {
             if (in_array($field, $forbiddenFieldList)) {
@@ -111,10 +87,10 @@ class DataPrivacy extends \Espo\Core\Services\Base
 
         $service->loadAdditionalFields($entity);
 
-        $filedManager = $this->getInjection('fieldManagerUtil');
+        $filedManager = $this->fieldManagerUtil;
 
         foreach ($fieldList as $field) {
-            $type = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+            $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
             $attributeList = $filedManager->getActualAttributeList($entityType, $field);
 
             if ($type === 'email') {
@@ -122,13 +98,13 @@ class DataPrivacy extends \Espo\Core\Services\Base
                 foreach ($emailAddressList as $emailAddress) {
                     if (
                         $this
-                        ->getInjection('aclManager')
-                        ->getImplementation('EmailAddress')
-                        ->checkEditInEntity($this->getInjection('user'), $emailAddress, $entity)
+                            ->aclManager
+                            ->getImplementation('EmailAddress')
+                            ->checkEditInEntity($this->user, $emailAddress, $entity)
                     ) {
                         $emailAddress->set('name', 'ERASED:' . $emailAddress->id);
                         $emailAddress->set('optOut', true);
-                        $this->getEntityManager()->saveEntity($emailAddress);
+                        $this->entityManager->saveEntity($emailAddress);
                     }
                 }
 
@@ -142,12 +118,12 @@ class DataPrivacy extends \Espo\Core\Services\Base
                 foreach ($phoneNumberList as $phoneNumber) {
                     if (
                         $this
-                        ->getInjection('aclManager')
-                        ->getImplementation('PhoneNumber')
-                        ->checkEditInEntity($this->getInjection('user'), $phoneNumber, $entity)
+                            ->aclManager
+                            ->getImplementation('PhoneNumber')
+                            ->checkEditInEntity($this->user, $phoneNumber, $entity)
                     ) {
                         $phoneNumber->set('name', 'ERASED:' . $phoneNumber->id);
-                        $this->getEntityManager()->saveEntity($phoneNumber);
+                        $this->entityManager->saveEntity($phoneNumber);
                     }
                 }
 
@@ -159,15 +135,15 @@ class DataPrivacy extends \Espo\Core\Services\Base
             else if ($type === 'file' || $type === 'image') {
                 $attachmentId = $entity->get($field . 'Id');
                 if ($attachmentId) {
-                    $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
-                    $this->getEntityManager()->removeEntity($attachment);
+                    $attachment = $this->entityManager->getEntity('Attachment', $attachmentId);
+                    $this->entityManager->removeEntity($attachment);
                 }
 
             }
             else if ($type === 'attachmentMultiple') {
                 $attachmentList = $entity->get($field);
                 foreach ($attachmentList as $attachment) {
-                    $this->getEntityManager()->removeEntity($attachment);
+                    $this->entityManager->removeEntity($attachment);
                 }
             }
 
@@ -180,32 +156,8 @@ class DataPrivacy extends \Espo\Core\Services\Base
             }
         }
 
-        $this->getEntityManager()->saveEntity($entity);
+        $this->entityManager->saveEntity($entity);
 
         return true;
     }
-
-    public function exportPdf()
-    {
-
-
-        $htmlizer = new Htmlizer(
-            $this->getFileManager(),
-            $this->getInjection('dateTime'),
-            $this->getInjection('number'),
-            $this->getAcl(),
-            $this->getInjection('entityManager'),
-            $this->getInjection('metadata'),
-            $this->getInjection('defaultLanguage')
-        );
-
-        $pdf = new \Espo\Core\Pdf\Tcpdf();
-
-        $fontFace = $this->getConfig()->get('pdfFontFace', $this->fontFace);
-
-        $pdf->setFont($fontFace, '', $this->fontSize, '', true);
-        $pdf->setPrintHeader(false);
-
-    }
 }
-

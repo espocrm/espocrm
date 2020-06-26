@@ -33,8 +33,11 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Util;
 use Espo\Core\Exceptions\ForbiddenSilent;
+
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\ControllerUtil;
+use Espo\Core\Record\Collection as RecordCollection;
 
 class Record extends Base
 {
@@ -130,14 +133,21 @@ class Record extends Base
 
         $result = $this->getRecordService()->find($params);
 
+        if ($result instanceof RecordCollection) {
+            return (object) [
+                'total' => $result->getTotal(),
+                'list' => $result->getValueMapList(),
+            ];
+        }
+
         if (is_array($result)) {
-            return [
+            return (object) [
                 'total' => $result['total'],
                 'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
             ];
         }
 
-        return [
+        return (object) [
             'total' => $result->total,
             'list' => isset($result->collection) ? $result->collection->getValueMapList() : $result->list
         ];
@@ -171,7 +181,7 @@ class Record extends Base
 
     protected function fetchListParamsFromRequest(&$params, $request, $data)
     {
-        \Espo\Core\Utils\ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
+        ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
     }
 
     public function actionListLinked($params, $data, $request)
@@ -191,6 +201,13 @@ class Record extends Base
         }
 
         $result = $this->getRecordService()->findLinked($id, $link, $params);
+
+        if ($result instanceof RecordCollection) {
+            return (object) [
+                'total' => $result->getTotal(),
+                'list' => $result->getValueMapList(),
+            ];
+        }
 
         if (is_array($result)) {
             return [

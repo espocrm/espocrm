@@ -29,18 +29,22 @@
 
 namespace Espo\Services;
 
-class AdminNotifications extends \Espo\Core\Services\Base
+use Espo\Core\Di;
+
+class AdminNotifications implements
+
+    Di\ConfigAware,
+    Di\EntityManagerAware
 {
+    use Di\ConfigSetter;
+    use Di\EntityManagerSetter;
+
     /**
-     * Job for checking a new version of EspoCRM
-     *
-     * @param  object $data
-     *
-     * @return boolean
+     * Job for checking a new version of EspoCRM.
      */
     public function jobCheckNewVersion($data)
     {
-        $config = $this->getConfig();
+        $config = $this->config;
 
         if (!$config->get('adminNotifications') || !$config->get('adminNotificationsNewVersion')) {
             return true;
@@ -72,7 +76,7 @@ class AdminNotifications extends \Espo\Core\Services\Base
     }
 
     /**
-     * Job for cheking a new version of installed extensions
+     * Job for cheking a new version of installed extensions.
      *
      * @param  object $data
      *
@@ -80,13 +84,13 @@ class AdminNotifications extends \Espo\Core\Services\Base
      */
     public function jobCheckNewExtensionVersion($data)
     {
-        $config = $this->getConfig();
+        $config = $this->config;
 
         if (!$config->get('adminNotifications') || !$config->get('adminNotificationsNewExtensionVersion')) {
             return true;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
         $query = "
             SELECT id, name, version, check_version_url as url
@@ -153,13 +157,8 @@ class AdminNotifications extends \Espo\Core\Services\Base
 
     /**
      * Get latest version
-     *
-     * @param  string $url
-     * @param  array  $requestData
-     *
-     * @return array|null
      */
-    protected function getLatestRelease($url = null, array $requestData = [], $urlPath = 'release/latest')
+    protected function getLatestRelease(?string $url = null, array $requestData = [], string $urlPath = 'release/latest')
     {
         if (function_exists('curl_version')) {
             $ch = curl_init();
@@ -183,5 +182,6 @@ class AdminNotifications extends \Espo\Core\Services\Base
                 }
             }
         }
+        return null;
     }
 }

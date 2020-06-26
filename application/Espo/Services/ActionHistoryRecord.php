@@ -29,9 +29,11 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+
+use Espo\ORM\Entity;
 
 class ActionHistoryRecord extends Record
 {
@@ -41,7 +43,7 @@ class ActionHistoryRecord extends Record
 
     protected $forceSelectAllAttributes = true;
 
-    public function loadParentNameFields(\Espo\ORM\Entity $entity)
+    public function loadParentNameFields(Entity $entity)
     {
         if ($entity->get('targetId') && $entity->get('targetType')) {
             $repository = $this->getEntityManager()->getRepository($entity->get('targetType'));
@@ -58,4 +60,3 @@ class ActionHistoryRecord extends Record
         }
     }
 }
-

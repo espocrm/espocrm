@@ -40,7 +40,7 @@ use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Core\Mail\Sender;
 use Laminas\Mail\Message;
 
-use StdClass;
+use Espo\Core\Record\Collection as RecordCollection;
 
 class MassEmail extends \Espo\Services\Record
 {
@@ -530,7 +530,7 @@ class MassEmail extends \Espo\Services\Record
         return $this->campaignService;
     }
 
-    protected function findLinkedQueueItems(string $id, array $params) : StdClass
+    protected function findLinkedQueueItems(string $id, array $params) : RecordCollection
     {
         $link = 'queueItems';
 
@@ -557,10 +557,7 @@ class MassEmail extends \Espo\Services\Record
 
         $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
 
-        return (object) [
-            'total' => $total,
-            'collection' => $collection
-        ];
+        return new RecordCollection($collection, $total);
     }
 
     public function getSmtpAccountDataList()

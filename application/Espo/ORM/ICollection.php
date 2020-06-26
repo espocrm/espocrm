@@ -31,5 +31,5 @@ namespace Espo\ORM;
 
 interface ICollection
 {
-
+    public function getValueMapList() : array;
 }

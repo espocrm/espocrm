@@ -34,7 +34,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Metadata;
 
-use Espo\Core\Services\Record;
+use Espo\Core\Services\Crud;
 
 /**
  * Container for record services. Lazy loading is used.
@@ -58,7 +58,7 @@ class RecordServiceContainer
         $this->metadata = $metadata;
     }
 
-    public function get(string $entityType) : Record
+    public function get(string $entityType) : Crud
     {
         $name = $entityType;
 

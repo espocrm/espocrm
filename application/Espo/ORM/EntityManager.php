@@ -231,7 +231,7 @@ class EntityManager
         return $this->pdo;
     }
 
-    public function createCollection(?string $entityType = null, $data = [])
+    public function createCollection(?string $entityType = null, array $data = [])
     {
         $collection = new EntityCollection($data, $entityType, $this->entityFactory);
         return $collection;

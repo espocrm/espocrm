@@ -254,7 +254,7 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         return $arr;
     }
 
-    public function getValueMapList()
+    public function getValueMapList() : array
     {
         return $this->toArray(true);
     }
@@ -269,7 +269,7 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         $this->isFetched = false;
     }
 
-    public function isFetched()
+    public function isFetched() : bool
     {
         return $this->isFetched;
     }

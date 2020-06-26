@@ -47,7 +47,8 @@ use Espo\Core\{
     ORM\EntityManager,
     AclManager,
     Utils\Util,
-    Services\Record as RecordServiceInterface,
+    Services\Crud,
+    Record\Collection as RecordCollection,
 };
 
 use Espo\Core\Di;
@@ -58,7 +59,7 @@ use StdClass;
  * A layer between Controller and Repository. For CRUD and other operations with records.
  * If a service with the name of an entity type exists then it will be used instead this one.
  */
-class Record implements RecordServiceInterface,
+class Record implements Crud,
 
     Di\ConfigAware,
     Di\ServiceFactoryAware,
@@ -1129,7 +1130,7 @@ class Record implements RecordServiceInterface,
         return $this->find($params);
     }
 
-    public function find(array $params) : StdClass
+    public function find(array $params) : RecordCollection
     {
         $disableCount = false;
         if (
@@ -1183,10 +1184,7 @@ class Record implements RecordServiceInterface,
             }
         }
 
-        return (object) [
-            'total' => $total,
-            'collection' => $collection,
-        ];
+        return new RecordCollection($collection, $total);
     }
 
     public function getListKanban(array $params) : StdClass
@@ -1336,7 +1334,7 @@ class Record implements RecordServiceInterface,
         return $this->findLinked($id, $link, $params);
     }
 
-    public function findLinked(string $id, string $link, array $params) : StdClass
+    public function findLinked(string $id, string $link, array $params) : RecordCollection
     {
         $entity = $this->getRepository()->get($id);
         if (!$entity) {
@@ -1450,10 +1448,7 @@ class Record implements RecordServiceInterface,
             }
         }
 
-        return (object) [
-            'total' => $total,
-            'collection' => $collection,
-        ];
+        return new RecordCollection($collection, $total);
     }
 
     public function linkEntity($id, $link, $foreignId) //TODO Remove in 5.8
@@ -2684,8 +2679,9 @@ class Record implements RecordServiceInterface,
         return $list;
     }
 
-    protected function convertEntityCurrency(Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null)
-    {
+    protected function convertEntityCurrency(
+        Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null
+    ) {
         if (!$this->getAcl()->check($entity, 'edit')) return;
 
         $data = $this->getConvertCurrencyValues($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
@@ -2697,8 +2693,9 @@ class Record implements RecordServiceInterface,
         }
     }
 
-    public function getConvertCurrencyValues(Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null)
-    {
+    public function getConvertCurrencyValues(
+        Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null
+    ) {
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
 
         $data = (object) [];

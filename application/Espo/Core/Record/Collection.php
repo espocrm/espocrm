@@ -27,21 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Services;
+namespace Espo\Core\Record;
 
-use Espo\ORM\Entity;
+use Espo\ORM\{
+    ICollection,
+};
 
-use StdClass;
-
-interface Record
+/**
+ * Wrapper for ORM Collections. Contains a total number of records.
+ */
+class Collection
 {
-    public function create(StdClass $data) : Entity;
+    protected $collection;
+    protected $total;
 
-    public function read(string $id) : Entity;
+    public function __construct(ICollection $collection, ?int $total = null)
+    {
+        $this->collection = $collection;
+        $this->total = $total;
+    }
 
-    public function update(string $id, StdClass $data) : Entity;
+    public function getTotal() : ?int
+    {
+        return $this->total;
+    }
 
-    public function delete(string $id);
+    public function getCollection() : ICollection
+    {
+        return $this->collection;
+    }
 
-    public function find(array $params) : StdClass;
+    public function getValueMapList() : array
+    {
+        if (!$this->collection->getEntityType()) {
+            $list = [];
+            foreach ($this->collection as $e) {
+                $item = $e->getValueMap();
+                $item->_scope = $e->getEntityType();
+                $list[] = $item;
+            }
+            return $list;
+        }
+
+        return $this->collection->getValueMapList();
+    }
 }
