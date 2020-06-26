@@ -53,18 +53,9 @@ class InboundEmail extends \Espo\Services\Record implements
 
     private $campaignService = null;
 
-    protected $storageClassName = '\\Espo\\Core\\Mail\\Mail\\Storage\\Imap';
+    protected $storageClassName = 'Espo\\Core\\Mail\\Mail\\Storage\\Imap';
 
     const PORTION_LIMIT = 20;
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('mailSender');
-        $this->addDependency('crypt');
-        $this->addDependency('notificatorFactory');
-    }
 
     protected function getMailSender()
     {
