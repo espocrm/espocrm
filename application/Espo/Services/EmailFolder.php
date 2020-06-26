@@ -59,7 +59,7 @@ class EmailFolder extends Record
         }
     }
 
-    public function moveUp($id)
+    public function moveUp(string $id)
     {
         $entity = $this->getEntityManager()->getEntity('EmailFolder', $id);
         if (!$entity) throw new NotFound();
@@ -83,7 +83,7 @@ class EmailFolder extends Record
         $this->getEntityManager()->saveEntity($previousEntity);
     }
 
-    public function moveDown($id)
+    public function moveDown(string $id)
     {
         $entity = $this->getEntityManager()->getEntity('EmailFolder', $id);
         if (!$entity) throw new NotFound();
@@ -143,9 +143,8 @@ class EmailFolder extends Record
             $finalList[] = $attributes;
         }
 
-        return array(
+        return [
             'list' => $finalList
-        );
+        ];
     }
 }
-
