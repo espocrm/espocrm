@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Espo\ORM\Entity;
+use Espo\Entities\User;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
@@ -37,32 +38,32 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Laminas\Mail\Storage;
 
-class EmailAccount extends Record
+use Espo\Core\Mail\Importer;
+
+use Espo\Entities\EmailAccount as EmailAccountEntity;
+
+use Espo\Core\Di;
+
+class EmailAccount extends Record implements
+
+    Di\CryptAware,
+    Di\NotificatorFactoryAware
 {
-    protected $storageClassName = '\\Espo\\Core\\Mail\\Mail\\Storage\\Imap';
+    use Di\CryptSetter;
+    use Di\NotificatorFactorySetter;
+
+    protected $storageClassName = 'Espo\\Core\\Mail\\Mail\\Storage\\Imap';
 
     const PORTION_LIMIT = 10;
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('crypt');
-        $this->addDependency('notificatorFactory');
-    }
-
-    protected function getCrypt()
-    {
-        return $this->getInjection('crypt');
-    }
 
     protected function handleInput($data)
     {
         parent::handleInput($data);
         if (property_exists($data, 'password')) {
-            $data->password = $this->getCrypt()->encrypt($data->password);
+            $data->password = $this->crypt->encrypt($data->password);
         }
         if (property_exists($data, 'smtpPassword')) {
-            $data->smtpPassword = $this->getCrypt()->encrypt($data->smtpPassword);
+            $data->smtpPassword = $this->crypt->encrypt($data->smtpPassword);
         }
     }
 
@@ -91,7 +92,7 @@ class EmailAccount extends Record
         if (!empty($params['id'])) {
             $entity = $this->getEntityManager()->getEntity('EmailAccount', $params['id']);
             if ($entity) {
-                $params['password'] = $this->getCrypt()->decrypt($entity->get('password'));
+                $params['password'] = $this->crypt->decrypt($entity->get('password'));
                 $params['imapHandler'] = $entity->get('imapHandler');
             }
         }
@@ -144,7 +145,7 @@ class EmailAccount extends Record
 
         if ($handlerClassName && !empty($params['id'])) {
             try {
-                $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
+                $handler = $this->injectableFactory->create($handlerClassName);
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error(
                     "EmailAccount: Could not create Imap Handler. Error: " . $e->getMessage()
@@ -164,7 +165,7 @@ class EmailAccount extends Record
                     if (isset($imapHandlers->$emailAddress)) {
                         $handlerClassName = $imapHandlers->$emailAddress;
                         try {
-                            $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
+                            $handler = $this->injectableFactory->create($handlerClassName);
                         } catch (\Throwable $e) {
                             $GLOBALS['log']->error("EmailAccount: Could not create Imap Handler for {$emailAddress}. Error: " . $e->getMessage());
                         }
@@ -233,7 +234,7 @@ class EmailAccount extends Record
             'host' => $emailAccount->get('host'),
             'port' => $emailAccount->get('port'),
             'username' => $emailAccount->get('username'),
-            'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
+            'password' => $this->crypt->decrypt($emailAccount->get('password')),
             'emailAddress' => $emailAccount->get('emailAddress'),
             'userId' => $emailAccount->get('assignedUserId'),
         ];
@@ -256,9 +257,9 @@ class EmailAccount extends Record
             throw new Error("Email Account {$emailAccount->id} is not active.");
         }
 
-        $notificator = $this->getInjection('notificatorFactory')->create('Email');
+        $notificator = $this->notificatorFactory->create('Email');
 
-        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig(), $notificator);
+        $importer = new Importer($this->getEntityManager(), $this->getConfig(), $notificator);
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
@@ -514,7 +515,7 @@ class EmailAccount extends Record
         }
     }
 
-    public function findAccountForUser(\Espo\Entities\User $user, $address)
+    public function findAccountForUser(User $user, $address)
     {
         $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where([
             'emailAddress' => $address,
@@ -525,7 +526,7 @@ class EmailAccount extends Record
         return $emailAccount;
     }
 
-    public function getSmtpParamsFromAccount(\Espo\Entities\EmailAccount $emailAccount)
+    public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount)
     {
         $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
@@ -539,7 +540,7 @@ class EmailAccount extends Record
                 $smtpParams['authMechanism'] = $emailAccount->get('smtpAuthMechanism');
             }
             if (array_key_exists('password', $smtpParams)) {
-                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
             }
 
             $this->applySmtpHandler($emailAccount, $smtpParams);
@@ -549,13 +550,13 @@ class EmailAccount extends Record
         return;
     }
 
-    public function applySmtpHandler(\Espo\Entities\EmailAccount $emailAccount, array &$params)
+    public function applySmtpHandler(EmailAccountEntity $emailAccount, array &$params)
     {
         $handlerClassName = $emailAccount->get('smtpHandler');
         if (!$handlerClassName) return;
 
         try {
-            $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
+            $handler = $this->injectableFactory->create($handlerClassName);
         } catch (\Throwable $e) {
             $GLOBALS['log']->error(
                 "EmailAccount: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()

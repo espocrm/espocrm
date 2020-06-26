@@ -27,48 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record;
+namespace Espo\Core\Di;
 
-use Espo\ORM\{
-    ICollection,
-};
+use Espo\Core\Utils\Crypt;
 
-/**
- * Contains an ORM collection and total number of records.
- */
-class Collection
+trait CryptSetter
 {
-    protected $collection;
-    protected $total;
+    protected $crypt;
 
-    public function __construct(ICollection $collection, ?int $total = null)
+    public function setCrypt(Crypt $crypt)
     {
-        $this->collection = $collection;
-        $this->total = $total;
-    }
-
-    public function getTotal() : ?int
-    {
-        return $this->total;
-    }
-
-    public function getCollection() : ICollection
-    {
-        return $this->collection;
-    }
-
-    public function getValueMapList() : array
-    {
-        if (!$this->collection->getEntityType()) {
-            $list = [];
-            foreach ($this->collection as $e) {
-                $item = $e->getValueMap();
-                $item->_scope = $e->getEntityType();
-                $list[] = $item;
-            }
-            return $list;
-        }
-
-        return $this->collection->getValueMapList();
+        $this->crypt = $crypt;
     }
 }

@@ -56,8 +56,9 @@ use Espo\Core\Di;
 use StdClass;
 
 /**
- * A layer between Controller and Repository. For CRUD and other operations with records.
+ * The layer between Controller and Repository. For CRUD and other operations with records.
  * If a service with the name of an entity type exists then it will be used instead this one.
+ * Access control is checked here.
  */
 class Record implements Crud,
 
@@ -625,7 +626,7 @@ class Record implements Crud,
         }
     }
 
-    protected function isFieldSetInData($data, $field)
+    protected function isFieldSetInData(StdClass $data, string $field) : bool
     {
         $attributeList = $this->getFieldManagerUtil()->getActualAttributeList($this->entityType, $field);
         $isSet = false;
@@ -638,7 +639,14 @@ class Record implements Crud,
         return $isSet;
     }
 
-    public function checkAssignment(Entity $entity)
+    public function processAssignmentCheck(Entity $entity)
+    {
+        if (!$this->checkAssignment($entity)) {
+            throw new Forbidden("Assignment failure: assigned user or team not allowed.");
+        }
+    }
+
+    public function checkAssignment(Entity $entity) : bool
     {
         if (!$this->isPermittedAssignedUser($entity)) {
             return false;
@@ -651,10 +659,11 @@ class Record implements Crud,
                 return false;
             }
         }
+
         return true;
     }
 
-    public function isPermittedAssignedUsers(Entity $entity)
+    public function isPermittedAssignedUsers(Entity $entity) : bool
     {
         if (!$entity->hasLinkMultipleField('assignedUsers')) {
             return true;
@@ -715,7 +724,7 @@ class Record implements Crud,
         return true;
     }
 
-    public function isPermittedAssignedUser(Entity $entity)
+    public function isPermittedAssignedUser(Entity $entity) : bool
     {
         if (!$entity->hasAttribute('assignedUserId')) {
             return true;
@@ -767,7 +776,7 @@ class Record implements Crud,
         return true;
     }
 
-    public function isPermittedTeams(Entity $entity)
+    public function isPermittedTeams(Entity $entity) : bool
     {
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
@@ -825,10 +834,11 @@ class Record implements Crud,
         return true;
     }
 
-
     protected function stripTags($string)
     {
-        return strip_tags($string, '<a><img><p><br><span><ol><ul><li><blockquote><pre><h1><h2><h3><h4><h5><table><tr><td><th><thead><tbody><i><b>');
+        return strip_tags($string,
+            '<a><img><p><br><span><ol><ul><li><blockquote><pre><h1><h2><h3><h4><h5><table><tr><td><th><thead><tbody><i><b>'
+        );
     }
 
     protected function filterInputAttribute($attribute, $value)
@@ -945,6 +955,7 @@ class Record implements Crud,
         }
     }
 
+    /** Deprecated */
     public function createEntity($data) //TODO Remove in 5.8
     {
         return $this->create($data);
@@ -977,7 +988,7 @@ class Record implements Crud,
 
         $this->processValidation($entity, $data);
 
-        if (!$this->checkAssignment($entity)) throw new Forbidden('Assignment permission failure.');
+        $this->processAssignmentCheck($entity);
 
         $this->processDuplicateCheck($entity, $data);
 
@@ -995,6 +1006,7 @@ class Record implements Crud,
         throw new Error();
     }
 
+    /** Deprecated */
     public function updateEntity($id, $data) //TODO Remove in 5.8
     {
         return $this->update($id, $data);
@@ -1032,7 +1044,7 @@ class Record implements Crud,
 
         $this->processValidation($entity, $data);
 
-        if (!$this->checkAssignment($entity)) throw new Forbidden("Assignment permission failure.");
+        $this->processAssignmentCheck($entity);
 
         $this->beforeUpdateEntity($entity, $data);
 
@@ -1312,7 +1324,7 @@ class Record implements Crud,
         return true;
     }
 
-    public function getMaxSelectTextAttributeLength()
+    public function getMaxSelectTextAttributeLength() : ?int
     {
         if (!$this->maxSelectTextAttributeLengthDisabled) {
             if ($this->maxSelectTextAttributeLength) {
@@ -1324,11 +1336,12 @@ class Record implements Crud,
         return null;
     }
 
-    public function isSkipSelectTextAttributes()
+    public function isSkipSelectTextAttributes() : bool
     {
         return $this->skipSelectTextAttributes;
     }
 
+    /** Deprecated */
     public function findLinkedEntities($id, $link, $params)
     {
         return $this->findLinked($id, $link, $params);
@@ -1451,6 +1464,7 @@ class Record implements Crud,
         return new RecordCollection($collection, $total);
     }
 
+    /** Deprecated */
     public function linkEntity($id, $link, $foreignId) //TODO Remove in 5.8
     {
         return $this->link($id, $link, $foreignId);
@@ -1516,6 +1530,7 @@ class Record implements Crud,
         return true;
     }
 
+    /** Deprecated */
     public function unlinkEntity($id, $link, $foreignId) //TODO Remove in 5.8
     {
         return $this->unlink($id, $link, $foreignId);
@@ -1582,9 +1597,11 @@ class Record implements Crud,
         }
 
         $this->getRepository()->unrelate($entity, $link, $foreignEntity);
+
         return true;
     }
 
+    /** Deprecated */
     public function linkEntityMass($id, $link, $where, $selectData = null) //TODO Remove in 5.8
     {
         return $this->massLink($id, $link, $where, $selectData);

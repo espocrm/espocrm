@@ -27,48 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record;
+namespace Espo\Core\Di;
 
-use Espo\ORM\{
-    ICollection,
-};
+use Espo\Core\Mail\Sender as MailSender;
 
-/**
- * Contains an ORM collection and total number of records.
- */
-class Collection
+interface MailSenderAware
 {
-    protected $collection;
-    protected $total;
-
-    public function __construct(ICollection $collection, ?int $total = null)
-    {
-        $this->collection = $collection;
-        $this->total = $total;
-    }
-
-    public function getTotal() : ?int
-    {
-        return $this->total;
-    }
-
-    public function getCollection() : ICollection
-    {
-        return $this->collection;
-    }
-
-    public function getValueMapList() : array
-    {
-        if (!$this->collection->getEntityType()) {
-            $list = [];
-            foreach ($this->collection as $e) {
-                $item = $e->getValueMap();
-                $item->_scope = $e->getEntityType();
-                $list[] = $item;
-            }
-            return $list;
-        }
-
-        return $this->collection->getValueMapList();
-    }
+    public function setMailSender(MailSender $mailSender);
 }

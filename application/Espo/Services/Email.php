@@ -38,20 +38,17 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
-class Email extends Record
+use Espo\Core\Di;
+
+class Email extends Record implements
+
+    Di\MailSenderAware,
+    Di\CryptAware,
+    Di\FileStorageManagerAware
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependencyList([
-            'container',
-            'preferences',
-            'fileManager',
-            'crypt',
-            'serviceFactory',
-            'fileStorageManager'
-        ]);
-    }
+    use Di\MailSenderSetter;
+    use Di\CryptSetter;
+    use Di\FileStorageManagerSetter;
 
     private $streamService = null;
 
@@ -60,7 +57,13 @@ class Email extends Record
     protected $skipSelectTextAttributes = true;
 
     protected $allowedForUpdateAttributeList = [
-        'parentType', 'parentId', 'parentName', 'teamsIds', 'teamsNames', 'assignedUserId', 'assignedUserName'
+        'parentType',
+        'parentId',
+        'parentName',
+        'teamsIds',
+        'teamsNames',
+        'assignedUserId',
+        'assignedUserName',
     ];
 
     protected $mandatorySelectAttributeList = [
@@ -80,39 +83,24 @@ class Email extends Record
         'messageId',
         'sentById',
         'replyToString',
-        'hasAttachment'
+        'hasAttachment',
     ];
 
     private $fromEmailAddressNameCache = [];
 
-    protected function getFileManager()
-    {
-        return $this->getInjection('fileManager');
-    }
-
     protected function getFileStorageManager()
     {
-        return $this->getInjection('fileStorageManager');
+        return $this->fileStorageManager;
     }
 
     protected function getMailSender()
     {
-        return $this->getInjection('container')->get('mailSender');
-    }
-
-    protected function getPreferences()
-    {
-        return $this->injections['preferences'];
+        return $this->mailSender;
     }
 
     protected function getCrypt()
     {
-        return $this->injections['crypt'];
-    }
-
-    protected function getServiceFactory()
-    {
-        return $this->injections['serviceFactory'];
+        return $this->crypt;
     }
 
     public function getUserSmtpParams(string $userId)
@@ -1002,12 +990,12 @@ class Email extends Record
         return $data;
     }
 
-    public function isPermittedAssignedUser(Entity $entity)
+    public function isPermittedAssignedUser(Entity $entity) : bool
     {
         return true;
     }
 
-    public function isPermittedAssignedUsers(Entity $entity)
+    public function isPermittedAssignedUsers(Entity $entity) : bool
     {
         return true;
     }

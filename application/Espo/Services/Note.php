@@ -140,7 +140,7 @@ class Note extends Record
         $entity->set('post', $post);
     }
 
-    public function checkAssignment(Entity $entity)
+    public function processAssignmentCheck(Entity $entity)
     {
         if ($entity->isNew()) {
             $targetType = $entity->get('targetType');

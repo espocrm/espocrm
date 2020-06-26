@@ -78,7 +78,7 @@ class Meeting extends \Espo\Services\Record
         return $this->getInjection('dateTime');
     }
 
-    public function checkAssignment(Entity $entity)
+    public function checkAssignment(Entity $entity) : bool
     {
         $result = parent::checkAssignment($entity);
         if (!$result) return false;
@@ -112,7 +112,7 @@ class Meeting extends \Espo\Services\Record
         return true;
     }
 
-    protected function getInvitationManager($useUserSmtp = true)
+    protected function getInvitationManager(bool $useUserSmtp = true)
     {
         $smtpParams = null;
         if ($useUserSmtp) {
@@ -134,7 +134,7 @@ class Meeting extends \Espo\Services\Record
         );
     }
 
-    public function sendInvitations(Entity $entity, $useUserSmtp = true)
+    public function sendInvitations(Entity $entity, bool $useUserSmtp = true)
     {
         $invitationManager = $this->getInvitationManager($useUserSmtp);
 
