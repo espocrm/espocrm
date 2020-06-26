@@ -35,15 +35,13 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
-class ExternalAccount extends Record
-{
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('hookManager');
-    }
+use Espo\Core\Di;
 
-    protected function getClient($integration, $id)
+class ExternalAccount extends Record implements Di\HookManagerAware
+{
+    use Di\HookManagerSetter;
+
+    protected function getClient(string $integration, string $id)
     {
         $integrationEntity = $this->getEntityManager()->getEntity('Integration', $integration);
 
@@ -62,12 +60,12 @@ class ExternalAccount extends Record
         return $factory->create($integration, $id);
     }
 
-    public function getExternalAccountEntity($integration, $userId)
+    public function getExternalAccountEntity(string $integration, string $userId)
     {
         return $this->getEntityManager()->getEntity('ExternalAccount', $integration . '__' . $userId);
     }
 
-    public function ping($integration, $userId)
+    public function ping(string $integration, string $userId)
     {
         $entity = $this->getExternalAccountEntity($integration, $userId);
         try {
@@ -76,9 +74,11 @@ class ExternalAccount extends Record
                 return $client->ping();
             }
         } catch (\Exception $e) {}
+
+        return false;
     }
 
-    public function authorizationCode($integration, $userId, $code)
+    public function authorizationCode(string $integration, string $userId, string $code)
     {
         $entity = $this->getExternalAccountEntity($integration, $userId);
         if (!$entity) {
@@ -99,7 +99,7 @@ class ExternalAccount extends Record
                     $entity->set($name, $value);
                 }
                 $this->getEntityManager()->saveEntity($entity);
-                $this->getInjection('hookManager')->process('ExternalAccount', 'afterConnect', $entity, [
+                $this->hookManager->process('ExternalAccount', 'afterConnect', $entity, [
                     'integration' => $integration,
                     'userId' => $userId,
                     'code' => $code,

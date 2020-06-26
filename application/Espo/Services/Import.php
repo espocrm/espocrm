@@ -39,17 +39,19 @@ use Espo\Entities\User;
 
 use StdClass;
 
-class Import extends \Espo\Services\Record
+use Espo\Core\Di;
+
+use Espo\Core\Record\Collection as RecordCollection;
+
+class Import extends \Espo\Services\Record implements
+
+    Di\FileManagerAware,
+    Di\FileStorageManagerAware
 {
+    use Di\FileManagerSetter;
+    use Di\FileStorageManagerSetter;
+
     const REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS = 2;
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('fileManager');
-        $this->addDependency('fileStorageManager');
-    }
 
     protected $dateFormatsMap = [
         'YYYY-MM-DD' => 'Y-m-d',
@@ -73,12 +75,12 @@ class Import extends \Espo\Services\Record
 
     protected function getFileStorageManager()
     {
-        return $this->getInjection('fileStorageManager');
+        return $this->fileStorageManager;
     }
 
     protected function getFileManager()
     {
-        return $this->getInjection('fileManager');
+        return $this->fileManager;
     }
 
     protected function getAcl()
@@ -110,7 +112,7 @@ class Import extends \Espo\Services\Record
         ]);
     }
 
-    public function findLinked(string $id, string $link, array $params) : StdClass
+    public function findLinked(string $id, string $link, array $params) : RecordCollection
     {
         $entity = $this->getRepository()->get($id);
         $foreignEntityType = $entity->get('entityType');
@@ -139,13 +141,10 @@ class Import extends \Espo\Services\Record
 
         $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
 
-        return (object) [
-            'total' => $total,
-            'collection' => $collection,
-        ];
+        return new RecordCollection($collection, $total);
     }
 
-    public function uploadFile($contents)
+    public function uploadFile($contents) : string
     {
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('type', 'text/csv');

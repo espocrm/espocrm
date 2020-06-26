@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\{
     BadRequest,
     Conflict,
     NotFound,
+    Forbidden,
     NotFoundSilent,
     ForbiddenSilent,
     ConflictSilent,
