@@ -33,6 +33,8 @@ use Espo\ORM\{
     ICollection,
 };
 
+use StdClass;
+
 /**
  * Contains an ORM collection and total number of records.
  */

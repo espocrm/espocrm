@@ -29,44 +29,35 @@
 
 namespace Espo\Services;
 
-class Metadata extends \Espo\Core\Services\Base
+use Espo\Core\{
+    Acl,
+    Utils\Metadata as MetadataUtil,
+};
+
+use Espo\Entities\User;
+
+class Metadata
 {
-    protected function init()
-    {
-        $this->addDependency('metadata');
-        $this->addDependency('acl');
-    }
+    protected $acl;
+    protected $metadata;
+    protected $user;
 
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getAcl()
-    {
-        return $this->getInjection('acl');
-    }
-
-    protected function getDefaultLanguage()
-    {
-        return $this->getInjection('container')->get('defaultLanguage');
-    }
-
-    protected function getLanguage()
-    {
-        return $this->getInjection('container')->get('language');
+    public function __construct(Acl $acl, MetadataUtil $metadata, User $user) {
+        $this->acl = $acl;
+        $this->metadata = $metadata;
+        $this->user = $user;
     }
 
     public function getDataForFrontend()
     {
-        $data = $this->getMetadata()->getAllForFrontend();
+        $data = $this->metadata->getAllForFrontend();
 
-        if (!$this->getUser()->isAdmin()) {
-            $scopeList = array_keys($this->getMetadata()->get(['scopes'], []));
+        if (!$this->user->isAdmin()) {
+            $scopeList = array_keys($this->metadata->get(['scopes'], []));
             foreach ($scopeList as $scope) {
-                if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
+                if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
                 if (in_array($scope, ['Reminder'])) continue;
-                if (!$this->getAcl()->check($scope)) {
+                if (!$this->acl->check($scope)) {
                     unset($data->entityDefs->$scope);
                     unset($data->clientDefs->$scope);
                     unset($data->entityAcl->$scope);
@@ -76,21 +67,21 @@ class Metadata extends \Espo\Core\Services\Base
 
             $entityTypeList = array_keys(get_object_vars($data->entityDefs));
             foreach ($entityTypeList as $entityType) {
-                $linksDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'links'], []);
+                $linksDefs = $this->metadata->get(['entityDefs', $entityType, 'links'], []);
 
-                $fobiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($entityType);
+                $fobiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType);
 
                 foreach ($linksDefs as $link => $defs) {
                     $type = $defs['type'] ?? null;
 
-                    $hasField = !!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', $link]);
+                    $hasField = !!$this->metadata->get(['entityDefs', $entityType, 'fields', $link]);
 
                     if ($type === 'belongsToParent') {
                         if ($hasField) {
-                            $parentEntityList = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $link, 'entityList']);
+                            $parentEntityList = $this->metadata->get(['entityDefs', $entityType, 'fields', $link, 'entityList']);
                             if (is_array($parentEntityList)) {
                                 foreach ($parentEntityList as $i => $e) {
-                                    if (!$this->getAcl()->check($e)) {
+                                    if (!$this->acl->check($e)) {
                                         unset($parentEntityList[$i]);
                                     }
                                 }
@@ -104,9 +95,9 @@ class Metadata extends \Espo\Core\Services\Base
                     $foreignEntityType = $defs['entity'] ?? null;
 
                     if ($foreignEntityType) {
-                        if ($this->getAcl()->check($foreignEntityType)) continue;
+                        if ($this->acl->check($foreignEntityType)) continue;
 
-                        if ($this->getUser()->isPortal()) {
+                        if ($this->user->isPortal()) {
                             if ($foreignEntityType === 'Account' || $foreignEntityType === 'Contact') {
                                 continue;
                             }
@@ -136,11 +127,11 @@ class Metadata extends \Espo\Core\Services\Base
 
             unset($data->entityDefs->Settings);
 
-            $dashletList = array_keys($this->getMetadata()->get(['dashlets'], []));
+            $dashletList = array_keys($this->metadata->get(['dashlets'], []));
 
             foreach ($dashletList as $item) {
-                $aclScope = $this->getMetadata()->get(['dashlets', $item, 'aclScope']);
-                if ($aclScope && !$this->getAcl()->check($aclScope)) {
+                $aclScope = $this->metadata->get(['dashlets', $item, 'aclScope']);
+                if ($aclScope && !$this->acl->check($aclScope)) {
                     unset($data->dashlets->$item);
                 }
             }
@@ -148,7 +139,7 @@ class Metadata extends \Espo\Core\Services\Base
             unset($data->authenticationMethods);
             unset($data->formula);
 
-            foreach (($this->getMetadata()->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
+            foreach (($this->metadata->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
                 $targetArr = explode('.', $target);
 
                 if (is_string($item)) {
@@ -164,14 +155,14 @@ class Metadata extends \Espo\Core\Services\Base
                     $aclScope = $item['scope'] ?? null;;
                     $aclField = $item['field'] ?? null;
                     if (!$aclScope) continue;
-                    if (!$this->getAcl()->check($aclScope)) continue;
-                    if ($aclField && in_array($aclField, $this->getAcl()->getScopeForbiddenFieldList($aclScope))) continue;
+                    if (!$this->acl->check($aclScope)) continue;
+                    if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) continue;
                 }
 
                 $pointer = $data;
                 foreach ($targetArr as $i => $k) {
                     if ($i === count($targetArr) - 1) {
-                        $pointer->$k = $this->getMetadata()->get($targetArr);
+                        $pointer->$k = $this->metadata->get($targetArr);
                         break;
                     }
                     if (!isset($pointer->$k)) {

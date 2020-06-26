@@ -36,17 +36,22 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Json;
 
-class Notification extends \Espo\Services\Record
+use Espo\Core\Record\Collection as RecordCollection;
+
+use Espo\Entities\Note;
+use Espo\Entities\User;
+
+use Espo\Core\Di;
+
+class Notification extends \Espo\Services\Record implements
+
+    Di\WebSocketSubmissionAware
 {
+    use Di\WebSocketSubmissionSetter;
+
     protected $actionHistoryDisabled = true;
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('webSocketSubmission');
-    }
-
-    public function notifyAboutMentionInPost($userId, $noteId)
+    public function notifyAboutMentionInPost(string $userId, string $noteId)
     {
         $notification = $this->getEntityManager()->getEntity('Notification');
         $notification->set(array(
@@ -59,7 +64,7 @@ class Notification extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($notification);
     }
 
-    public function notifyAboutNote(array $userIdList, \Espo\Entities\Note $note)
+    public function notifyAboutNote(array $userIdList, Note $note)
     {
         $data = ['noteId' => $note->id];
         $encodedData = Json::encode($data);
@@ -101,12 +106,12 @@ class Notification extends \Espo\Services\Record
 
         if ($this->getConfig()->get('useWebSocket')) {
             foreach ($userIdList as $userId) {
-                $this->getInjection('webSocketSubmission')->submit('newNotification', $userId);
+                $this->webSocketSubmission->submit('newNotification', $userId);
             }
         }
     }
 
-    public function checkUserNoteAccess(\Espo\Entities\User $user, \Espo\Entities\Note $note)
+    public function checkUserNoteAccess(User $user, Note $note) : bool
     {
         if ($user->isPortal()) {
             if ($note->get('relatedType')) {
@@ -133,7 +138,7 @@ class Notification extends \Espo\Services\Record
         return true;
     }
 
-    public function getNotReadCount($userId)
+    public function getNotReadCount(string $userId) : int
     {
         $whereClause = array(
             'userId' => $userId,
@@ -155,7 +160,7 @@ class Notification extends \Espo\Services\Record
         return $this->getEntityManager()->getRepository('Notification')->where($whereClause)->count();
     }
 
-    public function markAllRead($userId)
+    public function markAllRead(string $userId)
     {
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "UPDATE notification SET `read` = 1 WHERE user_id = ".$pdo->quote($userId)." AND `read` = 0";
@@ -163,13 +168,13 @@ class Notification extends \Espo\Services\Record
         return true;
     }
 
-    public function getList($userId, array $params = array())
+    public function getList(string $userId, array $params = []) : RecordCollection
     {
-        $searchParams = array();
+        $searchParams = [];
 
-        $whereClause = array(
+        $whereClause = [
             'userId' => $userId
-        );
+        ];
         if (!empty($params['after'])) {
             $whereClause['createdAt>'] = $params['after'];
         }
@@ -177,12 +182,12 @@ class Notification extends \Espo\Services\Record
         $ignoreScopeList = $this->getIgnoreScopeList();
         if (!empty($ignoreScopeList)) {
             $where = [];
-            $where[] = array(
-                'OR' => array(
+            $where[] = [
+                'OR' => [
                     'relatedParentType' => null,
                     'relatedParentType!=' => $ignoreScopeList
-                )
-            );
+                ]
+            ];
             $whereClause[] = $where;
         }
 
@@ -200,7 +205,7 @@ class Notification extends \Espo\Services\Record
         $collection = $this->getEntityManager()->getRepository('Notification')->find($searchParams);
         $count = $this->getEntityManager()->getRepository('Notification')->count($searchParams);
 
-        $ids = array();
+        $ids = [];
         foreach ($collection as $k => $entity) {
             $ids[] = $entity->id;
             $data = $entity->get('data');
@@ -262,17 +267,13 @@ class Notification extends \Espo\Services\Record
             $s->execute();
         }
 
-
-        return array(
-            'total' => $count,
-            'collection' => $collection
-        );
+        return new RecordCollection($collection, $count);
     }
 
-    protected function getIgnoreScopeList()
+    protected function getIgnoreScopeList() : array
     {
         $ignoreScopeList = [];
-        $scopes = $this->getMetadata()->get('scopes', array());
+        $scopes = $this->getMetadata()->get('scopes', []);
         foreach ($scopes as $scope => $d) {
             if (empty($d['entity']) || !$d['entity']) continue;
             if (empty($d['object']) || !$d['object']) continue;
@@ -283,4 +284,3 @@ class Notification extends \Espo\Services\Record
         return $ignoreScopeList;
     }
 }
-

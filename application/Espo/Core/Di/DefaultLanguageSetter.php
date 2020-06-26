@@ -27,37 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Di;
 
-use Espo\ORM\Entity;
+use Espo\Core\Utils\Language;
 
-use Espo\Core\Di;
-
-class PortalRole extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+trait DefaultLanguageSetter
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    protected $defaultLanguage;
 
-    protected $forceSelectAllAttributes = true;
-
-    public function afterCreateEntity(Entity $entity, $data)
+    public function setDefaultLanguage(Language $defaultLanguage)
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
-
-    public function afterUpdateEntity(Entity $entity, $data)
-    {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
-
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/acl-portal');
-        $this->dataManager->updateCacheTimestamp();
+        $this->defaultLanguage = $defaultLanguage;
     }
 }

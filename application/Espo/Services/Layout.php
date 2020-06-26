@@ -32,26 +32,39 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
-class Layout extends \Espo\Core\Services\Base
+use Espo\Core\{
+    Acl,
+    Utils\Layout as LayoutUtil,
+    ORM\EntityManager,
+    Utils\Metadata,
+    DataManager,
+};
+
+use Espo\Entities\User;
+
+class Layout
 {
-    protected function init()
-    {
-        $this->addDependency('acl');
-        $this->addDependency('layout');
-        $this->addDependency('entityManager');
-        $this->addDependency('metadata');
-        $this->addDependency('dataManager');
-        $this->addDependency('user');
-    }
+    protected $acl;
+    protected $layout;
+    protected $entityManager;
+    protected $metadata;
+    protected $dataManager;
+    protected $user;
 
-    protected function getAcl()
-    {
-        return $this->getInjection('acl');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
+    public function __construct(
+        Acl $acl,
+        LayoutUtil $layout,
+        EntityManager $entityManager,
+        Metadata $metadata,
+        DataManager $dataManager,
+        User $user
+    ) {
+        $this->acl = $acl;
+        $this->layout = $layout;
+        $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
+        $this->dataManager = $dataManager;
+        $this->user = $user;
     }
 
     public function getOriginal(string $scope, string $name, ?string $setId = null)
@@ -66,7 +79,7 @@ class Layout extends \Espo\Core\Services\Base
         }
 
         if (!$result) {
-            $result = $this->getInjection('layout')->get($scope, $name);
+            $result = $this->layout->get($scope, $name);
             $result = json_decode($result);
         }
 
@@ -85,8 +98,8 @@ class Layout extends \Espo\Core\Services\Base
         $layoutSetId = null;
         $data = null;
 
-        $em = $this->getInjection('entityManager');
-        $user = $this->getInjection('user');
+        $em = $this->entityManager;
+        $user = $this->user;
 
         if ($user->isPortal()) {
             $portalId = $user->get('portalId');
@@ -122,7 +135,7 @@ class Layout extends \Espo\Core\Services\Base
         }
 
         if (!$data) {
-            $dataString = $this->getInjection('layout')->get($scope, $name);
+            $dataString = $this->layout->get($scope, $name);
             $data = json_decode($dataString);
         } else {
             $dataString = json_encode($data);
@@ -132,15 +145,15 @@ class Layout extends \Espo\Core\Services\Base
             throw new NotFound("Layout {$scope}:{$name} is not found.");
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             if ($name === 'relationships') {
                 if (is_array($data)) {
                     foreach ($data as $i => $item) {
                         $link = $item;
                         if (is_object($item)) $link = $item->name ?? null;
-                        $foreignEntityType = $this->getMetadata()->get(['entityDefs', $scope, 'links', $link, 'entity']);
+                        $foreignEntityType = $this->metadata->get(['entityDefs', $scope, 'links', $link, 'entity']);
                         if ($foreignEntityType) {
-                            if (!$this->getAcl()->check($foreignEntityType)) {
+                            if (!$this->acl->check($foreignEntityType)) {
                                 unset($data[$i]);
                             }
                         }
@@ -162,7 +175,7 @@ class Layout extends \Espo\Core\Services\Base
 
     protected function getRecordFromSet(string $scope, string $name, string $setId, bool $skipCheck = false)
     {
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
         $layoutSet = $em->getEntity('LayoutSet', $setId);
         if (!$layoutSet) throw new NotFound("LayoutSet {$setId} not found.");
 
@@ -188,7 +201,7 @@ class Layout extends \Espo\Core\Services\Base
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId);
 
-            $em = $this->getInjection('entityManager');
+            $em = $this->entityManager;
 
             if (!$layout) {
                 $layout = $em->getEntity('LayoutRecord');
@@ -205,32 +218,32 @@ class Layout extends \Espo\Core\Services\Base
             return $layout->get('data');
         }
 
-        $layoutManager = $this->getInjection('layout');
+        $layoutManager = $this->layout;
 
         $layoutManager->set($data, $scope, $name);
         $result = $layoutManager->save();
 
         if ($result === false) throw new Error("Error while saving layout.");
 
-        $this->getInjection('dataManager')->updateCacheTimestamp();
+        $this->dataManager->updateCacheTimestamp();
 
         return $layoutManager->get($scope, $name);
     }
 
     public function resetToDefault(string $scope, string $name, ?string $setId = null)
     {
-        $this->getInjection('dataManager')->updateCacheTimestamp();
+        $this->dataManager->updateCacheTimestamp();
 
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId);
             if ($layout) {
-                $em = $this->getInjection('entityManager');
+                $em = $this->entityManager;
                 $em->removeEntity($layout);
             }
             return $this->getOriginal($scope, $name);
         }
 
-        $this->getInjection('layout')->resetToDefault($scope, $name);
+        $this->layout->resetToDefault($scope, $name);
 
         $methodName = 'resetToDefault' . ucfirst($name);
         if (method_exists($this, $methodName)) {
@@ -272,6 +285,6 @@ class Layout extends \Espo\Core\Services\Base
 
     protected function resetToDefaultBottomPanelsDetail(string $scope)
     {
-        $this->getInjection('layout')->resetToDefault($scope, 'relationships');
+        $this->layout->resetToDefault($scope, 'relationships');
     }
 }

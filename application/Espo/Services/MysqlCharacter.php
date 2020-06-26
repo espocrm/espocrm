@@ -31,6 +31,8 @@ namespace Espo\Services;
 
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 
+
+// TODO remove
 class MysqlCharacter extends \Espo\Core\Services\Base
 {
     protected function init()

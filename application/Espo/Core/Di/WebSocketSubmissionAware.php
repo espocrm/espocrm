@@ -27,37 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Di;
 
-use Espo\ORM\Entity;
+use Espo\Core\WebSocket\Submission;
 
-use Espo\Core\Di;
-
-class PortalRole extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+interface WebSocketSubmissionAware
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
-
-    protected $forceSelectAllAttributes = true;
-
-    public function afterCreateEntity(Entity $entity, $data)
-    {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
-
-    public function afterUpdateEntity(Entity $entity, $data)
-    {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
-
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/acl-portal');
-        $this->dataManager->updateCacheTimestamp();
-    }
+    public function setWebSocketSubmission(Submission $webSocketSubmission);
 }
