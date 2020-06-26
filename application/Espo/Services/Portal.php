@@ -29,7 +29,7 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class Portal extends Record
 {

@@ -29,13 +29,13 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
 class LeadCapture extends Record
 {
@@ -44,7 +44,7 @@ class LeadCapture extends Record
     protected function init()
     {
         $this->addDependency('fieldManagerUtil');
-        $this->addDependency('container');
+        $this->addDependency('mailSender');
         $this->addDependency('defaultLanguage');
         $this->addDependency('hookManager');
         $this->addDependency('dateTime');
@@ -52,7 +52,7 @@ class LeadCapture extends Record
 
     protected function getMailSender()
     {
-        return $this->getInjection('container')->get('mailSender');
+        return $this->getInjection('mailSender');
     }
 
     public function prepareEntityForOutput(Entity $entity)

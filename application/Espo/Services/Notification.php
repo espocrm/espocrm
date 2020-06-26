@@ -29,8 +29,8 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
 
@@ -43,7 +43,7 @@ class Notification extends \Espo\Services\Record
     protected function init()
     {
         parent::init();
-        $this->addDependency('container');
+        $this->addDependency('webSocketSubmission');
     }
 
     public function notifyAboutMentionInPost($userId, $noteId)
@@ -101,7 +101,7 @@ class Notification extends \Espo\Services\Record
 
         if ($this->getConfig()->get('useWebSocket')) {
             foreach ($userIdList as $userId) {
-                $this->getInjection('container')->get('webSocketSubmission')->submit('newNotification', $userId);
+                $this->getInjection('webSocketSubmission')->submit('newNotification', $userId);
             }
         }
     }

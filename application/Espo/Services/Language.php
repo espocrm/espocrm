@@ -56,6 +56,7 @@ class Language
         $this->container = $container;
     }
 
+    // TODO use proxy
     protected function getDefaultLanguage()
     {
         return $this->container->get('defaultLanguage');

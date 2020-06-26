@@ -29,12 +29,12 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
 
 class RecordTree extends Record
 {
@@ -51,7 +51,7 @@ class RecordTree extends Record
         parent::__construct();
 
         if (!$this->subjectEntityType) {
-            $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) -8 );
+            $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
         }
     }
 
