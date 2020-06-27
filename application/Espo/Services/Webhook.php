@@ -35,8 +35,14 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\BadRequest;
 
-class Webhook extends Record
+use Espo\Core\Di;
+
+class Webhook extends Record implements
+    Di\WebhookManagerAware
+
 {
+    use Di\WebhookManagerSetter;
+
     const WEBHOOK_MAX_COUNT_PER_USER = 50;
 
     protected $eventTypeList = [
@@ -49,14 +55,6 @@ class Webhook extends Record
     protected $onlyAdminAttributeList = ['userId', 'userName'];
 
     protected $readOnlyAttributeList = ['secretKey'];
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependencyList([
-            'webhookManager',
-        ]);
-    }
 
     public function populateDefaults(Entity $entity, $data)
     {
@@ -170,14 +168,14 @@ class Webhook extends Record
     protected function afterCreateEntity(Entity $entity, $data)
     {
         if ($entity->get('isActive')) {
-            $this->getInjection('webhookManager')->addEvent($entity->get('event'));
+            $this->webhookManager->addEvent($entity->get('event'));
         }
     }
 
     protected function afterDeleteEntity(Entity $entity)
     {
         if ($entity->get('isActive')) {
-            $this->getInjection('webhookManager')->removeEvent($entity->get('event'));
+            $this->webhookManager->removeEvent($entity->get('event'));
         }
     }
 
@@ -185,9 +183,9 @@ class Webhook extends Record
     {
         if (isset($data->isActive)) {
             if ($entity->get('isActive')) {
-                $this->getInjection('webhookManager')->addEvent($entity->get('event'));
+                $this->webhookManager->addEvent($entity->get('event'));
             } else {
-                $this->getInjection('webhookManager')->removeEvent($entity->get('event'));
+                $this->webhookManager->removeEvent($entity->get('event'));
             }
         }
     }
