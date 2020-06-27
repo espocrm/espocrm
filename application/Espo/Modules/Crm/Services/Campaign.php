@@ -29,11 +29,11 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden,
-    \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error,
+    Espo\Core\Exceptions\Forbidden,
+    Espo\Core\Exceptions\BadRequest;
 
 class Campaign extends \Espo\Services\Record
 {

@@ -29,12 +29,11 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFound;
 
 class Document extends \Espo\Services\Record
 {
-    public function getAttachmentList($id)
+    public function getAttachmentList(string $id)
     {
         $entity = $this->getEntity($id);
 
@@ -60,4 +59,3 @@ class Document extends \Espo\Services\Record
         return $attachmentList;
     }
 }
-

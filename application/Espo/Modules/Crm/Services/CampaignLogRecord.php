@@ -29,9 +29,6 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\ORM\Entity;
-
 class CampaignLogRecord extends \Espo\Services\Record
 {
     protected $forceSelectAllAttributes = true;

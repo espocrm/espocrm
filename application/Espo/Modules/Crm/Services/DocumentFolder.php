@@ -29,12 +29,9 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
-
 class DocumentFolder extends \Espo\Services\RecordTree
 {
     protected $subjectEntityType = 'Document';
 
     protected $categoryField = 'folder';
-
 }

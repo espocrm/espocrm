@@ -29,12 +29,12 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
-use \Espo\Modules\Crm\Business\Event\Invitations;
+use Espo\ORM\Entity;
+use Espo\Modules\Crm\Business\Event\Invitations;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 class Meeting extends \Espo\Services\Record
 {

@@ -29,8 +29,8 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\ORM\Entity;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\ORM\Entity;
 
 class CampaignTrackingUrl extends \Espo\Services\Record
 {

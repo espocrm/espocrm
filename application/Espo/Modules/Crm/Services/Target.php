@@ -29,9 +29,9 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\ORM\Entity;
 
 class Target extends \Espo\Services\Record
 {
@@ -91,4 +91,3 @@ class Target extends \Espo\Services\Record
         return $lead;
     }
 }
-
