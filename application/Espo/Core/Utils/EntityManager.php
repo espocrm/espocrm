@@ -39,6 +39,9 @@ use Espo\Core\Container;
 
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
 
+/**
+ * Administration > Entity Manager.
+ */
 class EntityManager
 {
     private $metadata;

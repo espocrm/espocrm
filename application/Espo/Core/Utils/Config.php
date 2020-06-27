@@ -31,6 +31,9 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Exceptions\Error;
 
+/**
+ * Reads and writes the main config file.
+ */
 class Config
 {
     private $defaultConfigPath = 'application/Espo/Core/defaults/config.php';
@@ -49,7 +52,6 @@ class Config
         'logger',
         'defaultPermissions',
     ];
-
 
     private $data;
 

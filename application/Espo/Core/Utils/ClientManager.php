@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Utils;
 
+/**
+ * Renders the main HTML page.
+ */
 class ClientManager
 {
     private $themeManager;

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
 class DataUtil
 {
@@ -167,4 +167,3 @@ class DataUtil
         }
     }
 }
-

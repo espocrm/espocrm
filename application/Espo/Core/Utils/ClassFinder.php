@@ -29,6 +29,11 @@
 
 namespace Espo\Core\Utils;
 
+/**
+ * Finds classes of a specific category. Category examples: Services, Controllers.
+ * First it checks ib the custom folder, then modules, then the internal folder.
+ * Available as 'classFinder' service.
+ */
 class ClassFinder
 {
     protected $classParser;
@@ -47,7 +52,7 @@ class ClassFinder
     }
 
     /**
-     * Find class name by category (e.g. Controllers, Services) and name.
+     * Find class name by a category and name.
      */
     public function find(string $category, string $name, bool $subDirs = false) : ?string
     {

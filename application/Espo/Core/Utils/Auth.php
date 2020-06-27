@@ -44,6 +44,9 @@ use Espo\Core\Utils\Authentication\TwoFA\CodeInterface as TwoFACodeInterface;
 
 use Espo\Core\Container;
 
+/**
+ * Handles authentication. The entry point of the auth process.
+ */
 class Auth
 {
     protected $allowAnyAccess;
