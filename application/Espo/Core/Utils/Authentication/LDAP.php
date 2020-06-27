@@ -127,7 +127,7 @@ class LDAP extends Espo
         return $this->ldapClient;
     }
 
-    public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request = null)
+    public function login(string $username, ?string $password, ?AuthToken $authToken = null, array $params = [], $request = null)
     {
         $isPortal = !empty($params['isPortal']);
 

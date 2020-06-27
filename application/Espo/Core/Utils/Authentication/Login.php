@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-interface AuthInterface
+interface Login
 {
 
 }

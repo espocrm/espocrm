@@ -31,7 +31,7 @@ namespace Espo\Core\Utils\Authentication\Utils;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Authentication\AuthInterface;
+use Espo\Core\Utils\Authentication\Login;
 
 class AuthenticationFactory
 {
@@ -44,7 +44,7 @@ class AuthenticationFactory
         $this->metadata = $metadata;
     }
 
-    public function create(string $method) : AuthInterface
+    public function create(string $method) : Login
     {
         $className = $this->metadata->get(['authenticationMethods', $method, 'implementationClassName']);
 

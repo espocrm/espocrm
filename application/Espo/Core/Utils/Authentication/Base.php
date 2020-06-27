@@ -33,13 +33,12 @@ use Espo\Core\Utils\Config;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Auth;
 
-abstract class Base implements AuthInterface
+abstract class Base implements Login
 {
-    protected $config;
-
-    protected $entityManager;
-
     private $passwordHash;
+
+    protected $config;
+    protected $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
