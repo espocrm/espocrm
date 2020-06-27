@@ -29,13 +29,23 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\BadRequest;
 
-class App extends \Espo\Core\Controllers\Base
+use Espo\Core\Utils\Auth;
+
+use Espo\Core\Di;
+
+class App implements
+
+    Di\ServiceFactoryAware,
+    Di\InjectableFactoryAware
 {
+    use Di\ServiceFactorySetter;
+    use Di\InjectableFactorySetter;
+
     public function actionUser()
     {
-        return $this->getServiceFactory()->create('App')->getUserData();
+        return $this->serviceFactory->create('App')->getUserData();
     }
 
     public function postActionDestroyAuthToken($params, $data)
@@ -44,7 +54,8 @@ class App extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
+        $auth = $this->injectableFactory->create(Auth::class);
+
         return $auth->destroyAuthToken($data->token);
     }
 }
