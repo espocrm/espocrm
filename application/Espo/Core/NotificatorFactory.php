@@ -36,7 +36,7 @@ use Espo\Core\Notificators\DefaultNotificator;
 
 class NotificatorFactory
 {
-    protected $baseClassName = DefaultNotificator::class;
+    protected $defaultClassName = DefaultNotificator::class;
 
     protected $injectableFactory;
     protected $classFinder;
@@ -52,7 +52,7 @@ class NotificatorFactory
         $className = $this->classFinder->find('Notificators', $entityType);
 
         if (!$className || !class_exists($className)) {
-            $className = $this->baseClassName;
+            $className = $this->defaultClassName;
         }
 
         $obj = $this->injectableFactory->create($className);
