@@ -35,40 +35,53 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\ORM\Entity;
 
-class Settings extends \Espo\Core\Services\Base
+use Espo\Core\{
+    ApplicationState,
+    Acl,
+    ORM\EntityManager,
+    Utils\Metadata,
+    Utils\FieldManagerUtil,
+    Utils\Config,
+    DataManager,
+    Utils\FieldValidatorManager,
+};
+
+class Settings
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('fieldManagerUtil');
-        $this->addDependency('metadata');
-        $this->addDependency('acl');
-        $this->addDependency('container');
-    }
+    protected $applicationState;
+    protected $config;
+    protected $fieldManagerUtil;
+    protected $metadata;
+    protected $acl;
+    protected $entityManager;
+    protected $dataManager;
+    protected $fieldValidatorManager;
 
-    protected function getFieldManagerUtil()
-    {
-        return $this->getInjection('fieldManagerUtil');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getAcl()
-    {
-        return $this->getInjection('acl');
-    }
-
-    protected function getContainer()
-    {
-        return $this->getInjection('container');
+    public function __construct(
+        ApplicationState $applicationState,
+        Config $config,
+        Metadata $metadata,
+        Acl $acl,
+        FieldManagerUtil $fieldManagerUtil,
+        EntityManager $entityManager,
+        DataManager $dataManager,
+        FieldValidatorManager $fieldValidatorManager
+    ) {
+        $this->applicationState = $applicationState;
+        $this->config = $config;
+        $this->metadata = $metadata;
+        $this->acl = $acl;
+        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->entityManager = $entityManager;
+        $this->dataManager = $dataManager;
+        $this->fieldValidatorManager = $fieldValidatorManager;
     }
 
     public function getConfigData()
     {
-        $data = $this->getConfig()->getAllData();
+        $data = $this->config->getAllData();
+
+        $user = $this->applicationState->getUser();
 
         $ignoreItemList = [];
 
@@ -76,26 +89,27 @@ class Settings extends \Espo\Core\Services\Base
             $ignoreItemList[] = $item;
         }
 
-        if (!$this->getUser()->isAdmin() || $this->getUser()->isSystem()) {
+        if (!$user->isAdmin() || $user->isSystem()) {
             foreach ($this->getAdminOnlyItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
 
-        if ($this->getUser()->isSystem()) {
+        if ($user->isSystem()) {
             foreach ($this->getUserOnlyItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
 
-        if ($this->getConfig()->get('restrictedMode') && !$this->getUser()->isSuperAdmin()) {
-            foreach ($this->getConfig()->getSuperAdminOnlySystemItemList() as $item) {
+        if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
+            foreach ($this->config->getSuperAdminOnlySystemItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
 
-        if ($portal = $this->getContainer()->get('portal')) {
-            $this->getContainer()->get('entityManager')->getRepository('Portal')->loadUrlField($portal);
+        if ($this->applicationState->isPortal()) {
+            $portal = $this->applicationState->getPortal();
+            $this->entityManager->getRepository('Portal')->loadUrlField($portal);
             $data->siteUrl = $portal->get('url');
         }
 
@@ -103,7 +117,7 @@ class Settings extends \Espo\Core\Services\Base
             unset($data->$item);
         }
 
-        if ($this->getUser()->isSystem()) {
+        if ($user->isSystem()) {
             $globalItemList = $this->getGlobalItemList();
             foreach (get_object_vars($data) as $item => $value) {
                 if (!in_array($item, $globalItemList)) {
@@ -112,7 +126,7 @@ class Settings extends \Espo\Core\Services\Base
             }
         }
 
-        if (!$this->getUser()->isAdmin() && !$this->getUser()->isSystem()) {
+        if (!$user->isAdmin() && !$user->isSystem()) {
             $entityTypeListParamList = [
                 'tabList',
                 'quickCreateList',
@@ -126,10 +140,10 @@ class Settings extends \Espo\Core\Services\Base
                 'streamEmailNotificationsTypeList',
                 'emailKeepParentTeamsEntityList',
             ];
-            $scopeList = array_keys($this->getMetadata()->get(['entityDefs'], []));
+            $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
             foreach ($scopeList as $scope) {
-                if (!$this->getMetadata()->get(['scopes', $scope, 'acl'])) continue;
-                if (!$this->getAcl()->check($scope)) {
+                if (!$this->metadata->get(['scopes', $scope, 'acl'])) continue;
+                if (!$this->acl->check($scope)) {
                     foreach ($entityTypeListParamList as $param) {
                         $list = $data->$param ?? [];
                         foreach ($list as $i => $item) {
@@ -146,14 +160,14 @@ class Settings extends \Espo\Core\Services\Base
         }
 
         if (
-            ($this->getConfig()->get('outboundEmailFromAddress') || $this->getConfig()->get('internalSmtpServer'))
+            ($this->config->get('outboundEmailFromAddress') || $this->config->get('internalSmtpServer'))
             &&
-            !$this->getConfig()->get('passwordRecoveryDisabled')
+            !$this->config->get('passwordRecoveryDisabled')
         ) {
             $data->passwordRecoveryEnabled = true;
         }
 
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
+        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
 
         foreach ($fieldDefs as $field => $fieldParams) {
             if ($fieldParams['type'] === 'password') {
@@ -168,7 +182,9 @@ class Settings extends \Espo\Core\Services\Base
 
     public function setConfigData($data)
     {
-        if (!$this->getUser()->isAdmin()) {
+        $user = $this->applicationState->getUser();
+
+        if (!$user->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -178,11 +194,11 @@ class Settings extends \Espo\Core\Services\Base
             $ignoreItemList[] = $item;
         }
 
-        if ($this->getConfig()->get('restrictedMode') && !$this->getUser()->isSuperAdmin()) {
-            foreach ($this->getConfig()->getSuperAdminOnlyItemList() as $item) {
+        if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
+            foreach ($this->config->getSuperAdminOnlyItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
-            foreach ($this->getConfig()->getSuperAdminOnlySystemItemList() as $item) {
+            foreach ($this->config->getSuperAdminOnlySystemItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
@@ -191,30 +207,30 @@ class Settings extends \Espo\Core\Services\Base
             unset($data->$item);
         }
 
-        $entity = $this->getEntityManager()->getEntity('Settings');
+        $entity = $this->entityManager->getEntity('Settings');
         $entity->set($data);
         $this->processValidation($entity, $data);
 
         if (
-            (isset($data->useCache) && $data->useCache !== $this->getConfig()->get('useCache'))
+            (isset($data->useCache) && $data->useCache !== $this->config->get('useCache'))
         ) {
-            $this->getContainer()->get('dataManager')->clearCache();
+            $this->dataManager->clearCache();
         }
 
-        $this->getConfig()->setData($data);
+        $this->config->setData($data);
 
-        $result = $this->getConfig()->save();
+        $result = $this->config->save();
 
         if ($result === false) {
             throw new Error('Cannot save settings');
         }
 
         if (isset($data->personNameFormat)) {
-            $this->getContainer()->get('dataManager')->clearCache();
+            $this->dataManager->clearCache();
         }
 
         if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
-            $this->getContainer()->get('dataManager')->rebuildDatabase([]);
+            $this->dataManager->rebuildDatabase([]);
         }
 
         return $result;
@@ -222,18 +238,20 @@ class Settings extends \Espo\Core\Services\Base
 
     protected function filterData($data)
     {
+        $user = $this->applicationState->getUser();
+
         if (empty($data->useWebSocket)) {
             unset($data->webSocketUrl);
         }
 
-        if ($this->getUser()->isSystem()) return;
+        if ($user->isSystem()) return;
 
-        if ($this->getUser()->isAdmin()) return;
+        if ($user->isAdmin()) return;
 
         if (
-            !$this->getAcl()->checkScope('Email', 'create')
+            !$this->acl->checkScope('Email', 'create')
             ||
-            !$this->getConfig()->get('outboundEmailIsShared')
+            !$this->config->get('outboundEmailIsShared')
         ) {
             unset($data->outboundEmailFromAddress);
             unset($data->outboundEmailFromName);
@@ -243,12 +261,12 @@ class Settings extends \Espo\Core\Services\Base
 
     public function getAdminOnlyItemList()
     {
-        $itemList = $this->getConfig()->getAdminOnlyItemList();
+        $itemList = $this->config->getAdminOnlyItemList();
 
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
+        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['onlyAdmin'])) {
-                foreach ($this->getFieldManagerUtil()->getAttributeList('Settings', $field) as $attribute) {
+                foreach ($this->fieldManagerUtil->getAttributeList('Settings', $field) as $attribute) {
                     $itemList[] = $attribute;
                 }
             }
@@ -259,12 +277,12 @@ class Settings extends \Espo\Core\Services\Base
 
     public function getUserOnlyItemList()
     {
-        $itemList = $this->getConfig()->getUserOnlyItemList();
+        $itemList = $this->config->getUserOnlyItemList();
 
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
+        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['onlyUser'])) {
-                foreach ($this->getFieldManagerUtil()->getAttributeList('Settings', $field) as $attribute) {
+                foreach ($this->fieldManagerUtil->getAttributeList('Settings', $field) as $attribute) {
                     $itemList[] = $attribute;
                 }
             }
@@ -275,12 +293,12 @@ class Settings extends \Espo\Core\Services\Base
 
     public function getSystemOnlyItemList()
     {
-        $itemList = $this->getConfig()->getSystemOnlyItemList();
+        $itemList = $this->config->getSystemOnlyItemList();
 
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
+        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['onlySystem'])) {
-                foreach ($this->getFieldManagerUtil()->getAttributeList('Settings', $field) as $attribute) {
+                foreach ($this->fieldManagerUtil->getAttributeList('Settings', $field) as $attribute) {
                     $itemList[] = $attribute;
                 }
             }
@@ -291,12 +309,12 @@ class Settings extends \Espo\Core\Services\Base
 
     public function getGlobalItemList()
     {
-        $itemList = $this->getConfig()->get('globalItems', []);
+        $itemList = $this->config->get('globalItems', []);
 
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
+        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['global'])) {
-                foreach ($this->getFieldManagerUtil()->getAttributeList('Settings', $field) as $attribute) {
+                foreach ($this->fieldManagerUtil->getAttributeList('Settings', $field) as $attribute) {
                     $itemList[] = $attribute;
                 }
             }
@@ -307,7 +325,7 @@ class Settings extends \Espo\Core\Services\Base
 
     protected function processValidation(Entity $entity, $data)
     {
-        $fieldList = $this->getFieldManagerUtil()->getEntityTypeFieldList('Settings');
+        $fieldList = $this->fieldManagerUtil->getEntityTypeFieldList('Settings');
 
         foreach ($fieldList as $field) {
             if (!$this->isFieldSetInData($data, $field)) continue;
@@ -317,13 +335,13 @@ class Settings extends \Espo\Core\Services\Base
 
     protected function processValidationField(Entity $entity, string $field, $data)
     {
-        $fieldType = $this->getFieldManagerUtil()->getEntityTypeFieldParam('Settings', $field, 'type');
-        $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
-        $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
-        $fieldValidatorManager = $this->getInjection('container')->get('fieldValidatorManager');
+        $fieldType = $this->fieldManagerUtil->getEntityTypeFieldParam('Settings', $field, 'type');
+        $validationList = $this->metadata->get(['fields', $fieldType, 'validationList'], []);
+        $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
+        $fieldValidatorManager = $this->fieldValidatorManager;
 
         foreach ($validationList as $type) {
-            $value = $this->getFieldManagerUtil()->getEntityTypeFieldParam('Settings', $field, $type);
+            $value = $this->fieldManagerUtil->getEntityTypeFieldParam('Settings', $field, $type);
             if (is_null($value) && !in_array($type, $mandatoryValidationList)) continue;
 
             if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
@@ -334,7 +352,7 @@ class Settings extends \Espo\Core\Services\Base
 
     protected function isFieldSetInData($data, $field)
     {
-        $attributeList = $this->getFieldManagerUtil()->getActualAttributeList('Settings', $field);
+        $attributeList = $this->fieldManagerUtil->getActualAttributeList('Settings', $field);
         $isSet = false;
         foreach ($attributeList as $attribute) {
             if (property_exists($data, $attribute)) {
