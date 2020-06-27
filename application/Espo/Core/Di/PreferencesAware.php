@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Di;
 
-use Espo\Entities\User;
+use Espo\Entities\Preferences;
 
-interface UserAware
+interface PreferencesAware
 {
-    public function setUser(User $user);
+    public function setPreferences(Preferences $preferences);
 }
