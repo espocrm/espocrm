@@ -37,29 +37,44 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
-class Recovery implements \Espo\Core\Interfaces\Injectable
-{
-    use \Espo\Core\Traits\Injectable;
+use Espo\Core\{
+    ORM\EntityManager,
+    Utils\Config,
+    Mail\Sender as MailSender,
+    Htmlizer\Factory as HtmlizerFactory,
+    Utils\TemplateFileManager,
+};
 
-    const REQUEST_DELAY = 3000; //ms
+class Recovery
+{
+    const REQUEST_DELAY = 3000;
 
     const REQUEST_LIFETIME = '3 hours';
 
-    public function __construct()
-    {
-        $this->addDependencyList([
-            'entityManager',
-            'config',
-            'mailSender',
-            'htmlizerFactory',
-            'templateFileManager',
-        ]);
+    protected $entityManager;
+    protected $config;
+    protected $mailSender;
+    protected $htmlizerFactory;
+    protected $templateFileManager;
+
+    public function __construct(
+        EntityManager $entityManager,
+        Config $config,
+        MailSender $mailSender,
+        HtmlizerFactory $htmlizerFactory,
+        TemplateFileManager $templateFileManager
+    ) {
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+        $this->mailSender = $mailSender;
+        $this->htmlizerFactory = $htmlizerFactory;
+        $this->templateFileManager = $templateFileManager;
     }
 
     public function getRequest(string $id) : PasswordChangeRequest
     {
-        $config = $this->getInjection('config');
-        $em = $this->getInjection('entityManager');
+        $config = $this->config;
+        $em = $this->entityManager;
 
         if ($config->get('passwordRecoveryDisabled')) {
             throw new Forbidden("Password recovery: Disabled.");
@@ -83,7 +98,7 @@ class Recovery implements \Espo\Core\Interfaces\Injectable
 
     public function removeRequest(string $id)
     {
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
         $request = $em->getRepository('PasswordChangeRequest')->where([
             'requestId' => $id,
         ])->findOne();
@@ -95,8 +110,8 @@ class Recovery implements \Espo\Core\Interfaces\Injectable
 
     public function request(string $emailAddress, ?string $userName = null, ?string $url) : bool
     {
-        $config = $this->getInjection('config');
-        $em = $this->getInjection('entityManager');
+        $config = $this->config;
+        $em = $this->entityManager;
 
         $noExposure = $config->get('passwordRecoveryNoExposure') ?? false;
 
@@ -198,7 +213,7 @@ class Recovery implements \Espo\Core\Interfaces\Injectable
 
     private function getDelay()
     {
-        return $this->getInjection('config')->get('passwordRecoveryRequestDelay') ?? self::REQUEST_DELAY;
+        return $this->config->get('passwordRecoveryRequestDelay') ?? self::REQUEST_DELAY;
     }
 
     protected function delay(?int $delay = null)
@@ -210,12 +225,12 @@ class Recovery implements \Espo\Core\Interfaces\Injectable
 
     protected function send(string $requestId, string $emailAddress, User $user)
     {
-        $config = $this->getInjection('config');
-        $em = $this->getInjection('entityManager');
-        $mailSender = $this->getInjection('mailSender');
-        $htmlizerFactory = $this->getInjection('htmlizerFactory');
+        $config = $this->config;
+        $em = $this->entityManager;
+        $mailSender = $this->mailSender;
+        $htmlizerFactory = $this->htmlizerFactory;
 
-        $templateFileManager = $this->getInjection('templateFileManager');
+        $templateFileManager = $this->templateFileManager;
 
         if (!$emailAddress) return;
 
@@ -277,7 +292,7 @@ class Recovery implements \Espo\Core\Interfaces\Injectable
 
     private function fail(?string $msg = null, int $errorCode = 403)
     {
-        $config = $this->getInjection('config');
+        $config = $this->config;
 
         $noExposure = $config->get('passwordRecoveryNoExposure') ?? false;
 
@@ -294,7 +309,6 @@ class Recovery implements \Espo\Core\Interfaces\Injectable
                 throw new Error();
             }
         }
-
 
         $this->delay();
     }
