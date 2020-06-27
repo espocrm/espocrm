@@ -76,7 +76,7 @@ class RecordServiceContainer
                     $default = $this->defaultTypeMap[$type] ?? $default;
                 }
                 $obj = $this->serviceFactory->create($default);
-                $service->setEntityType($name);
+                $obj->setEntityType($name);
             }
             $this->data[$name] = $obj;
         }

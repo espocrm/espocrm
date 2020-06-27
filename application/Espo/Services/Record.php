@@ -52,9 +52,9 @@ use Espo\Core\{
     Record\Collection as RecordCollection,
 };
 
-use Espo\Core\Di;
-
 use StdClass;
+
+use Espo\Core\Di;
 
 /**
  * The layer between Controller and Repository. For CRUD and other operations with records.
@@ -102,7 +102,7 @@ class Record implements Crud,
 
     protected $getEntityBeforeUpdate = false;
 
-    protected $entityType;
+    protected $entityType = null;
 
     private $streamService;
 
@@ -207,6 +207,29 @@ class Record implements Crud,
     {
         $this->aclManager = $aclManager;
 
+        if ($this->entityType) {
+            $this->initAclParams();
+        }
+    }
+
+    public function setEntityType(string $entityType)
+    {
+        $initAclParams = false;
+        if (!$this->entityType) {
+            $initAclParams = true;
+        }
+
+        $this->entityType = $entityType;
+
+        if ($initAclParams) {
+            $this->initAclParams();
+        }
+    }
+
+    protected function initAclParams()
+    {
+        $aclManager = $this->aclManager;
+
         foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'forbidden') as $item) {
             if (!in_array($item, $this->forbiddenAttributeList)) $this->forbiddenAttributeList[] = $item;
         }
@@ -238,11 +261,6 @@ class Record implements Crud,
         foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'nonAdminReadOnly') as $item) {
             if (!in_array($item, $this->nonAdminReadOnlyLinkList)) $this->nonAdminReadOnlyLinkList[] = $item;
         }
-    }
-
-    public function setEntityType(string $entityType)
-    {
-        $this->entityType = $entityType;
     }
 
     public function getEntityType() : string
