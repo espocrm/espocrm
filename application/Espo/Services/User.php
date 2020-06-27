@@ -38,27 +38,34 @@ use Espo\ORM\Entity;
 
 use StdClass;
 
-class User extends Record
-{
-    protected function init()
-    {
-        parent::init();
+use Espo\Core\Di;
 
-        $this->addDependency('container');
-    }
+class User extends Record implements
+
+    Di\TemplateFileManagerAware,
+    Di\MailSenderAware,
+    Di\HtmlizerFactoryAware,
+    Di\FileManagerAware,
+    Di\DataManagerAware
+{
+    use Di\TemplateFileManagerSetter;
+    use Di\MailSenderSetter;
+    use Di\HtmlizerFactorySetter;
+    use Di\FileManagerSetter;
+    use Di\DataManagerSetter;
 
     protected $mandatorySelectAttributeList = [
         'isPortalUser',
         'isActive',
         'userName',
         'isAdmin',
-        'type'
+        'type',
     ];
 
     protected $linkSelectParams = [
         'targetLists' => [
             'additionalColumns' => [
-                'optedOut' => 'isOptedOut'
+                'optedOut' => 'isOptedOut',
             ]
         ]
     ];
@@ -67,37 +74,7 @@ class User extends Record
 
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
 
-    protected function getMailSender()
-    {
-        return $this->getContainer()->get('mailSender');
-    }
-
-    protected function getLanguage()
-    {
-        return $this->getContainer()->get('language');
-    }
-
-    protected function getFileManager()
-    {
-        return $this->getContainer()->get('fileManager');
-    }
-
-    protected function getNumber()
-    {
-        return $this->getContainer()->get('number');
-    }
-
-    protected function getDateTime()
-    {
-        return $this->getContainer()->get('dateTime');
-    }
-
-    protected function getContainer()
-    {
-        return $this->injections['container'];
-    }
-
-    public function getEntity(? string $id = null) : Entity
+    public function getEntity(?string $id = null) : Entity
     {
         if (isset($id) && $id == 'system') {
             throw new Forbidden();
@@ -210,14 +187,14 @@ class User extends Record
 
     public function passwordChangeRequest($userName, $emailAddress, $url = null)
     {
-        $recovery = $this->getContainer()->get('injectableFactory')->create('\\Espo\\Core\\Password\\Recovery');
+        $recovery = $this->injectableFactory->create('\\Espo\\Core\\Password\\Recovery');
         $recovery->request($emailAddress, $userName, $url);
         return true;
     }
 
     public function changePasswordByRequest(string $requestId, string $password)
     {
-        $recovery = $this->getContainer()->get('injectableFactory')->create('\\Espo\\Core\\Password\\Recovery');
+        $recovery = $this->injectableFactory->create('\\Espo\\Core\\Password\\Recovery');
 
         $request = $recovery->getRequest($requestId);
 
@@ -387,7 +364,7 @@ class User extends Record
             throw new Forbidden("Generate new password: Can't process because user desn't have email address.");
         }
 
-        if (!$this->getMailSender()->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->mailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
             throw new Forbidden("Generate new password: Can't process because SMTP is not configured.");
         }
 
@@ -533,11 +510,11 @@ class User extends Record
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        if (!$this->getMailSender()->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->mailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
             return;
         }
 
-        $templateFileManager = $this->getContainer()->get('templateFileManager');
+        $templateFileManager = $this->templateFileManager;
 
         $siteUrl = $this->getConfig()->getSiteUrl() . '/';
 
@@ -580,7 +557,7 @@ class User extends Record
 
         $data['password'] = $password;
 
-        $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->getFileManager(), $this->getDateTime(), $this->getNumber(), null);
+        $htmlizer = $this->htmlizerFactory->create(true);
 
         $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
         $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
@@ -591,25 +568,24 @@ class User extends Record
             'to' => $emailAddress
         ]);
 
-        if ($this->getMailSender()->hasSystemSmtp()) {
-            $this->getMailSender()->useGlobal();
+        if ($this->mailSender->hasSystemSmtp()) {
+            $this->mailSender->useGlobal();
         } else {
-            $this->getMailSender()->useSmtp(array(
+            $this->mailSender->useSmtp(array(
                 'server' => $this->getConfig()->get('internalSmtpServer'),
                 'port' => $this->getConfig()->get('internalSmtpPort'),
                 'auth' => $this->getConfig()->get('internalSmtpAuth'),
                 'username' => $this->getConfig()->get('internalSmtpUsername'),
                 'password' => $this->getConfig()->get('internalSmtpPassword'),
                 'security' => $this->getConfig()->get('internalSmtpSecurity'),
-                'fromAddress' => $this->getConfig()->get('internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
+                'fromAddress' => $this->getConfig()->get(
+                    'internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
             ));
         }
-        $this->getMailSender()->send($email);
+        $this->mailSender->send($email);
     }
 
-
-
-    public function delete($id)
+    public function delete(string $id)
     {
         if ($id == 'system') {
             throw new Forbidden();
@@ -692,13 +668,14 @@ class User extends Record
 
     protected function clearRoleCache($id)
     {
-        $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
-        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
+        $this->fileManager->removeFile('data/cache/application/acl/' . $id . '.php');
+        $this->dataManager->updateCacheTimestamp();
     }
 
     protected function clearPortalRolesCache()
     {
-        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
+        $this->fileManager->removeInDir('data/cache/application/acl-portal');
+        $this->dataManager->updateCacheTimestamp();
     }
 
     public function massUpdate(array $params, $data)
