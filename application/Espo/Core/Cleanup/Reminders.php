@@ -29,18 +29,32 @@
 
 namespace Espo\Core\Cleanup;
 
-class Reminders extends Base
+use Espo\Core\{
+    Utils\Config,
+    ORM\EntityManager,
+};
+
+class Reminders
 {
+    protected $config;
+    protected $entityManager;
+
+    public function __construct(Config $config, EntityManager $entityManager)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+    }
+
     protected $cleanupRemindersPeriod = '15 days';
 
     public function process()
     {
-        $period = '-' . $this->getConfig()->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
+        $period = '-' . $this->config->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
 
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
         $query = "DELETE FROM `reminder` WHERE DATE(remind_at) < " . $pdo->quote($datetime->format('Y-m-d'));
 

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Cleanup;
 
+/** Deprecated */
 abstract class Base extends \Espo\Core\Injectable
 {
     protected function init()
