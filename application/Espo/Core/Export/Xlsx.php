@@ -29,34 +29,60 @@
 
 namespace Espo\Core\Export;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
 
-class Xlsx extends \Espo\Core\Injectable
+use Espo\Core\{
+    Utils\Config,
+    Utils\Metadata,
+    Utils\Language,
+    Utils\DateTime,
+    FileStorage\Manager as FileStorageManager,
+    Utils\File\Manager as FileManager,
+    ORM\EntityManager,
+};
+
+class Xlsx
 {
-    protected $dependencyList = [
-        'language',
-        'metadata',
-        'config',
-        'dateTime',
-        'entityManager',
-        'fileStorageManager',
-        'fileManager'
-    ];
+    protected $config;
+    protected $metadata;
+    protected $language;
+    protected $dateTime;
+    protected $entityManager;
+    protected $fileStorageManager;
+    protected $fileManager;
+
+    public function __construct(
+        Config $config,
+        Metadata $metadata,
+        Language $language,
+        DateTime $dateTime,
+        EntityManager $entityManager,
+        FileStorageManager $fileStorageManager,
+        FileManager $fileManager
+    ) {
+        $this->config = $config;
+        $this->metadata = $metadata;
+        $this->language = $language;
+        $this->dateTime = $dateTime;
+        $this->entityManager = $entityManager;
+        $this->fileStorageManager = $fileStorageManager;
+        $this->fileManager = $fileManager;
+    }
 
     protected function getConfig()
     {
-        return $this->getInjection('config');
+        return $this->config;
     }
 
     protected function getMetadata()
     {
-        return $this->getInjection('metadata');
+        return $this->metadata;
     }
 
     protected function getEntityManager()
     {
-        return $this->getInjection('entityManager');
+        return $this->entityManager;
     }
 
     public function loadAdditionalFields(Entity $entity, $fieldList)
@@ -158,7 +184,7 @@ class Xlsx extends \Espo\Core\Injectable
         if (isset($params['exportName'])) {
             $exportName = $params['exportName'];
         } else {
-            $exportName = $this->getInjection('language')->translate($entityType, 'scopeNamesPlural');
+            $exportName = $this->language->translate($entityType, 'scopeNamesPlural');
         }
 
         $sheetName = mb_substr($exportName, 0, 30, 'utf-8');
@@ -185,7 +211,7 @@ class Xlsx extends \Espo\Core\Injectable
         );
 
         $now = new \DateTime();
-        $now->setTimezone(new \DateTimeZone($this->getInjection('config')->get('timeZone', 'UTC')));
+        $now->setTimezone(new \DateTimeZone($this->config->get('timeZone', 'UTC')));
 
         $sheet->setCellValue('A1', $exportName);
         $sheet->setCellValue('B1', \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($now->format('Y-m-d H:i:s'))));
@@ -194,7 +220,7 @@ class Xlsx extends \Espo\Core\Injectable
         $sheet->getStyle('B1')->applyFromArray($dateStyle);
 
         $sheet->getStyle('B1')->getNumberFormat()
-                            ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
+                            ->setFormatCode($this->dateTime->getDateTimeFormat());
 
         $azRange = range('A', 'Z');
         $azRangeCopied = $azRange;
@@ -216,7 +242,7 @@ class Xlsx extends \Espo\Core\Injectable
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];
 
-            $defs = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'fields', $name]);
+            $defs = $this->metadata->get(['entityDefs', $entityType, 'fields', $name]);
 
             if (!$defs) {
                 $defs['type'] = 'base';
@@ -225,12 +251,12 @@ class Xlsx extends \Espo\Core\Injectable
             $label = $name;
             if (strpos($name, '_') !== false) {
                 list($linkName, $foreignField) = explode('_', $name);
-                $foreignScope = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                $foreignScope = $this->metadata->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
                 if ($foreignScope) {
-                    $label = $this->getInjection('language')->translate($linkName, 'links', $entityType) . '.' . $this->getInjection('language')->translate($foreignField, 'fields', $foreignScope);
+                    $label = $this->language->translate($linkName, 'links', $entityType) . '.' . $this->language->translate($foreignField, 'fields', $foreignScope);
                 }
             } else {
-                $label = $this->getInjection('language')->translate($name, 'fields', $entityType);
+                $label = $this->language->translate($name, 'fields', $entityType);
             }
 
             $sheet->setCellValue($col . $rowNumber, $label);
@@ -280,7 +306,7 @@ class Xlsx extends \Espo\Core\Injectable
             foreach ($fieldList as $i => $name) {
                 $col = $azRange[$i];
 
-                $defs = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'fields', $name]);
+                $defs = $this->metadata->get(['entityDefs', $entityType, 'fields', $name]);
                 if (!$defs) {
                     $defs = array();
                     $defs['type'] = 'base';
@@ -291,17 +317,17 @@ class Xlsx extends \Espo\Core\Injectable
                 $linkName = null;
                 if (strpos($name, '_') !== false) {
                     list($linkName, $foreignField) = explode('_', $name);
-                    $foreignScope = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                    $foreignScope = $this->metadata->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
                     if ($foreignScope) {
-                        $type = $this->getInjection('metadata')->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
+                        $type = $this->metadata->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
                     }
                 }
                 if ($type === 'foreign') {
-                    $linkName = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'fields', $name, 'link']);
-                    $foreignField = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'fields', $name, 'field']);
-                    $foreignScope = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                    $linkName = $this->metadata->get(['entityDefs', $entityType, 'fields', $name, 'link']);
+                    $foreignField = $this->metadata->get(['entityDefs', $entityType, 'fields', $name, 'field']);
+                    $foreignScope = $this->metadata->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
                     if ($foreignScope) {
-                        $type = $this->getInjection('metadata')->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
+                        $type = $this->metadata->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
                     }
                 }
                 $typesCache[$name] = $type;
@@ -374,10 +400,10 @@ class Xlsx extends \Espo\Core\Injectable
                     }
                     if ($value && strlen($value) > 11) {
                         try {
-                            $timeZone = $this->getInjection('config')->get('timeZone');
+                            $timeZone = $this->config->get('timeZone');
                             $dt = new \DateTime($value);
                             $dt->setTimezone(new \DateTimeZone($timeZone));
-                            $value = $dt->format($this->getInjection('dateTime')->getInternalDateTimeFormat());
+                            $value = $dt->format($this->dateTime->getInternalDateTimeFormat());
                         } catch (\Exception $e) {
                             $value = '';
                         }
@@ -391,7 +417,7 @@ class Xlsx extends \Espo\Core\Injectable
 
                         if ($attachment) {
                             $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-                            $filePath = $this->getInjection('fileStorageManager')->getLocalFilePath($attachment);
+                            $filePath = $this->fileStorageManager->getLocalFilePath($attachment);
 
                             if ($filePath && file_exists($filePath)) {
                                 $objDrawing->setPath($filePath);
@@ -410,9 +436,9 @@ class Xlsx extends \Espo\Core\Injectable
                 } else if ($type == 'enum') {
                     if (array_key_exists($name, $row)) {
                         if ($linkName) {
-                            $value = $this->getInjection('language')->translateOption($row[$name], $foreignField, $foreignScope);
+                            $value = $this->language->translateOption($row[$name], $foreignField, $foreignScope);
                         } else {
-                            $value = $this->getInjection('language')->translateOption($row[$name], $name, $entityType);
+                            $value = $this->language->translateOption($row[$name], $name, $entityType);
                         }
                         $sheet->setCellValue("$col$rowNumber", $value);
                     }
@@ -474,19 +500,19 @@ class Xlsx extends \Espo\Core\Injectable
 
                         $value = '';
                         if ($days) {
-                            $value .= (string) $days . $this->getInjection('language')->translate('d', 'durationUnits');
+                            $value .= (string) $days . $this->language->translate('d', 'durationUnits');
                             if ($minutes || $hours) {
                                 $value .= ' ';
                             }
                         }
                         if ($hours) {
-                            $value .= (string) $hours . $this->getInjection('language')->translate('h', 'durationUnits');
+                            $value .= (string) $hours . $this->language->translate('h', 'durationUnits');
                             if ($minutes) {
                                 $value .= ' ';
                             }
                         }
                         if ($minutes) {
-                            $value .= (string) $minutes . $this->getInjection('language')->translate('m', 'durationUnits');
+                            $value .= (string) $minutes . $this->language->translate('m', 'durationUnits');
                         }
 
                         $sheet->setCellValue("$col$rowNumber", $value);
@@ -591,17 +617,17 @@ class Xlsx extends \Espo\Core\Injectable
                 case 'date': {
                     $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                         ->getNumberFormat()
-                        ->setFormatCode($this->getInjection('dateTime')->getDateFormat());
+                        ->setFormatCode($this->dateTime->getDateFormat());
                 } break;
                 case 'datetime': {
                     $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                         ->getNumberFormat()
-                        ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
+                        ->setFormatCode($this->dateTime->getDateTimeFormat());
                 } break;
                 case 'datetimeOptional': {
                     $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                         ->getNumberFormat()
-                        ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
+                        ->setFormatCode($this->dateTime->getDateTimeFormat());
                 } break;
                 default: {
                     $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
@@ -623,15 +649,15 @@ class Xlsx extends \Espo\Core\Injectable
 
         $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($phpExcel, 'Xlsx');
 
-        if (!$this->getInjection('fileManager')->isDir('data/cache/')) {
-            $this->getInjection('fileManager')->mkdir('data/cache/');
+        if (!$this->fileManager->isDir('data/cache/')) {
+            $this->fileManager->mkdir('data/cache/');
         }
         $tempFileName = 'data/cache/' . 'export_' . substr(md5(rand()), 0, 7);
 
         $objWriter->save($tempFileName);
         $fp = fopen($tempFileName, 'r');
         $xlsx = stream_get_contents($fp);
-        $this->getInjection('fileManager')->unlink($tempFileName);
+        $this->fileManager->unlink($tempFileName);
 
         return $xlsx;
     }
