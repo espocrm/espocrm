@@ -29,74 +29,31 @@
 
 namespace Espo\Core\Notificators;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Interfaces\Injectable;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-class Base implements Injectable
+use Espo\Entities\User;
+
+use Espo\Core\{
+    ORM\EntityManager,
+};
+
+class DefaultNotificator implements Notificator
 {
-    protected $dependencyList = [
-        'user',
-        'entityManager',
-    ];
-
-    protected $injections = [];
-
     private $userIdEnabledMap = [];
 
     protected $entityType;
 
     public static $order = 9;
 
-    public function __construct()
-    {
-        $this->init();
-    }
+    protected $user;
+    protected $entityManager;
 
-    protected function init()
+    public function __construct(User $user, EntityManager $entityManager)
     {
-    }
-
-    protected function addDependencyList(array $list)
-    {
-        foreach ($list as $item) {
-            $this->addDependency($item);
-        }
-    }
-
-    protected function addDependency($name)
-    {
-        $this->dependencyList[] = $name;
-    }
-
-    public function setEntityType(string $entityType)
-    {
-        $this->entityType = $entityType;
-    }
-
-    public function getDependencyList()
-    {
-        return $this->dependencyList;
-    }
-
-    protected function getInjection($name)
-    {
-        return $this->injections[$name] ?? $this->$name ?? null;
-    }
-
-    public function inject($name, $object)
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getInjection('entityManager');
-    }
-
-    protected function getUser()
-    {
-        return $this->getInjection('user');
+        $this->user = $user;
+        $this->entityManager = $entityManager;
     }
 
     public function process(Entity $entity, array $options = [])
@@ -120,7 +77,7 @@ class Base implements Injectable
         }
     }
 
-    protected function processForUser(Entity $entity, $assignedUserId)
+    protected function processForUser(Entity $entity, string $assignedUserId)
     {
         if (!$this->isNotificationsEnabledForUser($assignedUserId)) return;
 
@@ -131,11 +88,11 @@ class Base implements Injectable
                 $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
             }
         } else {
-            $isNotSelfAssignment = $assignedUserId !== $this->getUser()->id;
+            $isNotSelfAssignment = $assignedUserId !== $this->user->id;
         }
         if (!$isNotSelfAssignment) return;
 
-        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification = $this->entityManager->getEntity('Notification');
         $notification->set([
             'type' => 'Assign',
             'userId' => $assignedUserId,
@@ -144,17 +101,17 @@ class Base implements Injectable
                 'entityId' => $entity->id,
                 'entityName' => $entity->get('name'),
                 'isNew' => $entity->isNew(),
-                'userId' => $this->getUser()->id,
-                'userName' => $this->getUser()->get('name'),
+                'userId' => $this->user->id,
+                'userName' => $this->user->get('name'),
             ]
         ]);
-        $this->getEntityManager()->saveEntity($notification);
+        $this->entityManager->saveEntity($notification);
     }
 
-    protected function isNotificationsEnabledForUser(string $userId)
+    protected function isNotificationsEnabledForUser(string $userId) : bool
     {
         if (!array_key_exists($userId, $this->userIdEnabledMap)) {
-            $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+            $preferences = $this->entityManager->getEntity('Preferences', $userId);
             $isEnabled = false;
             if ($preferences) {
                 $isEnabled = true;

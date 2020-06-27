@@ -29,29 +29,47 @@
 
 namespace Espo\Notificators;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-class Email extends \Espo\Core\Notificators\Base
+use Espo\Core\Notificators\DefaultNotificator;
+
+use Espo\Services\Email as EmailService;
+
+use Espo\Entities\User;
+
+use Espo\Core\{
+    ORM\EntityManager,
+    ServiceFactory,
+    AclManager,
+};
+
+class Email extends DefaultNotificator
 {
     const DAYS_THRESHOLD = 2;
 
-    protected function init()
-    {
-        $this->addDependency('serviceFactory');
-        $this->addDependency('aclManager');
-    }
-
     private $streamService = null;
 
-    protected function getAclManager()
-    {
-        return $this->getInjection('aclManager');
+    protected $user;
+    protected $entityManager;
+    protected $serviceFactory;
+    protected $aclManager;
+
+    public function __construct(
+        User $user,
+        EntityManager $entityManager,
+        ServiceFactory $serviceFactory,
+        AclManager $aclManager
+    ) {
+        $this->user = $user;
+        $this->entityManager = $entityManager;
+        $this->serviceFactory = $serviceFactory;
+        $this->aclManager = $aclManager;
     }
 
     protected function getStreamService()
     {
         if (empty($this->streamService)) {
-            $this->streamService = $this->getInjection('serviceFactory')->create('Stream');
+            $this->streamService = $this->serviceFactory->create('Stream');
         }
         return $this->streamService;
     }
@@ -90,7 +108,7 @@ class Email extends \Espo\Core\Notificators\Base
 
         $userIdList = [];
         foreach ($emailUserIdList as $userId) {
-            if (!in_array($userId, $userIdList) && !in_array($userId, $previousUserIdList) && $userId != $this->getUser()->id) {
+            if (!in_array($userId, $userIdList) && !in_array($userId, $previousUserIdList) && $userId != $this->user->id) {
                 $userIdList[] = $userId;
             }
         }
@@ -101,17 +119,18 @@ class Email extends \Espo\Core\Notificators\Base
         ];
 
         if (!$entity->has('from')) {
-            $this->getEntityManager()->getRepository('Email')->loadFromField($entity);
+            $this->entityManager->getRepository('Email')->loadFromField($entity);
         }
 
         if (!$entity->has('to')) {
-            $this->getEntityManager()->getRepository('Email')->loadToField($entity);
+            $this->entityManager->getRepository('Email')->loadToField($entity);
         }
         $person = null;
 
         $from = $entity->get('from');
         if ($from) {
-            $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($from, null, ['User', 'Contact', 'Lead']);
+            $person = $this->entityManager->getRepository('EmailAddress')
+                ->getEntityByAddress($from, null, ['User', 'Contact', 'Lead']);
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
@@ -125,7 +144,7 @@ class Email extends \Espo\Core\Notificators\Base
         }
 
         if (empty($data['personEntityId'])) {
-            $data['fromString'] = \Espo\Services\Email::parseFromName($entity->get('fromString'));
+            $data['fromString'] = EmailService::parseFromName($entity->get('fromString'));
             if (empty($data['fromString']) && $from) {
                 $data['fromString'] = $from;
             }
@@ -133,11 +152,11 @@ class Email extends \Espo\Core\Notificators\Base
 
         $parent = null;
         if ($entity->get('parentId') && $entity->get('parentType')) {
-            $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+            $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
         }
         $account = null;
         if ($entity->get('accountId')) {
-            $account = $this->getEntityManager()->getEntity('Account', $entity->get('accountId'));
+            $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
         }
 
         foreach ($userIdList as $userId) {
@@ -150,7 +169,7 @@ class Email extends \Espo\Core\Notificators\Base
                 $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);
                 if ($folderId) {
                     if (
-                        $this->getEntityManager()->getRepository('EmailFolder')->where([
+                        $this->entityManager->getRepository('EmailFolder')->where([
                             'id' => $folderId,
                             'skipNotifications' => true
                         ])->count()
@@ -160,10 +179,10 @@ class Email extends \Espo\Core\Notificators\Base
                 }
             }
 
-            $user = $this->getEntityManager()->getEntity('User', $userId);
+            $user = $this->entityManager->getEntity('User', $userId);
             if (!$user) continue;
             if ($user->isPortal()) continue;
-            if (!$this->getAclManager()->checkScope($user, 'Email')) {
+            if (!$this->aclManager->checkScope($user, 'Email')) {
                 continue;
             }
             if ($entity->get('status') == 'Archived' || !empty($options['isBeingImported'])) {
@@ -179,23 +198,23 @@ class Email extends \Espo\Core\Notificators\Base
                 }
             }
             if (
-                $this->getEntityManager()->getRepository('Notification')->where([
+                $this->entityManager->getRepository('Notification')->where([
                     'type' => 'EmailReceived',
                     'userId' => $userId,
                     'relatedId' => $entity->id,
-                    'relatedType' => 'Email'
+                    'relatedType' => 'Email',
                 ])->select(['id'])->findOne()
             ) continue;
 
-            $notification = $this->getEntityManager()->getEntity('Notification');
+            $notification = $this->entityManager->getEntity('Notification');
             $notification->set([
                 'type' => 'EmailReceived',
                 'userId' => $userId,
                 'data' => $data,
                 'relatedId' => $entity->id,
-                'relatedType' => 'Email'
+                'relatedType' => 'Email',
             ]);
-            $this->getEntityManager()->saveEntity($notification);
+            $this->entityManager->saveEntity($notification);
         }
     }
 }

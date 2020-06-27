@@ -27,36 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Notificators;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\ClassFinder;
-use Espo\Core\Notificators\Notificator;
-use Espo\Core\Notificators\DefaultNotificator;
+use Espo\ORM\Entity;
 
-class NotificatorFactory
+interface Notificator
 {
-    protected $baseClassName = DefaultNotificator::class;
-
-    protected $injectableFactory;
-    protected $classFinder;
-
-    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->classFinder = $classFinder;
-    }
-
-    public function create(string $entityType) : Notificator
-    {
-        $className = $this->classFinder->find('Notificators', $entityType);
-
-        if (!$className || !class_exists($className)) {
-            $className = $this->baseClassName;
-        }
-
-        $obj = $this->injectableFactory->create($className);
-
-        return $obj;
-    }
+    public function process(Entity $entity, array $options = []);
 }
