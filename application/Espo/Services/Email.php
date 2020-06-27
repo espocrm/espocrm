@@ -103,17 +103,17 @@ class Email extends Record implements
         return $this->crypt;
     }
 
-    public function getUserSmtpParams(string $userId)
+    public function getUserSmtpParams(string $userId) : ?array
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
-        if (!$user) return;
+        if (!$user) return null;
 
         $fromAddress = $user->get('emailAddress');
         if ($fromAddress)
             $fromAddress = strtolower($fromAddress);
 
         $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
-        if (!$preferences) return;
+        if (!$preferences) return null;
 
         $smtpParams = $preferences->getSmtpParams();
         if ($smtpParams) {

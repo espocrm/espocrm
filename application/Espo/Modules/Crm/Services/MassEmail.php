@@ -42,8 +42,16 @@ use Laminas\Mail\Message;
 
 use Espo\Core\Record\Collection as RecordCollection;
 
-class MassEmail extends \Espo\Services\Record
+use Espo\Core\Di;
+
+class MassEmail extends \Espo\Services\Record implements
+
+    Di\DefaultLanguageAware,
+    Di\MailSenderAware
 {
+    use Di\DefaultLanguageSetter;
+    use Di\MailSenderSetter;
+
     const MAX_ATTEMPT_COUNT = 3;
 
     const MAX_PER_HOUR_COUNT = 10000;
@@ -56,21 +64,14 @@ class MassEmail extends \Espo\Services\Record
 
     protected $targetsLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('container');
-        $this->addDependency('defaultLanguage');
-    }
-
     protected function getMailSender()
     {
-        return $this->getInjection('container')->get('mailSender');
+        return $this->mailSender;
     }
 
     protected function getLanguage()
     {
-        return $this->getInjection('defaultLanguage');
+        return $this->defaultLanguage;
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)

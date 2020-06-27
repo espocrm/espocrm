@@ -35,13 +35,13 @@ use Espo\Core\Exceptions\Error,
     Espo\Core\Exceptions\Forbidden,
     Espo\Core\Exceptions\BadRequest;
 
-class Campaign extends \Espo\Services\Record
+use Espo\Core\Di;
+
+class Campaign extends \Espo\Services\Record implements
+
+    Di\DefaultLanguageAware
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('container');
-    }
+    use Di\DefaultLanguageSetter;
 
     protected $entityTypeAddressFieldListMap = [
         'Account' => ['billingAddress', 'shippingAddress'],
@@ -195,8 +195,15 @@ class Campaign extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($logRecord);
     }
 
-    public function logSent($campaignId, $queueItemId = null, Entity $target, Entity $emailOrEmailTemplate = null, $emailAddress, $actionDate = null, $isTest = false)
-    {
+    public function logSent(
+        string $campaignId,
+        ?string $queueItemId = null,
+        Entity $target,
+        Entity $emailOrEmailTemplate = null,
+        $emailAddress,
+        $actionDate = null,
+        $isTest = false
+    ) {
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
         }
@@ -466,13 +473,15 @@ class Campaign extends \Espo\Services\Record
             throw new Error("No targets available for mail merge.");
         }
 
-        $filename = $campaign->get('name') . ' - ' . $this->getDefaultLanguage()->translate($targetEntityType, 'scopeNamesPlural');
+        $filename = $campaign->get('name') . ' - ' .
+            $this->getDefaultLanguage()->translate($targetEntityType, 'scopeNamesPlural');
 
-        return $this->getServiceFactory()->create('Pdf')->generateMailMerge($targetEntityType, $targetEntityList, $template, $filename, $campaign->id);
+        return $this->getServiceFactory()->create('Pdf')->generateMailMerge(
+            $targetEntityType, $targetEntityList, $template, $filename, $campaign->id);
     }
 
     protected function getDefaultLanguage()
     {
-        return $this->getInjection('container')->get('defaultLanguage');
+        return $this->defaultLanguage;
     }
 }

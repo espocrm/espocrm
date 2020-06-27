@@ -526,7 +526,7 @@ class EmailAccount extends Record implements
         return $emailAccount;
     }
 
-    public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount)
+    public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount) : ?array
     {
         $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
@@ -547,7 +547,7 @@ class EmailAccount extends Record implements
 
             return $smtpParams;
         }
-        return;
+        return null;
     }
 
     public function applySmtpHandler(EmailAccountEntity $emailAccount, array &$params)

@@ -37,17 +37,26 @@ use Espo\ORM\Entity;
 
 use PDO;
 
-class Activities extends \Espo\Core\Services\Base
+use Espo\Core\Di;
+
+class Activities implements
+
+    Di\ConfigAware,
+    Di\MetadataAware,
+    Di\AclAware,
+    Di\SelectManagerFactoryAware,
+    Di\ServiceFactoryAware,
+    Di\EntityManagerAware,
+    Di\UserAware
 {
-    protected function init()
-    {
-        $this->addDependencyList([
-            'metadata',
-            'acl',
-            'selectManagerFactory',
-            'serviceFactory',
-        ]);
-    }
+
+    use Di\ConfigSetter;
+    use Di\MetadataSetter;
+    use Di\AclSetter;
+    use Di\SelectManagerFactorySetter;
+    use Di\ServiceFactorySetter;
+    use Di\EntityManagerSetter;
+    use Di\UserSetter;
 
     const UPCOMING_ACTIVITIES_FUTURE_DAYS = 1;
 
@@ -64,37 +73,43 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getEntityManager()
     {
-        return $this->getInjection('entityManager');
+        return $this->entityManager;
     }
 
     protected function getUser()
     {
-        return $this->getInjection('user');
+        return $this->user;
     }
 
     protected function getAcl()
     {
-        return $this->getInjection('acl');
+        return $this->acl;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
     }
 
     protected function getMetadata()
     {
-        return $this->getInjection('metadata');
+        return $this->metadata;
     }
 
     protected function getSelectManagerFactory()
     {
-        return $this->getInjection('selectManagerFactory');
+        return $this->selectManagerFactory;
     }
 
     protected function getServiceFactory()
     {
-        return $this->getInjection('serviceFactory');
+        return $this->serviceFactory;
     }
 
     protected function isPerson($scope)
     {
-        return in_array($scope, ['Contact', 'Lead', 'User']) || $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Person';
+        return in_array($scope, ['Contact', 'Lead', 'User']) ||
+            $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Person';
     }
 
     protected function isCompany($scope)

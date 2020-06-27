@@ -34,26 +34,27 @@ use Espo\Core\Exceptions\Forbidden;
 
 use Espo\ORM\Entity;
 
-class Lead extends \Espo\Core\Templates\Services\Person
+use Espo\Modules\Crm\Entities\Lead as LeadEntity;
+
+use Espo\Core\Di;
+
+class Lead extends \Espo\Core\Templates\Services\Person implements
+
+    Di\FieldManagerUtilAware
 {
+    use Di\FieldManagerUtilSetter;
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('container');
-    }
-
-    protected $linkSelectParams = array(
-        'targetLists' => array(
-            'additionalColumns' => array(
+    protected $linkSelectParams = [
+        'targetLists' => [
+            'additionalColumns' => [
                 'optedOut' => 'isOptedOut'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
-    protected function getFieldManager()
+    protected function getFieldManagerUtil()
     {
-        return $this->getInjection('container')->get('fieldManager');
+        return $this->fieldManagerUtil;
     }
 
     protected function afterCreateEntity(Entity $entity, $data)
@@ -163,8 +164,8 @@ class Lead extends \Espo\Core\Templates\Services\Person
                     continue;
                 }
 
-                $leadAttributeList = $this->getFieldManager()->getAttributeList('Lead', $leadField);
-                $attributeList = $this->getFieldManager()->getAttributeList($entityType, $field);
+                $leadAttributeList = $this->getFieldManagerUtil()->getAttributeList('Lead', $leadField);
+                $attributeList = $this->getFieldManagerUtil()->getAttributeList($entityType, $field);
 
                 foreach ($attributeList as $i => $attribute) {
                     if (in_array($attribute, $ignoreAttributeList)) continue;
@@ -183,7 +184,7 @@ class Lead extends \Espo\Core\Templates\Services\Person
         return $data;
     }
 
-    public function convert(string $id, object $recordsData, ?object $additionalData = null) : \Espo\Modules\Crm\Entities\Lead
+    public function convert(string $id, object $recordsData, ?object $additionalData = null) : LeadEntity
     {
         $lead = $this->getEntity($id);
 

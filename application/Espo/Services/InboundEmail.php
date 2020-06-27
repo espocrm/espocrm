@@ -977,7 +977,7 @@ class InboundEmail extends \Espo\Services\Record implements
         $storage->appendMessage($message->toString(), $folder);
     }
 
-    public function getSmtpParamsFromAccount(\Espo\Entities\InboundEmail $emailAccount)
+    public function getSmtpParamsFromAccount(\Espo\Entities\InboundEmail $emailAccount) : ?array
     {
         $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
@@ -1006,7 +1006,7 @@ class InboundEmail extends \Espo\Services\Record implements
 
             return $smtpParams;
         }
-        return;
+        return null;
     }
 
     public function applySmtpHandler(\Espo\Entities\InboundEmail $emailAccount, array &$params)

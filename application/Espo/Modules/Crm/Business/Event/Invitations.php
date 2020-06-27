@@ -29,30 +29,47 @@
 
 namespace Espo\Modules\Crm\Business\Event;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
 
+use Espo\Core\{
+    ORM\EntityManager,
+    Mail\Sender,
+    Utils\Config,
+    Utils\File\Manager as FileManager,
+    Utils\DateTime,
+    Utils\NumberUtil,
+    Utils\Language,
+    Utils\TemplateFileManager,
+};
+
 class Invitations
 {
-    protected $entityManager;
-
     protected $smtpParams;
-
-    protected $mailSender;
-
-    protected $config;
-
-    protected $dateTime;
-
-    protected $language;
 
     protected $ics;
 
+    protected $entityManager;
+    protected $mailSender;
+    protected $config;
+    protected $dateTime;
+    protected $language;
+    protected $number;
     protected $templateFileManager;
+    protected $fileManager;
 
-    public function __construct($entityManager, $smtpParams, $mailSender, $config, $fileManager, $dateTime, $number, $language, $templateFileManager)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        ?array $smtpParams,
+        Sender $mailSender,
+        Config $config,
+        FileManager $fileManager,
+        DateTime $dateTime,
+        NumberUtil $number,
+        Language $language,
+        TemplateFileManager $templateFileManager
+    ) {
         $this->entityManager = $entityManager;
         $this->smtpParams = $smtpParams;
         $this->mailSender = $mailSender;
@@ -74,7 +91,7 @@ class Invitations
         return $this->config;
     }
 
-    public function sendInvitation(Entity $entity, Entity $invitee, $link)
+    public function sendInvitation(Entity $entity, Entity $invitee, string $link)
     {
         $uid = $this->getEntityManager()->getEntity('UniqueId');
         $uid->set('data', [
@@ -82,7 +99,7 @@ class Invitations
             'eventId' => $entity->id,
             'inviteeId' => $invitee->id,
             'inviteeType' => $invitee->getEntityType(),
-            'link' => $link
+            'link' => $link,
         ]);
 
         if ($entity->get('dateEnd')) {

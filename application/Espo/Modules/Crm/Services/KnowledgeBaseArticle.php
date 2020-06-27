@@ -35,8 +35,14 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
-class KnowledgeBaseArticle extends \Espo\Services\Record
+use Espo\Core\Di;
+
+class KnowledgeBaseArticle extends \Espo\Services\Record implements
+
+    Di\FileStorageManagerAware
 {
+    use Di\FileStorageManagerSetter;
+
     protected $readOnlyAttributeList = ['order'];
 
     protected function init()
@@ -49,12 +55,12 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
 
     protected function getFileStorageManager()
     {
-        return $this->getInjection('fileStorageManager');
+        return $this->fileStorageManager;
     }
 
-    public function getCopiedAttachments($id, $parentType = null, $parentId = null)
+    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null)
     {
-        $ids = array();
+        $ids = [];
         $names = new \stdClass();
 
         if (empty($id)) {
@@ -103,7 +109,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         );
     }
 
-    public function moveUp($id, $where = null)
+    public function moveUp(string $id, $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
         if (!$entity) throw new NotFound();
@@ -141,7 +147,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($previousEntity);
     }
 
-    public function moveDown($id, $where = null)
+    public function moveDown(string $id, $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
         if (!$entity) throw new NotFound();
@@ -179,7 +185,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($nextEntity);
     }
 
-    public function moveToTop($id, $where = null)
+    public function moveToTop(string $id, $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
         if (!$entity) throw new NotFound();
@@ -215,7 +221,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($entity);
     }
 
-    public function moveToBottom($id, $where = null)
+    public function moveToBottom(string $id, $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
         if (!$entity) throw new NotFound();
