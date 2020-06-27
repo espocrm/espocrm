@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 interface Relatable
 {
-    public function findRelated(Entity $entity, string $relationName, array $params) : \Traversable;
+    public function findRelated(Entity $entity, string $relationName, array $params);
 
     public function countRelated(Entity $entity, string $relationName, array $params = []) : int;
 
