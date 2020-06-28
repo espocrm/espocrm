@@ -136,7 +136,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $this->createUser('test-2', []);
+        $user2 = $this->createUser('test-2', []);
 
         $this->auth('test-1');
         $app = $this->createApplication();
