@@ -476,7 +476,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $result;
     }
 
-    /** Deprecated */
+    /** @deprecated */
     public function getAll()
     {
         $this->reset();

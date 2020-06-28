@@ -37,7 +37,7 @@ use Espo\Core\Formula\FunctionFactory;
 
 use StdClass;
 
-/** Deprecated */
+/** @deprecated */
 abstract class Base extends FunctionBase implements Injectable
 {
     protected $dependencyList = [];

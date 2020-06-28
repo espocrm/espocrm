@@ -31,7 +31,7 @@ namespace Espo\Core\Services;
 
 use Espo\Core\Interfaces\Injectable;
 
-/** Deprecated */
+/** @deprecated */
 abstract class Base implements Injectable
 {
     protected $dependencyList = [
@@ -57,12 +57,10 @@ abstract class Base implements Injectable
     {
     }
 
-    /** Deprecated */
     public function prepare()
     {
     }
 
-    /** Deprecated */
     protected function getInjection($name)
     {
         return $this->injections[$name] ?? $this->$name ?? null;

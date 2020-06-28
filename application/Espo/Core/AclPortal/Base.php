@@ -30,7 +30,7 @@
 namespace Espo\Core\AclPortal;
 
 
-/** Deprecated */
+/** @deprecated */
 class Base extends \Espo\Core\Acl\Base implements PortalScopeAcl
 {
     use Portal;

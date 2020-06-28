@@ -333,7 +333,7 @@ class Record implements Crud,
         return $this->getEntityManager()->getRepository($this->entityType);
     }
 
-    /** Deprecated */
+    /** @deprecated */
     protected function getRecordService($name)
     {
         return $this->recordServiceContainer->get($name);
@@ -974,7 +974,7 @@ class Record implements Crud,
         }
     }
 
-    /** Deprecated */
+    /** @deprecated */
     public function createEntity($data) //TODO Remove in 5.8
     {
         return $this->create($data);
@@ -1025,7 +1025,7 @@ class Record implements Crud,
         throw new Error();
     }
 
-    /** Deprecated */
+    /** @deprecated */
     public function updateEntity($id, $data) //TODO Remove in 5.8
     {
         return $this->update($id, $data);
@@ -1360,7 +1360,7 @@ class Record implements Crud,
         return $this->skipSelectTextAttributes;
     }
 
-    /** Deprecated */
+    /** @deprecated */
     public function findLinkedEntities($id, $link, $params)
     {
         return $this->findLinked($id, $link, $params);
@@ -1483,7 +1483,7 @@ class Record implements Crud,
         return new RecordCollection($collection, $total);
     }
 
-    /** Deprecated */
+    /** @deprecated */
     public function linkEntity($id, $link, $foreignId) //TODO Remove in 5.8
     {
         return $this->link($id, $link, $foreignId);
@@ -1549,7 +1549,7 @@ class Record implements Crud,
         return true;
     }
 
-    /** Deprecated */
+    /** @deprecated */
     public function unlinkEntity($id, $link, $foreignId) //TODO Remove in 5.8
     {
         return $this->unlink($id, $link, $foreignId);
@@ -1620,7 +1620,7 @@ class Record implements Crud,
         return true;
     }
 
-    /** Deprecated */
+    /** @deprecated */
     public function linkEntityMass($id, $link, $where, $selectData = null) //TODO Remove in 5.8
     {
         return $this->massLink($id, $link, $where, $selectData);

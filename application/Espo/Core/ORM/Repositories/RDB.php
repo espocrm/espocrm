@@ -42,7 +42,7 @@ use Espo\Core\{
     Utils\FieldManagerUtil,
 };
 
-/** Deprecated */
+/** @deprecated */
 class RDB extends \Espo\Core\Repositories\Database implements Injectable
 {
     protected $dependencyList = [

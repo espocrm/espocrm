@@ -85,7 +85,7 @@ class InjectableFactory
         return $obj;
     }
 
-    /** Deprecated */
+    /** @deprecated */
     protected function applyInjectable(ReflectionClass $class, object $obj)
     {
         $setList = [];

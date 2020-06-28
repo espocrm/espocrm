@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Interfaces;
 
-/** Deprecated */
+/** @deprecated */
 interface Injectable
 {
     public function getDependencyList();

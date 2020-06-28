@@ -40,7 +40,7 @@ use Espo\Core\{
     Utils\Config,
 };
 
-/** Deprecated */
+/** @deprecated */
 class Base extends Acl implements Injectable
 {
     protected $dependencyList = [];

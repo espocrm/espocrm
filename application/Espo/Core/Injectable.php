@@ -29,7 +29,7 @@
 
 namespace Espo\Core;
 
-/** Deprecated */
+/** @deprecated */
 abstract class Injectable implements \Espo\Core\Interfaces\Injectable
 {
     protected $dependencyList = [];

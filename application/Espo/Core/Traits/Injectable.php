@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Traits;
 
-/** Deprecated */
+/** @deprecated */
 trait Injectable
 {
     protected $injections = [];

@@ -34,7 +34,7 @@ use Espo\Core\EntryPoint;
 
 use Espo\Core\Exceptions\Forbidden;
 
-/** Deprecated */
+/** @deprecated */
 abstract class Base
 {
     public static $authRequired = true;
