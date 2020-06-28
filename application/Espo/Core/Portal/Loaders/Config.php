@@ -27,24 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal;
+namespace Espo\Core\Portal\Loaders;
 
-use Espo\Entities\Portal as PortalEntity;
+use Espo\Core\Portal\Utils\Config as ConfigService;
+use Espo\Core\Loaders\Loader;
+use Espo\Core\Utils\File\Manager as FileManager;
 
-use Espo\Core\Container as BaseContainer;
-
-class Container extends BaseContainer
+class Config implements Loader
 {
-    public function setPortal(PortalEntity $portal)
+    public function load()
     {
-        $this->setForced('portal', $portal);
-
-        $data = [];
-        foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {
-            $data[$attribute] = $this->get('portal')->get($attribute);
-        }
-        $this->get('config')->setPortalParameters($data);
-
-        $this->get('aclManager')->setPortal($portal);
+        return new ConfigService(new FileManager());
     }
 }

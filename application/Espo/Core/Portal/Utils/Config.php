@@ -27,24 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal;
+namespace Espo\Core\Portal\Utils;
 
-use Espo\Entities\Portal as PortalEntity;
+use Espo\Core\Utils\Config as BaseConfig;
 
-use Espo\Core\Container as BaseContainer;
-
-class Container extends BaseContainer
+class Config extends BaseConfig
 {
-    public function setPortal(PortalEntity $portal)
+    /**
+     * Override parameters for a portal.
+     */
+    public function setPortalParameters(array $data = [])
     {
-        $this->setForced('portal', $portal);
+        if (empty($data['language'])) unset($data['language']);
+        if (empty($data['theme'])) unset($data['theme']);
+        if (empty($data['timeZone'])) unset($data['timeZone']);
+        if (empty($data['dateFormat'])) unset($data['dateFormat']);
+        if (empty($data['timeFormat'])) unset($data['timeFormat']);
+        if (empty($data['defaultCurrency'])) unset($data['defaultCurrency']);
+        if (isset($data['weekStart']) && $data['weekStart'] === -1) unset($data['weekStart']);
+        if (array_key_exists('weekStart', $data) && is_null($data['weekStart'])) unset($data['weekStart']);
 
-        $data = [];
-        foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {
-            $data[$attribute] = $this->get('portal')->get($attribute);
+        if ($this->get('webSocketInPortalDisabled')) {
+            $this->set('useWebSocket', false, true);
         }
-        $this->get('config')->setPortalParameters($data);
 
-        $this->get('aclManager')->setPortal($portal);
+        foreach ($data as $attribute => $value) {
+            $this->set($attribute, $value, true);
+        }
+    }
+
+    /**
+     * Save is disabled.
+     */
+    public function save()
+    {
     }
 }

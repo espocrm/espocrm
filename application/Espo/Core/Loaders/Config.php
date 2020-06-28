@@ -34,10 +34,6 @@ use Espo\Core\Utils\File\Manager as FileManager;
 
 class Config implements Loader
 {
-    public function __construct()
-    {
-    }
-
     public function load()
     {
         return new ConfigService(new FileManager());
