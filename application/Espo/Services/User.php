@@ -55,10 +55,8 @@ class User extends Record implements
     use Di\DataManagerSetter;
 
     protected $mandatorySelectAttributeList = [
-        'isPortalUser',
         'isActive',
         'userName',
-        'isAdmin',
         'type',
     ];
 

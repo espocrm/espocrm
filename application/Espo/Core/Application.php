@@ -456,7 +456,6 @@ class Application
     public function setupSystemUser()
     {
         $user = $this->container->get('entityManager')->getEntity('User', 'system');
-        $user->set('isAdmin', true); // TODO remove in 5.7
         $user->set('type', 'system');
         $this->container->set('user', $user);
         $this->container->get('entityManager')->setUser($user);

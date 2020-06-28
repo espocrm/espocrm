@@ -26,16 +26,7 @@
             "readOnly": true,
             "onlyAdmin": true
         },
-        "isAdmin": {
-            "readOnly": true
-        },
-        "isSuperAdmin": {
-            "readOnly": true
-        },
         "isActive": {
-            "nonAdminReadOnly": true
-        },
-        "isPortalUser": {
             "nonAdminReadOnly": true
         },
         "teams": {

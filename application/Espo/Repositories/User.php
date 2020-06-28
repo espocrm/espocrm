@@ -39,42 +39,15 @@ use Espo\Core\Utils\ApiKey;
 use Espo\Core\Di;
 
 class User extends \Espo\Core\Repositories\Database implements
+
     Di\ConfigAware
 {
     use Di\ConfigSetter;
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew() && !$entity->has('type')) {
-            if ($entity->get('isPortalUser') && $entity->isAttributeChanged('isPortalUser')) {
-                $entity->set('type', 'portal');
-            }
-        }
-
         if ($entity->has('type') && !$entity->get('type')) {
             $entity->set('type', 'regular');
-        }
-
-        $entity->clear('isAdmin');
-        $entity->clear('isPortalUser');
-        $entity->clear('isSuperAdmin');
-
-        if ($entity->isAttributeChanged('type')) {
-            $type = $entity->get('type');
-
-            if (in_array($type, ['regular', 'admin', 'portal'])) {
-                $entity->set('isAdmin', false);
-                $entity->set('isPortalUser', false);
-                $entity->set('isSuperAdmin', false);
-
-                if ($type === 'portal') {
-                    $entity->set('isPortalUser', true);
-                } else if ($type === 'admin') {
-                    $entity->set('isAdmin', true);
-                } else if ($type === 'super-admin') {
-                    $entity->set('isSuperAdmin', true);
-                }
-            }
         }
 
         if ($entity->isApi()) {

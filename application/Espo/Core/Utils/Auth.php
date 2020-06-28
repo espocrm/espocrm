@@ -143,7 +143,6 @@ class Auth
             throw new Error("System user is not found");
         }
 
-        $user->set('isAdmin', true);
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
         $entityManager->setUser($user);
