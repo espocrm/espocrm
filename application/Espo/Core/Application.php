@@ -49,15 +49,12 @@ use Espo\Core\{
     Loaders\Metadata as MetadataLoader,
 };
 
+/**
+ * The main entry point of the application.
+ */
 class Application
 {
     protected $container;
-
-    private $metadata;
-
-    private $slim;
-
-    private $auth;
 
     protected $loaderClassNames = [
         'config' => ConfigLoader::class,
@@ -72,7 +69,6 @@ class Application
         date_default_timezone_set('UTC');
 
         $this->initContainer();
-
         $this->initAutoloads();
         $this->initPreloads();
     }
@@ -82,6 +78,9 @@ class Application
         $this->container = new Container(ContainerConfiguration::class, $this->loaderClassNames);
     }
 
+    /**
+     * Run REST API.
+     */
     public function run(string $name = 'default')
     {
         $this->routeHooks();
@@ -89,12 +88,18 @@ class Application
         $this->getSlim()->run();
     }
 
+    /**
+     * Display the main HTML page.
+     */
     public function runClient()
     {
         $this->container->get('clientManager')->display();
         exit;
     }
 
+    /**
+     * Run entryPoint.
+     */
     public function runEntryPoint(string $entryPoint, array $data = [], bool $final = false)
     {
         if (empty($entryPoint)) {
@@ -140,6 +145,9 @@ class Application
         }
     }
 
+    /**
+     * Run cron.
+     */
     public function runCron()
     {
         if ($this->getConfig()->get('cronDisabled')) {
@@ -154,6 +162,9 @@ class Application
         $cronManager->run();
     }
 
+    /**
+     * Run daemon.
+     */
     public function runDaemon()
     {
         $maxProcessNumber = $this->getConfig()->get('daemonMaxProcessNumber');
@@ -195,6 +206,9 @@ class Application
         }
     }
 
+    /**
+     * Run a job by ID. A job record should exist in database.
+     */
     public function runJob(string $id)
     {
         $auth = $this->createAuth();
@@ -204,18 +218,27 @@ class Application
         $cronManager->runJobById($id);
     }
 
+    /**
+     * Rebuild application.
+     */
     public function runRebuild()
     {
         $dataManager = $this->container->get('dataManager');
         $dataManager->rebuild();
     }
 
+    /**
+     * Clear application cache.
+     */
     public function runClearCache()
     {
         $dataManager = $this->container->get('dataManager');
         $dataManager->clearCache();
     }
 
+    /**
+     * Run command in Console Command framework.
+     */
     public function runCommand(string $command)
     {
         $auth = $this->createAuth();
@@ -225,6 +248,9 @@ class Application
         return $consoleCommandManager->run($command);
     }
 
+    /**
+     * The whether the application is installed.
+     */
     public function isInstalled() : bool
     {
         $config = $this->getConfig();
@@ -236,6 +262,9 @@ class Application
         return false;
     }
 
+    /**
+     * Get the service container.
+     */
     public function getContainer() : Container
     {
         return $this->container;
@@ -243,28 +272,22 @@ class Application
 
     protected function getSlim()
     {
-        if (!$this->slim) {
-            $this->slim = $this->container->get('slim');
-        }
-        return $this->slim;
+        return $this->container->get('slim');
     }
 
     protected function getMetadata()
     {
-        if (!$this->metadata) {
-            $this->metadata = $this->container->get('metadata');
-        }
-        return $this->metadata;
-    }
-
-    protected function createAuth()
-    {
-        return new Auth($this->container);
+        return $this->container->get('metadata');
     }
 
     protected function getConfig()
     {
         return $this->container->get('config');
+    }
+
+    protected function createAuth()
+    {
+        return new Auth($this->container);
     }
 
     protected function createApiAuth(Auth $auth) : ApiAuth
@@ -427,6 +450,9 @@ class Application
         return null;
     }
 
+    /**
+     * Setup the system user. The system user is used when no user is logged in.
+     */
     public function setupSystemUser()
     {
         $user = $this->container->get('entityManager')->getEntity('User', 'system');
