@@ -31,6 +31,15 @@ namespace Espo\ORM;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\ORM\DB\{
+    IMapper,
+    Query\Base as Query,
+};
+
+
+/**
+ * A central access point to ORM functionality.
+ */
 class EntityManager
 {
     const STH_COLLECTION = 'sthCollection';
@@ -50,6 +59,8 @@ class EntityManager
     protected $params = [];
 
     protected $query;
+
+    protected $defaultMapperName = 'RDB';
 
     protected $driverPlatformMap = [
         'pdo_mysql' => 'Mysql',
@@ -85,7 +96,10 @@ class EntityManager
         $this->init();
     }
 
-    public function getQuery()
+    /**
+     * Get Query.
+     */
+    public function getQuery() : Query
     {
         if (empty($this->query)) {
             $platform = $this->params['platform'];
@@ -106,11 +120,20 @@ class EntityManager
                 break;
         }
 
+        if (!class_exists($className)) {
+            throw new Error("Mapper {$name} does not exist.");
+        }
+
         return $className;
     }
 
-    public function getMapper(string $name)
+    /**
+     * Get Mapper.
+     */
+    public function getMapper(?string $name = null) : IMapper
     {
+        $name = $name ?? $this->defaultMapperName;
+
         if ($name{0} == '\\') {
             $className = $name;
         } else {
@@ -156,6 +179,10 @@ class EntityManager
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
+    /**
+     * Get entity. If $id is null, a new entity instance is created.
+     * If entity with a specified $id does not exist, then NULL is returned.
+     */
     public function getEntity(string $entityType, ?string $id = null) : ?Entity
     {
         if (!$this->hasRepository($entityType)) {
@@ -165,19 +192,30 @@ class EntityManager
         return $this->getRepository($entityType)->get($id);
     }
 
+    /**
+     * Store entity (in database).
+     */
     public function saveEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
         return $this->getRepository($entityType)->save($entity, $options);
     }
 
+    /**
+     * Mark entity as deleted (in database).
+     */
     public function removeEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
         return $this->getRepository($entityType)->remove($entity, $options);
     }
 
-    public function createEntity(string $entityType, $data, array $options = [])
+    /**
+     * Create entity (store it in database).
+     *
+     * @param \StdClass|array $data Entity attributes.
+     */
+    public function createEntity(string $entityType, $data, array $options = []) : Entity
     {
         $entity = $this->getEntity($entityType);
         $entity->set($data);
@@ -185,13 +223,27 @@ class EntityManager
         return $entity;
     }
 
-    public function fetchEntity(string $entityType, string $id)
+    /**
+     * Fetch entity (from database).
+     */
+    public function fetchEntity(string $entityType, string $id) : ?Entity
     {
-        if (empty($id)) return;
+        if (empty($id)) return null;
         return $this->getEntity($entityType, $id);
     }
 
-    public function getRepository(string $entityType) : ?object
+    /**
+     * Check whether a repository for a specific entity type exist.
+     */
+    public function hasRepository(string $entityType) : bool
+    {
+        return $this->getMetadata()->has($entityType);
+    }
+
+    /**
+     * Get a repository for a specific entity type.
+     */
+    public function getRepository(string $entityType) : ?Repository
     {
         if (!$this->hasRepository($entityType)) {
             // TODO Throw error
@@ -208,10 +260,6 @@ class EntityManager
         $this->metadata->setData($data);
     }
 
-    public function hasRepository(string $entityType) : bool
-    {
-        return $this->getMetadata()->has($entityType);
-    }
 
     public function getMetadata()
     {
@@ -223,6 +271,9 @@ class EntityManager
         return $this->getMetadata();
     }
 
+    /**
+     * Get an instance of PDO.
+     */
     public function getPDO() : \PDO
     {
         if (empty($this->pdo)) {
@@ -231,12 +282,19 @@ class EntityManager
         return $this->pdo;
     }
 
+    /**
+     * Create a Collection.
+     * Entity type can be omitted.
+     */
     public function createCollection(?string $entityType = null, array $data = [])
     {
         $collection = new EntityCollection($data, $entityType, $this->entityFactory);
         return $collection;
     }
 
+    /**
+     * Create an Sth Collection. Sth collection is preferable when a select query returns a large number of rows.
+     */
     public function createSthCollection(string $entityType, array $selectParams = [])
     {
         return new SthCollection($entityType, $this, $selectParams);
@@ -247,6 +305,11 @@ class EntityManager
         return $this->entityFactory;
     }
 
+    /**
+     * Run a query. Returns a result if execution.
+     *
+     * @param $rerunIfDeadlock Query will be re-run if a deadlock occurs.
+     */
     public function runQuery(string $query, bool $rerunIfDeadlock = false)
     {
         try {

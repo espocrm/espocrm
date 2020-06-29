@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\ORM\DB;
+
 use Espo\ORM\IEntity;
 use Espo\ORM\Classes\EntityFactory;
 
