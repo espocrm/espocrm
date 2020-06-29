@@ -32,28 +32,26 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-class CurrencyRate extends \Espo\Core\Controllers\Base
+use Espo\Core\{
+    ServiceFactory,
+};
+
+class CurrencyRate
 {
-    protected function checkControllerAccess()
+    protected $serviceFactory;
+
+    public function __construct(ServiceFactory $serviceFactory)
     {
-        if (!$this->getAcl()->check('Currency')) {
-            throw new Forbidden();
-        }
+        $this->serviceFactory = $serviceFactory;
     }
 
     public function getActionIndex()
     {
-        if ($this->getAcl()->getLevel('Currency', 'read') !== 'yes') throw new Forbidden();
-
-        return $this->getService('CurrencyRate')->get();
+        return $this->serviceFactory->create('CurrencyRate')->get();
     }
 
-    public function putActionUpdate($params, $data)
+    public function putActionUpdate($params, \StdClass $data)
     {
-        if ($this->getAcl()->getLevel('Currency', 'edit') !== 'yes') throw new Forbidden();
-
-        if (empty($data) || !is_object($data)) throw new BadRequest();
-
-        return $this->getService('CurrencyRate')->set($data);
+        return $this->serviceFactory->create('CurrencyRate')->set($data);
     }
 }

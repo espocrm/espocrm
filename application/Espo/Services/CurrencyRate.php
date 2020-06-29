@@ -31,33 +31,42 @@ namespace Espo\Services;
 
 use Espo\Core\Exceptions\{
     BadRequest,
+    Forbidden,
 };
 
 use Espo\Core\{
     DataManager,
     Utils\Config,
+    Acl,
 };
+
+use StdClass;
 
 class CurrencyRate
 {
     protected $config;
     protected $dataManager;
+    protected $acl;
 
-    public function __construct(
-        Config $config,
-        DataManager $dataManager
-    ) {
+    public function __construct(Config $config, DataManager $dataManager, Acl $acl) {
         $this->config = $config;
         $this->dataManager = $dataManager;
+        $this->acl = $acl;
     }
 
-    public function get() : object
+    public function get() : StdClass
     {
+        if (!$this->acl->check('Currency')) throw new Forbidden();
+        if ($this->acl->getLevel('Currency', 'read') !== 'yes') throw new Forbidden();
+
         return (object) ($this->config->get('currencyRates') ?? []);
     }
 
-    public function set(object $rates) : object
+    public function set(StdClass $rates) : StdClass
     {
+        if (!$this->acl->check('Currency')) throw new Forbidden();
+        if ($this->acl->getLevel('Currency', 'edit') !== 'yes') throw new Forbidden();
+
         $config = $this->config;
         $currencyList = $config->get('currencyList') ?? [];
 
