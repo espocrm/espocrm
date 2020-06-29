@@ -89,7 +89,7 @@ class Mentions
                 $userName = substr($item, 1);
                 $user = $this->entityManager->getRepository('User')->where(['userName' => $userName])->findOne();
                 if ($user) {
-                    if (!$this->acl->checkUser('assignmentPermission', $user)) {
+                    if (!$this->acl->checkUserPermission($user, 'assignment')) {
                         continue;
                     }
                     $m = [

@@ -141,6 +141,9 @@ class AclManager
      */
     public function get(User $user, string $permission) : ?string
     {
+        if (substr($permission, -10) !== 'Permission') {
+            $permission .= 'Permission';
+        }
         return $this->getTable($user)->get($permission);
     }
 
@@ -248,21 +251,21 @@ class AclManager
     }
 
     /**
-     * Whether a user has an access to another user taking into account a specific permission.
+     * @deprecated
      */
-    public function checkUser(User $user, string $permission, User $entity) : bool
+    public function checkUser(User $user, string $permission, User $target) : bool
     {
         if ($user->isAdmin()) {
             return true;
         }
         if ($this->get($user, $permission) === 'no') {
-            if ($entity->id !== $user->id) {
+            if ($target->id !== $user->id) {
                 return false;
             }
         } else if ($this->get($user, $permission) === 'team') {
-            if ($entity->id != $user->id) {
+            if ($target->id != $user->id) {
                 $teamIdList1 = $user->getTeamIdList();
-                $teamIdList2 = $entity->getTeamIdList();
+                $teamIdList2 = $target->getTeamIdList();
 
                 $inTeam = false;
                 foreach ($teamIdList1 as $id) {
@@ -366,7 +369,12 @@ class AclManager
         return $list;
     }
 
-    public function checkUserPermission(User $user, $target, string $permissionType = 'userPermission') : bool
+    /**
+     * Whether a user has an access to another user over a specific permission.
+     *
+     * @param $target User|string User entity or user ID.
+     */
+    public function checkUserPermission(User $user, $target, string $permissionType = 'user') : bool
     {
         $permission = $this->get($user, $permissionType);
 
@@ -396,9 +404,14 @@ class AclManager
         return true;
     }
 
+    /**
+     * Whether a user can assign to another user.
+     *
+     * @param $target User|string User entity or user ID.
+     */
     public function checkAssignmentPermission(User $user, $target) : bool
     {
-        return $this->checkUserPermission($user, $target, 'assignmentPermission');
+        return $this->checkUserPermission($user, $target, 'assignment');
     }
 
     /**

@@ -127,7 +127,7 @@ class Acl
     }
 
     /**
-     * Whether a user has an access to another user taking into account a specific permission.
+     * @deprecated
      */
     public function checkUser(string $permission, User $entity) : bool
     {
@@ -174,11 +174,21 @@ class Acl
         return $this->getAclManager()->getScopeForbiddenLinkList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
-    public function checkUserPermission($target, string $permissionType = 'userPermission') : bool
+    /**
+     * Whether a user has an access to another user over a specific permission.
+     *
+     * @param $target User|string User entity or user ID.
+     */
+    public function checkUserPermission($target, string $permissionType = 'user') : bool
     {
         return $this->getAclManager()->checkUserPermission($this->getUser(), $target, $permissionType);
     }
 
+    /**
+     * Whether a user can assign to another user.
+     *
+     * @param $target User|string User entity or user ID.
+     */
     public function checkAssignmentPermission($target) : bool
     {
         return $this->getAclManager()->checkAssignmentPermission($this->getUser(), $target);

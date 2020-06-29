@@ -737,7 +737,7 @@ class Activities implements
     protected function accessCheck($entity)
     {
         if ($entity->getEntityType() == 'User') {
-            if (!$this->getAcl()->checkUser('userPermission', $entity)) {
+            if (!$this->getAcl()->checkUserPermission($entity, 'user')) {
                 throw new Forbidden();
             }
 

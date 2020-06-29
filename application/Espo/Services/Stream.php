@@ -352,7 +352,7 @@ class Stream
             if (!$user) {
                 throw new NotFound();
             }
-            if (!$this->acl->checkUser('userPermission', $user)) {
+            if (!$this->acl->checkUserPermission($user, 'user')) {
                 throw new Forbidden();
             }
         }
