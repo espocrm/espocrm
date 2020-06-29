@@ -51,7 +51,8 @@ class ContainerConfiguration
         try {
             $className = $this->metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
             if (!$className) {
-                // deprecated
+                /** @deprecated */
+                /** @todo remove in 7.0 */
                 $className = $this->metadata->get(['app', 'loaders', ucfirst($name)]);
             }
         } catch (\Exception $e) {}
