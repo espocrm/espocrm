@@ -44,11 +44,17 @@ class ApplicationState
         $this->container = $container;
     }
 
+    /**
+     * Whether an application is initialized as a portal.
+     */
     public function isPortal() : bool
     {
         return $this->container->has('portal');
     }
 
+    /**
+     * Get portal ID (if an applicaition is portal).
+     */
     public function getPortalId() : string
     {
         if (!$this->isPortal()) throw new Error("Can't get portal ID for non-portal application.");
@@ -56,6 +62,9 @@ class ApplicationState
         return $this->getPortal()->id;
     }
 
+    /**
+     * Get a portal entity (if an applicaition is portal).
+     */
     public function getPortal() : PortalEntity
     {
         if (!$this->isPortal()) throw new Error("Can't get portal for non-portal application.");
@@ -63,11 +72,17 @@ class ApplicationState
         return $this->container->get('portal');
     }
 
+    /**
+     * Get current logged user. If no auth is applied, then system used will be returned.
+     */
     public function getUser() : UserEntity
     {
         return $this->container->get('user');
     }
 
+    /**
+     * Whether a user is logged.
+     */
     public function isLogged() : bool
     {
         if (!$this->container->has('user')) return false;
@@ -75,12 +90,19 @@ class ApplicationState
         return true;
     }
 
+    /**
+     * Whether logged as admin.
+     */
     public function isAdmin() : bool
     {
         if (!$this->isLogged()) return false;
         return $this->getUser()->isAdmin();
     }
 
+
+    /**
+     * Whether logged as api user.
+     */
     public function isApi() : bool
     {
         if (!$this->isLogged()) return false;
