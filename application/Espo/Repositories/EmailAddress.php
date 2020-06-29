@@ -31,26 +31,18 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Di;
+
+class EmailAddress extends \Espo\Core\Repositories\Database implements
+    Di\UserAware,
+    Di\AclManagerAware
 {
+    use Di\UserSetter;
+    use Di\AclManagerSetter;
+
     protected $processFieldsAfterSaveDisabled = true;
 
-    protected $processFieldsBeforeSaveDisabled = true;
-
     protected $processFieldsAfterRemoveDisabled = true;
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('user');
-        $this->addDependency('acl');
-        $this->addDependency('aclManager');
-    }
-
-    protected function getAcl()
-    {
-        return $this->getInjection('acl');
-    }
 
     public function getIdListFormAddressList(array $addressList = [])
     {
@@ -620,9 +612,11 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
+    // TODO move it to another place
     protected function checkChangeIsForbidden($entity, $excludeEntity)
     {
-        return !$this->getInjection('aclManager')->getImplementation('EmailAddress')->checkEditInEntity($this->getInjection('user'), $entity, $excludeEntity);
+        return !$this->aclManager->getImplementation('EmailAddress')
+            ->checkEditInEntity($this->user, $entity, $excludeEntity);
     }
 
     public function markAddressOptedOut($address, $isOptedOut = true)

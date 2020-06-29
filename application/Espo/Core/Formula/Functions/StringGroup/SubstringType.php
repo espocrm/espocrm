@@ -29,22 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class SubstringType extends \Espo\Core\Formula\Functions\Base
+class SubstringType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 2) {
-            throw new Error();
+            throw new Error("string\\substring: too few arguments.");
         }
 
         $string = $this->evaluate($item->value[0]);

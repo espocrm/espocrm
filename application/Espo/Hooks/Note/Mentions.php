@@ -31,29 +31,44 @@ namespace Espo\Hooks\Note;
 
 use Espo\ORM\Entity;
 
-class Mentions extends \Espo\Core\Hooks\Base
+use Espo\Core\{
+    ORM\EntityManager,
+    ServiceFactory,
+    AclManager,
+    Acl,
+};
+
+use Espo\Entities\User;
+
+class Mentions
 {
     public static $order = 9;
 
     protected $notificationService = null;
 
-    protected function init()
-    {
-        $this->addDependency('serviceFactory');
-    }
+    protected $entityManager;
+    protected $serviceFactory;
+    protected $user;
+    protected $aclManager;
+    protected $acl;
 
-    protected function getServiceFactory()
-    {
-        return $this->getInjection('serviceFactory');
+    public function __construct(
+        EntityManager $entityManager, ServiceFactory $serviceFactory, User $user, AclManager $aclManager, Acl $acl
+    ) {
+        $this->entityManager = $entityManager;
+        $this->serviceFactory = $serviceFactory;
+        $this->user = $user;
+        $this->aclManager = $aclManager;
+        $this->acl = $acl;
     }
 
     protected function addMentionData($entity)
     {
         $post = $entity->get('post');
 
-        $mentionData = new \stdClass();
+        $mentionData = (object) [];
 
-        $previousMentionList = array();
+        $previousMentionList = [];
         if (!$entity->isNew()) {
             $data = $entity->get('data');
             if (!empty($data) && !empty($data->mentions)) {
@@ -68,25 +83,25 @@ class Mentions extends \Espo\Core\Hooks\Base
         if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
             $parent = null;
             if ($entity->get('parentId') && $entity->get('parentType')) {
-                $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+                $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
             }
             foreach ($matches[0] as $item) {
                 $userName = substr($item, 1);
-                $user = $this->getEntityManager()->getRepository('User')->where(array('userName' => $userName))->findOne();
+                $user = $this->entityManager->getRepository('User')->where(['userName' => $userName])->findOne();
                 if ($user) {
-                    if (!$this->getAcl()->checkUser('assignmentPermission', $user)) {
+                    if (!$this->acl->checkUser('assignmentPermission', $user)) {
                         continue;
                     }
-                    $m = array(
+                    $m = [
                         'id' => $user->id,
                         'name' => $user->get('name'),
                         'userName' => $user->get('userName'),
-                        '_scope' => $user->getEntityName()
-                    );
+                        '_scope' => $user->getEntityType(),
+                    ];
                     $mentionData->$item = (object) $m;
                     $mentionCount++;
                     if (!in_array($item, $previousMentionList)) {
-                        if ($user->id == $this->getUser()->id) {
+                        if ($user->id == $this->user->id) {
                             continue;
                         }
                         $this->notifyAboutMention($entity, $user, $parent);
@@ -98,7 +113,7 @@ class Mentions extends \Espo\Core\Hooks\Base
 
         $data = $entity->get('data');
         if (empty($data)) {
-            $data = new \stdClass();
+            $data = (object) [];
         }
         if ($mentionCount) {
             $data->mentions = $mentionData;
@@ -122,7 +137,7 @@ class Mentions extends \Espo\Core\Hooks\Base
     {
         if ($user->isPortal()) return;
         if ($parent) {
-            if (!$this->getAclManager()->check($user, $parent, 'stream')) return;
+            if (!$this->aclManager->check($user, $parent, 'stream')) return;
         }
         $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
     }

@@ -31,7 +31,16 @@ namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 
-class Stream extends \Espo\Core\Hooks\Base
+use Espo\Core\{
+    Utils\Metadata,
+    ORM\EntityManager,
+    ServiceFactory,
+};
+
+use Espo\Entities\User;
+use Espo\Entities\Preferences;
+
+class Stream
 {
     protected $streamService = null;
 
@@ -45,27 +54,32 @@ class Stream extends \Espo\Core\Hooks\Base
 
     public static $order = 9;
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('serviceFactory');
-    }
+    protected $metadata;
+    protected $config;
+    protected $entityManager;
+    protected $serviceFactory;
+    protected $user;
+    protected $preferences;
 
-    protected function getServiceFactory()
-    {
-        return $this->getInjection('serviceFactory');
-    }
-
-    protected function getPreferences()
-    {
-        return $this->getInjection('container')->get('preferences');
+    public function __construct(
+        Metadata $metadata,
+        EntityManager $entityManager,
+        ServiceFactory $serviceFactory,
+        User $user,
+        Preferences $preferences
+    ) {
+        $this->metadata = $metadata;
+        $this->entityManager = $entityManager;
+        $this->serviceFactory = $serviceFactory;
+        $this->user = $user;
+        $this->preferences = $preferences;
     }
 
     protected function checkHasStream(Entity $entity)
     {
         $entityType = $entity->getEntityType();
         if (!array_key_exists($entityType, $this->hasStreamCache)) {
-            $this->hasStreamCache[$entityType] = $this->getMetadata()->get("scopes.{$entityType}.stream");
+            $this->hasStreamCache[$entityType] = $this->metadata->get("scopes.{$entityType}.stream");
         }
         return $this->hasStreamCache[$entityType];
     }
@@ -75,8 +89,8 @@ class Stream extends \Espo\Core\Hooks\Base
         $key = $scope . '__' . $link;
         if (!array_key_exists($key, $this->isLinkObservableInStreamCache)) {
             $this->isLinkObservableInStreamCache[$key] =
-                $this->getMetadata()->get(['scopes', $scope, 'stream']) &&
-                $this->getMetadata()->get(['entityDefs', $scope, 'links', $link, 'audited']);
+                $this->metadata->get(['scopes', $scope, 'stream']) &&
+                $this->metadata->get(['entityDefs', $scope, 'links', $link, 'audited']);
         }
 
         return $this->isLinkObservableInStreamCache[$key];
@@ -88,7 +102,7 @@ class Stream extends \Espo\Core\Hooks\Base
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
         }
 
-        $query = $this->getEntityManager()->getQuery();
+        $query = $this->entityManager->getQuery();
         $sql = "
             UPDATE `note`
             SET `deleted` = 1, `modified_at` = '".date('Y-m-d H:i:s')."'
@@ -97,12 +111,12 @@ class Stream extends \Espo\Core\Hooks\Base
                     (related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) .")
                 )
         ";
-        $this->getEntityManager()->getPDO()->query($sql);
+        $this->entityManager->getPDO()->query($sql);
     }
 
     protected function handleCreateRelated(Entity $entity, array $options = [])
     {
-        $linkDefs = $this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".links", []);
+        $linkDefs = $this->metadata->get("entityDefs." . $entity->getEntityType() . ".links", []);
 
         $scopeNotifiedList = [];
         foreach ($linkDefs as $link => $defs) {
@@ -157,7 +171,7 @@ class Stream extends \Espo\Core\Hooks\Base
     protected function getAutofollowUserIdList(Entity $entity, array $ignoreList = [])
     {
         $entityType = $entity->getEntityType();
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
         $userIdList = [];
 
         $sql = "
@@ -200,23 +214,23 @@ class Stream extends \Espo\Core\Hooks\Base
                 }
 
                 if (
-                    !$this->getUser()->isSystem()
+                    !$this->user->isSystem()
                     &&
-                    !$this->getUser()->isApi()
+                    !$this->user->isApi()
                     &&
                     $createdById
                     &&
-                    $createdById === $this->getUser()->id
+                    $createdById === $this->user->id
                     &&
                     (
-                        $this->getUser()->isPortalUser()
+                        $this->user->isPortalUser()
                         ||
-                        $this->getPreferences()->get('followCreatedEntities')
+                        $this->preferences->get('followCreatedEntities')
                         ||
                         (
-                            is_array($this->getPreferences()->get('followCreatedEntityTypeList'))
+                            is_array($this->preferences->get('followCreatedEntityTypeList'))
                             &&
-                            in_array($entityType, $this->getPreferences()->get('followCreatedEntityTypeList'))
+                            in_array($entityType, $this->preferences->get('followCreatedEntityTypeList'))
                         )
                     )
                 ) {
@@ -243,7 +257,7 @@ class Stream extends \Espo\Core\Hooks\Base
                     $this->getStreamService()->noteCreate($entity, $options);
                 }
 
-                if (in_array($this->getUser()->id, $userIdList)) {
+                if (in_array($this->user->id, $userIdList)) {
                 	$entity->set('isFollowed', true);
                 }
 
@@ -256,7 +270,7 @@ class Stream extends \Espo\Core\Hooks\Base
                 $autofollowUserIdList = array_values($autofollowUserIdList);
 
                 if (!empty($autofollowUserIdList)) {
-                    $job = $this->getEntityManager()->getEntity('Job');
+                    $job = $this->entityManager->getEntity('Job');
                     $job->set([
                         'serviceName' => 'Stream',
                         'methodName' => 'afterRecordCreatedJob',
@@ -267,7 +281,7 @@ class Stream extends \Espo\Core\Hooks\Base
                         ],
                         'queue' => 'q1'
                     ]);
-                    $this->getEntityManager()->saveEntity($job);
+                    $this->entityManager->saveEntity($job);
                 }
             } else {
                 if (empty($options['noStream']) && empty($options['silent'])) {
@@ -277,7 +291,7 @@ class Stream extends \Espo\Core\Hooks\Base
                             $this->getStreamService()->followEntity($entity, $assignedUserId);
                             $this->getStreamService()->noteAssign($entity, $options);
 
-			                if ($this->getUser()->id === $assignedUserId) {
+			                if ($this->user->id === $assignedUserId) {
 			                	$entity->set('isFollowed', true);
 			                }
                         } else {
@@ -311,7 +325,7 @@ class Stream extends \Espo\Core\Hooks\Base
                                 continue;
                             }
                             $this->getStreamService()->followEntity($entity, $userId);
-                            if ($this->getUser()->id === $userId) {
+                            if ($this->user->id === $userId) {
                                 $entity->set('isFollowed', true);
                             }
                         }
@@ -336,7 +350,7 @@ class Stream extends \Espo\Core\Hooks\Base
                         )
                     )
                 ) {
-                    $job = $this->getEntityManager()->getEntity('Job');
+                    $job = $this->entityManager->getEntity('Job');
                     $job->set([
                         'serviceName' => 'Stream',
                         'methodName' => 'controlFollowersJob',
@@ -346,12 +360,12 @@ class Stream extends \Espo\Core\Hooks\Base
                         ],
                         'queue' => 'q1'
                     ]);
-                    $this->getEntityManager()->saveEntity($job);
+                    $this->entityManager->saveEntity($job);
                 }
             }
         }
 
-        if ($entity->isNew() && empty($options['noStream']) && empty($options['silent']) && $this->getMetadata()->get(['scopes', $entityType, 'object'])) {
+        if ($entity->isNew() && empty($options['noStream']) && empty($options['silent']) && $this->metadata->get(['scopes', $entityType, 'object'])) {
             $this->handleCreateRelated($entity, $options);
         }
     }
@@ -361,7 +375,7 @@ class Stream extends \Espo\Core\Hooks\Base
         $entityType = $entity->getEntityType();
         if (
             empty($options['noStream']) && empty($options['silent']) &&
-            $this->getMetadata()->get(['scopes', $entityType, 'object'])
+            $this->metadata->get(['scopes', $entityType, 'object'])
         ) {
             if (empty($data['relationName']) || empty($data['foreignEntity']) || !($data['foreignEntity'] instanceof Entity)) {
                 return;
@@ -370,24 +384,24 @@ class Stream extends \Espo\Core\Hooks\Base
             $foreignEntity = $data['foreignEntity'];
 
             if (
-                $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])
+                $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited'])
             ) {
                 $this->getStreamService()->noteRelate($foreignEntity, $entityType, $entity->id);
             }
 
             $foreignLink = $entity->getRelationParam($link, 'foreign');
-            if ($this->getMetadata()->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
+            if ($this->metadata->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
                 $this->getStreamService()->noteRelate($entity, $foreignEntity->getEntityType(), $foreignEntity->id);
             }
         }
     }
 
-    public function afterUnrelate(Entity $entity, array $options = array(), array $data = array())
+    public function afterUnrelate(Entity $entity, array $options = [], array $data = [])
     {
         $entityType = $entity->getEntityType();
         if (
             empty($options['noStream']) && empty($options['silent']) &&
-            $this->getMetadata()->get(['scopes', $entityType, 'object'])
+            $this->metadata->get(['scopes', $entityType, 'object'])
         ) {
             if (empty($data['relationName']) || empty($data['foreignEntity']) || !($data['foreignEntity'] instanceof Entity)) {
                 return;
@@ -395,31 +409,31 @@ class Stream extends \Espo\Core\Hooks\Base
             $link = $data['relationName'];
             $foreignEntity = $data['foreignEntity'];
 
-            if ($this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])) {
-                $note = $this->getEntityManager()->getRepository('Note')->where(array(
+            if ($this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited'])) {
+                $note = $this->entityManager->getRepository('Note')->where([
                     'type' => 'Relate',
                     'parentId' => $entity->id,
                     'parentType' => $entityType,
                     'relatedId' => $foreignEntity->id,
-                    'relatedType' => $foreignEntity->getEntityType()
-                ))->findOne();
+                    'relatedType' => $foreignEntity->getEntityType(),
+                ])->findOne();
                 if ($note) {
-                    $this->getEntityManager()->removeEntity($note);
+                    $this->entityManager->removeEntity($note);
                 }
             }
 
             $foreignLink = $entity->getRelationParam($link, 'foreign');
-            if ($this->getMetadata()->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
-                $note = $this->getEntityManager()->getRepository('Note')->where(array(
+            if ($this->metadata->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
+                $note = $this->entityManager->getRepository('Note')->where([
                     'type' => 'Relate',
                     'parentId' => $foreignEntity->id,
                     'parentType' => $foreignEntity->getEntityType(),
                     'relatedId' => $entity->id,
                     'relatedType' => $entityType
-                ))->findOne();
+                ])->findOne();
                 if (!$note) return;
                 if ($note) {
-                    $this->getEntityManager()->removeEntity($note);
+                    $this->entityManager->removeEntity($note);
                 }
             }
         }
@@ -429,7 +443,7 @@ class Stream extends \Espo\Core\Hooks\Base
     {
         if (is_null($this->statusFields)) {
             $this->statusFields = array();
-            $scopes = $this->getMetadata()->get('scopes', array());
+            $scopes = $this->metadata->get('scopes', []);
             foreach ($scopes as $scope => $data) {
                 if (empty($data['statusField'])) continue;
                 $this->statusFields[$scope] = $data['statusField'];
@@ -441,7 +455,7 @@ class Stream extends \Espo\Core\Hooks\Base
     protected function getStreamService()
     {
         if (empty($this->streamService)) {
-            $this->streamService = $this->getServiceFactory()->create('Stream');
+            $this->streamService = $this->serviceFactory->create('Stream');
         }
         return $this->streamService;
     }

@@ -35,7 +35,12 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
-        $this->evaluator = new \Espo\Core\Formula\Evaluator();
+        $container = $this->container =
+            $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+
+        $injectableFactory = $injectableFactory = new \Espo\Core\InjectableFactory($container);
+
+        $this->evaluator = new \Espo\Core\Formula\Evaluator($injectableFactory);
     }
 
     protected function tearDown() : void
@@ -187,5 +192,101 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->evaluator->process($expression, null, $vars);
 
         $this->assertEquals([0, 1, 2], $vars->target);
+    }
+
+    public function testComment1()
+    {
+        $expression = "
+            // test
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment2()
+    {
+        $expression = "
+            // test'test
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment3()
+    {
+        $expression = "
+            // test\"test
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment4()
+    {
+        $expression = "
+            // test)(test
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment5()
+    {
+        $expression = "
+            /* test'test
+            */
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment6()
+    {
+        $expression = "
+            /* test(test
+            */
+            \$test = '1';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('1', $vars->test);
+    }
+
+    public function testComment7()
+    {
+        $expression = "
+            \$test = '/* 1 */';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('/* 1 */', $vars->test);
+    }
+
+    public function testComment8()
+    {
+        $expression = "
+            \$test = '// 1 */';
+        ";
+
+        $vars = (object) [];
+        $this->evaluator->process($expression, null, $vars);
+        $this->assertEquals('// 1 */', $vars->test);
     }
 }

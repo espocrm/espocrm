@@ -29,10 +29,10 @@
 
 namespace Espo\Core\Interfaces;
 
+/** @deprecated */
 interface Injectable
 {
     public function getDependencyList();
 
     public function inject($name, $object);
 }
-

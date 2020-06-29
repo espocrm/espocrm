@@ -29,12 +29,25 @@
 
 namespace Espo\Core\Loaders;
 
-class ConsoleCommandManager extends Base
+use Espo\Core\{
+    InjectableFactory,
+    Utils\Metadata,
+    Console\CommandManager,
+};
+
+class ConsoleCommandManager implements Loader
 {
+    protected $injectableFactory;
+    protected $metadata;
+
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
+    {
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
+    }
+
     public function load()
     {
-        return new \Espo\Core\Console\CommandManager(
-            $this->getContainer()
-        );
+        return new CommandManager($this->injectableFactory, $this->metadata);
     }
 }

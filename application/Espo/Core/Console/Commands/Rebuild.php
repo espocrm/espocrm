@@ -29,11 +29,20 @@
 
 namespace Espo\Core\Console\Commands;
 
-class Rebuild extends Base
+use Espo\Core\DataManager;
+
+class Rebuild implements Command
 {
+    protected $dataManager;
+
+    public function __construct(DataManager $dataManager)
+    {
+        $this->dataManager = $dataManager;
+    }
+
     public function run()
     {
-        $this->getContainer()->get('dataManager')->rebuild();
+        $this->dataManager->rebuild();
         echo "Rebuild has been done.\n";
     }
 }

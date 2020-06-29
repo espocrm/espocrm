@@ -78,7 +78,7 @@ class Installer
         $this->app = new \Espo\Core\Application();
 
         $user = $this->getEntityManager()->getEntity('User');
-        $this->app->getContainer()->setUser($user);
+        $this->app->getContainer()->set('user', $user);
 
         require_once('install/core/InstallerConfig.php');
         $this->installerConfig = new InstallerConfig();

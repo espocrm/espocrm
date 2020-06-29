@@ -29,9 +29,15 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\ORM\EntityManager;
-use \Espo\Entities\Email;
+use Espo\Core\ORM\EntityManager;
+use Espo\Entities\Email;
+use Espo\Entities\EmailFilter;
 
+use Espo\Core\Mail\FiltersMatcher;
+
+/**
+ * Looks for any matching Email Filter for a given email and user.
+ */
 class EmailFilterManager
 {
     private $entityManager;
@@ -53,12 +59,12 @@ class EmailFilterManager
     protected function getFiltersMatcher()
     {
         if (!$this->filtersMatcher) {
-            $this->filtersMatcher = new \Espo\Core\Mail\FiltersMatcher();
+            $this->filtersMatcher = new FiltersMatcher();
         }
         return $this->filtersMatcher;
     }
 
-    public function getMatchingFilter(Email $email, $userId)
+    public function getMatchingFilter(Email $email, string $userId) : ?EmailFilter
     {
         if (!array_key_exists($userId, $this->data)) {
             $emailFilterList = $this->getEntityManager()->getRepository('EmailFilter')->where([
@@ -72,5 +78,6 @@ class EmailFilterManager
                 return $emailFilter;
             }
         }
+        return null;
     }
 }

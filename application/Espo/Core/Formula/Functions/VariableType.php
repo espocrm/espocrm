@@ -29,17 +29,12 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class VariableType extends Base
+class VariableType extends FunctionBase
 {
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
         $name = $item->value;
 
         if (is_null($name)) {

@@ -37,31 +37,34 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-class InboundEmail extends \Espo\Services\Record
+use Espo\Core\Mail\Importer;
+
+use Espo\Core\Di;
+
+class InboundEmail extends \Espo\Services\Record implements
+
+    Di\CryptAware,
+    Di\MailSenderAware,
+    Di\NotificatorFactoryAware
 {
+    use Di\CryptSetter;
+    use Di\MailSenderSetter;
+    use Di\NotificatorFactorySetter;
+
     private $campaignService = null;
 
-    protected $storageClassName = '\\Espo\\Core\\Mail\\Mail\\Storage\\Imap';
+    protected $storageClassName = 'Espo\\Core\\Mail\\Mail\\Storage\\Imap';
 
     const PORTION_LIMIT = 20;
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('mailSender');
-        $this->addDependency('crypt');
-        $this->addDependency('notificatorFactory');
-    }
-
     protected function getMailSender()
     {
-        return $this->getInjection('mailSender');
+        return $this->mailSender;
     }
 
     protected function getCrypt()
     {
-        return $this->getInjection('crypt');
+        return $this->crypt;
     }
 
     protected function handleInput($data)
@@ -130,9 +133,9 @@ class InboundEmail extends \Espo\Services\Record
             throw new Error("Group Email Account {$emailAccount->id} is not active.");
         }
 
-        $notificator = $this->getInjection('notificatorFactory')->create('Email');
+        $notificator = $this->notificatorFactory->create('Email');
 
-        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig(), $notificator);
+        $importer = new Importer($this->getEntityManager(), $this->getConfig(), $notificator);
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
@@ -937,7 +940,7 @@ class InboundEmail extends \Espo\Services\Record
 
         if ($handlerClassName && !empty($params['id'])) {
             try {
-                $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+                $handler = $this->injectableFactory->create($handlerClassName);
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error(
                     "InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage()
@@ -974,7 +977,7 @@ class InboundEmail extends \Espo\Services\Record
         $storage->appendMessage($message->toString(), $folder);
     }
 
-    public function getSmtpParamsFromAccount(\Espo\Entities\InboundEmail $emailAccount)
+    public function getSmtpParamsFromAccount(\Espo\Entities\InboundEmail $emailAccount) : ?array
     {
         $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
@@ -1003,7 +1006,7 @@ class InboundEmail extends \Espo\Services\Record
 
             return $smtpParams;
         }
-        return;
+        return null;
     }
 
     public function applySmtpHandler(\Espo\Entities\InboundEmail $emailAccount, array &$params)
@@ -1012,7 +1015,7 @@ class InboundEmail extends \Espo\Services\Record
         if (!$handlerClassName) return;
 
         try {
-            $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+            $handler = $this->injectableFactory->create($handlerClassName);
         } catch (\Throwable $e) {
             $GLOBALS['log']->error(
                 "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()

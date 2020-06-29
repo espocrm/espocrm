@@ -29,23 +29,25 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class FormulaTest extends \PHPUnit\Framework\TestCase
 {
-
     protected function setUp() : void
     {
-        $container = $this->container = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+        $container = $this->container =
+            $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+
+        $injectableFactory = $injectableFactory = new \Espo\Core\InjectableFactory($container);
 
         $attributeFetcher = new \Espo\Core\Formula\AttributeFetcher();
 
-        $this->functionFactory = new \Espo\Core\Formula\FunctionFactory($container, $attributeFetcher);
+        $this->functionFactory = new \Espo\Core\Formula\FunctionFactory($injectableFactory, $attributeFetcher);
         $this->formula = new \Espo\Core\Formula\Formula($this->functionFactory);
 
         $this->entity = $this->getEntityMock();
-        $this->entityManager = $this->getMockBuilder('\\Espo\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
-        $this->repository = $this->getMockBuilder('\\Espo\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
+        $this->entityManager = $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+        $this->repository = $this->getMockBuilder('Espo\\Core\\Repositories\\Database')->disableOriginalConstructor()->getMock();
 
         date_default_timezone_set('UTC');
 
@@ -53,7 +55,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $this->number = new \Espo\Core\Utils\NumberUtil();
 
-        $this->config = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $this->config = $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
         $this->config
             ->expects($this->any())
             ->method('get')
@@ -61,9 +63,18 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ['timeZone', null, 'UTC']
             ]));
 
-        $this->user = new \tests\unit\testData\Entities\User();
+        //$this->user = new \tests\unit\testData\Entities\User();
+
+        $this->user = $this->getMockBuilder('Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
 
         $this->user->id = '1';
+
+        $this->user
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap([
+                ['id', [], '1']
+            ]));
 
         $container
             ->expects($this->any())
@@ -80,6 +91,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
     protected function tearDown() : void
     {
         $this->container = null;
+        $this->injectableFactory = null;
         $this->functionFactory = null;
         $this->formula = null;
         $this->entity = null;

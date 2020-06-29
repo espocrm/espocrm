@@ -31,20 +31,14 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class Portal extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Di;
+
+class Portal extends \Espo\Core\Repositories\Database implements
+    Di\ConfigAware
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('config');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
+    use Di\ConfigSetter;
 
     public function loadUrlField(Entity $entity)
     {
@@ -52,11 +46,11 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
             $entity->set('url', $entity->get('customUrl'));
         }
 
-        $siteUrl = $this->getConfig()->get('siteUrl');
+        $siteUrl = $this->config->get('siteUrl');
         $siteUrl = rtrim($siteUrl , '/') . '/';
         $url = $siteUrl . 'portal/';
 
-        if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
+        if ($entity->id === $this->config->get('defaultPortalId')) {
             $entity->set('isDefault', true);
             $entity->setFetched('isDefault', true);
         } else {
@@ -80,16 +74,16 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
 
         if ($entity->has('isDefault')) {
             if ($entity->get('isDefault')) {
-                $defaultPortalId = $this->getConfig()->get('defaultPortalId');
+                $defaultPortalId = $this->config->get('defaultPortalId');
                 if ($defaultPortalId !== $entity->id) {
-                    $this->getConfig()->set('defaultPortalId', $entity->id);
-                    $this->getConfig()->save();
+                    $this->config->set('defaultPortalId', $entity->id);
+                    $this->config->save();
                 }
             } else {
                 if ($entity->isAttributeChanged('isDefault')) {
                     if ($entity->getFetched('isDefault')) {
-                        $this->getConfig()->set('defaultPortalId', null);
-                        $this->getConfig()->save();
+                        $this->config->set('defaultPortalId', null);
+                        $this->config->save();
                     }
                 }
             }

@@ -29,10 +29,13 @@
 
 namespace Espo\Jobs;
 
-class Dummy extends \Espo\Core\Jobs\Base
+use Espo\Core\{
+    Jobs\Job,
+};
+
+class Dummy implements Job
 {
     public function run()
     {
-
     }
 }

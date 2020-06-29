@@ -31,13 +31,13 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class Webhook extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Utils\Util;
+
+class Webhook extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
     protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsBeforeSaveDisabled = true;
 
     protected $processFieldsAfterRemoveDisabled = true;
 
@@ -52,7 +52,7 @@ class Webhook extends \Espo\Core\ORM\Repositories\RDB
 
     protected function fillSecretKey(Entity $entity)
     {
-        $secretKey = \Espo\Core\Utils\Util::generateSecretKey();
+        $secretKey = Util::generateSecretKey();
         $entity->set('secretKey', $secretKey);
     }
 

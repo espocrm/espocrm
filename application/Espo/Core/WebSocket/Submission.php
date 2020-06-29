@@ -29,11 +29,13 @@
 
 namespace Espo\Core\WebSocket;
 
+use Espo\Core\Utils\Config;
+
 class Submission
 {
     protected $config;
 
-    public function __construct(\Espo\Core\Utils\Config $config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
     }

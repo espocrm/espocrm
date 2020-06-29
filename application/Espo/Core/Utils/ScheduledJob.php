@@ -31,10 +31,16 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Exceptions\NotFound;
 
+use Espo\Core\Container;
+use Espo\Core\{
+    Utils\ClassFinder,
+    Utils\Language,
+    Utils\System,
+    ORM\EntityManager,
+};
+
 class ScheduledJob
 {
-    private $container;
-
     private $systemUtil;
 
     protected $cronFile = 'cron.php';
@@ -53,20 +59,22 @@ class ScheduledJob
         'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
     ];
 
-    public function __construct(\Espo\Core\Container $container)
+    protected $classFinder;
+    protected $language;
+    protected $entityManager;
+
+    public function __construct(ClassFinder $classFinder, EntityManager $entityManager, Language $language)
     {
-        $this->container = $container;
-        $this->systemUtil = new \Espo\Core\Utils\System();
+        $this->classFinder = $classFinder;
+        $this->entityManager = $entityManager;
+        $this->language = $language;
+
+        $this->systemUtil = new System();
     }
 
     protected function getContainer()
     {
         return $this->container;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->container->get('entityManager');
     }
 
     protected function getSystemUtil()
@@ -76,7 +84,7 @@ class ScheduledJob
 
     public function getAvailableList()
     {
-        $map = $this->getContainer()->get('classFinder')->getMap('Jobs');
+        $map = $this->classFinder->getMap('Jobs');
         $list = array_keys($map);
         return $list;
     }
@@ -84,13 +92,13 @@ class ScheduledJob
     public function getJobClassName(string $name) : ?string
     {
         $name = ucfirst($name);
-        $className = $this->getContainer()->get('classFinder')->find('Jobs', $name);
+        $className = $this->classFinder->find('Jobs', $name);
         return $className;
     }
 
     public function getSetupMessage()
     {
-        $language = $this->getContainer()->get('language');
+        $language = $this->language;
 
         $OS = $this->getSystemUtil()->getOS();
         $desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
@@ -143,12 +151,12 @@ class ScheduledJob
                     [
                         ['executeTime>=' => $r1From->format($format)],
                         ['executeTime<='=> $r1To->format($format)],
-                        'scheduledJob.job' => 'Dummy'
+                        'scheduledJob.job' => 'Dummy',
                     ]
                 ]
             ]
         ];
 
-        return !!$this->getEntityManager()->getRepository('Job')->findOne($selectParams);
+        return !!$this->entityManager->getRepository('Job')->findOne($selectParams);
     }
 }

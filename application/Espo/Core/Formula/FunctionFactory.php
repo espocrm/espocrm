@@ -29,23 +29,30 @@
 
 namespace Espo\Core\Formula;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
+
+use Espo\Core\InjectableFactory;
+
+use StdClass;
 
 class FunctionFactory
 {
-    private $container;
+    private $injectableFactory;
+
+    private $attributeFetcher;
 
     private $classNameMap;
 
-    public function __construct($container, AttributeFetcher $attributeFetcher, $classNameMap = null)
-    {
-        $this->container = $container;
+    public function __construct(
+        InjectableFactory $injectableFactory, AttributeFetcher $attributeFetcher, ?array $classNameMap = null
+    ) {
+        $this->injectableFactory = $injectableFactory;
         $this->attributeFetcher = $attributeFetcher;
         $this->classNameMap = $classNameMap;
     }
 
-    public function create(\StdClass $item, $entity, \StdClass $variables)
+    public function create(StdClass $item, ?Entity $entity = null, ?StdClass $variables = null)
     {
         if (!isset($item->type)) {
             throw new Error('Missing type');
@@ -68,26 +75,23 @@ class FunctionFactory
                 $arr[$i] = ucfirst($part);
             }
             $name = implode('\\', $arr);
-            $className = '\\Espo\\Core\\Formula\\Functions\\' . $name . 'Type';
+            $className = 'Espo\\Core\\Formula\\Functions\\' . $name . 'Type';
         }
 
         if (!class_exists($className)) {
             throw new Error('Class ' . $className . ' was not found.');
         }
 
-        $object = new $className($this, $entity, $variables);
+        $object = $this->injectableFactory->createWith($className, [
+            'itemFactory' => $this,
+            'entity' => $entity,
+            'variables' => $variables,
+        ]);
 
-        $dependencyList = $object->getDependencyList();
-        foreach ($dependencyList as $name) {
-            if (!$this->container) {
-                throw new Error('Container required but not passed.');
-            }
-            $object->inject($name, $this->container->get($name));
-        }
-
-        if (property_exists($className, 'hasAttributeFetcher')) {
+        if (property_exists($className, 'hasAttributeFetcher') || method_exists($className, 'setAttributeFetcher')) {
             $object->setAttributeFetcher($this->attributeFetcher);
         }
+
         return $object;
     }
 }

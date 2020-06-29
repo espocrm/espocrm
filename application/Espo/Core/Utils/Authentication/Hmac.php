@@ -35,7 +35,7 @@ use Espo\Entities\AuthToken;
 
 class Hmac extends Base
 {
-    public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request)
+    public function login(string $username, ?string $password, ?AuthToken $authToken = null, array $params = [], $request)
     {
         $apiKey = $username;
         $hash = $password;

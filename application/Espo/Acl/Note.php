@@ -29,10 +29,10 @@
 
 namespace Espo\Acl;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class Note extends \Espo\Core\Acl\Base
+class Note extends \Espo\Core\Acl\Acl
 {
     protected $deleteThresholdPeriod = '1 month';
 

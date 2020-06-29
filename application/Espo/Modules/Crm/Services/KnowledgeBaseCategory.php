@@ -29,12 +29,11 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class KnowledgeBaseCategory extends \Espo\Services\RecordTree
 {
     protected $subjectEntityType = 'KnowledgeBaseArticle';
 
     protected $categoryField = 'categories';
-
 }

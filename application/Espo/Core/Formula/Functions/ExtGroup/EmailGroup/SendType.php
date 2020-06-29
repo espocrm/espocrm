@@ -31,14 +31,16 @@ namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class SendType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class SendType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware,
+    Di\ServiceFactoryAware,
+    Di\ConfigAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('serviceFactory');
-        $this->addDependency('config');
-    }
+    use Di\EntityManagerSetter;
+    use Di\ServiceFactorySetter;
+    use Di\ConfigSettr;
 
     public function process(\StdClass $item)
     {
@@ -50,7 +52,7 @@ class SendType extends \Espo\Core\Formula\Functions\Base
         if (!$id) throw new Error("Formula ext\\email\send: First argument should not be empty.");
         if (!is_string($id)) throw new Error("Formula ext\\email\send: First argument should be a string.");
 
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
 
         $email = $em->getEntity('Email', $id);
 
@@ -66,7 +68,7 @@ class SendType extends \Espo\Core\Formula\Functions\Base
             return false;
         }
 
-        $service = $this->getInjection('serviceFactory')->create('Email');
+        $service = $this->serviceFactory->create('Email');
         $service->loadAdditionalFields($email);
 
         $toSave = false;
@@ -77,7 +79,7 @@ class SendType extends \Espo\Core\Formula\Functions\Base
         }
 
         if (!$email->get('from')) {
-            $from = $this->getInjection('config')->get('outboundEmailFromAddress');
+            $from = $this->config->get('outboundEmailFromAddress');
             if ($from) {
                 $email->set('from', $from);
                 $toSave = true;

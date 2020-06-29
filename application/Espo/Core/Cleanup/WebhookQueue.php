@@ -29,15 +29,29 @@
 
 namespace Espo\Core\Cleanup;
 
-class WebhookQueue extends Base
+use Espo\Core\{
+    Utils\Config,
+    ORM\EntityManager,
+};
+
+class WebhookQueue
 {
     protected $cleanupWebhookQueuePeriod = '10 days';
 
+    protected $config;
+    protected $entityManager;
+
+    public function __construct(Config $config, EntityManager $entityManager)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+    }
+
     public function process()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
-        $period = '-' . $this->getConfig()->get('cleanupWebhookQueuePeriod', $this->cleanupWebhookQueuePeriod);
+        $period = '-' . $this->config->get('cleanupWebhookQueuePeriod', $this->cleanupWebhookQueuePeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
         $from = $datetime->format('Y-m-d H:i:s');

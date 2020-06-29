@@ -31,19 +31,17 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class ArrayValue extends \Espo\Core\ORM\Repositories\RDB
+class ArrayValue extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
     protected $processFieldsAfterSaveDisabled = true;
 
-    protected $processFieldsBeforeSaveDisabled = true;
-
     protected $processFieldsAfterRemoveDisabled = true;
 
-    public function storeEntityAttribute(Entity $entity, $attribute, $populateMode = false)
+    public function storeEntityAttribute(Entity $entity, string $attribute, bool $populateMode = false)
     {
         if (!$entity->getAttributeType($attribute) === Entity::JSON_ARRAY) {
             throw new Error("ArrayValue: Can't store non array attribute.");
@@ -89,13 +87,13 @@ class ArrayValue extends \Espo\Core\ORM\Repositories\RDB
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->id,
                 'attribute' => $attribute,
-                'value' => $value
+                'value' => $value,
             ]);
             $this->save($arrayValue);
         }
     }
 
-    public function deleteEntityAttribute(Entity $entity, $attribute)
+    public function deleteEntityAttribute(Entity $entity, string $attribute)
     {
         if (!$entity->id) {
             throw new Error("ArrayValue: Can't delete {$attribute} w/o id given.");

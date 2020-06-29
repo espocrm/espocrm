@@ -35,7 +35,7 @@ use Espo\Entities\AuthToken;
 
 class Espo extends Base
 {
-    public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request = null)
+    public function login(string $username, ?string $password, ?AuthToken $authToken = null, array $params = [], $request = null)
     {
         if (!$password) return;
 

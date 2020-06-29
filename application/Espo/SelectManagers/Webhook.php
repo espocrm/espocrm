@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class Webhook extends \Espo\Core\SelectManagers\Base
+class Webhook extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function access(&$result)
     {

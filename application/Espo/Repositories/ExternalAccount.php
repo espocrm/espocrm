@@ -31,9 +31,9 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class ExternalAccount extends \Espo\Core\ORM\Repositories\RDB
+class ExternalAccount extends \Espo\Core\Repositories\Database
 {
-    public function get($id = null) : ?Entity
+    public function get(?string $id = null) : ?Entity
     {
         $entity = parent::get($id);
         if (empty($entity) && !empty($id)) {

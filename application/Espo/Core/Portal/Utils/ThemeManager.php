@@ -29,12 +29,12 @@
 
 namespace Espo\Core\Portal\Utils;
 
-use \Espo\Entities\Portal;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Portal;
+use Espo\Core\Utils\ThemeManager as BaseThemeManager;
 
-use \Espo\Core\Utils\Config;
-use \Espo\Core\Utils\Metadata;
-
-class ThemeManager extends \Espo\Core\Utils\ThemeManager
+class ThemeManager extends BaseThemeManager
 {
     public function __construct(Config $config, Metadata $metadata, Portal $portal)
     {
@@ -52,5 +52,3 @@ class ThemeManager extends \Espo\Core\Utils\ThemeManager
         return $theme;
     }
 }
-
-

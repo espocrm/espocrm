@@ -29,31 +29,31 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
-class LeadCapture extends Record
+use Espo\Core\Di;
+
+class LeadCapture extends Record implements
+
+    Di\MailSenderAware,
+    Di\DateTimeAware,
+    Di\DefaultLanguageAware,
+    Di\FieldManagerUtilAware,
+    Di\HookManagerAware
 {
+    use Di\MailSenderSetter;
+    use Di\DateTimeSetter;
+    use Di\DefaultLanguageSetter;
+    use Di\FieldManagerUtilSetter;
+    use Di\HookManagerSetter;
+
     protected $readOnlyAttributeList = ['apiKey'];
-
-    protected function init()
-    {
-        $this->addDependency('fieldManagerUtil');
-        $this->addDependency('container');
-        $this->addDependency('defaultLanguage');
-        $this->addDependency('hookManager');
-        $this->addDependency('dateTime');
-    }
-
-    protected function getMailSender()
-    {
-        return $this->getInjection('container')->get('mailSender');
-    }
 
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -64,7 +64,7 @@ class LeadCapture extends Record
         $requestUrl = $this->getConfig()->getSiteUrl() . '/api/v1/LeadCapture/' . $entity->get('apiKey');
         $entity->set('exampleRequestUrl', $requestUrl);
 
-        $fieldManagerUtil = $this->getInjection('fieldManagerUtil');
+        $fieldManagerUtil = $this->fieldManagerUtil;
 
         $requestPayload = "```{\n";
 
@@ -238,7 +238,7 @@ class LeadCapture extends Record
                 }
                 continue;
             }
-            $attributeList = $this->getInjection('fieldManagerUtil')->getActualAttributeList('Lead', $field);
+            $attributeList = $this->fieldManagerUtil->getActualAttributeList('Lead', $field);
             if (empty($attributeList)) continue;
             foreach ($attributeList as $attribute) {
                 if (property_exists($data, $attribute)) {
@@ -348,7 +348,7 @@ class LeadCapture extends Record
 
                         $targetList = $this->getEntityManager()->getEntity('TargetList', $leadCapture->get('targetListId'));
                         if ($targetList) {
-                            $this->getInjection('hookManager')->process('TargetList', 'afterOptIn', $targetList, [], [
+                            $this->hookManager->process('TargetList', 'afterOptIn', $targetList, [], [
                                'link' => 'contacts',
                                'targetId' => $contact->id,
                                'targetType' => 'Contact',
@@ -372,11 +372,11 @@ class LeadCapture extends Record
         }
 
         if ($contact && (!$isContactOptedIn || !$leadCapture->get('subscribeToTargetList'))) {
-            $this->getInjection('hookManager')->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
+            $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
                'targetId' => $contact->id,
                'targetType' => 'Contact',
             ]);
-            $this->getInjection('hookManager')->process('Contact', 'afterLeadCapture', $contact, [], [
+            $this->hookManager->process('Contact', 'afterLeadCapture', $contact, [], [
                'leadCaptureId' => $leadCapture->id,
             ]);
         }
@@ -406,7 +406,7 @@ class LeadCapture extends Record
 
             $targetList = $this->getEntityManager()->getEntity('TargetList', $leadCapture->get('targetListId'));
             if ($targetList) {
-                $this->getInjection('hookManager')->process('TargetList', 'afterOptIn', $targetList, [], [
+                $this->hookManager->process('TargetList', 'afterOptIn', $targetList, [], [
                    'link' => 'leads',
                    'targetId' => $targetLead->id,
                    'targetType' => 'Lead',
@@ -416,11 +416,11 @@ class LeadCapture extends Record
         }
 
         if ($toRelateLead  || !$leadCapture->get('subscribeToTargetList')) {
-            $this->getInjection('hookManager')->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
+            $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
                'targetId' => $targetLead->id,
                'targetType' => 'Lead',
             ]);
-            $this->getInjection('hookManager')->process('Lead', 'afterLeadCapture', $targetLead, [], [
+            $this->hookManager->process('Lead', 'afterLeadCapture', $targetLead, [], [
                'leadCaptureId' => $leadCapture->id,
             ]);
         }
@@ -541,16 +541,16 @@ class LeadCapture extends Record
         }
 
         $url = $this->getConfig()->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->get('name');
-        $linkHtml = '<a href='.$url.'>'.$this->getInjection('defaultLanguage')->translate('Confirm Opt-In', 'labels', 'LeadCapture').'</a>';
+        $linkHtml = '<a href='.$url.'>'.$this->defaultLanguage->translate('Confirm Opt-In', 'labels', 'LeadCapture').'</a>';
 
         $body = str_replace('{optInUrl}', $url, $body);
         $body = str_replace('{optInLink}', $linkHtml, $body);
 
         $createdAt = $uniqueId->get('createdAt');
         if ($createdAt) {
-            $dateString = $this->getInjection('dateTime')->convertSystemDateTime($createdAt, null, $this->getConfig()->get('dateFormat'));
-            $timeString = $this->getInjection('dateTime')->convertSystemDateTime($createdAt, null, $this->getConfig()->get('timeFormat'));
-            $dateTimeString = $this->getInjection('dateTime')->convertSystemDateTime($createdAt);
+            $dateString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->getConfig()->get('dateFormat'));
+            $timeString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->getConfig()->get('timeFormat'));
+            $dateTimeString = $this->dateTime->convertSystemDateTime($createdAt);
 
             $body = str_replace('{optInDate}', $dateString, $body);
             $body = str_replace('{optInTime}', $timeString, $body);
@@ -590,7 +590,7 @@ class LeadCapture extends Record
             }
         }
 
-        $sender = $this->getMailSender();
+        $sender = $this->mailSender;
 
         if ($smtpParams) {
             $sender->useSmtp($smtpParams);
@@ -621,7 +621,7 @@ class LeadCapture extends Record
         if (time() > strtotime($terminateAt)) {
             return (object) [
                 'status' => 'expired',
-                'message' => $this->getInjection('defaultLanguage')->translate('optInConfirmationExpired', 'messages', 'LeadCapture')
+                'message' => $this->defaultLanguage->translate('optInConfirmationExpired', 'messages', 'LeadCapture')
             ];
         }
 

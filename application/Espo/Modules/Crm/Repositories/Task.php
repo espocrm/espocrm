@@ -39,23 +39,6 @@ class Task extends \Espo\Core\Repositories\Event
 
     protected $preserveDuration = false;
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('dateTime');
-        $this->addDependency('config');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
-    protected function getDateTime()
-    {
-        return $this->getInjection('dateTime');
-    }
-
     protected function beforeSave(Entity $entity, array $options = array())
     {
         if ($entity->isAttributeChanged('status')) {

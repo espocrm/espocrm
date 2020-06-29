@@ -29,34 +29,43 @@
 
 namespace Espo\Modules\Crm\Business\Reminder;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
+
+use Espo\Core\{
+    ORM\EntityManager,
+    Utils\TemplateFileManager,
+    Mail\Sender,
+    Utils\Config,
+    Htmlizer\Factory as HtmlizerFactory,
+    Utils\Language,
+};
 
 class EmailReminder
 {
     protected $entityManager;
-
     protected $mailSender;
-
     protected $config;
-
     protected $dateTime;
-
     protected $templateFileManager;
-
     protected $language;
+    protected $htmlizerFactory;
 
-    public function __construct($entityManager, $templateFileManager, $mailSender, $config, $fileManager, $dateTime, $number, $language)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        TemplateFileManager $templateFileManager,
+        Sender $mailSender,
+        Config $config,
+        HtmlizerFactory $htmlizerFactory,
+        Language $language
+    ) {
         $this->entityManager = $entityManager;
+        $this->templateFileManager = $templateFileManager;
         $this->mailSender = $mailSender;
         $this->config = $config;
-        $this->dateTime = $dateTime;
         $this->language = $language;
-        $this->number = $number;
-        $this->fileManager = $fileManager;
-        $this->templateFileManager = $templateFileManager;
+        $this->htmlizerFactory = $htmlizerFactory;
     }
 
     protected function getEntityManager()
@@ -117,12 +126,12 @@ class EmailReminder
 
         $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
         $timezone = $preferences->get('timeZone');
-        $dateTime = clone($this->dateTime);
-        if ($timezone) {
-            $dateTime->setTimezone($timezone);
+
+        if (!$timezone) {
+            $timezone = null;
         }
 
-        $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $dateTime, $this->number, null);
+        $htmlizer = $this->htmlizerFactory->create(true, $timezone);
 
         $subject = $htmlizer->render($entity, $subjectTpl, 'reminder-email-subject-' . $entity->getEntityType(), $data, true);
         $body = $htmlizer->render($entity, $bodyTpl, 'reminder-email-body-' . $entity->getEntityType(), $data, false);

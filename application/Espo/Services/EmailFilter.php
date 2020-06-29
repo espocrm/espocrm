@@ -29,9 +29,9 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Forbidden;
 
 class EmailFilter extends Record
 {

@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class PadType extends \Espo\Core\Formula\Functions\Base
+class PadType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
         $args = $this->fetchArguments($item);
 
-        if (count($args) < 2) throw new Error("Formula: string\\pad: should have at least 2 arguments.");
+        if (count($args) < 2) throw new Error("string\\pad: should have at least 2 arguments.");
 
         $input = $args[0];
         $length = $args[1];
@@ -45,7 +45,7 @@ class PadType extends \Espo\Core\Formula\Functions\Base
         $type = $args[3] ?? 'right';
 
         if (!is_string($input)) $input = strval($input);
-        if (!is_int($length)) throw new Error("Formula: string\\pad: second argument should be integer.");
+        if (!is_int($length)) throw new Error("string\\pad: second argument should be integer.");
 
         $map = [
             'right' => \STR_PAD_RIGHT,

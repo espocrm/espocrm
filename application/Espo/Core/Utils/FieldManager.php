@@ -33,6 +33,9 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Container;
 
+/**
+ * Administration > Entity Manager > fields.
+ */
 class FieldManager
 {
     private $metadata;

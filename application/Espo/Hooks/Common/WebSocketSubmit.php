@@ -31,40 +31,41 @@ namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 
-class WebSocketSubmit extends \Espo\Core\Hooks\Base
+use Espo\Core\{
+    Utils\Metadata,
+    Utils\Config,
+    WebSocket\Submission as WebSocketSubmission,
+};
+
+class WebSocketSubmit
 {
     public static $order = 20;
 
-    protected function init()
-    {
-        $this->addDependency('metadata');
-        $this->addDependency('webSocketSubmission');
-    }
+    protected $metadata;
+    protected $webSocketSubmission;
+    protected $config;
 
-    protected function getMetadata()
+    public function __construct(Metadata $metadata, WebSocketSubmission $webSocketSubmission, Config $config)
     {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getWebSocketSubmission()
-    {
-        return $this->getInjection('webSocketSubmission');
+        $this->metadata = $metadata;
+        $this->webSocketSubmission = $webSocketSubmission;
+        $this->config = $config;
     }
 
     public function afterSave(Entity $entity, array $options = [])
     {
         if ($options['silent'] ?? false) return;
         if ($entity->isNew()) return;
-        if (!$this->getConfig()->get('useWebSocket')) return;
+        if (!$this->config->get('useWebSocket')) return;
 
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
-        if (!$this->getMetadata()->get(['scopes', $scope, 'object'])) return;
+        if (!$this->metadata->get(['scopes', $scope, 'object'])) return;
 
         $data = (object) [];
 
         $topic = "recordUpdate.{$scope}.{$id}";
-        $this->getInjection('webSocketSubmission')->submit($topic, null, $data);
+        $this->webSocketSubmission->submit($topic, null, $data);
     }
 }

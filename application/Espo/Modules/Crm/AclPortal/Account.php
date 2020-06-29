@@ -29,10 +29,12 @@
 
 namespace Espo\Modules\Crm\AclPortal;
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
-class Account extends \Espo\Core\AclPortal\Base
+use Espo\Core\AclPortal\Acl;
+
+class Account extends Acl
 {
     public function checkInAccount(User $user, Entity $entity)
     {
@@ -45,4 +47,3 @@ class Account extends \Espo\Core\AclPortal\Base
         return false;
     }
 }
-

@@ -29,20 +29,12 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class LengthType extends \Espo\Core\Formula\Functions\Base
+class LengthType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            return '';
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 1) {
             throw new Error();
         }

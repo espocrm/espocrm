@@ -29,45 +29,25 @@
 
 namespace Espo\Repositories;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Conflict;
 
-class User extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Utils\ApiKey;
+
+use Espo\Core\Di;
+
+class User extends \Espo\Core\Repositories\Database implements
+
+    Di\ConfigAware
 {
+    use Di\ConfigSetter;
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew() && !$entity->has('type')) {
-            if ($entity->get('isPortalUser') && $entity->isAttributeChanged('isPortalUser')) {
-                $entity->set('type', 'portal');
-            }
-        }
-
         if ($entity->has('type') && !$entity->get('type')) {
             $entity->set('type', 'regular');
-        }
-
-        $entity->clear('isAdmin');
-        $entity->clear('isPortalUser');
-        $entity->clear('isSuperAdmin');
-
-        if ($entity->isAttributeChanged('type')) {
-            $type = $entity->get('type');
-
-            if (in_array($type, ['regular', 'admin', 'portal'])) {
-                $entity->set('isAdmin', false);
-                $entity->set('isPortalUser', false);
-                $entity->set('isSuperAdmin', false);
-
-                if ($type === 'portal') {
-                    $entity->set('isPortalUser', true);
-                } else if ($type === 'admin') {
-                    $entity->set('isAdmin', true);
-                } else if ($type === 'super-admin') {
-                    $entity->set('isSuperAdmin', true);
-                }
-            }
         }
 
         if ($entity->isApi()) {
@@ -154,12 +134,12 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                     $entity->isAttributeChanged('apiKey') || $entity->isAttributeChanged('authMethod')
                 )
             ) {
-                $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+                $apiKeyUtil = new ApiKey($this->config);
                 $apiKeyUtil->storeSecretKeyForUserId($entity->id, $entity->get('secretKey'));
             }
 
             if ($entity->isAttributeChanged('authMethod') && $entity->get('authMethod') !== 'Hmac') {
-                $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+                $apiKeyUtil = new ApiKey($this->config);
                 $apiKeyUtil->removeSecretKeyForUserId($entity->id);
             }
         }
@@ -170,7 +150,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
         parent::afterRemove($entity, $options);
 
         if ($entity->isApi() && $entity->get('authMethod') === 'Hmac') {
-            $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+            $apiKeyUtil = new ApiKey($this->config);
             $apiKeyUtil->removeSecretKeyForUserId($entity->id);
         }
 
@@ -180,7 +160,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    public function checkBelongsToAnyOfTeams($userId, array $teamIds)
+    public function checkBelongsToAnyOfTeams(string $userId, array $teamIds) : bool
     {
         if (empty($teamIds)) {
             return false;
@@ -208,6 +188,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
     public function handleSelectParams(&$params)
     {
         parent::handleSelectParams($params);
+
         if (array_key_exists('select', $params)) {
             if (in_array('name', $params['select'])) {
                 $additionalAttributeList = ['userName'];

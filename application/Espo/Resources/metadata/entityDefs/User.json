@@ -1,10 +1,5 @@
 {
     "fields": {
-        "isAdmin": {
-            "type": "bool",
-            "tooltip": true,
-            "disabled": true
-        },
         "userName": {
             "type": "varchar",
             "maxLength": 50,
@@ -89,15 +84,6 @@
             "layoutDetailDisabled": true,
             "tooltip": true,
             "default": true
-        },
-        "isPortalUser": {
-            "type": "bool",
-            "disabled": true
-        },
-        "isSuperAdmin": {
-            "type": "bool",
-            "default": false,
-            "disabled": true
         },
         "title": {
             "type": "varchar",

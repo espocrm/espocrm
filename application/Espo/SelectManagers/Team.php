@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class Team extends \Espo\Core\SelectManagers\Base
+class Team extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function boolFilterOnlyMy(&$result)
     {

@@ -29,10 +29,10 @@
 
 namespace Espo\Acl;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class EmailAddress extends \Espo\Core\Acl\Base
+class EmailAddress extends \Espo\Core\Acl\Acl
 {
     public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity)
     {
@@ -62,4 +62,3 @@ class EmailAddress extends \Espo\Core\Acl\Base
         return !$isFobidden;
     }
 }
-

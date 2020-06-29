@@ -87,10 +87,10 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     name: 'generateNewPassword',
                     label: 'Generate New Password',
                     action: 'generateNewPassword',
-                    hidden: !this.model.get('emailAddress') || !this.getConfig().get('smtpServer'),
+                    hidden: !this.model.get('emailAddress'),
                 });
 
-                if (!this.model.get('emailAddress') && this.getConfig().get('smtpServer')) {
+                if (!this.model.get('emailAddress')) {
                     this.listenTo(this.model, 'sync', function () {
                         if (this.model.get('emailAddress')) {
                             this.showActionItem('generateNewPassword');

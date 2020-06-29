@@ -29,16 +29,27 @@
 
 namespace Espo\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\{
+    CronManager,
+    Utils\Config,
+    Jobs\Job,
+};
 
-class ProcessJobQueueE0 extends \Espo\Core\Jobs\Base
+class ProcessJobQueueE0 implements Job
 {
+    protected $cronManager;
+    protected $config;
+
+    public function __construct(CronManager $cronManager, Config $config)
+    {
+        $this->cronManager = $cronManager;
+        $this->config = $config;
+    }
+
     public function run()
     {
-        $limit = $this->getConfig()->get('jobE0MaxPortion', 100);
+        $limit = $this->config->get('jobE0MaxPortion', 100);
 
-        $cronManager = new \Espo\Core\CronManager($this->getContainer());
-
-        $cronManager->processPendingJobs('e0', $limit, true, true);
+        $this->cronManager->processPendingJobs('e0', $limit, true, true);
     }
 }

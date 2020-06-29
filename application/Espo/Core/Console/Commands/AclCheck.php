@@ -29,41 +29,51 @@
 
 namespace Espo\Core\Console\Commands;
 
-class AclCheck extends Base
+use Espo\Core\Portal\Application as PortalApplication;
+use Espo\Core\Container;
+
+class AclCheck implements Command
 {
-    public function run($options)
+    protected $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    public function run(array $options) : ?string
     {
         $userId = $options['userId'] ?? null;
         $scope = $options['scope'] ?? null;
         $id = $options['id'] ?? null;
         $action = $options['action'] ?? null;
 
-        if (empty($userId)) return;
-        if (empty($scope)) return;
-        if (empty($id)) return;
+        if (empty($userId)) return null;
+        if (empty($scope)) return null;
+        if (empty($id)) return null;
 
-        $container = $this->getContainer();
+        $container = $this->container;
         $entityManager = $container->get('entityManager');
 
         $user = $entityManager->getEntity('User', $userId);
-        if (!$user) return;
+        if (!$user) return null;
 
         if ($user->isPortal()) {
             $portalIdList = $user->getLinkMultipleIdList('portals');
             foreach ($portalIdList as $portalId) {
-                $application = new \Espo\Core\Portal\Application($portalId);
+                $application = new PortalApplication($portalId);
                 $containerPortal = $application->getContainer();
                 $entityManager = $containerPortal->get('entityManager');
 
                 $user = $entityManager->getEntity('User', $userId);
-                if (!$user) return;
+                if (!$user) return null;
 
                 $result = $this->check($user, $scope, $id, $action, $containerPortal);
                 if ($result) {
                     return 'true';
                 }
             }
-            return;
+            return null;
         }
 
         if ($this->check($user, $scope, $id, $action, $container)) {
@@ -76,12 +86,14 @@ class AclCheck extends Base
         $entityManager = $container->get('entityManager');
 
         $entity = $entityManager->getEntity($scope, $id);
-        if (!$entity) return;
+        if (!$entity) return false;
 
         $aclManager = $container->get('aclManager');
 
         if ($aclManager->check($user, $entity, $action)) {
             return true;
         }
+
+        return false;
     }
 }

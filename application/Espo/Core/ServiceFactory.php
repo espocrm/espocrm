@@ -31,26 +31,27 @@ namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\Utils\ClassFinder;
+use Espo\Core\InjectableFactory;
+
 class ServiceFactory
 {
-    private $container;
+    protected $classFinder;
+    protected $injectableFactory;
 
-    public function __construct(Container $container)
+    public function __construct(ClassFinder $classFinder, InjectableFactory $injectableFactory)
     {
-        $this->container = $container;
+        $this->classFinder = $classFinder;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    protected function getContainer()
+    protected function getClassName(string $name)
     {
-        return $this->container;
+        return $this->classFinder->find('Services', $name, true);
     }
 
-    protected function getClassName($name)
+    public function checkExists(string $name) : bool
     {
-        return $this->getContainer()->get('classFinder')->find('Services', $name);
-    }
-
-    public function checkExists($name) {
         $className = $this->getClassName($name);
         if (!$className) {
             return false;
@@ -58,28 +59,20 @@ class ServiceFactory
         return true;
     }
 
-    public function create($name)
+    public function create(string $name) : object
     {
         $className = $this->getClassName($name);
         if (!$className) {
             throw new Error("Service '{$name}' was not found.");
         }
-        return $this->createByClassName($className);
-    }
 
-    protected function createByClassName($className)
-    {
-        if (class_exists($className)) {
-            $service = new $className();
-            $dependencyList = $service->getDependencyList();
-            foreach ($dependencyList as $name) {
-                $service->inject($name, $this->container->get($name));
-            }
-            if (method_exists($service, 'prepare')) {
-                $service->prepare();
-            }
-            return $service;
+        $obj = $this->injectableFactory->create($className);
+
+        // deprecated
+        if (method_exists($obj, 'prepare')) {
+            $obj->prepare();
         }
-        throw new Error("Class '$className' does not exist.");
+
+        return $obj;
     }
 }

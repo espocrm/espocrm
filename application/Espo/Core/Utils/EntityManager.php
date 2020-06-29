@@ -29,13 +29,19 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Conflict;
-use \Espo\Core\Utils\Json;
-use \Espo\Core\Container;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Utils\Json;
 
+use Espo\Core\Container;
+
+use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
+
+/**
+ * Administration > Entity Manager.
+ */
 class EntityManager
 {
     private $metadata;
@@ -67,14 +73,15 @@ class EntityManager
         'Base',
     ];
 
-    public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, Container $container = null)
-    {
+    public function __construct(
+        Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, ?Container $container = null
+    ) {
         $this->metadata = $metadata;
         $this->language = $language;
         $this->fileManager = $fileManager;
         $this->config = $config;
 
-        $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
+        $this->metadataHelper = new MetadataHelper($this->metadata);
 
         $this->container = $container;
     }

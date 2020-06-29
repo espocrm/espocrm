@@ -29,11 +29,20 @@
 
 namespace Espo\Core\Console\Commands;
 
-class ClearCache extends Base
+use Espo\Core\DataManager;
+
+class ClearCache implements Command
 {
+    protected $dataManager;
+
+    public function __construct(DataManager $dataManager)
+    {
+        $this->dataManager = $dataManager;
+    }
+
     public function run()
     {
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->dataManager->clearCache();
         echo "Cache has been cleared.\n";
     }
 }

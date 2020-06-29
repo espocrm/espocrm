@@ -29,14 +29,23 @@
 
 namespace Espo\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\{
+    ServiceFactory,
+    Jobs\Job,
+};
 
-class SendEmailNotifications extends \Espo\Core\Jobs\Base
+class SendEmailNotifications implements Job
 {
+    protected $serviceFactory;
+
+    public function __construct(ServiceFactory $serviceFactory)
+    {
+        $this->serviceFactory = $serviceFactory;
+    }
+
     public function run()
     {
-        $service = $this->getServiceFactory()->create('EmailNotification');
+        $service = $this->serviceFactory->create('EmailNotification');
         $service->process();
     }
 }
-

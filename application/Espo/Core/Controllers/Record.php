@@ -33,8 +33,11 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Util;
 use Espo\Core\Exceptions\ForbiddenSilent;
+
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\ControllerUtil;
+use Espo\Core\Record\Collection as RecordCollection;
 
 class Record extends Base
 {
@@ -42,27 +45,16 @@ class Record extends Base
 
     public static $defaultAction = 'list';
 
-    protected $defaultRecordServiceName = 'Record';
-
     protected function getEntityManager()
     {
         return $this->getContainer()->get('entityManager');
     }
 
-    protected function getRecordService($name = null)
+    protected function getRecordService(?string $name = null) : object
     {
-        if (empty($name)) {
-            $name = $this->name;
-        }
+        $name = $name ?? $this->name;
 
-        if ($this->getServiceFactory()->checkExists($name)) {
-            $service = $this->getServiceFactory()->create($name);
-        } else {
-            $service = $this->getServiceFactory()->create($this->defaultRecordServiceName);
-            $service->setEntityType($name);
-        }
-
-        return $service;
+        return $this->getContainer()->get('recordServiceContainer')->get($name);
     }
 
     public function actionRead($params, $data, $request)
@@ -141,14 +133,21 @@ class Record extends Base
 
         $result = $this->getRecordService()->find($params);
 
+        if ($result instanceof RecordCollection) {
+            return (object) [
+                'total' => $result->getTotal(),
+                'list' => $result->getValueMapList(),
+            ];
+        }
+
         if (is_array($result)) {
-            return [
+            return (object) [
                 'total' => $result['total'],
                 'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
             ];
         }
 
-        return [
+        return (object) [
             'total' => $result->total,
             'list' => isset($result->collection) ? $result->collection->getValueMapList() : $result->list
         ];
@@ -182,7 +181,7 @@ class Record extends Base
 
     protected function fetchListParamsFromRequest(&$params, $request, $data)
     {
-        \Espo\Core\Utils\ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
+        ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
     }
 
     public function actionListLinked($params, $data, $request)
@@ -202,6 +201,13 @@ class Record extends Base
         }
 
         $result = $this->getRecordService()->findLinked($id, $link, $params);
+
+        if ($result instanceof RecordCollection) {
+            return (object) [
+                'total' => $result->getTotal(),
+                'list' => $result->getValueMapList(),
+            ];
+        }
 
         if (is_array($result)) {
             return [
@@ -224,10 +230,9 @@ class Record extends Base
 
         $id = $params['id'];
 
-        if ($this->getRecordService()->delete($id)) {
-            return true;
-        }
-        throw new Error();
+        $this->getRecordService()->delete($id);
+
+        return true;
     }
 
     public function actionExport($params, $data, $request)

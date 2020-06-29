@@ -32,6 +32,9 @@ namespace Espo\Core\Utils;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 
+/**
+ * Notifications on the admin panel.
+ */
 class AdminNotificationManager
 {
     private $container;

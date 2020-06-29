@@ -29,57 +29,68 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\NotFound,
-    Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\NotFound;
+
+use Espo\Core\{
+    InjectableFactory,
+    Utils\ClassFinder,
+    EntryPoints\NotStrictAuth,
+    EntryPoints\NoAuth,
+};
+
+use Slim\Http\Request;
 
 class EntryPointManager
 {
-    private $container;
+    protected $injectableFactory;
+    protected $classFinder;
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
+        $this->injectableFactory = $injectableFactory;
+        $this->classFinder = $classFinder;
     }
 
     public function checkAuthRequired(string $name) : bool
     {
         $className = $this->getClassName($name);
         if (!$className) {
-            echo $name;
-            die;
-            throw new NotFound();
+            throw new NotFound("EntryPoint {$name} not found.");
         }
-        return $className::$authRequired;
+
+        if ($className::$noAuth ?? false) {
+            return false;
+        }
+
+        // for backward compatibility
+        return $className::$authRequired ?? true;
     }
 
     public function checkNotStrictAuth(string $name) : bool
     {
         $className = $this->getClassName($name);
         if (!$className) {
-            throw new NotFound();
+            throw new NotFound("EntryPoint {$name} not found.");
         }
-        return $className::$notStrictAuth;
+
+        return $className::$notStrictAuth ?? false;
     }
 
-    public function run(string $name, array $data = [])
+    public function run(string $name, Request $request, array $data = [])
     {
         $className = $this->getClassName($name);
         if (!$className) {
-            throw new NotFound();
+            throw new NotFound("EntryPoint {$name} not found.");
         }
-        $entryPoint = new $className($this->container);
 
-        $entryPoint->run($data);
+        $entryPoint = $this->injectableFactory->create($className);
+
+        $entryPoint->run($request, $data);
     }
 
     protected function getClassName(string $name) : ?string
     {
         $name = ucfirst($name);
-        return $this->getContainer()->get('classFinder')->find('EntryPoints', $name);
+        return $this->classFinder->find('EntryPoints', $name);
     }
 }

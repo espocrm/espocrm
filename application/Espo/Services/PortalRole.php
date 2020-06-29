@@ -29,16 +29,17 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-class PortalRole extends Record
+use Espo\Core\Di;
+
+class PortalRole extends Record implements
+
+    Di\FileManagerAware,
+    Di\DataManagerAware
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('fileManager');
-        $this->addDependency('dataManager');
-    }
+    use Di\FileManagerSetter;
+    use Di\DataManagerSetter;
 
     protected $forceSelectAllAttributes = true;
 
@@ -56,7 +57,7 @@ class PortalRole extends Record
 
     protected function clearRolesCache()
     {
-        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
-        $this->getInjection('dataManager')->updateCacheTimestamp();
+        $this->fileManager->removeInDir('data/cache/application/acl-portal');
+        $this->dataManager->updateCacheTimestamp();
     }
 }

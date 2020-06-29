@@ -29,27 +29,58 @@
 
 namespace Espo\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\Exceptions;
 
-class Cleanup extends \Espo\Core\Jobs\Base
+use Espo\Core\{
+    Utils\Config,
+    ORM\EntityManager,
+    Jobs\Job,
+    Utils\Metadata,
+    Utils\File\Manager as FileManager,
+    InjectableFactory,
+    SelectManagerFactory,
+    ServiceFactory,
+};
+
+use Espo\ORM\Entity;
+
+class Cleanup implements Job
 {
     protected $cleanupJobPeriod = '10 days';
-
     protected $cleanupActionHistoryPeriod = '15 days';
-
     protected $cleanupAuthTokenPeriod = '1 month';
-
     protected $cleanupAuthLogPeriod = '2 months';
-
     protected $cleanupNotificationsPeriod = '2 months';
-
     protected $cleanupAttachmentsPeriod = '15 days';
-
     protected $cleanupAttachmentsFromPeriod = '3 months';
-
     protected $cleanupBackupPeriod = '2 month';
-
     protected $cleanupDeletedRecordsPeriod = '3 months';
+
+    protected $config;
+    protected $entityManager;
+    protected $metedata;
+    protected $fileManager;
+    protected $injectableFactory;
+    protected $selectManagerFactory;
+    protected $serviceFactory;
+
+    public function __construct(
+        Config $config,
+        EntityManager $entityManager,
+        Metadata $metadata,
+        FileManager $fileManager,
+        InjectableFactory $injectableFactory,
+        SelectManagerFactory $selectManagerFactory,
+        ServiceFactory $serviceFactory
+    ) {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
+        $this->fileManager = $fileManager;
+        $this->injectableFactory = $injectableFactory;
+        $this->selectManagerFactory = $selectManagerFactory;
+        $this->serviceFactory = $serviceFactory;
+    }
 
     public function run()
     {
@@ -65,7 +96,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $this->cleanupUniqueIds();
         $this->cleanupDeletedRecords();
 
-        $items = $this->getMetadata()->get(['app', 'cleanup']) ?? [];
+        $items = $this->metadata->get(['app', 'cleanup']) ?? [];
 
         usort($items, function ($a, $b) {
             $o1 = $a['order'] ?? 0;
@@ -73,12 +104,12 @@ class Cleanup extends \Espo\Core\Jobs\Base
             return $o1 > $o2;
         });
 
-        $injectableFactory = $this->getContainer()->get('injectableFactory');
+        $injectableFactory = $this->injectableFactory;
 
         foreach ($items as $name => $item) {
             try {
                 $className = $item['className'];
-                $injectableFactory->createByClassName($className)->process();
+                $injectableFactory->create($className)->process();
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error("Cleanup: {$name}: " . $e->getMessage());
             }
@@ -87,7 +118,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupJobs()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
         $query = "DELETE FROM `job` WHERE DATE(modified_at) < ".$pdo->quote($this->getCleanupJobFromDate())." AND status <> 'Pending'";
         $sth = $pdo->prepare($query);
@@ -100,7 +131,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupUniqueIds()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
         $query = "DELETE FROM `unique_id` WHERE terminate_at IS NOT NULL AND terminate_at < ".$pdo->quote(date('Y-m-d H:i:s'))."";
 
@@ -110,7 +141,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupScheduledJobLog()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
         $sql = "SELECT id FROM scheduled_job";
         $sth = $pdo->prepare($sql);
@@ -139,9 +170,9 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupActionHistory()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
-        $period = '-' . $this->getConfig()->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
+        $period = '-' . $this->config->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
@@ -153,9 +184,9 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupAuthToken()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
-        $period = '-' . $this->getConfig()->get('cleanupAuthTokenPeriod', $this->cleanupAuthTokenPeriod);
+        $period = '-' . $this->config->get('cleanupAuthTokenPeriod', $this->cleanupAuthTokenPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
@@ -167,9 +198,9 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupAuthLog()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
-        $period = '-' . $this->getConfig()->get('cleanupAuthLogPeriod', $this->cleanupAuthLogPeriod);
+        $period = '-' . $this->config->get('cleanupAuthLogPeriod', $this->cleanupAuthLogPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
@@ -181,7 +212,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function getCleanupJobFromDate()
     {
-        $period = '-' . $this->getConfig()->get('cleanupJobPeriod', $this->cleanupJobPeriod);
+        $period = '-' . $this->config->get('cleanupJobPeriod', $this->cleanupJobPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
         return $datetime->format('Y-m-d');
@@ -189,13 +220,13 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupAttachments()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
-        $period = '-' . $this->getConfig()->get('cleanupAttachmentsPeriod', $this->cleanupAttachmentsPeriod);
+        $period = '-' . $this->config->get('cleanupAttachmentsPeriod', $this->cleanupAttachmentsPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $collection = $this->getEntityManager()->getRepository('Attachment')->where(array(
+        $collection = $this->entityManager->getRepository('Attachment')->where(array(
             'OR' => array(
                 array(
                     'role' => ['Export File', 'Mail Merge', 'Mass Pdf']
@@ -205,11 +236,11 @@ class Cleanup extends \Espo\Core\Jobs\Base
         ))->limit(0, 5000)->find();
 
         foreach ($collection as $e) {
-            $this->getEntityManager()->removeEntity($e);
+            $this->entityManager->removeEntity($e);
         }
 
-        if ($this->getConfig()->get('cleanupOrphanAttachments')) {
-            $selectManager = $this->getContainer()->get('selectManagerFactory')->create('Attachment');
+        if ($this->config->get('cleanupOrphanAttachments')) {
+            $selectManager = $this->selectManagerFactory->create('Attachment');
 
             $selectParams = $selectManager->getEmptySelectParams();
             $selectManager->applyFilter('orphan', $selectParams);
@@ -219,29 +250,29 @@ class Cleanup extends \Espo\Core\Jobs\Base
                 'createdAt>' => '2018-01-01 00:00:00',
             ];
 
-            $collection = $this->getEntityManager()->getRepository('Attachment')->limit(0, 5000)->find($selectParams);
+            $collection = $this->entityManager->getRepository('Attachment')->limit(0, 5000)->find($selectParams);
 
             foreach ($collection as $e) {
-                $this->getEntityManager()->removeEntity($e);
+                $this->entityManager->removeEntity($e);
             }
         }
 
-        $fromPeriod = '-' . $this->getConfig()->get('cleanupAttachmentsFromPeriod', $this->cleanupAttachmentsFromPeriod);
+        $fromPeriod = '-' . $this->config->get('cleanupAttachmentsFromPeriod', $this->cleanupAttachmentsFromPeriod);
         $datetimeFrom = new \DateTime();
         $datetimeFrom->modify($fromPeriod);
 
-        $scopeList = array_keys($this->getMetadata()->get(['scopes']));
+        $scopeList = array_keys($this->metadata->get(['scopes']));
         foreach ($scopeList as $scope) {
-            if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
-            if (!$this->getMetadata()->get(['scopes', $scope, 'object']) && $scope !== 'Note') continue;
-            if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) continue;
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
+            if (!$this->metadata->get(['scopes', $scope, 'object']) && $scope !== 'Note') continue;
+            if (!$this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) continue;
 
             $hasAttachmentField = false;
             if ($scope === 'Note') {
                 $hasAttachmentField = true;
             }
             if (!$hasAttachmentField) {
-                foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $defs) {
+                foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $field => $defs) {
                     if (empty($defs['type'])) continue;
                     if (in_array($defs['type'], ['file', 'image', 'attachmentMultiple'])) {
                         $hasAttachmentField = true;
@@ -251,8 +282,8 @@ class Cleanup extends \Espo\Core\Jobs\Base
             }
             if (!$hasAttachmentField) continue;
 
-            if (!$this->getEntityManager()->hasRepository($scope)) continue;
-            $repository = $this->getEntityManager()->getRepository($scope);
+            if (!$this->entityManager->hasRepository($scope)) continue;
+            $repository = $this->entityManager->getRepository($scope);
             if (!method_exists($repository, 'find')) continue;
             if (!method_exists($repository, 'where')) continue;
 
@@ -263,7 +294,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
             ])->find(['withDeleted' => true]);
             foreach ($deletedEntityList as $deletedEntity) {
-                $attachmentToRemoveList = $this->getEntityManager()->getRepository('Attachment')->where([
+                $attachmentToRemoveList = $this->entityManager->getRepository('Attachment')->where([
                     'OR' => [
                         [
                             'relatedType' => $scope,
@@ -277,7 +308,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
                 ])->find();
 
                 foreach ($attachmentToRemoveList as $attachmentToRemove) {
-                    $this->getEntityManager()->removeEntity($attachmentToRemove);
+                    $this->entityManager->removeEntity($attachmentToRemove);
                 }
             }
         }
@@ -288,7 +319,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupEmails()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
         $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24 * 20);
 
@@ -297,12 +328,12 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $sth->execute();
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $id = $row['id'];
-            $attachments = $this->getEntityManager()->getRepository('Attachment')->where(array(
+            $attachments = $this->entityManager->getRepository('Attachment')->where(array(
                 'parentId' => $id,
                 'parentType' => 'Email'
             ))->find();
             foreach ($attachments as $attachment) {
-                $this->getEntityManager()->removeEntity($attachment);
+                $this->entityManager->removeEntity($attachment);
             }
             $sqlDel = "DELETE FROM email WHERE deleted = 1 AND id = ".$pdo->quote($id);
             $pdo->query($sqlDel);
@@ -313,9 +344,9 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupNotifications()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $pdo = $this->entityManager->getPDO();
 
-        $period = '-' . $this->getConfig()->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
+        $period = '-' . $this->config->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
@@ -325,7 +356,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $sth->execute();
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $id = $row['id'];
-            $this->getEntityManager()->getRepository('Notification')->deleteFromDb($id);
+            $this->entityManager->getRepository('Notification')->deleteFromDb($id);
         }
     }
 
@@ -335,7 +366,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $datetime = new \DateTime('-' . $this->cleanupBackupPeriod);
 
         if (file_exists($path)) {
-            $fileManager = $this->getContainer()->get('fileManager');
+            $fileManager = $this->fileManager;
             $fileList = $fileManager->getFileList($path, false, '', false);
 
             foreach ($fileList as $dirName) {
@@ -349,16 +380,16 @@ class Cleanup extends \Espo\Core\Jobs\Base
         }
     }
 
-    protected function cleanupDeletedEntity(\Espo\ORM\Entity $e)
+    protected function cleanupDeletedEntity(Entity $e)
     {
         $scope = $e->getEntityType();
 
         if (!$e->get('deleted')) return;
 
-        $repository = $this->getEntityManager()->getRepository($scope);
+        $repository = $this->entityManager->getRepository($scope);
         $repository->deleteFromDb($e->id);
 
-        $query = $this->getEntityManager()->getQuery();
+        $query = $this->entityManager->getQuery();
 
         foreach ($e->getRelationList() as $relation) {
             if ($e->getRelationType($relation) !== 'manyMany') continue;;
@@ -386,11 +417,11 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
                 $sql = "DELETE FROM `{$relationTable}` WHERE " . implode(' AND ', $partList);
 
-                $this->getEntityManager()->getPDO()->query($sql);
+                $this->entityManager->getPDO()->query($sql);
             } catch (\Exception $e) {}
         }
 
-        $noteList = $this->getEntityManager()->getRepository('Note')->where([
+        $noteList = $this->entityManager->getRepository('Note')->where([
             'OR' => [
                 [
                     'relatedType' => $scope,
@@ -403,38 +434,38 @@ class Cleanup extends \Espo\Core\Jobs\Base
             ]
         ])->find(['withDeleted' => true]);
         foreach ($noteList as $note) {
-            $this->getEntityManager()->removeEntity($note);
+            $this->entityManager->removeEntity($note);
             $note->set('deleted', true);
             $this->cleanupDeletedEntity($note);
         }
 
         if ($scope === 'Note') {
-            $attachmentList = $this->getEntityManager()->getRepository('Attachment')->where([
+            $attachmentList = $this->entityManager->getRepository('Attachment')->where([
                 'parentId' => $e->id,
                 'parentType' => 'Note'
             ])->find();
             foreach ($attachmentList as $attachment) {
-                $this->getEntityManager()->removeEntity($attachment);
-                $this->getEntityManager()->getRepository('Attachment')->deleteFromDb($attachment->id);
+                $this->entityManager->removeEntity($attachment);
+                $this->entityManager->getRepository('Attachment')->deleteFromDb($attachment->id);
             }
         }
     }
 
     protected function cleanupDeletedRecords()
     {
-        if (!$this->getConfig()->get('cleanupDeletedRecords')) return;
-        $period = '-' . $this->getConfig()->get('cleanupDeletedRecordsPeriod', $this->cleanupDeletedRecordsPeriod);
+        if (!$this->config->get('cleanupDeletedRecords')) return;
+        $period = '-' . $this->config->get('cleanupDeletedRecordsPeriod', $this->cleanupDeletedRecordsPeriod);
         $datetime = new \DateTime($period);
 
-        $serviceFactory = $this->getServiceFactory();
+        $serviceFactory = $this->serviceFactory;
 
-        $scopeList = array_keys($this->getMetadata()->get(['scopes']));
+        $scopeList = array_keys($this->metadata->get(['scopes']));
         foreach ($scopeList as $scope) {
-            if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
             if ($scope === 'Attachment') continue;
 
-            if (!$this->getEntityManager()->hasRepository($scope)) continue;
-            $repository = $this->getEntityManager()->getRepository($scope);
+            if (!$this->entityManager->hasRepository($scope)) continue;
+            $repository = $this->entityManager->getRepository($scope);
             if (!$repository) continue;
             if (!method_exists($repository, 'find')) continue;
             if (!method_exists($repository, 'where')) continue;
@@ -454,9 +485,9 @@ class Cleanup extends \Espo\Core\Jobs\Base
                 'deleted' => 1,
             ];
 
-            if ($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
+            if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
                 $whereClause['modifiedAt<'] = $datetime->format('Y-m-d H:i:s');
-            } else if ($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
+            } else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
                 $whereClause['createdAt<'] = $datetime->format('Y-m-d H:i:s');
             }
 

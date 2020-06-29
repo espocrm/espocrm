@@ -29,19 +29,25 @@
 
 namespace Espo\Core\Utils\Authentication\TwoFA;
 
-use \Espo\Entities\User;
+use Espo\Entities\User;
 
-class Totp extends Base
+use Espo\ORM\EntityManager;
+use Espo\Core\Utils\Authentication\TwoFA\Utils\Totp as TotpUtils;
+
+class Totp implements CodeInterface
 {
-    protected $dependencyList = [
-        'config',
-        'entityManager',
-        'totp',
-    ];
+    protected $entityManager;
+    protected $totp;
+
+    public function __construct(EntityManager $entityManager, TotpUtils $totp)
+    {
+        $this->entityManager = $entityManager;
+        $this->totp = $totp;
+    }
 
     public function verifyCode(User $user, string $code) : bool
     {
-        $userData = $this->getInjection('entityManager')->getRepository('UserData')->getByUserId($user->id);
+        $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
 
         if (!$userData) return false;
         if (!$userData->get('auth2FA')) return false;
@@ -51,9 +57,8 @@ class Totp extends Base
 
         if (!$secret) return false;
 
-        return $this->getInjection('totp')->verifyCode($secret, $code);
+        return $this->totp->verifyCode($secret, $code);
     }
-
 
     public function getLoginData(User $user) : array
     {

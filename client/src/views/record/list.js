@@ -846,7 +846,7 @@ define('views/record/list', 'view', function (Dep) {
         },
 
         massActionExport: function () {
-            if (!this.getConfig().get('exportDisabled') || this.getUser().get('isAdmin')) {
+            if (!this.getConfig().get('exportDisabled') || this.getUser().isAdmin()) {
                 this.export();
             }
         },

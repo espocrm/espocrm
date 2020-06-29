@@ -25,34 +25,56 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use \Espo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
-class EventConfirmation extends \Espo\Core\EntryPoints\Base
+use Espo\Core\EntryPoints\{
+    EntryPoint,
+    NoAuth,
+};
+
+use Espo\Core\{
+    ORM\EntityManager,
+    Utils\ClientManager,
+    HookManager,
+};
+
+class EventConfirmation implements EntryPoint
 {
-    public static $authRequired = false;
+    use NoAuth;
 
-    public function run()
+    protected $entityManager;
+    protected $clientManager;
+    protected $hookManager;
+
+    public function __construct(EntityManager $entityManager, ClientManager $clientManager, HookManager $hookManager) {
+        $this->entityManager = $entityManager;
+        $this->clientManager = $clientManager;
+        $this->hookManager = $hookManager;
+    }
+
+    public function run($request)
     {
-        $uid = $_GET['uid'];
-        $action = $_GET['action'];
+        $uid = $request->get('uid') ?? null;
+        $action = $request->get('action') ?? null;
+
         if (empty($uid) || empty($action)) {
             throw new BadRequest();
         }
 
-        if (!in_array($action, array('accept', 'decline', 'tentative'))) {
+        if (!in_array($action, ['accept', 'decline', 'tentative'])) {
             throw new BadRequest();
         }
 
-        $uniqueId = $this->getEntityManager()->getRepository('UniqueId')->where(array('name' => $uid))->findOne();
+        $uniqueId = $this->entityManager->getRepository('UniqueId')->where(['name' => $uid])->findOne();
 
         if (!$uniqueId) {
             throw new NotFound();
@@ -67,8 +89,8 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
         $link = $data->link;
 
         if (!empty($eventType) && !empty($eventId) && !empty($inviteeType) && !empty($inviteeId) && !empty($link)) {
-            $event = $this->getEntityManager()->getEntity($eventType, $eventId);
-            $invitee = $this->getEntityManager()->getEntity($inviteeType, $inviteeId);
+            $event = $this->entityManager->getEntity($eventType, $eventId);
+            $invitee = $this->entityManager->getEntity($inviteeType, $inviteeId);
 
             if (!$event || !$invitee) {
                 throw new NotFound();
@@ -91,7 +113,7 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
             $data = (object) [
                 'status' => $status
             ];
-            $this->getEntityManager()->getRepository($eventType)->updateRelation($event, $link, $invitee->id, $data);
+            $this->entityManager->getRepository($eventType)->updateRelation($event, $link, $invitee->id, $data);
 
             $actionData = [
                 'eventName' => $event->get('name'),
@@ -105,7 +127,7 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
                 'inviteeId' => $invitee->id
             ];
 
-            $this->getEntityManager()->getHookManager()->process($event->getEntityType(), $hookMethodName, $event, [], $actionData);
+            $this->hookManager->process($event->getEntityType(), $hookMethodName, $event, [], $actionData);
 
             $runScript = "
                 Espo.require('crm:controllers/event-confirmation', function (Controller) {
@@ -115,7 +137,7 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
                 });
             ";
 
-            $this->getClientManager()->display($runScript);
+            $this->clientManager->display($runScript);
 
             return;
         }

@@ -30,31 +30,19 @@
 namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Util;
+use Espo\Core\Di;
 
-class CurrencyConverted extends \Espo\Core\Hooks\Base
+class CurrencyConverted implements Di\MetadataAware, Di\ConfigAware
 {
+    use Di\MetadataSetter;
+    use Di\ConfigSetter;
+
     public static $order = 1;
 
-    protected function init()
+    public function beforeSave(Entity $entity, array $options = [])
     {
-        $this->addDependency('metadata');
-        $this->addDependency('config');
-    }
+        $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
 
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
-    public function beforeSave(Entity $entity, array $options = array())
-    {
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
         foreach ($fieldDefs as $fieldName => $defs) {
             if (!empty($defs['type']) && $defs['type'] === 'currencyConverted') {
                 $currencyFieldName = substr($fieldName, 0, -9);
@@ -69,9 +57,9 @@ class CurrencyConverted extends \Espo\Core\Hooks\Base
                         $currency = $entity->get($currencyCurrencyFieldName);
                         $value = $entity->get($currencyFieldName);
                         if (!$currency) continue;
-                        $rates = $this->getConfig()->get('currencyRates', array());
-                        $baseCurrency = $this->getConfig()->get('baseCurrency');
-                        $defaultCurrency = $this->getConfig()->get('defaultCurrency');
+                        $rates = $this->config->get('currencyRates', array());
+                        $baseCurrency = $this->config->get('baseCurrency');
+                        $defaultCurrency = $this->config->get('defaultCurrency');
                         if ($defaultCurrency === $currency) {
                             $targetValue = $value;
                         } else {

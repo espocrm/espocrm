@@ -29,13 +29,19 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
-class Attachment extends \Espo\Core\EntryPoints\Base
+use Espo\Core\EntryPoints\EntryPoint;
+use Espo\Core\Di;
+
+class Attachment implements EntryPoint,
+    Di\EntityManagerAware,
+    Di\AclAware
 {
-    public static $authRequired = true;
+    use Di\EntityManagerSetter;
+    use Di\AclSetter;
 
     protected $allowedFileTypes = [
         'image/jpeg',
@@ -44,24 +50,25 @@ class Attachment extends \Espo\Core\EntryPoints\Base
         'image/webp',
     ];
 
-    public function run()
+    public function run($request)
     {
-        $id = $_GET['id'];
-        if (empty($id)) {
+        $id = $request->get('id');
+
+        if (!$id) {
             throw new BadRequest();
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+        $attachment = $this->entityManager->getEntity('Attachment', $id);
 
         if (!$attachment) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->checkEntity($attachment)) {
+        if (!$this->acl->checkEntity($attachment)) {
             throw new Forbidden();
         }
 
-        $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
+        $fileName = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
 
         if (!file_exists($fileName)) {
             throw new NotFound();

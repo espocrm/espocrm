@@ -29,11 +29,13 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+
+use Espo\Core\Record\Collection as RecordCollection;
 
 class TargetList extends \Espo\Services\Record
 {
@@ -43,12 +45,12 @@ class TargetList extends \Espo\Services\Record
 
     protected $targetsLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
-    protected $entityTypeLinkMap = array(
+    protected $entityTypeLinkMap = [
         'Lead' => 'leads',
         'Account' => 'accounts',
         'Contact' => 'contacts',
         'User' => 'users',
-    );
+    ];
 
     protected $linkSelectParams = [
         'accounts' => [
@@ -232,7 +234,7 @@ class TargetList extends \Espo\Services\Record
         }
     }
 
-    protected function findLinkedOptedOut($id, $params)
+    protected function findLinkedOptedOut(string $id, array $params) : RecordCollection
     {
         $pdo = $this->getEntityManager()->getPDO();
         $query = $this->getEntityManager()->getQuery();
@@ -297,13 +299,18 @@ class TargetList extends \Espo\Services\Record
         $row = $sth->fetch(\PDO::FETCH_ASSOC);
         $count = $row['count'];
 
-        return array(
-            'total' => $count,
-            'list' => $arr
-        );
+        $collection = $this->getEntityManager()->createCollection();
+
+        foreach ($arr as $row) {
+            $e = $this->getEntityManager()->getEntity($row['_scope']);
+            $e->set($row);
+            $collection[] = $e;
+        }
+
+        return new RecordCollection($collection, $count);
     }
 
-    public function optOut($id, $targetType, $targetId)
+    public function optOut(string $id, string $targetType, string $targetId)
     {
         $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
         if (!$targetList) {
@@ -342,7 +349,7 @@ class TargetList extends \Espo\Services\Record
         return false;
     }
 
-    public function cancelOptOut($id, $targetType, $targetId)
+    public function cancelOptOut(string $id, string $targetType, string $targetId)
     {
         $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
         if (!$targetList) {

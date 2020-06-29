@@ -29,10 +29,11 @@
 
 namespace Espo\Core\ORM;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Interfaces\Injectable;
 
-use \Espo\ORM\EntityFactory;
+use Espo\ORM\EntityFactory;
 
+/** @deprecated */
 abstract class Repository extends \Espo\ORM\Repository implements Injectable
 {
     protected $dependencyList = [];

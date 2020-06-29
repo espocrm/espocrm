@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Utils;
 
+/**
+ * Available as 'fieldManagerUtil' service.
+ */
 class FieldManagerUtil
 {
     private $metadata;

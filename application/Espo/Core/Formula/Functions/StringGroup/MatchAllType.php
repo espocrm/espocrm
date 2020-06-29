@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class MatchAllType extends \Espo\Core\Formula\Functions\Base
+class MatchAllType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
         $args = $this->fetchArguments($item);
 
-        if (count($args) < 2) throw new Error("Formula: string\\matchAll: Too few arguments.");
+        if (count($args) < 2) throw new Error("string\\matchAll: Too few arguments.");
 
         $string = $args[0];
         $regexp = $args[1];

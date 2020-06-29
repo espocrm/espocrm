@@ -38,20 +38,17 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
-class Email extends Record
+use Espo\Core\Di;
+
+class Email extends Record implements
+
+    Di\MailSenderAware,
+    Di\CryptAware,
+    Di\FileStorageManagerAware
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependencyList([
-            'container',
-            'preferences',
-            'fileManager',
-            'crypt',
-            'serviceFactory',
-            'fileStorageManager'
-        ]);
-    }
+    use Di\MailSenderSetter;
+    use Di\CryptSetter;
+    use Di\FileStorageManagerSetter;
 
     private $streamService = null;
 
@@ -60,7 +57,13 @@ class Email extends Record
     protected $skipSelectTextAttributes = true;
 
     protected $allowedForUpdateAttributeList = [
-        'parentType', 'parentId', 'parentName', 'teamsIds', 'teamsNames', 'assignedUserId', 'assignedUserName'
+        'parentType',
+        'parentId',
+        'parentName',
+        'teamsIds',
+        'teamsNames',
+        'assignedUserId',
+        'assignedUserName',
     ];
 
     protected $mandatorySelectAttributeList = [
@@ -80,52 +83,37 @@ class Email extends Record
         'messageId',
         'sentById',
         'replyToString',
-        'hasAttachment'
+        'hasAttachment',
     ];
 
     private $fromEmailAddressNameCache = [];
 
-    protected function getFileManager()
-    {
-        return $this->getInjection('fileManager');
-    }
-
     protected function getFileStorageManager()
     {
-        return $this->getInjection('fileStorageManager');
+        return $this->fileStorageManager;
     }
 
     protected function getMailSender()
     {
-        return $this->getInjection('container')->get('mailSender');
-    }
-
-    protected function getPreferences()
-    {
-        return $this->injections['preferences'];
+        return $this->mailSender;
     }
 
     protected function getCrypt()
     {
-        return $this->injections['crypt'];
+        return $this->crypt;
     }
 
-    protected function getServiceFactory()
-    {
-        return $this->injections['serviceFactory'];
-    }
-
-    public function getUserSmtpParams(string $userId)
+    public function getUserSmtpParams(string $userId) : ?array
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
-        if (!$user) return;
+        if (!$user) return null;
 
         $fromAddress = $user->get('emailAddress');
         if ($fromAddress)
             $fromAddress = strtolower($fromAddress);
 
         $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
-        if (!$preferences) return;
+        if (!$preferences) return null;
 
         $smtpParams = $preferences->getSmtpParams();
         if ($smtpParams) {
@@ -338,7 +326,7 @@ class Email extends Record
                 if (isset($smtpHandlers->$emailAddress)) {
                     $handlerClassName = $smtpHandlers->$emailAddress;
                     try {
-                        $handler = $this->getInjection('injectableFactory')->createByClassName($handlerClassName);
+                        $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
                     } catch (\Throwable $e) {
                         $GLOBALS['log']->error(
                             "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " . $e->getMessage() . "."
@@ -389,7 +377,7 @@ class Email extends Record
         return $this->streamService;
     }
 
-    public function create($data)
+    public function create(\StdClass $data) : Entity
     {
         $entity = parent::create($data);
 
@@ -448,11 +436,11 @@ class Email extends Record
         $this->getEntityManager()->getRepository('Email')->loadReplyToField($entity);
     }
 
-    public function getEntity($id = null)
+    public function getEntity(?string $id = null) : ?Entity
     {
         $entity = parent::getEntity($id);
 
-        if (!empty($entity) && !empty($id) && !$entity->get('isRead')) {
+        if ($entity && $id && !$entity->get('isRead')) {
             $this->markAsRead($entity->id);
         }
 
@@ -1002,12 +990,12 @@ class Email extends Record
         return $data;
     }
 
-    public function isPermittedAssignedUser(Entity $entity)
+    public function isPermittedAssignedUser(Entity $entity) : bool
     {
         return true;
     }
 
-    public function isPermittedAssignedUsers(Entity $entity)
+    public function isPermittedAssignedUsers(Entity $entity) : bool
     {
         return true;
     }

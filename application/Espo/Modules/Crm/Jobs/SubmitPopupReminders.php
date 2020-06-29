@@ -29,24 +29,40 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\{
+    ORM\EntityManager,
+    Utils\Config,
+    WebSocket\Submission as WebSocketSubmission,
+    Jobs\Job,
+};
 
-class SubmitPopupReminders extends \Espo\Core\Jobs\Base
+class SubmitPopupReminders implements Job
 {
     const REMINDER_PAST_HOURS = 24;
 
+    protected $entityManager;
+    protected $config;
+    protected $webSocketSubmission;
+
+    public function __construct(EntityManager $entityManager, Config $config, WebSocketSubmission $webSocketSubmission)
+    {
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+        $this->webSocketSubmission = $webSocketSubmission;
+    }
+
     public function run()
     {
-        if (!$this->getConfig()->get('useWebSocket')) return;
+        if (!$this->config->get('useWebSocket')) return;
 
         $dt = new \DateTime();
 
         $now = $dt->format('Y-m-d H:i:s');
 
-        $pastHours = $this->getConfig()->get('reminderPastHours', self::REMINDER_PAST_HOURS);
+        $pastHours = $this->config->get('reminderPastHours', self::REMINDER_PAST_HOURS);
         $nowShifted = $dt->modify('-' . $pastHours . ' hours')->format('Y-m-d H:i:s');
 
-        $reminderList = $this->getEntityManager()->getRepository('Reminder')->where([
+        $reminderList = $this->entityManager->getRepository('Reminder')->where([
             'type' => 'Popup',
             'remindAt<=' => $now,
             'startAt>' => $nowShifted,
@@ -65,7 +81,7 @@ class SubmitPopupReminders extends \Espo\Core\Jobs\Base
                 continue;
             }
 
-            $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
+            $entity = $this->entityManager->getEntity($entityType, $entityId);
 
             if (!$entity) {
                 $this->deleteReminder($reminder);
@@ -104,7 +120,7 @@ class SubmitPopupReminders extends \Espo\Core\Jobs\Base
 
             $reminder->set('isSubmitted', true);
 
-            $this->getEntityManager()->saveEntity($reminder);
+            $this->entityManager->saveEntity($reminder);
         }
 
         foreach ($submitData as $userId => $list) {
@@ -122,6 +138,6 @@ class SubmitPopupReminders extends \Espo\Core\Jobs\Base
 
     protected function deleteReminder($reminder)
     {
-        $this->getEntityManager()->getRepository('Reminder')->deleteFromDb($reminder->id);
+        $this->entityManager->getRepository('Reminder')->deleteFromDb($reminder->id);
     }
 }

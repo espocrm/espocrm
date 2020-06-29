@@ -29,17 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\ArrayGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class IncludesType extends \Espo\Core\Formula\Functions\Base
+class IncludesType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value') || !is_array($item->value)) {
-            throw new Error('Value for \'Array\\Includes\' item is not array.');
-        }
         if (count($item->value) < 2) {
-            throw new Error('Bad arguments passed to \'Array\\Includes\'.');
+            throw new Error('Too few arguments passed to \'array\\includes\'.');
         }
         $list = $this->evaluate($item->value[0]);
         $needle = $this->evaluate($item->value[1]);

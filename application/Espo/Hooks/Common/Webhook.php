@@ -30,45 +30,42 @@
 namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Util;
 
-class Webhook extends \Espo\Core\Hooks\Base
+use Espo\Core\{
+    Utils\Metadata,
+    Webhook\Manager as WebhookManager,
+};
+
+class Webhook
 {
     public static $order = 101;
 
-    protected function init()
-    {
-        $this->addDependency('metadata');
-        $this->addDependency('container');
-    }
+    protected $metadata;
+    protected $webhookManager;
 
-    protected function getMetadata()
+    public function __construct(Metadata $metadata, WebhookManager $webhookManager)
     {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getWebhookManager()
-    {
-        return $this->getInjection('container')->get('webhookManager');
+        $this->metadata = $metadata;
+        $this->webhookManager = $webhookManager;
     }
 
     public function afterSave(Entity $entity, array $options = [])
     {
         if (!empty($options['silent'])) return;
-        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'object'])) return;
+        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'object'])) return;
 
         if ($entity->isNew()) {
-            $this->getWebhookManager()->processCreate($entity);
+            $this->webhookManager->processCreate($entity);
         } else {
-            $this->getWebhookManager()->processUpdate($entity);
+            $this->webhookManager->processUpdate($entity);
         }
     }
 
     public function afterRemove(Entity $entity, array $options = [])
     {
         if (!empty($options['silent'])) return;
-        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'object'])) return;
+        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'object'])) return;
 
-        $this->getWebhookManager()->processDelete($entity);
+        $this->webhookManager->processDelete($entity);
     }
 }

@@ -47,10 +47,10 @@ class Output
     ];
 
     protected $ignorePrintXStatusReasonExceptionClassNameList = [
-        'PDOException'
+        'PDOException',
     ];
 
-    public function __construct(\Espo\Core\Utils\Api\Slim $slim)
+    public function __construct(Slim $slim)
     {
         $this->slim = $slim;
     }

@@ -29,28 +29,19 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class ExistsType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class ExistsType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-    }
+    use Di\EntityManagerSetter;
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 3) {
-            throw new Error();
+            throw new Error("record\\exists: too few arguments.");
         }
 
         $entityType = $this->evaluate($item->value[0]);
@@ -65,6 +56,6 @@ class ExistsType extends \Espo\Core\Formula\Functions\Base
             $i = $i + 2;
         }
 
-        return !!$this->getInjection('entityManager')->getRepository($entityType)->where($whereClause)->findOne();
+        return !!$this->entityManager->getRepository($entityType)->where($whereClause)->findOne();
     }
 }

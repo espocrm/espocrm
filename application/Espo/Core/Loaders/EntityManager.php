@@ -29,21 +29,49 @@
 
 namespace Espo\Core\Loaders;
 
-class EntityManager extends Base
+use Espo\Core\{
+    Utils\Config,
+    Utils\Metadata\OrmMetadata,
+    InjectableFactory,
+    ORM\EntityManager as EntityManagerService,
+    ORM\RepositoryFactory,
+    ORM\EntityFactory,
+    ORM\Helper,
+};
+
+class EntityManager implements Loader
 {
+    protected $config;
+    protected $injectableFactory;
+    protected $ormMetadata;
+
+    public function __construct(Config $config, InjectableFactory $injectableFactory, OrmMetadata $ormMetadata)
+    {
+        $this->config = $config;
+        $this->injectableFactory = $injectableFactory;
+        $this->ormMetadata = $ormMetadata;
+    }
+
     public function load()
     {
-        $config = $this->getContainer()->get('config');
+        $entityFactory = $this->injectableFactory->create(EntityFactory::class);
+
+        $repositoryFactory = $this->injectableFactory->createWith(RepositoryFactory::class, [
+            'entityFactory' => $entityFactory,
+        ]);
+
+        $helper = $this->injectableFactory->create(Helper::class);
+
+        $config = $this->config;
 
         $params = [
+            'metadata' => $this->ormMetadata->getData(),
             'host' => $config->get('database.host'),
             'port' => $config->get('database.port'),
             'dbname' => $config->get('database.dbname'),
             'user' => $config->get('database.user'),
             'charset' => $config->get('database.charset', 'utf8'),
             'password' => $config->get('database.password'),
-            'metadata' => $this->getContainer()->get('ormMetadata')->getData(),
-            'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
             'driver' => $config->get('database.driver'),
             'platform' => $config->get('database.platform'),
             'sslCA' => $config->get('database.sslCA'),
@@ -53,12 +81,12 @@ class EntityManager extends Base
             'sslCipher' => $config->get('database.sslCipher'),
         ];
 
-        $entityManager = new \Espo\Core\ORM\EntityManager($params);
-
-        $entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
-        $entityManager->setHookManager($this->getContainer()->get('hookManager'));
-        $entityManager->setHelper($this->getContainer()->get('entityManagerHelper'));
-        $entityManager->setContainer($this->getContainer());
+        $entityManager = $this->injectableFactory->createWith(EntityManagerService::class, [
+            'params' => $params,
+            'repositoryFactory' => $repositoryFactory,
+            'entityFactory' => $entityFactory,
+            'helper' => $helper,
+        ]);
 
         return $entityManager;
     }

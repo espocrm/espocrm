@@ -29,24 +29,42 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\Core\{
+    ServiceFactory,
+    Utils\Metadata,
+    Utils\Util,
+    ORM\EntityManager,
+    ORM\Entity,
+};
 
-class LastViewed extends \Espo\Core\Services\Base
+use Espo\Entities\User;
+
+class LastViewed
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('serviceFactory');
-        $this->addDependency('metadata');
+    protected $serviceFactory;
+    protected $metadata;
+    protected $entityManager;
+    protected $user;
+
+    public function __construct(
+        ServiceFactory $serviceFactory,
+        Metadata $metadata,
+        EntityManager $entityManager,
+        User $user
+    ) {
+        $this->serviceFactory = $serviceFactory;
+        $this->metadata = $metadata;
+        $this->entityManager = $entityManager;
+        $this->user = $user;
     }
 
-    public function getList($params)
+    public function getList($params) : object
     {
-        $repository = $this->getEntityManager()->getRepository('ActionHistoryRecord');
+        $repository = $this->entityManager->getRepository('ActionHistoryRecord');
 
-        $actionHistoryRecordService = $this->getInjection('serviceFactory')->create('ActionHistoryRecord');
+        $actionHistoryRecordService = $this->serviceFactory->create('ActionHistoryRecord');
 
-        $scopes = $this->getInjection('metadata')->get('scopes');
+        $scopes = $this->metadata->get('scopes');
 
         $targetTypeList = array_filter(array_keys($scopes), function ($item) use ($scopes) {
             return !empty($scopes[$item]['object']) || !empty($scopes[$item]['lastViewed']);
@@ -57,7 +75,7 @@ class LastViewed extends \Espo\Core\Services\Base
 
         $selectParams = [
             'whereClause' => [
-                'userId' => $this->getUser()->id,
+                'userId' => $this->user->id,
                 'action' => 'read',
                 'targetType' => $targetTypeList
             ],
@@ -70,7 +88,7 @@ class LastViewed extends \Espo\Core\Services\Base
 
         foreach ($collection as $i => $entity) {
             $actionHistoryRecordService->loadParentNameFields($entity);
-            $entity->set('id', \Espo\Core\Utils\Util::generateId());
+            $entity->set('id', Util::generateId());
         }
 
         if ($maxSize && count($collection) > $maxSize) {
@@ -86,4 +104,3 @@ class LastViewed extends \Espo\Core\Services\Base
         ];
     }
 }
-

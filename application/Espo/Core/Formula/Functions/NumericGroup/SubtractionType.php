@@ -29,20 +29,12 @@
 
 namespace Espo\Core\Formula\Functions\NumericGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class SubtractionType extends \Espo\Core\Formula\Functions\Base
+class SubtractionType extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            return '';
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error('Value for \'Subtraction\' item is not array.');
-        }
-
         if (count($item->value) < 2) {
             throw new Error('Bad value for \'Subtraction\'.');
         }

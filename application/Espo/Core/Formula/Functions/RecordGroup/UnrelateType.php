@@ -31,18 +31,18 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class UnrelateType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class UnrelateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-    }
+    use Di\EntityManagerSetter;
 
     public function process(\StdClass $item)
     {
         $args = $item->value ?? [];
 
-        if (count($args) < 4) throw new Error("Formula: record\\unrelate: Not enough arguments.");
+        if (count($args) < 4) throw new Error("record\\unrelate: Not enough arguments.");
 
         $entityType = $this->evaluate($args[0]);
         $id = $this->evaluate($args[1]);
@@ -54,14 +54,14 @@ class UnrelateType extends \Espo\Core\Formula\Functions\Base
         if (!$link) throw new Error("Formula record\\unrelate: Empty link.");
         if (!$foreignId) return null;
 
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
 
         if (!$em->hasRepository($entityType)) throw new Error("Formula: record\\unrelate: Repository does not exist.");
 
         $entity = $em->getEntity($entityType, $id);
         if (!$entity) return null;
 
-        if (!$em->getRepository($entityType)->isRelated($entity, $link, $foreignId)) 
+        if (!$em->getRepository($entityType)->isRelated($entity, $link, $foreignId))
             return true;
 
         return $em->getRepository($entityType)->unrelate($entity, $link, $foreignId);

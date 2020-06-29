@@ -31,13 +31,14 @@ namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class ApplyTemplateType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class ApplyTemplateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware,
+    Di\ServiceFactoryAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('serviceFactory');
-    }
+    use Di\EntityManagerSetter;
+    use Di\ServiceFactorySetter;
 
     public function process(\StdClass $item)
     {
@@ -62,7 +63,7 @@ class ApplyTemplateType extends \Espo\Core\Formula\Functions\Base
         if ($parentId && !is_string($parentId))
             throw new Error("Formula ext\\email\applyTemplate: 4th argument should be string.");
 
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
 
         $email = $em->getEntity('Email', $id);
         $emailTemplate = $em->getEntity('EmailTemplate', $templateId);
@@ -83,7 +84,7 @@ class ApplyTemplateType extends \Espo\Core\Formula\Functions\Base
             return false;
         }
 
-        $emailTemplateService = $this->getInjection('serviceFactory')->create('EmailTemplate');
+        $emailTemplateService = $this->serviceFactory->create('EmailTemplate');
 
         $params = [];
 

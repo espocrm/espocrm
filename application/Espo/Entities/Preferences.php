@@ -31,9 +31,9 @@ namespace Espo\Entities;
 
 class Preferences extends \Espo\Core\ORM\Entity
 {
-    public function getSmtpParams()
+    public function getSmtpParams() : ?array
     {
-        $smtpParams = array();
+        $smtpParams = [];
         $smtpParams['server'] = $this->get('smtpServer');
         if ($smtpParams['server']) {
             $smtpParams['port'] = $this->get('smtpPort');
@@ -45,8 +45,8 @@ class Preferences extends \Espo\Core\ORM\Entity
                 $smtpParams['password'] = $this->get('smtpPassword');
             }
             return $smtpParams;
-        } else {
-            return false;
         }
+
+        return null;
     }
 }

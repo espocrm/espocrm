@@ -29,31 +29,18 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-class DiffType extends \Espo\Core\Formula\Functions\Base
+class DiffType extends \Espo\Core\Formula\Functions\FunctionBase
 {
-    protected function init()
-    {
-        $this->addDependency('dateTime');
-    }
-
-    protected $intevalTypePropertyMap = array(
+    protected $intevalTypePropertyMap = [
         'years' => 'y', 'months' => 'm', 'days' => 'd', 'hours' => 'h', 'minutes' => 'i', 'seconds' => 's'
-    );
+    ];
 
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
         if (count($item->value) < 2) {
-            throw new Error();
+            throw new Error("Diff function: Too few arguments.");
         }
 
         $dateTime1String = $this->evaluate($item->value[0]);

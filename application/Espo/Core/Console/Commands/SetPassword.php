@@ -29,9 +29,21 @@
 
 namespace Espo\Core\Console\Commands;
 
-class SetPassword extends Base
+use Espo\Core\Container;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\PasswordHash;
+
+class SetPassword implements Command
 {
-    public function run($options, $flagList, $argumentList)
+    protected $entityManager;
+
+    public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
+    {
+        $this->entityManager = $entityManager;
+        $this->passwordHash = $passwordHash;
+    }
+
+    public function run(array $options, array $flagList, array $argumentList)
     {
         $userName = $argumentList[0] ?? null;
 
@@ -40,7 +52,7 @@ class SetPassword extends Base
             die;
         }
 
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->entityManager;
 
         $user = $em->getRepository('User')->where(['userName' => $userName])->findOne();
 
@@ -58,12 +70,14 @@ class SetPassword extends Base
 
         $password = $this->ask();
 
+        $password = trim($password);
+
         if (!$password) {
             $this->out("Password can not be empty.\n");
             die;
         }
 
-        $hash = $this->getContainer()->get('passwordHash');
+        $hash = $this->passwordHash;
 
         $user->set('password', $hash->hash($password));
 

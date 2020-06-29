@@ -29,35 +29,29 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Interfaces\Injectable;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
 
-abstract class Base implements Injectable
+use Espo\Core\Formula\FunctionFactory;
+
+use StdClass;
+
+/** @deprecated */
+abstract class Base extends FunctionBase implements Injectable
 {
     protected $dependencyList = [];
 
-    protected $itemFactory;
-
-    protected $injections = array();
-
-    private $entity;
-
-    private $variables;
+    protected $injections = [];
 
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
     }
 
-    protected function init()
-    {
-    }
-
     protected function getInjection($name)
     {
-        return $this->injections[$name];
+        return $this->injections[$name] ?? $this->$name ?? null;
     }
 
     protected function addDependency($name)
@@ -77,54 +71,13 @@ abstract class Base implements Injectable
         return $this->dependencyList;
     }
 
-    protected function getVariables()
+    public function __construct(FunctionFactory $itemFactory, ?Entity $entity = null, ?StdClass $variables = null)
     {
-        return $this->variables;
-    }
-
-    protected function getEntity()
-    {
-        if (!$this->entity) {
-            throw new Error('Entity required but not passed.');
-        }
-        return $this->entity;
-    }
-
-    public function __construct($itemFactory, $entity = null, $variables = null)
-    {
-        $this->itemFactory = $itemFactory;
-        $this->entity = $entity;
-        $this->variables = $variables;
+        parent::__construct($itemFactory, $entity, $variables);
         $this->init();
     }
 
-    protected function getFactory()
+    protected function init()
     {
-        return $this->itemFactory;
-    }
-
-    protected function evaluate($item)
-    {
-        $function = $this->getFactory()->create($item, $this->entity, $this->variables);
-        return $function->process($item);
-    }
-
-    public abstract function process(\StdClass $item);
-
-    protected function fetchArguments(\StdClass $item)
-    {
-        $args = $item->value ?? [];
-
-        $eArgs = [];
-        foreach ($args as $item) {
-            $eArgs[] = $this->evaluate($item);
-        }
-
-        return $eArgs;
-    }
-
-    protected function fetchRawArguments(\StdClass $item)
-    {
-        return $item->value ?? [];
     }
 }

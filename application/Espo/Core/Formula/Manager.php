@@ -29,18 +29,34 @@
 
 namespace Espo\Core\Formula;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+
+use Espo\Core\ORM\Entity;
+
+use StdClass;
+
+/**
+ * The entry point for formula execution.
+ */
 class Manager
 {
-    public function __construct(\Espo\Core\Container $container, \Espo\Core\Utils\Metadata $metadata)
+    protected $injectableFactory;
+    protected $metadata;
+
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
         $functionClassNameMap = $metadata->get(['app', 'formula', 'functionClassNameMap'], []);
 
-        $this->evaluator = new \Espo\Core\Formula\Evaluator($container, $functionClassNameMap);
+        $this->evaluator = new Evaluator($injectableFactory, $functionClassNameMap);
     }
 
-    public function run($script, $entity = null, $variables = null)
+    /**
+     * Executes a script and returns its result.
+     */
+    public function run(string $script, ?Entity $entity = null, ?StdClass $variables = null)
     {
         return $this->evaluator->process($script, $entity, $variables);
     }

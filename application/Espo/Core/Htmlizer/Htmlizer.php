@@ -40,6 +40,7 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
+use Espo\Core\Acl;
 
 use LightnCandy\LightnCandy as LightnCandy;
 
@@ -58,14 +59,13 @@ class Htmlizer
         FileManager $fileManager,
         DateTime $dateTime,
         NumberUtil $number,
-        $acl = null,
+        ?Acl $acl = null,
         ?EntityManager $entityManager = null,
         ?Metadata $metadata = null,
         ?Language $language = null,
         ?Config $config = null,
         ?ServiceFactory $serviceFactory = null
-    )
-    {
+    ) {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
         $this->number = $number;

@@ -35,38 +35,42 @@ use Espo\Core\Entities\Person;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 
-class EmailTemplate extends Record
-{
-    protected function init()
-    {
-        parent::init();
+use Espo\Core\Di;
 
-        $this->addDependency('fileStorageManager');
-        $this->addDependency('dateTime');
-        $this->addDependency('language');
-        $this->addDependency('number');
-        $this->addDependency('htmlizerFactory');
-        $this->addDependency('fieldManagerUtil');
-    }
+class EmailTemplate extends Record implements
+
+    Di\FileStorageManagerAware,
+    Di\DateTimeAware,
+    Di\LanguageAware,
+    Di\NumberAware,
+    Di\HtmlizerFactoryAware,
+    Di\FieldManagerUtilAware
+{
+    use Di\FileStorageManagerSetter;
+    use Di\DateTimeSetter;
+    use Di\LanguageSetter;
+    use Di\NumberSetter;
+    use Di\HtmlizerFactorySetter;
+    use Di\FieldManagerUtilSetter;
 
     protected function getFileStorageManager()
     {
-        return $this->getInjection('fileStorageManager');
+        return $this->fileStorageManager;
     }
 
     protected function getDateTime()
     {
-        return $this->getInjection('dateTime');
+        return $this->dateTime;
     }
 
     protected function getLanguage()
     {
-        return $this->getInjection('language');
+        return $this->language;
     }
 
     protected function getNumber()
     {
-        return $this->getInjection('number');
+        return $this->number;
     }
 
     public function parseTemplate(Entity $emailTemplate, array $params = [], $copyAttachments = false, $skipAcl = false)
@@ -138,7 +142,7 @@ class EmailTemplate extends Record
             $handlebarsInBody = strpos($body, '{{') !== false && strpos($body, '}}') !== false;
 
             if ($handlebarsInSubject || $handlebarsInBody) {
-                $htmlizer = $this->getInjection('htmlizerFactory')->create($skipAcl);
+                $htmlizer = $this->htmlizerFactory->create($skipAcl);
 
                 if ($handlebarsInSubject) {
                     $subject = $htmlizer->render($parent, $subject);
@@ -369,7 +373,7 @@ class EmailTemplate extends Record
             }
         }
 
-        $fm = $this->getInjection('fieldManagerUtil');
+        $fm = $this->fieldManagerUtil;
 
         foreach ($dataList as $item) {
             $type = $item['type'];

@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class PhoneNumber extends \Espo\Core\SelectManagers\Base
+class PhoneNumber extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function filterOrphan(&$result)
     {

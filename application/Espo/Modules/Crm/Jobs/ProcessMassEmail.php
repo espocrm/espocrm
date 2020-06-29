@@ -29,38 +29,52 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\{
+    ServiceFactory,
+    ORM\EntityManager,
+    Jobs\Job,
+};
 
-class ProcessMassEmail extends \Espo\Core\Jobs\Base
+class ProcessMassEmail implements Job
 {
+    protected $serviceFactory;
+    protected $entityManager;
+
+    public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
+    {
+        $this->serviceFactory = $serviceFactory;
+        $this->entityManager = $entityManager;
+    }
+
     public function run()
     {
-        $service = $this->getServiceFactory()->create('MassEmail');
+        $service = $this->serviceFactory->create('MassEmail');
 
-        $massEmailList = $this->getEntityManager()->getRepository('MassEmail')->where(array(
+        $massEmailList = $this->entityManager->getRepository('MassEmail')->where([
             'status' => 'Pending',
-            'startAt<=' => date('Y-m-d H:i:s')
-        ))->find();
+            'startAt<=' => date('Y-m-d H:i:s'),
+        ])->find();
         foreach ($massEmailList as $massEmail) {
             try {
                 $service->createQueue($massEmail);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Job ProcessMassEmail#createQueue '.$massEmail->id.': [' . $e->getCode() . '] ' .$e->getMessage());
+                $GLOBALS['log']->error(
+                    'Job ProcessMassEmail#createQueue '.$massEmail->id.': [' . $e->getCode() . '] ' .$e->getMessage()
+                );
             }
         }
 
-        $massEmailList = $this->getEntityManager()->getRepository('MassEmail')->where(array(
-            'status' => 'In Process'
-        ))->find();
+        $massEmailList = $this->entityManager->getRepository('MassEmail')->where([
+            'status' => 'In Process',
+        ])->find();
         foreach ($massEmailList as $massEmail) {
             try {
                 $service->processSending($massEmail);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Job ProcessMassEmail#processSending '.$massEmail->id.': [' . $e->getCode() . '] ' .$e->getMessage());
+                $GLOBALS['log']->error(
+                    'Job ProcessMassEmail#processSending '.$massEmail->id.': [' . $e->getCode() . '] ' .$e->getMessage()
+                );
             }
         }
-
-        return true;
     }
 }
-

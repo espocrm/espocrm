@@ -29,54 +29,69 @@
 
 namespace Espo\Core\Portal;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\{
+    Error,
+    NotFound,
+    Forbidden,
+};
 
-class Application extends \Espo\Core\Application
+use Espo\Core\{
+    Portal\Container as PortalContainer,
+    Portal\ContainerConfiguration as PortalContainerConfiguration,
+    Portal\Loaders\Config as ConfigLoader,
+    Application as BaseApplication,
+};
+
+class Application extends BaseApplication
 {
-    public function __construct($portalId)
+    public function __construct(?string $portalId)
     {
         date_default_timezone_set('UTC');
 
         $this->initContainer();
 
-        if (empty($portalId)) {
-            throw new Error("Portal id was not passed to ApplicationPortal.");
+        $this->initPortal($portalId);
+
+        $this->initAutoloads();
+        $this->initPreloads();
+    }
+
+    protected function initContainer()
+    {
+        $this->loaderClassNames['config'] = ConfigLoader::class;
+
+        $this->container = new PortalContainer(PortalContainerConfiguration::class, $this->loaderClassNames);
+    }
+
+    protected function initPortal(?string $portalId)
+    {
+        if (!$portalId) {
+            throw new Error("Portal ID was not passed to Portal\Application.");
         }
 
-        $GLOBALS['log'] = $this->getContainer()->get('log');
+        $entityManager = $this->container->get('entityManager');
 
-        $portal = $this->getContainer()->get('entityManager')->getEntity('Portal', $portalId);
+        $portal = $entityManager->getEntity('Portal', $portalId);
 
         if (!$portal) {
-            $portal = $this->getContainer()->get('entityManager')->getRepository('Portal')->where([
-                'customId' => $portalId
-            ])->findOne();
+            $portal = $entityManager->getRepository('Portal')->where(['customId' => $portalId])->findOne();
         }
 
         if (!$portal) {
-            throw new NotFound();
+            throw new NotFound("Portal {$portalId} not found.");
         }
         if (!$portal->get('isActive')) {
-            throw new Forbidden("Portal is not active.");
+            throw new Forbidden("Portal {$portalId} is not active.");
         }
 
         $this->portal = $portal;
 
-        $this->getContainer()->setPortal($portal);
-
-        $this->initAutoloads();
+        $this->container->setPortal($portal);
     }
 
     protected function getPortal()
     {
         return $this->portal;
-    }
-
-    protected function initContainer()
-    {
-        $this->container = new Container();
     }
 
     protected function getRouteList()
@@ -96,12 +111,21 @@ class Application extends \Espo\Core\Application
 
     public function runClient()
     {
-        $this->getContainer()->get('clientManager')->display(null, null, [
+        $this->container->get('clientManager')->display(null, null, [
             'portalId' => $this->getPortal()->id,
             'applicationId' => $this->getPortal()->id,
             'apiUrl' => 'api/v1/portal-access/' . $this->getPortal()->id,
             'appClientClassName' => 'app-portal'
         ]);
         exit;
+    }
+
+    protected function initPreloads()
+    {
+        foreach ($this->getMetadata()->get(['app', 'portalContainerServices']) ?? [] as $name => $defs) {
+            if ($defs['preload'] ?? false) {
+                $this->container->get($name);
+            }
+        }
     }
 }

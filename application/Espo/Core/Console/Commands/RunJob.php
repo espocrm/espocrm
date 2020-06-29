@@ -29,9 +29,22 @@
 
 namespace Espo\Core\Console\Commands;
 
-class RunJob extends Base
+use Espo\Core\CronManager;
+use Espo\Core\Utils\Util;
+use Espo\Core\ORM\EntityManager;
+
+class RunJob implements Command
 {
-    public function run($options, $flags, $argumentList)
+    protected $cronManager;
+    protected $entityManager;
+
+    public function __construct(CronManager $cronManager, EntityManager $entityManager)
+    {
+        $this->cronManager = $cronManager;
+        $this->entityManager = $entityManager;
+    }
+
+    public function run(array $options, array $flags, array $argumentList)
     {
         $jobName = $options['job'] ?? null;
         $targetId = $options['targetId'] ?? null;
@@ -43,10 +56,9 @@ class RunJob extends Base
 
         if (!$jobName) echo "No job specified.\n";
 
-        $jobName = ucfirst(\Espo\Core\Utils\Util::hyphenToCamelCase($jobName));
+        $jobName = ucfirst(Util::hyphenToCamelCase($jobName));
 
-        $container = $this->getContainer();
-        $entityManager = $container->get('entityManager');
+        $entityManager = $this->entityManager;
 
         $job = $entityManager->createEntity('Job', [
             'name' => $jobName,
@@ -55,9 +67,7 @@ class RunJob extends Base
             'targetId' => $targetId,
         ]);
 
-        $cronManager = new \Espo\Core\CronManager($container);
-
-        $result = $cronManager->runJob($job);
+        $result = $this->cronManager->runJob($job);
 
         if ($result) {
             echo "Job '{$jobName}' has been executed.\n";

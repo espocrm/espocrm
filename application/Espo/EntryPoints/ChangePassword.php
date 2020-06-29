@@ -29,32 +29,53 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
-class ChangePassword extends \Espo\Core\EntryPoints\Base
+use Espo\Core\EntryPoints\{
+    EntryPoint,
+    NoAuth,
+};
+
+use Espo\Core\{
+    Utils\Config,
+    Utils\ClientManager,
+    ORM\EntityManager,
+};
+
+class ChangePassword implements EntryPoint
 {
-    public static $authRequired = false;
+    use NoAuth;
 
-    public function run()
+    protected $config;
+    protected $clientManager;
+    protected $entityManager;
+
+    public function __construct(Config $config, ClientManager $clientManager, EntityManager $entityManager)
     {
-        $requestId = $_GET['id'] ?? null;
+        $this->config = $config;
+        $this->clientManager = $clientManager;
+        $this->entityManager = $entityManager;
+    }
+
+    public function run($request)
+    {
+        $requestId = $request->get('id');
 
         if (!$requestId) throw new BadRequest();
 
-        $config = $this->getConfig();
-        $themeManager = $this->getThemeManager();
+        $config = $this->config;
 
-        $request = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
-            'requestId' => $requestId
+        $request = $this->entityManager->getRepository('PasswordChangeRequest')->where([
+            'requestId' => $requestId,
         ])->findOne();
 
         $strengthParams = [
-            'passwordStrengthLength' => $this->getConfig()->get('passwordStrengthLength'),
-            'passwordStrengthLetterCount' => $this->getConfig()->get('passwordStrengthLetterCount'),
-            'passwordStrengthNumberCount' => $this->getConfig()->get('passwordStrengthNumberCount'),
-            'passwordStrengthBothCases' => $this->getConfig()->get('passwordStrengthBothCases'),
+            'passwordStrengthLength' => $this->config->get('passwordStrengthLength'),
+            'passwordStrengthLetterCount' => $this->config->get('passwordStrengthLetterCount'),
+            'passwordStrengthNumberCount' => $this->config->get('passwordStrengthNumberCount'),
+            'passwordStrengthBothCases' => $this->config->get('passwordStrengthBothCases'),
         ];
 
         if (!$request) throw new NotFound();
@@ -70,11 +91,6 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
             });
         ";
 
-        $this->getClientManager()->display($runScript);
-    }
-
-    protected function getThemeManager()
-    {
-        return $this->getContainer()->get('themeManager');
+        $this->clientManager->display($runScript);
     }
 }

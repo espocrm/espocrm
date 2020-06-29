@@ -31,13 +31,16 @@ namespace Espo\Core\Formula\Functions\ExtGroup\PdfGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class GenerateType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Utils\Util;
+
+use Espo\Core\Di;
+
+class GenerateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware,
+    Di\ServiceFactoryAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('serviceFactory');
-    }
+    use Di\EntityManagerSetter;
+    use Di\ServiceFactorySetter;
 
     public function process(\StdClass $item)
     {
@@ -59,7 +62,7 @@ class GenerateType extends \Espo\Core\Formula\Functions\Base
         if ($fileName && !is_string($fileName))
             throw new Error("Formula ext\\pdf\\generate: 4rd argument should be string.");
 
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
 
         try {
             $entity = $em->getEntity($entityType, $id);
@@ -85,11 +88,11 @@ class GenerateType extends \Espo\Core\Formula\Functions\Base
                 $fileName .= '.pdf';
             }
         } else {
-            $fileName = \Espo\Core\Utils\Util::sanitizeFileName($entity->get('name')) . '.pdf';
+            $fileName = Util::sanitizeFileName($entity->get('name')) . '.pdf';
         }
 
         try {
-            $contents = $this->getInjection('serviceFactory')->create('Pdf')->buildFromTemplate($entity, $template);
+            $contents = $this->serviceFactory->create('Pdf')->buildFromTemplate($entity, $template);
         } catch (\Exception $e) {
             $GLOBALS['log']->error("Formula ext\\pdf\\generate: Error while generating. Message: " . $e->getMessage());
             return null;

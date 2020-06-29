@@ -34,11 +34,13 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 
-class Avatar extends Image
-{
-    public static $authRequired = true;
+use Espo\Core\EntryPoints\NotStrictAuth;
+use Espo\Core\Di;
 
-    public static $notStrictAuth = true;
+class Avatar extends Image implements Di\MetadataAware
+{
+    use Di\MetadataSetter;
+    use NotStrictAuth;
 
     protected $systemColor = '#a4b5bd';
 
@@ -63,21 +65,22 @@ class Avatar extends Image
         }
         $x = intval($sum % 128) + 1;
 
-        $colorList = $this->getMetadata()->get(['app', 'avatars', 'colorList']) ?? $this->colorList;
+        $colorList = $this->metadata->get(['app', 'avatars', 'colorList']) ?? $this->colorList;
 
         $index = intval($x * count($colorList) / 128);
         return $colorList[$index];
     }
 
-    public function run()
+    public function run($request)
     {
-        if (empty($_GET['id'])) {
+        $userId = $request->get('id');
+        $size = $request->get('size') ?? null;
+
+        if (!$userId) {
             throw new BadRequest();
         }
 
-        $userId = $_GET['id'];
-
-        $user = $this->getEntityManager()->getEntity('User', $userId);
+        $user = $this->entityManager->getEntity('User', $userId);
         if (!$user) {
             header('Content-Type: image/png');
             $img  = imagecreatetruecolor(14, 14);
@@ -91,11 +94,6 @@ class Avatar extends Image
         }
 
         $id = $user->get('avatarId');
-
-        $size = null;
-        if (!empty($_GET['size'])) {
-            $size = $_GET['size'];
-        }
 
         if (!empty($id)) {
             $this->show($id, $size, true);
@@ -113,7 +111,7 @@ class Avatar extends Image
                 $hash = $userId;
                 $color = $this->getColor($userId);
                 if ($hash === 'system') {
-                    $color = $this->getMetadata()->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
+                    $color = $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
                 }
 
                 $imgContent = $identicon->getImageData($hash, $width, $color);

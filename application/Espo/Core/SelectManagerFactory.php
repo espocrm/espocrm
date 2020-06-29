@@ -30,59 +30,41 @@
 namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Util;
 
 use Espo\Core\InjectableFactory;
-use Espo\Core\SelectManagers\Base as BaseSelectManager;
+use Espo\Core\SelectManagers\SelectManager;
 use Espo\Entities\User;
-use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Util;
 
 class SelectManagerFactory
 {
-    private $entityManager;
+    protected $defaultClassName = SelectManager::class;
 
     private $user;
-
     private $acl;
-
-    private $metadata;
-
     private $injectableFactory;
-
-    private $fieldManagerUtil;
-
     private $classFinder;
 
-    protected $baseClassName = '\\Espo\\Core\\SelectManagers\\Base';
-
     public function __construct(
-        EntityManager $entityManager,
         User $user,
         Acl $acl,
         AclManager $aclManager,
-        Utils\Metadata $metadata,
-        Utils\Config $config,
-        Utils\FieldManagerUtil $fieldManagerUtil,
         InjectableFactory $injectableFactory,
-        Utils\ClassFinder $classFinder)
-    {
-        $this->entityManager = $entityManager;
+        Utils\ClassFinder $classFinder
+    ) {
         $this->user = $user;
         $this->acl = $acl;
         $this->aclManager = $aclManager;
-        $this->metadata = $metadata;
-        $this->config = $config;
-        $this->fieldManagerUtil = $fieldManagerUtil;
         $this->injectableFactory = $injectableFactory;
         $this->classFinder = $classFinder;
     }
 
-    public function create(string $entityType, ?User $user = null) : BaseSelectManager
+    public function create(string $entityType, ?User $user = null) : SelectManager
     {
         $className = $this->classFinder->find('SelectManagers', $entityType);
 
         if (!$className || !class_exists($className)) {
-            $className = $this->baseClassName;
+            $className = $this->defaultClassName;
         }
 
         if ($user) {
@@ -92,16 +74,11 @@ class SelectManagerFactory
             $user = $this->user;
         }
 
-        $selectManager = new $className(
-            $this->entityManager,
-            $user,
-            $acl,
-            $this->aclManager,
-            $this->metadata,
-            $this->config,
-            $this->fieldManagerUtil,
-            $this->injectableFactory
-        );
+        $selectManager = $this->injectableFactory->createWith($className, [
+            'user' => $user,
+            'acl' => $acl,
+        ]);
+
         $selectManager->setEntityType($entityType);
 
         return $selectManager;

@@ -29,107 +29,112 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Exceptions\{
+    Error,
+};
+
+use Espo\Core\{
+    ContainerConfiguration,
+    EntryPointManager,
+    CronManager,
+    Utils\Auth,
+    Utils\Api\Auth as ApiAuth,
+    Utils\Route,
+    Utils\Autoload,
+    Portal\Application as PortalApplication,
+    Loaders\Config as ConfigLoader,
+    Loaders\Log as LogLoader,
+    Loaders\FileManager as FileManagerLoader,
+    Loaders\DataManager as DataManagerLoader,
+    Loaders\Metadata as MetadataLoader,
+};
+
+/**
+ * The main entry point of the application.
+ */
 class Application
 {
-    private $metadata;
-
     protected $container;
 
-    private $slim;
-
-    private $auth;
+    protected $loaderClassNames = [
+        'config' => ConfigLoader::class,
+        'log' => LogLoader::class,
+        'fileManager' => FileManagerLoader::class,
+        'dataManager' => DataManagerLoader::class,
+        'metadata' => MetadataLoader::class,
+    ];
 
     public function __construct()
     {
         date_default_timezone_set('UTC');
 
         $this->initContainer();
-
-        $GLOBALS['log'] = $this->getContainer()->get('log');
-
         $this->initAutoloads();
         $this->initPreloads();
     }
 
     protected function initContainer()
     {
-        $this->container = new Container();
+        $this->container = new Container(ContainerConfiguration::class, $this->loaderClassNames);
     }
 
-    public function getSlim()
-    {
-        if (empty($this->slim)) {
-            $this->slim = $this->container->get('slim');
-        }
-        return $this->slim;
-    }
-
-    public function getMetadata()
-    {
-        if (empty($this->metadata)) {
-            $this->metadata = $this->container->get('metadata');
-        }
-        return $this->metadata;
-    }
-
-    protected function createAuth()
-    {
-        return new \Espo\Core\Utils\Auth($this->container);
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    public function run($name = 'default')
+    /**
+     * Run REST API.
+     */
+    public function run(string $name = 'default')
     {
         $this->routeHooks();
         $this->initRoutes();
         $this->getSlim()->run();
     }
 
+    /**
+     * Display the main HTML page.
+     */
     public function runClient()
     {
-        $this->getContainer()->get('clientManager')->display();
+        $this->container->get('clientManager')->display();
         exit;
     }
 
-    public function runEntryPoint($entryPoint, $data = [], $final = false)
+    /**
+     * Run entryPoint.
+     */
+    public function runEntryPoint(string $entryPoint, array $data = [], bool $final = false)
     {
         if (empty($entryPoint)) {
-            throw new \Error();
+            throw new Error();
         }
 
         $slim = $this->getSlim();
-        $container = $this->getContainer();
+        $container = $this->container;
 
         $slim->any('.*', function() {});
 
-        $entryPointManager = new \Espo\Core\EntryPointManager($container);
+        $injectableFactory = $container->get('injectableFactory');
+        $classFinder = $container->get('classFinder');
+
+        $entryPointManager = new EntryPointManager($injectableFactory, $classFinder);
 
         try {
             $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
             $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
             if ($authRequired && !$authNotStrict) {
-                if (!$final && $portalId = $this->detectedPortalId()) {
-                    $app = new \Espo\Core\Portal\Application($portalId);
+                if (!$final && $portalId = $this->detectPortalId()) {
+                    $app = new PortalApplication($portalId);
                     $app->setBasePath($this->getBasePath());
                     $app->runEntryPoint($entryPoint, $data, true);
                     exit;
                 }
             }
-            $auth = new \Espo\Core\Utils\Auth($this->container, $authNotStrict);
-            $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $authRequired, true);
+            $auth = new Auth($this->container, $authNotStrict);
+            $apiAuth = new ApiAuth($auth, $authRequired, true);
             $slim->add($apiAuth);
 
-            $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container, $data) {
-                $entryPointManager->run($entryPoint, $data);
+            $request = $slim->request();
+
+            $slim->hook('slim.before.dispatch', function () use ($entryPointManager, $entryPoint, $request, $data) {
+                $entryPointManager->run($entryPoint, $request, $data);
             });
 
             $slim->run();
@@ -140,6 +145,9 @@ class Application
         }
     }
 
+    /**
+     * Run cron.
+     */
     public function runCron()
     {
         if ($this->getConfig()->get('cronDisabled')) {
@@ -150,10 +158,13 @@ class Application
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $cronManager = new \Espo\Core\CronManager($this->container);
+        $cronManager = $this->container->get('cronManager');
         $cronManager->run();
     }
 
+    /**
+     * Run daemon.
+     */
     public function runDaemon()
     {
         $maxProcessNumber = $this->getConfig()->get('daemonMaxProcessNumber');
@@ -195,37 +206,52 @@ class Application
         }
     }
 
-    public function runJob($id)
+    /**
+     * Run a job by ID. A job record should exist in database.
+     */
+    public function runJob(string $id)
     {
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $cronManager = new \Espo\Core\CronManager($this->container);
+        $cronManager = $this->container->get('cronManager');
         $cronManager->runJobById($id);
     }
 
+    /**
+     * Rebuild application.
+     */
     public function runRebuild()
     {
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->container->get('dataManager');
         $dataManager->rebuild();
     }
 
+    /**
+     * Clear application cache.
+     */
     public function runClearCache()
     {
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->container->get('dataManager');
         $dataManager->clearCache();
     }
 
+    /**
+     * Run command in Console Command framework.
+     */
     public function runCommand(string $command)
     {
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $consoleCommandManager = $this->getContainer()->get('consoleCommandManager');
+        $consoleCommandManager = $this->container->get('consoleCommandManager');
         return $consoleCommandManager->run($command);
     }
 
-    public function isInstalled()
+    /**
+     * The whether the application is installed.
+     */
+    public function isInstalled() : bool
     {
         $config = $this->getConfig();
 
@@ -236,14 +262,42 @@ class Application
         return false;
     }
 
-    protected function createApiAuth($auth)
+    /**
+     * Get the service container.
+     */
+    public function getContainer() : Container
     {
-        return new \Espo\Core\Utils\Api\Auth($auth);
+        return $this->container;
+    }
+
+    protected function getSlim()
+    {
+        return $this->container->get('slim');
+    }
+
+    protected function getMetadata()
+    {
+        return $this->container->get('metadata');
+    }
+
+    protected function getConfig()
+    {
+        return $this->container->get('config');
+    }
+
+    protected function createAuth()
+    {
+        return new Auth($this->container);
+    }
+
+    protected function createApiAuth(Auth $auth) : ApiAuth
+    {
+        return new ApiAuth($auth);
     }
 
     protected function routeHooks()
     {
-        $container = $this->getContainer();
+        $container = $this->container;
         $slim = $this->getSlim();
 
         try {
@@ -294,12 +348,17 @@ class Application
             } else {
                 $httpMethod = strtolower($slim->request()->getMethod());
                 $crudList = $container->get('config')->get('crud');
-                $actionName = $crudList[$httpMethod];
+                $actionName = $crudList[$httpMethod] ?? null;
+                if (!$actionName) {
+                    throw new Error("No action for {$httpMethod} request.");
+                }
             }
 
             try {
-                $controllerManager = $this->getContainer()->get('controllerManager');
-                $result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
+                $controllerManager = $this->container->get('controllerManager');
+                $result = $controllerManager->process(
+                    $controllerName, $actionName, $params, $data, $slim->request(), $slim->response()
+                );
                 $container->get('output')->render($result);
             } catch (\Exception $e) {
                 $container->get('output')->processError($e->getMessage(), $e->getCode(), false, $e);
@@ -322,7 +381,7 @@ class Application
 
     protected function getRouteList()
     {
-        $routes = new \Espo\Core\Utils\Route($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $routes = new Route($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
         return $routes->getAll();
     }
 
@@ -333,7 +392,9 @@ class Application
         foreach ($this->getRouteList() as $route) {
             $method = strtolower($route['method']);
             if (!in_array($method, $crudList) && $method !== 'options') {
-                $GLOBALS['log']->error('Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']');
+                $GLOBALS['log']->error(
+                    'Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']'
+                );
                 continue;
             }
 
@@ -349,7 +410,7 @@ class Application
 
     protected function initAutoloads()
     {
-        $autoload = new \Espo\Core\Utils\Autoload($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $autoload = new Autoload($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
         $autoload->register();
     }
 
@@ -357,29 +418,29 @@ class Application
     {
         foreach ($this->getMetadata()->get(['app', 'containerServices']) ?? [] as $name => $defs) {
             if ($defs['preload'] ?? false) {
-                $this->getContainer()->get($name);
+                $this->container->get($name);
             }
         }
     }
 
-    public function setBasePath($basePath)
+    public function setBasePath(string $basePath)
     {
-        $this->getContainer()->get('clientManager')->setBasePath($basePath);
+        $this->container->get('clientManager')->setBasePath($basePath);
     }
 
-    public function getBasePath()
+    public function getBasePath() : string
     {
-        return $this->getContainer()->get('clientManager')->getBasePath();
+        return $this->container->get('clientManager')->getBasePath();
     }
 
-    public function detectedPortalId()
+    public function detectPortalId() : ?string
     {
         if (!empty($_GET['portalId'])) {
             return $_GET['portalId'];
         }
         if (!empty($_COOKIE['auth-token'])) {
             $token =
-                $this->getContainer()->get('entityManager')
+                $this->container->get('entityManager')
                     ->getRepository('AuthToken')->where(['token' => $_COOKIE['auth-token']])->findOne();
 
             if ($token && $token->get('portalId')) {
@@ -389,12 +450,14 @@ class Application
         return null;
     }
 
+    /**
+     * Setup the system user. The system user is used when no user is logged in.
+     */
     public function setupSystemUser()
     {
-        $user = $this->getContainer()->get('entityManager')->getEntity('User', 'system');
-        $user->set('isAdmin', true); // TODO remove in 5.7
+        $user = $this->container->get('entityManager')->getEntity('User', 'system');
         $user->set('type', 'system');
-        $this->getContainer()->setUser($user);
-        $this->getContainer()->get('entityManager')->setUser($user);
+        $this->container->set('user', $user);
+        $this->container->get('entityManager')->setUser($user);
     }
 }

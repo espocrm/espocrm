@@ -29,43 +29,174 @@
 
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
+use ReflectionClass;
+use Espo\Core\Interfaces\Injectable;
+
+/**
+ * Creates an instance by a class name. Uses constructor param names to detect which
+ * dependencies are needed. Only container services supported as dependencies.
+ */
 class InjectableFactory
 {
-    private $container;
+    protected $container;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    public function createByClassName($className)
+    public function create(string $className) : object
     {
-        if (class_exists($className)) {
-            $service = new $className();
-            if (!($service instanceof \Espo\Core\Interfaces\Injectable)) {
-                throw new Error("Class '$className' is not instance of Injectable interface");
-            }
-            $dependencyList = $service->getDependencyList();
-            foreach ($dependencyList as $name) {
-                $service->inject($name, $this->container->get($name));
-            }
-            if (method_exists($service, 'prepare')) {
-                $service->prepare();
-            }
-            return $service;
+        return $this->createByClassName($className);
+    }
+
+    /**
+     * Allows passing specific constructor parameters. Defined in an associative array. A key should match the parameter name.
+     */
+    public function createWith(string $className, array $with = []) : object
+    {
+        return $this->createByClassName($className, $with);
+    }
+
+    /**
+     * Use create or createWith instead. Left public for backward compatibility.
+     */
+    public function createByClassName(string $className, ?array $with = null) : object
+    {
+        if (!class_exists($className)) {
+            throw new Error("InjectableFactory: Class '{$className}' does not exist.");
         }
-        throw new Error("Class '$className' does not exist");
+
+        $class = new ReflectionClass($className);
+
+        $injectionList = $this->getConstructorInjectionList($class, $with);
+
+        $obj = $class->newInstanceArgs($injectionList);
+
+        if ($class->implementsInterface(Injectable::class)) {
+            $this->applyInjectable($class, $obj);
+            return $obj;
+        }
+
+        $this->applyAwareInjections($class, $obj);
+
+        return $obj;
     }
 
-    protected function getMetadata()
+    /** @deprecated */
+    protected function applyInjectable(ReflectionClass $class, object $obj)
     {
-        return $this->getContainer()->get('metadata');
+        $setList = [];
+
+        $dependencyList = $obj->getDependencyList();
+
+        foreach ($dependencyList as $name) {
+            $injection = $this->container->get($name);
+            if ($this->classHasDependencySetter($class, $name)) {
+                $methodName = 'set' . ucfirst($name);
+                $obj->$methodName($injection);
+                $setList[] = $name;
+            }
+            $obj->inject($name, $injection);
+        }
+
+        $this->applyAwareInjections($class, $obj, $setList);
+
+        return $obj;
     }
 
-    protected function getContainer()
+    protected function getConstructorInjectionList(ReflectionClass $class, ?array $with = null)
     {
-        return $this->container;
+        $injectionList = [];
+
+        $constructor = $class->getConstructor();
+        if ($constructor) {
+            $params = $constructor->getParameters();
+
+            foreach ($params as $param) {
+                $name = $param->getName();
+
+                if ($with && array_key_exists($name, $with)) {
+                    $injection = $with[$name];
+                } else {
+                    $dependencyClassName = null;
+
+                    if ($param->getType()) {
+                        try {
+                            $dependencyClassName = $param->getClass();
+                        } catch (\Throwable $e) {
+                            $badClassName = $param->getType()->getName();
+                            // this trick allows to log syntax errors
+                            class_exists($badClassName);
+                            throw new Error("InjectableFactory: " . $e->getMessage());
+                        }
+                    }
+
+                    if (!$dependencyClassName) {
+                        if ($param->isDefaultValueAvailable()) {
+                            $injectionList[] = $param->getDefaultValue();
+                            continue;
+                        }
+                    }
+
+                    $injection = $this->container->get($name);
+
+                    if (!$injection) {
+                        $className = $class->getName();
+                        throw new Error("InjectableFactory: Could not create {$className}, dependency {$name} not found.");
+                    }
+                }
+
+                $injectionList[] = $injection;
+            }
+        }
+
+        return $injectionList;
+    }
+
+    protected function applyAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
+    {
+        foreach ($class->getInterfaces() as $interface) {
+            $interfaceName = $interface->getShortName();
+
+            if (substr($interfaceName, -5) !== 'Aware' || strlen($interfaceName) <= 5) continue;
+
+            $name = lcfirst(substr($interfaceName, 0, -5));
+
+            if (in_array($name, $ignoreList)) continue;
+
+            if (!$this->classHasDependencySetter($class, $name, true)) continue;
+
+            $injection = $this->container->get($name);
+
+            $methodName = 'set' . ucfirst($name);
+            $obj->$methodName($injection);
+        }
+    }
+
+    protected function classHasDependencySetter(ReflectionClass $class, string $name, bool $skipInstanceCheck = false) : bool
+    {
+        $methodName = 'set' . ucfirst($name);
+
+        if (!$class->hasMethod($methodName) || !$class->getMethod($methodName)->isPublic()) {
+            return false;
+        }
+
+        $params = $class->getMethod($methodName)->getParameters();
+        if (!$params || !count($params)) {
+            return false;
+        }
+
+        $injection = $this->container->get($name);
+
+        $paramClass = $params[0]->getClass();
+
+        if ($skipInstanceCheck || $paramClass && $paramClass->isInstance($injection)) {
+            return true;
+        }
+
+        return false;
     }
 }

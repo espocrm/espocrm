@@ -31,14 +31,16 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class FindRelatedOneType extends \Espo\Core\Formula\Functions\FunctionBase implements
+    Di\EntityManagerAware,
+    Di\SelectManagerFactoryAware,
+    Di\MetadataAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('selectManagerFactory');
-        $this->addDependency('metadata');
-    }
+    use Di\EntityManagerSetter;
+    use Di\SelectManagerFactorySetter;
+    use Di\MetadataSetter;
 
     public function process(\StdClass $item)
     {
@@ -54,7 +56,7 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
             throw new Error();
         }
 
-        $entityManager = $this->getInjection('entityManager');
+        $entityManager = $this->entityManager;
 
         $entityType = $this->evaluate($item->value[0]);
         $id = $this->evaluate($item->value[1]);
@@ -70,15 +72,15 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
             $order = $this->evaluate($item->value[4]) ?? null;
         }
 
-        if (!$entityType) throw new Error("Formula record\\findRelatedOne: Empty entityType.");
+        if (!$entityType) throw new Error("record\\findRelatedOne: Empty entityType.");
         if (!$id) return null;
-        if (!$link) throw new Error("Formula record\\findRelatedOne: Empty link.");
+        if (!$link) throw new Error("record\\findRelatedOne: Empty link.");
 
         $entity = $entityManager->getEntity($entityType, $id);
 
         if (!$entity) return null;
 
-        $metadata = $this->getInjection('metadata');
+        $metadata = $this->metadata;
 
         $relationType = $entity->getRelationParam($link, 'type');
 
@@ -107,7 +109,7 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base
         $foreignLink = $entity->getRelationParam($link, 'foreign');
         if (!$foreignLink) throw new Error("Formula record\\findRelatedOne: Not supported link '{$link}'.");
 
-        $selectManager = $this->getInjection('selectManagerFactory')->create($foreignEntityType);
+        $selectManager = $this->selectManagerFactory->create($foreignEntityType);
         $selectParams = $selectManager->getEmptySelectParams();
 
         if ($relationType === 'hasChildren') {

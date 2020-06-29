@@ -29,23 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\ComparisonGroup;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-abstract class Base extends \Espo\Core\Formula\Functions\Base
+abstract class Base extends \Espo\Core\Formula\Functions\FunctionBase
 {
     public function process(\StdClass $item)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error('Value is not array.');
-        }
-
         if (count($item->value) < 2) {
-             throw new Error('Bad value.');
+            throw new Error('Formula comparison function: Too few arguments passed.');
         }
 
         if (is_object($item->value[0])) {

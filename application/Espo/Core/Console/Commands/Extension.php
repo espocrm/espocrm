@@ -31,11 +31,21 @@ namespace Espo\Core\Console\Commands;
 
 use Espo\Core\Exceptions\Error;
 
-class Extension extends Base
+use Espo\Core\Container;
+use Espo\Core\ExtensionManager;
+
+class Extension implements Command
 {
     protected $extensionManager = null;
 
-    public function run($options, $flagList, $argumentList)
+    protected $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    public function run(array $options, array $flagList)
     {
         if (in_array('u', $flagList)) {
             // uninstall
@@ -180,12 +190,12 @@ class Extension extends Base
 
     protected function createExtensionManager()
     {
-        return new \Espo\Core\ExtensionManager($this->getContainer());
+        return new ExtensionManager($this->container);
     }
 
     protected function getEntityManager()
     {
-        return $this->getContainer()->get('entityManager');
+        return $this->container->get('entityManager');
     }
 
     protected function out(string $string)

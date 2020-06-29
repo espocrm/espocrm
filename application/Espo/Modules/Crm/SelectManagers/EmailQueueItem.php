@@ -29,9 +29,8 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class EmailQueueItem extends \Espo\Core\SelectManagers\Base
+class EmailQueueItem extends \Espo\Core\SelectManagers\SelectManager
 {
-
     protected function filterPending(&$result)
     {
         $result['whereClause'][] = array(

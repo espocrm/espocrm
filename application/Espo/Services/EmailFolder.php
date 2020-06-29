@@ -29,11 +29,11 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
 
 class EmailFolder extends Record
 {
@@ -59,7 +59,7 @@ class EmailFolder extends Record
         }
     }
 
-    public function moveUp($id)
+    public function moveUp(string $id)
     {
         $entity = $this->getEntityManager()->getEntity('EmailFolder', $id);
         if (!$entity) throw new NotFound();
@@ -83,7 +83,7 @@ class EmailFolder extends Record
         $this->getEntityManager()->saveEntity($previousEntity);
     }
 
-    public function moveDown($id)
+    public function moveDown(string $id)
     {
         $entity = $this->getEntityManager()->getEntity('EmailFolder', $id);
         if (!$entity) throw new NotFound();
@@ -143,9 +143,8 @@ class EmailFolder extends Record
             $finalList[] = $attributes;
         }
 
-        return array(
+        return [
             'list' => $finalList
-        );
+        ];
     }
 }
-

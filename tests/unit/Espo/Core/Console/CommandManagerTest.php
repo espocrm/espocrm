@@ -36,10 +36,12 @@ class CommandManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $container = $this->container =
-            $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+        $injectableFactory =
+            $this->getMockBuilder('\\Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
+        $metadata =
+            $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Console\CommandManager($container);
+        $this->object = new \Espo\Core\Console\CommandManager($injectableFactory, $metadata);
 
         $this->reflection = new ReflectionHelper($this->object);
     }

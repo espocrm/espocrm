@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Document extends \Espo\Core\SelectManagers\Base
+class Document extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function filterActive(&$result)
     {

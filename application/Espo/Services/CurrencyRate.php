@@ -29,26 +29,36 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\{
+    BadRequest,
+};
 
-class CurrencyRate extends \Espo\Core\Services\Base
+use Espo\Core\{
+    DataManager,
+    Utils\Config,
+};
+
+class CurrencyRate
 {
-    protected function init()
-    {
-        $this->addDependency('config');
-        $this->addDependency('dataManager');
+    protected $config;
+    protected $dataManager;
+
+    public function __construct(
+        Config $config,
+        DataManager $dataManager
+    ) {
+        $this->config = $config;
+        $this->dataManager = $dataManager;
     }
 
     public function get() : object
     {
-        return (object) ($this->getInjection('config')->get('currencyRates') ?? []);
+        return (object) ($this->config->get('currencyRates') ?? []);
     }
 
     public function set(object $rates) : object
     {
-        $config = $this->getInjection('config');
+        $config = $this->config;
         $currencyList = $config->get('currencyList') ?? [];
 
         foreach (get_object_vars($rates) as $key => $value) {
@@ -73,7 +83,7 @@ class CurrencyRate extends \Espo\Core\Services\Base
         $config->setData($data);
         $config->save();
 
-        $this->getInjection('dataManager')->rebuildDatabase([]);
+        $this->dataManager->rebuildDatabase([]);
 
         return (object) ($config->get('currencyRates') ?? []);
     }

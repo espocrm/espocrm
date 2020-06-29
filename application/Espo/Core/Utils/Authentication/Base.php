@@ -29,17 +29,16 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Utils\Config;
-use \Espo\Core\ORM\EntityManager;
-use \Espo\Core\Utils\Auth;
+use Espo\Core\Utils\Config;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Auth;
 
-abstract class Base
+abstract class Base implements Login
 {
-    protected $config;
-
-    protected $entityManager;
-
     private $passwordHash;
+
+    protected $config;
+    protected $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {

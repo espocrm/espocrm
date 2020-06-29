@@ -29,22 +29,34 @@
 
 namespace Espo\Core\Export;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-use \Espo\Core\ORM\Entity;
+use Espo\Core\ORM\Entity;
 
-class Csv extends \Espo\Core\Injectable
+use Espo\Core\{
+    Utils\Config,
+    Utils\Metadata,
+};
+
+use Espo\Entities\Preferences;
+
+class Csv
 {
-    protected $dependencyList = [
-        'config',
-        'preferences',
-        'metadata'
-    ];
+    protected $config;
+    protected $preferences;
+    protected $metadata;
+
+    public function __construct(Config $config, Preferences $preferences, Metadata $metadata)
+    {
+        $this->config = $config;
+        $this->preferences = $preferences;
+        $this->metadata = $metadata;
+    }
 
     public function loadAdditionalFields(Entity $entity, $fieldList)
     {
         foreach ($fieldList as $field) {
-            if ($this->getInjection('metadata')->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']) === 'linkMultiple') {
+            if ($this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']) === 'linkMultiple') {
                 if (!$entity->has($field . 'Ids')) {
                     $entity->loadLinkMultipleField($field);
                 }
@@ -60,9 +72,9 @@ class Csv extends \Espo\Core\Injectable
 
         $attributeList = $params['attributeList'];
 
-        $delimiter = $this->getInjection('preferences')->get('exportDelimiter');
+        $delimiter = $this->preferences->get('exportDelimiter');
         if (empty($delimiter)) {
-            $delimiter = $this->getInjection('config')->get('exportDelimiter', ',');
+            $delimiter = $this->config->get('exportDelimiter', ',');
         }
 
         $delimiter = str_replace('\t', "\t", $delimiter);

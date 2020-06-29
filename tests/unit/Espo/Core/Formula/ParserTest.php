@@ -29,7 +29,7 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class ParserTest extends \PHPUnit\Framework\TestCase
 {

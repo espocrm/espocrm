@@ -29,39 +29,41 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
-class LogoImage extends Image
+use Espo\Core\EntryPoints\{
+    NoAuth,
+};
+
+use Espo\Core\Di;
+
+class LogoImage extends Image implements Di\ConfigAware
 {
-    public static $authRequired = false;
+    use NoAuth;
+    use Di\ConfigSetter;
 
     protected $allowedRelatedTypeList = ['Settings', 'Portal'];
 
     protected $allowedFieldList = ['companyLogo'];
 
-    public function run()
+    public function run($request)
     {
-        $this->imageSizes['small-logo'] = array(181, 44);
+        $id = $request->get('id');
+        $size = $request->get('size') ?? null;
 
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else {
-            $id = $this->getConfig()->get('companyLogoId');
+        $this->imageSizes['small-logo'] = [181, 44];
+
+        if (!$id) {
+            $id = $this->config->get('companyLogoId');
         }
 
-        if (empty($id)) {
+        if (!$id) {
             throw new NotFound();
-        }
-
-        $size = null;
-        if (!empty($_GET['size'])) {
-            $size = $_GET['size'];
         }
 
         $this->show($id, $size);
     }
 }
-

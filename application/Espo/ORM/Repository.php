@@ -31,67 +31,47 @@ namespace Espo\ORM;
 
 abstract class Repository
 {
-    /**
-     * @var EntityFactory EntityFactory object.
-     */
     protected $entityFactory;
 
-    /**
-     * @var EntityManager EntityManager object.
-     */
     protected $entityManager;
 
-
-    /**
-     * @var iModel Seed entity.
-     */
     protected $seed;
 
-    /**
-     * @var string Class Name of aggregate root.
-     */
     protected $entityClassName;
 
-    /**
-     * @var string Model Name of aggregate root.
-     */
     protected $entityType;
 
-    public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory)
+    public function __construct(string $entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
-        $this->entityName = $entityName;
+        $this->entityType = $entityType;
         $this->entityFactory = $entityFactory;
-        $this->seed = $this->entityFactory->create($entityName);
+        $this->seed = $this->entityFactory->create($entityType);
         $this->entityClassName = get_class($this->seed);
         $this->entityManager = $entityManager;
     }
 
-    protected function getEntityFactory()
+    protected function getEntityFactory() : EntityFactory
     {
         return $this->entityFactory;
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager() : EntityManager
     {
         return $this->entityManager;
     }
 
-    public function getEntityType()
+    public function getEntityType() : string
     {
         return $this->entityType;
     }
 
-    abstract public function get($id = null);
+    /**
+     * Get entity. If $id is NULL, a new entity is returned.
+     */
+    abstract public function get(?string $id = null) : ?Entity;
 
+    /**
+     * Store entity.
+     */
     abstract public function save(Entity $entity);
-
-    abstract public function remove(Entity $entity);
-
-    abstract public function find(array $params);
-
-    abstract public function findOne(array $params);
-
-    abstract public function getAll();
-
-    abstract public function count(array $params);
 }

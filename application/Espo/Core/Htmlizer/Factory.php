@@ -29,29 +29,32 @@
 
 namespace Espo\Core\Htmlizer;
 
-use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\DateTime;
 
 class Factory
 {
-    protected $container;
+    protected $injectableFactory;
+    protected $dateTime;
 
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    public function __construct(InjectableFactory $injectableFactory, DateTime $dateTime) {
+        $this->injectableFactory = $injectableFactory;
+        $this->dateTime = $dateTime;
     }
 
-    public function create(bool $skipAcl = false)
+    public function create(bool $skipAcl = false, ?string $timezone = null) : Htmlizer
     {
-        return new Htmlizer(
-            $this->container->get('fileManager'),
-            $this->container->get('dateTime'),
-            $this->container->get('number'),
-            !$skipAcl ? $this->container->get('acl') : null,
-            $this->container->get('entityManager'),
-            $this->container->get('metadata'),
-            $this->container->get('defaultLanguage'),
-            $this->container->get('config'),
-            $this->container->get('serviceFactory')
-        );
+        $with = [];
+        if ($skipAcl) {
+            $with['acl'] = null;
+        }
+
+        if ($timezone) {
+            $dateTime = clone($this->dateTime);
+            $dateTime->setTimezone($timezone);
+            $with['dateTime'] = $dateTime;
+        }
+
+        return $this->injectableFactory->createWith(Htmlizer::class, $with);
     }
 }

@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class MassEmail extends \Espo\Core\SelectManagers\Base
+class MassEmail extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function filterActual(&$result)
     {

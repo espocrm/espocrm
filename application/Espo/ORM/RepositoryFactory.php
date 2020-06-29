@@ -29,34 +29,7 @@
 
 namespace Espo\ORM;
 
-class RepositoryFactory
+interface RepositoryFactory
 {
-    protected $entityFactroy;
-
-    protected $entityManager;
-
-    protected $defaultRepositoryClassName = '\\Espo\\ORM\\Repository';
-
-    public function __construct(EntityManager $entityManager, EntityFactory $entityFactroy)
-    {
-        $this->entityManager = $entityManager;
-        $this->entityFactroy = $entityFactroy;
-    }
-
-    public function create($name)
-    {
-        $className = $this->entityManager->getRepositoryClassName($name);
-
-        if (!class_exists($className)) {
-            $className = $this->defaultRepositoryClassName;
-        }
-
-        $repository = new $className($name, $this->entityManager, $this->entityFactroy);
-        return $repository;
-    }
-
-    public function setDefaultRepositoryClassName($defaultRepositoryClassName)
-    {
-        $this->defaultRepositoryClassName = $defaultRepositoryClassName;
-    }
+    public function create(string $name) : object;
 }

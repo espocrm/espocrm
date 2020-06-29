@@ -29,16 +29,16 @@
 
 namespace Espo\Core\AclPortal;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\User;
-use \Espo\Entities\Portal;
+use Espo\ORM\Entity;
+use Espo\Entities\User;
+use Espo\Entities\Portal;
 
-use \Espo\Core\Utils\Config;
-use \Espo\Core\Utils\Metadata;
-use \Espo\Core\Utils\FieldManagerUtil;
-use \Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\FieldManagerUtil;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 class Table extends \Espo\Core\Acl\Table
 {
@@ -52,13 +52,16 @@ class Table extends \Espo\Core\Acl\Table
 
     protected $isStrictModeForced = true;
 
-    public function __construct(User $user, Portal $portal, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManagerUtil $fieldManager = null)
-    {
+    public function __construct(
+        User $user, Portal $portal, Config $config = null, FileManager $fileManager = null,
+        Metadata $metadata = null, FieldManagerUtil $fieldManagerUtil = null
+    ) {
         if (empty($portal)) {
             throw new Error("No portal was passed to AclPortal\\Table constructor.");
         }
         $this->portal = $portal;
-        parent::__construct($user, $config, $fileManager, $metadata, $fieldManager);
+
+        parent::__construct($user, $config, $fileManager, $metadata, $fieldManagerUtil);
     }
 
     protected function getPortal()
@@ -132,4 +135,3 @@ class Table extends \Espo\Core\Acl\Table
     {
     }
 }
-

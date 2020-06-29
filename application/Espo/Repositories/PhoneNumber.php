@@ -31,27 +31,24 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
-{
-    protected $processFieldsAfterSaveDisabled = true;
+use Espo\Core\Di;
 
-    protected $processFieldsBeforeSaveDisabled = true;
+class PhoneNumber extends \Espo\Core\Repositories\Database implements
+    Di\UserAware,
+    Di\AclManagerAware
+{
+    use Di\UserSetter;
+    use Di\AclManagerSetter;
+
+    protected $processFieldsAfterSaveDisabled = true;
 
     protected $processFieldsAfterRemoveDisabled = true;
 
     const ERASED_PREFIX = 'ERASED:';
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('user');
-        $this->addDependency('acl');
-        $this->addDependency('aclManager');
-    }
-
     protected function getAcl()
     {
-        return $this->getInjection('acl');
+        return $this->acl;
     }
 
     public function getIds($numberList = [])
@@ -429,7 +426,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                     WHERE
                         entity_id = ".$pdo->quote($entity->id)." AND
                         entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        phone_number_id = ".$pdo->quote($phoneNumber->id)." AND 
+                        phone_number_id = ".$pdo->quote($phoneNumber->id)." AND
                         deleted = 0
                 ";
                 $sth = $pdo->prepare($query);
@@ -468,7 +465,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                     if ($entity->has('phoneNumberIsOptedOut')) {
                         $phoneNumberNew->set('optOut', !!$entity->get('phoneNumberIsOptedOut'));
                     }
-                    $defaultType = $this->getEntityManager()->getEspoMetadata()->get('entityDefs.' .  $entity->getEntityType() . '.fields.phoneNumber.defaultType');
+                    $defaultType = $this->getMetadata()->get('entityDefs.' .  $entity->getEntityType() . '.fields.phoneNumber.defaultType');
 
                     $phoneNumberNew->set('type', $defaultType);
 
@@ -541,9 +538,11 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
+    // TODO move it to another place
     protected function checkChangeIsForbidden($entity, $excludeEntity)
     {
-        return !$this->getInjection('aclManager')->getImplementation('PhoneNumber')->checkEditInEntity($this->getInjection('user'), $entity, $excludeEntity);
+        return !$this->aclManager->getImplementation('PhoneNumber')
+            ->checkEditInEntity($this->user, $entity, $excludeEntity);
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

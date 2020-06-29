@@ -29,9 +29,6 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
-
 class ConditionType extends Base
 {
     public function process(\StdClass $item)

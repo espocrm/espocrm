@@ -31,9 +31,9 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
-class KnowledgeBaseArticle extends \Espo\Core\ORM\Repositories\RDB
+class KnowledgeBaseArticle extends \Espo\Core\Repositories\Database
 {
-    protected function beforeSave(Entity $entity, array $options = array())
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
         $order = $entity->get('order');

@@ -29,7 +29,7 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
 class Notification extends \Espo\Core\Controllers\Record
 {
@@ -47,18 +47,18 @@ class Notification extends \Espo\Core\Controllers\Record
             $maxSize = self::MAX_SIZE_LIMIT;
         }
 
-        $params = array(
+        $params = [
             'offset' => $offset,
             'maxSize' => $maxSize,
-            'after' => $after
-        );
+            'after' => $after,
+        ];
 
-        $result = $this->getService('Notification')->getList($userId, $params);
+        $recordCollection = $this->getService('Notification')->getList($userId, $params);
 
-        return array(
-            'total' => $result['total'],
-            'list' => $result['collection']->toArray()
-        );
+        return (object) [
+            'total' => $recordCollection->getTotal(),
+            'list' => $recordCollection->getValueMapList(),
+        ];
     }
 
     public function actionNotReadCount()

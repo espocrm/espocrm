@@ -31,6 +31,11 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\Utils\File\Manager as FileManager;
+
+/**
+ * Reads and writes the main config file.
+ */
 class Config
 {
     private $defaultConfigPath = 'application/Espo/Core/defaults/config.php';
@@ -50,7 +55,6 @@ class Config
         'defaultPermissions',
     ];
 
-
     private $data;
 
     private $changedData = [];
@@ -59,8 +63,7 @@ class Config
 
     private $fileManager;
 
-
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(FileManager $fileManager)
     {
         $this->fileManager = $fileManager;
     }
@@ -76,13 +79,11 @@ class Config
     }
 
     /**
-     * Get an option from config
+     * Get a parameter value.
      *
-     * @param string $name
-     * @param string $default
-     * @return string | array
+     * @return mixed
      */
-    public function get($name, $default = null)
+    public function get(string $name, $default = null)
     {
         $keys = explode('.', $name);
 
@@ -103,12 +104,9 @@ class Config
     }
 
     /**
-     * Whether parameter is set
-     *
-     * @param string $name
-     * @return bool
+     * Whether a parameter is set.
      */
-    public function has($name)
+    public function has(string $name) : bool
     {
         $keys = explode('.', $name);
 
@@ -129,13 +127,9 @@ class Config
     }
 
     /**
-     * Set an option to the config
-     *
-     * @param string $name
-     * @param string $value
-     * @return bool
+     * Set a parameter or multiple parameters.
      */
-    public function set($name, $value = null, $dontMarkDirty = false)
+    public function set($name, $value = null, bool $dontMarkDirty = false)
     {
         if (is_object($name)) {
             $name = get_object_vars($name);
@@ -157,12 +151,9 @@ class Config
     }
 
     /**
-     * Remove an option in config
-     *
-     * @param  string $name
-     * @return bool | null - null if an option doesn't exist
+     * Remove a parameter..
      */
-    public function remove($name)
+    public function remove(string $name) : bool
     {
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
@@ -170,9 +161,12 @@ class Config
             return true;
         }
 
-        return null;
+        return false;
     }
 
+    /**
+     * Save config changes to the file.
+     */
     public function save()
     {
         $values = $this->changedData;
@@ -231,12 +225,15 @@ class Config
         return $result;
     }
 
-    public function getDefaults()
+    /**
+     * Get system default config parameters.
+     */
+    public function getDefaults() : array
     {
         return $this->getFileManager()->getPhpContents($this->defaultConfigPath);
     }
 
-    protected function loadConfig($reload = false)
+    protected function loadConfig(bool $reload = false)
     {
         if (!$reload && isset($this->data) && !empty($this->data)) {
             return $this->data;
@@ -252,18 +249,23 @@ class Config
         return $this->data;
     }
 
-    public function getAllData()
+    /**
+     * Get all parameters.
+     */
+    public function getAllData() : \StdClass
     {
         return (object) $this->loadConfig();
     }
 
-    public function getData($isAdmin = null)
+    /** @deprecated */
+    public function getData()
     {
         $data = $this->loadConfig();
 
         return $data;
     }
 
+    /** @deprecated */
     public function setData($data)
     {
         if (is_object($data)) {
@@ -274,50 +276,50 @@ class Config
     }
 
     /**
-     * Update cache timestamp
+     * Update cache timestamp.
      *
-     * @param $onlyValue - If need to return just timestamp array
+     * @param $returnOnlyValue - To return an array with timestamp.
      * @return bool | array
      */
-    public function updateCacheTimestamp($onlyValue = false)
+    public function updateCacheTimestamp(bool $returnOnlyValue = false)
     {
         $timestamp = [
             $this->cacheTimestamp => time()
         ];
 
-        if ($onlyValue) {
+        if ($returnOnlyValue) {
             return $timestamp;
         }
 
         return $this->set($timestamp);
     }
 
-    public function getAdminOnlyItemList()
+    public function getAdminOnlyItemList() : array
     {
         return $this->get('adminItems', []);
     }
 
-    public function getSuperAdminOnlyItemList()
+    public function getSuperAdminOnlyItemList() : array
     {
         return $this->get('superAdminItems', []);
     }
 
-    public function getSystemOnlyItemList()
+    public function getSystemOnlyItemList() : array
     {
         return $this->get('systemItems', []);
     }
 
-    public function getSuperAdminOnlySystemItemList()
+    public function getSuperAdminOnlySystemItemList() : array
     {
         return $this->get('superAdminSystemItems', []);
     }
 
-    public function getUserOnlyItemList()
+    public function getUserOnlyItemList() : array
     {
         return $this->get('userItems', []);
     }
 
-    public function getSiteUrl()
+    public function getSiteUrl() : string
     {
         return rtrim($this->get('siteUrl'), '/');
     }

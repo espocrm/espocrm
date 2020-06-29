@@ -48,20 +48,19 @@ class ScheduledJobTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
+        $this->objects['classFinder'] =
+            $this->getMockBuilder('\Espo\Core\Utils\classFinder')->disableOriginalConstructor()->getMock();
 
         $this->objects['language'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
+        $this->objects['entityManager'] =
+            $this->getMockBuilder('\Espo\Core\ORM\EntityManager')->disableOriginalConstructor()->getMock();
 
-        $map = array(
-            array('language', $this->objects['language']),
+
+        $this->object = new \Espo\Core\Utils\ScheduledJob(
+            $this->objects['classFinder'],
+            $this->objects['entityManager'],
+            $this->objects['language']
         );
-
-        $this->objects['container']
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap($map));
-
-        $this->object = new \Espo\Core\Utils\ScheduledJob( $this->objects['container'] );
 
         $this->reflection = new ReflectionHelper($this->object);
 

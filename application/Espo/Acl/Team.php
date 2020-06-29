@@ -29,11 +29,13 @@
 
 namespace Espo\Acl;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-class Team extends \Espo\Core\Acl\Base
+use Espo\Entities\User as UserEntity;
+
+class Team extends \Espo\Core\Acl\Acl
 {
-    public function checkInTeam(\Espo\Entities\User $user, Entity $entity)
+    public function checkInTeam(UserEntity $user, Entity $entity)
     {
         $userTeamIdList = $user->getLinkMultipleIdList('teams');
         return in_array($entity->id, $userTeamIdList);

@@ -37,19 +37,21 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
 
-class Import extends \Espo\Services\Record
+use StdClass;
+
+use Espo\Core\Di;
+
+use Espo\Core\Record\Collection as RecordCollection;
+
+class Import extends \Espo\Services\Record implements
+
+    Di\FileManagerAware,
+    Di\FileStorageManagerAware
 {
+    use Di\FileManagerSetter;
+    use Di\FileStorageManagerSetter;
+
     const REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS = 2;
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('serviceFactory');
-        $this->addDependency('fileManager');
-        $this->addDependency('selectManagerFactory');
-        $this->addDependency('fileStorageManager');
-    }
 
     protected $dateFormatsMap = [
         'YYYY-MM-DD' => 'Y-m-d',
@@ -71,36 +73,29 @@ class Import extends \Espo\Services\Record
         'hh:mmA' => 'h:iA',
     ];
 
-    protected $services = [];
-
-    protected function getSelectManagerFactory()
-    {
-        return $this->injections['selectManagerFactory'];
-    }
-
     protected function getFileStorageManager()
     {
-        return $this->injections['fileStorageManager'];
+        return $this->fileStorageManager;
     }
 
     protected function getFileManager()
     {
-        return $this->injections['fileManager'];
+        return $this->fileManager;
     }
 
     protected function getAcl()
     {
-        return $this->injections['acl'];
+        return $this->acl;
     }
 
     protected function getMetadata()
     {
-        return $this->injections['metadata'];
+        return $this->metadata;
     }
 
     protected function getServiceFactory()
     {
-        return $this->injections['serviceFactory'];
+        return $this->serviceFactory;
     }
 
     public function loadAdditionalFields(Entity $entity)
@@ -113,11 +108,11 @@ class Import extends \Espo\Services\Record
         $entity->set([
             'importedCount' => $importedCount,
             'duplicateCount' => $duplicateCount,
-            'updatedCount' => $updatedCount
+            'updatedCount' => $updatedCount,
         ]);
     }
 
-    public function findLinked($id, $link, $params)
+    public function findLinked(string $id, string $link, array $params) : RecordCollection
     {
         $entity = $this->getRepository()->get($id);
         $foreignEntityType = $entity->get('entityType');
@@ -137,7 +132,7 @@ class Import extends \Espo\Services\Record
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
-        $recordService = $this->getRecordService($foreignEntityType);
+        $recordService = $this->recordServiceContainer->get($foreignEntityType);
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -146,13 +141,10 @@ class Import extends \Espo\Services\Record
 
         $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
 
-        return [
-            'total' => $total,
-            'collection' => $collection
-        ];
+        return new RecordCollection($collection, $total);
     }
 
-    public function uploadFile($contents)
+    public function uploadFile($contents) : string
     {
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('type', 'text/csv');
@@ -318,7 +310,7 @@ class Import extends \Espo\Services\Record
         return true;
     }
 
-    public function jobRunIdleImport($data)
+    public function jobRunIdleImport(StdClass $data) : array
     {
         if (
             empty($data->userId) ||
@@ -349,7 +341,7 @@ class Import extends \Espo\Services\Record
         $this->import($entityType, $importAttributeList, $attachmentId, $params, $importId, $user);
     }
 
-    public function importById(string $id, bool $startFromLastIndex = false, $forceResume = false) : array
+    public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false) : array
     {
         $import = $this->getEntityManager()->getEntity('Import', $id);
 
@@ -380,7 +372,7 @@ class Import extends \Espo\Services\Record
         return $this->import($entityType, $attributeList, $import->get('fileId'), $params, $id);
     }
 
-    public function importFileWithParamsId(string $contents, string $importParamsId)
+    public function importFileWithParamsId(string $contents, string $importParamsId) : array
     {
         if (!$contents) {
             throw new Error("File contents is empty.");
@@ -622,8 +614,9 @@ class Import extends \Espo\Services\Record
         ];
     }
 
-    public function importRow($scope, array $importAttributeList, array $row, array $params = [], $user)
-    {
+    public function importRow(
+        string $scope, array $importAttributeList, array $row, array $params = [], ?User $user = null
+    ) : ?array {
         $id = null;
         $action = 'create';
         if (!empty($params['action'])) {
@@ -631,7 +624,7 @@ class Import extends \Espo\Services\Record
         }
 
         if (empty($importAttributeList)) {
-            return;
+            return null;
         }
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
@@ -647,18 +640,18 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        $recordService = $this->getRecordService($scope);
+        $recordService = $this->recordServiceContainer->get($scope);
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
             if (!count($updateByAttributeList)) {
-                return;
+                return null;
             }
             $entity = $this->getEntityManager()->getRepository($scope)->where($whereClause)->findOne();
 
             if ($entity) {
                 if (!$user->isAdmin()) {
                     if (!$this->getAclManager()->checkEntity($user, $entity, 'edit')) {
-                        return;
+                        return null;
                     }
                 }
             }
@@ -669,7 +662,7 @@ class Import extends \Espo\Services\Record
                         $entity->set('id', $whereClause['id']);
                     }
                 } else {
-                    return;
+                    return null;
                 }
             }
         } else {
@@ -1091,8 +1084,8 @@ class Import extends \Espo\Services\Record
                 return $value;
 
             case Entity::JSON_ARRAY:
-                if (!is_string($value)) return;
-                if (!strlen($value)) return;
+                if (!is_string($value)) return null;
+                if (!strlen($value)) return null;
                 if ($value[0] === '[') {
                     $value = \Espo\Core\Utils\Json::decode($value);
                     return $value;
@@ -1107,21 +1100,7 @@ class Import extends \Espo\Services\Record
         return $value;
     }
 
-    protected function getRecordService($scope)
-    {
-        if (empty($this->services[$scope])) {
-            if ($this->getServiceFactory()->checkExists($scope)) {
-                $service = $this->getServiceFactory()->create($scope);
-            } else {
-                $service = $this->getServiceFactory()->create('Record');
-                $service->setEntityType($scope);
-            }
-            $this->services[$scope] = $service;
-        }
-        return $this->services[$scope];
-    }
-
-    public function unmarkAsDuplicate($id, $entityType, $entityId)
+    public function unmarkAsDuplicate(string $id, string $entityType, string $entityId)
     {
         $pdo = $this->getEntityManager()->getPDO();
 

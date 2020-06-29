@@ -29,24 +29,33 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Utils\Util;
 use Espo\Core\InjectableFactory;
-use Espo\Core\Notificators\Base as BaseNotificator;
+use Espo\Core\Utils\ClassFinder;
+use Espo\Core\Notificators\Notificator;
+use Espo\Core\Notificators\DefaultNotificator;
 
-class NotificatorFactory extends InjectableFactory
+class NotificatorFactory
 {
-    protected $baseClassName = '\\Espo\\Core\\Notificators\\Base';
+    protected $defaultClassName = DefaultNotificator::class;
 
-    public function create(string $entityType) : BaseNotificator
+    protected $injectableFactory;
+    protected $classFinder;
+
+    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
-        $className = $this->getContainer()->get('classFinder')->find('Notificators', $entityType);
+        $this->injectableFactory = $injectableFactory;
+        $this->classFinder = $classFinder;
+    }
+
+    public function create(string $entityType) : Notificator
+    {
+        $className = $this->classFinder->find('Notificators', $entityType);
 
         if (!$className || !class_exists($className)) {
-            $className = $this->baseClassName;
+            $className = $this->defaultClassName;
         }
 
-        $obj = $this->createByClassName($className);
-        $obj->setEntityType($entityType);
+        $obj = $this->injectableFactory->create($className);
 
         return $obj;
     }

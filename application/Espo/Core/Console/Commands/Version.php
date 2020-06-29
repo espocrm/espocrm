@@ -29,11 +29,20 @@
 
 namespace Espo\Core\Console\Commands;
 
-class Version extends Base
+use Espo\Core\Utils\Config;
+
+class Version implements Command
 {
-    public function run($options, $flagList, $argumentList)
+    protected $config;
+
+    public function __construct(Config $config)
     {
-        $version = $this->getContainer()->get('config')->get('version');
+        $this->config = $config;
+    }
+
+    public function run()
+    {
+        $version = $this->config->get('version');
 
         if (is_null($version)) {
             return;

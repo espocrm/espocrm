@@ -29,11 +29,26 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use \Espo\Core\Exceptions;
+use Espo\Core\{
+    InjectableFactory,
+    ORM\EntityManager,
+    Jobs\Job,
+};
 
-class SendEmailReminders extends \Espo\Core\Jobs\Base
+use Espo\Modules\Crm\Business\Reminder\EmailReminder;
+
+class SendEmailReminders implements Job
 {
     const MAX_PORTION_SIZE = 10;
+
+    protected $injectableFactory;
+    protected $entityManager;
+
+    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
+    {
+        $this->injectableFactory = $injectableFactory;
+        $this->entityManager = $entityManager;
+    }
 
     public function run()
     {
@@ -42,26 +57,19 @@ class SendEmailReminders extends \Espo\Core\Jobs\Base
         $now = $dt->format('Y-m-d H:i:s');
         $nowShifted = $dt->sub(new \DateInterval('PT1H'))->format('Y-m-d H:i:s');
 
-        $collection = $this->getEntityManager()->getRepository('Reminder')->where(array(
+        $collection = $this->entityManager->getRepository('Reminder')->where([
             'type' => 'Email',
             'remindAt<=' => $now,
-            'startAt>' => $nowShifted
-        ))->find();
+            'startAt>' => $nowShifted,
+        ])->find();
 
-        if (!empty($collection)) {
-            $emailReminder = new \Espo\Modules\Crm\Business\Reminder\EmailReminder(
-                $this->getEntityManager(),
-                $this->getContainer()->get('templateFileManager'),
-                $this->getContainer()->get('mailSender'),
-                $this->getConfig(),
-                $this->getContainer()->get('fileManager'),
-                $this->getContainer()->get('dateTime'),
-                $this->getContainer()->get('number'),
-                $this->getContainer()->get('language')
-
-            );
-            $pdo = $this->getEntityManager()->getPDO();
+        if (empty($collection)) {
+            return;
         }
+
+        $emailReminder = $this->injectableFactory->create(EmailReminder::class);
+
+        $pdo = $this->entityManager->getPDO();
 
         foreach ($collection as $i => $entity) {
             if ($i >= self::MAX_PORTION_SIZE) {
@@ -72,12 +80,7 @@ class SendEmailReminders extends \Espo\Core\Jobs\Base
             } catch (\Exception $e) {
                 $GLOBALS['log']->error('Job SendEmailReminders '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
             }
-
-            $sql = "DELETE FROM `reminder` WHERE id = ". $pdo->quote($entity->id);
-            $pdo->query($sql);
-            $this->getEntityManager()->removeEntity($entity);
+            $this->entityManager->getRepository('Reminder')->deleteFromDb($entity->id);
         }
-        return true;
     }
 }
-

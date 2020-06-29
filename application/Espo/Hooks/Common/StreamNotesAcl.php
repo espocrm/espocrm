@@ -31,27 +31,21 @@ namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 
-class StreamNotesAcl extends \Espo\Core\Hooks\Base
+use Espo\Core\{
+    ServiceFactory,
+};
+
+class StreamNotesAcl
 {
     protected $noteService = null;
 
     public static $order = 10;
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('serviceFactory');
-        $this->addDependency('aclManager');
-    }
+    protected $serviceFactory;
 
-    protected function getServiceFactory()
+    public function __construct(ServiceFactory $serviceFactory)
     {
-        return $this->getInjection('serviceFactory');
-    }
-
-    protected function getAclManager()
-    {
-        return $this->getInjection('aclManager');
+        $this->serviceFactory = $serviceFactory;
     }
 
     public function afterSave(Entity $entity, array $options = [])
@@ -63,7 +57,7 @@ class StreamNotesAcl extends \Espo\Core\Hooks\Base
         if ($entity->isNew()) return;
 
         if (!$this->noteService) {
-            $this->noteService = $this->getServiceFactory()->create('Note');
+            $this->noteService = $this->serviceFactory->create('Note');
         }
 
         $forceProcessNoteNotifications = !empty($options['forceProcessNoteNotifications']);

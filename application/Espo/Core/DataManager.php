@@ -51,7 +51,7 @@ class DataManager
      *
      * @return bool
      */
-    public function rebuild($entityList = null)
+    public function rebuild($target = null)
     {
         $result = $this->clearCache();
 
@@ -59,7 +59,7 @@ class DataManager
 
         $result &= $this->rebuildMetadata();
 
-        $result &= $this->rebuildDatabase($entityList);
+        $result &= $this->rebuildDatabase($target);
 
         $this->rebuildScheduledJobs();
 
@@ -89,12 +89,12 @@ class DataManager
      *
      * @return bool
      */
-    public function rebuildDatabase($entityList = null)
+    public function rebuildDatabase($target = null)
     {
         $schema = $this->getContainer()->get('schema');
 
         try {
-            $result = $schema->rebuild($entityList);
+            $result = $schema->rebuild($target);
         } catch (\Throwable $e) {
             $result = false;
             $GLOBALS['log']->error('Fault to rebuild database schema. Details: '. $e->getMessage());

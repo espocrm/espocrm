@@ -33,6 +33,8 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Exceptions\BadRequest;
 
+use Cron\CronExpression;
+
 class ScheduledJob extends Record
 {
     protected $findLinkedLogCountQueryDisabled = true;
@@ -44,7 +46,7 @@ class ScheduledJob extends Record
         $scheduling = $entity->get('scheduling');
 
         try {
-            $cronExpression = \Cron\CronExpression::factory($scheduling);
+            $cronExpression = CronExpression::factory($scheduling);
             $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
         } catch (\Exception $e) {
             throw new BadRequest("Not valid scheduling expression.");

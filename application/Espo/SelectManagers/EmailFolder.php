@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class EmailFolder extends \Espo\Core\SelectManagers\Base
+class EmailFolder extends \Espo\Core\SelectManagers\SelectManager
 {
     protected function access(&$result)
     {

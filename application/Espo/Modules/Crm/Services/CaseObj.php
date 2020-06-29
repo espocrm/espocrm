@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class CaseObj extends \Espo\Services\Record
 {
@@ -177,4 +177,3 @@ class CaseObj extends \Espo\Services\Record
         return $list;
     }
 }
-

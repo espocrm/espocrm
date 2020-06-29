@@ -29,23 +29,15 @@
 
 namespace Espo\Core\Formula;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
 
 class AttributeFetcher
 {
     private $relatedEntitiesCacheMap = [];
 
-    public function __construct()
+    public function fetch(Entity $entity, string $attribute, bool $getFetchedAttribute = false)
     {
-    }
-
-    public function fetch(Entity $entity, $attribute, $getFetchedAttribute = false)
-    {
-        if (!is_string($attribute)) {
-            throw new Error();
-        }
-
         if (strpos($attribute, '.') !== false) {
             $arr = explode('.', $attribute);
 
@@ -85,7 +77,7 @@ class AttributeFetcher
         $this->relatedEntitiesCacheMap = [];
     }
 
-    protected function buildKey(Entity $entity, $link)
+    protected function buildKey(Entity $entity, string $link) : string
     {
         return spl_object_hash($entity) . '-' . $link;
     }

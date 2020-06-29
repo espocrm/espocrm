@@ -33,8 +33,17 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
 
-class Attachment extends \Espo\Core\ORM\Repositories\RDB
+use Espo\Core\Di;
+
+class Attachment extends \Espo\Core\Repositories\Database implements
+    Di\FileManagerAware,
+    Di\FileStorageManagerAware,
+    Di\ConfigAware
 {
+    use Di\FileManagerSetter;
+    use Di\FileStorageManagerSetter;
+    use Di\ConfigSetter;
+
     protected $imageTypeList = [
         'image/jpeg',
         'image/png',
@@ -53,35 +62,23 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         'xx-large',
     ];
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('container');
-        $this->addDependency('config');
-    }
-
     protected function getFileManager()
     {
-        return $this->getInjection('container')->get('fileManager');
+        return $this->fileManager;
     }
 
     protected function getFileStorageManager()
     {
-        return $this->getInjection('container')->get('fileStorageManager');
+        return $this->fileStorageManager;
     }
 
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
-    public function beforeSave(Entity $entity, array $options = array())
+    public function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
         $storage = $entity->get('storage');
         if (!$storage) {
-            $entity->set('storage', $this->getConfig()->get('defaultFileStorage', null));
+            $entity->set('storage', $this->config->get('defaultFileStorage', null));
         }
 
         if ($entity->isNew()) {

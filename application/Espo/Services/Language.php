@@ -29,34 +29,42 @@
 
 namespace Espo\Services;
 
-class Language extends \Espo\Core\Services\Base
+use Espo\Core\{
+    Acl,
+    Container,
+    Utils\Metadata,
+};
+
+use Espo\Entities\User;
+
+class Language
 {
+    protected $metadata;
+    protected $acl;
+    protected $user;
+    protected $container;
 
-    protected function init()
-    {
-        $this->addDependency('container');
-        $this->addDependency('metadata');
-        $this->addDependency('acl');
+    public function __construct(
+        Metadata $metadata,
+        Acl $acl,
+        User $user,
+        Container $container
+    ) {
+        $this->metadata = $metadata;
+        $this->acl = $acl;
+        $this->user = $user;
+        $this->container = $container;
     }
 
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getAcl()
-    {
-        return $this->getInjection('acl');
-    }
-
+    // TODO use proxy
     protected function getDefaultLanguage()
     {
-        return $this->getInjection('container')->get('defaultLanguage');
+        return $this->container->get('defaultLanguage');
     }
 
     protected function getLanguage()
     {
-        return $this->getInjection('container')->get('language');
+        return $this->container->get('language');
     }
 
     public function getDataForFrontend(bool $default = false)
@@ -68,7 +76,7 @@ class Language extends \Espo\Core\Services\Base
         }
         $data = $languageObj->getAll();
 
-        if ($this->getUser()->isSystem()) {
+        if ($this->user->isSystem()) {
             unset($data['Global']['scopeNames']);
             unset($data['Global']['scopeNamesPlural']);
             unset($data['Global']['dashlets']);
@@ -94,20 +102,20 @@ class Language extends \Espo\Core\Services\Base
             unset($data['Campaign']['tooltips']);
             unset($data['Campaign']['presetFilters']);
         } else {
-            $scopeList = array_keys($this->getMetadata()->get(['scopes'], []));
+            $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
             foreach ($scopeList as $scope) {
-                if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
-                if ($this->getMetadata()->get(['entityAcl', $scope, 'languageAclDisabled'])) continue;
+                if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
+                if ($this->metadata->get(['entityAcl', $scope, 'languageAclDisabled'])) continue;
 
-                if (!$this->getAcl()->check($scope)) {
+                if (!$this->acl->check($scope)) {
                     unset($data[$scope]);
                     unset($data['Global']['scopeNames'][$scope]);
                     unset($data['Global']['scopeNamesPlural'][$scope]);
                 } else {
                     if (in_array($scope, ['EmailAccount', 'InboundEmail'])) continue;
 
-                    foreach ($this->getAcl()->getScopeForbiddenFieldList($scope) as $field) {
+                    foreach ($this->acl->getScopeForbiddenFieldList($scope) as $field) {
                         if (isset($data[$scope]['fields'])) unset($data[$scope]['fields'][$field]);
                         if (isset($data[$scope]['options'])) unset($data[$scope]['options'][$field]);
                         if (isset($data[$scope]['links'])) unset($data[$scope]['links'][$field]);
@@ -115,7 +123,7 @@ class Language extends \Espo\Core\Services\Base
                 }
             }
 
-            if (!$this->getUser()->isAdmin()) {
+            if (!$this->user->isAdmin()) {
                 unset($data['Admin']);
                 unset($data['LayoutManager']);
                 unset($data['EntityManager']);
@@ -135,14 +143,14 @@ class Language extends \Espo\Core\Services\Base
                     ],
                 ];
 
-                foreach (($this->getMetadata()->get(['app', 'language', 'aclDependencies']) ?? []) as $target => $item) {
+                foreach (($this->metadata->get(['app', 'language', 'aclDependencies']) ?? []) as $target => $item) {
                     $targetArr = explode('.', $target);
 
                     $aclScope = $item['scope'] ?? null;;
                     $aclField = $item['field'] ?? null;
                     if (!$aclScope) continue;
-                    if (!$this->getAcl()->check($aclScope)) continue;
-                    if ($aclField && in_array($aclField, $this->getAcl()->getScopeForbiddenFieldList($aclScope))) continue;
+                    if (!$this->acl->check($aclScope)) continue;
+                    if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) continue;
 
                     $pointer =& $data;
                     foreach ($targetArr as $i => $k) {

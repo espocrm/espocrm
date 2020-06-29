@@ -29,27 +29,25 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-class Team extends Record
+use Espo\Core\Di;
+
+class Team extends Record implements
+
+    Di\FileManagerAware,
+    Di\DataManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('fileManager');
-    }
+    use Di\FileManagerSetter;
+    use Di\DataManagerSetter;
 
-    protected $linkSelectParams = array(
-        'users' => array(
-            'additionalColumns' => array(
+    protected $linkSelectParams = [
+        'users' => [
+            'additionalColumns' => [
                 'role' => 'teamRole'
-            )
-        )
-    );
-
-    protected function getFileManager()
-    {
-        return $this->getInjection('fileManager');
-    }
+            ]
+        ]
+    ];
 
     public function afterUpdateEntity(Entity $entity, $data)
     {
@@ -61,37 +59,40 @@ class Team extends Record
 
     protected function clearRolesCache()
     {
-        $this->getFileManager()->removeInDir('data/cache/application/acl');
+        $this->fileManager->removeInDir('data/cache/application/acl');
+        $this->dataManager->updateCacheTimestamp();
     }
 
-    public function link($id, $link, $foreignId)
+    public function link(string $id, string $link, string $foreignId)
     {
         $result = parent::link($id, $link, $foreignId);
 
         if ($link === 'users') {
-            $this->getFileManager()->removeFile('data/cache/application/acl/' . $foreignId . '.php');
+            $this->fileManager->removeFile('data/cache/application/acl/' . $foreignId . '.php');
+            $this->dataManager->updateCacheTimestamp();
         }
 
         return $result;
     }
 
-    public function unlink($id, $link, $foreignId)
+    public function unlink(string $id, string $link, string $foreignId)
     {
         $result = parent::unlink($id, $link, $foreignId);
 
         if ($link === 'users') {
-            $this->getFileManager()->removeFile('data/cache/application/acl/' . $foreignId . '.php');
+            $this->fileManager->removeFile('data/cache/application/acl/' . $foreignId . '.php');
+            $this->dataManager->updateCacheTimestamp();
         }
 
         return $result;
     }
 
-    public function massLink($id, $link, $where, $selectData = null)
+    public function massLink(string $id, string $link, array $where, ?array $selectData = null)
     {
         $result = parent::massLink($id, $link, $where, $selectData);
 
         if ($link === 'users') {
-            $this->getFileManager()->removeInDir('data/cache/application/acl');
+            $this->clearRolesCache();
         }
 
         return $result;

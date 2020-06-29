@@ -40,8 +40,18 @@ use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Core\Mail\Sender;
 use Laminas\Mail\Message;
 
-class MassEmail extends \Espo\Services\Record
+use Espo\Core\Record\Collection as RecordCollection;
+
+use Espo\Core\Di;
+
+class MassEmail extends \Espo\Services\Record implements
+
+    Di\DefaultLanguageAware,
+    Di\MailSenderAware
 {
+    use Di\DefaultLanguageSetter;
+    use Di\MailSenderSetter;
+
     const MAX_ATTEMPT_COUNT = 3;
 
     const MAX_PER_HOUR_COUNT = 10000;
@@ -54,21 +64,14 @@ class MassEmail extends \Espo\Services\Record
 
     protected $targetsLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('container');
-        $this->addDependency('defaultLanguage');
-    }
-
     protected function getMailSender()
     {
-        return $this->getInjection('container')->get('mailSender');
+        return $this->mailSender;
     }
 
     protected function getLanguage()
     {
-        return $this->getInjection('defaultLanguage');
+        return $this->defaultLanguage;
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
@@ -528,7 +531,7 @@ class MassEmail extends \Espo\Services\Record
         return $this->campaignService;
     }
 
-    protected function findLinkedQueueItems($id, $params)
+    protected function findLinkedQueueItems(string $id, array $params) : RecordCollection
     {
         $link = 'queueItems';
 
@@ -540,13 +543,13 @@ class MassEmail extends \Espo\Services\Record
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
 
-        $selectParams['whereClause'][] = array(
+        $selectParams['whereClause'][] = [
             'isTest' => false
-        );
+        ];
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
-        $recordService = $this->getRecordService('EmailQueueItem');
+        $recordService = $this->recordServiceContainer->get('EmailQueueItem');
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -555,10 +558,7 @@ class MassEmail extends \Espo\Services\Record
 
         $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
 
-        return array(
-            'total' => $total,
-            'collection' => $collection
-        );
+        return new RecordCollection($collection, $total);
     }
 
     public function getSmtpAccountDataList()

@@ -29,11 +29,17 @@
 
 namespace Espo\Core\Formula;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+
+use Espo\Core\InjectableFactory;
+
+use Espo\Core\ORM\Entity;
+
+use StdClass;
 
 class Evaluator
 {
-    private $functionFactory;
+    private $functionFactory = null;
 
     private $formula;
 
@@ -43,26 +49,23 @@ class Evaluator
 
     private $parsedHash;
 
-    public function __construct($container = null, array $functionClassNameMap = [], array $parsedHash = [])
-    {
+    public function __construct(
+        ?InjectableFactory $injectableFactory = null, array $functionClassNameMap = [], array $parsedHash = []
+    ) {
         $this->attributeFetcher = new AttributeFetcher();
-        $this->functionFactory = new FunctionFactory($container, $this->attributeFetcher, $functionClassNameMap);
+        $this->functionFactory = new FunctionFactory($injectableFactory, $this->attributeFetcher, $functionClassNameMap);
         $this->formula = new Formula($this->functionFactory);
         $this->parser = new Parser();
         $this->parsedHash = [];
     }
 
-    public function process($expression, $entity = null, $variables = null)
+    public function process(string $expression, ?Entity $entity = null, ?StdClass $variables = null)
     {
         if (!array_key_exists($expression, $this->parsedHash)) {
             $item = $this->parser->parse($expression);
             $this->parsedHash[$expression] = $item;
         } else {
             $item = $this->parsedHash[$expression];
-        }
-
-        if (!$item || !($item instanceof \StdClass)) {
-            throw new Error();
         }
 
         $result = $this->formula->process($item, $entity, $variables);

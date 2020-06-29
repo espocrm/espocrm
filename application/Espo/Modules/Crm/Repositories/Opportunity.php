@@ -31,13 +31,15 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
-class Opportunity extends \Espo\Core\ORM\Repositories\RDB
+class Opportunity extends \Espo\Core\Repositories\Database
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
             if (!$entity->has('probability') && $entity->get('stage')) {
-                $probability = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.probabilityMap.' . $entity->get('stage'), 0);
+                $probability = $this->metadata->get(
+                    'entityDefs.Opportunity.fields.stage.probabilityMap.' . $entity->get('stage'), 0
+                );
                 if (!is_null($probability)) {
                     $entity->set('probability', $probability);
                 }
@@ -45,11 +47,13 @@ class Opportunity extends \Espo\Core\ORM\Repositories\RDB
         }
 
         if (!$entity->isAttributeChanged('lastStage') && $entity->isAttributeChanged('stage')) {
-            $probability = $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->get('stage')], 0);
-            $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+            $probability = $this->metadata->get(
+                ['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->get('stage')], 0
+            );
+            $probabilityMap =  $this->metadata->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
 
             if (!$probability) {
-                $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+                $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);
                 if ($entity->isNew()) {
                     if (count($stageList)) {
                         $min = 100;
@@ -67,7 +71,9 @@ class Opportunity extends \Espo\Core\ORM\Repositories\RDB
                         }
                     }
                 } else {
-                    $lastStageProbability = $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->get('lastStage')], 0);
+                    $lastStageProbability = $this->metadata->get(
+                        ['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->get('lastStage')], 0
+                    );
                     if ($lastStageProbability === 100) {
                         if (count($stageList)) {
                             $max = 0;

@@ -29,18 +29,46 @@
 
 namespace Espo\Core\ORM;
 
-class RepositoryFactory extends \Espo\ORM\RepositoryFactory
+use Espo\Core\{
+    InjectableFactory,
+    Utils\ClassFinder,
+    Repositories\Database as DatabaseRepository,
+};
+
+use Espo\ORM\RepositoryFactory as RepositoryFactoryInterface;
+
+class RepositoryFactory implements RepositoryFactoryInterface
 {
-    protected $defaultRepositoryClassName = '\\Espo\\Core\\ORM\\Repositories\\RDB';
+    protected $defaultClassName = DatabaseRepository::class;
 
-    public function create($name)
+    protected $entityFactory;
+    protected $injectableFactory;
+    protected $classFinder;
+
+    public function __construct(EntityFactory $entityFactory, InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
-        $repository = parent::create($name);
+        $this->entityFactory = $entityFactory;
 
-        $dependencyList = $repository->getDependencyList();
-        foreach ($dependencyList as $name) {
-            $repository->inject($name, $this->entityManager->getContainer()->get($name));
+        $this->injectableFactory = $injectableFactory;
+        $this->classFinder = $classFinder;
+    }
+
+    protected function getClassName(string $name) : ?string
+    {
+        return $this->classFinder->find('Repositories', $name);
+    }
+
+    public function create(string $name) : object
+    {
+        $className = $this->getClassName($name);
+
+        if (!$className || !class_exists($className)) {
+            $className = $this->defaultClassName;
         }
-        return $repository;
+
+        return $this->injectableFactory->createWith($className, [
+            'entityFactory' => $this->entityFactory,
+            'entityType' => $name,
+        ]);
     }
 }

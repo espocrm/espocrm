@@ -29,16 +29,29 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ServiceUnavailable;
 
-use \Espo\Entities\Portal;
+use Espo\Entities\{
+    Portal,
+    User,
+    AuthLogRecord,
+};
 
+use Espo\Core\Utils\Authentication\Login;
+use Espo\Core\Utils\Authentication\TwoFA\CodeInterface as TwoFACodeInterface;
+
+use Espo\Core\Container;
+
+/**
+ * Handles authentication. The entry point of the auth process.
+ */
 class Auth
 {
-    protected $container;
-
     protected $allowAnyAccess;
+
+    private $portal;
 
     const ACCESS_CRM_ONLY = 0;
 
@@ -50,13 +63,13 @@ class Auth
 
     const MAX_FAILED_ATTEMPT_NUMBER = 10;
 
-    private $portal;
-
     const STATUS_SUCCESS = 'success';
 
     const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
 
-    public function __construct(\Espo\Core\Container $container, $allowAnyAccess = false)
+     protected $container;
+
+    public function __construct(Container $container, bool $allowAnyAccess = false)
     {
         $this->container = $container;
 
@@ -75,27 +88,14 @@ class Auth
         return $this->getConfig()->get('authenticationMethod', 'Espo');
     }
 
-    protected function getAuthenticationImpl(string $method) : \Espo\Core\Utils\Authentication\Base
+    protected function getAuthenticationImpl(string $method) : Login
     {
         return $this->getContainer()->get('authenticationFactory')->create($method);
     }
 
-    protected function get2FAImpl(string $method) : \Espo\Core\Utils\Authentication\TwoFA\Base
+    protected function get2FAImpl(string $method) : TwoFACodeInterface
     {
-        $className = $this->getMetadata()->get([
-            'app', 'auth2FAMethods', $method, 'implementationClassName'
-        ]);
-
-        if (!$className) {
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
-
-            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
-            if (!class_exists($className)) {
-                $className = "\\Espo\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
-            }
-        }
-
-        return $this->getContainer()->get('injectableFactory')->createByClassName($className);
+        return $this->getContainer()->get('auth2FAFactory')->create($method);
     }
 
     protected function setPortal(Portal $portal)
@@ -143,14 +143,13 @@ class Auth
             throw new Error("System user is not found");
         }
 
-        $user->set('isAdmin', true);
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
         $entityManager->setUser($user);
-        $this->getContainer()->setUser($user);
+        $this->getContainer()->set('user', $user);
     }
 
-    public function login($username, $password = null, $authenticationMethod = null)
+    public function login(string $username, ?string $password = null, ?string $authenticationMethod = null) : ?array
     {
         $isByTokenOnly = false;
 
@@ -198,11 +197,11 @@ class Auth
             if (!$this->allowAnyAccess) {
                 if ($this->isPortal() && $authToken->get('portalId') !== $this->getPortal()->id) {
                     $GLOBALS['log']->info("AUTH: Trying to login to portal with a token not related to portal.");
-                    return;
+                    return null;
                 }
                 if (!$this->isPortal() && $authToken->get('portalId')) {
                     $GLOBALS['log']->info("AUTH: Trying to login to crm with a token related to portal.");
-                    return;
+                    return null;
                 }
             }
             if ($this->allowAnyAccess) {
@@ -219,7 +218,7 @@ class Auth
 
         if ($isByTokenOnly && !$authToken) {
             $GLOBALS['log']->info("AUTH: Trying to login as user '{$username}' by token but token is not found.");
-            return;
+            return null;
         }
 
         if (!$authenticationMethod) {
@@ -243,36 +242,36 @@ class Auth
         }
 
         if (!$user) {
-            return;
+            return null;
         }
 
         if (!$user->isAdmin() && $this->getConfig()->get('maintenanceMode')) {
-            throw new \Espo\Core\Exceptions\ServiceUnavailable("Application is in maintenance mode.");
+            throw new ServiceUnavailable("Application is in maintenance mode.");
         }
 
         if (!$user->isActive()) {
             $GLOBALS['log']->info("AUTH: Trying to login as user '".$user->get('userName')."' which is not active.");
             $this->logDenied($authLogRecord, 'INACTIVE_USER');
-            return;
+            return null;
         }
 
         if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'.");
             $this->logDenied($authLogRecord, 'IS_PORTAL_USER');
-            return;
+            return null;
         }
 
         if ($this->isPortal() && !$user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user.");
             $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
-            return;
+            return null;
         }
 
         if ($this->isPortal()) {
             if (!$this->getEntityManager()->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
                 $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is portal user but does not belongs to portal.");
                 $this->logDenied($authLogRecord, 'USER_IS_NOT_IN_PORTAL');
-                return;
+                return null;
             }
             $user->set('portalId', $this->getPortal()->id);
         } else {
@@ -282,7 +281,7 @@ class Auth
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
         $this->getEntityManager()->setUser($user);
-        $this->getContainer()->setUser($user);
+        $this->getContainer()->set('user', $user);
 
         $secondStepRequired = false;
 
@@ -295,7 +294,7 @@ class Auth
 
                 if ($twoFACode) {
                     if (!$twoFAImpl->verifyCode($user, $twoFACode)) {
-                        return;
+                        return null;
                     }
                 } else {
                     $loginResultData = $twoFAImpl->getLoginData($user);
@@ -433,9 +432,11 @@ class Auth
         }
     }
 
-    public function destroyAuthToken($token)
+    public function destroyAuthToken(string $token)
     {
-        $authToken = $this->getEntityManager()->getRepository('AuthToken')->select(['id', 'isActive', 'secret'])->where(['token' => $token])->findOne();
+        $authToken = $this->getEntityManager()->getRepository('AuthToken')->select(['id', 'isActive', 'secret'])->where(
+            ['token' => $token]
+        )->findOne();
         if ($authToken) {
             $authToken->set('isActive', false);
             $this->getEntityManager()->saveEntity($authToken);
@@ -449,9 +450,9 @@ class Auth
         }
     }
 
-    protected function createAuthLogRecord($username, $user, $authenticationMethod = null)
+    protected function createAuthLogRecord(string $username, ?User $user, ?string $authenticationMethod = null) : ?AuthLogRecord
     {
-        if ($username === '**logout') return;
+        if ($username === '**logout') return null;
 
         $authLogRecord = $this->getEntityManager()->getEntity('AuthLogRecord');
 
@@ -479,7 +480,7 @@ class Auth
         return $authLogRecord;
     }
 
-    protected function logDenied($authLogRecord, $denialReason)
+    protected function logDenied(AuthLogRecord $authLogRecord, string $denialReason)
     {
         if (!$authLogRecord) return;
 
