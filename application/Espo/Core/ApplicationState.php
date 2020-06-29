@@ -91,7 +91,7 @@ class ApplicationState
     }
 
     /**
-     * Whether logged as admin.
+     * Whether logged as an admin.
      */
     public function isAdmin() : bool
     {
@@ -101,7 +101,7 @@ class ApplicationState
 
 
     /**
-     * Whether logged as api user.
+     * Whether logged as an api user.
      */
     public function isApi() : bool
     {

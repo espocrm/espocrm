@@ -401,6 +401,9 @@ class AclManager
         return $this->checkUserPermission($user, $target, 'assignmentPermission');
     }
 
+    /**
+     * Create a wrapper for a specific user.
+     */
     public function createUserAcl(User $user) : UserAclWrapper
     {
         $className = $this->userAclClassName;
