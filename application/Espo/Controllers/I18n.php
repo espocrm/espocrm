@@ -29,12 +29,21 @@
 
 namespace Espo\Controllers;
 
-class I18n extends \Espo\Core\Controllers\Base
+use Espo\Core\ServiceFactory;
+
+class I18n
 {
+    protected $serviceFactory;
+
+    public function __construct(ServiceFactory $serviceFactory)
+    {
+        $this->serviceFactory = $serviceFactory;
+    }
+
     public function actionRead($params, $data, $request)
     {
         $default = $request->get('default') === 'true';
 
-        return $this->getServiceFactory()->create('Language')->getDataForFrontend($default);
+        return $this->serviceFactory->create('Language')->getDataForFrontend($default);
     }
 }

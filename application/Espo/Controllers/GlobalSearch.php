@@ -29,8 +29,17 @@
 
 namespace Espo\Controllers;
 
-class GlobalSearch extends \Espo\Core\Controllers\Base
+use Espo\Core\ServiceFactory;
+
+class GlobalSearch
 {
+    protected $serviceFactory;
+
+    public function __construct(ServiceFactory $serviceFactory)
+    {
+        $this->serviceFactory = $serviceFactory;
+    }
+
     public function actionSearch($params, $data, $request)
     {
         $query = $request->get('q');
@@ -38,6 +47,6 @@ class GlobalSearch extends \Espo\Core\Controllers\Base
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
 
-        return $this->getService('GlobalSearch')->find($query, $offset, $maxSize);
+        return $this->serviceFactory->create('GlobalSearch')->find($query, $offset, $maxSize);
     }
 }
