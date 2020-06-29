@@ -306,7 +306,7 @@ class EntityManager
     }
 
     /**
-     * Run a query. Returns a result if execution.
+     * Run a query. Returns a result.
      *
      * @param $rerunIfDeadlock Query will be re-run if a deadlock occurs.
      */
