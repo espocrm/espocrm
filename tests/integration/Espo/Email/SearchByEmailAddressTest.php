@@ -52,9 +52,7 @@ class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
                 )
             )
         ));
-
-        $this->assertArrayHasKey('collection', $result);
-        $this->assertEquals(1, count($result['collection']));
+        $this->assertEquals(1, count($result->getCollection()));
     }
 
     public function testTextSearch()
@@ -73,13 +71,11 @@ class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
         $result = $emailService->findEntities([
             'textFilter' => 'name abc'
         ]);
-        $this->assertArrayHasKey('collection', $result);
-        $this->assertEquals(1, count($result['collection']));
+        $this->assertEquals(1, count($result->getCollection()));
 
         $result = $emailService->findEntities([
             'textFilter' => 'Improvements to our Privacy Policy'
         ]);
-        $this->assertArrayHasKey('collection', $result);
-        $this->assertEquals(1, count($result['collection']));
+        $this->assertEquals(1, count($result->getCollection()));
     }
 }

@@ -55,34 +55,12 @@ class SearchTest extends \tests\integration\Core\BaseTestCase
 
         $result = $service->findEntities($params);
 
-        $this->assertArrayHasKey('total', $result);
-        $this->assertArrayHasKey('collection', $result);
+        $this->assertEquals(1, $result->getTotal());
 
-        $this->assertEquals(1, $result['total']);
+        $this->assertInstanceOf('\\Espo\\ORM\\EntityCollection', $result->getCollection());
 
-        $this->assertInstanceOf('\\Espo\\ORM\\EntityCollection', $result['collection']);
-
-        $list = $result['collection']->toArray();
+        $list = $result->getCollection()->toArray();
 
         $this->assertEquals('53203b942850b', $list[0]['id']);
     }
-
-    /*public function testSearchByName()
-    {
-        $result = $this->sendRequest('GET', 'Account', array(
-            'maxSize' => 20,
-            'offset' => 0,
-            'sortBy' => 'name',
-            'asc' => true,
-            'where' => array(
-                array(
-                    'type' => 'textFilter',
-                    'value' => 'Besha',
-                ),
-            ),
-        ));
-
-        $this->assertEquals(1, $result['total']);
-        $this->assertEquals('53203b942850b', $result['list'][0]['id']);
-    }*/
 }
