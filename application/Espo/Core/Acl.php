@@ -62,71 +62,113 @@ class Acl
         return $this->getAclManager()->getMap($this->getUser());
     }
 
+    /**
+     * Get an access level for a specific scope and action.
+     */
     public function getLevel(string $scope, string $action) : string
     {
         return $this->getAclManager()->getLevel($this->getUser(), $scope, $action);
     }
 
+    /**
+     * Get a permission. E.g. 'assignment' permission.
+     */
     public function get(string $permission) : ?string
     {
         return $this->getAclManager()->get($this->getUser(), $permission);
     }
 
+    /**
+     * Whether there's no 'read' access for a specific scope.
+     */
     public function checkReadNo(string $scope) : bool
     {
         return $this->getAclManager()->checkReadNo($this->getUser(), $scope);
     }
 
+    /**
+     * Whether 'read' access is set to 'team' for a specific scope.
+     */
     public function checkReadOnlyTeam(string $scope) : bool
     {
         return $this->getAclManager()->checkReadOnlyTeam($this->getUser(), $scope);
     }
 
+    /**
+     * Whether 'read' access is set to 'own' for a specific scope.
+     */
     public function checkReadOnlyOwn(string $scope) : bool
     {
         return $this->getAclManager()->checkReadOnlyOwn($this->getUser(), $scope);
     }
 
+    /**
+     * Check a scope or entity. If $action is omitted, it will check whether a scope level is set to 'enabled'.
+     */
     public function check($subject, ?string $action = null) : bool
     {
         return $this->getAclManager()->check($this->getUser(), $subject, $action);
     }
 
+    /**
+     * Check access to scope. If $action is omitted, it will check whether a scope level is set to 'enabled'.
+     */
     public function checkScope(string $scope, ?string $action = null) : bool
     {
         return $this->getAclManager()->checkScope($this->getUser(), $scope, $action);
     }
 
+    /**
+     * Check access to a specific entity (record).
+     */
     public function checkEntity(Entity $entity, string $action = 'read') : bool
     {
         return $this->getAclManager()->checkEntity($this->getUser(), $entity, $action);
     }
 
+    /**
+     * Whether a user has an access to another user taking into account a specific permission.
+     */
     public function checkUser(string $permission, User $entity) : bool
     {
         return $this->getAclManager()->checkUser($this->getUser(), $permission, $entity);
     }
 
+    /**
+     * Whether a user is owned of an entity (record). Usually 'assignedUser' field is used for checking.
+     */
     public function checkIsOwner(Entity $entity) : bool
     {
         return $this->getAclManager()->checkIsOwner($this->getUser(), $entity);
     }
 
+    /**
+     * Whether a user team list overlaps with teams set in an entity.
+     */
     public function checkInTeam(Entity $entity) : bool
     {
         return $this->getAclManager()->checkInTeam($this->getUser(), $entity);
     }
 
+    /**
+     * Get attributes forbidden for a user.
+     */
     public function getScopeForbiddenAttributeList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
     {
         return $this->getAclManager()->getScopeForbiddenAttributeList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
+    /**
+     * Get fields forbidden for a user.
+     */
     public function getScopeForbiddenFieldList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
     {
         return $this->getAclManager()->getScopeForbiddenFieldList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
+    /**
+     * Get links forbidden for a user.
+     */
     public function getScopeForbiddenLinkList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
     {
         return $this->getAclManager()->getScopeForbiddenLinkList($this->getUser(), $scope, $action, $thresholdLevel);
