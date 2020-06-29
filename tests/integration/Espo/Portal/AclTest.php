@@ -235,7 +235,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $result = $service->find([]);
 
         $idList = [];
-        foreach ($result['collection'] as $e) {
+        foreach ($result->getCollection() as $e) {
             $idList[] = $e->id;
         }
 
