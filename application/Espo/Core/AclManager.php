@@ -120,7 +120,7 @@ class AclManager
         return $this->tableHashMap[$key];
     }
 
-    public function getMap(User $user) : object
+    public function getMap(User $user) : \StdClass
     {
         return $this->getTable($user)->getMap();
     }

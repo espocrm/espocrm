@@ -39,6 +39,9 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\FieldManagerUtil;
 use Espo\Core\Utils\File\Manager as FileManager;
 
+/**
+ * A table is generated for each user. It's resulted from merging of multitple roles.
+ */
 class Table
 {
     protected $type = 'acl';
@@ -63,12 +66,6 @@ class Table
 
     protected $valuePermissionList = [];
 
-    private $fileManager;
-
-    private $metadata;
-
-    private $fieldManager;
-
     protected $forbiddenAttributesCache = [];
 
     protected $forbiddenFieldsCache = [];
@@ -77,8 +74,17 @@ class Table
 
     protected $isStrictMode = false;
 
+    private $user;
+    private $config;
+    private $fileManager;
+    private $metadata;
+    private $fieldManagerUtil;
+
     public function __construct(
-        User $user, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null,
+        User $user,
+        Config $config = null,
+        FileManager $fileManager = null,
+        Metadata $metadata = null,
         FieldManagerUtil $fieldManagerUtil = null
     ) {
         $this->data = (object) [
@@ -144,7 +150,7 @@ class Table
         return $this->fieldManager;
     }
 
-    public function getMap()
+    public function getMap() : \StdClass
     {
         return $this->data;
     }
@@ -162,7 +168,7 @@ class Table
         return null;
     }
 
-    public function get($permission)
+    public function get(string $permission) : ?string
     {
         if ($permission == 'table') {
             return null;
@@ -174,7 +180,7 @@ class Table
         return 'no';
     }
 
-    public function getLevel($scope, $action)
+    public function getLevel(string $scope, string $action) : string
     {
         if (isset($this->data->table->$scope)) {
             if (isset($this->data->table->$scope->$action)) {
@@ -184,7 +190,7 @@ class Table
         return 'no';
     }
 
-    public function getHighestLevel($scope, $action)
+    public function getHighestLevel(string $scope, string $action) : string
     {
         if (in_array($action, $this->booleanActionList)) {
             return 'yes';
@@ -307,7 +313,7 @@ class Table
         return $roleList;
     }
 
-    public function getScopeForbiddenAttributeList($scope, $action = 'read', $thresholdLevel = 'no')
+    public function getScopeForbiddenAttributeList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
     {
         $key = $scope . '_'. $action . '_' . $thresholdLevel;
         if (isset($this->forbiddenAttributesCache[$key])) {
@@ -346,7 +352,7 @@ class Table
         return $attributeList;
     }
 
-    public function getScopeForbiddenFieldList($scope, $action = 'read', $thresholdLevel = 'no')
+    public function getScopeForbiddenFieldList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
     {
         $key = $scope . '_'. $action . '_' . $thresholdLevel;
         if (isset($this->forbiddenFieldsCache[$key])) {

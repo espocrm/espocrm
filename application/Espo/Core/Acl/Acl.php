@@ -38,6 +38,9 @@ use Espo\Core\{
     Utils\Config,
 };
 
+/**
+ * An implementation for access checking for entities. Can be overriden in `Acl` namespece.
+ */
 class Acl implements ScopeAcl, EntityAcl
 {
     protected $scope;

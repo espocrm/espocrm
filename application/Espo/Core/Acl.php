@@ -57,7 +57,7 @@ class Acl
         return $this->user;
     }
 
-    public function getMap() : object
+    public function getMap() : \StdClass
     {
         return $this->getAclManager()->getMap($this->getUser());
     }

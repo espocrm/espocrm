@@ -35,6 +35,9 @@ use Espo\Core\{
     Utils\FieldManagerUtil,
 };
 
+/**
+ * Lists of restricted fields can be obtained from here. Restricted fields are specified in metadata > entityAcl.
+ */
 class GlobalRestricton
 {
     protected $fieldTypeList = [
