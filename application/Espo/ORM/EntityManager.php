@@ -36,7 +36,6 @@ use Espo\ORM\DB\{
     Query\Base as Query,
 };
 
-
 /**
  * A central access point to ORM functionality.
  */
