@@ -29,7 +29,7 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
 class Stream extends \Espo\Core\Controllers\Base
 {

@@ -29,7 +29,7 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\BadRequest;
 
 class EmailFolder extends \Espo\Core\Controllers\Record
 {

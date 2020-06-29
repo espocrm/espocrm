@@ -29,7 +29,7 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
 class EmailTemplate extends \Espo\Core\Controllers\Record
 {
@@ -49,6 +49,4 @@ class EmailTemplate extends \Espo\Core\Controllers\Record
             'relatedId' => $request->get('relatedId')
         ), true);
     }
-
 }
-

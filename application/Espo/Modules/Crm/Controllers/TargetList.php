@@ -29,9 +29,8 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 class TargetList extends \Espo\Core\Controllers\Record
 {

@@ -33,4 +33,3 @@ class EmailFilter extends \Espo\Core\Controllers\Record
 {
 
 }
-

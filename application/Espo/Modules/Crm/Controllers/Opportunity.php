@@ -29,13 +29,11 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 class Opportunity extends \Espo\Core\Controllers\Record
 {
-
     public function actionReportByLeadSource($params, $data, $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');

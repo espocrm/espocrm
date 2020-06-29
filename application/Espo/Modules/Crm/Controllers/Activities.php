@@ -29,9 +29,8 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden,
-    \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 class Activities extends \Espo\Core\Controllers\Base
 {

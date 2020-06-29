@@ -29,13 +29,12 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
 
 class Meeting extends \Espo\Core\Controllers\Record
 {
-
     public function postActionSendInvitations($params, $data)
     {
         if (empty($data->id)) {

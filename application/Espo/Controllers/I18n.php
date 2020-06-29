@@ -36,10 +36,5 @@ class I18n extends \Espo\Core\Controllers\Base
         $default = $request->get('default') === 'true';
 
         return $this->getServiceFactory()->create('Language')->getDataForFrontend($default);
-
-        /*if ($request->get('default')) {
-            return $this->getContainer()->get('defaultLanguage')->getAll();
-        }
-        return $this->getContainer()->get('language')->getAll();*/
     }
 }

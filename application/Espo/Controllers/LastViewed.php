@@ -29,7 +29,7 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Forbidden;
 
 class LastViewed extends \Espo\Core\Controllers\Base
 {

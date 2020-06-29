@@ -29,9 +29,6 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden;
-
 class GlobalSearch extends \Espo\Core\Controllers\Base
 {
     public function actionSearch($params, $data, $request)
@@ -44,4 +41,3 @@ class GlobalSearch extends \Espo\Core\Controllers\Base
         return $this->getService('GlobalSearch')->find($query, $offset, $maxSize);
     }
 }
-

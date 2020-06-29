@@ -29,8 +29,6 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Forbidden;
-
 class PhoneNumber extends \Espo\Core\Controllers\Record
 {
 

@@ -29,11 +29,10 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Forbidden;
 
 class Metadata extends \Espo\Core\Controllers\Base
 {
-
     public function actionRead($params, $data)
     {
         return $this->getServiceFactory()->create('Metadata')->getDataForFrontend();

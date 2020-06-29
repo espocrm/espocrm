@@ -29,12 +29,10 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\BadRequest;
 
 class Target extends \Espo\Core\Controllers\Record
 {
-
     public function actionConvert($params, $data)
     {
         if (empty($data->id)) {
