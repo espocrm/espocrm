@@ -34,8 +34,6 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
-    EntryPoints\NotStrictAuth,
-    EntryPoints\NoAuth,
 };
 
 use Slim\Http\Request;
