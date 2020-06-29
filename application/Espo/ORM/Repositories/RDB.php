@@ -251,10 +251,8 @@ class RDB extends Repository implements Findable, Relatable, Removable
             $entityType = $entity->getRelationParam($relationName, 'entity');
         }
 
-        if ($entityType) {
-            if (empty($params['skipAdditionalSelectParams'])) {
-                $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
-            }
+        if ($entityType && empty($params['skipAdditionalSelectParams'])) {
+            $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
         }
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
@@ -279,8 +277,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
         if (!$entity->id) {
             return 0;
         }
-        $entityType = $entity->relations[$relationName]['entity'];
-        if (empty($params['skipAdditionalSelectParams'])) {
+        $entityType =  $entity->getRelationParam($relationName, 'entity');
+
+        if ($entityType && empty($params['skipAdditionalSelectParams'])) {
             $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
         }
 
