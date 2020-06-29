@@ -46,6 +46,9 @@ use Espo\Core\{
 
 use Espo\Entities\User;
 
+/**
+ * Used for generating and managing select parameters which subsequently will be feed to ORM.
+ */
 class SelectManager
 {
     protected $entityType;
@@ -289,6 +292,11 @@ class SelectManager
         $this->applyLeftJoinsFromWhere($where, $result);
     }
 
+    /**
+     * Convert 'where' parameters from the frontend format to the format needed by ORM.
+     *
+     * @return Where clause for ORM.
+     */
     public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result = []) : array
     {
         $whereClause = [];
@@ -481,6 +489,9 @@ class SelectManager
         $this->q(['q' => $textFilter], $result);
     }
 
+    /**
+     * Get empty select parameters.
+     */
     public function getEmptySelectParams() : array
     {
         $result = [];
@@ -770,6 +781,9 @@ class SelectManager
         return false;
     }
 
+    /**
+     * @deprecated
+     */
     public function getAclParams() : array
     {
         $result = [];
@@ -777,13 +791,27 @@ class SelectManager
         return $result;
     }
 
-    public function buildSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false) : array
-    {
+    /**
+     * Build select parameters for ORM from parameters in the frontend format.
+     *
+     * @param $params Parameters in frontend format.
+     * @param $withAcl To apply ACL.
+     * @param $checkWherePermission To check passed filters, whether a user has an access to use these filters.
+     * @param forbidComplexExpressions To forbid complex expression usage.
+     * @return Parameters for ORM.
+     */
+    public function buildSelectParams(
+        array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false
+    ) : array {
         return $this->getSelectParams($params, $withAcl, $checkWherePermission, $forbidComplexExpressions);
     }
 
-    public function getSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false) : array
-    {
+    /**
+     * The same as buildSelectParams.
+     */
+    public function getSelectParams(
+        array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false
+    ) : array {
         $result = [];
         $this->prepareResult($result);
 
@@ -867,6 +895,9 @@ class SelectManager
         return $result;
     }
 
+    /**
+     * Apply default order to select parameters.
+     */
     public function applyDefaultOrder(array &$result)
     {
         $orderBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
@@ -1872,18 +1903,27 @@ class SelectManager
         return $part;
     }
 
+    /**
+     * Apply an order to select parameters.
+     */
     public function applyOrder(string $sortBy, $desc, array &$result)
     {
         $this->prepareResult($result);
         $this->order($sortBy, $desc, $result);
     }
 
+    /**
+     * Apply a limit to select parameters.
+     */
     public function applyLimit(?int $offset, ?int $maxSize, array &$result)
     {
         $this->prepareResult($result);
         $this->limit($offset, $maxSize, $result);
     }
 
+    /**
+     * Apply a primary filter to select parameters.
+     */
     public function applyPrimaryFilter(string $filter, array &$result)
     {
         $this->prepareResult($result);
@@ -1893,7 +1933,8 @@ class SelectManager
             $this->$method($result);
             return;
         } else {
-            $className = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'filters', $filter, 'className']);
+            $className = $this->getMetadata()->get(
+                ['entityDefs', $this->entityType, 'collection', 'filters', $filter, 'className']);
             if ($className) {
                 if (!class_exists($className)) {
                     $GLOBALS['log']->error("Could find class for filter {$filter}.");
@@ -1917,6 +1958,9 @@ class SelectManager
         $this->applyPrimaryFilter($filter, $result);
     }
 
+    /**
+     * Apply a bool filter to select parameters.
+     */
     public function applyBoolFilter(string $filter, array &$result)
     {
         $this->prepareResult($result);
@@ -1930,6 +1974,9 @@ class SelectManager
         }
     }
 
+    /**
+     * Apply a list of bool filters to select parameters.
+     */
     public function applyBoolFilterList(array $filterList, array &$result)
     {
         $this->prepareResult($result);
@@ -1955,6 +2002,9 @@ class SelectManager
         }
     }
 
+    /**
+     * Apply a text filter to select parameters.
+     */
     public function applyTextFilter(string $textFilter, array &$result)
     {
         $this->prepareResult($result);
@@ -1966,6 +2016,9 @@ class SelectManager
 
     }
 
+    /**
+     * Check whether a link is already in JOINs. If an existing join has alias, then the alias is checked, the link is ignored.
+     */
     public function hasJoin($join, array &$result)
     {
         if (in_array($join, $result['joins'])) {
@@ -1983,6 +2036,10 @@ class SelectManager
         return false;
     }
 
+    /**
+     * Check whether a link is already in LEFT JOINs. If an existing join has alias, then the alias is checked,
+     * the link is ignored.
+     */
     public function hasLeftJoin($leftJoin, array &$result)
     {
         if (in_array($leftJoin, $result['leftJoins'])) {
@@ -2000,6 +2057,9 @@ class SelectManager
         return false;
     }
 
+    /**
+     * Check whether a link is already joined. If an existing join has alias, then the alias is checked, the link is ignored.
+     */
     public function hasLinkJoined($join, array &$result)
     {
         if (in_array($join, $result['joins'])) {
@@ -2029,6 +2089,11 @@ class SelectManager
         return false;
     }
 
+    /**
+     * Add JOIN.
+     *
+     * @param string|array $join Format used for array: [link, alias, conditions].
+     */
     public function addJoin($join, array &$result)
     {
         if (empty($result['joins'])) {
@@ -2060,6 +2125,11 @@ class SelectManager
         $result['joins'][] = $join;
     }
 
+    /**
+     * Add LEFT JOIN.
+     *
+     * @param string|array $join Format used for array: [link, alias, conditions].
+     */
     public function addLeftJoin($leftJoin, array &$result)
     {
         if (empty($result['leftJoins'])) {
@@ -2096,6 +2166,9 @@ class SelectManager
         $result['joinConditions'][$join] = $condition;
     }
 
+    /**
+     * Set DISTINCT.
+     */
     public function setDistinct(bool $distinct, array &$result)
     {
         $result['distinct'] = (bool) $distinct;
@@ -2526,8 +2599,6 @@ class SelectManager
         ], $result);
 
         return ['subscription.id!=' => null];
-
-        //$result['whereClause'][] = ['subscription.id!=' => null];
     }
 
     public function mergeSelectParams(array $selectParams1, ?array $selectParams2) : array
