@@ -30,6 +30,7 @@
 namespace Espo\Core;
 
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\{
     InjectableFactory,
@@ -141,6 +142,22 @@ class ControllerManager
 
         if (method_exists($controller, $beforeMethodName)) {
             $controller->$beforeMethodName($params, $data, $request, $response);
+        }
+
+        $class = new \ReflectionClass($controller);
+        $method = $class->getMethod($primaryActionMethodName);
+        $args = $method->getParameters();
+        if (count($args) >= 2) {
+            if ($args[1]->hasType()) {
+                $dataClass = $args[1]->getClass();
+                if ($dataClass && strtolower($dataClass->getName()) === 'stdclass') {
+                    if (!$data instanceof \StdClass) {
+                        throw new BadRequest(
+                            "{$controllerName} {$requestMethod} {$actionName}: Content-Type should be 'application/json'."
+                        );
+                    }
+                }
+            }
         }
 
         $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
