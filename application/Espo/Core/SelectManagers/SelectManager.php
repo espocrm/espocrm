@@ -2204,7 +2204,9 @@ class SelectManager
             $textFilter = str_replace('%', '', $textFilter);
         }
 
-        $fullTextSearchColumnList = $this->getEntityManager()->getOrmMetadata()->get($this->getEntityType(), ['fullTextSearchColumnList']);
+        $fullTextSearchColumnList = $this->getEntityManager()->getMetadata()->get(
+            $this->getEntityType(), ['fullTextSearchColumnList']
+        );
 
         $useFullTextSearch = false;
 

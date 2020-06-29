@@ -54,7 +54,7 @@ class CheckCreatedIndexTest extends \tests\integration\Core\BaseTestCase
         $entityManager = $this->getContainer()->get('entityManager');
         $pdo = $entityManager->getPDO();
 
-        $fulltextFieldList = $entityManager->getOrmMetadata()->get($entityName, 'fullTextSearchColumnList');
+        $fulltextFieldList = $entityManager->getMetadata()->get($entityName, 'fullTextSearchColumnList');
 
         if (!$fulltextFieldList) {
             $this->assertNull($fulltextFieldList);

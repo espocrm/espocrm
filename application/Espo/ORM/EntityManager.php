@@ -265,11 +265,6 @@ class EntityManager
         return $this->metadata;
     }
 
-    public function getOrmMetadata()
-    {
-        return $this->getMetadata();
-    }
-
     /**
      * Get an instance of PDO.
      */
