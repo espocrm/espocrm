@@ -29,17 +29,26 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Utils as Utils;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-class TemplateManager extends \Espo\Core\Controllers\Base
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\TemplateFileManager;
+use Espo\Core\ApplicationState;
+
+class TemplateManager
 {
-    protected function checkControllerAccess()
+    protected $metadata;
+    protected $templateFileManager;
+    protected $applicationState;
+
+    public function __construct(Metadata $metadata, TemplateFileManager $templateFileManager, ApplicationState $applicationState)
     {
-        if (!$this->getUser()->isAdmin()) {
+        $this->metadata = $metadata;
+        $this->templateFileManager = $templateFileManager;
+        $this->applicationState = $applicationState;
+
+        if (!$this->applicationState->isAdmin()) {
             throw new Forbidden();
         }
     }
@@ -50,10 +59,10 @@ class TemplateManager extends \Espo\Core\Controllers\Base
         if (empty($name)) throw new BadRequest();
         $scope = $request->get('scope');
         $module = null;
-        $module = $this->getMetadata()->get(['app', 'templates', $name, 'module']);
-        $hasSubject = !$this->getMetadata()->get(['app', 'templates', $name, 'noSubject']);
+        $module = $this->metadata->get(['app', 'templates', $name, 'module']);
+        $hasSubject = !$this->metadata->get(['app', 'templates', $name, 'noSubject']);
 
-        $templateFileManager = $this->getContainer()->get('templateFileManager');
+        $templateFileManager = $this->templateFileManager;
 
         $returnData = (object) [];
         $returnData->body = $templateFileManager->getTemplate($name, 'body', $scope, $module);
@@ -75,7 +84,7 @@ class TemplateManager extends \Espo\Core\Controllers\Base
             $scope = $data->scope;
         }
 
-        $templateFileManager = $this->getContainer()->get('templateFileManager');
+        $templateFileManager = $this->templateFileManager;
 
         if (isset($data->subject)) {
             $templateFileManager->saveTemplate($data->name, 'subject', $data->subject, $scope);
@@ -99,10 +108,10 @@ class TemplateManager extends \Espo\Core\Controllers\Base
         }
 
         $module = null;
-        $module = $this->getMetadata()->get(['app', 'templates', $data->name, 'module']);
-        $hasSubject = !$this->getMetadata()->get(['app', 'templates', $data->name, 'noSubject']);
+        $module = $this->metadata->get(['app', 'templates', $data->name, 'module']);
+        $hasSubject = !$this->metadata->get(['app', 'templates', $data->name, 'noSubject']);
 
-        $templateFileManager = $this->getContainer()->get('templateFileManager');
+        $templateFileManager = $this->templateFileManager;
 
         if ($hasSubject) {
             $templateFileManager->resetTemplate($data->name, 'subject', $scope);
