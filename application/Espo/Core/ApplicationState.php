@@ -70,7 +70,7 @@ class ApplicationState
 
     public function isLogged() : bool
     {
-        if (!$this->continer->has('user')) return false;
+        if (!$this->container->has('user')) return false;
         if ($this->getUser()->isSystem()) return false;
         return true;
     }
