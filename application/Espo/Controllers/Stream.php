@@ -31,11 +31,23 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Error;
 
-class Stream extends \Espo\Core\Controllers\Base
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
+
+class Stream
 {
     const MAX_SIZE_LIMIT = 200;
 
     public static $defaultAction = 'list';
+
+    protected $serviceFactory;
+    protected $config;
+
+    public function __construct(ServiceFactory $serviceFactory, Config $config)
+    {
+        $this->serviceFactory = $serviceFactory;
+        $this->config = $config;
+    }
 
     public function actionList($params, $data, $request)
     {
@@ -48,9 +60,7 @@ class Stream extends \Espo\Core\Controllers\Base
         $filter = $request->get('filter');
         $skipOwn = $request->get('skipOwn') === 'true';
 
-        $service = $this->getService('Stream');
-
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
         if (empty($maxSize)) {
             $maxSize = $maxSizeLimit;
         }
@@ -58,7 +68,7 @@ class Stream extends \Espo\Core\Controllers\Base
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
-        $result = $service->find($scope, $id, [
+        $result = $this->serviceFactory->create('Stream')->find($scope, $id, [
             'offset' => $offset,
             'maxSize' => $maxSize,
             'after' => $after,
@@ -83,9 +93,7 @@ class Stream extends \Espo\Core\Controllers\Base
 
         $where = $request->get('where');
 
-        $service = $this->getService('Stream');
-
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
         if (empty($maxSize)) {
             $maxSize = $maxSizeLimit;
         }
@@ -93,7 +101,7 @@ class Stream extends \Espo\Core\Controllers\Base
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
-        $result = $service->find($scope, $id, [
+        $result = $this->serviceFactory->create('Stream')->find($scope, $id, [
             'offset' => $offset,
             'maxSize' => $maxSize,
             'after' => $after,
