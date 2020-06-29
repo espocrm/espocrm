@@ -35,24 +35,21 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
-    Utils\Metadata,
     Utils\Json,
     Utils\Util,
 };
 
 class ControllerManager
 {
-    protected $injectableFactory;
-    protected $classFinder;
-    protected $metadata; // TODO remove
-
     private $controllersHash;
 
-    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder, Metadata $metadata)
+    protected $injectableFactory;
+    protected $classFinder;
+
+    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
         $this->injectableFactory = $injectableFactory;
         $this->classFinder = $classFinder;
-        $this->metadata = $metadata;
 
         $this->controllersHash = (object) [];
     }
@@ -128,16 +125,6 @@ class ControllerManager
             throw new NotFound(
                 "Action {$requestMethod} '{$actionName}' does not exist in controller '{$controllerName}'."
             );
-        }
-
-        // TODO Remove in 6.0.0
-        if ($data instanceof \StdClass) {
-            if (
-                $this->metadata->get(
-                    ['app', 'deprecatedControllerActions', $controllerName, $primaryActionMethodName])
-            ) {
-                $data = get_object_vars($data);
-            }
         }
 
         if (method_exists($controller, $beforeMethodName)) {

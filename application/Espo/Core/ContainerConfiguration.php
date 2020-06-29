@@ -74,12 +74,7 @@ class ContainerConfiguration
 
     public function getServiceClassName(string $name) : ?string
     {
-        $className =
-            $this->metadata->get(['app', 'containerServices', $name, 'className']) ??
-            $this->metadata->get(['app', 'serviceContainer', 'classNames',  $name]) ?? // deprecated
-            null;
-
-        return $className;
+        return $this->metadata->get(['app', 'containerServices', $name, 'className']) ?? null;
     }
 
     public function getServiceDependencyList(string $name) : ?array
