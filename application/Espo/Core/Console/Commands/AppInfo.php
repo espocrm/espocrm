@@ -77,6 +77,10 @@ class AppInfo implements Command
                 $serviceList[] = $name;
             }
         }
+
+
+        sort($serviceList);
+
         if ($nameOnly) {
             foreach ($serviceList as $name) {
                 echo $name . "\n";
