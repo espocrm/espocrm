@@ -317,10 +317,6 @@ class Application
             $response = $slim->response();
             $response->headers->set('Content-Type', 'application/json');
 
-            if (isset($conditions['useController']) && $conditions['useController'] == false) {
-                return;
-            }
-
             $routeOptions = call_user_func($route->getCallable());
             $routeKeys = is_array($routeOptions) ? array_keys($routeOptions) : [];
 
