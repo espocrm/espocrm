@@ -293,7 +293,7 @@ class Attachment extends Record
             $opts[\CURLOPT_HEADER] = true;
             $opts[\CURLOPT_BINARYTRANSFER] = true;
             $opts[\CURLOPT_VERBOSE] = true;
-            $opts[\CURLOPT_SSL_VERIFYPEER] = false;
+            $opts[\CURLOPT_SSL_VERIFYPEER] = true;
             $opts[\CURLOPT_SSL_VERIFYHOST] = 2;
             $opts[\CURLOPT_RETURNTRANSFER] = true;
             $opts[\CURLOPT_FOLLOWLOCATION] = true;
