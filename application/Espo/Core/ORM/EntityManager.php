@@ -54,8 +54,8 @@ class EntityManager extends BaseEntityManager
         $this->helper = $helper;
     }
 
-    public function getHelper() : ?Helper
+    public function getHelper() : Helper
     {
-        return $this->helper ?? null;
+        return $this->helper;
     }
 }
