@@ -36,7 +36,12 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-class Meeting extends \Espo\Services\Record {
+use Espo\Core\Di;
+
+class Meeting extends \Espo\Services\Record implements
+    Di\HookManagerAware
+{
+    use Di\HookManagerSetter;
 
     protected $validateRequiredSkipFieldList = [
         'dateEnd'
@@ -219,7 +224,7 @@ class Meeting extends \Espo\Services\Record {
             'inviteeId' => $userId,
         ];
 
-        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterConfirmation', $entity, [], $actionData);
+        $this->hookManager->process($this->entityType, 'afterConfirmation', $entity, [], $actionData);
 
         return true;
     }

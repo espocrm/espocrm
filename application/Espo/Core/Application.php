@@ -458,6 +458,5 @@ class Application
         $user = $this->container->get('entityManager')->getEntity('User', 'system');
         $user->set('type', 'system');
         $this->container->set('user', $user);
-        $this->container->get('entityManager')->setUser($user);
     }
 }

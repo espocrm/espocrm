@@ -37,7 +37,6 @@ use Espo\Entities\AuthToken;
 
 use Espo\Core\Container;
 
-
 class LDAP extends Espo
 {
     private $utils;
@@ -109,7 +108,6 @@ class LDAP extends Espo
         }
 
         $this->getContainer()->set('user', $systemUser);
-        $this->getEntityManager()->setUser($systemUser);
     }
 
     protected function getLdapClient()

@@ -73,10 +73,19 @@ class ApplicationState
     }
 
     /**
-     * Get current logged user. If no auth is applied, then system used will be returned.
+     * Whether any user is initialized. If not logged, it will also return TRUE, meaning the system used is used.
+     */
+    public function hasUser() : bool
+    {
+        return $this->container->has('user');
+    }
+
+    /**
+     * Get current logged user. If no auth is applied, then system user will be returned.
      */
     public function getUser() : UserEntity
     {
+        if (!$this->hasUser()) throw new Error("User is not available yet.");
         return $this->container->get('user');
     }
 

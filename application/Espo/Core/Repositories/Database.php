@@ -42,6 +42,8 @@ use Espo\Core\ORM\{
 use Espo\Core\{
     Utils\Metadata,
     Utils\Util,
+    HookManager,
+    ApplicationState,
 };
 
 class Database extends RDB
@@ -55,33 +57,27 @@ class Database extends RDB
     private $restoreData = null;
 
     protected $metadata;
-    protected $config;
-    protected $fieldManagerUtil;
+    protected $hookManager;
+    protected $applicationState;
 
     public function __construct(
         string $entityType,
         EntityManager $entityManager,
         EntityFactory $entityFactory,
-        Metadata $metadata
+        Metadata $metadata,
+        HookManager $hookManager,
+        ApplicationState $applicationState
     ) {
-        parent::__construct($entityType, $entityManager, $entityFactory, $metadata);
-
         $this->metadata = $metadata;
+        $this->hookManager = $hookManager;
+        $this->applicationState = $applicationState;
+
+        parent::__construct($entityType, $entityManager, $entityFactory, $metadata);
     }
 
     protected function getMetadata()
     {
         return $this->metadata;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getFieldManagerUtil()
-    {
-        return $this->fieldManagerUtil;
     }
 
     public function handleSelectParams(&$params)
@@ -140,7 +136,7 @@ class Database extends RDB
     {
         parent::beforeRemove($entity, $options);
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeRemove', $entity, $options);
+            $this->hookManager->process($this->entityType, 'beforeRemove', $entity, $options);
         }
 
         $nowString = date('Y-m-d H:i:s', time());
@@ -148,8 +144,8 @@ class Database extends RDB
             $entity->set('modifiedAt', $nowString);
         }
         if ($entity->hasAttribute('modifiedById')) {
-            if ($this->getEntityManager()->getUser()) {
-                $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+            if ($this->applicationState->hasUser()) {
+                $entity->set('modifiedById', $this->applicationState->getUser()->id);
             }
         }
     }
@@ -163,7 +159,7 @@ class Database extends RDB
         }
 
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
+            $this->hookManager->process($this->entityType, 'afterRemove', $entity, $options);
         }
     }
 
@@ -174,7 +170,7 @@ class Database extends RDB
                 'relationName' => $relationName,
                 'relationParams' => $params,
             ];
-            $this->getEntityManager()->getHookManager()->process(
+            $this->hookManager->process(
                 $this->entityType, 'afterMassRelate', $entity, $options, $hookData
             );
         }
@@ -208,7 +204,7 @@ class Database extends RDB
                     'foreignEntity' => $foreign,
                     'foreignId' => $foreign->id,
                 ];
-                $this->getEntityManager()->getHookManager()->process(
+                $this->hookManager->process(
                     $this->entityType, 'afterRelate', $entity, $options, $hookData
                 );
             }
@@ -236,7 +232,7 @@ class Database extends RDB
                     'foreignEntity' => $foreign,
                     'foreignId' => $foreign->id,
                 ];
-                $this->getEntityManager()->getHookManager()->process(
+                $this->hookManager->process(
                     $this->entityType, 'afterUnrelate', $entity, $options, $hookData
                 );
             }
@@ -248,7 +244,7 @@ class Database extends RDB
         parent::beforeSave($entity, $options);
 
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeSave', $entity, $options);
+            $this->hookManager->process($this->entityType, 'beforeSave', $entity, $options);
         }
     }
 
@@ -270,7 +266,7 @@ class Database extends RDB
         }
 
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterSave', $entity, $options);
+            $this->hookManager->process($this->entityType, 'afterSave', $entity, $options);
         }
     }
 
@@ -299,8 +295,8 @@ class Database extends RDB
                     if (!empty($options['createdById'])) {
                         $entity->set('createdById', $options['createdById']);
                     } else if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
-                        if ($this->getEntityManager()->getUser()) {
-                            $entity->set('createdById', $this->getEntityManager()->getUser()->id);
+                        if ($this->applicationState->hasUser()) {
+                            $entity->set('createdById', $this->applicationState->getUser()->id);
                         }
                     }
                 }
@@ -312,9 +308,9 @@ class Database extends RDB
                     if ($entity->hasAttribute('modifiedById')) {
                         if (!empty($options['modifiedById'])) {
                             $entity->set('modifiedById', $options['modifiedById']);
-                        } else if ($this->getEntityManager()->getUser()) {
-                            $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
-                            $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
+                        } else if ($this->applicationState->hasUser()) {
+                            $entity->set('modifiedById', $this->applicationState->getUser()->id);
+                            $entity->set('modifiedByName', $this->applicationState->getUser()->get('name'));
                         }
                     }
                 }

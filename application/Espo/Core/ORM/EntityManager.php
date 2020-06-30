@@ -41,39 +41,17 @@ use Espo\ORM\EntityManager as BaseEntityManager;
 
 class EntityManager extends BaseEntityManager
 {
-    private $hookManager;
-
     private $helper;
-
-    protected $user = null;
 
     public function __construct(
         array $params,
         RepositoryFactory $repositoryFactory,
         EntityFactory $entityFactory,
-        HookManager $hookManager,
         Helper $helper
     ) {
         parent::__construct($params, $repositoryFactory, $entityFactory);
 
-        $this->hookManager = $hookManager;
         $this->helper = $helper;
-    }
-
-    // TODO Check whether setUser is needed here
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    public function getUser() : ?User
-    {
-        return $this->user ?? null;
-    }
-
-    public function getHookManager() : HookManager
-    {
-        return $this->hookManager;
     }
 
     public function getHelper() : ?Helper
