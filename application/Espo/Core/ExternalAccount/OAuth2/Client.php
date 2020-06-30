@@ -207,13 +207,11 @@ class Client
 
         curl_setopt($ch, CURLOPT_HEADER, 1);
 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+
         if (!empty($this->certificateFile)) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_CAINFO, $this->certificateFile);
-        } else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         }
 
         if (!empty($this->curlOptions)) {
