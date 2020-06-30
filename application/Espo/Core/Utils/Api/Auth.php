@@ -55,21 +55,21 @@ class Auth extends \Slim\Middleware
         $uri = $request->getResourceUri();
         $httpMethod = $request->getMethod();
 
-        $username = $request->headers('PHP_AUTH_USER');
-        $password = $request->headers('PHP_AUTH_PW');
+        $username = $request->headers->get('PHP_AUTH_USER');
+        $password = $request->headers->get('PHP_AUTH_PW');
 
         $authenticationMethod = null;
 
-        $espoAuthorizationHeader = $request->headers('Http-Espo-Authorization');
+        $espoAuthorizationHeader = $request->headers->get('Http-Espo-Authorization');
         if (isset($espoAuthorizationHeader)) {
             list($username, $password) = explode(':', base64_decode($espoAuthorizationHeader), 2);
         } else {
-            $hmacAuthorizationHeader = $request->headers('X-Hmac-Authorization');
+            $hmacAuthorizationHeader = $request->headers->get('X-Hmac-Authorization');
             if ($hmacAuthorizationHeader) {
                 $authenticationMethod = 'Hmac';
                 list($username, $password) = explode(':', base64_decode($hmacAuthorizationHeader), 2);
             } else {
-                $apiKeyHeader = $request->headers('X-Api-Key');
+                $apiKeyHeader = $request->headers->get('X-Api-Key');
                 if ($apiKeyHeader) {
                     $authenticationMethod = 'ApiKey';
                     $username = $apiKeyHeader;
@@ -86,9 +86,9 @@ class Auth extends \Slim\Middleware
         }
 
         if (!isset($username) && !isset($password)) {
-            $espoCgiAuth = $request->headers('Http-Espo-Cgi-Auth');
+            $espoCgiAuth = $request->headers->get('Http-Espo-Cgi-Auth');
             if (empty($espoCgiAuth)) {
-                $espoCgiAuth = $request->headers('Redirect-Http-Espo-Cgi-Auth');
+                $espoCgiAuth = $request->headers->get('Redirect-Http-Espo-Cgi-Auth');
             }
             if (!empty($espoCgiAuth)) {
                 list($username, $password) = explode(':' , base64_decode(substr($espoCgiAuth, 6)));
@@ -198,7 +198,7 @@ class Auth extends \Slim\Middleware
     {
         $request = $this->app->request();
 
-        $httpXRequestedWith = $request->headers('Http-X-Requested-With');
+        $httpXRequestedWith = $request->headers->get('Http-X-Requested-With');
         if ($httpXRequestedWith && strtolower($httpXRequestedWith) == 'xmlhttprequest') {
             return true;
         }
