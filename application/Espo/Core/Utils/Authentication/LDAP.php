@@ -226,7 +226,10 @@ class LDAP extends Espo
 
         $tokenUsername = $user->get('userName');
         if (strtolower($username) != strtolower($tokenUsername)) {
-            $GLOBALS['log']->alert('Unauthorized access attempt for user ['.$username.'] from IP ['.$_SERVER['REMOTE_ADDR'].']');
+            $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+            $GLOBALS['log']->alert(
+                'Unauthorized access attempt for user ['.$username.'] from IP ['.$ip.']'
+            );
             return null;
         }
 

@@ -143,7 +143,7 @@ class Auth
             throw new Error("System user is not found");
         }
 
-        $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
 
         $this->getContainer()->set('user', $user);
     }
@@ -277,7 +277,7 @@ class Auth
             $user->loadLinkMultipleField('teams');
         }
 
-        $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
 
         $this->getContainer()->set('user', $user);
 
@@ -311,7 +311,7 @@ class Auth
                 $token = $this->generateToken();
                 $authToken->set('token', $token);
                 $authToken->set('hash', $user->get('password'));
-                $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+                $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
                 $authToken->set('userId', $user->id);
 
                 if ($createTokenSecret) {
@@ -399,7 +399,7 @@ class Auth
 
         $where = [
             'requestTime>' => $requestTimeFrom->format('U'),
-            'ipAddress' => $_SERVER['REMOTE_ADDR'],
+            'ipAddress' => $_SERVER['REMOTE_ADDR'] ?? null,
             'isDenied' => true,
         ];
 
@@ -410,7 +410,9 @@ class Auth
         }
 
         if ($failAttemptCount > $maxFailedAttempts) {
-            $GLOBALS['log']->warning("AUTH: Max failed login attempts exceeded for IP '".$_SERVER['REMOTE_ADDR']."'.");
+            $GLOBALS['log']->warning(
+                "AUTH: Max failed login attempts exceeded for IP '".($_SERVER['REMOTE_ADDR'] ?? null)."'."
+            );
             throw new Forbidden("Max failed login attempts exceeded.");
         }
     }
@@ -456,7 +458,7 @@ class Auth
 
         $authLogRecord->set([
             'username' => $username,
-            'ipAddress' => $_SERVER['REMOTE_ADDR'],
+            'ipAddress' => $_SERVER['REMOTE_ADDR'] ?? null,
             'requestTime' => $_SERVER['REQUEST_TIME_FLOAT'],
             'requestMethod' => $this->request->getMethod(),
             'requestUrl' => $this->request->getUrl() . $this->request->getPath(),
