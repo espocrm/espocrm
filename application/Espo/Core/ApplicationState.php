@@ -85,7 +85,7 @@ class ApplicationState
      */
     public function getUser() : UserEntity
     {
-        if (!$this->hasUser()) throw new Error("User is not available yet.");
+        if (!$this->hasUser()) throw new Error("User is not yet available.");
         return $this->container->get('user');
     }
 
