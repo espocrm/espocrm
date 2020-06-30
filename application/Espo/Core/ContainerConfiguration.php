@@ -67,7 +67,10 @@ class ContainerConfiguration
         }
 
         if (class_exists($className)) {
-            return $className;
+            $class = new \ReflectionClass($className);
+            if ($class->isInstantiable()) {
+                return $className;
+            }
         }
 
         return null;
