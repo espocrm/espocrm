@@ -61,7 +61,7 @@ class ExistsType extends \Espo\Core\Formula\Functions\Base
         while ($i < count($item->value) - 1) {
             $key = $this->evaluate($item->value[$i]);
             $value = $this->evaluate($item->value[$i + 1]);
-            $whereClause[$key] = $value;
+            $whereClause[] = [$key => $value];
             $i = $i + 2;
         }
 
