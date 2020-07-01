@@ -44,6 +44,10 @@ use Espo\Core\Utils\Authentication\TwoFA\CodeInterface as TwoFACodeInterface;
 
 use Espo\Core\Container;
 
+use Psr\Http\Message\{
+    ServerRequestInterface as Request,
+};
+
 /**
  * Handles authentication. The entry point of the auth process.
  */
@@ -67,15 +71,13 @@ class Auth
 
     const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
 
-     protected $container;
+    protected $container;
 
-    public function __construct(Container $container, bool $allowAnyAccess = false)
+    public function __construct(Container $container, Request $request, bool $allowAnyAccess = false)
     {
         $this->container = $container;
-
+        $this->request = $request;
         $this->allowAnyAccess = $allowAnyAccess;
-
-        $this->request = $container->get('slim')->request();
     }
 
     protected function getContainer()
@@ -134,31 +136,17 @@ class Auth
         return $this->getContainer()->get('metadata');
     }
 
-    public function useNoAuth()
-    {
-        $entityManager = $this->getContainer()->get('entityManager');
-
-        $user = $entityManager->getRepository('User')->get('system');
-        if (!$user) {
-            throw new Error("System user is not found");
-        }
-
-        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
-
-        $this->getContainer()->set('user', $user);
-    }
-
     public function login(string $username, ?string $password = null, ?string $authenticationMethod = null) : ?array
     {
         $isByTokenOnly = false;
 
         if (!$authenticationMethod) {
-            if ($this->request->headers->get('Http-Espo-Authorization-By-Token') === 'true') {
+            if ($this->request->getHeaderLine('Http-Espo-Authorization-By-Token') === 'true') {
                 $isByTokenOnly = true;
             }
         }
 
-        $createTokenSecret = $this->request->headers->get('Espo-Authorization-Create-Token-Secret') === 'true';
+        $createTokenSecret = $this->request->getHeaderLine('Espo-Authorization-Create-Token-Secret') === 'true';
 
         if ($createTokenSecret) {
             if ($this->getConfig()->get('authTokenSecretDisabled')) {
@@ -288,7 +276,7 @@ class Auth
             if ($twoFAMethod) {
                 $twoFAImpl = $this->get2FAImpl($twoFAMethod);
 
-                $twoFACode = $this->request->headers->get('Espo-Authorization-Code');
+                $twoFACode = $this->request->getHeaderLine('Espo-Authorization-Code');
 
                 if ($twoFACode) {
                     if (!$twoFAImpl->verifyCode($user, $twoFACode)) {
@@ -305,7 +293,7 @@ class Auth
             $secondStepRequired = $loginResultData['secondStepRequired'] ?? false;
         }
 
-        if (!$secondStepRequired && $this->request->headers->get('Http-Espo-Authorization')) {
+        if (!$secondStepRequired && $this->request->getHeaderLine('Http-Espo-Authorization')) {
             if (!$authToken) {
                 $authToken = $this->getEntityManager()->getEntity('AuthToken');
                 $token = $this->generateToken();
@@ -461,7 +449,7 @@ class Auth
             'ipAddress' => $_SERVER['REMOTE_ADDR'] ?? null,
             'requestTime' => $_SERVER['REQUEST_TIME_FLOAT'],
             'requestMethod' => $this->request->getMethod(),
-            'requestUrl' => $this->request->getUrl() . $this->request->getPath(),
+            'requestUrl' => $this->request->getUri() . $this->request->getPath(),
             'authenticationMethod' => $authenticationMethod
         ]);
 

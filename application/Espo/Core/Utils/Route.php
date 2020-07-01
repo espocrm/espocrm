@@ -169,20 +169,41 @@ class Route
     }
 
     /**
-     * Check and adjust the route path
+     * Check and adjust the route path.
      *
      * @param string $routePath - it can be "/App/user",  "App/user"
      *
      * @return string - "/App/user"
      */
-    protected function adjustPath($routePath)
+    protected function adjustPath(string $routePath) : string
     {
         $routePath = trim($routePath);
 
-        if (substr($routePath,0,1) != '/') {
+        // to fast route format
+        $routePath = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', $routePath);
+
+        if (substr($routePath, 0, 1) != '/') {
             return '/'.$routePath;
         }
 
         return $routePath;
+    }
+
+    public static function detectBasePath() : string
+    {
+        $scriptName = parse_url($_SERVER['SCRIPT_NAME'] , PHP_URL_PATH);
+        $scriptDir = dirname($scriptName);
+
+        $uri = parse_url('http://any.com' . $_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+        $basePath = '';
+
+        if (stripos($uri, $scriptName) === 0) {
+            $basePath = $scriptName;
+        } elseif ($scriptDir !== '/' && stripos($uri, $scriptDir) === 0) {
+            $basePath = $scriptDir;
+        }
+
+        return $basePath;
     }
 }

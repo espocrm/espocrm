@@ -39,6 +39,7 @@ use Espo\Core\{
     CronManager,
     Utils\Auth,
     Utils\Api\Auth as ApiAuth,
+    Api\Output as ApiOutput,
     Utils\Route,
     Utils\Autoload,
     Portal\Application as PortalApplication,
@@ -49,12 +50,21 @@ use Espo\Core\{
     Loaders\Metadata as MetadataLoader,
 };
 
+use Psr\Http\Message\{
+    ResponseInterface as Response,
+    ServerRequestInterface as Request,
+};
+
+use Slim\Factory\AppFactory as SlimAppFactory;
+
 /**
  * The main entry point of the application.
  */
 class Application
 {
     protected $container;
+
+    protected $slim = null;
 
     protected $loaderClassNames = [
         'config' => ConfigLoader::class,
@@ -83,7 +93,7 @@ class Application
      */
     public function run(string $name = 'default')
     {
-        $this->routeHooks();
+        //$this->routeHooks();
         $this->initRoutes();
         $this->getSlim()->run();
     }
@@ -127,8 +137,9 @@ class Application
                     exit;
                 }
             }
-            $auth = new Auth($this->container, $authNotStrict);
-            $apiAuth = new ApiAuth($auth, $authRequired, true);
+            $auth = $this->createAuth($request, true);
+            $apiAuth = new ApiAuth($auth, $authRequired, true, true);
+
             $slim->add($apiAuth);
 
             $request = $slim->request();
@@ -155,8 +166,7 @@ class Application
             return;
         }
 
-        $auth = $this->createAuth();
-        $auth->useNoAuth();
+        $this->setupSystemUser();
 
         $cronManager = $this->container->get('cronManager');
         $cronManager->run();
@@ -211,8 +221,7 @@ class Application
      */
     public function runJob(string $id)
     {
-        $auth = $this->createAuth();
-        $auth->useNoAuth();
+        $this->setupSystemUser();
 
         $cronManager = $this->container->get('cronManager');
         $cronManager->runJobById($id);
@@ -241,8 +250,7 @@ class Application
      */
     public function runCommand(string $command)
     {
-        $auth = $this->createAuth();
-        $auth->useNoAuth();
+        $this->setupSystemUser();
 
         $consoleCommandManager = $this->container->get('consoleCommandManager');
         return $consoleCommandManager->run($command);
@@ -272,7 +280,11 @@ class Application
 
     protected function getSlim()
     {
-        return $this->container->get('slim');
+        if (!$this->slim) {
+            $this->slim = SlimAppFactory::create();
+            $this->slim->setBasePath(Route::detectBasePath());
+        }
+        return $this->slim;
     }
 
     protected function getMetadata()
@@ -285,9 +297,9 @@ class Application
         return $this->container->get('config');
     }
 
-    protected function createAuth()
+    protected function createAuth(Request $request, bool $allowAnyAccess = false) : Auth
     {
-        return new Auth($this->container);
+        return new Auth($this->container, $request, $allowAnyAccess);
     }
 
     protected function createApiAuth(Auth $auth) : ApiAuth
@@ -311,11 +323,11 @@ class Application
         $this->getSlim()->add($apiAuth);
         $this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
-            $route = $slim->router()->getCurrentRoute();
+            /*$route = $slim->router()->getCurrentRoute();
             $conditions = $route->getConditions();
 
             $response = $slim->response();
-            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Content-Type', 'application/json');*/
 
             $routeOptions = call_user_func($route->getCallable());
             $routeKeys = is_array($routeOptions) ? array_keys($routeOptions) : [];
@@ -385,6 +397,10 @@ class Application
     {
         $crudList = array_keys($this->getConfig()->get('crud'));
 
+        $slim = $this->getSlim();
+
+        $slim->addRoutingMiddleware();
+
         foreach ($this->getRouteList() as $route) {
             $method = strtolower($route['method']);
             if (!in_array($method, $crudList) && $method !== 'options') {
@@ -394,14 +410,82 @@ class Application
                 continue;
             }
 
-            $currentRoute = $this->getSlim()->$method($route['route'], function() use ($route) {
-                return $route['params'];
-            });
+            $currentRoute = $slim->
+                $method(
+                    $route['route'],
+                    function (Request $request, Response $response, $args) use ($route) {
+                        $authRequired = true;
 
-            if (isset($route['conditions'])) {
-                $currentRoute->conditions($route['conditions']);
+                        $conditions = $route['conditions'] ?? [];
+                        if (($conditions['auth'] ?? true) === false) {
+                            $authRequired = false;
+                        }
+
+                        print_r($args);
+                        die;
+
+                        $auth = $this->createAuth($request);
+                        $apiAuth = new ApiAuth($auth, $authRequired);
+
+                        $response = $apiAuth->process($request, $response);
+
+                        if (!$apiAuth->isResolved()) {
+                            return $response;
+                        }
+
+                        if ($apiAuth->isResolvedUseNoAuth()) {
+                            $this->setupSystemUser();
+                        }
+
+                        $response = $this->processRoute($route, $request, $response, $args);
+
+                        return $response;
+                    }
+                );
+        }
+    }
+
+    protected function processRoute(array $route, Request $request, Response $response, array $args)
+    {
+        $response = $response->withHeader('Content-Type', 'application/json');
+
+        $data = (string) $request->getBody();
+
+        $params = [];
+
+        $paramKeys = array_keys($route['params']);
+
+        foreach ($paramKeys as $key) {
+            $paramName = $key;
+              if ($key[0] === ':') {
+                $paramName = substr($key, 1);
+                $params[$paramName] = $args[$paramName];
+            } else {
+                $params[$paramName] = $route['params'][$key]
             }
         }
+
+        $controllerName = $params['controller'] ?? $args['controller'] ?? null;
+        $actionName = $params['action'] ?? $args['action'] ?? null;
+
+        if (!$controllerName) {
+            throw new Error("Route ".$route['route']." doesn't have a controller.");
+        }
+
+        if (!$actionName) {
+            $httpMethod = strtolower($request->getMethod());
+            $crudList = $this->getConfig()->get('crud') ?? [];
+            $actionName = $crudList[$httpMethod] ?? null;
+            if (!$actionName) {
+                throw new Error("No action for method {$httpMethod}.");
+            }
+        }
+
+
+        unset($params['controller']);
+        unset($params['action']);
+
+        return $response;
     }
 
     protected function initAutoloads()
@@ -452,7 +536,14 @@ class Application
     public function setupSystemUser()
     {
         $user = $this->container->get('entityManager')->getEntity('User', 'system');
+        if (!$user) {
+            throw new Error("System user is not found");
+        }
+
+        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
         $user->set('type', 'system');
+
         $this->container->set('user', $user);
     }
+
 }

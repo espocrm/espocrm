@@ -55,7 +55,7 @@ class Hmac extends Base
             $secretKey = $apiKeyUtil->getSecretKeyForUserId($user->id);
             if (!$secretKey) return;
 
-            $string = $request->getMethod() . ' ' . $request->getResourceUri();
+            $string = $request->getMethod() . ' ' . $request->getUri();
 
             if ($hash === \Espo\Core\Utils\ApiKey::hash($secretKey, $string)) {
                 return $user;

@@ -1,10 +1,4 @@
 {
-    "slim": {
-        "className": "Espo\\Core\\Utils\\Api\\Slim"
-    },
-    "output": {
-        "className": "Espo\\Core\\Utils\\Api\\Output"
-    },
     "schema": {
         "className": "Espo\\Core\\Utils\\Database\\Schema\\Schema"
     },

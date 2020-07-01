@@ -31,8 +31,6 @@ namespace Espo\Core\Utils\Api;
 
 class Output
 {
-    private $slim;
-
     protected $errorDescriptions = [
         400 => 'Bad Request',
         401 => 'Unauthorized',
@@ -50,14 +48,8 @@ class Output
         'PDOException',
     ];
 
-    public function __construct(Slim $slim)
+    public function __construct()
     {
-        $this->slim = $slim;
-    }
-
-    protected function getSlim()
-    {
-        return $this->slim;
     }
 
     public function render($data = null)
@@ -71,8 +63,9 @@ class Output
         echo $data;
     }
 
-    public function processError(string $message = 'Error', $statusCode = 500, bool $toPrint = false, $exception = null)
-    {
+    public function processError(
+        string $message = 'Error', int $statusCode = 500, bool $toPrint = false, $exception = null
+    ) : Response {
         $currentRoute = $this->getSlim()->router()->getCurrentRoute();
 
         if (isset($currentRoute)) {
@@ -99,7 +92,7 @@ class Output
         $this->displayError($message, $statusCode, $toPrint, $exception);
     }
 
-    public function displayError(string $text, $statusCode = 500, bool $toPrint = false, $exception = null)
+    protected function displayError(string $text, $statusCode = 500, bool $toPrint = false, $exception = null)
     {
         $logLevel = 'error';
         $messageLineFile = null;
@@ -155,7 +148,8 @@ class Output
 
             $this->getSlim()->stop();
         } else {
-            $GLOBALS['log']->info('Could not get Slim instance. It looks like a direct call (bypass API). URL: '.$_SERVER['REQUEST_URI']);
+            $GLOBALS['log']->info(
+                'Could not get Slim instance. It looks like a direct call (bypass API). URL: '.$_SERVER['REQUEST_URI']);
             die($text);
         }
     }

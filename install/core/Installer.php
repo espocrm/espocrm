@@ -163,8 +163,7 @@ class Installer
     protected function auth()
     {
         if (!$this->isAuth) {
-            $auth = new \Espo\Core\Utils\Auth($this->app->getContainer());
-            $auth->useNoAuth();
+            $this->app->setupSystemUser();
 
             $this->isAuth = true;
         }
