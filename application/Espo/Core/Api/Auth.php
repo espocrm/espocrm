@@ -112,9 +112,10 @@ class Auth
         }
 
         if (!isset($username)) {
-            if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
-                $username = $_COOKIE['auth-username'];
-                $password = $_COOKIE['auth-token'];
+            $cookie = $request->getCookieParams();
+            if (!empty($cookie['auth-username']) && !empty($cookie['auth-token'])) {
+                $username = $cookie['auth-username'];
+                $password = $cookie['auth-token'];
             }
         }
 
