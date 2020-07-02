@@ -58,7 +58,7 @@ class Auth
 
     protected function resolve()
     {
-        $this->resolved = true;
+        $this->isResolved = true;
     }
 
     protected function resolveUseNoAuth()

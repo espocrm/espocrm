@@ -420,6 +420,7 @@ class Application
                         $conditions = $route['conditions'] ?? [];
                         if (($conditions['auth'] ?? true) === false) {
                             $authRequired = false;
+
                         }
 
                         $auth = $this->createAuth($request);

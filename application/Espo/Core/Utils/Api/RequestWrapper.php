@@ -53,4 +53,9 @@ class RequestWrapper
 
         return $this->request->getHeaderLine($name);
     }
+
+    public function getMethod()
+    {
+        return $this->request->getMethod();
+    }
 }
