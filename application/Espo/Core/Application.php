@@ -148,7 +148,7 @@ class Application
 
                 try {
                     $auth = $this->createAuth($request, $authNotStrict);
-                    $apiAuth = new ApiAuth($auth, $authRequired);
+                    $apiAuth = new ApiAuth($auth, $authRequired, true, true);
 
                     $response = $apiAuth->process($request, $response);
 
