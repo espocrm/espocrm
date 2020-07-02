@@ -360,26 +360,27 @@ class Application
                 $method(
                     $route['route'],
                     function (Request $request, Response $response, $args) use ($route) {
-                        $authRequired = true;
-
-                        $conditions = $route['conditions'] ?? [];
-                        if (($conditions['auth'] ?? true) === false) {
-                            $authRequired = false;
-                        }
-
-                        $auth = $this->createAuth($request);
-                        $apiAuth = new ApiAuth($auth, $authRequired);
-
-                        $response = $apiAuth->process($request, $response);
-
-                        if (!$apiAuth->isResolved()) {
-                            return $response;
-                        }
-                        if ($apiAuth->isResolvedUseNoAuth()) {
-                            $this->setupSystemUser();
-                        }
-
                         try {
+                            $authRequired = true;
+
+                            $conditions = $route['conditions'] ?? [];
+                            if (($conditions['auth'] ?? true) === false) {
+                                $authRequired = false;
+                            }
+
+                            $auth = $this->createAuth($request);
+                            $apiAuth = new ApiAuth($auth, $authRequired);
+
+                            $response = $apiAuth->process($request, $response);
+
+
+                            if (!$apiAuth->isResolved()) {
+                                return $response;
+                            }
+                            if ($apiAuth->isResolvedUseNoAuth()) {
+                                $this->setupSystemUser();
+                            }
+
                             $response = $this->processRoute($route, $request, $response, $args);
                         } catch (\Throwable $e) {
                             $output = new ApiOutput($request);
@@ -450,19 +451,14 @@ class Application
 
         $output = new ApiOutput($request);
 
-        try {
-            $controllerManager = $this->container->get('controllerManager');
-            $result = $controllerManager->process(
-                $controllerName, $actionName, $params, $data, $requestWrapped, $responseWrapped
-            );
+        $controllerManager = $this->container->get('controllerManager');
+        $result = $controllerManager->process(
+            $controllerName, $actionName, $params, $data, $requestWrapped, $responseWrapped
+        );
 
-            $response = $responseWrapped->getResponse();
+        $response = $responseWrapped->getResponse();
 
-            $response = $output->render($response, $result);
-
-        } catch (\Exception $e) {
-            $response = $output->processError($response, $e, false, $route, $args);
-        }
+        $response = $output->render($response, $result);
 
         return $response;
     }

@@ -78,7 +78,6 @@ class Auth
 
     public function process(Request $request, Response $response) : Response
     {
-        $uri = $request->getUri();
         $httpMethod = $request->getMethod();
 
         $username = null;

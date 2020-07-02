@@ -444,12 +444,14 @@ class Auth
 
         $authLogRecord = $this->getEntityManager()->getEntity('AuthLogRecord');
 
+        $requestUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost() . $request->getUri()->getPath();
+
         $authLogRecord->set([
             'username' => $username,
             'ipAddress' => $_SERVER['REMOTE_ADDR'] ?? null,
             'requestTime' => $_SERVER['REQUEST_TIME_FLOAT'],
             'requestMethod' => $this->request->getMethod(),
-            'requestUrl' => $this->request->getUri() . $this->request->getPath(),
+            'requestUrl' => $requestUrl,
             'authenticationMethod' => $authenticationMethod
         ]);
 
