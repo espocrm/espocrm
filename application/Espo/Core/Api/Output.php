@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Api;
+namespace Espo\Core\Api;
 
 use Psr\Http\Message\{
     ResponseInterface as Response,
@@ -62,14 +62,13 @@ class Output
 
     public function render(Response $response, $data = null) : Response
     {
-        if (is_array($data)) {
-            $dataArr = array_values($data);
-            $data = empty($dataArr[0]) ? false : $dataArr[0];
-        } else if ($data instanceof \StdClass) {
-            $data = json_encode($data);
+        if (is_string($data)) {
+            $response->getBody()->write($data);
+        } else {
+            if ($data) {
+                $response->setBody($data);
+            }
         }
-
-        $response->getBody()->write($data);
 
         return $response;
     }

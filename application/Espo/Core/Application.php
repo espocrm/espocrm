@@ -38,10 +38,10 @@ use Espo\Core\{
     EntryPointManager,
     CronManager,
     Utils\Auth,
-    Utils\Api\Auth as ApiAuth,
-    Utils\Api\Output as ApiOutput,
-    Utils\Api\RequestWrapper,
-    Utils\Api\ResponseWrapper,
+    Api\Auth as ApiAuth,
+    Api\Output as ApiOutput,
+    Api\RequestWrapper,
+    Api\ResponseWrapper,
     Utils\Route,
     Utils\Autoload,
     Portal\Application as PortalApplication,
@@ -420,7 +420,6 @@ class Application
                         $conditions = $route['conditions'] ?? [];
                         if (($conditions['auth'] ?? true) === false) {
                             $authRequired = false;
-
                         }
 
                         $auth = $this->createAuth($request);
@@ -454,14 +453,24 @@ class Application
 
         $paramKeys = array_keys($route['params']);
 
+        $setKeyList = [];
+
         foreach ($paramKeys as $key) {
+            $value = $route['params'][$key];
+
             $paramName = $key;
-              if ($key[0] === ':') {
-                $paramName = substr($key, 1);
-                $params[$paramName] = $args[$paramName];
+            if ($value[0] === ':') {
+                $realKey = substr($value, 1);
+                $params[$paramName] = $args[$realKey];
+                $setKeyList[] = $realKey;
             } else {
-                $params[$paramName] = $route['params'][$key];
+                $params[$paramName] = $value;
             }
+        }
+
+        foreach ($args as $key => $value) {
+            if (in_array($key, $setKeyList)) continue;
+            $params[$key] = $value;
         }
 
         $controllerName = $params['controller'] ?? $args['controller'] ?? null;

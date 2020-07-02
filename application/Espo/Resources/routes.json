@@ -2,7 +2,10 @@
     {
         "route": "/",
         "method": "get",
-        "params": "\"EspoCRM REST API\""
+        "params": {
+            "controller": "ApiIndex",
+            "action": "index"
+        }
     },
     {
         "route": "/App/user",

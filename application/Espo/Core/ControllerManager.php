@@ -37,6 +37,8 @@ use Espo\Core\{
     Utils\ClassFinder,
     Utils\Json,
     Utils\Util,
+    Api\Request,
+    Api\Response,
 };
 
 class ControllerManager
@@ -54,8 +56,14 @@ class ControllerManager
         $this->controllersHash = (object) [];
     }
 
-    public function process(string $controllerName, string $actionName, $params, $data, $request, $response = null)
-    {
+    public function process(
+        string $controllerName,
+        string $actionName,
+        array $params,
+        $data,
+        Request $request,
+        Response $response
+    ) {
         $controller = $this->getController($controllerName);
         return $this->processRequest($controller, $controllerName, $actionName, $params, $data, $request, $response);
     }
@@ -95,7 +103,13 @@ class ControllerManager
     }
 
     protected function processRequest(
-        object $controller, string $controllerName, string $actionName, $params, $data, $request, $response = null
+        object $controller,
+        string $controllerName,
+        string $actionName,
+        array $params,
+        $data,
+        Request $request,
+        Response $response
     ) {
         if ($data && stristr($request->getContentType(), 'application/json')) {
             $data = json_decode($data);

@@ -27,17 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Api;
+namespace Espo\Core\Api;
 
 use Psr\Http\Message\{
-    ServerRequestInterface as Request,
+    ServerRequestInterface as Psr7Request,
 };
 
-class RequestWrapper
+use Espo\Core\Api\Request as ApiRequest;
+
+class RequestWrapper implements ApiRequest
 {
     protected $request;
 
-    public function __construct(Request $request)
+    public function __construct(Psr7Request $request)
     {
         $this->request = $request;
     }
@@ -54,7 +56,7 @@ class RequestWrapper
         return $this->request->getHeaderLine($name);
     }
 
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->request->getMethod();
     }

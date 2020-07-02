@@ -27,33 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Api;
+namespace Espo\Controllers;
 
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-};
+class ApiIndex {
 
-class ResponseWrapper
-{
-    protected $response;
-
-    public function __construct(Response $response)
+    public function getActionIndex()
     {
-        $this->response = $response;
-    }
-
-    public function setStatus(int $code, ?string $reason)
-    {
-        $this->response = $this->response->withStatus($code, $reason);
-    }
-
-    public function setHeader(string $name, string $value)
-    {
-        $this->response = $this->response->withHeader($name, $value);
-    }
-
-    public function getResponse() : Response
-    {
-        return $this->response;
+        return "EspoCRM REST API";
     }
 }
