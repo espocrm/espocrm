@@ -55,7 +55,7 @@ class Portal implements EntryPoint
         $this->config = $config;
     }
 
-    public function run($request, $data = [])
+    public function run($request, $response, $data = [])
     {
         $id = $request->get('id') ?? $data['id'] ?? null;
 

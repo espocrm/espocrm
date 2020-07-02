@@ -34,9 +34,9 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
+    Api\Request,
+    Api\Response,
 };
-
-use Slim\Http\Request;
 
 class EntryPointManager
 {
@@ -74,7 +74,7 @@ class EntryPointManager
         return $className::$notStrictAuth ?? false;
     }
 
-    public function run(string $name, Request $request, array $data = [])
+    public function run(string $name, Request $request, Response $response, array $data = [])
     {
         $className = $this->getClassName($name);
         if (!$className) {
@@ -83,7 +83,7 @@ class EntryPointManager
 
         $entryPoint = $this->injectableFactory->create($className);
 
-        $entryPoint->run($request, $data);
+        $entryPoint->run($request, $response, $data);
     }
 
     protected function getClassName(string $name) : ?string

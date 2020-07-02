@@ -139,7 +139,9 @@ class Application
         }
 
         $slim->add(
-            function (Request $request, RequestHandler $handler) use ($entryPointManager, $entryPoint, $data) {
+            function (Request $request, RequestHandler $handler) use (
+                $entryPointManager, $entryPoint, $data, $authRequired, $authNotStrict
+            ) {
                 $response = $handler->handle($request);
 
                 $output = new ApiOutput($request);
@@ -161,7 +163,7 @@ class Application
                     $responseWrapped = new ResponseWrapper($response);
 
                     ob_start();
-                    $entryPointManager->run($entryPoint, $requestWrapped, $data, $responseWrapped);
+                    $entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped, $data);
                     $contents = ob_get_clean();
 
                     $response = $responseWrapped->getResponse();
@@ -178,7 +180,11 @@ class Application
             }
         );
 
-        $this->slim->run();
+        $slim->get('/', function (Request $request, Response $response) {
+            return $response;
+        });
+
+        $slim->run();
 
         /*try {
 

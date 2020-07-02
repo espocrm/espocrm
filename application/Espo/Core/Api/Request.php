@@ -34,7 +34,7 @@ interface Request
     /**
      * Get a query parameter.
      */
-    public function get(string $name) : ?string;
+    public function get(string $name);
 
     /**
      * Get a header value.
