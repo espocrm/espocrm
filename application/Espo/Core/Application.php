@@ -95,7 +95,6 @@ class Application
      */
     public function run(string $name = 'default')
     {
-        //$this->routeHooks();
         $this->initRoutes();
         $this->getSlim()->run();
     }
