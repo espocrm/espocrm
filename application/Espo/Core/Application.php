@@ -333,11 +333,6 @@ class Application
         return new Auth($this->container, $request, $allowAnyAccess);
     }
 
-    protected function createApiAuth(Auth $auth) : ApiAuth
-    {
-        return new ApiAuth($auth);
-    }
-
     protected function getRouteList()
     {
         $routes = new Route($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
