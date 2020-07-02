@@ -384,7 +384,12 @@ class Application
                             $this->setupSystemUser();
                         }
 
-                        $response = $this->processRoute($route, $request, $response, $args);
+                        try {
+                            $response = $this->processRoute($route, $request, $response, $args);
+                        } catch (\Throwable $e) {
+                            $output = new ApiOutput($request);
+                            $response = $output->processError($response, $e, false, $route, $args);
+                        }
 
                         return $response;
                     }

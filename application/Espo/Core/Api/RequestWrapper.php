@@ -63,4 +63,39 @@ class RequestWrapper implements ApiRequest
     {
         return $this->request->getMethod();
     }
+
+    public function getContentType() : ?string
+    {
+        return $this->getHeader('Content-Type');;
+    }
+
+    public function isGet() : bool
+    {
+        return $this->getMethod() === 'GET';
+    }
+
+    public function isPut() : bool
+    {
+        return $this->getMethod() === 'PUT';
+    }
+
+    public function isUpdate() : bool
+    {
+        return $this->getMethod() === 'UPDATE';
+    }
+
+    public function isPost() : bool
+    {
+        return $this->getMethod() === 'POST';
+    }
+
+    public function isPatch() : bool
+    {
+        return $this->getMethod() === 'PATCH';
+    }
+
+    public function isDelete() : bool
+    {
+        return $this->getMethod() === 'DELETE';
+    }
 }
