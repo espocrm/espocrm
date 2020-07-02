@@ -39,7 +39,7 @@ use Espo\Core\{
     CronManager,
     Utils\Auth,
     Utils\Api\Auth as ApiAuth,
-    Api\Output as ApiOutput,
+    Utils\Api\Output as ApiOutput,
     Utils\Route,
     Utils\Autoload,
     Portal\Application as PortalApplication,
@@ -421,9 +421,6 @@ class Application
                             $authRequired = false;
                         }
 
-                        print_r($args);
-                        die;
-
                         $auth = $this->createAuth($request);
                         $apiAuth = new ApiAuth($auth, $authRequired);
 
@@ -472,6 +469,8 @@ class Application
             throw new Error("Route ".$route['route']." doesn't have a controller.");
         }
 
+        $controllerName = ucfirst($controllerName);
+
         if (!$actionName) {
             $httpMethod = strtolower($request->getMethod());
             $crudList = $this->getConfig()->get('crud') ?? [];
@@ -481,9 +480,27 @@ class Application
             }
         }
 
-
         unset($params['controller']);
         unset($params['action']);
+
+        $requestWrapped = new RequestWrapper($request);
+        $responseWrapped = new ResponseWrapper($response);
+
+        $output = new ApiOutput($request);
+
+        try {
+            $controllerManager = $this->container->get('controllerManager');
+            $result = $controllerManager->process(
+                $controllerName, $actionName, $params, $data, $requestWrapped, $responseWrapped
+            );
+
+            $response = $responseWrapped->getResponse();
+
+            $response = $output->render($response, $result);
+
+        } catch (\Exception $e) {
+            $response = $output->processError($response, $e, false, $route, $args)
+        }
 
         return $response;
     }
@@ -545,5 +562,4 @@ class Application
 
         $this->container->set('user', $user);
     }
-
 }

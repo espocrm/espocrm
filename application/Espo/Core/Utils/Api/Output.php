@@ -29,6 +29,11 @@
 
 namespace Espo\Core\Utils\Api;
 
+use Psr\Http\Message\{
+    ResponseInterface as Response,
+    ServerRequestInterface as Request,
+};
+
 class Output
 {
     protected $errorDescriptions = [
@@ -48,39 +53,49 @@ class Output
         'PDOException',
     ];
 
-    public function __construct()
+    protected $request;
+
+    public function __construct(Request $request)
     {
+        $this->request = $request;
     }
 
-    public function render($data = null)
+    public function render(Response $response, $data = null) : Response
     {
         if (is_array($data)) {
             $dataArr = array_values($data);
             $data = empty($dataArr[0]) ? false : $dataArr[0];
+        } else if ($data instanceof \StdClass) {
+            $data = json_encode($data);
         }
 
-        ob_clean();
-        echo $data;
+        $response->getBody()->write($data);
+
+        return $response;
     }
 
     public function processError(
-        string $message = 'Error', int $statusCode = 500, bool $toPrint = false, $exception = null
+        Response $response, \Throwable $exception, bool $toPrint = false, ?array $route = null, ?array $routeParams = null
     ) : Response {
-        $currentRoute = $this->getSlim()->router()->getCurrentRoute();
+        $message = $exception->getMessage() ?? '';
+        $statusCode = $exception->getCode();
 
-        if (isset($currentRoute)) {
-            $inputData = $this->getSlim()->request()->getBody();
-            $inputData = $this->clearPasswords($inputData);
+        if ($route) {
+            $requestBodyString = $this->request->getBody()->getContents();
+            $requestBodyString = $this->clearPasswords($requestBodyString);
 
-            $routePattern = $currentRoute->getPattern();
-            $routeParams = $currentRoute->getParams();
-            $method = $this->getSlim()->request()->getMethod();
+            $routePattern = $route['route'];
+            $routeParams = $routeParams ?? [];
 
             $logMessage = "API ($statusCode) ";
             $logMessageItemList = [];
+
             if ($message) $logMessageItemList[] = $message;
-            $logMessageItemList[] .= "$method " . $_SERVER['REQUEST_URI'];
-            if ($inputData) $logMessageItemList[] = "Input data: " . $inputData;
+
+            $logMessageItemList[] .= $this->request->getMethod() . ' ' . $this->request->getUri();
+
+            if ($requestBodyString) $logMessageItemList[] = "Input data: " . $requestBodyString;
+
             if ($routePattern) $logMessageItemList[] = "Route pattern: ". $routePattern;
             if (!empty($routeParams)) $logMessageItemList[] = "Route params: ". print_r($routeParams, true);
 
@@ -89,11 +104,6 @@ class Output
             $GLOBALS['log']->log('debug', $logMessage);
         }
 
-        $this->displayError($message, $statusCode, $toPrint, $exception);
-    }
-
-    protected function displayError(string $text, $statusCode = 500, bool $toPrint = false, $exception = null)
-    {
         $logLevel = 'error';
         $messageLineFile = null;
 
@@ -107,11 +117,9 @@ class Output
 
         $logMessageItemList = [];
 
-        if ($text) $logMessageItemList[] = "{$text}";
+        if ($message) $logMessageItemList[] = "{$message}";
 
-        if (!empty($this->slim)) {
-            $logMessageItemList[] = $this->getSlim()->request()->getMethod() . ' ' .$_SERVER['REQUEST_URI'];
-        }
+        $logMessageItemList[] = $this->request->getMethod() . ' ' . $this->request->getUri();
 
         if ($messageLineFile) {
             $logMessageItemList[] = $messageLineFile;
@@ -121,50 +129,56 @@ class Output
 
         $GLOBALS['log']->log($logLevel, $logMessage);
 
-        ob_clean();
-
-        if (!empty($this->slim)) {
-            $toPrintXStatusReason = true;
-            if ($exception && in_array(get_class($exception), $this->ignorePrintXStatusReasonExceptionClassNameList)) {
-                $toPrintXStatusReason = false;
-            }
-
-            if (!in_array($statusCode, $this->allowedStatusCodeList)) {
-                $statusCode = 500;
-            }
-
-            $this->getSlim()->response()->setStatus($statusCode);
-            if ($toPrintXStatusReason) {
-                $this->getSlim()->response()->headers->set('X-Status-Reason', $text);
-            }
-
-            if ($toPrint) {
-                $status = $this->getCodeDescription($statusCode);
-                $status = isset($status) ? $statusCode.' '.$status : 'HTTP '.$statusCode;
-                if ($text)
-                    $text = htmlspecialchars($text);
-                $this->getSlim()->printError($text, $status);
-            }
-
-            $this->getSlim()->stop();
-        } else {
-            $GLOBALS['log']->info(
-                'Could not get Slim instance. It looks like a direct call (bypass API). URL: '.$_SERVER['REQUEST_URI']);
-            die($text);
+        $toPrintXStatusReason = true;
+        if ($exception && in_array(get_class($exception), $this->ignorePrintXStatusReasonExceptionClassNameList)) {
+            $toPrintXStatusReason = false;
         }
+
+        if (!in_array($statusCode, $this->allowedStatusCodeList)) {
+            $statusCode = 500;
+        }
+
+        $response = $response->withStatus($statusCode);
+        if ($toPrintXStatusReason) {
+            $response = $response->withHeader('X-Status-Reason', $message);
+        }
+
+        if ($toPrint) {
+            $statusText = $this->getCodeDescription($statusCode);
+            $statusText = isset($statusText) ?
+                $statusCode . ' '. $statusText :
+                'HTTP ' . $statusCode;
+
+            if ($message) {
+                $message = htmlspecialchars($message);
+            }
+
+            $response = $response->getBody()->write(
+                self::generateErrorBody($statusText, $message)
+            );
+        }
+
+        return $response;
     }
 
-    protected function getCodeDescription($statusCode)
+    protected function getCodeDescription(int $statusCode) : ?string
     {
         if (isset($this->errorDescriptions[$statusCode])) {
             return $this->errorDescriptions[$statusCode];
         }
-
         return null;
     }
 
-    protected function clearPasswords($inputData)
+    protected function clearPasswords(string $string) : string
     {
-        return preg_replace('/"(.*?password.*?)":".*?"/i', '"$1":"*****"', $inputData);
+        return preg_replace('/"(.*?password.*?)":".*?"/i', '"$1":"*****"', $string);
+    }
+
+    protected static function generateErrorBody(string $header, string $text) : string
+    {
+        $body = "<h1>" . $header . "</h1>";
+        $body .= $text;
+
+        return $body;
     }
 }
