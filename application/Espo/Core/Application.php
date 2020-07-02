@@ -57,6 +57,8 @@ use Psr\Http\Message\{
     ServerRequestInterface as Request,
 };
 
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+
 use Slim\Factory\AppFactory as SlimAppFactory;
 
 /**
@@ -118,27 +120,69 @@ class Application
         }
 
         $slim = $this->getSlim();
-        $container = $this->container;
 
-        $slim->any('.*', function() {});
-
-        $injectableFactory = $container->get('injectableFactory');
-        $classFinder = $container->get('classFinder');
+        $injectableFactory = $this->container->get('injectableFactory');
+        $classFinder = $this->container->get('classFinder');
 
         $entryPointManager = new EntryPointManager($injectableFactory, $classFinder);
 
-        try {
-            $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
-            $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
-            if ($authRequired && !$authNotStrict) {
-                if (!$final && $portalId = $this->detectPortalId()) {
-                    $app = new PortalApplication($portalId);
-                    $app->setBasePath($this->getBasePath());
-                    $app->runEntryPoint($entryPoint, $data, true);
-                    exit;
-                }
+        $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
+        $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
+
+        if ($authRequired && !$authNotStrict) {
+            if (!$final && $portalId = $this->detectPortalId()) {
+                $app = new PortalApplication($portalId);
+                $app->setBasePath($this->getBasePath());
+                $app->runEntryPoint($entryPoint, $data, true);
+                exit;
             }
-            $auth = $this->createAuth($request, true);
+        }
+
+        $slim->add(
+            function (Request $request, RequestHandler $handler) use ($entryPointManager, $entryPoint, $data) {
+                $response = $handler->handle($request);
+
+                $output = new ApiOutput($request);
+
+                try {
+                    $auth = $this->createAuth($request, $authNotStrict);
+                    $apiAuth = new ApiAuth($auth, $authRequired);
+
+                    $response = $apiAuth->process($request, $response);
+
+                    if (!$apiAuth->isResolved()) {
+                        return $response;
+                    }
+                    if ($apiAuth->isResolvedUseNoAuth()) {
+                        $this->setupSystemUser();
+                    }
+
+                    $requestWrapped = new RequestWrapper($request);
+                    $responseWrapped = new ResponseWrapper($response);
+
+                    ob_start();
+                    $entryPointManager->run($entryPoint, $requestWrapped, $data, $responseWrapped);
+                    $contents = ob_get_clean();
+
+                    $response = $responseWrapped->getResponse();
+
+                    if ($contents) {
+                        $response->getBody()->write($contents);
+                    }
+
+                } catch (\Exception $e) {
+                    $response = $output->processError($response, $e, true);
+                }
+
+                return $response;
+            }
+        );
+
+        $this->slim->run();
+
+        /*try {
+
+            $auth = $this->createAuth($request, $authNotStrict);
             $apiAuth = new ApiAuth($auth, $authRequired, true, true);
 
             $slim->add($apiAuth);
@@ -154,7 +198,7 @@ class Application
             try {
                 $container->get('output')->processError($e->getMessage(), $e->getCode(), true, $e);
             } catch (\Slim\Exception\Stop $e) {}
-        }
+        }*/
     }
 
     /**
@@ -308,7 +352,7 @@ class Application
         return new ApiAuth($auth);
     }
 
-    protected function routeHooks()
+    /*protected function routeHooks()
     {
         $container = $this->container;
         $slim = $this->getSlim();
@@ -324,11 +368,11 @@ class Application
         $this->getSlim()->add($apiAuth);
         $this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
-            /*$route = $slim->router()->getCurrentRoute();
+            $route = $slim->router()->getCurrentRoute();
             $conditions = $route->getConditions();
 
             $response = $slim->response();
-            $response->headers->set('Content-Type', 'application/json');*/
+            $response->headers->set('Content-Type', 'application/json');
 
             $routeOptions = call_user_func($route->getCallable());
             $routeKeys = is_array($routeOptions) ? array_keys($routeOptions) : [];
@@ -386,7 +430,7 @@ class Application
             $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
             $response->headers->set('Pragma', 'no-cache');
         });
-    }
+    }*/
 
     protected function getRouteList()
     {
@@ -430,7 +474,6 @@ class Application
                         if (!$apiAuth->isResolved()) {
                             return $response;
                         }
-
                         if ($apiAuth->isResolvedUseNoAuth()) {
                             $this->setupSystemUser();
                         }
@@ -473,8 +516,8 @@ class Application
             $params[$key] = $value;
         }
 
-        $controllerName = $params['controller'] ?? $args['controller'] ?? null;
-        $actionName = $params['action'] ?? $args['action'] ?? null;
+        $controllerName = $params['controller'] ?? null;
+        $actionName = $params['action'] ?? null;
 
         if (!$controllerName) {
             throw new Error("Route ".$route['route']." doesn't have a controller.");

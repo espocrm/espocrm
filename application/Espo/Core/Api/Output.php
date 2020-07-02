@@ -74,7 +74,11 @@ class Output
     }
 
     public function processError(
-        Response $response, \Throwable $exception, bool $toPrint = false, ?array $route = null, ?array $routeParams = null
+        Response $response,
+        \Throwable $exception,
+        bool $toPrint = false,
+        ?array $route = null,
+        ?array $routeParams = null
     ) : Response {
         $message = $exception->getMessage() ?? '';
         $statusCode = $exception->getCode();

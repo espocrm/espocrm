@@ -167,7 +167,9 @@ class ControllerManager
             $controller->$afterMethodName($params, $data, $request, $response);
         }
 
-        if (is_array($result) || is_bool($result) || $result instanceof \StdClass) {
+        if (
+            is_int($result) || is_float($result) || is_array($result) || is_bool($result) || $result instanceof \StdClass
+        ) {
             return Json::encode($result);
         }
 
