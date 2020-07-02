@@ -41,7 +41,7 @@ class LeadCapture extends \Espo\Core\Controllers\Record
         if (empty($data)) throw new BadRequest('No payload provided.');
 
         $allowOrigin = $this->getConfig()->get('leadCaptureAllowOrigin', '*');
-        $response->headers->set('Access-Control-Allow-Origin', $allowOrigin);
+        $response->setHeader('Access-Control-Allow-Origin', $allowOrigin);
 
         return $this->getRecordService()->leadCapture($params['apiKey'], $data);
     }
@@ -56,9 +56,9 @@ class LeadCapture extends \Espo\Core\Controllers\Record
 
         $allowOrigin = $this->getConfig()->get('leadCaptureAllowOrigin', '*');
 
-        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
-        $response->headers->set('Access-Control-Allow-Origin', $allowOrigin);
-        $response->headers->set('Access-Control-Allow-Methods', 'POST');
+        $response->setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+        $response->setHeader('Access-Control-Allow-Origin', $allowOrigin);
+        $response->setHeader('Access-Control-Allow-Methods', 'POST');
 
         return true;
     }

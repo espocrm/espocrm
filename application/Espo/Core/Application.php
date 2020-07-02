@@ -40,6 +40,8 @@ use Espo\Core\{
     Utils\Auth,
     Utils\Api\Auth as ApiAuth,
     Utils\Api\Output as ApiOutput,
+    Utils\Api\RequestWrapper,
+    Utils\Api\ResponseWrapper,
     Utils\Route,
     Utils\Autoload,
     Portal\Application as PortalApplication,
@@ -458,7 +460,7 @@ class Application
                 $paramName = substr($key, 1);
                 $params[$paramName] = $args[$paramName];
             } else {
-                $params[$paramName] = $route['params'][$key]
+                $params[$paramName] = $route['params'][$key];
             }
         }
 
@@ -499,7 +501,7 @@ class Application
             $response = $output->render($response, $result);
 
         } catch (\Exception $e) {
-            $response = $output->processError($response, $e, false, $route, $args)
+            $response = $output->processError($response, $e, false, $route, $args);
         }
 
         return $response;

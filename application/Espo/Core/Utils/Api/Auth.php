@@ -81,18 +81,24 @@ class Auth
         $uri = $request->getUri();
         $httpMethod = $request->getMethod();
 
-        $username = $request->getHeaderLine('PHP_AUTH_USER');
-        $password = $request->getHeaderLine('PHP_AUTH_PW');
+        $username = null;
+        $password = null;
+
+        if ($request->hasHeader('PHP_AUTH_USER')) {
+            $username = $request->getHeaderLine('PHP_AUTH_USER');
+        }
+        if ($request->hasHeader('PHP_AUTH_PW')) {
+            $password = $request->getHeaderLine('PHP_AUTH_PW');
+        }
 
         $authenticationMethod = null;
 
-        $espoAuthorizationHeader = $request->getHeaderLine('Http-Espo-Authorization');
-
-        if (isset($espoAuthorizationHeader)) {
+        if ($request->hasHeader('Http-Espo-Authorization')) {
+            $espoAuthorizationHeader = $request->getHeaderLine('Http-Espo-Authorization');
             list($username, $password) = explode(':', base64_decode($espoAuthorizationHeader), 2);
         } else {
-            $hmacAuthorizationHeader = $request->getHeaderLine('X-Hmac-Authorization');
-            if ($hmacAuthorizationHeader) {
+            if ($request->hasHeader('X-Hmac-Authorization')) {
+                $hmacAuthorizationHeader = $request->getHeaderLine('X-Hmac-Authorization');
                 $authenticationMethod = 'Hmac';
                 list($username, $password) = explode(':', base64_decode($hmacAuthorizationHeader), 2);
             } else {
@@ -114,10 +120,9 @@ class Auth
 
         if (!isset($username) && !isset($password)) {
             $espoCgiAuth = $request->getHeaderLine('Http-Espo-Cgi-Auth');
-            if (empty($espoCgiAuth)) {
+            if (!$espoCgiAuth) {
                 $espoCgiAuth = $request->getHeaderLine('Redirect-Http-Espo-Cgi-Auth');
-            }
-            if (!empty($espoCgiAuth)) {
+            } else {
                 list($username, $password) = explode(':' , base64_decode(substr($espoCgiAuth, 6)));
             }
         }
@@ -209,7 +214,7 @@ class Auth
 
     protected function isXMLHttpRequest(Request $request)
     {
-        if (strtolower($request->getHeaderLine('Http-X-Requested-With') ?? '') == 'xmlhttprequest') {
+        if (strtolower($request->getHeaderLine('Http-X-Requested-With')) == 'xmlhttprequest') {
             return true;
         }
 
