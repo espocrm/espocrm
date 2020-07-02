@@ -448,7 +448,7 @@ class Application
     {
         $response = $response->withHeader('Content-Type', 'application/json');
 
-        $data = (string) $request->getBody();
+        $data = $request->getBody()->getContents();
 
         $params = [];
 
