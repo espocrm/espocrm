@@ -185,26 +185,6 @@ class Application
         });
 
         $slim->run();
-
-        /*try {
-
-            $auth = $this->createAuth($request, $authNotStrict);
-            $apiAuth = new ApiAuth($auth, $authRequired, true, true);
-
-            $slim->add($apiAuth);
-
-            $request = $slim->request();
-
-            $slim->hook('slim.before.dispatch', function () use ($entryPointManager, $entryPoint, $request, $data) {
-                $entryPointManager->run($entryPoint, $request, $data);
-            });
-
-            $slim->run();
-        } catch (\Exception $e) {
-            try {
-                $container->get('output')->processError($e->getMessage(), $e->getCode(), true, $e);
-            } catch (\Slim\Exception\Stop $e) {}
-        }*/
     }
 
     /**
@@ -358,86 +338,6 @@ class Application
         return new ApiAuth($auth);
     }
 
-    /*protected function routeHooks()
-    {
-        $container = $this->container;
-        $slim = $this->getSlim();
-
-        try {
-            $auth = $this->createAuth();
-        } catch (\Exception $e) {
-            $container->get('output')->processError($e->getMessage(), $e->getCode(), false, $e);
-        }
-
-        $apiAuth = $this->createApiAuth($auth);
-
-        $this->getSlim()->add($apiAuth);
-        $this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
-
-            $route = $slim->router()->getCurrentRoute();
-            $conditions = $route->getConditions();
-
-            $response = $slim->response();
-            $response->headers->set('Content-Type', 'application/json');
-
-            $routeOptions = call_user_func($route->getCallable());
-            $routeKeys = is_array($routeOptions) ? array_keys($routeOptions) : [];
-
-            if (!in_array('controller', $routeKeys, true)) {
-                return $container->get('output')->render($routeOptions);
-            }
-
-            $params = $route->getParams();
-            $data = $slim->request()->getBody();
-
-            foreach ($routeOptions as $key => $value) {
-                if (strstr($value, ':')) {
-                    $paramName = str_replace(':', '', $value);
-                    $value = $params[$paramName];
-                }
-                $controllerParams[$key] = $value;
-            }
-
-            $params = array_merge($params, $controllerParams);
-
-            $controllerName = ucfirst($controllerParams['controller']);
-
-            if (!empty($controllerParams['action'])) {
-                $actionName = $controllerParams['action'];
-            } else {
-                $httpMethod = strtolower($slim->request()->getMethod());
-                $crudList = $container->get('config')->get('crud');
-                $actionName = $crudList[$httpMethod] ?? null;
-                if (!$actionName) {
-                    throw new Error("No action for {$httpMethod} request.");
-                }
-            }
-
-            try {
-                $controllerManager = $this->container->get('controllerManager');
-                $result = $controllerManager->process(
-                    $controllerName, $actionName, $params, $data, $slim->request(), $slim->response()
-                );
-                $container->get('output')->render($result);
-            } catch (\Exception $e) {
-                $container->get('output')->processError($e->getMessage(), $e->getCode(), false, $e);
-            }
-        });
-
-        $this->getSlim()->hook('slim.after.router', function () use (&$slim) {
-            $response = $slim->response();
-
-            if (!$response->headers->has('Content-Type')) {
-                $response->headers->set('Content-Type', 'application/json');
-            }
-
-            $response->headers->set('Expires', '0');
-            $response->headers->set('Last-Modified', gmdate("D, d M Y H:i:s") . " GMT");
-            $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-            $response->headers->set('Pragma', 'no-cache');
-        });
-    }*/
-
     protected function getRouteList()
     {
         $routes = new Route($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
@@ -490,6 +390,8 @@ class Application
                     }
                 );
         }
+
+        $slim->addErrorMiddleware(false, true, false);
     }
 
     protected function processRoute(array $route, Request $request, Response $response, array $args)
