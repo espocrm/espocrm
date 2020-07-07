@@ -33,7 +33,7 @@ use Espo\Entities\UserData;
 use Espo\Core\Utils\Authentication\TwoFA\Utils\Totp as TotpUtils;
 use Espo\Core\Utils\Config;
 
-class Totp implements CodeInterface
+class Totp implements CodeVerify
 {
     protected $entityManager;
     protected $totp;

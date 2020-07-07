@@ -27,13 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\TwoFA;
+namespace Espo\Core\Utils\Authentication\TwoFA\User;
 
-use Espo\Entities\User;
+use Espo\Entities\UserData;
 
-interface CodeInterface
+interface CodeVerify
 {
-    public function verifyCode(User $user, string $code) : bool;
+    public function generateData(UserData $userData, object $data, string $userName) : object;
 
-    public function getLoginData(User $user) : array;
+    public function verify(UserData $userData, string $code) : bool;
 }

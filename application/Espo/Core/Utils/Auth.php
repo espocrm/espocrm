@@ -29,9 +29,11 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\ServiceUnavailable;
+use Espo\Core\Exceptions\{
+    Error,
+    Forbidden,
+    ServiceUnavailable,
+};
 
 use Espo\Entities\{
     Portal,
@@ -39,12 +41,15 @@ use Espo\Entities\{
     AuthLogRecord,
 };
 
-use Espo\Core\Utils\Authentication\Login;
-use Espo\Core\Utils\Authentication\TwoFA\CodeInterface as TwoFACodeInterface;
+use Espo\Core\Utils\Authentication\{
+    Login,
+    TwoFA\СodeVerify as TwoFACodeVerify,
+};
+
+use Espo\Core\Api\Request;
 
 use Espo\Core\Container;
 
-use Espo\Core\Api\Request;
 
 /**
  * Handles authentication. The entry point of the auth process.
@@ -93,7 +98,7 @@ class Auth
         return $this->getContainer()->get('authenticationFactory')->create($method);
     }
 
-    protected function get2FAImpl(string $method) : TwoFACodeInterface
+    protected function get2FAImpl(string $method) : TwoFACodeVerify
     {
         return $this->getContainer()->get('auth2FAFactory')->create($method);
     }
@@ -360,7 +365,7 @@ class Auth
         ];
     }
 
-    protected function getUser2FAMethod(\Espo\Entities\User $user) : ?string
+    protected function getUser2FAMethod(User $user) : ?string
     {
         $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($user->id);
         if (!$userData) return null;
@@ -374,7 +379,7 @@ class Auth
         return $method;
     }
 
-    protected function checkFailedAttemptsLimit($username = null)
+    protected function checkFailedAttemptsLimit()
     {
         $failedAttemptsPeriod = $this->getConfig()->get('authFailedAttemptsPeriod', self::FAILED_ATTEMPTS_PERIOD);
         $maxFailedAttempts = $this->getConfig()->get('authMaxFailedAttemptNumber', self::MAX_FAILED_ATTEMPT_NUMBER);
