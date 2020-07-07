@@ -187,8 +187,6 @@ class Auth
             ];
             $response->writeBody(json_encode($bodyData));
         }
-
-        return;
     }
 
     protected function processException(Response $response, \Exception $e)

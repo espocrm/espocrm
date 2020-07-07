@@ -75,11 +75,6 @@ class Auth
         $this->allowAnyAccess = $allowAnyAccess;
     }
 
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
     protected function getDefaultAuthenticationMethod()
     {
         return $this->getConfig()->get('authenticationMethod', 'Espo');
@@ -87,12 +82,12 @@ class Auth
 
     protected function getAuthenticationImpl(string $method) : Login
     {
-        return $this->getContainer()->get('authenticationFactory')->create($method);
+        return $this->container->get('authenticationFactory')->create($method);
     }
 
     protected function get2FAImpl(string $method) : TwoFACodeVerify
     {
-        return $this->getContainer()->get('auth2FAFactory')->create($method);
+        return $this->container->get('auth2FAFactory')->create($method);
     }
 
     protected function setPortal(Portal $portal)
@@ -105,7 +100,7 @@ class Auth
         if ($this->portal) {
             return true;
         }
-        return $this->getContainer()->has('portal');
+        return $this->container->has('portal');
     }
 
     protected function getPortal()
@@ -113,22 +108,22 @@ class Auth
         if ($this->portal) {
             return $this->portal;
         }
-        return $this->getContainer()->get('portal');
+        return $this->container->get('portal');
     }
 
     protected function getConfig()
     {
-        return $this->getContainer()->get('config');
+        return $this->container->get('config');
     }
 
     protected function getEntityManager()
     {
-        return $this->getContainer()->get('entityManager');
+        return $this->container->get('entityManager');
     }
 
     protected function getMetadata()
     {
-        return $this->getContainer()->get('metadata');
+        return $this->container->get('metadata');
     }
 
     public function login(string $username, ?string $password = null, ?string $authenticationMethod = null) : ?array
@@ -267,7 +262,7 @@ class Auth
 
         $user->set('ipAddress', $this->request->getServerParam('REMOTE_ADDR') ?? null);
 
-        $this->getContainer()->set('user', $user);
+        $this->container->set('user', $user);
 
         $secondStepRequired = false;
 
