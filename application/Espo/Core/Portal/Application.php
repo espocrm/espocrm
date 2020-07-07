@@ -94,15 +94,16 @@ class Application extends BaseApplication
         return $this->portal;
     }
 
-    protected function getRouteList()
+    protected function getRouteList() : array
     {
         $routeList = parent::getRouteList();
+
         foreach ($routeList as $i => $route) {
             if (isset($route['route'])) {
                 if ($route['route']{0} !== '/') {
                     $route['route'] = '/' . $route['route'];
                 }
-                $route['route'] = '/:portalId' . $route['route'];
+                $route['route'] = '/{portalId}' . $route['route'];
             }
             $routeList[$i] = $route;
         }

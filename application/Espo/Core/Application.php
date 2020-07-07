@@ -104,7 +104,7 @@ class Application
 
         $crudList = array_keys($this->getConfig()->get('crud'));
 
-        $routeList = $this->getInjectableFactory()->create(Route::class)->getAll();
+        $routeList = $this->getRouteList();
 
         foreach ($routeList as $item) {
             $method = strtolower($item['method']);
@@ -461,6 +461,11 @@ class Application
                 $this->container->get($name);
             }
         }
+    }
+
+    protected function getRouteList() : array
+    {
+        return $this->getInjectableFactory()->create(Route::class)->getFullList();
     }
 
     /**

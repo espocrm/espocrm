@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Utils\Autoload\Loader;
+
 class Autoload
 {
     protected $data = null;
@@ -54,7 +56,8 @@ class Autoload
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
-        $this->loader = new \Espo\Core\Utils\Autoload\Loader($config, $fileManager);
+
+        $this->loader = new Loader($config, $fileManager);
     }
 
     protected function getConfig()

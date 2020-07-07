@@ -29,40 +29,28 @@
 
 namespace Espo\Core\Utils\Autoload;
 
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+
 class Loader
 {
-    private $config;
+    protected $namespaceLoader;
 
-    private $fileManager;
+    protected $config;
+    protected $fileManager;
 
-    private $namespaceLoader;
-
-    public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(Config $config, FileManager $fileManager)
     {
         $this->config = $config;
         $this->fileManager = $fileManager;
+
         $this->namespaceLoader = new NamespaceLoader($config, $fileManager);
-    }
-
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    public function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    public function getNamespaceLoader()
-    {
-        return $this->namespaceLoader;
     }
 
     public function register(array $autoloadList)
     {
         /* load "psr-4", "psr-0", "classmap" */
-        $this->getNamespaceLoader()->register($autoloadList);
+        $this->namespaceLoader->register($autoloadList);
 
         /* load "autoloadFileList" */
         $this->registerAutoloadFileList($autoloadList);

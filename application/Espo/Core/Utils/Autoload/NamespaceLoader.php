@@ -31,21 +31,24 @@ namespace Espo\Core\Utils\Autoload;
 
 use Espo\Core\Utils\Util;
 
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+
+use Composer\Autoload\ClassLoader;
+
 class NamespaceLoader
 {
-    private $config;
+    protected $config;
+    protected $fileManager;
 
-    private $fileManager;
-
-    private $classLoader;
+    protected $classLoader;
 
     private $namespaces;
 
     protected $autoloadFilePath = 'vendor/autoload.php';
 
     /**
-     * Namespace files
-     * @var array
+     * Namespace files.
      */
     protected $namespacesPaths = [
         'psr-4' => 'vendor/composer/autoload_psr4.php',
@@ -54,8 +57,7 @@ class NamespaceLoader
     ];
 
     /**
-     * Method names in ClassLoader
-     * @var array
+     * Method names in ClassLoader.
      */
     protected $methodNameMap = [
         'psr-4' => 'addPsr4',
@@ -67,33 +69,18 @@ class NamespaceLoader
 
     protected $vendorNamespacesCacheFile = 'data/cache/application/autoload-vendor-namespaces.php';
 
-    public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(Config $config, FileManager $fileManager)
     {
         $this->config = $config;
         $this->fileManager = $fileManager;
-        $this->classLoader = new \Composer\Autoload\ClassLoader();
-    }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getClassLoader()
-    {
-        return $this->classLoader;
+        $this->classLoader = new ClassLoader();
     }
 
     public function register(array $autoloadList)
     {
-        $classLoader = $this->getClassLoader();
-        $this->addListToClassLoader($classLoader, $autoloadList);
-        $classLoader->register(true);
+        $this->addListToClassLoader($this->classLoader, $autoloadList);
+        $this->classLoader->register(true);
     }
 
     protected function loadNamespaces($basePath = '')
@@ -193,8 +180,8 @@ class NamespaceLoader
         if (!isset($this->vendorNamespaces)) {
             $this->vendorNamespaces = [];
 
-            if (file_exists($this->vendorNamespacesCacheFile) && $this->getConfig()->get('useCache')) {
-                $this->vendorNamespaces = $this->getFileManager()->getPhpContents($this->vendorNamespacesCacheFile);
+            if (file_exists($this->vendorNamespacesCacheFile) && $this->config->get('useCache')) {
+                $this->vendorNamespaces = $this->fileManager->getPhpContents($this->vendorNamespacesCacheFile);
                 if (!is_array($this->vendorNamespaces)) {
                     $this->vendorNamespaces = [];
                 }
@@ -206,8 +193,8 @@ class NamespaceLoader
             if ($vendorPath) {
                 $this->vendorNamespaces[$path] = $this->loadNamespaces($vendorPath);
 
-                if ($this->getConfig()->get('useCache')) {
-                    $this->getFileManager()->putPhpContents($this->vendorNamespacesCacheFile, $this->vendorNamespaces);
+                if ($this->config->get('useCache')) {
+                    $this->fileManager->putPhpContents($this->vendorNamespacesCacheFile, $this->vendorNamespaces);
                 }
             }
         }
