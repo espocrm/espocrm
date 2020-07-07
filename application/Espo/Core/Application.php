@@ -37,11 +37,11 @@ use Espo\Core\{
     ContainerConfiguration,
     EntryPointManager,
     CronManager,
-    Utils\Auth,
     Api\Auth as ApiAuth,
     Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
+    Utils\Auth,
     Utils\Route,
     Utils\Autoload,
     Portal\Application as PortalApplication,
@@ -52,14 +52,16 @@ use Espo\Core\{
     Loaders\Metadata as MetadataLoader,
 };
 
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-    ServerRequestInterface as Request,
+use Psr\Http\{
+    Message\ResponseInterface as Response,
+    Message\ServerRequestInterface as Request,
+    Server\RequestHandlerInterface as RequestHandler,
 };
 
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-
-use Slim\Factory\AppFactory as SlimAppFactory;
+use Slim\{
+    App as SlimApp,
+    Factory\AppFactory as SlimAppFactory,
+};
 
 /**
  * A central access point of the application.
@@ -97,7 +99,7 @@ class Application
      */
     public function runApi()
     {
-        $slim = $this->getSlim();
+        $slim = $this->createSlimApp();
         $slim->addRoutingMiddleware();
 
         $crudList = array_keys($this->getConfig()->get('crud'));
@@ -173,7 +175,7 @@ class Application
             throw new Error();
         }
 
-        $slim = $this->getSlim();
+        $slim = $this->createSlimApp();
 
         $injectableFactory = $this->container->get('injectableFactory');
         $classFinder = $this->container->get('classFinder');
@@ -371,13 +373,11 @@ class Application
         return $this->container->get('injectableFactory');
     }
 
-    protected function getSlim()
+    protected function createSlimApp() : SlimApp
     {
-        if (!$this->slim) {
-            $this->slim = SlimAppFactory::create();
-            $this->slim->setBasePath(Route::detectBasePath());
-        }
-        return $this->slim;
+        $slim = SlimAppFactory::create();
+        $slim->setBasePath(Route::detectBasePath());
+        return $slim;
     }
 
     protected function createAuth(RequestWrapper $request, bool $allowAnyAccess = false) : Auth

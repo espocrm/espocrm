@@ -50,29 +50,21 @@ use Espo\Core\Api\Request;
 
 use Espo\Core\Container;
 
-
 /**
  * Handles authentication. The entry point of the auth process.
  */
 class Auth
 {
-    protected $allowAnyAccess;
-
-    private $portal;
-
-    const ACCESS_CRM_ONLY = 0;
-
-    const ACCESS_PORTAL_ONLY = 1;
-
-    const ACCESS_ANY = 3;
-
     const FAILED_ATTEMPTS_PERIOD = '60 seconds';
 
     const MAX_FAILED_ATTEMPT_NUMBER = 10;
 
     const STATUS_SUCCESS = 'success';
-
     const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
+
+    protected $allowAnyAccess;
+
+    private $portal;
 
     protected $container;
 
@@ -113,7 +105,7 @@ class Auth
         if ($this->portal) {
             return true;
         }
-        return !!$this->getContainer()->get('portal');
+        return $this->getContainer()->has('portal');
     }
 
     protected function getPortal()
@@ -252,14 +244,19 @@ class Auth
         }
 
         if ($this->isPortal() && !$user->isPortal()) {
-            $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user.");
+            $GLOBALS['log']->info(
+                "AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user."
+            );
             $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
             return null;
         }
 
         if ($this->isPortal()) {
             if (!$this->getEntityManager()->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
-                $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is portal user but does not belongs to portal.");
+                $GLOBALS['log']->info(
+                    "AUTH: Trying to login to portal as user '".$user->get('userName')."' ".
+                    "which is portal user but does not belongs to portal."
+                );
                 $this->logDenied($authLogRecord, 'USER_IS_NOT_IN_PORTAL');
                 return null;
             }
