@@ -31,6 +31,7 @@ namespace Espo\Core\Api;
 
 use Psr\Http\Message\{
     ResponseInterface as Psr7Response,
+    StreamInterface,
 };
 
 use Espo\Core\Api\Response as ApiResponse;
@@ -44,9 +45,9 @@ class ResponseWrapper implements ApiResponse
         $this->response = $response;
     }
 
-    public function setStatus(int $code, ?string $reason)
+    public function setStatus(int $code, ?string $reason = null)
     {
-        $this->response = $this->response->withStatus($code, $reason);
+        $this->response = $this->response->withStatus($code, $reason ?? '');
     }
 
     public function setHeader(string $name, string $value)
@@ -57,5 +58,15 @@ class ResponseWrapper implements ApiResponse
     public function getResponse() : Psr7Response
     {
         return $this->response;
+    }
+
+    public function writeBody(string $string)
+    {
+        $this->response->getBody()->write($string);
+    }
+
+    public function setBody(StreamInterface $body)
+    {
+        $this->response->setBody($body);
     }
 }

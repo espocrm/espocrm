@@ -63,9 +63,9 @@ $requestUri = rtrim($a[0], '/');
 
 if (strpos($requestUri, '/') !== false) {
     if ($portalId) {
-        $app->setBasePath('../../');
+        $app->setClientBasePath('../../');
     } else {
-        $app->setBasePath('../');
+        $app->setClientBasePath('../');
     }
 }
 

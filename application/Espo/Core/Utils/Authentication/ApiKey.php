@@ -33,9 +33,11 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Entities\AuthToken;
 
+use Espo\Core\Api\Request;
+
 class ApiKey extends Base
 {
-    public function login(string $username, ?string $password, ?AuthToken $authToken = null, array $params = [], $request = null)
+    public function login(string $username, ?string $password, ?AuthToken $authToken, array $params, Request $request)
     {
         $apiKey = $username;
 

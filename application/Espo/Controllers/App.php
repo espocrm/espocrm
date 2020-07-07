@@ -32,8 +32,8 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Utils\Auth;
-
 use Espo\Core\Di;
+use Espo\Core\Api\Request;
 
 class App implements
 
@@ -48,13 +48,15 @@ class App implements
         return $this->serviceFactory->create('App')->getUserData();
     }
 
-    public function postActionDestroyAuthToken($params, $data)
+    public function postActionDestroyAuthToken(array $params, \StdClass $data, Request $request)
     {
         if (empty($data->token)) {
             throw new BadRequest();
         }
 
-        $auth = $this->injectableFactory->create(Auth::class);
+        $auth = $this->injectableFactory->createWith(Auth::class, [
+            'request' => $request,
+        ]);
 
         return $auth->destroyAuthToken($data->token);
     }

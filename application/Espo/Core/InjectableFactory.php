@@ -145,7 +145,7 @@ class InjectableFactory
 
                     if (!$injection) {
                         $className = $class->getName();
-                        throw new Error("InjectableFactory: Could not create {$className}, dependency {$name} not found.");
+                        throw new Error("InjectableFactory: Could not create {$className}, dependency '{$name}' not found.");
                     }
                 }
 

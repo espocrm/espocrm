@@ -37,6 +37,8 @@ use Espo\Entities\AuthToken;
 
 use Espo\Core\Container;
 
+use Espo\Core\Api\Request;
+
 class LDAP extends Espo
 {
     private $utils;
@@ -125,8 +127,9 @@ class LDAP extends Espo
         return $this->ldapClient;
     }
 
-    public function login(string $username, ?string $password, ?AuthToken $authToken = null, array $params = [], $request = null)
-    {
+    public function login(
+        string $username, ?string $password, ?AuthToken $authToken, array $params, Request $request
+    ) {
         $isPortal = !empty($params['isPortal']);
 
         if ($authToken) {

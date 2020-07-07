@@ -29,12 +29,12 @@
 
 namespace Espo\Core\Api;
 
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-    ServerRequestInterface as Request,
+use Espo\Core\{
+    Api\Request,
+    Api\Response,
 };
 
-class Output
+class ErrorOutput
 {
     protected $errorDescriptions = [
         400 => 'Bad Request',
@@ -46,7 +46,7 @@ class Output
     ];
 
     protected $allowedStatusCodeList = [
-        200, 201, 400, 401, 403, 404, 409, 500
+        200, 201, 400, 401, 403, 404, 409, 500,
     ];
 
     protected $ignorePrintXStatusReasonExceptionClassNameList = [
@@ -60,31 +60,18 @@ class Output
         $this->request = $request;
     }
 
-    public function render(Response $response, $data = null) : Response
-    {
-        if (is_string($data)) {
-            $response->getBody()->write($data);
-        } else {
-            if ($data) {
-                $response->setBody($data);
-            }
-        }
-
-        return $response;
-    }
-
-    public function processError(
+    public function process(
         Response $response,
         \Throwable $exception,
         bool $toPrint = false,
         ?array $route = null,
         ?array $routeParams = null
-    ) : Response {
+    ) {
         $message = $exception->getMessage() ?? '';
         $statusCode = $exception->getCode();
 
         if ($route) {
-            $requestBodyString = $this->request->getBody()->getContents();
+            $requestBodyString = $this->request->getBodyContents();
             $requestBodyString = $this->clearPasswords($requestBodyString);
 
             $routePattern = $route['route'];
@@ -95,7 +82,7 @@ class Output
 
             if ($message) $logMessageItemList[] = $message;
 
-            $logMessageItemList[] .= $this->request->getMethod() . ' ' . $this->request->getUri();
+            $logMessageItemList[] .= $this->request->getMethod() . ' ' . $this->request->getResourcePath();
 
             if ($requestBodyString) $logMessageItemList[] = "Input data: " . $requestBodyString;
 
@@ -122,7 +109,7 @@ class Output
 
         if ($message) $logMessageItemList[] = "{$message}";
 
-        $logMessageItemList[] = $this->request->getMethod() . ' ' . $this->request->getUri();
+        $logMessageItemList[] = $this->request->getMethod() . ' ' . $this->request->getResourcePath();
 
         if ($messageLineFile) {
             $logMessageItemList[] = $messageLineFile;
@@ -141,9 +128,9 @@ class Output
             $statusCode = 500;
         }
 
-        $response = $response->withStatus($statusCode);
+        $response->setStatus($statusCode);
         if ($toPrintXStatusReason) {
-            $response = $response->withHeader('X-Status-Reason', $message);
+            $response->setHeader('X-Status-Reason', $message);
         }
 
         if ($toPrint) {
@@ -156,12 +143,8 @@ class Output
                 $message = htmlspecialchars($message);
             }
 
-            $response = $response->getBody()->write(
-                self::generateErrorBody($statusText, $message)
-            );
+            $response->writeBody(self::generateErrorBody($statusText, $message));
         }
-
-        return $response;
     }
 
     protected function getCodeDescription(int $statusCode) : ?string

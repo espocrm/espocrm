@@ -31,6 +31,7 @@ namespace Espo\Core\Api;
 
 use Psr\Http\Message\{
     ResponseInterface as Psr7Response,
+    StreamInterface,
 };
 
 interface Response
@@ -38,12 +39,22 @@ interface Response
     /**
      * Set a status code.
      */
-    public function setStatus(int $code, ?string $reason);
+    public function setStatus(int $code, ?string $reason = null);
 
     /**
      * Set a specific header.
      */
     public function setHeader(string $name, string $value);
+
+    /**
+     * Write a body.
+     */
+    public function writeBody(string $string);
+
+    /**
+     * Set a body.
+     */
+    public function setBody(StreamInterface $body);
 
     /**
      * Get a result psr7 response.

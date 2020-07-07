@@ -77,7 +77,7 @@ class Portal implements EntryPoint
         }
 
         $application = new PortalApplication($id);
-        $application->setBasePath($this->clientManager->getBasePath());
+        $application->setClientBasePath($this->clientManager->getBasePath());
         $application->runClient();
     }
 }

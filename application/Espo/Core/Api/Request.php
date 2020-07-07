@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Api;
 
+use Psr\Http\Message\UriInterface;
+
 interface Request
 {
     /**
@@ -42,7 +44,37 @@ interface Request
     public function getHeader(string $name) : ?string;
 
     /**
+     * Whether a header is set.
+     */
+    public function hasHeader(string $name) : bool;
+
+    /**
      * Get a request method.
      */
     public function getMethod() : string;
+
+    /**
+     * Get Uri.
+     */
+    public function getUri() : UriInterface;
+
+    /**
+     * Get a relative path of a request (w/o base path).
+     */
+    public function getResourcePath() : string;
+
+    /**
+     * Get body contents.
+     */
+    public function getBodyContents() : ?string;
+
+    /**
+     * Get a cookie param value.
+     */
+    public function getCookieParam(string $name) : ?string;
+
+    /**
+     * Get a server param value.
+     */
+    public function getServerParam(string $name);
 }

@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Utils\Authentication;
 
+/**
+ * @todo Add login method.
+ */
 interface Login
 {
 

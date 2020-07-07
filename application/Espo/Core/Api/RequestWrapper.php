@@ -31,6 +31,7 @@ namespace Espo\Core\Api;
 
 use Psr\Http\Message\{
     ServerRequestInterface as Psr7Request,
+    UriInterface,
 };
 
 use Espo\Core\Api\Request as ApiRequest;
@@ -39,9 +40,12 @@ class RequestWrapper implements ApiRequest
 {
     protected $request;
 
-    public function __construct(Psr7Request $request)
+    protected $basePath;
+
+    public function __construct(Psr7Request $request, string $basePath = '')
     {
         $this->request = $request;
+        $this->basePath = $basePath;
     }
 
     public function get(string $name)
@@ -59,6 +63,11 @@ class RequestWrapper implements ApiRequest
         return $this->request->getHeaderLine($name);
     }
 
+    public function hasHeader(string $name) : bool
+    {
+        return $this->request->hasHeader($name);
+    }
+
     public function getMethod() : string
     {
         return $this->request->getMethod();
@@ -67,6 +76,34 @@ class RequestWrapper implements ApiRequest
     public function getContentType() : ?string
     {
         return $this->getHeader('Content-Type');;
+    }
+
+    public function getBodyContents() : ?string
+    {
+        return $this->request->getBody()->getContents();
+    }
+
+    public function getCookieParam(string $name) : ?string
+    {
+        $params = $this->request->getCookieParams();
+        return $params[$name] ?? null;
+    }
+
+    public function getServerParam(string $name) : ?string
+    {
+        $params = $this->request->getServerParams();
+        return $params[$name] ?? null;
+    }
+
+    public function getUri() : UriInterface
+    {
+        return $this->request->getUri();
+    }
+
+    public function getResourcePath() : string
+    {
+        $path = $this->request->getUri()->getPath();
+        return substr($path, strlen($this->basePath));
     }
 
     public function isGet() : bool

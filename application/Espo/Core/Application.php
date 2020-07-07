@@ -39,7 +39,7 @@ use Espo\Core\{
     CronManager,
     Utils\Auth,
     Api\Auth as ApiAuth,
-    Api\Output as ApiOutput,
+    Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
     Utils\Route,
@@ -132,7 +132,7 @@ class Application
         if ($authRequired && !$authNotStrict) {
             if (!$final && $portalId = $this->detectPortalId()) {
                 $app = new PortalApplication($portalId);
-                $app->setBasePath($this->getBasePath());
+                $app->setClientBasePath($this->getClientBasePath());
                 $app->runEntryPoint($entryPoint, $data, true);
                 exit;
             }
@@ -140,43 +140,36 @@ class Application
 
         $slim->add(
             function (Request $request, RequestHandler $handler) use (
-                $entryPointManager, $entryPoint, $data, $authRequired, $authNotStrict
+                $entryPointManager, $entryPoint, $data, $authRequired, $authNotStrict, $slim
             ) {
-                $response = $handler->handle($request);
-
-                $output = new ApiOutput($request);
+                $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
+                $responseWrapped = new ResponseWrapper($handler->handle($request));
 
                 try {
-                    $auth = $this->createAuth($request, $authNotStrict);
+                    $auth = $this->createAuth($requestWrapped, $authNotStrict);
                     $apiAuth = new ApiAuth($auth, $authRequired, true, true);
 
-                    $response = $apiAuth->process($request, $response);
+                    $apiAuth->process($requestWrapped, $responseWrapped);
 
                     if (!$apiAuth->isResolved()) {
-                        return $response;
+                        $requestWrapped->getResponse();
                     }
                     if ($apiAuth->isResolvedUseNoAuth()) {
                         $this->setupSystemUser();
                     }
 
-                    $requestWrapped = new RequestWrapper($request);
-                    $responseWrapped = new ResponseWrapper($response);
-
                     ob_start();
                     $entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped, $data);
                     $contents = ob_get_clean();
 
-                    $response = $responseWrapped->getResponse();
-
                     if ($contents) {
-                        $response->getBody()->write($contents);
+                        $responseWrapped->writeBody($contents);
                     }
-
-                } catch (\Exception $e) {
-                    $response = $output->processError($response, $e, true);
+                } catch (\Throwable $e) {
+                    (new ApiErrorOutput($requestWrapped))->process($responseWrapped, $e, true);
                 }
 
-                return $response;
+                return $responseWrapped->getResponse();
             }
         );
 
@@ -328,9 +321,14 @@ class Application
         return $this->container->get('config');
     }
 
-    protected function createAuth(Request $request, bool $allowAnyAccess = false) : Auth
+    protected function createAuth(RequestWrapper $request, bool $allowAnyAccess = false) : Auth
     {
-        return new Auth($this->container, $request, $allowAnyAccess);
+        $injectableFactory = $this->container->get('injectableFactory');
+
+        return $injectableFactory->createWith(Auth::class, [
+            'request' => $request,
+            'allowAnyAccess' => $allowAnyAccess,
+        ]);
     }
 
     protected function getRouteList()
@@ -359,7 +357,10 @@ class Application
             $currentRoute = $slim->
                 $method(
                     $route['route'],
-                    function (Request $request, Response $response, $args) use ($route) {
+                    function (Request $request, Response $response, array $args) use ($route, $slim) {
+                        $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
+                        $responseWrapped = new ResponseWrapper($response);
+
                         try {
                             $authRequired = true;
 
@@ -368,38 +369,39 @@ class Application
                                 $authRequired = false;
                             }
 
-                            $auth = $this->createAuth($request);
+                            $auth = $this->createAuth($requestWrapped);
                             $apiAuth = new ApiAuth($auth, $authRequired);
 
-                            $response = $apiAuth->process($request, $response);
-
+                            $apiAuth->process($requestWrapped, $responseWrapped);
 
                             if (!$apiAuth->isResolved()) {
-                                return $response;
+                                return $responseWrapped->getResponse();
                             }
                             if ($apiAuth->isResolvedUseNoAuth()) {
                                 $this->setupSystemUser();
                             }
 
-                            $response = $this->processRoute($route, $request, $response, $args);
-                        } catch (\Throwable $e) {
-                            $output = new ApiOutput($request);
-                            $response = $output->processError($response, $e, false, $route, $args);
+                            $this->processRoute($route, $requestWrapped, $responseWrapped, $args);
+                        } catch (\Throwable $exception) {
+                            (new ApiErrorOutput($requestWrapped))->process(
+                                $responseWrapped, $exception, false, $route, $args
+                            );
                         }
 
-                        return $response;
+                        return $responseWrapped->getResponse();
                     }
                 );
         }
 
-        $slim->addErrorMiddleware(false, true, false);
+
+        $slim->addErrorMiddleware(false, true, true);
     }
 
-    protected function processRoute(array $route, Request $request, Response $response, array $args)
+    protected function processRoute(array $route, RequestWrapper $request, ResponseWrapper $response, array $args)
     {
-        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->setHeader('Content-Type', 'application/json');
 
-        $data = $request->getBody()->getContents();
+        $data = $request->getBodyContents();
 
         $params = [];
 
@@ -446,21 +448,13 @@ class Application
         unset($params['controller']);
         unset($params['action']);
 
-        $requestWrapped = new RequestWrapper($request);
-        $responseWrapped = new ResponseWrapper($response);
-
-        $output = new ApiOutput($request);
-
         $controllerManager = $this->container->get('controllerManager');
-        $result = $controllerManager->process(
-            $controllerName, $actionName, $params, $data, $requestWrapped, $responseWrapped
-        );
 
-        $response = $responseWrapped->getResponse();
+        $contents = $controllerManager->process($controllerName, $actionName, $params, $data, $request, $response);
 
-        $response = $output->render($response, $result);
-
-        return $response;
+        if (is_string($contents)) {
+            $response->writeBody($contents);
+        }
     }
 
     protected function initAutoloads()
@@ -478,12 +472,18 @@ class Application
         }
     }
 
-    public function setBasePath(string $basePath)
+    /**
+     * Set a base path of an index file related to the application directory. Used for a portal.
+     */
+    public function setClientBasePath(string $basePath)
     {
         $this->container->get('clientManager')->setBasePath($basePath);
     }
 
-    public function getBasePath() : string
+    /**
+     * Get a base path of an index file related to the application directory. Used for a portal.
+     */
+    public function getClientBasePath() : string
     {
         return $this->container->get('clientManager')->getBasePath();
     }

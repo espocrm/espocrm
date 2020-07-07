@@ -44,9 +44,7 @@ use Espo\Core\Utils\Authentication\TwoFA\CodeInterface as TwoFACodeInterface;
 
 use Espo\Core\Container;
 
-use Psr\Http\Message\{
-    ServerRequestInterface as Request,
-};
+use Espo\Core\Api\Request;
 
 /**
  * Handles authentication. The entry point of the auth process.
@@ -141,12 +139,12 @@ class Auth
         $isByTokenOnly = false;
 
         if (!$authenticationMethod) {
-            if ($this->request->getHeaderLine('Http-Espo-Authorization-By-Token') === 'true') {
+            if ($this->request->getHeader('Http-Espo-Authorization-By-Token') === 'true') {
                 $isByTokenOnly = true;
             }
         }
 
-        $createTokenSecret = $this->request->getHeaderLine('Espo-Authorization-Create-Token-Secret') === 'true';
+        $createTokenSecret = $this->request->getHeader('Espo-Authorization-Create-Token-Secret') === 'true';
 
         if ($createTokenSecret) {
             if ($this->getConfig()->get('authTokenSecretDisabled')) {
@@ -265,7 +263,7 @@ class Auth
             $user->loadLinkMultipleField('teams');
         }
 
-        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
+        $user->set('ipAddress', $this->request->getServerParam('REMOTE_ADDR') ?? null);
 
         $this->getContainer()->set('user', $user);
 
@@ -276,7 +274,7 @@ class Auth
             if ($twoFAMethod) {
                 $twoFAImpl = $this->get2FAImpl($twoFAMethod);
 
-                $twoFACode = $this->request->getHeaderLine('Espo-Authorization-Code');
+                $twoFACode = $this->request->getHeader('Espo-Authorization-Code');
 
                 if ($twoFACode) {
                     if (!$twoFAImpl->verifyCode($user, $twoFACode)) {
@@ -293,13 +291,13 @@ class Auth
             $secondStepRequired = $loginResultData['secondStepRequired'] ?? false;
         }
 
-        if (!$secondStepRequired && $this->request->getHeaderLine('Http-Espo-Authorization')) {
+        if (!$secondStepRequired && $this->request->getHeader('Http-Espo-Authorization')) {
             if (!$authToken) {
                 $authToken = $this->getEntityManager()->getEntity('AuthToken');
                 $token = $this->generateToken();
                 $authToken->set('token', $token);
                 $authToken->set('hash', $user->get('password'));
-                $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
+                $authToken->set('ipAddress', $this->request->getServerParam('REMOTE_ADDR'));
                 $authToken->set('userId', $user->id);
 
                 if ($createTokenSecret) {
@@ -381,13 +379,16 @@ class Auth
         $failedAttemptsPeriod = $this->getConfig()->get('authFailedAttemptsPeriod', self::FAILED_ATTEMPTS_PERIOD);
         $maxFailedAttempts = $this->getConfig()->get('authMaxFailedAttemptNumber', self::MAX_FAILED_ATTEMPT_NUMBER);
 
-        $requestTimeFrom = (new \DateTime('@' . intval($_SERVER['REQUEST_TIME_FLOAT'])))->modify('-' . $failedAttemptsPeriod);
+        $requestTime = intval($this->request->getServerParam('REQUEST_TIME_FLOAT'));
+        $requestTimeFrom = (new \DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
 
         $failAttemptCount = 0;
 
+        $ip = $this->request->getServerParam('REMOTE_ADDR');
+
         $where = [
             'requestTime>' => $requestTimeFrom->format('U'),
-            'ipAddress' => $_SERVER['REMOTE_ADDR'] ?? null,
+            'ipAddress' => $ip,
             'isDenied' => true,
         ];
 
@@ -398,9 +399,7 @@ class Auth
         }
 
         if ($failAttemptCount > $maxFailedAttempts) {
-            $GLOBALS['log']->warning(
-                "AUTH: Max failed login attempts exceeded for IP '".($_SERVER['REMOTE_ADDR'] ?? null)."'."
-            );
+            $GLOBALS['log']->warning("AUTH: Max failed login attempts exceeded for IP '{$ip}'.");
             throw new Forbidden("Max failed login attempts exceeded.");
         }
     }
@@ -425,11 +424,12 @@ class Auth
         $authToken = $this->getEntityManager()->getRepository('AuthToken')->select(['id', 'isActive', 'secret'])->where(
             ['token' => $token]
         )->findOne();
+
         if ($authToken) {
             $authToken->set('isActive', false);
             $this->getEntityManager()->saveEntity($authToken);
             if ($authToken->get('secret')) {
-                $sentSecret = $_COOKIE['auth-token-secret'] ?? null;
+                $sentSecret = $this->request->getCookieParam('auth-token-secret');
                 if ($sentSecret === $authToken->get('secret')) {
                     setcookie('auth-token-secret', null, -1, '/');
                 }
@@ -444,15 +444,17 @@ class Auth
 
         $authLogRecord = $this->getEntityManager()->getEntity('AuthLogRecord');
 
+        $request = $this->request;
+
         $requestUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost() . $request->getUri()->getPath();
 
         $authLogRecord->set([
             'username' => $username,
-            'ipAddress' => $_SERVER['REMOTE_ADDR'] ?? null,
-            'requestTime' => $_SERVER['REQUEST_TIME_FLOAT'],
-            'requestMethod' => $this->request->getMethod(),
+            'ipAddress' => $request->getServerParam('REMOTE_ADDR'),
+            'requestTime' => $request->getServerParam('REQUEST_TIME_FLOAT'),
+            'requestMethod' => $request->getMethod(),
             'requestUrl' => $requestUrl,
-            'authenticationMethod' => $authenticationMethod
+            'authenticationMethod' => $authenticationMethod,
         ]);
 
         if ($this->isPortal()) {

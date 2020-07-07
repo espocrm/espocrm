@@ -33,9 +33,13 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Entities\AuthToken;
 
+use Espo\Core\Utils\ApiKey;
+
+use Espo\Core\Api\Request;
+
 class Hmac extends Base
 {
-    public function login(string $username, ?string $password, ?AuthToken $authToken = null, array $params = [], $request)
+    public function login(string $username, ?string $password, ?AuthToken $authToken, array $params, Request $request)
     {
         $apiKey = $username;
         $hash = $password;
@@ -44,20 +48,20 @@ class Hmac extends Base
             'whereClause' => [
                 'type' => 'api',
                 'apiKey' => $apiKey,
-                'authMethod' => 'Hmac'
+                'authMethod' => 'Hmac',
             ]
         ]);
 
         if (!$user) return;
 
         if ($user) {
-            $apiKeyUtil = new \Espo\Core\Utils\ApiKey($this->getConfig());
+            $apiKeyUtil = new ApiKey($this->getConfig());
             $secretKey = $apiKeyUtil->getSecretKeyForUserId($user->id);
             if (!$secretKey) return;
 
-            $string = $request->getMethod() . ' ' . $request->getUri();
+            $string = $request->getMethod() . ' ' . $request->getResourcePath();
 
-            if ($hash === \Espo\Core\Utils\ApiKey::hash($secretKey, $string)) {
+            if ($hash === ApiKey::hash($secretKey, $string)) {
                 return $user;
             }
 
