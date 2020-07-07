@@ -97,8 +97,62 @@ class Application
      */
     public function run()
     {
-        $this->initRoutes();
-        $this->getSlim()->run();
+        $crudList = array_keys($this->getConfig()->get('crud'));
+
+        $slim = $this->getSlim();
+
+        $slim->addRoutingMiddleware();
+
+        foreach ($this->getRouteList() as $route) {
+            $method = strtolower($route['method']);
+            if (!in_array($method, $crudList) && $method !== 'options') {
+                $GLOBALS['log']->error(
+                    'Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']'
+                );
+                continue;
+            }
+
+            $currentRoute = $slim->$method(
+                $route['route'],
+                function (Request $request, Response $response, array $args) use ($route, $slim) {
+                    $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
+                    $responseWrapped = new ResponseWrapper($response);
+
+                    try {
+                        $authRequired = true;
+
+                        $conditions = $route['conditions'] ?? [];
+                        if (($conditions['auth'] ?? true) === false) {
+                            $authRequired = false;
+                        }
+
+                        $auth = $this->createAuth($requestWrapped);
+                        $apiAuth = new ApiAuth($auth, $authRequired);
+
+                        $apiAuth->process($requestWrapped, $responseWrapped);
+
+                        if (!$apiAuth->isResolved()) {
+                            return $responseWrapped->getResponse();
+                        }
+                        if ($apiAuth->isResolvedUseNoAuth()) {
+                            $this->setupSystemUser();
+                        }
+
+                        $this->processRoute($route, $requestWrapped, $responseWrapped, $args);
+                    } catch (\Throwable $exception) {
+                        (new ApiErrorOutput($requestWrapped))->process(
+                            $responseWrapped, $exception, false, $route, $args
+                        );
+                    }
+
+                    return $responseWrapped->getResponse();
+                }
+            );
+        }
+
+        $slim->addErrorMiddleware(false, true, true);
+
+        $slim->run();
     }
 
     /**
@@ -335,66 +389,6 @@ class Application
     {
         $routes = new Route($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
         return $routes->getAll();
-    }
-
-    protected function initRoutes()
-    {
-        $crudList = array_keys($this->getConfig()->get('crud'));
-
-        $slim = $this->getSlim();
-
-        $slim->addRoutingMiddleware();
-
-        foreach ($this->getRouteList() as $route) {
-            $method = strtolower($route['method']);
-            if (!in_array($method, $crudList) && $method !== 'options') {
-                $GLOBALS['log']->error(
-                    'Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']'
-                );
-                continue;
-            }
-
-            $currentRoute = $slim->
-                $method(
-                    $route['route'],
-                    function (Request $request, Response $response, array $args) use ($route, $slim) {
-                        $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
-                        $responseWrapped = new ResponseWrapper($response);
-
-                        try {
-                            $authRequired = true;
-
-                            $conditions = $route['conditions'] ?? [];
-                            if (($conditions['auth'] ?? true) === false) {
-                                $authRequired = false;
-                            }
-
-                            $auth = $this->createAuth($requestWrapped);
-                            $apiAuth = new ApiAuth($auth, $authRequired);
-
-                            $apiAuth->process($requestWrapped, $responseWrapped);
-
-                            if (!$apiAuth->isResolved()) {
-                                return $responseWrapped->getResponse();
-                            }
-                            if ($apiAuth->isResolvedUseNoAuth()) {
-                                $this->setupSystemUser();
-                            }
-
-                            $this->processRoute($route, $requestWrapped, $responseWrapped, $args);
-                        } catch (\Throwable $exception) {
-                            (new ApiErrorOutput($requestWrapped))->process(
-                                $responseWrapped, $exception, false, $route, $args
-                            );
-                        }
-
-                        return $responseWrapped->getResponse();
-                    }
-                );
-        }
-
-
-        $slim->addErrorMiddleware(false, true, true);
     }
 
     protected function processRoute(array $route, RequestWrapper $request, ResponseWrapper $response, array $args)
