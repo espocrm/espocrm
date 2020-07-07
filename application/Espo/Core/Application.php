@@ -62,7 +62,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Factory\AppFactory as SlimAppFactory;
 
 /**
- * The main entry point of the application.
+ * A central access point of the application.
  */
 class Application
 {
