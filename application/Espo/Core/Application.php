@@ -95,33 +95,34 @@ class Application
     /**
      * Run REST API.
      */
-    public function run()
+    public function runApi()
     {
-        $crudList = array_keys($this->getConfig()->get('crud'));
-
         $slim = $this->getSlim();
-
         $slim->addRoutingMiddleware();
 
-        foreach ($this->getRouteList() as $route) {
-            $method = strtolower($route['method']);
+        $crudList = array_keys($this->getConfig()->get('crud'));
+
+        $routeList = $this->getInjectableFactory()->create(Route::class)->getAll();
+
+        foreach ($routeList as $item) {
+            $method = strtolower($item['method']);
+            $route = $item['route'];
+
             if (!in_array($method, $crudList) && $method !== 'options') {
-                $GLOBALS['log']->error(
-                    'Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']'
-                );
+                $GLOBALS['log']->error("Route: Method '{$method}' does not exist. Check the route '{$route}'.");
                 continue;
             }
 
-            $currentRoute = $slim->$method(
-                $route['route'],
-                function (Request $request, Response $response, array $args) use ($route, $slim) {
+            $slim->$method(
+                $route,
+                function (Request $request, Response $response, array $args) use ($item, $slim) {
                     $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
                     $responseWrapped = new ResponseWrapper($response);
 
                     try {
                         $authRequired = true;
 
-                        $conditions = $route['conditions'] ?? [];
+                        $conditions = $item['conditions'] ?? [];
                         if (($conditions['auth'] ?? true) === false) {
                             $authRequired = false;
                         }
@@ -138,10 +139,10 @@ class Application
                             $this->setupSystemUser();
                         }
 
-                        $this->processRoute($route, $requestWrapped, $responseWrapped, $args);
-                    } catch (\Throwable $exception) {
+                        $this->processRoute($item, $requestWrapped, $responseWrapped, $args);
+                    } catch (\Exception $exception) {
                         (new ApiErrorOutput($requestWrapped))->process(
-                            $responseWrapped, $exception, false, $route, $args
+                            $responseWrapped, $exception, false, $item, $args
                         );
                     }
 
@@ -151,7 +152,6 @@ class Application
         }
 
         $slim->addErrorMiddleware(false, true, true);
-
         $slim->run();
     }
 
@@ -219,7 +219,7 @@ class Application
                     if ($contents) {
                         $responseWrapped->writeBody($contents);
                     }
-                } catch (\Throwable $e) {
+                } catch (\Exception $e) {
                     (new ApiErrorOutput($requestWrapped))->process($responseWrapped, $e, true);
                 }
 
@@ -356,15 +356,6 @@ class Application
         return $this->container;
     }
 
-    protected function getSlim()
-    {
-        if (!$this->slim) {
-            $this->slim = SlimAppFactory::create();
-            $this->slim->setBasePath(Route::detectBasePath());
-        }
-        return $this->slim;
-    }
-
     protected function getMetadata()
     {
         return $this->container->get('metadata');
@@ -375,20 +366,26 @@ class Application
         return $this->container->get('config');
     }
 
+    protected function getInjectableFactory()
+    {
+        return $this->container->get('injectableFactory');
+    }
+
+    protected function getSlim()
+    {
+        if (!$this->slim) {
+            $this->slim = SlimAppFactory::create();
+            $this->slim->setBasePath(Route::detectBasePath());
+        }
+        return $this->slim;
+    }
+
     protected function createAuth(RequestWrapper $request, bool $allowAnyAccess = false) : Auth
     {
-        $injectableFactory = $this->container->get('injectableFactory');
-
-        return $injectableFactory->createWith(Auth::class, [
+        return $this->getInjectableFactory()->createWith(Auth::class, [
             'request' => $request,
             'allowAnyAccess' => $allowAnyAccess,
         ]);
-    }
-
-    protected function getRouteList()
-    {
-        $routes = new Route($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
-        return $routes->getAll();
     }
 
     protected function processRoute(array $route, RequestWrapper $request, ResponseWrapper $response, array $args)

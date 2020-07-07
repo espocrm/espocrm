@@ -36,4 +36,4 @@ if (!empty($_GET['portalId'])) {
 }
 
 $app = new \Espo\Core\Portal\Application($portalId);
-$app->run();
+$app->runApi();
