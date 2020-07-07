@@ -150,7 +150,7 @@ class AclManager extends BaseAclManager
         return (bool) $this->getImplementation($entity->getEntityType())->checkIsOwnContact($user, $entity);
     }
 
-    public function getMap(User $user) : object
+    public function getMap(User $user) : \StdClass
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getMap($user);
