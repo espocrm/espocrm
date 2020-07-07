@@ -123,6 +123,8 @@ class Application extends BaseApplication
 
     protected function initPreloads()
     {
+        parent::initPreloads();
+
         foreach ($this->getMetadata()->get(['app', 'portalContainerServices']) ?? [] as $name => $defs) {
             if ($defs['preload'] ?? false) {
                 $this->container->get($name);
