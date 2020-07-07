@@ -95,7 +95,7 @@ class Application
     /**
      * Run REST API.
      */
-    public function run(string $name = 'default')
+    public function run()
     {
         $this->initRoutes();
         $this->getSlim()->run();
