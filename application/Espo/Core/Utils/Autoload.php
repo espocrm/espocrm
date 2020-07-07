@@ -35,21 +35,19 @@ class Autoload
 {
     protected $data = null;
 
-    private $config;
-
-    private $metadata;
-
-    private $fileManager;
-
-    private $loader;
-
     protected $cacheFile = 'data/cache/application/autoload.php';
 
-    protected $paths = array(
+    protected $paths = [
         'corePath' => 'application/Espo/Resources/autoload.json',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/autoload.json',
         'customPath' => 'custom/Espo/Custom/Resources/autoload.json',
-    );
+    ];
+
+    protected $loader;
+
+    protected $config;
+    protected $metadata;
+    protected $fileManager;
 
     public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
     {
@@ -58,26 +56,6 @@ class Autoload
         $this->fileManager = $fileManager;
 
         $this->loader = new Loader($config, $fileManager);
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getLoader()
-    {
-        return $this->loader;
     }
 
     public function get($key = null, $returns = null)
@@ -100,15 +78,15 @@ class Autoload
 
     protected function init()
     {
-        if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
-            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
+        if (file_exists($this->cacheFile) && $this->config->get('useCache')) {
+            $this->data = $this->fileManager->getPhpContents($this->cacheFile);
             return;
         }
 
         $this->data = $this->unify();
 
-        if ($this->getConfig()->get('useCache')) {
-            $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
+        if ($this->config->get('useCache')) {
+            $result = $this->fileManager->putPhpContents($this->cacheFile, $this->data);
             if ($result == false) {
                  throw new \Espo\Core\Exceptions\Error('Autoload: Cannot save unified autoload.');
             }
@@ -119,7 +97,7 @@ class Autoload
     {
         $data = $this->loadData($this->paths['corePath']);
 
-        foreach ($this->getMetadata()->getModuleList() as $moduleName) {
+        foreach ($this->metadata->getModuleList() as $moduleName) {
             $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
             $data = array_merge($data, $this->loadData($modulePath));
         }
@@ -132,7 +110,7 @@ class Autoload
     protected function loadData($autoloadFile, $returns = array())
     {
         if (file_exists($autoloadFile)) {
-            $content = $this->getFileManager()->getContents($autoloadFile);
+            $content = $this->fileManager->getContents($autoloadFile);
             $arrayContent = Json::getArrayData($content);
             if (!empty($arrayContent)) {
                 return $this->normalizeData($arrayContent);
@@ -174,7 +152,7 @@ class Autoload
         } catch (\Exception $e) {} //bad permissions
 
         if (!empty($autoloadList)) {
-            $this->getLoader()->register($autoloadList);
+            $this->loader->register($autoloadList);
         }
     }
 }

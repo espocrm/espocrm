@@ -337,7 +337,7 @@ class Application
     }
 
     /**
-     * The whether the application is installed.
+     * Whether the application is installed.
      */
     public function isInstalled() : bool
     {
@@ -450,10 +450,13 @@ class Application
 
     protected function initAutoloads()
     {
-        $autoload = new Autoload($this->getConfig(), $this->getMetadata(), $this->container->get('fileManager'));
+        $autoload = $this->getInjectableFactory()->create(Autoload::class);
         $autoload->register();
     }
 
+    /**
+     * Initialize services that has the 'preload' parameter.
+     */
     protected function initPreloads()
     {
         foreach ($this->getMetadata()->get(['app', 'containerServices']) ?? [] as $name => $defs) {
