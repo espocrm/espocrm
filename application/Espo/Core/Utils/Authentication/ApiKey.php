@@ -29,25 +29,33 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\Entities\AuthToken;
+use Espo\Entities\{
+    User,
+    AuthToken,
+};
 
 use Espo\Core\Api\Request;
+use Espo\Core\ORM\EntityManager;
 
-class ApiKey extends Base
+class ApiKey implements Login
 {
-    public function login(string $username, ?string $password, ?AuthToken $authToken, array $params, Request $request)
-    {
-        $apiKey = $username;
+    protected $entityManager;
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne([
-            'whereClause' => [
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'ApiKey',
-            ]
-        ]);
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+    ) : ?User {
+        $apiKey = $request->getHeader('X-Api-Key');
+
+        $user = $this->entityManager->getRepository('User')->where([
+            'type' => 'api',
+            'apiKey' => $apiKey,
+            'authMethod' => 'ApiKey',
+        ])->findOne();
 
         return $user;
     }

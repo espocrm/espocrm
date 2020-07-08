@@ -29,10 +29,16 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-/**
- * @todo Add login method.
- */
+use Espo\Entities\{
+    User,
+    AuthToken,
+};
+
+use Espo\Core\Api\Request;
+
 interface Login
 {
-
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+    ) : ?User;
 }

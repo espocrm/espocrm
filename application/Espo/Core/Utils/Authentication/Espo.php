@@ -29,31 +29,44 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Entities\{
+    User,
+    AuthToken,
+};
 
-use Espo\Entities\AuthToken;
+use Espo\Core\{
+    ORM\EntityManager,
+    Api\Request,
+    Utils\PasswordHash,
+};
 
-use Espo\Core\Api\Request;
-
-class Espo extends Base
+class Espo implements Login
 {
-    public function login(string $username, ?string $password, ?AuthToken $authToken, array $params, Request $request)
+    protected $entityManager;
+    protected $passwordHash;
+
+    public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
     {
-        if (!$password) return;
+        $this->entityManager = $entityManager;
+        $this->passwordHash = $passwordHash;
+    }
+
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+    ) :?User {
+        if (!$password) return null;
 
         if ($authToken) {
             $hash = $authToken->get('hash');
         } else {
-            $hash = $this->getPasswordHash()->hash($password);
+            $hash = $this->passwordHash->hash($password);
         }
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne([
-            'whereClause' => [
-                'userName' => $username,
-                'password' => $hash,
-                'type!=' => ['api', 'system'],
-            ]
-        ]);
+        $user = $this->entityManager->getRepository('User')->where( [
+            'userName' => $username,
+            'password' => $hash,
+            'type!=' => ['api', 'system'],
+        ])->findOne();
 
         if ($user && $authToken) {
             if ($user->id !== $authToken->get('userId')) {

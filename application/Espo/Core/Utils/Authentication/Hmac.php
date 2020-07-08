@@ -29,35 +29,47 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Entities\{
+    User,
+    AuthToken,
+};
 
-use Espo\Entities\AuthToken;
+use Espo\Core\{
+    ORM\EntityManager,
+    Api\Request,
+    Utils\Config,
+    Utils\ApiKey,
+};
 
-use Espo\Core\Utils\ApiKey;
-
-use Espo\Core\Api\Request;
-
-class Hmac extends Base
+class Hmac implements Login
 {
-    public function login(string $username, ?string $password, ?AuthToken $authToken, array $params, Request $request)
+    protected $entityManager;
+    protected $config;
+
+    public function __construct(EntityManager $entityManager, Config $config)
     {
-        $apiKey = $username;
-        $hash = $password;
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+    }
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne([
-            'whereClause' => [
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'Hmac',
-            ]
-        ]);
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+    ) :?User {
+        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
 
-        if (!$user) return;
+        list($apiKey, $hash) = explode(':', $authString, 2);
+
+        $user = $this->entityManager->getRepository('User')->where([
+            'type' => 'api',
+            'apiKey' => $apiKey,
+            'authMethod' => 'Hmac',
+        ])->findOne();
+
+        if (!$user) return null;
 
         if ($user) {
-            $apiKeyUtil = new ApiKey($this->getConfig());
-            $secretKey = $apiKeyUtil->getSecretKeyForUserId($user->id);
-            if (!$secretKey) return;
+            $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
+            if (!$secretKey) return null;
 
             $string = $request->getMethod() . ' ' . $request->getResourcePath();
 
@@ -65,7 +77,7 @@ class Hmac extends Base
                 return $user;
             }
 
-            return;
+            return null;
         }
 
         return $user;

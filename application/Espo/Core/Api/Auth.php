@@ -93,20 +93,19 @@ class Auth
 
         $authenticationMethod = null;
 
-        if ($request->hasHeader('Http-Espo-Authorization')) {
-            $espoAuthorizationHeader = $request->getHeader('Http-Espo-Authorization');
+        if ($request->hasHeader('Espo-Authorization')) {
+            $espoAuthorizationHeader = $request->getHeader('Espo-Authorization');
             list($username, $password) = explode(':', base64_decode($espoAuthorizationHeader), 2);
         } else {
             if ($request->hasHeader('X-Hmac-Authorization')) {
                 $hmacAuthorizationHeader = $request->getHeader('X-Hmac-Authorization');
                 $authenticationMethod = 'Hmac';
-                list($username, $password) = explode(':', base64_decode($hmacAuthorizationHeader), 2);
+                $username = explode(':', base64_decode($hmacAuthorizationHeader), 2)[0];
             } else {
                 $apiKeyHeader = $request->getHeader('X-Api-Key');
                 if ($apiKeyHeader) {
                     $authenticationMethod = 'ApiKey';
                     $username = $apiKeyHeader;
-                    $password = null;
                 }
             }
         }

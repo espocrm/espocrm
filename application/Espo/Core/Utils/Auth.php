@@ -148,7 +148,7 @@ class Auth
         $isByTokenOnly = false;
 
         if (!$authenticationMethod) {
-            if ($this->request->getHeader('Http-Espo-Authorization-By-Token') === 'true') {
+            if ($this->request->getHeader('Espo-Authorization-By-Token') === 'true') {
                 $isByTokenOnly = true;
             }
         }
@@ -162,7 +162,7 @@ class Auth
         }
 
         if (!$isByTokenOnly) {
-            $this->checkFailedAttemptsLimit($username);
+            $this->checkFailedAttemptsLimit();
         }
 
         $authToken = null;
@@ -225,7 +225,7 @@ class Auth
 
         $loginResultData = [];
 
-        $user = $authenticationImpl->login($username, $password, $authToken, $params, $this->request, $loginResultData);
+        $user = $authenticationImpl->login($username, $password, $authToken, $this->request, $params, $loginResultData);
 
         $authLogRecord = null;
 
