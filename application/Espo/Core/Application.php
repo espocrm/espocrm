@@ -163,7 +163,7 @@ class Application
      */
     public function runClient()
     {
-        $this->getClientMaanger()->display();
+        $this->getClientManager()->display();
         exit;
     }
 
@@ -355,7 +355,7 @@ class Application
         return $this->container->get('injectableFactory');
     }
 
-    protected function getClientMaanger() : ClientManager
+    protected function getClientManager() : ClientManager
     {
         return $this->container->get('clientManager');
     }
@@ -428,7 +428,7 @@ class Application
      */
     public function setClientBasePath(string $basePath)
     {
-        $this->getClientMaanger()->setBasePath($basePath);
+        $this->getClientManager()->setBasePath($basePath);
     }
 
     /**
@@ -436,7 +436,7 @@ class Application
      */
     public function getClientBasePath() : string
     {
-        return $this->getClientMaanger()->getBasePath();
+        return $this->getClientManager()->getBasePath();
     }
 
     public function detectPortalId() : ?string
