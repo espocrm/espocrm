@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\{
 
 use Espo\Core\{
     ContainerConfiguration,
+    InjectableFactory,
     EntryPointManager,
     CronManager,
     Api\Auth as ApiAuth,
@@ -45,6 +46,11 @@ use Espo\Core\{
     Utils\Auth,
     Utils\Route,
     Utils\Autoload,
+    Utils\Config,
+    Utils\Metadata,
+    Utils\ClientManager,
+    ORM\EntityManager,
+    Console\CommandManager as ConsoleCommandManager,
     Portal\Application as PortalApplication,
     Loaders\Config as ConfigLoader,
     Loaders\Log as LogLoader,
@@ -157,7 +163,7 @@ class Application
      */
     public function runClient()
     {
-        $this->container->get('clientManager')->display();
+        $this->getClientMaanger()->display();
         exit;
     }
 
@@ -172,10 +178,7 @@ class Application
 
         $slim = $this->createSlimApp();
 
-        $injectableFactory = $this->container->get('injectableFactory');
-        $classFinder = $this->container->get('classFinder');
-
-        $entryPointManager = new EntryPointManager($injectableFactory, $classFinder);
+        $entryPointManager = $this->getInjectableFactory()->create(EntryPointManager::class);
 
         $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
         $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
@@ -240,11 +243,8 @@ class Application
             $GLOBALS['log']->warning("Cron is not run because it's disabled with 'cronDisabled' param.");
             return;
         }
-
         $this->setupSystemUser();
-
-        $cronManager = $this->container->get('cronManager');
-        $cronManager->run();
+        $this->getCronManager()->run();
     }
 
     /**
@@ -267,6 +267,7 @@ class Application
         }
 
         $processList = [];
+
         while (true) {
             $toSkip = false;
             $runningCount = 0;
@@ -297,9 +298,7 @@ class Application
     public function runJob(string $id)
     {
         $this->setupSystemUser();
-
-        $cronManager = $this->container->get('cronManager');
-        $cronManager->runJobById($id);
+        $this->getCronManager()->runJobById($id);
     }
 
     /**
@@ -307,8 +306,7 @@ class Application
      */
     public function runRebuild()
     {
-        $dataManager = $this->container->get('dataManager');
-        $dataManager->rebuild();
+        $this->getDataManager()->rebuild();
     }
 
     /**
@@ -316,8 +314,7 @@ class Application
      */
     public function runClearCache()
     {
-        $dataManager = $this->container->get('dataManager');
-        $dataManager->clearCache();
+        $this->getDataManager()->clearCache();
     }
 
     /**
@@ -327,7 +324,7 @@ class Application
     {
         $this->setupSystemUser();
 
-        $consoleCommandManager = $this->container->get('consoleCommandManager');
+        $consoleCommandManager = $this->getInjectableFactory()->create(ConsoleCommandManager::class);
         return $consoleCommandManager->run($command);
     }
 
@@ -353,19 +350,39 @@ class Application
         return $this->container;
     }
 
-    protected function getMetadata()
+    protected function getInjectableFactory() : InjectableFactory
+    {
+        return $this->container->get('injectableFactory');
+    }
+
+    protected function getClientMaanger() : ClientManager
+    {
+        return $this->container->get('clientManager');
+    }
+
+    protected function getMetadata() : Metadata
     {
         return $this->container->get('metadata');
     }
 
-    protected function getConfig()
+    protected function getConfig() : Config
     {
         return $this->container->get('config');
     }
 
-    protected function getInjectableFactory()
+    protected function getDataManager() : DataManager
     {
-        return $this->container->get('injectableFactory');
+        return $this->container->get('dataManager');
+    }
+
+    protected function getCronManager() : CronManager
+    {
+        return $this->container->get('cronManager');
+    }
+
+    protected function getEntityManager() : EntityManager
+    {
+        return $this->container->get('entityManager');
     }
 
     protected function createSlimApp() : SlimApp
@@ -411,7 +428,7 @@ class Application
      */
     public function setClientBasePath(string $basePath)
     {
-        $this->container->get('clientManager')->setBasePath($basePath);
+        $this->getClientMaanger()->setBasePath($basePath);
     }
 
     /**
@@ -419,7 +436,7 @@ class Application
      */
     public function getClientBasePath() : string
     {
-        return $this->container->get('clientManager')->getBasePath();
+        return $this->getClientMaanger()->getBasePath();
     }
 
     public function detectPortalId() : ?string
@@ -429,8 +446,8 @@ class Application
         }
         if (!empty($_COOKIE['auth-token'])) {
             $token =
-                $this->container->get('entityManager')
-                    ->getRepository('AuthToken')->where(['token' => $_COOKIE['auth-token']])->findOne();
+                $this->getEntityManager()->getRepository('AuthToken')
+                    ->where(['token' => $_COOKIE['auth-token']])->findOne();
 
             if ($token && $token->get('portalId')) {
                 return $token->get('portalId');
@@ -444,7 +461,7 @@ class Application
      */
     public function setupSystemUser()
     {
-        $user = $this->container->get('entityManager')->getEntity('User', 'system');
+        $user = $this->getEntityManager()->getEntity('User', 'system');
         if (!$user) {
             throw new Error("System user is not found");
         }
