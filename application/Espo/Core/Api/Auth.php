@@ -84,11 +84,9 @@ class Auth
         $username = null;
         $password = null;
 
-        if ($request->hasHeader('PHP_AUTH_USER')) {
-            $username = $request->getHeader('PHP_AUTH_USER');
-        }
-        if ($request->hasHeader('PHP_AUTH_PW')) {
-            $password = $request->getHeader('PHP_AUTH_PW');
+        if ($request->getServerParam('PHP_AUTH_USER') && $request->getServerParam('PHP_AUTH_PW')) {
+            $username = $request->getServerParam('PHP_AUTH_USER');
+            $password = $request->getServerParam('PHP_AUTH_PW');
         }
 
         $authenticationMethod = null;
@@ -210,7 +208,7 @@ class Auth
 
     protected function isXMLHttpRequest(Request $request)
     {
-        if (strtolower($request->getHeader('Http-X-Requested-With') ?? '') == 'xmlhttprequest') {
+        if (strtolower($request->getHeader('X-Requested-With') ?? '') == 'xmlhttprequest') {
             return true;
         }
 
