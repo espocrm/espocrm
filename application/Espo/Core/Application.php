@@ -439,7 +439,7 @@ class Application
         return $this->getClientManager()->getBasePath();
     }
 
-    public function detectPortalId() : ?string
+    protected function detectPortalId() : ?string
     {
         if (!empty($_GET['portalId'])) {
             return $_GET['portalId'];
