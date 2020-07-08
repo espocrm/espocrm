@@ -93,10 +93,8 @@ class Auth
             list($username, $password) = $this->decodeAuthorizationString($request->getHeader('Espo-Authorization'));
         } else if ($request->hasHeader('X-Hmac-Authorization')) {
             $authenticationMethod = 'Hmac';
-            $username = $this->decodeAuthorizationString($request->getHeader('X-Hmac-Authorization'))[0];
         } else if ($request->hasHeader('X-Api-Key')) {
             $authenticationMethod = 'ApiKey';
-            $username = $request->getHeader('X-Api-Key');
         }
 
         if (!$authenticationMethod) {
@@ -115,33 +113,33 @@ class Auth
             }
 
             if (!$username) {
-                $espoCgiAuth = $request->getHeader('Http-Espo-Cgi-Auth') ?? $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
+                $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ?? $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
                 if ($cgiAuthString) {
                     list($username, $password) = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
                 }
             }
         }
 
+        $hasAuthData = $username || $authenticationMethod;
+
         if (!$this->authRequired) {
-            if (!$this->isEntryPoint) {
-                if ($username && $password) {
-                    try {
-                        $isAuthenticated = $this->auth->login($username, $password, $request);
-                    } catch (Exception $e) {
-                        $this->processException($response, $e);
-                        return;
-                    }
-                    if ($isAuthenticated) {
-                        $this->resolve();
-                        return;
-                    }
+            if (!$this->isEntryPoint && $hasAuthData) {
+                try {
+                    $isAuthenticated = $this->auth->login($username, $password, $request, $authenticationMethod);
+                } catch (Exception $e) {
+                    $this->processException($response, $e);
+                    return;
+                }
+                if ($isAuthenticated) {
+                    $this->resolve();
+                    return;
                 }
             }
             $this->resolveUseNoAuth();
             return;
         }
 
-        if ($username) {
+        if ($hasAuthData) {
             try {
                 $authResult = $this->auth->login($username, $password, $request, $authenticationMethod);
             } catch (Exception $e) {

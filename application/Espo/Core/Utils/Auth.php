@@ -137,12 +137,12 @@ class Auth
     }
 
     /**
-     * Process a username and password check.
+     * Process a credentials check.
      *
      * @return Status and additional data. NULL if failed.
      */
     public function login(
-        string $username, ?string $password = null, Request $request, ?string $authenticationMethod = null
+        ?string $username, ?string $password = null, Request $request, ?string $authenticationMethod = null
     ) : ?array {
         $isByTokenOnly = false;
 
@@ -208,7 +208,9 @@ class Auth
         }
 
         if ($isByTokenOnly && !$authToken) {
-            $GLOBALS['log']->info("AUTH: Trying to login as user '{$username}' by token but token is not found.");
+            if ($username) {
+                $GLOBALS['log']->info("AUTH: Trying to login as user '{$username}' by token but token is not found.");
+            }
             return null;
         }
 
@@ -450,13 +452,17 @@ class Auth
     }
 
     protected function createAuthLogRecord(
-        string $username, ?User $user, Request $request, ?string $authenticationMethod = null
+        ?string $username, ?User $user, Request $request, ?string $authenticationMethod = null
     ) : ?AuthLogRecord {
         if ($username === '**logout') return null;
 
         $authLogRecord = $this->entityManager->getEntity('AuthLogRecord');
 
         $requestUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost() . $request->getUri()->getPath();
+
+        if (!$username && $user) {
+            $username = $user->get('userName');
+        }
 
         $authLogRecord->set([
             'username' => $username,

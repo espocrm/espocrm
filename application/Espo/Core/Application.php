@@ -205,7 +205,7 @@ class Application
                     $apiAuth->process($requestWrapped, $responseWrapped);
 
                     if (!$apiAuth->isResolved()) {
-                        $requestWrapped->getResponse();
+                        return $responseWrapped->getResponse();
                     }
                     if ($apiAuth->isResolvedUseNoAuth()) {
                         $this->setupSystemUser();
