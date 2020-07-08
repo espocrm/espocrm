@@ -43,6 +43,9 @@ class ResponseWrapper implements ApiResponse
     public function __construct(Psr7Response $response)
     {
         $this->response = $response;
+
+        // Slim adds Authorization header. It's not needed.
+        $this->response = $this->response->withoutHeader('Authorization');
     }
 
     public function setStatus(int $code, ?string $reason = null)
