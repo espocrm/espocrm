@@ -28,9 +28,7 @@
         "params": {
             "controller": "I18n"
         },
-        "conditions": {
-            "auth": false
-        }
+        "noAuth": true
     },
     {
         "route": "/Settings",
@@ -38,9 +36,7 @@
         "params": {
             "controller": "Settings"
         },
-        "conditions": {
-            "auth": false
-        }
+        "noAuth": true
     },
     {
         "route": "/Settings",
@@ -63,9 +59,7 @@
             "controller": "User",
             "action": "passwordChangeRequest"
         },
-        "conditions": {
-            "auth": false
-        }
+        "noAuth": true
     },
     {
         "route": "User/changePasswordByRequest",
@@ -74,9 +68,7 @@
             "controller": "User",
             "action": "changePasswordByRequest"
         },
-        "conditions": {
-            "auth": false
-        }
+        "noAuth": true
     },
     {
         "route": "/Stream",
@@ -103,9 +95,7 @@
             "action": "leadCapture",
             "apiKey": ":apiKey"
         },
-        "conditions": {
-            "auth": false
-        }
+        "noAuth": true
     },
     {
         "route": "/LeadCapture/:apiKey",
@@ -115,9 +105,7 @@
             "action": "leadCapture",
             "apiKey": ":apiKey"
         },
-        "conditions": {
-            "auth": false
-        }
+        "noAuth": true
     },
     {
         "route": "/:controller/action/:action",

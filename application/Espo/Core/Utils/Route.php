@@ -37,11 +37,11 @@ class Route
 
     protected $cacheFile = 'data/cache/application/routes.php';
 
-    protected $paths = array(
+    protected $paths = [
         'corePath' => 'application/Espo/Resources/routes.json',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/routes.json',
         'customPath' => 'custom/Espo/Custom/Resources/routes.json',
-    );
+    ];
 
     private $fileManager;
     private $config;
@@ -123,12 +123,13 @@ class Route
 
     protected function addToData($data, $newData)
     {
-        if (!is_array($newData)) {
-            return $data;
-        }
-
         foreach ($newData as $route) {
             $route['route'] = $this->adjustPath($route['route']);
+
+            if (isset($route['conditions'])) {
+                $route['noAuth'] = !($route['conditions']['auth'] ?? true);
+                unset($route['conditions']);
+            }
             $data[] = $route;
         }
 

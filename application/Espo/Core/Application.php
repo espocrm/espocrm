@@ -122,12 +122,14 @@ class Application
                     $responseWrapped = new ResponseWrapper($response);
 
                     try {
-                        $authRequired = true;
+                        /*$authRequired = true;
 
                         $conditions = $item['conditions'] ?? [];
                         if (($conditions['auth'] ?? true) === false) {
                             $authRequired = false;
-                        }
+                        }*/
+
+                        $authRequired = !($item['noAuth'] ?? false);
 
                         $auth = $this->createAuth($requestWrapped);
                         $apiAuth = new ApiAuth($auth, $authRequired);
