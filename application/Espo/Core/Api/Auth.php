@@ -120,7 +120,7 @@ class Auth
             if (!$espoCgiAuth) {
                 $espoCgiAuth = $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
             } else {
-                list($username, $password) = explode(':' , base64_decode(substr($espoCgiAuth, 6)));
+                list($username, $password) = explode(':', base64_decode(substr($espoCgiAuth, 6)));
             }
         }
 
