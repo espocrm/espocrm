@@ -27,9 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\LDAP;
+namespace Espo\Core\Authentication\TwoFA;
 
-class Client extends \Laminas\Ldap\Ldap
+use Espo\Entities\User;
+
+interface CodeVerify
 {
+    public function verifyCode(User $user, string $code) : bool;
 
+    public function getLoginData(User $user) : array;
 }

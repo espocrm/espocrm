@@ -27,28 +27,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\TwoFA\Utils;
+namespace Espo\Core\Authentication;
 
-class Totp
+use Espo\Entities\{
+    User,
+    AuthToken,
+};
+
+use Espo\Core\{
+    ORM\EntityManager,
+    Api\Request,
+    Utils\Config,
+    Utils\ApiKey,
+};
+
+class Hmac implements Login
 {
+    protected $entityManager;
     protected $config;
 
-    public function __construct(\Espo\Core\Utils\Config $config)
+    public function __construct(EntityManager $entityManager, Config $config)
     {
+        $this->entityManager = $entityManager;
         $this->config = $config;
     }
 
-    public function verifyCode(string $secret, string $code)
-    {
-        $impl = new \RobThree\Auth\TwoFactorAuth();
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+    ) :?User {
+        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
 
-        return $impl->verifyCode($secret, $code);
-    }
+        list($apiKey, $hash) = explode(':', $authString, 2);
 
-    public function createSecret()
-    {
-        $impl = new \RobThree\Auth\TwoFactorAuth();
+        $user = $this->entityManager->getRepository('User')->where([
+            'type' => 'api',
+            'apiKey' => $apiKey,
+            'authMethod' => 'Hmac',
+        ])->findOne();
 
-        return $impl->createSecret();
+        if (!$user) return null;
+
+        if ($user) {
+            $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
+            if (!$secretKey) return null;
+
+            $string = $request->getMethod() . ' ' . $request->getResourcePath();
+
+            if ($hash === ApiKey::hash($secretKey, $string)) {
+                return $user;
+            }
+
+            return null;
+        }
+
+        return $user;
     }
 }

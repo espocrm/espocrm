@@ -44,8 +44,8 @@ use Espo\Core\{
     Utils\Config,
 };
 
-use Espo\Core\Utils\Authentication\Utils\AuthenticationFactory;
-use Espo\Core\Utils\Authentication\TwoFA\Utils\UserFactory as Auth2FAUserFactory;
+use Espo\Core\Authentication\Utils\AuthenticationFactory;
+use Espo\Core\Authentication\TwoFA\Utils\UserFactory as Auth2FAUserFactory;
 
 class UserSecurity
 {

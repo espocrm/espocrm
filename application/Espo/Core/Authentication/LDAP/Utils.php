@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\LDAP;
+namespace Espo\Core\Authentication\LDAP;
 
 use Espo\Core\Utils\Config;
 

@@ -81,16 +81,16 @@
         "className": "Espo\\Core\\Utils\\Hasher"
     },
     "authenticationFactory": {
-        "className": "Espo\\Core\\Utils\\Authentication\\Utils\\AuthenticationFactory"
+        "className": "Espo\\Core\\Authentication\\Utils\\AuthenticationFactory"
     },
     "auth2FAFactory": {
-        "className": "Espo\\Core\\Utils\\Authentication\\TwoFA\\Utils\\Factory"
+        "className": "Espo\\Core\\Authentication\\TwoFA\\Utils\\Factory"
     },
     "auth2FAUserFactory": {
-        "className": "Espo\\Core\\Utils\\Authentication\\TwoFA\\Utils\\UserFactory"
+        "className": "Espo\\Core\\Authentication\\TwoFA\\Utils\\UserFactory"
     },
     "totp": {
-        "className": "Espo\\Core\\Utils\\Authentication\\TwoFA\\Utils\\Totp"
+        "className": "Espo\\Core\\Authentication\\TwoFA\\Utils\\Totp"
     },
     "emailFilterManager": {
         "className": "Espo\\Core\\Utils\\EmailFilterManager"

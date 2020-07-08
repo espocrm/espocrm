@@ -41,7 +41,7 @@ use Espo\Entities\{
     AuthLogRecord,
 };
 
-use Espo\Core\Utils\Authentication\{
+use Espo\Core\Authentication\{
     Login,
     TwoFA\СodeVerify as TwoFACodeVerify,
     Utils\AuthenticationFactory,

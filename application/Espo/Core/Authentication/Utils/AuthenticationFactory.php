@@ -27,59 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\Core\Authentication\Utils;
 
-use Espo\Entities\{
-    User,
-    AuthToken,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Authentication\Login;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Api\Request,
-    Utils\Config,
-    Utils\ApiKey,
-};
-
-class Hmac implements Login
+class AuthenticationFactory
 {
-    protected $entityManager;
-    protected $config;
+    protected $injectableFactory;
+    protected $metadata;
 
-    public function __construct(EntityManager $entityManager, Config $config)
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
-    public function login(
-        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
-    ) :?User {
-        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
+    public function create(string $method) : Login
+    {
+        $className = $this->metadata->get(['authenticationMethods', $method, 'implementationClassName']);
 
-        list($apiKey, $hash) = explode(':', $authString, 2);
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
-        $user = $this->entityManager->getRepository('User')->where([
-            'type' => 'api',
-            'apiKey' => $apiKey,
-            'authMethod' => 'Hmac',
-        ])->findOne();
-
-        if (!$user) return null;
-
-        if ($user) {
-            $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
-            if (!$secretKey) return null;
-
-            $string = $request->getMethod() . ' ' . $request->getResourcePath();
-
-            if ($hash === ApiKey::hash($secretKey, $string)) {
-                return $user;
+            $className = "Espo\\Custom\\Core\\Authentication\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "Espo\\Core\\Authentication\\" . $sanitizedName;
             }
-
-            return null;
         }
 
-        return $user;
+        return $this->injectableFactory->create($className);
     }
 }

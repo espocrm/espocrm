@@ -27,16 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\Utils;
+namespace Espo\Core\Authentication\TwoFA\Utils;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Authentication\Login;
 
-class AuthenticationFactory
+class UserFactory
 {
     protected $injectableFactory;
-    protected $metadata;
+    protected $config;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -44,16 +43,18 @@ class AuthenticationFactory
         $this->metadata = $metadata;
     }
 
-    public function create(string $method) : Login
+    public function create(string $method) : object
     {
-        $className = $this->metadata->get(['authenticationMethods', $method, 'implementationClassName']);
+        $className = $this->metadata->get([
+            'app', 'auth2FAMethods', $method, 'implementationUserClassName'
+        ]);
 
         if (!$className) {
             $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
-            $className = "Espo\\Custom\\Core\\Utils\\Authentication\\" . $sanitizedName;
+            $className = "Espo\\Custom\\Core\\Authentication\\TwoFA\\User\\" . $sanitizedName;
             if (!class_exists($className)) {
-                $className = "Espo\\Core\\Utils\\Authentication\\" . $sanitizedName;
+                $className = "Espo\\Core\\Authentication\\TwoFA\\User\\" . $sanitizedName;
             }
         }
 

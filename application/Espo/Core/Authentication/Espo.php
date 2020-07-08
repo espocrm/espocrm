@@ -27,43 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\TwoFA;
+namespace Espo\Core\Authentication;
 
-use Espo\Entities\User;
+use Espo\Entities\{
+    User,
+    AuthToken,
+};
 
-use Espo\ORM\EntityManager;
-use Espo\Core\Utils\Authentication\TwoFA\Utils\Totp as TotpUtils;
+use Espo\Core\{
+    ORM\EntityManager,
+    Api\Request,
+    Utils\PasswordHash,
+};
 
-class Totp implements CodeVerify
+class Espo implements Login
 {
     protected $entityManager;
-    protected $totp;
+    protected $passwordHash;
 
-    public function __construct(EntityManager $entityManager, TotpUtils $totp)
+    public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
     {
         $this->entityManager = $entityManager;
-        $this->totp = $totp;
+        $this->passwordHash = $passwordHash;
     }
 
-    public function verifyCode(User $user, string $code) : bool
-    {
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+    ) :?User {
+        if (!$password) return null;
 
-        if (!$userData) return false;
-        if (!$userData->get('auth2FA')) return false;
-        if ($userData->get('auth2FAMethod') != 'Totp') return false;
+        if ($authToken) {
+            $hash = $authToken->get('hash');
+        } else {
+            $hash = $this->passwordHash->hash($password);
+        }
 
-        $secret = $userData->get('auth2FATotpSecret');
+        $user = $this->entityManager->getRepository('User')->where( [
+            'userName' => $username,
+            'password' => $hash,
+            'type!=' => ['api', 'system'],
+        ])->findOne();
 
-        if (!$secret) return false;
+        if ($user && $authToken) {
+            if ($user->id !== $authToken->get('userId')) {
+                return null;
+            }
+        }
 
-        return $this->totp->verifyCode($secret, $code);
-    }
-
-    public function getLoginData(User $user) : array
-    {
-        return [
-            'message' => 'enterTotpCode',
-        ];
+        return $user;
     }
 }

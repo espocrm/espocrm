@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\Core\Authentication;
 
 use Espo\Entities\{
     User,
@@ -35,28 +35,10 @@ use Espo\Entities\{
 };
 
 use Espo\Core\Api\Request;
-use Espo\Core\ORM\EntityManager;
 
-class ApiKey implements Login
+interface Login
 {
-    protected $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
     public function login(
         ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
-    ) : ?User {
-        $apiKey = $request->getHeader('X-Api-Key');
-
-        $user = $this->entityManager->getRepository('User')->where([
-            'type' => 'api',
-            'apiKey' => $apiKey,
-            'authMethod' => 'ApiKey',
-        ])->findOne();
-
-        return $user;
-    }
+    ) : ?User;
 }

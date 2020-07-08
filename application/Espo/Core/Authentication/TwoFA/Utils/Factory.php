@@ -27,53 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\Core\Authentication\TwoFA\Utils;
 
-use Espo\Entities\{
-    User,
-    AuthToken,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Api\Request,
-    Utils\PasswordHash,
-};
-
-class Espo implements Login
+class Factory
 {
-    protected $entityManager;
-    protected $passwordHash;
+    protected $injectableFactory;
+    protected $config;
 
-    public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        $this->entityManager = $entityManager;
-        $this->passwordHash = $passwordHash;
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
-    public function login(
-        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
-    ) :?User {
-        if (!$password) return null;
+    public function create(string $method) : object
+    {
+        $className = $this->metadata->get([
+            'app', 'auth2FAMethods', $method, 'implementationClassName'
+        ]);
 
-        if ($authToken) {
-            $hash = $authToken->get('hash');
-        } else {
-            $hash = $this->passwordHash->hash($password);
-        }
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
-        $user = $this->entityManager->getRepository('User')->where( [
-            'userName' => $username,
-            'password' => $hash,
-            'type!=' => ['api', 'system'],
-        ])->findOne();
-
-        if ($user && $authToken) {
-            if ($user->id !== $authToken->get('userId')) {
-                return null;
+            $className = "Espo\\Custom\\Core\\\Authentication\\TwoFA\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "Espo\\Core\\Authentication\\TwoFA\\" . $sanitizedName;
             }
         }
 
-        return $user;
+        return $this->injectableFactory->create($className);
     }
 }

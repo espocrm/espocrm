@@ -27,37 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\TwoFA\Utils;
+namespace Espo\Core\Authentication;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Metadata;
+use Espo\Entities\{
+    User,
+    AuthToken,
+};
 
-class Factory
+use Espo\Core\Api\Request;
+use Espo\Core\ORM\EntityManager;
+
+class ApiKey implements Login
 {
-    protected $injectableFactory;
-    protected $config;
+    protected $entityManager;
 
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
+        $this->entityManager = $entityManager;
     }
 
-    public function create(string $method) : object
-    {
-        $className = $this->metadata->get([
-            'app', 'auth2FAMethods', $method, 'implementationClassName'
-        ]);
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+    ) : ?User {
+        $apiKey = $request->getHeader('X-Api-Key');
 
-        if (!$className) {
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+        $user = $this->entityManager->getRepository('User')->where([
+            'type' => 'api',
+            'apiKey' => $apiKey,
+            'authMethod' => 'ApiKey',
+        ])->findOne();
 
-            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
-            if (!class_exists($className)) {
-                $className = "\\Espo\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
-            }
-        }
-
-        return $this->injectableFactory->create($className);
+        return $user;
     }
 }
