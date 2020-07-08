@@ -311,7 +311,7 @@ class Auth
             $secondStepRequired = $loginResultData['secondStepRequired'] ?? false;
         }
 
-        if (!$secondStepRequired && $request->getHeader('Http-Espo-Authorization')) {
+        if (!$secondStepRequired && $request->getHeader('Espo-Authorization')) {
             if (!$authToken) {
                 $authToken = $this->entityManager->getEntity('AuthToken');
                 $token = $this->generateToken();
