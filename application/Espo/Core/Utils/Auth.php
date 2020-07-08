@@ -146,6 +146,13 @@ class Auth
     ) : ?array {
         $isByTokenOnly = false;
 
+        if ($authenticationMethod) {
+            if (!$this->metadata->get(['authenticationMethods', $authenticationMethod, 'api'])) {
+                $GLOBALS['log']->warning("AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'.");
+                return null;
+            }
+        }
+
         if (!$authenticationMethod) {
             if ($request->getHeader('Espo-Authorization-By-Token') === 'true') {
                 $isByTokenOnly = true;

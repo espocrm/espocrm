@@ -68,16 +68,26 @@ class Auth
         $this->isResolvedUseNoAuth = true;
     }
 
+    /**
+     * Logged in succesfully.
+     */
     public function isResolved() : bool
     {
         return $this->isResolved;
     }
 
+    /**
+     * No need to log in.
+     */
     public function isResolvedUseNoAuth() : bool
     {
         return $this->isResolvedUseNoAuth;
     }
 
+    /**
+     * Determines which auth method to use. Fetches a username and password from headers and server parameters.
+     * Then tries to log in.
+     */
     public function process(Request $request, Response $response)
     {
         $httpMethod = $request->getMethod();
@@ -95,6 +105,8 @@ class Auth
             $authenticationMethod = 'Hmac';
         } else if ($request->hasHeader('X-Api-Key')) {
             $authenticationMethod = 'ApiKey';
+        } else if ($request->hasHeader('X-Auth-Method')) {
+            $authenticationMethod = $request->getHeader('X-Auth-Method');
         }
 
         if (!$authenticationMethod) {
