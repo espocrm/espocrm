@@ -199,7 +199,7 @@ define('views/main', 'view', function (Dep) {
             var type = false;
 
             ['actions', 'dropdown', 'buttons'].forEach(function (t) {
-                this.menu[t].forEach(function (item, i) {
+                (this.menu[t] || []).forEach(function (item, i) {
                     item = item || {};
                     if (item.name == name) {
                         index = i;
@@ -244,7 +244,7 @@ define('views/main', 'view', function (Dep) {
 
         hideHeaderActionItem: function (name) {
             ['actions', 'dropdown', 'buttons'].forEach(function (t) {
-                this.menu[t].forEach(function (item, i) {
+                (this.menu[t] || []).forEach(function (item, i) {
                     item = item || {};
                     if (item.name == name) {
                         item.hidden = true;
@@ -260,7 +260,7 @@ define('views/main', 'view', function (Dep) {
 
         showHeaderActionItem: function (name) {
             ['actions', 'dropdown', 'buttons'].forEach(function (t) {
-                this.menu[t].forEach(function (item, i) {
+                (this.menu[t] || []).forEach(function (item, i) {
                     item = item || {};
                     if (item.name == name) {
                         item.hidden = false;
@@ -276,7 +276,7 @@ define('views/main', 'view', function (Dep) {
 
         hasMenuVisibleDropdownItems: function () {
             var hasItems = false;
-            this.menu.dropdown.forEach(function (item) {
+            (this.menu.dropdown || []).forEach(function (item) {
                 if (!item.hidden) hasItems = true;
             });
             return hasItems;
