@@ -41,6 +41,7 @@ use Espo\Core\{
     Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
+    Api\RouteProcessor,
     Utils\Auth,
     Utils\Route,
     Utils\Autoload,
@@ -122,18 +123,9 @@ class Application
                     $responseWrapped = new ResponseWrapper($response);
 
                     try {
-                        /*$authRequired = true;
-
-                        $conditions = $item['conditions'] ?? [];
-                        if (($conditions['auth'] ?? true) === false) {
-                            $authRequired = false;
-                        }*/
-
                         $authRequired = !($item['noAuth'] ?? false);
 
-                        $auth = $this->createAuth($requestWrapped);
-                        $apiAuth = new ApiAuth($auth, $authRequired);
-
+                        $apiAuth = new ApiAuth($this->createAuth($requestWrapped), $authRequired);
                         $apiAuth->process($requestWrapped, $responseWrapped);
 
                         if (!$apiAuth->isResolved()) {
@@ -143,7 +135,8 @@ class Application
                             $this->setupSystemUser();
                         }
 
-                        $this->processRoute($item, $requestWrapped, $responseWrapped, $args);
+                        $routeProcessor = $this->getInjectableFactory()->create(RouteProcessor::class);
+                        $routeProcessor->process($item['route'], $item['params'], $requestWrapped, $responseWrapped, $args);
                     } catch (\Exception $exception) {
                         (new ApiErrorOutput($requestWrapped))->process(
                             $responseWrapped, $exception, false, $item, $args
@@ -388,66 +381,6 @@ class Application
             'request' => $request,
             'allowAnyAccess' => $allowAnyAccess,
         ]);
-    }
-
-    protected function processRoute(array $route, RequestWrapper $request, ResponseWrapper $response, array $args)
-    {
-        $response->setHeader('Content-Type', 'application/json');
-
-        $data = $request->getBodyContents();
-
-        $params = [];
-
-        $paramKeys = array_keys($route['params']);
-
-        $setKeyList = [];
-
-        foreach ($paramKeys as $key) {
-            $value = $route['params'][$key];
-
-            $paramName = $key;
-            if ($value[0] === ':') {
-                $realKey = substr($value, 1);
-                $params[$paramName] = $args[$realKey];
-                $setKeyList[] = $realKey;
-            } else {
-                $params[$paramName] = $value;
-            }
-        }
-
-        foreach ($args as $key => $value) {
-            if (in_array($key, $setKeyList)) continue;
-            $params[$key] = $value;
-        }
-
-        $controllerName = $params['controller'] ?? null;
-        $actionName = $params['action'] ?? null;
-
-        if (!$controllerName) {
-            throw new Error("Route ".$route['route']." doesn't have a controller.");
-        }
-
-        $controllerName = ucfirst($controllerName);
-
-        if (!$actionName) {
-            $httpMethod = strtolower($request->getMethod());
-            $crudList = $this->getConfig()->get('crud') ?? [];
-            $actionName = $crudList[$httpMethod] ?? null;
-            if (!$actionName) {
-                throw new Error("No action for method {$httpMethod}.");
-            }
-        }
-
-        unset($params['controller']);
-        unset($params['action']);
-
-        $controllerManager = $this->container->get('controllerManager');
-
-        $contents = $controllerManager->process($controllerName, $actionName, $params, $data, $request, $response);
-
-        if (is_string($contents)) {
-            $response->writeBody($contents);
-        }
     }
 
     protected function initAutoloads()

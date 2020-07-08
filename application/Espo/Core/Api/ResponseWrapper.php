@@ -55,6 +55,18 @@ class ResponseWrapper implements ApiResponse
         $this->response = $this->response->withHeader($name, $value);
     }
 
+    public function getHeader(string $name) : ?string
+    {
+        if (!$this->response->hasHeader($name)) return null;
+
+        return $this->response->getHeaderLine($name);
+    }
+
+    public function hasHeader(string $name) : bool
+    {
+        return $this->response->hasHeader($name);
+    }
+
     public function getResponse() : Psr7Response
     {
         return $this->response;

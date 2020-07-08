@@ -47,6 +47,16 @@ interface Response
     public function setHeader(string $name, string $value);
 
     /**
+     * Get a header value.
+     */
+    public function getHeader(string $name) : ?string;
+
+    /**
+     * Whether a header is set.
+     */
+    public function hasHeader(string $name) : bool;
+
+    /**
      * Write a body.
      */
     public function writeBody(string $string);
