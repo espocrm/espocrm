@@ -131,7 +131,7 @@ class Application
                     try {
                         $authRequired = !($item['noAuth'] ?? false);
 
-                        $apiAuth = new ApiAuth($this->createAuth($requestWrapped), $authRequired);
+                        $apiAuth = new ApiAuth($this->createAuth(), $authRequired);
                         $apiAuth->process($requestWrapped, $responseWrapped);
 
                         if (!$apiAuth->isResolved()) {
@@ -200,8 +200,7 @@ class Application
                 $responseWrapped = new ResponseWrapper($handler->handle($request));
 
                 try {
-                    $auth = $this->createAuth($requestWrapped, $authNotStrict);
-                    $apiAuth = new ApiAuth($auth, $authRequired, true, true);
+                    $apiAuth = new ApiAuth($this->createAuth($authNotStrict), $authRequired, true);
 
                     $apiAuth->process($requestWrapped, $responseWrapped);
 
@@ -392,10 +391,9 @@ class Application
         return $slim;
     }
 
-    protected function createAuth(RequestWrapper $request, bool $allowAnyAccess = false) : Auth
+    protected function createAuth(bool $allowAnyAccess = false) : Auth
     {
-        return $this->getInjectableFactory()->createWith(Auth::class, [
-            'request' => $request,
+        return $this->getInjectableFactory()->create(Auth::class, [
             'allowAnyAccess' => $allowAnyAccess,
         ]);
     }

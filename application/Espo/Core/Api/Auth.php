@@ -29,6 +29,10 @@
 
 namespace Espo\Core\Api;
 
+use Exception;
+
+use Espo\Core\Exceptions\BadRequest;
+
 use Espo\Core\Utils\Auth as AuthUtil;
 
 use Espo\Core\{
@@ -40,20 +44,17 @@ class Auth
 {
     protected $auth;
 
-    protected $authRequired = null;
-
-    protected $showDialog = false;
+    protected $authRequired;
 
     private $isResolved = false;
 
     private $isResolvedUseNoAuth = false;
 
-    public function __construct(AuthUtil $auth, bool $authRequired = null, bool $isEntryPoint = false, bool $showDialog = false)
+    public function __construct(AuthUtil $auth, bool $authRequired = true, bool $isEntryPoint = false)
     {
         $this->auth = $auth;
         $this->authRequired = $authRequired;
         $this->isEntryPoint = $isEntryPoint;
-        $this->showDialog = $showDialog;
     }
 
     protected function resolve()
@@ -84,43 +85,40 @@ class Auth
         $username = null;
         $password = null;
 
-        if ($request->getServerParam('PHP_AUTH_USER') && $request->getServerParam('PHP_AUTH_PW')) {
-            $username = $request->getServerParam('PHP_AUTH_USER');
-            $password = $request->getServerParam('PHP_AUTH_PW');
-        }
+        $showDialog = $this->isEntryPoint;
 
         $authenticationMethod = null;
 
         if ($request->hasHeader('Espo-Authorization')) {
-            $espoAuthorizationHeader = $request->getHeader('Espo-Authorization');
-            list($username, $password) = explode(':', base64_decode($espoAuthorizationHeader), 2);
-        } else {
-            if ($request->hasHeader('X-Hmac-Authorization')) {
-                $hmacAuthorizationHeader = $request->getHeader('X-Hmac-Authorization');
-                $authenticationMethod = 'Hmac';
-                $username = explode(':', base64_decode($hmacAuthorizationHeader), 2)[0];
-            } else {
-                $apiKeyHeader = $request->getHeader('X-Api-Key');
-                if ($apiKeyHeader) {
-                    $authenticationMethod = 'ApiKey';
-                    $username = $apiKeyHeader;
+            list($username, $password) = $this->decodeAuthorizationString($request->getHeader('Espo-Authorization'));
+        } else if ($request->hasHeader('X-Hmac-Authorization')) {
+            $authenticationMethod = 'Hmac';
+            $username = $this->decodeAuthorizationString($request->getHeader('X-Hmac-Authorization'))[0];
+        } else if ($request->hasHeader('X-Api-Key')) {
+            $authenticationMethod = 'ApiKey';
+            $username = $request->getHeader('X-Api-Key');
+        }
+
+        if (!$authenticationMethod) {
+            if (!$username) {
+                if ($request->getServerParam('PHP_AUTH_USER') && $request->getServerParam('PHP_AUTH_PW')) {
+                    $username = $request->getServerParam('PHP_AUTH_USER');
+                    $password = $request->getServerParam('PHP_AUTH_PW');
                 }
             }
-        }
 
-        if (!isset($username)) {
-            if ($request->getCookieParam('auth-username') && $request->getCookieParam('auth-token')) {
-                $username = $request->getCookieParam('auth-username');
-                $password = $request->getCookieParam('auth-token');
+            if (!$username) {
+                if ($request->getCookieParam('auth-username') && $request->getCookieParam('auth-token')) {
+                    $username = $request->getCookieParam('auth-username');
+                    $password = $request->getCookieParam('auth-token');
+                }
             }
-        }
 
-        if (!isset($username) && !isset($password)) {
-            $espoCgiAuth = $request->getHeader('Http-Espo-Cgi-Auth');
-            if (!$espoCgiAuth) {
-                $espoCgiAuth = $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
-            } else {
-                list($username, $password) = explode(':', base64_decode(substr($espoCgiAuth, 6)));
+            if (!$username) {
+                $espoCgiAuth = $request->getHeader('Http-Espo-Cgi-Auth') ?? $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
+                if ($cgiAuthString) {
+                    list($username, $password) = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
+                }
             }
         }
 
@@ -128,8 +126,8 @@ class Auth
             if (!$this->isEntryPoint) {
                 if ($username && $password) {
                     try {
-                        $isAuthenticated = $this->auth->login($username, $password);
-                    } catch (\Exception $e) {
+                        $isAuthenticated = $this->auth->login($username, $password, $request);
+                    } catch (Exception $e) {
                         $this->processException($response, $e);
                         return;
                     }
@@ -145,22 +143,33 @@ class Auth
 
         if ($username) {
             try {
-                $authResult = $this->auth->login($username, $password, $authenticationMethod);
-            } catch (\Exception $e) {
+                $authResult = $this->auth->login($username, $password, $request, $authenticationMethod);
+            } catch (Exception $e) {
                 $this->processException($response, $e);
             }
 
             if ($authResult) {
                 $this->handleAuthResult($response, $authResult);
             } else {
-                $this->processUnauthorized($response);
+                $this->processUnauthorized($response, $showDialog);
             }
         } else {
             if (!$this->isXMLHttpRequest($request)) {
-                $this->showDialog = true;
+                $showDialog = true;
             }
-            $this->processUnauthorized($response);
+            $this->processUnauthorized($response, $showDialog);
         }
+    }
+
+    protected function decodeAuthorizationString(string $string) : array
+    {
+        $string = base64_decode($string);
+
+        if (strpos($string, ':') === false) {
+            throw new BadRequest("Auth: Bad authorization string provided.");
+        }
+
+        return explode(':', $string, 2);
     }
 
     protected function handleAuthResult(Response $response, array $authResult)
@@ -186,7 +195,7 @@ class Auth
         }
     }
 
-    protected function processException(Response $response, \Exception $e)
+    protected function processException(Response $response, Exception $e)
     {
         $reason = $e->getMessage();
 
@@ -197,9 +206,9 @@ class Auth
         $response->setStatus($e->getCode(), $reason);
     }
 
-    protected function processUnauthorized(Response $response)
+    protected function processUnauthorized(Response $response, bool $showDialog)
     {
-        if ($this->showDialog) {
+        if ($showDialog) {
             $response->setHeader('WWW-Authenticate', 'Basic realm=""');
         }
 

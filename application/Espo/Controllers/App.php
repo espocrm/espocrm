@@ -53,11 +53,7 @@ class App implements
         if (empty($data->token)) {
             throw new BadRequest();
         }
-
-        $auth = $this->injectableFactory->createWith(Auth::class, [
-            'request' => $request,
-        ]);
-
-        return $auth->destroyAuthToken($data->token);
+        $auth = $this->injectableFactory->create(Auth::class);
+        return $auth->destroyAuthToken($data->token, $request);
     }
 }
