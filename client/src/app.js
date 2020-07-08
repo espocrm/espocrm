@@ -671,7 +671,7 @@ define(
                             if (self.auth) {
                                 self.logout();
                             } else {
-                                Espo.Ui.error(self.language.translate('Auth error'));
+                                console.error('Error 401: Unauthorized.');
                             }
                         }
                         break;
