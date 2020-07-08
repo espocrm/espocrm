@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils\Authentication\LDAP;
 
-use \Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 
 class Utils
 {
@@ -41,7 +41,7 @@ class Utils
      * Association between LDAP and Espo fields
      * @var array
      */
-    protected $fieldMap = array(
+    protected $fieldMap = [
         'host' => 'ldapHost',
         'port' => 'ldapPort',
         'useSsl' => 'ldapSecurity',
@@ -71,14 +71,14 @@ class Utils
         'portalUserLdapAuth' => 'ldapPortalUserLdapAuth',
         'portalUserPortalsIds' => 'ldapPortalUserPortalsIds',
         'portalUserRolesIds' => 'ldapPortalUserRolesIds',
-    );
+    ];
 
     /**
      * Permitted Espo Options
      *
      * @var array
      */
-    protected $permittedEspoOptions = array(
+    protected $permittedEspoOptions = [
         'createEspoUser',
         'userNameAttribute',
         'userObjectClass',
@@ -93,19 +93,19 @@ class Utils
         'portalUserLdapAuth',
         'portalUserPortalsIds',
         'portalUserRolesIds',
-    );
+    ];
 
     /**
      * accountCanonicalForm Map between Espo and Laminas value
      *
      * @var array
      */
-    protected $accountCanonicalFormMap = array(
+    protected $accountCanonicalFormMap = [
         'Dn' => 1,
         'Username' => 2,
         'Backslash' => 3,
         'Principal' => 4,
-    );
+    ];
 
 
     public function __construct(Config $config = null)
