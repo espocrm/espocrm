@@ -140,12 +140,13 @@ class Tester
         return $fileManager->putPhpContents($this->configPath, $configData);
     }
 
-    public function auth($userName, $password = null, $portalId = null, $authenticationMethod = null)
+    public function auth($userName, $password = null, $portalId = null, $authenticationMethod = null, $request = null)
     {
         $this->userName = $userName;
         $this->password = $password;
         $this->portalId = $portalId;
         $this->authenticationMethod = $authenticationMethod;
+        $this->request = $request;
     }
 
     public function getApplication($reload = false, $clearCache = true, $portalId = null)
@@ -164,13 +165,13 @@ class Tester
                 'allowAnyAccess' => false,
             ]);
 
-            $requestWrapped = new RequestWrapper(
+            $request = $this->request ?? new RequestWrapper(
                 (new RequestFactory())->createRequest('POST', '')
             );
 
-            if (isset($this->userName)) {
+            if (isset($this->userName) || $this->authenticationMethod) {
                 $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
-                $auth->login($this->userName, $this->password, $requestWrapped, $this->authenticationMethod);
+                $result = $auth->login($this->userName, $this->password, $request, $this->authenticationMethod);
             } else {
                 $this->application->setupSystemUser();
             }

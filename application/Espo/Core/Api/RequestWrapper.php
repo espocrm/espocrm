@@ -75,7 +75,7 @@ class RequestWrapper implements ApiRequest
 
     public function getContentType() : ?string
     {
-        return $this->getHeader('Content-Type');;
+        return $this->getHeader('Content-Type');
     }
 
     public function getBodyContents() : ?string

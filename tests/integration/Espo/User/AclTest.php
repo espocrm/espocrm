@@ -45,7 +45,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $metadata->save();
     }
 
-    public function testUserAccess()
+    public function testUserAccess0()
     {
         $this->expectException('\\Espo\\Core\\Exceptions\\Forbidden');
 
@@ -79,10 +79,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $controllerManager = $app->getContainer()->get('controllerManager');
 
-        $params = array();
-        $data = '{"name":"Test Account"}';
-        $request = $this->createRequest('POST', $params, array('CONTENT_TYPE' => 'application/json'));
-        $result = $controllerManager->process('Account', 'create', $params, $data, $request, $this->createResponse());
+
+        $request = $this->createRequest('POST', [], ['Content-Type' => 'application/json'], '{"name":"Test Account"}');
+
+        $result = $controllerManager->process('Account', 'create', [], $request, $this->createResponse());
     }
 
     public function testPortalUserAccess()
@@ -118,10 +118,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $controllerManager = $app->getContainer()->get('controllerManager');
 
-        $params = array();
+        $params = [];
         $data = '{"name":"Test Account"}';
-        $request = $this->createRequest('POST', $params, array('CONTENT_TYPE' => 'application/json'));
-        $result = $controllerManager->process('Account', 'create', $params, $data, $request, $this->createResponse());
+        $request = $this->createRequest('POST', $params, ['Content-Type' => 'application/json'], $data);
+        $result = $controllerManager->process('Account', 'create', $params, $request, $this->createResponse());
     }
 
     public function testUserAccessEditOwn1()
@@ -149,9 +149,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'id' => $user1->id,
             'title' => 'Test'
         ];
-        $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
+        $request = $this->createRequest('PATCH', $params, ['Content-Type' => 'application/json'], json_encode($data));
         $result = $controllerManager->process(
-            'User', 'update', $params, json_encode($data), $request, $this->createResponse());
+            'User', 'update', $params, $request, $this->createResponse());
 
         $this->assertTrue(is_string($result));
 
@@ -162,12 +162,12 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'id' => $user2->id,
             'title' => 'Test'
         ];
-        $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
+        $request = $this->createRequest('PATCH', $params, ['Content-Type' => 'application/json'], json_encode($data));
 
         $result = null;
         try {
             $result = $controllerManager->process(
-                'User', 'update', $params, json_encode($data), $request, $this->createResponse());
+                'User', 'update', $params, $request, $this->createResponse());
         } catch (\Exception $e) {};
 
         $this->assertNull($result);
@@ -181,8 +181,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'type' => 'admin',
             'teamsIds' => ['id']
         ];
-        $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
-        $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request, $this->createResponse());
+        $request = $this->createRequest('PATCH', $params, ['Content-Type' => 'application/json'], json_encode($data));
+        $result = $controllerManager->process('User', 'update', $params, $request, $this->createResponse());
         $resultData = json_decode($result);
 
         $this->assertTrue(!property_exists($resultData, 'type') || $resultData->type !== 'admin');
@@ -214,12 +214,12 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'id' => $user1->id,
             'title' => 'Test'
         ];
-        $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
+        $request = $this->createRequest('PATCH', $params, ['Content-Type' => 'application/json'], json_encode($data));
 
         $result = null;
         try {
             $result = $controllerManager->process(
-                'User', 'update', $params, json_encode($data), $request, $this->createResponse());
+                'User', 'update', $params, $request, $this->createResponse());
         } catch (\Exception $e) {};
 
         $this->assertNull($result);

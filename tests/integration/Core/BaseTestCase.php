@@ -34,6 +34,7 @@ use Espo\Core\Api\ResponseWrapper;
 
 use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Factory\ResponseFactory;
+use Slim\Psr7\Factory\StreamFactory;
 
 abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 {
@@ -80,15 +81,16 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return $this->espoTester->getApplication(true, $clearCache, $portalId);
     }
 
-    protected function auth($userName, $password = null, $portalId = null, $authenticationMethod = null)
-    {
+    protected function auth(
+        $userName = null, $password = null, $portalId = null, $authenticationMethod = null, ?RequestWrapper $request = null
+    ) {
         $this->userName = $userName;
         $this->password = $password;
         $this->portalId = $portalId;
         $this->authenticationMethod = $authenticationMethod;
 
         if (isset($this->espoTester)) {
-            $this->espoTester->auth($userName, $password, $portalId, $authenticationMethod);
+            $this->espoTester->auth($userName, $password, $portalId, $authenticationMethod, $request);
         }
     }
 
@@ -170,12 +172,19 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
     }
 
-    protected function createRequest(string $method, array $queryParams = [], array $headers = []) : RequestWrapper
-    {
+    protected function createRequest(
+        string $method, array $queryParams = [], array $headers = [], ?string $body = null
+    ) : RequestWrapper {
         $request = (new RequestFactory())->createRequest($method, 'http://localhost/?' . http_build_query($queryParams));
 
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
+        }
+
+        if ($body) {
+            $request = $request->withBody(
+                (new StreamFactory)->createStream($body)
+            );
         }
 
         return new RequestWrapper($request);

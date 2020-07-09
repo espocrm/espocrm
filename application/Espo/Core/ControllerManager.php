@@ -43,8 +43,6 @@ use Espo\Core\{
 
 class ControllerManager
 {
-    private $controllersHash;
-
     protected $injectableFactory;
     protected $classFinder;
 
@@ -52,65 +50,19 @@ class ControllerManager
     {
         $this->injectableFactory = $injectableFactory;
         $this->classFinder = $classFinder;
-
-        $this->controllersHash = (object) [];
     }
 
     public function process(
         string $controllerName,
         string $actionName,
         array $params,
-        $data,
         Request $request,
         Response $response
     ) {
-        $controller = $this->getController($controllerName);
-        return $this->processRequest($controller, $controllerName, $actionName, $params, $data, $request, $response);
-    }
+        $controller = $this->createController($controllerName);
 
-    protected function getControllerClassName(string $name) : string
-    {
-        $className = $this->classFinder->find('Controllers', $name);
+        $data = $request->getBodyContents();
 
-        if (!$className) {
-            throw new NotFound("Controller '{$name}' does not exist.");
-        }
-
-        if (!class_exists($className)) {
-            throw new NotFound("Class not found for controller '{$name}'.");
-        }
-
-        return $className;
-    }
-
-    protected function createController(string $name) : object
-    {
-        $className = $this->getControllerClassName($name);
-
-        $controller = $this->injectableFactory->createWith($className, [
-            'name' => $name,
-        ]);
-
-        return $controller;
-    }
-
-    protected function getController(string $name) : object
-    {
-        if (!property_exists($this->controllersHash, $name)) {
-            $this->controllersHash->$name = $this->createController($name);
-        }
-        return $this->controllersHash->$name;
-    }
-
-    protected function processRequest(
-        object $controller,
-        string $controllerName,
-        string $actionName,
-        array $params,
-        $data,
-        Request $request,
-        Response $response
-    ) {
         if ($data && stristr($request->getContentType(), 'application/json')) {
             $data = json_decode($data);
         }
@@ -174,5 +126,27 @@ class ControllerManager
         }
 
         return $result;
+    }
+
+    protected function getControllerClassName(string $name) : string
+    {
+        $className = $this->classFinder->find('Controllers', $name);
+
+        if (!$className) {
+            throw new NotFound("Controller '{$name}' does not exist.");
+        }
+
+        if (!class_exists($className)) {
+            throw new NotFound("Class not found for controller '{$name}'.");
+        }
+
+        return $className;
+    }
+
+    protected function createController(string $name) : object
+    {
+        return $this->injectableFactory->createWith($this->getControllerClassName($name), [
+            'name' => $name,
+        ]);
     }
 }

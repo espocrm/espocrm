@@ -51,8 +51,6 @@ class RouteProcessor
     {
         $response->setHeader('Content-Type', 'application/json');
 
-        $data = $request->getBodyContents();
-
         $params = [];
 
         $paramKeys = array_keys($routeParams);
@@ -98,7 +96,7 @@ class RouteProcessor
         unset($params['controller']);
         unset($params['action']);
 
-        $contents = $this->controllerManager->process($controllerName, $actionName, $params, $data, $request, $response);
+        $contents = $this->controllerManager->process($controllerName, $actionName, $params, $request, $response);
 
         if (is_string($contents)) {
             $response->writeBody($contents);
