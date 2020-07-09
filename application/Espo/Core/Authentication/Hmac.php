@@ -53,7 +53,12 @@ class Hmac implements Login
     }
 
     public function login(
-        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+        ?string $username,
+        ?string $password,
+        ?AuthToken $authToken = null,
+        ?Request $request = null,
+        array $params = [],
+        array &$resultData = []
     ) :?User {
         $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
 

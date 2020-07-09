@@ -27,10 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\TwoFA\User;
+namespace Espo\Core\Authentication\TwoFA\User;
 
 use Espo\Entities\UserData;
-use Espo\Core\Utils\Authentication\TwoFA\Utils\Totp as TotpUtils;
+use Espo\Core\Authentication\TwoFA\Utils\Totp as TotpUtils;
 use Espo\Core\Utils\Config;
 
 class Totp implements CodeVerify

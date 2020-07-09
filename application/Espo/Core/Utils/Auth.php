@@ -43,7 +43,7 @@ use Espo\Entities\{
 
 use Espo\Core\Authentication\{
     Login,
-    TwoFA\СodeVerify as TwoFACodeVerify,
+    TwoFA\CodeVerify as TwoFACodeVerify,
     Utils\AuthenticationFactory,
     TwoFA\Utils\Factory as Auth2FAFactory,
 };
@@ -290,18 +290,20 @@ class Auth
         $secondStepRequired = false;
 
         if (!$authToken && $this->config->get('auth2FA')) {
-            $twoFAMethod = $this->getUser2FAMethod($user);
+            $user2FA = $loginResultData['actualUser'] ?? $user;
+
+            $twoFAMethod = $this->getUser2FAMethod($user2FA);
             if ($twoFAMethod) {
                 $twoFAImpl = $this->get2FAImpl($twoFAMethod);
 
                 $twoFACode = $request->getHeader('Espo-Authorization-Code');
 
                 if ($twoFACode) {
-                    if (!$twoFAImpl->verifyCode($user, $twoFACode)) {
+                    if (!$twoFAImpl->verifyCode($user2FA, $twoFACode)) {
                         return null;
                     }
                 } else {
-                    $loginResultData = $twoFAImpl->getLoginData($user);
+                    $loginResultData = $twoFAImpl->getLoginData($user2FA);
                     $secondStepRequired = true;
                 }
             }

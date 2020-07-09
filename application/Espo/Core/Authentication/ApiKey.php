@@ -47,7 +47,12 @@ class ApiKey implements Login
     }
 
     public function login(
-        ?string $username, ?string $password, ?AuthToken $authToken, Request $request, array $params, array &$resultData
+        ?string $username,
+        ?string $password,
+        ?AuthToken $authToken = null,
+        ?Request $request = null,
+        array $params = [],
+        array &$resultData = []
     ) : ?User {
         $apiKey = $request->getHeader('X-Api-Key');
 

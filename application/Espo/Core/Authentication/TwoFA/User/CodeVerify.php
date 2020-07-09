@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\TwoFA\User;
+namespace Espo\Core\Authentication\TwoFA\User;
 
 use Espo\Entities\UserData;
 
