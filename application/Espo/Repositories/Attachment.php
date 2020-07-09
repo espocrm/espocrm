@@ -29,6 +29,8 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
@@ -62,16 +64,6 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         'xx-large',
     ];
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getFileStorageManager()
-    {
-        return $this->fileStorageManager;
-    }
-
     public function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
@@ -95,11 +87,11 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         if ($isNew) {
             $entity->id = Util::generateId();
 
-            if (!empty($entity->id) && $entity->has('contents')) {
+            if ($entity->has('contents')) {
                 $contents = $entity->get('contents');
-                $storeResult = $this->getFileStorageManager()->putContents($entity, $contents);
+                $storeResult = $this->fileStorageManager->putContents($entity, $contents);
                 if ($storeResult === false) {
-                    throw new \Espo\Core\Exceptions\Error("Could not store the file");
+                    throw new Error("Could not store the file");
                 }
             }
         }
@@ -125,7 +117,7 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         ])->count();
 
         if ($duplicateCount === 0) {
-            $this->getFileStorageManager()->unlink($entity);
+            $this->fileStorageManager->unlink($entity);
 
             if (in_array($entity->get('type'), $this->imageTypeList)) {
                 $this->removeImageThumbs($entity);
@@ -137,8 +129,8 @@ class Attachment extends \Espo\Core\Repositories\Database implements
     {
         foreach ($this->imageThumbList as $suffix) {
             $filePath = "data/upload/thumbs/".$entity->getSourceId()."_{$suffix}";
-            if ($this->getFileManager()->isFile($filePath)) {
-                $this->getFileManager()->removeFile($filePath);
+            if ($this->fileManager->isFile($filePath)) {
+                $this->fileManager->removeFile($filePath);
             }
         }
     }
@@ -166,21 +158,21 @@ class Attachment extends \Espo\Core\Repositories\Database implements
 
     public function getContents(Entity $entity)
     {
-        return $this->getFileStorageManager()->getContents($entity);
+        return $this->fileStorageManager->getContents($entity);
     }
 
     public function getFilePath(Entity $entity)
     {
-        return $this->getFileStorageManager()->getLocalFilePath($entity);
+        return $this->fileStorageManager->getLocalFilePath($entity);
     }
 
     public function hasDownloadUrl(Entity $entity)
     {
-        return $this->getFileStorageManager()->hasDownloadUrl($entity);
+        return $this->fileStorageManager->hasDownloadUrl($entity);
     }
 
     public function getDownloadUrl(Entity $entity)
     {
-        return $this->getFileStorageManager()->getDownloadUrl($entity);
+        return $this->fileStorageManager->getDownloadUrl($entity);
     }
 }

@@ -911,6 +911,10 @@ class Record implements Crud,
     {
     }
 
+    protected function handleCreateInput($data)
+    {
+    }
+
     protected function handleInput($data)
     {
     }
@@ -987,9 +991,11 @@ class Record implements Crud,
 
         $entity = $this->getRepository()->get();
 
+        $this->handleInput($data);
+        $this->handleCreateInput($data);
+
         $this->filterInput($data);
         $this->filterCreateInput($data);
-        $this->handleInput($data);
 
         unset($data->id);
         unset($data->modifiedById);

@@ -79,7 +79,7 @@ class Attachment extends Record
         }
     }
 
-    protected function beforeCreateEntity(Entity $entity, $data)
+    protected function handleCreateInput($data)
     {
         if (!empty($data->file)) {
             $arr = explode(',', $data->file);
@@ -140,7 +140,10 @@ class Attachment extends Record
                 throw new BadRequest("Not supported attachment role.");
             }
         }
+    }
 
+    protected function beforeCreateEntity(Entity $entity, $data)
+    {
         $storage = $entity->get('storage');
         if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
             $entity->clear('storage');
