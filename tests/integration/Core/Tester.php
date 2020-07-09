@@ -29,6 +29,14 @@
 
 namespace tests\integration\Core;
 
+use Espo\Core\Utils\Auth;
+
+use Espo\Core\Application;
+use Espo\Core\Portal\Application as PortalApplication;
+use Espo\Core\Api\RequestWrapper;
+
+use Slim\Psr7\Factory\RequestFactory;
+
 class Tester
 {
     protected $configPath = 'tests/integration/config.php';
@@ -150,15 +158,21 @@ class Tester
                 $this->clearCache();
             }
 
-            $this->application = !$portalId ? new \Espo\Core\Application() : new \Espo\Core\Portal\Application($portalId);
+            $this->application = !$portalId ? new Application() : new PortalApplication($portalId);
 
-            $auth = new \Espo\Core\Utils\Auth($this->application->getContainer());
+            $auth = $this->application->getContainer()->get('injectableFactory')->createWith(Auth::class, [
+                'allowAnyAccess' => false,
+            ]);
+
+            $requestWrapped = new RequestWrapper(
+                (new RequestFactory())->createRequest('POST', '')
+            );
 
             if (isset($this->userName)) {
                 $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
-                $auth->login($this->userName, $this->password, $this->authenticationMethod);
+                $auth->login($this->userName, $this->password, $requestWrapped, $this->authenticationMethod);
             } else {
-                $auth->useNoAuth();
+                $this->application->setupSystemUser();
             }
         }
 
