@@ -61,67 +61,69 @@ class Preferences extends Repository implements Removable,
 
     public function get(?string $id = null) : ?Entity
     {
-        if ($id) {
-            $entity = $this->entityFactory->create('Preferences');
-            $entity->id = $id;
-            if (empty($this->data[$id])) {
-                $pdo = $this->entityManager->getPDO();
-                $sql = "SELECT `id`, `data` FROM `preferences` WHERE id = ".$pdo->quote($id);
-                $ps = $pdo->query($sql);
+        if (!$id) {
+            return $this->entityFactory->create('Preferences');
+        }
 
-                $data = null;
+        $entity = $this->entityFactory->create('Preferences');
+        $entity->id = $id;
+        if (empty($this->data[$id])) {
+            $pdo = $this->entityManager->getPDO();
+            $sql = "SELECT `id`, `data` FROM `preferences` WHERE id = ".$pdo->quote($id);
+            $ps = $pdo->query($sql);
 
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
+            $data = null;
 
-                while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                    $data = Json::decode($row['data']);
-                    $data = get_object_vars($data);
-                    break;
-                }
+            $sth = $pdo->prepare($sql);
+            $sth->execute();
 
-                if ($data) {
-                    $this->data[$id] = $data;
-                } else {
-                    $fields = $this->metadata->get('entityDefs.Preferences.fields');
-                    $defaults = [];
-
-                    $dashboardLayout = $this->config->get('dashboardLayout');
-                    $dashletsOptions = null;
-                    if (!$dashboardLayout) {
-                        $dashboardLayout = $this->metadata->get('app.defaultDashboardLayouts.Standard');
-                        $dashletsOptions = $this->metadata->get('app.defaultDashboardOptions.Standard');
-                    }
-
-                    if ($dashletsOptions === null) {
-                        $dashletsOptions = $this->config->get('dashletsOptions', (object) []);
-                    }
-
-                    $defaults['dashboardLayout'] = $dashboardLayout;
-                    $defaults['dashletsOptions'] = $dashletsOptions;
-
-                    foreach ($fields as $field => $d) {
-                        if (array_key_exists('default', $d)) {
-                            $defaults[$field] = $d['default'];
-                        }
-                    }
-                    foreach ($this->defaultAttributeListFromSettings as $attr) {
-                        $defaults[$attr] = $this->config->get($attr);
-                    }
-
-                    $this->data[$id] = $defaults;
-                    $entity->set($defaults);
-                }
+            while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                $data = Json::decode($row['data']);
+                $data = get_object_vars($data);
+                break;
             }
 
-            $entity->set($this->data[$id]);
+            if ($data) {
+                $this->data[$id] = $data;
+            } else {
+                $fields = $this->metadata->get('entityDefs.Preferences.fields');
+                $defaults = [];
 
-            $this->fetchAutoFollowEntityTypeList($entity);
+                $dashboardLayout = $this->config->get('dashboardLayout');
+                $dashletsOptions = null;
+                if (!$dashboardLayout) {
+                    $dashboardLayout = $this->metadata->get('app.defaultDashboardLayouts.Standard');
+                    $dashletsOptions = $this->metadata->get('app.defaultDashboardOptions.Standard');
+                }
 
-            $entity->setAsFetched($this->data[$id]);
+                if ($dashletsOptions === null) {
+                    $dashletsOptions = $this->config->get('dashletsOptions', (object) []);
+                }
 
-            return $entity;
+                $defaults['dashboardLayout'] = $dashboardLayout;
+                $defaults['dashletsOptions'] = $dashletsOptions;
+
+                foreach ($fields as $field => $d) {
+                    if (array_key_exists('default', $d)) {
+                        $defaults[$field] = $d['default'];
+                    }
+                }
+                foreach ($this->defaultAttributeListFromSettings as $attr) {
+                    $defaults[$attr] = $this->config->get($attr);
+                }
+
+                $this->data[$id] = $defaults;
+                $entity->set($defaults);
+            }
         }
+
+        $entity->set($this->data[$id]);
+
+        $this->fetchAutoFollowEntityTypeList($entity);
+
+        $entity->setAsFetched($this->data[$id]);
+
+        return $entity;
     }
 
     protected function fetchAutoFollowEntityTypeList(Entity $entity)
