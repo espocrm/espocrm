@@ -35,12 +35,14 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
-    Utils\Json,
     Utils\Util,
     Api\Request,
     Api\Response,
 };
 
+/**
+ * Creates controller instances and processes actions.
+ */
 class ControllerManager
 {
     protected $injectableFactory;
@@ -54,24 +56,18 @@ class ControllerManager
 
     public function process(
         string $controllerName,
+        string $requestMethod,
         string $actionName,
         array $params,
+        $data,
         Request $request,
         Response $response
     ) {
         $controller = $this->createController($controllerName);
 
-        $data = $request->getBodyContents();
-
-        if ($data && stristr($request->getContentType(), 'application/json')) {
-            $data = json_decode($data);
-        }
-
         if ($actionName == 'index') {
             $actionName = $controller::$defaultAction ?? 'index';
         }
-
-        $requestMethod = $request->getMethod();
 
         $actionNameUcfirst = ucfirst($actionName);
 
@@ -117,12 +113,6 @@ class ControllerManager
 
         if (method_exists($controller, $afterMethodName)) {
             $controller->$afterMethodName($params, $data, $request, $response);
-        }
-
-        if (
-            is_int($result) || is_float($result) || is_array($result) || is_bool($result) || $result instanceof \StdClass
-        ) {
-            return Json::encode($result);
         }
 
         return $result;

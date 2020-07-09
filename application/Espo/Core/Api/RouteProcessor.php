@@ -33,9 +33,13 @@ use Espo\Core\{
     Api\Request,
     Api\Response,
     Utils\Config,
+    Utils\Json,
     ControllerManager,
 };
 
+/**
+ * Processes routes. Obtains a controller name, action, body from a request. Then passes them to controller manager.
+ */
 class RouteProcessor
 {
     protected $config;
@@ -84,8 +88,10 @@ class RouteProcessor
 
         $controllerName = ucfirst($controllerName);
 
+        $requestMethod = $request->getMethod();
+
         if (!$actionName) {
-            $httpMethod = strtolower($request->getMethod());
+            $httpMethod = strtolower($requestMethod);
             $crudList = $this->config->get('crud') ?? [];
             $actionName = $crudList[$httpMethod] ?? null;
             if (!$actionName) {
@@ -96,10 +102,30 @@ class RouteProcessor
         unset($params['controller']);
         unset($params['action']);
 
-        $contents = $this->controllerManager->process($controllerName, $actionName, $params, $request, $response);
+        $data = $request->getBodyContents();
 
-        if (is_string($contents)) {
-            $response->writeBody($contents);
+        if ($data && stristr($request->getContentType(), 'application/json')) {
+            $data = json_decode($data);
+        }
+
+        $result = $this->controllerManager->process(
+            $controllerName, $requestMethod, $actionName, $params, $data, $request, $response
+        ) ?? null;
+
+        $responseContents = $result;
+
+        if (
+            is_int($result) ||
+            is_float($result) ||
+            is_array($result) ||
+            is_bool($result) ||
+            $result instanceof \StdClass
+        ) {
+            $responseContents = Json::encode($result);
+        }
+
+        if (is_string($responseContents)) {
+            $response->writeBody($responseContents);
         }
 
         $response->setHeader('Expires', '0');

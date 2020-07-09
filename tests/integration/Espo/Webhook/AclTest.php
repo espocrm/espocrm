@@ -55,9 +55,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
 
-        $request = $this->createRequest('POST', [], ['Content-Type' => 'application/json'], '{"event":"Account.create"}');
+        $request = $this->createRequest('POST', [], ['Content-Type' => 'application/json']);
 
-        $result = $controllerManager->process('Webhook', 'create', [], $request, $this->createResponse());
+        $data = json_decode('{"event":"Account.create"}');
+
+        $result = $controllerManager->process('Webhook', 'POST', 'create', [], $data, $request, $this->createResponse());
     }
 
     public function testApiUserNoAccess1()
@@ -79,9 +81,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this->createRequest('POST', [], [
             'Content-Type' => 'application/json',
             'X-Api-Key' => 'test-key',
-        ], '{"event":"Account.create", "url": "https://test"}');
+        ]);
 
         $this->auth(null, null, null, 'ApiKey', $request);
+
+        $data = json_decode('{"event":"Account.create", "url": "https://test"}');
 
         $app = $this->createApplication();
 
@@ -89,7 +93,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
 
-        $result = $controllerManager->process('Webhook', 'create', [], $request, $this->createResponse());
+        $result = $controllerManager->process('Webhook', 'POST', 'create', [], $data, $request, $this->createResponse());
     }
 
     public function testApiUserNoAccess2()
@@ -112,9 +116,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this->createRequest('POST', [], [
             'Content-Type' => 'application/json',
             'X-Api-Key' => 'test-key',
-        ], '{"event":"Account.create", "url": "https://test"}');
+        ]);
 
         $this->auth(null, null, null, 'ApiKey', $request);
+
+        $data = json_decode('{"event":"Account.create", "url": "https://test"}');
 
         $app = $this->createApplication();
 
@@ -122,7 +128,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
 
-        $result = $controllerManager->process('Webhook', 'create', [], $request, $this->createResponse());
+        $result = $controllerManager->process('Webhook', 'POST', 'create', [], $data, $request, $this->createResponse());
     }
 
     public function testApiUserHasAccess1()
@@ -145,7 +151,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this->createRequest('POST', [], [
             'Content-Type' => 'application/json',
             'X-Api-Key' => 'test-key',
-        ], '{"event":"Account.create", "url": "https://test"}');
+        ]);
 
         $this->auth(null, null, null, 'ApiKey', $request);
 
@@ -153,7 +159,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $controllerManager = $app->getContainer()->get('controllerManager');
 
-        $result = $controllerManager->process('Webhook', 'create', [], $request, $this->createResponse());
+        $data = json_decode('{"event":"Account.create", "url": "https://test"}');
+
+        $result = $controllerManager->process('Webhook', 'POST', 'create', [], $data, $request, $this->createResponse());
 
         $this->assertTrue(!empty($result));
     }
