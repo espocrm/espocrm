@@ -111,7 +111,7 @@ class LDAP extends Espo
         ?Request $request = null,
         array $params = [],
         array &$resultData = []
-    ) :?User {
+    ) : ?User {
         $isPortal = !empty($params['isPortal']);
 
         if ($authToken) {
