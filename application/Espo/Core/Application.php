@@ -393,7 +393,7 @@ class Application
 
     protected function createAuth(bool $allowAnyAccess = false) : Auth
     {
-        return $this->getInjectableFactory()->create(Auth::class, [
+        return $this->getInjectableFactory()->createWith(Auth::class, [
             'allowAnyAccess' => $allowAnyAccess,
         ]);
     }
