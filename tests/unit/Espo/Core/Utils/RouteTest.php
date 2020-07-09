@@ -85,7 +85,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
 
         $result = array (
           array (
-            'route' => '/Custom/:scope/:id/:name',
+            'route' => '/Custom/{scope}/{id}/{name}',
             'method' => 'get',
             'params' =>
             array (
@@ -97,7 +97,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ),
           ),
           array (
-            'route' => '/Activities/:scope/:id/:name',
+            'route' => '/Activities/{scope}/{id}/{name}',
             'method' => 'get',
             'params' =>
             array (
@@ -135,7 +135,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ),
           ),
           array (
-            'route' => '/:controller/action/:action',
+            'route' => '/{controller}/action/{action}',
             'method' => 'post',
             'params' =>
             array (
@@ -144,7 +144,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ),
           ),
           array (
-            'route' => '/:controller/action/:action',
+            'route' => '/{controller}/action/{action}',
             'method' => 'get',
             'params' =>
             array (
@@ -175,7 +175,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
 
         $result = array (
           array (
-            'route' => '/Activities/:scope/:id/:name',
+            'route' => '/Activities/{scope}/{id}/{name}',
             'method' => 'get',
             'params' =>
             array (
@@ -222,7 +222,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ),
           ),
           array (
-            'route' => '/:controller/action/:action',
+            'route' => '/{controller}/action/{action}',
             'method' => 'post',
             'params' =>
             array (
@@ -231,7 +231,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ),
           ),
           array (
-            'route' => '/:controller/action/:action',
+            'route' => '/{controller}/action/{action}',
             'method' => 'get',
             'params' =>
             array (
@@ -262,7 +262,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
 
         $result = array (
           array (
-            'route' => '/Activities/:scope/:id/:name',
+            'route' => '/Activities/{scope}/{id}/{name}',
             'method' => 'get',
             'params' =>
             array (
@@ -309,7 +309,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ),
           ),
           array (
-            'route' => '/:controller/action/:action',
+            'route' => '/{controller}/action/{action}',
             'method' => 'post',
             'params' =>
             array (
@@ -318,7 +318,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ),
           ),
           array (
-            'route' => '/:controller/action/:action',
+            'route' => '/{controller}/action/{action}',
             'method' => 'get',
             'params' =>
             array (
@@ -354,7 +354,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
         // prepare expected result
         $result = [
             [
-                'route'  => '/Activities/:scope/:id/:name',
+                'route'  => '/Activities/{scope}/{id}/{name}',
                 'method' => 'get',
                 'params' => [
                     'controller' => 'TestExt',
