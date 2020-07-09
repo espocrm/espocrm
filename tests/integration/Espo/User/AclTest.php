@@ -82,7 +82,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $params = array();
         $data = '{"name":"Test Account"}';
         $request = $this->createRequest('POST', $params, array('CONTENT_TYPE' => 'application/json'));
-        $result = $controllerManager->process('Account', 'create', $params, $data, $request);
+        $result = $controllerManager->process('Account', 'create', $params, $data, $request, $this->createResponse());
     }
 
     public function testPortalUserAccess()
@@ -121,7 +121,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $params = array();
         $data = '{"name":"Test Account"}';
         $request = $this->createRequest('POST', $params, array('CONTENT_TYPE' => 'application/json'));
-        $result = $controllerManager->process('Account', 'create', $params, $data, $request);
+        $result = $controllerManager->process('Account', 'create', $params, $data, $request, $this->createResponse());
     }
 
     public function testUserAccessEditOwn1()
@@ -150,7 +150,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'title' => 'Test'
         ];
         $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
-        $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
+        $result = $controllerManager->process(
+            'User', 'update', $params, json_encode($data), $request, $this->createResponse());
 
         $this->assertTrue(is_string($result));
 
@@ -165,7 +166,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $result = null;
         try {
-            $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
+            $result = $controllerManager->process(
+                'User', 'update', $params, json_encode($data), $request, $this->createResponse());
         } catch (\Exception $e) {};
 
         $this->assertNull($result);
@@ -180,7 +182,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'teamsIds' => ['id']
         ];
         $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
-        $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
+        $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request, $this->createResponse());
         $resultData = json_decode($result);
 
         $this->assertTrue(!property_exists($resultData, 'type') || $resultData->type !== 'admin');
@@ -216,7 +218,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $result = null;
         try {
-            $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
+            $result = $controllerManager->process(
+                'User', 'update', $params, json_encode($data), $request, $this->createResponse());
         } catch (\Exception $e) {};
 
         $this->assertNull($result);

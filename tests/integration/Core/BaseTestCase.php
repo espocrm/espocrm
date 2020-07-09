@@ -29,6 +29,12 @@
 
 namespace tests\integration\Core;
 
+use Espo\Core\Api\RequestWrapper;
+use Espo\Core\Api\ResponseWrapper;
+
+use Slim\Psr7\Factory\RequestFactory;
+use Slim\Psr7\Factory\ResponseFactory;
+
 abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 {
     protected $espoTester;
@@ -164,28 +170,22 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
     }
 
-    /**
-     * Create Slim request object
-     *
-     * @param  string $method
-     * @param  array  $params
-     * @param  array  $envParams  E.g. 'REQUEST_METHOD' => 'GET', 'QUERY_STRING' => 'name=John&age=30'. More details \Slim\Environment::mock()
-     *
-     * @return \Slim\Http\Request
-     */
-    protected function createRequest($method, array $params = array(), array $envParams = array())
+    protected function createRequest(string $method, array $queryParams = [], array $headers = []) : RequestWrapper
     {
-        if (!isset($envParams['REQUEST_METHOD'])) {
-            $envParams['REQUEST_METHOD'] = strtoupper($method);
+        $request = (new RequestFactory())->createRequest($method, 'http://localhost/?' . http_build_query($queryParams));
+
+        foreach ($headers as $name => $value) {
+            $request = $request->withHeader($name, $value);
         }
 
-        if (!isset($envParams['QUERY_STRING'])) {
-            $envParams['QUERY_STRING'] = http_build_query($params);
-        }
+        return new RequestWrapper($request);
+    }
 
-        $slimEnvironment = \Slim\Environment::mock($envParams);
-
-        return new \Slim\Http\Request($slimEnvironment);
+    protected function createResponse()
+    {
+        return new ResponseWrapper(
+            (new ResponseFactory())->createResponse()
+        );
     }
 
     protected function setData(array $data)
