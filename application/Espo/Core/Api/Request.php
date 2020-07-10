@@ -36,7 +36,12 @@ interface Request
     /**
      * Get a query parameter.
      */
-    public function get(string $name);
+    public function getQueryParam(string $name);
+
+    /**
+     * Get query parameters.
+     */
+    public function getQueryParams() : array;
 
     /**
      * Get a header value.

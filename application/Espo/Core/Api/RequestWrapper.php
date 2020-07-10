@@ -48,12 +48,23 @@ class RequestWrapper implements ApiRequest
         $this->basePath = $basePath;
     }
 
-    public function get(string $name)
+    public function get(?string $name = null)
     {
-        $params = $this->request->getQueryParams();
-        $value = $params[$name] ?? null;
+        if (is_null($name)) {
+            return $this->getQueryParams();
+        }
 
-        return $value;
+        return $this->getQueryParam($name);
+    }
+
+    public function getQueryParam(string $name)
+    {
+        return $this->request->getQueryParams()[$name] ?? null;
+    }
+
+    public function getQueryParams() : array
+    {
+        return $this->request->getQueryParams();
     }
 
     public function getHeader(string $name) : ?string
