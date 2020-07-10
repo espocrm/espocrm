@@ -3,19 +3,23 @@
 <div class="admin-content">
 	<div class="row">
 		<div class="col-md-7">
+			<div class="admin-search-container">
+				<input type="text" maxlength="64" placeholder="{{translate 'Search'}}"
+					data-name="quick-search" class="form-control">
+			</div>
 			<div class="admin-tables-container">
 				{{#each panelDataList}}
-				<div>
-					<h4>{{translate label scope='Admin'}}</h4>
+				<div class="admin-content-section" data-index="{{@index}}">
+					<h4>{{label}}</h4>
 					<table class="table table-bordered table-admin-panel" data-name="{{name}}">
 					    {{#each itemList}}
-					    <tr>
+					    <tr class="admin-content-row" data-index="{{@index}}">
 					        <td>
 					        	<div>
 					        	{{#if iconClass}}
 					        	<span class="icon {{iconClass}}"></span>
 					        	{{/if}}
-					            <a href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{translate label scope='Admin' category='labels'}}</a>
+					            <a href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{label}}</a>
 					        	</div>
 					        </td>
 					        <td>{{translate description scope='Admin' category='descriptions'}}</td>
@@ -24,6 +28,7 @@
 					</table>
 				</div>
 				{{/each}}
+				<div class="no-data hidden">{{translate 'No Data'}}</div>
 			</div>
 		</div>
 		<div class="col-md-5 admin-right-column">
