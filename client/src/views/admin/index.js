@@ -49,6 +49,13 @@ define('views/admin/index', 'view', function (Dep) {
             };
         },
 
+        afterRender: function () {
+            if (this.quickSearchText) {
+                this.$el.find('input[data-name="quick-search"]').val(this.quickSearchText);
+                this.processQuickSearch(this.quickSearchText);
+            }
+        },
+
         setup: function () {
             this.panelDataList = [];
 
@@ -93,6 +100,8 @@ define('views/admin/index', 'view', function (Dep) {
 
         processQuickSearch: function (text) {
             text = text.trim();
+
+            this.quickSearchText = text;
 
             var $noData = this.$noData || this.$el.find('.no-data');
 
