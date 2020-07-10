@@ -40,6 +40,10 @@ use Espo\Core\{
     Api\Response,
 };
 
+/**
+ * Determines which auth method to use. Fetches a username and password from headers and server parameters.
+ * Then tries to log in.
+ */
 class Auth
 {
     protected $auth;
@@ -84,10 +88,6 @@ class Auth
         return $this->isResolvedUseNoAuth;
     }
 
-    /**
-     * Determines which auth method to use. Fetches a username and password from headers and server parameters.
-     * Then tries to log in.
-     */
     public function process(Request $request, Response $response)
     {
         $httpMethod = $request->getMethod();
