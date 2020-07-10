@@ -29,8 +29,11 @@
 
 namespace Espo\Core\Mail\Parsers\PhpMimeMailParser;
 
-use \PhpMimeMailParser\Attachment;
+use PhpMimeMailParser\Attachment;
 
+/**
+ * @deprecated
+ */
 class Parser extends \PhpMimeMailParser\Parser
 {
     public function getAttachments($include_inline = true)

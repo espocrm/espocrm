@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Mail\Parsers;
 
+/**
+ * @deprecated
+ */
 class PhpMimeMailParser
 {
     private $entityManager;

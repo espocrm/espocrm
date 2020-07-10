@@ -29,16 +29,10 @@
 
 namespace Espo\Core\Mail;
 
-
-use \Espo\Entities\Email;
+use Espo\Entities\Email;
 
 class FiltersMatcher
 {
-    public function __construct()
-    {
-
-    }
-
     protected function matchTo(Email $email, $filter)
     {
         if ($email->get('to')) {

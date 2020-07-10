@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Mail;
 
-use \Espo\Entities\Email;
+use Espo\Entities\Email;
 
 class MessageWrapper
 {
@@ -43,7 +43,7 @@ class MessageWrapper
 
     private $zendMessage = null;
 
-    protected $zendMessageClass = '\Laminas\Mail\Storage\Message';
+    protected $zendMessageClass = 'Laminas\Mail\Storage\Message';
 
     protected $fullRawContent = null;
 

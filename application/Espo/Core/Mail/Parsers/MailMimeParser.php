@@ -29,13 +29,20 @@
 
 namespace Espo\Core\Mail\Parsers;
 
+use ZBateson\MailMimeParser\MailMimeParser as Parser;
+
+use Espo\Entities\Email as EmailEntity;
+
+/**
+ * An adapter for MailMimeParser library.
+ */
 class MailMimeParser
 {
     private $entityManager;
 
-    private $parser = array();
+    private $parser = [];
 
-    protected $messageHash = array();
+    protected $messageHash = [];
 
     public function __construct($entityManager)
     {
@@ -50,7 +57,7 @@ class MailMimeParser
     protected function getParser()
     {
         if (!$this->parser) {
-            $this->parser = new \ZBateson\MailMimeParser\MailMimeParser();
+            $this->parser = new Parser();
         }
 
         return $this->parser;
@@ -149,7 +156,7 @@ class MailMimeParser
         return $addressList;
     }
 
-    public function fetchContentParts(\Espo\Entities\Email $email, $message, &$inlineAttachmentList = [])
+    public function fetchContentParts(EmailEntity $email, $message, &$inlineAttachmentList = [])
     {
         $this->loadContent($message);
 
@@ -195,7 +202,7 @@ class MailMimeParser
         }
 
         $attachmentObjList = $this->getMessage($message)->getAllAttachmentParts();
-        $inlineIds = array();
+        $inlineIds = [];
 
         foreach ($attachmentObjList as $attachmentObj) {
             $attachment = $this->getEntityManager()->getEntity('Attachment');

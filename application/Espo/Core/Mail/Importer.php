@@ -31,25 +31,35 @@ namespace Espo\Core\Mail;
 
 use Laminas\Mime\Mime as Mime;
 
-use \Espo\ORM\Entity;
-use \Espo\ORM\Email;
+use Espo\Entities\Email;
 
+use Espo\Core\{
+    Mail\MessageWrapper,
+    ORM\EntityManager,
+    Utils\Config,
+    Notificators\Notificator,
+};
+
+use Espo\Notificators\EmailNotificator;
+
+/**
+ * Imports an email message into CRM. Handles duplicate checking, parent look-up.
+ */
 class Importer
 {
     private $entityManager;
-
     private $config;
+    private $notificator;
 
     private $filtersMatcher;
 
-    private $notificator = null;
-
-    public function __construct($entityManager, $config, $notificator = null)
+    public function __construct(EntityManager $entityManager, Config $config, ?Notificator $notificator = null)
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
-        $this->filtersMatcher = new FiltersMatcher();
         $this->notificator = $notificator;
+
+        $this->filtersMatcher = new FiltersMatcher();
     }
 
     protected function getEntityManager()
@@ -74,16 +84,16 @@ class Importer
 
     public function importMessage(
         string $parserType,
-        $message,
-        $assignedUserId = null,
-        $teamsIdList = [],
-        $userIdList = [],
-        $filterList = [],
-        $fetchOnlyHeader = false,
-        $folderData = null)
-    {
+        MessageWrapper $message,
+        ?string $assignedUserId = null,
+        array $teamsIdList = [],
+        array $userIdList = [],
+        iterable $filterList = [],
+        bool $fetchOnlyHeader = false,
+        ?array $folderData = null
+    ) : ?Email {
         $parser = $message->getParser();
-        $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserType;
+        $parserClassName = 'Espo\\Core\\Mail\\Parsers\\' . $parserType;
 
         if (!$parser || get_class($parser) !== $parserClassName) {
             $parser = new $parserClassName($this->getEntityManager());
@@ -154,7 +164,7 @@ class Importer
         }
 
         if ($this->getFiltersMatcher()->match($email, $filterList, true)) {
-            return false;
+            return null;
         }
 
         if ($parser->checkMessageAttribute($message, 'message-Id') && $parser->getMessageAttribute($message, 'message-Id')) {
@@ -165,7 +175,7 @@ class Importer
                 $email->set('messageIdInternal', $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To'));
             }
             if (stripos($messageId, '@espo-system') !== false) {
-                return;
+                return null;
             }
         }
 
@@ -407,7 +417,7 @@ class Importer
         $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
     }
 
-    protected function findParent(Entity $email, $emailAddress)
+    protected function findParent(Email $email, $emailAddress)
     {
         $contact = $this->getEntityManager()->getRepository('Contact')->where(array(
             'emailAddress' => $emailAddress
@@ -444,7 +454,7 @@ class Importer
         }
     }
 
-    protected function findDuplicate(Entity $email)
+    protected function findDuplicate(Email $email)
     {
         if ($email->get('messageId')) {
             $duplicate = $this->getEntityManager()->getRepository('Email')->select(['id', 'status'])->where([
@@ -456,7 +466,7 @@ class Importer
         }
     }
 
-    protected function processDuplicate(Entity $duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList)
+    protected function processDuplicate(Email $duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList)
     {
         if ($duplicate->get('status') == 'Archived') {
             $this->getEntityManager()->getRepository('Email')->loadFromField($duplicate);
