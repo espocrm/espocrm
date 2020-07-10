@@ -48,6 +48,11 @@ use Espo\Core\{
     ServiceFactory,
 };
 
+use Traversable;
+
+/**
+ * An util for email sending. Can send with SMTP parameters of the system email account or with specific parameters.
+ */
 class Sender
 {
     protected $config;
@@ -102,6 +107,9 @@ class Sender
         return $this;
     }
 
+    /**
+     * Use specific SMTP parameters.
+     */
     public function useSmtp(array $params = []) : self
     {
         $this->isGlobal = false;
@@ -109,7 +117,10 @@ class Sender
         return $this;
     }
 
-    public function useGlobal()
+    /**
+     * Use the system SMTP parameters.
+     */
+    public function useGlobal() : self
     {
         $this->params = [];
         $this->isGlobal = true;
@@ -240,7 +251,10 @@ class Sender
         return $this->inboundEmailService;
     }
 
-    public function send(Email $email, ?array $params = [], $message = null, $attachmentList = [])
+    /**
+     * Send an email.
+     */
+    public function send(Email $email, ?array $params = [], ?Message $message = null, iterable $attachmentList = [])
     {
         if ($this->isGlobal) {
             $this->applyGlobal();
