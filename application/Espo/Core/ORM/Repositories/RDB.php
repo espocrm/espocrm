@@ -40,6 +40,8 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\Config,
     Utils\FieldManagerUtil,
+    HookManager,
+    ApplicationState,
 };
 
 /** @deprecated */
@@ -94,11 +96,11 @@ class RDB extends \Espo\Core\Repositories\Database implements Injectable
         string $entityType,
         EntityManager $entityManager,
         EntityFactory $entityFactory,
-        Metadata $metadata
+        Metadata $metadata,
+        HookManager $hookManager,
+        ApplicationState $applicationState
     ) {
-        parent::__construct($entityType, $entityManager, $entityFactory, $metadata);
-
-        $this->metadata = $metadata;
+        parent::__construct($entityType, $entityManager, $entityFactory, $metadata, $hookManager, $applicationState);
 
         $this->init();
     }
