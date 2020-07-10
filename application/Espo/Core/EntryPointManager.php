@@ -38,6 +38,9 @@ use Espo\Core\{
     Api\Response,
 };
 
+/**
+ * Runs entry points.
+ */
 class EntryPointManager
 {
     protected $injectableFactory;

@@ -168,13 +168,13 @@ class CronManager
         return $this->useProcessPool;
     }
 
-    public function setUseProcessPool($useProcessPool)
+    public function setUseProcessPool(bool $useProcessPool)
     {
         $this->useProcessPool = $useProcessPool;
     }
 
     /**
-     * Run Cron
+     * Run cron.
      */
     public function run()
     {
@@ -193,6 +193,9 @@ class CronManager
         $this->processPendingJobs();
     }
 
+    /**
+     * Run a portion of pending jobs.
+     */
     public function processPendingJobs($queue = null, $limit = null, $poolDisabled = false, $noLock = false)
     {
         if (is_null($limit)) {
@@ -269,7 +272,10 @@ class CronManager
         $this->entityManager->getPdo()->query('UNLOCK TABLES');
     }
 
-    public function runJobById($id)
+    /**
+     * Run a specific job by ID. A job status should be set to 'Ready'.
+     */
+    public function runJobById(string $id)
     {
         if (empty($id)) throw new Error();
 
@@ -292,6 +298,9 @@ class CronManager
         $this->runJob($job);
     }
 
+    /**
+     * Run a specific job.
+     */
     public function runJob(JobEntity $job)
     {
         $isSuccess = true;

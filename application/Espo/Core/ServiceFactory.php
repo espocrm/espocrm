@@ -34,6 +34,9 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\ClassFinder;
 use Espo\Core\InjectableFactory;
 
+/**
+ * Creates services. Services are intended for a business logic. Do not confuse with container services.
+ */
 class ServiceFactory
 {
     protected $classFinder;

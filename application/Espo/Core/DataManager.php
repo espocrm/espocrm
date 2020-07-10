@@ -29,6 +29,9 @@
 
 namespace Espo\Core;
 
+/**
+ * Clears cache, rebuilds the application.
+ */
 class DataManager
 {
     private $container;

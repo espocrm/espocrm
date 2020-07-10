@@ -36,6 +36,10 @@ use Espo\Core\SelectManagers\SelectManager;
 use Espo\Entities\User;
 use Espo\Core\Utils\Util;
 
+/**
+ * Creates select managers for specific entity types. You can specify a user whose ACL will be applied to queries.
+ * If user is not specified, then the current one will be used.
+ */
 class SelectManagerFactory
 {
     protected $defaultClassName = SelectManager::class;
