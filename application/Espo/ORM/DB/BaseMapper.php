@@ -1207,9 +1207,4 @@ abstract class BaseMapper implements Mapper
     }
 
     abstract protected function toDb(string $attribute);
-
-    public function setCollectionClass(string $collectionClass)
-    {
-        $this->collectionClass = $collectionClass;
-    }
 }

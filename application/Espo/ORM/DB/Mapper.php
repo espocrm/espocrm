@@ -143,11 +143,6 @@ interface Mapper
     public function delete(Entity $entity) : bool;
 
     /**
-     * Set a class name of a a model collection that will be returned by operations such as select.
-     */
-    public function setCollectionClass(string $collectionClass);
-
-    /**
      * Delete a record from DB.
      */
     public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false) : bool;
