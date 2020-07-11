@@ -130,7 +130,7 @@ class Authentication
     /**
      * Process logging in.
      *
-     * @return Result if success or second sterp required.. NULL if failed.
+     * @return Result if success or second step required. NULL if failed.
      */
     public function login(
         ?string $username, ?string $password = null, Request $request, ?string $authenticationMethod = null
