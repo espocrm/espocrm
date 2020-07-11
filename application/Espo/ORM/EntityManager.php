@@ -32,7 +32,7 @@ namespace Espo\ORM;
 use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\DB\{
-    IMapper,
+    Mapper,
     Query\Base as Query,
 };
 
@@ -119,7 +119,7 @@ class EntityManager
                 break;
         }
 
-        if (!class_exists($className)) {
+        if (!$className || !class_exists($className)) {
             throw new Error("Mapper {$name} does not exist.");
         }
 
@@ -129,20 +129,18 @@ class EntityManager
     /**
      * Get Mapper.
      */
-    public function getMapper(?string $name = null) : IMapper
+    public function getMapper(?string $name = null) : Mapper
     {
         $name = $name ?? $this->defaultMapperName;
 
-        if ($name{0} == '\\') {
-            $className = $name;
-        } else {
-            $className = $this->getMapperClassName($name);
-        }
+        $className = $this->getMapperClassName($name);
 
         if (empty($this->mappers[$className])) {
             $this->mappers[$className] = new $className(
-                $this->getPDO(), $this->entityFactory, $this->getQuery(), $this->metadata);
+                $this->getPDO(), $this->entityFactory, $this->getQuery(), $this->metadata
+            );
         }
+
         return $this->mappers[$className];
     }
 

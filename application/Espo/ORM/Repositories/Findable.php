@@ -29,13 +29,16 @@
 
 namespace Espo\ORM\Repositories;
 
-use Espo\ORM\Entity;
+use Espo\ORM\{
+    Entity,
+    ICollection as Collection,
+};
 
 interface Findable
 {
     public function count(array $params) : int;
 
-    public function find(array $params) : \Traversable;
+    public function find(array $params) : Collection;
 
     public function findOne(array $params) : ?Entity;
 }

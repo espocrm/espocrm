@@ -28,18 +28,10 @@
  ************************************************************************/
 
 namespace Espo\ORM\DB;
-use Espo\ORM\Entity;
-use Espo\ORM\Classes\EntityCollection;
-use PDO;
 
-/**
- * Abstraction for MySQL DB.
- * Mapping of Entity to DB.
- * Should be used internally only.
- */
-class MysqlMapper extends Mapper
+class MysqlMapper extends BaseMapper
 {
-    protected function toDb($attribute)
+    protected function toDb(string $attribute)
     {
         return $this->query->toDb($attribute);
     }

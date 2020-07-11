@@ -61,17 +61,17 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
                     return "'" . $args[0] . "'";
                 }));
 
-        $metadata = $this->getMockBuilder('\\Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+        $metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
         $metadata
             ->method('get')
             ->will($this->returnValue(false));
 
-        $entityManager = $this->getMockBuilder('\\Espo\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+        $entityManager = $this->getMockBuilder('Espo\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
         $entityManager
             ->method('getMetadata')
             ->will($this->returnValue($metadata));
 
-        $this->entityFactory = $this->getMockBuilder('\\Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
+        $this->entityFactory = $this->getMockBuilder('Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
         $this->entityFactory
             ->expects($this->any())
             ->method('create')
@@ -81,12 +81,11 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
                 return new $className([], $entityManager);
             }));
 
-        $this->metadata = $this->getMockBuilder('\\Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 
         $this->query = new Query($this->pdo, $this->entityFactory, $this->metadata);
 
         $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query, $this->metadata);
-        $this->db->setReturnCollection(true);
 
         $this->post = new \Espo\Entities\Post([], $entityManager);
         $this->comment = new \Espo\Entities\Comment([], $entityManager);
@@ -95,7 +94,6 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->contact = new \Espo\Entities\Contact([], $entityManager);
         $this->account = new \Espo\Entities\Account([], $entityManager);
-
     }
 
     protected function tearDown() : void

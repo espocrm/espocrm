@@ -29,20 +29,17 @@
 
 namespace Espo\ORM\Repositories;
 
-use Espo\ORM\EntityManager;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityCollection;
-use Espo\ORM\Entity;
-use Espo\ORM\IEntity;
-use Espo\ORM\Repository;
-
-use Espo\ORM\DB\IMapper as Mapper;
+use Espo\ORM\{
+    EntityManager,
+    EntityFactory,
+    ICollection as Collection,
+    Entity,
+    Repository,
+    DB\Mapper,
+};
 
 class RDB extends Repository implements Findable, Relatable, Removable
 {
-    /**
-     * @var Object Mapper.
-     */
     protected $mapper;
 
     /**
@@ -85,6 +82,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
     {
     }
 
+    /**
+     * Reset select parameters.
+     */
     public function reset()
     {
         $this->whereClause = [];
@@ -92,6 +92,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
         $this->listParams = [];
     }
 
+    /**
+     * Get a new entity.
+     */
     public function getNew() : ?Entity
     {
         $entity = $this->entityFactory->create($this->entityType);
@@ -190,7 +193,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 
-    public function find(array $params = []) : \Traversable
+    public function find(array $params = []) : Collection
     {
         $params = $this->getSelectParams($params);
 
@@ -198,16 +201,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
             $this->handleSelectParams($params);
         }
 
-        $selectResult = $this->getMapper()->select($this->seed, $params);
-
-        if (!empty($params['returnSthCollection'])) {
-            $collection = $selectResult;
-        } else {
-            $dataList = $selectResult;
-            $collection = new EntityCollection($dataList, $this->entityType, $this->entityFactory);
-        }
-
-        $collection->setAsFetched();
+        $collection = $this->getMapper()->select($this->seed, $params);
 
         $this->reset();
 
@@ -225,11 +219,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
     public function findByQuery(string $sql, ?string $collectionType = null)
     {
-        $dataArr = $this->getMapper()->selectByQuery($this->seed, $sql);
-
         if (!$collectionType) {
-            $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
-        } else if ($collectionType === \Espo\ORM\EntityManager::STH_COLLECTION) {
+            $collection = $this->getMapper()->selectByQuery($this->seed, $sql);
+        } else if ($collectionType === EntityManager::STH_COLLECTION) {
             $collection = $this->getEntityManager()->createSthCollection($this->entityType);
             $collection->setQuery($sql);
         }
@@ -242,7 +234,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     public function findRelated(Entity $entity, string $relationName, array $params = [])
     {
         if (!$entity->id) {
-            return [];
+            return null;
         }
 
         if ($entity->getRelationType($relationName) === Entity::BELONGS_TO_PARENT) {
@@ -257,19 +249,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
 
-        if (is_array($result)) {
-            $collection = new EntityCollection($result, $entityType, $this->entityFactory);
-            $collection->setAsFetched();
-            return $collection;
-        } else if ($result instanceof EntityCollection) {
-            $collection = $result;
-            return $collection;
-        } else if ($result instanceof Entity) {
-            $entity = $result;
-            return $entity;
-        } else {
-            return $result;
-        }
+        return $result;
     }
 
     public function countRelated(Entity $entity, string $relationName, array $params = []) : int
@@ -372,7 +352,6 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
         return $result;
     }
-
 
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
     {
@@ -587,7 +566,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this;
     }
 
-    public function order($field = 'id', $direction = "ASC")
+    public function order($field = 'id', $direction = 'ASC')
     {
         $this->listParams['orderBy'] = $field;
         $this->listParams['order'] = $direction;
