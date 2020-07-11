@@ -27,13 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFA\User;
+namespace Espo\Core\Authentication\TwoFactor\Utils;
 
-use Espo\Entities\UserData;
+use RobThree\Auth\TwoFactorAuth;
 
-interface CodeVerify
+class Totp
 {
-    public function generateData(UserData $userData, object $data, string $userName) : object;
+    public function verifyCode(string $secret, string $code)
+    {
+        $impl = new TwoFactorAuth();
+        return $impl->verifyCode($secret, $code);
+    }
 
-    public function verify(UserData $userData, string $code) : bool;
+    public function createSecret()
+    {
+        $impl = new TwoFactorAuth();
+        return $impl->createSecret();
+    }
 }

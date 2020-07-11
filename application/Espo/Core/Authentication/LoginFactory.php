@@ -27,21 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFA\Utils;
+namespace Espo\Core\Authentication;
 
-use RobThree\Auth\TwoFactorAuth;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Authentication\Login\Login;
 
-class Totp
+class LoginFactory
 {
-    public function verifyCode(string $secret, string $code)
+    protected $injectableFactory;
+    protected $metadata;
+
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        $impl = new TwoFactorAuth();
-        return $impl->verifyCode($secret, $code);
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
-    public function createSecret()
+    public function create(string $method) : Login
     {
-        $impl = new TwoFactorAuth();
-        return $impl->createSecret();
+        $className = $this->metadata->get(['authenticationMethods', $method, 'implementationClassName']);
+
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+
+            $className = "Espo\\Custom\\Core\\Authentication\\Login\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "Espo\\Core\\Authentication\\Login\\" . $sanitizedName;
+            }
+        }
+
+        return $this->injectableFactory->create($className);
     }
 }

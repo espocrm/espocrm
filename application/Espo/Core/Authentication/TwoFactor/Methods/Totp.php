@@ -27,43 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFA\User;
+namespace Espo\Core\Authentication\TwoFactor\Methods;
 
-use Espo\Entities\UserData;
-use Espo\Core\Authentication\TwoFA\Utils\Totp as TotpUtils;
-use Espo\Core\Utils\Config;
+use Espo\Entities\User;
+
+use Espo\ORM\EntityManager;
+use Espo\Core\Authentication\TwoFactor\Utils\Totp as TotpUtils;
+
+use StdClass;
 
 class Totp implements CodeVerify
 {
     protected $entityManager;
     protected $totp;
 
-    public function __construct(TotpUtils $totp, Config $config)
+    public function __construct(EntityManager $entityManager, TotpUtils $totp)
     {
+        $this->entityManager = $entityManager;
         $this->totp = $totp;
-        $this->config = $config;
     }
 
-    public function generateData(UserData $userData, object $data, string $userName) : object
+    public function verifyCode(User $user, string $code) : bool
     {
-        $secret = $this->totp->createSecret();
+        $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
 
-        $label = rawurlencode($this->config->get('applicationName')) . ':' . rawurlencode($userName);
-
-        return (object) [
-            'auth2FATotpSecret' => $secret,
-            'label' => $label,
-        ];
-    }
-
-    public function verify(UserData $userData, string $code) : bool
-    {
-        if (!$code) return false;
-
-        $code = str_replace(' ', '', trim($code));
+        if (!$userData) return false;
+        if (!$userData->get('auth2FA')) return false;
+        if ($userData->get('auth2FAMethod') != 'Totp') return false;
 
         $secret = $userData->get('auth2FATotpSecret');
 
+        if (!$secret) return false;
+
         return $this->totp->verifyCode($secret, $code);
+    }
+
+    public function getLoginData(User $user) : StdClass
+    {
+        return (object) [
+            'message' => 'enterTotpCode',
+        ];
     }
 }

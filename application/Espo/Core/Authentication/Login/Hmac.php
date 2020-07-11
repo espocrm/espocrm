@@ -27,17 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication;
+namespace Espo\Core\Authentication\Login;
 
 use Espo\Entities\{
     User,
     AuthToken,
 };
 
-use Espo\Core\Api\Request;
+use Espo\Core\{
+    ORM\EntityManager,
+    Api\Request,
+    Utils\Config,
+    Utils\ApiKey,
+};
 
-interface Login
+class Hmac implements Login
 {
+    protected $entityManager;
+    protected $config;
+
+    public function __construct(EntityManager $entityManager, Config $config)
+    {
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+    }
+
     public function login(
         ?string $username,
         ?string $password,
@@ -45,5 +59,32 @@ interface Login
         ?Request $request = null,
         array $params = [],
         array &$resultData = []
-    ) : ?User;
+    ) :?User {
+        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
+
+        list($apiKey, $hash) = explode(':', $authString, 2);
+
+        $user = $this->entityManager->getRepository('User')->where([
+            'type' => 'api',
+            'apiKey' => $apiKey,
+            'authMethod' => 'Hmac',
+        ])->findOne();
+
+        if (!$user) return null;
+
+        if ($user) {
+            $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
+            if (!$secretKey) return null;
+
+            $string = $request->getMethod() . ' ' . $request->getResourcePath();
+
+            if ($hash === ApiKey::hash($secretKey, $string)) {
+                return $user;
+            }
+
+            return null;
+        }
+
+        return $user;
+    }
 }

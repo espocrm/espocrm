@@ -27,43 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFA;
+namespace Espo\Core\Authentication\TwoFactor;
 
-use Espo\Entities\User;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
-use Espo\ORM\EntityManager;
-use Espo\Core\Authentication\TwoFA\Utils\Totp as TotpUtils;
-
-class Totp implements CodeVerify
+class Factory
 {
-    protected $entityManager;
-    protected $totp;
+    protected $injectableFactory;
+    protected $config;
 
-    public function __construct(EntityManager $entityManager, TotpUtils $totp)
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        $this->entityManager = $entityManager;
-        $this->totp = $totp;
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
-    public function verifyCode(User $user, string $code) : bool
+    public function create(string $method) : object
     {
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
+        $className = $this->metadata->get([
+            'app', 'auth2FAMethods', $method, 'implementationClassName'
+        ]);
 
-        if (!$userData) return false;
-        if (!$userData->get('auth2FA')) return false;
-        if ($userData->get('auth2FAMethod') != 'Totp') return false;
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
-        $secret = $userData->get('auth2FATotpSecret');
+            $className = "Espo\\Custom\\Core\\\Authentication\\TwoFactor\\Methods\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "Espo\\Core\\Authentication\\TwoFactor\\Methods\\" . $sanitizedName;
+            }
+        }
 
-        if (!$secret) return false;
-
-        return $this->totp->verifyCode($secret, $code);
-    }
-
-    public function getLoginData(User $user) : array
-    {
-        return [
-            'message' => 'enterTotpCode',
-        ];
+        return $this->injectableFactory->create($className);
     }
 }

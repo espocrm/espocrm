@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Core\Authentication;
 
 use Espo\Core\Exceptions\{
     Error,
@@ -42,10 +42,10 @@ use Espo\Entities\{
 };
 
 use Espo\Core\Authentication\{
-    Login,
-    TwoFA\CodeVerify as TwoFACodeVerify,
-    Utils\AuthenticationFactory,
-    TwoFA\Utils\Factory as Auth2FAFactory,
+    Login\Login,
+    TwoFactor\Methods\CodeVerify as TwoFACodeVerify,
+    LoginFactory,
+    TwoFactor\Factory as TwoFAFactory,
 };
 
 use Espo\Core\Api\Request;
@@ -58,10 +58,12 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+use StdClass;
+
 /**
  * Handles authentication. The entry point of the auth process.
  */
-class Auth
+class Authentication
 {
     const FAILED_ATTEMPTS_PERIOD = '60 seconds';
 
@@ -79,7 +81,7 @@ class Auth
     protected $config;
     protected $metadata;
     protected $entityManager;
-    protected $authenticationFactory;
+    protected $authLoginFactory;
     protected $auth2FAFactory;
 
     public function __construct(
@@ -89,8 +91,8 @@ class Auth
         Config $config,
         Metadata $metadata,
         EntityManager $entityManager,
-        AuthenticationFactory $authenticationFactory,
-        Auth2FAFactory $auth2FAFactory
+        LoginFactory $authLoginFactory,
+        TwoFAFactory $auth2FAFactory
     ) {
         $this->allowAnyAccess = $allowAnyAccess;
 
@@ -99,7 +101,7 @@ class Auth
         $this->config = $config;
         $this->metadata = $metadata;
         $this->entityManager = $entityManager;
-        $this->authenticationFactory = $authenticationFactory;
+        $this->authLoginFactory = $authLoginFactory;
         $this->auth2FAFactory = $auth2FAFactory;
     }
 
@@ -110,7 +112,7 @@ class Auth
 
     protected function getAuthenticationImpl(string $method) : Login
     {
-        return $this->authenticationFactory->create($method);
+        return $this->authLoginFactory->create($method);
     }
 
     protected function get2FAImpl(string $method) : TwoFACodeVerify
@@ -143,7 +145,7 @@ class Auth
      */
     public function login(
         ?string $username, ?string $password = null, Request $request, ?string $authenticationMethod = null
-    ) : ?array {
+    ) : ?StdClass {
         $isByTokenOnly = false;
 
         if ($authenticationMethod) {
@@ -303,7 +305,7 @@ class Auth
                         return null;
                     }
                 } else {
-                    $loginResultData = $twoFAImpl->getLoginData($user2FA);
+                    $loginResultData = (array) $twoFAImpl->getLoginData($user2FA);
                     $secondStepRequired = true;
                 }
             }
@@ -369,7 +371,7 @@ class Auth
         }
 
         if ($secondStepRequired) {
-            return [
+            return (object) [
                 'status' => self::STATUS_SECOND_STEP_REQUIRED,
                 'message' => $loginResultData['message'] ?? null,
                 'token' => $loginResultData['token'] ?? null,
@@ -377,7 +379,7 @@ class Auth
             ];
         }
 
-        return [
+        return (object) [
             'status' => self::STATUS_SUCCESS,
         ];
     }

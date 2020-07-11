@@ -33,12 +33,14 @@ use Exception;
 
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\Utils\Auth as AuthUtil;
+use Espo\Core\Authentication\Authentication;
 
 use Espo\Core\{
     Api\Request,
     Api\Response,
 };
+
+use StdClass;
 
 /**
  * Determines which auth method to use. Fetches a username and password from headers and server parameters.
@@ -46,7 +48,7 @@ use Espo\Core\{
  */
 class Auth
 {
-    protected $auth;
+    protected $authentication;
 
     protected $authRequired;
 
@@ -54,9 +56,9 @@ class Auth
 
     private $isResolvedUseNoAuth = false;
 
-    public function __construct(AuthUtil $auth, bool $authRequired = true, bool $isEntryPoint = false)
+    public function __construct(Authentication $authentication, bool $authRequired = true, bool $isEntryPoint = false)
     {
-        $this->auth = $auth;
+        $this->authentication = $authentication;
         $this->authRequired = $authRequired;
         $this->isEntryPoint = $isEntryPoint;
     }
@@ -137,7 +139,7 @@ class Auth
         if (!$this->authRequired) {
             if (!$this->isEntryPoint && $hasAuthData) {
                 try {
-                    $isAuthenticated = $this->auth->login($username, $password, $request, $authenticationMethod);
+                    $isAuthenticated = $this->authentication->login($username, $password, $request, $authenticationMethod);
                 } catch (Exception $e) {
                     $this->processException($response, $e);
                     return;
@@ -153,7 +155,7 @@ class Auth
 
         if ($hasAuthData) {
             try {
-                $authResult = $this->auth->login($username, $password, $request, $authenticationMethod);
+                $authResult = $this->authentication->login($username, $password, $request, $authenticationMethod);
             } catch (Exception $e) {
                 $this->processException($response, $e);
             }
@@ -182,24 +184,24 @@ class Auth
         return explode(':', $string, 2);
     }
 
-    protected function handleAuthResult(Response $response, array $authResult)
+    protected function handleAuthResult(Response $response, StdClass $authResult)
     {
-        $status = $authResult['status'];
+        $status = $authResult->status;
 
-        if ($status === AuthUtil::STATUS_SUCCESS) {
+        if ($status === Authentication::STATUS_SUCCESS) {
             $this->resolve();
             return;
         }
 
-        if ($status === AuthUtil::STATUS_SECOND_STEP_REQUIRED) {
+        if ($status === Authentication::STATUS_SECOND_STEP_REQUIRED) {
             $response->setStatus(401);
             $response->setHeader('X-Status-Reason', 'second-step-required');
 
             $bodyData = [
                 'status' => $status,
-                'message' => $authResult['message'] ?? null,
-                'view' => $authResult['view'] ?? null,
-                'token' => $authResult['token'] ?? null,
+                'message' => $authResult->message ?? null,
+                'view' => $authResult->view ?? null,
+                'token' => $authResult->token ?? null,
             ];
             $response->writeBody(json_encode($bodyData));
         }

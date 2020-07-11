@@ -38,12 +38,12 @@ use Espo\Core\{
     InjectableFactory,
     EntryPointManager,
     CronManager,
+    Authentication\Authentication,
     Api\Auth as ApiAuth,
     Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
     Api\RouteProcessor,
-    Utils\Auth,
     Utils\Route,
     Utils\Autoload,
     Utils\Config,
@@ -131,7 +131,7 @@ class Application
                     try {
                         $authRequired = !($item['noAuth'] ?? false);
 
-                        $apiAuth = new ApiAuth($this->createAuth(), $authRequired);
+                        $apiAuth = new ApiAuth($this->createAuthentication(), $authRequired);
                         $apiAuth->process($requestWrapped, $responseWrapped);
 
                         if (!$apiAuth->isResolved()) {
@@ -200,7 +200,7 @@ class Application
                 $responseWrapped = new ResponseWrapper($handler->handle($request));
 
                 try {
-                    $apiAuth = new ApiAuth($this->createAuth($authNotStrict), $authRequired, true);
+                    $apiAuth = new ApiAuth($this->createAuthentication($authNotStrict), $authRequired, true);
 
                     $apiAuth->process($requestWrapped, $responseWrapped);
 
@@ -391,9 +391,9 @@ class Application
         return $slim;
     }
 
-    protected function createAuth(bool $allowAnyAccess = false) : Auth
+    protected function createAuthentication(bool $allowAnyAccess = false) : Authentication
     {
-        return $this->getInjectableFactory()->createWith(Auth::class, [
+        return $this->getInjectableFactory()->createWith(Authentication::class, [
             'allowAnyAccess' => $allowAnyAccess,
         ]);
     }

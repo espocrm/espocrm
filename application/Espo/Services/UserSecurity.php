@@ -44,8 +44,10 @@ use Espo\Core\{
     Utils\Config,
 };
 
-use Espo\Core\Authentication\Utils\AuthenticationFactory;
-use Espo\Core\Authentication\TwoFA\Utils\UserFactory as Auth2FAUserFactory;
+use Espo\Core\Authentication\LoginFactory;
+use Espo\Core\Authentication\TwoFactor\UserFactory as TwoFactorUserFactory;
+
+use StdClass;
 
 class UserSecurity
 {
@@ -53,7 +55,7 @@ class UserSecurity
     protected $user;
     protected $metadata;
     protected $config;
-    protected $authenticationFactory;
+    protected $authLoginFactory;
     protected $auth2FAUserFactory;
 
     public function __construct(
@@ -61,18 +63,18 @@ class UserSecurity
         User $user,
         Metadata $metadata,
         Config $config,
-        AuthenticationFactory $authenticationFactory,
-        Auth2FAUserFactory $auth2FAUserFactory
+        LoginFactory $authLoginFactory,
+        TwoFactorUserFactory $auth2FAUserFactory
     ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->metadata = $metadata;
         $this->config = $config;
-        $this->authenticationFactory = $authenticationFactory;
+        $this->authLoginFactory = $authLoginFactory;
         $this->auth2FAUserFactory = $auth2FAUserFactory;
     }
 
-    public function read(string $id) : object
+    public function read(string $id) : StdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->id) throw new Forbidden();
 
@@ -89,7 +91,7 @@ class UserSecurity
         ];
     }
 
-    public function generate2FAData(string $id, object $data) : object
+    public function generate2FAData(string $id, StdClass $data) : StdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->id) throw new Forbidden();
 
@@ -128,7 +130,7 @@ class UserSecurity
         return $generatedData;
     }
 
-    public function update(string $id, object $data) : object
+    public function update(string $id, StdClass $data) : StdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->id) throw new Forbidden();
 
@@ -204,7 +206,7 @@ class UserSecurity
     {
         $method = $this->config->get('authenticationMethod', 'Espo');
 
-        $auth = $this->authenticationFactory->create($method);
+        $auth = $this->authLoginFactory->create($method);
 
         $user = $this->entityManager->getRepository('User')->where([
             'id' => $id,

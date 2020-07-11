@@ -32,6 +32,9 @@ namespace Espo\Core\Acl;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 
+/**
+ * @todo Add methods.
+ */
 interface ScopeAcl
 {
 

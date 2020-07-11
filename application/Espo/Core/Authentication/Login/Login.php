@@ -27,30 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication;
+namespace Espo\Core\Authentication\Login;
 
 use Espo\Entities\{
     User,
     AuthToken,
 };
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Api\Request,
-    Utils\PasswordHash,
-};
+use Espo\Core\Api\Request;
 
-class Espo implements Login
+/**
+ * Performs credentials checking. For the basic authorization a username & password are used.
+ * For other authorization methods credentials must be fetched from the request.
+ */
+interface Login
 {
-    protected $entityManager;
-    protected $passwordHash;
-
-    public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
-    {
-        $this->entityManager = $entityManager;
-        $this->passwordHash = $passwordHash;
-    }
-
+    /**
+     * Check credentials.
+     *
+     * @return User if credentials are correct. NULL otherwise.
+     */
     public function login(
         ?string $username,
         ?string $password,
@@ -58,27 +54,5 @@ class Espo implements Login
         ?Request $request = null,
         array $params = [],
         array &$resultData = []
-    ) :?User {
-        if (!$password) return null;
-
-        if ($authToken) {
-            $hash = $authToken->get('hash');
-        } else {
-            $hash = $this->passwordHash->hash($password);
-        }
-
-        $user = $this->entityManager->getRepository('User')->where( [
-            'userName' => $username,
-            'password' => $hash,
-            'type!=' => ['api', 'system'],
-        ])->findOne();
-
-        if ($user && $authToken) {
-            if ($user->id !== $authToken->get('userId')) {
-                return null;
-            }
-        }
-
-        return $user;
-    }
+    ) : ?User;
 }

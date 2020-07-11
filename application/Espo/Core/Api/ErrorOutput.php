@@ -34,6 +34,11 @@ use Espo\Core\{
     Api\Response,
 };
 
+use Throwable;
+
+/**
+ * Processes an error output. If an exception occured, it will be passed to here.
+ */
 class ErrorOutput
 {
     protected $errorDescriptions = [
@@ -62,7 +67,7 @@ class ErrorOutput
 
     public function process(
         Response $response,
-        \Throwable $exception,
+        Throwable $exception,
         bool $toPrint = false,
         ?array $route = null,
         ?array $routeParams = null

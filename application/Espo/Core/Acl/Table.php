@@ -40,7 +40,8 @@ use Espo\Core\Utils\FieldManagerUtil;
 use Espo\Core\Utils\File\Manager as FileManager;
 
 /**
- * A table is generated for each user. It's resulted from merging of multitple roles.
+ * A table is generated for each user. Multiple roles are merged into a single table.
+ * This table is used for access checking.
  */
 class Table
 {

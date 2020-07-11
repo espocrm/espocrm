@@ -27,37 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFA\Utils;
+namespace Espo\Core\Authentication\TwoFactor\User;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Metadata;
+use Espo\Entities\UserData;
+use Espo\Core\Authentication\TwoFactor\Utils\Totp as TotpUtils;
+use Espo\Core\Utils\Config;
 
-class Factory
+use StdClass;
+
+class Totp implements CodeVerify
 {
-    protected $injectableFactory;
-    protected $config;
+    protected $entityManager;
+    protected $totp;
 
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
+    public function __construct(TotpUtils $totp, Config $config)
     {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
+        $this->totp = $totp;
+        $this->config = $config;
     }
 
-    public function create(string $method) : object
+    public function generateData(UserData $userData, StdClass $data, string $userName) : StdClass
     {
-        $className = $this->metadata->get([
-            'app', 'auth2FAMethods', $method, 'implementationClassName'
-        ]);
+        $secret = $this->totp->createSecret();
 
-        if (!$className) {
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+        $label = rawurlencode($this->config->get('applicationName')) . ':' . rawurlencode($userName);
 
-            $className = "Espo\\Custom\\Core\\\Authentication\\TwoFA\\" . $sanitizedName;
-            if (!class_exists($className)) {
-                $className = "Espo\\Core\\Authentication\\TwoFA\\" . $sanitizedName;
-            }
-        }
+        return (object) [
+            'auth2FATotpSecret' => $secret,
+            'label' => $label,
+        ];
+    }
 
-        return $this->injectableFactory->create($className);
+    public function verify(UserData $userData, string $code) : bool
+    {
+        if (!$code) return false;
+
+        $code = str_replace(' ', '', trim($code));
+
+        $secret = $userData->get('auth2FATotpSecret');
+
+        return $this->totp->verifyCode($secret, $code);
     }
 }
