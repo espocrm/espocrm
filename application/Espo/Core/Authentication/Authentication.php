@@ -68,9 +68,6 @@ class Authentication
 
     const MAX_FAILED_ATTEMPT_NUMBER = 10;
 
-    const STATUS_SUCCESS = 'success';
-    const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
-
     protected $allowAnyAccess;
 
     private $portal;
