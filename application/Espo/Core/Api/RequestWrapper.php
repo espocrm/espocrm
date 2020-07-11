@@ -36,6 +36,9 @@ use Psr\Http\Message\{
 
 use Espo\Core\Api\Request as ApiRequest;
 
+/**
+ * Adapter for PSR-7 request interface.
+ */
 class RequestWrapper implements ApiRequest
 {
     protected $request;

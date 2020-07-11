@@ -31,6 +31,9 @@ namespace Espo\Core\Api;
 
 use Psr\Http\Message\UriInterface;
 
+/**
+ * Representation of an HTTP request.
+ */
 interface Request
 {
     /**

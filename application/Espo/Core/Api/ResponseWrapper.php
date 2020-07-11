@@ -36,6 +36,9 @@ use Psr\Http\Message\{
 
 use Espo\Core\Api\Response as ApiResponse;
 
+/**
+ * Adapter for PSR-7 response interface.
+ */
 class ResponseWrapper implements ApiResponse
 {
     protected $response;

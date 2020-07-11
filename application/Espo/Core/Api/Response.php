@@ -34,6 +34,9 @@ use Psr\Http\Message\{
     StreamInterface,
 };
 
+/**
+ * Representation of an HTTP response. An instance is mutable.
+ */
 interface Response
 {
     /**
@@ -67,7 +70,7 @@ interface Response
     public function setBody(StreamInterface $body);
 
     /**
-     * Get a result psr7 response.
+     * Get a result PSR-7 response.
      */
     public function getResponse() : Psr7Response;
 }
