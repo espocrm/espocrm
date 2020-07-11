@@ -39,12 +39,11 @@ use Espo\Entities\{
     Portal,
     User,
     AuthLogRecord,
+    AuthToken,
 };
 
 use Espo\Core\Authentication\{
     Result,
-    Login\Login,
-    TwoFactor\Methods\CodeVerify as TwoFACodeVerify,
     LoginFactory,
     TwoFactor\Factory as TwoFAFactory,
 };
@@ -110,11 +109,6 @@ class Authentication
         return $this->config->get('authenticationMethod', 'Espo');
     }
 
-    protected function get2FAImpl(string $method) : TwoFACodeVerify
-    {
-        return $this->auth2FAFactory->create($method);
-    }
-
     protected function setPortal(Portal $portal)
     {
         $this->portal = $portal;
@@ -153,14 +147,6 @@ class Authentication
         if (!$authenticationMethod) {
             if ($request->getHeader('Espo-Authorization-By-Token') === 'true') {
                 $isByTokenOnly = true;
-            }
-        }
-
-        $createTokenSecret = $request->getHeader('Espo-Authorization-Create-Token-Secret') === 'true';
-
-        if ($createTokenSecret) {
-            if ($this->config->get('authTokenSecretDisabled')) {
-                $createTokenSecret = false;
             }
         }
 
@@ -243,37 +229,15 @@ class Authentication
             throw new ServiceUnavailable("Application is in maintenance mode.");
         }
 
-        if (!$user->isActive()) {
-            $GLOBALS['log']->info("AUTH: Trying to login as user '".$user->get('userName')."' which is not active.");
-            $this->logDenied($authLogRecord, 'INACTIVE_USER');
-            return null;
-        }
-
-        if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
-            $GLOBALS['log']->info("AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'.");
-            $this->logDenied($authLogRecord, 'IS_PORTAL_USER');
-            return null;
-        }
-
-        if ($this->isPortal() && !$user->isPortal()) {
-            $GLOBALS['log']->info(
-                "AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user."
-            );
-            $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
+        if (!$this->processUserCheck($user, $authLogRecord)) {
             return null;
         }
 
         if ($this->isPortal()) {
-            if (!$this->entityManager->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
-                $GLOBALS['log']->info(
-                    "AUTH: Trying to login to portal as user '".$user->get('userName')."' ".
-                    "which is portal user but does not belongs to portal."
-                );
-                $this->logDenied($authLogRecord, 'USER_IS_NOT_IN_PORTAL');
-                return null;
-            }
             $user->set('portalId', $this->getPortal()->id);
-        } else {
+        }
+
+        if (!$this->isPortal()) {
             $user->loadLinkMultipleField('teams');
         }
 
@@ -282,54 +246,15 @@ class Authentication
         $this->container->set('user', $user);
 
         if (!$result->isSecondStepRequired() && !$authToken && $this->config->get('auth2FA')) {
-            $loggedUser = $result->getLoggedUser();
-
-            $twoFAMethod = $this->getUser2FAMethod($loggedUser);
-            if ($twoFAMethod) {
-                $twoFAImpl = $this->get2FAImpl($twoFAMethod);
-
-                $twoFACode = $request->getHeader('Espo-Authorization-Code');
-
-                if ($twoFACode) {
-                    if (!$twoFAImpl->verifyCode($loggedUser, $twoFACode)) {
-                        return null;
-                    }
-                } else {
-                    $loginResultData = $twoFAImpl->getLoginData($loggedUser);
-                    $result = Result::secondStepRequired($user, $loginResultData);
-                }
+            $result = $this->processTwoFactor($result, $request);
+            if ($result->isFail()) {
+                return null;
             }
         }
 
         if (!$result->isSecondStepRequired() && $request->getHeader('Espo-Authorization')) {
             if (!$authToken) {
-                $authToken = $this->entityManager->getEntity('AuthToken');
-                $token = $this->generateToken();
-                $authToken->set('token', $token);
-                $authToken->set('hash', $user->get('password'));
-                $authToken->set('ipAddress', $request->getServerParam('REMOTE_ADDR'));
-                $authToken->set('userId', $user->id);
-
-                if ($createTokenSecret) {
-                    $secret = $this->generateToken();
-                    $authToken->set('secret', $secret);
-                    $this->setSecretInCookie($secret);
-                }
-
-                if ($this->isPortal()) {
-                    $authToken->set('portalId', $this->getPortal()->id);
-                }
-
-                if ($this->config->get('authTokenPreventConcurrent')) {
-                    $concurrentAuthTokenList = $this->entityManager->getRepository('AuthToken')->select(['id'])->where([
-                        'userId' => $user->id,
-                        'isActive' => true,
-                    ])->find();
-                    foreach ($concurrentAuthTokenList as $concurrentAuthToken) {
-                        $concurrentAuthToken->set('isActive', false);
-                        $this->entityManager->saveEntity($concurrentAuthToken);
-                    }
-                }
+                $authToken = $this->createAuthToken($user, $request);
             }
         	$authToken->set('lastAccess', date('Y-m-d H:i:s'));
 
@@ -357,6 +282,65 @@ class Authentication
         }
 
         return $result;
+    }
+
+    protected function processUserCheck(User $user, ?AuthLogRecord $authLogRecord) : bool
+    {
+        if (!$user->isActive()) {
+            $GLOBALS['log']->info("AUTH: Trying to login as user '".$user->get('userName')."' which is not active.");
+            $this->logDenied($authLogRecord, 'INACTIVE_USER');
+            return false;
+        }
+
+        if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
+            $GLOBALS['log']->info("AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'.");
+            $this->logDenied($authLogRecord, 'IS_PORTAL_USER');
+            return false;
+        }
+
+        if ($this->isPortal() && !$user->isPortal()) {
+            $GLOBALS['log']->info(
+                "AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user."
+            );
+            $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
+            return false;
+        }
+
+        if ($this->isPortal()) {
+            if (!$this->entityManager->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
+                $GLOBALS['log']->info(
+                    "AUTH: Trying to login to portal as user '".$user->get('userName')."' ".
+                    "which is portal user but does not belongs to portal."
+                );
+                $this->logDenied($authLogRecord, 'USER_IS_NOT_IN_PORTAL');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function processTwoFactor(Result $result, Request $request) : Result
+    {
+        $loggedUser = $result->getLoggedUser();
+
+        $method = $this->getUser2FAMethod($loggedUser);
+
+        if (!$method) {
+            return $result;
+        }
+
+        $impl = $this->auth2FAFactory->create($method);
+
+        $code = $request->getHeader('Espo-Authorization-Code');
+        if ($code) {
+            if (!$impl->verifyCode($loggedUser, $code)) {
+                Result::fail('Code not verified');
+            }
+            return $result;
+        }
+
+        return Result::secondStepRequired($result->getUser(), $impl->getLoginData($loggedUser));
     }
 
     protected function getUser2FAMethod(User $user) : ?string
@@ -401,6 +385,46 @@ class Authentication
             $GLOBALS['log']->warning("AUTH: Max failed login attempts exceeded for IP '{$ip}'.");
             throw new Forbidden("Max failed login attempts exceeded.");
         }
+    }
+
+    protected function createAuthToken(User $user, Request $request) : AuthToken
+    {
+        $createTokenSecret = $request->getHeader('Espo-Authorization-Create-Token-Secret') === 'true';
+        if ($createTokenSecret) {
+            if ($this->config->get('authTokenSecretDisabled')) {
+                $createTokenSecret = false;
+            }
+        }
+
+        $authToken = $this->entityManager->getEntity('AuthToken');
+        $token = $this->generateToken();
+        $authToken->set('token', $token);
+        $authToken->set('hash', $user->get('password'));
+        $authToken->set('ipAddress', $request->getServerParam('REMOTE_ADDR'));
+        $authToken->set('userId', $user->id);
+
+        if ($createTokenSecret) {
+            $secret = $this->generateToken();
+            $authToken->set('secret', $secret);
+            $this->setSecretInCookie($secret);
+        }
+
+        if ($this->isPortal()) {
+            $authToken->set('portalId', $this->getPortal()->id);
+        }
+
+        if ($this->config->get('authTokenPreventConcurrent')) {
+            $concurrentAuthTokenList = $this->entityManager->getRepository('AuthToken')->select(['id'])->where([
+                'userId' => $user->id,
+                'isActive' => true,
+            ])->find();
+            foreach ($concurrentAuthTokenList as $concurrentAuthToken) {
+                $concurrentAuthToken->set('isActive', false);
+                $this->entityManager->saveEntity($concurrentAuthToken);
+            }
+        }
+
+        return $authToken;
     }
 
     protected function generateToken()
@@ -474,7 +498,7 @@ class Authentication
         return $authLogRecord;
     }
 
-    protected function logDenied(AuthLogRecord $authLogRecord, string $denialReason)
+    protected function logDenied(?AuthLogRecord $authLogRecord, string $denialReason)
     {
         if (!$authLogRecord) return;
 
