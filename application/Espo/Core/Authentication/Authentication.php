@@ -208,8 +208,6 @@ class Authentication
             $authenticationMethod = $this->getDefaultAuthenticationMethod();
         }
 
-        $loginResultData = (object) [];
-
         $login = $this->authLoginFactory->create($authenticationMethod, $this->isPortal());
 
         $result = $login->login($username, $password, $authToken, $request);
