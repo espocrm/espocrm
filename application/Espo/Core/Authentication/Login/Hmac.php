@@ -41,6 +41,8 @@ use Espo\Core\{
     Utils\ApiKey,
 };
 
+use StdClass;
+
 class Hmac implements Login
 {
     protected $entityManager;
@@ -57,8 +59,7 @@ class Hmac implements Login
         ?string $password,
         ?AuthToken $authToken = null,
         ?Request $request = null,
-        array $params = [],
-        array &$resultData = []
+        ?StdClass $resultData = null
     ) :?User {
         $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
 

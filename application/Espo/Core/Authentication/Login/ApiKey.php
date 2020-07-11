@@ -37,6 +37,8 @@ use Espo\Entities\{
 use Espo\Core\Api\Request;
 use Espo\Core\ORM\EntityManager;
 
+use StdClass;
+
 class ApiKey implements Login
 {
     protected $entityManager;
@@ -51,8 +53,7 @@ class ApiKey implements Login
         ?string $password,
         ?AuthToken $authToken = null,
         ?Request $request = null,
-        array $params = [],
-        array &$resultData = []
+        ?StdClass $resultData = null
     ) : ?User {
         $apiKey = $request->getHeader('X-Api-Key');
 

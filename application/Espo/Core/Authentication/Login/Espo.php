@@ -40,6 +40,8 @@ use Espo\Core\{
     Utils\PasswordHash,
 };
 
+use StdClass;
+
 class Espo implements Login
 {
     protected $entityManager;
@@ -56,8 +58,7 @@ class Espo implements Login
         ?string $password,
         ?AuthToken $authToken = null,
         ?Request $request = null,
-        array $params = [],
-        array &$resultData = []
+        ?StdClass $resultData = null
     ) :?User {
         if (!$password) return null;
 
@@ -67,7 +68,7 @@ class Espo implements Login
             $hash = $this->passwordHash->hash($password);
         }
 
-        $user = $this->entityManager->getRepository('User')->where( [
+        $user = $this->entityManager->getRepository('User')->where([
             'userName' => $username,
             'password' => $hash,
             'type!=' => ['api', 'system'],

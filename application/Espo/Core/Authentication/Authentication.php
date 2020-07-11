@@ -42,13 +42,12 @@ use Espo\Entities\{
 };
 
 use Espo\Core\Authentication\{
+    Result,
     Login\Login,
     TwoFactor\Methods\CodeVerify as TwoFACodeVerify,
     LoginFactory,
     TwoFactor\Factory as TwoFAFactory,
 };
-
-use Espo\Core\Api\Request;
 
 use Espo\Core\{
     Container,
@@ -56,6 +55,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
     ORM\EntityManager,
+    Api\Request,
 };
 
 use StdClass;
@@ -110,11 +110,6 @@ class Authentication
         return $this->config->get('authenticationMethod', 'Espo');
     }
 
-    protected function getAuthenticationImpl(string $method) : Login
-    {
-        return $this->authLoginFactory->create($method);
-    }
-
     protected function get2FAImpl(string $method) : TwoFACodeVerify
     {
         return $this->auth2FAFactory->create($method);
@@ -145,7 +140,7 @@ class Authentication
      */
     public function login(
         ?string $username, ?string $password = null, Request $request, ?string $authenticationMethod = null
-    ) : ?StdClass {
+    ) : ?Result {
         $isByTokenOnly = false;
 
         if ($authenticationMethod) {
@@ -227,15 +222,11 @@ class Authentication
             $authenticationMethod = $this->getDefaultAuthenticationMethod();
         }
 
-        $authenticationImpl = $this->getAuthenticationImpl($authenticationMethod);
+        $loginResultData = (object) [];
 
-        $params = [
-            'isPortal' => $this->isPortal(),
-        ];
+        $login = $this->authLoginFactory->create($authenticationMethod, $this->isPortal());
 
-        $loginResultData = [];
-
-        $user = $authenticationImpl->login($username, $password, $authToken, $request, $params, $loginResultData);
+        $user = $login->login($username, $password, $authToken, $request, $loginResultData);
 
         $authLogRecord = null;
 
@@ -292,7 +283,7 @@ class Authentication
         $secondStepRequired = false;
 
         if (!$authToken && $this->config->get('auth2FA')) {
-            $user2FA = $loginResultData['actualUser'] ?? $user;
+            $user2FA = $loginResultData->loggedUser ?? $user;
 
             $twoFAMethod = $this->getUser2FAMethod($user2FA);
             if ($twoFAMethod) {
@@ -305,14 +296,14 @@ class Authentication
                         return null;
                     }
                 } else {
-                    $loginResultData = (array) $twoFAImpl->getLoginData($user2FA);
+                    $loginResultData = $twoFAImpl->getLoginData($user2FA);
                     $secondStepRequired = true;
                 }
             }
         }
 
         if (!$secondStepRequired) {
-            $secondStepRequired = $loginResultData['secondStepRequired'] ?? false;
+            $secondStepRequired = $loginResultData->secondStepRequired ?? false;
         }
 
         if (!$secondStepRequired && $request->getHeader('Espo-Authorization')) {
@@ -371,17 +362,14 @@ class Authentication
         }
 
         if ($secondStepRequired) {
-            return (object) [
-                'status' => self::STATUS_SECOND_STEP_REQUIRED,
-                'message' => $loginResultData['message'] ?? null,
-                'token' => $loginResultData['token'] ?? null,
-                'view' => $loginResultData['view'] ?? null,
-            ];
+            return Result::secondStepRequired((object) [
+                'message' => $loginResultData->message ?? null,
+                'token' => $loginResultData->token ?? null,
+                'view' => $loginResultData->view ?? null,
+            ]);
         }
 
-        return (object) [
-            'status' => self::STATUS_SUCCESS,
-        ];
+        return Result::success();
     }
 
     protected function getUser2FAMethod(User $user) : ?string

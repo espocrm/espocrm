@@ -36,6 +36,8 @@ use Espo\Entities\{
 
 use Espo\Core\Api\Request;
 
+use StdClass;
+
 /**
  * Performs credentials checking. For the basic authorization a username & password are used.
  * For other authorization methods credentials must be fetched from the request.
@@ -52,7 +54,6 @@ interface Login
         ?string $password,
         ?AuthToken $authToken = null,
         ?Request $request = null,
-        array $params = [],
-        array &$resultData = []
+        ?StdClass $resultData = null
     ) : ?User;
 }

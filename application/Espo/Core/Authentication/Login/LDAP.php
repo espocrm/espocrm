@@ -42,9 +42,10 @@ use Espo\Core\{
     Utils\Config,
     Utils\PasswordHash,
     Utils\Language,
+    Container,
 };
 
-use Espo\Core\Container;
+use StdClass;
 
 class LDAP extends Espo
 {
@@ -52,20 +53,29 @@ class LDAP extends Espo
 
     private $ldapClient;
 
+    protected $isPortal;
+
     protected $config;
     protected $entityManager;
     protected $passwordHash;
-    protected $container;
     protected $language;
+    protected $container;
 
     public function __construct(
-        Config $config, EntityManager $entityManager, PasswordHash $passwordHash, Language $language, Container $container
+        Config $config,
+        EntityManager $entityManager,
+        PasswordHash $passwordHash,
+        Language $language,
+        Container $container,
+        bool $isPortal = false
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->passwordHash = $passwordHash;
         $this->language = $language;
         $this->container = $container;
+
+        $this->isPortal = $isPortal;
 
         $this->utils = new LDAP\Utils($config);
     }
@@ -109,10 +119,9 @@ class LDAP extends Espo
         ?string $password,
         ?AuthToken $authToken = null,
         ?Request $request = null,
-        array $params = [],
-        array &$resultData = []
+        ?StdClass $resultData = null
     ) : ?User {
-        $isPortal = !empty($params['isPortal']);
+        $isPortal = $this->isPortal;
 
         if ($authToken) {
             return $this->loginByToken($username, $authToken);

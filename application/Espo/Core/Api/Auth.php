@@ -33,7 +33,10 @@ use Exception;
 
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\Authentication\Authentication;
+use Espo\Core\Authentication\{
+    Authentication,
+    Result,
+};
 
 use Espo\Core\{
     Api\Request,
@@ -139,7 +142,7 @@ class Auth
         if (!$this->authRequired) {
             if (!$this->isEntryPoint && $hasAuthData) {
                 try {
-                    $isAuthenticated = $this->authentication->login($username, $password, $request, $authenticationMethod);
+                    $isAuthenticated = (bool) $this->authentication->login($username, $password, $request, $authenticationMethod);
                 } catch (Exception $e) {
                     $this->processException($response, $e);
                     return;
@@ -184,24 +187,24 @@ class Auth
         return explode(':', $string, 2);
     }
 
-    protected function handleAuthResult(Response $response, StdClass $authResult)
+    protected function handleAuthResult(Response $response, Result $authResult)
     {
-        $status = $authResult->status;
+        $status = $authResult->getStatus();
 
-        if ($status === Authentication::STATUS_SUCCESS) {
+        if ($authResult->isSuccess()) {
             $this->resolve();
             return;
         }
 
-        if ($status === Authentication::STATUS_SECOND_STEP_REQUIRED) {
+        if ($authResult->isSecondStepRequired()) {
             $response->setStatus(401);
             $response->setHeader('X-Status-Reason', 'second-step-required');
 
             $bodyData = [
-                'status' => $status,
-                'message' => $authResult->message ?? null,
-                'view' => $authResult->view ?? null,
-                'token' => $authResult->token ?? null,
+                'status' => $authResult->getStatus(),
+                'message' => $authResult->getMessage(),
+                'view' => $authResult->getView(),
+                'token' => $authResult->getToken(),
             ];
             $response->writeBody(json_encode($bodyData));
         }
