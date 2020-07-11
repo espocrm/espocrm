@@ -214,7 +214,9 @@ class UserSecurity
 
         if (!$user) throw new Forbidden('User is not found.');
 
-        if (!$auth->login($user->get('userName'), $password)) {
+        $result = $auth->login($user->get('userName'), $password);
+
+        if ($result->isFail()) {
             throw new Forbidden('Password is incorrect.');
         }
         return true;
