@@ -34,10 +34,11 @@ use Espo\Entities\{
     AuthToken,
 };
 
-use Espo\Core\Api\Request;
-use Espo\Core\ORM\EntityManager;
-
-use StdClass;
+use Espo\Core\{
+    Api\Request,
+    ORM\EntityManager,
+    Authentication\Result,
+};
 
 class ApiKey implements Login
 {
@@ -48,13 +49,8 @@ class ApiKey implements Login
         $this->entityManager = $entityManager;
     }
 
-    public function login(
-        ?string $username,
-        ?string $password,
-        ?AuthToken $authToken = null,
-        ?Request $request = null,
-        ?StdClass $resultData = null
-    ) : ?User {
+    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result
+    {
         $apiKey = $request->getHeader('X-Api-Key');
 
         $user = $this->entityManager->getRepository('User')->where([
@@ -63,6 +59,10 @@ class ApiKey implements Login
             'authMethod' => 'ApiKey',
         ])->findOne();
 
-        return $user;
+        if (!$user) {
+            return Result::fail();
+        }
+
+        return Result::success($user);
     }
 }

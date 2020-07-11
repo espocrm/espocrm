@@ -34,9 +34,10 @@ use Espo\Entities\{
     AuthToken,
 };
 
-use Espo\Core\Api\Request;
-
-use StdClass;
+use Espo\Core\{
+    Api\Request,
+    Authentication\Result,
+};
 
 /**
  * Performs credentials checking. For the basic authorization a username & password are used.
@@ -46,14 +47,6 @@ interface Login
 {
     /**
      * Check credentials.
-     *
-     * @return User if credentials are correct. NULL otherwise.
      */
-    public function login(
-        ?string $username,
-        ?string $password,
-        ?AuthToken $authToken = null,
-        ?Request $request = null,
-        ?StdClass $resultData = null
-    ) : ?User;
+    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result;
 }

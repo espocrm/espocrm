@@ -43,9 +43,8 @@ use Espo\Core\{
     Utils\PasswordHash,
     Utils\Language,
     Container,
+    Authentication\Result,
 };
-
-use StdClass;
 
 class LDAP extends Espo
 {
@@ -81,9 +80,7 @@ class LDAP extends Espo
     }
 
     /**
-     * User field name  => option name (LDAP attribute)
-     *
-     * @var array
+     * User field name  => option name (LDAP attribute).
      */
     protected $ldapFieldMap = [
         'userName' => 'userNameAttribute',
@@ -95,9 +92,7 @@ class LDAP extends Espo
     ];
 
     /**
-     * User field name => option name
-     *
-     * @var array
+     * User field name => option name.
      */
     protected $userFieldMap = [
         'teamsIds' => 'userTeamsIds',
@@ -105,26 +100,25 @@ class LDAP extends Espo
     ];
 
     /**
-     * User field name => option name
-     *
-     * @var array
+     * User field name => option name.
      */
     protected $portalUserFieldMap = [
         'portalsIds' => 'portalUserPortalsIds',
         'portalRolesIds' => 'portalUserRolesIds',
     ];
 
-    public function login(
-        ?string $username,
-        ?string $password,
-        ?AuthToken $authToken = null,
-        ?Request $request = null,
-        ?StdClass $resultData = null
-    ) : ?User {
+    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result
+    {
         $isPortal = $this->isPortal;
 
         if ($authToken) {
-            return $this->loginByToken($username, $authToken);
+            $user = $this->loginByToken($username, $authToken);
+
+            if ($user) {
+                return Result::success($user);
+            } else {
+                return Result::fail();
+            }
         }
 
         if (!$password || $username == '**logout') return;
@@ -132,7 +126,7 @@ class LDAP extends Espo
         if ($isPortal) {
             $useLdapAuthForPortalUser = $this->utils->getOption('portalUserLdapAuth');
             if (!$useLdapAuthForPortalUser) {
-                return parent::login($username, $password, $authToken, $request, $params, $resultData);
+                return parent::login($username, $password, $authToken, $request);
             }
         }
 
@@ -147,7 +141,7 @@ class LDAP extends Espo
 
             $adminUser = $this->adminLogin($username, $password);
             if (!isset($adminUser)) {
-                return null;
+                return Result::fail();
             }
 
             $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
@@ -165,7 +159,7 @@ class LDAP extends Espo
 
                 $adminUser = $this->adminLogin($username, $password);
                 if (!isset($adminUser)) {
-                    return null;
+                    return Result::fail();
                 }
 
                 $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
@@ -177,7 +171,7 @@ class LDAP extends Espo
                 $ldapClient->bind($userDn, $password);
             } catch (\Exception $e) {
                 $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: ' . $e->getMessage());
-                return null;
+                return Result::fail();
             }
         }
 
@@ -198,7 +192,11 @@ class LDAP extends Espo
             $user = $this->createUser($userData, $isPortal);
         }
 
-        return $user;
+        if (!$user) {
+            return Result::fail();
+        }
+
+        return Result::success($user);
     }
 
     protected function useSystemUser()
@@ -294,7 +292,7 @@ class LDAP extends Espo
     protected function createUser(array $userData, $isPortal = false)
     {
         $GLOBALS['log']->info('Creating new user ...');
-        $data = array();
+        $data = [];
 
         // show full array of the LDAP user
         $GLOBALS['log']->debug('LDAP: user data: ' .print_r($userData, true));
@@ -388,7 +386,7 @@ class LDAP extends Espo
 
         $typeMap = $type . 'FieldMap';
 
-        $fields = array();
+        $fields = [];
         foreach ($this->$typeMap as $fieldName => $fieldValue) {
             if (isset($options[$fieldValue])) {
                 $fields[$fieldName] = $options[$fieldValue];

@@ -134,9 +134,9 @@ class Authentication
     }
 
     /**
-     * Process a credentials check.
+     * Process logging in.
      *
-     * @return Status and additional data. NULL if failed.
+     * @return Result if success or second sterp required.. NULL if failed.
      */
     public function login(
         ?string $username, ?string $password = null, Request $request, ?string $authenticationMethod = null
@@ -226,15 +226,16 @@ class Authentication
 
         $login = $this->authLoginFactory->create($authenticationMethod, $this->isPortal());
 
-        $user = $login->login($username, $password, $authToken, $request, $loginResultData);
+        $result = $login->login($username, $password, $authToken, $request);
+
+        $user = $result->getUser();
 
         $authLogRecord = null;
-
         if (!$authTokenIsFound) {
             $authLogRecord = $this->createAuthLogRecord($username, $user, $request, $authenticationMethod);
         }
 
-        if (!$user) {
+        if ($result->isFail() || !$user) {
             return null;
         }
 
@@ -280,33 +281,27 @@ class Authentication
 
         $this->container->set('user', $user);
 
-        $secondStepRequired = false;
+        if (!$result->isSecondStepRequired() && !$authToken && $this->config->get('auth2FA')) {
+            $loggedUser = $result->getLoggedUser();
 
-        if (!$authToken && $this->config->get('auth2FA')) {
-            $user2FA = $loginResultData->loggedUser ?? $user;
-
-            $twoFAMethod = $this->getUser2FAMethod($user2FA);
+            $twoFAMethod = $this->getUser2FAMethod($loggedUser);
             if ($twoFAMethod) {
                 $twoFAImpl = $this->get2FAImpl($twoFAMethod);
 
                 $twoFACode = $request->getHeader('Espo-Authorization-Code');
 
                 if ($twoFACode) {
-                    if (!$twoFAImpl->verifyCode($user2FA, $twoFACode)) {
+                    if (!$twoFAImpl->verifyCode($loggedUser, $twoFACode)) {
                         return null;
                     }
                 } else {
-                    $loginResultData = $twoFAImpl->getLoginData($user2FA);
-                    $secondStepRequired = true;
+                    $loginResultData = $twoFAImpl->getLoginData($loggedUser);
+                    $result = Result::secondStepRequired($user, $loginResultData);
                 }
             }
         }
 
-        if (!$secondStepRequired) {
-            $secondStepRequired = $loginResultData->secondStepRequired ?? false;
-        }
-
-        if (!$secondStepRequired && $request->getHeader('Espo-Authorization')) {
+        if (!$result->isSecondStepRequired() && $request->getHeader('Espo-Authorization')) {
             if (!$authToken) {
                 $authToken = $this->entityManager->getEntity('AuthToken');
                 $token = $this->generateToken();
@@ -361,15 +356,7 @@ class Authentication
             $user->set('authLogRecordId', $authLogRecord->id);
         }
 
-        if ($secondStepRequired) {
-            return Result::secondStepRequired((object) [
-                'message' => $loginResultData->message ?? null,
-                'token' => $loginResultData->token ?? null,
-                'view' => $loginResultData->view ?? null,
-            ]);
-        }
-
-        return Result::success();
+        return $result;
     }
 
     protected function getUser2FAMethod(User $user) : ?string

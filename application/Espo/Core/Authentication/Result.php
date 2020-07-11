@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Authentication;
 
+use Espo\Entities\User;
+
 use StdClass;
 
 /**
@@ -40,6 +42,10 @@ class Result
 
     const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
 
+    const STATUS_FAIL = 'fail';
+
+    protected $user;
+
     protected $status;
 
     protected $message = null;
@@ -48,31 +54,47 @@ class Result
 
     protected $view = null;
 
-    protected function __construct(string $status, ?StdClass $params = null)
-    {
-        $this->status = $status;
+    protected $loggedUser = null;
 
+    protected $failReason = null;
+
+    protected function __construct(string $status, ?User $user = null, ?StdClass $params = null)
+    {
+        $this->user = $user;
+        $this->status = $status;
         if ($params) {
             $this->message = $params->message ?? null;
             $this->token = $params->token ?? null;
             $this->view = $params->view ?? null;
+            $this->loggedUser = $params->loggedUser ?? null;
+            $this->failReason = $params->failReason ?? null;
         }
     }
 
     /**
      * Create an instance for a successful login.
      */
-    public static function success()
+    public static function success(User $user)
     {
-        return new Result(self::STATUS_SUCCESS);
+        return new Result(self::STATUS_SUCCESS, $user);
+    }
+
+    /**
+     * Create an instance for a failed login.
+     */
+    public static function fail(?string $reason = null)
+    {
+        return new Result(self::STATUS_FAIL, null, (object) [
+            'failReason' => $reason,
+        ]);
     }
 
     /**
      * Create an instance for a login requiring a second step. E.g. for 2FA.
      */
-    public static function secondStepRequired(StdClass $params)
+    public static function secondStepRequired(User $user, StdClass $params)
     {
-        return new Result(self::STATUS_SECOND_STEP_REQUIRED, $params);
+        return new Result(self::STATUS_SECOND_STEP_REQUIRED, $user, $params);
     }
 
     /**
@@ -89,6 +111,30 @@ class Result
     public function isSecondStepRequired() : bool
     {
         return $this->status === self::STATUS_SECOND_STEP_REQUIRED;
+    }
+
+    /**
+     * Login is failed.
+     */
+    public function isFail() : bool
+    {
+        return $this->status === self::STATUS_FAIL;
+    }
+
+    /**
+     * Get a user.
+     */
+    public function getUser() : ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * Get a logged user. Considered that an admin user can log in as another user. The logged user will be an admin user.
+     */
+    public function getLoggedUser() : ?User
+    {
+        return $this->loggedUser ?? $this->user;
     }
 
     /**
@@ -121,5 +167,13 @@ class Result
     public function getToken() : ?string
     {
         return $this->token;
+    }
+
+    /**
+     * A fail reason.
+     */
+    public function getFailReason() : ?string
+    {
+        return $this->failReason;
     }
 }

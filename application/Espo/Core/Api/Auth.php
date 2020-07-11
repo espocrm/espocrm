@@ -163,7 +163,7 @@ class Auth
                 $this->processException($response, $e);
             }
 
-            if ($authResult) {
+            if ($authResult && ($authResult->isSuccess() || $authResult->isSecondStepRequired())) {
                 $this->handleAuthResult($response, $authResult);
             } else {
                 $this->processUnauthorized($response, $showDialog);

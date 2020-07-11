@@ -38,9 +38,8 @@ use Espo\Core\{
     ORM\EntityManager,
     Api\Request,
     Utils\PasswordHash,
+    Authentication\Result,
 };
-
-use StdClass;
 
 class Espo implements Login
 {
@@ -53,14 +52,9 @@ class Espo implements Login
         $this->passwordHash = $passwordHash;
     }
 
-    public function login(
-        ?string $username,
-        ?string $password,
-        ?AuthToken $authToken = null,
-        ?Request $request = null,
-        ?StdClass $resultData = null
-    ) :?User {
-        if (!$password) return null;
+    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result
+    {
+        if (!$password) return Result::fail('Empty password');
 
         if ($authToken) {
             $hash = $authToken->get('hash');
@@ -74,12 +68,16 @@ class Espo implements Login
             'type!=' => ['api', 'system'],
         ])->findOne();
 
-        if ($user && $authToken) {
+        if (!$user) {
+            return Result::fail();
+        }
+
+        if ($authToken) {
             if ($user->id !== $authToken->get('userId')) {
-                return null;
+                return Result::fail('User and token mismatch');
             }
         }
 
-        return $user;
+        return Result::success($user);
     }
 }

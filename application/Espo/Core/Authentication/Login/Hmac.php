@@ -39,9 +39,8 @@ use Espo\Core\{
     Api\Request,
     Utils\Config,
     Utils\ApiKey,
+    Authentication\Result,
 };
-
-use StdClass;
 
 class Hmac implements Login
 {
@@ -54,13 +53,8 @@ class Hmac implements Login
         $this->config = $config;
     }
 
-    public function login(
-        ?string $username,
-        ?string $password,
-        ?AuthToken $authToken = null,
-        ?Request $request = null,
-        ?StdClass $resultData = null
-    ) :?User {
+    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result
+    {
         $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
 
         list($apiKey, $hash) = explode(':', $authString, 2);
@@ -71,21 +65,19 @@ class Hmac implements Login
             'authMethod' => 'Hmac',
         ])->findOne();
 
-        if (!$user) return null;
-
-        if ($user) {
-            $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
-            if (!$secretKey) return null;
-
-            $string = $request->getMethod() . ' ' . $request->getResourcePath();
-
-            if ($hash === ApiKey::hash($secretKey, $string)) {
-                return $user;
-            }
-
-            return null;
+        if (!$user) {
+            return Result::fail();
         }
 
-        return $user;
+        $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
+        if (!$secretKey) return null;
+
+        $string = $request->getMethod() . ' ' . $request->getResourcePath();
+
+        if ($hash === ApiKey::hash($secretKey, $string)) {
+            return Result::success($user);
+        }
+
+        return Result::fail('Hash not matched');
     }
 }
