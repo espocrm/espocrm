@@ -47,12 +47,10 @@ if (!isset($pathInfo['extension']) || $pathInfo['extension'] !== 'zip' || !is_fi
 }
 
 $app = new \Espo\Core\Application();
+$app->setupSystemUser();
 
 $config = $app->getContainer()->get('config');
 $entityManager = $app->getContainer()->get('entityManager');
-
-$user = $entityManager->getEntity('User', 'system');
-$app->getContainer()->setUser($user);
 
 $upgradeManager = new \Espo\Core\ExtensionManager($app->getContainer());
 
