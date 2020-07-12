@@ -121,17 +121,6 @@ class Application extends BaseApplication
         return parent::getRunnerClassName($runnerName);
     }
 
-    public function runClient()
-    {
-        $this->container->get('clientManager')->display(null, null, [
-            'portalId' => $this->getPortal()->id,
-            'applicationId' => $this->getPortal()->id,
-            'apiUrl' => 'api/v1/portal-access/' . $this->getPortal()->id,
-            'appClientClassName' => 'app-portal'
-        ]);
-        exit;
-    }
-
     protected function initPreloads()
     {
         parent::initPreloads();

@@ -38,6 +38,8 @@ use Espo\Core\{
     Api\Response,
 };
 
+use StdClass;
+
 /**
  * Runs entry points.
  */
@@ -77,7 +79,7 @@ class EntryPointManager
         return $className::$notStrictAuth ?? false;
     }
 
-    public function run(string $name, Request $request, Response $response, array $data = [])
+    public function run(string $name, Request $request, Response $response, ?StdClass $data = null)
     {
         $className = $this->getClassName($name);
         if (!$className) {

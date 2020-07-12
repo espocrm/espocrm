@@ -27,45 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\EntryPoints\{
-    NoAuth,
+use Espo\Core\{
+    Utils\ClientManager,
 };
 
-use Espo\Core\Api\Request;
-
-use Espo\Core\Di;
-
-class LogoImage extends Image implements Di\ConfigAware
+/**
+ * Displays the main HTML page.
+ */
+class Client implements ApplicationRunner
 {
-    use NoAuth;
-    use Di\ConfigSetter;
+    protected $clientManager;
 
-    protected $allowedRelatedTypeList = ['Settings', 'Portal'];
-
-    protected $allowedFieldList = ['companyLogo'];
-
-    public function run(Request $request)
+    public function __construct(ClientManager $clientManager)
     {
-        $id = $request->get('id');
-        $size = $request->get('size') ?? null;
+        $this->clientManager = $clientManager;
+    }
 
-        $this->imageSizes['small-logo'] = [181, 44];
-
-        if (!$id) {
-            $id = $this->config->get('companyLogoId');
-        }
-
-        if (!$id) {
-            throw new NotFound();
-        }
-
-        $this->show($id, $size);
+    public function run()
+    {
+        $this->clientManager->display();
     }
 }

@@ -37,6 +37,8 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\EntryPoints\NotStrictAuth;
 use Espo\Core\Di;
 
+use Espo\Core\Api\Request;
+
 class Avatar extends Image implements Di\MetadataAware
 {
     use Di\MetadataSetter;
@@ -71,7 +73,7 @@ class Avatar extends Image implements Di\MetadataAware
         return $colorList[$index];
     }
 
-    public function run($request)
+    public function run(Request $request)
     {
         $userId = $request->get('id');
         $size = $request->get('size') ?? null;

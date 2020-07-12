@@ -36,6 +36,8 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\EntryPoints\EntryPoint;
 use Espo\Core\Di;
 
+use Espo\Core\Api\Request;
+
 class Attachment implements EntryPoint,
     Di\EntityManagerAware,
     Di\AclAware
@@ -50,7 +52,7 @@ class Attachment implements EntryPoint,
         'image/webp',
     ];
 
-    public function run($request)
+    public function run(Request $request)
     {
         $id = $request->get('id');
 

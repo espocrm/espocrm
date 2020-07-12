@@ -40,7 +40,11 @@ use Espo\Core\{
     Utils\ClientManager,
     Utils\Config,
     Portal\Application as PortalApplication,
+    Api\Request,
+    Api\Response,
 };
+
+use StdClass;
 
 class Portal implements EntryPoint
 {
@@ -55,9 +59,11 @@ class Portal implements EntryPoint
         $this->config = $config;
     }
 
-    public function run($request, $response, $data = [])
+    public function run(Request $request, Response $response, ?StdClass $data = null)
     {
-        $id = $request->get('id') ?? $data['id'] ?? null;
+        $data = $data ?? (object) [];
+
+        $id = $request->get('id') ?? $data->id ?? null;
 
         if (!$id) {
             $url = $_SERVER['REQUEST_URI'];
@@ -78,6 +84,6 @@ class Portal implements EntryPoint
 
         $application = new PortalApplication($id);
         $application->setClientBasePath($this->clientManager->getBasePath());
-        $application->runClient();
+        $application->run('client');
     }
 }

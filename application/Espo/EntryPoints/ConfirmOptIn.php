@@ -42,6 +42,7 @@ use Espo\Core\EntryPoints\{
 use Espo\Core\{
     Utils\ClientManager,
     ServiceFactory,
+    Api\Request,
 };
 
 class ConfirmOptIn implements EntryPoint
@@ -57,7 +58,7 @@ class ConfirmOptIn implements EntryPoint
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run($request)
+    public function run(Request $request)
     {
         $id = $request->get('id');
 

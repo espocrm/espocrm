@@ -42,6 +42,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\ClientManager,
     ORM\EntityManager,
+    Api\Request,
 };
 
 class ChangePassword implements EntryPoint
@@ -59,7 +60,7 @@ class ChangePassword implements EntryPoint
         $this->entityManager = $entityManager;
     }
 
-    public function run($request)
+    public function run(Request $request)
     {
         $requestId = $request->get('id');
 

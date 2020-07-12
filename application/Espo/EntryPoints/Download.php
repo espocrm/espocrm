@@ -42,6 +42,8 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+use Espo\Core\Api\Request;
+
 class Download implements EntryPoint
 {
     protected $fileTypesToShowInline = [
@@ -64,7 +66,7 @@ class Download implements EntryPoint
         $this->entityManager = $entityManager;
     }
 
-    public function run($request)
+    public function run(Request $request)
     {
         $id = $request->get('id');
 

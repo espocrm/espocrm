@@ -162,18 +162,9 @@ class Application
     }
 
     /**
-     * Display the main HTML page.
-     */
-    public function runClient()
-    {
-        $this->getClientManager()->display();
-        exit;
-    }
-
-    /**
      * Run entryPoint.
      */
-    public function runEntryPoint(string $entryPoint, array $data = [], bool $final = false)
+    public function runEntryPoint(string $entryPoint, $data = null, bool $final = false)
     {
         if (empty($entryPoint)) {
             throw new Error();
@@ -280,7 +271,7 @@ class Application
     }
 
     /**
-     * Whether the application is installed.
+     * Whether an application is installed.
      */
     public function isInstalled() : bool
     {
@@ -294,7 +285,7 @@ class Application
     }
 
     /**
-     * Get the service container.
+     * Get a service container.
      */
     public function getContainer() : Container
     {

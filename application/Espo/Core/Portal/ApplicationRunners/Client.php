@@ -27,45 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+namespace Espo\Core\Portal\ApplicationRunners;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\EntryPoints\{
-    NoAuth,
+use Espo\Core\{
+    Utils\ClientManager,
+    ApplicationState,
+    ApplicationRunners\ApplicationRunner,
 };
 
-use Espo\Core\Api\Request;
-
-use Espo\Core\Di;
-
-class LogoImage extends Image implements Di\ConfigAware
+/**
+ * Displays the main HTML page for a portal.
+ */
+class Client implements ApplicationRunner
 {
-    use NoAuth;
-    use Di\ConfigSetter;
+    protected $clientManager;
+    protected $applicationState;
 
-    protected $allowedRelatedTypeList = ['Settings', 'Portal'];
-
-    protected $allowedFieldList = ['companyLogo'];
-
-    public function run(Request $request)
+    public function __construct(ClientManager $clientManager, ApplicationState $applicationState)
     {
-        $id = $request->get('id');
-        $size = $request->get('size') ?? null;
+        $this->clientManager = $clientManager;
+        $this->applicationState = $applicationState;
+    }
 
-        $this->imageSizes['small-logo'] = [181, 44];
+    public function run()
+    {
+        $portalId = $this->applicationState->getPortal()->id;
 
-        if (!$id) {
-            $id = $this->config->get('companyLogoId');
-        }
-
-        if (!$id) {
-            throw new NotFound();
-        }
-
-        $this->show($id, $size);
+        $this->clientManager->display(null, null, [
+            'portalId' => $portalId,
+            'applicationId' => $portalId,
+            'apiUrl' => 'api/v1/portal-access/' . $portalId,
+            'appClientClassName' => 'app-portal',
+        ]);
     }
 }
