@@ -30,35 +30,44 @@
 namespace Espo\Core\Record;
 
 use Espo\ORM\{
-    ICollection,
+    Collection as OrmCollection,
 };
 
 use StdClass;
 
 /**
- * Contains an ORM collection and total number of records.
+ * Contains an an ORM collection and total number of records.
  */
 class Collection
 {
     protected $collection;
     protected $total;
 
-    public function __construct(ICollection $collection, ?int $total = null)
+    public function __construct(OrmCollection $collection, ?int $total = null)
     {
         $this->collection = $collection;
         $this->total = $total;
     }
 
+    /**
+     * Get a total number of records in DB (that matches applied search parameters).
+     */
     public function getTotal() : ?int
     {
         return $this->total;
     }
 
-    public function getCollection() : ICollection
+    /**
+     * Get an ORM collection.
+     */
+    public function getCollection() : OrmCollection
     {
         return $this->collection;
     }
 
+    /**
+     * Get an array of StdClass objects.
+     */
     public function getValueMapList() : array
     {
         if (!$this->collection->getEntityType()) {

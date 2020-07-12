@@ -35,7 +35,7 @@ use Espo\Core\{
 };
 
 use Espo\ORM\Metadata;
-use Espo\ORM\IEntity;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use Espo\Core\Exceptions\Error;
@@ -66,7 +66,7 @@ class EntityFactory implements EntityFactoryInterface
         $this->entityManager = $entityManager;
     }
 
-    public function create(string $name) : IEntity
+    public function create(string $name) : Entity
     {
         $className = $this->getClassName($name);
         if (!class_exists($className)) {

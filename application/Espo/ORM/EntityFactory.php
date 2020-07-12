@@ -31,7 +31,7 @@ namespace Espo\ORM;
 
 interface EntityFactory
 {
-    public function create(string $name) : IEntity;
+    public function create(string $name) : Entity;
 
     public function setEntityManager(EntityManager $entityManager);
 }

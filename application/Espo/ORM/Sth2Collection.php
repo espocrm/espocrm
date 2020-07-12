@@ -29,10 +29,15 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\DB\Query\Base as Query;
+
+use PDO;
+
 class Sth2Collection extends SthCollection
 {
-    public function __construct(string $entityType, EntityFactory $entityFactory, DB\Query\Base $query, \PDO $pdo, array $selectParams = [])
-    {
+    public function __construct(
+        string $entityType, EntityFactory $entityFactory, Query $query, PDO $pdo, array $selectParams = []
+    ) {
         $this->selectParams = $selectParams;
         $this->entityType = $entityType;
 

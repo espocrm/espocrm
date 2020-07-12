@@ -39,6 +39,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Collection;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Acl;
 
@@ -155,7 +156,7 @@ class Htmlizer
         }
 
         foreach ($data as $key => $value) {
-            if ($value instanceof \Espo\ORM\ICollection) {
+            if ($value instanceof Collection) {
                 $skipAttributeList[] = $key;
                 $collection = $value;
                 $list = [];

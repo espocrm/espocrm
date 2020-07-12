@@ -29,14 +29,9 @@
 
 namespace Espo\ORM\DB\Query;
 
-use Espo\ORM\Entity;
-use Espo\ORM\IEntity;
-use Espo\ORM\EntityFactory;
-use PDO;
-
 class Mysql extends Base
 {
-    public function limit($sql, $offset, $limit)
+    public function limit(string $sql, ?int $offset = null, ?int $limit = null) : string
     {
         if (!is_null($offset) && !is_null($limit)) {
             $offset = intval($offset);

@@ -29,10 +29,12 @@
 
 namespace Espo\ORM\DB\Query;
 
-use Espo\ORM\Entity;
-use Espo\ORM\IEntity;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\Metadata;
+use Espo\ORM\{
+    Entity,
+    EntityFactory,
+    Metadata,
+};
+
 use PDO;
 
 abstract class Base
@@ -276,7 +278,7 @@ abstract class Base
         $this->metadata = $metadata;
     }
 
-    protected function getSeed($entityType)
+    protected function getSeed(string $entityType) : Entity
     {
         if (empty($this->seedCache[$entityType])) {
             $this->seedCache[$entityType] = $this->entityFactory->create($entityType);
@@ -924,7 +926,7 @@ abstract class Base
         return $part;
     }
 
-    protected function getAttributeSql(IEntity $entity, $attribute, $type, &$params = null, $alias = null)
+    protected function getAttributeSql(Entity $entity, $attribute, $type, &$params = null, $alias = null)
     {
         $fieldDefs = $entity->fields[$attribute];
 
@@ -1001,7 +1003,7 @@ abstract class Base
         return $part;
     }
 
-    protected function getSelect(IEntity $entity, $itemList = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, &$params = null)
+    protected function getSelect(Entity $entity, $itemList = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, &$params = null)
     {
         $select = "";
         $arr = [];
@@ -1106,7 +1108,7 @@ abstract class Base
         return $select;
     }
 
-    protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null, $alias = null)
+    protected function getBelongsToJoin(Entity $entity, $relationName, $r = null, $alias = null)
     {
         if (empty($r)) {
             $r = $entity->relations[$relationName];
@@ -1128,7 +1130,7 @@ abstract class Base
         }
     }
 
-    protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = [])
+    protected function getBelongsToJoins(Entity $entity, $select = null, $skipList = [])
     {
         $joinsArr = [];
 
@@ -1152,7 +1154,7 @@ abstract class Base
 
         foreach ($entity->relations as $relationName => $r) {
             $type = $r['type'] ?? null;
-            if ($type == IEntity::BELONGS_TO || $type == IEntity::HAS_ONE) {
+            if ($type == Entity::BELONGS_TO || $type == Entity::HAS_ONE) {
                 if (!empty($r['noJoin'])) continue;
 
                 if (in_array($relationName, $skipList)) continue;
@@ -1167,11 +1169,11 @@ abstract class Base
 
                 if (is_array($select) && !in_array($relationName, $relationsToJoin)) continue;
 
-                if ($type == IEntity::BELONGS_TO) {
+                if ($type == Entity::BELONGS_TO) {
                     $join = $this->getBelongsToJoin($entity, $relationName, $r);
                     if (!$join) continue;
                     $joinsArr[] = 'LEFT ' . $join;
-                } else if ($type == IEntity::HAS_ONE) {
+                } else if ($type == Entity::HAS_ONE) {
                     $join =  $this->getJoin($entity, $relationName, true);
                     $joinsArr[] = $join;
                 }
@@ -1181,7 +1183,7 @@ abstract class Base
         return implode(' ', $joinsArr);
     }
 
-    protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null, $useColumnAlias = false, &$params = null) {
+    protected function getOrderPart(Entity $entity, $orderBy = null, $order = null, $useColumnAlias = false, &$params = null) {
 
         if (!is_null($orderBy)) {
             if (is_array($orderBy)) {
@@ -1251,7 +1253,7 @@ abstract class Base
         }
     }
 
-    protected function getOrder(IEntity $entity, $orderBy = null, $order = null, &$params = null)
+    protected function getOrder(Entity $entity, $orderBy = null, $order = null, &$params = null)
     {
         $orderPart = $this->getOrderPart($entity, $orderBy, $order, false, $params);
         if ($orderPart) {
@@ -1259,7 +1261,7 @@ abstract class Base
         }
     }
 
-    public function order(string $sql, IEntity $entity, $orderBy = null, $order = null, $useColumnAlias = false)
+    public function order(string $sql, Entity $entity, $orderBy = null, $order = null, $useColumnAlias = false)
     {
         $orderPart = $this->getOrderPart($entity, $orderBy, $order, $useColumnAlias);
         if ($orderPart) {
@@ -1283,7 +1285,7 @@ abstract class Base
         return $fieldPath;
     }
 
-    protected function getAggregationSelect(IEntity $entity, $aggregation, $aggregationBy, $distinct = false)
+    protected function getAggregationSelect(Entity $entity, $aggregation, $aggregationBy, $distinct = false)
     {
         if (!isset($entity->fields[$aggregationBy])) {
             return false;
@@ -1330,7 +1332,7 @@ abstract class Base
         return "_" . strtolower($matches[1]);
     }
 
-    protected function getAlias(IEntity $entity, $relationName)
+    protected function getAlias(Entity $entity, $relationName)
     {
         if (!isset($this->aliasesCache[$entity->getEntityType()])) {
             $this->aliasesCache[$entity->getEntityType()] = $this->getTableAliases($entity);
@@ -1343,7 +1345,7 @@ abstract class Base
         }
     }
 
-    protected function getTableAliases(IEntity $entity)
+    protected function getTableAliases(Entity $entity)
     {
         $aliases = [];
         $c = 0;
@@ -1351,7 +1353,7 @@ abstract class Base
         $occuranceHash = [];
 
         foreach ($entity->relations as $name => $r) {
-            if ($r['type'] == IEntity::BELONGS_TO || $r['type'] == IEntity::HAS_ONE) {
+            if ($r['type'] == Entity::BELONGS_TO || $r['type'] == Entity::HAS_ONE) {
 
                 if (!array_key_exists($name, $aliases)) {
                     if (array_key_exists($name, $occuranceHash)) {
@@ -1372,7 +1374,7 @@ abstract class Base
         return $aliases;
     }
 
-    protected function getFieldPath(IEntity $entity, $field, &$params = null)
+    protected function getFieldPath(Entity $entity, $field, &$params = null)
     {
         if (isset($entity->fields[$field])) {
             $f = $entity->fields[$field];
@@ -1434,7 +1436,7 @@ abstract class Base
         return false;
     }
 
-    public function getWhere(IEntity $entity, $whereClause = null, $sqlOp = 'AND', &$params = [], $level = 0)
+    public function getWhere(Entity $entity, $whereClause = null, $sqlOp = 'AND', &$params = [], $level = 0)
     {
         $wherePartList = [];
 
@@ -1530,7 +1532,7 @@ abstract class Base
                     &&
                     in_array($operator, ['=', '<>'])
                     &&
-                    $attributeType == IEntity::BOOL
+                    $attributeType == Entity::BOOL
                 ) {
                     if ($value) {
                         if ($operator === '=') {
@@ -1600,7 +1602,7 @@ abstract class Base
                     }
                     $wherePartList[] = str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
                 } else {
-                    if ($fieldDefs['type'] == IEntity::FOREIGN) {
+                    if ($fieldDefs['type'] == Entity::FOREIGN) {
                         $leftPart = '';
                         if (isset($fieldDefs['relation'])) {
                             $relationName = $fieldDefs['relation'];
@@ -1734,7 +1736,7 @@ abstract class Base
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
 
-    protected function getJoins(IEntity $entity, array $joins, $isLeft = false, $joinConditions = [])
+    protected function getJoins(Entity $entity, array $joins, $isLeft = false, $joinConditions = [])
     {
         $joinSqlList = [];
 
@@ -1881,7 +1883,7 @@ abstract class Base
         }
     }
 
-    protected function getJoin(IEntity $entity, $name, $isLeft = false, $conditions = [], $alias = null, array $params = [])
+    protected function getJoin(Entity $entity, $name, $isLeft = false, $conditions = [], $alias = null, array $params = [])
     {
         $prefix = ($isLeft) ? 'LEFT ' : '';
 
@@ -1926,7 +1928,7 @@ abstract class Base
         $type = $relOpt['type'];
 
         switch ($type) {
-            case IEntity::MANY_MANY:
+            case Entity::MANY_MANY:
                 $key = $keySet['key'];
                 $foreignKey = $keySet['foreignKey'];
                 $nearKey = $keySet['nearKey'];
@@ -1988,8 +1990,8 @@ abstract class Base
 
                 return $sql;
 
-            case IEntity::HAS_MANY:
-            case IEntity::HAS_ONE:
+            case Entity::HAS_MANY:
+            case Entity::HAS_ONE:
                 $foreignKey = $keySet['foreignKey'];
                 $distantTable = $this->toDb($relOpt['entity']);
 
@@ -2008,7 +2010,7 @@ abstract class Base
 
                 return $sql;
 
-            case IEntity::HAS_CHILDREN:
+            case Entity::HAS_CHILDREN:
                 $foreignKey = $keySet['foreignKey'];
                 $foreignType = $keySet['foreignType'];
                 $distantTable = $this->toDb($relOpt['entity']);
@@ -2030,7 +2032,7 @@ abstract class Base
 
                 return $sql;
 
-            case IEntity::BELONGS_TO:
+            case Entity::BELONGS_TO:
                 $sql = $prefix . $this->getBelongsToJoin($entity, $relationName, null, $alias);
                 return $sql;
         }
@@ -2051,8 +2053,7 @@ abstract class Base
         $groupBy = null,
         $having = null,
         $indexKeyList = null
-    )
-    {
+    ) : string {
         $sql = "SELECT";
 
         if (!empty($distinct) && empty($groupBy)) {
@@ -2096,15 +2097,15 @@ abstract class Base
         return $sql;
     }
 
-    abstract public function limit($sql, $offset, $limit);
+    abstract public function limit(string $sql, ?int $offset = null, ?int $limit = null) : string;
 
-    public function getKeys(IEntity $entity, $relationName)
+    public function getKeys(Entity $entity, string $relationName) : array
     {
         $relOpt = $entity->relations[$relationName];
         $relType = $relOpt['type'];
 
         switch ($relType) {
-            case IEntity::BELONGS_TO:
+            case Entity::BELONGS_TO:
                 $key = $this->toDb($entity->getEntityType()) . 'Id';
                 if (isset($relOpt['key'])) {
                     $key = $relOpt['key'];
@@ -2118,8 +2119,8 @@ abstract class Base
                     'foreignKey' => $foreignKey,
                 ];
 
-            case IEntity::HAS_MANY:
-            case IEntity::HAS_ONE:
+            case Entity::HAS_MANY:
+            case Entity::HAS_ONE:
                 $key = 'id';
                 if (isset($relOpt['key'])){
                     $key = $relOpt['key'];
@@ -2133,7 +2134,7 @@ abstract class Base
                     'foreignKey' => $foreignKey,
                 ];
 
-            case IEntity::HAS_CHILDREN:
+            case Entity::HAS_CHILDREN:
                 $key = 'id';
                 if (isset($relOpt['key'])){
                     $key = $relOpt['key'];
@@ -2152,7 +2153,7 @@ abstract class Base
                     'foreignType' => $foreignType,
                 ];
 
-            case IEntity::MANY_MANY:
+            case Entity::MANY_MANY:
                 $key = 'id';
                 if(isset($relOpt['key'])){
                     $key = $relOpt['key'];
@@ -2173,7 +2174,7 @@ abstract class Base
                     'nearKey' => $nearKey,
                     'distantKey' => $distantKey
                 ];
-            case IEntity::BELONGS_TO_PARENT:
+            case Entity::BELONGS_TO_PARENT:
                 $key = $relationName . 'Id';
                 $typeKey = $relationName . 'Type';
                 return [
@@ -2182,5 +2183,7 @@ abstract class Base
                     'foreignKey' => 'id'
                 ];
         }
+
+        return null;
     }
 }

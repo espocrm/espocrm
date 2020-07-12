@@ -59,16 +59,16 @@ class QueryTest extends \PHPUnit\Framework\TestCase
                 }));
 
 
-        $this->entityFactory = $this->getMockBuilder('\\Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
+        $this->entityFactory = $this->getMockBuilder('Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
         $this->entityFactory->expects($this->any())
                             ->method('create')
                             ->will($this->returnCallback(function() {
                                 $args = func_get_args();
-                                $className = "\\Espo\\Entities\\" . $args[0];
+                                $className = "Espo\\Entities\\" . $args[0];
                                   return new $className();
                             }));
 
-        $this->metadata = $this->getMockBuilder('\\Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 
         $this->query = new Query($this->pdo, $this->entityFactory, $this->metadata);
 

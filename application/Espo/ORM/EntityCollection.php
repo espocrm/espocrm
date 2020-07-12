@@ -29,7 +29,7 @@
 
 namespace Espo\ORM;
 
-class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \SeekableIterator, ICollection
+class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \SeekableIterator, Collection
 {
     private $entityFactory = null;
 
@@ -172,11 +172,17 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         }
     }
 
+    /**
+     * Get an entity type.
+     */
     public function getEntityType() : ?string
     {
         return $this->entityType;
     }
 
+    /**
+     * @deprecated
+     */
     public function getEntityName()
     {
         return $this->entityType;
@@ -187,6 +193,9 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         return $this->dataList;
     }
 
+    /**
+     * Merge with another collection.
+     */
     public function merge(EntityCollection $collection)
     {
         $newData = $this->dataList;
@@ -199,7 +208,10 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         }
     }
 
-    public function contains($value)
+    /**
+     * Whether a collection contains a specific item.
+     */
+    public function contains($value) : bool
     {
         if ($this->indexOf($value) !== false) {
             return true;
@@ -240,7 +252,10 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         return false;
     }
 
-    public function toArray($itemsAsObjects = false)
+    /**
+     * @deprecated
+     */
+    public function toArray(bool $itemsAsObjects = false) : array
     {
         $arr = [];
         foreach ($this as $entity) {
@@ -259,16 +274,25 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         return $this->toArray(true);
     }
 
+    /**
+     * Mark as fetched from DB.
+     */
     public function setAsFetched()
     {
         $this->isFetched = true;
     }
 
+    /**
+     * Mark as not fetched from DB.
+     */
     public function setAsNotFetched()
     {
         $this->isFetched = false;
     }
 
+    /**
+     * Is fetched from DB.
+     */
     public function isFetched() : bool
     {
         return $this->isFetched;

@@ -33,5 +33,8 @@ use Espo\ORM\Entity;
 
 interface Removable
 {
+    /**
+     * Remove a record (mark as deleted).
+     */
     public function remove(Entity $entity);
 }

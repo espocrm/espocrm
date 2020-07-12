@@ -30,8 +30,8 @@
 namespace Espo\ORM\DB;
 
 use Espo\ORM\{
-    IEntity as Entity,
-    ICollection as Collection,
+    Entity,
+    Collection,
 };
 
 interface Mapper
@@ -39,7 +39,7 @@ interface Mapper
     /**
      * Select an entity by ID.
      */
-    public function selectById(Entity $entity, $id, ?array $params = null) : ?Entity;
+    public function selectById(Entity $entity, string $id, ?array $params = null) : ?Entity;
 
     /**
      * Select a list of entities according to given parameters.

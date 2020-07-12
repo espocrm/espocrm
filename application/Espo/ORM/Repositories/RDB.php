@@ -32,7 +32,7 @@ namespace Espo\ORM\Repositories;
 use Espo\ORM\{
     EntityManager,
     EntityFactory,
-    ICollection as Collection,
+    Collection,
     Entity,
     Repository,
     DB\Mapper,

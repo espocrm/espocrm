@@ -28,55 +28,11 @@
  ************************************************************************/
 
 namespace Espo\ORM;
-/**
- * Model interface.
- */
-interface IEntity
+
+interface Collection extends \Traversable
 {
-    const ID = 'id';
-    const VARCHAR = 'varchar';
-    const INT = 'int';
-    const FLOAT = 'float';
-    const TEXT = 'text';
-    const BOOL = 'bool';
-    const FOREIGN_ID = 'foreignId';
-    const FOREIGN = 'foreign';
-    const FOREIGN_TYPE = 'foreignType';
-    const DATE = 'date';
-    const DATETIME = 'datetime';
-    const JSON_ARRAY = 'jsonArray';
-    const JSON_OBJECT = 'jsonObject';
-    const PASSWORD = 'password';
-
-    const MANY_MANY = 'manyMany';
-    const HAS_MANY = 'hasMany';
-    const BELONGS_TO = 'belongsTo';
-    const HAS_ONE = 'hasOne';
-    const BELONGS_TO_PARENT = 'belongsToParent';
-    const HAS_CHILDREN = 'hasChildren';
-
     /**
-     * Resets all attributes in the current model.
+     * Get an array of StdClass objects.
      */
-    function reset();
-
-    /**
-     * Set attribute.
-     */
-    function set($name, $value);
-
-    /**
-     * Get attribute.
-     */
-    function get(string $name);
-
-    /**
-     * Check attribute is set.
-     */
-    function has(string $name);
-
-    /**
-     * Clear attribute.
-     */
-    function clear(?string $name);
+    public function getValueMapList() : array;
 }

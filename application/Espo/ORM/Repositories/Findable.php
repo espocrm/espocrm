@@ -31,14 +31,23 @@ namespace Espo\ORM\Repositories;
 
 use Espo\ORM\{
     Entity,
-    ICollection as Collection,
+    Collection,
 };
 
 interface Findable
 {
+    /**
+     * A number of records matching specific parameters.
+     */
     public function count(array $params) : int;
 
+    /**
+     * Find records matching specific parameters.
+     */
     public function find(array $params) : Collection;
 
+    /**
+     * Find the first record matching specific parameters.
+     */
     public function findOne(array $params) : ?Entity;
 }

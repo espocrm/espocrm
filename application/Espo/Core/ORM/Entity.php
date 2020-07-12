@@ -29,7 +29,9 @@
 
 namespace Espo\Core\ORM;
 
-class Entity extends \Espo\ORM\Entity
+use Espo\ORM\BaseEntity;
+
+class Entity extends BaseEntity
 {
     public function hasLinkMultipleField($field)
     {

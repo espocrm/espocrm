@@ -29,7 +29,7 @@
 
 namespace Espo\ORM;
 
-class SthCollection implements \IteratorAggregate, ICollection
+class SthCollection implements \IteratorAggregate, Collection
 {
     protected $entityManager = null;
 
@@ -65,16 +65,25 @@ class SthCollection implements \IteratorAggregate, ICollection
         return $this->entityManager->getEntityFactory();
     }
 
+    /**
+     * Get select parameters.
+     */
     public function setSelectParams(array $selectParams)
     {
         $this->selectParams = $selectParams;
     }
 
+    /**
+     * Set an SQL query.
+     */
     public function setQuery(?string $sql)
     {
         $this->sql = $sql;
     }
 
+    /**
+     * Run an SQL query.
+     */
     public function executeQuery()
     {
         if ($this->sql) {
@@ -116,6 +125,9 @@ class SthCollection implements \IteratorAggregate, ICollection
     {
     }
 
+    /**
+     * @deprecated
+     */
     public function toArray(bool $itemsAsObjects = false) : array
     {
         $arr = [];
@@ -135,21 +147,33 @@ class SthCollection implements \IteratorAggregate, ICollection
         return $this->toArray(true);
     }
 
+    /**
+     * Mark as fetched from DB.
+     */
     public function setAsFetched()
     {
         $this->isFetched = true;
     }
 
+    /**
+     * Mark as not fetched from DB.
+     */
     public function setAsNotFetched()
     {
         $this->isFetched = false;
     }
 
+    /**
+     * Is fetched from DB.
+     */
     public function isFetched() : bool
     {
         return $this->isFetched;
     }
 
+    /**
+     * Get an entity type.
+     */
     public function getEntityType() : string
     {
         return $this->entityType;

@@ -30,8 +30,8 @@
 namespace Espo\ORM\DB;
 
 use Espo\ORM\{
-    IEntity as Entity,
-    ICollection as Collection,
+    Entity,
+    Collection,
     EntityFactory,
     Metadata,
     DB\Query\Base as Query,
@@ -62,14 +62,15 @@ abstract class BaseMapper implements Mapper
 
     protected $sthCollectionClass = Sth2Collection::class;
 
-    public function __construct(PDO $pdo, EntityFactory $entityFactory, Query $query, Metadata $metadata) {
+    public function __construct(PDO $pdo, EntityFactory $entityFactory, Query $query, Metadata $metadata)
+    {
         $this->pdo = $pdo;
         $this->query = $query;
         $this->entityFactory = $entityFactory;
         $this->metadata = $metadata;
     }
 
-    public function selectById(Entity $entity, $id, ?array $params = null) : ?Entity
+    public function selectById(Entity $entity, string $id, ?array $params = null) : ?Entity
     {
         $params = $params ?? [];
 
