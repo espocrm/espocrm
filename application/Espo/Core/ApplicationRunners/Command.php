@@ -27,32 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Application;
+use Espo\Core\{
+    InjectableFactory,
+    Console\CommandManager as ConsoleCommandManager,
+};
 
-class JobTask extends \Spatie\Async\Task
+/**
+ * Runs a console command.
+ */
+class Command implements ApplicationRunner
 {
-    private $jobId;
+    use Cli;
+    use SetupSystemUser;
 
-    public function __construct($jobId)
-    {
-        $this->jobId = $jobId;
-    }
+    protected $injectableFactory;
 
-    public function configure()
+    public function __construct(InjectableFactory $injectableFactory)
     {
+        $this->injectableFactory = $injectableFactory;
+
+        $this->commandManager = $this->injectableFactory->create(ConsoleCommandManager::class);
     }
 
     public function run()
     {
-        $app = new Application();
-        try {
-            $app->run('job', (object) [
-                'id' => $this->jobId,
-            ]);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("JobTask: Failed job run. Job id: ".$this->jobId.". Error details: ".$e->getMessage());
+        ob_start();
+
+        $result = $this->commandManager->run($_SERVER['argv']);
+
+        if (is_string($result)) {
+            ob_end_clean();
+            echo $result;
         }
     }
 }

@@ -37,6 +37,9 @@ use Espo\Core\{
 
 use Espo\Core\Exceptions\Error;
 
+/**
+ * Processes console commands. A console command can be run in CLI by runnig `php command.php`.
+ */
 class CommandManager
 {
     protected $injectableFactory;
@@ -48,11 +51,19 @@ class CommandManager
         $this->metadata = $metadata;
     }
 
-    public function run(string $command)
+    public function run(array $argv)
     {
+        $command = isset($argv[1]) ? trim($argv[1]) : null;
+
+        if (!$command) {
+            $msg = "Command name is not specifed.";
+            echo $msg . "\n";
+            throw new Error($msg);
+        }
+
         $command = ucfirst(Util::hyphenToCamelCase($command));
 
-        $params = $this->getParams($_SERVER['argv']);
+        $params = $this->getParams($argv);
 
         $options = $params['options'];
         $flagList = $params['flagList'];

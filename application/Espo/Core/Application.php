@@ -37,7 +37,6 @@ use Espo\Core\{
     ContainerConfiguration,
     InjectableFactory,
     EntryPointManager,
-    CronManager,
     Authentication\Authentication,
     Api\Auth as ApiAuth,
     Api\ErrorOutput as ApiErrorOutput,
@@ -49,8 +48,8 @@ use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
     Utils\ClientManager,
+    Utils\Log,
     ORM\EntityManager,
-    Console\CommandManager as ConsoleCommandManager,
     Portal\Application as PortalApplication,
     Loaders\Config as ConfigLoader,
     Loaders\Log as LogLoader,
@@ -70,6 +69,8 @@ use Slim\{
     Factory\AppFactory as SlimAppFactory,
 };
 
+use ReflectionClass;
+
 /**
  * A central access point of the application.
  */
@@ -78,6 +79,8 @@ class Application
     protected $container;
 
     protected $slim = null;
+
+    protected $log;
 
     protected $loaderClassNames = [
         'config' => ConfigLoader::class,
@@ -118,7 +121,7 @@ class Application
             $route = $item['route'];
 
             if (!in_array($method, $crudList) && $method !== 'options') {
-                $GLOBALS['log']->error("Route: Method '{$method}' does not exist. Check the route '{$route}'.");
+                $this->getLog()->error("Route: Method '{$method}' does not exist. Check the route '{$route}'.");
                 continue;
             }
 
@@ -234,97 +237,46 @@ class Application
     }
 
     /**
-     * Run cron.
+     * Run an application through a specific runner.
+     * You can find runner classes in `Espo\Core\ApplicationRunners`.
      */
-    public function runCron()
+    public function run(string $runnerName, ?object $params = null)
     {
-        if ($this->getConfig()->get('cronDisabled')) {
-            $GLOBALS['log']->warning("Cron is not run because it's disabled with 'cronDisabled' param.");
-            return;
-        }
-        $this->setupSystemUser();
-        $this->getCronManager()->run();
-    }
+        $className = $this->getRunnerClassName($runnerName);
 
-    /**
-     * Run daemon.
-     */
-    public function runDaemon()
-    {
-        $maxProcessNumber = $this->getConfig()->get('daemonMaxProcessNumber');
-        $interval = $this->getConfig()->get('daemonInterval');
-        $timeout = $this->getConfig()->get('daemonProcessTimeout');
-
-        $phpExecutablePath = $this->getConfig()->get('phpExecutablePath');
-        if (!$phpExecutablePath) {
-            $phpExecutablePath = (new \Symfony\Component\Process\PhpExecutableFinder)->find();
-        }
-
-        if (!$maxProcessNumber || !$interval) {
-            $GLOBALS['log']->error("Daemon config params are not set.");
+        if (!$className) {
+            $this->getLog()->error("Application runner '{$runnerName}' does not exist.");
             return;
         }
 
-        $processList = [];
+        $class = new ReflectionClass($className);
 
-        while (true) {
-            $toSkip = false;
-            $runningCount = 0;
-            foreach ($processList as $i => $process) {
-                if ($process->isRunning()) {
-                    $runningCount++;
-                } else {
-                    unset($processList[$i]);
-                }
+        if ($class->getStaticPropertyValue('cli', false)) {
+            if (substr(php_sapi_name(), 0, 3) !== 'cli') {
+                die("Application runner '{$runnerName}' can be run only via CLI.");
             }
-            $processList = array_values($processList);
-            if ($runningCount >= $maxProcessNumber) {
-                $toSkip = true;
-            }
-            if (!$toSkip) {
-                $process = new \Symfony\Component\Process\Process([$phpExecutablePath, 'cron.php']);
-                $process->setTimeout($timeout);
-                $process->run();
-                $processList[] = $process;
-            }
-            sleep($interval);
         }
+        if ($class->getStaticPropertyValue('setupSystemUser', false)) {
+            $this->setupSystemUser();
+        }
+
+        $runner = $this->getInjectableFactory()->create($className);
+
+        $runner->run($params);
     }
 
-    /**
-     * Run a job by ID. A job record should exist in database.
-     */
-    public function runJob(string $id)
+    protected function getRunnerClassName(string $runnerName) : ?string
     {
-        $this->setupSystemUser();
-        $this->getCronManager()->runJobById($id);
-    }
+        $className = 'Espo\\Core\\ApplicationRunners\\' . ucfirst($runnerName);
 
-    /**
-     * Rebuild application.
-     */
-    public function runRebuild()
-    {
-        $this->getDataManager()->rebuild();
-    }
+        if (!class_exists($className)) {
+            $className = $this->getMetadata()->get(['app', 'runners', $runnerName, 'className']);
+            if (!$className || !class_exists($className)) {
+                return null;
+            }
+        }
 
-    /**
-     * Clear application cache.
-     */
-    public function runClearCache()
-    {
-        $this->getDataManager()->clearCache();
-    }
-
-    /**
-     * Run command in Console Command framework.
-     */
-    public function runCommand(string $command)
-    {
-        $this->setupSystemUser();
-
-        $consoleCommandManager = $this->getInjectableFactory()->create(ConsoleCommandManager::class);
-        return $consoleCommandManager->run($command);
+        return $className;
     }
 
     /**
@@ -354,6 +306,11 @@ class Application
         return $this->container->get('injectableFactory');
     }
 
+    protected function getLog() : Log
+    {
+        return $this->container->get('log');
+    }
+
     protected function getClientManager() : ClientManager
     {
         return $this->container->get('clientManager');
@@ -367,16 +324,6 @@ class Application
     protected function getConfig() : Config
     {
         return $this->container->get('config');
-    }
-
-    protected function getDataManager() : DataManager
-    {
-        return $this->container->get('dataManager');
-    }
-
-    protected function getCronManager() : CronManager
-    {
-        return $this->container->get('cronManager');
     }
 
     protected function getEntityManager() : EntityManager

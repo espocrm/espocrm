@@ -27,32 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Application;
+use Espo\Core\{
+    DataManager,
+};
 
-class JobTask extends \Spatie\Async\Task
+/**
+ * Rebuilds an application.
+ */
+class Rebuild implements ApplicationRunner
 {
-    private $jobId;
+    use Cli;
 
-    public function __construct($jobId)
-    {
-        $this->jobId = $jobId;
-    }
+    protected $dataManager;
 
-    public function configure()
+    public function __construct(DataManager $dataManager)
     {
+        $this->dataManager = $dataManager;
     }
 
     public function run()
     {
-        $app = new Application();
-        try {
-            $app->run('job', (object) [
-                'id' => $this->jobId,
-            ]);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("JobTask: Failed job run. Job id: ".$this->jobId.". Error details: ".$e->getMessage());
-        }
+        $this->dataManager->rebuild();
     }
 }

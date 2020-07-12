@@ -27,32 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Application;
+use Espo\Core\{
+    CronManager,
+};
 
-class JobTask extends \Spatie\Async\Task
+/**
+ * Runs a job by ID. A job record should exist in database.
+ */
+class Job implements ApplicationRunner
 {
-    private $jobId;
+    use Cli;
+    use SetupSystemUser;
 
-    public function __construct($jobId)
+    protected $cronManager;
+
+    public function __construct(CronManager $cronManager)
     {
-        $this->jobId = $jobId;
+        $this->cronManager = $cronManager;
     }
 
-    public function configure()
+    public function run(object $params)
     {
-    }
-
-    public function run()
-    {
-        $app = new Application();
-        try {
-            $app->run('job', (object) [
-                'id' => $this->jobId,
-            ]);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("JobTask: Failed job run. Job id: ".$this->jobId.". Error details: ".$e->getMessage());
-        }
+        $this->cronManager->runJobById($params->id);
     }
 }

@@ -27,32 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Application;
+use Espo\Core\{
+    CronManager,
+    Utils\Config,
+};
 
-class JobTask extends \Spatie\Async\Task
+/**
+ * Runs cron.
+ */
+class Cron implements ApplicationRunner
 {
-    private $jobId;
+    use Cli;
+    use SetupSystemUser;
 
-    public function __construct($jobId)
-    {
-        $this->jobId = $jobId;
-    }
+    protected $cronManager;
+    protected $config;
 
-    public function configure()
+    public function __construct(CronManager $cronManager, Config $config)
     {
+        $this->cronManager = $cronManager;
+        $this->config = $config;
     }
 
     public function run()
     {
-        $app = new Application();
-        try {
-            $app->run('job', (object) [
-                'id' => $this->jobId,
-            ]);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("JobTask: Failed job run. Job id: ".$this->jobId.". Error details: ".$e->getMessage());
+        if ($this->config->get('cronDisabled')) {
+            $GLOBALS['log']->warning("Cron is not run because it's disabled with 'cronDisabled' param.");
+            return;
         }
+
+        $this->cronManager->run();
     }
 }

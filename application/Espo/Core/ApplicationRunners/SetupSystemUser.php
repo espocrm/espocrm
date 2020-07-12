@@ -27,32 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Application;
-
-class JobTask extends \Spatie\Async\Task
+/**
+ * System user will be set up for an application.
+ */
+trait SetupSystemUser
 {
-    private $jobId;
-
-    public function __construct($jobId)
-    {
-        $this->jobId = $jobId;
-    }
-
-    public function configure()
-    {
-    }
-
-    public function run()
-    {
-        $app = new Application();
-        try {
-            $app->run('job', (object) [
-                'id' => $this->jobId,
-            ]);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("JobTask: Failed job run. Job id: ".$this->jobId.". Error details: ".$e->getMessage());
-        }
-    }
+    public static $setupSystemUser = true;
 }

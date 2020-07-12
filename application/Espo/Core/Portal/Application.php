@@ -110,6 +110,17 @@ class Application extends BaseApplication
         return $routeList;
     }
 
+    protected function getRunnerClassName(string $runnerName) : ?string
+    {
+        $className = 'Espo\\Core\\Portal\\ApplicationRunners\\' . ucfirst($runnerName);
+
+        if (class_exists($className)) {
+            return $className;
+        }
+
+        return parent::getRunnerClassName($runnerName);
+    }
+
     public function runClient()
     {
         $this->container->get('clientManager')->display(null, null, [
