@@ -154,7 +154,7 @@ class RecordTree extends Record
     protected function hasOrder()
     {
         $seed = $this->getSeed();
-        if ($seed->hasField('order')) {
+        if ($seed->hasAttribute('order')) {
             return true;
         }
         return false;

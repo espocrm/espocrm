@@ -37,7 +37,7 @@ class Integration extends \Espo\Core\ORM\Entity
             return $this->id;
         }
 
-        if ($this->hasField($name)) {
+        if ($this->hasAttribute($name)) {
             if (array_key_exists($name, $this->valuesContainer)) {
                 return $this->valuesContainer[$name];
             }
@@ -88,7 +88,7 @@ class Integration extends \Espo\Core\ORM\Entity
             return;
         }
 
-        if ($this->hasField($name)) {
+        if ($this->hasAttribute($name)) {
             $this->valuesContainer[$name] = $value;
         } else {
             $data = $this->get('data');
@@ -100,7 +100,7 @@ class Integration extends \Espo\Core\ORM\Entity
         }
     }
 
-    public function isAttributeChanged($name)
+    public function isAttributeChanged(string $name) : bool
     {
         if ($name === 'data') return true;
 
@@ -113,15 +113,15 @@ class Integration extends \Espo\Core\ORM\Entity
             $this->reset();
         }
 
-        foreach ($arr as $field => $value) {
-            if (is_string($field)) {
+        foreach ($arr as $attribute => $value) {
+            if (is_string($attribute)) {
 
-                if ($this->hasField($field)) {
-                    $fields = $this->getFields();
-                    $fieldDefs = $fields[$field];
+                if ($this->hasAttribute($attribute)) {
+                    $attributes = $this->getAttributes();
+                    $defs = $attributes[$attribute];
 
                     if (!is_null($value)) {
-                        switch ($fieldDefs['type']) {
+                        switch ($defs['type']) {
                             case self::VARCHAR:
                                 break;
                             case self::BOOL:
@@ -141,7 +141,7 @@ class Integration extends \Espo\Core\ORM\Entity
                                 break;
                             case self::JSON_OBJECT:
                                 $value = is_string($value) ? json_decode($value) : $value;
-                                if (!($value instanceof \stdClass) && !is_array($value)) {
+                                if (!($value instanceof \StdClass) && !is_array($value)) {
                                     $value = null;
                                 }
                                 break;
@@ -151,7 +151,7 @@ class Integration extends \Espo\Core\ORM\Entity
                     }
                 }
 
-                $this->set($field, $value);
+                $this->set($attribute, $value);
             }
         }
     }
@@ -162,21 +162,21 @@ class Integration extends \Espo\Core\ORM\Entity
         if (isset($this->id)) {
             $arr['id'] = $this->id;
         }
-        foreach ($this->fields as $field => $defs) {
-            if ($field == 'id') {
+        foreach ($this->getAttributes() as $attribute => $defs) {
+            if ($attribute == 'id') {
                 continue;
             }
-            if ($field == 'data') {
+            if ($attribute == 'data') {
                 continue;
             }
-            if ($this->has($field)) {
-                $arr[$field] = $this->get($field);
+            if ($this->has($attribute)) {
+                $arr[$attribute] = $this->get($attribute);
             }
         }
 
         $data = $this->get('data');
         if (empty($data)) {
-            $data = new \stdClass();
+            $data = new \StdClass();
         }
 
         $dataArr = get_object_vars($data);
@@ -185,7 +185,7 @@ class Integration extends \Espo\Core\ORM\Entity
         return $arr;
     }
 
-    public function getValueMap()
+    public function getValueMap() : \StdClass
     {
         $arr = $this->toArray();
 

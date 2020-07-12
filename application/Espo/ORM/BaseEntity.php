@@ -67,7 +67,7 @@ abstract class BaseEntity implements Entity
 
     protected $isBeingSaved = false;
 
-    public function __construct($defs = [], ?EntityManager $entityManager = null)
+    public function __construct(array $defs = [], ?EntityManager $entityManager = null)
     {
         if (empty($this->entityType)) {
             $classNames = explode('\\', get_class($this));

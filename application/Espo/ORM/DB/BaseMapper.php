@@ -983,7 +983,7 @@ abstract class BaseMapper implements Mapper
         foreach ($dataList as $field => $value) {
             $fieldArr[] = $this->toDb($field);
 
-            $type = $entity->fields[$field]['type'];
+            $type = $entity->getAttributes()[$field]['type'];
 
             $value = $this->prepareValueForInsert($type, $value);
 

@@ -326,7 +326,8 @@ abstract class Base
 
         if (empty($params['aggregation'])) {
             $selectPart = $this->getSelect(
-                $entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength'], $params
+                $entity, $params['select'], $params['distinct'], $params['skipTextColumns'],
+                $params['maxTextColumnsLength'], $params
             );
 
             $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order'], $params);
@@ -348,10 +349,14 @@ abstract class Base
                 }
             }
 
-            if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
+            if (
+                !empty($params['additionalColumns']) && is_array($params['additionalColumns']) &&
+                !empty($params['relationName'])
+            ) {
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $itemAlias = $this->sanitizeSelectAlias($field);
-                    $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." . $this->toDb($this->sanitize($column)) . " AS `{$itemAlias}`";
+                    $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." .
+                        $this->toDb($this->sanitize($column)) . " AS `{$itemAlias}`";
                 }
             }
 
@@ -914,7 +919,7 @@ abstract class Base
                 }
             }
         } else {
-            if (!empty($entity->fields[$attribute]['select'])) {
+            if (!empty($entity->getAttributes()[$attribute]['select'])) {
                 $part = $this->getAttributeSql($entity, $attribute, 'select', $params);
             } else {
                 if ($part !== '') {
@@ -928,7 +933,7 @@ abstract class Base
 
     protected function getAttributeSql(Entity $entity, $attribute, $type, &$params = null, $alias = null)
     {
-        $fieldDefs = $entity->fields[$attribute];
+        $fieldDefs = $entity->getAttributes()[$attribute];
 
         if (is_string($fieldDefs[$type])) {
             $part = $fieldDefs[$type];
@@ -1056,7 +1061,7 @@ abstract class Base
                     if (!array_key_exists($attribute[0], $entity->fields)) {
                         $part = $this->convertComplexExpression($entity, $attribute[0], $distinct, $params);
                     } else {
-                        $fieldDefs = $entity->fields[$attribute[0]];
+                        $fieldDefs = $entity->getAttributes()[$attribute[0]];
                         if (!empty($fieldDefs['select'])) {
                             $part = $this->getAttributeSql($entity, $attribute[0], 'select', $params);
                         } else {
@@ -1078,7 +1083,7 @@ abstract class Base
             $attribute = $this->sanitizeSelectItem($attribute);
 
             if (array_key_exists($attribute, $entity->fields)) {
-                $fieldDefs = $entity->fields[$attribute];
+                $fieldDefs = $entity->getAttributes()[$attribute];
             } else {
                 $part = $this->convertComplexExpression($entity, $attribute, $distinct, $params);
                 $arr[] = $part . ' AS `' . $this->sanitizeSelectAlias($attribute) . '`';
@@ -1235,8 +1240,8 @@ abstract class Base
                 return "{$orderBy} " . $order;
             }
 
-            if (!empty($entity->fields[$orderBy])) {
-                $fieldDefs = $entity->fields[$orderBy];
+            if (!empty($entity->getAttributes()[$orderBy])) {
+                $fieldDefs = $entity->getAttributes()[$orderBy];
             }
             if (!empty($fieldDefs) && !empty($fieldDefs['orderBy'])) {
                 $orderPart = $this->getAttributeSql($entity, $orderBy, 'orderBy', $params);
@@ -1287,7 +1292,7 @@ abstract class Base
 
     protected function getAggregationSelect(Entity $entity, $aggregation, $aggregationBy, $distinct = false)
     {
-        if (!isset($entity->fields[$aggregationBy])) {
+        if (!isset($entity->getAttributes()[$aggregationBy])) {
             return false;
         }
 
@@ -1298,7 +1303,8 @@ abstract class Base
             $distinctPart = 'DISTINCT ';
         }
 
-        $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityType()) . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
+        $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityType()) . "." .
+            $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
         return $selectPart;
     }
 
@@ -1376,8 +1382,8 @@ abstract class Base
 
     protected function getFieldPath(Entity $entity, $field, &$params = null)
     {
-        if (isset($entity->fields[$field])) {
-            $f = $entity->fields[$field];
+        if (isset($entity->getAttributes()[$field])) {
+            $f = $entity->getAttributes()[$field];
 
             $relationType = $f['type'];
 
@@ -1513,12 +1519,12 @@ abstract class Base
             }
 
             if (empty($isComplex)) {
-                if (!isset($entity->fields[$field])) {
+                if (!isset($entity->getAttributes()[$field])) {
                     $wherePartList[] = '0';
                     continue;
                 }
 
-                $fieldDefs = $entity->fields[$field];
+                $fieldDefs = $entity->getAttributes()[$field];
 
                 $operatorModified = $operator;
 
@@ -1968,7 +1974,8 @@ abstract class Base
                 }
 
                 $sql =
-                    "{$prefix}JOIN `{$relTable}` AS `{$midAlias}`{$indexPart} ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
+                    "{$prefix}JOIN `{$relTable}` AS `{$midAlias}`{$indexPart} ON {$this->toDb($entity->getEntityType())}." .
+                    $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                     . " AND "
                     . "{$midAlias}.deleted = " . $this->pdo->quote(0);
 
@@ -1983,7 +1990,8 @@ abstract class Base
                 $onlyMiddle = $params['onlyMiddle'] ?? false;
 
                 if (!$onlyMiddle) {
-                    $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
+                    $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) .
+                    " = {$midAlias}." . $this->toDb($distantKey)
                         . " AND "
                         . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
                 }
@@ -1996,7 +2004,8 @@ abstract class Base
                 $distantTable = $this->toDb($relOpt['entity']);
 
                 $sql =
-                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
+                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." .
+                    $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
                     . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
@@ -2016,7 +2025,8 @@ abstract class Base
                 $distantTable = $this->toDb($relOpt['entity']);
 
                 $sql =
-                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
+                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." .
+                    $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
                     . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
                     . " AND "
