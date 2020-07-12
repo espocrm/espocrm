@@ -29,6 +29,9 @@
 
 namespace Espo\ORM;
 
+/**
+ * A standard collection of entities. It allocates a memory for all entities.
+ */
 class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \SeekableIterator, Collection
 {
     private $entityFactory = null;

@@ -29,6 +29,9 @@
 
 namespace Espo\ORM;
 
+/**
+ * An access point for fetching and storing records.
+ */
 abstract class Repository
 {
     protected $entityFactory;

@@ -29,6 +29,9 @@
 
 namespace Espo\ORM;
 
+/**
+ * A collection of entities.
+ */
 interface Collection extends \Traversable
 {
     /**

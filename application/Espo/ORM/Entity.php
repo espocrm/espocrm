@@ -30,7 +30,7 @@
 namespace Espo\ORM;
 
 /**
- * An entity.
+ * An entity. Represents a single record in DB.
  */
 interface Entity
 {

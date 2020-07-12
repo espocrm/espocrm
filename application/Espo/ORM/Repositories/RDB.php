@@ -78,6 +78,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this->mapper;
     }
 
+    /**
+     * @deprecated
+     */
     public function handleSelectParams(&$params)
     {
     }
@@ -98,13 +101,19 @@ class RDB extends Repository implements Findable, Relatable, Removable
     public function getNew() : ?Entity
     {
         $entity = $this->entityFactory->create($this->entityType);
+
         if ($entity) {
             $entity->setIsNew(true);
             $entity->populateDefaults();
             return $entity;
         }
+
+        return null;
     }
 
+    /**
+     * Fetch an entity by ID.
+     */
     public function getById(string $id, array $params = []) : ?Entity
     {
         $entity = $this->entityFactory->create($this->entityType);
@@ -165,6 +174,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $result;
     }
 
+    /**
+     * Restore a record flagged as deleted.
+     */
     public function restoreDeleted(string $id)
     {
         return $this->getMapper()->restoreDeleted($this->entityType, $id);
@@ -316,7 +328,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     public function relate(Entity $entity, string $relationName, $foreign, $data = null, array $options = [])
     {
         if (!$entity->id) {
-            return;
+            return false;
         }
 
         $this->beforeRelate($entity, $relationName, $foreign, $data, $options);
@@ -331,7 +343,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
             $result = $this->$methodName($entity, $foreign, $data, $options);
         } else {
             $d = $data;
-            if ($d instanceof \stdClass) {
+            if ($d instanceof \StdClass) {
                 $d = get_object_vars($d);
             }
             if ($foreign instanceof Entity) {
@@ -356,7 +368,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
     {
         if (!$entity->id) {
-            return;
+            return false;
         }
 
         $this->beforeUnrelate($entity, $relationName, $foreign, $options);
@@ -424,9 +436,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
     public function updateRelation(Entity $entity, string $relationName, $foreign, $data)
     {
         if (!$entity->id) {
-            return;
+            return false;
         }
-        if ($data instanceof \stdClass) {
+        if ($data instanceof \StdClass) {
             $data = get_object_vars($data);
         }
         if ($foreign instanceof Entity) {
@@ -437,13 +449,14 @@ class RDB extends Repository implements Findable, Relatable, Removable
         if (is_string($foreign)) {
             return $this->getMapper()->updateRelation($entity, $relationName, $id, $data);
         }
-        return null;
+
+        return false;
     }
 
     public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
     {
         if (!$entity->id) {
-            return;
+            return false;
         }
         $this->beforeMassRelate($entity, $relationName, $params, $options);
 
@@ -470,27 +483,46 @@ class RDB extends Repository implements Findable, Relatable, Removable
         $params = $this->getSelectParams($params);
         $count = $this->getMapper()->count($this->seed, $params);
         $this->reset();
+
         return intval($count);
     }
 
     public function max(string $field)
     {
         $params = $this->getSelectParams();
+
         return $this->getMapper()->max($this->seed, $params, $field);
     }
 
     public function min(string $field)
     {
         $params = $this->getSelectParams();
+
         return $this->getMapper()->min($this->seed, $params, $field);
     }
 
     public function sum(string $field)
     {
         $params = $this->getSelectParams();
+
         return $this->getMapper()->sum($this->seed, $params, $field);
     }
 
+    /**
+     * Add a join.
+     *
+     * Usage options:
+     * * `join(string $relationName)`
+     * * `join(array $joinDefinitionList)`
+     *
+     * Usage examples:
+     * ```
+     * ->join($relationName)
+     * ->join([$relationName1, $relationName2])
+     * ->join([[$relationName, $alias]])
+     * ->join([[$relationName, $alias, $conditions]])
+     * ```
+     */
     public function join()
     {
         $args = func_get_args();
@@ -512,7 +544,12 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this;
     }
 
-    public function leftJoin()
+    /**
+     * Add a left join.
+     *
+     * This method works the same way as `join` method.
+     */
+    public function leftJoin() : self
     {
         $args = func_get_args();
 
@@ -533,13 +570,34 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this;
     }
 
-    public function distinct()
+    /**
+     * Set DISTINCT parameter.
+     */
+    public function distinct() : self
     {
         $this->listParams['distinct'] = true;
+
         return $this;
     }
 
-    public function where($param1 = [], $param2 = null)
+    /**
+     * Set to return STH collection. Recommended fetching large number of records.
+     */
+    public function sth() : self
+    {
+        $this->listParams['returnSthCollection'] = true;
+
+        return $this;
+    }
+
+    /**
+     * Add a WHERE clause.
+     *
+     * Two usage options:
+     * * `where(array $whereClause)`
+     * * `where(string $key, string $value)`
+     */
+    public function where($param1 = [], $param2 = null) : self
     {
         if (is_array($param1)) {
             $this->whereClause = $param1 + $this->whereClause;
@@ -553,7 +611,14 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this;
     }
 
-    public function having($param1 = [], $param2 = null)
+    /**
+     * Add a HAVING clause.
+     *
+     * Two usage options:
+     * * `having(array $havingClause)`
+     * * `having(string $key, string $value)`
+     */
+    public function having($param1 = [], $param2 = null) : self
     {
         if (is_array($param1)) {
             $this->havingClause = $param1 + $this->havingClause;
@@ -566,15 +631,24 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this;
     }
 
-    public function order($field = 'id', $direction = 'ASC')
+    /**
+     * Apply ORDER.
+     *
+     * @param string|array $attribute An attribute to order by or order definitions as an array.
+     * @param bool|string $direction TRUE for DESC order.
+     */
+    public function order($attribute = 'id', $direction = 'ASC') : self
     {
-        $this->listParams['orderBy'] = $field;
+        $this->listParams['orderBy'] = $attribute;
         $this->listParams['order'] = $direction;
 
         return $this;
     }
 
-    public function limit($offset, $limit)
+    /**
+     * Apply OFFSET and LIMIT.
+     */
+    public function limit(?int $offset = null, ?int $limit = null) : self
     {
         $this->listParams['offset'] = $offset;
         $this->listParams['limit'] = $limit;
@@ -582,15 +656,23 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this;
     }
 
-    public function select($select)
+    /**
+     * Specify SELECT. Which attributes to select. All attributes are selected by default.
+     */
+    public function select(array $select) : self
     {
         $this->listParams['select'] = $select;
+
         return $this;
     }
 
-    public function groupBy($groupBy)
+    /**
+     * Specify GROUP BY.
+     */
+    public function groupBy(array $groupBy) : self
     {
         $this->listParams['groupBy'] = $groupBy;
+
         return $this;
     }
 

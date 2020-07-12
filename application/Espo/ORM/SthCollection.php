@@ -29,6 +29,11 @@
 
 namespace Espo\ORM;
 
+/**
+ * Reasonable to use when selecting a large number of records.
+ * It doesn't allocate a memory for every entity.
+ * Entities are fetched on each iteration while traversing a collection.
+ */
 class SthCollection implements \IteratorAggregate, Collection
 {
     protected $entityManager = null;
