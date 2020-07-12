@@ -509,7 +509,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     }
 
     /**
-     * Add a join.
+     * Add JOIN.
      *
      * Usage options:
      * * `join(string $relationName)`
@@ -545,7 +545,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     }
 
     /**
-     * Add a left join.
+     * Add LEFT JOIN.
      *
      * This method works the same way as `join` method.
      */
