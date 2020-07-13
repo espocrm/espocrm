@@ -29,22 +29,11 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\{
-    Error,
-};
-
 use Espo\Core\{
     ContainerConfiguration,
     InjectableFactory,
     Container,
     ApplicationUser,
-    Authentication\Authentication,
-    Api\Auth as ApiAuth,
-    Api\ErrorOutput as ApiErrorOutput,
-    Api\RequestWrapper,
-    Api\ResponseWrapper,
-    Api\RouteProcessor,
-    Utils\Route,
     Utils\Autoload,
     Utils\Config,
     Utils\Metadata,
@@ -57,17 +46,6 @@ use Espo\Core\{
     Loaders\Metadata as MetadataLoader,
 };
 
-use Psr\Http\{
-    Message\ResponseInterface as Response,
-    Message\ServerRequestInterface as Request,
-    Server\RequestHandlerInterface as RequestHandler,
-};
-
-use Slim\{
-    App as SlimApp,
-    Factory\AppFactory as SlimAppFactory,
-};
-
 use ReflectionClass;
 
 /**
@@ -76,10 +54,6 @@ use ReflectionClass;
 class Application
 {
     protected $container;
-
-    protected $slim = null;
-
-    protected $log;
 
     protected $loaderClassNames = [
         'config' => ConfigLoader::class,
@@ -101,63 +75,6 @@ class Application
     protected function initContainer()
     {
         $this->container = new Container(ContainerConfiguration::class, $this->loaderClassNames);
-    }
-
-    /**
-     * Run REST API.
-     */
-    public function runApi()
-    {
-        $slim = $this->createSlimApp();
-        $slim->addRoutingMiddleware();
-
-        $crudList = array_keys($this->getConfig()->get('crud'));
-
-        $routeList = $this->getRouteList();
-
-        foreach ($routeList as $item) {
-            $method = strtolower($item['method']);
-            $route = $item['route'];
-
-            if (!in_array($method, $crudList) && $method !== 'options') {
-                $this->getLog()->error("Route: Method '{$method}' does not exist. Check the route '{$route}'.");
-                continue;
-            }
-
-            $slim->$method(
-                $route,
-                function (Request $request, Response $response, array $args) use ($item, $slim) {
-                    $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
-                    $responseWrapped = new ResponseWrapper($response);
-
-                    try {
-                        $authRequired = !($item['noAuth'] ?? false);
-
-                        $apiAuth = new ApiAuth($this->createAuthentication(), $authRequired);
-                        $apiAuth->process($requestWrapped, $responseWrapped);
-
-                        if (!$apiAuth->isResolved()) {
-                            return $responseWrapped->getResponse();
-                        }
-                        if ($apiAuth->isResolvedUseNoAuth()) {
-                            $this->setupSystemUser();
-                        }
-
-                        $routeProcessor = $this->getInjectableFactory()->create(RouteProcessor::class);
-                        $routeProcessor->process($item['route'], $item['params'], $requestWrapped, $responseWrapped, $args);
-                    } catch (\Exception $exception) {
-                        (new ApiErrorOutput($requestWrapped))->process(
-                            $responseWrapped, $exception, false, $item, $args
-                        );
-                    }
-
-                    return $responseWrapped->getResponse();
-                }
-            );
-        }
-
-        $slim->addErrorMiddleware(false, true, true);
-        $slim->run();
     }
 
     /**
@@ -255,20 +172,6 @@ class Application
         return $this->container->get('config');
     }
 
-    protected function createSlimApp() : SlimApp
-    {
-        $slim = SlimAppFactory::create();
-        $slim->setBasePath(Route::detectBasePath());
-        return $slim;
-    }
-
-    protected function createAuthentication(bool $allowAnyAccess = false) : Authentication
-    {
-        return $this->getInjectableFactory()->createWith(Authentication::class, [
-            'allowAnyAccess' => $allowAnyAccess,
-        ]);
-    }
-
     protected function initAutoloads()
     {
         $autoload = $this->getInjectableFactory()->create(Autoload::class);
@@ -285,11 +188,6 @@ class Application
                 $this->container->get($name);
             }
         }
-    }
-
-    protected function getRouteList() : array
-    {
-        return $this->getInjectableFactory()->create(Route::class)->getFullList();
     }
 
     /**

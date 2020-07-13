@@ -27,12 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-require_once('../../../bootstrap.php');
+namespace Espo\Core\Portal\ApplicationRunners;
 
-if (!empty($_GET['portalId'])) {
-    $portalId = $_GET['portalId'];
-} else {
-    $portalId = explode('/', $_SERVER['REQUEST_URI'])[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
+use Espo\Core\{
+    ApplicationRunners\Api as ApiBase,
+};
+
+class Api extends ApiBase
+{
+    protected function getRouteList() : array
+    {
+        $routeList = parent::getRouteList();
+
+        foreach ($routeList as $i => $route) {
+            if (isset($route['route'])) {
+                if ($route['route']{0} !== '/') {
+                    $route['route'] = '/' . $route['route'];
+                }
+                $route['route'] = '/{portalId}' . $route['route'];
+            }
+            $routeList[$i] = $route;
+        }
+        return $routeList;
+    }
 }
-
-(new \Espo\Core\Portal\Application($portalId))->run('api');
