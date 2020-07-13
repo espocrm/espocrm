@@ -442,7 +442,7 @@ class Auth
             if ($authToken->get('secret')) {
                 $sentSecret = $_COOKIE['auth-token-secret'] ?? null;
                 if ($sentSecret === $authToken->get('secret')) {
-                    setcookie('auth-token-secret', null, -1, '/');
+                    $this->setSecretInCookie(null);
                 }
             }
             return true;
@@ -487,15 +487,21 @@ class Auth
         $this->getEntityManager()->saveEntity($authLogRecord);
     }
 
-    protected function setSecretInCookie(string $secret)
+    protected function setSecretInCookie(?string $secret)
     {
+        if (!$secret) {
+            $time = -1;
+        } else {
+            $time = strtotime('+1000 days');
+        }
+
         if (version_compare(\PHP_VERSION, '7.3.0') < 0) {
-            setcookie('auth-token-secret', $secret, strtotime('+1000 days'), '/', '', false, true);
+            setcookie('auth-token-secret', $secret, $time, '/', '', false, true);
             return;
         }
 
         setcookie('auth-token-secret', $secret, [
-            'expires' => strtotime('+1000 days'),
+            'expires' => $time,
             'path' => '/',
             'httponly' => true,
             'samesite' => 'Lax',
