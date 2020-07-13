@@ -27,31 +27,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
+namespace Espo\Core;
 
-use Espo\Core\{
-    CronManager,
+use Espo\Core\Exceptions\{
+    Error,
 };
 
-use StdClass;
+use Espo\Entities\{
+    User,
+};
+
+use Espo\Core\{
+    ORM\EntityManager,
+};
 
 /**
- * Runs a job by ID. A job record should exist in database.
+ * Setting a current user for the application.
  */
-class Job implements ApplicationRunner
+class ApplicationUser
 {
-    use Cli;
-    use SetupSystemUser;
+    protected $container;
+    protected $entityManager;
 
-    protected $cronManager;
-
-    public function __construct(CronManager $cronManager)
+    public function __construct(Container $container, EntityManager $entityManager)
     {
-        $this->cronManager = $cronManager;
+        $this->container = $container;
+        $this->entityManager = $entityManager;
     }
 
-    public function run(StdClass $params)
+    /**
+     * Setup the system user as a current user. The system user is used when no user is logged in.
+     */
+    public function setupSystemUser()
     {
-        $this->cronManager->runJobById($params->id);
+        $user = $this->entityManager->getEntity('User', 'system');
+        if (!$user) {
+            throw new Error("System user is not found");
+        }
+
+        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
+        $user->set('type', 'system');
+
+        $this->container->set('user', $user);
+    }
+
+    /**
+     * Set a current user.
+     */
+    public function setUser(User $user)
+    {
+        $this->container->set('user', $user);
     }
 }

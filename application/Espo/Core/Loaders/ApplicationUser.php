@@ -27,31 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
+namespace Espo\Core\Loaders;
 
 use Espo\Core\{
-    CronManager,
+    InjectableFactory,
+    ApplicationUser as Service,
 };
 
-use StdClass;
-
-/**
- * Runs a job by ID. A job record should exist in database.
- */
-class Job implements ApplicationRunner
+class ApplicationUser implements Loader
 {
-    use Cli;
-    use SetupSystemUser;
+    protected $injectableFactory;
 
-    protected $cronManager;
-
-    public function __construct(CronManager $cronManager)
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        $this->cronManager = $cronManager;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function run(StdClass $params)
+    public function load()
     {
-        $this->cronManager->runJobById($params->id);
+        return $this->injectableFactory->create(Service::class);
     }
 }

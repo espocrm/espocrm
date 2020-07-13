@@ -70,8 +70,10 @@ if (strpos($requestUri, '/') !== false) {
 }
 
 if (!empty($_GET['entryPoint'])) {
-    $app->runEntryPoint($_GET['entryPoint']);
+    $app->run('entryPoint');
     exit;
 }
 
-$app->runEntryPoint('portal');
+$app->run('entryPoint', (object) [
+    'entryPoint' => 'portal',
+]);

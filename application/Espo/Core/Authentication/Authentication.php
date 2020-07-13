@@ -49,7 +49,7 @@ use Espo\Core\Authentication\{
 };
 
 use Espo\Core\{
-    Container,
+    ApplicationUser,
     ApplicationState,
     Utils\Config,
     Utils\Metadata,
@@ -72,7 +72,7 @@ class Authentication
 
     private $portal;
 
-    protected $container;
+    protected $applicationUser;
     protected $applicationState;
     protected $config;
     protected $metadata;
@@ -82,7 +82,7 @@ class Authentication
 
     public function __construct(
         bool $allowAnyAccess = false,
-        Container $container,
+        ApplicationUser $applicationUser,
         ApplicationState $applicationState,
         Config $config,
         Metadata $metadata,
@@ -92,7 +92,7 @@ class Authentication
     ) {
         $this->allowAnyAccess = $allowAnyAccess;
 
-        $this->container = $container;
+        $this->applicationUser = $applicationUser;
         $this->applicationState = $applicationState;
         $this->config = $config;
         $this->metadata = $metadata;
@@ -238,7 +238,7 @@ class Authentication
 
         $user->set('ipAddress', $request->getServerParam('REMOTE_ADDR') ?? null);
 
-        $this->container->set('user', $user);
+        $this->applicationUser->setUser($user);
 
         if (!$result->isSecondStepRequired() && !$authToken && $this->config->get('auth2FA')) {
             $result = $this->processTwoFactor($result, $request);

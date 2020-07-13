@@ -42,7 +42,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\PasswordHash,
     Utils\Language,
-    Container,
+    ApplicationUser,
     Authentication\Result,
 };
 
@@ -58,21 +58,21 @@ class LDAP extends Espo
     protected $entityManager;
     protected $passwordHash;
     protected $language;
-    protected $container;
+    protected $applicationUser;
 
     public function __construct(
         Config $config,
         EntityManager $entityManager,
         PasswordHash $passwordHash,
         Language $language,
-        Container $container,
+        ApplicationUser $applicationUser,
         bool $isPortal = false
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->passwordHash = $passwordHash;
         $this->language = $language;
-        $this->container = $container;
+        $this->applicationUser = $applicationUser;
 
         $this->isPortal = $isPortal;
 
@@ -201,12 +201,7 @@ class LDAP extends Espo
 
     protected function useSystemUser()
     {
-        $systemUser = $this->entityManager->getEntity('User', 'system');
-        if (!$systemUser) {
-            throw new Error("System user is not found.");
-        }
-
-        $this->container->set('user', $systemUser);
+        $this->applicationUser->setupSystemUser();
     }
 
     protected function getLdapClient()

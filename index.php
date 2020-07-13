@@ -37,7 +37,7 @@ if (!$app->isInstalled()) {
 }
 
 if (!empty($_GET['entryPoint'])) {
-    $app->runEntryPoint($_GET['entryPoint']);
+    $app->run('entryPoint');
     exit;
 }
 

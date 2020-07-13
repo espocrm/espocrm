@@ -36,7 +36,8 @@ use Espo\Core\Exceptions\{
 use Espo\Core\{
     ContainerConfiguration,
     InjectableFactory,
-    EntryPointManager,
+    Container,
+    ApplicationUser,
     Authentication\Authentication,
     Api\Auth as ApiAuth,
     Api\ErrorOutput as ApiErrorOutput,
@@ -49,8 +50,6 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\ClientManager,
     Utils\Log,
-    ORM\EntityManager,
-    Portal\Application as PortalApplication,
     Loaders\Config as ConfigLoader,
     Loaders\Log as LogLoader,
     Loaders\FileManager as FileManagerLoader,
@@ -162,72 +161,6 @@ class Application
     }
 
     /**
-     * Run entryPoint.
-     */
-    public function runEntryPoint(string $entryPoint, $data = null, bool $final = false)
-    {
-        if (empty($entryPoint)) {
-            throw new Error();
-        }
-
-        $slim = $this->createSlimApp();
-
-        $entryPointManager = $this->getInjectableFactory()->create(EntryPointManager::class);
-
-        $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
-        $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
-
-        if ($authRequired && !$authNotStrict) {
-            if (!$final && $portalId = $this->detectPortalId()) {
-                $app = new PortalApplication($portalId);
-                $app->setClientBasePath($this->getClientBasePath());
-                $app->runEntryPoint($entryPoint, $data, true);
-                exit;
-            }
-        }
-
-        $slim->add(
-            function (Request $request, RequestHandler $handler) use (
-                $entryPointManager, $entryPoint, $data, $authRequired, $authNotStrict, $slim
-            ) {
-                $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
-                $responseWrapped = new ResponseWrapper($handler->handle($request));
-
-                try {
-                    $apiAuth = new ApiAuth($this->createAuthentication($authNotStrict), $authRequired, true);
-
-                    $apiAuth->process($requestWrapped, $responseWrapped);
-
-                    if (!$apiAuth->isResolved()) {
-                        return $responseWrapped->getResponse();
-                    }
-                    if ($apiAuth->isResolvedUseNoAuth()) {
-                        $this->setupSystemUser();
-                    }
-
-                    ob_start();
-                    $entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped, $data);
-                    $contents = ob_get_clean();
-
-                    if ($contents) {
-                        $responseWrapped->writeBody($contents);
-                    }
-                } catch (\Exception $e) {
-                    (new ApiErrorOutput($requestWrapped))->process($responseWrapped, $e, true);
-                }
-
-                return $responseWrapped->getResponse();
-            }
-        );
-
-        $slim->get('/', function (Request $request, Response $response) {
-            return $response;
-        });
-
-        $slim->run();
-    }
-
-    /**
      * Run an application through a specific runner.
      * You can find runner classes in `Espo\Core\ApplicationRunners`.
      */
@@ -297,6 +230,11 @@ class Application
         return $this->container->get('injectableFactory');
     }
 
+    protected function getApplicationUser() : ApplicationUser
+    {
+        return $this->container->get('applicationUser');
+    }
+
     protected function getLog() : Log
     {
         return $this->container->get('log');
@@ -315,11 +253,6 @@ class Application
     protected function getConfig() : Config
     {
         return $this->container->get('config');
-    }
-
-    protected function getEntityManager() : EntityManager
-    {
-        return $this->container->get('entityManager');
     }
 
     protected function createSlimApp() : SlimApp
@@ -368,43 +301,10 @@ class Application
     }
 
     /**
-     * Get a base path of an index file related to the application directory. Used for a portal.
-     */
-    public function getClientBasePath() : string
-    {
-        return $this->getClientManager()->getBasePath();
-    }
-
-    protected function detectPortalId() : ?string
-    {
-        if (!empty($_GET['portalId'])) {
-            return $_GET['portalId'];
-        }
-        if (!empty($_COOKIE['auth-token'])) {
-            $token =
-                $this->getEntityManager()->getRepository('AuthToken')
-                    ->where(['token' => $_COOKIE['auth-token']])->findOne();
-
-            if ($token && $token->get('portalId')) {
-                return $token->get('portalId');
-            }
-        }
-        return null;
-    }
-
-    /**
      * Setup the system user. The system user is used when no user is logged in.
      */
     public function setupSystemUser()
     {
-        $user = $this->getEntityManager()->getEntity('User', 'system');
-        if (!$user) {
-            throw new Error("System user is not found");
-        }
-
-        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
-        $user->set('type', 'system');
-
-        $this->container->set('user', $user);
+        $this->getApplicationUser()->setupSystemUser();
     }
 }
