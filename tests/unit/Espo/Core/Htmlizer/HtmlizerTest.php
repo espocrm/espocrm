@@ -47,7 +47,7 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
 
         $obj = new \StdClass();
 
-        $this->fileManager = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
+        $this->fileManager = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
         $this->fileManager
                     ->expects($this->any())
                     ->method('putContents')

@@ -178,8 +178,10 @@ abstract class BaseMapper implements Mapper
         return null;
     }
 
-    public function selectRelated(Entity $entity, string $relationName, array $params = [], bool $returnTotalCount = false)
+    public function selectRelated(Entity $entity, string $relationName, ?array $params = null, bool $returnTotalCount = false)
     {
+        $params = $params ?? [];
+
         $relDefs = $entity->relations[$relationName];
 
         if (!isset($relDefs['type'])) {
@@ -379,7 +381,7 @@ abstract class BaseMapper implements Mapper
         return false;
     }
 
-    public function countRelated(Entity $entity, string $relationName, array $params) : int
+    public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int
     {
         return (int) $this->selectRelated($entity, $relationName, $params, true);
     }
@@ -584,9 +586,9 @@ abstract class BaseMapper implements Mapper
         }
     }
 
-    public function addRelation
-        (Entity $entity, string $relationName, ?string $id = null, ?Entity $relEntity = null, ?array $data = null)
-    {
+    public function addRelation(
+        Entity $entity, string $relationName, ?string $id = null, ?Entity $relEntity = null, ?array $data = null
+    ) : bool {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
         }
@@ -960,7 +962,7 @@ abstract class BaseMapper implements Mapper
 
     public function removeAllRelations(Entity $entity, string $relationName) : bool
     {
-        $this->removeRelation($entity, $relationName, null, true);
+        return $this->removeRelation($entity, $relationName, null, true);
     }
 
     protected function quote($value)

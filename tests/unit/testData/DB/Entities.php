@@ -3,9 +3,9 @@
 namespace Espo\Entities;
 
 use Espo\ORM\Entity;
+use Espo\ORM\BaseEntity;
 
-
-class TEntity extends Entity
+class TEntity extends BaseEntity
 {
 
 }

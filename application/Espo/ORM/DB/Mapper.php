@@ -79,35 +79,35 @@ interface Mapper
      *
      * @return mixed Sum value.
      */
-    function sum(Entity $entity, ?array $params, string $attribute);
+    public function sum(Entity $entity, ?array $params, string $attribute);
 
     /**
      * Selects related entity or list of entities.
      *
      * @return List of entities or total count if $totalCount was passed as true.
      */
-    public function selectRelated(Entity $entity, string $relationName, array $params = [], bool $returnTotalCount = false);
+    public function selectRelated(Entity $entity, string $relationName, ?array $params = null, bool $returnTotalCount = false);
 
     /**
      * Returns count of related records according to given parameters.
      *
-     * @return int Count of records.
+     * @return A number of records.
      */
-    public function countRelated(Entity $entity, string $relationName, array $params) : int;
+    public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int;
 
     /**
      * Links entity with another one.
      *
-     * @return bool True if success
+     * @return TRUE if success.
      */
     public function addRelation(
         Entity $entity, string $relationName, ?string $id = null, ?Entity $relEntity = null, ?array $data = null
-    );
+    ) : bool;
 
     /**
      * Remove relation of entity with certain record.
      *
-     * @return bool True if success.
+     * @return TRUE if success.
      */
     public function removeRelation(
         Entity $entity, string $relationName, ?string $id = null, bool $all = false, ?Entity $relEntity = null
@@ -116,9 +116,9 @@ interface Mapper
     /**
      * Remove all relations of entity of specified relation name.
      *
-     * @return True if success.
+     * @return TRUE if success.
      */
-    public function removeAllRelations(Entity $entity, string $relationName);
+    public function removeAllRelations(Entity $entity, string $relationName) : bool;
 
     /**
      * Insert an entity into DB.
@@ -130,7 +130,7 @@ interface Mapper
     /**
      * Update an entity in DB.
      *
-     * @return Recotd ID if success.
+     * @return Record ID if success.
      */
     public function update(Entity $entity) : ?string;
 

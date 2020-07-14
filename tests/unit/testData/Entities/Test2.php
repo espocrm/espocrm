@@ -2,9 +2,10 @@
 
 namespace tests\unit\testData\Entities;
 
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
+use Espo\ORM\BaseEntity;
 
-class Test2 extends Entity
+class Test2 extends BaseEntity
 {
     public $fields = array(
         'id' => array(
