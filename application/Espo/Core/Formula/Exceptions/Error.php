@@ -27,49 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula;
+namespace Espo\Core\Formula\Exceptions;
 
-/**
- * A function argument.
- */
-class Argument implements Evaluatable
+class Error extends \Exception
 {
-    private $data;
-
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * Get an argument type (function name).
-     */
-    public function getType() : ?string
-    {
-        return $this->data->type ?? null;
-    }
-
-    /**
-     * Get an argument list.
-     */
-    public function getArgumentList() : ArgumentList
-    {
-        if (!isset($this->data->value)) {
-            $argumentList = new ArgumentList([]);
-        } else if (is_array($this->data->value)) {
-            $argumentList = new ArgumentList($this->data->value);
-        } else {
-            $argumentList = new ArgumentList([$this->data->value]);
-        }
-
-        return $argumentList;
-    }
-
-    /**
-     * Get RAW data.
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
+    protected $code = 500;
 }

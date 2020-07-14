@@ -29,10 +29,13 @@
 
 namespace Espo\Core\Formula;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\SyntaxError;
 
 use StdClass;
 
+/**
+ * Parses a formula script. Returns a RAW data object that represents a tree of functions.
+ */
 class Parser
 {
     protected $priorityList = [
@@ -93,7 +96,7 @@ class Parser
                     ]
                 ];
             }
-            throw new Error();
+            throw new SyntaxError("Bad operator usage.");
         }
 
         $functionName = $this->operatorMap[$operator];
@@ -246,7 +249,7 @@ class Parser
             }
         }
         if ($braceCounter !== 0) {
-            throw new Error('Formula Parser: Incorrect round brackets in expression ' . $expression . '.');
+            throw new SyntaxError('Incorrect round brackets in expression ' . $expression . '.');
         }
 
         if (strlen($expression) > 1 && $expression[0] === '(' && $expression[strlen($expression) - 1] === ')' && $hasExcessBraces) {

@@ -30,8 +30,10 @@
 namespace Espo\Core\Formula;
 
 use Espo\ORM\Entity;
-use Espo\Core\Exceptions\Error;
 
+/**
+ * Fetches attributes from an entity.
+ */
 class AttributeFetcher
 {
     private $relatedEntitiesCacheMap = [];

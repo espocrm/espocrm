@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\UnknownFunction;
 
 use Espo\ORM\Entity;
 
@@ -76,7 +76,7 @@ class FunctionFactory
         }
 
         if (!class_exists($className)) {
-            throw new Error("Class {$className} not found.");
+            throw new UnknownFunction("Unknown function: " . $name);
         }
 
         $object = $this->injectableFactory->createWith($className, [

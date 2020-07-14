@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\Error;
 
 use Espo\ORM\Entity;
 
@@ -66,7 +66,7 @@ class Processor
     public function process(Argument $item)
     {
         if (!$item->getType()) {
-            throw new Error("Formula: Missing 'type' in item.");
+            throw new Error("Missing 'type' in raw function data.");
         }
 
         $function = $this->functionFactory->create($item->getType(), $this->entity, $this->variables);
