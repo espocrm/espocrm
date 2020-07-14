@@ -50,7 +50,7 @@ abstract class FunctionBase
         return $this->variables;
     }
 
-    protected function getEntity() : Entity
+    protected function getEntity()
     {
         if (!$this->entity) {
             throw new Error('Formula: Entity required but not passed.');

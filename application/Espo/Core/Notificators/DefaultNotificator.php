@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Notificators;
 
-use Espo\Core\Interfaces\Injectable;
-
 use Espo\ORM\Entity;
 
 use Espo\Entities\User;
