@@ -248,7 +248,7 @@ class Entity extends BaseEntity
         return null;
     }
 
-    public function setLinkMultipleName(string $field, string $id, string $value)
+    public function setLinkMultipleName(string $field, string $id, ?string $value)
     {
         $namesAttribute = $field . 'Names';
         if (!$this->has($namesAttribute)) return;
