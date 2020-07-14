@@ -39,7 +39,7 @@ use Espo\Core\ORM\Entity;
 use StdClass;
 
 /**
- * The entry point for formula execution.
+ * An access point for the formula functionality.
  */
 class Manager
 {

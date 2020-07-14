@@ -31,22 +31,27 @@ namespace Espo\Core\Formula;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\InjectableFactory;
+
 use StdClass;
 
-class Formula
+class Processor
 {
     private $functionFactory;
 
-    public function __construct(FunctionFactory $functionFactory)
+    public function __construct(InjectableFactory $injectableFactory, AttributeFetcher $attributeFetcher, ?array $functionClassNameMap = null)
     {
-        $this->functionFactory = $functionFactory;
+        $this->functionFactory = new FunctionFactory($this, $injectableFactory, $attributeFetcher, $functionClassNameMap);
     }
 
     public function process(StdClass $item, ?Entity $entity = null, ?StdClass $variables = null)
     {
         if (is_null($variables)) {
-            $variables = (object)[];
+            $variables = (object) [];
         }
-        return $this->functionFactory->create($item, $entity, $variables)->process($item);
+
+        $function = $this->functionFactory->create($item, $entity, $variables);
+
+        return $function->process($item);
     }
 }

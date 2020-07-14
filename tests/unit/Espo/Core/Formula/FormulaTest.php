@@ -31,6 +31,9 @@ namespace tests\unit\Espo\Core\Formula;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Formula\AttributeFetcher;
+use Espo\Core\Formula\Processor;
+
 class FormulaTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
@@ -40,10 +43,8 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $injectableFactory = $injectableFactory = new \Espo\Core\InjectableFactory($container);
 
-        $attributeFetcher = new \Espo\Core\Formula\AttributeFetcher();
-
-        $this->functionFactory = new \Espo\Core\Formula\FunctionFactory($injectableFactory, $attributeFetcher);
-        $this->formula = new \Espo\Core\Formula\Formula($this->functionFactory);
+        $attributeFetcher = new AttributeFetcher();
+        $this->processor = new Processor($injectableFactory, $attributeFetcher);
 
         $this->entity = $this->getEntityMock();
         $this->entityManager = $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
@@ -62,8 +63,6 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValueMap([
                 ['timeZone', null, 'UTC']
             ]));
-
-        //$this->user = new \tests\unit\testData\Entities\User();
 
         $this->user = $this->getMockBuilder('Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
 
@@ -92,8 +91,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
     {
         $this->container = null;
         $this->injectableFactory = null;
-        $this->functionFactory = null;
-        $this->formula = null;
+        $this->processor = null;
         $this->entity = null;
         $this->entityManager = null;
         $this->repository = null;
@@ -144,7 +142,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'name' => 'Test'
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals('Test', $result);
     }
@@ -167,7 +165,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'name' => 'Test'
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals('Test', $result);
     }
@@ -190,7 +188,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'name' => 'Test'
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals('Test', $result);
     }
@@ -218,7 +216,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ->method('isAttributeChanged')
             ->will($this->returnValue(true));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -246,7 +244,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ->method('isAttributeChanged')
             ->will($this->returnValue(false));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -286,7 +284,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ->method('getRepository')
             ->will($this->returnValue($this->repository));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -320,7 +318,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ->method('addLinkMultipleId')
             ->with('teams', '1');
 
-        $this->formula->process($item, $this->entity);
+        $this->processor->process($item, $this->entity);
 
         $this->assertTrue(true);
     }
@@ -354,7 +352,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ->method('removeLinkMultipleId')
             ->with('teams', '1');
 
-        $this->formula->process($item, $this->entity);
+        $this->processor->process($item, $this->entity);
 
         $this->assertTrue(true);
     }
@@ -399,7 +397,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'name' => 'Test'
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -422,7 +420,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         ');
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -449,7 +447,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'name' => 'Test'
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertFalse($result);
     }
@@ -497,7 +495,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'name' => 'Test'
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertFalse($result);
     }
@@ -545,7 +543,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'name' => 'Test'
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals('Hello Test 12', $result);
     }
@@ -563,7 +561,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(9, $actual);
     }
 
@@ -584,7 +582,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertTrue($actual);
 
         $item = json_decode('
@@ -602,7 +600,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertTrue($actual);
 
         $item = json_decode('
@@ -620,7 +618,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertFalse($actual);
     }
 
@@ -641,7 +639,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertTrue($actual);
 
         $item = json_decode('
@@ -659,7 +657,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertFalse($actual);
     }
 
@@ -702,7 +700,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 4
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals(2 + 3 + 4 + (5 - 2), $result);
     }
@@ -733,7 +731,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 4.2
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals(2 * 3 * 4.2, $result);
     }
@@ -756,7 +754,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         ');
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals(3 / 2, $result);
     }
@@ -804,7 +802,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'test' => true
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals(2, $result);
     }
@@ -853,7 +851,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 3
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals(1, $result);
     }
@@ -880,7 +878,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 3
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -914,7 +912,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         ));
 
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -941,7 +939,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 3
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertFalse($result);
     }
@@ -968,7 +966,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 3
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -994,7 +992,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->setEntityAttributes($this->entity, array(
             'amount' => 3
         ));
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
         $this->assertTrue($result);
     }
 
@@ -1021,7 +1019,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'parentType' => 'User'
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -1048,7 +1046,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 3
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -1075,7 +1073,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 3
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -1102,7 +1100,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 4
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -1129,7 +1127,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'amount' => 4
         ));
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertTrue($result);
     }
@@ -1143,7 +1141,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         ');
 
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
 
         $this->assertEquals("test\ntest", $result);
     }
@@ -1166,7 +1164,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         ');
 
-        $result = $this->formula->process($item, $this->entity, (object)[
+        $result = $this->processor->process($item, $this->entity, (object)[
             'counter' => 4
         ]);
 
@@ -1194,7 +1192,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $variables = (object)[
             'counter' => 4
         ];
-        $this->formula->process($item, $this->entity, $variables);
+        $this->processor->process($item, $this->entity, $variables);
 
         $this->assertEquals(5, $variables->counter);
     }
@@ -1226,7 +1224,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ->method('set')
             ->with('amount', 4);
 
-        $this->formula->process($item, $this->entity, $variables);
+        $this->processor->process($item, $this->entity, $variables);
     }
 
     function testCompareDates()
@@ -1249,7 +1247,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->setEntityAttributes($this->entity, array(
             'dateStart' => '2017-01-01'
         ));
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
         $this->assertTrue($result);
 
         $item = json_decode('
@@ -1270,7 +1268,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->setEntityAttributes($this->entity, array(
             'dateStart' => '2017-01-01'
         ));
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
         $this->assertTrue($result);
 
         $item = json_decode('
@@ -1291,7 +1289,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->setEntityAttributes($this->entity, array(
             'dateStart' => '2017-01-01'
         ));
-        $result = $this->formula->process($item, $this->entity);
+        $result = $this->processor->process($item, $this->entity);
         $this->assertTrue($result);
     }
 
@@ -1308,7 +1306,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(20, $actual);
     }
 
@@ -1325,7 +1323,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(21, $actual);
     }
 
@@ -1342,7 +1340,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(20, $actual);
     }
 
@@ -1363,7 +1361,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('20.00', $actual);
 
         $item = json_decode('
@@ -1385,7 +1383,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('20,00', $actual);
     }
 
@@ -1406,7 +1404,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(1.1, $actual);
 
         $item = json_decode('
@@ -1420,7 +1418,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(3, $actual);
     }
 
@@ -1441,7 +1439,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
 
         $this->assertIsInt($actual);
     }
@@ -1453,7 +1451,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "type": "datetime\\\\now"
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(date('Y-m-d H:i:s'), $actual);
 
         $item = json_decode('
@@ -1461,7 +1459,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "type": "datetime\\\\today"
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(date('Y-m-d'), $actual);
     }
 
@@ -1486,7 +1484,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-10-20 02:15 pm', $actual);
     }
 
@@ -1503,7 +1501,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(2017, $actual);
 
         $item = json_decode('
@@ -1517,7 +1515,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(2017, $actual);
 
         $item = json_decode('
@@ -1531,7 +1529,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(0, $actual);
 
         $item = json_decode('
@@ -1549,7 +1547,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(2018, $actual);
     }
 
@@ -1566,7 +1564,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(10, $actual);
 
         $item = json_decode('
@@ -1580,7 +1578,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(10, $actual);
 
         $item = json_decode('
@@ -1598,7 +1596,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(12, $actual);
     }
 
@@ -1615,7 +1613,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(2, $actual);
 
         $item = json_decode('
@@ -1629,7 +1627,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(20, $actual);
 
         $item = json_decode('
@@ -1647,7 +1645,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(3, $actual);
     }
 
@@ -1664,7 +1662,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(14, $actual);
 
         $item = json_decode('
@@ -1678,7 +1676,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(0, $actual);
 
         $item = json_decode('
@@ -1696,7 +1694,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(16, $actual);
     }
 
@@ -1713,7 +1711,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(5, $actual);
 
         $item = json_decode('
@@ -1727,7 +1725,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(0, $actual);
 
         $item = json_decode('
@@ -1745,7 +1743,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(5, $actual);
     }
 
@@ -1762,7 +1760,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(5, $actual);
 
         $item = json_decode('
@@ -1776,7 +1774,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(0, $actual);
 
         $item = json_decode('
@@ -1790,7 +1788,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(-1, $actual);
 
         $item = json_decode('
@@ -1804,7 +1802,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(5, $actual);
 
         $item = json_decode('
@@ -1822,7 +1820,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item);
+        $actual = $this->processor->process($item);
         $this->assertEquals(6, $actual);
     }
 
@@ -1847,7 +1845,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(-5, $actual);
 
         $item = json_decode('
@@ -1869,7 +1867,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(3, $actual);
 
         $item = json_decode('
@@ -1891,7 +1889,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(1, $actual);
 
         $item = json_decode('
@@ -1913,7 +1911,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(75, $actual);
     }
 
@@ -1934,7 +1932,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-01-03', $actual);
 
         $item = json_decode('
@@ -1952,7 +1950,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-01-03 10:00:05', $actual);
 
         $item = json_decode('
@@ -1970,7 +1968,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2016-12-01 10:00:05', $actual);
 
         $item = json_decode('
@@ -1988,7 +1986,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-01-08 10:00:05', $actual);
 
         $item = json_decode('
@@ -2006,7 +2004,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2018-01-01', $actual);
 
         $item = json_decode('
@@ -2024,7 +2022,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-01-01 02:00:00', $actual);
 
         $item = json_decode('
@@ -2042,7 +2040,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-01-01 19:30:00', $actual);
     }
 
@@ -2067,7 +2065,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-16 16:15', $actual);
 
         $item = json_decode('
@@ -2089,7 +2087,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-17 12:00', $actual);
 
         $item = json_decode('
@@ -2115,7 +2113,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-15 16:15', $actual);
 
         $item = json_decode('
@@ -2141,7 +2139,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-15 16:15', $actual);
 
         $item = json_decode('
@@ -2167,7 +2165,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-16 00:00', $actual);
 
         $item = json_decode('
@@ -2193,7 +2191,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-15 12:00', $actual);
 
         $item = json_decode('
@@ -2219,7 +2217,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-16 12:10', $actual);
     }
 
@@ -2244,7 +2242,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-17 10:00', $actual);
 
         $item = json_decode('
@@ -2270,7 +2268,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-16 10:00', $actual);
     }
 
@@ -2299,7 +2297,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-16 15:10', $actual);
 
         $item = json_decode('
@@ -2321,7 +2319,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-16 15:10', $actual);
 
         $item = json_decode('
@@ -2343,7 +2341,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-16 16:10', $actual);
 
         $item = json_decode('
@@ -2365,7 +2363,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-16 15:59', $actual);
     }
 
@@ -2390,7 +2388,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-20 00:00', $actual);
 
         $item = json_decode('
@@ -2416,7 +2414,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-13', $actual);
 
         $item = json_decode('
@@ -2438,7 +2436,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-19 00:00', $actual);
     }
 
@@ -2463,7 +2461,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-30 00:00', $actual);
 
         $item = json_decode('
@@ -2489,7 +2487,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-10-31', $actual);
 
         $item = json_decode('
@@ -2511,7 +2509,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-12-01 00:00', $actual);
     }
 
@@ -2536,7 +2534,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2018-01-01', $actual);
 
         $item = json_decode('
@@ -2558,7 +2556,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-01', $actual);
 
         $item = json_decode('
@@ -2580,7 +2578,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2018-11-01 00:00', $actual);
 
         $item = json_decode('
@@ -2606,7 +2604,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('2017-11-01', $actual);
     }
 
@@ -2627,7 +2625,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(["Test", "Hello"], $actual);
 
         $item = json_decode('
@@ -2636,7 +2634,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "value": []
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals([], $actual);
     }
 
@@ -2657,7 +2655,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertTrue($actual);
 
         $item = json_decode('
@@ -2675,7 +2673,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertFalse($actual);
 
         $item = json_decode('
@@ -2693,7 +2691,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertFalse($actual);
     }
 
@@ -2718,7 +2716,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(['Test', 'Hello', '1', '2'], $actual);
     }
 
@@ -2735,7 +2733,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(2, $actual);
     }
 
@@ -2752,7 +2750,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('1', $actual);
     }
 
@@ -2769,7 +2767,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('test', $actual);
     }
 
@@ -2786,7 +2784,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(' test ', $actual);
     }
 
@@ -2803,7 +2801,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('TEST', $actual);
     }
 
@@ -2824,7 +2822,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('234', $actual);
 
         $item = json_decode('
@@ -2846,7 +2844,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         ');
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals('12', $actual);
     }
 
@@ -2868,7 +2866,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         ');
 
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertEquals(1, $actual);
 
         $item = json_decode('
@@ -2887,7 +2885,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         ');
 
-        $actual = $this->formula->process($item, $this->entity);
+        $actual = $this->processor->process($item, $this->entity);
         $this->assertFalse($actual);
     }
 
@@ -2932,7 +2930,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             'test' => 'hello'
         ));
 
-        $this->formula->process($item, $this->entity, $variables);
+        $this->processor->process($item, $this->entity, $variables);
 
         $this->assertEquals(5, $variables->counter);
         $this->assertEquals('hello', $variables->test);

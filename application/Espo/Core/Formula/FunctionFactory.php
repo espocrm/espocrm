@@ -38,6 +38,8 @@ use StdClass;
 
 class FunctionFactory
 {
+    private $processor;
+
     private $injectableFactory;
 
     private $attributeFetcher;
@@ -45,8 +47,12 @@ class FunctionFactory
     private $classNameMap;
 
     public function __construct(
-        InjectableFactory $injectableFactory, AttributeFetcher $attributeFetcher, ?array $classNameMap = null
+        Processor $processor,
+        InjectableFactory $injectableFactory,
+        AttributeFetcher $attributeFetcher,
+        ?array $classNameMap = null
     ) {
+        $this->processor = $processor;
         $this->injectableFactory = $injectableFactory;
         $this->attributeFetcher = $attributeFetcher;
         $this->classNameMap = $classNameMap;
@@ -83,7 +89,7 @@ class FunctionFactory
         }
 
         $object = $this->injectableFactory->createWith($className, [
-            'itemFactory' => $this,
+            'processor' => $this->processor,
             'entity' => $entity,
             'variables' => $variables,
         ]);

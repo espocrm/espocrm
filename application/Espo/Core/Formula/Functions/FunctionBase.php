@@ -29,17 +29,17 @@
 
 namespace Espo\Core\Formula\Functions;
 
-
-use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
 
-use Espo\Core\Formula\FunctionFactory;
+use Espo\ORM\Entity;
+
+use Espo\Core\Formula\Processor;
 
 use StdClass;
 
 abstract class FunctionBase
 {
-    protected $itemFactory;
+    protected $processor;
 
     private $entity;
 
@@ -58,22 +58,16 @@ abstract class FunctionBase
         return $this->entity;
     }
 
-    public function __construct(FunctionFactory $itemFactory, ?Entity $entity = null, ?StdClass $variables = null)
+    public function __construct(Processor $processor, ?Entity $entity = null, ?StdClass $variables = null)
     {
-        $this->itemFactory = $itemFactory;
+        $this->processor = $processor;
         $this->entity = $entity;
         $this->variables = $variables;
     }
 
-    protected function getFactory() : FunctionFactory
-    {
-        return $this->itemFactory;
-    }
-
     protected function evaluate(StdClass $item)
     {
-        $function = $this->getFactory()->create($item, $this->entity, $this->variables);
-        return $function->process($item);
+        return $this->processor->process($item, $this->entity, $this->variables);
     }
 
     public abstract function process(StdClass $item);

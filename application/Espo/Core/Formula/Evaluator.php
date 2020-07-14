@@ -41,7 +41,7 @@ class Evaluator
 {
     private $functionFactory = null;
 
-    private $formula;
+    private $processor;
 
     private $parser;
 
@@ -49,12 +49,9 @@ class Evaluator
 
     private $parsedHash;
 
-    public function __construct(
-        ?InjectableFactory $injectableFactory = null, array $functionClassNameMap = [], array $parsedHash = []
-    ) {
+    public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = [], array $parsedHash = []) {
         $this->attributeFetcher = new AttributeFetcher();
-        $this->functionFactory = new FunctionFactory($injectableFactory, $this->attributeFetcher, $functionClassNameMap);
-        $this->formula = new Formula($this->functionFactory);
+        $this->processor = new Processor($injectableFactory, $this->attributeFetcher, $functionClassNameMap);
         $this->parser = new Parser();
         $this->parsedHash = [];
     }
@@ -68,7 +65,7 @@ class Evaluator
             $item = $this->parsedHash[$expression];
         }
 
-        $result = $this->formula->process($item, $entity, $variables);
+        $result = $this->processor->process($item, $entity, $variables);
 
         $this->attributeFetcher->resetRuntimeCache();
 

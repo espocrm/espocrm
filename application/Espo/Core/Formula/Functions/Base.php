@@ -34,6 +34,7 @@ use Espo\Core\Interfaces\Injectable;
 use Espo\ORM\Entity;
 
 use Espo\Core\Formula\FunctionFactory;
+use Espo\Core\Formula\Processor;
 
 use StdClass;
 
@@ -71,9 +72,9 @@ abstract class Base extends FunctionBase implements Injectable
         return $this->dependencyList;
     }
 
-    public function __construct(FunctionFactory $itemFactory, ?Entity $entity = null, ?StdClass $variables = null)
+    public function __construct(Processor $processor, ?Entity $entity = null, ?StdClass $variables = null)
     {
-        parent::__construct($itemFactory, $entity, $variables);
+        parent::__construct($processor, $entity, $variables);
         $this->init();
     }
 
