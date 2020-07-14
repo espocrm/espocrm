@@ -29,7 +29,7 @@
 
 namespace tests\integration\Core;
 
-use Espo\Core\Utils\Auth;
+use Espo\Core\Authentication\Authentication;
 
 use Espo\Core\Application;
 use Espo\Core\Portal\Application as PortalApplication;
@@ -161,7 +161,7 @@ class Tester
 
             $this->application = !$portalId ? new Application() : new PortalApplication($portalId);
 
-            $auth = $this->application->getContainer()->get('injectableFactory')->createWith(Auth::class, [
+            $auth = $this->application->getContainer()->get('injectableFactory')->createWith(Authentication::class, [
                 'allowAnyAccess' => false,
             ]);
 
@@ -323,7 +323,7 @@ class Tester
 
         if (!empty($this->params['pathToFiles']) && file_exists($this->params['pathToFiles'])) {
             $result = $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
-            $this->getApplication(true, true)->runRebuild();
+            $this->getApplication(true, true)->run('rebuild');
         }
 
         if (!empty($this->params['dataFile'])) {
@@ -337,14 +337,14 @@ class Tester
         }
 
         if ($applyChanges) {
-            $this->getApplication(true, true)->runRebuild();
+            $this->getApplication(true, true)->run('rebuild');
         }
     }
 
     public function setData(array $data)
     {
         $this->getDataLoader()->setData($data);
-        $this->getApplication(true, true)->runRebuild();
+        $this->getApplication(true, true)->run('rebuild');
     }
 
     public function clearCache()
