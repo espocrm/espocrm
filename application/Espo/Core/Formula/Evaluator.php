@@ -37,9 +37,14 @@ use Espo\Core\ORM\Entity;
 
 use StdClass;
 
+/**
+ * Creates an instance of Processor and executes a script.
+ */
 class Evaluator
 {
-    private $functionFactory = null;
+    private $functionFactory;
+
+    private $functionClassNameMap;
 
     private $processor;
 
@@ -49,26 +54,37 @@ class Evaluator
 
     private $parsedHash;
 
-    public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = [], array $parsedHash = []) {
+    public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = []) {
         $this->attributeFetcher = new AttributeFetcher();
-        $this->processor = new Processor($injectableFactory, $this->attributeFetcher, $functionClassNameMap);
+
+        $this->injectableFactory = $injectableFactory;
+        $this->functionClassNameMap = $functionClassNameMap;
+
         $this->parser = new Parser();
         $this->parsedHash = [];
     }
 
     public function process(string $expression, ?Entity $entity = null, ?StdClass $variables = null)
     {
-        if (!array_key_exists($expression, $this->parsedHash)) {
-            $item = $this->parser->parse($expression);
-            $this->parsedHash[$expression] = $item;
-        } else {
-            $item = $this->parsedHash[$expression];
-        }
+        $this->processor = new Processor(
+            $this->injectableFactory, $this->attributeFetcher, $this->functionClassNameMap, $entity, $variables
+        );
 
-        $result = $this->processor->process($item, $entity, $variables);
+        $item = $this->getParsedExpression($expression);
+
+        $result = $this->processor->process($item);
 
         $this->attributeFetcher->resetRuntimeCache();
 
         return $result;
+    }
+
+    private function getParsedExpression(string $expression) : Argument
+    {
+        if (!array_key_exists($expression, $this->parsedHash)) {
+            $this->parsedHash[$expression] = $this->parser->parse($expression);
+        }
+
+        return new Argument($this->parsedHash[$expression]);
     }
 }

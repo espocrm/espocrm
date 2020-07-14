@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 use Espo\Core\Di;
 
-class TodayType extends \Espo\Core\Formula\Functions\FunctionBase implements Di\DateTimeAware
+class TodayType extends \Espo\Core\Formula\Functions\Base implements Di\DateTimeAware
 {
     use Di\DateTimeSetter;
 

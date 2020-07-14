@@ -29,17 +29,23 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class ContainsType extends \Espo\Core\Formula\Functions\FunctionBase
+class ContainsType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 2) {
-            throw new Error('Bad arguments passed to \'String\\Contains\'.');
+        $args = $this->evaluate($args);
+
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
         }
-        $string = $this->evaluate($item->value[0]);
-        $needle = $this->evaluate($item->value[1]);
+
+        $string = $args[0];
+        $needle = $args[1];
 
         if (!is_string($string)) {
             return false;

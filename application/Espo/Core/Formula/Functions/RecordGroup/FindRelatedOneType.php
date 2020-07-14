@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
-class FindRelatedOneType extends \Espo\Core\Formula\Functions\FunctionBase implements
+class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base implements
     Di\EntityManagerAware,
     Di\SelectManagerFactoryAware,
     Di\MetadataAware

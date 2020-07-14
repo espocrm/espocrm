@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions;
 
-class ListType extends FunctionBase
+class ListType extends Base
 {
     public function process(\StdClass $item)
     {

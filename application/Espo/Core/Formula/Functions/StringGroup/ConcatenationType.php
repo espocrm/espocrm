@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-class ConcatenationType extends \Espo\Core\Formula\Functions\FunctionBase
+class ConcatenationType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

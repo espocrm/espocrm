@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
-class ClosestType extends \Espo\Core\Formula\Functions\FunctionBase implements Di\ConfigAware
+class ClosestType extends \Espo\Core\Formula\Functions\Base implements Di\ConfigAware
 {
     use Di\ConfigSetter;
 

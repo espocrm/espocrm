@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
-class IsNewType extends \Espo\Core\Formula\Functions\FunctionBase
+class IsNewType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

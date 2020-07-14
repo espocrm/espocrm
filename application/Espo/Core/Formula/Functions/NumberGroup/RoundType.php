@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\NumberGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class RoundType extends \Espo\Core\Formula\Functions\FunctionBase
+class RoundType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

@@ -29,29 +29,53 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\ORM\Entity;
 
 use Espo\Core\InjectableFactory;
 
+use Espo\Core\Formula\Functions\Base as DeprecatedBaseFunction;
+
 use StdClass;
 
+/**
+ * An instance of Processor is created for every formula script.
+ */
 class Processor
 {
     private $functionFactory;
 
-    public function __construct(InjectableFactory $injectableFactory, AttributeFetcher $attributeFetcher, ?array $functionClassNameMap = null)
-    {
+    private $entity;
+
+    private $variables;
+
+    public function __construct(
+        InjectableFactory $injectableFactory,
+        AttributeFetcher $attributeFetcher,
+        ?array $functionClassNameMap = null,
+        ?Entity $entity = null,
+        ?StdClass $variables = null
+    ) {
         $this->functionFactory = new FunctionFactory($this, $injectableFactory, $attributeFetcher, $functionClassNameMap);
+
+        $this->entity = $entity;
+        $this->variables = $variables ?? (object) [];
     }
 
-    public function process(StdClass $item, ?Entity $entity = null, ?StdClass $variables = null)
+    public function process(Argument $item)
     {
-        if (is_null($variables)) {
-            $variables = (object) [];
+        if (!$item->getType()) {
+            throw new Error("Formula: Missing 'type' in item.");
         }
 
-        $function = $this->functionFactory->create($item, $entity, $variables);
+        $function = $this->functionFactory->create($item->getType(), $this->entity, $this->variables);
 
-        return $function->process($item);
+        /** @deprecated */
+        if ($function instanceof DeprecatedBaseFunction) {
+            return $function->process($item->getData());
+        }
+
+        return $function->process($item->getArgumentList());
     }
 }

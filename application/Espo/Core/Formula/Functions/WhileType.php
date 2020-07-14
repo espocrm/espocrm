@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Exceptions\Error;
 
-class WhileType extends FunctionBase
+class WhileType extends Base
 {
     public function process(\StdClass $item)
     {

@@ -27,18 +27,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\LogicalGroup;
+namespace tests\unit\Espo\Core\Formula;
 
-class AndType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Formula\ArgumentList;
+
+class ArgumentListTest extends \PHPUnit\Framework\TestCase
 {
-    public function process(\StdClass $item)
+    protected function setUp() : void
     {
-        $result = true;
-        foreach ($item->value as $subItem) {
-            $result = $result && $this->evaluate($subItem);
-            if (!$result) break;
-        }
+    }
 
-        return $result;
+    protected function tearDown() : void
+    {
+    }
+
+    public function testCount()
+    {
+        $list = new ArgumentList([]);
+        $this->assertEquals(0, count($list));
+
+        $list = new ArgumentList([
+            null,
+            '1',
+            (object) [],
+        ]);
+        $this->assertEquals(3, count($list));
+    }
+
+    public function testAccess()
+    {
+        $list = new ArgumentList([
+            null,
+            '1',
+            (object) [],
+        ]);
+        $this->assertEquals(null, $list[0]->getData());
+        $this->assertEquals('1', $list[1]->getData());
+    }
+
+    public function testIteration()
+    {
+        $list = new ArgumentList([
+            null,
+            '1',
+        ]);
+
+        $array = [];
+        foreach ($list as $item) {
+            $array[] = $item->getData();
+        }
+        $this->assertEquals(null, $array[0]);
+        $this->assertEquals('1', $array[1]);
     }
 }

@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
-class FormatType extends \Espo\Core\Formula\Functions\FunctionBase implements
+class FormatType extends \Espo\Core\Formula\Functions\Base implements
     Di\NumberAware
 {
     use Di\NumberSetter;

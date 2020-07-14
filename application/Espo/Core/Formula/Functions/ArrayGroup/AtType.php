@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\ArrayGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class AtType extends \Espo\Core\Formula\Functions\FunctionBase
+class AtType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

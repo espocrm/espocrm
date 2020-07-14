@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\NumericGroup;
 
-class MultiplicationType extends \Espo\Core\Formula\Functions\FunctionBase
+class MultiplicationType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

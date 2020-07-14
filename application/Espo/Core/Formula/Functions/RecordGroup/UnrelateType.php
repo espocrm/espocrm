@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
-class UnrelateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+class UnrelateType extends \Espo\Core\Formula\Functions\Base implements
     Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;

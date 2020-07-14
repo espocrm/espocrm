@@ -35,7 +35,7 @@ use Espo\Core\Utils\Util;
 
 use Espo\Core\Di;
 
-class GenerateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+class GenerateType extends \Espo\Core\Formula\Functions\Base implements
     Di\EntityManagerAware,
     Di\ServiceFactoryAware
 {

@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\NumericGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class SubtractionType extends \Espo\Core\Formula\Functions\FunctionBase
+class SubtractionType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

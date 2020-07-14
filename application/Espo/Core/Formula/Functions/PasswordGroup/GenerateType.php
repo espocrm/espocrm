@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\PasswordGroup;
 
 use Espo\Core\Di;
 
-class GenerateType extends \Espo\Core\Formula\Functions\FunctionBase implements
+class GenerateType extends \Espo\Core\Formula\Functions\Base implements
     Di\ConfigAware
 {
     use Di\ConfigSetter;

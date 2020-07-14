@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class AddLinkMultipleIdType extends \Espo\Core\Formula\Functions\FunctionBase
+class AddLinkMultipleIdType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

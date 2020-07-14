@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Exceptions\Error;
 
-class VariableType extends FunctionBase
+class VariableType extends Base
 {
     public function process(\StdClass $item)
     {

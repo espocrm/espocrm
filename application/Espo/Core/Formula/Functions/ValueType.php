@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions;
 
-class ValueType extends FunctionBase
+class ValueType extends Base
 {
     public function process(\StdClass $item)
     {

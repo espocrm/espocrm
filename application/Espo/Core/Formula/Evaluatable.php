@@ -27,65 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions;
+namespace Espo\Core\Formula;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\ORM\Entity;
-
-use Espo\Core\Formula\Processor;
-
-use StdClass;
-
-abstract class FunctionBase
+/**
+ * A data that can be evaluated.
+ */
+interface Evaluatable
 {
-    protected $processor;
-
-    private $entity;
-
-    private $variables;
-
-    protected function getVariables() : StdClass
-    {
-        return $this->variables;
-    }
-
-    protected function getEntity()
-    {
-        if (!$this->entity) {
-            throw new Error('Formula: Entity required but not passed.');
-        }
-        return $this->entity;
-    }
-
-    public function __construct(Processor $processor, ?Entity $entity = null, ?StdClass $variables = null)
-    {
-        $this->processor = $processor;
-        $this->entity = $entity;
-        $this->variables = $variables;
-    }
-
-    protected function evaluate(StdClass $item)
-    {
-        return $this->processor->process($item, $this->entity, $this->variables);
-    }
-
-    public abstract function process(StdClass $item);
-
-    protected function fetchArguments(StdClass $item) : array
-    {
-        $args = $item->value ?? [];
-
-        $eArgs = [];
-        foreach ($args as $item) {
-            $eArgs[] = $this->evaluate($item);
-        }
-
-        return $eArgs;
-    }
-
-    protected function fetchRawArguments(StdClass $item) : array
-    {
-        return $item->value ?? [];
-    }
 }

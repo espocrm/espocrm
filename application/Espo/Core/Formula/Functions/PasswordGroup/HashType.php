@@ -35,7 +35,7 @@ use Espo\Core\Utils\PasswordHash;
 
 use Espo\Core\Di;
 
-class HashType extends \Espo\Core\Formula\Functions\FunctionBase implements
+class HashType extends \Espo\Core\Formula\Functions\Base implements
     Di\ConfigAware
 {
     use Di\ConfigSetter;

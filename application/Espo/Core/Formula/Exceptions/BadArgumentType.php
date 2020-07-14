@@ -27,18 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\LogicalGroup;
+namespace Espo\Core\Formula\Exceptions;
 
-class AndType extends \Espo\Core\Formula\Functions\Base
+class BadArgumentType extends \Exception
 {
-    public function process(\StdClass $item)
-    {
-        $result = true;
-        foreach ($item->value as $subItem) {
-            $result = $result && $this->evaluate($subItem);
-            if (!$result) break;
-        }
-
-        return $result;
-    }
+    protected $code = 500;
 }

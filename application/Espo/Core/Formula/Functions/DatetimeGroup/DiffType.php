@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class DiffType extends \Espo\Core\Formula\Functions\FunctionBase
+class DiffType extends \Espo\Core\Formula\Functions\Base
 {
     protected $intevalTypePropertyMap = [
         'years' => 'y', 'months' => 'm', 'days' => 'd', 'hours' => 'h', 'minutes' => 'i', 'seconds' => 's'

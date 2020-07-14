@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\StringGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class SubstringType extends \Espo\Core\Formula\Functions\FunctionBase
+class SubstringType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

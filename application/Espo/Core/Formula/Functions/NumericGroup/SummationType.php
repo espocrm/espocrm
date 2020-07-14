@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\NumericGroup;
 
-class SummationType extends \Espo\Core\Formula\Functions\FunctionBase
+class SummationType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

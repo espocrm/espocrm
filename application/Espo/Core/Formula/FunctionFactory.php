@@ -30,6 +30,7 @@
 namespace Espo\Core\Formula;
 
 use Espo\Core\Exceptions\Error;
+
 use Espo\ORM\Entity;
 
 use Espo\Core\InjectableFactory;
@@ -58,18 +59,8 @@ class FunctionFactory
         $this->classNameMap = $classNameMap;
     }
 
-    public function create(StdClass $item, ?Entity $entity = null, ?StdClass $variables = null)
+    public function create(string $name, ?Entity $entity = null, ?StdClass $variables = null)
     {
-        if (!isset($item->type)) {
-            throw new Error('Missing type');
-        }
-
-        if (!is_string($item->type)) {
-            throw new Error('Bad type');
-        }
-
-        $name = $item->type;
-
         if ($this->classNameMap && array_key_exists($name, $this->classNameMap)) {
             $className = $this->classNameMap[$name];
         } else {
@@ -80,18 +71,20 @@ class FunctionFactory
                 }
                 $arr[$i] = ucfirst($part);
             }
-            $name = implode('\\', $arr);
-            $className = 'Espo\\Core\\Formula\\Functions\\' . $name . 'Type';
+            $typeName = implode('\\', $arr);
+            $className = 'Espo\\Core\\Formula\\Functions\\' . $typeName . 'Type';
         }
 
         if (!class_exists($className)) {
-            throw new Error('Class ' . $className . ' was not found.');
+            throw new Error("Class {$className} not found.");
         }
 
         $object = $this->injectableFactory->createWith($className, [
+            'name' => $name,
             'processor' => $this->processor,
             'entity' => $entity,
             'variables' => $variables,
+            'attributeFetcher' => $this->attributeFetcher,
         ]);
 
         if (property_exists($className, 'hasAttributeFetcher') || method_exists($className, 'setAttributeFetcher')) {

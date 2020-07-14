@@ -29,60 +29,41 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\Interfaces\Injectable;
-
 use Espo\ORM\Entity;
 
-use Espo\Core\Formula\Processor;
-use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Argument;
+use Espo\Core\Formula\{
+    Processor,
+    ArgumentList,
+    Argument,
+    Evaluatable,
+    Exceptions\TooFewArguments,
+    Exceptions\BadArgumentType,
+    Exceptions\NotPassedEntity,
+};
 
 use StdClass;
 
-/**
- * @deprecated Use BaseFormula instead.
- */
-abstract class Base implements Injectable
+abstract class BaseFunction
 {
-    protected $name;
-
     protected $processor;
 
     private $entity;
 
     private $variables;
 
-    protected $dependencyList = [];
+    protected $name;
 
-    protected $injections = [];
-
-    public function inject($name, $object)
+    protected function getVariables() : StdClass
     {
-        $this->injections[$name] = $object;
+        return $this->variables;
     }
 
-    protected function getInjection($name)
+    protected function getEntity() : Entity
     {
-        return $this->injections[$name] ?? $this->$name ?? null;
-    }
-
-    protected function addDependency($name)
-    {
-        $this->dependencyList[] = $name;
-    }
-
-    protected function addDependencyList(array $list)
-    {
-        foreach ($list as $item) {
-            $this->addDependency($item);
+        if (!$this->entity) {
+            throw new NotPassedEntity('function: ' . $this->name);
         }
-    }
-
-    public function getDependencyList()
-    {
-        return $this->dependencyList;
+        return $this->entity;
     }
 
     public function __construct(string $name, Processor $processor, ?Entity $entity = null, ?StdClass $variables = null)
@@ -91,49 +72,39 @@ abstract class Base implements Injectable
         $this->processor = $processor;
         $this->entity = $entity;
         $this->variables = $variables;
-
-        $this->init();
     }
 
-    protected function init()
-    {
-    }
+    public abstract function process(ArgumentList $args);
 
-    protected function getVariables() : StdClass
+    protected function evaluate(Evaluatable $item)
     {
-        return $this->variables;
-    }
-
-    protected function getEntity()
-    {
-        if (!$this->entity) {
-            throw new Error('Formula: Entity required but not passed.');
+        if ($item instanceof ArgumentList) {
+            return $this->evaluateList($item);
         }
-        return $this->entity;
-    }
 
-    public abstract function process(StdClass $item);
-
-    protected function evaluate($item)
-    {
-        $item = new Argument($item);
         return $this->processor->process($item);
     }
 
-    protected function fetchArguments(StdClass $item) : array
+    private function evaluateList(ArgumentList $args) : array
     {
-        $args = $item->value ?? [];
-
-        $eArgs = [];
+        $list = [];
         foreach ($args as $item) {
-            $eArgs[] = $this->evaluate($item);
+            $list[] = $this->evaluate($item);
         }
-
-        return $eArgs;
+        return $list;
     }
 
-    protected function fetchRawArguments(StdClass $item) : array
+    protected function throwTooFewArguments()
     {
-        return $item->value ?? [];
+        throw new TooFewArguments('function: ' . $this->name);
+    }
+
+    protected function throwBadArgumentType(?int $index = null)
+    {
+        $msg = 'function: ' . $this->name;
+        if ($index !== null) {
+            $msg .= ', index: ' . $index;
+        }
+        throw new BadArgumentType($msg);
     }
 }

@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
-abstract class AddIntervalType extends \Espo\Core\Formula\Functions\FunctionBase implements Di\DateTimeAware
+abstract class AddIntervalType extends \Espo\Core\Formula\Functions\Base implements Di\DateTimeAware
 {
     use Di\DateTimeSetter;
 

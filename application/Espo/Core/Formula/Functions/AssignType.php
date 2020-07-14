@@ -29,8 +29,8 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use \Espo\ORM\Entity;
-use \Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
 
 class AssignType extends Base
 {

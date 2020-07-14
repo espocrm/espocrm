@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\StringGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class MatchAllType extends \Espo\Core\Formula\Functions\FunctionBase
+class MatchAllType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

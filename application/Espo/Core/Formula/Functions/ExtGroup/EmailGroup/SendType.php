@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
-class SendType extends \Espo\Core\Formula\Functions\FunctionBase implements
+class SendType extends \Espo\Core\Formula\Functions\Base implements
     Di\EntityManagerAware,
     Di\ServiceFactoryAware,
     Di\ConfigAware

@@ -27,18 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\LogicalGroup;
+namespace Espo\Core\Formula;
 
-class AndType extends \Espo\Core\Formula\Functions\Base
+/**
+ * A function argument.
+ */
+class Argument implements Evaluatable
 {
-    public function process(\StdClass $item)
+    private $data;
+
+    public function __construct($data)
     {
-        $result = true;
-        foreach ($item->value as $subItem) {
-            $result = $result && $this->evaluate($subItem);
-            if (!$result) break;
+        $this->data = $data;
+    }
+
+    public function getType() : ?string
+    {
+        return $this->data->type ?? [];
+    }
+
+    public function getArgumentList() : ArgumentList
+    {
+        if (!isset($this->data->value)) {
+            $argumentList = new ArgumentList([]);
+        } else if (is_array($this->data->value)) {
+            $argumentList = new ArgumentList($this->data->value);
+        } else {
+            $argumentList = new ArgumentList([$this->data->value]);
         }
 
-        return $result;
+        return $argumentList;
+    }
+
+    public function getData()
+    {
+        return $this->data;
     }
 }

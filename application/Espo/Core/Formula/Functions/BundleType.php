@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Exceptions\Error;
 
-class BundleType extends FunctionBase
+class BundleType extends Base
 {
     public function process(\StdClass $item)
     {

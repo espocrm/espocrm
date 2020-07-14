@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\ComparisonGroup;
 
 use Espo\Core\Exceptions\Error;
 
-abstract class Base extends \Espo\Core\Formula\Functions\FunctionBase
+abstract class Base extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

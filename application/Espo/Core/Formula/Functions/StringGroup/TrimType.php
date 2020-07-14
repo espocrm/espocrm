@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\StringGroup;
 
 use Espo\Core\Exceptions\Error;
 
-class TrimType extends \Espo\Core\Formula\Functions\FunctionBase
+class TrimType extends \Espo\Core\Formula\Functions\Base
 {
     public function process(\StdClass $item)
     {

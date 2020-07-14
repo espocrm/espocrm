@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Exceptions\Error;
 
-class SetAttributeType extends FunctionBase
+class SetAttributeType extends Base
 {
     public function process(\StdClass $item)
     {
