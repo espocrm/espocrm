@@ -74,24 +74,22 @@ abstract class BaseFunction
         $this->variables = $variables;
     }
 
+    /**
+     * Evaluates a function.
+     *
+     * @return mixed A result of the function.
+     */
     public abstract function process(ArgumentList $args);
 
+    /**
+     * Evaluates an argument or argunent list.
+     *
+     * @param $item Argument or ArgumentList.
+     * @return mixed A result of evaluation. An array if an argument list was passed.
+     */
     protected function evaluate(Evaluatable $item)
     {
-        if ($item instanceof ArgumentList) {
-            return $this->evaluateList($item);
-        }
-
         return $this->processor->process($item);
-    }
-
-    private function evaluateList(ArgumentList $args) : array
-    {
-        $list = [];
-        foreach ($args as $item) {
-            $list[] = $this->evaluate($item);
-        }
-        return $list;
     }
 
     protected function throwTooFewArguments()

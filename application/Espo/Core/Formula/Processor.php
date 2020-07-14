@@ -63,8 +63,17 @@ class Processor
         $this->variables = $variables ?? (object) [];
     }
 
-    public function process(Argument $item)
+    /**
+     * Evaluates an argument or argunent list.
+     *
+     * @return mixed A result of evaluation. An array if an argument list was passed.
+     */
+    public function process(Evaluatable $item)
     {
+        if ($item instanceof ArgumentList) {
+            return $this->processList($item);
+        }
+
         if (!$item->getType()) {
             throw new Error("Missing 'type' in raw function data.");
         }
@@ -77,5 +86,14 @@ class Processor
         }
 
         return $function->process($item->getArgumentList());
+    }
+
+    private function processList(ArgumentList $args) : array
+    {
+        $list = [];
+        foreach ($args as $item) {
+            $list[] = $this->process($item);
+        }
+        return $list;
     }
 }

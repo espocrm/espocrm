@@ -50,7 +50,7 @@ class Argument implements Evaluatable
     }
 
     /**
-     * Get an argument list.
+     * Get a nested argument list.
      */
     public function getArgumentList() : ArgumentList
     {
