@@ -32,7 +32,7 @@ namespace Espo\Core\Formula;
 use Espo\Core\{
     InjectableFactory,
     Utils\Metadata,
-}
+};
 
 use Espo\ORM\Entity;
 
