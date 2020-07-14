@@ -449,7 +449,7 @@ abstract class BaseMapper implements Mapper
 
     public function getRelationColumn(Entity $entity, string $relationName, string $id, string $column)
     {
-        $type = $entity->getRelationType($entityType, $relationName);
+        $type = $entity->getRelationType($relationName);
 
         if (!$type === Entity::MANY_MANY) return null;
 
