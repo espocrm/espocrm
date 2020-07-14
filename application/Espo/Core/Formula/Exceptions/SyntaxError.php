@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Formula\Exceptions;
 
-class SyntaxError extends \Exception
+class SyntaxError extends Error
 {
-    protected $code = 500;
 }

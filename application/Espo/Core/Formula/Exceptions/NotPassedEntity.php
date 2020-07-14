@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Formula\Exceptions;
 
-class NotPassedEntity extends \Exception
+class NotPassedEntity extends Error
 {
-    protected $code = 500;
 }

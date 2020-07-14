@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Formula\Exceptions;
 
-class TooFewArguments extends \Exception
+class TooFewArguments extends Error
 {
-    protected $code = 500;
 }

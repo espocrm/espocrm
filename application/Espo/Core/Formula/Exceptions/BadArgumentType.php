@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Formula\Exceptions;
 
-class BadArgumentType extends \Exception
+class BadArgumentType extends Error
 {
-    protected $code = 500;
 }

@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Formula\Exceptions;
 
-class UnknownFunction extends \Exception
+class UnknownFunction extends Error
 {
-    protected $code = 500;
 }
