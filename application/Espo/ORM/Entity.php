@@ -62,7 +62,7 @@ interface Entity
     public function reset();
 
     /**
-     * Set attribute.
+     * Set an attribute or multiple attributes.
      *
      * Two usage options:
      * * `set(string $name, mixed $value)`
