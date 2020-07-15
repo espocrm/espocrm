@@ -54,7 +54,8 @@ class Evaluator
 
     private $parsedHash;
 
-    public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = []) {
+    public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = [])
+    {
         $this->attributeFetcher = new AttributeFetcher();
 
         $this->injectableFactory = $injectableFactory;
