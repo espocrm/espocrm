@@ -27,42 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\DateTimeGroup;
+namespace Espo\Core\Formula\Exceptions;
 
-use Espo\Core\Di;
-
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
-
-class MinuteType extends BaseFunction implements Di\DateTimeAware
+class BadArgumentValue extends Error
 {
-    use Di\DateTimeSetter;
-
-    public function process(ArgumentList $args)
-    {
-        $args = $this->evaluate($args);
-
-        if (count($args) < 1) {
-            $this->throwTooFewArguments();
-        }
-
-        $value = $args[0];
-
-        $timezone = null;
-        if (count($args) > 1) {
-             $timezone = $args[1];
-        }
-
-        if (empty($value)) return -1;
-
-        if (strlen($value) > 11) {
-            $resultString = $this->dateTime->convertSystemDateTime($value, $timezone, 'm');
-        } else {
-            return 0;
-        }
-
-        return intval($resultString);
-    }
 }

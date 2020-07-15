@@ -38,6 +38,7 @@ use Espo\Core\Formula\{
     Evaluatable,
     Exceptions\TooFewArguments,
     Exceptions\BadArgumentType,
+    Exceptions\BadArgumentValue,
     Exceptions\NotPassedEntity,
 };
 
@@ -98,11 +99,17 @@ abstract class BaseFunction
         return $this->processor->process($item);
     }
 
+    /**
+     * Throw TooFewArguments exception.
+     */
     protected function throwTooFewArguments()
     {
         throw new TooFewArguments('function: ' . $this->name);
     }
 
+    /**
+     * Throw BadArgumentType exception.
+     */
     protected function throwBadArgumentType(?int $index = null, ?string $type = null)
     {
         $msg = 'function: ' . $this->name;
@@ -115,10 +122,38 @@ abstract class BaseFunction
         throw new BadArgumentType($msg);
     }
 
+    /**
+     * Throw BadArgumentValue exception.
+     */
+    protected function throwBadArgumentValue(?int $index = null, ?string $msg = null)
+    {
+        $string = $msg;
+
+        $msg = 'function: ' . $this->name;
+        if ($index !== null) {
+            $msg .= ', index: ' . $index;
+            if ($msg) {
+                $msg .= ', ' . $string;
+            }
+        }
+        throw new BadArgumentValue($msg);
+    }
+
+    /**
+     * Log a bad argument type.
+     */
     protected function logBadArgumentType(int $index, string $type)
     {
         if (!$this->log) return;
-
         $this->log->warning("Formula function: {$this->name}, argument {$index} should be '{$type}'.");
+    }
+
+    /**
+     * Log a message.
+     */
+    protected function log(string $msg, string $level = 'notice')
+    {
+        if (!$this->log) return;
+        $this->log->log($level, 'function: ' . $this->name . ', ' . $msg);
     }
 }

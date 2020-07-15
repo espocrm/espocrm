@@ -36,4 +36,3 @@ class GreaterThanOrEqualsType extends Base
         return $left >= $right;
     }
 }
-

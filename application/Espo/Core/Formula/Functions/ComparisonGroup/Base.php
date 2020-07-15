@@ -29,26 +29,21 @@
 
 namespace Espo\Core\Formula\Functions\ComparisonGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-abstract class Base extends \Espo\Core\Formula\Functions\Base
+abstract class Base extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 2) {
-            throw new Error('Formula comparison function: Too few arguments passed.');
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
         }
 
-        if (is_object($item->value[0])) {
-            $left = $this->evaluate($item->value[0]);
-        } else {
-            $left = $item->value[0];
-        }
-        if (is_object($item->value[1])) {
-            $right = $this->evaluate($item->value[1]);
-        } else {
-            $right = $item->value[1];
-        }
+        $left = $this->evaluate($args[0]);
+        $right = $this->evaluate($args[1]);
 
         return $this->compare($left, $right);
     }

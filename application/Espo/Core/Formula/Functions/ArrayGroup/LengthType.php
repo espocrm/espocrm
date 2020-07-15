@@ -29,17 +29,22 @@
 
 namespace Espo\Core\Formula\Functions\ArrayGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class LengthType extends \Espo\Core\Formula\Functions\Base
+class LengthType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 1) {
-            throw new Error('No argument passed to \'array\\length\'.');
+        $args = $this->evaluate($args);
+
+        if (count($args) < 1) {
+            $this->throwTooFewArguments();
         }
 
-        $list = $this->evaluate($item->value[0]);
+        $list = $args[0];
 
         if (!is_array($list)) {
             return 0;

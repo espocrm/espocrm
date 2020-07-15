@@ -29,23 +29,28 @@
 
 namespace Espo\Core\Formula\Functions\ArrayGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class PushType extends \Espo\Core\Formula\Functions\Base
+class PushType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 2) {
-            throw new Error('Too few arguments passed to \'Array\\push\'.');
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
         }
-        $list = $this->evaluate($item->value[0]);
+
+        $list = $this->evaluate($args[0]);
+
         if (!is_array($list)) {
             return false;
         }
 
-        foreach ($item->value as $i => $v) {
+        foreach ($args as $i => $v) {
             if ($i === 0) continue;
-            $element = $this->evaluate($item->value[$i]);
+            $element = $this->evaluate($args[$i]);
             $list[] = $element;
         }
 

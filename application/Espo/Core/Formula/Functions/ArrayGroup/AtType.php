@@ -29,23 +29,33 @@
 
 namespace Espo\Core\Formula\Functions\ArrayGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class AtType extends \Espo\Core\Formula\Functions\Base
+class AtType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
-        if (count($args) < 2) throw new Error("Formula: array\\at: Not enough arguments.");
+        $args = $this->evaluate($args);
+
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
+        }
 
         $array = $args[0];
         $index = $args[1];
 
-        if (!is_array($array)) throw new Error("Formula: array\\at: First argument must be array.");
-        if (!is_int($index)) throw new Error("Formula: array\\at: Second argument must be integer.");
+        if (!is_array($array)) {
+            $this->throwBadArgumentType(1, 'array');
+        }
+        if (!is_int($index)) {
+            $this->throwBadArgumentType(2, 'int');
+        }
 
         if (!array_key_exists($index, $array)) {
-            $GLOBALS['log']->notice("Formula: array\\at: Index doesn't exist.");
+            $this->log("index doesn't exist");
             return null;
         }
 

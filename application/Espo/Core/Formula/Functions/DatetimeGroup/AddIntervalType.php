@@ -29,36 +29,43 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Di;
 
-abstract class AddIntervalType extends \Espo\Core\Formula\Functions\Base implements Di\DateTimeAware
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+use DateTime;
+
+abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
 {
     use Di\DateTimeSetter;
 
     protected $timeOnly = false;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 2) {
-            throw new Error("Add Interval function: Too few arguments.");
+        $args = $this->evaluate($args);
+
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
         }
 
-        $dateTimeString = $this->evaluate($item->value[0]);
+        $dateTimeString = $args[0];
 
         if (!$dateTimeString) {
             return null;
         }
 
         if (!is_string($dateTimeString)) {
-            throw new Error();
+            $this->throwBadArgumentType(1, 'string');
         }
 
-        $interval = $this->evaluate($item->value[1]);
+        $interval = $args[1];
 
         if (!is_numeric($interval)) {
-            throw new Error();
+            $this->throwBadArgumentType(2, 'numeric');
         }
 
         $isTime = false;
@@ -72,8 +79,9 @@ abstract class AddIntervalType extends \Espo\Core\Formula\Functions\Base impleme
         }
 
         try {
-            $dateTime = new \DateTime($dateTimeString);
+            $dateTime = new DateTime($dateTimeString);
         } catch (\Exception $e) {
+            $this->log('bad date-time value passed', 'warning');
             return null;
         }
 

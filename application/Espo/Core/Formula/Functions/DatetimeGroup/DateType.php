@@ -29,25 +29,30 @@
 
 namespace Espo\Core\Formula\Functions\DateTimeGroup;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Di;
 
-class DateType extends \Espo\Core\Formula\Functions\Base implements Di\DateTimeAware
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+class DateType extends BaseFunction implements Di\DateTimeAware
 {
     use Di\DateTimeSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 1) {
-             throw new Error("Date function: Too few arguments.");
+        $args = $this->evaluate($args);
+
+        if (count($args) < 1) {
+            $this->throwTooFewArguments();
         }
 
-        $value = $this->evaluate($item->value[0]);
+        $value = $args[0];
 
         $timezone = null;
-        if (count($item->value) > 1) {
-             $timezone = $this->evaluate($item->value[1]);
+        if (count($args) > 1) {
+             $timezone = $args[1];
         }
 
         if (empty($value)) return 0;
