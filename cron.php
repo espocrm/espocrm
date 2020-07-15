@@ -29,4 +29,9 @@
 
 include "bootstrap.php";
 
-(new \Espo\Core\Application())->run('cron');
+use Espo\Core\{
+    Application,
+    ApplicationRunners\Cron,
+};
+
+(new Application())->run(Cron::class);

@@ -29,9 +29,14 @@
 
 include "bootstrap.php";
 
+use Espo\Core\{
+    Application,
+    ApplicationRunners\Command,
+};
+
 ob_start();
 
-$result = (new \Espo\Core\Application())->run('command');
+$result = (new Application())->run(Command::class);
 
 if (is_string($result)) {
     ob_end_clean();

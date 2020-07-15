@@ -40,6 +40,7 @@ use Espo\Core\{
     Utils\ClientManager,
     Utils\Config,
     Portal\Application as PortalApplication,
+    Portal\ApplicationRunners\Client,
     Api\Request,
     Api\Response,
 };
@@ -84,6 +85,6 @@ class Portal implements EntryPoint
 
         $application = new PortalApplication($id);
         $application->setClientBasePath($this->clientManager->getBasePath());
-        $application->run('client');
+        $application->run(Client::class);
     }
 }

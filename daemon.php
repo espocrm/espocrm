@@ -29,4 +29,9 @@
 
 include "bootstrap.php";
 
-(new \Espo\Core\Application())->run('daemon');
+use Espo\Core\{
+    Application,
+    ApplicationRunners\Daemon,
+};
+
+(new Application())->run(Daemon::class);

@@ -99,7 +99,7 @@ class EntryPoint implements ApplicationRunner
             if ($portalId = $this->detectPortalId()) {
                 $app = new PortalApplication($portalId);
                 $app->setClientBasePath($this->clientManager->getBasePath());
-                $app->run('entryPoint', (object) [
+                $app->run(EntryPoint::class, (object) [
                     'entryPoint' => $entryPoint,
                     'data' => $data,
                     'final' => true,

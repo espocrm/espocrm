@@ -29,4 +29,9 @@
 
 require_once('../../bootstrap.php');
 
-(new \Espo\Core\Application())->run('api');
+use Espo\Core\{
+    Application,
+    ApplicationRunners\Api,
+};
+
+(new Application())->run(Api::class);

@@ -13,7 +13,6 @@
         ["app", "templateHelpers"],
         ["app", "appParams"],
         ["app", "cleanup"],
-        ["app", "runners"],
         ["app", "auth2FAMethods", "__ANY__", "implementationClassName"],
         ["app", "auth2FAMethods", "__ANY__", "implementationUserClassName"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]

@@ -29,7 +29,12 @@
 
 include "../bootstrap.php";
 
-$app = new \Espo\Core\Application();
+use Espo\Core\{
+    Application,
+    ApplicationRunners\EntryPoint,
+};
+
+$app = new Application();
 if (!$app->isInstalled()) {
     exit;
 }
@@ -70,10 +75,10 @@ if (strpos($requestUri, '/') !== false) {
 }
 
 if (!empty($_GET['entryPoint'])) {
-    $app->run('entryPoint');
+    $app->run(EntryPoint::class);
     exit;
 }
 
-$app->run('entryPoint', (object) [
+$app->run(EntryPoint::class, (object) [
     'entryPoint' => 'portal',
 ]);

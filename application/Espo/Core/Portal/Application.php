@@ -94,17 +94,6 @@ class Application extends BaseApplication
         return $this->portal;
     }
 
-    protected function getRunnerClassName(string $runnerName) : ?string
-    {
-        $className = 'Espo\\Core\\Portal\\ApplicationRunners\\' . ucfirst($runnerName);
-
-        if (class_exists($className)) {
-            return $className;
-        }
-
-        return parent::getRunnerClassName($runnerName);
-    }
-
     protected function initPreloads()
     {
         parent::initPreloads();

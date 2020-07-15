@@ -29,4 +29,9 @@
 
 include "bootstrap.php";
 
-(new \Espo\Core\Application())->run('rebuild');
+use Espo\Core\{
+    Application,
+    ApplicationRunners\Rebuild,
+};
+
+(new Application())->run(Rebuild::class);

@@ -78,15 +78,13 @@ class Application
     }
 
     /**
-     * Run an application through a specific runner.
-     * You can find runner classes in `Espo\Core\ApplicationRunners`.
+     * Run a specific application runner.
+     * You can find runner classes at `Espo\Core\ApplicationRunners`.
      */
-    public function run(string $runnerName, ?object $params = null)
+    public function run(string $className, ?object $params = null)
     {
-        $className = $this->getRunnerClassName($runnerName);
-
         if (!$className) {
-            $this->getLog()->error("Application runner '{$runnerName}' does not exist.");
+            $this->getLog()->error("Application runner '{$className}' does not exist.");
             return;
         }
 
@@ -94,9 +92,10 @@ class Application
 
         if ($class->getStaticPropertyValue('cli', false)) {
             if (substr(php_sapi_name(), 0, 3) !== 'cli') {
-                die("Application runner '{$runnerName}' can be run only via CLI.");
+                die("Can be run only via CLI.");
             }
         }
+
         if ($class->getStaticPropertyValue('setupSystemUser', false)) {
             $this->setupSystemUser();
         }
@@ -104,20 +103,6 @@ class Application
         $runner = $this->getInjectableFactory()->create($className);
 
         $runner->run($params);
-    }
-
-    protected function getRunnerClassName(string $runnerName) : ?string
-    {
-        $className = 'Espo\\Core\\ApplicationRunners\\' . ucfirst($runnerName);
-
-        if (!class_exists($className)) {
-            $className = $this->getMetadata()->get(['app', 'runners', $runnerName, 'className']);
-            if (!$className || !class_exists($className)) {
-                return null;
-            }
-        }
-
-        return $className;
     }
 
     /**

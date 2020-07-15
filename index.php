@@ -29,7 +29,13 @@
 
 include "bootstrap.php";
 
-$app = new \Espo\Core\Application();
+use Espo\Core\{
+    Application,
+    ApplicationRunners\Client,
+    ApplicationRunners\EntryPoint,
+};
+
+$app = new Application();
 
 if (!$app->isInstalled()) {
     header("Location: install/");
@@ -37,8 +43,8 @@ if (!$app->isInstalled()) {
 }
 
 if (!empty($_GET['entryPoint'])) {
-    $app->run('entryPoint');
+    $app->run(EntryPoint::class);
     exit;
 }
 
-$app->run('client');
+$app->run(Client::class);

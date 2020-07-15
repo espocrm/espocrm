@@ -29,4 +29,9 @@
 
 include "bootstrap.php";
 
-(new \Espo\Core\Application())->run('clearCache');
+use Espo\Core\{
+    Application,
+    ApplicationRunners\ClearCache,
+};
+
+(new Application())->run(ClearCache::class);
