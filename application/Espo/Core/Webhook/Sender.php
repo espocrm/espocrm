@@ -35,6 +35,9 @@ use Espo\Core\{
     Utils\Config,
 };
 
+/**
+ * Sends a poption.
+ */
 class Sender
 {
     const CONNECT_TIMEOUT = 5;

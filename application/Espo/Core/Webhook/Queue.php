@@ -42,6 +42,9 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+/**
+ * Groups ocurred events into portions and sends them. A portion contains multiple events of the same webhook.
+ */
 class Queue
 {
     const EVENT_PORTION_SIZE = 20;

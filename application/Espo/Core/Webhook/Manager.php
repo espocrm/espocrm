@@ -37,6 +37,9 @@ use Espo\Core\{
     ORM\Entity,
 };
 
+/**
+ * Processes events. Holds an information about existing events.
+ */
 class Manager
 {
     private $cacheFile = 'data/cache/application/webhooks.php';
@@ -108,6 +111,9 @@ class Manager
         return $data;
     }
 
+    /**
+     * Add an event. To cache the information that at least one webhook for this event exists.
+     */
     public function addEvent(string $event)
     {
         $this->data[$event] = true;
@@ -117,6 +123,9 @@ class Manager
         }
     }
 
+    /**
+     * Remove an event. If no webhooks with this event left, then it will be removed from the cache.
+     */
     public function removeEvent(string $event)
     {
         $notExists = !$this->entityManager->getRepository('Webhook')->select(['id'])->where([
@@ -142,6 +151,9 @@ class Manager
         $GLOBALS['log']->debug("Webhook: {$event} on record {$entity->id}.");
     }
 
+    /**
+     * Process 'create' event.
+     */
     public function processCreate(Entity $entity)
     {
         $event = $entity->getEntityType() . '.create';
@@ -158,6 +170,9 @@ class Manager
         $this->logDebugEvent($event, $entity);
     }
 
+    /**
+     * Process 'delete' event.
+     */
     public function processDelete(Entity $entity)
     {
         $event = $entity->getEntityType() . '.delete';
@@ -176,6 +191,9 @@ class Manager
         $this->logDebugEvent($event, $entity);
     }
 
+    /**
+     * Process 'update' event.
+     */
     public function processUpdate(Entity $entity)
     {
         $event = $entity->getEntityType() . '.update';
