@@ -29,11 +29,10 @@
 
 namespace Espo\Core\Formula;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\InjectableFactory;
-
-use Espo\Core\ORM\Entity;
+use Espo\Core\{
+    InjectableFactory,
+    ORM\Entity,
+};
 
 use StdClass;
 
