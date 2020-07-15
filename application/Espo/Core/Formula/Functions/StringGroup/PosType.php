@@ -29,18 +29,23 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class PosType extends \Espo\Core\Formula\Functions\Base
+class PosType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $item->value ?? [];
+        $args = $this->evaluate($args);
 
-        if (count($args) < 2) throw new Error("Bad arguments passed to function string\\pos.");
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
+        }
 
-        $string = $this->evaluate($args[0]);
-        $needle = $this->evaluate($args[1]);
+        $string = $args[0];
+        $needle = $args[1];
 
         if (!is_string($string)) {
             return false;

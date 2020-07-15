@@ -29,18 +29,23 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class TestType extends \Espo\Core\Formula\Functions\Base
+class TestType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 2) {
-            throw new Error('string\\test: too few arguments.');
+        $args = $this->evaluate($args);
+
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
         }
 
-        $string = $this->evaluate($item->value[0]);
-        $regexp = $this->evaluate($item->value[1]);
+        $string = $args[0];
+        $regexp = $args[1];
 
         if (!is_string($string)) {
             return false;

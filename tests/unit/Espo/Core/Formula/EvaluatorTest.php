@@ -38,6 +38,15 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $container = $this->container =
             $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
+        $this->log = $this->getMockBuilder('Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
+
+        $container
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap([
+                ['log', $this->log],
+            ]));
+
         $injectableFactory = $injectableFactory = new \Espo\Core\InjectableFactory($container);
 
         $this->evaluator = new \Espo\Core\Formula\Evaluator($injectableFactory);

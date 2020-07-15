@@ -41,6 +41,8 @@ use Espo\Core\Formula\{
     Exceptions\NotPassedEntity,
 };
 
+use Espo\Core\Utils\Log;
+
 use StdClass;
 
 abstract class BaseFunction
@@ -52,6 +54,8 @@ abstract class BaseFunction
     private $variables;
 
     protected $name;
+
+    protected $log;
 
     protected function getVariables() : StdClass
     {
@@ -66,12 +70,14 @@ abstract class BaseFunction
         return $this->entity;
     }
 
-    public function __construct(string $name, Processor $processor, ?Entity $entity = null, ?StdClass $variables = null)
-    {
+    public function __construct(
+        string $name, Processor $processor, ?Entity $entity = null, ?StdClass $variables = null, ?Log $log = null
+    ) {
         $this->name = $name;
         $this->processor = $processor;
         $this->entity = $entity;
         $this->variables = $variables;
+        $this->log = $log;
     }
 
     /**
@@ -97,12 +103,22 @@ abstract class BaseFunction
         throw new TooFewArguments('function: ' . $this->name);
     }
 
-    protected function throwBadArgumentType(?int $index = null)
+    protected function throwBadArgumentType(?int $index = null, ?string $type = null)
     {
         $msg = 'function: ' . $this->name;
         if ($index !== null) {
             $msg .= ', index: ' . $index;
+            if ($type) {
+                $msg .= ', should be: ' . $type;
+            }
         }
         throw new BadArgumentType($msg);
+    }
+
+    protected function logBadArgumentType(int $index, string $type)
+    {
+        if (!$this->log) return;
+
+        $this->log->warning("Formula function: {$this->name}, argument {$index} should be '{$type}'.");
     }
 }

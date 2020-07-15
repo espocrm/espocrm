@@ -29,13 +29,18 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-class ConcatenationType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+class ConcatenationType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
         $result = '';
 
-        foreach ($item->value as $subItem) {
+        foreach ($args as $subItem) {
             $part = $this->evaluate($subItem);
 
             if (!is_string($part)) {

@@ -63,6 +63,8 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $this->user = $this->getMockBuilder('Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
 
+        $this->log = $this->getMockBuilder('Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
+
         $this->user->id = '1';
 
         $this->user
@@ -80,7 +82,8 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ['dateTime', $this->dateTime],
                 ['number', $this->number],
                 ['config', $this->config],
-                ['user', $this->user]
+                ['user', $this->user],
+                ['log', $this->log],
             ]));
     }
 

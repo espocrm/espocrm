@@ -29,36 +29,40 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class ReplaceType extends \Espo\Core\Formula\Functions\Base
+class ReplaceType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        $args = $this->evaluate($args);
 
-        if (count($args) < 3) throw new Error("string\\replace: Too few arguments.");
+        if (count($args) < 3) {
+            $this->throwTooFewArguments();
+        };
 
         $string = $args[0];
         $search = $args[1];
         $replace = $args[2];
 
         if (!is_string($string)) {
-            $GLOBALS['log']->warning("string\\replace: 1st argument should be string.");
+            $this->logBadArgumentType(1, 'string');
             return '';
         }
 
         if (!is_string($search)) {
-            $GLOBALS['log']->warning("string\\replace: 2nd argument should be string.");
+            $this->logBadArgumentType(2, 'string');
             return $string;
         }
 
         if (!is_string($replace)) {
-            $GLOBALS['log']->warning("string\\replace: 3rd argument should be string.");
+            $this->logBadArgumentType(3, 'string');
             return $string;
         }
 
         return str_replace($search, $replace, $string);
     }
 }
-

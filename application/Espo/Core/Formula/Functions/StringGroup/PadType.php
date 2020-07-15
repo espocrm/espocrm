@@ -29,23 +29,33 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class PadType extends \Espo\Core\Formula\Functions\Base
+class PadType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        $args = $this->evaluate($args);
 
-        if (count($args) < 2) throw new Error("string\\pad: should have at least 2 arguments.");
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
+        }
 
         $input = $args[0];
         $length = $args[1];
         $string = $args[2] ?? ' ';
         $type = $args[3] ?? 'right';
 
-        if (!is_string($input)) $input = strval($input);
-        if (!is_int($length)) throw new Error("string\\pad: second argument should be integer.");
+        if (!is_string($input)) {
+            $input = strval($input);
+        }
+
+        if (!is_int($length)) {
+            $this->throwBadArgumentType(2);
+        }
 
         $map = [
             'right' => \STR_PAD_RIGHT,
