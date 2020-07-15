@@ -39,16 +39,16 @@ use Espo\Core\{
 
 class Manager
 {
-    protected $config;
-    protected $fileManager;
-    protected $entityManager;
-    protected $fieldManagerUtil;
-
     private $cacheFile = 'data/cache/application/webhooks.php';
 
     protected $skipAttributeList = ['isFollowed', 'modifiedAt', 'modifiedBy'];
 
     private $data = null;
+
+    protected $config;
+    protected $fileManager;
+    protected $entityManager;
+    protected $fieldManagerUtil;
 
     public function __construct(
         Config $config,

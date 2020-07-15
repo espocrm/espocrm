@@ -29,10 +29,18 @@
 
 namespace Espo\Core\Webhook;
 
-use Espo\ORM\Entity;
-use Espo\Core\Utils\DateTime;
-use Espo\Entities\WebhookQueueItem;
-use Espo\Entities\Webhook;
+use Espo\Entities\{
+    Webhook,
+    WebhookQueueItem,
+    WebhookEventQueueItem,
+};
+
+use Espo\Core\{
+    AclManager,
+    Utils\Config,
+    Utils\DateTime,
+    ORM\EntityManager,
+};
 
 class Queue
 {
@@ -51,12 +59,8 @@ class Queue
     protected $entityManager;
     protected $aclManager;
 
-    public function __construct(
-        Sender $sender,
-        \Espo\Core\Utils\Config $config,
-        \Espo\ORM\EntityManager $entityManager,
-        \Espo\Core\AclManager $aclManager
-    ) {
+    public function __construct(Sender $sender, Config $config, EntityManager $entityManager, AclManager $aclManager)
+    {
         $this->sender = $sender;
         $this->config = $config;
         $this->entityManager = $entityManager;
@@ -86,7 +90,7 @@ class Queue
         }
     }
 
-    protected function createQueueFromEvent(\Espo\Entities\WebhookEventQueueItem $item)
+    protected function createQueueFromEvent(WebhookEventQueueItem $item)
     {
         $webhookList = $this->entityManager->getRepository('Webhook')->where([
             'event' => $item->get('event'),

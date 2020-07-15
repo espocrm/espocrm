@@ -31,6 +31,10 @@ namespace Espo\Core\Webhook;
 
 use Espo\Entities\Webhook;
 
+use Espo\Core\{
+    Utils\Config,
+};
+
 class Sender
 {
     const CONNECT_TIMEOUT = 5;
@@ -39,7 +43,7 @@ class Sender
 
     protected $config;
 
-    public function __construct(\Espo\Core\Utils\Config $config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
     }
