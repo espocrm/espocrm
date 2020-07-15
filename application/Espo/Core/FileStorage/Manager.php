@@ -35,6 +35,9 @@ use Espo\Entities\Attachment;
 
 use Espo\Core\Exceptions\Error;
 
+/**
+ * An access point for file storing and fetching. Files are represented as Attachment entities.
+ */
 class Manager
 {
     private $implementations = [];
@@ -66,42 +69,63 @@ class Manager
         return $this->implementations[$storage];
     }
 
+    /**
+     * Whether a file exists in a storage.
+     */
     public function isFile(Attachment $attachment) : bool
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->isFile($attachment);
     }
 
-    public function getContents(Attachment $attachment)
+    /**
+     * Get file contents.
+     */
+    public function getContents(Attachment $attachment) : ?string
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->getContents($attachment);
     }
 
-    public function putContents(Attachment $attachment, $contents)
+    /**
+     * Store file contents.
+     */
+    public function putContents(Attachment $attachment, string $contents)
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->putContents($attachment, $contents);
+        $implementation->putContents($attachment, $contents);
     }
 
+    /**
+     * Remove a file.
+     */
     public function unlink(Attachment $attachment)
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->unlink($attachment);
+        $implementation->unlink($attachment);
     }
 
+    /**
+     * Get a file path.
+     */
     public function getLocalFilePath(Attachment $attachment) : string
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->getLocalFilePath($attachment);
     }
 
+    /**
+     * Whether a file can be downloaded by URL.
+     */
     public function hasDownloadUrl(Attachment $attachment) : bool
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->hasDownloadUrl($attachment);
     }
 
+    /**
+     * Get download URL.
+     */
     public function getDownloadUrl(Attachment $attachment) : string
     {
         $implementation = $this->getImplementation($attachment->get('storage'));

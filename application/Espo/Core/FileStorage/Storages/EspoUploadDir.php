@@ -58,14 +58,24 @@ class EspoUploadDir implements Storage
         return $this->getFileManager()->isFile($this->getFilePath($attachment));
     }
 
-    public function getContents(Attachment $attachment)
+    public function getContents(Attachment $attachment) : ?string
     {
-        return $this->getFileManager()->getContents($this->getFilePath($attachment));
+        $contents = $this->getFileManager()->getContents($this->getFilePath($attachment));
+
+        if ($contents === false) {
+            return null;
+        }
+
+        return $contents;
     }
 
-    public function putContents(Attachment $attachment, $contents)
+    public function putContents(Attachment $attachment, string $contents)
     {
-        return $this->getFileManager()->putContents($this->getFilePath($attachment), $contents);
+        $filePath = $this->getFilePath($attachment);
+        $result = $this->getFileManager()->putContents($filePath, $contents);
+        if (!$result) {
+            throw new Error("Could not store a file {$filePath}.");
+        }
     }
 
     public function getLocalFilePath(Attachment $attachment) : string

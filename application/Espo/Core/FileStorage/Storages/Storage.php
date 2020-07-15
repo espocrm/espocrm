@@ -31,19 +31,43 @@ namespace Espo\Core\FileStorage\Storages;
 
 use Espo\Entities\Attachment;
 
+/**
+ * File storing and fetching. Files are represented as Attachment entities.
+ */
 interface Storage
 {
-    public function hasDownloadUrl(Attachment $attachment) : bool;
+    /**
+     * Get file contents.
+     */
+    public function getContents(Attachment $attachment) : ?string;
 
-    public function getDownloadUrl(Attachment $attachment) : string;
-
-    public function unlink(Attachment $attachment);
-
-    public function getContents(Attachment $attachment);
-
+    /**
+     * Whether a file exists in a storage.
+     */
     public function isFile(Attachment $attachment) : bool;
 
-    public function putContents(Attachment $attachment, $contents);
+    /**
+     * Store file contents.
+     */
+    public function putContents(Attachment $attachment, string $contents);
 
+    /**
+     * Get a file path.
+     */
     public function getLocalFilePath(Attachment $attachment) : string;
+
+    /**
+     * Remove a file.
+     */
+    public function unlink(Attachment $attachment);
+
+    /**
+     * Whether a file can be downloaded by URL.
+     */
+    public function hasDownloadUrl(Attachment $attachment) : bool;
+
+    /**
+     * Get download URL.
+     */
+    public function getDownloadUrl(Attachment $attachment) : string;
 }

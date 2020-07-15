@@ -80,7 +80,7 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function save(Entity $entity, array $options = array())
+    public function save(Entity $entity, array $options = [])
     {
         $isNew = $entity->isNew();
 
@@ -89,9 +89,8 @@ class Attachment extends \Espo\Core\Repositories\Database implements
 
             if ($entity->has('contents')) {
                 $contents = $entity->get('contents');
-                $storeResult = $this->fileStorageManager->putContents($entity, $contents);
-                if ($storeResult === false) {
-                    throw new Error("Could not store the file");
+                if (is_string($contents)) {
+                    $this->fileStorageManager->putContents($entity, $contents);
                 }
             }
         }
@@ -101,7 +100,7 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         return $result;
     }
 
-    protected function afterRemove(Entity $entity, array $options = array())
+    protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
@@ -156,22 +155,22 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         return $attachment;
     }
 
-    public function getContents(Entity $entity)
+    public function getContents(Entity $entity) : ?string
     {
         return $this->fileStorageManager->getContents($entity);
     }
 
-    public function getFilePath(Entity $entity)
+    public function getFilePath(Entity $entity) : string
     {
         return $this->fileStorageManager->getLocalFilePath($entity);
     }
 
-    public function hasDownloadUrl(Entity $entity)
+    public function hasDownloadUrl(Entity $entity) : bool
     {
         return $this->fileStorageManager->hasDownloadUrl($entity);
     }
 
-    public function getDownloadUrl(Entity $entity)
+    public function getDownloadUrl(Entity $entity) : string
     {
         return $this->fileStorageManager->getDownloadUrl($entity);
     }

@@ -95,7 +95,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
 
                 if ($this->getFileStorageManager()->isFile($source)) {
                     $this->getEntityManager()->saveEntity($attachment);
-                    $contents = $this->getFileStorageManager()->getContents($source);
+                    $contents = $this->getFileStorageManager()->getContents($source) ?? '';
                     $this->getFileStorageManager()->putContents($attachment, $contents);
                     $ids[] = $attachment->id;
                     $names->{$attachment->id} = $attachment->get('name');
@@ -103,10 +103,10 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
             }
         }
 
-        return array(
+        return [
             'ids' => $ids,
-            'names' => $names
-        );
+            'names' => $names,
+        ];
     }
 
     public function moveUp(string $id, $where = null)

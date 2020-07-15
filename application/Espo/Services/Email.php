@@ -846,7 +846,7 @@ class Email extends Record implements
 
                 if ($this->getFileStorageManager()->isFile($source)) {
                     $this->getEntityManager()->saveEntity($attachment);
-                    $contents = $this->getFileStorageManager()->getContents($source);
+                    $contents = $this->getFileStorageManager()->getContents($source) ?? '';
                     $this->getFileStorageManager()->putContents($attachment, $contents);
                     $ids[] = $attachment->id;
                     $names->{$attachment->id} = $attachment->get('name');
