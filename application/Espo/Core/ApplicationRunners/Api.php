@@ -40,7 +40,6 @@ use Espo\Core\{
     Api\RequestWrapper,
     Api\ResponseWrapper,
     Api\RouteProcessor,
-    Utils\Config,
     Utils\Route,
 };
 
@@ -58,17 +57,26 @@ use Psr\Http\{
 use Exception;
 
 /**
- * Runs API.
+ * Runs API request processing.
  */
 class Api implements ApplicationRunner
 {
+    protected $allowedMethodList = [
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete',
+        'options',
+    ];
+
     protected $injectableFactory;
     protected $applicationUser;
 
-    public function __construct(InjectableFactory $injectableFactory, ApplicationUser $applicationUser, Config $config) {
+    public function __construct(InjectableFactory $injectableFactory, ApplicationUser $applicationUser)
+    {
         $this->injectableFactory = $injectableFactory;
         $this->applicationUser = $applicationUser;
-        $this->config = $config;
     }
 
     public function run()
@@ -77,55 +85,80 @@ class Api implements ApplicationRunner
         $slim->setBasePath(Route::detectBasePath());
         $slim->addRoutingMiddleware();
 
-        $crudList = array_keys($this->config->get('crud'));
-
         $routeList = $this->getRouteList();
+        $routeList = $this->filterRouteList($routeList);
 
         foreach ($routeList as $item) {
-            $method = strtolower($item['method']);
-            $route = $item['route'];
-
-            if (!in_array($method, $crudList) && $method !== 'options') {
-                $GLOBALS['log']->error("Route: Method '{$method}' does not exist. Check the route '{$route}'.");
-                continue;
-            }
-
-            $slim->$method(
-                $route,
-                function (Psr7Request $request, Psr7Response $response, array $args) use ($item, $slim) {
-                    $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
-                    $responseWrapped = new ResponseWrapper($response);
-
-                    try {
-                        $authRequired = !($item['noAuth'] ?? false);
-
-                        $authentication = $this->injectableFactory->create(Authentication::class);
-
-                        $apiAuth = new ApiAuth($authentication, $authRequired);
-                        $apiAuth->process($requestWrapped, $responseWrapped);
-
-                        if (!$apiAuth->isResolved()) {
-                            return $responseWrapped->getResponse();
-                        }
-                        if ($apiAuth->isResolvedUseNoAuth()) {
-                            $this->applicationUser->setupSystemUser();
-                        }
-
-                        $routeProcessor = $this->injectableFactory->create(RouteProcessor::class);
-                        $routeProcessor->process($item['route'], $item['params'], $requestWrapped, $responseWrapped, $args);
-                    } catch (Exception $exception) {
-                        (new ApiErrorOutput($requestWrapped))->process(
-                            $responseWrapped, $exception, false, $item, $args
-                        );
-                    }
-
-                    return $responseWrapped->getResponse();
-                }
-            );
+            $this->addRoute($slim, $item);
         }
 
         $slim->addErrorMiddleware(false, true, true);
         $slim->run();
+    }
+
+    protected function addRoute(SlimApp $slim, array $item)
+    {
+        $method = strtolower($item['method']);
+        $route = $item['route'];
+
+        $slim->$method(
+            $route,
+            function (Psr7Request $request, Psr7Response $response, array $args) use ($item, $slim) {
+                $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
+                $responseWrapped = new ResponseWrapper($response);
+
+                $this->processRequest($item, $requestWrapped, $responseWrapped, $args);
+
+                return $responseWrapped->getResponse();
+            }
+        );
+    }
+
+    protected function processRequest(array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped, array $args)
+    {
+        try {
+            $authRequired = !($item['noAuth'] ?? false);
+
+            $authentication = $this->injectableFactory->create(Authentication::class);
+
+            $apiAuth = new ApiAuth($authentication, $authRequired);
+            $apiAuth->process($requestWrapped, $responseWrapped);
+
+            if (!$apiAuth->isResolved()) {
+                return;
+            }
+
+            if ($apiAuth->isResolvedUseNoAuth()) {
+                $this->applicationUser->setupSystemUser();
+            }
+
+            $routeProcessor = $this->injectableFactory->create(RouteProcessor::class);
+            $routeProcessor->process($item['route'], $item['params'], $requestWrapped, $responseWrapped, $args);
+        } catch (Exception $exception) {
+            (new ApiErrorOutput($requestWrapped))->process(
+                $responseWrapped, $exception, false, $item, $args
+            );
+        }
+    }
+
+    protected function filterRouteList(array $routeList) : array
+    {
+        $routeList = array_filter($routeList, function ($item) {
+            $method = strtolower($item['method'] ?? '');
+            $route = $item['route'] ?? null;
+
+            if (!$route) {
+                return false;
+            }
+
+            if (!in_array($method, $this->allowedMethodList)) {
+                $GLOBALS['log']->warning("Route: Method '{$method}' is not supported. Fix the route '{$route}'.");
+                return false;
+            }
+            return true;
+        });
+
+        return $routeList;
     }
 
     protected function getRouteList() : array
