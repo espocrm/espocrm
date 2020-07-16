@@ -27,6 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/************************************************************************
+ * This file contains code parts copied from TCPDF software library
+ * that is published under GNU Lesser General Public License.
+ ************************************************************************/
+
 namespace Espo\Core\Pdf;
 
 define('K_TCPDF_EXTERNAL_CONFIG', true);
