@@ -501,7 +501,7 @@ define('ui', [], function () {
         },
 
         error: function (message) {
-            Espo.Ui.notify(message, 'error', 2000);
+            Espo.Ui.notify(message, 'error', 4000);
         },
 
         info: function (message) {

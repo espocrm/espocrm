@@ -269,7 +269,7 @@
         "systemRequirements": "System Requirements for EspoCRM.",
         "apiUsers": "Separate users for integration purposes.",
         "webhooks": "Manage webhooks.",
-        "emailAddresses": "All emailes addresses stored in the system.",
+        "emailAddresses": "All email addresses stored in the system.",
         "phoneNumbers": "All phone numbers stored in the system.",
         "dashboardTemplates": "Deploy dashboards to users.",
         "layoutSets": "Collections of layouts that can be assigned to teams & portals.",

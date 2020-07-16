@@ -74,7 +74,7 @@ class Sender
         $handler = curl_init($webhook->get('url'));
         curl_setopt($handler, \CURLOPT_RETURNTRANSFER, true);
         curl_setopt($handler, \CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($handler, \CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($handler, \CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($handler, \CURLOPT_HEADER, true);
         curl_setopt($handler, \CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($handler, \CURLOPT_CONNECTTIMEOUT, $connectTimeout);
