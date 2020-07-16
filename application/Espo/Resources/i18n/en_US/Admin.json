@@ -275,6 +275,18 @@
         "layoutSets": "Collections of layouts that can be assigned to teams & portals.",
         "pdfTemplates": "Templates for printing to PDF."
     },
+    "keywords": {
+        "settings": "system",
+        "userInterface": "ui,theme,tabs,logo,dashboard",
+        "authentication": "password",
+        "scheduledJob": "cron,jobs",
+        "integrations": "google,maps,google maps",
+        "authLog": "log,history",
+        "authTokens": "history,access,log",
+        "entityManager": "fields,relations,relationships",
+        "templateManager": "notifications",
+        "jobs": "cron"
+    },
     "options": {
         "previewSize": {
             "x-small": "X-Small",

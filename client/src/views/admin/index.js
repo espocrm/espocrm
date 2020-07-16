@@ -65,6 +65,17 @@ define('views/admin/index', 'view', function (Dep) {
                 panelItem.name = name;
                 panelItem.itemList = panelItem.itemList || [];
                 panelItem.label = this.translate(panelItem.label, 'labels', 'Admin');
+
+                if (panelItem.itemList) {
+                    panelItem.itemList.forEach(function (item) {
+                        if (item.description) {
+                            item.keywords = (this.getLanguage().get('Admin', 'keywords', item.description) || '').split(',');
+                        } else {
+                            item.keywords = [];
+                        }
+                    }, this);
+                }
+
                 if (panelItem.items) {
                     panelItem.items.forEach(function (item) {
                         item.label = this.translate(item.label, 'labels', 'Admin');
@@ -153,6 +164,20 @@ define('views/admin/index', 'view', function (Dep) {
                                 matched = true;
                             }
                         }, this);
+
+                        if (!matched) {
+                            matched = ~row.keywords.indexOf(text);
+                        }
+                        if (!matched) {
+                            if (text.length > 3) {
+                                row.keywords.forEach(function (word) {
+                                    if (word.indexOf(text) === 0) {
+                                        matched = true;
+                                    }
+                                }, this);
+                            }
+
+                        }
                     }
 
                     if (matched) {
