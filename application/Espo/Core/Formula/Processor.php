@@ -64,7 +64,7 @@ class Processor
     }
 
     /**
-     * Evaluates an argument or argunent list.
+     * Evaluates an argument or argument list.
      *
      * @return mixed A result of evaluation. An array if an argument list was passed.
      */

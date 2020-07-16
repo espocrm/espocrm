@@ -48,7 +48,7 @@ class ArgumentList implements Evaluatable, \Iterator, \Countable, \ArrayAccess, 
         $keys = array_keys($this->dataList);
         $i = end($keys);
         while ($i > 0) {
-            if (isset($this->dataList[$i])) {
+            if (array_key_exists($i, $this->dataList)) {
                 break;
             }
             $i--;

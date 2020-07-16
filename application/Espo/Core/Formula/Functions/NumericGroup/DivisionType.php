@@ -29,21 +29,26 @@
 
 namespace Espo\Core\Formula\Functions\NumericGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class DivisionType extends \Espo\Core\Formula\Functions\Base
+class DivisionType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 2) {
-            throw new Error('Bad value for \'Division\'.');
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
         }
 
-        $result = $this->evaluate($item->value[0]);
-        $part = $this->evaluate($item->value[1]);
+        $result = $this->evaluate($args[0]);
+        $part = $this->evaluate($args[1]);
+
         if (!is_float($part) && !is_int($part)) {
             $part = floatval($part);
         }
+
         $result /= $part;
 
         return $result;

@@ -29,14 +29,15 @@
 
 namespace Espo\Core\Formula\Functions;
 
-class ConditionType extends Base
-{
-    public function process(\StdClass $item)
-    {
-        if (!property_exists($item, 'value')) {
-            return true;
-        }
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-        return $this->evaluate($item->value);
+class ConditionType extends BaseFunction
+{
+    public function process(ArgumentList $args)
+    {
+        return $this->evaluate($args[0]);
     }
 }

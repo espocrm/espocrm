@@ -29,13 +29,19 @@
 
 namespace Espo\Core\Formula\Functions\LogicalGroup;
 
-class AndType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+class AndType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
         $result = true;
-        foreach ($item->value as $subItem) {
-            $result = $result && $this->evaluate($subItem);
+
+        foreach ($args as $item) {
+            $result = $result && $this->evaluate($item);
             if (!$result) break;
         }
 

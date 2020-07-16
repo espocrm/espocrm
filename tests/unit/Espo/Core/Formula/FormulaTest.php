@@ -764,6 +764,29 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(3 / 2, $result);
     }
 
+    function testModulo()
+    {
+        $item = new Argument(json_decode('
+            {
+                "type": "numeric\\\\modulo",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": 3
+                    },
+                    {
+                        "type": "value",
+                        "value": 2
+                    }
+                ]
+            }
+        '));
+
+        $result = $this->createProcessor()->process($item);
+
+        $this->assertEquals(3 % 2, $result);
+    }
+
     function testIfThenElse1()
     {
         $item = new Argument(json_decode('
@@ -859,6 +882,50 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $result = $this->createProcessor()->process($item);
 
         $this->assertEquals(1, $result);
+    }
+
+    function testIfThen1()
+    {
+        $item = new Argument(json_decode('
+            {
+                "type": "ifThen",
+                "value": [
+                    {
+                        "type": "condition",
+                        "value": {
+                            "type": "logical\\\\and",
+                            "value": [
+                                {
+                                    "type": "comparison\\\\equals",
+                                    "value": [
+                                        {
+                                            "type": "attribute",
+                                            "value": "test"
+                                        },
+                                        {
+                                            "type": "value",
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "value",
+                        "value": 2
+                    }
+                ]
+            }
+        '));
+
+        $this->setEntityAttributes($this->entity, [
+            'test' => true,
+        ]);
+
+        $result = $this->createProcessor()->process($item);
+
+        $this->assertEquals(2, $result);
     }
 
     function testComparisonEquals()
@@ -1008,21 +1075,39 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "type": "comparison\\\\equals",
                 "value": [
                     {
-                        "type": "attribute",
-                        "value": ["parentId", "parentType"]
+                        "type": "list",
+                        "value": [
+                            {
+                                "type": "value",
+                                "value": "1"
+                            },
+                            {
+                                "type": "value",
+                                "value": "User"
+                            }
+                        ]
                     },
                     {
-                        "type": "value",
-                        "value": ["1", "User"]
+                        "type": "list",
+                        "value": [
+                            {
+                                "type": "value",
+                                "value": "1"
+                            },
+                            {
+                                "type": "value",
+                                "value": "User"
+                            }
+                        ]
                     }
                 ]
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'parentId' => '1',
             'parentType' => 'User'
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -2650,8 +2735,17 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "type": "array\\\\includes",
                 "value": [
                     {
-                        "type": "value",
-                        "value": ["Test", "Hello"]
+                        "type": "list",
+                        "value": [
+                            {
+                                "type": "value",
+                                "value": "Test"
+                            },
+                            {
+                                "type": "value",
+                                "value": "Hello"
+                            }
+                        ]
                     },
                     {
                         "type": "value",
@@ -2686,8 +2780,17 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "type": "array\\\\includes",
                 "value": [
                     {
-                        "type": "value",
-                        "value": ["Test", "Hello"]
+                        "type": "list",
+                        "value": [
+                            {
+                                "type": "value",
+                                "value": "Test"
+                            },
+                            {
+                                "type": "value",
+                                "value": "Hello"
+                            }
+                        ]
                     },
                     {
                         "type": "value",
@@ -2707,8 +2810,17 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "type": "array\\\\push",
                 "value": [
                     {
-                        "type": "value",
-                        "value": ["Test", "Hello"]
+                        "type": "list",
+                        "value": [
+                            {
+                                "type": "value",
+                                "value": "Test"
+                            },
+                            {
+                                "type": "value",
+                                "value": "Hello"
+                            }
+                        ]
                     },
                     {
                         "type": "value",
@@ -2732,8 +2844,17 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "type": "array\\\\length",
                 "value": [
                     {
-                        "type": "value",
-                        "value": ["Test", "Hello"]
+                        "type": "list",
+                        "value": [
+                            {
+                                "type": "value",
+                                "value": "Test"
+                            },
+                            {
+                                "type": "value",
+                                "value": "Hello"
+                            }
+                        ]
                     }
                 ]
             }

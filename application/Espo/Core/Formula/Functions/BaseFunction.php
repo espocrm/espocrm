@@ -102,9 +102,14 @@ abstract class BaseFunction
     /**
      * Throw TooFewArguments exception.
      */
-    protected function throwTooFewArguments()
+    protected function throwTooFewArguments(?int $number = null)
     {
-        throw new TooFewArguments('function: ' . $this->name);
+        $msg = 'function: ' . $this->name;
+        if ($number !== null) {
+            $msg .= ', needs: ' . $number;
+        }
+
+        throw new TooFewArguments($msg);
     }
 
     /**

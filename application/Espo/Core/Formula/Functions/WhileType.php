@@ -29,16 +29,17 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class WhileType extends Base
+class WhileType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchRawArguments($item);
-
         if (count($args) < 2) {
-            throw new Error("Function \'while\' should receieve 2 arguments.");
+            $this->throwTooFewArguments(2);
         }
 
         while ($this->evaluate($args[0])) {

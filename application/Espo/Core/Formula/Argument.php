@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\Formula\Exceptions\Error;
+
 /**
  * A function argument.
  */
@@ -46,6 +48,8 @@ class Argument implements Evaluatable
      */
     public function getType() : ?string
     {
+        if (!is_object($this->data)) return null;
+
         return $this->data->type ?? null;
     }
 
@@ -54,7 +58,11 @@ class Argument implements Evaluatable
      */
     public function getArgumentList() : ArgumentList
     {
-        if (!isset($this->data->value)) {
+        if (!is_object($this->data)) {
+            throw new Error("Can't get an argument list from a scalar value item.");
+        }
+
+        if (!property_exists($this->data, 'value')) {
             $argumentList = new ArgumentList([]);
         } else if (is_array($this->data->value)) {
             $argumentList = new ArgumentList($this->data->value);

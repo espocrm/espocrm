@@ -29,11 +29,22 @@
 
 namespace Espo\Core\Formula\Functions;
 
-class ValueType extends Base
+use Espo\Core\Formula\Exceptions\Error;
+
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+class ValueType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $value = $item->value;
+        if (!count($args)) {
+            throw Error("Bad value.");
+        }
+
+        $value = $args[0]->getData();
 
         if (is_string($value)) {
             $value = str_replace("\\n", "\n", $value);

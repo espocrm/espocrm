@@ -29,12 +29,18 @@
 
 namespace Espo\Core\Formula\Functions;
 
-class ListType extends Base
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+class ListType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
         $result = [];
-        foreach ($item->value as $item) {
+
+        foreach ($args as $item) {
             $result[] = $this->evaluate($item);
         }
 

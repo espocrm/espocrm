@@ -29,14 +29,18 @@
 
 namespace Espo\Core\Formula\Functions\NumericGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class ModuloType extends \Espo\Core\Formula\Functions\Base
+class ModuloType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
         $result = 1;
-        foreach ($item->value as $subItem) {
+
+        foreach ($args as $subItem) {
             $part = $this->evaluate($subItem);
 
             if (!is_float($part) && !is_int($part)) {

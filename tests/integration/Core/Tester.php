@@ -34,6 +34,7 @@ use Espo\Core\Authentication\Authentication;
 use Espo\Core\Application;
 use Espo\Core\Portal\Application as PortalApplication;
 use Espo\Core\Api\RequestWrapper;
+use Espo\Core\ApplicationRunners\Rebuild;
 
 use Slim\Psr7\Factory\RequestFactory;
 
@@ -323,7 +324,7 @@ class Tester
 
         if (!empty($this->params['pathToFiles']) && file_exists($this->params['pathToFiles'])) {
             $result = $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
-            $this->getApplication(true, true)->run('rebuild');
+            $this->getApplication(true, true)->run(Rebuild::class);
         }
 
         if (!empty($this->params['dataFile'])) {
@@ -337,14 +338,14 @@ class Tester
         }
 
         if ($applyChanges) {
-            $this->getApplication(true, true)->run('rebuild');
+            $this->getApplication(true, true)->run(Rebuild::class);
         }
     }
 
     public function setData(array $data)
     {
         $this->getDataLoader()->setData($data);
-        $this->getApplication(true, true)->run('rebuild');
+        $this->getApplication(true, true)->run(Rebuild::class);
     }
 
     public function clearCache()

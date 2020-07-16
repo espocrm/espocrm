@@ -29,10 +29,15 @@
 
 namespace Espo\Core\Formula\Functions\LogicalGroup;
 
-class NotType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+class NotType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        return !$this->evaluate($item->value);
+        return !$this->evaluate($args);
     }
 }

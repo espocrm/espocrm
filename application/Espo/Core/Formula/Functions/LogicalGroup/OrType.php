@@ -29,13 +29,19 @@
 
 namespace Espo\Core\Formula\Functions\LogicalGroup;
 
-class OrType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+class OrType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
         $result = false;
-        foreach ($item->value as $subItem) {
-            $result = $result || $this->evaluate($subItem);
+
+        foreach ($args as $item) {
+            $result = $result || $this->evaluate($item);
             if ($result) break;
         }
 

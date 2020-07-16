@@ -29,22 +29,25 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class IfThenElseType extends Base
+class IfThenElseType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 2) {
-             throw new Error('IfThenElse: Too few arguments.');
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
         }
 
-        if ($this->evaluate($item->value[0])) {
-            return $this->evaluate($item->value[1]);
-        } else {
-            if (count($item->value) > 2) {
-                return $this->evaluate($item->value[2]);
-            }
+        if ($this->evaluate($args[0])) {
+            return $this->evaluate($args[1]);
+        }
+
+        if (count($args) > 2) {
+            return $this->evaluate($args[2]);
         }
     }
 }

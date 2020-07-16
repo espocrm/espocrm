@@ -29,18 +29,27 @@
 
 namespace Espo\Core\Formula\Functions\NumberGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class RandomIntType extends \Espo\Core\Formula\Functions\Base
+class RandomIntType extends BaseFunction
 {
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        $args = $this->evaluate($args);
 
         $min = $args[0] ?? 0;
         $max = $args[1] ?? PHP_INT_MAX;
 
-        if (!is_int($min) || !is_int($max) ) throw new Error("Non-integer arguments passed to function number\\randomInt.");
+        if (!is_int($min)) {
+            $this->throwBadArgumentType(1, 'int');
+        }
+
+        if (!is_int($max)) {
+            $this->throwBadArgumentType(2, 'int');
+        }
 
         return random_int($min, $max);
     }
