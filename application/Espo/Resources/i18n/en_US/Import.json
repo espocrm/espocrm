@@ -65,7 +65,7 @@
         "removeDuplicates": "This will permanently remove all imported records that were recognized as duplicates.",
         "confirmRevert": "This will remove all imported records permanently. Are you sure?",
         "confirmRemoveDuplicates": "This will permanently remove all imported records that were recognized as duplicates. Are you sure?",
-        "confirmRemoveImportLog" : "This will remove the import log. All imported records will be kept. You won't be able to revert import results. Are you sure you?",
+        "confirmRemoveImportLog" : "This will remove the import log. All imported records will be kept. You won't be able to revert import results. Are you sure?",
         "removeImportLog": "This will remove the import log. All imported records will be kept. Use it if you are sure that import is fine."
     },
     "fields": {
