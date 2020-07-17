@@ -33,19 +33,20 @@ var versionFrom = process.argv[2];
 var acceptedVersionName = versionFrom;
 var isDev = false;
 var isAll = false;
-var withVendor = false;
+var withVendor = true;
 var forceScripts = false;
 
 if (process.argv.length > 1) {
     for (var i in process.argv) {
         if (process.argv[i] === '--dev') {
             isDev = true;
+            withVendor = false;
         }
         if (process.argv[i] === '--all') {
             isAll = true;
         }
-        if (process.argv[i] === '--vendor') {
-            withVendor = true;
+        if (process.argv[i] === '--no-vendor') {
+            withVendor = false;
         }
         if (process.argv[i] === '--scripts') {
             forceScripts = true;
@@ -242,6 +243,13 @@ function buildUpgradePackage(versionFrom, params)
                         return;
                     }
                     deletedFileList.push(file);
+                });
+
+                var deletedFileList = deletedFileList.filter(function (item) {
+                    if (item.indexOf('test/') === 0) {
+                        return false;
+                    }
+                    return true;
                 });
 
                 if (beforeUpgradeFileList.length) {
