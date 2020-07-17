@@ -60,6 +60,8 @@ use Psr\Http\{
 
 use StdClass;
 
+use Exception;
+
 /**
  * Runs an entry point.
  */
@@ -164,7 +166,7 @@ class EntryPoint implements ApplicationRunner
             if ($contents) {
                 $responseWrapped->writeBody($contents);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             (new ApiErrorOutput($requestWrapped))->process($responseWrapped, $e, true);
         }
     }
