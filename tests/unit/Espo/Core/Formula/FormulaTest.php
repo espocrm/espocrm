@@ -1912,6 +1912,34 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         '));
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(6, $actual);
+
+        $item = new Argument(json_decode('
+            {
+                "type": "datetime\\\\dayOfWeek",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2020-05-15"
+                    }
+                ]
+            }
+        '));
+        $actual = $this->createProcessor()->process($item);
+        $this->assertEquals(5, $actual);
+
+        $item = new Argument(json_decode('
+            {
+                "type": "datetime\\\\dayOfWeek",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2020-07-18 14:02:50"
+                    }
+                ]
+            }
+        '));
+        $actual = $this->createProcessor()->process($item);
+        $this->assertEquals(6, $actual);
     }
 
     function testDatetimeDiff()
