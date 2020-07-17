@@ -50,6 +50,9 @@
     "hookManager": {
         "className": "Espo\\Core\\HookManager"
     },
+    "entryPointManager": {
+        "className": "Espo\\Core\\EntryPointManager"
+    },
     "notificatorFactory": {
         "className": "Espo\\Core\\NotificatorFactory"
     },

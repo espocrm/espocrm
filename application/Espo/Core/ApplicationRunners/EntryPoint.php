@@ -66,14 +66,20 @@ use StdClass;
 class EntryPoint implements ApplicationRunner
 {
     protected $injectableFactory;
+    protected $entryPointManager;
     protected $entityManager;
     protected $clientManager;
     protected $applicationUser;
 
     public function __construct(
-        InjectableFactory $injectableFactory, EntityManager $entityManager, ClientManager $clientManager, ApplicationUser $applicationUser
+        InjectableFactory $injectableFactory,
+        EntryPointManager $entryPointManager,
+        EntityManager $entityManager,
+        ClientManager $clientManager,
+        ApplicationUser $applicationUser
     ) {
         $this->injectableFactory = $injectableFactory;
+        $this->entryPointManager = $entryPointManager;
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
         $this->applicationUser = $applicationUser;
@@ -88,22 +94,17 @@ class EntryPoint implements ApplicationRunner
         $final = $params->final ?? false;
         $data = $params->data ?? null;
 
-        if (!$entryPoint) throw new Error();
+        if (!$entryPoint) {
+            throw new Error();
+        }
 
-        $entryPointManager = $this->injectableFactory->create(EntryPointManager::class);
-
-        $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
-        $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
+        $authRequired = $this->entryPointManager->checkAuthRequired($entryPoint);
+        $authNotStrict = $this->entryPointManager->checkNotStrictAuth($entryPoint);
 
         if ($authRequired && !$authNotStrict && !$final) {
-            if ($portalId = $this->detectPortalId()) {
-                $app = new PortalApplication($portalId);
-                $app->setClientBasePath($this->clientManager->getBasePath());
-                $app->run(EntryPoint::class, (object) [
-                    'entryPoint' => $entryPoint,
-                    'data' => $data,
-                    'final' => true,
-                ]);
+            $portalId = $this->detectPortalId();
+            if ($portalId) {
+                $this->runThroughPortal($portalId, $entryPoint, $data);
                 return;
             }
         }
@@ -113,37 +114,12 @@ class EntryPoint implements ApplicationRunner
 
         $slim->add(
             function (Psr7Request $request, Psr7RequestHandler $handler) use (
-                $entryPointManager, $entryPoint, $data, $authRequired, $authNotStrict, $slim
+                $entryPoint, $data, $authRequired, $authNotStrict, $slim
             ) : Psr7Response {
                 $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
                 $responseWrapped = new ResponseWrapper($handler->handle($request));
 
-                try {
-                    $authentication = $this->injectableFactory->createWith(Authentication::class, [
-                        'allowAnyAccess' => $authNotStrict,
-                    ]);
-
-                    $apiAuth = new ApiAuth($authentication, $authRequired, true);
-
-                    $apiAuth->process($requestWrapped, $responseWrapped);
-
-                    if (!$apiAuth->isResolved()) {
-                        return $responseWrapped->getResponse();
-                    }
-                    if ($apiAuth->isResolvedUseNoAuth()) {
-                        $this->applicationUser->setupSystemUser();
-                    }
-
-                    ob_start();
-                    $entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped, $data);
-                    $contents = ob_get_clean();
-
-                    if ($contents) {
-                        $responseWrapped->writeBody($contents);
-                    }
-                } catch (\Exception $e) {
-                    (new ApiErrorOutput($requestWrapped))->process($responseWrapped, $e, true);
-                }
+                $this->processRequest($entryPoint, $requestWrapped, $responseWrapped, $data, $authRequired, $authNotStrict);
 
                 return $responseWrapped->getResponse();
             }
@@ -154,6 +130,43 @@ class EntryPoint implements ApplicationRunner
         });
 
         $slim->run();
+    }
+
+    protected function processRequest(
+        string $entryPoint,
+        RequestWrapper $requestWrapped,
+        ResponseWrapper $responseWrapped,
+        ?StdClass $data,
+        bool $authRequired,
+        bool $authNotStrict
+    ) {
+        try {
+            $authentication = $this->injectableFactory->createWith(Authentication::class, [
+                'allowAnyAccess' => $authNotStrict,
+            ]);
+
+            $apiAuth = ApiAuth::createForEntryPoint($authentication, $authRequired);
+
+            $apiAuth->process($requestWrapped, $responseWrapped);
+
+            if (!$apiAuth->isResolved()) {
+                return;
+            }
+
+            if ($apiAuth->isResolvedUseNoAuth()) {
+                $this->applicationUser->setupSystemUser();
+            }
+
+            ob_start();
+            $this->entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped, $data);
+            $contents = ob_get_clean();
+
+            if ($contents) {
+                $responseWrapped->writeBody($contents);
+            }
+        } catch (\Exception $e) {
+            (new ApiErrorOutput($requestWrapped))->process($responseWrapped, $e, true);
+        }
     }
 
     protected function detectPortalId() : ?string
@@ -169,5 +182,16 @@ class EntryPoint implements ApplicationRunner
             }
         }
         return null;
+    }
+
+    protected function runThroughPortal(string $portalId, string $entryPoint, ?StdClass $data)
+    {
+        $app = new PortalApplication($portalId);
+        $app->setClientBasePath($this->clientManager->getBasePath());
+        $app->run(EntryPoint::class, (object) [
+            'entryPoint' => $entryPoint,
+            'data' => $data,
+            'final' => true,
+        ]);
     }
 }

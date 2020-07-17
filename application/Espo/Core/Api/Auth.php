@@ -55,15 +55,23 @@ class Auth
 
     protected $authRequired;
 
+    protected $isEntryPoint = false;
+
     private $isResolved = false;
 
     private $isResolvedUseNoAuth = false;
 
-    public function __construct(Authentication $authentication, bool $authRequired = true, bool $isEntryPoint = false)
+    public function __construct(Authentication $authentication, bool $authRequired = true)
     {
         $this->authentication = $authentication;
         $this->authRequired = $authRequired;
-        $this->isEntryPoint = $isEntryPoint;
+    }
+
+    public function createForEntryPoint(Authentication $authentication, bool $authRequired = true)
+    {
+        $instance = new Auth($authentication, $authRequired);
+        $instance->isEntryPoint = true;
+        return $instance;
     }
 
     protected function resolve()
