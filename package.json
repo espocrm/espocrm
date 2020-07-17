@@ -23,9 +23,9 @@
     "grunt-mkdir": "~1.0.0",
     "grunt-replace": "~1.0.1",
     "js-yaml": "^3.13.1",
-    "pofile": "~1.0.11",
+    "lodash": "^4.17.19",
     "minimist": ">=1.2.2",
-    "lodash": ">=4.17.12",
+    "pofile": "~1.0.11",
     "tar": "^4.4.8"
   },
   "dependencies": {}
