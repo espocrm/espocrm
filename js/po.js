@@ -33,8 +33,7 @@ const fs = require('fs');
 */
 class PO
 {
-    constructor (espoPath, language, onlyModuleName)
-    {
+    constructor (espoPath, language, onlyModuleName) {
         this.espoPath = espoPath;
         this.onlyModuleName = onlyModuleName;
 
