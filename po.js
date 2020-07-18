@@ -26,16 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (process.argv.length < 2) {
-    throw new Error('No dir argument passed');
-}
+/**
+* Buils a PO file for a specific language or all languages.
+* The built PO file will be available in `build` directory.
+*
+* Command example: `node po en_US`.
+*
+* Options:
+* * --module={ModuleName} - only specific module;
+* * --all - all languages.
+*/
 
-var path = require('path');
-var fs = require('fs');
+const PO = require('./js/po');
+const path = require('path');
+const fs = require('fs');
 
-var language = process.argv[2];
-
-var espoPath = path.dirname(fs.realpathSync(__filename)) + '';
+var language = process.argv[2] || null;
 
 var onlyModuleName = null;
 if (process.argv.length > 2) {
@@ -43,183 +49,18 @@ if (process.argv.length > 2) {
         if (~process.argv[i].indexOf('--module=')) {
             onlyModuleName = process.argv[i].substr(('--module=').length);
         }
-    }
-}
-
-function PO (espoPath, language) {
-    this.moduleList = ['Crm'];
-    if (onlyModuleName) {
-        this.moduleList = [onlyModuleName];
-    }
-    this.baseLanguage = 'en_US';
-    this.language = language || this.baseLanguage;
-
-    this.currentPath = path.dirname(fs.realpathSync(__filename)) + '/';
-
-    this.outputFileName = 'espocrm-' + this.language ;
-    if (onlyModuleName) {
-        this.outputFileName += '-' + onlyModuleName;
-    }
-    this.outputFileName += '.po';
-
-    this.path = espoPath;
-    if (this.path.substr(-1) != '/') {
-        this.path += '/';
-    }
-
-    var dirs = [
-        this.path + 'application/Espo/Resources/i18n/',
-        this.path + 'install/core/i18n/',
-        this.path + 'application/Espo/Core/Templates/i18n/'
-    ];
-
-    if (onlyModuleName) {
-        dirs = [];
-    }
-
-    this.moduleList.forEach(function (moduleName) {
-        dirs.push(this.path + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/');
-    }, this);
-
-    this.dirs = dirs;
-
-    this.poContentHeader = 'msgid ""\n' +
-        'msgstr ""\n' +
-        '"Project-Id-Version: \\n"\n' +
-        '"POT-Creation-Date: \\n"\n' +
-        '"PO-Revision-Date: \\n"\n' +
-        '"Last-Translator: \\n"\n' +
-        '"Language-Team: EspoCRM <infobox@espocrm.com>\\n"\n' +
-        '"MIME-Version: 1.0\\n"\n' +
-        '"Content-Type: text/plain; charset=UTF-8\\n"\n' +
-        '"Content-Transfer-Encoding: 8bit\\n"\n' +
-        '"Language: ' + this.language + '\\n"\n\n';
-};
-
-PO.prototype.run = function () {
-    var dirs = this.dirs;
-    var messageData = {};
-    var targetMessageData = {}
-
-    var self = this;
-    var poContents = this.poContentHeader;
-
-    dirs.forEach(function (path) {
-
-        var dirPath = this.getDirPath(path, self.baseLanguage);
-
-        var list = fs.readdirSync(dirPath);
-        list.forEach(function (fileName) {
-            var filePath = this.getDirPath(path, self.baseLanguage) + fileName;
-            this.populateMessageDataFromFile(filePath, messageData);
-
-            if (self.language != self.baseLanguage) {
-                var langFilePath = this.getDirPath(path, self.language) + fileName;
-                this.populateMessageDataFromFile(langFilePath, targetMessageData);
-            }
-        }, this);
-
-    }, this);
-
-
-    if (self.language == self.baseLanguage) {
-        targetMessageData = messageData;
-    }
-
-    for (var key in messageData) {
-        poContents += 'msgctxt "' + messageData[key].context + '"\n';
-        poContents += 'msgid "' + messageData[key].value + '"\n';
-        var translatedValue = (targetMessageData[key] || {}).value || "";
-        poContents += 'msgstr "' + translatedValue + '"\n\n';
-    }
-
-    var resFilePath = this.currentPath + 'build/' + this.outputFileName;
-
-    if (fs.existsSync(resFilePath)) {
-        fs.unlinkSync(resFilePath);
-    }
-
-    fs.writeFileSync(resFilePath, poContents);
-};
-
-PO.prototype.populateMessageDataFromFile = function (filePath, messageData) {
-    if (!fs.existsSync(filePath)) {
-        return messageData;
-    }
-
-    var data = fs.readFileSync(filePath, 'utf8');
-    data = JSON.parse(data);
-
-    var fileName = filePath.split('\/').slice(-1).pop().split('.')[0];
-
-    this.populateMessageData(fileName, data, '', messageData);
-}
-
-PO.prototype.getDirPath = function (path, language) {
-    var dirPath = path + language + '/';
-    return dirPath;
-}
-
-PO.prototype.populateMessageData = function (fileName, dataObject, prefix, messageData) {
-    prefix = prefix || '';
-
-    for (var index in dataObject) {
-        if (dataObject[index] === null || dataObject[index] === "") {
-            continue;
-        }
-
-        if (typeof dataObject[index] === 'object' && !Array.isArray(dataObject[index])) {
-            var nextPrefix = prefix + (prefix ? '.' : '') + index;
-            this.populateMessageData(fileName, dataObject[index], nextPrefix, messageData);
-        } else {
-            var path = fileName + '.' + prefix;
-
-            var key = path + '.' + index;
-
-            var value = dataObject[index];
-            if (Array.isArray(value)) {
-                value = '"' + value.join('", "') + '"';
-                path = path + '.' + index;
-            }
-
-            messageData[key] = {
-                context: path,
-                value: this.fixString(value)
-            };
+        if (~process.argv[i].indexOf('--all')) {
+            language = '--all';
         }
     }
 }
 
-PO.prototype.replaceAll = function (string, find, replace) {
-    escapedRegExp = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-    return string.replace(new RegExp(escapedRegExp, 'g'), replace);
-}
+var espoPath = path.dirname(fs.realpathSync(__filename)) + '';
 
-PO.prototype.fixString = function (savedString) {
-    savedString = this.replaceAll(savedString, "\\", '\\\\');
-    savedString = this.replaceAll(savedString, '"', '\\"');
-    savedString = this.replaceAll(savedString, "\n", '\\n');
-    savedString = this.replaceAll(savedString, "\t", '\\t');
-    return savedString;
-}
-
+var po = new PO(espoPath, language, onlyModuleName);
 
 if (language === '--all') {
-    var pathToLanguage = espoPath + '/application/Espo/Resources/i18n/';
-
-    var languageList = [];
-    fs.readdirSync(pathToLanguage).forEach(function (dir) {
-        if (dir.indexOf('_') == 2) {
-            languageList.push(dir);
-        }
-    });
-
-    languageList.forEach(function (language) {
-        var po = new PO(espoPath, language);
-        po.run();
-    });
-
+    po.runAll();
 } else {
-    var po = new PO(espoPath, language);
     po.run();
 }
