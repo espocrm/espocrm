@@ -26,43 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 ﻿
+const fs = require('fs');
+const nodePath = require('path');
+const PO = require('pofile');
+const os = require('os');
+
 if (process.argv.length < 2) {
     throw new Error('No dir argument passed');
 }
 
-const fs = require('fs');
-const nodePath = require('path');
 
-const PO = require('pofile');
-const os = require('os');
-
-
-var onlyModuleName = null;
-if (process.argv.length > 2) {
-    for (var i in process.argv) {
-        if (~process.argv[i].indexOf('--module=')) {
-            onlyModuleName = process.argv[i].substr(('--module=').length);
-        }
-    }
-}
-
-
-/*var deleteFolderRecursive = function (path) {
-    var files = [];
-    if (fs.existsSync(path)) {
-        files = fs.readdirSync(path);
-        files.forEach(function(file,index){
-            var curPath = path + "/" + file;
-            if(fs.lstatSync(curPath).isDirectory()) {
-                deleteFolderRecursive(curPath);
-            } else {
-                fs.unlinkSync(curPath);
-            }
-        });
-        fs.rmdirSync(path);
-    }
-};*/
-
+/**
+ * Builds language files from a PO file.
+ */
 class Lang
 {
     constructor (language, poPath, espoPath, onlyModuleName) {

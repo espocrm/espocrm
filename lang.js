@@ -26,6 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 ﻿
+/**
+ * Builds language files from a PO file.
+ *
+ * Command example: `node lang de_DE`.
+ *
+ * A PO file should be located in `build` directory: `build/espocrm-lang_CODE.po`.
+ * Langugae files will be created in `build` directory.
+ *
+ * You specify a module with `--module=` parameter. It will build only for the specified module.
+ */
+
 const Lang = require('./js/lang');
 const path = require('path');
 const fs = require('fs');
@@ -58,23 +69,6 @@ if (!poPath) {
     }
     poPath += '.po';
 }
-
-/*var deleteFolderRecursive = function (path) {
-    var files = [];
-    if (fs.existsSync(path)) {
-        files = fs.readdirSync(path);
-        files.forEach(function(file,index){
-            var curPath = path + "/" + file;
-            if(fs.lstatSync(curPath).isDirectory()) {
-                deleteFolderRecursive(curPath);
-            } else {
-                fs.unlinkSync(curPath);
-            }
-        });
-        fs.rmdirSync(path);
-    }
-};*/
-
 
 var lang = new Lang(language, poPath, espoPath, onlyModuleName);
 lang.run();
