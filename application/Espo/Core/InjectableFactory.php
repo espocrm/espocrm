@@ -62,6 +62,7 @@ class InjectableFactory
 
     /**
      * Use create or createWith instead. Left public for backward compatibility.
+     * @todo Make protected.
      */
     public function createByClassName(string $className, ?array $with = null) : object
     {
