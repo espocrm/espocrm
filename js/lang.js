@@ -31,11 +31,6 @@ const nodePath = require('path');
 const PO = require('pofile');
 const os = require('os');
 
-if (process.argv.length < 2) {
-    throw new Error('No dir argument passed');
-}
-
-
 /**
  * Builds language files from a PO file.
  */
