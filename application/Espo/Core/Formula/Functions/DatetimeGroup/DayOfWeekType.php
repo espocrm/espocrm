@@ -58,9 +58,9 @@ class DayOfWeekType extends BaseFunction implements Di\DateTimeAware
         if (empty($value)) return -1;
 
         if (strlen($value) > 11) {
-            $resultString = $this->dateTime->convertSystemDateTime($value, $timezone, 'e');
+            $resultString = $this->dateTime->convertSystemDateTime($value, $timezone, 'd');
         } else {
-            $resultString = $this->dateTime->convertSystemDate($value, 'e');
+            $resultString = $this->dateTime->convertSystemDate($value, 'd');
         }
 
         $result = intval($resultString);
