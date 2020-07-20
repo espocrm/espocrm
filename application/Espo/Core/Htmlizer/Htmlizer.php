@@ -45,6 +45,10 @@ use Espo\Core\Acl;
 
 use LightnCandy\LightnCandy as LightnCandy;
 
+/**
+ * Generates an HTML for an entity.
+ * Used by a Print-to-PDF, system email notifications.
+ */
 class Htmlizer
 {
     protected $fileManager;
@@ -78,21 +82,6 @@ class Htmlizer
         $this->serviceFactory = $serviceFactory;
     }
 
-    protected function getAcl()
-    {
-        return $this->acl;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
     protected function format($value)
     {
         if (is_float($value)) {
@@ -116,15 +105,15 @@ class Htmlizer
         $skipAttributeList = [];
         $forbiddenLinkList = [];
 
-        if ($this->getAcl()) {
-            $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+        if ($this->acl) {
+            $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
 
             $forbiddenAttributeList = array_merge(
                 $forbiddenAttributeList,
-                $this->getAcl()->getScopeRestrictedAttributeList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin'])
+                $this->acl->getScopeRestrictedAttributeList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin'])
             );
 
-            $forbiddenLinkList = $this->getAcl()->getScopeRestrictedLinkList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']);
+            $forbiddenLinkList = $this->acl->getScopeRestrictedLinkList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']);
         }
 
         $relationList = $entity->getRelationList();
@@ -264,8 +253,8 @@ class Htmlizer
                 ) {
                     $relatedEntity = $entity->get($relation);
                     if (!$relatedEntity) continue;
-                    if ($this->getAcl()) {
-                        if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
+                    if ($this->acl) {
+                        if (!$this->acl->check($relatedEntity, 'read')) continue;
                     }
 
                     $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);
@@ -547,8 +536,16 @@ class Htmlizer
         return $helpers;
     }
 
-    public function render(Entity $entity, $template, $id = null, ?array $additionalData = null, $skipLinks = false)
-    {
+    /**
+     * Generate an HTML for entity by a given template.
+     *
+     * @param $cacheId @deprecated Skip or specify NULL.
+     * @param $additionalData Data will be passed to the template.
+     * @param $skipLinks Do not process related records.
+     */
+    public function render(
+        Entity $entity, string $template, ?string $cacheId = null, ?array $additionalData = null, bool $skipLinks = false
+    ) : string {
         $template = str_replace('<tcpdf ', '', $template);
 
         $helpers = $this->getHelpers();
@@ -590,13 +587,13 @@ class Htmlizer
 
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
 
-        if ($this->getEntityManager()) {
+        if ($this->entityManager) {
             $html = preg_replace_callback('/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/', function ($matches) {
                 $id = $matches[1];
-                $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+                $attachment = $this->entityManager->getEntity('Attachment', $id);
 
                 if ($attachment) {
-                    $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
+                    $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
                     return $filePath;
                 }
             }, $html);
@@ -605,8 +602,9 @@ class Htmlizer
         return $html;
     }
 
-    protected function getFieldType($entityType, $field) {
-        if (!$this->metadata) return;
+    protected function getFieldType(string $entityType, string $field)
+    {
+        if (!$this->metadata) return null;
         return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
     }
 }
