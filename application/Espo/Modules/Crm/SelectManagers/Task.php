@@ -132,13 +132,14 @@ class Task extends \Espo\Core\SelectManagers\SelectManager
         ]);
     }
 
-    public function transformDateTimeWhereItem(array $item) : ?array
+    public function transformDateTimeWhereItem(array $item) : array
     {
         $where = parent::transformDateTimeWhereItem($item);
 
         if (empty($where)) {
-            return null;
+            return [];
         }
+
         $attribute = null;
         if (!empty($item['attribute'])) {
             $attribute = $item['attribute'];
@@ -156,6 +157,7 @@ class Task extends \Espo\Core\SelectManagers\SelectManager
         $attributeDate = $attribute . 'Date';
 
         $value = null;
+
         if (array_key_exists('value', $item)) {
             $value = $item['value'];
             if (is_string($value)) {
