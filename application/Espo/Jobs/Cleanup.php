@@ -38,7 +38,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\File\Manager as FileManager,
     InjectableFactory,
-    SelectManagerFactory,
+    Select\SelectManagerFactory,
     ServiceFactory,
 };
 

@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class EmailTemplate extends \Espo\Core\SelectManagers\SelectManager
+class EmailTemplate extends \Espo\Core\Select\SelectManager
 {
     protected function filterActual(&$result)
     {

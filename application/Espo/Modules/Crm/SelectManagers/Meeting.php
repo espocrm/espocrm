@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Meeting extends \Espo\Core\SelectManagers\SelectManager
+class Meeting extends \Espo\Core\Select\SelectManager
 {
     protected function accessOnlyOwn(&$result)
     {

@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\SelectManagers;
+namespace Espo\Core\Select;
 
 use Espo\Core\Exceptions\{
     Error,

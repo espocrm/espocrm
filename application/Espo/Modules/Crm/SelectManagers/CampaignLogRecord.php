@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class CampaignLogRecord extends \Espo\Core\SelectManagers\SelectManager
+class CampaignLogRecord extends \Espo\Core\Select\SelectManager
 {
     protected function accessOnlyOwn(&$result)
     {

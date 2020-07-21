@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class EmailAddress extends \Espo\Core\SelectManagers\SelectManager
+class EmailAddress extends \Espo\Core\Select\SelectManager
 {
     protected function filterOrphan(&$result)
     {

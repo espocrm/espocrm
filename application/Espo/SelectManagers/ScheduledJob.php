@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class ScheduledJob extends \Espo\Core\SelectManagers\SelectManager
+class ScheduledJob extends \Espo\Core\Select\SelectManager
 {
     protected function access(&$result)
     {

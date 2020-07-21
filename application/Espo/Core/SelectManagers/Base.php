@@ -30,6 +30,6 @@
 namespace Espo\Core\SelectManagers;
 
 /** @deprecated */
-class Base extends SelectManager
+class Base extends \Espo\Core\Select\SelectManager
 {
 }

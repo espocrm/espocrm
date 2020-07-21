@@ -29,9 +29,11 @@
 
 namespace Espo\Core\AppParams;
 
-use Espo\Core\Acl;
-use Espo\Core\SelectManagerFactory;
-use Espo\ORM\EntityManager;
+use Espo\Core\{
+    Acl,
+    Select\SelectManagerFactory,
+    ORM\EntityManager,
+};
 
 /**
  * Returns a list of entity types for which a PDF template exists.

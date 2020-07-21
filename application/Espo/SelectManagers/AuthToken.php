@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class AuthToken extends \Espo\Core\SelectManagers\SelectManager
+class AuthToken extends \Espo\Core\Select\SelectManager
 {
     protected function filterActive(&$result)
     {

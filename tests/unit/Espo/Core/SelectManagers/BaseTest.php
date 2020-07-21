@@ -29,7 +29,10 @@
 
 namespace tests\unit\Espo\Core\SelectManagers;
 
-use \tests\unit\testData\Entities\Test2;
+use tests\unit\testData\Entities\Test2;
+
+use Espo\Core\Select\SelectManager;
+
 
 class BaseTest extends \PHPUnit\Framework\TestCase
 {
@@ -87,7 +90,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testTestEmptySelectParams()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
+        $selectManager = new SelectManager($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $selectParams = $selectManager->getEmptySelectParams();
@@ -100,7 +103,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testGetEmptySelectParams()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
+        $selectManager = new SelectManager($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $selectParams = $selectManager->getEmptySelectParams();
@@ -113,7 +116,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testAccessOnlyOwn()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
+        $selectManager = new SelectManager($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $this->user
@@ -147,7 +150,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testAccessOnlyTeam()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
+        $selectManager = new SelectManager($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $this->user
@@ -184,7 +187,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testBuildSelectParams()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
+        $selectManager = new SelectManager($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $params = array(
@@ -229,7 +232,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testBuildSelectParamsNot()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
+        $selectManager = new SelectManager($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $params = array(
@@ -259,7 +262,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testBuildSelectParamsComplex()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
+        $selectManager = new SelectManager($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->fieldManagerUtil, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $params = array(

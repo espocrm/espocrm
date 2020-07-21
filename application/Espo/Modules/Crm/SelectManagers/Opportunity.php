@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Opportunity extends \Espo\Core\SelectManagers\SelectManager
+class Opportunity extends \Espo\Core\Select\SelectManager
 {
     protected function filterOpen(&$result)
     {

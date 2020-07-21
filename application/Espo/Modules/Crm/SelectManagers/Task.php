@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Task extends \Espo\Core\SelectManagers\SelectManager
+class Task extends \Espo\Core\Select\SelectManager
 {
     protected $selectAttributesDependancyMap = [
         'dateEnd' => ['status']

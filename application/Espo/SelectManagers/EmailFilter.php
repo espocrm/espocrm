@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class EmailFilter extends \Espo\Core\SelectManagers\SelectManager
+class EmailFilter extends \Espo\Core\Select\SelectManager
 {
     protected function boolFilterOnlyMy(&$result)
     {

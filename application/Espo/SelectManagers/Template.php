@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class Template extends \Espo\Core\SelectManagers\SelectManager
+class Template extends \Espo\Core\Select\SelectManager
 {
     protected function access(&$result)
     {

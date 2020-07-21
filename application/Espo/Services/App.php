@@ -38,7 +38,7 @@ use Espo\Core\Exceptions\{
 use Espo\Core\{
     Acl,
     AclManager,
-    SelectManagerFactory,
+    Select\SelectManagerFactory,
     DataManager,
     InjectableFactory,
     ServiceFactory,

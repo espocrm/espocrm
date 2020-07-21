@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class CaseObj extends \Espo\Core\SelectManagers\SelectManager
+class CaseObj extends \Espo\Core\Select\SelectManager
 {
     protected function boolFilterOpen(&$result)
     {

@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class EmailQueueItem extends \Espo\Core\SelectManagers\SelectManager
+class EmailQueueItem extends \Espo\Core\Select\SelectManager
 {
     protected function filterPending(&$result)
     {

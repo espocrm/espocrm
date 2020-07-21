@@ -30,7 +30,7 @@
         "className": "Espo\\Core\\ControllerManager"
     },
     "selectManagerFactory": {
-        "className": "Espo\\Core\\SelectManagerFactory"
+        "className": "Espo\\Core\\Select\\SelectManagerFactory"
     },
     "serviceFactory": {
         "className": "Espo\\Core\\ServiceFactory"

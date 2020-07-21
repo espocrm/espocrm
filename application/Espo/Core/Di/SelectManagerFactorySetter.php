@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Di;
 
-use Espo\Core\SelectManagerFactory;
+use Espo\Core\Select\SelectManagerFactory;
 
 trait SelectManagerFactorySetter
 {

@@ -43,7 +43,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
     Utils\Language,
-    SelectManagerFactory,
+    Select\SelectManagerFactory,
     InjectableFactory,
     Utils\TemplateFileManager,
     Mail\Sender as MailSender,

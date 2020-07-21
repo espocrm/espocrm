@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Contact extends \Espo\Core\SelectManagers\SelectManager
+class Contact extends \Espo\Core\Select\SelectManager
 {
     protected function filterPortalUsers(&$result)
     {

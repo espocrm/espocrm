@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class CampaignTrackingUrl extends \Espo\Core\SelectManagers\SelectManager
+class CampaignTrackingUrl extends \Espo\Core\Select\SelectManager
 {
     protected function accessOnlyOwn(&$result)
     {

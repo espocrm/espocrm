@@ -27,14 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Select;
 
 use Espo\Core\Exceptions\Error;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\SelectManagers\SelectManager;
+use Espo\Core\{
+    InjectableFactory,
+    Acl,
+    AclManager,
+    Utils\Util,
+    Utils\ClassFinder,
+};
+
 use Espo\Entities\User;
-use Espo\Core\Utils\Util;
 
 /**
  * Creates select managers for specific entity types. You can specify a user whose ACL will be applied to queries.
@@ -54,7 +59,7 @@ class SelectManagerFactory
         Acl $acl,
         AclManager $aclManager,
         InjectableFactory $injectableFactory,
-        Utils\ClassFinder $classFinder
+        ClassFinder $classFinder
     ) {
         $this->user = $user;
         $this->acl = $acl;

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Templates\SelectManagers;
 
-class Event extends \Espo\Core\SelectManagers\SelectManager
+class Event extends \Espo\Core\Select\SelectManager
 {
     protected function filterPlanned(&$result)
     {

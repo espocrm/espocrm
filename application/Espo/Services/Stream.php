@@ -43,7 +43,7 @@ use Espo\Core\{
     AclManager,
     ServiceFactory,
     Portal\AclManagerContainer as PortalAclManagerContainer,
-    SelectManagerFactory,
+    Select\SelectManagerFactory,
     Utils\FieldManagerUtil,
 };
 

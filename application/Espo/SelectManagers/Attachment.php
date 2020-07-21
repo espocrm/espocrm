@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class Attachment extends \Espo\Core\SelectManagers\SelectManager
+class Attachment extends \Espo\Core\Select\SelectManager
 {
     protected function filterOrphan(&$result)
     {

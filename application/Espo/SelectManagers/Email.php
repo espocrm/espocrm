@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class Email extends \Espo\Core\SelectManagers\SelectManager
+class Email extends \Espo\Core\Select\SelectManager
 {
     protected $textFilterUseContainsAttributeList = ['name'];
 

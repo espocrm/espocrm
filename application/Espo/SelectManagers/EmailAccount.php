@@ -29,7 +29,7 @@
 
 namespace Espo\SelectManagers;
 
-class EmailAccount extends \Espo\Core\SelectManagers\SelectManager
+class EmailAccount extends \Espo\Core\Select\SelectManager
 {
     protected function access(&$result)
     {
