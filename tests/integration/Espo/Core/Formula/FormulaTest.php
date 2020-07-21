@@ -239,7 +239,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(null, $result);
     }
 
-    public function testRecordFindRelatedOne()
+    public function testRecordFindRelatedOne1()
     {
         $fm = $this->getContainer()->get('formulaManager');
         $em = $this->getContainer()->get('entityManager');
@@ -317,7 +317,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals($c2->id, $result);
     }
 
-    public function testRecordFindRelatedOne1()
+    public function testRecordFindRelatedOne2()
     {
         $fm = $this->getContainer()->get('formulaManager');
         $em = $this->getContainer()->get('entityManager');
@@ -552,7 +552,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $script = "record\\relationColumn('Account', '{$a->id}', 'contacts', '{$c->id}', 'role')";
         $result = $fm->run($script);
 
-        $this->assertEquals( 'test', $result);
+        $this->assertEquals('test', $result);
     }
 
     public function testRecordUpdateRelationColumn()

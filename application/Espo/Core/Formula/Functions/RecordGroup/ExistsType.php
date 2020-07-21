@@ -29,33 +29,36 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class ExistsType extends \Espo\Core\Formula\Functions\Base implements
+class ExistsType extends BaseFunction implements
     Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 3) {
-            throw new Error("record\\exists: too few arguments.");
+        if (count($args) < 3) {
+            $this->throwTooFewArguments(3);
         }
 
-        $entityType = $this->evaluate($item->value[0]);
+        $entityType = $this->evaluate($args[0]);
 
         $whereClause = [];
 
         $i = 1;
-        while ($i < count($item->value) - 1) {
-            $key = $this->evaluate($item->value[$i]);
-            $value = $this->evaluate($item->value[$i + 1]);
+        while ($i < count($args) - 1) {
+            $key = $this->evaluate($args[$i]);
+            $value = $this->evaluate($args[$i + 1]);
             $whereClause[] = [$key => $value];
             $i = $i + 2;
         }
 
-        return !!$this->entityManager->getRepository($entityType)->where($whereClause)->findOne();
+        return (bool) $this->entityManager->getRepository($entityType)->where($whereClause)->findOne();
     }
 }

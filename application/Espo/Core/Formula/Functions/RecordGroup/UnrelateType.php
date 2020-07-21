@@ -29,40 +29,53 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class UnrelateType extends \Espo\Core\Formula\Functions\Base implements
+class UnrelateType extends BaseFunction implements
     Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $item->value ?? [];
-
-        if (count($args) < 4) throw new Error("record\\unrelate: Not enough arguments.");
+        if (count($args) < 4) {
+            $this->throwTooFewArguments(4);
+        }
 
         $entityType = $this->evaluate($args[0]);
         $id = $this->evaluate($args[1]);
-        $link = $this->evaluate($item->value[2]);
-        $foreignId = $this->evaluate($item->value[3]);
+        $link = $this->evaluate($args[2]);
+        $foreignId = $this->evaluate($args[3]);
 
-        if (!$entityType) throw new Error("Formula record\\unrelate: Empty entityType.");
+        if (!$entityType) {
+            $this->throwError("Empty entityType.");
+        }
+
         if (!$id) return null;
-        if (!$link) throw new Error("Formula record\\unrelate: Empty link.");
+
+        if (!$link) {
+            $this->throwError("Empty link.");
+        }
+
         if (!$foreignId) return null;
 
         $em = $this->entityManager;
 
-        if (!$em->hasRepository($entityType)) throw new Error("Formula: record\\unrelate: Repository does not exist.");
+        if (!$em->hasRepository($entityType)) {
+            $this->throwError("Repository does not exist.");
+        }
 
         $entity = $em->getEntity($entityType, $id);
         if (!$entity) return null;
 
-        if (!$em->getRepository($entityType)->isRelated($entity, $link, $foreignId))
+        if (!$em->getRepository($entityType)->isRelated($entity, $link, $foreignId)) {
             return true;
+        }
 
         return $em->getRepository($entityType)->unrelate($entity, $link, $foreignId);
     }

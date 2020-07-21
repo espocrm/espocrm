@@ -29,11 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base implements
+class FindRelatedManyType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\SelectManagerFactoryAware,
     Di\MetadataAware
@@ -42,12 +45,12 @@ class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base implements
     use Di\SelectManagerFactorySetter;
     use Di\MetadataSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        $args = $this->evaluate($args);
 
         if (count($args) < 4) {
-            throw new Error("record\\findRelatedMany: Too few arguments.");
+            $this->throwTooFewArguments(4);
         }
 
         $entityManager = $this->entityManager;
@@ -67,24 +70,31 @@ class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base implements
             $order = $args[5];
         }
 
-        if (!$entityType) throw new Error("record\\findRelatedMany: Empty entityType.");
-        if (!is_string($entityType)) throw new Error("record\\findRelatedMany: entityType should be string.");
+        if (!$entityType || !is_string($entityType)) {
+            $this->throwBadArgumentType(1, 'string');
+        }
 
         if (!$id) {
-            $GLOBALS['log']->warning("record\\findRelatedMany: Empty id.");
+            $this->log("Empty ID.");
             return [];
         }
-        if (!is_string($id)) throw new Error("record\\findRelatedMany: id should be string.");
 
-        if (!$link) throw new Error("record\\findRelatedMany: Empty link.");
-        if (!is_string($link)) throw new Error("record\\findRelatedMany: link should be string.");
+        if (!is_string($id)) {
+            $this->throwBadArgumentType(2, 'string');
+        }
 
-        if (!is_int($limit)) throw new Error("record\\findRelatedMany: limit should be int.");
+        if (!$link || !is_string($link)) {
+            $this->throwBadArgumentType(3, 'string');
+        }
+
+        if (!is_int($limit)) {
+            $this->throwBadArgumentType(4, 'string');
+        }
 
         $entity = $entityManager->getEntity($entityType, $id);
 
         if (!$entity) {
-            $GLOBALS['log']->notice("record\\findRelatedMany: Entity {$entity} {$id} not found.");
+            $this->log("record\\findRelatedMany: Entity {$entity} {$id} not found.", 'notice');
             return [];
         }
 
@@ -102,14 +112,18 @@ class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base implements
         $relationType = $entity->getRelationParam($link, 'type');
 
         if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
-            throw new Error("record\\findRelatedMany: Not supported link type '{$relationType}'.");
+            $this->throwError("Not supported link type '{$relationType}'.");
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
-        if (!$foreignEntityType) throw new Error("record\\findRelatedMany: Bad or not supported link '{$link}'.");
+        if (!$foreignEntityType) {
+            $this->throwError("Bad or not supported link '{$link}'.");
+        }
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
-        if (!$foreignLink) throw new Error("record\\findRelatedMany: Not supported link '{$link}'.");
+        if (!$foreignLink) {
+            $this->throwError("Not supported link '{$link}'.");
+        }
 
         $selectManager = $this->selectManagerFactory->create($foreignEntityType);
         $selectParams = $selectManager->getEmptySelectParams();
@@ -128,7 +142,9 @@ class FindRelatedManyType extends \Espo\Core\Formula\Functions\Base implements
                 $filter = $args[6];
             }
             if ($filter) {
-                if (!is_string($filter)) throw new Error("record\\findRelatedMany: Bad filter.");
+                if (!is_string($filter)) {
+                    $this->throwError("Bad filter.");
+                }
                 $selectManager->applyFilter($filter, $selectParams);
             }
         } else {

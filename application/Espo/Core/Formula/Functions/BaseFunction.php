@@ -40,6 +40,7 @@ use Espo\Core\Formula\{
     Exceptions\BadArgumentType,
     Exceptions\BadArgumentValue,
     Exceptions\NotPassedEntity,
+    Exceptions\Error,
 };
 
 use Espo\Core\Utils\Log;
@@ -132,16 +133,26 @@ abstract class BaseFunction
      */
     protected function throwBadArgumentValue(?int $index = null, ?string $msg = null)
     {
-        $string = $msg;
-
-        $msg = 'function: ' . $this->name;
+        $string = 'function: ' . $this->name;
         if ($index !== null) {
-            $msg .= ', index: ' . $index;
+            $string .= ', index: ' . $index;
             if ($msg) {
-                $msg .= ', ' . $string;
+                $string .= ', ' . $msg;
             }
         }
-        throw new BadArgumentValue($msg);
+        throw new BadArgumentValue($string);
+    }
+
+    /**
+     * Throw Error exception.
+     */
+    protected function throwError(?string $msg = null)
+    {
+        $string = 'function: ' . $this->name;
+        if ($msg) {
+            $string .= ', ' . $msg;
+        }
+        throw new Error($string);
     }
 
     /**

@@ -29,11 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base implements
+class FindRelatedOneType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\SelectManagerFactoryAware,
     Di\MetadataAware
@@ -42,39 +45,39 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base implements
     use Di\SelectManagerFactorySetter;
     use Di\MetadataSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (!property_exists($item, 'value')) {
-            throw new Error();
-        }
-
-        if (!is_array($item->value)) {
-            throw new Error();
-        }
-
-        if (count($item->value) < 3) {
-            throw new Error();
+        if (count($args) < 3) {
+            $this->throwTooFewArguments(3);
         }
 
         $entityManager = $this->entityManager;
 
-        $entityType = $this->evaluate($item->value[0]);
-        $id = $this->evaluate($item->value[1]);
-        $link = $this->evaluate($item->value[2]);
+        $entityType = $this->evaluate($args[0]);
+        $id = $this->evaluate($args[1]);
+        $link = $this->evaluate($args[2]);
 
         $orderBy = null;
         $order = null;
 
-        if (count($item->value) > 3) {
-            $orderBy = $this->evaluate($item->value[3]);
+        if (count($args) > 3) {
+            $orderBy = $this->evaluate($args[3]);
         }
-        if (count($item->value) > 4) {
-            $order = $this->evaluate($item->value[4]) ?? null;
+        if (count($args) > 4) {
+            $order = $this->evaluate($args[4]) ?? null;
         }
 
-        if (!$entityType) throw new Error("record\\findRelatedOne: Empty entityType.");
-        if (!$id) return null;
-        if (!$link) throw new Error("record\\findRelatedOne: Empty link.");
+        if (!$entityType) {
+            $this->throwBadArgumentType(1, 'string');
+        }
+
+        if (!$id) {
+            return null;
+        }
+
+        if (!$link) {
+            $this->throwBadArgumentType(3, 'string');
+        }
 
         $entity = $entityManager->getEntity($entityType, $id);
 
@@ -104,10 +107,14 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base implements
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
-        if (!$foreignEntityType) throw new Error("Formula record\\findRelatedOne: Bad or not supported link '{$link}'.");
+        if (!$foreignEntityType) {
+            $this->throwError("Bad or not supported link '{$link}'.");
+        }
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
-        if (!$foreignLink) throw new Error("Formula record\\findRelatedOne: Not supported link '{$link}'.");
+        if (!$foreignLink) {
+            $this->throwError("Not supported link '{$link}'.");
+        }
 
         $selectManager = $this->selectManagerFactory->create($foreignEntityType);
         $selectParams = $selectManager->getEmptySelectParams();
@@ -120,20 +127,22 @@ class FindRelatedOneType extends \Espo\Core\Formula\Functions\Base implements
             $selectParams['whereClause'][] = [$foreignLink . '.id' => $entity->id];
         }
 
-        if (count($item->value) <= 6) {
+        if (count($args) <= 6) {
             $filter = null;
-            if (count($item->value) == 6) {
-                $filter = $this->evaluate($item->value[5]);
+            if (count($args) == 6) {
+                $filter = $this->evaluate($args[5]);
             }
             if ($filter) {
-                if (!is_string($filter)) throw new Error("Formula record\\findRelatedOne: Bad filter.");
+                if (!is_string($filter)) {
+                    $this->throwError("Bad filter.");
+                }
                 $selectManager->applyFilter($filter, $selectParams);
             }
         } else {
             $i = 5;
-            while ($i < count($item->value) - 1) {
-                $key = $this->evaluate($item->value[$i]);
-                $value = $this->evaluate($item->value[$i + 1]);
+            while ($i < count($args) - 1) {
+                $key = $this->evaluate($args[$i]);
+                $value = $this->evaluate($args[$i + 1]);
                 $selectParams['whereClause'][] = [$key => $value];
                 $i = $i + 2;
             }

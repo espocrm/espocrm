@@ -29,34 +29,47 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class RelateType extends \Espo\Core\Formula\Functions\Base implements
+class RelateType extends BaseFunction implements
     Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $item->value ?? [];
-
-        if (count($args) < 4) throw new Error("record\\relate: Not enough arguments.");
+        if (count($args) < 4) {
+            $this->throwTooFewArguments(4);
+        }
 
         $entityType = $this->evaluate($args[0]);
         $id = $this->evaluate($args[1]);
-        $link = $this->evaluate($item->value[2]);
-        $foreignId = $this->evaluate($item->value[3]);
+        $link = $this->evaluate($args[2]);
+        $foreignId = $this->evaluate($args[3]);
 
-        if (!$entityType) throw new Error("record\\relate: Empty entityType.");
-        if (!$id) return null;
-        if (!$link) throw new Error("record\\relate: Empty link.");
-        if (!$foreignId) return null;
+        if (!$entityType || !is_string($entityType)) {
+            $this->throwBadArgumentType(1, 'string');
+        }
+        if (!$id) {
+            return null;
+        }
+        if (!$link || !is_string($link)) {
+            $this->throwBadArgumentType(3, 'string');
+        }
+        if (!$foreignId) {
+            return null;
+        }
 
         $em = $this->entityManager;
 
-        if (!$em->hasRepository($entityType)) throw new Error("record\\relate: Repository does not exist.");
+        if (!$em->hasRepository($entityType)) {
+            $this->throwError("Repository does not exist.");
+        }
 
         $entity = $em->getEntity($entityType, $id);
         if (!$entity) return null;
@@ -66,14 +79,15 @@ class RelateType extends \Espo\Core\Formula\Functions\Base implements
                 $em->getRepository($entityType)->relate($entity, $link, $itemId);
             }
             return true;
+        }
 
-        } else if (is_string($foreignId)) {
+        if (is_string($foreignId)) {
             if ($em->getRepository($entityType)->isRelated($entity, $link, $foreignId)) {
                 return true;
             }
             return $em->getRepository($entityType)->relate($entity, $link, $foreignId);
-        } else {
-            throw new Error("record\\relate: foreignId type is wrong.");
         }
+
+        $this->throwError("foreignId type is wrong.");
     }
 }

@@ -29,29 +29,32 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class CountType extends \Espo\Core\Formula\Functions\Base implements
+class CountType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\SelectManagerFactoryAware
 {
     use Di\EntityManagerSetter;
     use Di\SelectManagerFactorySetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 1) {
-            throw new Error("record\\count: too few arguments.");
+        if (count($args) < 1) {
+            $this->throwTooFewArguments(1);
         }
 
-        $entityType = $this->evaluate($item->value[0]);
+        $entityType = $this->evaluate($args[0]);
 
-        if (count($item->value) < 3) {
+        if (count($args) < 3) {
             $filter = null;
-            if (count($item->value) == 2) {
-                $filter = $this->evaluate($item->value[1]);
+            if (count($args) == 2) {
+                $filter = $this->evaluate($args[1]);
             }
 
             $selectManager = $this->selectManagerFactory->create($entityType);
@@ -61,7 +64,7 @@ class CountType extends \Espo\Core\Formula\Functions\Base implements
                 if (is_string($filter)) {
                     $selectManager->applyFilter($filter, $selectParams);
                 } else {
-                    throw new Error("Formula record\\count: Bad filter.");
+                    $this->throwError("Bad filter.");
                 }
             }
 
@@ -71,9 +74,9 @@ class CountType extends \Espo\Core\Formula\Functions\Base implements
         $whereClause = [];
 
         $i = 1;
-        while ($i < count($item->value) - 1) {
-            $key = $this->evaluate($item->value[$i]);
-            $value = $this->evaluate($item->value[$i + 1]);
+        while ($i < count($args) - 1) {
+            $key = $this->evaluate($args[$i]);
+            $value = $this->evaluate($args[$i + 1]);
             $whereClause[] = [$key => $value];
             $i = $i + 2;
         }

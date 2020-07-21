@@ -29,32 +29,44 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class UpdateType extends \Espo\Core\Formula\Functions\Base implements
+class UpdateType extends BaseFunction implements
     Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        if (count($args) < 2) {
+            $this->throwTooFewArguments(2);
+        }
 
-        if (count($args) < 2) throw new Error("record\update: Too few arguments.");
+        $args = $this->evaluate($args);
+
         $entityType = $args[0];
         $id = $args[1];
 
-        if (!is_string($entityType)) throw new Error("record\update: First argument should be a string.");
-        if (!is_string($id)) throw new Error("record\update: Second argument should be a string.");
+        if (!is_string($entityType)) {
+            $this->throwBadArgumentType(1, 'string');
+        }
+        if (!is_string($id)) {
+            $this->throwBadArgumentType(2, 'string');
+        }
 
         $data = [];
 
         $i = 2;
         while ($i < count($args) - 1) {
             $attribute = $args[$i];
-            if (!is_string($entityType)) throw new Error("record\update: Attribute should be a string.");
+            if (!is_string($entityType)) {
+                $this->throwBadArgumentType($i + 1, 'string');
+            }
             $value = $args[$i + 1];
             $data[$attribute] = $value;
             $i = $i + 2;

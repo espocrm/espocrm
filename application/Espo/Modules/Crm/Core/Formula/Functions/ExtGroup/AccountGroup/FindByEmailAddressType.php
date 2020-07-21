@@ -29,28 +29,34 @@
 
 namespace Espo\Modules\Crm\Core\Formula\Functions\ExtGroup\AccountGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-class FindByEmailAddressType extends \Espo\Core\Formula\Functions\Base
+use Espo\Core\Di;
+
+class FindByEmailAddressType extends BaseFunction implements
+    Di\EntityManagerAware,
+    Di\FileManagerAware
 {
-    protected function init()
-    {
-        $this->addDependency('entityManager');
-        $this->addDependency('fileManager');
-    }
+    use Di\EntityManagerSetter;
+    use Di\FileManagerSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        $args = $this->evaluate($args);
 
-        if (count($args) < 1) throw new Error("Formula: ext\\account\\findByEmailAddress: Not enough arguments.");
+        if (count($args) < 1) {
+            $this->throwTooFewArguments(1);
+        }
 
         $emailAddress = $args[0];
 
         if (!$emailAddress) return null;
 
         if (!is_string($emailAddress)) {
-            $GLOBALS['log']->warning("Formula: ext\\account\\findByEmailAddress: Bad argument type.");
+            $this->log("Formula: ext\\account\\findByEmailAddress: Bad argument type.");
             return null;
         }
 
@@ -61,7 +67,7 @@ class FindByEmailAddressType extends \Espo\Core\Formula\Functions\Base
 
         $domain = strtolower($domain);
 
-        $em = $this->getInjection('entityManager');
+        $em = $this->entityManager;
 
         $account = $em->getRepository('Account')->where([
             'emailAddress' => $emailAddress,
@@ -69,7 +75,7 @@ class FindByEmailAddressType extends \Espo\Core\Formula\Functions\Base
 
         if ($account) return $account->id;
 
-        $ignoreList = json_decode($this->getInjection('fileManager')->getContents(
+        $ignoreList = json_decode($this->fileManager->getContents(
             'application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json'
         )) ?? [];
 
