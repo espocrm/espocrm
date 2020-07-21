@@ -676,7 +676,6 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(false, $email->get('isHtml'));
         $this->assertEquals(2, count($attachmentsIds));
 
-
         $case = $em->createEntity('Case', [
             'name' => 'Case 1',
         ]);
@@ -743,5 +742,15 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $attachment = $em->getEntity('Attachment', $id);
 
         $this->assertEquals('1.pdf', $attachment->get('name'));
+    }
+
+    public function testEnvUserAttribute()
+    {
+        $fm = $this->getContainer()->get('formulaManager');
+        $user = $this->getContainer()->get('user');
+
+        $script = "env\\userAttribute('id')";
+        $id = $fm->run($script);
+        $this->assertEquals($id, $user->id);
     }
 }

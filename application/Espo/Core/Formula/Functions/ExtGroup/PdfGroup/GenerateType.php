@@ -29,57 +29,66 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\PdfGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Utils\Util;
 
 use Espo\Core\Di;
 
-class GenerateType extends \Espo\Core\Formula\Functions\Base implements
+class GenerateType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\ServiceFactoryAware
 {
     use Di\EntityManagerSetter;
     use Di\ServiceFactorySetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        if (count($args) < 3) {
+            $this->throwTooFewArguments(3);
+        }
 
-        if (count($args) < 3) throw new Error("Formula ext\\pdf\\generate: Too few arguments.");
+        $args = $this->evaluate($args);
 
         $entityType = $args[0];
         $id = $args[1];
         $templateId = $args[2];
         $fileName = $args[3];
 
-        if (!$entityType || !is_string($entityType))
-            throw new Error("Formula ext\\pdf\\generate: 1st argument should be string and not be empty.");
-        if (!$id || !is_string($id))
-            throw new Error("Formula ext\\pdf\\generate: 2nd argument should be string and not be empty.");
-        if (!$templateId || !is_string($templateId))
-            throw new Error("Formula ext\\pdf\\generate: 3rd argument should be string and not be empty.");
-        if ($fileName && !is_string($fileName))
-            throw new Error("Formula ext\\pdf\\generate: 4rd argument should be string.");
+        if (!$entityType || !is_string($entityType)) {
+            $this->throwBadArgumentType(1, 'string');
+        }
+        if (!$id || !is_string($id)) {
+            $this->throwBadArgumentType(2, 'string');
+        }
+        if (!$templateId || !is_string($templateId)) {
+            $this->throwBadArgumentType(3, 'string');
+        }
+        if ($fileName && !is_string($fileName)) {
+            $this->throwBadArgumentType(4, 'string');
+        }
 
         $em = $this->entityManager;
 
         try {
             $entity = $em->getEntity($entityType, $id);
         } catch (\Exception $e) {
-            $GLOBALS['log']->error("Formula ext\\pdf\\generate: Message: " . $e->getMessage());
+            $this->log("Message: " . $e->getMessage() . ".");
             return null;
         }
 
         if (!$entity) {
-            $GLOBALS['log']->warning("Formula ext\\pdf\\generate: Record {$entityType} {$id} does not exist.");
+            $this->log("Record {$entityType} {$id} does not exist.");
             return null;
         }
 
         $template = $em->getEntity('Template', $templateId);
 
         if (!$template) {
-            $GLOBALS['log']->warning("Formula ext\\pdf\\generate: Template {$templateId} does not exist.");
+            $this->log("Template {$templateId} does not exist.");
             return null;
         }
 
@@ -94,7 +103,7 @@ class GenerateType extends \Espo\Core\Formula\Functions\Base implements
         try {
             $contents = $this->serviceFactory->create('Pdf')->buildFromTemplate($entity, $template);
         } catch (\Exception $e) {
-            $GLOBALS['log']->error("Formula ext\\pdf\\generate: Error while generating. Message: " . $e->getMessage());
+            $this->log("Error while generating. Message: " . $e->getMessage() . ".", 'error');
             return null;
         }
 

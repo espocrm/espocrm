@@ -29,39 +29,48 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class ApplyTemplateType extends \Espo\Core\Formula\Functions\Base implements
+class ApplyTemplateType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\ServiceFactoryAware
 {
     use Di\EntityManagerSetter;
     use Di\ServiceFactorySetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        if (count($args) < 2) {
+            $this->throwTooFewArguments(2);
+        }
 
-        if (count($args) < 2) throw new Error("Formula ext\email\applyTemplate: Too few arguments.");
+        $args = $this->evaluate($args);
 
         $id = $args[0];
         $templateId = $args[1];
         $parentType = $args[2] ?? null;
         $parentId = $args[3] ?? null;
 
-        if (!$id || !is_string($id))
-            throw new Error("Formula ext\\email\applyTemplate: 1st argument should be string and not be empty.");
+        if (!$id || !is_string($id)) {
+            $this->throwBadArgumentType(1, 'string');
+        }
 
-        if (!$templateId || !is_string($templateId))
-            throw new Error("Formula ext\\email\applyTemplate: 2nd argument should be string and not be empty.");
+        if (!$templateId || !is_string($templateId)) {
+            $this->throwBadArgumentType(2, 'string');
+        }
 
-        if ($parentType && !is_string($parentType))
-            throw new Error("Formula ext\\email\applyTemplate: 3st argument should be string.");
+        if ($parentType && !is_string($parentType)) {
+            $this->throwBadArgumentType(3, 'string');
+        }
 
-        if ($parentId && !is_string($parentId))
-            throw new Error("Formula ext\\email\applyTemplate: 4th argument should be string.");
+        if ($parentId && !is_string($parentId)) {
+            $this->throwBadArgumentType(4, 'string');
+        }
 
         $em = $this->entityManager;
 
@@ -69,18 +78,18 @@ class ApplyTemplateType extends \Espo\Core\Formula\Functions\Base implements
         $emailTemplate = $em->getEntity('EmailTemplate', $templateId);
 
         if (!$email) {
-            $GLOBALS['log']->warning("Formula ext\\email\applyTemplate: Email {$id} does not exist.");
+            $this->log("Email {$id} does not exist.");
             return false;
         }
         if (!$emailTemplate) {
-            $GLOBALS['log']->warning("Formula ext\\email\applyTemplate: EmailTemplate {$templateId} does not exist.");
+            $this->log("EmailTemplate {$templateId} does not exist.");
             return false;
         }
 
         $status = $email->get('status');
 
         if ($status && in_array($status, ['Sent'])) {
-            $GLOBALS['log']->warning("Formula ext\\email\applyTemplate: Can't apply template to email with 'Sent' status.");
+            $this->log("Can't apply template to email with 'Sent' status.");
             return false;
         }
 

@@ -29,42 +29,49 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class SendType extends \Espo\Core\Formula\Functions\Base implements
+class SendType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\ServiceFactoryAware,
     Di\ConfigAware
 {
     use Di\EntityManagerSetter;
     use Di\ServiceFactorySetter;
-    use Di\ConfigSettr;
+    use Di\ConfigSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $this->fetchArguments($item);
+        if (count($args) < 1) {
+            $this->throwTooFewArguments(1);
+        }
 
-        if (count($args) < 1) throw new Error("Formula ext\email\send: Too few arguments.");
+        $args = $this->evaluate($args);
+
         $id = $args[0];
 
-        if (!$id) throw new Error("Formula ext\\email\send: First argument should not be empty.");
-        if (!is_string($id)) throw new Error("Formula ext\\email\send: First argument should be a string.");
+        if (!$id || !is_string($id)) {
+            $this->throwBadArgumentType(1, 'string');
+        }
 
         $em = $this->entityManager;
 
         $email = $em->getEntity('Email', $id);
 
         if (!$email) {
-            $GLOBALS['log']->warning("Formula ext\\email\send: Email {$id} does not exist.");
+            $this->log("Email '{$id}' does not exist.");
             return false;
         }
 
         $status = $email->get('status');
 
         if ($status && in_array($status, ['Sent'])) {
-            $GLOBALS['log']->warning("Formula ext\\email\send: Can't send email that has 'Sent' status.");
+            $this->log("Can't send email that has 'Sent' status.");
             return false;
         }
 
@@ -96,7 +103,8 @@ class SendType extends \Espo\Core\Formula\Functions\Base implements
         try {
             $service->sendEntity($email);
         } catch (\Exception $e) {
-            $GLOBALS['log']->error("Formula ext\\email\send: Error while sending. Message: " . $e->getMessage());
+            $message = $e->getMessage();
+            $this->log("Error while sending. Message: {$message}." , 'error');
             return false;
         }
 

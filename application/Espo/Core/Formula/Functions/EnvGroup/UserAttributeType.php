@@ -29,25 +29,28 @@
 
 namespace Espo\Core\Formula\Functions\EnvGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Di;
 
-class UserAttributeType extends \Espo\Core\Formula\Functions\AttributeType implements
+class UserAttributeType extends BaseFunction implements
     Di\UserAware
 {
     use Di\UserSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        if (count($item->value) < 1) {
-            throw new Error("userAttribute: too few arguments.");
+        if (count($args) < 1) {
+            $this->throwTooFewArguments();
         }
 
-        $attribute = $this->evaluate($item->value[0]);
+        $attribute = $this->evaluate($args[0]);
 
         if (!is_string($attribute)) {
-            throw new Error();
+            $this->throwBadArgumentType(1, 'string');
         }
 
         return $this->user->get($attribute);

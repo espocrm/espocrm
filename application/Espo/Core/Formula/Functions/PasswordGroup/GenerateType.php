@@ -29,14 +29,21 @@
 
 namespace Espo\Core\Formula\Functions\PasswordGroup;
 
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
+
+use Espo\Core\Utils\Util;
+
 use Espo\Core\Di;
 
-class GenerateType extends \Espo\Core\Formula\Functions\Base implements
+class GenerateType extends BaseFunction implements
     Di\ConfigAware
 {
     use Di\ConfigSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
         $config = $this->config;
 
@@ -44,7 +51,7 @@ class GenerateType extends \Espo\Core\Formula\Functions\Base implements
         $letterCount = $config->get('passwordGenerateLetterCount', 4);
         $numberCount = $config->get('passwordGenerateNumberCount', 2);
 
-        $password = \Espo\Core\Utils\Util::generatePassword($length, $letterCount, $numberCount, true);
+        $password = Util::generatePassword($length, $letterCount, $numberCount, true);
 
         return $password;
     }

@@ -29,29 +29,30 @@
 
 namespace Espo\Core\Formula\Functions\PasswordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
 use Espo\Core\Utils\PasswordHash;
 
 use Espo\Core\Di;
 
-class HashType extends \Espo\Core\Formula\Functions\Base implements
+class HashType extends BaseFunction implements
     Di\ConfigAware
 {
     use Di\ConfigSetter;
 
-    public function process(\StdClass $item)
+    public function process(ArgumentList $args)
     {
-        $args = $item->value ?? [];
-
         if (count($args) < 1) {
-            throw new Error("Formula: password\\hash: no argument.");
+            $this->throwTooFewArguments();
         }
 
         $password = $this->evaluate($args[0]);
 
         if (!is_string($password)) {
-            throw new Error("Formula: password\\hash: bad argument.");
+            $this->throwBadArgumentType(1, 'string');
         }
 
         $passwordHash = new PasswordHash($this->config);

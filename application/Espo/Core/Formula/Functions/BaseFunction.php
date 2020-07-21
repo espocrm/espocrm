@@ -159,6 +159,6 @@ abstract class BaseFunction
     protected function log(string $msg, string $level = 'notice')
     {
         if (!$this->log) return;
-        $this->log->log($level, 'function: ' . $this->name . ', ' . $msg);
+        $this->log->log($level, 'Formula function: ' . $this->name . ', ' . $msg);
     }
 }
