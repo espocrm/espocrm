@@ -98,7 +98,7 @@ class Pdf
         $pdf->setMargins($template->get('leftMargin'), $template->get('topMargin'), $template->get('rightMargin'));
 
         if ($template->get('printFooter')) {
-            $htmlFooter = $htmlizer->render($entity, $template->get('footer'), null, $additionalData);
+            $htmlFooter = $htmlizer->render($entity, $template->get('footer') ?? '', null, $additionalData);
             $pdf->setFooterFont([$fontFace, '', $this->fontSize]);
             $pdf->setFooterPosition($template->get('footerPosition'));
             $pdf->setFooterHtml($htmlFooter);
@@ -122,7 +122,7 @@ class Pdf
             $pageOrientationCode = 'L';
         }
 
-        $htmlHeader = $htmlizer->render($entity, $template->get('header'), null, $additionalData);
+        $htmlHeader = $htmlizer->render($entity, $template->get('header') ?? '', null, $additionalData);
 
         if ($template->get('printHeader')) {
             $pdf->setHeaderFont([$fontFace, '', $this->fontSize]);
@@ -137,7 +137,7 @@ class Pdf
         }
 
 
-        $htmlBody = $htmlizer->render($entity, $template->get('body'), null, $additionalData);
+        $htmlBody = $htmlizer->render($entity, $template->get('body') ?? '', null, $additionalData);
         $pdf->writeHTML($htmlBody, true, false, true, false, '');
     }
 
