@@ -404,10 +404,16 @@ abstract class Base
             $selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
         }
 
-        $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']));
+        $joinsPart = null;
+
+        if ($method === 'SELECT') {
+            $joinsPart = $this->getBelongsToJoins(
+                $entity, $params['select'], array_merge($params['joins'], $params['leftJoins'])
+            );
+        }
 
         if (!empty($params['customWhere'])) {
-            if (!empty($wherePart)) {
+            if ($wherePart) {
                 $wherePart .= ' ';
             }
             $wherePart .= $params['customWhere'];
@@ -1719,6 +1725,7 @@ abstract class Base
                 }
             }
         }
+
         return implode(" " . $sqlOp . " ", $wherePartList);
     }
 
@@ -2148,7 +2155,7 @@ abstract class Base
             $sql .= " {$joins}";
         }
 
-        if (!empty($where)) {
+        if ($where !== null && $where !== '') {
             $sql .= " WHERE {$where}";
         }
 
@@ -2156,7 +2163,7 @@ abstract class Base
             $sql .= " GROUP BY {$groupBy}";
         }
 
-        if (!empty($having)) {
+        if ($having !== null && $having !== '') {
             $sql .= " HAVING {$having}";
         }
 
