@@ -121,18 +121,19 @@ class Event extends \Espo\Core\Repositories\Database implements
         parent::beforeSave($entity, $options);
     }
 
-    protected function afterRemove(Entity $entity, array $options = array())
+    protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
         $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            DELETE FROM `reminder`
-            WHERE
-                entity_id = ".$pdo->quote($entity->id)." AND
-                entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                deleted = 0
-        ";
+
+        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('Reminder', [
+            'whereClause' => [
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+            ],
+        ]);
+
         $pdo->query($sql);
     }
 

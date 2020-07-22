@@ -32,6 +32,8 @@ namespace Espo\Core\Utils;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 
+use Espo\Core\Container;
+
 /**
  * Notifications on the admin panel.
  */
@@ -39,7 +41,7 @@ class AdminNotificationManager
 {
     private $container;
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
@@ -74,11 +76,11 @@ class AdminNotificationManager
 
         if ($this->getConfig()->get('adminNotificationsCronIsNotConfigured')) {
             if (!$this->isCronConfigured()) {
-                $notificationList[] = array(
+                $notificationList[] = [
                     'id' => 'cronIsNotConfigured',
                     'type' => 'cronIsNotConfigured',
-                    'message' => $this->getLanguage()->translate('cronIsNotConfigured', 'messages', 'Admin')
-                );
+                    'message' => $this->getLanguage()->translate('cronIsNotConfigured', 'messages', 'Admin'),
+                ];
             }
         }
 
@@ -86,11 +88,11 @@ class AdminNotificationManager
             $instanceNeedingUpgrade = $this->getInstanceNeedingUpgrade();
             if (!empty($instanceNeedingUpgrade)) {
                 $message = $this->getLanguage()->translate('newVersionIsAvailable', 'messages', 'Admin');
-                $notificationList[] = array(
+                $notificationList[] = [
                     'id' => 'newVersionIsAvailable',
                     'type' => 'newVersionIsAvailable',
                     'message' => $this->prepareMessage($message, $instanceNeedingUpgrade)
-                );
+                ];
             }
         }
 
@@ -105,11 +107,11 @@ class AdminNotificationManager
                         $message = $this->getLanguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
                     }
 
-                    $notificationList[] = array(
+                    $notificationList[] = [
                         'id' => 'newExtensionVersionIsAvailable' . Util::toCamelCase($extensionName, ' ', true),
                         'type' => 'newExtensionVersionIsAvailable',
                         'message' => $this->prepareMessage($message, $extensionDetails)
-                    );
+                    ];
                 }
             }
         }
@@ -150,11 +152,11 @@ class AdminNotificationManager
             foreach ($latestExtensionVersions as $extensionName => $extensionLatestVersion) {
                 $currentVersion = $this->getExtensionLatestInstalledVersion($extensionName);
                 if (isset($currentVersion) && version_compare($extensionLatestVersion, $currentVersion, '>')) {
-                    $extensions[$extensionName] = array(
+                    $extensions[$extensionName] = [
                         'currentVersion' => $currentVersion,
                         'latestVersion' => $extensionLatestVersion,
                         'extensionName' => $extensionName,
-                    );
+                    ];
                 }
             }
         }
@@ -164,22 +166,19 @@ class AdminNotificationManager
 
     protected function getExtensionLatestInstalledVersion($extensionName)
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $extension = $this->getEntityManager()->getRepository('Extension')
+            ->select(['version'])
+            ->where([
+                'isInstalled' => true,
+            ])
+            ->order('createdAt', true)
+            ->findOne();
 
-        $query = "
-            SELECT version FROM extension
-            WHERE name = ". $pdo->quote($extensionName) ."
-            AND deleted = 0
-            AND is_installed = 1
-            ORDER BY created_at DESC
-        ";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $row = $sth->fetch(\PDO::FETCH_ASSOC);
-        if (isset($row['version'])) {
-            return $row['version'];
+        if (!$extension) {
+            return null;
         }
+
+        return $extension->get('version');
     }
 
     /**
@@ -193,18 +192,18 @@ class AdminNotificationManager
     public function createNotification($message, $userId = '1')
     {
         $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set(array(
+        $notification->set([
             'type' => 'message',
-            'data' => array(
+            'data' => [
                 'userId' => $userId,
-            ),
+            ],
             'userId' => $userId,
             'message' => $message
-        ));
+        ]);
         $this->getEntityManager()->saveEntity($notification);
     }
 
-    protected function prepareMessage($message, array $data = array())
+    protected function prepareMessage($message, array $data = [])
     {
         foreach ($data as $name => $value) {
             $message = str_replace('{'.$name.'}', $value, $message);

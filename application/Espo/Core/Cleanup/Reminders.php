@@ -51,14 +51,18 @@ class Reminders
     {
         $period = '-' . $this->config->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
 
-        $datetime = new \DateTime();
-        $datetime->modify($period);
+        $dt = new \DateTime();
+        $dt->modify($period);
 
         $pdo = $this->entityManager->getPDO();
 
-        $query = "DELETE FROM `reminder` WHERE DATE(remind_at) < " . $pdo->quote($datetime->format('Y-m-d'));
+        $sql = $this->entityManager->getQuery()->createDeleteQuery('Reminder', [
+            'whereClause' => [
+                'remindAt<' => $dt->format('Y-m-d')
+            ],
+        ]);
 
-        $sth = $pdo->prepare($query);
+        $sth = $pdo->prepare($sql);
         $sth->execute();
     }
 }
