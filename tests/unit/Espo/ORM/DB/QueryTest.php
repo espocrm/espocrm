@@ -92,14 +92,45 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         unset($this->account);
     }
 
+    public function testDelete1()
+    {
+        $sql = $this->query->createDeleteQuery('Account', [
+            'whereClause' => [
+                'name' => 'test',
+            ],
+        ]);
+
+        $expectedSql =
+            "DELETE FROM `account` " .
+            "WHERE account.name = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testDeleteWithDeleted()
+    {
+        $sql = $this->query->createDeleteQuery('Account', [
+            'whereClause' => [
+                'name' => 'test',
+                'deleted' => true
+            ],
+        ]);
+
+        $expectedSql =
+            "DELETE FROM `account` " .
+            "WHERE account.name = 'test' AND account.deleted = '1'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testSelectAllColumns()
     {
-        $sql = $this->query->createSelectQuery('Account', array(
+        $sql = $this->query->createSelectQuery('Account', [
             'orderBy' => 'name',
             'order' => 'ASC',
             'offset' => 10,
             'limit' => 20
-        ));
+        ]);
 
         $expectedSql =
             "SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted` FROM `account` " .
@@ -110,13 +141,13 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectSkipTextColumns()
     {
-        $sql = $this->query->createSelectQuery('Article', array(
+        $sql = $this->query->createSelectQuery('Article', [
             'orderBy' => 'name',
             'order' => 'ASC',
             'offset' => 10,
             'limit' => 20,
             'skipTextColumns' => true
-        ));
+        ]);
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name`, article.deleted AS `deleted` FROM `article` " .
@@ -127,9 +158,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectWithBelongsToJoin()
     {
-        $sql = $this->query->createSelectQuery('Comment', array(
-
-        ));
+        $sql = $this->query->createSelectQuery('Comment', [
+        ]);
 
         $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, comment.deleted AS `deleted` FROM `comment` " .
@@ -141,9 +171,9 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectWithSpecifiedColumns()
     {
-        $sql = $this->query->createSelectQuery('Comment', array(
-            'select' => array('id', 'name')
-        ));
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => ['id', 'name']
+        ]);
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
             "WHERE comment.deleted = '0'";

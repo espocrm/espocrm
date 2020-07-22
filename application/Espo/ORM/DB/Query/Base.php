@@ -60,6 +60,7 @@ abstract class Base
         'skipTextColumns',
         'maxTextColumnsLength',
         'useIndex',
+        'withDeleted',
     ];
 
     protected static $sqlOperators = [
@@ -265,7 +266,7 @@ abstract class Base
 
     protected $metadata;
 
-    protected $fieldsMapCache = [];
+    protected $attributeDbMapCache = [];
 
     protected $aliasesCache = [];
 
@@ -286,7 +287,26 @@ abstract class Base
         return $this->seedCache[$entityType];
     }
 
-    public function createSelectQuery(string $entityType, ?array $params = null, $withDeleted = false)
+    /**
+     * Compose a SELECT query.
+     */
+    public function createSelectQuery(string $entityType, ?array $params = nul) : string
+    {
+        return $this->createSelectOrDeleteQuery('SELECT', $entityType, $params);
+    }
+
+    /**
+     * Compose a DELETE query.
+     */
+    public function createDeleteQuery(string $entityType, ?array $params = null) : string
+    {
+        $params = $params ?? [];
+        $params['withDeleted'] = true;
+
+        return $this->createSelectOrDeleteQuery('DELETE', $entityType, $params);
+    }
+
+    protected function createSelectOrDeleteQuery(string $method, string $entityType, ?array $params = null)
     {
         $entity = $this->getSeed($entityType);
 
@@ -296,12 +316,16 @@ abstract class Base
             $params[$k] = array_key_exists($k, $params) ? $params[$k] : null;
         }
 
+        $params['distinct'] = $params['distinct'] ?? false;
+
+        $isAggregation = (bool) ($params['aggregation'] ?? null);
+
         $whereClause = $params['whereClause'];
         if (empty($whereClause)) {
             $whereClause = [];
         }
 
-        if (!$withDeleted && empty($params['withDeleted'])) {
+        if (!$params['withDeleted']) {
             $whereClause = $whereClause + ['deleted' => 0];
         }
 
@@ -324,7 +348,10 @@ abstract class Base
             $havingPart = $this->getWhere($entity, $havingClause, 'AND', $params);
         }
 
-        if (empty($params['aggregation'])) {
+        $selectPart = null;
+        $orderPart = null;
+
+        if (!$isAggregation && $method === 'SELECT') {
             $selectPart = $this->getSelect(
                 $entity, $params['select'], $params['distinct'], $params['skipTextColumns'],
                 $params['maxTextColumnsLength'], $params
@@ -366,8 +393,9 @@ abstract class Base
                     $selectPart .= ", " . $column . " AS `{$itemAlias}`";
                 }
             }
+        }
 
-        } else {
+        if ($isAggregation) {
             $aggDist = false;
             if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
                 $aggDist = true;
@@ -393,7 +421,7 @@ abstract class Base
         }
 
         if (!empty($params['joins']) && is_array($params['joins'])) {
-            // TODO array unique
+            // @todo array unique
             $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions']);
             if (!empty($joinsRelated)) {
                 if (!empty($joinsPart)) {
@@ -404,7 +432,7 @@ abstract class Base
         }
 
         if (!empty($params['leftJoins']) && is_array($params['leftJoins'])) {
-            // TODO array unique
+            // @todo array unique
             $joinsRelated = $this->getJoins($entity, $params['leftJoins'], true, $params['joinConditions']);
             if (!empty($joinsRelated)) {
                 if (!empty($joinsPart)) {
@@ -446,7 +474,7 @@ abstract class Base
             }
         }
 
-        if (!empty($params['aggregation'])) {
+        if ($isAggregation) {
             $sql = $this->composeSelectQuery(
                 $this->toDb($entityType),
                 $selectPart,
@@ -456,7 +484,6 @@ abstract class Base
                 null,
                 null,
                 false,
-                $params['aggregation'],
                 $groupByPart,
                 $havingPart,
                 $indexKeyList
@@ -467,7 +494,8 @@ abstract class Base
             return $sql;
         }
 
-        $sql = $this->composeSelectQuery(
+        $sql = $this->composeSelectOrDeleteQuery(
+            $method,
             $this->toDb($entityType),
             $selectPart,
             $joinsPart,
@@ -476,7 +504,6 @@ abstract class Base
             $params['offset'],
             $params['limit'],
             $params['distinct'],
-            null,
             $groupByPart,
             $havingPart,
             $indexKeyList
@@ -752,7 +779,12 @@ abstract class Base
         return $part;
     }
 
-    public static function getAllAttributesFromComplexExpression(string $expression, &$list = null) : array
+    public static function getAllAttributesFromComplexExpression(string $expression) : array
+    {
+        return self::getAllAttributesFromComplexExpressionImplementation($expression);
+    }
+
+    protected static function getAllAttributesFromComplexExpressionImplementation(string $expression, ?array &$list = null) : array
     {
         if (!$list) $list = [];
 
@@ -779,13 +811,13 @@ abstract class Base
         $argumentList = self::parseArgumentListFromFunctionContent($arguments);
 
         foreach ($argumentList as $argument) {
-            self::getAllAttributesFromComplexExpression($argument, $list);
+            self::getAllAttributesFromComplexExpressionImplementation($argument, $list);
         }
 
         return $list;
     }
 
-    static protected function parseArgumentListFromFunctionContent($functionContent)
+    static protected function parseArgumentListFromFunctionContent(string $functionContent)
     {
         $functionContent = trim($functionContent);
 
@@ -1008,8 +1040,9 @@ abstract class Base
         return $part;
     }
 
-    protected function getSelect(Entity $entity, $itemList = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, &$params = null)
-    {
+    protected function getSelect(
+        Entity $entity, $itemList = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, &$params = null
+    ) {
         $select = "";
         $arr = [];
         $specifiedList = is_array($itemList) ? true : false;
@@ -1266,7 +1299,7 @@ abstract class Base
         }
     }
 
-    public function order(string $sql, Entity $entity, $orderBy = null, $order = null, $useColumnAlias = false)
+    public function order(string $sql, Entity $entity, $orderBy = null, $order = null, bool $useColumnAlias = false)
     {
         $orderPart = $this->getOrderPart($entity, $orderBy, $order, $useColumnAlias);
         if ($orderPart) {
@@ -1308,6 +1341,9 @@ abstract class Base
         return $selectPart;
     }
 
+    /**
+     * Quote a value.
+     */
     public function quote($value)
     {
         if (is_null($value)) {
@@ -1319,18 +1355,14 @@ abstract class Base
         }
     }
 
-    public function toDb(string $field)
+    public function toDb(string $attribute) : string
     {
-        if (array_key_exists($field, $this->fieldsMapCache)) {
-            return $this->fieldsMapCache[$field];
-
-        } else {
-            $field[0] = strtolower($field[0]);
-            $dbField = preg_replace_callback('/([A-Z])/', [$this, 'toDbConversion'], $field);
-
-            $this->fieldsMapCache[$field] = $dbField;
-            return $dbField;
+        if (!array_key_exists($attribute, $this->attributeDbMapCache)) {
+            $attribute[0] = strtolower($attribute[0]);
+            $this->attributeDbMapCache[$attribute] = preg_replace_callback('/([A-Z])/', [$this, 'toDbConversion'], $attribute);
         }
+
+        return $this->attributeDbMapCache[$attribute];
     }
 
     protected function toDbConversion($matches)
@@ -1442,7 +1474,7 @@ abstract class Base
         return false;
     }
 
-    public function getWhere(Entity $entity, $whereClause = null, $sqlOp = 'AND', &$params = [], $level = 0)
+    public function getWhere(Entity $entity, ?array $whereClause = null, string $sqlOp = 'AND', array &$params = [], int $level = 0)
     {
         $wherePartList = [];
 
@@ -1650,7 +1682,8 @@ abstract class Base
                     if (!empty($value['withDeleted'])) {
                         $subQuerySelectParams['withDeleted'] = true;
                     }
-                    $wherePartList[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams) . ")";
+                    $wherePartList[] = $leftPart . " " . $operator . " (" .
+                        $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams) . ")";
                 } else if (!is_array($value)) {
                     if ($isNotValue) {
                         if (!is_null($value)) {
@@ -1689,7 +1722,7 @@ abstract class Base
         return implode(" " . $sqlOp . " ", $wherePartList);
     }
 
-    public function obtainJoinAlias($j)
+    protected function obtainJoinAlias($j)
     {
         if (is_array($j)) {
             if (count($j)) {
@@ -1706,7 +1739,7 @@ abstract class Base
         return $joinAlias;
     }
 
-    public function stringifyValue($value)
+    public function stringifyValue($value) : string
     {
         if (is_array($value)) {
             $arr = [];
@@ -1720,24 +1753,24 @@ abstract class Base
         return $stringValue;
     }
 
-    public function sanitize($string)
+    public function sanitize(string $string) : string
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
 
-    public function sanitizeSelectAlias($string)
+    public function sanitizeSelectAlias(string $string) : string
     {
         $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-\(\)]+/', '', $string);
         if (strlen($string) > 256) $string = substr($string, 0, 256);
         return $string;
     }
 
-    public function sanitizeSelectItem($string)
+    protected function sanitizeSelectItem(string $string) : string
     {
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
-    public function sanitizeIndexName($string)
+    protected function sanitizeIndexName(string $string) : string
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
@@ -1780,7 +1813,7 @@ abstract class Base
         return implode(' ', $joinSqlList);
     }
 
-    public function buildJoinConditionsStatement($entity, $alias = null, array $conditions)
+    public function buildJoinConditionsStatement(Entity $entity, string $alias, array $conditions)
     {
         $sql = '';
 
@@ -1795,7 +1828,7 @@ abstract class Base
         return $sql;
     }
 
-    protected function buildJoinConditionStatement($entity, $alias = null, $left, $right)
+    protected function buildJoinConditionStatement(Entity $entity, $alias = null, $left, $right)
     {
         $sql = '';
 
@@ -2051,26 +2084,59 @@ abstract class Base
     }
 
     public function composeSelectQuery(
-        $table,
-        $select,
-        $joins = '',
-        $where = '',
-        $order = '',
-        $offset = null,
-        $limit = null,
-        $distinct = null,
-        $aggregation = false,
-        $groupBy = null,
-        $having = null,
-        $indexKeyList = null
+        string $table,
+        string $select,
+        ?string $joins = null,
+        ?string $where = null,
+        ?string $order = null,
+        ?int $offset = null,
+        ?int $limit = null,
+        bool $distinct = false,
+        ?string $groupBy = null,
+        ?string $having = null,
+        ?array $indexKeyList = null
     ) : string {
-        $sql = "SELECT";
+        return $this->composeSelectOrDeleteQuery(
+            'SELECT',
+            $table,
+            $select,
+            $joins,
+            $where,
+            $order,
+            $offset,
+            $limit,
+            $distinct,
+            $groupBy,
+            $having,
+            $indexKeyList
+        );
+    }
+
+    protected function composeSelectOrDeleteQuery(
+        string $method,
+        string $table,
+        ?string $select = null,
+        ?string $joins = null,
+        ?string $where = null,
+        ?string $order = null,
+        ?int $offset = null,
+        ?int $limit = null,
+        bool $distinct = false,
+        ?string $groupBy = null,
+        ?string $having = null,
+        ?array $indexKeyList = null
+    ) : string {
+        $sql = "{$method}";
 
         if (!empty($distinct) && empty($groupBy)) {
             $sql .= " DISTINCT";
         }
 
-        $sql .= " {$select} FROM `{$table}`";
+        if ($method === 'SELECT') {
+            $sql .= " {$select}";
+        }
+
+        $sql .= " FROM `{$table}`";
 
         if (!empty($indexKeyList)) {
             foreach ($indexKeyList as $index) {
