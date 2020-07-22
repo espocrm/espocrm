@@ -168,9 +168,8 @@ class Stream
         }
     }
 
-    protected function getAutofollowUserIdList(Entity $entity, array $ignoreList = [])
+    protected function getAutofollowUserIdList(string $entityType, array $ignoreList = [])
     {
-        $entityType = $entity->getEntityType();
         $pdo = $this->entityManager->getPDO();
         $userIdList = [];
 
@@ -261,7 +260,7 @@ class Stream
                 	$entity->set('isFollowed', true);
                 }
 
-                $autofollowUserIdList = $this->getAutofollowUserIdList($entity, $userIdList);
+                $autofollowUserIdList = $this->getAutofollowUserIdList($entity->getEntityType(), $userIdList);
                 foreach ($autofollowUserIdList as $i => $userId) {
                     if (in_array($userId, $userIdList)) {
                         unset($autofollowUserIdList[$i]);
