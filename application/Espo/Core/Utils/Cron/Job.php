@@ -393,5 +393,4 @@ class Job
             $this->getEntityManager()->saveEntity($job);
         }
     }
-
 }
