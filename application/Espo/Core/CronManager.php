@@ -264,12 +264,12 @@ class CronManager
 
     protected function lockJobTable()
     {
-        $this->entityManager->getPdo()->query('LOCK TABLES `job` WRITE');
+        $this->entityManager->getPDO()->query('LOCK TABLES `job` WRITE');
     }
 
     protected function unlockTables()
     {
-        $this->entityManager->getPdo()->query('UNLOCK TABLES');
+        $this->entityManager->getPDO()->query('UNLOCK TABLES');
     }
 
     /**
