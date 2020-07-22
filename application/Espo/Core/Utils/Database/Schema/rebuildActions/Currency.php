@@ -47,18 +47,14 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 
         $pdo = $this->getEntityManager()->getPDO();
 
-        $sql = "TRUNCATE `currency`";
+        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('Currency');
         $pdo->prepare($sql)->execute();
 
         foreach ($currencyRates as $currencyName => $rate) {
-
-            $sql = "
-                INSERT INTO `currency`
-                (id, rate)
-                VALUES
-                (".$pdo->quote($currencyName) . ", " . $pdo->quote($rate) . ")
-            ";
-            $pdo->prepare($sql)->execute();
+            $this->getEntityManager()->createEntity('Currency', [
+                'id' => $currencyName,
+                'rate' => $rate,
+            ]);
         }
     }
 
