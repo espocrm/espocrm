@@ -438,8 +438,10 @@ class CronManager
                     continue;
                 }
 
-                $existingJob = $this->getCronJobUtil()->getJobByScheduledJobIdOnMinute($scheduledJob->id, $nextDate);
-                if ($existingJob) continue;
+                $jobAlreadyExists = $this->getCronJobUtil()->hasScheduledJobOnMinute($scheduledJob->id, $nextDate);
+                if ($jobAlreadyExists) {
+                    continue;
+                }
             }
 
             $className = $this->getScheduledJobUtil()->getJobClassName($scheduledJob->get('job'));
