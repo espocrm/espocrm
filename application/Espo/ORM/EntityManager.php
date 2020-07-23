@@ -195,7 +195,7 @@ class EntityManager
     public function saveEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
-        return $this->getRepository($entityType)->save($entity, $options);
+        $this->getRepository($entityType)->save($entity, $options);
     }
 
     /**
@@ -204,7 +204,7 @@ class EntityManager
     public function removeEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
-        return $this->getRepository($entityType)->remove($entity, $options);
+        $this->getRepository($entityType)->remove($entity, $options);
     }
 
     /**

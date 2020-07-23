@@ -84,9 +84,9 @@ interface Mapper
     /**
      * Selects related entity or list of entities.
      *
-     * @return List of entities or total count if $totalCount was passed as true.
+     * @return List of entities or one entity.
      */
-    public function selectRelated(Entity $entity, string $relationName, ?array $params = null, bool $returnTotalCount = false);
+    public function selectRelated(Entity $entity, string $relationName, ?array $params = null);
 
     /**
      * Returns count of related records according to given parameters.
@@ -122,34 +122,26 @@ interface Mapper
 
     /**
      * Insert an entity into DB.
-     *
-     * @return Record ID if success.
      */
     public function insert(Entity $entity);
 
     /**
      * Insert an entity collaction.
-     *
-     * @return TRUE if success.
      */
-    public function massInsert(Collection $collection) : bool;
+    public function massInsert(Collection $collection);
 
     /**
      * Update an entity in DB.
-     *
-     * @return Record ID if success.
      */
-    public function update(Entity $entity) : ?string;
+    public function update(Entity $entity);
 
     /**
      * Delete an entity (mark as deleted).
-     *
-     * @return TRUE if success.
      */
-    public function delete(Entity $entity) : bool;
+    public function delete(Entity $entity);
 
     /**
      * Delete a record from DB.
      */
-    public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false) : bool;
+    public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false);
 }

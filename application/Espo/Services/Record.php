@@ -601,7 +601,7 @@ class Record implements Crud,
 
     protected function storeEntity(Entity $entity)
     {
-        return $this->getRepository()->save($entity);
+        $this->getRepository()->save($entity);
     }
 
     public function processValidation(Entity $entity, $data)
@@ -1012,23 +1012,19 @@ class Record implements Crud,
         if (!$this->getAcl()->check($entity, 'create')) throw new ForbiddenSilent("No create access.");
 
         $this->processValidation($entity, $data);
-
         $this->processAssignmentCheck($entity);
-
         $this->processDuplicateCheck($entity, $data);
-
         $this->beforeCreateEntity($entity, $data);
 
-        if ($this->storeEntity($entity)) {
-            $this->afterCreateEntity($entity, $data);
-            $this->afterCreateProcessDuplicating($entity, $data);
-            $this->loadAdditionalFields($entity);
-            $this->prepareEntityForOutput($entity);
-            $this->processActionHistoryRecord('create', $entity);
-            return $entity;
-        }
+        $this->storeEntity($entity);
 
-        throw new Error();
+        $this->afterCreateEntity($entity, $data);
+        $this->afterCreateProcessDuplicating($entity, $data);
+        $this->loadAdditionalFields($entity);
+        $this->prepareEntityForOutput($entity);
+        $this->processActionHistoryRecord('create', $entity);
+
+        return $entity;
     }
 
     /** @deprecated */
@@ -1077,14 +1073,13 @@ class Record implements Crud,
             $this->processDuplicateCheck($entity, $data);
         }
 
-        if ($this->storeEntity($entity)) {
-            $this->afterUpdateEntity($entity, $data);
-            $this->prepareEntityForOutput($entity);
-            $this->processActionHistoryRecord('update', $entity);
-            return $entity;
-        }
+        $this->storeEntity($entity);
 
-        throw new Error();
+        $this->afterUpdateEntity($entity, $data);
+        $this->prepareEntityForOutput($entity);
+        $this->processActionHistoryRecord('update', $entity);
+
+        return $entity;
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
@@ -1136,17 +1131,11 @@ class Record implements Crud,
 
         $this->beforeDeleteEntity($entity);
 
-        $result = $this->getRepository()->remove($entity);
-
-        if (!$result) {
-            throw new Error("Could not delete record {$id}.");
-        }
+        $this->getRepository()->remove($entity);
 
         $this->afterDeleteEntity($entity);
 
         $this->processActionHistoryRecord('delete', $entity);
-
-        return $result;
     }
 
     protected function getSelectParams($params)
@@ -1552,7 +1541,6 @@ class Record implements Crud,
         }
 
         $this->getRepository()->relate($entity, $link, $foreignEntity);
-        return true;
     }
 
     /** @deprecated */
@@ -1729,7 +1717,8 @@ class Record implements Crud,
         $selectParams = $this->recordServiceContainer->get($foreignEntityType)->getSelectParams($params);
 
         if ($this->getAcl()->getLevel($foreignEntityType, $accessActionRequired) === 'all') {
-            return $this->getRepository()->massRelate($entity, $link, $selectParams);
+            $this->getRepository()->massRelate($entity, $link, $selectParams);
+            return true;
         } else {
             $foreignEntityList = $this->getEntityManager()->getRepository($foreignEntityType)->find($selectParams);
             $countRelated = 0;
@@ -1744,6 +1733,8 @@ class Record implements Crud,
                 return true;
             }
         }
+
+        return false;
     }
 
     public function massUpdate(array $params, StdClass $data)
@@ -1771,12 +1762,11 @@ class Record implements Crud,
                     continue;
                 }
                 if ($this->checkAssignment($entity)) {
-                    if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
-                        $resultIdList[] = $entity->id;
-                        $count++;
+                    $repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true]);
+                    $resultIdList[] = $entity->id;
+                    $count++;
 
-                        $this->processActionHistoryRecord('update', $entity);
-                    }
+                    $this->processActionHistoryRecord('update', $entity);
                 }
             }
         }
@@ -2729,10 +2719,9 @@ class Record implements Crud,
         $data = $this->getConvertCurrencyValues($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
 
         $entity->set($data);
-        if ($this->getRepository()->save($entity)) {
-            $this->processActionHistoryRecord('update', $entity);
-            return true;
-        }
+        $this->getRepository()->save($entity);
+        $this->processActionHistoryRecord('update', $entity);
+        return true;
     }
 
     public function getConvertCurrencyValues(

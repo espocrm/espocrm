@@ -150,28 +150,28 @@ class RDB extends Repository implements Findable, Relatable, Removable
             $this->beforeSave($entity, $options);
         }
         if ($entity->isNew() && !$entity->isSaved()) {
-            $result = $this->getMapper()->insert($entity);
+            $this->getMapper()->insert($entity);
         } else {
-            $result = $this->getMapper()->update($entity);
+            $this->getMapper()->update($entity);
         }
-        if ($result) {
-            $entity->setIsSaved(true);
-            if (empty($options['skipAfterSave']) && empty($options['skipAll'])) {
-                $this->afterSave($entity, $options);
-            }
-            if ($entity->isNew()) {
-                if (empty($options['keepNew'])) {
-                    $entity->setIsNew(false);
-                }
-            } else {
-                if ($entity->isFetched()) {
-                    $entity->updateFetchedValues();
-                }
-            }
-        }
-        $entity->setAsNotBeingSaved();
 
-        return $result;
+        $entity->setIsSaved(true);
+
+        if (empty($options['skipAfterSave']) && empty($options['skipAll'])) {
+            $this->afterSave($entity, $options);
+        }
+
+        if ($entity->isNew()) {
+            if (empty($options['keepNew'])) {
+                $entity->setIsNew(false);
+            }
+        } else {
+            if ($entity->isFetched()) {
+                $entity->updateFetchedValues();
+            }
+        }
+
+        $entity->setAsNotBeingSaved();
     }
 
     /**
@@ -193,16 +193,13 @@ class RDB extends Repository implements Findable, Relatable, Removable
     public function remove(Entity $entity, array $options = [])
     {
         $this->beforeRemove($entity, $options);
-        $result = $this->getMapper()->delete($entity);
-        if ($result) {
-            $this->afterRemove($entity, $options);
-        }
-        return $result;
+        $this->getMapper()->delete($entity);
+        $this->afterRemove($entity, $options);
     }
 
     public function deleteFromDb(string $id, bool $onlyDeleted = false)
     {
-        return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
+        $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 
     public function find(array $params = []) : Collection
@@ -433,6 +430,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
     {
     }
 
+    /**
+     * Update relationship columns.
+     */
     public function updateRelation(Entity $entity, string $relationName, $foreign, $data)
     {
         if (!$entity->id) {
@@ -458,13 +458,12 @@ class RDB extends Repository implements Findable, Relatable, Removable
         if (!$entity->id) {
             return false;
         }
+
         $this->beforeMassRelate($entity, $relationName, $params, $options);
 
-        $result = $this->getMapper()->massRelate($entity, $relationName, $params);
-        if ($result) {
-            $this->afterMassRelate($entity, $relationName, $params, $options);
-        }
-        return $result;
+        $this->getMapper()->massRelate($entity, $relationName, $params);
+
+        $this->afterMassRelate($entity, $relationName, $params, $options);
     }
 
     /** @deprecated */

@@ -352,7 +352,7 @@ class Record extends Base
 
             return $this->getRecordService()->massLink($id, $link, $where, $selectData);
         } else {
-            $foreignIdList = array();
+            $foreignIdList = [];
             if (isset($data->id)) {
                 $foreignIdList[] = $data->id;
             }
@@ -364,13 +364,10 @@ class Record extends Base
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if ($this->getRecordService()->link($id, $link, $foreignId)) {
-                    $result = true;
-                }
+                $this->getRecordService()->link($id, $link, $foreignId);
+                $result = true;
             }
-            if ($result) {
-                return true;
-            }
+            return $result;
         }
 
         throw new Error();
@@ -401,15 +398,10 @@ class Record extends Base
 
         $result = false;
         foreach ($foreignIdList as $foreignId) {
-            if ($this->getRecordService()->unlink($id, $link, $foreignId)) {
-                $result = $result || true;
-            }
+            $this->getRecordService()->unlink($id, $link, $foreignId);
+            $result = true;
         }
-        if ($result) {
-            return true;
-        }
-
-        throw new Error();
+        return $result;
     }
 
     public function actionFollow($params, $data, $request)
