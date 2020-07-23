@@ -461,6 +461,11 @@ abstract class BaseMapper implements Mapper
         return false;
     }
 
+    /**
+     * Get a relationship column value.
+     *
+     * @return string|int|float|bool|null A relationship column value.
+     */
     public function getRelationColumn(Entity $entity, string $relationName, string $id, string $column)
     {
         $type = $entity->getRelationType($relationName);
@@ -514,6 +519,9 @@ abstract class BaseMapper implements Mapper
         return null;
     }
 
+    /**
+     * Mass relate.
+     */
     public function massRelate(Entity $entity, string $relationName, array $params = [])
     {
         $id = $entity->id;
