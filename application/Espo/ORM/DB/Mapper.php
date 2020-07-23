@@ -128,12 +128,18 @@ interface Mapper
     public function insert(Entity $entity);
 
     /**
+     * Insert an entity collaction.
+     *
+     * @return TRUE if success.
+     */
+    public function massInsert(Collection $collection) : bool;
+
+    /**
      * Update an entity in DB.
      *
      * @return Record ID if success.
      */
     public function update(Entity $entity) : ?string;
-
 
     /**
      * Delete an entity (mark as deleted).
