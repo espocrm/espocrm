@@ -29,20 +29,24 @@
 
 namespace tests\unit\Espo\Core\Mail;
 
-use \Espo\Entities\Attachment;
-use \Espo\Entities\Email;
+use Espo\Entities\Attachment;
+use Espo\Entities\Email;
 
 class ImporterTest extends \PHPUnit\Framework\TestCase
 {
     function setUp() : void
     {
-        $GLOBALS['log'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
+        $GLOBALS['log'] = $this->getMockBuilder('Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
 
-        $entityManager = $this->entityManager = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
-        $config = $this->config = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $entityManager = $this->entityManager =
+            $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
 
-        $emailRepository = $this->getMockBuilder('\\Espo\\Core\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
-        $emptyRepository = $this->getMockBuilder('\\Espo\\Core\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
+        $config = $this->config = $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+
+        $emailRepository = $this->getMockBuilder('Espo\\Core\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
+        $emptyRepository = $this->getMockBuilder('Espo\\Core\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
+
+        $metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 
         $pdo = $this->getMockBuilder('\\Pdo')->disableOriginalConstructor()->getMock();
 
@@ -61,6 +65,16 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             ->method('getPdo')
             ->will($this->returnValue($pdo));
 
+        $entityManager
+            ->expects($this->any())
+            ->method('getMetadata')
+            ->will($this->returnValue($metadata));
+
+        $metadata
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue(null));
+
         $emptyRepository
             ->expects($this->any())
             ->method('where')
@@ -73,12 +87,13 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
              array('Lead', $emptyRepository)
         );
 
-        $email = $this->email = new \Espo\Entities\Email();
+        $email = $this->email = new Email('Email', [], $entityManager);
+
         $emailDefs = require('tests/unit/testData/Core/Mail/email_defs.php');
         $email->fields = $emailDefs['fields'];
         $email->relations = $emailDefs['relations'];
 
-        $attachment = new \Espo\Entities\Attachment();
+        $attachment = new Attachment('Attachment', [], $entityManager);
         $attachmentDefs = require('tests/unit/testData/Core/Mail/attachment_defs.php');
         $attachment->fields = $attachmentDefs['fields'];
         $attachment->relations = $attachmentDefs['relations'];

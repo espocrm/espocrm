@@ -81,6 +81,6 @@ class EntityFactory implements EntityFactoryInterface
             throw new Error("Entity '{$name}' is not defined in metadata.");
         }
 
-        return new $className($defs, $this->entityManager);
+        return new $className($name, $defs, $this->entityManager);
     }
 }

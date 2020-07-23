@@ -424,10 +424,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
                             ->method('getRepository')
                             ->will($this->returnValue($this->repository));
 
-
-
-        $this->email = new Email($this->defs, $this->entityManager);
-
+        $this->email = new Email('Email', $this->defs, $this->entityManager);
     }
 
     protected function tearDown() : void

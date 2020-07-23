@@ -67,22 +67,19 @@ abstract class BaseEntity implements Entity
 
     protected $isBeingSaved = false;
 
-    public function __construct(array $defs = [], ?EntityManager $entityManager = null)
+    public function __construct(string $entityType, array $defs = [], EntityManager $entityManager)
     {
-        if (empty($this->entityType)) {
+        $this->entityType = $entityType ?? null;
+
+        /*if (!$this->entityType) {
             $classNames = explode('\\', get_class($this));
             $this->entityType = end($classNames);
-        }
+        }*/
 
         $this->entityManager = $entityManager;
 
-        if (!empty($defs['fields'])) {
-            $this->fields = $defs['fields'];
-        }
-
-        if (!empty($defs['relations'])) {
-            $this->relations = $defs['relations'];
-        }
+        $this->fields = $defs['fields'] ?? $this->fields;
+        $this->relations = $defs['relations'] ?? $this->relations;
     }
 
     public function clear(?string $name = null)
@@ -196,7 +193,9 @@ abstract class BaseEntity implements Entity
                         if (is_string($foreign)) {
                             $foreignEntityType = $this->getRelationParam($relation, 'entity');
                             if ($foreignEntityType) {
-                                $valueType = $this->entityManager->getMetadata()->get($foreignEntityType, ['fields', $foreign, 'type']);
+                                $valueType = $this->entityManager->getMetadata()->get(
+                                    $foreignEntityType, ['fields', $foreign, 'type']
+                                );
                             }
                         }
                     }

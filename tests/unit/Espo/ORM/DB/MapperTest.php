@@ -78,7 +78,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnCallback(function () use ($entityManager) {
                 $args = func_get_args();
                 $className = "\\Espo\\Entities\\" . $args[0];
-                return new $className([], $entityManager);
+                return new $className($args[0], [], $entityManager);
             }));
 
         $this->metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
@@ -87,13 +87,15 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query, $this->metadata);
 
-        $this->post = new \Espo\Entities\Post([], $entityManager);
-        $this->comment = new \Espo\Entities\Comment([], $entityManager);
-        $this->tag = new \Espo\Entities\Tag([], $entityManager);
-        $this->note = new \Espo\Entities\Note([], $entityManager);
+        $entityFactory = $this->entityFactory;
 
-        $this->contact = new \Espo\Entities\Contact([], $entityManager);
-        $this->account = new \Espo\Entities\Account([], $entityManager);
+        $this->post = $entityFactory->create('Post');
+        $this->comment = $entityFactory->create('Comment');
+        $this->tag = $entityFactory->create('Tag');
+        $this->note = $entityFactory->create('Note');
+
+        $this->contact = $entityFactory->create('Contact');
+        $this->account = $entityFactory->create('Account');
     }
 
     protected function tearDown() : void
@@ -365,7 +367,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->mockQuery($query, true);
 
-        $job = new \Espo\Entities\Job();
+        $job = $this->entityFactory->create('Job');
         $job->id = '1';
         $job->setFetched('array', ['1', '2']);
         $job->set('array', ['2', '1']);
@@ -379,7 +381,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->mockQuery($query, true);
 
-        $job = new \Espo\Entities\Job();
+        $job = $this->entityFactory->create('Job');
         $job->id = '1';
         $job->setFetched('array', ['1', '2']);
         $job->set('array', null);

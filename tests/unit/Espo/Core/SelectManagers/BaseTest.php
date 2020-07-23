@@ -38,16 +38,16 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
-        $entity = $this->entity = new Test2();
-
-        $this->config = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
-        $this->acl = $this->getMockBuilder('\\Espo\\Core\\Acl')->disableOriginalConstructor()->getMock();
-        $this->aclManager = $this->getMockBuilder('\\Espo\\Core\\AclManager')->disableOriginalConstructor()->getMock();
-        $this->metadata = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->config = $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $this->acl = $this->getMockBuilder('Espo\\Core\\Acl')->disableOriginalConstructor()->getMock();
+        $this->aclManager = $this->getMockBuilder('Espo\\Core\\AclManager')->disableOriginalConstructor()->getMock();
+        $this->metadata = $this->getMockBuilder('Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
         $this->entityManager = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
-        $this->user = $this->getMockBuilder('\\Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
-        $this->fieldManagerUtil = $this->getMockBuilder('\\Espo\\Core\\Utils\\FieldManagerUtil')->disableOriginalConstructor()->getMock();
-        $this->injectableFactory = $this->getMockBuilder('\\Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
+        $this->user = $this->getMockBuilder('Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
+        $this->fieldManagerUtil = $this->getMockBuilder('Espo\\Core\\Utils\\FieldManagerUtil')->disableOriginalConstructor()->getMock();
+        $this->injectableFactory = $this->getMockBuilder('Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
+
+        $entity = $this->entity = new Test2('Test2', [], $this->entityManager);
 
         $this->entityManager
             ->expects($this->any())
@@ -55,7 +55,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->with($this->equalTo('Test2'))
             ->will($this->returnValue($this->entity));
 
-        $preferences = $this->preferences = $this->getMockBuilder('\\Espo\\Entities\\Preferences')->disableOriginalConstructor()->getMock();
+        $preferences = $this->preferences = $this->getMockBuilder('Espo\\Entities\\Preferences')->disableOriginalConstructor()->getMock();
         $preferences
             ->expects($this->any())
             ->method('get')

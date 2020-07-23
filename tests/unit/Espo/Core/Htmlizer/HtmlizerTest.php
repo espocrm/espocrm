@@ -45,6 +45,9 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
     {
         date_default_timezone_set('UTC');
 
+        $this->entityManager =
+            $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+
         $obj = new \StdClass();
 
         $this->fileManager = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
@@ -87,7 +90,7 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
 
     public function testRender()
     {
-        $entity = new \tests\unit\testData\Entities\Test();
+        $entity = new \tests\unit\testData\Entities\Test('Test', [], $this->entityManager);
         $entity->set('name', 'test');
         $entity->set('date', '2015-09-15');
         $entity->set('dateTime', '2015-09-15 10:00:00');

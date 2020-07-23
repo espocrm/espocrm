@@ -30,6 +30,8 @@
 use Espo\ORM\DB\Query\Mysql as Query;
 use Espo\ORM\EntityFactory;
 
+use Espo\Core\ORM\EntityManager;
+
 use Espo\Entities\Post;
 use Espo\Entities\Comment;
 use Espo\Entities\Tag;
@@ -58,27 +60,33 @@ class QueryTest extends \PHPUnit\Framework\TestCase
                     return "'" . $args[0] . "'";
                 }));
 
+        $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();;
+
 
         $this->entityFactory = $this->getMockBuilder('Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
         $this->entityFactory->expects($this->any())
                             ->method('create')
-                            ->will($this->returnCallback(function() {
-                                $args = func_get_args();
-                                $className = "Espo\\Entities\\" . $args[0];
-                                  return new $className();
-                            }));
+                            ->will(
+                                $this->returnCallback(function() {
+                                    $args = func_get_args();
+                                    $className = "Espo\\Entities\\" . $args[0];
+                                    return new $className($args[0], [], $this->entityManager);
+                                }
+                            ));
 
         $this->metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 
         $this->query = new Query($this->pdo, $this->entityFactory, $this->metadata);
 
-        $this->post = new \Espo\Entities\Post();
-        $this->comment = new \Espo\Entities\Comment();
-        $this->tag = new \Espo\Entities\Tag();
-        $this->note = new \Espo\Entities\Note();
+        $entityFactory = $this->entityFactory;
 
-        $this->contact = new \Espo\Entities\Contact();
-        $this->account = new \Espo\Entities\Account();
+        $this->post = $entityFactory->create('Post');
+        $this->comment = $entityFactory->create('Comment');
+        $this->tag = $entityFactory->create('Tag');
+        $this->note = $entityFactory->create('Note');
+
+        $this->contact = $entityFactory->create('Contact');
+        $this->account = $entityFactory->create('Account');
     }
 
     protected function tearDown() : void
