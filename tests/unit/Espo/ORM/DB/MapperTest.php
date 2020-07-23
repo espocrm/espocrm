@@ -30,6 +30,7 @@
 use Espo\ORM\DB\MysqlMapper;
 use Espo\ORM\DB\Query\Mysql as Query;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityCollection;
 
 use Espo\Entities\Post;
 use Espo\Entities\Comment;
@@ -346,6 +347,29 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->post->set('privateField', 'dontStoreThis');
 
         $this->db->insert($this->post);
+    }
+
+    public function testMassInsert()
+    {
+        $query = "INSERT INTO `post` (`id`, `name`) VALUES ('1', 'test1'), ('2', 'test2')";
+        $return = true;
+        $this->mockQuery($query, $return);
+
+        $post1 = $this->entityFactory->create('Post');
+        $post2 = $this->entityFactory->create('Post');
+
+        $post1->id = '1';
+        $post1->set('name', 'test1');
+
+        $post2->id = '2';
+        $post2->set('name', 'test2');
+
+        $collection = new EntityCollection([
+            $post1,
+            $post2,
+        ]);
+
+        $this->db->massInsert($collection);
     }
 
     public function testUpdate()

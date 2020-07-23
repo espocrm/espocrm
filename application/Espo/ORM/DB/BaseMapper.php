@@ -980,27 +980,73 @@ abstract class BaseMapper implements Mapper
     {
         $dataList = $this->toValueMap($entity);
 
-        $fieldArr = [];
-        $valArr = [];
-        foreach ($dataList as $field => $value) {
-            $fieldArr[] = $this->toDb($field);
+        $columnList = $this->getInsertColumnList($entity);
+        $valueList = $this->getInsertValueList($entity);
 
-            $type = $entity->getAttributes()[$field]['type'];
-
-            $value = $this->prepareValueForInsert($type, $value);
-
-            $valArr[] = $this->quote($value);
-        }
-        $fieldsPart = "`" . implode("`, `", $fieldArr) . "`";
-        $valuesPart = implode(", ", $valArr);
+        $fieldsPart = "`" . implode("`, `", $columnList) . "`";
+        $valuesPart = implode(", ", $valueList);
 
         $sql = $this->composeInsertQuery($this->toDb($entity->getEntityType()), $fieldsPart, $valuesPart);
 
-        if ($this->pdo->query($sql)) {
-            return $entity->id;
+        $result = $this->pdo->query($sql);
+
+        if (!$result) {
+            return null;
         }
 
-        return null;
+        return $entity->id;
+    }
+
+    public function massInsert(Collection $collection) : bool
+    {
+        if (!count($collection)) return true;
+
+        $columnList = $this->getInsertColumnList($collection[0]);
+
+        $fieldsPart = "`" . implode("`, `", $columnList) . "`";
+
+        $valuesPartList = [];
+
+        foreach ($collection as $entity) {
+            $valueList = $this->getInsertValueList($entity);
+            $valuesPart = implode(", ", $valueList);
+            $valuesPartList[] = $valuesPart;
+        }
+
+        $sql = $this->composeInsertQuery($this->toDb($entity->getEntityType()), $fieldsPart, $valuesPartList);
+
+        $result = $this->pdo->query($sql);
+
+        return (bool) $result;
+    }
+
+    protected function getInsertColumnList(Entity $entity) : array
+    {
+        $columnList = [];
+
+        $dataList = $this->toValueMap($entity);
+
+        foreach ($dataList as $attribute => $value) {
+            $columnList[] = $this->toDb($attribute);
+        }
+
+        return $columnList;
+    }
+
+
+    protected function getInsertValueList(Entity $entity) : array
+    {
+        $valueList = [];
+
+        $dataList = $this->toValueMap($entity);
+
+        foreach ($dataList as $attribute => $value) {
+            $type = $entity->getAttributeType($attribute);
+            $value = $this->prepareValueForInsert($type, $value);
+            $valueList[] = $this->quote($value);
+        }
+
+        return $valueList;
     }
 
     public function update(Entity $entity) : ?string
