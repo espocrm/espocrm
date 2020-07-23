@@ -275,10 +275,12 @@ class Database extends RDB
         $nowString = date('Y-m-d H:i:s', time());
         $restoreData = [];
 
-        if ($entity->isNew()) {
-            if (!$entity->has('id')) {
-                $entity->set('id', Util::generateId());
-            }
+        if (
+            $entity->isNew() &&
+            !$entity->has('id') &&
+            !$entity->getAttributeParam('id', 'autoincrement')
+        ) {
+            $entity->set('id', Util::generateId());
         }
 
         if (empty($options['skipAll'])) {

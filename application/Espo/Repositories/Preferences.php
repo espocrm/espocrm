@@ -131,18 +131,18 @@ class Preferences extends Repository implements Removable,
         $id = $entity->id;
 
         $autoFollowEntityTypeList = [];
-        $pdo = $this->entityManager->getPDO();
-        $sql = "
-            SELECT `entity_type` AS 'entityType' FROM `autofollow`
-            WHERE `user_id` = ".$pdo->quote($id)."
-            ORDER BY `entity_type`
-        ";
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $rows = $sth->fetchAll();
-        foreach ($rows as $row) {
-            $autoFollowEntityTypeList[] = $row['entityType'];
+
+        $autofollowList = $this->entityManager->getRepository('Autofollow')
+            ->select(['entityType'])
+            ->where([
+                'userId' => $id,
+            ])
+            ->find();
+
+        foreach ($autofollowList as $autofollow) {
+            $autoFollowEntityTypeList[] = $autofollow->get('entityType');
         }
+
         $this->data[$id]['autoFollowEntityTypeList'] = $autoFollowEntityTypeList;
         $entity->set('autoFollowEntityTypeList', $autoFollowEntityTypeList);
     }
@@ -151,32 +151,29 @@ class Preferences extends Repository implements Removable,
     {
         $id = $entity->id;
 
-        $was = $entity->getFetched('autoFollowEntityTypeList');
-        $became = $entity->get('autoFollowEntityTypeList');
-
-        if (!is_array($was)) {
-            $was = [];
-        }
-        if (!is_array($became)) {
-            $became = [];
-        }
-
-        if ($was == $became) {
+        if (!$entity->isAttributeChanged('autoFollowEntityTypeList')) {
             return;
         }
-        $pdo = $this->entityManager->getPDO();
-        $sql = "DELETE FROM autofollow WHERE user_id = ".$pdo->quote($id)."";
-        $pdo->query($sql);
 
-        $scopes = $this->metadata->get('scopes');
-        foreach ($became as $entityType) {
-            if (isset($scopes[$entityType]) && !empty($scopes[$entityType]['stream'])) {
-                $sql = "
-                    INSERT INTO autofollow (user_id, entity_type)
-                    VALUES (".$pdo->quote($id).", ".$pdo->quote($entityType).")
-                ";
-                $pdo->query($sql);
-            }
+        $entityTypeList = $entity->get('autoFollowEntityTypeList') ?? [];
+
+        $sql = $this->entityManager->getQuery()->createDeleteQuery('Autofollow', [
+            'whereClause' => [
+                'userId' => $id,
+            ],
+        ]);
+
+        $this->entityManager->getPDO()->query($sql);
+
+        $entityTypeList = array_filter($entityTypeList, function ($item) {
+            return (bool) $this->metadata->get(['scopes', $item, 'stream']);
+        });
+
+        foreach ($entityTypeList as $entityType) {
+            $this->entityManager->createEntity('Autofollow', [
+                'userId' => $id,
+                'entityType' => $entityType,
+            ]);
         }
     }
 

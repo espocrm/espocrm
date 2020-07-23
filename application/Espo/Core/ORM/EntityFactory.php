@@ -29,18 +29,20 @@
 
 namespace Espo\Core\ORM;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
+    ORM\Entity as BaseEntity,
 };
 
-use Espo\ORM\Metadata;
-use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
-
-use Espo\Core\Exceptions\Error;
-
-use Espo\ORM\EntityFactory as EntityFactoryInterface;
+use Espo\ORM\{
+    Metadata,
+    Entity,
+    EntityManager,
+    EntityFactory as EntityFactoryInterface,
+};
 
 class EntityFactory implements EntityFactoryInterface
 {
@@ -70,7 +72,7 @@ class EntityFactory implements EntityFactoryInterface
     {
         $className = $this->getClassName($name);
         if (!class_exists($className)) {
-            $className = Entity::class;
+            $className = BaseEntity::class;
         }
 
         $defs = $this->entityManager->getMetadata()->get($name);

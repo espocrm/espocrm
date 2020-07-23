@@ -27,13 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-
-    'ActionHistoryRecord' => array(
-        'params' => array(
-            'engine' => 'InnoDB'
-        )
-    )
-
-);
-
+return [
+    'ActionHistoryRecord' => [
+        'params' => [
+            'engine' => 'InnoDB',
+        ],
+    ],
+];

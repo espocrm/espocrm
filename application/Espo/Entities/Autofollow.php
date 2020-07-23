@@ -27,28 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
+namespace Espo\Entities;
 
-    'Autofollow' => array(
-        'fields' => array(
-            'id' => array(
-                'type' => 'id',
-                'dbType' => 'int',
-                'len' => '11',
-                'autoincrement' => true,
-            ),
-            'entityType' => array(
-                'type' => 'varchar',
-                'len' => '100',
-                'index' => 'entityType',
-            ),
-            'userId' => array(
-                'type' => 'varchar',
-                'len' => '24',
-                'index' => true,
-            )
-        )
-    )
+class Autofollow extends \Espo\Core\ORM\Entity
+{
 
-);
-
+}
