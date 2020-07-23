@@ -27,12 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-
-    'unset' => array(
+return [
+    'unset' => [
         '__APPEND__',
         'Settings',
-    ),
-
-);
-
+    ],
+];

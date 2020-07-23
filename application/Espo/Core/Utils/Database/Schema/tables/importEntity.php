@@ -28,7 +28,6 @@
  ************************************************************************/
 
 return array(
-
     'ImportEntity' => array(
         'fields' => array(
             'id' => array(
@@ -68,6 +67,4 @@ return array(
             )
         )
     ),
-
 );
-
