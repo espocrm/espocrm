@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
+define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -73,6 +73,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     this.deleteAttachment(id);
                 }
                 $div.parent().remove();
+                this.$el.find('input.file').val(null);
             },
             'change input.file': function (e) {
                 var $file = $(e.currentTarget);
@@ -204,6 +205,10 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     $(window).off('resize.' + this.cid);
                 }
             }.bind(this));
+
+            this.on('inline-edit-off', function () {
+                this.isUploading = false;
+            }, this);
         },
 
         setupSearch: function () {
@@ -413,30 +418,37 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         attachment.set('file', e.target.result);
                         attachment.set('field', this.name);
 
-                        attachment.save({}, {timeout: 0}).then(function () {
-                            if (canceledList.indexOf(attachment.cid) === -1) {
-                                $attachmentBox.trigger('ready');
-                                this.pushAttachment(attachment);
-                                $attachmentBox.attr('data-id', attachment.id);
-                                uploadedCount++;
-                                if (uploadedCount == totalCount && this.isUploading) {
-                                    this.isUploading = false;
-                                    this.model.trigger('attachment-uploaded:' + this.name);
-                                    this.afterAttachmentsUploaded.call(this);
-                                }
-                            }
-                        }.bind(this)).fail(function () {
-                            $attachmentBox.remove();
-                            totalCount--;
-                            if (!totalCount) {
-                                this.isUploading = false;
-                                this.$el.find('.uploading-message').remove();
-                            }
-                            if (uploadedCount == totalCount && this.isUploading) {
-                                this.isUploading = false;
-                                this.afterAttachmentsUploaded.call(this);
-                            }
-                        }.bind(this));
+                        attachment
+                            .save({}, {timeout: 0})
+                            .then(
+                                function () {
+                                    if (canceledList.indexOf(attachment.cid) === -1) {
+                                        $attachmentBox.trigger('ready');
+                                        this.pushAttachment(attachment);
+                                        $attachmentBox.attr('data-id', attachment.id);
+                                        uploadedCount++;
+                                        if (uploadedCount == totalCount && this.isUploading) {
+                                            this.model.trigger('attachment-uploaded:' + this.name);
+                                            this.afterAttachmentsUploaded.call(this);
+                                            this.isUploading = false;
+                                        }
+                                    }
+                                }.bind(this)
+                            )
+                            .fail(
+                                function () {
+                                    $attachmentBox.remove();
+                                    totalCount--;
+                                    if (!totalCount) {
+                                        this.isUploading = false;
+                                        this.$el.find('.uploading-message').remove();
+                                    }
+                                    if (uploadedCount == totalCount && this.isUploading) {
+                                        this.isUploading = false;
+                                        this.afterAttachmentsUploaded.call(this);
+                                    }
+                                }.bind(this)
+                            );
                     }.bind(this);
                     fileReader.readAsDataURL(file);
                 }, this);

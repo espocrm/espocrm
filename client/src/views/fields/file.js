@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
+define('views/fields/file', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
@@ -62,6 +62,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 var $div = $(e.currentTarget).parent();
                 this.deleteAttachment();
                 $div.parent().remove();
+                this.$el.find('input.file').val(null);
             },
             'change input.file': function (e) {
                 var $file = $(e.currentTarget);
@@ -179,6 +180,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     $(window).off('resize.' + this.cid);
                 }
             }.bind(this));
+
+            this.on('inline-edit-off', function () {
+                this.isUploading = false;
+            }, this);
         },
 
         afterRender: function () {
@@ -340,8 +345,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
             if (exceedsMaxFileSize) {
                 var msg = this.translate('fieldMaxFileSizeError', 'messages')
-                          .replace('{field}', this.getLabelText())
-                          .replace('{max}', maxFileSize);
+                    .replace('{field}', this.getLabelText())
+                    .replace('{max}', maxFileSize);
                 this.showValidationMessage(msg, '.attachment-button label');
                 return;
             }
@@ -357,6 +362,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     isCanceled = true;
                     this.$el.find('.attachment-button').removeClass('hidden');
                     this.isUploading = false;
+                    this.$el.find('input.file').val(null);
                 }.bind(this));
 
                 var fileReader = new FileReader();
@@ -370,18 +376,25 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         attachment.set('file', result);
                         attachment.set('field', this.name);
 
-                        attachment.save({}, {timeout: 0}).then(function () {
-                            this.isUploading = false;
-                            if (!isCanceled) {
-                                $attachmentBox.trigger('ready');
-                                this.setAttachment(attachment);
-                            }
-                        }.bind(this)).fail(function () {
-                            $attachmentBox.remove();
-                            this.$el.find('.uploading-message').remove();
-                            this.$el.find('.attachment-button').removeClass('hidden');
-                            this.isUploading = false;
-                        }.bind(this));
+                        attachment
+                            .save({}, {timeout: 0})
+                            .then(
+                                function () {
+                                    if (!isCanceled && this.isUploading) {
+                                        $attachmentBox.trigger('ready');
+                                        this.setAttachment(attachment);
+                                        this.isUploading = false;
+                                    }
+                                }.bind(this)
+                            )
+                            .fail(
+                                function () {
+                                    $attachmentBox.remove();
+                                    this.$el.find('.uploading-message').remove();
+                                    this.$el.find('.attachment-button').removeClass('hidden');
+                                    this.isUploading = false;
+                                }.bind(this)
+                            );
                     }.bind(this));
                 }.bind(this);
                 fileReader.readAsDataURL(file);
