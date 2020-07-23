@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "id": {
+            "type": "id",
+            "dbType": "int",
+            "autoincrement": true
+        },
+        "entityId": {
+            "type": "varchar",
+            "maxLength": 24,
+            "index": "entity"
+        },
+        "entityType": {
+            "type": "varchar",
+            "maxLength": 100,
+            "index": "entity"
+        },
+        "userId": {
+            "type": "varchar",
+            "maxLength": 24,
+            "index": true
+        }
+    },
+    "indexes": {
+        "userEntity": {
+            "columns": ["userId", "entityId", "entityType"]
+        }
+    }
+}

@@ -32,7 +32,10 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
-use Espo\ORM\Entity;
+use Espo\ORM\{
+    Entity,
+    EntityCollection,
+};
 use Espo\Entities\User;
 
 use Espo\Core\{
@@ -45,6 +48,7 @@ use Espo\Core\{
     Portal\AclManagerContainer as PortalAclManagerContainer,
     Select\SelectManagerFactory,
     Utils\FieldManagerUtil,
+    Record\Collection as RecordCollection,
 };
 
 class Stream
@@ -177,26 +181,22 @@ class Stream
         }
     }
 
-    public function checkIsFollowed(Entity $entity, $userId = null)
+    public function checkIsFollowed(Entity $entity, ?string $userId = null) : bool
     {
         if (empty($userId)) {
             $userId = $this->user->id;
         }
 
-        $pdo = $this->entityManager->getPDO();
-        $sql = "
-            SELECT id FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityType()) . " AND
-                user_id = " . $pdo->quote($userId) . "
-        ";
+        $isFollowed = (bool) $this->entityManager->getRepository('Subscription')
+            ->select(['id'])
+            ->where([
+                'userId' => $userId,
+                'entityType' => $entity->getEntityType(),
+                'entityId' => $entity->id,
+            ])
+            ->findOne();
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        if ($sth->fetchAll()) {
-            return true;
-        }
-        return false;
+        return $isFollowed;
     }
 
     public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false)
@@ -242,36 +242,35 @@ class Stream
 
         $pdo = $this->entityManager->getPDO();
 
-        $userIdQuotedList = [];
-        foreach ($userIdList as $userId) {
-            $userIdQuotedList[] = $pdo->quote($userId);
-        }
-
-        $sql = "
-            DELETE FROM subscription WHERE user_id IN (".implode(', ', $userIdQuotedList).") AND entity_id = ".$pdo->quote($entity->id) . "
-        ";
-        $pdo->query($sql);
-
-        $sql = "
-            INSERT INTO subscription
-            (entity_id, entity_type, user_id)
-            VALUES
-        ";
-        foreach ($userIdList as $userId) {
-            $arr[] = "
-                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityType()) . ", " . $pdo->quote($userId).")
-            ";
-        }
-
-        $sql .= implode(", ", $arr);
+        $sql = $this->entityManager->getQuery()->createDeleteQuery('Subscription', [
+            'whereClause' => [
+                'userId' => $userIdList,
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+            ],
+        ]);
 
         $pdo->query($sql);
+
+        $collection = new EntityCollection();
+
+        foreach ($userIdList as $userId) {
+            $subscription = $this->entityManager->getEntity('Subscription');
+            $subscription->set([
+                'userId' => $userId,
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+            ]);
+            $collection[] = $subscription;
+        }
+
+        $this->entityManager->getMapper('RDB')->massInsert($collection);
     }
 
-    public function followEntity(Entity $entity, $userId, bool $skipAclCheck = false)
+    public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false)
     {
         if ($userId == 'system') {
-            return;
+            return false;
         }
         if (!$this->metadata->get('scopes.' . $entity->getEntityType() . '.stream')) {
             return false;
@@ -291,19 +290,20 @@ class Stream
 
         $pdo = $this->entityManager->getPDO();
 
-        if (!$this->checkIsFollowed($entity, $userId)) {
-            $sql = "
-                INSERT INTO subscription
-                (entity_id, entity_type, user_id)
-                VALUES
-                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityType()) . ", " . $pdo->quote($userId).")
-            ";
-            $sth = $pdo->prepare($sql)->execute();
+        if ($this->checkIsFollowed($entity, $userId)) {
+            return true;
         }
+
+        $this->entityManager->createEntity('Subscription', [
+            'entityId' => $entity->id,
+            'entityType' => $entity->getEntityType(),
+            'userId' => $userId,
+        ]);
+
         return true;
     }
 
-    public function unfollowEntity(Entity $entity, $userId)
+    public function unfollowEntity(Entity $entity, string $userId)
     {
         if (!$this->metadata->get('scopes.' . $entity->getEntityType() . '.stream')) {
             return false;
@@ -311,13 +311,15 @@ class Stream
 
         $pdo = $this->entityManager->getPDO();
 
-        $sql = "
-            DELETE FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityType()) . " AND
-                user_id = " . $pdo->quote($userId) . "
-        ";
-        $sth = $pdo->prepare($sql)->execute();
+        $sql = $this->entityManager->getQuery()->createDeleteQuery('Subscription', [
+            'whereClause' => [
+                'userId' => $userId,
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+            ],
+        ]);
+
+        $pdo->query($sql);
 
         return true;
     }
@@ -330,12 +332,15 @@ class Stream
         }
 
         $pdo = $this->entityManager->getPDO();
-        $sql = "
-            DELETE FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityType()) . "
-        ";
-        $sth = $pdo->prepare($sql)->execute();
+
+        $sql = $this->entityManager->getQuery()->createDeleteQuery('Subscription', [
+            'whereClause' => [
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+            ],
+        ]);
+
+        $pdo->query($sql);
     }
 
     public function findUserStream($userId, $params = [])
@@ -1628,10 +1633,7 @@ class Stream
         $collection = $this->entityManager->getRepository('User')->find($selectParams);
         $total = $this->entityManager->getRepository('User')->count($selectParams);
 
-        return (object) [
-            'total' => $total,
-            'collection' => $collection
-        ];
+        return new RecordCollection($collection, $total);
     }
 
     public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)

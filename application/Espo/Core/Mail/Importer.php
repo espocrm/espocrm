@@ -132,7 +132,8 @@ class Importer
 
         $fromAddressData = $parser->getAddressDataFromMessage($message, 'from');
         if ($fromAddressData) {
-            $fromString = ($fromAddressData['name'] ? ($fromAddressData['name'] . ' ') : '') . '<' . $fromAddressData['address'] .'>';
+            $fromString = ($fromAddressData['name'] ? ($fromAddressData['name'] . ' ') : '') . '<' .
+                $fromAddressData['address'] .'>';
             $email->set('fromString', $fromString);
         }
 
