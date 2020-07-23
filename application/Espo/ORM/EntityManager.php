@@ -91,8 +91,6 @@ class EntityManager
         $this->entityFactory->setEntityManager($this);
 
         $this->repositoryFactory = $repositoryFactory;
-
-        $this->init();
     }
 
     /**
@@ -314,9 +312,5 @@ class EntityManager
                 }
             }
         }
-    }
-
-    protected function init()
-    {
     }
 }

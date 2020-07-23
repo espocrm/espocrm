@@ -76,13 +76,13 @@ class UpdateType extends BaseFunction implements
 
         $entity = $em->getEntity($entityType, $id);
 
-        if ($entity) {
-            $entity->set($data);
-            if ($em->saveEntity($entity)) {
-                return true;
-            }
+        if (!$entity) {
+            return false;
         }
 
-        return false;
+        $entity->set($data);
+        $em->saveEntity($entity);
+
+        return true;
     }
 }
