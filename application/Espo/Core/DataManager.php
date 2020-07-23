@@ -38,7 +38,6 @@ class DataManager
 
     private $cachePath = 'data/cache';
 
-
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -58,6 +57,8 @@ class DataManager
     {
         $result = $this->clearCache();
 
+        $this->disableHooks();
+
         $this->populateConfigParameters();
 
         $result &= $this->rebuildMetadata();
@@ -65,6 +66,8 @@ class DataManager
         $result &= $this->rebuildDatabase($target);
 
         $this->rebuildScheduledJobs();
+
+        $this->enableHooks();
 
         return $result;
     }
@@ -227,5 +230,15 @@ class DataManager
         }
 
         $config->save();
+    }
+
+    protected function disableHooks()
+    {
+        $this->getContainer()->get('hookManager')->disable();
+    }
+
+    protected function enableHooks()
+    {
+        $this->getContainer()->get('hookManager')->enable();
     }
 }

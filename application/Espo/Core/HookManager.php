@@ -49,6 +49,8 @@ class HookManager
 
     private $data;
 
+    protected $isDisabled;
+
     private $hookListHash = [];
 
     private $hooks;
@@ -81,6 +83,10 @@ class HookManager
 
     public function process(string $scope, string $hookName, $injection = null, array $options = [], array $hookData = [])
     {
+        if ($this->isDisabled) {
+            return;
+        }
+
         if (!isset($this->data)) {
             $this->loadHooks();
         }
@@ -97,6 +103,22 @@ class HookManager
                 $hook->$hookName($injection, $options, $hookData);
             }
         }
+    }
+
+    /**
+     * Disable hook processing.
+     */
+    public function disable()
+    {
+        $this->isDisabled = true;
+    }
+
+    /**
+     * Enable hook processing.
+     */
+    public function enable()
+    {
+        $this->isDisabled = false;
     }
 
     protected function loadHooks()
