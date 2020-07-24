@@ -126,37 +126,42 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         return $this->where(['name' => $number])->findOne();
     }
 
-    public function getEntityListByPhoneNumberId(string $phoneNumberId, ?Entity $exceptionEntity = null)
+    public function getEntityListByPhoneNumberId(string $phoneNumberId, ?Entity $exceptionEntity = null) : array
     {
         $entityList = [];
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT entity_phone_number.entity_type AS 'entityType', entity_phone_number.entity_id AS 'entityId'
-            FROM entity_phone_number
-            WHERE
-                entity_phone_number.phone_number_id = ".$pdo->quote($phoneNumberId)." AND
-                entity_phone_number.deleted = 0
-        ";
+        $where = [
+            'phoneNumberId' => $phoneNumberId,
+        ];
+
         if ($exceptionEntity) {
-            $sql .= "
-                AND (
-                    entity_phone_number.entity_type <> " .$pdo->quote($exceptionEntity->getEntityType()) . "
-                    OR
-                    entity_phone_number.entity_id <> " .$pdo->quote($exceptionEntity->id) . "
-                )
-            ";
+            $where[] = [
+                'OR' => [
+                    'entityType!=' => $exceptionEntity->getEntityType(),
+                    'entityId!=' => $exceptionEntity->id,
+                ]
+            ];
         }
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        while ($row = $sth->fetch()) {
-            if (empty($row['entityType']) || empty($row['entityId'])) continue;
-            if (!$this->getEntityManager()->hasRepository($row['entityType'])) continue;
-            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
-            if ($entity) {
-                $entityList[] = $entity;
-            }
+        $itemList = $this->getEntityManager()->getRepository('EntityPhoneNumber')
+            ->sth()
+            ->select(['entityType', 'entityId'])
+            ->where($where)
+            ->find();
+
+        foreach ($itemList as $item) {
+            $itemEntityType = $item->get('entityType');
+            $itemEntityId = $item->get('entityId');
+
+            if (!$itemEntityType || !$itemEntityId) continue;
+
+            if (!$this->getEntityManager()->hasRepository($itemEntityType)) continue;
+
+            $entity = $this->getEntityManager()->getEntity($itemEntityType, $itemEntityId);
+
+            if (!$entity) continue;
+
+            $entityList[] = $entity;
         }
 
         return $entityList;

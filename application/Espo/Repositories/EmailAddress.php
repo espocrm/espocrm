@@ -130,61 +130,64 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
     public function getEntityListByAddressId(
         string $emailAddressId, ?Entity $exceptionEntity = null, ?string $entityType = null, bool $onlyName = false
-    ) {
+    ) : array {
         $entityList = [];
 
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $sql = "
-            SELECT entity_email_address.entity_type AS 'entityType', entity_email_address.entity_id AS 'entityId'
-            FROM entity_email_address
-            WHERE
-                entity_email_address.email_address_id = ".$pdo->quote($emailAddressId)." AND
-                entity_email_address.deleted = 0
-        ";
+        $where = [
+            'emailAddressId' => $emailAddressId,
+        ];
 
         if ($exceptionEntity) {
-            $sql .= "
-                AND (
-                    entity_email_address.entity_type <> " .$pdo->quote($exceptionEntity->getEntityType()) . "
-                    OR
-                    entity_email_address.entity_id <> " .$pdo->quote($exceptionEntity->id) . "
-                )
-            ";
+            $where[] = [
+                'OR' => [
+                    'entityType!=' => $exceptionEntity->getEntityType(),
+                    'entityId!=' => $exceptionEntity->id,
+                ]
+            ];
         }
 
         if ($entityType) {
-            $sql .= "
-                AND entity_email_address.entity_type = " . $pdo->quote($entityType) . "
-            ";
+            $where[] = [
+                'entityType' => $entityType,
+            ];
         }
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $itemList = $this->getEntityManager()->getRepository('EntityEmailAddress')
+            ->sth()
+            ->select(['entityType', 'entityId'])
+            ->where($where)
+            ->find();
 
-        while ($row = $sth->fetch()) {
-            if (empty($row['entityType']) || empty($row['entityId'])) continue;
-            if (!$this->getEntityManager()->hasRepository($row['entityType'])) continue;
+        foreach ($itemList as $item) {
+            $itemEntityType = $item->get('entityType');
+            $itemEntityId = $item->get('entityId');
+
+            if (!$itemEntityType || !$itemEntityId) continue;
+
+            if (!$this->getEntityManager()->hasRepository($itemEntityType)) continue;
 
             if ($onlyName) {
                 $select = ['id', 'name'];
-                if ($row['entityType'] === 'User') {
+                if ($itemEntityType === 'User') {
                     $select[] = 'isActive';
                 }
-                $entity = $this->getEntityManager()->getRepository($row['entityType'])
+                $entity = $this->getEntityManager()->getRepository($itemEntityType)
                     ->select($select)
-                    ->where(['id' => $row['entityId']])
+                    ->where(['id' => $itemEntityId])
                     ->findOne();
             } else {
-                $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+                $entity = $this->getEntityManager()->getEntity($itemEntityType, $itemEntityId);
             }
 
-            if ($entity) {
-                if ($entity->getEntityType() === 'User') {
-                    if (!$entity->get('isActive')) continue;
-                }
-                $entityList[] = $entity;
+            if (!$entity) {
+                continue;
             }
+
+            if ($entity->getEntityType() === 'User' && !$entity->get('isActive')) {
+                continue;
+            }
+
+            $entityList[] = $entity;
         }
 
         return $entityList;
