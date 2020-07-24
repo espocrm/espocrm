@@ -235,33 +235,29 @@ class Event extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function getEntityReminderList(Entity $entity)
+    public function getEntityReminderList(Entity $entity) : array
     {
-        $pdo = $this->getEntityManager()->getPDO();
-        $reminderList = [];
+        $reminderDataList = [];
 
-        $sql = "
-            SELECT DISTINCT `seconds`, `type`
-            FROM `reminder`
-            WHERE
-                `entity_type` = ".$pdo->quote($entity->getEntityType())." AND
-                `entity_id` = ".$pdo->quote($entity->id)." AND
-                `deleted` = 0
-            ORDER BY `seconds` ASC
-        ";
+        $reminderCollection = $this->getEntityManager()->getRepository('Reminder')
+            ->select(['seconds', 'type'])
+            ->where([
+                'entityType' => $entity->getEntityType(),
+                'entityId' => $entity->id,
+            ])
+            ->distinct()
+            ->order('seconds')
+            ->find();
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-        foreach ($rows as $row) {
-            $o = new \StdClass();
-            $o->seconds = intval($row['seconds']);
-            $o->type = $row['type'];
-            $reminderList[] = $o;
+        foreach ($reminderCollection as $reminder) {
+            $o = (object) [
+                'seconds' => $reminder->get('seconds'),
+                'type' => $reminder->get('type'),
+            ];
+            $reminderDataList[] = $o;
         }
 
-        return $reminderList;
+        return $reminderDataList;
     }
 
     protected function convertDateTimeToDefaultTimezone($string)
