@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
+define('views/fields/email', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
@@ -51,7 +51,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             var notValid = false;
 
             data.forEach(function (row, i) {
-                var address = row.emailAddress;
+                var address = row.emailAddress || '';
                 var addressLowerCase = String(address).toLowerCase();
                 if (!re.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
                     var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
@@ -121,7 +121,8 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             if (emailAddressData) {
                 emailAddressData = Espo.Utils.cloneDeep(emailAddressData);
                 emailAddressData.forEach(function (item) {
-                    item.erased = item.emailAddress.indexOf(this.erasedPlaceholder) === 0;
+                    var address = item.emailAddress || '';
+                    item.erased = address.indexOf(this.erasedPlaceholder) === 0;
                     item.lineThrough = item.optOut || item.invalid;
                 }, this);
             }
