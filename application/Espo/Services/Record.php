@@ -46,6 +46,7 @@ use Espo\Entities\User;
 use Espo\Core\{
     Acl,
     ORM\EntityManager,
+    ORM\EntityCollection,
     AclManager,
     Utils\Util,
     Services\Crud,
@@ -1243,7 +1244,7 @@ class Record implements Crud,
             $selectParams['skipTextColumns'] = $this->isSkipSelectTextAttributes();
         }
 
-        $collection = new \Espo\ORM\EntityCollection([], $this->entityType);
+        $collection = new EntityCollection([], $this->entityType);
 
         $statusField = $this->getMetadata()->get(['scopes', $this->entityType, 'statusField']);
         if (!$statusField) {
@@ -1842,7 +1843,7 @@ class Record implements Crud,
         ];
     }
 
-    public function follow($id, $userId = null)
+    public function follow(string $id, ?string $userId = null)
     {
         $entity = $this->getRepository()->get($id);
         if (!$entity) throw new NotFoundSilent();
@@ -1858,7 +1859,7 @@ class Record implements Crud,
         return $this->getStreamService()->followEntity($entity, $userId);
     }
 
-    public function unfollow($id, $userId = null)
+    public function unfollow(string $id, ?string $userId = null)
     {
         $entity = $this->getRepository()->get($id);
         if (!$entity) throw new NotFoundSilent();
@@ -1870,7 +1871,7 @@ class Record implements Crud,
         return $this->getStreamService()->unfollowEntity($entity, $userId);
     }
 
-    public function massFollow(array $params, $userId = null)
+    public function massFollow(array $params, ?string $userId = null)
     {
         $resultIdList = [];
 
@@ -1899,7 +1900,7 @@ class Record implements Crud,
         return $result;
     }
 
-    public function massUnfollow(array $params, $userId = null)
+    public function massUnfollow(array $params, ?string $userId = null)
     {
         $resultIdList = [];
 
@@ -1972,7 +1973,7 @@ class Record implements Crud,
         return false;
     }
 
-    public function findDuplicates(Entity $entity, $data = null) : ?\Espo\ORM\EntityCollection
+    public function findDuplicates(Entity $entity, $data = null) : ?EntityCollection
     {
         if (!$data) {
             $data = (object) [];
