@@ -190,7 +190,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         return $entityList;
     }
 
-    public function getEntityByAddressId($emailAddressId, $entityType = null, $onlyName = false)
+    public function getEntityByAddressId(string $emailAddressId, ?string $entityType = null, bool $onlyName = false) : Entity
     {
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
@@ -239,6 +239,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 return $entity;
             }
         }
+
+        return null;
     }
 
     public function getEntityByAddress($address, $entityType = null, $order = ['User', 'Contact', 'Lead', 'Account'])

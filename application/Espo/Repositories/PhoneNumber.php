@@ -162,7 +162,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         return $entityList;
     }
 
-    public function getEntityByPhoneNumberId($phoneNumberId, $entityType = null)
+    public function getEntityByPhoneNumberId(string $phoneNumberId, ?string $entityType = null) : Entity
     {
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
@@ -188,7 +188,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         while ($row = $sth->fetch()) {
             if (!empty($row['entityType']) && !empty($row['entityId'])) {
                 if (!$this->getEntityManager()->hasRepository($row['entityType'])) {
-                    return;
+                    return null;
                 }
                 $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
                 if ($entity) {
@@ -196,6 +196,8 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                 }
             }
         }
+
+        return null;
     }
 
     protected function storeEntityPhoneNumberData(Entity $entity)
