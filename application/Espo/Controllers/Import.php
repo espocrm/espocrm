@@ -95,7 +95,9 @@ class Import extends \Espo\Core\Controllers\Record
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        return $this->getService('Import')->revert($data->id);
+        $this->getService('Import')->revert($data->id);
+
+        return true;
     }
 
     public function actionRemoveDuplicates($params, $data, $request)
@@ -106,7 +108,9 @@ class Import extends \Espo\Core\Controllers\Record
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        return $this->getService('Import')->removeDuplicates($data->id);
+        $this->getService('Import')->removeDuplicates($data->id);
+
+        return true;
     }
 
     public function actionCreate($params, $data, $request)
@@ -201,7 +205,9 @@ class Import extends \Espo\Core\Controllers\Record
         if (empty($data->id) || empty($data->entityType) || empty($data->entityId)) {
             throw new BadRequest();
         }
+
         $this->getService('Import')->unmarkAsDuplicate($data->id, $data->entityType, $data->entityId);
+
         return true;
     }
 }

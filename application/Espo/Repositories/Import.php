@@ -37,52 +37,50 @@ class Import extends \Espo\Core\Repositories\Database
     {
         $entityType = $entity->get('entityType');
 
-        if (empty($params['customJoin'])) {
-            $params['customJoin'] = '';
-        }
-        $params['customJoin'] .= $this->getRelatedJoin($entity, $relationName);
+        $this->addImportEntityJoin($entity, $relationName, $params);
 
         return $this->getEntityManager()->getRepository($entityType)->find($params);
     }
 
-    protected function getRelatedJoin(Entity $entity, string $link)
+    protected function addImportEntityJoin(Entity $entity, string $link, array &$params)
     {
         $entityType = $entity->get('entityType');
-        $pdo = $this->getEntityManager()->getPDO();
-        $table = $this->getEntityManager()->getQuery()->toDb($this->getEntityManager()->getQuery()->sanitize($entityType));
 
-        $part = "0";
+        $param = null;
+
         switch ($link) {
             case 'imported':
-                $part = "import_entity.is_imported = 1";
+                $param = 'isImported';
                 break;
             case 'duplicates':
-                $part = "import_entity.is_duplicate = 1";
+                $param = 'isDuplicate';
                 break;
             case 'updated':
-                $part = "import_entity.is_updated = 1";
+                $param = 'isUpdated';
                 break;
+            default:
+                return;
         }
 
-        $sql = "
-            JOIN import_entity ON
-                import_entity.import_id = " . $pdo->quote($entity->id) . " AND
-                import_entity.entity_type = " . $pdo->quote($entity->get('entityType')) . " AND
-                import_entity.entity_id = " . $table . ".id AND
-                ".$part."
-        ";
+        $params['joins'] = $params['joins'] ?? [];
 
-        return $sql;
+        $params['joins'][] = [
+            'ImportEntity',
+            'importEntity',
+            [
+                'importEntity.importId' => $entity->id,
+                'importEntity.entityType' => $entityType,
+                'importEntity.entityId:' => $entityType . '.id',
+                'importEntity.' . $param => true,
+            ],
+        ];
     }
 
     public function countRelated(Entity $entity, string $relationName, array $params = []) : int
     {
         $entityType = $entity->get('entityType');
 
-        if (empty($params['customJoin'])) {
-            $params['customJoin'] = '';
-        }
-        $params['customJoin'] .= $this->getRelatedJoin($entity, $relationName);
+        $this->addImportEntityJoin($entity, $relationName, $params);
 
         return $this->getEntityManager()->getRepository($entityType)->count($params);
     }
@@ -96,11 +94,13 @@ class Import extends \Espo\Core\Repositories\Database
             }
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "DELETE FROM import_entity WHERE import_id = :importId";
-        $sth = $pdo->prepare($sql);
-        $sth->bindValue(':importId', $entity->id);
-        $sth->execute();
+        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('ImportEntity', [
+            'whereClause' => [
+                'importId' => $entity->id,
+            ]
+        ]);
+
+        $this->getEntityManager()->getPDO()->query($sql);
 
         parent::afterRemove($entity, $options);
     }

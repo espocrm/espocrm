@@ -65,11 +65,11 @@ class Import implements Command
             $contents = file_get_contents($filePath);
 
             try {
-                $results = $service->importFileWithParamsId($contents, $paramsId);
+                $result = $service->importFileWithParamsId($contents, $paramsId);
 
-                $resultId = $results['id'];
-                $countCreated = $results['countCreated'];
-                $countUpdated = $results['countUpdated'];
+                $resultId = $result->id;
+                $countCreated = $result->countCreated;
+                $countUpdated = $result->countUpdated;
             } catch (\Throwable $e) {
                 $this->out("Error occured: ".$e->getMessage()."\n");
                 return;
@@ -83,7 +83,7 @@ class Import implements Command
             $this->out("Reverting import...\n");
 
             try {
-                $results = $service->revert($id);
+                $service->revert($id);
             } catch (\Throwable $e) {
                 $this->out("Error occured: ".$e->getMessage()."\n");
                 return;
@@ -97,14 +97,14 @@ class Import implements Command
             $this->out("Running import, this may take a while...\n");
 
             try {
-                $results = $service->importById($id, true, $forceResume);
+                $result = $service->importById($id, true, $forceResume);
             } catch (\Throwable $e) {
                 $this->out("Error occured: ".$e->getMessage()."\n");
                 return;
             }
 
-            $countCreated = $results['countCreated'];
-            $countUpdated = $results['countUpdated'];
+            $countCreated = $result->countCreated;
+            $countUpdated = $result->countUpdated;
 
             $this->out("Finished. Created: {$countCreated}. Updated: {$countUpdated}.\n");
             return;

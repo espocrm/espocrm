@@ -105,6 +105,7 @@ class Import extends \Espo\Services\Record implements
         $importedCount = $this->getRepository()->countRelated($entity, 'imported');
         $duplicateCount = $this->getRepository()->countRelated($entity, 'duplicates');
         $updatedCount = $this->getRepository()->countRelated($entity, 'updated');
+
         $entity->set([
             'importedCount' => $importedCount,
             'duplicateCount' => $duplicateCount,
@@ -144,7 +145,7 @@ class Import extends \Espo\Services\Record implements
         return new RecordCollection($collection, $total);
     }
 
-    public function uploadFile($contents) : string
+    public function uploadFile(string $contents) : string
     {
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('type', 'text/csv');
@@ -222,7 +223,7 @@ class Import extends \Espo\Services\Record implements
 
     public function revert(string $id)
     {
-        $import = $this->getEntityManager()->getEntity('Import', $id);
+        $import = $this->entityManager->getEntity('Import', $id);
         if (empty($import)) {
             throw new NotFound("Could not find import record.");
         }
@@ -231,9 +232,13 @@ class Import extends \Espo\Services\Record implements
             throw new Forbidden("No access import record.");
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $sql = "SELECT * FROM import_entity WHERE import_id = ".$pdo->quote($import->id) . " AND is_imported = 1";
+        $importEntityList = $this->entityManager->getRepository('ImportEntity')
+            ->sth()
+            ->where([
+                'importId' => $import->id,
+                'isImported' => true,
+            ])
+            ->find();
 
         $removeFromDb = false;
         $createdAt = $import->get('createdAt');
@@ -246,25 +251,36 @@ class Import extends \Espo\Services\Record implements
             }
         }
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            if (empty($row['entity_type']) || empty($row['entity_id'])) {
+        foreach ($importEntityList as $importEntity) {
+            $entityType = $importEntity->get('entityType');
+            $entityId = $importEntity->get('entityId');
+
+            if (!$entityType || !$entityId) {
                 continue;
             }
-            $entityType = $row['entity_type'];
-            $entityId = $row['entity_id'];
 
-            $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
-            if ($entity) {
-                $this->getEntityManager()->removeEntity($entity, [
-                    'noStream' => true,
-                    'noNotifications' => true,
-                    'import' => true
-                ]);
+            if (!$this->entityManager->hasRepository($entityType)) {
+                continue;
             }
+
+            $entity = $this->entityManager->getRepository($entityType)
+                ->select(['id'])
+                ->where(['id' => $entityId])
+                ->findOne();
+
+            if (!$entity) {
+                continue;
+            }
+
+            $this->entityManager->removeEntity($entity, [
+                'noStream' => true,
+                'noNotifications' => true,
+                'import' => true,
+                'silent' => true,
+            ]);
+
             if ($removeFromDb) {
-                $this->getEntityManager()->getRepository($entityType)->deleteFromDb($entityId);
+                $this->entityManager->getRepository($entityType)->deleteFromDb($entityId);
             }
         }
 
@@ -277,7 +293,7 @@ class Import extends \Espo\Services\Record implements
 
     public function removeDuplicates(string $id)
     {
-        $import = $this->getEntityManager()->getEntity('Import', $id);
+        $import = $this->entityManager->getEntity('Import', $id);
         if (empty($import)) {
             throw new NotFound();
         }
@@ -286,31 +302,47 @@ class Import extends \Espo\Services\Record implements
             throw new Forbidden();
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $importEntityList = $this->entityManager->getRepository('ImportEntity')
+            ->sth()
+            ->where([
+                'importId' => $import->id,
+                'isDuplicate' => true,
+            ])
+            ->find();
 
+        foreach ($importEntityList as $importEntity) {
+            $entityType = $importEntity->get('entityType');
+            $entityId = $importEntity->get('entityId');
 
-        $sql = "SELECT * FROM import_entity WHERE import_id = ".$pdo->quote($import->id) . " AND is_duplicate = 1";
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            if (empty($row['entity_type']) || empty($row['entity_id'])) {
+            if (!$entityType || !$entityId) {
                 continue;
             }
-            $entityType = $row['entity_type'];
-            $entityId = $row['entity_id'];
 
-            $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
-            if ($entity) {
-                $this->getEntityManager()->removeEntity($entity);
+            if (!$this->entityManager->hasRepository($entityType)) {
+                continue;
             }
-            $this->getEntityManager()->getRepository($entityType)->deleteFromDb($entityId);
-        }
 
-        return true;
+            $entity = $this->entityManager->getRepository($entityType)
+                ->select(['id'])
+                ->where(['id' => $entityId])
+                ->findOne();
+
+            if (!$entity) {
+                continue;
+            }
+
+            $this->entityManager->removeEntity($entity, [
+                'noStream' => true,
+                'noNotifications' => true,
+                'import' => true,
+                'silent' => true,
+            ]);
+
+            $this->entityManager->getRepository($entityType)->deleteFromDb($entityId);
+        }
     }
 
-    public function jobRunIdleImport(StdClass $data) : array
+    public function jobRunIdleImport(StdClass $data)
     {
         if (
             empty($data->userId) ||
@@ -341,7 +373,7 @@ class Import extends \Espo\Services\Record implements
         $this->import($entityType, $importAttributeList, $attachmentId, $params, $importId, $user);
     }
 
-    public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false) : array
+    public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false) : StdClass
     {
         $import = $this->getEntityManager()->getEntity('Import', $id);
 
@@ -372,7 +404,7 @@ class Import extends \Espo\Services\Record implements
         return $this->import($entityType, $attributeList, $import->get('fileId'), $params, $id);
     }
 
-    public function importFileWithParamsId(string $contents, string $importParamsId) : array
+    public function importFileWithParamsId(string $contents, string $importParamsId) : StdClass
     {
         if (!$contents) {
             throw new Error("File contents is empty.");
@@ -418,16 +450,16 @@ class Import extends \Espo\Services\Record implements
      *    'timezone' => (string),
      *    'startFromLastIndex' => (bool),
      * ]
-     * @return array [
-     *     'id' => (string),
-     *     'countCreated' => (int),
-     *     'countUpdated' => (int),
+     * @return StdClass [
+     *     id: (string),
+     *     countCreated: (int),
+     *     countUpdated: (int),
      * ]
      */
     public function import(
         string $scope, array $importAttributeList, string $attachmentId, array $params = [], ?string $importId = null,
-        ?User $user = null) : array
-    {
+        ?User $user = null
+    ) : StdClass {
         $delimiter = ',';
         if (!empty($params['delimiter'])) {
             $delimiter = $params['delimiter'];
@@ -504,7 +536,7 @@ class Import extends \Espo\Services\Record implements
         $this->processActionHistoryRecord('create', $import);
 
         if (!$importId && ($params['manualMode'] ?? false)) {
-            return [
+            return (object) [
                 'id' => $import->id,
                 'countCreated' => 0,
                 'countUpdated' => 0,
@@ -530,7 +562,7 @@ class Import extends \Espo\Services\Record implements
             ]);
             $this->getEntityManager()->saveEntity($job);
 
-            return [
+            return (object) [
                 'id' => $import->id,
                 'countCreated' => 0,
                 'countUpdated' => 0
@@ -538,13 +570,12 @@ class Import extends \Espo\Services\Record implements
         }
 
         try {
-            $pdo = $this->getEntityManager()->getPDO();
-
-            $result = [
+            $result = (object) [
                 'importedIds' => [],
                 'updatedIds' => [],
-                'duplicateIds' => []
+                'duplicateIds' => [],
             ];
+
             $i = -1;
 
             $contents = str_replace("\r\n", "\n", $contents);
@@ -564,39 +595,37 @@ class Import extends \Espo\Services\Record implements
                     continue;
                 }
 
-                $r = $this->importRow($scope, $importAttributeList, $arr, $params, $user);
+                $rowResult = $this->importRow($scope, $importAttributeList, $arr, $params, $user);
 
-                if (empty($r)) {
+                if (!$rowResult) {
                     continue;
                 }
 
                 $import->set('lastIndex', $i);
-                $this->getEntityManager()->saveEntity($import, ['skipHooks' => true, 'silent' => true]);
 
-                if (!empty($r['isImported'])) {
-                    $result['importedIds'][] = $r['id'];
-                }
-                if (!empty($r['isUpdated'])) {
-                    $result['updatedIds'][] = $r['id'];
-                }
-                if (!empty($r['isDuplicate'])) {
-                    $result['duplicateIds'][] = $r['id'];
-                }
-                $sql = "
-                    INSERT INTO import_entity
-                    (entity_type, entity_id, import_id, is_imported, is_updated, is_duplicate)
-                    VALUES
-                    (:entityType, :entityId, :importId, :isImported, :isUpdated, :isDuplicate)
-                ";
-                $sth = $pdo->prepare($sql);
-                $sth->bindValue(':entityType', $scope);
-                $sth->bindValue(':entityId', $r['id']);
-                $sth->bindValue(':importId', $import->id);
-                $sth->bindValue(':isImported', !empty($r['isImported']), \PDO::PARAM_BOOL);
-                $sth->bindValue(':isUpdated', !empty($r['isUpdated']), \PDO::PARAM_BOOL);
-                $sth->bindValue(':isDuplicate', !empty($r['isDuplicate']), \PDO::PARAM_BOOL);
+                $this->getEntityManager()->saveEntity($import, [
+                    'skipHooks' => true,
+                    'silent' => true,
+                ]);
 
-                $sth->execute();
+                if ($rowResult->isImported ?? false) {
+                    $result->importedIds[] = $rowResult->id;
+                }
+                if ($rowResult->isUpdated ?? false) {
+                    $result->updatedIds[] = $rowResult->id;
+                }
+                if ($rowResult->isDuplicate ?? false) {
+                    $result->duplicateIds[] = $rowResult->id;
+                }
+
+                $this->getEntityManager()->createEntity('ImportEntity', [
+                    'entityType' => $scope,
+                    'entityId' => $rowResult->id,
+                    'importId' => $import->id,
+                    'isImported' => $rowResult->isImported ?? false,
+                    'isUpdated' => $rowResult->isUpdated ?? false,
+                    'isDuplicate' => $rowResult->isDuplicate ?? false,
+                ]);
             }
         } catch (\Exception $e) {
             $GLOBALS['log']->error('Import Error: '. $e->getMessage());
@@ -607,16 +636,16 @@ class Import extends \Espo\Services\Record implements
 
         $this->getEntityManager()->saveEntity($import);
 
-        return [
+        return (object) [
             'id' => $import->id,
-            'countCreated' => count($result['importedIds']),
-            'countUpdated' => count($result['updatedIds']),
+            'countCreated' => count($result->importedIds),
+            'countUpdated' => count($result->updatedIds),
         ];
     }
 
     public function importRow(
         string $scope, array $importAttributeList, array $row, array $params = [], ?User $user = null
-    ) : ?array {
+    ) : ?StdClass {
         $id = null;
         $action = 'create';
         if (!empty($params['action'])) {
@@ -859,7 +888,8 @@ class Import extends \Espo\Services\Record implements
             $type = $attributeDefs[$attribute]['type'];
 
             if (in_array($type, [Entity::FOREIGN, Entity::VARCHAR]) && !empty($defs['foreign'])) {
-                $relatedEntityIsPerson = is_array($defs['foreign']) && in_array('firstName', $defs['foreign']) && in_array('lastName', $defs['foreign']);
+                $relatedEntityIsPerson = is_array($defs['foreign']) &&
+                    in_array('firstName', $defs['foreign']) && in_array('lastName', $defs['foreign']);
 
                 if ($defs['foreign'] === 'name' || $relatedEntityIsPerson) {
                     if ($entity->has($attribute)) {
@@ -904,28 +934,29 @@ class Import extends \Espo\Services\Record implements
             if ($entity->id) {
                 $sql = $this->getEntityManager()->getRepository($entity->getEntityType())->deleteFromDb($entity->id, true);
             }
-            $saveResult = $this->getEntityManager()->saveEntity($entity, [
+            $this->getEntityManager()->saveEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
                 'import' => true,
-                'silent' => !empty($params['silentMode']),
+                'silent' => $params['silentMode'] ?? false,
             ]);
-            if ($saveResult) {
-                $result['id'] = $entity->id;
-                if ($isNew) {
-                    $result['isImported'] = true;
-                    if ($isDuplicate) {
-                        $result['isDuplicate'] = true;
-                    }
-                } else {
-                    $result['isUpdated'] = true;
+
+            $result['id'] = $entity->id;
+
+            if ($isNew) {
+                $result['isImported'] = true;
+                if ($isDuplicate) {
+                    $result['isDuplicate'] = true;
                 }
+            } else {
+                $result['isUpdated'] = true;
             }
+
         } catch (\Exception $e) {
             $GLOBALS['log']->error('Import: [' . $e->getCode() . '] ' .$e->getMessage());
         }
 
-        return $result;
+        return (object) $result;
     }
 
     protected function prepareAttributeValue($entity, $attribute, $value)
@@ -1100,21 +1131,22 @@ class Import extends \Espo\Services\Record implements
         return $value;
     }
 
-    public function unmarkAsDuplicate(string $id, string $entityType, string $entityId)
+    public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId)
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $e = $this->getEntityManager()->getRepository('ImportEntity')
+            ->where([
+                'importId' => $importId,
+                'entityType' => $entityType,
+                'entityId' => $entityId,
+            ])
+            ->findOne();
 
-        $sql = "
-            UPDATE import_entity
-            SET is_duplicate = 0
-            WHERE
-                import_id = ".$pdo->quote($id)." AND
-                entity_type = ".$pdo->quote($entityType)." AND
-                entity_id = ".$pdo->quote($entityId)."
-        ";
-
-        if ($pdo->query($sql)) {
-            return true;
+        if (!$e) {
+            throw new NotFound();
         }
+
+        $e->set('isDuplicate', false);
+
+        $this->getEntityManager()->saveEntity($e);
     }
 }

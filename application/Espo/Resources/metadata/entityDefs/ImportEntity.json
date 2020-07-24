@@ -1,0 +1,38 @@
+{
+    "fields": {
+        "id": {
+            "type": "id",
+            "dbType": "int",
+            "autoincrement": true
+        },
+        "entityId": {
+            "type": "varchar",
+            "maxLength": 24,
+            "index": "entity"
+        },
+        "entityType": {
+            "type": "varchar",
+            "maxLength": 100,
+            "index": "entity"
+        },
+        "importId": {
+            "type": "varchar",
+            "maxLength": 24,
+            "index": true
+        },
+        "isImported": {
+            "type": "bool"
+        },
+        "isUpdated": {
+            "type": "bool"
+        },
+        "isDuplicate": {
+            "type": "bool"
+        }
+    },
+    "indexes": {
+        "entityImport": {
+            "columns": ["importId", "entityType"]
+        }
+    }
+}
