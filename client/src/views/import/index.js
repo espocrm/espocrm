@@ -61,6 +61,10 @@ define('views/import/index', 'view', function (Dep) {
         changeStep: function (num, result) {
             this.step = num;
 
+            if (num > 1) {
+                this.setConfirmLeaveOut(true);
+            }
+
             this.createView('step', 'views/import/step' + num.toString(), {
                 el: this.options.el + ' > .import-container',
                 entityType: this.entityType,
@@ -83,6 +87,10 @@ define('views/import/index', 'view', function (Dep) {
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Import', 'labels', 'Admin'));
+        },
+
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
         },
 
     });

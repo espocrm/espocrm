@@ -481,6 +481,8 @@ define('views/import/step2', 'view', function (Dep) {
         },
 
         runImport: function (attachmentId) {
+            this.getRouter().confirmLeaveOut = false;
+
             this.formData.attachmentId = attachmentId;
 
             this.notify('Import running...');

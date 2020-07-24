@@ -373,6 +373,12 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             this.listenTo(this.model, 'change:action', function () {
                 delete this.formData.updateBy;
             }, this);
+
+            this.listenTo(this.model, 'change', function (m, o) {
+                if (!o.ui) return;
+
+                this.getRouter().confirmLeaveOut = true;
+            }, this);
         },
 
         afterRender: function () {
@@ -438,6 +444,8 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 if (e.target.readyState == FileReader.DONE) {
                     this.getParentView().fileContents = e.target.result;
                     this.setFileIsLoaded();
+
+                    this.getRouter().confirmLeaveOut = true;
                 }
             }.bind(this);
             reader.readAsText(file);
