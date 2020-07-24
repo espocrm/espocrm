@@ -325,7 +325,7 @@ abstract class Base
             $whereClause = [];
         }
 
-        if (!$params['withDeleted']) {
+        if (!$params['withDeleted'] && $entity->hasAttribute('deleted')) {
             $whereClause = $whereClause + ['deleted' => 0];
         }
 

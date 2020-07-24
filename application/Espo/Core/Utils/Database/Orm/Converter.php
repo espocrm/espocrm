@@ -164,62 +164,71 @@ class Converter
     {
         $entityDefs = $this->getEntityDefs(true);
 
-        $ormMetadata = array();
-        foreach($entityDefs as $entityName => $entityMetadata) {
+        $ormMetadata = [];
 
+        foreach ($entityDefs as $entityType => $entityMetadata) {
             if (empty($entityMetadata)) {
-                $GLOBALS['log']->critical('Orm\Converter:process(), Entity:'.$entityName.' - metadata cannot be converted into ORM format');
+                $GLOBALS['log']->critical('Orm\Converter:process(), Entity:'.$entityType.' - metadata cannot be converted into ORM format');
                 continue;
             }
 
-            if ($entityMetadata['skipRebuild'] ?? false) $ormMetadata[$entityName]['skipRebuild'] = true;
+            if ($entityMetadata['skipRebuild'] ?? false) {
+                $ormMetadata[$entityType]['skipRebuild'] = true;
+            }
 
-            $ormMetadata = Util::merge($ormMetadata, $this->convertEntity($entityName, $entityMetadata));
+            $ormMetadata = Util::merge($ormMetadata, $this->convertEntity($entityType, $entityMetadata));
         }
 
         $ormMetadata = $this->afterProcess($ormMetadata);
 
+        foreach ($ormMetadata as $entityType => $entityOrmMetadata) {
+            $ormMetadata = Util::merge(
+                $ormMetadata,
+                $this->createRelationsEntityDefs($entityType, $entityOrmMetadata)
+            );
+        }
+
         return $ormMetadata;
     }
 
-    protected function convertEntity($entityName, $entityMetadata)
+    protected function convertEntity($entityType, $entityMetadata)
     {
-        $ormMetadata = array();
-        $ormMetadata[$entityName] = array(
+        $ormMetadata = [];
+        $ormMetadata[$entityType] = [
             'fields' => [],
-            'relations' => []
-        );
+            'relations' => [],
+        ];
 
         foreach ($this->permittedEntityOptions as $optionName) {
             if (isset($entityMetadata[$optionName])) {
-                $ormMetadata[$entityName][$optionName] = $entityMetadata[$optionName];
+                $ormMetadata[$entityType][$optionName] = $entityMetadata[$optionName];
             }
         }
 
-        $ormMetadata[$entityName]['fields'] = $this->convertFields($entityName, $entityMetadata);
-        $ormMetadata = $this->correctFields($entityName, $ormMetadata);
+        $ormMetadata[$entityType]['fields'] = $this->convertFields($entityType, $entityMetadata);
+        $ormMetadata = $this->correctFields($entityType, $ormMetadata);
 
-        $convertedLinks = $this->convertLinks($entityName, $entityMetadata, $ormMetadata);
+        $convertedLinks = $this->convertLinks($entityType, $entityMetadata, $ormMetadata);
 
         $ormMetadata = Util::merge($ormMetadata, $convertedLinks);
 
-        $this->applyFullTextSearch($ormMetadata, $entityName);
-        $this->applyIndexes($ormMetadata, $entityName);
+        $this->applyFullTextSearch($ormMetadata, $entityType);
+        $this->applyIndexes($ormMetadata, $entityType);
 
         if (!empty($entityMetadata['collection']) && is_array($entityMetadata['collection'])) {
             $collectionDefs = $entityMetadata['collection'];
-            $ormMetadata[$entityName]['collection'] = array();
+            $ormMetadata[$entityType]['collection'] = array();
 
             if (array_key_exists('orderByColumn', $collectionDefs)) {
-                $ormMetadata[$entityName]['collection']['orderBy'] = $collectionDefs['orderByColumn'];
+                $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderByColumn'];
             } else if (array_key_exists('orderBy', $collectionDefs)) {
-                if (array_key_exists($collectionDefs['orderBy'], $ormMetadata[$entityName]['fields'])) {
-                    $ormMetadata[$entityName]['collection']['orderBy'] = $collectionDefs['orderBy'];
+                if (array_key_exists($collectionDefs['orderBy'], $ormMetadata[$entityType]['fields'])) {
+                    $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderBy'];
                 }
             }
-            $ormMetadata[$entityName]['collection']['order'] = 'ASC';
+            $ormMetadata[$entityType]['collection']['order'] = 'ASC';
             if (array_key_exists('order', $collectionDefs)) {
-                $ormMetadata[$entityName]['collection']['order'] = strtoupper($collectionDefs['order']);
+                $ormMetadata[$entityType]['collection']['order'] = strtoupper($collectionDefs['order']);
             }
         }
 
@@ -228,7 +237,7 @@ class Converter
 
     public function afterProcess(array $ormMetadata)
     {
-        foreach ($ormMetadata as $entityName => &$entityParams) {
+        foreach ($ormMetadata as $entityType => &$entityParams) {
             foreach ($entityParams['fields'] as $fieldName => &$fieldParams) {
 
                 /* remove fields without type */
@@ -281,12 +290,12 @@ class Converter
     /**
      * Metadata conversion from Espo format into Doctrine
      *
-     * @param string $entityName
+     * @param string $entityType
      * @param array $entityMetadata
      *
      * @return array
      */
-    protected function convertFields($entityName, &$entityMetadata)
+    protected function convertFields($entityType, &$entityMetadata)
     {
         //List of unmerged fields with default field definitions in $outputMeta
         $unmergedFields = array(
@@ -314,7 +323,7 @@ class Converter
             /** check if "fields" option exists in $fieldMeta */
             $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
 
-            $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMetadata);
+            $fieldDefs = $this->convertField($entityType, $fieldName, $fieldParams, $fieldTypeMetadata);
 
             if ($fieldDefs !== false) {
                 //push fieldDefs to the ORM metadata array
@@ -327,7 +336,7 @@ class Converter
 
             /** check and set the linkDefs from 'fields' metadata */
             if (isset($fieldTypeMetadata['linkDefs'])) {
-                $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($entityName, $fieldParams, $fieldTypeMetadata['linkDefs']);
+                $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($entityType, $fieldParams, $fieldTypeMetadata['linkDefs']);
                 if (isset($linkDefs)) {
                     if (!isset($entityMetadata['links'])) {
                         $entityMetadata['links'] = array();
@@ -343,11 +352,11 @@ class Converter
     /**
      * Correct fields definitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
      */
-    protected function correctFields($entityName, array $ormMetadata) : array
+    protected function correctFields($entityType, array $ormMetadata) : array
     {
         $entityDefs = $this->getEntityDefs();
 
-        $entityMetadata = $ormMetadata[$entityName];
+        $entityMetadata = $ormMetadata[$entityType];
         //load custom field definitions and customCodes
         foreach ($entityMetadata['fields'] as $fieldName => $fieldParams) {
             if (empty($fieldParams['type'])) continue;
@@ -360,7 +369,7 @@ class Converter
 
             if (class_exists($className) && method_exists($className, 'load')) {
                 $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
-                $fieldResult = $helperClass->process($fieldName, $entityName);
+                $fieldResult = $helperClass->process($fieldName, $entityType);
                 if (isset($fieldResult['unset'])) {
                     $ormMetadata = Util::unsetInArray($ormMetadata, $fieldResult['unset']);
                     unset($fieldResult['unset']);
@@ -369,10 +378,10 @@ class Converter
                 $ormMetadata = Util::merge($ormMetadata, $fieldResult);
             }
 
-            $defaultAttributes = $this->metadata->get(['entityDefs', $entityName, 'fields', $fieldName, 'defaultAttributes']);
+            $defaultAttributes = $this->metadata->get(['entityDefs', $entityType, 'fields', $fieldName, 'defaultAttributes']);
             if ($defaultAttributes && array_key_exists($fieldName, $defaultAttributes)) {
                 $defaultMetadataPart = array(
-                    $entityName => array(
+                    $entityType => array(
                         'fields' => array(
                             $fieldName => array(
                                 'default' => $defaultAttributes[$fieldName]
@@ -386,21 +395,21 @@ class Converter
 
         //todo move to separate file
         //add a field 'isFollowed' for scopes with 'stream => true'
-        $scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
+        $scopeDefs = $this->getMetadata()->get('scopes.'.$entityType);
         if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
             if (!isset($entityMetadata['fields']['isFollowed'])) {
-                $ormMetadata[$entityName]['fields']['isFollowed'] = array(
+                $ormMetadata[$entityType]['fields']['isFollowed'] = array(
                     'type' => 'varchar',
                     'notStorable' => true,
                     'notExportable' => true,
                 );
 
-                $ormMetadata[$entityName]['fields']['followersIds'] = array(
+                $ormMetadata[$entityType]['fields']['followersIds'] = array(
                     'type' => 'jsonArray',
                     'notStorable' => true,
                     'notExportable' => true,
                 );
-                $ormMetadata[$entityName]['fields']['followersNames'] = array(
+                $ormMetadata[$entityType]['fields']['followersNames'] = array(
                     'type' => 'jsonObject',
                     'notStorable' => true,
                     'notExportable' => true,
@@ -411,7 +420,7 @@ class Converter
         return $ormMetadata;
     }
 
-    protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMetadata = null)
+    protected function convertField($entityType, $fieldName, array $fieldParams, $fieldTypeMetadata = null)
     {
         /** merge fieldDefs option from field definition */
         if (!isset($fieldTypeMetadata)) {
@@ -451,7 +460,7 @@ class Converter
         return $fieldDefs;
     }
 
-    protected function convertLinks($entityName, $entityMetadata, $ormMetadata)
+    protected function convertLinks($entityType, $entityMetadata, $ormMetadata)
     {
         if (!isset($entityMetadata['links'])) {
             return array();
@@ -464,7 +473,7 @@ class Converter
                 continue;
             }
 
-            $convertedLink = $this->getRelationManager()->convert($linkName, $linkParams, $entityName, $ormMetadata);
+            $convertedLink = $this->getRelationManager()->convert($linkName, $linkParams, $entityType, $ormMetadata);
 
             if (isset($convertedLink)) {
                 $relationships = Util::merge($convertedLink, $relationships);
@@ -578,5 +587,46 @@ class Converter
                 }
             }
         }
+    }
+
+    protected function createRelationsEntityDefs(string $entityType, array $defs) : array
+    {
+        $result = [];
+
+        foreach ($defs['relations'] as $relationParams) {
+            if ($relationParams['type'] !== 'manyMany') continue;
+
+            $relationEntityType = ucfirst($relationParams['relationName']);
+
+            $itemDefs = [
+                'skipRebuild' => true,
+                'fields' => [
+                    'id' => [
+                        'type' => 'id',
+                        'autoincrement' => true,
+                        'dbType' => 'varchar',
+                    ],
+                    'deleted' => [
+                        'type' => 'bool'
+                    ],
+                ],
+            ];
+
+            foreach ($relationParams['midKeys'] ?? [] as $key) {
+                $itemDefs['fields'][$key] = [
+                    'type' => 'foreignId',
+                ];
+            }
+
+            foreach ($relationParams['additionalColumns'] ?? [] as $columnName => $columnItem) {
+                $itemDefs['fields'][$columnName] = [
+                    'type' => $columnItem['type'] ?? 'varchar',
+                ];
+            }
+
+            $result[$relationEntityType] = $itemDefs;
+        }
+
+        return $result;
     }
 }
