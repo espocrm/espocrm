@@ -31,6 +31,8 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
+use Espo\Entities\EmailAddress as EmailAddressEntity;
+
 use Espo\Core\Di;
 
 class EmailAddress extends \Espo\Core\Repositories\Database implements
@@ -86,45 +88,49 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         return $ids;
     }
 
-    public function getEmailAddressData(Entity $entity)
+    public function getEmailAddressData(Entity $entity) : array
     {
-        $data = [];
+        $dataList = [];
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT email_address.name, email_address.lower, email_address.invalid, email_address.opt_out AS optOut, entity_email_address.primary
-            FROM entity_email_address
-            JOIN email_address ON email_address.id = entity_email_address.email_address_id AND email_address.deleted = 0
-            WHERE
-                entity_email_address.entity_id = ".$pdo->quote($entity->id)." AND
-                entity_email_address.entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                entity_email_address.deleted = 0
-            ORDER BY entity_email_address.primary DESC
-        ";
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        if ($rows = $sth->fetchAll()) {
-            foreach ($rows as $row) {
-                $obj = new \StdClass();
-                $obj->emailAddress = $row['name'];
-                $obj->lower = $row['lower'];
-                $obj->primary = ($row['primary'] == '1') ? true : false;
-                $obj->optOut = ($row['optOut'] == '1') ? true : false;
-                $obj->invalid = ($row['invalid'] == '1') ? true : false;
-                $data[] = $obj;
-            }
+        $emailAddressList = $this
+            ->select(['name', 'lower', 'invalid', 'optOut', ['ee.primary', 'primary']])
+            ->join([[
+                'EntityEmailAddress',
+                'ee',
+                [
+                    'ee.emailAddressId:' => 'id',
+                ]
+            ]])
+            ->where([
+                'ee.entityId' => $entity->id,
+                'ee.entityType' => $entity->getEntityType(),
+                'ee.deleted' => false,
+            ])
+            ->order('ee.primary', true)
+            ->find();
+
+        foreach ($emailAddressList as $emailAddress) {
+            $item = (object) [
+                'emailAddress' => $emailAddress->get('name'),
+                'lower' => $emailAddress->get('lower'),
+                'primary' => $emailAddress->get('primary'),
+                'optOut' => $emailAddress->get('optOut'),
+                'invalid' => $emailAddress->get('invalid'),
+            ];
+            $dataList[] = $item;
         }
 
-        return $data;
+        return $dataList;
     }
 
-    public function getByAddress($address)
+    public function getByAddress(string $address) : ?EmailAddressEntity
     {
-        return $this->where(array('lower' => strtolower($address)))->findOne();
+        return $this->where(['lower' => strtolower($address)])->findOne();
     }
 
-    public function getEntityListByAddressId($emailAddressId, $exceptionEntity = null, $entityType = null, $onlyName = false)
-    {
+    public function getEntityListByAddressId(
+        string $emailAddressId, ?Entity $exceptionEntity = null, ?string $entityType = null, bool $onlyName = false
+    ) {
         $entityList = [];
 
         $pdo = $this->getEntityManager()->getPDO();

@@ -31,6 +31,8 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
+use Espo\Entities\PhoneNumber as PhoneNumberEntity;
+
 use Espo\Core\Di;
 
 class PhoneNumber extends \Espo\Core\Repositories\Database implements
@@ -84,45 +86,47 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         return $ids;
     }
 
-    public function getPhoneNumberData(Entity $entity)
+    public function getPhoneNumberData(Entity $entity) : array
     {
-        $data = array();
+        $dataList = [];
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT phone_number.name, phone_number.type, entity_phone_number.primary, phone_number.opt_out AS optOut, phone_number.invalid
-            FROM entity_phone_number
-            JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id AND phone_number.deleted = 0
-            WHERE
-            entity_phone_number.entity_id = ".$pdo->quote($entity->id)." AND
-            entity_phone_number.entity_type = ".$pdo->quote($entity->getEntityType())." AND
-            entity_phone_number.deleted = 0
-            ORDER BY entity_phone_number.primary DESC
-        ";
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        if ($rows = $sth->fetchAll()) {
-            foreach ($rows as $row) {
-                $obj = new \StdClass();
-                $obj->phoneNumber = $row['name'];
-                $obj->primary = ($row['primary'] == '1') ? true : false;
-                $obj->type = $row['type'];
-                $obj->optOut = ($row['optOut'] == '1') ? true : false;
-                $obj->invalid = ($row['invalid'] == '1') ? true : false;
+        $numberList = $this
+            ->select(['name', 'type', 'invalid', 'optOut', ['en.primary', 'primary']])
+            ->join([[
+                'EntityPhoneNumber',
+                'en',
+                [
+                    'en.phoneNumberId:' => 'id',
+                ]
+            ]])
+            ->where([
+                'en.entityId' => $entity->id,
+                'en.entityType' => $entity->getEntityType(),
+                'en.deleted' => false,
+            ])
+            ->order('en.primary', true)
+            ->find();
 
-                $data[] = $obj;
-            }
+        foreach ($numberList as $number) {
+            $item = (object) [
+                'phoneNumber' => $number->get('name'),
+                'type' => $number->get('type'),
+                'primary' => $number->get('primary'),
+                'optOut' => $number->get('optOut'),
+                'invalid' => $number->get('invalid'),
+            ];
+            $dataList[] = $item;
         }
 
-        return $data;
+        return $dataList;
     }
 
-    public function getByNumber($number)
+    public function getByNumber(string $number) : ?PhoneNumberEntity
     {
-        return $this->where(array('name' => $number))->findOne();
+        return $this->where(['name' => $number])->findOne();
     }
 
-    public function getEntityListByPhoneNumberId($phoneNumberId, $exceptionEntity = null)
+    public function getEntityListByPhoneNumberId(string $phoneNumberId, ?Entity $exceptionEntity = null)
     {
         $entityList = [];
 
