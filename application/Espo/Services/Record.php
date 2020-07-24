@@ -1808,11 +1808,10 @@ class Record implements Crud,
 
         foreach ($collection as $entity) {
             if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
-                if ($repository->remove($entity)) {
-                    $resultIdList[] = $entity->id;
-                    $count++;
-                    $this->processActionHistoryRecord('delete', $entity);
-                }
+                $repository->remove($entity);
+                $resultIdList[] = $entity->id;
+                $count++;
+                $this->processActionHistoryRecord('delete', $entity);
             }
         }
 
