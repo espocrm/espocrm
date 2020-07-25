@@ -603,7 +603,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
         } else {
             if (!is_null($param2)) {
-                $this->whereClause[$param1] = $param2;
+                $this->whereClause[] = [$param1 => $param2];
             }
         }
 
@@ -623,7 +623,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
             $this->havingClause = $param1 + $this->havingClause;
         } else {
             if (!is_null($param2)) {
-                $this->havingClause[$param1] = $param2;
+                $this->havingClause[] = [$param1 => $param2];
             }
         }
 
