@@ -74,6 +74,11 @@ class Auth
         return $instance;
     }
 
+    public static function getBuilder() : AuthBuilder
+    {
+        return new AuthBuilder();
+    }
+
     protected function resolve()
     {
         $this->isResolved = true;

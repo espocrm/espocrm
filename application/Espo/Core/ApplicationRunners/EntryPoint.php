@@ -147,7 +147,11 @@ class EntryPoint implements ApplicationRunner
                 'allowAnyAccess' => $authNotStrict,
             ]);
 
-            $apiAuth = ApiAuth::createForEntryPoint($authentication, $authRequired);
+            $apiAuth = ApiAuth::getBuilder()
+                ->setAuthentication($authentication)
+                ->setAuthRequired($authRequired)
+                ->forEntryPoint()
+                ->build();
 
             $apiAuth->process($requestWrapped, $responseWrapped);
 
