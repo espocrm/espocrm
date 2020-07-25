@@ -30,9 +30,11 @@
 namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
+use Throwable;
+
+use Espo\Core\Interfaces\Injectable;
 
 use ReflectionClass;
-use Espo\Core\Interfaces\Injectable;
 
 /**
  * Creates an instance by a class name. Uses constructor param names to detect which
@@ -113,45 +115,48 @@ class InjectableFactory
         $injectionList = [];
 
         $constructor = $class->getConstructor();
-        if ($constructor) {
-            $params = $constructor->getParameters();
 
-            foreach ($params as $param) {
-                $name = $param->getName();
+        if (!$constructor) {
+            return $injectionList;
+        }
 
-                if ($with && array_key_exists($name, $with)) {
-                    $injection = $with[$name];
-                } else {
-                    $dependencyClassName = null;
+        $params = $constructor->getParameters();
 
-                    if ($param->getType()) {
-                        try {
-                            $dependencyClassName = $param->getClass();
-                        } catch (\Throwable $e) {
-                            $badClassName = $param->getType()->getName();
-                            // this trick allows to log syntax errors
-                            class_exists($badClassName);
-                            throw new Error("InjectableFactory: " . $e->getMessage());
-                        }
-                    }
+        foreach ($params as $param) {
+            $name = $param->getName();
 
-                    if (!$dependencyClassName) {
-                        if ($param->isDefaultValueAvailable()) {
-                            $injectionList[] = $param->getDefaultValue();
-                            continue;
-                        }
-                    }
+            if ($with && array_key_exists($name, $with)) {
+                $injection = $with[$name];
+            } else {
+                $dependencyClassName = null;
 
-                    $injection = $this->container->get($name);
-
-                    if (!$injection) {
-                        $className = $class->getName();
-                        throw new Error("InjectableFactory: Could not create {$className}, dependency '{$name}' not found.");
+                if ($param->getType()) {
+                    try {
+                        $dependencyClassName = $param->getClass();
+                    } catch (Throwable $e) {
+                        $badClassName = $param->getType()->getName();
+                        // this trick allows to log syntax errors
+                        class_exists($badClassName);
+                        throw new Error("InjectableFactory: " . $e->getMessage());
                     }
                 }
 
-                $injectionList[] = $injection;
+                if (!$dependencyClassName) {
+                    if ($param->isDefaultValueAvailable()) {
+                        $injectionList[] = $param->getDefaultValue();
+                        continue;
+                    }
+                }
+
+                $injection = $this->container->get($name);
+
+                if (!$injection) {
+                    $className = $class->getName();
+                    throw new Error("InjectableFactory: Could not create {$className}, dependency '{$name}' not found.");
+                }
             }
+
+            $injectionList[] = $injection;
         }
 
         return $injectionList;
@@ -162,13 +167,19 @@ class InjectableFactory
         foreach ($class->getInterfaces() as $interface) {
             $interfaceName = $interface->getShortName();
 
-            if (substr($interfaceName, -5) !== 'Aware' || strlen($interfaceName) <= 5) continue;
+            if (substr($interfaceName, -5) !== 'Aware' || strlen($interfaceName) <= 5) {
+                continue;
+            }
 
             $name = lcfirst(substr($interfaceName, 0, -5));
 
-            if (in_array($name, $ignoreList)) continue;
+            if (in_array($name, $ignoreList)) {
+                continue;
+            }
 
-            if (!$this->classHasDependencySetter($class, $name, true)) continue;
+            if (!$this->classHasDependencySetter($class, $name, true)) {
+                continue;
+            }
 
             $injection = $this->container->get($name);
 

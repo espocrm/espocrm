@@ -30,7 +30,6 @@
 namespace Espo\Core;
 
 use Espo\Core\InjectableFactory;
-use Espo\Entities\User;
 
 use Espo\Core\Exceptions\Error;
 
@@ -57,7 +56,7 @@ class Container
      */
     public function get(string $name) : object
     {
-        if (!array_key_exists($name, $this->data)) {
+        if (!isset($this->data[$name])) {
             $this->load($name);
         }
 
@@ -69,13 +68,23 @@ class Container
      */
     public function has(string $name) : bool
     {
-        if (isset($this->data[$name])) return true;
+        if (isset($this->data[$name])) {
+            return true;
+        }
 
         $loadMethodName = 'load' . ucfirst($name);
-        if (method_exists($this, $loadMethodName)) return true;
 
-        if ($this->configuration->getLoaderClassName($name)) return true;
-        if ($this->configuration->getServiceClassName($name)) return true;
+        if (method_exists($this, $loadMethodName)) {
+            return true;
+        }
+
+        if ($this->configuration->getLoaderClassName($name)) {
+            return true;
+        }
+
+        if ($this->configuration->getServiceClassName($name)) {
+            return true;
+        }
 
         return false;
     }
@@ -109,6 +118,7 @@ class Container
 
         if ($loaderClassName) {
             $loadClass = $this->get('injectableFactory')->create($loaderClassName);
+
             $this->data[$name] = $loadClass->load();
             return;
         }
@@ -116,7 +126,7 @@ class Container
         $className = $this->configuration->getServiceClassName($name);
 
         if (!$className || !class_exists($className)) {
-            throw new Error("Could not load {$name} service.");
+            throw new Error("Could not load '{$name}' service.");
         }
 
         $dependencyList = $this->configuration->getServiceDependencyList($name);
@@ -126,7 +136,9 @@ class Container
             foreach ($dependencyList as $item) {
                 $dependencyObjectList[] = $this->get($item);
             }
+
             $reflector = new \ReflectionClass($className);
+
             $this->data[$name] = $reflector->newInstanceArgs($dependencyObjectList);
             return;
         }
