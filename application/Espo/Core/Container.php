@@ -55,15 +55,13 @@ class Container
     /**
      * Obtain a service object.
      */
-    public function get(string $name) : ?object
+    public function get(string $name) : object
     {
-        if (empty($this->data[$name])) {
+        if (!array_key_exists($name, $this->data)) {
             $this->load($name);
         }
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-        return null;
+
+        return $this->data[$name] ?? null;
     }
 
     /**
@@ -101,39 +99,39 @@ class Container
     private function load(string $name)
     {
         $loadMethodName = 'load' . ucfirst($name);
+
         if (method_exists($this, $loadMethodName)) {
-            $obj = $this->$loadMethodName();
-            $this->data[$name] = $obj;
+            $this->data[$name] = $this->$loadMethodName();
             return;
         }
 
         $loaderClassName = $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);
 
-        $object = null;
-
         if ($loaderClassName) {
             $loadClass = $this->get('injectableFactory')->create($loaderClassName);
-            $object = $loadClass->load();
-            $this->data[$name] = $object;
-        } else {
-            $className = $this->configuration->getServiceClassName($name);
-
-            if ($className && class_exists($className)) {
-                $dependencyList = $this->configuration->getServiceDependencyList($name);
-                if (!is_null($dependencyList)) {
-                    $dependencyObjectList = [];
-                    foreach ($dependencyList as $item) {
-                        $dependencyObjectList[] = $this->get($item);
-                    }
-                    $reflector = new \ReflectionClass($className);
-                    $object = $reflector->newInstanceArgs($dependencyObjectList);
-                } else {
-                    $object = $this->get('injectableFactory')->create($className);
-                }
-
-                $this->data[$name] = $object;
-            }
+            $this->data[$name] = $loadClass->load();
+            return;
         }
+
+        $className = $this->configuration->getServiceClassName($name);
+
+        if (!$className || !class_exists($className)) {
+            throw new Error("Could not load {$name} service.");
+        }
+
+        $dependencyList = $this->configuration->getServiceDependencyList($name);
+
+        if (!is_null($dependencyList)) {
+            $dependencyObjectList = [];
+            foreach ($dependencyList as $item) {
+                $dependencyObjectList[] = $this->get($item);
+            }
+            $reflector = new \ReflectionClass($className);
+            $this->data[$name] = $reflector->newInstanceArgs($dependencyObjectList);
+            return;
+        }
+
+        $this->data[$name] = $this->get('injectableFactory')->create($className);
     }
 
     protected function loadContainer()
