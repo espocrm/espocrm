@@ -29,9 +29,11 @@
 
 namespace Espo\Core\FieldValidators;
 
+use Espo\ORM\Entity;
+
 class CurrencyType extends FloatType
 {
-    protected function isNotEmpty(\Espo\ORM\Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, $field)
     {
         return
             $entity->has($field) && $entity->get($field) !== null &&

@@ -29,14 +29,19 @@
 
 namespace Espo\Core\FieldValidators;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
+
+use Espo\Core\{
+    Utils\Metadata,
+    Utils\FieldManagerUtil,
+};
 
 class BaseType
 {
-    private $metadata;
-    private $fieldManagerUtil;
+    protected $metadata;
+    protected $fieldManagerUtil;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\FieldManagerUtil $fieldManagerUtil)
+    public function __construct(Metadata $metadata, FieldManagerUtil $fieldManagerUtil)
     {
         $this->metadata = $metadata;
         $this->fieldManagerUtil = $fieldManagerUtil;
@@ -47,12 +52,12 @@ class BaseType
         return $this->getFieldManagerUtil()->getActualAttributeList($entity->getEntityType(), $field);
     }
 
-    protected function getMetadata() : \Espo\Core\Utils\Metadata
+    protected function getMetadata() : Metadata
     {
         return $this->metadata;
     }
 
-    protected function getFieldManagerUtil() : \Espo\Core\Utils\FieldManagerUtil
+    protected function getFieldManagerUtil() : FieldManagerUtil
     {
         return $this->fieldManagerUtil;
     }

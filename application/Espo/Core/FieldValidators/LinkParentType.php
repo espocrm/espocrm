@@ -31,7 +31,7 @@ namespace Espo\Core\FieldValidators;
 
 class LinkParentType extends BaseType
 {
-    public function checkRequired(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
     {
         $idAttribute = $field . 'Id';
         $typeAttribute = $field . 'Type';

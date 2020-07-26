@@ -29,14 +29,16 @@
 
 namespace Espo\Core\FieldValidators;
 
+use Espo\ORM\Entity;
+
 class VarcharType extends BaseType
 {
-    public function checkRequired(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
     {
         return $this->isNotEmpty($entity, $field);
     }
 
-    public function checkMaxLength(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkMaxLength(Entity $entity, string $field, $validationValue, $data) : bool
     {
         if ($this->isNotEmpty($entity, $field)) {
             $value = $entity->get($field);
@@ -47,7 +49,7 @@ class VarcharType extends BaseType
         return true;
     }
 
-    protected function isNotEmpty(\Espo\ORM\Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, $field)
     {
         return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
     }

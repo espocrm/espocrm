@@ -31,7 +31,7 @@ namespace Espo\Core\FieldValidators;
 
 class PersonNameType extends BaseType
 {
-    public function checkRequired(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
     {
         $isEmpty = true;
         foreach ($this->getActualAttributeList($entity, $field) as $attribute) {
