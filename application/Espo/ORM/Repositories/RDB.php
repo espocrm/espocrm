@@ -510,6 +510,8 @@ class RDB extends Repository implements Findable, Relatable, Removable
     /**
      * Add JOIN.
      *
+     * @param string|array $relationName A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     *
      * Usage options:
      * * `join(string $relationName)`
      * * `join(array $joinDefinitionList)`
@@ -517,55 +519,72 @@ class RDB extends Repository implements Findable, Relatable, Removable
      * Usage examples:
      * ```
      * ->join($relationName)
-     * ->join([$relationName1, $relationName2])
-     * ->join([[$relationName, $alias]])
-     * ->join([[$relationName, $alias, $conditions]])
+     * ->join($relationName, $alias, $conditions)
+     * ->join([$relationName1, $relationName2, ...])
+     * ->join([[$relationName, $alias], ...])
+     * ->join([[$relationName, $alias, $conditions], ...])
      * ```
      */
-    public function join()
+    public function join($relationName, ?string $alias = null, ?array $conditions = null) : self
     {
-        $args = func_get_args();
-
         if (empty($this->listParams['joins'])) {
             $this->listParams['joins'] = [];
         }
 
-        foreach ($args as &$param) {
-            if (is_array($param)) {
-                foreach ($param as $k => $v) {
-                    $this->listParams['joins'][] = $v;
-                }
-            } else {
-                $this->listParams['joins'][] = $param;
+        if (is_array($relationName)) {
+            $joinList = $relationName;
+            foreach ($joinList as $item) {
+                $this->listParams['joins'][] = $item;
             }
+            return $this;
         }
 
+        if (is_null($alias) && is_null($conditions)) {
+            $this->listParams['joins'][] = $relationName;
+            return $this;
+        }
+
+        if (is_null($conditions)) {
+            $this->listParams['joins'][] = [$relationName, $alias];
+            return $this;
+        }
+
+        $this->listParams['joins'][] = [$relationName, $alias, $conditions];
         return $this;
     }
 
     /**
      * Add LEFT JOIN.
      *
+     * @param string|array $relationName A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     *
      * This method works the same way as `join` method.
      */
-    public function leftJoin() : self
+    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : self
     {
-        $args = func_get_args();
-
         if (empty($this->listParams['leftJoins'])) {
             $this->listParams['leftJoins'] = [];
         }
 
-        foreach ($args as &$param) {
-            if (is_array($param)) {
-                foreach ($param as $k => $v) {
-                    $this->listParams['leftJoins'][] = $v;
-                }
-            } else {
-                $this->listParams['leftJoins'][] = $param;
+        if (is_array($relationName)) {
+            $joinList = $relationName;
+            foreach ($joinList as $item) {
+                $this->listParams['leftJoins'][] = $item;
             }
+            return $this;
         }
 
+        if (is_null($alias) && is_null($conditions)) {
+            $this->listParams['leftJoins'][] = $relationName;
+            return $this;
+        }
+
+        if (is_null($conditions)) {
+            $this->listParams['leftJoins'][] = [$relationName, $alias];
+            return $this;
+        }
+
+        $this->listParams['leftJoins'][] = [$relationName, $alias, $conditions];
         return $this;
     }
 
@@ -702,6 +721,14 @@ class RDB extends Repository implements Findable, Relatable, Removable
             }
         } else {
             $params['havingClause'] = $this->havingClause;
+        }
+
+        if (empty($params['whereClause'])) {
+            unset($params['whereClause']);
+        }
+
+        if (empty($params['havingClause'])) {
+            unset($params['havingClause']);
         }
 
         if (!empty($params['leftJoins']) && !empty($this->listParams['leftJoins'])) {
