@@ -249,9 +249,10 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
     public function getEntityByAddress(
         string $address, ?string $entityType = null, array $order = ['User', 'Contact', 'Lead', 'Account']
     ) : ?Entity {
-        $selectBuilder = $this->getEntityManager()->getRepository('EntityEmailAddress')->createSelectBuilder();
+        $selectBuilder = $this->getEntityManager()->createSelectBuilder();
 
         $selectBuilder
+            ->from('EntityEmailAddress')
             ->select(['entityType', 'entityId'])
             ->sth()
             ->join('EmailAddress', 'ea', ['ea.id:' => 'emailAddressId', 'ea.deleted' => 0])
@@ -260,6 +261,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 ['LIST:entityType:' . implode(',', $order)],
                 ['primary', 'DESC'],
             ]);
+
 
         if ($entityType) {
             $selectBuilder->where('entityType=', $entityType);

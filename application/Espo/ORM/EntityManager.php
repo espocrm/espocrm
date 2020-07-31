@@ -250,6 +250,14 @@ class EntityManager
         return $this->repositoryHash[$entityType] ?? null;
     }
 
+    /**
+     * Create a select builder.
+     */
+    public function createSelectBuilder() : RDBSelectBuilder
+    {
+        return new RDBSelectBuilder($this);
+    }
+
     public function setMetadata(array $data)
     {
         $this->metadata->setData($data);

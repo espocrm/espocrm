@@ -29,9 +29,10 @@
 
 namespace Espo\ORM;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\ORM\{
     Repositories\Findable,
-    Repositories\RDB as Repository,
     Collection,
     Entity,
 };
@@ -45,49 +46,89 @@ class RDBSelectBuilder implements Findable
 
     protected $havingClause = [];
 
-    protected $listParams = [];
+    protected $params = [];
+
+    protected $entityManager;
 
     protected $repository;
 
-    public function __construct(Repository $repository)
+    protected $entityType = null;
+
+    public function __construct(EntityManager $entityManager)
     {
-        $this->repository = $repository;
+        $this->entityManager = $entityManager;
+    }
+
+    public function from(string $entityType) : self
+    {
+        if ($this->repository) {
+            throw new Error("SelectBuilder: Method 'from' can be called only once.");
+        }
+
+        $this->entityType = $entityType;
+        $this->repository = $this->entityManager->getRepository($entityType);
+
+        return $this;
+    }
+
+    protected function isExecutable() : bool
+    {
+        return (bool) $this->entityType;
+    }
+
+    protected function processExecutableCheck()
+    {
+        if (!$this->isExecutable()) {
+            throw new Error("SelectBuilder: Method 'from' must be called.");
+        }
     }
 
     public function find(array $params = []) : Collection
     {
-        $params = $this->getSelectParams($params);
+        $this->processExecutableCheck();
+
+        $params = $this->getMergedParams($params);
         return $this->repository->find($params);
     }
 
     public function findOne(array $params = []) : ?Entity
     {
-        $params = $this->getSelectParams($params);
+        $this->processExecutableCheck();
+
+        $params = $this->getMergedParams($params);
         return $this->repository->findOne($params);
     }
 
     public function count(array $params = []) : int
     {
-        $params = $this->getSelectParams($params);
+        $this->processExecutableCheck();
+
+        $params = $this->getMergedParams($params);
         return $this->repository->count($params);
     }
 
     public function max(string $attribute)
     {
-        $params = $this->getSelectParams();
-        return $this->repository->max($attribute);
+        $this->processExecutableCheck();
+
+        $params = $this->getMergedParams();
+        return $this->repository->max($attribute, $params);
     }
 
     public function min(string $attribute)
     {
-        $params = $this->getSelectParams();
-        return $this->repository->min($attribute);
+        $this->processExecutableCheck();
+
+        $params = $this->getMergedParams();
+        return $this->repository->min($attribute, $params);
     }
 
     public function sum(string $attribute)
     {
-        $params = $this->getSelectParams();
-        return $this->repository->sum($attribute);
+        $this->processExecutableCheck();
+
+        $params = $this->getMergedParams();
+        return $this->repository->sum($attribute, $params);
     }
 
     /**
@@ -110,29 +151,29 @@ class RDBSelectBuilder implements Findable
      */
     public function join($relationName, ?string $alias = null, ?array $conditions = null) : self
     {
-        if (empty($this->listParams['joins'])) {
-            $this->listParams['joins'] = [];
+        if (empty($this->params['joins'])) {
+            $this->params['joins'] = [];
         }
 
         if (is_array($relationName)) {
             $joinList = $relationName;
             foreach ($joinList as $item) {
-                $this->listParams['joins'][] = $item;
+                $this->params['joins'][] = $item;
             }
             return $this;
         }
 
         if (is_null($alias) && is_null($conditions)) {
-            $this->listParams['joins'][] = $relationName;
+            $this->params['joins'][] = $relationName;
             return $this;
         }
 
         if (is_null($conditions)) {
-            $this->listParams['joins'][] = [$relationName, $alias];
+            $this->params['joins'][] = [$relationName, $alias];
             return $this;
         }
 
-        $this->listParams['joins'][] = [$relationName, $alias, $conditions];
+        $this->params['joins'][] = [$relationName, $alias, $conditions];
         return $this;
     }
 
@@ -145,29 +186,29 @@ class RDBSelectBuilder implements Findable
      */
     public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : self
     {
-        if (empty($this->listParams['leftJoins'])) {
-            $this->listParams['leftJoins'] = [];
+        if (empty($this->params['leftJoins'])) {
+            $this->params['leftJoins'] = [];
         }
 
         if (is_array($relationName)) {
             $joinList = $relationName;
             foreach ($joinList as $item) {
-                $this->listParams['leftJoins'][] = $item;
+                $this->params['leftJoins'][] = $item;
             }
             return $this;
         }
 
         if (is_null($alias) && is_null($conditions)) {
-            $this->listParams['leftJoins'][] = $relationName;
+            $this->params['leftJoins'][] = $relationName;
             return $this;
         }
 
         if (is_null($conditions)) {
-            $this->listParams['leftJoins'][] = [$relationName, $alias];
+            $this->params['leftJoins'][] = [$relationName, $alias];
             return $this;
         }
 
-        $this->listParams['leftJoins'][] = [$relationName, $alias, $conditions];
+        $this->params['leftJoins'][] = [$relationName, $alias, $conditions];
         return $this;
     }
 
@@ -176,7 +217,7 @@ class RDBSelectBuilder implements Findable
      */
     public function distinct() : self
     {
-        $this->listParams['distinct'] = true;
+        $this->params['distinct'] = true;
 
         return $this;
     }
@@ -186,7 +227,7 @@ class RDBSelectBuilder implements Findable
      */
     public function sth() : self
     {
-        $this->listParams['returnSthCollection'] = true;
+        $this->params['returnSthCollection'] = true;
 
         return $this;
     }
@@ -240,8 +281,8 @@ class RDBSelectBuilder implements Findable
      */
     public function order($attribute = 'id', $direction = 'ASC') : self
     {
-        $this->listParams['orderBy'] = $attribute;
-        $this->listParams['order'] = $direction;
+        $this->params['orderBy'] = $attribute;
+        $this->params['order'] = $direction;
 
         return $this;
     }
@@ -251,8 +292,8 @@ class RDBSelectBuilder implements Findable
      */
     public function limit(?int $offset = null, ?int $limit = null) : self
     {
-        $this->listParams['offset'] = $offset;
-        $this->listParams['limit'] = $limit;
+        $this->params['offset'] = $offset;
+        $this->params['limit'] = $limit;
 
         return $this;
     }
@@ -262,7 +303,7 @@ class RDBSelectBuilder implements Findable
      */
     public function select(array $select) : self
     {
-        $this->listParams['select'] = $select;
+        $this->params['select'] = $select;
 
         return $this;
     }
@@ -272,12 +313,22 @@ class RDBSelectBuilder implements Findable
      */
     public function groupBy(array $groupBy) : self
     {
-        $this->listParams['groupBy'] = $groupBy;
+        $this->params['groupBy'] = $groupBy;
 
         return $this;
     }
 
-    protected function getSelectParams(array $params = [])
+    /**
+     * Builds result select parameters.
+     */
+    public function build() : RDBSelectParams
+    {
+        $this->processExecutableCheck();
+
+        return new RDBSelectParams($this->entityType, $this->getMergedParams());
+    }
+
+    protected function getMergedParams(array $params = []) : array
     {
         if (isset($params['whereClause'])) {
             $params['whereClause'] = $params['whereClause'];
@@ -304,19 +355,19 @@ class RDBSelectBuilder implements Findable
             unset($params['havingClause']);
         }
 
-        if (!empty($params['leftJoins']) && !empty($this->listParams['leftJoins'])) {
-            foreach ($this->listParams['leftJoins'] as $j) {
+        if (!empty($params['leftJoins']) && !empty($this->params['leftJoins'])) {
+            foreach ($this->params['leftJoins'] as $j) {
                 $params['leftJoins'][] = $j;
             }
         }
 
-        if (!empty($params['joins']) && !empty($this->listParams['joins'])) {
-            foreach ($this->listParams['joins'] as $j) {
+        if (!empty($params['joins']) && !empty($this->params['joins'])) {
+            foreach ($this->params['joins'] as $j) {
                 $params['joins'][] = $j;
             }
         }
 
-        $params = array_replace_recursive($this->listParams, $params);
+        $params = array_replace_recursive($this->params, $params);
 
         return $params;
     }

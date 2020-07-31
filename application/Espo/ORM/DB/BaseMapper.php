@@ -1039,7 +1039,6 @@ abstract class BaseMapper implements Mapper
         return $columnList;
     }
 
-
     protected function getInsertValueList(Entity $entity) : array
     {
         $valueList = [];

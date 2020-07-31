@@ -452,17 +452,17 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return intval($count);
     }
 
-    public function max(string $attribute)
+    public function max(string $attribute, array $params = [])
     {
         return $this->getMapper()->max($this->seed, $params, $attribute);
     }
 
-    public function min(string $attribute)
+    public function min(string $attribute, array $params = [])
     {
         return $this->getMapper()->min($this->seed, $params, $attribute);
     }
 
-    public function sum(string $attribute)
+    public function sum(string $attribute, array $params = [])
     {
         return $this->getMapper()->sum($this->seed, $params, $attribute);
     }
@@ -601,11 +601,10 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this->isTableLocked;
     }
 
-    /**
-     * Create a select builder.
-     */
-    public function createSelectBuilder() : RDBSelectBuilder
+    protected function createSelectBuilder() : RDBSelectBuilder
     {
-        return new RDBSelectBuilder($this);
+        $builder = new RDBSelectBuilder($this->getEntityManager());
+        $builder->from($this->getEntityType());
+        return $builder;
     }
 }

@@ -65,6 +65,10 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($entity));
 
         $this->repository = new Repository('Test', $entityManager, $entityFactory);
+
+        $entityManager
+            ->method('getRepository')
+            ->will($this->returnValue($this->repository));
     }
 
     protected function createEntity(string $entityType, string $className)
