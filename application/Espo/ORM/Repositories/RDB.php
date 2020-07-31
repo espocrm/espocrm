@@ -36,26 +36,12 @@ use Espo\ORM\{
     Entity,
     Repository,
     DB\Mapper,
+    RDBSelectBuilder as RDBSelectBuilder,
 };
 
 class RDB extends Repository implements Findable, Relatable, Removable
 {
     protected $mapper;
-
-    /**
-     * @var array Where clause array. To be used in further find operation.
-     */
-    protected $whereClause = [];
-
-    /**
-     * @var array Having clause array.
-     */
-    protected $havingClause = [];
-
-    /**
-     * @var array Parameters to be used in further find operations.
-     */
-    protected $listParams = [];
 
     private $isTableLocked = false;
 
@@ -83,16 +69,6 @@ class RDB extends Repository implements Findable, Relatable, Removable
      */
     public function handleSelectParams(&$params)
     {
-    }
-
-    /**
-     * Reset select parameters.
-     */
-    public function reset()
-    {
-        $this->whereClause = [];
-        $this->havingClause = [];
-        $this->listParams = [];
     }
 
     /**
@@ -204,25 +180,25 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
     public function find(array $params = []) : Collection
     {
-        $params = $this->getSelectParams($params);
-
         if (empty($params['skipAdditionalSelectParams'])) {
             $this->handleSelectParams($params);
         }
 
         $collection = $this->getMapper()->select($this->seed, $params);
 
-        $this->reset();
-
         return $collection;
     }
 
     public function findOne(array $params = []) : ?Entity
     {
+        unset($params['returnSthCollection']);
+
         $collection = $this->limit(0, 1)->find($params);
+
         if (count($collection)) {
             return $collection[0];
         }
+
         return null;
     }
 
@@ -234,8 +210,6 @@ class RDB extends Repository implements Findable, Relatable, Removable
             $collection = $this->getEntityManager()->createSthCollection($this->entityType);
             $collection->setQuery($sql);
         }
-
-        $this->reset();
 
         return $collection;
     }
@@ -266,6 +240,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
         if (!$entity->id) {
             return 0;
         }
+
         $entityType =  $entity->getRelationParam($relationName, 'entity');
 
         if ($entityType && empty($params['skipAdditionalSelectParams'])) {
@@ -466,45 +441,30 @@ class RDB extends Repository implements Findable, Relatable, Removable
         $this->afterMassRelate($entity, $relationName, $params, $options);
     }
 
-    /** @deprecated */
-    public function getAll()
-    {
-        $this->reset();
-        return $this->find();
-    }
-
     public function count(array $params = []) : int
     {
         if (empty($params['skipAdditionalSelectParams'])) {
             $this->handleSelectParams($params);
         }
 
-        $params = $this->getSelectParams($params);
         $count = $this->getMapper()->count($this->seed, $params);
-        $this->reset();
 
         return intval($count);
     }
 
-    public function max(string $field)
+    public function max(string $attribute)
     {
-        $params = $this->getSelectParams();
-
-        return $this->getMapper()->max($this->seed, $params, $field);
+        return $this->getMapper()->max($this->seed, $params, $attribute);
     }
 
-    public function min(string $field)
+    public function min(string $attribute)
     {
-        $params = $this->getSelectParams();
-
-        return $this->getMapper()->min($this->seed, $params, $field);
+        return $this->getMapper()->min($this->seed, $params, $attribute);
     }
 
-    public function sum(string $field)
+    public function sum(string $attribute)
     {
-        $params = $this->getSelectParams();
-
-        return $this->getMapper()->sum($this->seed, $params, $field);
+        return $this->getMapper()->sum($this->seed, $params, $attribute);
     }
 
     /**
@@ -525,32 +485,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
      * ->join([[$relationName, $alias, $conditions], ...])
      * ```
      */
-    public function join($relationName, ?string $alias = null, ?array $conditions = null) : self
+    public function join($relationName, ?string $alias = null, ?array $conditions = null) : RDBSelectBuilder
     {
-        if (empty($this->listParams['joins'])) {
-            $this->listParams['joins'] = [];
-        }
-
-        if (is_array($relationName)) {
-            $joinList = $relationName;
-            foreach ($joinList as $item) {
-                $this->listParams['joins'][] = $item;
-            }
-            return $this;
-        }
-
-        if (is_null($alias) && is_null($conditions)) {
-            $this->listParams['joins'][] = $relationName;
-            return $this;
-        }
-
-        if (is_null($conditions)) {
-            $this->listParams['joins'][] = [$relationName, $alias];
-            return $this;
-        }
-
-        $this->listParams['joins'][] = [$relationName, $alias, $conditions];
-        return $this;
+        return $this->createSelectBuilder()->join($relationName, $alias, $conditions);
     }
 
     /**
@@ -560,52 +497,25 @@ class RDB extends Repository implements Findable, Relatable, Removable
      *
      * This method works the same way as `join` method.
      */
-    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : self
+    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : RDBSelectBuilder
     {
-        if (empty($this->listParams['leftJoins'])) {
-            $this->listParams['leftJoins'] = [];
-        }
-
-        if (is_array($relationName)) {
-            $joinList = $relationName;
-            foreach ($joinList as $item) {
-                $this->listParams['leftJoins'][] = $item;
-            }
-            return $this;
-        }
-
-        if (is_null($alias) && is_null($conditions)) {
-            $this->listParams['leftJoins'][] = $relationName;
-            return $this;
-        }
-
-        if (is_null($conditions)) {
-            $this->listParams['leftJoins'][] = [$relationName, $alias];
-            return $this;
-        }
-
-        $this->listParams['leftJoins'][] = [$relationName, $alias, $conditions];
-        return $this;
+        return $this->createSelectBuilder()->leftJoin($relationName, $alias, $conditions);
     }
 
     /**
      * Set DISTINCT parameter.
      */
-    public function distinct() : self
+    public function distinct() : RDBSelectBuilder
     {
-        $this->listParams['distinct'] = true;
-
-        return $this;
+        return $this->createSelectBuilder()->distinct();
     }
 
     /**
      * Set to return STH collection. Recommended fetching large number of records.
      */
-    public function sth() : self
+    public function sth() : RDBSelectBuilder
     {
-        $this->listParams['returnSthCollection'] = true;
-
-        return $this;
+        return $this->createSelectBuilder()->sth();
     }
 
     /**
@@ -615,18 +525,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
      * * `where(array $whereClause)`
      * * `where(string $key, string $value)`
      */
-    public function where($param1 = [], $param2 = null) : self
+    public function where($param1 = [], $param2 = null) : RDBSelectBuilder
     {
-        if (is_array($param1)) {
-            $this->whereClause = $param1 + $this->whereClause;
-
-        } else {
-            if (!is_null($param2)) {
-                $this->whereClause[] = [$param1 => $param2];
-            }
-        }
-
-        return $this;
+        return $this->createSelectBuilder()->where($param1, $param2);
     }
 
     /**
@@ -636,17 +537,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
      * * `having(array $havingClause)`
      * * `having(string $key, string $value)`
      */
-    public function having($param1 = [], $param2 = null) : self
+    public function having($param1 = [], $param2 = null) : RDBSelectBuilder
     {
-        if (is_array($param1)) {
-            $this->havingClause = $param1 + $this->havingClause;
-        } else {
-            if (!is_null($param2)) {
-                $this->havingClause[] = [$param1 => $param2];
-            }
-        }
-
-        return $this;
+        return $this->createSelectBuilder()->having($param1, $param2);
     }
 
     /**
@@ -655,97 +548,33 @@ class RDB extends Repository implements Findable, Relatable, Removable
      * @param string|array $attribute An attribute to order by or order definitions as an array.
      * @param bool|string $direction TRUE for DESC order.
      */
-    public function order($attribute = 'id', $direction = 'ASC') : self
+    public function order($attribute = 'id', $direction = 'ASC') : RDBSelectBuilder
     {
-        $this->listParams['orderBy'] = $attribute;
-        $this->listParams['order'] = $direction;
-
-        return $this;
+        return $this->createSelectBuilder()->order($attribute, $direction);
     }
 
     /**
      * Apply OFFSET and LIMIT.
      */
-    public function limit(?int $offset = null, ?int $limit = null) : self
+    public function limit(?int $offset = null, ?int $limit = null) : RDBSelectBuilder
     {
-        $this->listParams['offset'] = $offset;
-        $this->listParams['limit'] = $limit;
-
-        return $this;
+        return $this->createSelectBuilder()->limit($offset, $limit);
     }
 
     /**
      * Specify SELECT. Which attributes to select. All attributes are selected by default.
      */
-    public function select(array $select) : self
+    public function select(array $select) : RDBSelectBuilder
     {
-        $this->listParams['select'] = $select;
-
-        return $this;
+        return $this->createSelectBuilder()->select($select);
     }
 
     /**
      * Specify GROUP BY.
      */
-    public function groupBy(array $groupBy) : self
+    public function groupBy(array $groupBy) : RDBSelectBuilder
     {
-        $this->listParams['groupBy'] = $groupBy;
-
-        return $this;
-    }
-
-    public function setListParams(array $params = [])
-    {
-        $this->listParams = $params;
-    }
-
-    public function getListParams()
-    {
-        return $this->listParams;
-    }
-
-    protected function getSelectParams(array $params = [])
-    {
-        if (isset($params['whereClause'])) {
-            $params['whereClause'] = $params['whereClause'];
-            if (!empty($this->whereClause)) {
-                $params['whereClause'][] = $this->whereClause;
-            }
-        } else {
-            $params['whereClause'] = $this->whereClause;
-        }
-        if (!empty($params['havingClause'])) {
-            $params['havingClause'] = $params['havingClause'];
-            if (!empty($this->havingClause)) {
-                $params['havingClause'][] = $this->havingClause;
-            }
-        } else {
-            $params['havingClause'] = $this->havingClause;
-        }
-
-        if (empty($params['whereClause'])) {
-            unset($params['whereClause']);
-        }
-
-        if (empty($params['havingClause'])) {
-            unset($params['havingClause']);
-        }
-
-        if (!empty($params['leftJoins']) && !empty($this->listParams['leftJoins'])) {
-            foreach ($this->listParams['leftJoins'] as $j) {
-                $params['leftJoins'][] = $j;
-            }
-        }
-
-        if (!empty($params['joins']) && !empty($this->listParams['joins'])) {
-            foreach ($this->listParams['joins'] as $j) {
-                $params['joins'][] = $j;
-            }
-        }
-
-        $params = array_replace_recursive($this->listParams, $params);
-
-        return $params;
+        return $this->createSelectBuilder()->groupBy($groupBy);
     }
 
     protected function getPDO()
@@ -770,5 +599,10 @@ class RDB extends Repository implements Findable, Relatable, Removable
     protected function isTableLocked()
     {
         return $this->isTableLocked;
+    }
+
+    protected function createSelectBuilder() : RDBSelectBuilder
+    {
+        return new RDBSelectBuilder($this);
     }
 }
