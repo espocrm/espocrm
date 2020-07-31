@@ -601,7 +601,10 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this->isTableLocked;
     }
 
-    protected function createSelectBuilder() : RDBSelectBuilder
+    /**
+     * Create a select builder.
+     */
+    public function createSelectBuilder() : RDBSelectBuilder
     {
         return new RDBSelectBuilder($this);
     }

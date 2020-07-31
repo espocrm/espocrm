@@ -277,7 +277,6 @@ class RDBSelectBuilder implements Findable
         return $this;
     }
 
-
     protected function getSelectParams(array $params = [])
     {
         if (isset($params['whereClause'])) {
