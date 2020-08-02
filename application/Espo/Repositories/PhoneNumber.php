@@ -405,19 +405,19 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                 }
             }
 
-            $query = "
-                INSERT entity_phone_number
-                    (entity_id, entity_type, phone_number_id, `primary`)
-                    VALUES
-                    (
-                        ".$pdo->quote($entity->id).",
-                        ".$pdo->quote($entity->getEntityType()).",
-                        ".$pdo->quote($phoneNumber->id).",
-                        ".$pdo->quote((int)($number === $primary))."
-                    )
-                ON DUPLICATE KEY UPDATE deleted = 0, `primary` = ".$pdo->quote((int)($number === $primary))."
-            ";
-            $this->getEntityManager()->runQuery($query, true);
+            $entityPhoneNumber = $this->getEntityManager()->getEntity('EntityPhoneNumber');
+            $entityPhoneNumber->set([
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+                'phoneNumberId' => $phoneNumber->id,
+                'primary' => $number === $primary,
+                'deleted' => false,
+            ]);
+
+            $this->getEntityManager()->getMapper('RDB')->insertOnDuplicateUpdate($entityPhoneNumber, [
+                'primary',
+                'deleted',
+            ]);
         }
 
         if ($primary) {

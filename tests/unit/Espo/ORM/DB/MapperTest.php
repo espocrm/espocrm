@@ -349,6 +349,22 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->insert($this->post);
     }
 
+    public function testInsertUpdate()
+    {
+        $query =
+            "INSERT INTO `post` (`id`, `name`, `deleted`) VALUES ('1', 'test', '0') " .
+            "ON DUPLICATE KEY UPDATE `name` = 'test', `deleted` = '0'";
+        $return = true;
+        $this->mockQuery($query, $return);
+
+        $this->post->reset();
+        $this->post->id = '1';
+        $this->post->set('name', 'test');
+        $this->post->set('deleted', false);
+
+        $this->db->insertOnDuplicateUpdate($this->post, ['name', 'deleted']);
+    }
+
     public function testMassInsert()
     {
         $query = "INSERT INTO `post` (`id`, `name`) VALUES ('1', 'test1'), ('2', 'test2')";

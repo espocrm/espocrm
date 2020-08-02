@@ -70,6 +70,9 @@ abstract class BaseMapper implements Mapper
         $this->metadata = $metadata;
     }
 
+    /**
+     * Get a single entity from DB by ID.
+     */
     public function selectById(Entity $entity, string $id, ?array $params = null) : ?Entity
     {
         $params = $params ?? [];
@@ -94,6 +97,9 @@ abstract class BaseMapper implements Mapper
         return null;
     }
 
+    /**
+     * Get a number of entities in DB.
+     */
     public function count(Entity $entity, ?array $params = null) : int
     {
         return (int) $this->aggregate($entity, $params, 'COUNT', 'id');
@@ -114,6 +120,9 @@ abstract class BaseMapper implements Mapper
         return $this->aggregate($entity, $params, 'SUM', $attribute);
     }
 
+    /**
+     * Select enities from DB.
+     */
     public function select(Entity $entity, ?array $params = null) : Collection
     {
         $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
@@ -121,6 +130,9 @@ abstract class BaseMapper implements Mapper
         return $this->selectByQuery($entity, $sql, $params);
     }
 
+    /**
+     * Select enities from DB by a SQL query.
+     */
     public function selectByQuery(Entity $entity, $sql, ?array $params = null) : Collection
     {
         $params = $params ?? [];
@@ -178,6 +190,9 @@ abstract class BaseMapper implements Mapper
         return null;
     }
 
+    /**
+     * Select related entities from DB.
+     */
     public function selectRelated(Entity $entity, string $relationName, ?array $params = null)
     {
         return $this->selectRelatedInternal($entity, $relationName, $params);
@@ -386,6 +401,9 @@ abstract class BaseMapper implements Mapper
         return false;
     }
 
+    /**
+     * Get a number of related enities in DB.
+     */
     public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int
     {
         return (int) $this->selectRelatedInternal($entity, $relationName, $params, true);
@@ -408,7 +426,7 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
-     * Update a relationshiop columns.
+     * Update relationship columns.
      */
     public function updateRelation(Entity $entity, string $relationName, ?string $id = null, array $columnData) : bool
     {
@@ -588,13 +606,17 @@ abstract class BaseMapper implements Mapper
         }
     }
 
-    public function runQuery($query, $rerunIfDeadlock = false)
+    public function runQuery(string $query, bool $rerunIfDeadlock = false)
     {
         try {
             return $this->pdo->query($query);
         } catch (\Exception $e) {
             if ($rerunIfDeadlock) {
-                if ($e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
+                if (
+                    isset($e->errorInfo) &&
+                    $e->errorInfo[0] == 40001 &&
+                    $e->errorInfo[1] == 1213
+                ) {
                     return $this->pdo->query($query);
                 } else {
                     throw $e;
@@ -988,9 +1010,24 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
+     * Insert an entity into DB.
+     *
      * @todo Set 'id' if autoincrement (as fetched).
      */
     public function insert(Entity $entity)
+    {
+        $this->insertInternal($entity);
+    }
+
+    /**
+     * Insert an entity into DB, on duplicate key update specified attributes.
+     */
+    public function insertOnDuplicateUpdate(Entity $entity, array $onDuplicateUpdateAttributeList)
+    {
+        $this->insertInternal($entity, $onDuplicateUpdateAttributeList);
+    }
+
+    protected function insertInternal(Entity $entity, ?array $onDuplicateUpdateAttributeList = null)
     {
         $dataList = $this->toValueMap($entity);
 
@@ -1000,11 +1037,25 @@ abstract class BaseMapper implements Mapper
         $fieldsPart = "`" . implode("`, `", $columnList) . "`";
         $valuesPart = implode(", ", $valueList);
 
-        $sql = $this->composeInsertQuery($this->toDb($entity->getEntityType()), $fieldsPart, $valuesPart);
+        $onDuplicatePart = null;
 
-        $this->pdo->query($sql);
+        if ($onDuplicateUpdateAttributeList && count($onDuplicateUpdateAttributeList)) {
+            $onDuplicateSetMap = $this->getInsertOnDuplicateSetMap($entity, $onDuplicateUpdateAttributeList);
+            $onDuplicateSubPartList = [];
+            foreach ($onDuplicateSetMap as $attribute => $value) {
+                $onDuplicateSubPartList[] = "`" . $this->toDb($attribute) . "` = " . $this->quote($value);
+            }
+            $onDuplicatePart = implode(', ', $onDuplicateSubPartList);
+        }
+
+        $sql = $this->composeInsertQuery($this->toDb($entity->getEntityType()), $fieldsPart, $valuesPart, $onDuplicatePart);
+
+        $this->runQuery($sql, true);
     }
 
+    /**
+     * Mass insert collection into DB.
+     */
     public function massInsert(Collection $collection)
     {
         if (!count($collection)) return;
@@ -1023,7 +1074,7 @@ abstract class BaseMapper implements Mapper
 
         $sql = $this->composeInsertQuery($this->toDb($entity->getEntityType()), $fieldsPart, $valuesPartList);
 
-        $result = $this->pdo->query($sql);
+        $this->runQuery($sql, true);
     }
 
     protected function getInsertColumnList(Entity $entity) : array
@@ -1054,6 +1105,20 @@ abstract class BaseMapper implements Mapper
         return $valueList;
     }
 
+    protected function getInsertOnDuplicateSetMap(Entity $entity, array $attributeList)
+    {
+        $list = [];
+
+        foreach ($attributeList as $a) {
+            $list[$a] = $this->prepareValueForInsert($entity, $entity->get($a));
+        }
+
+        return $list;
+    }
+
+    /**
+     * Update an entity in DB.
+     */
     public function update(Entity $entity)
     {
         $valueMap = $this->toValueMap($entity);
@@ -1109,6 +1174,9 @@ abstract class BaseMapper implements Mapper
         return $value;
     }
 
+    /**
+     * Delete an entity from DB.
+     */
     public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false)
     {
         if (empty($entityType) || empty($id)) return false;
@@ -1124,7 +1192,7 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
-     * Mass delete from database by specified whereClause.
+     * Mass delete from DB by specified whereClause.
      *
      * @return Number of deleted records or null if failure.
      */
@@ -1151,6 +1219,9 @@ abstract class BaseMapper implements Mapper
         return null;
     }
 
+    /**
+     * Unmark an entity as deleted in DB.
+     */
     public function restoreDeleted(string $entityType, string $id)
     {
         if (empty($entityType) || empty($id)) return false;
@@ -1161,6 +1232,9 @@ abstract class BaseMapper implements Mapper
         $this->pdo->query($sql);
     }
 
+    /**
+     * Mark an entity as deleted in DB.
+     */
     public function delete(Entity $entity) : bool
     {
         $entity->set('deleted', true);
@@ -1230,8 +1304,7 @@ abstract class BaseMapper implements Mapper
         return $join;
     }
 
-
-    protected function composeInsertQuery($table, $fields, $values)
+    protected function composeInsertQuery(string $table, string $fields, $values, ?string $onDuplicate = null) : string
     {
         $sql = "INSERT INTO `{$table}`";
         $sql .= " ({$fields})";
@@ -1241,10 +1314,14 @@ abstract class BaseMapper implements Mapper
             $sql .= " VALUES (" . implode("), (", $values) . ")";
         }
 
+        if ($onDuplicate) {
+            $sql .= " ON DUPLICATE KEY UPDATE " . $onDuplicate;
+        }
+
         return $sql;
     }
 
-    protected function composeUpdateQuery($table, $set, $where)
+    protected function composeUpdateQuery(string $table, string $set, string $where)
     {
         $sql = "UPDATE `{$table}` SET {$set} WHERE {$where}";
 

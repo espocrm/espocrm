@@ -477,20 +477,19 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 }
             }
 
-            $query = "
-                INSERT entity_email_address
-                    (entity_id, entity_type, email_address_id, `primary`)
-                    VALUES
-                    (
-                        ".$pdo->quote($entity->id).",
-                        ".$pdo->quote($entity->getEntityType()).",
-                        ".$pdo->quote($emailAddress->id).",
-                        ".$pdo->quote((int)($address === $primary))."
-                    )
-                ON DUPLICATE KEY UPDATE deleted = 0, `primary` = ".$pdo->quote((int)($address === $primary))."
-            ";
+            $entityEmailAddress = $this->getEntityManager()->getEntity('EntityEmailAddress');
+            $entityEmailAddress->set([
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+                'emailAddressId' => $emailAddress->id,
+                'primary' => $address === $primary,
+                'deleted' => false,
+            ]);
 
-            $this->getEntityManager()->runQuery($query, true);
+            $this->getEntityManager()->getMapper('RDB')->insertOnDuplicateUpdate($entityEmailAddress, [
+                'primary',
+                'deleted',
+            ]);
         }
 
         if ($primary) {
