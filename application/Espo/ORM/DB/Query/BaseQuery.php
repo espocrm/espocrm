@@ -1593,7 +1593,7 @@ abstract class BaseQuery
     /**
      * Compose a WHERE query part from a given where clause.
      */
-    public function createWhereQueryPart(string $entityType, array $whereClause) : string
+    public function buildWherePart(string $entityType, array $whereClause) : string
     {
         $entity = $this->getSeed($entityType);
 
@@ -1945,8 +1945,10 @@ abstract class BaseQuery
         return implode(' ', $joinSqlList);
     }
 
-    public function buildJoinConditionsStatement(Entity $entity, string $alias, array $conditions)
+    public function buildJoinConditionsStatement(string $entityType, string $alias, array $conditions) : string
     {
+        $entity = $this->getSeed($entityType);
+
         $sql = '';
 
         $joinSqlList = [];
