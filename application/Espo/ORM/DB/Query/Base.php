@@ -301,7 +301,7 @@ abstract class Base
      */
     public function createSelectQuery(string $entityType, ?array $params = nul) : string
     {
-        return $this->createSelectingQuery(self::SELECT_METHOD, $entityType, $params);
+        return $this->createSelectQueryInternal($entityType, $params);
     }
 
     /**
@@ -309,10 +309,23 @@ abstract class Base
      */
     public function createDeleteQuery(string $entityType, ?array $params = null) : string
     {
-        $params = $params ?? [];
-        $params['withDeleted'] = true;
+        $params = $this->normilizeParams(self::DELETE_METHOD, $params);
 
-        return $this->createSelectingQuery(self::DELETE_METHOD, $entityType, $params);
+        $entity = $this->getSeed($entityType);
+
+        $wherePart = $this->getWherePart($entity, $params['whereClause'], 'AND', $params);
+        $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order'], $params);
+        $joinsPart = $this->getJoinsPart($entity, $params);
+
+        $sql = $this->composeDeleteQuery(
+            $this->toDb($entityType),
+            $wherePart,
+            $joinsPart,
+            $orderPart,
+            $params['limit']
+        );
+
+        return $sql;
     }
 
     /**
@@ -321,8 +334,6 @@ abstract class Base
     public function createUpdateQuery(string $entityType, ?array $params = null, array $values) : string
     {
         $params = $this->normilizeParams(self::UPDATE_METHOD, $params);
-
-        $params['withDeleted'] = true;
 
         $entity = $this->getSeed($entityType);
 
@@ -338,7 +349,7 @@ abstract class Base
             $wherePart,
             $joinsPart,
             $orderPart,
-            $params['limit'],
+            $params['limit']
         );
 
         return $sql;
@@ -372,11 +383,11 @@ abstract class Base
         return $params;
     }
 
-    protected function createSelectingQuery(string $method, string $entityType, ?array $params = null)
+    protected function createSelectQueryInternal(string $entityType, ?array $params = null) : string
     {
         $entity = $this->getSeed($entityType);
 
-        $params = $this->normilizeParams($method, $params);
+        $params = $this->normilizeParams(self::SELECT_METHOD, $params);
 
         $isAggregation = (bool) ($params['aggregation'] ?? null);
 
@@ -399,17 +410,13 @@ abstract class Base
             $havingPart = $this->getWherePart($entity, $havingClause, 'AND', $params);
         }
 
-        if ($method === self::SELECT_METHOD && !$isAggregation) {
+        if (!$isAggregation) {
             $selectPart = $this->getSelectPart(
                 $entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength'], $params
             );
-        }
 
-        if (!$isAggregation) {
             $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order'], $params);
-        }
 
-        if ($method === self::SELECT_METHOD && !$isAggregation) {
             $additionalSelectPart = $this->getAdditionalSelect($entity, $params);
             if ($additionalSelectPart) {
                 $selectPart .= $additionalSelectPart;
@@ -417,12 +424,12 @@ abstract class Base
         }
 
         if ($isAggregation) {
-            $aggDist = false;
+            $aggregationDistinct = false;
             if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
-                $aggDist = true;
+                $aggregationDistinct = true;
             }
             $params['select'] = [];
-            $selectPart = $this->getAggregationSelectPart($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
+            $selectPart = $this->getAggregationSelectPart($entity, $params['aggregation'], $params['aggregationBy'], $aggregationDistinct);
         }
 
         // @todo remove 'customWhere' support
@@ -441,11 +448,8 @@ abstract class Base
             $havingPart .= $params['customHaving'];
         }
 
-        $joinsPart = $this->getJoinsPart($entity, $params, $method === self::SELECT_METHOD);
-
-        if ($method === self::SELECT_METHOD && !empty($params['groupBy'])) {
-            $groupByPart = $this->getGroupByPart($entity, $params);
-        }
+        $joinsPart = $this->getJoinsPart($entity, $params, true);
+        $groupByPart = $this->getGroupByPart($entity, $params);
 
         $indexKeyList = $this->getIndexKeyList($entityType, $params);
 
@@ -471,8 +475,7 @@ abstract class Base
             return $sql;
         }
 
-        $sql = $this->composeSelectOrDeleteQuery(
-            $method,
+        $sql = $this->composeSelectQuery(
             $this->toDb($entityType),
             $selectPart,
             $joinsPart,
@@ -556,8 +559,12 @@ abstract class Base
         return $joinsPart;
     }
 
-    protected function getGroupByPart(Entity $entity, array $params) : string
+    protected function getGroupByPart(Entity $entity, array $params) : ?string
     {
+        if (empty($params['groupBy'])) {
+            return null;
+        }
+
         $list = [];
         foreach ($params['groupBy'] as $field) {
             $list[] = $this->convertComplexExpression($entity, $field, false, $params);
@@ -2221,45 +2228,13 @@ abstract class Base
         ?string $having = null,
         ?array $indexKeyList = null
     ) : string {
-        return $this->composeSelectOrDeleteQuery(
-            'SELECT',
-            $table,
-            $select,
-            $joins,
-            $where,
-            $order,
-            $offset,
-            $limit,
-            $distinct,
-            $groupBy,
-            $having,
-            $indexKeyList
-        );
-    }
-
-    protected function composeSelectOrDeleteQuery(
-        string $method,
-        string $table,
-        ?string $select = null,
-        ?string $joins = null,
-        ?string $where = null,
-        ?string $order = null,
-        ?int $offset = null,
-        ?int $limit = null,
-        bool $distinct = false,
-        ?string $groupBy = null,
-        ?string $having = null,
-        ?array $indexKeyList = null
-    ) : string {
-        $sql = "{$method}";
+        $sql = "SELECT";
 
         if (!empty($distinct) && empty($groupBy)) {
             $sql .= " DISTINCT";
         }
 
-        if ($method === self::SELECT_METHOD) {
-            $sql .= " {$select}";
-        }
+        $sql .= " {$select}";
 
         $sql .= " FROM `{$table}`";
 
@@ -2289,11 +2264,39 @@ abstract class Base
             $sql .= " ORDER BY {$order}";
         }
 
-        if ($method === self::SELECT_METHOD  && is_null($offset) && !is_null($limit)) {
+        if (is_null($offset) && !is_null($limit)) {
             $offset = 0;
         }
 
         $sql = $this->limit($sql, $offset, $limit);
+
+        return $sql;
+    }
+
+    protected function composeDeleteQuery(
+        string $table,
+        string $where,
+        ?string $joins,
+        ?string $order,
+        ?int $limit
+    ) : string {
+        $sql = "DELETE FROM `{$table}`";
+
+        if ($joins) {
+            $sql .= " {$joins}";
+        }
+
+        if ($where) {
+            $sql .= " WHERE {$where}";
+        }
+
+        if ($order) {
+            $sql .= " ORDER BY {$order}";
+        }
+
+        if ($limit) {
+            $sql = $this->limit($sql, null, $limit);
+        }
 
         return $sql;
     }
