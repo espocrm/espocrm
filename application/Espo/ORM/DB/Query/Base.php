@@ -1133,7 +1133,7 @@ abstract class Base
         $specifiedList = is_array($itemList) ? true : false;
 
         if (empty($itemList)) {
-            $attributeList = array_keys($entity->fields);
+            $attributeList = $entity->getAttributeList();
         } else {
             $attributeList = $itemList;
         }
@@ -1176,7 +1176,7 @@ abstract class Base
                         $part = $this->quote('');
                     }
                 } else {
-                    if (!array_key_exists($attribute[0], $entity->fields)) {
+                    if (!$entity->hasAttribute($attribute[0])) {
                         $part = $this->convertComplexExpression($entity, $attribute[0], $distinct, $params);
                     } else {
                         $fieldDefs = $entity->getAttributes()[$attribute[0]];
@@ -1200,7 +1200,7 @@ abstract class Base
 
             $attribute = $this->sanitizeSelectItem($attribute);
 
-            if (array_key_exists($attribute, $entity->fields)) {
+            if ($entity->hasAttribute($attribute)) {
                 $fieldDefs = $entity->getAttributes()[$attribute];
             } else {
                 $part = $this->convertComplexExpression($entity, $attribute, $distinct, $params);
@@ -1276,7 +1276,7 @@ abstract class Base
             }
         }
 
-        foreach ($entity->relations as $relationName => $r) {
+        foreach ($entity->getRelations() as $relationName => $r) {
             $type = $r['type'] ?? null;
             if ($type == Entity::BELONGS_TO || $type == Entity::HAS_ONE) {
                 if (!empty($r['noJoin'])) continue;
@@ -1478,7 +1478,7 @@ abstract class Base
 
         $occuranceHash = [];
 
-        foreach ($entity->relations as $name => $r) {
+        foreach ($entity->getRelations() as $name => $r) {
             if ($r['type'] == Entity::BELONGS_TO || $r['type'] == Entity::HAS_ONE) {
 
                 if (!array_key_exists($name, $aliases)) {
@@ -1743,7 +1743,7 @@ abstract class Base
                         $leftPart = '';
                         if (isset($fieldDefs['relation'])) {
                             $relationName = $fieldDefs['relation'];
-                            if (isset($entity->relations[$relationName])) {
+                            if ($entity->hasRelation($relationName)) {
                                 $alias = $this->getAlias($entity, $relationName);
                                 if ($alias) {
                                     if (!is_array($fieldDefs['foreign'])) {
@@ -2055,7 +2055,7 @@ abstract class Base
 
         $relationName = $name;
 
-        $relOpt = $entity->relations[$relationName];
+        $relParams = $entity->getRelations()[$relationName];
         $keySet = $this->getKeys($entity, $relationName);
 
         if (!$alias) {
@@ -2064,11 +2064,11 @@ abstract class Base
 
         $alias = $this->sanitize($alias);
 
-        if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-            $conditions = array_merge($conditions, $relOpt['conditions']);
+        if (!empty($relParams['conditions']) && is_array($relParams['conditions'])) {
+            $conditions = array_merge($conditions, $relParams['conditions']);
         }
 
-        $type = $relOpt['type'];
+        $type = $relParams['type'];
 
         switch ($type) {
             case Entity::MANY_MANY:
@@ -2077,10 +2077,10 @@ abstract class Base
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $relTable = $this->toDb($relOpt['relationName']);
-                $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
+                $relTable = $this->toDb($relParams['relationName']);
+                $midAlias = lcfirst($this->sanitize($relParams['relationName']));
 
-                $distantTable = $this->toDb($relOpt['entity']);
+                $distantTable = $this->toDb($relParams['entity']);
 
                 $midAlias = $alias . 'Middle';
 
@@ -2138,7 +2138,7 @@ abstract class Base
             case Entity::HAS_MANY:
             case Entity::HAS_ONE:
                 $foreignKey = $keySet['foreignKey'];
-                $distantTable = $this->toDb($relOpt['entity']);
+                $distantTable = $this->toDb($relParams['entity']);
 
                 $sql =
                     "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." .
@@ -2159,7 +2159,7 @@ abstract class Base
             case Entity::HAS_CHILDREN:
                 $foreignKey = $keySet['foreignKey'];
                 $foreignType = $keySet['foreignType'];
-                $distantTable = $this->toDb($relOpt['entity']);
+                $distantTable = $this->toDb($relParams['entity']);
 
                 $sql =
                     "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." .
@@ -2287,18 +2287,18 @@ abstract class Base
      */
     public function getKeys(Entity $entity, string $relationName) : array
     {
-        $relOpt = $entity->relations[$relationName];
-        $relType = $relOpt['type'];
+        $relParams = $entity->getRelations()[$relationName];
+        $relType = $relParams['type'];
 
         switch ($relType) {
             case Entity::BELONGS_TO:
                 $key = $this->toDb($entity->getEntityType()) . 'Id';
-                if (isset($relOpt['key'])) {
-                    $key = $relOpt['key'];
+                if (isset($relParams['key'])) {
+                    $key = $relParams['key'];
                 }
                 $foreignKey = 'id';
-                if (isset($relOpt['foreignKey'])){
-                    $foreignKey = $relOpt['foreignKey'];
+                if (isset($relParams['foreignKey'])){
+                    $foreignKey = $relParams['foreignKey'];
                 }
                 return [
                     'key' => $key,
@@ -2308,12 +2308,12 @@ abstract class Base
             case Entity::HAS_MANY:
             case Entity::HAS_ONE:
                 $key = 'id';
-                if (isset($relOpt['key'])){
-                    $key = $relOpt['key'];
+                if (isset($relParams['key'])){
+                    $key = $relParams['key'];
                 }
                 $foreignKey = $this->toDb($entity->getEntityType()) . 'Id';
-                if (isset($relOpt['foreignKey'])) {
-                    $foreignKey = $relOpt['foreignKey'];
+                if (isset($relParams['foreignKey'])) {
+                    $foreignKey = $relParams['foreignKey'];
                 }
                 return [
                     'key' => $key,
@@ -2322,16 +2322,16 @@ abstract class Base
 
             case Entity::HAS_CHILDREN:
                 $key = 'id';
-                if (isset($relOpt['key'])){
-                    $key = $relOpt['key'];
+                if (isset($relParams['key'])){
+                    $key = $relParams['key'];
                 }
                 $foreignKey = 'parentId';
-                if (isset($relOpt['foreignKey'])) {
-                    $foreignKey = $relOpt['foreignKey'];
+                if (isset($relParams['foreignKey'])) {
+                    $foreignKey = $relParams['foreignKey'];
                 }
                 $foreignType = 'parentType';
-                if (isset($relOpt['foreignType'])) {
-                    $foreignType = $relOpt['foreignType'];
+                if (isset($relParams['foreignType'])) {
+                    $foreignType = $relParams['foreignType'];
                 }
                 return [
                     'key' => $key,
@@ -2341,18 +2341,18 @@ abstract class Base
 
             case Entity::MANY_MANY:
                 $key = 'id';
-                if(isset($relOpt['key'])){
-                    $key = $relOpt['key'];
+                if(isset($relParams['key'])){
+                    $key = $relParams['key'];
                 }
                 $foreignKey = 'id';
-                if(isset($relOpt['foreignKey'])){
-                    $foreignKey = $relOpt['foreignKey'];
+                if(isset($relParams['foreignKey'])){
+                    $foreignKey = $relParams['foreignKey'];
                 }
                 $nearKey = $this->toDb($entity->getEntityType()) . 'Id';
-                $distantKey = $this->toDb($relOpt['entity']) . 'Id';
-                if (isset($relOpt['midKeys']) && is_array($relOpt['midKeys'])){
-                    $nearKey = $relOpt['midKeys'][0];
-                    $distantKey = $relOpt['midKeys'][1];
+                $distantKey = $this->toDb($relParams['entity']) . 'Id';
+                if (isset($relParams['midKeys']) && is_array($relParams['midKeys'])){
+                    $nearKey = $relParams['midKeys'][0];
+                    $distantKey = $relParams['midKeys'][1];
                 }
                 return [
                     'key' => $key,
@@ -2366,7 +2366,7 @@ abstract class Base
                 return [
                     'key' => $key,
                     'typeKey' => $typeKey,
-                    'foreignKey' => 'id'
+                    'foreignKey' => 'id',
                 ];
         }
 
