@@ -336,14 +336,14 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         foreach ($toRemoveList as $number) {
             $phoneNumber = $this->getByNumber($number);
             if ($phoneNumber) {
-                $query = "
-                    DELETE FROM  entity_phone_number
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        phone_number_id = ".$pdo->quote($phoneNumber->id)."
-                ";
-                $sth = $pdo->prepare($query);
+                $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('EntityPhoneNumber', [
+                    'whereClause' => [
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'phoneNumberId' => $phoneNumber->id,
+                    ],
+                ]);
+                $sth = $pdo->prepare($sql);
                 $sth->execute();
             }
         }

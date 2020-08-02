@@ -411,14 +411,14 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         foreach ($toRemoveList as $address) {
             $emailAddress = $this->getByAddress($address);
             if ($emailAddress) {
-                $query = "
-                    DELETE FROM entity_email_address
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        email_address_id = ".$pdo->quote($emailAddress->id)."
-                ";
-                $sth = $pdo->prepare($query);
+                $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('EntityEmailAddress', [
+                    'whereClause' => [
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'emailAddressId' => $emailAddress->id,
+                    ],
+                ]);
+                $sth = $pdo->prepare($sql);
                 $sth->execute();
             }
         }
