@@ -668,7 +668,9 @@ abstract class BaseMapper implements Mapper
                 if ($foreignRelationName) {
                     if ($relEntity->getRelationParam($foreignRelationName, 'type') === Entity::HAS_ONE) {
                         $setPart = $this->toDb($key) . " = " . $this->quote(null);
-                        $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id!=' => $entity->id, $key => $id, 'deleted' => 0]);
+                        $wherePart = $this->query->createWhereQueryPart(
+                            $entity->getEntityType(), ['id!=' => $entity->id, $key => $id, 'deleted' => 0]
+                        );
                         $sql = $this->composeUpdateQuery(
                             $this->toDb($entity->getEntityType()),
                             $setPart,
