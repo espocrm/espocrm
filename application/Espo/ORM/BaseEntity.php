@@ -71,11 +71,6 @@ abstract class BaseEntity implements Entity
     {
         $this->entityType = $entityType ?? null;
 
-        /*if (!$this->entityType) {
-            $classNames = explode('\\', get_class($this));
-            $this->entityType = end($classNames);
-        }*/
-
         $this->entityManager = $entityManager;
 
         $this->fields = $defs['fields'] ?? $this->fields;
