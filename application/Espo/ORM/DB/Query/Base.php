@@ -320,7 +320,28 @@ abstract class Base
      */
     public function createUpdateQuery(string $entityType, ?array $params = null, array $values) : string
     {
+        $params = $this->normilizeParams(self::UPDATE_METHOD, $params);
 
+        $params['withDeleted'] = true;
+
+        $entity = $this->getSeed($entityType);
+
+        $wherePart = $this->getWherePart($entity, $params['whereClause'], 'AND', $params);
+        $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order'], $params);
+        $joinsPart = $this->getJoinsPart($entity, $params);
+
+        $setPart = $this->getSetPart($entity, $values);
+
+        $sql = $this->composeUpdateQuery(
+            $this->toDb($entityType),
+            $setPart,
+            $wherePart,
+            $joinsPart,
+            $orderPart,
+            $params['limit'],
+        );
+
+        return $sql;
     }
 
     protected function normilizeParams(string $method, ?array $params) : array
@@ -363,7 +384,7 @@ abstract class Base
         $havingClause = $params['havingClause'] ?? [];
 
         if (!$params['withDeleted'] && $entity->hasAttribute('deleted')) {
-            $whereClause = $whereClause + ['deleted' => 0];
+            $whereClause = $whereClause + ['deleted' => false];
         }
 
         $selectPart = null;
@@ -1792,7 +1813,7 @@ abstract class Base
                             $wherePartList[] = $leftPart;
                         }
                     } else if (!is_null($value)) {
-                        $wherePartList[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
+                        $wherePartList[] = $leftPart . " " . $operator . " " . $this->quote($value);
                     } else {
                         if ($operator == '=') {
                             $wherePartList[] = $leftPart . " IS NULL";
@@ -1803,7 +1824,7 @@ abstract class Base
                 } else {
                     $valArr = $value;
                     foreach ($valArr as $k => $v) {
-                        $valArr[$k] = $this->pdo->quote($valArr[$k]);
+                        $valArr[$k] = $this->quote($valArr[$k]);
                     }
                     $oppose = '';
                     $emptyValue = '0';
@@ -1986,7 +2007,7 @@ abstract class Base
         if (is_array($right)) {
             $arr = [];
             foreach ($right as $item) {
-                $arr[] = $this->pdo->quote($item);
+                $arr[] = $this->quote($item);
             }
             $operator = "IN";
             if ($operator == '<>') {
@@ -2020,7 +2041,7 @@ abstract class Base
                 return $sql;
             }
 
-            $sql .= " " . $operator . " " . $this->pdo->quote($value);
+            $sql .= " " . $operator . " " . $this->quote($value);
 
             return $sql;
         }
@@ -2114,7 +2135,7 @@ abstract class Base
                     "{$prefix}JOIN `{$relTable}` AS `{$midAlias}`{$indexPart} ON {$this->toDb($entity->getEntityType())}." .
                     $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                     . " AND "
-                    . "{$midAlias}.deleted = " . $this->pdo->quote(0);
+                    . "{$midAlias}.deleted = " . $this->quote(false);
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
@@ -2130,7 +2151,7 @@ abstract class Base
                     $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) .
                     " = {$midAlias}." . $this->toDb($distantKey)
                         . " AND "
-                        . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                        . "{$alias}.deleted = " . $this->quote(false) . "";
                 }
 
                 return $sql;
@@ -2144,7 +2165,7 @@ abstract class Base
                     "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." .
                     $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
-                    . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                    . "{$alias}.deleted = " . $this->quote(false) . "";
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
@@ -2167,7 +2188,7 @@ abstract class Base
                     . " AND "
                     . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
                     . " AND "
-                    . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                    . "{$alias}.deleted = " . $this->quote(false) . "";
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
@@ -2275,6 +2296,76 @@ abstract class Base
         $sql = $this->limit($sql, $offset, $limit);
 
         return $sql;
+    }
+
+    protected function composeUpdateQuery(
+        string $table,
+        string $set,
+        string $where,
+        ?string $joins,
+        ?string $order,
+        ?int $limit
+    ) : string {
+        $sql = "UPDATE `{$table}`";
+
+        if ($joins) {
+            $sql .= " {$joins}";
+        }
+
+        $sql .= " SET {$set}";
+
+        if ($where) {
+            $sql .= " WHERE {$where}";
+        }
+
+        if ($order) {
+            $sql .= " ORDER BY {$order}";
+        }
+
+        if ($limit) {
+            $sql = $this->limit($sql, null, $limit);
+        }
+
+        return $sql;
+    }
+
+    protected function getSetPart(Entity $entity, array $values) : string
+    {
+        if (!count($values)) {
+            throw new Error("No SET values for update query.");
+        }
+
+        $list = [];
+
+        foreach ($values as $attribute => $value) {
+            $isNotValue = false;
+
+            if (substr($attribute, -1) == ':') {
+                $attribute = substr($attribute, 0, -1);
+                $isNotValue = true;
+            }
+
+            if (strpos($attribute, '.') > 0) {
+                list($alias, $attribute) = explode('.', $attribute);
+                $alias = $this->sanitize($alias);
+                $column = $this->toDb($this->sanitize($attribute));
+                $left = "{$alias}.{$column}";
+            } else {
+                $table = $this->toDb($entity->getEntityType());
+                $column = $this->toDb($this->sanitize($attribute));
+                $left = "{$table}.{$column}";
+            }
+
+            if ($isNotValue) {
+                $right = $this->convertComplexExpression($entity, $value);
+            } else {
+                $right = $this->quote($value);
+            }
+
+            $list[] = $left . " = " . $right;
+        }
+
+        return implode(', ', $list);
     }
 
     /**

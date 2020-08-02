@@ -143,13 +143,96 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->createDeleteQuery('Account', [
             'whereClause' => [
                 'name' => 'test',
-                'deleted' => true
+                'deleted' => true,
             ],
         ]);
 
         $expectedSql =
             "DELETE FROM `account` " .
-            "WHERE account.name = 'test' AND account.deleted = '1'";
+            "WHERE account.name = 'test' AND account.deleted = 1";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUpdateQuery1()
+    {
+        $sql = $this->query->createUpdateQuery('Account', [
+            'whereClause' => [
+                'name' => 'test',
+            ],
+        ], [
+            'deleted' => false,
+            'name' => 'hello',
+        ]);
+
+        $expectedSql =
+            "UPDATE `account` " .
+            "SET account.deleted = 0, account.name = 'hello' ".
+            "WHERE account.name = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUpdateQueryWithJoin()
+    {
+        $sql = $this->query->createUpdateQuery('Comment', [
+            'whereClause' => [
+                'name' => 'test',
+            ],
+            'joins' => ['post'],
+        ], [
+            'name:' => 'post.name',
+        ]);
+
+        $expectedSql =
+            "UPDATE `comment` " .
+            "JOIN `post` AS `post` ON comment.post_id = post.id ".
+            "SET comment.name = post.name ".
+            "WHERE comment.name = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUpdateQueryWithOrder()
+    {
+        $sql = $this->query->createUpdateQuery('Account', [
+            'whereClause' => [
+                'name' => 'test',
+            ],
+            'orderBy' => 'name',
+        ], [
+            'deleted' => false,
+            'name' => 'hello',
+        ]);
+
+        $expectedSql =
+            "UPDATE `account` " .
+            "SET account.deleted = 0, account.name = 'hello' ".
+            "WHERE account.name = 'test' " .
+            "ORDER BY account.name ASC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUpdateQueryWithLimit()
+    {
+        $sql = $this->query->createUpdateQuery('Account', [
+            'whereClause' => [
+                'name' => 'test',
+            ],
+            'orderBy' => 'name',
+            'limit' => 1,
+        ], [
+            'deleted' => false,
+            'name' => 'hello',
+        ]);
+
+        $expectedSql =
+            "UPDATE `account` " .
+            "SET account.deleted = 0, account.name = 'hello' ".
+            "WHERE account.name = 'test' " .
+            "ORDER BY account.name ASC " .
+            "LIMIT 1";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -165,7 +248,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted` FROM `account` " .
-            "WHERE account.deleted = '0' ORDER BY account.name ASC LIMIT 10, 20";
+            "WHERE account.deleted = 0 ORDER BY account.name ASC LIMIT 10, 20";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -182,7 +265,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name`, article.deleted AS `deleted` FROM `article` " .
-            "WHERE article.deleted = '0' ORDER BY article.name ASC LIMIT 10, 20";
+            "WHERE article.deleted = 0 ORDER BY article.name ASC LIMIT 10, 20";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -195,7 +278,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, comment.deleted AS `deleted` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -207,7 +290,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
 
@@ -217,7 +300,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name`, post.name AS `postName` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
 
@@ -228,7 +311,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name`, post.name AS `postName` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
 
@@ -239,7 +322,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -252,7 +335,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT account.id AS `id`, account.name AS `name` FROM `account` USE INDEX (`IDX_NAME`) " .
-            "WHERE account.deleted = '0'";
+            "WHERE account.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
 
@@ -262,7 +345,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT account.id AS `id`, account.name AS `name` FROM `account` USE INDEX (`IDX_NAME`) " .
-            "WHERE account.deleted = '0'";
+            "WHERE account.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -277,7 +360,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, COUNT(comment.id) AS `COUNT:id` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0' " .
+            "WHERE comment.deleted = 0 " .
             "GROUP BY comment.post_id, post.name";
         $this->assertEquals($expectedSql, $sql);
 
@@ -290,7 +373,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0' " .
+            "WHERE comment.deleted = 0 " .
             "GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -304,8 +387,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = '0' " .
-            "WHERE post.deleted = '0'";
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = 0 " .
+            "WHERE post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -319,8 +402,9 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = '0' AND notesLeft.name IS NOT NULL " .
-            "WHERE post.deleted = '0'";
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = 0 " .
+            "AND notesLeft.name IS NOT NULL " .
+            "WHERE post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -334,8 +418,9 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = '0' AND notesLeft.name = post.name " .
-            "WHERE post.deleted = '0'";
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = 0 ".
+            "AND notesLeft.name = post.name " .
+            "WHERE post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -387,7 +472,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
             "LEFT JOIN `note_table` AS `note` ON note.parent_id = post.id AND note.parent_type = 'Post' " .
-            "WHERE post.deleted = '0'";
+            "WHERE post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -402,8 +487,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id` FROM `post` " .
-            "LEFT JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = '0' " .
-            "WHERE post.deleted = '0'";
+            "LEFT JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = 0 " .
+            "WHERE post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -419,7 +504,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "WHERE post.name <> post.id AND post.deleted = '0'";
+            "WHERE post.name <> post.id AND post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -458,7 +543,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             )
         ));
 
-        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = '0') AND post.deleted = '0'";
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
         $sql = $this->query->createSelectQuery('Post', array(
@@ -476,7 +561,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             )
         ));
 
-        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = '0') AND post.deleted = '0'";
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
 
@@ -490,7 +575,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             )
         ));
 
-        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.created_by_id = '1' AND post.deleted = '0') AND post.deleted = '0'";
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.created_by_id = '1' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -502,7 +587,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, CONCAT(YEAR(comment.created_at), '_', QUARTER(comment.created_at)) AS `QUARTER:comment.createdAt` FROM `comment` " .
-            "WHERE comment.deleted = '0' " .
+            "WHERE comment.deleted = 0 " .
             "GROUP BY CONCAT(YEAR(comment.created_at), '_', QUARTER(comment.created_at))";
         $this->assertEquals($expectedSql, $sql);
 
@@ -513,7 +598,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END AS `YEAR_5:comment.createdAt` FROM `comment` " .
-            "WHERE comment.deleted = '0' " .
+            "WHERE comment.deleted = 0 " .
             "GROUP BY CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END";
         $this->assertEquals($expectedSql, $sql);
 
@@ -525,7 +610,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 7) / 3)) END AS `QUARTER_4:comment.createdAt` FROM `comment` " .
-            "WHERE comment.deleted = '0' " .
+            "WHERE comment.deleted = 0 " .
             "GROUP BY CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 7) / 3)) END";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -541,7 +626,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0' " .
+            "WHERE comment.deleted = 0 " .
             "GROUP BY YEAR(post.created_at) ".
             "ORDER BY 2 ASC";
         $this->assertEquals($expectedSql, $sql);
@@ -556,7 +641,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, post.name AS `post.name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0' " .
+            "WHERE comment.deleted = 0 " .
             "GROUP BY post.name ".
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
         $this->assertEquals($expectedSql, $sql);
@@ -573,7 +658,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, post.name AS `post.name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = '0' " .
+            "WHERE comment.deleted = 0 " .
             "GROUP BY YEAR(post.created_at), post.name ".
             "ORDER BY 2 DESC, FIELD(post.name, 'Hello', 'Test') DESC";
         $this->assertEquals($expectedSql, $sql);
@@ -592,7 +677,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE post.created_by_id = 'id_1' AND comment.deleted = '0' " .
+            "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
             "GROUP BY comment.post_id";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -607,7 +692,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE comment.id IN ('id_1') AND comment.deleted = '0'";
+            "WHERE comment.id IN ('id_1') AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -618,7 +703,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE comment.id NOT IN ('id_1') AND comment.deleted = '0'";
+            "WHERE comment.id NOT IN ('id_1') AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -629,7 +714,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE 0 AND comment.deleted = '0'";
+            "WHERE 0 AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -641,7 +726,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE comment.name = 'Test' AND 1 AND comment.deleted = '0'";
+            "WHERE comment.name = 'Test' AND 1 AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -655,7 +740,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = '0'";
+            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -669,7 +754,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE WEEK(comment.created_at, 3) = '2' AND comment.deleted = '0'";
+            "WHERE WEEK(comment.created_at, 3) = '2' AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -683,7 +768,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = '0'";
+            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -697,7 +782,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE CONCAT(DATE_FORMAT(comment.created_at, '%Y-%m'), ' ', CONCAT(comment.name, '+')) = 'Test Hello' AND comment.deleted = '0'";
+            "WHERE CONCAT(DATE_FORMAT(comment.created_at, '%Y-%m'), ' ', CONCAT(comment.name, '+')) = 'Test Hello' AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -710,7 +795,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, FLOOR('3.5') AS `FLOOR:3.5` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -722,7 +807,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, ROUND('3.5', '1') AS `ROUND:3.5,1` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -734,7 +819,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, ROUND('3.5', '1') AS `ROUND:3.5,1` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -745,7 +830,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, CONCAT(',test', '+', '\"', ''') AS `value` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -756,7 +841,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, COALESCE(comment.name, FALSE, TRUE, NULL) AS `value` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -767,7 +852,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, IF(comment.name LIKE '%test%', '1', '0') AS `value` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -867,7 +952,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '-03:30')) AS `MONTH_NUMBER:TZ:(comment.created_at,-3.5)` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -879,7 +964,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
         $expectedSql =
             "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '+00:00')) AS `MONTH_NUMBER:TZ:(comment.created_at,0)` FROM `comment` " .
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -900,7 +985,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` " .
             "FROM `comment` LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE post.created_by_id = 'id_1' AND comment.deleted = '0' " .
+            "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
             "GROUP BY comment.post_id " .
             "HAVING COUNT(comment.id) > '1'";
         $this->assertEquals($expectedSql, $sql);
@@ -935,7 +1020,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (article.name,article.description) AGAINST ('test +hello' IN BOOLEAN MODE) AND article.id IS NOT NULL AND article.deleted = '0'";
+            "WHERE MATCH (article.name,article.description) AGAINST ('test +hello' IN BOOLEAN MODE) AND article.id IS NOT NULL AND article.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -951,7 +1036,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (article.description) AGAINST ('\"test hello\"' IN NATURAL LANGUAGE MODE) AND article.deleted = '0'";
+            "WHERE MATCH (article.description) AGAINST ('\"test hello\"' IN NATURAL LANGUAGE MODE) AND article.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -970,7 +1055,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:description:test` FROM `article` " .
-            "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
+            "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = 0 " .
             "ORDER BY 2 DESC";
 
         $this->assertEquals($expectedSql, $sql);
@@ -990,7 +1075,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `relevance` FROM `article` " .
-            "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
+            "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = 0 " .
             "ORDER BY 2 DESC";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1007,7 +1092,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) > '1' AND article.deleted = '0'";
+            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) > '1' AND article.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1023,7 +1108,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) AND article.deleted = '0'";
+            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) AND article.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }

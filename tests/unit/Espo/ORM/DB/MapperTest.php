@@ -124,12 +124,12 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "WHERE post.id = '1' AND post.deleted = '0'";
+            "WHERE post.id = '1' AND post.deleted = 0";
         $return = new MockDBResult(array(
             array(
                 'id' => '1',
                 'name' => 'test',
-                'deleted' => 0,
+                'deleted' => false,
             ),
         ));
         $this->mockQuery($query, $return);
@@ -138,28 +138,28 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->post->id, '1');
     }
 
-    public function testSelect()
+    public function testSelect1()
     {
         $query =
             "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = '0' ".
-            "JOIN `tag` AS `tags` ON tags.id = tagsMiddle.tag_id AND tags.deleted = '0' ".
-            "JOIN `comment` AS `comments` ON post.id = comments.post_id AND comments.deleted = '0' ".
-            "WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tags.name = 'yoTag' AND post.deleted = '0' ".
+            "JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = 0 ".
+            "JOIN `tag` AS `tags` ON tags.id = tagsMiddle.tag_id AND tags.deleted = 0 ".
+            "JOIN `comment` AS `comments` ON post.id = comments.post_id AND comments.deleted = 0 ".
+            "WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tags.name = 'yoTag' AND post.deleted = 0 ".
             "ORDER BY post.name DESC ".
             "LIMIT 0, 10";
         $return = new MockDBResult(array(
             array(
                 'id' => '2',
                 'name' => 'test_2',
-                'deleted' => 0,
+                'deleted' => false,
             ),
             array(
                 'id' => '1',
                 'name' => 'test_1',
-                'deleted' => 0,
+                'deleted' => false,
             ),
         ));
         $this->mockQuery($query, $return);
@@ -194,7 +194,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query =
             "SELECT contact.id AS `id`, TRIM(CONCAT(contact.first_name, ' ', contact.last_name)) AS `name`, contact.first_name AS `firstName`, contact.last_name AS `lastName`, contact.deleted AS `deleted` ".
             "FROM `contact` ".
-            "WHERE (contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') AND contact.deleted = '0' ".
+            "WHERE (contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') AND contact.deleted = 0 ".
             "ORDER BY contact.first_name DESC, contact.last_name DESC ".
             "LIMIT 0, 10";
 
@@ -202,7 +202,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             array(
                 'id' => '1',
                 'name' => 'test',
-                'deleted' => 0,
+                'deleted' => false,
             ),
         ));
         $this->mockQuery($query, $return);
@@ -224,14 +224,14 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, comment.deleted AS `deleted` ".
             "FROM `comment` ".
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id ".
-            "WHERE comment.deleted = '0'";
+            "WHERE comment.deleted = 0";
         $return = new MockDBResult(array(
             array(
                 'id' => '11',
                 'postId' => '1',
                 'postName' => 'test',
                 'name' => 'test_comment',
-                'deleted' => 0,
+                'deleted' => false,
             ),
         ));
         $this->mockQuery($query, $return);
@@ -248,13 +248,13 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query =
             "SELECT tag.id AS `id`, tag.name AS `name`, tag.deleted AS `deleted` ".
             "FROM `tag` ".
-            "JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = '0' ".
-            "WHERE tag.deleted = '0'";
+            "JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = 0 ".
+            "WHERE tag.deleted = 0";
         $return = new MockDBResult(array(
             array(
                 'id' => '1',
                 'name' => 'test',
-                'deleted' => 0,
+                'deleted' => false,
             ),
         ));
         $this->mockQuery($query, $return);
@@ -271,12 +271,12 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query =
             "SELECT note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` ".
             "FROM `note` ".
-            "WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = '0'";
+            "WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = 0";
         $return = new MockDBResult(array(
             array(
                 'id' => '1',
                 'name' => 'test',
-                'deleted' => 0,
+                'deleted' => false,
             ),
         ));
         $this->mockQuery($query, $return);
@@ -294,13 +294,13 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "WHERE post.id = '1' AND post.deleted = '0' ".
+            "WHERE post.id = '1' AND post.deleted = 0 ".
             "LIMIT 0, 1";
         $return = new MockDBResult(array(
             array(
                 'id' => '1',
                 'name' => 'test',
-                'deleted' => 0,
+                'deleted' => false,
             ),
         ));
         $this->mockQuery($query, $return);
@@ -320,8 +320,8 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query =
             "SELECT COUNT(tag.id) AS AggregateValue ".
             "FROM `tag` ".
-            "JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = '0' ".
-            "WHERE tag.deleted = '0'";
+            "JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = 0 ".
+            "WHERE tag.deleted = 0";
         $return = new MockDBResult(array(
             array(
                 'AggregateValue' => 1,
@@ -352,8 +352,8 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     public function testInsertUpdate()
     {
         $query =
-            "INSERT INTO `post` (`id`, `name`, `deleted`) VALUES ('1', 'test', '0') " .
-            "ON DUPLICATE KEY UPDATE `name` = 'test', `deleted` = '0'";
+            "INSERT INTO `post` (`id`, `name`, `deleted`) VALUES ('1', 'test', 0) " .
+            "ON DUPLICATE KEY UPDATE `name` = 'test', `deleted` = 0";
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -388,9 +388,9 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->massInsert($collection);
     }
 
-    public function testUpdate()
+    public function testUpdate1()
     {
-        $query = "UPDATE `post` SET `name` = 'test' WHERE post.id = '1' AND post.deleted = '0'";
+        $query = "UPDATE `post` SET post.name = 'test' WHERE post.id = '1' AND post.deleted = 0";
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -401,9 +401,23 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->update($this->post);
     }
 
+    public function testUpdate2()
+    {
+        $query = "UPDATE `post` SET post.name = 'test', post.deleted = 0 WHERE post.id = '1' AND post.deleted = 0";
+        $return = true;
+        $this->mockQuery($query, $return);
+
+        $this->post->reset();
+        $this->post->id = '1';
+        $this->post->set('name', 'test');
+        $this->post->set('deleted', false);
+
+        $this->db->update($this->post);
+    }
+
     public function testUpdateArray1()
     {
-        $query = "UPDATE `job` SET `array` = '[\"2\",\"1\"]' WHERE job.id = '1' AND job.deleted = '0'";
+        $query = "UPDATE `job` SET job.array = '[\"2\",\"1\"]' WHERE job.id = '1' AND job.deleted = 0";
 
         $this->mockQuery($query, true);
 
@@ -417,7 +431,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateArray2()
     {
-        $query = "UPDATE `job` SET `array` = NULL WHERE job.id = '1' AND job.deleted = '0'";
+        $query = "UPDATE `job` SET job.array = NULL WHERE job.id = '1' AND job.deleted = 0";
 
         $this->mockQuery($query, true);
 
@@ -431,7 +445,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testRemoveRelationHasMany()
     {
-        $query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = '0' AND comment.id = '100'";
+        $query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = 0 AND comment.id = '100'";
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -441,7 +455,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testRemoveAllHasMany()
     {
-        $query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = '0' AND comment.post_id = '1'";
+        $query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = 0 AND comment.post_id = '1'";
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -502,7 +516,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testMax()
     {
-        $query = "SELECT MAX(post.id) AS AggregateValue FROM `post` WHERE post.deleted = '0'";
+        $query = "SELECT MAX(post.id) AS AggregateValue FROM `post` WHERE post.deleted = 0";
         $return = new MockDBResult(array(
             array (
                 'AggregateValue' => 10,
@@ -517,7 +531,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testMassRelate()
     {
-        $query = "INSERT INTO `post_tag` (post_id, tag_id) (SELECT '1' AS `1`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = '0') ON DUPLICATE KEY UPDATE deleted = '0'";
+        $query = "INSERT INTO `post_tag` (post_id, tag_id) (SELECT '1' AS `1`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = 0) ON DUPLICATE KEY UPDATE deleted = 0";
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -532,7 +546,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testMassDeleteFromDb()
     {
-        $query = "DELETE FROM `post` WHERE post.name = 'test' AND post.deleted = '1'";
+        $query = "DELETE FROM `post` WHERE post.name = 'test' AND post.deleted = 1";
 
         $sth = $this->getMockBuilder('\\PDOStatement')->disableOriginalConstructor()->getMock();
 

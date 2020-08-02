@@ -599,7 +599,7 @@ abstract class BaseMapper implements Mapper
 
                 $subSql = $this->query->createSelectQuery($foreignEntityType, $params);
 
-                $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = '0'";
+                $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = 0";
 
                 $this->runQuery($sql, true);
 
@@ -669,7 +669,7 @@ abstract class BaseMapper implements Mapper
                     if ($relEntity->getRelationParam($foreignRelationName, 'type') === Entity::HAS_ONE) {
                         $setPart = $this->toDb($key) . " = " . $this->quote(null);
                         $wherePart = $this->query->createWhereQueryPart(
-                            $entity->getEntityType(), ['id!=' => $entity->id, $key => $id, 'deleted' => 0]
+                            $entity->getEntityType(), ['id!=' => $entity->id, $key => $id, 'deleted' => false]
                         );
                         $sql = $this->composeUpdateQuery(
                             $this->toDb($entity->getEntityType()),
@@ -681,7 +681,7 @@ abstract class BaseMapper implements Mapper
                 }
 
                 $setPart = $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id);
-                $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => 0]);
+                $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => false]);
 
                 $entity->set([
                     $key => $relEntity->id
@@ -809,7 +809,7 @@ abstract class BaseMapper implements Mapper
 
                     $sql = $this->composeInsertQuery($relTable, $fieldsPart, $valuesPart);
 
-                    $sql .= " ON DUPLICATE KEY UPDATE deleted = '0'";
+                    $sql .= " ON DUPLICATE KEY UPDATE deleted = 0";
 
                     if (!empty($data) && is_array($data)) {
                         $setArr = [];
@@ -945,7 +945,7 @@ abstract class BaseMapper implements Mapper
 
                 $setPart = $this->toDb($foreignKey) . " = " . "NULL";
 
-                $whereClause = ['deleted' => 0];
+                $whereClause = ['deleted' => false];
                 if (empty($all) && $relType != Entity::HAS_ONE) {
                     $whereClause['id'] = $id;
                 } else {
@@ -974,7 +974,6 @@ abstract class BaseMapper implements Mapper
 
                 $setPart = 'deleted = 1';
                 $wherePart = $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id);
-
 
                 if (empty($all)) {
                     $wherePart .= " AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . "";
@@ -1119,19 +1118,15 @@ abstract class BaseMapper implements Mapper
         return $list;
     }
 
-    /**
-     * Update an entity in DB.
-     */
-    public function update(Entity $entity)
+    protected function getValueMapForUpdate(Entity $entity) : array
     {
-        $valueMap = $this->toValueMap($entity);
+        $valueMap = [];
 
-        $setArr = [];
-
-        foreach ($valueMap as $attribute => $value) {
+        foreach ($this->toValueMap($entity) as $attribute => $value) {
             if ($attribute == 'id') {
                 continue;
             }
+
             $type = $entity->getAttributeType($attribute);
 
             if ($type == Entity::FOREIGN) {
@@ -1142,19 +1137,29 @@ abstract class BaseMapper implements Mapper
                 continue;
             }
 
-            $value = $this->prepareValueForInsert($type, $value);
-
-            $setArr[] = "`" . $this->toDb($attribute) . "` = " . $this->quote($value);
+            $valueMap[$attribute] = $this->prepareValueForInsert($type, $value);
         }
 
-        if (count($setArr) == 0) {
+        return $valueMap;
+    }
+
+    /**
+     * Update an entity in DB.
+     */
+    public function update(Entity $entity)
+    {
+        $valueMap = $this->getValueMapForUpdate($entity);
+
+        if (count($valueMap) == 0) {
             return;
         }
 
-        $setPart = implode(', ', $setArr);
-        $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => 0]);
-
-        $sql = $this->composeUpdateQuery($this->toDb($entity->getEntityType()), $setPart, $wherePart);
+        $sql = $this->query->createUpdateQuery($entity->getEntityType(), [
+            'whereClause' => [
+                'id' => $entity->id,
+                'deleted' => false,
+            ],
+        ], $valueMap);
 
         $this->pdo->query($sql);
     }
@@ -1163,7 +1168,7 @@ abstract class BaseMapper implements Mapper
     {
         if ($type == Entity::JSON_ARRAY && is_array($value)) {
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
-        } else if ($type == Entity::JSON_OBJECT && (is_array($value) || $value instanceof \stdClass)) {
+        } else if ($type == Entity::JSON_OBJECT && (is_array($value) || $value instanceof \StdClass)) {
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
         } else {
             if (is_array($value) || is_object($value)) {
@@ -1171,9 +1176,6 @@ abstract class BaseMapper implements Mapper
             }
         }
 
-        if (is_bool($value)) {
-            $value = (int) $value;
-        }
         return $value;
     }
 
@@ -1292,7 +1294,7 @@ abstract class BaseMapper implements Mapper
             . " AND "
             . "{$relTable}." . $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->get($key))
             . " AND "
-            . "{$relTable}.deleted = " . $this->pdo->quote(0) . "";
+            . "{$relTable}.deleted = " . $this->quote(false) . "";
 
         $conditions = $conditions ?? [];
         if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
