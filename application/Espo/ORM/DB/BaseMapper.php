@@ -187,6 +187,7 @@ abstract class BaseMapper implements Mapper
                 return $row['AggregateValue'];
             }
         }
+
         return null;
     }
 
@@ -667,7 +668,7 @@ abstract class BaseMapper implements Mapper
                 if ($foreignRelationName) {
                     if ($relEntity->getRelationParam($foreignRelationName, 'type') === Entity::HAS_ONE) {
                         $setPart = $this->toDb($key) . " = " . $this->quote(null);
-                        $wherePart = $this->query->getWhere($entity, ['id!=' => $entity->id, $key => $id, 'deleted' => 0]);
+                        $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id!=' => $entity->id, $key => $id, 'deleted' => 0]);
                         $sql = $this->composeUpdateQuery(
                             $this->toDb($entity->getEntityType()),
                             $setPart,
@@ -678,7 +679,7 @@ abstract class BaseMapper implements Mapper
                 }
 
                 $setPart = $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id);
-                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
+                $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => 0]);
 
                 $entity->set([
                     $key => $relEntity->id
@@ -706,7 +707,7 @@ abstract class BaseMapper implements Mapper
                 $setPart =
                     $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id) . ', ' .
                     $this->toDb($typeKey) . " = " . $this->pdo->quote($relEntity->getEntityType());
-                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id' => $id, 'deleted' => 0]);
 
                 $sql = $this->composeUpdateQuery(
                     $this->toDb($entity->getEntityType()),
@@ -726,12 +727,12 @@ abstract class BaseMapper implements Mapper
                 }
 
                 $setPart = $this->toDb($foreignKey) . " = " . $this->quote(null);
-                $wherePart = $this->query->getWhere($relEntity, [$foreignKey => $entity->id, 'deleted' => 0]);
+                $wherePart = $this->query->createWhereQueryPart($relEntity->getEntityType(), [$foreignKey => $entity->id, 'deleted' => 0]);
                 $sql = $this->composeUpdateQuery($this->toDb($foreignEntityType), $setPart, $wherePart);
                 $this->pdo->query($sql);
 
                 $setPart = $this->toDb($foreignKey) . " = " . $this->pdo->quote($entity->id);
-                $wherePart = $this->query->getWhere($relEntity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->createWhereQueryPart($relEntity->getEntityType(), ['id' => $id, 'deleted' => 0]);
                 $sql = $this->composeUpdateQuery($this->toDb($foreignEntityType), $setPart, $wherePart);
 
                 $this->pdo->query($sql);
@@ -754,7 +755,7 @@ abstract class BaseMapper implements Mapper
                     $setPart .= ", " . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType());
                 }
 
-                $wherePart = $this->query->getWhere($relEntity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->createWhereQueryPart($relEntity->getEntityType(), ['id' => $id, 'deleted' => 0]);
                 $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityType()), $setPart, $wherePart);
 
                 $this->pdo->query($sql);
@@ -894,7 +895,7 @@ abstract class BaseMapper implements Mapper
             case Entity::BELONGS_TO:
                 $key = $relationName . 'Id';
                 $setPart = $this->toDb($key) . " = " . $this->quote(null);
-                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
+                $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => 0]);
 
                 $entity->set([
                     $key => null
@@ -922,7 +923,7 @@ abstract class BaseMapper implements Mapper
                 $setPart =
                     $this->toDb($key) . " = " . $this->quote(null) . ', ' .
                     $this->toDb($typeKey) . " = " . $this->quote(null);
-                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
+                $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => 0]);
 
                 $sql = $this->composeUpdateQuery(
                     $this->toDb($entity->getEntityType()),
@@ -954,7 +955,7 @@ abstract class BaseMapper implements Mapper
                     $whereClause[$foreignType] = $entity->getEntityType();
                 }
 
-                $wherePart = $this->query->getWhere($relEntity, $whereClause);
+                $wherePart = $this->query->createWhereQueryPart($relEntity->getEntityType(), $whereClause);
                 $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityType()), $setPart, $wherePart);
 
                 $this->pdo->query($sql);
@@ -1149,7 +1150,7 @@ abstract class BaseMapper implements Mapper
         }
 
         $setPart = implode(', ', $setArr);
-        $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
+        $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => 0]);
 
         $sql = $this->composeUpdateQuery($this->toDb($entity->getEntityType()), $setPart, $wherePart);
 
@@ -1205,7 +1206,7 @@ abstract class BaseMapper implements Mapper
         $entity = $this->entityFactory->create($entityType);
         if (!$entity) return null;
 
-        $wherePart = $this->query->getWhere($entity, $whereClause);
+        $wherePart = $this->query->createWhereQueryPart($entity->getEntityType(), $whereClause);
         if ($wherePart) {
             $sql .= ' WHERE ' . $wherePart;
         }

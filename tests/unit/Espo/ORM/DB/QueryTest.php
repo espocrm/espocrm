@@ -29,6 +29,7 @@
 
 use Espo\ORM\DB\Query\Mysql as Query;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\Metadata;
 
 use Espo\Core\ORM\EntityManager;
 
@@ -62,7 +63,6 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();;
 
-
         $this->entityFactory = $this->getMockBuilder('Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
         $this->entityFactory->expects($this->any())
                             ->method('create')
@@ -74,7 +74,11 @@ class QueryTest extends \PHPUnit\Framework\TestCase
                                 }
                             ));
 
-        $this->metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+        $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
+
+        $this->metadata = new Metadata($ormMetadata);
+
+        $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 
         $this->query = new Query($this->pdo, $this->entityFactory, $this->metadata);
 
@@ -111,6 +115,25 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "DELETE FROM `account` " .
             "WHERE account.name = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testDeleteWithLimit()
+    {
+        $sql = $this->query->createDeleteQuery('Account', [
+            'whereClause' => [
+                'name' => 'test',
+            ],
+            'orderBy' => 'name',
+            'limit' => 1,
+        ]);
+
+        $expectedSql =
+            "DELETE FROM `account` " .
+            "WHERE account.name = 'test' " .
+            "ORDER BY account.name ASC " .
+            "LIMIT 1";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -217,6 +240,29 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectUseIndex()
+    {
+        $sql = $this->query->createSelectQuery('Account', [
+            'select' => ['id', 'name'],
+            'useIndex' => 'name',
+        ]);
+        $expectedSql =
+            "SELECT account.id AS `id`, account.name AS `name` FROM `account` USE INDEX (`IDX_NAME`) " .
+            "WHERE account.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+
+        $sql = $this->query->createSelectQuery('Account', [
+            'select' => ['id', 'name'],
+            'useIndex' => ['name'],
+        ]);
+        $expectedSql =
+            "SELECT account.id AS `id`, account.name AS `name` FROM `account` USE INDEX (`IDX_NAME`) " .
+            "WHERE account.deleted = '0'";
 
         $this->assertEquals($expectedSql, $sql);
     }

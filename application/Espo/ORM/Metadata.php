@@ -33,13 +33,21 @@ use Espo\Core\Utils\Util;
 
 class Metadata
 {
-    protected $data = [];
+    protected $data;
 
-    public function setData($data)
+    public function __construct(array $data = [])
     {
         $this->data = $data;
     }
 
+    public function setData(array $data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * Get a parameter or parameters by key. Key can be a string or array path.
+     */
     public function get(string $entityType, $key = null, $default = null)
     {
         if (!array_key_exists($entityType, $this->data)) {
@@ -51,6 +59,9 @@ class Metadata
         return Util::getValueByKey($data, $key, $default);
     }
 
+    /**
+     * Whether an entity type is available.
+     */
     public function has(string $entityType) : bool
     {
         if (!array_key_exists($entityType, $this->data)) {

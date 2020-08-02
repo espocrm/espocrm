@@ -37,7 +37,16 @@ class Mysql extends Base
             $offset = intval($offset);
             $limit = intval($limit);
             $sql .= " LIMIT {$offset}, {$limit}";
+
+            return $sql;
         }
+
+        if (!is_null($limit)) {
+            $limit = intval($limit);
+            $sql .= " LIMIT {$limit}";
+            return $sql;
+        }
+
         return $sql;
     }
 }
