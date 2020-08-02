@@ -31,8 +31,5 @@ namespace Espo\ORM\DB;
 
 class MysqlMapper extends BaseMapper
 {
-    protected function toDb(string $attribute)
-    {
-        return $this->query->toDb($attribute);
-    }
+
 }

@@ -33,8 +33,10 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\DB\{
     Mapper,
-    Query\Base as Query,
+    Query\BaseQuery as Query,
 };
+
+use PDO;
 
 /**
  * A central access point to ORM functionality.
@@ -100,7 +102,7 @@ class EntityManager
     {
         if (empty($this->query)) {
             $platform = $this->params['platform'];
-            $className = 'Espo\\ORM\\DB\\Query\\' . ucfirst($platform);
+            $className = 'Espo\\ORM\\DB\\Query\\' . ucfirst($platform) . 'Query';
             $this->query = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
         }
         return $this->query;
@@ -152,26 +154,26 @@ class EntityManager
 
         $options = [];
         if (isset($params['sslCA'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
+            $options[PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
         }
         if (isset($params['sslCert'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
+            $options[PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
         }
         if (isset($params['sslKey'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
+            $options[PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
         }
         if (isset($params['sslCAPath'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
+            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
         }
         if (isset($params['sslCipher'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
         }
 
-        $this->pdo = new \PDO(
+        $this->pdo = new PDO(
             $platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'],
             $params['user'], $params['password'], $options
         );
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**

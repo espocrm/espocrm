@@ -28,7 +28,7 @@
  ************************************************************************/
 
 use Espo\ORM\DB\MysqlMapper;
-use Espo\ORM\DB\Query\Mysql as Query;
+use Espo\ORM\DB\Query\MysqlQuery as Query;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityCollection;
 

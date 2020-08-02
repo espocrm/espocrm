@@ -34,7 +34,7 @@ use Espo\ORM\{
     Collection,
     EntityFactory,
     Metadata,
-    DB\Query\Base as Query,
+    DB\Query\BaseQuery as Query,
     EntityCollection,
     Sth2Collection,
 };
@@ -1333,5 +1333,8 @@ abstract class BaseMapper implements Mapper
         return $sql;
     }
 
-    abstract protected function toDb(string $attribute);
+    protected function toDb(string $attribute)
+    {
+        return $this->query->toDb($attribute);
+    }
 }

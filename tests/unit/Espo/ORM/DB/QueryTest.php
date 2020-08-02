@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-use Espo\ORM\DB\Query\Mysql as Query;
+use Espo\ORM\DB\Query\MysqlQuery as Query;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Metadata;
 

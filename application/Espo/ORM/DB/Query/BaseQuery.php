@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\DB\Query;
 
-use Espo\Core\Exceptions\Error;
+use Espo\CoreErrors\Error;
 
 use Espo\ORM\{
     Entity,
@@ -42,7 +42,7 @@ use PDO;
 /**
  * Composes SQL queries.
  */
-abstract class Base
+abstract class BaseQuery
 {
     protected static $selectParamList = [
         'select',
@@ -372,11 +372,11 @@ abstract class Base
 
         if ($method !== self::SELECT_METHOD) {
             if (isset($params['aggregation'])) {
-                throw new Error("Aggregation is not allowed for '{$method}'.");
+                throw new Error("ORM Query: Aggregation is not allowed for '{$method}'.");
             }
 
             if (isset($params['offset'])) {
-                throw new Error("Offset is not allowed for '{$method}'.");
+                throw new Error("ORM Query: Offset is not allowed for '{$method}'.");
             }
         }
 
@@ -622,7 +622,7 @@ abstract class Base
     protected function getFunctionPart($function, $part, $entityType, $distinct = false, ?array $argumentPartList = null)
     {
         if (!in_array($function, $this->functionList)) {
-            throw new \Exception("ORM Query: Not allowed function '{$function}'.");
+            throw new Error("ORM Query: Not allowed function '{$function}'.");
         }
 
         if (strpos($function, 'YEAR_') === 0 && $function !== 'YEAR_NUMBER') {
@@ -658,7 +658,7 @@ abstract class Base
 
         if (in_array($function, $this->comparisonFunctionList)) {
             if (count($argumentPartList) < 2) {
-                throw new \Exception("ORM Query: Not enough arguments for function '{$function}'.");
+                throw new Error("ORM Query: Not enough arguments for function '{$function}'.");
             }
             $operator = $this->comparisonFunctionOperatorMap[$function];
             return $argumentPartList[0] . ' ' . $operator . ' ' . $argumentPartList[1];
@@ -666,7 +666,7 @@ abstract class Base
 
         if (in_array($function, $this->mathOperationFunctionList)) {
             if (count($argumentPartList) < 2) {
-                throw new \Exception("ORM Query: Not enough arguments for function '{$function}'.");
+                throw new Error("ORM Query: Not enough arguments for function '{$function}'.");
             }
             $operator = $this->mathFunctionOperatorMap[$function];
             return '(' . implode(' ' . $operator . ' ', $argumentPartList) . ')';
@@ -676,7 +676,7 @@ abstract class Base
             $operator = $this->comparisonFunctionOperatorMap[$function];
 
             if (count($argumentPartList) < 2) {
-                throw new \Exception("ORM Query: Not enough arguments for function '{$function}'.");
+                throw new Error("ORM Query: Not enough arguments for function '{$function}'.");
             }
             $operatorArgumentList = $argumentPartList;
             array_shift($operatorArgumentList);
@@ -761,7 +761,7 @@ abstract class Base
     protected function getFunctionPartTZ($entityType, ?array $argumentPartList = null)
     {
         if (!$argumentPartList || count($argumentPartList) < 2) {
-            throw new \Exception("Not enough arguments for function TZ.");
+            throw new Error("ORM Query: Not enough arguments for function TZ.");
         }
         $offsetHoursString = $argumentPartList[1];
         if (substr($offsetHoursString, 0, 1) === '\'' && substr($offsetHoursString, -1) === '\'') {
@@ -787,14 +787,14 @@ abstract class Base
     {
         $delimiterPosition = strpos($expression, ':');
         if ($delimiterPosition === false) {
-            throw new \Exception("Bad MATCH usage.");
+            throw new Error("ORM Query: Bad MATCH usage.");
         }
 
         $function = substr($expression, 0, $delimiterPosition);
         $rest = substr($expression, $delimiterPosition + 1);
 
         if (empty($rest)) {
-            throw new \Exception("Empty MATCH parameters.");
+            throw new Error("ORM Query: Empty MATCH parameters.");
         }
 
         if (substr($rest, 0, 1) === '(' && substr($rest, -1) === ')') {
@@ -802,7 +802,7 @@ abstract class Base
 
             $argumentList = self::parseArgumentListFromFunctionContent($rest);
             if (count($argumentList) < 2) {
-                throw new \Exception("Bad MATCH usage.");
+                throw new Error("ORM Query: Bad MATCH usage.");
             }
 
             $columnList = [];
@@ -813,7 +813,7 @@ abstract class Base
         } else {
             $delimiterPosition = strpos($rest, ':');
             if ($delimiterPosition === false) {
-                throw new \Exception("Bad MATCH usage.");
+                throw new Error("ORM Query: Bad MATCH usage.");
             }
 
             $columns = substr($rest, 0, $delimiterPosition);
@@ -2335,7 +2335,7 @@ abstract class Base
     protected function getSetPart(Entity $entity, array $values) : string
     {
         if (!count($values)) {
-            throw new Error("No SET values for update query.");
+            throw new Error("ORM Query: No SET values for update query.");
         }
 
         $list = [];

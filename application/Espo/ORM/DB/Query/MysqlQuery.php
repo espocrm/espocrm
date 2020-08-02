@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\DB\Query;
 
-class Mysql extends Base
+class MysqlQuery extends BaseQuery
 {
     public function limit(string $sql, ?int $offset = null, ?int $limit = null) : string
     {
