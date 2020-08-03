@@ -29,6 +29,8 @@
 
 namespace Espo\Core\FieldValidators;
 
+use Espo\ORM\Entity;
+
 class LinkMultipleType extends BaseType
 {
     public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
