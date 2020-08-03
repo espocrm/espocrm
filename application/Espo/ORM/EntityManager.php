@@ -94,10 +94,12 @@ class EntityManager
         $this->entityFactory->setEntityManager($this);
 
         $this->repositoryFactory = $repositoryFactory;
+
+        $this->queryExecutor = new RDBQueryExecutor($this);
     }
 
     /**
-     * Get Query.
+     * Get a Query.
      */
     public function getQuery() : Query
     {
@@ -128,7 +130,7 @@ class EntityManager
     }
 
     /**
-     * Get Mapper.
+     * Get a Mapper.
      */
     public function getMapper(?string $name = null) : Mapper
     {
@@ -171,15 +173,16 @@ class EntityManager
         }
 
         $this->pdo = new PDO(
-            $platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'],
+            $platform . ':host=' . $params['host'] . ';'. $port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'],
             $params['user'], $params['password'], $options
         );
+
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**
-     * Get entity. If $id is null, a new entity instance is created.
-     * If entity with a specified $id does not exist, then NULL is returned.
+     * Get an entity. If $id is null, a new entity instance is created.
+     * If an entity with a specified $id does not exist, then NULL is returned.
      */
     public function getEntity(string $entityType, ?string $id = null) : ?Entity
     {
@@ -191,42 +194,48 @@ class EntityManager
     }
 
     /**
-     * Store entity (in database).
+     * Store an entity (in database).
      */
     public function saveEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
+
         $this->getRepository($entityType)->save($entity, $options);
     }
 
     /**
-     * Mark entity as deleted (in database).
+     * Mark an entity as deleted (in database).
      */
     public function removeEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
+
         $this->getRepository($entityType)->remove($entity, $options);
     }
 
     /**
      * Create entity (store it in database).
      *
-     * @param \StdClass|array $data Entity attributes.
+     * @param StdClass|array $data Entity attributes.
      */
     public function createEntity(string $entityType, $data, array $options = []) : Entity
     {
         $entity = $this->getEntity($entityType);
         $entity->set($data);
         $this->saveEntity($entity, $options);
+
         return $entity;
     }
 
     /**
-     * Fetch entity (from database).
+     * Fetch an entity (from database).
      */
     public function fetchEntity(string $entityType, string $id) : ?Entity
     {
-        if (empty($id)) return null;
+        if (empty($id)) {
+            return null;
+        }
+
         return $this->getEntity($entityType, $id);
     }
 
@@ -244,12 +253,13 @@ class EntityManager
     public function getRepository(string $entityType) : ?Repository
     {
         if (!$this->hasRepository($entityType)) {
-            // TODO Throw error
+            throw new Error("Repository '{$entityType}' does not exist.");
         }
 
         if (empty($this->repositoryHash[$entityType])) {
             $this->repositoryHash[$entityType] = $this->repositoryFactory->create($entityType);
         }
+
         return $this->repositoryHash[$entityType] ?? null;
     }
 
@@ -274,26 +284,26 @@ class EntityManager
     /**
      * Get an instance of PDO.
      */
-    public function getPDO() : \PDO
+    public function getPDO() : PDO
     {
         if (empty($this->pdo)) {
             $this->initPDO();
         }
+
         return $this->pdo;
     }
 
     /**
-     * Create a Collection.
+     * Create a collection.
      * Entity type can be omitted.
      */
     public function createCollection(?string $entityType = null, array $data = [])
     {
-        $collection = new EntityCollection($data, $entityType, $this->entityFactory);
-        return $collection;
+        return new EntityCollection($data, $entityType, $this->entityFactory);
     }
 
     /**
-     * Create an Sth Collection. Sth collection is preferable when a select query returns a large number of rows.
+     * Create an STH collection. An STH collection is preferable when a select query returns a large number of rows.
      */
     public function createSthCollection(string $entityType, array $selectParams = [])
     {
@@ -303,6 +313,14 @@ class EntityManager
     public function getEntityFactory() : object
     {
         return $this->entityFactory;
+    }
+
+    /**
+     * Get a Query Executor.
+     */
+    public function getQueryExecutor() : RDBQueryExecutor
+    {
+        return $this->queryExecutor;
     }
 
     /**

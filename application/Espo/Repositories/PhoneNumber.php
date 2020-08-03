@@ -423,29 +423,30 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         if ($primary) {
             $phoneNumber = $this->getByNumber($primary);
             if ($phoneNumber) {
-                $query = "
-                    UPDATE entity_phone_number
-                    SET `primary` = 0
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        `primary` = 1 AND
-                        deleted = 0
-                ";
-                $sth = $pdo->prepare($query);
-                $sth->execute();
 
-                $query = "
-                    UPDATE entity_phone_number
-                    SET `primary` = 1
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        phone_number_id = ".$pdo->quote($phoneNumber->id)." AND
-                        deleted = 0
-                ";
-                $sth = $pdo->prepare($query);
-                $sth->execute();
+                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                    ->from('EntityPhoneNumber')
+                    ->where([
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'primary' => true,
+                        'deleted' => false,
+                    ])
+                    ->build();
+
+                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => false]);
+
+                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                    ->from('EntityPhoneNumber')
+                    ->where([
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'phoneNumberId' => $phoneNumber->id,
+                        'deleted' => false,
+                    ])
+                    ->build();
+
+                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => true]);
             }
         }
 
@@ -501,16 +502,21 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     $this->markNumberOptedOut($phoneNumberValue, !!$entity->get('phoneNumberIsOptedOut'));
                 }
 
-                $query = "
-                    UPDATE entity_phone_number
-                    SET `primary` = 1
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        phone_number_id = ".$pdo->quote($phoneNumberNew->id)."
-                ";
-                $sth = $pdo->prepare($query);
-                $sth->execute();
+                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                    ->from('EntityPhoneNumber')
+                    ->where([
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'phoneNumberId' => $phoneNumberNew->id,
+                    ])
+                    ->build();
+
+                $sql = $this->getEntityManager()->getQuery()->createUpdateQuery('EntityPhoneNumber', $updateSelect->getRawParams(), [
+                    'primary' => true,
+                ]);
+
+                $this->getEntityManager()->runQuery($sql, true);
+
             } else {
                 if (
                     $entity->has('phoneNumberIsOptedOut')
@@ -553,7 +559,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    // TODO move it to another place
+    // @todo move it to another place
     protected function checkChangeIsForbidden($entity, $excludeEntity)
     {
         return !$this->aclManager->getImplementation('PhoneNumber')

@@ -30,33 +30,30 @@
 namespace Espo\ORM;
 
 /**
- * Select parameters.
+ * Executes queries by a given RDBSelect instances.
+ *
+ * @todo Add `select` method returning an array of StdClass objects.
  */
-class RDBSelectParams
+class RDBQueryExecutor
 {
-    protected $entityType;
+    protected $entityManager;
 
-    protected $params;
-
-    public function __construct(string $entityType, array $params)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->entityType = $entityType;
-        $this->params = $params;
+        $this->entityManager = $entityManager;
     }
 
-    /**
-     * Get an entity type.
-     */
-    public function getEntityType() : string
+    public function update(RDBSelect $select, array $values)
     {
-        return $this->entityType;
+        $sql = $this->entityManager->getQuery()->createUpdateQuery($select->getEntityType(), $select->getRawParams(), $values);
+
+        $this->entityManager->runQuery($sql, true);
     }
 
-    /**
-     * Get parameters in RAW format.
-     */
-    public function getRaw() : array
+    public function delete(RDBSelect $select)
     {
-        return $this->params;
+        $sql = $this->entityManager->getQuery()->createDeleteQuery($select->getEntityType(), $select->getRawParams());
+
+        $this->entityManager->runQuery($sql, true);
     }
 }

@@ -321,11 +321,11 @@ class RDBSelectBuilder implements Findable
     /**
      * Builds result select parameters.
      */
-    public function build() : RDBSelectParams
+    public function build() : RDBSelect
     {
         $this->processExecutableCheck();
 
-        return new RDBSelectParams($this->entityType, $this->getMergedParams());
+        return new RDBSelect($this->entityType, $this->getMergedParams());
     }
 
     protected function getMergedParams(array $params = []) : array

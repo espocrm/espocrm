@@ -494,30 +494,31 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
         if ($primary) {
             $emailAddress = $this->getByAddress($primary);
-            if ($emailAddress) {
-                $query = "
-                    UPDATE entity_email_address
-                    SET `primary` = 0
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        `primary` = 1 AND
-                        deleted = 0
-                ";
-                $sth = $pdo->prepare($query);
-                $sth->execute();
 
-                $query = "
-                    UPDATE entity_email_address
-                    SET `primary` = 1
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        email_address_id = ".$pdo->quote($emailAddress->id)." AND
-                        deleted = 0
-                ";
-                $sth = $pdo->prepare($query);
-                $sth->execute();
+            if ($emailAddress) {
+                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                    ->from('EntityEmailAddress')
+                    ->where([
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'primary' => true,
+                        'deleted' => false,
+                    ])
+                    ->build();
+
+                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => false]);
+
+                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                    ->from('EntityEmailAddress')
+                    ->where([
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'emailAddressId' => $emailAddress->id,
+                        'deleted' => false,
+                    ])
+                    ->build();
+
+                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => true]);
             }
         }
 
@@ -544,6 +545,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         }
 
         $entityRepository = $this->getEntityManager()->getRepository($entity->getEntityType());
+
         if (!empty($emailAddressValue)) {
             if ($emailAddressValue != $entity->getFetched('emailAddress')) {
 
@@ -572,16 +574,21 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     $this->markAddressOptedOut($emailAddressValue, !!$entity->get('emailAddressIsOptedOut'));
                 }
 
-                $query = "
-                    UPDATE entity_email_address
-                    SET `primary` = 1
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        email_address_id = ".$pdo->quote($emailAddressNew->id)."
-                ";
-                $sth = $pdo->prepare($query);
-                $sth->execute();
+                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                    ->from('EntityEmailAddress')
+                    ->where([
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'emailAddressId' => $emailAddressNew->id,
+                    ])
+                    ->build();
+
+                $sql = $this->getEntityManager()->getQuery()->createUpdateQuery('EntityEmailAddress', $updateSelect->getRawParams(), [
+                    'primary' => true,
+                ]);
+
+                $this->getEntityManager()->runQuery($sql, true);
+
             } else {
                 if (
                     $entity->has('emailAddressIsOptedOut')
@@ -608,7 +615,6 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 }
             }
         }
-
     }
 
     public function storeEntityEmailAddress(Entity $entity)
@@ -625,7 +631,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    // TODO move it to another place
+    // @todo move it to another place
     protected function checkChangeIsForbidden($entity, $excludeEntity)
     {
         return !$this->aclManager->getImplementation('EmailAddress')
