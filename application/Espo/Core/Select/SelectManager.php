@@ -431,7 +431,7 @@ class SelectManager
                 $aliasName . 'Middle.teamId' => $idsValue
             ];
         } else {
-            return;
+            throw new Error("Can't apply isUserFromTeams for link {$link}.");
         }
 
         $this->setDistinct(true, $result);
@@ -445,39 +445,65 @@ class SelectManager
 
         $tableName = $query->toDb($this->getSeed()->getEntityType());
 
-        if (!empty($relDefs[$link])) {
-            $defs = $relDefs[$link];
-
-            $foreignEntity = $defs['entity'];
-            if (empty($foreignEntity)) {
-                return;
-            }
-
-            $pathName = lcfirst($query->sanitize($foreignEntity . 'Path'));
-
-            if ($defs['type'] == 'manyMany') {
-                if (!empty($defs['midKeys'])) {
-                    $result['distinct'] = true;
-                    $result['joins'][] = $link;
-                    $key = $defs['midKeys'][1];
-
-                    $middleName = $link . 'Middle';
-
-                    $result['customJoin'] .= "
-                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($middleName) . "." . $query->toDb($key) . "
-                    ";
-                    $result['whereClause'][$pathName . '.ascendorId'] = $value;
-                }
-            } else if ($defs['type'] == 'belongsTo') {
-                if (!empty($defs['key'])) {
-                    $key = $defs['key'];
-                    $result['customJoin'] .= "
-                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = {$tableName}." . $query->toDb($key) . "
-                    ";
-                    $result['whereClause'][$pathName . '.ascendorId'] = $value;
-                }
-            }
+        if (empty($relDefs[$link])) {
+            throw new Error("Can't apply inCategory for link {$link}.");
         }
+
+        $defs = $relDefs[$link];
+
+        $foreignEntity = $defs['entity'] ?? null;
+
+        if (empty($foreignEntity)) {
+            throw new Error("Can't apply inCategory for link {$link}.");
+        }
+
+        $pathName = lcfirst($query->sanitize($foreignEntity)) . 'Path';
+
+        if ($defs['type'] == 'manyMany') {
+            if (empty($defs['midKeys'])) {
+                throw new Error("Can't apply inCategory for link {$link}.");
+            }
+
+            $this->setDistinct(true, $result);
+            $this->addJoin($link, $result);
+
+            $key = $defs['midKeys'][1];
+            $middleName = $link . 'Middle';
+
+            $this->addJoin([
+                ucfirst($pathName),
+                $pathName,
+                [
+                    "{$pathName}.descendorId:" => "{$middleName}.{$key}",
+                ]
+            ], $result);
+
+            $result['whereClause'][$pathName . '.ascendorId'] = $value;
+
+            return;
+        }
+
+        if ($defs['type'] == 'belongsTo') {
+            if (empty($defs['key'])) {
+                throw new Error("Can't apply inCategory for link {$link}.");
+            }
+
+            $key = $defs['key'];
+
+            $this->addJoin([
+                ucfirst($pathName),
+                $pathName,
+                [
+                    "{$pathName}.descendorId:" => "{$key}",
+                ]
+            ], $result);
+
+            $result['whereClause'][$pathName . '.ascendorId'] = $value;
+
+            return;
+        }
+
+        throw new Error("Can't apply inCategory for link {$link}.");
     }
 
     protected function q(array $params, array &$result)
