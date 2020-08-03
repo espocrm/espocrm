@@ -111,7 +111,7 @@ class EntityManager
         return $this->query;
     }
 
-    protected function getMapperClassName(string $name)
+    protected function getMapperClassName(string $name) : string
     {
         $className = null;
 
@@ -294,10 +294,9 @@ class EntityManager
     }
 
     /**
-     * Create a collection.
-     * Entity type can be omitted.
+     * Create a collection. Entity type can be omitted.
      */
-    public function createCollection(?string $entityType = null, array $data = [])
+    public function createCollection(?string $entityType = null, array $data = []) : EntityCollection
     {
         return new EntityCollection($data, $entityType, $this->entityFactory);
     }
@@ -305,12 +304,12 @@ class EntityManager
     /**
      * Create an STH collection. An STH collection is preferable when a select query returns a large number of rows.
      */
-    public function createSthCollection(string $entityType, array $selectParams = [])
+    public function createSthCollection(string $entityType, array $selectParams = []) : SthCollection
     {
         return new SthCollection($entityType, $this, $selectParams);
     }
 
-    public function getEntityFactory() : object
+    public function getEntityFactory() : EntityFactory
     {
         return $this->entityFactory;
     }
