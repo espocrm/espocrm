@@ -44,7 +44,7 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-use Espo\ORM\DB\Query\Base as Query;
+use Espo\ORM\DB\Query\BaseQuery as Query;
 
 use Espo\ORM\Entity;
 
