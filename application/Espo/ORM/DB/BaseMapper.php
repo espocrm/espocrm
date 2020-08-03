@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\DB;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\ORM\{
     Entity,
     Collection,
@@ -40,6 +42,8 @@ use Espo\ORM\{
 };
 
 use PDO;
+use Exception;
+use LogicException;
 
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
@@ -206,15 +210,15 @@ abstract class BaseMapper implements Mapper
         $relDefs = $entity->relations[$relationName];
 
         if (!isset($relDefs['type'])) {
-            throw new \LogicException(
-                "Missing 'type' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity"
+            throw new LogicException(
+                "Missing 'type' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity."
             );
         }
 
         if ($relDefs['type'] !== Entity::BELONGS_TO_PARENT) {
             if (!isset($relDefs['entity'])) {
-                throw new \LogicException(
-                    "Missing 'entity' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity"
+                throw new LogicException(
+                    "Missing 'entity' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity."
                 );
             }
 
@@ -552,7 +556,7 @@ abstract class BaseMapper implements Mapper
         $relDefs = $entity->relations[$relationName];
 
         if (!isset($relDefs['entity']) || !isset($relDefs['type'])) {
-            throw new \LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+            throw new LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity.");
         }
 
         $relType = $relDefs['type'];
@@ -611,18 +615,13 @@ abstract class BaseMapper implements Mapper
     {
         try {
             return $this->pdo->query($query);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($rerunIfDeadlock) {
-                if (
-                    isset($e->errorInfo) &&
-                    $e->errorInfo[0] == 40001 &&
-                    $e->errorInfo[1] == 1213
-                ) {
+                if (isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
                     return $this->pdo->query($query);
-                } else {
-                    throw $e;
                 }
             }
+            throw $e;
         }
     }
 
@@ -645,7 +644,7 @@ abstract class BaseMapper implements Mapper
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
-            throw new \LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+            throw new LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity.");
         }
 
         $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $foreignEntityType;
@@ -876,8 +875,8 @@ abstract class BaseMapper implements Mapper
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
-            throw new \LogicException(
-                "Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity"
+            throw new LogicException(
+                "Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity."
             );
         }
 
@@ -1184,44 +1183,23 @@ abstract class BaseMapper implements Mapper
      */
     public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false)
     {
-        if (empty($entityType) || empty($id)) return false;
+        if (empty($entityType) || empty($id)) {
+            throw new Error("Can't delete an empty entity type or ID from DB.");
+        }
 
-        $table = $this->toDb($entityType);
+        $whereClause = [
+            'id' => $id,
+        ];
 
-        $sql = "DELETE FROM `{$table}` WHERE id = " . $this->quote($id);
         if ($onlyDeleted) {
-            $sql .= " AND deleted = 1";
+            $whereClause['deleted'] = true;
         }
 
-        $this->pdo->query($sql);
-    }
+        $sql = $this->query->createDeleteQuery($entityType, [
+            'whereClause' => $whereClause,
+        ]);
 
-    /**
-     * Mass delete from DB by specified whereClause.
-     *
-     * @return Number of deleted records or null if failure.
-     */
-    public function massDeleteFromDb(string $entityType, array $whereClause) : ?int
-    {
-        $table = $this->toDb($entityType);
-
-        $sql = "DELETE FROM `{$table}`";
-
-        $entity = $this->entityFactory->create($entityType);
-        if (!$entity) return null;
-
-        $wherePart = $this->query->buildWherePart($entity->getEntityType(), $whereClause);
-        if ($wherePart) {
-            $sql .= ' WHERE ' . $wherePart;
-        }
-
-        $sth = $this->pdo->prepare($sql);
-
-        if ($sth->execute()) {
-            return $sth->rowCount();
-        }
-
-        return null;
+        $this->runQuery($sql);
     }
 
     /**
@@ -1229,12 +1207,17 @@ abstract class BaseMapper implements Mapper
      */
     public function restoreDeleted(string $entityType, string $id)
     {
-        if (empty($entityType) || empty($id)) return false;
+        if (empty($entityType) || empty($id)) {
+            throw new Error("Can't restore an empty entity type or ID.");
+        }
 
-        $table = $this->toDb($entityType);
-        $sql = "UPDATE `{$table}` SET `deleted` = 0 WHERE id = " . $this->quote($id);
+        $whereClause = [
+            'id' => $id,
+        ];
 
-        $this->pdo->query($sql);
+        $sql = $this->query->createUpdateQuery($entityType, ['whereClause' => $whereClause], ['deleted' => false]);
+
+        $this->runQuery($sql);
     }
 
     /**
@@ -1243,12 +1226,14 @@ abstract class BaseMapper implements Mapper
     public function delete(Entity $entity) : bool
     {
         $entity->set('deleted', true);
+
         return (booL) $this->update($entity);
     }
 
-    protected function toValueMap(Entity $entity, bool $onlyStorable = true)
+    protected function toValueMap(Entity $entity, bool $onlyStorable = true) : array
     {
         $data = [];
+
         foreach ($entity->getAttributes() as $attribute => $defs) {
             if ($entity->has($attribute)) {
                 if ($onlyStorable) {
@@ -1264,16 +1249,18 @@ abstract class BaseMapper implements Mapper
                 $data[$attribute] = $entity->get($attribute);
             }
         }
+
         return $data;
     }
 
-    protected function fromRow(Entity $entity, $data)
+    protected function fromRow(Entity $entity, $data) : Entity
     {
         $entity->set($data);
+
         return $entity;
     }
 
-    protected function getMMJoin(Entity $entity, $relationName, $keySet = false, $conditions = [])
+    protected function getMMJoin(Entity $entity, string $relationName, $keySet = false, $conditions = []) : string
     {
         $relDefs = $entity->relations[$relationName];
 

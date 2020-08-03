@@ -44,12 +44,18 @@ class RDBSelectParams
         $this->params = $params;
     }
 
+    /**
+     * Get an entity type.
+     */
     public function getEntityType() : string
     {
         return $this->entityType;
     }
 
-    public function getRawParams() : array
+    /**
+     * Get parameters in RAW format.
+     */
+    public function getRaw() : array
     {
         return $this->params;
     }

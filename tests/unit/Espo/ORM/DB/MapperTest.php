@@ -104,7 +104,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         unset($this->pdo, $this->db, $this->post, $this->comment);
     }
 
-    protected function mockQuery($query, $return, $any = false)
+    protected function mockQuery(string $query, $return = true, $any = false)
     {
         if ($any) {
             $expects = $this->any();
@@ -544,32 +544,27 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testMassDeleteFromDb()
+    public function testDeleteFromDb1()
     {
-        $query = "DELETE FROM `post` WHERE post.name = 'test' AND post.deleted = 1";
+        $query = "DELETE FROM `comment` WHERE comment.id = '1'";
+        $this->mockQuery($query);
 
-        $sth = $this->getMockBuilder('\\PDOStatement')->disableOriginalConstructor()->getMock();
+        $this->db->deleteFromDb('Comment', '1');
+    }
 
-        $this->pdo
-            ->expects($this->once())
-            ->method('prepare')
-            ->with($query)
-            ->will($this->returnValue($sth));
+    public function testDeleteFromDb2()
+    {
+        $query = "DELETE FROM `comment` WHERE comment.id = '1' AND comment.deleted = 1";
+        $this->mockQuery($query);
 
-        $sth
-            ->expects($this->once())
-            ->method('execute')
-            ->will($this->returnValue(true));
+        $this->db->deleteFromDb('Comment', '1', true);
+    }
 
-        $sth
-            ->expects($this->once())
-            ->method('rowCount')
-            ->will($this->returnValue(1));
+    public function testRestoreDeleted()
+    {
+        $query = "UPDATE `comment` SET comment.deleted = 0 WHERE comment.id = '1'";
+        $this->mockQuery($query);
 
-
-        $this->db->massDeleteFromDb('Post', [
-            'name' => 'test',
-            'deleted' => true,
-        ]);
+        $this->db->restoreDeleted('Comment', '1');
     }
 }

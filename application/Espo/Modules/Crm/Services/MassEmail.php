@@ -86,20 +86,34 @@ class MassEmail extends \Espo\Services\Record implements
     {
         parent::afterDeleteEntity($massEmail);
 
-        $this->getEntityManager()->getMapper('RDB')->massDeleteFromDb('EmailQueueItem', [
-            'massEmailId' => $massEmail->id,
-        ]);
+        $selectParams = $this->getEntityManager()->createSelectBuilder()
+            ->from('EmailQueueItem')
+            ->where([
+                 'massEmailId' => $massEmail->id,
+            ])
+            ->build();
+
+        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('EmailQueueItem', $selectParams->getRaw());
+
+        $this->getEntityManager()->runQuery($sql);
     }
 
     protected function cleanupQueueItems(Entity $massEmail)
     {
-        $this->getEntityManager()->getMapper('RDB')->massDeleteFromDb('EmailQueueItem', [
-            'massEmailId' => $massEmail->id,
-            'status' => ['Pending', 'Failed'],
-        ]);
+        $selectParams = $this->getEntityManager()->createSelectBuilder()
+            ->from('EmailQueueItem')
+            ->where([
+                 'massEmailId' => $massEmail->id,
+                 'status' => ['Pending', 'Failed'],
+            ])
+            ->build();
+
+        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('EmailQueueItem', $selectParams->getRaw());
+
+        $this->getEntityManager()->runQuery($sql);
     }
 
-    public function createQueue(Entity $massEmail, $isTest = false, $additionalTargetList = [])
+    public function createQueue(Entity $massEmail, bool $isTest = false, $additionalTargetList = [])
     {
         if (!$isTest && $massEmail->get('status') !== 'Pending') {
             throw new Error("Mass Email '".$massEmail->id."' should be 'Pending'.");

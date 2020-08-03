@@ -37,6 +37,7 @@ use Espo\ORM\DB\{
 };
 
 use PDO;
+use Exception;
 
 /**
  * A central access point to ORM functionality.
@@ -76,11 +77,11 @@ class EntityManager
 
         if (empty($this->params['platform'])) {
             if (empty($this->params['driver'])) {
-                throw new \Exception('No database driver specified.');
+                throw new Exception('No database driver specified.');
             }
             $driver = $this->params['driver'];
             if (empty($this->driverPlatformMap[$driver])) {
-                throw new \Exception("Database driver '{$driver}' is not supported.");
+                throw new Exception("Database driver '{$driver}' is not supported.");
             }
             $this->params['platform'] = $this->driverPlatformMap[$this->params['driver']];
         }
@@ -313,14 +314,13 @@ class EntityManager
     {
         try {
             return $this->getPDO()->query($query);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($rerunIfDeadlock) {
-                if ($e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
+                if (isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
                     return $this->getPDO()->query($query);
-                } else {
-                    throw $e;
                 }
             }
+            throw $e;
         }
     }
 }
