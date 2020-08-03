@@ -324,7 +324,6 @@ class Stream
         return true;
     }
 
-
     public function unfollowAllUsersFromEntity(Entity $entity)
     {
         if (empty($entity->id)) {
@@ -1564,40 +1563,26 @@ class Stream
         }
     }
 
-    public function getEntityFolowerIdList(Entity $entity)
+    public function getEntityFolowerIdList(Entity $entity) : array
     {
-        $query = $this->entityManager->getQuery();
-        $pdo = $this->entityManager->getPDO();
-        $sql = $query->createSelectQuery('User', [
-            'select' => ['id'],
-            'joins' => [
-                [
-                    'Subscription',
-                    'subscription',
-                    [
-                        'subscription.userId=:' => 'user.id',
-                        'subscription.entityId' => $entity->id,
-                        'subscription.entityType' => $entity->getEntityType(),
-                    ]
-                ]
-            ],
-            'whereClause' => [
-                'isActive' => true
-            ]
-        ]);
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $userList = $this->entityManager->getRepository('User')
+            ->select(['id'])
+            ->join('Subscription', 'subscription', [
+                'subscription.userId=:' => 'user.id',
+                'subscription.entityId' => $entity->id,
+                'subscription.entityType' => $entity->getEntityType(),
+            ])
+            ->where(['isActive' => true])
+            ->find();
 
         $idList = [];
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $idList[] = $row['id'];
+        foreach ($userList as $user) {
+            $idList[] = $user->id;
         }
-
         return $idList;
     }
 
-    public function findEntityFollowers(Entity $entity, $params)
+    public function findEntityFollowers(Entity $entity, $params) : RecordCollection
     {
         $selectAttributeList = $this->serviceFactory->create('User')->getSelectAttributeList($params);
 
