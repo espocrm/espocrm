@@ -1632,7 +1632,11 @@ class Record implements Crud,
 
         if (!$this->getUser()->isAdmin()) throw new Forbidden();
 
-        $this->getStreamService()->followEntity($entity, $foreignId);
+        $result = $this->getStreamService()->followEntity($entity, $foreignId);
+
+        if (!$result) {
+            throw new Forbidden("Could not add a user to followers. The user needs to have 'stream' access.");
+        }
 
         return true;
     }
