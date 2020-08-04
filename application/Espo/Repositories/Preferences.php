@@ -72,22 +72,6 @@ class Preferences extends Repository implements Removable,
 
         if (!isset($this->data[$id])) {
             $this->loadData($id);
-
-            /*$pdo = $this->entityManager->getPDO();
-            $sql = "SELECT `id`, `data` FROM `preferences` WHERE id = ".$pdo->quote($id);
-            $ps = $pdo->query($sql);*/
-
-
-            /*$sth = $pdo->prepare($sql);
-            $sth->execute();
-
-            while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $data = Json::decode($row['data']);
-                $data = get_object_vars($data);
-                break;
-            }*/
-
-
         }
 
         $entity->set($this->data[$id]);
@@ -226,10 +210,16 @@ class Preferences extends Repository implements Removable,
 
         $pdo = $this->entityManager->getPDO();
 
-        $sql = "
-            INSERT INTO `preferences` (`id`, `data`) VALUES (".$pdo->quote($entity->id).", ".$pdo->quote($dataString).")
-            ON DUPLICATE KEY UPDATE `data` = ".$pdo->quote($dataString)."
-        ";
+        $sql = $this->entityManager->getQuery()->createInsertQuery('Preferences', [
+            'columns' => ['id', 'data'],
+            'values' => [
+                'id' => $entity->id,
+                'data' => $dataString,
+            ],
+            'update' => [
+                'data' => $dataString,
+            ],
+        ]);
 
         $pdo->query($sql);
 
@@ -244,14 +234,22 @@ class Preferences extends Repository implements Removable,
     public function deleteFromDb(string $id)
     {
         $pdo = $this->entityManager->getPDO();
-        $sql = "DELETE  FROM `preferences` WHERE `id` = " . $pdo->quote($id);
-        $ps = $pdo->query($sql);
+
+        $sql = $this->entityManager->getQuery()->createDeleteQuery('Preferences', [
+            'whereClause' => [
+                'id' => $id,
+            ],
+        ]);
+
+        $pdo->query($sql);
     }
 
     public function remove(Entity $entity, array $options = [])
     {
         if (!$entity->id) return;
+
         $this->deleteFromDb($entity->id);
+
         if (isset($this->data[$entity->id])) {
             unset($this->data[$entity->id]);
         }
@@ -260,9 +258,11 @@ class Preferences extends Repository implements Removable,
     public function resetToDefaults(string $userId)
     {
         $this->deleteFromDb($userId);
+
         if (isset($this->data[$userId])) {
             unset($this->data[$userId]);
         }
+
         if ($entity = $this->get($userId)) {
             return $entity->toArray();
         }

@@ -45,7 +45,10 @@ class RDBQueryExecutor
 
     public function update(RDBSelect $select, array $values)
     {
-        $sql = $this->entityManager->getQuery()->createUpdateQuery($select->getEntityType(), $select->getRawParams(), $values);
+        $params = $select->getRawParams();
+        $params['update'] = $values;
+
+        $sql = $this->entityManager->getQuery()->createUpdateQuery($select->getEntityType(), $params);
 
         $this->entityManager->runQuery($sql, true);
     }

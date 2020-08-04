@@ -1053,26 +1053,17 @@ abstract class BaseMapper implements Mapper
 
     protected function insertInternal(Entity $entity, ?array $onDuplicateUpdateAttributeList = null)
     {
-        $dataList = $this->toValueMap($entity);
-
-        $columnList = $this->getInsertColumnList($entity);
-        $valueList = $this->getInsertValueList($entity);
-
-        $fieldsPart = "`" . implode("`, `", $columnList) . "`";
-        $valuesPart = implode(", ", $valueList);
-
-        $onDuplicatePart = null;
+        $update = null;
 
         if ($onDuplicateUpdateAttributeList && count($onDuplicateUpdateAttributeList)) {
-            $onDuplicateSetMap = $this->getInsertOnDuplicateSetMap($entity, $onDuplicateUpdateAttributeList);
-            $onDuplicateSubPartList = [];
-            foreach ($onDuplicateSetMap as $attribute => $value) {
-                $onDuplicateSubPartList[] = "`" . $this->toDb($attribute) . "` = " . $this->quote($value);
-            }
-            $onDuplicatePart = implode(', ', $onDuplicateSubPartList);
+            $update = $onDuplicateSetMap = $this->getInsertOnDuplicateSetMap($entity, $onDuplicateUpdateAttributeList);
         }
 
-        $sql = $this->composeInsertQuery($this->toDb($entity->getEntityType()), $fieldsPart, $valuesPart, $onDuplicatePart);
+        $sql = $this->query->createInsertQuery($entity->getEntityType(), [
+            'columns' => $this->getInsertColumnList($entity),
+            'values' => $this->getInsertValueMap($entity),
+            'update' => $update,
+        ]);
 
         $this->runQuery($sql, true);
     }
@@ -1086,25 +1077,16 @@ abstract class BaseMapper implements Mapper
             return;
         }
 
-        $columnList = $this->getInsertColumnList($collection[0]);
-
-        $fieldsPart = "`" . implode("`, `", $columnList) . "`";
-
-        $valuesPartList = [];
-
-        $entityType = $collection[0]->getEntityType();
+        $values = [];
 
         foreach ($collection as $entity) {
-            if ($entity->getEntityType() != $entityType) {
-                throw new Error("Mapper: Can't mass insert collection of different entity types.");
-            }
-
-            $valueList = $this->getInsertValueList($entity);
-            $valuesPart = implode(", ", $valueList);
-            $valuesPartList[] = $valuesPart;
+            $values[] = $this->getInsertValueMap($entity);
         }
 
-        $sql = $this->composeInsertQuery($this->toDb($entityType), $fieldsPart, $valuesPartList);
+        $sql = $this->query->createInsertQuery($entity->getEntityType(), [
+            'columns' => $this->getInsertColumnList($collection[0]),
+            'values' => $values,
+        ]);
 
         $this->runQuery($sql, true);
     }
@@ -1116,25 +1098,22 @@ abstract class BaseMapper implements Mapper
         $dataList = $this->toValueMap($entity);
 
         foreach ($dataList as $attribute => $value) {
-            $columnList[] = $this->toDb($attribute);
+            $columnList[] = $attribute;
         }
 
         return $columnList;
     }
 
-    protected function getInsertValueList(Entity $entity) : array
+    protected function getInsertValueMap(Entity $entity) : array
     {
-        $valueList = [];
+        $map = [];
 
-        $dataList = $this->toValueMap($entity);
-
-        foreach ($dataList as $attribute => $value) {
+        foreach ($this->toValueMap($entity) as $attribute => $value) {
             $type = $entity->getAttributeType($attribute);
-            $value = $this->prepareValueForInsert($type, $value);
-            $valueList[] = $this->quote($value);
+            $map[$attribute] = $this->prepareValueForInsert($type, $value);
         }
 
-        return $valueList;
+        return $map;
     }
 
     protected function getInsertOnDuplicateSetMap(Entity $entity, array $attributeList)
@@ -1189,7 +1168,8 @@ abstract class BaseMapper implements Mapper
                 'id' => $entity->id,
                 'deleted' => false,
             ],
-        ], $valueMap);
+            'update' => $valueMap,
+        ]);
 
         $this->pdo->query($sql);
     }
@@ -1246,7 +1226,10 @@ abstract class BaseMapper implements Mapper
             'id' => $id,
         ];
 
-        $sql = $this->query->createUpdateQuery($entityType, ['whereClause' => $whereClause], ['deleted' => false]);
+        $sql = $this->query->createUpdateQuery($entityType, [
+            'whereClause' => $whereClause,
+            'update' => ['deleted' => false],
+        ]);
 
         $this->runQuery($sql);
     }

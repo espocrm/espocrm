@@ -583,11 +583,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $sql = $this->getEntityManager()->getQuery()->createUpdateQuery('EntityEmailAddress', $updateSelect->getRawParams(), [
-                    'primary' => true,
-                ]);
-
-                $this->getEntityManager()->runQuery($sql, true);
+                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => true]);
 
             } else {
                 if (

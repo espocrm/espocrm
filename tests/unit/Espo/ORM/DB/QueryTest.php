@@ -160,9 +160,10 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             'whereClause' => [
                 'name' => 'test',
             ],
-        ], [
-            'deleted' => false,
-            'name' => 'hello',
+            'update' => [
+                'deleted' => false,
+                'name' => 'hello',
+            ],
         ]);
 
         $expectedSql =
@@ -180,8 +181,9 @@ class QueryTest extends \PHPUnit\Framework\TestCase
                 'name' => 'test',
             ],
             'joins' => ['post'],
-        ], [
-            'name:' => 'post.name',
+            'update' => [
+                'name:' => 'post.name',
+            ],
         ]);
 
         $expectedSql =
@@ -200,9 +202,10 @@ class QueryTest extends \PHPUnit\Framework\TestCase
                 'name' => 'test',
             ],
             'orderBy' => 'name',
-        ], [
-            'deleted' => false,
-            'name' => 'hello',
+            'update' => [
+                'deleted' => false,
+                'name' => 'hello',
+            ]
         ]);
 
         $expectedSql =
@@ -222,9 +225,10 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             ],
             'orderBy' => 'name',
             'limit' => 1,
-        ], [
-            'deleted' => false,
-            'name' => 'hello',
+            'update' => [
+                'deleted' => false,
+                'name' => 'hello',
+            ],
         ]);
 
         $expectedSql =
@@ -233,6 +237,64 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             "WHERE account.name = 'test' " .
             "ORDER BY account.name ASC " .
             "LIMIT 1";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testInsertQuery1()
+    {
+        $sql = $this->query->createInsertQuery('Account', [
+            'columns' => ['id', 'name'],
+            'values' => [
+                'id' => '1',
+                'name' => 'hello',
+            ],
+        ]);
+
+        $expectedSql =
+            "INSERT INTO `account` (`id`, `name`) VALUES ('1', 'hello')";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testInsertQuery2()
+    {
+        $sql = $this->query->createInsertQuery('Account', [
+            'columns' => ['id', 'name'],
+            'values' => [
+                [
+                    'id' => '1',
+                    'name' => 'hello',
+                ],
+                [
+                    'id' => '2',
+                    'name' => 'test',
+                ],
+            ],
+        ]);
+
+        $expectedSql =
+            "INSERT INTO `account` (`id`, `name`) VALUES ('1', 'hello'), ('2', 'test')";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testInsertUpdate()
+    {
+        $sql = $this->query->createInsertQuery('Account', [
+            'columns' => ['id', 'name'],
+            'values' => [
+                'id' => '1',
+                'name' => 'hello',
+            ],
+            'update' => [
+                'deleted' => false,
+                'name' => 'test'
+            ],
+        ]);
+
+        $expectedSql =
+            "INSERT INTO `account` (`id`, `name`) VALUES ('1', 'hello') ON DUPLICATE KEY UPDATE `deleted` = 0, `name` = 'test'";
 
         $this->assertEquals($expectedSql, $sql);
     }

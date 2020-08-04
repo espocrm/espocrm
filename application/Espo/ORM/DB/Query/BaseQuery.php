@@ -44,7 +44,7 @@ use PDO;
  */
 abstract class BaseQuery
 {
-    protected static $selectParamList = [
+    protected static $paramList = [
         'select',
         'whereClause',
         'offset',
@@ -66,6 +66,7 @@ abstract class BaseQuery
         'maxTextColumnsLength',
         'useIndex',
         'withDeleted',
+        'update',
     ];
 
     protected static $sqlOperators = [
@@ -269,6 +270,7 @@ abstract class BaseQuery
     const SELECT_METHOD = 'SELECT';
     const DELETE_METHOD = 'DELETE';
     const UPDATE_METHOD = 'UPDATE';
+    const INSERT_METHOD = 'INESRT';
 
     protected $entityFactory;
 
@@ -332,9 +334,11 @@ abstract class BaseQuery
     /**
      * Compose an UPDATE query.
      */
-    public function createUpdateQuery(string $entityType, ?array $params = null, array $values) : string
+    public function createUpdateQuery(string $entityType, ?array $params = null) : string
     {
         $params = $this->normilizeParams(self::UPDATE_METHOD, $params);
+
+        $values = $params['update'];
 
         $entity = $this->getSeed($entityType);
 
@@ -356,11 +360,85 @@ abstract class BaseQuery
         return $sql;
     }
 
+    public function createInsertQuery(string $entityType, array $params) : string
+    {
+        $params = $this->normilizeInsertParams($params);
+
+        $columns = $params['columns'];
+        $values = $params['values'];
+        $isMass = $params['isMass'];
+        $update = $params['update'];
+
+        $columnsPart = $this->getInsertColumnsPart($columns);
+
+        if ($isMass) {
+            $valuesPart = [];
+            foreach ($values as $item) {
+                $valuesPart[] = $this->getInsertValuesPart($columns, $item);
+            }
+        } else {
+            $valuesPart = $this->getInsertValuesPart($columns, $values);
+        }
+
+        $updatePart = null;
+
+        if ($update) {
+            $updatePart = $this->getInsertUpdatePart($update);
+        }
+
+        return $this->composeInsertQuery($this->toDb($entityType), $columnsPart, $valuesPart, $updatePart);
+    }
+
+    protected function normilizeInsertParams(array $params) : array
+    {
+        $columns = $params['columns'] ?? null;
+
+        if (empty($columns) || !is_array($columns)) {
+            throw new Error("ORM Query: 'columns' is empty for INSERT.");
+        }
+
+        $params['isMass'] = $params['isMass'] ?? false;
+
+        $values = $params['values'] ?? null;
+
+        if (empty($values) || !is_array($values)) {
+            throw new Error("ORM Query: 'values' is empty for INSERT.");
+        }
+
+        $isMass = array_keys($values)[0] === 0;
+
+        $params['isMass'] = $isMass;
+
+        if (!$isMass) {
+            foreach ($columns as $item) {
+                if (!array_key_exists($item, $values)) {
+                    throw new Error("ORM Query: 'values' should contain all items listed in 'columns'.");
+                }
+            }
+        } else {
+            foreach ($values as $valuesItem) {
+                foreach ($columns as $item) {
+                    if (!array_key_exists($item, $valuesItem)) {
+                        throw new Error("ORM Query: 'values' should contain all items listed in 'columns'.");
+                    }
+                }
+            }
+        }
+
+        $update = $params['update'] = $params['update'] ?? null;
+
+        if ($update && !is_array($update)) {
+            throw new Error("ORM Query: Bad 'update' param.");
+        }
+
+        return $params;
+    }
+
     protected function normilizeParams(string $method, ?array $params) : array
     {
         $params = $params ?? [];
 
-        foreach (self::$selectParamList as $k) {
+        foreach (self::$paramList as $k) {
             $params[$k] = array_key_exists($k, $params) ? $params[$k] : null;
         }
 
@@ -373,12 +451,22 @@ abstract class BaseQuery
 
         if ($method !== self::SELECT_METHOD) {
             if (isset($params['aggregation'])) {
-                throw new Error("ORM Query: Aggregation is not allowed for '{$method}'.");
+                throw new Error("ORM Query: Param 'aggregation' is not allowed for '{$method}'.");
             }
 
             if (isset($params['offset'])) {
-                throw new Error("ORM Query: Offset is not allowed for '{$method}'.");
+                throw new Error("ORM Query: Param 'offset' is not allowed for '{$method}'.");
             }
+        }
+
+        if ($method !== self::UPDATE_METHOD && $method !== self::INSERT_METHOD) {
+            if (isset($params['update'])) {
+                 throw new Error("ORM Query: Param 'update' is not allowed for '{$method}'.");
+            }
+        }
+
+        if (isset($params['update']) && !is_array($params['update'])) {
+            throw new Error("ORM Query: Param 'update' should be an array.");
         }
 
         return $params;
@@ -2336,6 +2424,25 @@ abstract class BaseQuery
         return $sql;
     }
 
+    protected function composeInsertQuery(string $table, string $columns, $values, ?string $update = null) : string
+    {
+        $sql = "INSERT INTO `{$table}`";
+
+        $sql .= " ({$columns})";
+
+        if (is_array($values)) {
+            $sql .= " VALUES (" . implode("), (", $values) . ")";
+        } else {
+            $sql .= " VALUES ({$values})";
+        }
+
+        if ($update) {
+            $sql .= " ON DUPLICATE KEY UPDATE " . $update;
+        }
+
+        return $sql;
+    }
+
     protected function getSetPart(Entity $entity, array $values) : string
     {
         if (!count($values)) {
@@ -2370,6 +2477,39 @@ abstract class BaseQuery
             }
 
             $list[] = $left . " = " . $right;
+        }
+
+        return implode(', ', $list);
+    }
+
+    protected function getInsertColumnsPart(array $columnList) : string
+    {
+        $list = [];
+
+        foreach ($columnList as $column) {
+            $list[] = '`'.$this->toDb($this->sanitize($column)) . '`';
+        }
+
+        return implode(', ', $list);
+    }
+
+    protected function getInsertValuesPart(array $columnList, array $values) : string
+    {
+        $list = [];
+
+        foreach ($columnList as $column) {
+            $list[] = $this->quote($values[$column]);
+        }
+
+        return implode(', ', $list);
+    }
+
+    protected function getInsertUpdatePart(array $values) : string
+    {
+        $list = [];
+
+        foreach ($values as $column => $value) {
+            $list[] = "`" . $this->toDb($this->sanitize($column)) . "` = " . $this->quote($value);
         }
 
         return implode(', ', $list);
