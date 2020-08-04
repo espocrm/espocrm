@@ -137,7 +137,7 @@ abstract class BaseMapper implements Mapper
     /**
      * Select enities from DB by a SQL query.
      */
-    public function selectByQuery(Entity $entity, $sql, ?array $params = null) : Collection
+    public function selectByQuery(Entity $entity, string $sql, ?array $params = null) : Collection
     {
         $params = $params ?? [];
 
