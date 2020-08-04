@@ -512,7 +512,9 @@ abstract class BaseMapper implements Mapper
     {
         $type = $entity->getRelationType($relationName);
 
-        if (!$type === Entity::MANY_MANY) return null;
+        if (!$type === Entity::MANY_MANY) {
+            throw new Error("'getRelationColumn' works only on many-to-many relations.");
+        }
 
         $relDefs = $entity->relations[$relationName];
 
@@ -569,7 +571,7 @@ abstract class BaseMapper implements Mapper
         $id = $entity->id;
 
         if (empty($id) || empty($relationName)) {
-            return;
+            throw new Error("Cant't mass relate on empty ID or relation name.");
         }
 
         $relDefs = $entity->relations[$relationName];
@@ -588,31 +590,30 @@ abstract class BaseMapper implements Mapper
 
         switch ($relType) {
             case Entity::MANY_MANY:
-                $key = $keySet['key'];
-                $foreignKey = $keySet['foreignKey'];
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $relTable = $this->toDb($relDefs['relationName']);
+                $middleName = ucfirst($relDefs['relationName']);
 
-                $fieldsPart = $this->toDb($nearKey);
-                $valuesPart = $this->pdo->quote($entity->id);
+                $columns = [];
+                $columns[] = $nearKey;
 
                 $valueList = [];
                 $valueList[] = $entity->id;
 
-                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-                    foreach ($relDefs['conditions'] as $f => $v) {
-                        $fieldsPart .= ", " . $this->toDb($f);
-                        $valuesPart .= ", " . $this->pdo->quote($v);
-                        $valueList[] = $v;
-                    }
+                $conditions = $relDefs['conditions'] ?? [];
+
+                foreach ($conditions as $left => $value) {
+                    $columns[] = $left;
+                    $valueList[] = $v;
                 }
-                $fieldsPart .= ", " . $this->toDb($distantKey);
+
+                $columns[] = $distantKey;
 
                 $params['select'] = [];
-                foreach ($valueList as $value) {
-                   $params['select'][] = ['VALUE:' . $value, $value];
+
+                foreach ($valueList as $i => $value) {
+                   $params['select'][] = ['VALUE:' . $value, 'v' . strval($i)];
                 }
 
                 $params['select'][] = 'id';
@@ -620,14 +621,22 @@ abstract class BaseMapper implements Mapper
                 unset($params['orderBy']);
                 unset($params['order']);
 
-                $subSql = $this->query->createSelectQuery($foreignEntityType, $params);
+                $params['from'] = $foreignEntityType;
 
-                $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = 0";
+                $sql = $this->query->createInsertQuery($middleName, [
+                    'columns' => $columns,
+                    'valuesSelectParams' => $params,
+                    'update' => [
+                        'deleted' => false,
+                    ],
+                ]);
 
                 $this->runQuery($sql, true);
 
-                break;
+                return;
         }
+
+        throw new Error("Relation type '{$relType}' is not supported for mass relate.");
     }
 
     public function runQuery(string $query, bool $rerunIfDeadlock = false)

@@ -366,19 +366,12 @@ abstract class BaseQuery
 
         $columns = $params['columns'];
         $values = $params['values'];
-        $isMass = $params['isMass'];
         $update = $params['update'];
+        $valuesSelectParams = $params['valuesSelectParams'];
 
         $columnsPart = $this->getInsertColumnsPart($columns);
 
-        if ($isMass) {
-            $valuesPart = [];
-            foreach ($values as $item) {
-                $valuesPart[] = $this->getInsertValuesPart($columns, $item);
-            }
-        } else {
-            $valuesPart = $this->getInsertValuesPart($columns, $values);
-        }
+        $valuesPart = $this->getInsertValuesPart($entityType, $params);
 
         $updatePart = null;
 
@@ -389,6 +382,29 @@ abstract class BaseQuery
         return $this->composeInsertQuery($this->toDb($entityType), $columnsPart, $valuesPart, $updatePart);
     }
 
+    protected function getInsertValuesPart(string $entityType, array $params)
+    {
+        $isMass = $params['isMass'];
+        $isBySelect = $params['isBySelect'];
+
+        $columns = $params['columns'];
+        $values = $params['values'];
+
+        if ($isBySelect) {
+            return '('. $this->createSelectQuery($params['valuesSelectParams']['from'], $params['valuesSelectParams']) . ')';
+        }
+
+        if ($isMass) {
+            $list = [];
+            foreach ($values as $item) {
+                $list[] = '(' . $this->getInsertValuesItemPart($columns, $item) . ')';
+            }
+            return 'VALUES ' . implode(', ', $list);
+        }
+
+        return 'VALUES (' . $this->getInsertValuesItemPart($columns, $values) . ')';
+    }
+
     protected function normilizeInsertParams(array $params) : array
     {
         $columns = $params['columns'] ?? null;
@@ -397,29 +413,50 @@ abstract class BaseQuery
             throw new Error("ORM Query: 'columns' is empty for INSERT.");
         }
 
-        $params['isMass'] = $params['isMass'] ?? false;
+        $values = $params['values'] = $params['values'] ?? null;
 
-        $values = $params['values'] ?? null;
+        $valuesSelectParams = $params['valuesSelectParams'] = $params['valuesSelectParams'] ?? null;
 
-        if (empty($values) || !is_array($values)) {
-            throw new Error("ORM Query: 'values' is empty for INSERT.");
+        $isBySelect = false;
+
+        if ($valuesSelectParams) {
+            $isBySelect = true;
         }
 
-        $isMass = array_keys($values)[0] === 0;
+        if (!$isBySelect) {
+            if (empty($values) || !is_array($values)) {
+                throw new Error("ORM Query: 'values' is empty for INSERT.");
+            }
+        }
+
+        if ($isBySelect) {
+            if (!is_array($valuesSelectParams)) {
+                throw new Error("ORM Query: Bad 'valuesSelectParams' parameter.");
+            }
+            if (!isset($valuesSelectParams['from'])) {
+                throw new Error("ORM Query: Missing 'from' in 'valuesSelectParams'.");
+            }
+        }
+
+        $params['isBySelect'] = $isBySelect;
+
+        $isMass = !$isBySelect && array_keys($values)[0] === 0;
 
         $params['isMass'] = $isMass;
 
-        if (!$isMass) {
-            foreach ($columns as $item) {
-                if (!array_key_exists($item, $values)) {
-                    throw new Error("ORM Query: 'values' should contain all items listed in 'columns'.");
-                }
-            }
-        } else {
-            foreach ($values as $valuesItem) {
+        if (!$isBySelect) {
+            if (!$isMass) {
                 foreach ($columns as $item) {
-                    if (!array_key_exists($item, $valuesItem)) {
+                    if (!array_key_exists($item, $values)) {
                         throw new Error("ORM Query: 'values' should contain all items listed in 'columns'.");
+                    }
+                }
+            } else {
+                foreach ($values as $valuesItem) {
+                    foreach ($columns as $item) {
+                        if (!array_key_exists($item, $valuesItem)) {
+                            throw new Error("ORM Query: 'values' should contain all items listed in 'columns'.");
+                        }
                     }
                 }
             }
@@ -2407,17 +2444,13 @@ abstract class BaseQuery
         return $sql;
     }
 
-    protected function composeInsertQuery(string $table, string $columns, $values, ?string $update = null) : string
+    protected function composeInsertQuery(string $table, string $columns, string $values, ?string $update = null) : string
     {
         $sql = "INSERT INTO `{$table}`";
 
         $sql .= " ({$columns})";
 
-        if (is_array($values)) {
-            $sql .= " VALUES (" . implode("), (", $values) . ")";
-        } else {
-            $sql .= " VALUES ({$values})";
-        }
+        $sql .= " {$values}";
 
         if ($update) {
             $sql .= " ON DUPLICATE KEY UPDATE " . $update;
@@ -2476,7 +2509,7 @@ abstract class BaseQuery
         return implode(', ', $list);
     }
 
-    protected function getInsertValuesPart(array $columnList, array $values) : string
+    protected function getInsertValuesItemPart(array $columnList, array $values) : string
     {
         $list = [];
 

@@ -558,17 +558,20 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testMassRelate()
     {
-        $query = "INSERT INTO `post_tag` (post_id, tag_id) (SELECT '1' AS `1`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = 0) ON DUPLICATE KEY UPDATE deleted = 0";
+        $query =
+            "INSERT INTO `post_tag` (`post_id`, `tag_id`) ".
+            "(SELECT '1' AS `v0`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = 0) ON DUPLICATE KEY UPDATE `deleted` = 0";
+
         $return = true;
         $this->mockQuery($query, $return);
 
         $this->post->id = '1';
 
-        $this->db->massRelate($this->post, 'tags', array(
-            'whereClause' => array(
-                'name' => 'test'
-            )
-        ));
+        $this->db->massRelate($this->post, 'tags', [
+            'whereClause' => [
+                'name' => 'test',
+            ],
+        ]);
     }
 
     public function testDeleteFromDb1()
