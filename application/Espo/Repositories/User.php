@@ -166,23 +166,13 @@ class User extends \Espo\Core\Repositories\Database implements
             return false;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $arr = [];
-        foreach ($teamIds as $teamId) {
-            $arr[] = $pdo->quote($teamId);
-        }
-
-        $sql = "SELECT * FROM team_user WHERE deleted = 0 AND user_id = :userId AND team_id IN (".implode(", ", $arr).")";
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute(array(
-            ':userId' => $userId
-        ));
-        if ($row = $sth->fetch()) {
-            return true;
-        }
-        return false;
+        return (bool) $this->getEntityManager()->getRepository('TeamUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'teamId' => $teamIds,
+            ])
+            ->findOne();
     }
 
     public function handleSelectParams(&$params)
