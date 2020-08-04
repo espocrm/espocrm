@@ -342,14 +342,10 @@ abstract class BaseMapper implements Mapper
                     $additionalColumnsConditions = $params['additionalColumnsConditions'];
                 }
 
-                $MMJoinPart = $this->getMMJoin($entity, $relationName, $keySet, $additionalColumnsConditions);
+                $params['joins'] = $params['joins'] ?? [];
 
-                if (empty($params['customJoin'])) {
-                    $params['customJoin'] = '';
-                } else {
-                    $params['customJoin'] .= ' ';
-                }
-                $params['customJoin'] .= $MMJoinPart;
+                $params['joins'][] = $this->getManyManyJoin($entity, $relationName, $additionalColumnsConditions);
+
 
                 $params['relationName'] = $relDefs['relationName'];
 
@@ -1274,38 +1270,41 @@ abstract class BaseMapper implements Mapper
         return $entity;
     }
 
-    protected function getMMJoin(Entity $entity, string $relationName, $keySet = false, $conditions = []) : string
+    protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null) : array
     {
-        $relDefs = $entity->relations[$relationName];
+        $defs = $entity->relations[$relationName];
 
-        if (empty($keySet)) {
-            $keySet = $this->query->getKeys($entity, $relationName);
-        }
+        $middleName = $defs['relationName'] ?? null;
+
+        $keySet = $this->query->getKeys($entity, $relationName);
 
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
         $nearKey = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
 
-        $relTable = $this->toDb($relDefs['relationName']);
-        $distantTable = $this->toDb($relDefs['entity']);
+        if (!$middleName) {
+            throw new Error("No 'relationName' parameter for '{$relationName}' relationship.");
+        }
 
-        $join =
-            "JOIN `{$relTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
-            . " AND "
-            . "{$relTable}." . $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->get($key))
-            . " AND "
-            . "{$relTable}.deleted = " . $this->quote(false) . "";
+        $alias = lcfirst($middleName);
+
+        $join = [
+            ucfirst($middleName),
+            $alias,
+            [
+                "{$distantKey}:" => $foreignKey,
+                "{$nearKey}" => $entity->get($key),
+                "deleted" => false,
+            ],
+        ];
 
         $conditions = $conditions ?? [];
-        if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-            $conditions = array_merge($conditions, $relDefs['conditions']);
+        if (!empty($defs['conditions']) && is_array($defs['conditions'])) {
+            $conditions = array_merge($conditions, $defs['conditions']);
         }
 
-        if (!empty($conditions)) {
-            $conditionsSql = $this->query->buildJoinConditionsStatement($entity->getEntityType(), $relTable, $conditions);
-            $join .= " AND " . $conditionsSql;
-        }
+        $join[2] = array_merge($join[2], $conditions);
 
         return $join;
     }

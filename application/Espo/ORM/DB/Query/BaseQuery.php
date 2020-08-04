@@ -684,13 +684,13 @@ abstract class BaseQuery
         }
 
         if (
-            !empty($params['additionalColumns']) && is_array($params['additionalColumns']) &&
-            !empty($params['relationName'])
+            !empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])
         ) {
+            $alias = $this->sanitizeSelectAlias(lcfirst($params['relationName']));
+
             foreach ($params['additionalColumns'] as $column => $field) {
                 $itemAlias = $this->sanitizeSelectAlias($field);
-                $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." .
-                    $this->toDb($this->sanitize($column)) . " AS `{$itemAlias}`";
+                $selectPart .= ", " . $alias . "." . $this->toDb($this->sanitize($column)) . " AS `{$itemAlias}`";
             }
         }
 
@@ -2033,23 +2033,6 @@ abstract class BaseQuery
         }
 
         return implode(' ', $joinSqlList);
-    }
-
-    public function buildJoinConditionsStatement(string $entityType, string $alias, array $conditions) : string
-    {
-        $entity = $this->getSeed($entityType);
-
-        $sql = '';
-
-        $joinSqlList = [];
-        foreach ($conditions as $left => $right) {
-            $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
-        }
-        if (count($joinSqlList)) {
-            $sql .= implode(" AND ", $joinSqlList);
-        }
-
-        return $sql;
     }
 
     protected function buildJoinConditionStatement(Entity $entity, $alias = null, $left, $right)

@@ -248,15 +248,15 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query =
             "SELECT tag.id AS `id`, tag.name AS `name`, tag.deleted AS `deleted` ".
             "FROM `tag` ".
-            "JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = 0 ".
+            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
-        $return = new MockDBResult(array(
-            array(
+        $return = new MockDBResult([
+            [
                 'id' => '1',
                 'name' => 'test',
                 'deleted' => false,
-            ),
-        ));
+            ],
+        ]);
         $this->mockQuery($query, $return);
         $this->post->id = '1';
         $list = $this->db->selectRelated($this->post, 'tags');
@@ -266,10 +266,34 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($list[0]->get('name'), 'test');
     }
 
+    public function testSelectRelatedManyManyWithConditions()
+    {
+        $query =
+            "SELECT team.id AS `id`, team.name AS `name`, team.deleted AS `deleted`, entityTeam.team_id AS `stub` FROM `team` ".
+            "JOIN `entity_team` AS `entityTeam` ON entityTeam.team_id = team.id AND entityTeam.entity_id = '1' AND " .
+            "entityTeam.deleted = 0 AND entityTeam.entity_type = 'Account' WHERE team.deleted = 0";
+        $return = new MockDBResult([
+            [
+                'id' => '1',
+                'name' => 'test',
+                'deleted' => false,
+            ],
+        ]);
+        $this->mockQuery($query, $return);
+        $this->account->id = '1';
+
+        $list = $this->db->selectRelated($this->account, 'teams', [
+            'additionalColumns' => [
+                'teamId' => 'stub',
+            ],
+        ]);
+    }
+
     public function testSelectRelatedHasChildren()
     {
         $query =
-            "SELECT note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` ".
+            "SELECT ".
+            "note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` ".
             "FROM `note` ".
             "WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = 0";
         $return = new MockDBResult(array(
@@ -291,7 +315,10 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectRelatedBelongsTo()
     {
         $query =
-            "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
+            "SELECT ".
+            "post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), ".
+            "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, ".
+            "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "WHERE post.id = '1' AND post.deleted = 0 ".
@@ -320,7 +347,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query =
             "SELECT COUNT(tag.id) AS `value` ".
             "FROM `tag` ".
-            "JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = 0 ".
+            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
         $return = new MockDBResult([
             [

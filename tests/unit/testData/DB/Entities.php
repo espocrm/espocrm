@@ -24,6 +24,10 @@ class Account extends TEntity
                 'type' => Entity::BOOL,
                 'default' => 0,
             ),
+            'stub' => [
+                'type' => 'varchar',
+                'notStorable' => true,
+            ],
     );
     public $relations = array(
             'teams' => array(
