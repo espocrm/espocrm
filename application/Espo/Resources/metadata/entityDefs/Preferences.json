@@ -198,5 +198,6 @@
         "tabColorsDisabled": {
             "type": "bool"
         }
-    }
+    },
+    "noDeletedAttribute": true
 }

@@ -33,6 +33,13 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Config;
+
+use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+
 class Converter
 {
     private $metadata;
@@ -53,19 +60,19 @@ class Converter
 
     protected $defaultNaming = 'postfix';
 
-    protected $defaultLength = array(
+    protected $defaultLength = [
         'varchar' => 255,
         'int' => 11,
-    );
+    ];
 
-    protected $defaultValue = array(
+    protected $defaultValue = [
         'bool' => false,
-    );
+    ];
 
-    /*
-    * //pair Espo => ORM
-    */
-    protected $fieldAccordances = array(
+    /**
+     * params mapping: entityDefs => ORM
+     */
+    protected $fieldAccordances = [
         'type' => 'type',
         'dbType' => 'dbType',
         'maxLength' => 'len',
@@ -76,44 +83,40 @@ class Converter
         'entity' => 'entity',
         'notStorable' => 'notStorable',
         'link' => 'relation',
-        'field' => 'foreign',  //todo change "foreign" to "field"
+        'field' => 'foreign',  // @todo change "foreign" to "field"
         'unique' => 'unique',
         'index' => 'index',
-        /*'conditions' => 'conditions',
-        'additionalColumns' => 'additionalColumns',    */
         'default' => 'default',
         'select' => 'select',
         'orderBy' => 'orderBy',
         'where' => 'where',
         'storeArrayValues' => 'storeArrayValues',
         'binary' => 'binary',
-    );
+    ];
 
-    protected $idParams = array(
+    protected $idParams = [
         'dbType' => 'varchar',
         'len' => 24,
-    );
+    ];
 
     /**
-     * Permitted Entity options which will be moved to ormMetadata
-     *
-     * @var array
+     * Permitted entityDefs parameters which will be copied to ormMetadata.
      */
-    protected $permittedEntityOptions = array(
+    protected $permittedEntityOptions = [
         'indexes',
         'additionalTables',
-    );
+    ];
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config = null)
+    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config = null)
     {
         $this->metadata = $metadata;
-        $this->fileManager = $fileManager; //need to featue with ormHooks. Ex. isFollowed field
+        $this->fileManager = $fileManager;
         $this->config = $config;
 
         $this->relationManager = new RelationManager($this->metadata, $config);
 
-        $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
-        $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->config);
+        $this->metadataHelper = new MetadataHelper($this->metadata);
+        $this->databaseHelper = new DatabaseHelper($this->config);
     }
 
     protected function getMetadata()
@@ -156,11 +159,9 @@ class Converter
     }
 
     /**
-     * Orm metadata convertation process
-     *
-     * @return array
+     * Covert metadata > entityDefs to ORM metadata.
      */
-    public function process()
+    public function process() : array
     {
         $entityDefs = $this->getEntityDefs(true);
 
@@ -191,7 +192,7 @@ class Converter
         return $ormMetadata;
     }
 
-    protected function convertEntity($entityType, $entityMetadata)
+    protected function convertEntity(string $entityType, array $entityMetadata) : array
     {
         $ormMetadata = [];
         $ormMetadata[$entityType] = [
@@ -217,7 +218,7 @@ class Converter
 
         if (!empty($entityMetadata['collection']) && is_array($entityMetadata['collection'])) {
             $collectionDefs = $entityMetadata['collection'];
-            $ormMetadata[$entityType]['collection'] = array();
+            $ormMetadata[$entityType]['collection'] = [];
 
             if (array_key_exists('orderByColumn', $collectionDefs)) {
                 $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderByColumn'];
@@ -235,7 +236,7 @@ class Converter
         return $ormMetadata;
     }
 
-    public function afterProcess(array $ormMetadata)
+    public function afterProcess(array $ormMetadata) : array
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
             foreach ($entityParams['fields'] as $fieldName => &$fieldParams) {
@@ -287,84 +288,82 @@ class Converter
         return $ormMetadata;
     }
 
-    /**
-     * Metadata conversion from Espo format into Doctrine
-     *
-     * @param string $entityType
-     * @param array $entityMetadata
-     *
-     * @return array
-     */
-    protected function convertFields($entityType, &$entityMetadata)
-    {
-        //List of unmerged fields with default field definitions in $outputMeta
-        $unmergedFields = array(
-            'name',
-        );
 
-        $outputMeta = array(
-            'id' => array(
+    protected function convertFields(string $entityType, array &$entityMetadata) : array
+    {
+        // List of unmerged fields with default field definitions in $output.
+        $unmergedFields = [
+            'name',
+        ];
+
+        $output = [
+            'id' => [
                 'type' => Entity::ID,
-                'dbType' => 'varchar'
-            ),
-            'name' => array(
+                'dbType' => 'varchar',
+            ],
+            'name' => [
                 'type' => isset($entityMetadata['fields']['name']['type']) ? $entityMetadata['fields']['name']['type'] : Entity::VARCHAR,
-                'notStorable' => true
-            ),
-            'deleted' => array(
+                'notStorable' => true,
+            ],
+            'deleted' => [
                 'type' => Entity::BOOL,
-                'default' => false
-            )
-        );
+                'default' => false,
+            ],
+        ];
+
+        if ($entityMetadata['noDeletedAttribute'] ?? false) {
+            unset($output['deleted']);
+        }
 
         foreach ($entityMetadata['fields'] as $fieldName => $fieldParams) {
             if (empty($fieldParams['type'])) continue;
 
-            /** check if "fields" option exists in $fieldMeta */
             $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
 
             $fieldDefs = $this->convertField($entityType, $fieldName, $fieldParams, $fieldTypeMetadata);
 
             if ($fieldDefs !== false) {
-                //push fieldDefs to the ORM metadata array
-                if (isset($outputMeta[$fieldName]) && !in_array($fieldName, $unmergedFields)) {
-                    $outputMeta[$fieldName] = array_merge($outputMeta[$fieldName], $fieldDefs);
+                if (isset($output[$fieldName]) && !in_array($fieldName, $unmergedFields)) {
+                    $output[$fieldName] = array_merge($output[$fieldName], $fieldDefs);
                 } else {
-                    $outputMeta[$fieldName] = $fieldDefs;
+                    $output[$fieldName] = $fieldDefs;
                 }
             }
 
-            /** check and set the linkDefs from 'fields' metadata */
             if (isset($fieldTypeMetadata['linkDefs'])) {
                 $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($entityType, $fieldParams, $fieldTypeMetadata['linkDefs']);
                 if (isset($linkDefs)) {
                     if (!isset($entityMetadata['links'])) {
-                        $entityMetadata['links'] = array();
+                        $entityMetadata['links'] = [];
                     }
-                    $entityMetadata['links'] = Util::merge( array($fieldName => $linkDefs), $entityMetadata['links'] );
+                    $entityMetadata['links'] = Util::merge(
+                        [$fieldName => $linkDefs],
+                        $entityMetadata['links']
+                    );
                 }
             }
         }
 
-        return $outputMeta;
+        return $output;
     }
 
     /**
-     * Correct fields definitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
+     * Correct fields definitions based on Espo\Custom\Core\Utils\Database\Orm\Fields.
      */
-    protected function correctFields($entityType, array $ormMetadata) : array
+    protected function correctFields(string $entityType, array $ormMetadata) : array
     {
         $entityDefs = $this->getEntityDefs();
 
         $entityMetadata = $ormMetadata[$entityType];
+
         //load custom field definitions and customCodes
         foreach ($entityMetadata['fields'] as $fieldName => $fieldParams) {
             if (empty($fieldParams['type'])) continue;
 
             $fieldType = ucfirst($fieldParams['type']);
-            $className = '\Espo\Custom\Core\Utils\Database\Orm\Fields\\' . $fieldType;
+            $className = 'Espo\Custom\Core\Utils\Database\Orm\Fields\\' . $fieldType;
             if (!class_exists($className)) {
-                $className = '\Espo\Core\Utils\Database\Orm\Fields\\' . $fieldType;
+                $className = 'Espo\Core\Utils\Database\Orm\Fields\\' . $fieldType;
             }
 
             if (class_exists($className) && method_exists($className, 'load')) {
@@ -380,49 +379,48 @@ class Converter
 
             $defaultAttributes = $this->metadata->get(['entityDefs', $entityType, 'fields', $fieldName, 'defaultAttributes']);
             if ($defaultAttributes && array_key_exists($fieldName, $defaultAttributes)) {
-                $defaultMetadataPart = array(
-                    $entityType => array(
-                        'fields' => array(
-                            $fieldName => array(
+                $defaultMetadataPart = [
+                    $entityType => [
+                        'fields' => [
+                            $fieldName => [
                                 'default' => $defaultAttributes[$fieldName]
-                            )
-                        )
-                    )
-                );
+                            ]
+                        ]
+                    ]
+                ];
                 $ormMetadata = Util::merge($ormMetadata, $defaultMetadataPart);
             }
         }
 
-        //todo move to separate file
-        //add a field 'isFollowed' for scopes with 'stream => true'
+        // @todo move to separate file
         $scopeDefs = $this->getMetadata()->get('scopes.'.$entityType);
+
         if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
             if (!isset($entityMetadata['fields']['isFollowed'])) {
-                $ormMetadata[$entityType]['fields']['isFollowed'] = array(
+                $ormMetadata[$entityType]['fields']['isFollowed'] = [
                     'type' => 'varchar',
                     'notStorable' => true,
                     'notExportable' => true,
-                );
+                ];
 
-                $ormMetadata[$entityType]['fields']['followersIds'] = array(
+                $ormMetadata[$entityType]['fields']['followersIds'] = [
                     'type' => 'jsonArray',
                     'notStorable' => true,
                     'notExportable' => true,
-                );
-                $ormMetadata[$entityType]['fields']['followersNames'] = array(
+                ];
+                $ormMetadata[$entityType]['fields']['followersNames'] = [
                     'type' => 'jsonObject',
                     'notStorable' => true,
                     'notExportable' => true,
-                );
+                ];
             }
-        } //END: add a field 'isFollowed' for stream => true
+        }
 
         return $ormMetadata;
     }
 
-    protected function convertField($entityType, $fieldName, array $fieldParams, $fieldTypeMetadata = null)
+    protected function convertField(string $entityType, string $fieldName, array $fieldParams, ?array $fieldTypeMetadata = null)
     {
-        /** merge fieldDefs option from field definition */
         if (!isset($fieldTypeMetadata)) {
             $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
         }
@@ -435,24 +433,20 @@ class Converter
             $fieldParams['notStorable'] = false;
         }
 
-        /** check if need to skipOrmDefs this field in ORM metadata */
         if (!empty($fieldTypeMetadata['skipOrmDefs']) || !empty($fieldParams['skipOrmDefs'])) {
             return false;
         }
 
-        /** if defined 'notNull => false' and 'required => true', then remove 'notNull' */
         if (isset($fieldParams['notNull']) && !$fieldParams['notNull'] && isset($fieldParams['required']) && $fieldParams['required']) {
             unset($fieldParams['notNull']);
         }
 
         $fieldDefs = $this->getInitValues($fieldParams);
 
-        /** check if the field need to be saved in database    */
         if ( (isset($fieldParams['db']) && $fieldParams['db'] === false) ) {
             $fieldDefs['notStorable'] = true;
         }
 
-        /** check and set the field length */
         if (isset($fieldDefs['type']) && !isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
             $fieldDefs['len'] = $this->defaultLength[$fieldDefs['type']];
         }
@@ -460,13 +454,13 @@ class Converter
         return $fieldDefs;
     }
 
-    protected function convertLinks($entityType, $entityMetadata, $ormMetadata)
+    protected function convertLinks(string $entityType, array $entityMetadata, array $ormMetadata) : array
     {
         if (!isset($entityMetadata['links'])) {
-            return array();
+            return [];
         }
 
-        $relationships = array();
+        $relationships = [];
         foreach ($entityMetadata['links'] as $linkName => $linkParams) {
 
             if (isset($linkParams['skipOrmDefs']) && $linkParams['skipOrmDefs'] === true) {
@@ -513,7 +507,7 @@ class Converter
         return $values;
     }
 
-    protected function applyFullTextSearch(&$ormMetadata, $entityType)
+    protected function applyFullTextSearch(array &$ormMetadata, string $entityType)
     {
         if (!$this->getDatabaseHelper()->isTableSupportsFulltext(Util::toUnderScore($entityType))) return;
         if (!$this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) return;
