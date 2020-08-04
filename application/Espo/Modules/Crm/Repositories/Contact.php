@@ -68,30 +68,28 @@ class Contact extends \Espo\Core\Repositories\Database
         }
 
         if ($accountIdChanged || $titleChanged) {
-            $pdo = $this->getEntityManager()->getPDO();
+            $accountContact = $this->getEntityManager()->getRepository('AccountContact')
+                ->select(['role'])
+                ->where([
+                    'accountId' => $accountId,
+                    'contactId' => $entity->id,
+                    'deleted' => false,
+                ])
+                ->findOne();
 
-            $sql = "
-                SELECT id, role FROM account_contact
-                WHERE
-                    account_id = ".$pdo->quote($accountId)." AND
-                    contact_id = ".$pdo->quote($entity->id)." AND
-                    deleted = 0
-            ";
-            $sth = $pdo->prepare($sql);
-            $sth->execute();
-
-            if ($row = $sth->fetch()) {
-                if ($titleChanged && $entity->get('title') != $row['role']) {
-                    $this->updateRelation($entity, 'accounts', $accountId, array(
-                        'role' => $entity->get('title')
-                    ));
-                }
-            } else {
+            if (!$accountContact) {
                 if ($accountIdChanged) {
-                    $this->relate($entity, 'accounts', $accountId, array(
+                    $this->relate($entity, 'accounts', $accountId, [
                         'role' => $entity->get('title')
-                    ));
+                    ]);
                 }
+                return;
+            }
+
+            if ($titleChanged && $entity->get('title') != $accountContact->get('role')) {
+                $this->updateRelation($entity, 'accounts', $accountId, [
+                    'role' => $entity->get('title'),
+                ]);
             }
         }
     }
