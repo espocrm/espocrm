@@ -318,15 +318,15 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     public function testCountRelated()
     {
         $query =
-            "SELECT COUNT(tag.id) AS AggregateValue ".
+            "SELECT COUNT(tag.id) AS `value` ".
             "FROM `tag` ".
             "JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = 0 ".
             "WHERE tag.deleted = 0";
-        $return = new MockDBResult(array(
-            array(
-                'AggregateValue' => 1,
-            ),
-        ));
+        $return = new MockDBResult([
+            [
+                'value' => 1,
+            ],
+        ]);
         $this->mockQuery($query, $return);
 
         $this->post->id = '1';
@@ -516,11 +516,11 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testMax()
     {
-        $query = "SELECT MAX(post.id) AS AggregateValue FROM `post` WHERE post.deleted = 0";
+        $query = "SELECT MAX(post.id) AS `value` FROM `post` WHERE post.deleted = 0";
         $return = new MockDBResult(array(
-            array (
-                'AggregateValue' => 10,
-            )
+            [
+                'value' => 10,
+            ]
         ));
         $this->mockQuery($query, $return);
 

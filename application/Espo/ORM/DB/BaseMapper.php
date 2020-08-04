@@ -188,7 +188,7 @@ abstract class BaseMapper implements Mapper
 
         if ($ps) {
             foreach ($ps as $row) {
-                return $row['AggregateValue'];
+                return $row['value'];
             }
         }
 
@@ -207,27 +207,25 @@ abstract class BaseMapper implements Mapper
     {
         $params = $params ?? [];
 
+        $entityType = $entity->getEntityType();
+
         $relDefs = $entity->relations[$relationName];
 
         if (!isset($relDefs['type'])) {
             throw new LogicException(
-                "Missing 'type' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity."
+                "Missing 'type' in definition for relationship {$relationName} in {entityType} entity."
             );
         }
 
         if ($relDefs['type'] !== Entity::BELONGS_TO_PARENT) {
             if (!isset($relDefs['entity'])) {
                 throw new LogicException(
-                    "Missing 'entity' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity."
+                    "Missing 'entity' in definition for relationship {$relationName} in {entityType} entity."
                 );
             }
 
-            $relEntityName = (!empty($relDefs['class'])) ? $relDefs['class'] : $relDefs['entity'];
-            $relEntity = $this->entityFactory->create($relEntityName);
-
-            if (!$relEntity) {
-                return null;
-            }
+            $relEntityType = (!empty($relDefs['class'])) ? $relDefs['class'] : $relDefs['entity'];
+            $relEntity = $this->entityFactory->create($relEntityType);
         }
 
         if ($returnTotalCount) {
@@ -256,17 +254,24 @@ abstract class BaseMapper implements Mapper
 
                 $ps = $this->pdo->query($sql);
 
-                if ($ps) {
-                    foreach ($ps as $row) {
-                        if (!$returnTotalCount) {
-                            $relEntity = $this->fromRow($relEntity, $row);
-                            $relEntity->setAsFetched();
-                            return $relEntity;
-                        } else {
-                            return $row['AggregateValue'];
-                        }
-                    }
+                if (!$ps) {
+                    return null;
                 }
+
+                if ($returnTotalCount) {
+                    foreach ($ps as $row) {
+                        return intval($row['value']);
+                    }
+                    return 0;
+                }
+
+                foreach ($ps as $row) {
+                    $relEntity = $this->fromRow($relEntity, $row);
+                    $relEntity->setAsFetched();
+
+                    return $relEntity;
+                }
+
                 return null;
 
             case Entity::HAS_MANY:
@@ -302,15 +307,19 @@ abstract class BaseMapper implements Mapper
                 }
 
                 $ps = $this->pdo->query($sql);
-                if ($ps) {
-                    if (!$returnTotalCount) {
-                        $resultDataList = $ps->fetchAll();
-                    } else {
-                        foreach ($ps as $row) {
-                            return $row['AggregateValue'];
-                        }
-                    }
+
+                if (!$ps) {
+                    return null;
                 }
+
+                if ($returnTotalCount) {
+                    foreach ($ps as $row) {
+                        return intval($row['value']);
+                    }
+                    return 0;
+                }
+
+                $resultDataList = $ps->fetchAll();
 
                 if ($relType == Entity::HAS_ONE) {
                     if (count($resultDataList)) {
@@ -320,12 +329,12 @@ abstract class BaseMapper implements Mapper
                         return $relEntity;
                     }
                     return null;
-                } else {
-                    $collection = $this->createCollection($relEntity->getEntityType(), $resultDataList);
-                    $collection->setAsFetched();
-
-                    return $collection;
                 }
+
+                $collection = $this->createCollection($relEntity->getEntityType(), $resultDataList);
+                $collection->setAsFetched();
+
+                return $collection;
 
             case Entity::MANY_MANY:
                 $additionalColumnsConditions = null;
@@ -359,15 +368,18 @@ abstract class BaseMapper implements Mapper
 
                 $ps = $this->pdo->query($sql);
 
-                if ($ps) {
-                    if (!$returnTotalCount) {
-                        $resultDataList = $ps->fetchAll();
-                    } else {
-                        foreach ($ps as $row) {
-                            return $row['AggregateValue'];
-                        }
-                    }
+                if (!$ps) {
+                    return null;
                 }
+
+                if ($returnTotalCount) {
+                    foreach ($ps as $row) {
+                        return intval($row['value']);
+                    }
+                    return null;
+                }
+
+                $resultDataList = $ps->fetchAll();
 
                 $collection = $this->createCollection($relEntity->getEntityType(), $resultDataList);
                 $collection->setAsFetched();
@@ -377,9 +389,13 @@ abstract class BaseMapper implements Mapper
             case Entity::BELONGS_TO_PARENT:
                 $foreignEntityType = $entity->get($keySet['typeKey']);
                 $foreignEntityId = $entity->get($key);
+
                 if (!$foreignEntityType || !$foreignEntityId) {
-                    return null;
+                    throw new LogicException(
+                        "Bad definition for relationship {$relationName} in {$entityType} entity."
+                    );
                 }
+
                 $params['whereClause'][$foreignKey] = $foreignEntityId;
                 $params['offset'] = 0;
                 $params['limit'] = 1;
@@ -390,20 +406,28 @@ abstract class BaseMapper implements Mapper
 
                 $ps = $this->pdo->query($sql);
 
-                if ($ps) {
-                    foreach ($ps as $row) {
-                        if (!$returnTotalCount) {
-                            $relEntity = $this->fromRow($relEntity, $row);
-                            return $relEntity;
-                        } else {
-                            return $row['AggregateValue'];
-                        }
-                    }
+                if (!$ps) {
+                    return null;
                 }
+
+                if ($returnTotalCount) {
+                    foreach ($ps as $row) {
+                        return intval($row['value']);
+                    }
+                    return 0;
+                }
+
+                foreach ($ps as $row) {
+                    $relEntity = $this->fromRow($relEntity, $row);
+                    return $relEntity;
+                }
+
                 return null;
         }
 
-        return false;
+        throw new LogicException(
+            "Bad 'type' {$relType} in definition for relationship {$relationName} in {$entityType} entity."
+        );
     }
 
     /**
@@ -465,8 +489,7 @@ abstract class BaseMapper implements Mapper
 
                 $wherePart =
                     $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
-                    AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0
-                    ";
+                    AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0";
 
                 if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
                     foreach ($relDefs['conditions'] as $f => $v) {

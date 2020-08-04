@@ -469,7 +469,7 @@ abstract class BaseQuery
             );
 
             if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
-                $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
+                $sql = "SELECT COUNT(*) AS `value` FROM ({$sql}) AS `countAlias`";
             }
 
             return $sql;
@@ -619,8 +619,9 @@ abstract class BaseQuery
         return $selectPart;
     }
 
-    protected function getFunctionPart($function, $part, $entityType, $distinct = false, ?array $argumentPartList = null)
-    {
+    protected function getFunctionPart(
+        string $function, string $part, string $entityType, bool $distinct = false, ?array $argumentPartList = null
+    ) : string {
         if (!in_array($function, $this->functionList)) {
             throw new Error("ORM Query: Not allowed function '{$function}'.");
         }
@@ -758,7 +759,7 @@ abstract class BaseQuery
         return $function . '(' . $part . ')';
     }
 
-    protected function getFunctionPartTZ($entityType, ?array $argumentPartList = null)
+    protected function getFunctionPartTZ(string $entityType, ?array $argumentPartList = null)
     {
         if (!$argumentPartList || count($argumentPartList) < 2) {
             throw new Error("ORM Query: Not enough arguments for function TZ.");
@@ -1452,7 +1453,7 @@ abstract class BaseQuery
         }
 
         $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityType()) . "." .
-            $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
+            $this->toDb($this->sanitize($aggregationBy)) . ") AS `value`";
 
         return $selectPart;
     }
