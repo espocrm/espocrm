@@ -224,7 +224,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
             if ($onlyName) {
                 $select = ['id', 'name'];
-                if ($row['entityType'] === 'User') {
+                if ($itemEntityType === 'User') {
                     $select[] = 'isActive';
                 }
                 $entity = $this->getEntityManager()->getRepository($itemEntityType)

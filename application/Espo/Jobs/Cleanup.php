@@ -118,96 +118,128 @@ class Cleanup implements Job
 
     protected function cleanupJobs()
     {
-        $pdo = $this->entityManager->getPDO();
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('Job')
+            ->where([
+                'DATE:modifiedAt<' => $this->getCleanupJobFromDate(),
+                'status!=' => 'Pending',
+            ])
+            ->build();
 
-        $query = "DELETE FROM `job` WHERE DATE(modified_at) < ".$pdo->quote($this->getCleanupJobFromDate())." AND status <> 'Pending'";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $this->entityManager->getQueryExecutor()->delete($select);
 
-        $query = "DELETE FROM `job` WHERE DATE(modified_at) < ".$pdo->quote($this->getCleanupJobFromDate())." AND status = 'Pending' AND deleted = 1";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('Job')
+            ->where([
+                'DATE:modifiedAt<' => $this->getCleanupJobFromDate(),
+                'status=' => 'Pending',
+                'deleted' => true,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->delete($select);
     }
 
     protected function cleanupUniqueIds()
     {
-        $pdo = $this->entityManager->getPDO();
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('UniqueId')
+            ->where([
+                'terminateAt!=' => null,
+                'terminateAt<' => date('Y-m-d H:i:s')
+            ])
+            ->build();
 
-        $query = "DELETE FROM `unique_id` WHERE terminate_at IS NOT NULL AND terminate_at < ".$pdo->quote(date('Y-m-d H:i:s'))."";
-
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $this->entityManager->getQueryExecutor()->delete($select);
     }
 
     protected function cleanupScheduledJobLog()
     {
-        $pdo = $this->entityManager->getPDO();
+        $scheduledJobList = $this->entityManager->getRepository('ScheduledJob')
+            ->select(['id'])
+            ->find();
 
-        $sql = "SELECT id FROM scheduled_job";
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $id = $row['id'];
+        foreach ($scheduledJobList as $scheduledJob) {
+            $scheduledJobId = $scheduledJob->get('id');
 
-            $lastRowsSql = "SELECT id FROM scheduled_job_log_record WHERE scheduled_job_id = ".$pdo->quote($id)." ORDER BY created_at DESC LIMIT 0,10";
-            $lastRowsSth = $pdo->prepare($lastRowsSql);
-            $lastRowsSth->execute();
-            $lastRowIds = $lastRowsSth->fetchAll(\PDO::FETCH_COLUMN, 0);
+            $ignoreLogRecordList = $this->entityManager->getRepository('ScheduledJobLogRecord')
+                ->select(['id'])
+                ->where([
+                    'scheduledJobId' => $scheduledJobId,
+                ])
+                ->order('createdAt', 'DESC')
+                ->limit(0, 10)
+                ->find();
 
-            if (count($lastRowIds)) {
-                foreach ($lastRowIds as $i => $v) {
-                    $lastRowIds[$i] = $pdo->quote($v);
-                }
-                $delSql = "DELETE FROM `scheduled_job_log_record`
-                        WHERE scheduled_job_id = ".$pdo->quote($id)."
-                        AND DATE(created_at) < ".$pdo->quote($this->getCleanupJobFromDate())."
-                        AND id NOT IN (".implode(',', $lastRowIds).")
-                    ";
-                $pdo->query($delSql);
+            if (!count($ignoreLogRecordList)) {
+                continue;
             }
+
+            $ignoreIdList = [];
+            foreach ($ignoreLogRecordList as $logRecord) {
+                $ignoreIdList[] = $logRecord->get('id');
+            }
+
+            $select = $this->entityManager->createSelectBuilder()
+                ->from('ScheduledJobLogRecord')
+                ->where([
+                    'scheduledJobId' => $scheduledJobId,
+                    'DATE:createdAt<' => $this->getCleanupJobFromDate(),
+                    'id!=' => $ignoreIdList,
+                ])
+                ->build();
+
+            $this->entityManager->getQueryExecutor()->delete($select);
         }
     }
 
     protected function cleanupActionHistory()
     {
-        $pdo = $this->entityManager->getPDO();
-
         $period = '-' . $this->config->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $query = "DELETE FROM `action_history_record` WHERE DATE(created_at) < " . $pdo->quote($datetime->format('Y-m-d')) . "";
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('ActionHistoryRecord')
+            ->where([
+                'DATE:createdAt<' => $datetime->format('Y-m-d'),
+            ])
+            ->build();
 
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $this->entityManager->getQueryExecutor()->delete($select);
     }
 
     protected function cleanupAuthToken()
     {
-        $pdo = $this->entityManager->getPDO();
-
         $period = '-' . $this->config->get('cleanupAuthTokenPeriod', $this->cleanupAuthTokenPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $query = "DELETE FROM `auth_token` WHERE DATE(modified_at) < " . $pdo->quote($datetime->format('Y-m-d')) . " AND is_active = 0";
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('AuthToken')
+            ->where([
+                'DATE:modifiedAt<' => $datetime->format('Y-m-d'),
+                'isActive' => false,
+            ])
+            ->build();
 
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $this->entityManager->getQueryExecutor()->delete($select);
     }
 
     protected function cleanupAuthLog()
     {
-        $pdo = $this->entityManager->getPDO();
-
         $period = '-' . $this->config->get('cleanupAuthLogPeriod', $this->cleanupAuthLogPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $query = "DELETE FROM `auth_log_record` WHERE DATE(created_at) < " . $pdo->quote($datetime->format('Y-m-d')) . "";
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('AuthLogRecord')
+            ->where([
+                'DATE:createdAt<' => $datetime->format('Y-m-d'),
+            ])
+            ->build();
 
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $this->entityManager->getQueryExecutor()->delete($select);
     }
 
     protected function getCleanupJobFromDate()
@@ -226,17 +258,20 @@ class Cleanup implements Job
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $collection = $this->entityManager->getRepository('Attachment')->where(array(
-            'OR' => array(
-                array(
-                    'role' => ['Export File', 'Mail Merge', 'Mass Pdf']
-                )
-            ),
-            'createdAt<' => $datetime->format('Y-m-d H:i:s')
-        ))->limit(0, 5000)->find();
+        $collection = $this->entityManager->getRepository('Attachment')
+            ->where([
+                'OR' => [
+                    [
+                        'role' => ['Export File', 'Mail Merge', 'Mass Pdf']
+                    ]
+                ],
+                'createdAt<' => $datetime->format('Y-m-d H:i:s'),
+            ])
+            ->limit(0, 5000)
+            ->find();
 
-        foreach ($collection as $e) {
-            $this->entityManager->removeEntity($e);
+        foreach ($collection as $entity) {
+            $this->entityManager->removeEntity($entity);
         }
 
         if ($this->config->get('cleanupOrphanAttachments')) {
@@ -252,8 +287,8 @@ class Cleanup implements Job
 
             $collection = $this->entityManager->getRepository('Attachment')->limit(0, 5000)->find($selectParams);
 
-            foreach ($collection as $e) {
-                $this->entityManager->removeEntity($e);
+            foreach ($collection as $entity) {
+                $this->entityManager->removeEntity($entity);
             }
         }
 
@@ -313,50 +348,76 @@ class Cleanup implements Job
             }
         }
 
-        $sql = "DELETE FROM attachment WHERE deleted = 1 AND created_at < ".$pdo->quote($datetime->format('Y-m-d H:i:s'));
-        $sth = $pdo->query($sql);
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('Attachment')
+            ->where([
+                'deleted' => true,
+                'createdAt<' => $datetime->format('Y-m-d H:i:s'),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->delete($select);
     }
 
     protected function cleanupEmails()
     {
-        $pdo = $this->entityManager->getPDO();
-
         $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24 * 20);
 
-        $sql = "SELECT * FROM email WHERE deleted = 1 AND created_at < ".$pdo->quote($dateBefore);
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $id = $row['id'];
-            $attachments = $this->entityManager->getRepository('Attachment')->where(array(
+        $emailList = $this->entityManager->getRepository('Email')
+            ->select(['id'])
+            ->where([
+                'createdAt<' => $dateBefore,
+                'deleted' => true,
+            ])
+            ->find(['withDeleted' => true]);
+
+        foreach ($emailList as $email) {
+            $id = $email->get('id');
+
+            $attachments = $this->entityManager->getRepository('Attachment')->where([
                 'parentId' => $id,
                 'parentType' => 'Email'
-            ))->find();
+            ])->find();
+
             foreach ($attachments as $attachment) {
                 $this->entityManager->removeEntity($attachment);
             }
-            $sqlDel = "DELETE FROM email WHERE deleted = 1 AND id = ".$pdo->quote($id);
-            $pdo->query($sqlDel);
-            $sqlDel = "DELETE FROM email_user WHERE email_id = ".$pdo->quote($id);
-            $pdo->query($sqlDel);
+
+            $select = $this->entityManager->createSelectBuilder()
+                ->from('Email')
+                ->where([
+                    'deleted' => true,
+                    'id' => $id,
+                ])
+                ->build();
+
+            $this->entityManager->getQueryExecutor()->delete($select);
+
+            $select = $this->entityManager->createSelectBuilder()
+                ->from('EmailUser')
+                ->where([
+                    'emailId' => $id,
+                ])
+                ->build();
+
+            $this->entityManager->getQueryExecutor()->delete($select);
         }
     }
 
     protected function cleanupNotifications()
     {
-        $pdo = $this->entityManager->getPDO();
-
         $period = '-' . $this->config->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $sql = "SELECT * FROM `notification` WHERE DATE(created_at) < ".$pdo->quote($datetime->format('Y-m-d'));
+        $notificationList = $this->entityManager->getRepository('Notification')
+            ->where([
+                'DATE:createdAt<' => $datetime->format('Y-m-d'),
+            ])
+            ->find();
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $id = $row['id'];
-            $this->entityManager->getRepository('Notification')->deleteFromDb($id);
+        foreach ($notificationList as $notification) {
+            $this->entityManager->getRepository('Notification')->deleteFromDb($notification->get('id'));
         }
     }
 
@@ -380,59 +441,82 @@ class Cleanup implements Job
         }
     }
 
-    protected function cleanupDeletedEntity(Entity $e)
+    protected function cleanupDeletedEntity(Entity $entity)
     {
-        $scope = $e->getEntityType();
+        $scope = $entity->getEntityType();
 
-        if (!$e->get('deleted')) return;
+        if (!$entity->get('deleted')) {
+            return;
+        }
 
         $repository = $this->entityManager->getRepository($scope);
-        $repository->deleteFromDb($e->id);
+        $repository->deleteFromDb($entity->id);
 
         $query = $this->entityManager->getQuery();
 
-        foreach ($e->getRelationList() as $relation) {
-            if ($e->getRelationType($relation) !== 'manyMany') continue;;
+        foreach ($entity->getRelationList() as $relation) {
+            if ($entity->getRelationType($relation) !== Entity::MANY_MANY) {
+                continue;
+            }
+
             try {
-                $relationName = $e->getRelationParam($relation, 'relationName');
-                $relationTable = $query->toDb($relationName);
+                $relationName = $entity->getRelationParam($relation, 'relationName');
 
-                $midKey = $e->getRelationParam($relation, 'midKeys')[0];
-
-                $where = [];
-                $where[$midKey] = $e->id;
-
-                $conditions = $e->getRelationParam($relation, 'conditions');
-                if (!empty($conditions)) {
-                    foreach ($conditions as $key => $value) {
-                        $where[$key] = $value;
-                    }
+                if (!$relationName) {
+                    continue;
                 }
 
-                $partList = [];
-                foreach ($where as $key => $value) {
-                    $partList[] = $query->toDb($key) . ' = ' . $query->quote($value);
+                $midKey = $entity->getRelationParam($relation, 'midKeys')[0];
+
+                if (!$midKey) {
+                    continue;
                 }
-                if (empty($partList)) continue;
 
-                $sql = "DELETE FROM `{$relationTable}` WHERE " . implode(' AND ', $partList);
+                $where = [
+                    $midKey => $entity->id,
+                ];
 
-                $this->entityManager->getPDO()->query($sql);
-            } catch (\Exception $e) {}
+                $conditions = $entity->getRelationParam($relation, 'conditions') ?? [];
+
+                foreach ($conditions as $key => $value) {
+                    $where[$key] = $value;
+                }
+
+                if (empty($where)) {
+                    continue;
+                }
+
+                $relationEntityType = ucfirst($relationName);
+
+                if (!$this->entityManager->hasRepository($relationEntityType)) {
+                    continue;
+                }
+
+                $select = $this->entityManager->createSelectBuilder()
+                    ->from($relationEntityType)
+                    ->where($where)
+                    ->build();
+
+                $this->entityManager->getQueryExecutor()->delete($select);
+
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error("Cleanup: " . $e->getMessage());
+            }
         }
 
         $noteList = $this->entityManager->getRepository('Note')->where([
             'OR' => [
                 [
                     'relatedType' => $scope,
-                    'relatedId' => $e->id
+                    'relatedId' => $entity->id
                 ],
                 [
                     'parentType' => $scope,
-                    'parentId' => $e->id
+                    'parentId' => $entity->id
                 ]
             ]
         ])->find(['withDeleted' => true]);
+
         foreach ($noteList as $note) {
             $this->entityManager->removeEntity($note);
             $note->set('deleted', true);
@@ -441,9 +525,10 @@ class Cleanup implements Job
 
         if ($scope === 'Note') {
             $attachmentList = $this->entityManager->getRepository('Attachment')->where([
-                'parentId' => $e->id,
+                'parentId' => $entity->id,
                 'parentType' => 'Note'
             ])->find();
+
             foreach ($attachmentList as $attachment) {
                 $this->entityManager->removeEntity($attachment);
                 $this->entityManager->getRepository('Attachment')->deleteFromDb($attachment->id);
@@ -492,15 +577,16 @@ class Cleanup implements Job
             }
 
             $deletedEntityList = $repository->select(['id', 'deleted'])->where($whereClause)->find(['withDeleted' => true]);
-            foreach ($deletedEntityList as $e) {
+
+            foreach ($deletedEntityList as $entity) {
                 if ($hasCleanupMethod) {
                     try {
-                        $service->cleanup($e->id);
+                        $service->cleanup($entity->id);
                     } catch (\Throwable $e) {
                         $GLOBALS['log']->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());
                     }
                 }
-                $this->cleanupDeletedEntity($e);
+                $this->cleanupDeletedEntity($entity);
             }
         }
     }

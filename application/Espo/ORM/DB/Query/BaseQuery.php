@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\DB\Query;
 
-use Espo\CoreErrors\Error;
+use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\{
     Entity,
@@ -92,6 +92,7 @@ abstract class BaseQuery
         'AVG',
         'MAX',
         'MIN',
+        'DATE',
         'MONTH',
         'DAY',
         'YEAR',

@@ -29,7 +29,7 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\DB\Query\Base as Query;
+use Espo\ORM\DB\Query\BaseQuery as Query;
 
 use PDO;
 
