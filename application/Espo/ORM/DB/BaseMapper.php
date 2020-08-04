@@ -1082,7 +1082,9 @@ abstract class BaseMapper implements Mapper
      */
     public function massInsert(Collection $collection)
     {
-        if (!count($collection)) return;
+        if (!count($collection)) {
+            return;
+        }
 
         $columnList = $this->getInsertColumnList($collection[0]);
 
@@ -1090,13 +1092,19 @@ abstract class BaseMapper implements Mapper
 
         $valuesPartList = [];
 
+        $entityType = $collection[0]->getEntityType();
+
         foreach ($collection as $entity) {
+            if ($entity->getEntityType() != $entityType) {
+                throw new Error("Mapper: Can't mass insert collection of different entity types.");
+            }
+
             $valueList = $this->getInsertValueList($entity);
             $valuesPart = implode(", ", $valueList);
             $valuesPartList[] = $valuesPart;
         }
 
-        $sql = $this->composeInsertQuery($this->toDb($entity->getEntityType()), $fieldsPart, $valuesPartList);
+        $sql = $this->composeInsertQuery($this->toDb($entityType), $fieldsPart, $valuesPartList);
 
         $this->runQuery($sql, true);
     }

@@ -36,6 +36,8 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Json;
 
+use Espo\Core\Utils\Util;
+
 use Espo\Core\Record\Collection as RecordCollection;
 
 use Espo\Entities\Note;
@@ -67,7 +69,6 @@ class Notification extends \Espo\Services\Record implements
     public function notifyAboutNote(array $userIdList, Note $note)
     {
         $data = ['noteId' => $note->id];
-        $encodedData = Json::encode($data);
 
         $related = null;
         if ($note->get('relatedType') == 'Email') {
@@ -76,33 +77,46 @@ class Notification extends \Espo\Services\Record implements
         }
 
         $now = date('Y-m-d H:i:s');
-        $pdo = $this->getEntityManager()->getPDO();
 
-        $query = $this->getEntityManager()->getQuery();
+        $collection = $this->entityManager->createCollection();
 
-        $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`, `related_id`, `related_type`, `related_parent_id`, `related_parent_type`) VALUES ";
-        $arr = [];
 
-        $userList = $this->getEntityManager()->getRepository('User')->where([
-            'isActive' => true,
-            'id' => $userIdList
-        ])->find();
+        $userList = $this->getEntityManager()->getRepository('User')
+            ->select(['id'])
+            ->where([
+                'isActive' => true,
+                'id' => $userIdList,
+            ])->find();
 
         foreach ($userList as $user) {
             $userId = $user->id;
+
             if (!$this->checkUserNoteAccess($user, $note)) continue;
             if ($note->get('createdById') === $user->id) continue;
             if ($related && $related->getEntityType() == 'Email' && $related->get('sentById') == $user->id) continue;
             if ($related && $related->get('createdById') == $user->id) continue;
 
-            $id = \Espo\Core\Utils\Util::generateId();
-            $arr[] = "(".$query->quote($id).", ".$query->quote($encodedData).", ".$query->quote('Note').", ".$query->quote($userId).", ".$query->quote($now).", ".$query->quote($note->id).", ".$query->quote('Note').", ".$query->quote($note->get('parentId')).", ".$query->quote($note->get('parentType')).")";
+            $notification = $this->entityManager->getEntity('Notification');
+            $notification->set([
+                'id' => Util::generateId(),
+                'data' => $data,
+                'type' => 'Note',
+                'userId' => $userId,
+                'createdAt' => $now,
+                'relatedId' => $note->id,
+                'relatedType' => 'Note',
+                'relatedParentId' => $note->get('parentId'),
+                'relatedParentType' => $note->get('parentType'),
+            ]);
+
+            $collection[] = $notification;
         }
 
-        if (empty($arr)) return;
+        if (empty($collection)) {
+            return;
+        }
 
-        $sql .= implode(", ", $arr);
-        $pdo->query($sql);
+        $this->entityManager->getMapper()->massInsert($collection);
 
         if ($this->getConfig()->get('useWebSocket')) {
             foreach ($userIdList as $userId) {
@@ -162,9 +176,16 @@ class Notification extends \Espo\Services\Record implements
 
     public function markAllRead(string $userId)
     {
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "UPDATE notification SET `read` = 1 WHERE user_id = ".$pdo->quote($userId)." AND `read` = 0";
-        $pdo->prepare($sql)->execute();
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('Notification')
+            ->where([
+                'userId' => $userId,
+                'read' => false,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['read' => true]);
+
         return true;
     }
 
@@ -255,16 +276,13 @@ class Notification extends \Espo\Services\Record implements
         }
 
         if (!empty($ids)) {
-            $pdo = $this->getEntityManager()->getPDO();
-            $idQuotedList = [];
-            foreach ($ids as $id) {
-                $idQuotedList[] = $pdo->quote($id);
-            }
-
-            $sql = "UPDATE notification SET `read` = 1 WHERE id IN (" . implode(', ', $idQuotedList) .")";
-
-            $s = $pdo->prepare($sql);
-            $s->execute();
+            $select = $this->entityManager->createSelectBuilder()
+                ->from('Notification')
+                ->where([
+                    'id' => $ids,
+                ])
+                ->build();
+            $this->entityManager->getQueryExecutor()->update($select, ['read' => true]);
         }
 
         return new RecordCollection($collection, $count);
