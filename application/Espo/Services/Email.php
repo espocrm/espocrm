@@ -518,193 +518,205 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAllAsRead($userId = null)
+    public function markAllAsRead(?string $userId = null)
     {
-        if (!$userId) {
-            $userId = $this->getUser()->id;
-        }
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            UPDATE email_user SET is_read = 1
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($userId) . "
-        ";
-        $pdo->query($sql);
+        $userId = $userId ?? $this->getUser()->id;
 
-        $sql = "
-            UPDATE notification SET `read` = 1
-            WHERE
-                `deleted` = 0 AND
-                `type` = 'EmailReceived' AND
-                `related_type` = 'Email' AND
-                `read` = 0 AND
-                `user_id` = " . $pdo->quote($userId) . "
-        ";
-        $pdo->query($sql);
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('EmailUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'isRead' => false,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['isRead' => true]);
+
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('Notification')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'relatedType' => 'Email',
+                'read' => false,
+                'type' => 'EmailReceived',
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['read' => true]);
 
         return true;
     }
 
-    public function markAsRead($id, $userId = null)
+    public function markAsRead(string $id, ?string $userId = null)
     {
-        if (!$userId) {
-            $userId = $this->getUser()->id;
-        }
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            UPDATE email_user SET is_read = 1
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($userId) . " AND
-                email_id = " . $pdo->quote($id) . "
-        ";
-        $pdo->query($sql);
+        $userId = $userId ?? $this->getUser()->id;
+
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('EmailUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'emailId' => $id,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['isRead' => true]);
 
         $this->markNotificationAsRead($id, $userId);
 
         return true;
     }
 
-    public function markAsNotRead($id, $userId = null)
+    public function markAsNotRead(string $id, ?string $userId = null)
     {
-        if (!$userId) {
-            $userId = $this->getUser()->id;
-        }
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            UPDATE email_user SET is_read = 0
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($userId) . " AND
-                email_id = " . $pdo->quote($id) . "
-        ";
-        $pdo->query($sql);
+        $userId = $userId ?? $this->getUser()->id;
+
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('EmailUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'emailId' => $id,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['isRead' => false]);
+
         return true;
     }
 
-    public function markAsImportant($id, $userId = null)
+    public function markAsImportant(string $id, ?string $userId = null)
     {
-        if (!$userId) {
-            $userId = $this->getUser()->id;
-        }
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            UPDATE email_user SET is_important = 1
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($userId) . " AND
-                email_id = " . $pdo->quote($id) . "
-        ";
-        $pdo->query($sql);
+        $userId = $userId ?? $this->getUser()->id;
+
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('EmailUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'emailId' => $id,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['isImportant' => true]);
+
         return true;
     }
 
-    public function markAsNotImportant($id, $userId = null)
+    public function markAsNotImportant(string $id, ?string $userId = null)
     {
-        if (!$userId) {
-            $userId = $this->getUser()->id;
-        }
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            UPDATE email_user SET is_important = 0
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($userId) . " AND
-                email_id = " . $pdo->quote($id) . "
-        ";
-        $pdo->query($sql);
+        $userId = $userId ?? $this->getUser()->id;
+
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('EmailUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'emailId' => $id,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['isImportant' => false]);
+
         return true;
     }
 
-    public function moveToTrash($id, $userId = null)
+    public function moveToTrash(string $id, ?string $userId = null)
     {
-        if (!$userId) {
-            $userId = $this->getUser()->id;
-        }
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            UPDATE email_user SET in_trash = 1
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($userId) . " AND
-                email_id = " . $pdo->quote($id) . "
-        ";
-        $pdo->query($sql);
+        $userId = $userId ?? $this->getUser()->id;
+
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('EmailUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'emailId' => $id,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['inTrash' => true]);
 
         $this->markNotificationAsRead($id, $userId);
 
         return true;
     }
 
-    public function markNotificationAsRead($id, $userId)
+    public function retrieveFromTrash(string $id, ?string $userId = null)
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $userId = $userId ?? $this->getUser()->id;
 
-        $sql = "
-            UPDATE notification SET `read` = 1
-            WHERE
-                `deleted` = 0 AND
-                `type` = 'EmailReceived' AND
-                `related_type` = 'Email' AND
-                `related_id` = " . $pdo->quote($id) ." AND
-                `read` = 0 AND
-                `user_id` = " . $pdo->quote($userId) . "
-        ";
-        $pdo->query($sql);
-    }
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('EmailUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'emailId' => $id,
+            ])
+            ->build();
 
-    public function retrieveFromTrash($id, $userId = null)
-    {
-        if (!$userId) {
-            $userId = $this->getUser()->id;
-        }
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            UPDATE email_user SET in_trash = 0
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($userId) . " AND
-                email_id = " . $pdo->quote($id) . "
-        ";
-        $pdo->query($sql);
+        $this->entityManager->getQueryExecutor()->update($select, ['inTrash' => false]);
+
         return true;
     }
 
-    public function moveToFolder($id, $folderId, $userId = null)
+    public function markNotificationAsRead(string $id, string $userId)
     {
-        if (!$userId) {
-            $userId = $this->getUser()->id;
-        }
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('Notification')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'relatedType' => 'Email',
+                'relatedId' => $id,
+                'read' => false,
+                'type' => 'EmailReceived',
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['read' => true]);
+    }
+
+    public function moveToFolder(string $id, ?string $folderId, ?string $userId = null)
+    {
+        $userId = $userId ?? $this->getUser()->id;
+
         if ($folderId === 'inbox') {
             $folderId = null;
         }
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            UPDATE email_user SET folder_id = " . $this->getEntityManager()->getQuery()->quote($folderId) . "
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($userId) . " AND
-                email_id = " . $pdo->quote($id) . "
-        ";
-        $pdo->query($sql);
+
+        $select = $this->entityManager->createSelectBuilder()
+            ->from('EmailUser')
+            ->where([
+                'deleted' => false,
+                'userId' => $userId,
+                'emailId' => $id,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->update($select, ['folderId' => $folderId]);
+
         return true;
     }
 
-    static public function parseFromName($string)
+    static public function parseFromName(?string $string) : string
     {
         $fromName = '';
+
         if ($string) {
             if (stripos($string, '<') !== false) {
                 $fromName = trim(preg_replace('/(<.*>)/', '', $string), '" ');
             }
         }
+
         return $fromName;
     }
 
-    static public function parseFromAddress($string)
+    static public function parseFromAddress(?string $string) : string
     {
         $fromAddress = '';
+
         if ($string) {
             if (stripos($string, '<') !== false) {
                 if (preg_match('/<(.*)>/', $string, $matches)) {
@@ -714,6 +726,7 @@ class Email extends Record implements
                 $fromAddress = $string;
             }
         }
+
         return $fromAddress;
     }
 
@@ -772,31 +785,28 @@ class Email extends Record implements
 
     public function loadUserColumnFields(Entity $entity)
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $emailUser = $this->entityManager->getRepository('EmailUser')
+            ->select(['isRead', 'isImportant', 'inTrash'])
+            ->where([
+                'deleted' => false,
+                'userId' => $this->getUser()->id,
+                'emailId' => $entity->id,
+            ])
+            ->findOne();
 
-        $sql = "
-            SELECT is_read AS 'isRead', is_important AS 'isImportant', in_trash AS 'inTrash' FROM email_user
-            WHERE
-                deleted = 0 AND
-                user_id = " . $pdo->quote($this->getUser()->id) . " AND
-                email_id = " . $pdo->quote($entity->id) . "
-        ";
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $isRead = !empty($row['isRead']) ? true : false;
-            $isImportant = !empty($row['isImportant']) ? true : false;
-            $inTrash = !empty($row['inTrash']) ? true : false;
-
-            $entity->set('isRead', $isRead);
-            $entity->set('isImportant', $isImportant);
-            $entity->set('inTrash', $inTrash);
-        } else {
+        if (!$emailUser) {
             $entity->set('isRead', null);
             $entity->clear('isImportant');
             $entity->clear('inTrash');
+
+            return;
         }
+
+        $entity->set([
+            'isRead' => $emailUser->get('isRead'),
+            'isImportant' => $emailUser->get('isImportant'),
+            'inTrash' => $emailUser->get('inTrash'),
+        ]);
     }
 
     public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo'])
@@ -804,15 +814,15 @@ class Email extends Record implements
         $this->getEntityManager()->getRepository('Email')->loadNameHash($entity, $fieldList);
     }
 
-    public function copyAttachments($emailId, $parentType, $parentId)
+    public function copyAttachments(string $emailId, ?string $parentType, ?string $parentId)
     {
         return $this->getCopiedAttachments($emailId, $parentType, $parentId);
     }
 
-    public function getCopiedAttachments($id, $parentType = null, $parentId = null)
+    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null)
     {
         $ids = [];
-        $names = new \stdClass();
+        $names = (object) [];
 
         if (empty($id)) {
             throw new BadRequest();
@@ -860,7 +870,7 @@ class Email extends Record implements
         ];
     }
 
-    public function sendTestEmail($data)
+    public function sendTestEmail(array $data)
     {
         $smtpParams = $data;
 
