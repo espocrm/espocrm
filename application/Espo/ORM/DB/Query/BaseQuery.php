@@ -166,6 +166,8 @@ abstract class BaseQuery
      */
     public function createSelectQuery(string $entityType, ?array $params = nul) : string
     {
+        $params = $params ?? [];
+
         return $this->createSelectQueryInternal($entityType, $params);
     }
 
@@ -174,6 +176,8 @@ abstract class BaseQuery
      */
     public function createDeleteQuery(string $entityType, ?array $params = null) : string
     {
+        $params = $params ?? [];
+
         $params = $this->normilizeParams(self::DELETE_METHOD, $params);
 
         $entity = $this->getSeed($entityType);
@@ -198,6 +202,8 @@ abstract class BaseQuery
      */
     public function createUpdateQuery(string $entityType, ?array $params = null) : string
     {
+        $params = $params ?? [];
+
         $params = $this->normilizeParams(self::UPDATE_METHOD, $params);
 
         $values = $params['update'];
