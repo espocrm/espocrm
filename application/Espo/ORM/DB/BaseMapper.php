@@ -29,8 +29,6 @@
 
 namespace Espo\ORM\DB;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\ORM\{
     Entity,
     Collection,
@@ -44,6 +42,7 @@ use Espo\ORM\{
 use PDO;
 use Exception;
 use LogicException;
+use RuntimeException;
 
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
@@ -72,6 +71,8 @@ abstract class BaseMapper implements Mapper
         $this->query = $query;
         $this->entityFactory = $entityFactory;
         $this->metadata = $metadata;
+
+        $this->helper = new Helper($metadata);
     }
 
     /**
@@ -239,7 +240,7 @@ abstract class BaseMapper implements Mapper
 
         $relType = $relDefs['type'];
 
-        $keySet = $this->query->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
@@ -456,7 +457,7 @@ abstract class BaseMapper implements Mapper
     public function updateRelation(Entity $entity, string $relationName, ?string $id = null, array $columnData) : bool
     {
         if (empty($id) || empty($relationName)) {
-            throw new Error("Can't update relation, empty ID or relation name.");
+            throw new RuntimeException("Can't update relation, empty ID or relation name.");
         }
 
         if (empty($columnData)) {
@@ -464,7 +465,7 @@ abstract class BaseMapper implements Mapper
         }
 
         $relDefs = $entity->getRelations()[$relationName];
-        $keySet = $this->query->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         $relType = $relDefs['type'];
 
@@ -520,16 +521,16 @@ abstract class BaseMapper implements Mapper
         $type = $entity->getRelationType($relationName);
 
         if (!$type === Entity::MANY_MANY) {
-            throw new Error("'getRelationColumn' works only on many-to-many relations.");
+            throw new RuntimeException("'getRelationColumn' works only on many-to-many relations.");
         }
 
         if (!$id) {
-            throw new Error("Empty ID passed to 'getRelationColumn'.");
+            throw new RuntimeException("Empty ID passed to 'getRelationColumn'.");
         }
 
         $middleName = ucfirst($entity->getRelationParam($relationName, 'relationName'));
 
-        $keySet = $this->query->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         $nearKey = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
@@ -594,7 +595,7 @@ abstract class BaseMapper implements Mapper
         $id = $entity->id;
 
         if (empty($id) || empty($relationName)) {
-            throw new Error("Cant't mass relate on empty ID or relation name.");
+            throw new RuntimeException("Cant't mass relate on empty ID or relation name.");
         }
 
         $relDefs = $entity->getRelations()[$relationName];
@@ -609,7 +610,7 @@ abstract class BaseMapper implements Mapper
 
         $relEntity = $this->entityFactory->create($foreignEntityType);
 
-        $keySet = $this->query->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         switch ($relType) {
             case Entity::MANY_MANY:
@@ -686,11 +687,11 @@ abstract class BaseMapper implements Mapper
         }
 
         if (empty($id) || empty($relationName) || !$entity->get('id')) {
-            throw new Error("Can't relate an empty entity or relation name.");
+            throw new RuntimeException("Can't relate an empty entity or relation name.");
         }
 
         if (!$entity->hasRelation($relationName)) {
-            throw new Error("Relation '{$relationName}' does not exist in '{$entityType}'.");
+            throw new RuntimeException("Relation '{$relationName}' does not exist in '{$entityType}'.");
         }
 
         $relDefs = $entity->getRelations()[$relationName];
@@ -698,7 +699,7 @@ abstract class BaseMapper implements Mapper
         $relType = $entity->getRelationType($relationName);
 
         if ($relType == Entity::BELONGS_TO_PARENT && !$relEntity) {
-            throw new Error("Bad foreign passed.");
+            throw new RuntimeException("Bad foreign passed.");
         }
 
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
@@ -712,7 +713,7 @@ abstract class BaseMapper implements Mapper
             $relEntity->id = $id;
         }
 
-        $keySet = $this->query->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         switch ($relType) {
             case Entity::BELONGS_TO:
@@ -923,11 +924,11 @@ abstract class BaseMapper implements Mapper
         $entityType = $entity->getEntityType();
 
         if (empty($id) && empty($all) || empty($relationName)) {
-            throw new Error("Can't unrelate an empty entity or relation name.");
+            throw new RuntimeException("Can't unrelate an empty entity or relation name.");
         }
 
         if (!$entity->hasRelation($relationName)) {
-            throw new Error("Relation '{$relationName}' does not exist in '{$entityType}'.");
+            throw new RuntimeException("Relation '{$relationName}' does not exist in '{$entityType}'.");
         }
 
         $relDefs = $entity->getRelations()[$relationName];
@@ -935,7 +936,7 @@ abstract class BaseMapper implements Mapper
         $relType = $entity->getRelationType($relationName);
 
         if ($relType === Entity::BELONGS_TO_PARENT && !$relEntity && !$all) {
-            throw new Error("Bad foreign passed.");
+            throw new RuntimeException("Bad foreign passed.");
         }
 
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
@@ -955,7 +956,7 @@ abstract class BaseMapper implements Mapper
             $relEntity->id = $id;
         }
 
-        $keySet = $this->query->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         switch ($relType) {
             case Entity::BELONGS_TO:
@@ -1233,7 +1234,7 @@ abstract class BaseMapper implements Mapper
     public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false)
     {
         if (empty($entityType) || empty($id)) {
-            throw new Error("Can't delete an empty entity type or ID from DB.");
+            throw new RuntimeException("Can't delete an empty entity type or ID from DB.");
         }
 
         $whereClause = [
@@ -1257,7 +1258,7 @@ abstract class BaseMapper implements Mapper
     public function restoreDeleted(string $entityType, string $id)
     {
         if (empty($entityType) || empty($id)) {
-            throw new Error("Can't restore an empty entity type or ID.");
+            throw new RuntimeException("Can't restore an empty entity type or ID.");
         }
 
         $whereClause = [
@@ -1318,7 +1319,7 @@ abstract class BaseMapper implements Mapper
 
         $middleName = $defs['relationName'] ?? null;
 
-        $keySet = $this->query->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
@@ -1326,7 +1327,7 @@ abstract class BaseMapper implements Mapper
         $distantKey = $keySet['distantKey'];
 
         if (!$middleName) {
-            throw new Error("No 'relationName' parameter for '{$relationName}' relationship.");
+            throw new RuntimeException("No 'relationName' parameter for '{$relationName}' relationship.");
         }
 
         $alias = lcfirst($middleName);

@@ -29,15 +29,16 @@
 
 namespace Espo\ORM\DB\Query;
 
-use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\{
     Entity,
     EntityFactory,
     Metadata,
+    DB\Helper,
 };
 
 use PDO;
+use RuntimeException;
 
 /**
  * Composes SQL queries.
@@ -278,6 +279,8 @@ abstract class BaseQuery
 
     protected $metadata;
 
+    protected $helper;
+
     protected $attributeDbMapCache = [];
 
     protected $aliasesCache = [];
@@ -289,6 +292,8 @@ abstract class BaseQuery
         $this->entityFactory = $entityFactory;
         $this->pdo = $pdo;
         $this->metadata = $metadata;
+
+        $this->helper = new Helper($metadata);
     }
 
     protected function getSeed(string $entityType) : Entity
@@ -410,7 +415,7 @@ abstract class BaseQuery
         $columns = $params['columns'] ?? null;
 
         if (empty($columns) || !is_array($columns)) {
-            throw new Error("ORM Query: 'columns' is empty for INSERT.");
+            throw new RuntimeException("ORM Query: 'columns' is empty for INSERT.");
         }
 
         $values = $params['values'] = $params['values'] ?? null;
@@ -425,16 +430,16 @@ abstract class BaseQuery
 
         if (!$isBySelect) {
             if (empty($values) || !is_array($values)) {
-                throw new Error("ORM Query: 'values' is empty for INSERT.");
+                throw new RuntimeException("ORM Query: 'values' is empty for INSERT.");
             }
         }
 
         if ($isBySelect) {
             if (!is_array($valuesSelectParams)) {
-                throw new Error("ORM Query: Bad 'valuesSelectParams' parameter.");
+                throw new RuntimeException("ORM Query: Bad 'valuesSelectParams' parameter.");
             }
             if (!isset($valuesSelectParams['from'])) {
-                throw new Error("ORM Query: Missing 'from' in 'valuesSelectParams'.");
+                throw new RuntimeException("ORM Query: Missing 'from' in 'valuesSelectParams'.");
             }
         }
 
@@ -448,14 +453,14 @@ abstract class BaseQuery
             if (!$isMass) {
                 foreach ($columns as $item) {
                     if (!array_key_exists($item, $values)) {
-                        throw new Error("ORM Query: 'values' should contain all items listed in 'columns'.");
+                        throw new RuntimeException("ORM Query: 'values' should contain all items listed in 'columns'.");
                     }
                 }
             } else {
                 foreach ($values as $valuesItem) {
                     foreach ($columns as $item) {
                         if (!array_key_exists($item, $valuesItem)) {
-                            throw new Error("ORM Query: 'values' should contain all items listed in 'columns'.");
+                            throw new RuntimeException("ORM Query: 'values' should contain all items listed in 'columns'.");
                         }
                     }
                 }
@@ -465,7 +470,7 @@ abstract class BaseQuery
         $update = $params['update'] = $params['update'] ?? null;
 
         if ($update && !is_array($update)) {
-            throw new Error("ORM Query: Bad 'update' param.");
+            throw new RuntimeException("ORM Query: Bad 'update' param.");
         }
 
         return $params;
@@ -488,22 +493,22 @@ abstract class BaseQuery
 
         if ($method !== self::SELECT_METHOD) {
             if (isset($params['aggregation'])) {
-                throw new Error("ORM Query: Param 'aggregation' is not allowed for '{$method}'.");
+                throw new RuntimeException("ORM Query: Param 'aggregation' is not allowed for '{$method}'.");
             }
 
             if (isset($params['offset'])) {
-                throw new Error("ORM Query: Param 'offset' is not allowed for '{$method}'.");
+                throw new RuntimeException("ORM Query: Param 'offset' is not allowed for '{$method}'.");
             }
         }
 
         if ($method !== self::UPDATE_METHOD && $method !== self::INSERT_METHOD) {
             if (isset($params['update'])) {
-                 throw new Error("ORM Query: Param 'update' is not allowed for '{$method}'.");
+                 throw new RuntimeException("ORM Query: Param 'update' is not allowed for '{$method}'.");
             }
         }
 
         if (isset($params['update']) && !is_array($params['update'])) {
-            throw new Error("ORM Query: Param 'update' should be an array.");
+            throw new RuntimeException("ORM Query: Param 'update' should be an array.");
         }
 
         return $params;
@@ -749,7 +754,7 @@ abstract class BaseQuery
         string $function, string $part, string $entityType, bool $distinct = false, ?array $argumentPartList = null
     ) : string {
         if (!in_array($function, $this->functionList)) {
-            throw new Error("ORM Query: Not allowed function '{$function}'.");
+            throw new RuntimeException("ORM Query: Not allowed function '{$function}'.");
         }
 
         if (strpos($function, 'YEAR_') === 0 && $function !== 'YEAR_NUMBER') {
@@ -785,7 +790,7 @@ abstract class BaseQuery
 
         if (in_array($function, $this->comparisonFunctionList)) {
             if (count($argumentPartList) < 2) {
-                throw new Error("ORM Query: Not enough arguments for function '{$function}'.");
+                throw new RuntimeException("ORM Query: Not enough arguments for function '{$function}'.");
             }
             $operator = $this->comparisonFunctionOperatorMap[$function];
             return $argumentPartList[0] . ' ' . $operator . ' ' . $argumentPartList[1];
@@ -793,7 +798,7 @@ abstract class BaseQuery
 
         if (in_array($function, $this->mathOperationFunctionList)) {
             if (count($argumentPartList) < 2) {
-                throw new Error("ORM Query: Not enough arguments for function '{$function}'.");
+                throw new RuntimeException("ORM Query: Not enough arguments for function '{$function}'.");
             }
             $operator = $this->mathFunctionOperatorMap[$function];
             return '(' . implode(' ' . $operator . ' ', $argumentPartList) . ')';
@@ -803,7 +808,7 @@ abstract class BaseQuery
             $operator = $this->comparisonFunctionOperatorMap[$function];
 
             if (count($argumentPartList) < 2) {
-                throw new Error("ORM Query: Not enough arguments for function '{$function}'.");
+                throw new RuntimeException("ORM Query: Not enough arguments for function '{$function}'.");
             }
             $operatorArgumentList = $argumentPartList;
             array_shift($operatorArgumentList);
@@ -888,7 +893,7 @@ abstract class BaseQuery
     protected function getFunctionPartTZ(string $entityType, ?array $argumentPartList = null)
     {
         if (!$argumentPartList || count($argumentPartList) < 2) {
-            throw new Error("ORM Query: Not enough arguments for function TZ.");
+            throw new RuntimeException("ORM Query: Not enough arguments for function TZ.");
         }
         $offsetHoursString = $argumentPartList[1];
         if (substr($offsetHoursString, 0, 1) === '\'' && substr($offsetHoursString, -1) === '\'') {
@@ -914,14 +919,14 @@ abstract class BaseQuery
     {
         $delimiterPosition = strpos($expression, ':');
         if ($delimiterPosition === false) {
-            throw new Error("ORM Query: Bad MATCH usage.");
+            throw new RuntimeException("ORM Query: Bad MATCH usage.");
         }
 
         $function = substr($expression, 0, $delimiterPosition);
         $rest = substr($expression, $delimiterPosition + 1);
 
         if (empty($rest)) {
-            throw new Error("ORM Query: Empty MATCH parameters.");
+            throw new RuntimeException("ORM Query: Empty MATCH parameters.");
         }
 
         if (substr($rest, 0, 1) === '(' && substr($rest, -1) === ')') {
@@ -929,7 +934,7 @@ abstract class BaseQuery
 
             $argumentList = self::parseArgumentListFromFunctionContent($rest);
             if (count($argumentList) < 2) {
-                throw new Error("ORM Query: Bad MATCH usage.");
+                throw new RuntimeException("ORM Query: Bad MATCH usage.");
             }
 
             $columnList = [];
@@ -940,7 +945,7 @@ abstract class BaseQuery
         } else {
             $delimiterPosition = strpos($rest, ':');
             if ($delimiterPosition === false) {
-                throw new Error("ORM Query: Bad MATCH usage.");
+                throw new RuntimeException("ORM Query: Bad MATCH usage.");
             }
 
             $columns = substr($rest, 0, $delimiterPosition);
@@ -1392,7 +1397,7 @@ abstract class BaseQuery
             $r = $entity->relations[$relationName];
         }
 
-        $keySet = $this->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
 
@@ -1598,6 +1603,9 @@ abstract class BaseQuery
         }
     }
 
+    /**
+     * Convert a camelCase string to a corresponding representation for DB.
+     */
     public function toDb(string $attribute) : string
     {
         if (!array_key_exists($attribute, $this->attributeDbMapCache)) {
@@ -1715,16 +1723,6 @@ abstract class BaseQuery
         }
 
         return $fieldPath;
-    }
-
-    /**
-     * Compose a WHERE query part from a given where clause.
-     */
-    public function buildWherePart(string $entityType, array $whereClause) : string
-    {
-        $entity = $this->getSeed($entityType);
-
-        return $this->getWherePart($entity, $whereClause);
     }
 
     protected function getWherePart(
@@ -1996,6 +1994,9 @@ abstract class BaseQuery
         return $joinAlias;
     }
 
+    /**
+     * Convert a value to a string.
+     */
     public function stringifyValue($value) : string
     {
         if (is_array($value)) {
@@ -2011,11 +2012,17 @@ abstract class BaseQuery
         return $stringValue;
     }
 
+    /**
+     * Sanitize a string.
+     */
     public function sanitize(string $string) : string
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
 
+    /**
+     * Sanitize an alias for a SELECT statement.
+     */
     public function sanitizeSelectAlias(string $string) : string
     {
         $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-\(\)]+/', '', $string);
@@ -2196,7 +2203,7 @@ abstract class BaseQuery
         $relationName = $name;
 
         $relParams = $entity->getRelations()[$relationName];
-        $keySet = $this->getKeys($entity, $relationName);
+        $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         if (!$alias) {
             $alias = $relationName;
@@ -2327,7 +2334,7 @@ abstract class BaseQuery
         return false;
     }
 
-    public function composeSelectQuery(
+    protected function composeSelectQuery(
         string $table,
         string $select,
         ?string $joins = null,
@@ -2462,7 +2469,7 @@ abstract class BaseQuery
     protected function getSetPart(Entity $entity, array $values) : string
     {
         if (!count($values)) {
-            throw new Error("ORM Query: No SET values for update query.");
+            throw new RuntimeException("ORM Query: No SET values for update query.");
         }
 
         $list = [];
@@ -2535,95 +2542,4 @@ abstract class BaseQuery
      * Add a LIMIT part to a SQL query.
      */
     abstract public function limit(string $sql, ?int $offset = null, ?int $limit = null) : string;
-
-    /**
-     * Get relation keys.
-     */
-    public function getKeys(Entity $entity, string $relationName) : array
-    {
-        $relParams = $entity->getRelations()[$relationName];
-        $relType = $relParams['type'];
-
-        switch ($relType) {
-            case Entity::BELONGS_TO:
-                $key = $this->toDb($entity->getEntityType()) . 'Id';
-                if (isset($relParams['key'])) {
-                    $key = $relParams['key'];
-                }
-                $foreignKey = 'id';
-                if (isset($relParams['foreignKey'])){
-                    $foreignKey = $relParams['foreignKey'];
-                }
-                return [
-                    'key' => $key,
-                    'foreignKey' => $foreignKey,
-                ];
-
-            case Entity::HAS_MANY:
-            case Entity::HAS_ONE:
-                $key = 'id';
-                if (isset($relParams['key'])){
-                    $key = $relParams['key'];
-                }
-                $foreignKey = $this->toDb($entity->getEntityType()) . 'Id';
-                if (isset($relParams['foreignKey'])) {
-                    $foreignKey = $relParams['foreignKey'];
-                }
-                return [
-                    'key' => $key,
-                    'foreignKey' => $foreignKey,
-                ];
-
-            case Entity::HAS_CHILDREN:
-                $key = 'id';
-                if (isset($relParams['key'])){
-                    $key = $relParams['key'];
-                }
-                $foreignKey = 'parentId';
-                if (isset($relParams['foreignKey'])) {
-                    $foreignKey = $relParams['foreignKey'];
-                }
-                $foreignType = 'parentType';
-                if (isset($relParams['foreignType'])) {
-                    $foreignType = $relParams['foreignType'];
-                }
-                return [
-                    'key' => $key,
-                    'foreignKey' => $foreignKey,
-                    'foreignType' => $foreignType,
-                ];
-
-            case Entity::MANY_MANY:
-                $key = 'id';
-                if(isset($relParams['key'])){
-                    $key = $relParams['key'];
-                }
-                $foreignKey = 'id';
-                if(isset($relParams['foreignKey'])){
-                    $foreignKey = $relParams['foreignKey'];
-                }
-                $nearKey = $this->toDb($entity->getEntityType()) . 'Id';
-                $distantKey = $this->toDb($relParams['entity']) . 'Id';
-                if (isset($relParams['midKeys']) && is_array($relParams['midKeys'])){
-                    $nearKey = $relParams['midKeys'][0];
-                    $distantKey = $relParams['midKeys'][1];
-                }
-                return [
-                    'key' => $key,
-                    'foreignKey' => $foreignKey,
-                    'nearKey' => $nearKey,
-                    'distantKey' => $distantKey
-                ];
-            case Entity::BELONGS_TO_PARENT:
-                $key = $relationName . 'Id';
-                $typeKey = $relationName . 'Type';
-                return [
-                    'key' => $key,
-                    'typeKey' => $typeKey,
-                    'foreignKey' => 'id',
-                ];
-        }
-
-        return null;
-    }
 }
