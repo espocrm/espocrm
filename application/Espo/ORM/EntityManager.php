@@ -96,8 +96,6 @@ class EntityManager
         $this->repositoryFactory = $repositoryFactory;
 
         $this->queryExecutor = new RDBQueryExecutor($this);
-
-        $this->metadataHelper = new MetadataHelper($this->metadata);
     }
 
     /**

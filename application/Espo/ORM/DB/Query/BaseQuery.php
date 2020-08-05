@@ -29,12 +29,12 @@
 
 namespace Espo\ORM\DB\Query;
 
-
 use Espo\ORM\{
     Entity,
     EntityFactory,
     Metadata,
     DB\Helper,
+    DB\Query\Functions,
 };
 
 use PDO;
@@ -88,147 +88,6 @@ abstract class BaseQuery
         '=' => '=',
     ];
 
-    protected $functionList = [
-        'COUNT',
-        'SUM',
-        'AVG',
-        'MAX',
-        'MIN',
-        'DATE',
-        'MONTH',
-        'DAY',
-        'YEAR',
-        'WEEK',
-        'WEEK_0',
-        'WEEK_1',
-        'QUARTER',
-        'DAYOFMONTH',
-        'DAYOFWEEK',
-        'DAYOFWEEK_NUMBER',
-        'MONTH_NUMBER',
-        'DATE_NUMBER',
-        'YEAR_NUMBER',
-        'HOUR_NUMBER',
-        'HOUR',
-        'MINUTE_NUMBER',
-        'MINUTE',
-        'QUARTER_NUMBER',
-        'WEEK_NUMBER',
-        'WEEK_NUMBER_0',
-        'WEEK_NUMBER_1',
-        'LOWER',
-        'UPPER',
-        'TRIM',
-        'LENGTH',
-        'CHAR_LENGTH',
-        'YEAR_0',
-        'YEAR_1',
-        'YEAR_2',
-        'YEAR_3',
-        'YEAR_4',
-        'YEAR_5',
-        'YEAR_6',
-        'YEAR_7',
-        'YEAR_8',
-        'YEAR_9',
-        'YEAR_10',
-        'YEAR_11',
-        'QUARTER_0',
-        'QUARTER_1',
-        'QUARTER_2',
-        'QUARTER_3',
-        'QUARTER_4',
-        'QUARTER_5',
-        'QUARTER_6',
-        'QUARTER_7',
-        'QUARTER_8',
-        'QUARTER_9',
-        'QUARTER_10',
-        'QUARTER_11',
-        'CONCAT',
-        'TZ',
-        'NOW',
-        'ADD',
-        'SUB',
-        'MUL',
-        'DIV',
-        'MOD',
-        'FLOOR',
-        'CEIL',
-        'ROUND',
-        'COALESCE',
-        'IF',
-        'LIKE',
-        'NOT_LIKE',
-        'EQUAL',
-        'NOT_EQUAL',
-        'GREATER_THAN',
-        'LESS_THAN',
-        'GREATER_THAN_OR_EQUAL',
-        'LESS_THAN_OR_EQUAL',
-        'IS_NULL',
-        'IS_NOT_NULL',
-        'OR',
-        'AND',
-        'NOT',
-        'IN',
-        'NOT_IN',
-        'IFNULL',
-        'NULLIF',
-        'BINARY',
-        'UNIX_TIMESTAMP',
-        'TIMESTAMPDIFF_DAY',
-        'TIMESTAMPDIFF_MONTH',
-        'TIMESTAMPDIFF_YEAR',
-        'TIMESTAMPDIFF_WEEK',
-        'TIMESTAMPDIFF_HOUR',
-        'TIMESTAMPDIFF_MINUTE',
-    ];
-
-    protected $multipleArgumentsFunctionList = [
-        'CONCAT',
-        'TZ',
-        'ROUND',
-        'COALESCE',
-        'IF',
-        'LIKE',
-        'NOT_LIKE',
-        'EQUAL',
-        'NOT_EQUAL',
-        'GREATER_THAN',
-        'LESS_THAN',
-        'GREATER_THAN_OR_EQUAL',
-        'LESS_THAN_OR_EQUAL',
-        'OR',
-        'AND',
-        'IN',
-        'NOT_IN',
-        'ADD',
-        'SUB',
-        'MUL',
-        'DIV',
-        'MOD',
-        'IFNULL',
-        'NULLIF',
-        'TIMESTAMPDIFF_DAY',
-        'TIMESTAMPDIFF_MONTH',
-        'TIMESTAMPDIFF_YEAR',
-        'TIMESTAMPDIFF_WEEK',
-        'TIMESTAMPDIFF_HOUR',
-        'TIMESTAMPDIFF_MINUTE',
-    ];
-
-    protected $comparisonFunctionList = [
-        'LIKE',
-        'NOT_LIKE',
-        'EQUAL',
-        'NOT_EQUAL',
-        'GREATER_THAN',
-        'LESS_THAN',
-        'GREATER_THAN_OR_EQUAL',
-        'LESS_THAN_OR_EQUAL',
-    ];
-
     protected $comparisonFunctionOperatorMap = [
         'LIKE' => 'LIKE',
         'NOT_LIKE' => 'NOT LIKE',
@@ -260,8 +119,6 @@ abstract class BaseQuery
         'MOD',
     ];
 
-    protected $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
-
     protected $matchFunctionMap = [
         'MATCH_BOOLEAN' => 'IN BOOLEAN MODE',
         'MATCH_NATURAL_LANGUAGE' => 'IN NATURAL LANGUAGE MODE',
@@ -271,7 +128,7 @@ abstract class BaseQuery
     const SELECT_METHOD = 'SELECT';
     const DELETE_METHOD = 'DELETE';
     const UPDATE_METHOD = 'UPDATE';
-    const INSERT_METHOD = 'INESRT';
+    const INSERT_METHOD = 'INSERT';
 
     protected $entityFactory;
 
@@ -501,7 +358,7 @@ abstract class BaseQuery
             }
         }
 
-        if ($method !== self::UPDATE_METHOD && $method !== self::INSERT_METHOD) {
+        if ($method !== self::UPDATE_METHOD) {
             if (isset($params['update'])) {
                  throw new RuntimeException("ORM Query: Param 'update' is not allowed for '{$method}'.");
             }
@@ -753,7 +610,7 @@ abstract class BaseQuery
     protected function getFunctionPart(
         string $function, string $part, string $entityType, bool $distinct = false, ?array $argumentPartList = null
     ) : string {
-        if (!in_array($function, $this->functionList)) {
+        if (!in_array($function, Functions::$functionList)) {
             throw new RuntimeException("ORM Query: Not allowed function '{$function}'.");
         }
 
@@ -788,7 +645,7 @@ abstract class BaseQuery
             return $this->getFunctionPartTZ($entityType, $argumentPartList);
         }
 
-        if (in_array($function, $this->comparisonFunctionList)) {
+        if (in_array($function, Functions::$comparisonFunctionList)) {
             if (count($argumentPartList) < 2) {
                 throw new RuntimeException("ORM Query: Not enough arguments for function '{$function}'.");
             }
@@ -915,9 +772,10 @@ abstract class BaseQuery
         return "CONVERT_TZ(". $argumentPartList[0]. ", '+00:00', " . $this->quote($offsetString) . ")";
     }
 
-    protected function convertMatchExpression($entity, $expression)
+    protected function convertMatchExpression(Entity $entity, string $expression)
     {
         $delimiterPosition = strpos($expression, ':');
+
         if ($delimiterPosition === false) {
             throw new RuntimeException("ORM Query: Bad MATCH usage.");
         }
@@ -962,7 +820,10 @@ abstract class BaseQuery
 
         $query = $this->quote($query);
 
-        if (!in_array($function, $this->matchFunctionList)) return;
+        if (!in_array($function, Functions::$matchFunctionList)) {
+            throw new RuntimeException("ORM Query: Not allowed MATCH usage.");
+        }
+
         $modePart = ' ' . $this->matchFunctionMap[$function];
 
         $result = "MATCH (" . implode(',', $columnList) . ") AGAINST (" . $query . "" . $modePart . ")";
@@ -980,7 +841,7 @@ abstract class BaseQuery
             $dilimeterPosition = strpos($attribute, ':');
             $function = substr($attribute, 0, $dilimeterPosition);
 
-            if (in_array($function, $this->matchFunctionList)) {
+            if (in_array($function, Functions::$matchFunctionList)) {
                 return $this->convertMatchExpression($entity, $attribute);
             }
 
@@ -996,7 +857,7 @@ abstract class BaseQuery
 
         $argumentPartList = null;
 
-        if ($function && in_array($function, $this->multipleArgumentsFunctionList)) {
+        if ($function && in_array($function, Functions::$multipleArgumentsFunctionList)) {
             $arguments = $attribute;
 
             $argumentList = $this->parseArgumentListFromFunctionContent($arguments);
@@ -1547,6 +1408,9 @@ abstract class BaseQuery
         return $this->getOrderExpressionPart($entity, $orderBy, $order, false, $params);
     }
 
+    /**
+     * @todo Make protected?
+     */
     public function order(string $sql, Entity $entity, $orderBy = null, $order = null, bool $useColumnAlias = false) : string
     {
         $orderPart = $this->getOrderExpressionPart($entity, $orderBy, $order, $useColumnAlias);
@@ -2453,11 +2317,7 @@ abstract class BaseQuery
 
     protected function composeInsertQuery(string $table, string $columns, string $values, ?string $update = null) : string
     {
-        $sql = "INSERT INTO `{$table}`";
-
-        $sql .= " ({$columns})";
-
-        $sql .= " {$values}";
+        $sql = "INSERT INTO `{$table}` ({$columns}) {$values}";
 
         if ($update) {
             $sql .= " ON DUPLICATE KEY UPDATE " . $update;
