@@ -94,9 +94,11 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->comment = $entityFactory->create('Comment');
         $this->tag = $entityFactory->create('Tag');
         $this->note = $entityFactory->create('Note');
+        $this->postData = $entityFactory->create('PostData');
 
         $this->contact = $entityFactory->create('Contact');
         $this->account = $entityFactory->create('Account');
+        $this->team = $entityFactory->create('Team');
     }
 
     protected function tearDown() : void
@@ -530,7 +532,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->removeAllRelations($this->account, 'teams');
     }
 
-    public function testUnrelate()
+    public function testUnrelate1()
     {
         $query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
         $return = true;
@@ -541,14 +543,251 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->unrelate($this->post, 'tags', $this->tag);
     }
 
+    public function testRelateOneToMany()
+    {
+        $this->post->id = 'p';
+        $this->comment->id = 'c';
+
+        $query1 =
+            "SELECT COUNT(comment.id) AS `value` FROM `comment` " .
+            "WHERE comment.id = 'c' AND comment.deleted = 0";
+
+        $query2 =
+            "UPDATE `comment` SET comment.post_id = 'p' WHERE comment.id = 'c' AND comment.deleted = 0";
+
+        $this->pdo->expects($this->exactly(2))
+            ->method('query')
+            ->withConsecutive([$query1], [$query2])
+            ->willReturnOnConsecutiveCalls([['value' => 1]], true);
+
+        $this->db->relate($this->post, 'comments', $this->comment);
+    }
+
+    public function testRelateParentToChildren()
+    {
+        $this->post->id = 'p';
+        $this->note->id = 'n';
+
+        $query1 =
+            "SELECT COUNT(note.id) AS `value` FROM `note` " .
+            "WHERE note.id = 'n' AND note.deleted = 0";
+
+        $query2 =
+            "UPDATE `note` SET note.parent_id = 'p', note.parent_type = 'Post' WHERE note.id = 'n' AND note.deleted = 0";
+
+        $this->pdo->expects($this->exactly(2))
+            ->method('query')
+            ->withConsecutive([$query1], [$query2])
+            ->willReturnOnConsecutiveCalls([['value' => 1]], true);
+
+        $this->db->relate($this->post, 'notes', $this->note);
+    }
+
+    public function testRelateManyToOne()
+    {
+        $this->comment->id = 'c';
+        $this->post->id = 'p';
+
+        $query1 =
+            "UPDATE `comment` SET comment.post_id = 'p' WHERE comment.id = 'c' AND comment.deleted = 0";
+
+        $this->pdo->expects($this->exactly(1))
+            ->method('query')
+            ->withConsecutive([$query1])
+            ->willReturnOnConsecutiveCalls(true);
+
+        $this->db->relate($this->comment, 'post', $this->post);
+    }
+
+    public function testRelateChildrenToParent()
+    {
+        $this->note->id = 'n';
+        $this->post->id = 'p';
+
+        $query1 =
+            "UPDATE `note` SET note.parent_id = 'p', note.parent_type = 'Post' WHERE note.id = 'n' AND note.deleted = 0";
+
+        $this->pdo->expects($this->exactly(1))
+            ->method('query')
+            ->withConsecutive([$query1])
+            ->willReturnOnConsecutiveCalls(true);
+
+        $this->db->relate($this->note, 'parent', $this->post);
+    }
+
+    public function testRelateOneToOne1()
+    {
+        $this->post->id = 'p';
+        $this->postData->id = 'd';
+
+        $query1 =
+            "UPDATE `post_data` SET post_data.post_id = NULL WHERE post_data.id <> 'd' AND post_data.post_id = 'p' AND post_data.deleted = 0";
+
+        $query2 =
+            "UPDATE `post_data` SET post_data.post_id = 'p' WHERE post_data.id = 'd' AND post_data.deleted = 0";
+
+        $this->pdo->expects($this->exactly(2))
+            ->method('query')
+            ->withConsecutive([$query1], [$query2])
+            ->willReturnOnConsecutiveCalls(true, true);
+
+        $this->db->relate($this->postData, 'post', $this->post);
+    }
+
+    public function testRelateOneToOne2()
+    {
+        $this->post->id = 'p';
+        $this->postData->id = 'd';
+
+        $query1 =
+            "SELECT COUNT(post_data.id) AS `value` FROM `post_data` " .
+            "WHERE post_data.id = 'd' AND post_data.deleted = 0";
+
+        $query2 =
+            "UPDATE `post_data` SET post_data.post_id = NULL WHERE post_data.post_id = 'p' AND post_data.deleted = 0";
+
+        $query3 =
+            "UPDATE `post_data` SET post_data.post_id = 'p' WHERE post_data.id = 'd' AND post_data.deleted = 0";
+
+        $this->pdo->expects($this->exactly(3))
+            ->method('query')
+            ->withConsecutive([$query1], [$query2], [$query3])
+            ->willReturnOnConsecutiveCalls([['value' => 1]], true, true);
+
+        $this->db->relate($this->post, 'postData', $this->postData);
+    }
+
+    public function testRelateManyToMany1Insert()
+    {
+        $this->post->id = 'postId';
+        $this->tag->id = 'tagId';
+
+        $query1 =
+            "SELECT COUNT(tag.id) AS `value` FROM `tag` " .
+            "WHERE tag.id = 'tagId' AND tag.deleted = 0";
+
+        $query2 =
+            "SELECT post_tag.id AS `id` FROM `post_tag` " .
+            "WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
+
+        $query3 =
+            "INSERT INTO `post_tag` (`post_id`, `tag_id`) VALUES ('postId', 'tagId') " .
+            "ON DUPLICATE KEY UPDATE `deleted` = 0";
+
+        $ps = $this->createMock(\PDOStatement::class);
+        $ps->expects($this->exactly(1))
+            ->method('rowCount')
+            ->willReturn(0);
+
+        $this->pdo
+            ->expects($this->exactly(3))
+            ->method('query')
+            ->withConsecutive([$query1], [$query2], [$query3])
+            ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
+
+        $this->db->relate($this->post, 'tags', $this->tag);
+    }
+
+    public function testRelateManyToMany1Update()
+    {
+        $this->post->id = 'postId';
+        $this->tag->id = 'tagId';
+
+        $query1 =
+            "SELECT COUNT(tag.id) AS `value` FROM `tag` " .
+            "WHERE tag.id = 'tagId' AND tag.deleted = 0";
+
+        $query2 =
+            "SELECT post_tag.id AS `id` FROM `post_tag` " .
+            "WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
+
+        $query3 =
+            "UPDATE `post_tag` SET post_tag.deleted = 0 WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
+
+        $ps = $this->createMock(\PDOStatement::class);
+        $ps->expects($this->exactly(1))
+            ->method('rowCount')
+            ->willReturn(1);
+
+        $this->pdo
+            ->expects($this->exactly(3))
+            ->method('query')
+            ->withConsecutive([$query1], [$query2], [$query3])
+            ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
+
+        $this->db->relate($this->post, 'tags', $this->tag);
+    }
+
+    public function testRelateManyToMany2Insert()
+    {
+        $this->account->id = 'accountId';
+        $this->team->id = 'teamId';
+
+        $query1 =
+            "SELECT COUNT(team.id) AS `value` FROM `team` " .
+            "WHERE team.id = 'teamId' AND team.deleted = 0";
+
+        $query2 =
+            "SELECT entity_team.id AS `id` FROM `entity_team` " .
+            "WHERE entity_team.entity_id = 'accountId' AND entity_team.team_id = 'teamId' AND entity_team.entity_type = 'Account'";
+
+        $query3 =
+            "INSERT INTO `entity_team` (`entity_id`, `team_id`, `entity_type`) VALUES ('accountId', 'teamId', 'Account') " .
+            "ON DUPLICATE KEY UPDATE `deleted` = 0";
+
+        $ps = $this->createMock(\PDOStatement::class);
+        $ps->expects($this->exactly(1))
+            ->method('rowCount')
+            ->willReturn(0);
+
+        $this->pdo
+            ->expects($this->exactly(3))
+            ->method('query')
+            ->withConsecutive([$query1], [$query2], [$query3])
+            ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
+
+        $this->db->relate($this->account, 'teams', $this->team);
+    }
+
+    public function testRelateManyToMany2Update()
+    {
+        $this->account->id = 'accountId';
+        $this->team->id = 'teamId';
+
+        $query1 =
+            "SELECT COUNT(team.id) AS `value` FROM `team` " .
+            "WHERE team.id = 'teamId' AND team.deleted = 0";
+
+        $query2 =
+            "SELECT entity_team.id AS `id` FROM `entity_team` " .
+            "WHERE entity_team.entity_id = 'accountId' AND entity_team.team_id = 'teamId' AND entity_team.entity_type = 'Account'";
+
+        $query3 =
+            "UPDATE `entity_team` SET entity_team.deleted = 0 " .
+            "WHERE entity_team.entity_id = 'accountId' AND entity_team.team_id = 'teamId' AND entity_team.entity_type = 'Account'";
+
+        $ps = $this->createMock(\PDOStatement::class);
+        $ps->expects($this->exactly(1))
+            ->method('rowCount')
+            ->willReturn(1);
+
+        $this->pdo
+            ->expects($this->exactly(3))
+            ->method('query')
+            ->withConsecutive([$query1], [$query2], [$query3])
+            ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
+
+        $this->db->relate($this->account, 'teams', $this->team);
+    }
+
     public function testMax()
     {
         $query = "SELECT MAX(post.id) AS `value` FROM `post` WHERE post.deleted = 0";
-        $return = new MockDBResult(array(
+        $return = new MockDBResult([
             [
                 'value' => 10,
             ]
-        ));
+        ]);
         $this->mockQuery($query, $return);
 
         $value = $this->db->max($this->post, array(), 'id', true);

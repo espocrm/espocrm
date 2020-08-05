@@ -29,36 +29,63 @@ class Account extends TEntity
                 'notStorable' => true,
             ],
     );
-    public $relations = array(
-            'teams' => array(
-                'type' => Entity::MANY_MANY,
-                'entity' => 'Team',
-                'relationName' => 'EntityTeam',
-                'midKeys' => array(
-                    'entityId',
-                    'teamId',
-                ),
-                'conditions' => array('entityType' => 'Account')
-            ),
-    );
+    public $relations = [
+        'teams' => [
+            'type' => Entity::MANY_MANY,
+            'entity' => 'Team',
+            'relationName' => 'EntityTeam',
+            'midKeys' => [
+                'entityId',
+                'teamId',
+            ],
+            'conditions' => ['entityType' => 'Account']
+        ],
+    ];
 }
 
 class Team extends TEntity
 {
     public $fields = array(
-            'id' => array(
-                'type' => Entity::ID,
-            ),
-            'name' => array(
-                'type' => Entity::VARCHAR,
-                'len' => 255,
-            ),
-            'deleted' => array(
-                'type' => Entity::BOOL,
-                'default' => 0,
-            ),
+        'id' => array(
+            'type' => Entity::ID,
+        ),
+        'name' => array(
+            'type' => Entity::VARCHAR,
+            'len' => 255,
+        ),
+        'deleted' => array(
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ),
     );
-    public $relations = array();
+    public $relations = [];
+}
+
+class EntityTeam extends TEntity
+{
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+            'autoincrement' => true,
+            'dbType' => 'int',
+        ],
+        'entityId' => [
+            'type' => Entity::FOREIGN_ID,
+            'len' => 50,
+        ],
+        'entityType' => [
+            'type' => Entity::VARCHAR,
+            'len' => 50,
+        ],
+        'teamId' => [
+            'type' => Entity::FOREIGN_ID,
+            'len' => 50,
+        ],
+        'deleted' => [
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ],
+    ];
 }
 
 class Contact extends TEntity
@@ -93,57 +120,63 @@ class Contact extends TEntity
 class Post extends TEntity
 {
     public $fields = array(
-            'id' => array(
-                'type' => Entity::ID,
-            ),
-            'name' => array(
-                'type' => Entity::VARCHAR,
-                'len' => 255,
-            ),
-            'privateField' => array(
-                'notStorable' => true,
-            ),
-            'createdByName' => array(
-                'type' => Entity::FOREIGN,
-                'relation' => 'createdBy',
-                'foreign' => array('salutationName', 'firstName', ' ', 'lastName'),
-            ),
-            'createdById' => array(
-                'type' => Entity::FOREIGN_ID,
-            ),
-            'deleted' => array(
-                'type' => Entity::BOOL,
-                'default' => 0,
-            ),
+        'id' => array(
+            'type' => Entity::ID,
+        ),
+        'name' => array(
+            'type' => Entity::VARCHAR,
+            'len' => 255,
+        ),
+        'privateField' => array(
+            'notStorable' => true,
+        ),
+        'createdByName' => array(
+            'type' => Entity::FOREIGN,
+            'relation' => 'createdBy',
+            'foreign' => array('salutationName', 'firstName', ' ', 'lastName'),
+        ),
+        'createdById' => array(
+            'type' => Entity::FOREIGN_ID,
+        ),
+        'deleted' => array(
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ),
     );
     public $relations = array(
-            'tags' => array(
-                'type' => Entity::MANY_MANY,
-                'entity' => 'Tag',
-                'relationName' => 'PostTag',
-                'key' => 'id',
-                'foreignKey' => 'id',
-                'midKeys' => array(
-                    'postId',
-                    'tagId',
-                ),
+        'tags' => array(
+            'type' => Entity::MANY_MANY,
+            'entity' => 'Tag',
+            'relationName' => 'PostTag',
+            'key' => 'id',
+            'foreignKey' => 'id',
+            'midKeys' => array(
+                'postId',
+                'tagId',
             ),
-            'comments' => array(
-                'type' => Entity::HAS_MANY,
-                'entity' => 'Comment',
-                'foreignKey' => 'postId',
-            ),
-            'createdBy' => array(
-                'type' => Entity::BELONGS_TO,
-                'entity' => 'User',
-                'key' => 'createdById',
-            ),
-            'notes' => array(
-                'type' => Entity::HAS_CHILDREN,
-                'entity' => 'Note',
-                'foreignKey' => 'parentId',
-                'foreignType' => 'parentType',
-            ),
+        ),
+        'comments' => array(
+            'type' => Entity::HAS_MANY,
+            'entity' => 'Comment',
+            'foreignKey' => 'postId',
+        ),
+        'createdBy' => array(
+            'type' => Entity::BELONGS_TO,
+            'entity' => 'User',
+            'key' => 'createdById',
+        ),
+        'notes' => array(
+            'type' => Entity::HAS_CHILDREN,
+            'entity' => 'Note',
+            'foreignKey' => 'parentId',
+            'foreignType' => 'parentType',
+        ),
+        'postData' => [
+            'type' => Entity::HAS_ONE,
+            'entity' => 'PostData',
+            'foreign' => 'post',
+            'noJoin' => true,
+        ],
     );
 }
 
@@ -181,6 +214,32 @@ class Comment extends TEntity
     );
 }
 
+class PostData extends TEntity
+{
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'postId' => [
+            'type' => Entity::FOREIGN_ID,
+        ],
+        'deleted' => [
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ],
+    ];
+
+    public $relations = [
+        'post' => [
+            'type' => Entity::BELONGS_TO,
+            'entity' => 'Post',
+            'key' => 'postId',
+            'foreignKey' => 'id',
+            'foreign' => 'postData',
+        ],
+    ];
+}
+
 class Tag extends TEntity
 {
     public $fields = array(
@@ -198,6 +257,28 @@ class Tag extends TEntity
     );
 }
 
+class PostTag extends TEntity
+{
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+            'autoincrement' => true,
+            'dbType' => 'int',
+        ],
+        'postId' => [
+            'type' => Entity::FOREIGN_ID,
+            'len' => 50,
+        ],
+        'tagId' => [
+            'type' => Entity::FOREIGN_ID,
+            'len' => 50,
+        ],
+        'deleted' => [
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ],
+    ];
+}
 
 class Note extends TEntity
 {
@@ -224,6 +305,14 @@ class Note extends TEntity
             'default' => 0,
         ),
     );
+
+    public $relations = [
+        'parent' => [
+            'type' => Entity::BELONGS_TO_PARENT,
+            'entities' => ['Post'],
+            'foreign' => 'notes',
+        ],
+    ];
 }
 
 

@@ -209,7 +209,7 @@ abstract class BaseMapper implements Mapper
 
         $entityType = $entity->getEntityType();
 
-        $relDefs = $entity->relations[$relationName];
+        $relDefs = $entity->getRelations()[$relationName];
 
         if (!isset($relDefs['type'])) {
             throw new LogicException(
@@ -461,7 +461,7 @@ abstract class BaseMapper implements Mapper
 
         if (empty($columnData)) return false;
 
-        $relDefs = $entity->relations[$relationName];
+        $relDefs = $entity->getRelations()[$relationName];
         $keySet = $this->query->getKeys($entity, $relationName);
 
         $relType = $relDefs['type'];
@@ -516,7 +516,7 @@ abstract class BaseMapper implements Mapper
             throw new Error("'getRelationColumn' works only on many-to-many relations.");
         }
 
-        $relDefs = $entity->relations[$relationName];
+        $relDefs = $entity->getRelations()[$relationName];
 
         $relTable = $this->toDb($relDefs['relationName']);
 
@@ -574,7 +574,7 @@ abstract class BaseMapper implements Mapper
             throw new Error("Cant't mass relate on empty ID or relation name.");
         }
 
-        $relDefs = $entity->relations[$relationName];
+        $relDefs = $entity->getRelations()[$relationName];
 
         if (!isset($relDefs['entity']) || !isset($relDefs['type'])) {
             throw new LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity.");
@@ -582,9 +582,9 @@ abstract class BaseMapper implements Mapper
 
         $relType = $relDefs['type'];
 
-        $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $relDefs['entity'];
-        $relEntity = $this->entityFactory->create($className);
-        $foreignEntityType = $relEntity->getEntityType();
+        $foreignEntityType = $relDefs['entity'];
+
+        $relEntity = $this->entityFactory->create($foreignEntityType);
 
         $keySet = $this->query->getKeys($entity, $relationName);
 
@@ -636,7 +636,7 @@ abstract class BaseMapper implements Mapper
                 return;
         }
 
-        throw new Error("Relation type '{$relType}' is not supported for mass relate.");
+        throw new LogicException("Relation type '{$relType}' is not supported for mass relate.");
     }
 
     public function runQuery(string $query, bool $rerunIfDeadlock = false)
@@ -656,32 +656,31 @@ abstract class BaseMapper implements Mapper
     public function addRelation(
         Entity $entity, string $relationName, ?string $id = null, ?Entity $relEntity = null, ?array $data = null
     ) : bool {
+        $entityType = $entity->getEntityType();
+
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
         }
 
-        if (empty($id) || empty($relationName)) {
-            return false;
+        if (empty($id) || empty($relationName) || !$entity->get('id')) {
+            throw new Error("Can't relate an empty entity or relation name.");
         }
 
-        if (!$entity->hasRelation($relationName)) return false;
+        if (!$entity->hasRelation($relationName)) {
+            throw new Error("Relation '{$relationName}' does not exist in '{$entityType}'.");
+        }
 
-        $relDefs = $entity->relations[$relationName];
+        $relDefs = $entity->getRelations()[$relationName];
 
         $relType = $entity->getRelationType($relationName);
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
-            throw new LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity.");
+            throw new LogicException("Not appropriate definition for relationship {$relationName} in '{$entityType}' entity.");
         }
 
-        $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $foreignEntityType;
-
         if (is_null($relEntity)) {
-            $relEntity = $this->entityFactory->create($className);
-            if (!$relEntity) {
-                return false;
-            }
+            $relEntity = $this->entityFactory->create($foreignEntityType);
             $relEntity->id = $id;
         }
 
@@ -692,35 +691,33 @@ abstract class BaseMapper implements Mapper
                 $key = $relationName . 'Id';
 
                 $foreignRelationName = $entity->getRelationParam($relationName, 'foreign');
-                if ($foreignRelationName) {
-                    if ($relEntity->getRelationParam($foreignRelationName, 'type') === Entity::HAS_ONE) {
-                        $setPart = $this->toDb($key) . " = " . $this->quote(null);
-                        $wherePart = $this->query->buildWherePart(
-                            $entity->getEntityType(), ['id!=' => $entity->id, $key => $id, 'deleted' => false]
-                        );
-                        $sql = $this->composeUpdateQuery(
-                            $this->toDb($entity->getEntityType()),
-                            $setPart,
-                            $wherePart
-                        );
-                        $this->pdo->query($sql);
-                    }
+
+                if ($foreignRelationName && $relEntity->getRelationParam($foreignRelationName, 'type') === Entity::HAS_ONE) {
+                    $sql = $this->query->createUpdateQuery($entityType, [
+                        'whereClause' => [
+                            'id!=' => $entity->id,
+                            $key => $id,
+                            'deleted' => false,
+                        ],
+                        'update' => [
+                            $key => NULL,
+                        ],
+                    ]);
+
+                    $this->runQuery($sql, true);
                 }
 
-                $setPart = $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id);
-                $wherePart = $this->query->buildWherePart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => false]);
-
-                $entity->set([
-                    $key => $relEntity->id
+                $sql = $this->query->createUpdateQuery($entityType, [
+                    'whereClause' => [
+                        'id' => $entity->id,
+                        'deleted' => false,
+                    ],
+                    'update' => [
+                        $key => $relEntity->id,
+                    ],
                 ]);
 
-                $sql = $this->composeUpdateQuery(
-                    $this->toDb($entity->getEntityType()),
-                    $setPart,
-                    $wherePart
-                );
-
-                $this->pdo->query($sql);
+                $this->runQuery($sql, true);
 
                 return true;
 
@@ -728,23 +725,18 @@ abstract class BaseMapper implements Mapper
                 $key = $relationName . 'Id';
                 $typeKey = $relationName . 'Type';
 
-                $entity->set([
-                    $key => $relEntity->id,
-                    $typeKey => $relEntity->getEntityType()
+                $sql = $this->query->createUpdateQuery($entityType, [
+                    'whereClause' => [
+                        'id' => $entity->id,
+                        'deleted' => false,
+                    ],
+                    'update' => [
+                        $key => $relEntity->id,
+                        $typeKey => $relEntity->getEntityType(),
+                    ],
                 ]);
 
-                $setPart =
-                    $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id) . ', ' .
-                    $this->toDb($typeKey) . " = " . $this->pdo->quote($relEntity->getEntityType());
-                $wherePart = $this->query->buildWherePart($entity->getEntityType(), ['id' => $id, 'deleted' => 0]);
-
-                $sql = $this->composeUpdateQuery(
-                    $this->toDb($entity->getEntityType()),
-                    $setPart,
-                    $wherePart
-                );
-
-                $this->pdo->query($sql);
+                $this->runQuery($sql, true);
 
                 return true;
 
@@ -755,16 +747,29 @@ abstract class BaseMapper implements Mapper
                     return false;
                 }
 
-                $setPart = $this->toDb($foreignKey) . " = " . $this->quote(null);
-                $wherePart = $this->query->buildWherePart($relEntity->getEntityType(), [$foreignKey => $entity->id, 'deleted' => 0]);
-                $sql = $this->composeUpdateQuery($this->toDb($foreignEntityType), $setPart, $wherePart);
-                $this->pdo->query($sql);
+                $sql = $this->query->createUpdateQuery($relEntity->getEntityType(), [
+                    'whereClause' => [
+                        $foreignKey => $entity->id,
+                        'deleted' => false,
+                    ],
+                    'update' => [
+                        $foreignKey => NULL,
+                    ],
+                ]);
 
-                $setPart = $this->toDb($foreignKey) . " = " . $this->pdo->quote($entity->id);
-                $wherePart = $this->query->buildWherePart($relEntity->getEntityType(), ['id' => $id, 'deleted' => 0]);
-                $sql = $this->composeUpdateQuery($this->toDb($foreignEntityType), $setPart, $wherePart);
+                $this->runQuery($sql, true);
 
-                $this->pdo->query($sql);
+                $sql = $this->query->createUpdateQuery($relEntity->getEntityType(), [
+                    'whereClause' => [
+                        'id' => $id,
+                        'deleted' => false,
+                    ],
+                    'update' => [
+                        $foreignKey => $entity->id,
+                    ],
+                ]);
+
+                $this->runQuery($sql, true);
 
                 return true;
 
@@ -777,23 +782,28 @@ abstract class BaseMapper implements Mapper
                     return false;
                 }
 
-                $setPart = $this->toDb($foreignKey) . " = " . $this->pdo->quote($entity->get($key));
+                $set = [
+                    $foreignKey => $entity->get('id'),
+                ];
 
                 if ($relType == Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'];
-                    $setPart .= ", " . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType());
+                    $set[$foreignType] = $entity->getEntityType();
                 }
 
-                $wherePart = $this->query->buildWherePart($relEntity->getEntityType(), ['id' => $id, 'deleted' => 0]);
-                $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityType()), $setPart, $wherePart);
+                $sql = $this->query->createUpdateQuery($relEntity->getEntityType(), [
+                    'whereClause' => [
+                        'id' => $id,
+                        'deleted' => false,
+                    ],
+                    'update' => $set,
+                ]);
 
-                $this->pdo->query($sql);
+                $this->runQuery($sql, true);
 
                 return true;
 
             case Entity::MANY_MANY:
-                $key = $keySet['key'];
-                $foreignKey = $keySet['foreignKey'];
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
@@ -801,87 +811,79 @@ abstract class BaseMapper implements Mapper
                     return false;
                 }
 
-                $relTable = $this->toDb($relDefs['relationName']);
-
-                $wherePart =
-                    $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . " ".
-                    "AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id);
-                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-                    foreach ($relDefs['conditions'] as $f => $v) {
-                        $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
-                    }
+                if (!isset($relDefs['relationName'])) {
+                    throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
                 }
 
-                $sql = $this->query->composeSelectQuery($relTable, '*', '', $wherePart);
+                $middleName = ucfirst($relDefs['relationName']);
+
+                $conditions = $relDefs['conditions'] ?? [];
+                $data = $data ?? [];
+
+                $where = [
+                    $nearKey => $entity->id,
+                    $distantKey => $relEntity->id,
+                ];
+
+                foreach ($conditions as $f => $v) {
+                    $where[$f] = $v;
+                }
+
+                $sql = $this->query->createSelectQuery($middleName, [
+                    'select' => ['id'],
+                    'whereClause' => $where,
+                    'withDeleted' => true,
+                ]);
 
                 $ps = $this->pdo->query($sql);
 
+                // @todo Leave one INSERT for better performance.
+
                 if ($ps->rowCount() == 0) {
-                    $fieldsPart = $this->toDb($nearKey) . ", " . $this->toDb($distantKey);
-                    $valuesPart = $this->pdo->quote($entity->id) . ", " . $this->pdo->quote($relEntity->id);
+                    $values = $where;
+                    $columns = array_keys($values);
 
-                    if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-                        foreach ($relDefs['conditions'] as $f => $v) {
-                            $fieldsPart .= ", " . $this->toDb($f);
-                            $valuesPart .= ", " . $this->quote($v);
-                        }
+                    $update = [
+                        'deleted' => false,
+                    ];
+
+                    foreach ($data as $column => $value) {
+                        $columns[] = $column;
+                        $values[$column] = $value;
+                        $update[$column] = $value;
                     }
 
-                    if (!empty($data) && is_array($data)) {
-                        foreach ($data as $column => $columnValue) {
-                            $fieldsPart .= ", " . $this->toDb($column);
-                            $valuesPart .= ", " . $this->quote($columnValue);
-                        }
-                    }
-
-                    $sql = $this->composeInsertQuery($relTable, $fieldsPart, $valuesPart);
-
-                    $sql .= " ON DUPLICATE KEY UPDATE deleted = 0";
-
-                    if (!empty($data) && is_array($data)) {
-                        $setArr = [];
-                        foreach ($data as $column => $value) {
-                            $setArr[] = $this->toDb($column) . " = " . $this->quote($value);
-                        }
-                        $sql .= ', ' . implode(', ', $setArr);
-                    }
+                    $sql = $this->query->createInsertQuery($middleName, [
+                        'columns' => $columns,
+                        'values' => $values,
+                        'update' => $update,
+                    ]);
 
                     $this->runQuery($sql, true);
 
                     return true;
-
-                } else {
-                    $setPart = 'deleted = 0';
-
-                    if (!empty($data) && is_array($data)) {
-                        $setArr = [];
-                        foreach ($data as $column => $value) {
-                            $setArr[] = $this->toDb($column) . " = " . $this->quote($value);
-                        }
-                        $setPart .= ', ' . implode(', ', $setArr);
-                    }
-
-                    $wherePart =
-                        $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
-                        AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id) . "
-                        ";
-
-                    if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-                        foreach ($relDefs['conditions'] as $f => $v) {
-                            $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
-                        }
-                    }
-
-                    $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
-
-                    $this->pdo->query($sql);
-
-                    return true;
                 }
+
+                $update = [
+                    'deleted' => false,
+                ];
+
+                foreach ($data as $column => $value) {
+                    $update[$column] = $value;
+                }
+
+                $sql = $this->query->createUpdateQuery($middleName, [
+                    'whereClause' => $where,
+                    'update' => $update,
+                ]);
+
+                $this->runQuery($sql, true);
+
+                return true;
 
         }
 
-        return false;
+        throw new LogicException("Relation type '{$relType}' is not supported.");
     }
 
     public function removeRelation(
@@ -897,7 +899,7 @@ abstract class BaseMapper implements Mapper
 
         if (!$entity->hasRelation($relationName)) return false;
 
-        $relDefs = $entity->relations[$relationName];
+        $relDefs = $entity->getRelations()[$relationName];
 
         $relType = $entity->getRelationType($relationName);
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
@@ -908,10 +910,8 @@ abstract class BaseMapper implements Mapper
             );
         }
 
-        $className = (!empty($relDefs['class'])) ? $relDefs['class'] : $foreignEntityType;
-
         if (is_null($relEntity)) {
-            $relEntity = $this->entityFactory->create($className);
+            $relEntity = $this->entityFactory->create($foreignEntityType);
             if (!$relEntity) {
                 return false;
             }
@@ -1281,7 +1281,7 @@ abstract class BaseMapper implements Mapper
 
     protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null) : array
     {
-        $defs = $entity->relations[$relationName];
+        $defs = $entity->getRelations()[$relationName];
 
         $middleName = $defs['relationName'] ?? null;
 
