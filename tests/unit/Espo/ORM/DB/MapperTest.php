@@ -472,29 +472,123 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->update($job);
     }
 
-    public function testRemoveRelationHasMany()
+    public function testRemoveManyToOne()
     {
-        $query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = 0 AND comment.id = '100'";
-        $return = true;
-        $this->mockQuery($query, $return);
+        $query =
+            "UPDATE `comment` SET comment.post_id = NULL " .
+            "WHERE comment.id = 'commentId' AND comment.post_id = 'postId' AND comment.deleted = 0";
 
-        $this->post->id = '1';
-        $this->db->removeRelation($this->post, 'comments', '100');
+        $this->mockQuery($query, true);
+
+        $this->post->id = 'postId';
+        $this->comment->id = 'commentId';
+
+        $this->db->unrelate($this->comment, 'post', $this->post);
     }
 
-    public function testRemoveAllHasMany()
+    public function testRemoveAllManyToOne()
     {
-        $query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = 0 AND comment.post_id = '1'";
-        $return = true;
-        $this->mockQuery($query, $return);
+        $query =
+            "UPDATE `comment` SET comment.post_id = NULL " .
+            "WHERE comment.id = 'commentId' AND comment.deleted = 0";
 
-        $this->post->id = '1';
+        $this->mockQuery($query, true);
+
+        $this->comment->id = 'commentId';
+
+        $this->db->removeAllRelations($this->comment, 'post');
+    }
+
+    public function testRemoveChildrenToParent()
+    {
+        $query =
+            "UPDATE `note` SET note.parent_id = NULL, note.parent_type = NULL " .
+            "WHERE note.id = 'noteId' AND note.parent_id = 'postId' AND note.parent_type = 'Post' AND note.deleted = 0";
+
+        $this->mockQuery($query, true);
+
+        $this->note->id = 'noteId';
+        $this->post->id = 'postId';
+        $this->db->unrelate($this->note, 'parent', $this->post);
+    }
+
+    public function testRemoveAllChildrenToParent()
+    {
+        $query =
+            "UPDATE `note` SET note.parent_id = NULL, note.parent_type = NULL " .
+            "WHERE note.id = 'noteId' AND note.deleted = 0";
+
+        $this->mockQuery($query, true);
+
+        $this->note->id = 'noteId';
+        $this->db->removeAllRelations($this->note, 'parent');
+    }
+
+    public function testRemoveOneToMany()
+    {
+        $query =
+            "UPDATE `comment` SET comment.post_id = NULL " .
+            "WHERE comment.id = 'commentId' AND comment.post_id = 'postId' AND comment.deleted = 0";
+
+        $this->mockQuery($query, true);
+
+        $this->post->id = 'postId';
+        $this->db->removeRelation($this->post, 'comments', 'commentId');
+    }
+
+    public function testRemoveAllOneToMany()
+    {
+        $query =
+            "UPDATE `comment` SET comment.post_id = NULL " .
+            "WHERE comment.post_id = 'postId' AND comment.deleted = 0";
+
+        $this->mockQuery($query, true);
+
+        $this->post->id = 'postId';
         $this->db->removeAllRelations($this->post, 'comments');
     }
 
-    public function testRemoveRelationManyMany()
+    public function testRemoveOneToOne1()
     {
-        $query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
+        $this->post->id = 'postId';
+        $this->postData->id = 'dataId';
+
+        $query =
+            "UPDATE `post_data` SET post_data.post_id = NULL " .
+            "WHERE post_data.post_id = 'postId' AND post_data.deleted = 0";
+
+        $this->mockQuery($query, true);
+
+        $this->db->removeRelation($this->post, 'postData', 'dataId');
+    }
+
+    public function testRemovenParentToChildren()
+    {
+        $query =
+            "UPDATE `note` SET note.parent_id = NULL, note.parent_type = NULL " .
+            "WHERE note.id = 'noteId' AND note.parent_id = 'postId' AND note.parent_type = 'Post' AND note.deleted = 0";
+
+        $this->mockQuery($query, true);
+
+        $this->post->id = 'postId';
+        $this->db->removeRelation($this->post, 'notes', 'noteId');
+    }
+
+    public function testRemoveAllParentToChildren()
+    {
+        $query =
+            "UPDATE `note` SET note.parent_id = NULL, note.parent_type = NULL " .
+            "WHERE note.parent_id = 'postId' AND note.parent_type = 'Post' AND note.deleted = 0";
+
+        $this->mockQuery($query, true);
+
+        $this->post->id = 'postId';
+        $this->db->removeAllRelations($this->post, 'notes');
+    }
+
+    public function testRemoveManyMany()
+    {
+        $query = "UPDATE `post_tag` SET post_tag.deleted = 1 WHERE post_tag.post_id = '1' AND post_tag.tag_id = '100'";
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -504,7 +598,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testRemoveAllManyMany()
     {
-        $query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1'";
+        $query = "UPDATE `post_tag` SET post_tag.deleted = 1 WHERE post_tag.post_id = '1'";
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -514,7 +608,9 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testRemoveRelationManyManyWithCondition()
     {
-        $query = "UPDATE `entity_team` SET deleted = 1 WHERE entity_id = '1' AND team_id = '100' AND entity_type = 'Account'";
+        $query =
+            "UPDATE `entity_team` SET entity_team.deleted = 1 ".
+            "WHERE entity_team.entity_id = '1' AND entity_team.team_id = '100' AND entity_team.entity_type = 'Account'";
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -524,7 +620,10 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testRemoveAllManyManyWithCondition()
     {
-        $query = "UPDATE `entity_team` SET deleted = 1 WHERE entity_id = '1' AND entity_type = 'Account'";
+        $query =
+            "UPDATE `entity_team` SET entity_team.deleted = 1 ".
+            "WHERE entity_team.entity_id = '1' AND entity_team.entity_type = 'Account'";
+
         $return = true;
         $this->mockQuery($query, $return);
 
@@ -532,14 +631,15 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->removeAllRelations($this->account, 'teams');
     }
 
-    public function testUnrelate1()
+    public function testUnrelateManyToMany()
     {
-        $query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
+        $query = "UPDATE `post_tag` SET post_tag.deleted = 1 WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
         $return = true;
         $this->mockQuery($query, $return);
 
-        $this->post->id = '1';
-        $this->tag->id = '100';
+        $this->post->id = 'postId';
+        $this->tag->id = 'tagId';
+
         $this->db->unrelate($this->post, 'tags', $this->tag);
     }
 

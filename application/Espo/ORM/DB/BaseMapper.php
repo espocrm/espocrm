@@ -658,7 +658,7 @@ abstract class BaseMapper implements Mapper
     ) : bool {
         $entityType = $entity->getEntityType();
 
-        if (!is_null($relEntity)) {
+        if ($relEntity) {
             $id = $relEntity->id;
         }
 
@@ -673,6 +673,11 @@ abstract class BaseMapper implements Mapper
         $relDefs = $entity->getRelations()[$relationName];
 
         $relType = $entity->getRelationType($relationName);
+
+        if ($relType == Entity::BELONGS_TO_PARENT && !$relEntity) {
+            throw new Error("Bad foreign passed.");
+        }
+
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
@@ -889,20 +894,33 @@ abstract class BaseMapper implements Mapper
     public function removeRelation(
         Entity $entity, string $relationName, ?string $id = null, bool $all = false, ?Entity $relEntity = null
     ) : bool {
-        if (!is_null($relEntity)) {
+        if ($relEntity) {
             $id = $relEntity->id;
         }
 
+        $entityType = $entity->getEntityType();
+
         if (empty($id) && empty($all) || empty($relationName)) {
-            return false;
+            throw new Error("Can't unrelate an empty entity or relation name.");
         }
 
-        if (!$entity->hasRelation($relationName)) return false;
+        if (!$entity->hasRelation($relationName)) {
+            throw new Error("Relation '{$relationName}' does not exist in '{$entityType}'.");
+        }
 
         $relDefs = $entity->getRelations()[$relationName];
 
         $relType = $entity->getRelationType($relationName);
+
+        if ($relType === Entity::BELONGS_TO_PARENT && !$relEntity && !$all) {
+            throw new Error("Bad foreign passed.");
+        }
+
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
+        if ($relType === Entity::BELONGS_TO_PARENT && $relEntity) {
+            $foreignEntityType = $relEntity->getEntityType();
+        }
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
             throw new LogicException(
@@ -910,11 +928,8 @@ abstract class BaseMapper implements Mapper
             );
         }
 
-        if (is_null($relEntity)) {
+        if (is_null($relEntity) && $relType !== Entity::BELONGS_TO_PARENT) {
             $relEntity = $this->entityFactory->create($foreignEntityType);
-            if (!$relEntity) {
-                return false;
-            }
             $relEntity->id = $id;
         }
 
@@ -922,104 +937,111 @@ abstract class BaseMapper implements Mapper
 
         switch ($relType) {
             case Entity::BELONGS_TO:
-                $key = $relationName . 'Id';
-                $setPart = $this->toDb($key) . " = " . $this->quote(null);
-                $wherePart = $this->query->buildWherePart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => 0]);
-
-                $entity->set([
-                    $key => null
-                ]);
-
-                $sql = $this->composeUpdateQuery(
-                    $this->toDb($entity->getEntityType()),
-                    $setPart,
-                    $wherePart
-                );
-
-                $this->pdo->query($sql);
-
-                return true;
-
             case Entity::BELONGS_TO_PARENT:
                 $key = $relationName . 'Id';
-                $typeKey = $relationName . 'Type';
 
-                $entity->set([
+                $update = [
                     $key => null,
-                    $typeKey => null
+                ];
+
+                $where = [
+                    'id' => $entity->id
+                ];
+
+                if (!$all) {
+                    $where[$key] = $id;
+                }
+
+                if ($relType === Entity::BELONGS_TO_PARENT) {
+                    $typeKey = $relationName . 'Type';
+                    $update[$typeKey] = null;
+                    if (!$all) {
+                        $where[$typeKey] = $foreignEntityType;
+                    }
+                }
+
+                $where['deleted'] = false;
+
+                $sql = $this->query->createUpdateQuery($entityType, [
+                    'whereClause' => $where,
+                    'update' => $update,
                 ]);
 
-                $setPart =
-                    $this->toDb($key) . " = " . $this->quote(null) . ', ' .
-                    $this->toDb($typeKey) . " = " . $this->quote(null);
-                $wherePart = $this->query->buildWherePart($entity->getEntityType(), ['id' => $entity->id, 'deleted' => 0]);
-
-                $sql = $this->composeUpdateQuery(
-                    $this->toDb($entity->getEntityType()),
-                    $setPart,
-                    $wherePart
-                );
-
-                $this->pdo->query($sql);
+                $this->runQuery($sql, true);
 
                 return true;
 
             case Entity::HAS_ONE:
             case Entity::HAS_MANY:
             case Entity::HAS_CHILDREN:
-                $key = $keySet['key'];
                 $foreignKey = $keySet['foreignKey'];
 
-                $setPart = $this->toDb($foreignKey) . " = " . "NULL";
+                $update = [
+                    $foreignKey => null,
+                ];
 
-                $whereClause = ['deleted' => false];
-                if (empty($all) && $relType != Entity::HAS_ONE) {
-                    $whereClause['id'] = $id;
-                } else {
-                    $whereClause[$foreignKey] = $entity->id;
+                $where = [];
+
+                if (!$all && $relType !== Entity::HAS_ONE) {
+                    $where['id'] = $id;
                 }
 
-                if ($relType == Entity::HAS_CHILDREN) {
+                $where[$foreignKey] = $entity->id;
+
+                if ($relType === Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'];
-                    $whereClause[$foreignType] = $entity->getEntityType();
+                    $where[$foreignType] = $entity->getEntityType();
+                    $update[$foreignType] = null;
                 }
 
-                $wherePart = $this->query->buildWherePart($relEntity->getEntityType(), $whereClause);
-                $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityType()), $setPart, $wherePart);
+                $where['deleted'] = false;
 
-                $this->pdo->query($sql);
+                $sql = $this->query->createUpdateQuery($relEntity->getEntityType(), [
+                    'whereClause' => $where,
+                    'update' => $update,
+                ]);
+
+                $this->runQuery($sql, true);
 
                 return true;
 
             case Entity::MANY_MANY:
-                $key = $keySet['key'];
-                $foreignKey = $keySet['foreignKey'];
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $relTable = $this->toDb($relDefs['relationName']);
-
-                $setPart = 'deleted = 1';
-                $wherePart = $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id);
-
-                if (empty($all)) {
-                    $wherePart .= " AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . "";
+                if (!isset($relDefs['relationName'])) {
+                    throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
                 }
 
-                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-                    foreach ($relDefs['conditions'] as $f => $v) {
-                        $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
-                    }
+                $middleName = ucfirst($relDefs['relationName']);
+
+                $conditions = $relDefs['conditions'] ?? [];
+
+                $where = [
+                    $nearKey => $entity->id,
+                ];
+
+                if (!$all) {
+                    $where[$distantKey] = $id;
                 }
 
-                $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
+                foreach ($conditions as $f => $v) {
+                    $where[$f] = $v;
+                }
 
-                $this->pdo->query($sql);
+                $sql = $this->query->createUpdateQuery($middleName, [
+                    'whereClause' => $where,
+                    'update' => [
+                        'deleted' => true,
+                    ],
+                ]);
+
+                $this->runQuery($sql, true);
 
                 return true;
         }
 
-        return false;
+        throw new LogicException("Relation type '{$relType}' is not supported for unrelating.");
     }
 
     public function removeAllRelations(Entity $entity, string $relationName) : bool
