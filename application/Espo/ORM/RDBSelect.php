@@ -57,6 +57,10 @@ class RDBSelect
      */
     public function getRawParams() : array
     {
-        return $this->params;
+        $params = $this->params;
+
+        $params['from'] = $this->entityType
+
+        return $params;
     }
 }
