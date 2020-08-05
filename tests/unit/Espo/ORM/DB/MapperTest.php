@@ -671,8 +671,8 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
 
         $query3 =
-            "INSERT INTO `post_tag` (`post_id`, `tag_id`) VALUES ('postId', 'tagId') " .
-            "ON DUPLICATE KEY UPDATE `deleted` = 0";
+            "INSERT INTO `post_tag` (`post_id`, `tag_id`, `role`) VALUES ('postId', 'tagId', 'Test') " .
+            "ON DUPLICATE KEY UPDATE `deleted` = 0, `role` = 'Test'";
 
         $ps = $this->createMock(\PDOStatement::class);
         $ps->expects($this->exactly(1))
@@ -685,7 +685,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             ->withConsecutive([$query1], [$query2], [$query3])
             ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
 
-        $this->db->relate($this->post, 'tags', $this->tag);
+        $this->db->relate($this->post, 'tags', $this->tag, ['role' => 'Test']);
     }
 
     public function testRelateManyToMany1Update()
@@ -702,7 +702,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
 
         $query3 =
-            "UPDATE `post_tag` SET post_tag.deleted = 0 WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
+            "UPDATE `post_tag` SET post_tag.deleted = 0, post_tag.role = 'Test' WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
 
         $ps = $this->createMock(\PDOStatement::class);
         $ps->expects($this->exactly(1))
@@ -715,7 +715,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             ->withConsecutive([$query1], [$query2], [$query3])
             ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
 
-        $this->db->relate($this->post, 'tags', $this->tag);
+        $this->db->relate($this->post, 'tags', $this->tag, ['role' => 'Test']);
     }
 
     public function testRelateManyToMany2Insert()

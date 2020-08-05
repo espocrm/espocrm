@@ -273,6 +273,9 @@ class PostTag extends TEntity
             'type' => Entity::FOREIGN_ID,
             'len' => 50,
         ],
+        'role' => [
+            'type' => Entity::VARCHAR,
+        ],
         'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0,
