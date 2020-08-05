@@ -154,6 +154,11 @@ class Post extends TEntity
                 'postId',
                 'tagId',
             ),
+            'additionalColumns' => [
+                'role' => [
+                    'type' => Entity::VARCHAR,
+                ],
+            ],
         ),
         'comments' => array(
             'type' => Entity::HAS_MANY,

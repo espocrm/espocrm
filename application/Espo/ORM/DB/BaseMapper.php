@@ -456,10 +456,12 @@ abstract class BaseMapper implements Mapper
     public function updateRelation(Entity $entity, string $relationName, ?string $id = null, array $columnData) : bool
     {
         if (empty($id) || empty($relationName)) {
-            return false;
+            throw new Error("Can't update relation, empty ID or relation name.");
         }
 
-        if (empty($columnData)) return false;
+        if (empty($columnData)) {
+            return false;
+        }
 
         $relDefs = $entity->getRelations()[$relationName];
         $keySet = $this->query->getKeys($entity, $relationName);
@@ -468,39 +470,44 @@ abstract class BaseMapper implements Mapper
 
         switch ($relType) {
             case Entity::MANY_MANY:
-                $relTable = $this->toDb($relDefs['relationName']);
-                $key = $keySet['key'];
-                $foreignKey = $keySet['foreignKey'];
+                $middleName = ucfirst($entity->getRelationParam($relationName, 'relationName'));
+
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $setArr = [];
+                $update = [];
+
                 foreach ($columnData as $column => $value) {
-                    $setArr[] = "`".$this->toDb($column) . "` = " . $this->quote($value);
+                    $update[$column] = $value;
                 }
-                if (empty($setArr)) {
+
+                if (empty($update)) {
                     return true;
                 }
-                $setPart = implode(', ', $setArr);
 
-                $wherePart =
-                    $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
-                    AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0";
+                $where = [
+                    $nearKey => $entity->id,
+                    $distantKey => $id,
+                    'deleted' => false,
+                ];
 
-                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-                    foreach ($relDefs['conditions'] as $f => $v) {
-                        $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
-                    }
+                $conditions = $entity->getRelationParam($relationName, 'conditions') ?? [];
+
+                foreach ($conditions as $k => $value) {
+                    $where[$k] = $value;
                 }
 
-                $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
+                $sql = $this->query->createUpdateQuery($middleName, [
+                    'whereClause' => $where,
+                    'update' => $update,
+                ]);
 
-                $this->pdo->query($sql);
+                $this->runQuery($sql, true);
 
                 return true;
         }
 
-        return false;
+        throw new LogicException("Relation type '{$relType}' is not supported.");
     }
 
     /**
@@ -516,48 +523,64 @@ abstract class BaseMapper implements Mapper
             throw new Error("'getRelationColumn' works only on many-to-many relations.");
         }
 
-        $relDefs = $entity->getRelations()[$relationName];
+        if (!$id) {
+            throw new Error("Empty ID passed to 'getRelationColumn'.");
+        }
 
-        $relTable = $this->toDb($relDefs['relationName']);
+        $middleName = ucfirst($entity->getRelationParam($relationName, 'relationName'));
 
         $keySet = $this->query->getKeys($entity, $relationName);
-        $key = $keySet['key'];
-        $foreignKey = $keySet['foreignKey'];
+
         $nearKey = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
 
         $additionalColumns = $entity->getRelationParam($relationName, 'additionalColumns') ?? [];
 
-        if (!isset($additionalColumns[$column])) return null;
+        if (!isset($additionalColumns[$column])) {
+            return null;
+        }
 
-        $columnType = $additionalColumns[$column]['type'] ?? 'string';
+        $columnType = $additionalColumns[$column]['type'] ?? Entity::VARCHAR;
 
-        $columnAlias = $this->query->sanitizeSelectAlias($column);
+        $where = [
+            $nearKey => $entity->id,
+            $distantKey => $id,
+            'deleted' => false,
+        ];
 
-        $sql =
-            "SELECT " . $this->toDb($this->query->sanitize($column)) . " AS `{$columnAlias}` FROM `{$relTable}` " .
-            "WHERE ";
+        $conditions = $entity->getRelationParam($relationName, 'conditions') ?? [];
 
-        $wherePart =
-            $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . " ".
-            "AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0";
+        foreach ($conditions as $k => $value) {
+            $where[$k] = $value;
+        }
 
-        $sql .= $wherePart;
+        $sql = $this->query->createSelectQuery($middleName, [
+            'select' => [[$column, 'value']],
+            'whereClause' => $where,
+        ]);
 
         $ps = $this->pdo->query($sql);
-        if ($ps) {
-            foreach ($ps as $row) {
-                $value = $row[$columnAlias];
-                if ($columnType == 'bool') {
-                    $value = boolval($value);
-                } else if ($columnType == 'int') {
-                    $value = intval($value);
-                } else if ($columnType == 'float') {
-                    $value = floatval($value);
-                }
 
-                return $value;
+        if (!$ps) {
+            return null;
+        }
+
+        foreach ($ps as $row) {
+            $value = $row['value'];
+
+            if ($columnType == Entity::BOOL) {
+                return boolval($value);
             }
+
+            if ($columnType == Entity::INT) {
+                return intval($value);
+            }
+
+            if ($columnType == Entity::FLOAT) {
+                return floatval($value);
+            }
+
+            return $value;
         }
 
         return null;
@@ -1338,34 +1361,5 @@ abstract class BaseMapper implements Mapper
         $join[2] = array_merge($join[2], $conditions);
 
         return $join;
-    }
-
-    protected function composeInsertQuery(string $table, string $fields, $values, ?string $onDuplicate = null) : string
-    {
-        $sql = "INSERT INTO `{$table}`";
-        $sql .= " ({$fields})";
-        if (!is_array($values)) {
-            $sql .= " VALUES ({$values})";
-        } else {
-            $sql .= " VALUES (" . implode("), (", $values) . ")";
-        }
-
-        if ($onDuplicate) {
-            $sql .= " ON DUPLICATE KEY UPDATE " . $onDuplicate;
-        }
-
-        return $sql;
-    }
-
-    protected function composeUpdateQuery(string $table, string $set, string $where)
-    {
-        $sql = "UPDATE `{$table}` SET {$set} WHERE {$where}";
-
-        return $sql;
-    }
-
-    protected function toDb(string $attribute)
-    {
-        return $this->query->toDb($attribute);
     }
 }

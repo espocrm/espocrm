@@ -880,6 +880,38 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->relate($this->account, 'teams', $this->team);
     }
 
+    public function testGetRelationColumn()
+    {
+        $this->post->id = 'postId';
+        $this->tag->id = 'tagId';
+
+        $query =
+            "SELECT post_tag.role AS `value` FROM `post_tag` " .
+            "WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId' AND post_tag.deleted = 0";
+
+        $this->mockQuery($query, [['value' => 'test']]);
+
+        $result = $this->db->getRelationColumn($this->post, 'tags', 'tagId', 'role');
+
+        $this->assertEquals('test', $result);
+    }
+
+    public function testUpdateRelation()
+    {
+        $this->post->id = 'postId';
+        $this->tag->id = 'tagId';
+
+        $query =
+            "UPDATE `post_tag` SET post_tag.role = 'test' " .
+            "WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId' AND post_tag.deleted = 0";
+
+        $this->mockQuery($query);
+
+        $this->db->updateRelation($this->post, 'tags', 'tagId', [
+            'role' => 'test'
+        ]);
+    }
+
     public function testMax()
     {
         $query = "SELECT MAX(post.id) AS `value` FROM `post` WHERE post.deleted = 0";
