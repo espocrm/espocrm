@@ -908,7 +908,6 @@ abstract class BaseMapper implements Mapper
                 $this->runQuery($sql, true);
 
                 return true;
-
         }
 
         throw new LogicException("Relation type '{$relType}' is not supported.");
@@ -1070,17 +1069,6 @@ abstract class BaseMapper implements Mapper
     public function removeAllRelations(Entity $entity, string $relationName) : bool
     {
         return $this->removeRelation($entity, $relationName, null, true);
-    }
-
-    protected function quote($value)
-    {
-        if (is_null($value)) {
-            return 'NULL';
-        } else if (is_bool($value)) {
-            return $value ? '1' : '0';
-        } else {
-            return $this->pdo->quote($value);
-        }
     }
 
     /**
