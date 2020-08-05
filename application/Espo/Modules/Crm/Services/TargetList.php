@@ -189,7 +189,7 @@ class TargetList extends \Espo\Services\Record
         }
     }
 
-    public function unlinkAll($id, $link)
+    public function unlinkAll(string $id, string $link)
     {
         $entity = $this->getRepository()->get($id);
         if (!$entity) {

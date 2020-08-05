@@ -347,7 +347,6 @@ abstract class BaseMapper implements Mapper
 
                 $params['joins'][] = $this->getManyManyJoin($entity, $relationName, $additionalColumnsConditions);
 
-
                 $params['relationName'] = $relDefs['relationName'];
 
                 $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
@@ -359,6 +358,7 @@ abstract class BaseMapper implements Mapper
                         $collection = $this->createSthCollection($relEntity->getEntityType());
                         $collection->setQuery($sql);
                         $collection->setAsFetched();
+
                         return $collection;
                     }
                 }
@@ -438,17 +438,41 @@ abstract class BaseMapper implements Mapper
     /**
      * Relate an entity with another entity.
      */
-    public function relate(Entity $entityFrom, string $relationName, Entity $entityTo, ?array $data = null) : bool
+    public function relate(Entity $entity, string $relationName, Entity $foreignEntity, ?array $columnData = null) : bool
     {
-        return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
+        return $this->addRelation($entity, $relationName, null, $foreignEntity, $columnData);
     }
 
     /**
-     * Relate an entity from another entity.
+     * Unrelate an entity from another entity.
      */
-    public function unrelate(Entity $entityFrom, string $relationName, Entity $entityTo) : bool
+    public function unrelate(Entity $entity, string $relationName, Entity $foreignEntity) : bool
     {
-        return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
+        return $this->removeRelation($entity, $relationName, null, false, $foreignEntity);
+    }
+
+    /**
+     * Unrelate an entity from another entity by a given ID.
+     */
+    public function relateById(Entity $entity, string $relationName, string $id, ?array $columnData = null) : bool
+    {
+        return $this->addRelation($entity, $relationName, $id, null, $columnData);
+    }
+
+    /**
+     * Unrelate an entity from another entity by a given ID.
+     */
+    public function unrelateById(Entity $entity, string $relationName, string $id) : bool
+    {
+        return $this->removeRelation($entity, $relationName, $id);
+    }
+
+    /**
+     * Unrelate all related entities.
+     */
+    public function unrelateAll(Entity $entity, string $relationName) : bool
+    {
+        return $this->removeRelation($entity, $relationName, null, true);
     }
 
     /**
@@ -663,7 +687,7 @@ abstract class BaseMapper implements Mapper
         throw new LogicException("Relation type '{$relType}' is not supported for mass relate.");
     }
 
-    public function runQuery(string $query, bool $rerunIfDeadlock = false)
+    protected function runQuery(string $query, bool $rerunIfDeadlock = false)
     {
         try {
             return $this->pdo->query($query);
@@ -677,7 +701,7 @@ abstract class BaseMapper implements Mapper
         }
     }
 
-    public function addRelation(
+    protected function addRelation(
         Entity $entity, string $relationName, ?string $id = null, ?Entity $relEntity = null, ?array $data = null
     ) : bool {
         $entityType = $entity->getEntityType();
@@ -914,7 +938,7 @@ abstract class BaseMapper implements Mapper
         throw new LogicException("Relation type '{$relType}' is not supported.");
     }
 
-    public function removeRelation(
+    protected function removeRelation(
         Entity $entity, string $relationName, ?string $id = null, bool $all = false, ?Entity $relEntity = null
     ) : bool {
         if ($relEntity) {
@@ -1065,11 +1089,6 @@ abstract class BaseMapper implements Mapper
         }
 
         throw new LogicException("Relation type '{$relType}' is not supported for unrelating.");
-    }
-
-    public function removeAllRelations(Entity $entity, string $relationName) : bool
-    {
-        return $this->removeRelation($entity, $relationName, null, true);
     }
 
     /**

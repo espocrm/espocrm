@@ -496,7 +496,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->comment->id = 'commentId';
 
-        $this->db->removeAllRelations($this->comment, 'post');
+        $this->db->unrelateAll($this->comment, 'post');
     }
 
     public function testRemoveChildrenToParent()
@@ -521,7 +521,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, true);
 
         $this->note->id = 'noteId';
-        $this->db->removeAllRelations($this->note, 'parent');
+        $this->db->unrelateAll($this->note, 'parent');
     }
 
     public function testRemoveOneToMany()
@@ -533,7 +533,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, true);
 
         $this->post->id = 'postId';
-        $this->db->removeRelation($this->post, 'comments', 'commentId');
+        $this->db->unrelateById($this->post, 'comments', 'commentId');
     }
 
     public function testRemoveAllOneToMany()
@@ -545,7 +545,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, true);
 
         $this->post->id = 'postId';
-        $this->db->removeAllRelations($this->post, 'comments');
+        $this->db->unrelateAll($this->post, 'comments');
     }
 
     public function testRemoveOneToOne1()
@@ -559,7 +559,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->mockQuery($query, true);
 
-        $this->db->removeRelation($this->post, 'postData', 'dataId');
+        $this->db->unrelateById($this->post, 'postData', 'dataId');
     }
 
     public function testRemovenParentToChildren()
@@ -571,7 +571,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, true);
 
         $this->post->id = 'postId';
-        $this->db->removeRelation($this->post, 'notes', 'noteId');
+        $this->db->unrelateById($this->post, 'notes', 'noteId');
     }
 
     public function testRemoveAllParentToChildren()
@@ -583,7 +583,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, true);
 
         $this->post->id = 'postId';
-        $this->db->removeAllRelations($this->post, 'notes');
+        $this->db->unrelateAll($this->post, 'notes');
     }
 
     public function testRemoveManyMany()
@@ -593,7 +593,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, $return);
 
         $this->post->id = '1';
-        $this->db->removeRelation($this->post, 'tags', '100');
+        $this->db->unrelateById($this->post, 'tags', '100');
     }
 
     public function testRemoveAllManyMany()
@@ -603,7 +603,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, $return);
 
         $this->post->id = '1';
-        $this->db->removeAllRelations($this->post, 'tags');
+        $this->db->unrelateAll($this->post, 'tags');
     }
 
     public function testRemoveRelationManyManyWithCondition()
@@ -615,7 +615,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, $return);
 
         $this->account->id = '1';
-        $this->db->removeRelation($this->account, 'teams', '100');
+        $this->db->unrelateById($this->account, 'teams', '100');
     }
 
     public function testRemoveAllManyManyWithCondition()
@@ -628,7 +628,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->mockQuery($query, $return);
 
         $this->account->id = '1';
-        $this->db->removeAllRelations($this->account, 'teams');
+        $this->db->unrelateAll($this->account, 'teams');
     }
 
     public function testUnrelateManyToMany()

@@ -39,6 +39,9 @@ use Espo\ORM\{
     RDBSelectBuilder as RDBSelectBuilder,
 };
 
+use StdClass;
+use RuntimeException;
+
 class RDB extends Repository implements Findable, Relatable, Removable
 {
     protected $mapper;
@@ -297,40 +300,50 @@ class RDB extends Repository implements Findable, Relatable, Removable
         ]);
     }
 
-    public function relate(Entity $entity, string $relationName, $foreign, $data = null, array $options = [])
+    public function relate(Entity $entity, string $relationName, $foreign, $columnData = null, array $options = [])
     {
         if (!$entity->id) {
-            return false;
+            throw new RuntimeException("Can't relate an entity w/o ID.");
         }
 
-        $this->beforeRelate($entity, $relationName, $foreign, $data, $options);
+        if (! $foreign instanceof Entity && !is_string($foreign)) {
+            throw new RuntimeException("Bad foreign value.");
+        }
+
+        $this->beforeRelate($entity, $relationName, $foreign, $columnData, $options);
+
         $beforeMethodName = 'beforeRelate' . ucfirst($relationName);
         if (method_exists($this, $beforeMethodName)) {
-            $this->$beforeMethodName($entity, $foreign, $data, $options);
+            $this->$beforeMethodName($entity, $foreign, $columnData, $options);
         }
 
         $result = false;
+
         $methodName = 'relate' . ucfirst($relationName);
+
         if (method_exists($this, $methodName)) {
-            $result = $this->$methodName($entity, $foreign, $data, $options);
+            $result = $this->$methodName($entity, $foreign, $columnData, $options);
         } else {
-            $d = $data;
-            if ($d instanceof \StdClass) {
-                $d = get_object_vars($d);
+            $data = $columnData;
+
+            if ($columnData instanceof StdClass) {
+                $data = get_object_vars($columnData);
             }
+
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->relate($entity, $relationName, $foreign, $d);
+                $id = $foreign->id;
+            } else {
+                $id = $foreign;
             }
-            if (is_string($foreign)) {
-                $result = $this->getMapper()->addRelation($entity, $relationName, $foreign, null, $d);
-            }
+
+            $result = $this->getMapper()->relateById($entity, $relationName, $id, $data);
         }
 
         if ($result) {
-            $this->afterRelate($entity, $relationName, $foreign, $data, $options);
+            $this->afterRelate($entity, $relationName, $foreign, $columnData, $options);
             $afterMethodName = 'afterRelate' . ucfirst($relationName);
             if (method_exists($this, $afterMethodName)) {
-                $this->$afterMethodName($entity, $foreign, $data, $options);
+                $this->$afterMethodName($entity, $foreign, $columnData, $options);
             }
         }
 
@@ -340,33 +353,39 @@ class RDB extends Repository implements Findable, Relatable, Removable
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
     {
         if (!$entity->id) {
-            return false;
+            throw new RuntimeException("Can't unrelate an entity w/o ID.");
+        }
+
+        if (! $foreign instanceof Entity && !is_string($foreign)) {
+            throw new RuntimeException("Bad foreign value.");
         }
 
         $this->beforeUnrelate($entity, $relationName, $foreign, $options);
+
         $beforeMethodName = 'beforeUnrelate' . ucfirst($relationName);
         if (method_exists($this, $beforeMethodName)) {
             $this->$beforeMethodName($entity, $foreign, $options);
         }
 
         $result = false;
+
         $methodName = 'unrelate' . ucfirst($relationName);
+
         if (method_exists($this, $methodName)) {
             $result = $this->$methodName($entity, $foreign);
         } else {
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign);
+                $id = $foreign->id;
+            } else {
+                $id = $foreign;
             }
-            if (is_string($foreign)) {
-                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign);
-            }
-            if ($foreign === true) {
-                $result = $this->getMapper()->removeAllRelations($entity, $relationName);
-            }
+
+            $result = $this->getMapper()->unrelateById($entity, $relationName, $id);
         }
 
         if ($result) {
             $this->afterUnrelate($entity, $relationName, $foreign, $options);
+
             $afterMethodName = 'afterUnrelate' . ucfirst($relationName);
             if (method_exists($this, $afterMethodName)) {
                 $this->$afterMethodName($entity, $foreign, $options);
@@ -408,30 +427,37 @@ class RDB extends Repository implements Findable, Relatable, Removable
     /**
      * Update relationship columns.
      */
-    public function updateRelation(Entity $entity, string $relationName, $foreign, $data)
+    public function updateRelation(Entity $entity, string $relationName, $foreign, $columnData)
     {
         if (!$entity->id) {
-            return false;
+            throw new RuntimeException("Can't update a relation for an entity w/o ID.");
         }
-        if ($data instanceof \StdClass) {
-            $data = get_object_vars($data);
+
+        if (! $foreign instanceof Entity && !is_string($foreign)) {
+            throw new RuntimeException("Bad foreign value.");
         }
+
+        if ($columnData instanceof StdClass) {
+            $columnData = get_object_vars($columnData);
+        }
+
         if ($foreign instanceof Entity) {
             $id = $foreign->id;
         } else {
             $id = $foreign;
         }
-        if (is_string($foreign)) {
-            return $this->getMapper()->updateRelation($entity, $relationName, $id, $data);
+
+        if (!is_string($id)) {
+            throw new RuntimeException("Bad foreign value.");
         }
 
-        return false;
+        return $this->getMapper()->updateRelation($entity, $relationName, $id, $columnData);
     }
 
     public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
     {
         if (!$entity->id) {
-            return false;
+            throw new RuntimeException("Can't related an entity w/o ID.");
         }
 
         $this->beforeMassRelate($entity, $relationName, $params, $options);

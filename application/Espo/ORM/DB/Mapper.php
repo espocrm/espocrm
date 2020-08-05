@@ -47,39 +47,11 @@ interface Mapper
     public function select(Entity $entity, ?array $params = null) : Collection;
 
     /**
-     * Invoke an aggregate function and return a result value.
-     *
-     * @return mixed Result of an aggregation.
-     */
-    public function aggregate(Entity $entity, ?array $params, string $aggregation, string $aggregationBy);
-
-    /**
      * Returns count of records according to given parameters.
      *
      * @return Record count.
      */
     public function count(Entity $entity, ?array $params = null) : int;
-
-    /**
-     * Returns max value of the attribute in the select according to given parameters.
-     *
-     * @return mixed Max value.
-     */
-    public function max(Entity $entity, ?array $params, string $attribute);
-
-    /**
-     * Returns a min value of the attribute in the select according to given parameters.
-     *
-     * @return mixed Min value.
-     */
-    public function min(Entity $entity, ?array $params, string $attribute);
-
-    /**
-     * Returns a sum value of the attribute in the select according to given parameters.
-     *
-     * @return mixed Sum value.
-     */
-    public function sum(Entity $entity, ?array $params, string $attribute);
 
     /**
      * Selects related entity or list of entities.
@@ -94,31 +66,6 @@ interface Mapper
      * @return A number of records.
      */
     public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int;
-
-    /**
-     * Links entity with another one.
-     *
-     * @return TRUE if success.
-     */
-    public function addRelation(
-        Entity $entity, string $relationName, ?string $id = null, ?Entity $relEntity = null, ?array $data = null
-    ) : bool;
-
-    /**
-     * Remove relation of entity with certain record.
-     *
-     * @return TRUE if success.
-     */
-    public function removeRelation(
-        Entity $entity, string $relationName, ?string $id = null, bool $all = false, ?Entity $relEntity = null
-    ) : bool;
-
-    /**
-     * Remove all relations of entity of specified relation name.
-     *
-     * @return TRUE if success.
-     */
-    public function removeAllRelations(Entity $entity, string $relationName) : bool;
 
     /**
      * Insert an entity into DB.
@@ -139,9 +86,4 @@ interface Mapper
      * Delete an entity (mark as deleted).
      */
     public function delete(Entity $entity);
-
-    /**
-     * Delete a record from DB.
-     */
-    public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false);
 }
