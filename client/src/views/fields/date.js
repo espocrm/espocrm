@@ -102,9 +102,10 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
                     return this.getDateTime().toDisplayDate(value);
                 }
 
-                var d = moment.tz(value + ' OO:OO:00', this.getDateTime().internalDateTimeFormat, this.getDateTime().getTimeZone());
+                var d = moment.utc(value + ' 00:00:00', this.getDateTime().internalDateTimeFormat);
 
                 var today = moment().tz(this.getDateTime().getTimeZone()).startOf('day');
+
                 var dt = today.clone();
 
                 var ranges = {
