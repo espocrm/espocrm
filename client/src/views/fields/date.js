@@ -102,9 +102,9 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
                     return this.getDateTime().toDisplayDate(value);
                 }
 
-                var d = moment.tz(value + ' OO:OO:00', this.getDateTime().internalDateTimeFormat, this.getDateTime().getTimeZone());
+                var d = moment.utc(value + ' 00:00:00', this.getDateTime().internalDateTimeFormat);
 
-                var today = moment().tz(this.getDateTime().getTimeZone()).startOf('day');
+                var today = moment().utc().startOf('day');
                 var dt = today.clone();
 
                 var ranges = {
@@ -124,9 +124,9 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
                 var readableFormat = this.getDateTime().getReadableDateFormat();
 
                 if (d.format('YYYY') == today.format('YYYY')) {
-                    return d.format(readableFormat);
+                    return d.tz(this.getDateTime().getTimeZone()).format(readableFormat);
                 } else {
-                    return d.format(readableFormat + ', YYYY');
+                    return d.tz(this.getDateTime().getTimeZone()).format(readableFormat + ', YYYY');
                 }
             }
 
