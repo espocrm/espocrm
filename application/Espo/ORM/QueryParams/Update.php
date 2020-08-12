@@ -27,34 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Repositories;
+namespace Espo\ORM\QueryParams;
 
-use Espo\ORM\Entity;
+use RuntimeException;
 
-interface Relatable
+/**
+ * Update parameters.
+ */
+class Update implements Query
 {
-    /**
-     * Find records records matching specific parameters.
-     */
-    public function findRelated(Entity $entity, string $relationName, array $params);
+    use SelectingTrait;
+    use BaseTrait;
 
-    /**
-     * A number of related records matching specific parameters.
-     */
-    public function countRelated(Entity $entity, string $relationName, array $params = []) : int;
+    protected function validateRawParams(array $params)
+    {
+        $this->validateRawParamsSelecting($params);
 
-    /**
-     * Whether records are related.
-     */
-    public function isRelated(Entity $entity, string $relationName, $foreign) : bool;
+        $set = $params['set'] ?? null;
 
-    /**
-     * Relate records.
-     */
-    public function relate(Entity $entity, string $relationName, $foreign);
-
-    /**
-     * Unrelate records.
-     */
-    public function unrelate(Entity $entity, string $relationName, $foreign);
+        if (!$set || !is_array($set)) {
+            throw new RuntimeException("Update params: Bad or missing 'set' parameter.");
+        }
+    }
 }

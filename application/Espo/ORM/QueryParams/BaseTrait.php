@@ -27,9 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\ORM\QueryParams;
 
-interface RepositoryFactory
+trait BaseTrait
 {
-    public function create(string $name) : object;
+    protected $params = [];
+
+    /**
+     * Get parameters in RAW format.
+     */
+    public function getRawParams() : array
+    {
+        return $this->params;
+    }
+
+    /**
+     * Create from RAW params.
+     */
+    public static function fromRaw(array $params) : self
+    {
+        $obj = new self();
+
+        $obj->validateRawParams($params);
+
+        $obj->params = $params;
+
+        return $obj;
+    }
+
+    protected function validateRawParams(array $params)
+    {
+    }
 }

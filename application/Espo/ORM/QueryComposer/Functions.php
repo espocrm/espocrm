@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\DB\Query;
+namespace Espo\ORM\QueryComposer;
 
 class Functions
 {

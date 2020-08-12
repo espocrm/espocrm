@@ -29,10 +29,12 @@
 
 namespace Espo\ORM;
 
+use Traversable;
+
 /**
  * A collection of entities.
  */
-interface Collection extends \Traversable
+interface Collection extends Traversable
 {
     /**
      * Get an array of StdClass objects.

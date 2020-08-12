@@ -111,7 +111,7 @@ class TargetList extends \Espo\Services\Record
 
         foreach ($this->targetsLinkList as $link) {
             $foreignEntityType = $entity->getRelationParam($link, 'entity');
-            $count += $this->getEntityManager()->getRepository($foreignEntityType)->join(['targetLists'])->where([
+            $count += $this->getEntityManager()->getRepository($foreignEntityType)->join('targetLists')->where([
                 'targetListsMiddle.targetListId' => $entity->id,
                 'targetListsMiddle.optedOut' => 1,
             ])->count();
@@ -209,7 +209,7 @@ class TargetList extends \Espo\Services\Record
         }
 
         $pdo = $this->getEntityManager()->getPDO();
-        $query = $this->getEntityManager()->getQuery();
+        $query = $this->getEntityManager()->getQueryComposer();
         $sql = null;
 
         switch ($link) {
@@ -237,7 +237,7 @@ class TargetList extends \Espo\Services\Record
     protected function findLinkedOptedOut(string $id, array $params) : RecordCollection
     {
         $pdo = $this->getEntityManager()->getPDO();
-        $query = $this->getEntityManager()->getQuery();
+        $query = $this->getEntityManager()->getQueryComposer();
 
         $sqlContact = $query->createSelectQuery('Contact', array(
             'select' => ['id', 'name', 'createdAt', ['VALUE:Contact', '_scope']],

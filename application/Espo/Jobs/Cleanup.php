@@ -118,7 +118,7 @@ class Cleanup implements Job
 
     protected function cleanupJobs()
     {
-        $select = $this->entityManager->createSelectBuilder()
+        $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('Job')
             ->where([
                 'DATE:modifiedAt<' => $this->getCleanupJobFromDate(),
@@ -126,9 +126,9 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->delete($select);
+        $this->entityManager->getQueryExecutor()->run($delete);
 
-        $select = $this->entityManager->createSelectBuilder()
+        $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('Job')
             ->where([
                 'DATE:modifiedAt<' => $this->getCleanupJobFromDate(),
@@ -137,12 +137,12 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->delete($select);
+        $this->entityManager->getQueryExecutor()->run($delete);
     }
 
     protected function cleanupUniqueIds()
     {
-        $select = $this->entityManager->createSelectBuilder()
+        $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('UniqueId')
             ->where([
                 'terminateAt!=' => null,
@@ -150,7 +150,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->delete($select);
+        $this->entityManager->getQueryExecutor()->run($delete);
     }
 
     protected function cleanupScheduledJobLog()
@@ -180,7 +180,7 @@ class Cleanup implements Job
                 $ignoreIdList[] = $logRecord->get('id');
             }
 
-            $select = $this->entityManager->createSelectBuilder()
+            $delete = $this->entityManager->getQueryBuilder()->delete()
                 ->from('ScheduledJobLogRecord')
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
@@ -189,7 +189,7 @@ class Cleanup implements Job
                 ])
                 ->build();
 
-            $this->entityManager->getQueryExecutor()->delete($select);
+            $this->entityManager->getQueryExecutor()->run($delete);
         }
     }
 
@@ -199,14 +199,14 @@ class Cleanup implements Job
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $select = $this->entityManager->createSelectBuilder()
+        $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('ActionHistoryRecord')
             ->where([
                 'DATE:createdAt<' => $datetime->format('Y-m-d'),
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->delete($select);
+        $this->entityManager->getQueryExecutor()->run($delete);
     }
 
     protected function cleanupAuthToken()
@@ -215,7 +215,7 @@ class Cleanup implements Job
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $select = $this->entityManager->createSelectBuilder()
+        $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('AuthToken')
             ->where([
                 'DATE:modifiedAt<' => $datetime->format('Y-m-d'),
@@ -223,7 +223,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->delete($select);
+        $this->entityManager->getQueryExecutor()->run($delete);
     }
 
     protected function cleanupAuthLog()
@@ -232,14 +232,14 @@ class Cleanup implements Job
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $select = $this->entityManager->createSelectBuilder()
+        $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('AuthLogRecord')
             ->where([
                 'DATE:createdAt<' => $datetime->format('Y-m-d'),
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->delete($select);
+        $this->entityManager->getQueryExecutor()->run($delete);
     }
 
     protected function getCleanupJobFromDate()
@@ -348,7 +348,7 @@ class Cleanup implements Job
             }
         }
 
-        $select = $this->entityManager->createSelectBuilder()
+        $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('Attachment')
             ->where([
                 'deleted' => true,
@@ -356,7 +356,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->delete($select);
+        $this->entityManager->getQueryExecutor()->run($delete);
     }
 
     protected function cleanupEmails()
@@ -383,7 +383,7 @@ class Cleanup implements Job
                 $this->entityManager->removeEntity($attachment);
             }
 
-            $select = $this->entityManager->createSelectBuilder()
+            $delete = $this->entityManager->getQueryBuilder()->delete()
                 ->from('Email')
                 ->where([
                     'deleted' => true,
@@ -391,16 +391,16 @@ class Cleanup implements Job
                 ])
                 ->build();
 
-            $this->entityManager->getQueryExecutor()->delete($select);
+            $this->entityManager->getQueryExecutor()->run($delete);
 
-            $select = $this->entityManager->createSelectBuilder()
+            $delete = $this->entityManager->getQueryBuilder()->delete()
                 ->from('EmailUser')
                 ->where([
                     'emailId' => $id,
                 ])
                 ->build();
 
-            $this->entityManager->getQueryExecutor()->delete($select);
+            $this->entityManager->getQueryExecutor()->run($delete);
         }
     }
 
@@ -452,7 +452,7 @@ class Cleanup implements Job
         $repository = $this->entityManager->getRepository($scope);
         $repository->deleteFromDb($entity->id);
 
-        $query = $this->entityManager->getQuery();
+        $query = $this->entityManager->getQueryComposer();
 
         foreach ($entity->getRelationList() as $relation) {
             if ($entity->getRelationType($relation) !== Entity::MANY_MANY) {
@@ -492,12 +492,12 @@ class Cleanup implements Job
                     continue;
                 }
 
-                $select = $this->entityManager->createSelectBuilder()
+                $delete = $this->entityManager->getQueryBuilder()->delete()
                     ->from($relationEntityType)
                     ->where($where)
                     ->build();
 
-                $this->entityManager->getQueryExecutor()->delete($select);
+                $this->entityManager->getQueryExecutor()->run($delete);
 
             } catch (\Exception $e) {
                 $GLOBALS['log']->error("Cleanup: " . $e->getMessage());

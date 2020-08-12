@@ -27,9 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-use Espo\ORM\DB\MysqlMapper;
-use Espo\ORM\DB\Query\Mysql as Query;
-use Espo\ORM\EntityFactory;
+use Espo\ORM\{
+    DB\MysqlMapper,
+    DB\Query\Mysql as Query,
+    EntityFactory,
+};
 
 use Espo\Entities\Job;
 

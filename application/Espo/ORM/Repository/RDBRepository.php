@@ -27,48 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Repositories;
+namespace Espo\ORM\Repository;
 
 use Espo\ORM\{
     EntityManager,
     EntityFactory,
     Collection,
     Entity,
-    Repository,
-    DB\Mapper,
-    RDBSelectBuilder as RDBSelectBuilder,
+    Mapper\Mapper,
+    QueryParams\Select,
 };
 
 use StdClass;
 use RuntimeException;
+use InvalidArgumentException;
 
-class RDB extends Repository implements Findable, Relatable, Removable
+class RDBRepository extends Repository
 {
     protected $mapper;
 
     private $isTableLocked = false;
 
-    public function __construct(string $entityType, EntityManager $entityManager, EntityFactory $entityFactory)
-    {
+    protected $hookMediator;
+
+    public function __construct(
+        string $entityType, EntityManager $entityManager, EntityFactory $entityFactory, ?HookMediator $hookMediator = null
+    ) {
         $this->entityType = $entityType;
         $this->entityName = $entityType;
 
         $this->entityFactory = $entityFactory;
-        $this->seed = $this->entityFactory->create($entityType);
-        $this->entityClassName = get_class($this->seed);
         $this->entityManager = $entityManager;
+
+        $this->seed = $this->entityFactory->create($entityType);
+
+        $this->hookMediator = $hookMediator ?? (new EmptyHookMediator());
     }
 
     protected function getMapper() : Mapper
     {
-        if (empty($this->mapper)) {
-            $this->mapper = $this->getEntityManager()->getMapper('RDB');
-        }
-        return $this->mapper;
+        return $this->entityManager->getMapper();
     }
 
     /**
      * @deprecated
+     * @todo Remove in 6.0.
      */
     public function handleSelectParams(&$params)
     {
@@ -84,6 +87,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
         if ($entity) {
             $entity->setIsNew(true);
             $entity->populateDefaults();
+
             return $entity;
         }
 
@@ -93,16 +97,17 @@ class RDB extends Repository implements Findable, Relatable, Removable
     /**
      * Fetch an entity by ID.
      */
-    public function getById(string $id, array $params = []) : ?Entity
+    public function getById(string $id) : ?Entity
     {
-        $entity = $this->entityFactory->create($this->entityType);
-        if (!$entity) return null;
+        $select = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->from($this->entityType)
+            ->where([
+                'id' => $id,
+            ])
+            ->build();
 
-        if (empty($params['skipAdditionalSelectParams'])) {
-            $this->handleSelectParams($params);
-        }
-
-        return $this->getMapper()->selectById($entity, $id, $params);
+        return $this->getMapper()->selectOne($select);
     }
 
     public function get(?string $id = null) : ?Entity
@@ -110,19 +115,21 @@ class RDB extends Repository implements Findable, Relatable, Removable
         if (is_null($id)) {
             return $this->getNew();
         }
+
         return $this->getById($id);
     }
 
-    protected function beforeSave(Entity $entity, array $options = [])
+    protected function processCheckEntity(Entity $entity)
     {
-    }
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
+        if ($entity->getEntityType() !== $this->entityType) {
+            throw new RuntimeException("An entity type doesn't match the repository.");
+        }
     }
 
     public function save(Entity $entity, array $options = [])
     {
+        $this->processCheckEntity($entity);
+
         $entity->setAsBeingSaved();
 
         if (empty($options['skipBeforeSave']) && empty($options['skipAll'])) {
@@ -161,102 +168,232 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $this->getMapper()->restoreDeleted($this->entityType, $id);
     }
 
-    protected function beforeRemove(Entity $entity, array $options = [])
+    /**
+     * Get an access point for a specific relation of a record.
+     */
+    public function getRelation(Entity $entity, string $relationName) : RDBRelation
     {
+        return new RDBRelation($this->entityManager, $entity, $relationName, $this->hookMediator);
     }
 
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-    }
-
+    /**
+     * Remove a record (mark as deleted).
+     */
     public function remove(Entity $entity, array $options = [])
     {
+        $this->processCheckEntity($entity);
+
         $this->beforeRemove($entity, $options);
+
         $this->getMapper()->delete($entity);
+
         $this->afterRemove($entity, $options);
     }
 
+    /**
+     * @deprecated Use QueryBuilder instead.
+     */
     public function deleteFromDb(string $id, bool $onlyDeleted = false)
     {
         $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 
-    public function find(array $params = []) : Collection
+    /**
+     * Find records.
+     *
+     * @param $params @deprecated Omit it.
+     */
+    public function find(?array $params = []) : Collection
     {
+        // @todo Remove.
+        if (empty($query['skipAdditionalSelectParams'])) {
+            $this->handleSelectParams($query);
+        }
+
+        return $this->createSelectBuilder()->find($params);
+    }
+
+    /**
+     * Find one record.
+     *
+     * @param $params @deprecated Omit it.
+     */
+    public function findOne(?array $params = []) : ?Entity
+    {
+        // @todo Remove.
         if (empty($params['skipAdditionalSelectParams'])) {
             $this->handleSelectParams($params);
         }
 
-        $collection = $this->getMapper()->select($this->seed, $params);
-
-        return $collection;
-    }
-
-    public function findOne(array $params = []) : ?Entity
-    {
-        unset($params['returnSthCollection']);
-
         $collection = $this->limit(0, 1)->find($params);
 
-        if (count($collection)) {
-            return $collection[0];
+        foreach ($collection as $entity) {
+            return $entity;
         }
 
         return null;
     }
 
-    public function findByQuery(string $sql, ?string $collectionType = null)
+    /**
+     * Find records by a SQL query.
+     */
+    public function findBySql(string $sql) : Collection
     {
-        if (!$collectionType) {
-            $collection = $this->getMapper()->selectByQuery($this->seed, $sql);
-        } else if ($collectionType === EntityManager::STH_COLLECTION) {
-            $collection = $this->getEntityManager()->createSthCollection($this->entityType);
-            $collection->setQuery($sql);
-        }
-
-        return $collection;
+        return $this->getMapper()->selectBySql($this->entityType, $sql);
     }
 
-    public function findRelated(Entity $entity, string $relationName, array $params = [])
+    /**
+     * @deprecated
+     */
+    public function findRelated(Entity $entity, string $relationName, ?array $params = null)
     {
+        $params = $params ?? [];
+
+        if ($entity->getEntityType() !== $this->entityType) {
+            throw new InvalidArgumentException("Not supported entity type.");
+        }
+
         if (!$entity->id) {
             return null;
         }
 
-        if ($entity->getRelationType($relationName) === Entity::BELONGS_TO_PARENT) {
-            $entityType = $entity->get($relationName . 'Type');
-        } else {
-            $entityType = $entity->getRelationParam($relationName, 'entity');
-        }
+        $type = $entity->getRelationType($relationName);
+        $entityType = $entity->getRelationParam($relationName, 'entity');
 
         if ($entityType && empty($params['skipAdditionalSelectParams'])) {
-            $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
+            $this->entityManager->getRepository($entityType)->handleSelectParams($params);
         }
 
-        $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
+        $additionalColumns = $params['additionalColumns'] ?? [];
+        unset($params['additionalColumns']);
+
+        $additionalColumnsConditions = $params['additionalColumnsConditions'] ?? [];
+        unset($params['additionalColumnsConditions']);
+
+        $select = null;
+
+        if ($entityType) {
+            $params['from'] = $entityType;
+            $select = Select::fromRaw($params);
+        }
+
+        if ($type === Entity::MANY_MANY && count($additionalColumns)) {
+            $select = $this->applyRelationAdditionalColumns($entity, $relationName, $additionalColumns, $select);
+        }
+
+        // @todo Get rid of 'additionalColumnsConditions' usage. Use 'whereClause' instead.
+        if ($type === Entity::MANY_MANY && count($additionalColumnsConditions)) {
+            $select = $this->applyRelationAdditionalColumnsConditions(
+                $entity, $relationName, $additionalColumnsConditions, $select
+            );
+        }
+
+        $result = $this->getMapper()->selectRelated($entity, $relationName, $select);
 
         return $result;
     }
 
-    public function countRelated(Entity $entity, string $relationName, array $params = []) : int
+    /**
+     * @deprecated
+     */
+    public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int
     {
+        $params = $params ?? [];
+
+        if ($entity->getEntityType() !== $this->entityType) {
+            throw new InvalidArgumentException("Not supported entity type.");
+        }
+
         if (!$entity->id) {
             return 0;
         }
 
-        $entityType =  $entity->getRelationParam($relationName, 'entity');
+        $type = $entity->getRelationType($relationName);
+        $entityType = $entity->getRelationParam($relationName, 'entity');
 
         if ($entityType && empty($params['skipAdditionalSelectParams'])) {
-            $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
+            $this->entityManager->getRepository($entityType)->handleSelectParams($params);
         }
 
-        return intval($this->getMapper()->countRelated($entity, $relationName, $params));
+        $additionalColumnsConditions = $params['additionalColumnsConditions'] ?? [];
+        unset($params['additionalColumnsConditions']);
+
+        if ($type === Entity::MANY_MANY && count($additionalColumnsConditions)) {
+            $select = $this->applyRelationAdditionalColumnsConditions($entity, $relationName, $additionalColumnsConditions, $select);
+        }
+
+        $select = null;
+
+        if ($entityType) {
+            $params['from'] = $entityType;
+            $select = Select::fromRaw($params);
+        }
+
+        return (int) $this->getMapper()->countRelated($entity, $relationName, $select);
     }
 
+    protected function applyRelationAdditionalColumns(
+        Entity $entity, string $relationName, array $columns, Select $select
+    ) : Select {
+        if (empty($columns)) {
+            return $select;
+        }
+
+        $middleName = lcfirst($entity->getRelationParam($relationName, 'relationName'));
+
+        $selectItemList = $select->getSelect();
+
+        if (empty($selectItemList)) {
+            $selectItemList[] = '*';
+        }
+
+        foreach ($columns as $column => $alias) {
+            $selectItemList[] = [
+                $middleName . '.' . $column,
+                $alias
+            ];
+        }
+
+        $select = $this->entityManager->getQueryBuilder()
+            ->clone($select)
+            ->select($selectItemList)
+            ->build();
+
+        return $select;
+    }
+
+    protected function applyRelationAdditionalColumnsConditions(
+        Entity $entity, string $relationName, array $conditions, Select $select
+    ) : Select {
+        if (empty($conditions)) {
+            return $select;
+        }
+
+        $middleName = lcfirst($entity->getRelationParam($relationName, 'relationName'));
+
+        $builder = $this->entityManager->getQueryBuilder()->clone($select);
+
+        foreach ($conditions as $column => $value) {
+            $builder->where(
+                $middleName . '.' . $column,
+                $value
+            );
+        }
+
+        return $builder->build();
+    }
+
+    /**
+     * @deprecated
+     */
     public function isRelated(Entity $entity, string $relationName, $foreign) : bool
     {
         if (!$entity->id) {
             return false;
+        }
+
+        if ($entity->getEntityType() !== $this->entityType) {
+            throw new InvalidArgumentException("Not supported entity type.");
         }
 
         if ($foreign instanceof Entity) {
@@ -264,14 +401,19 @@ class RDB extends Repository implements Findable, Relatable, Removable
         } else if (is_string($foreign)) {
             $id = $foreign;
         } else {
+            throw new RuntimeException("Bad 'foreign' value.");
+        }
+
+        if (!$id) {
             return false;
         }
 
-        if (!$id) return false;
-
         if ($entity->getRelationType($relationName) === Entity::BELONGS_TO) {
             $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
-            if (!$foreignEntityType) return false;
+
+            if (!$foreignEntityType) {
+                return false;
+            }
 
             $foreignId = $entity->get($relationName . 'Id');
 
@@ -282,24 +424,33 @@ class RDB extends Repository implements Findable, Relatable, Removable
                 }
             }
 
-            if (!$foreignId) return false;
+            if (!$foreignId) {
+                return false;
+            }
 
-            $foreignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->select(['id'])->where([
-                'id' => $foreignId,
-            ])->findOne();
+            $foreignEntity = $this->entityManager->getRepository($foreignEntityType)
+                ->select(['id'])
+                ->where(['id' => $foreignId])
+                ->findOne();
 
-            if (!$foreignEntity) return false;
+            if (!$foreignEntity) {
+                return false;
+            }
 
             return $foreignEntity->id === $id;
         }
 
+        // @todo Use related builder.
         return (bool) $this->countRelated($entity, $relationName, [
             'whereClause' => [
                 'id' => $id,
-            ]
+            ],
         ]);
     }
 
+    /**
+     * @deprecated
+     */
     public function relate(Entity $entity, string $relationName, $foreign, $columnData = null, array $options = [])
     {
         if (!$entity->id) {
@@ -307,7 +458,11 @@ class RDB extends Repository implements Findable, Relatable, Removable
         }
 
         if (! $foreign instanceof Entity && !is_string($foreign)) {
-            throw new RuntimeException("Bad foreign value.");
+            throw new RuntimeException("Bad 'foreign' value.");
+        }
+
+        if ($entity->getEntityType() !== $this->entityType) {
+            throw new InvalidArgumentException("Not supported entity type.");
         }
 
         $this->beforeRelate($entity, $relationName, $foreign, $columnData, $options);
@@ -350,6 +505,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $result;
     }
 
+    /**
+     * @deprecated
+     */
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
     {
         if (!$entity->id) {
@@ -358,6 +516,10 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
         if (! $foreign instanceof Entity && !is_string($foreign)) {
             throw new RuntimeException("Bad foreign value.");
+        }
+
+        if ($entity->getEntityType() !== $this->entityType) {
+            throw new InvalidArgumentException("Not supported entity type.");
         }
 
         $this->beforeUnrelate($entity, $relationName, $foreign, $options);
@@ -395,6 +557,9 @@ class RDB extends Repository implements Findable, Relatable, Removable
         return $result;
     }
 
+    /**
+     * @deprecated
+     */
     public function getRelationColumn(Entity $entity, string $relationName, string $foreignId, string $column)
     {
         return $this->getMapper()->getRelationColumn($entity, $relationName, $foreignId, $column);
@@ -425,7 +590,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     }
 
     /**
-     * Update relationship columns.
+     * @deprecated
      */
     public function updateRelation(Entity $entity, string $relationName, $foreign, $columnData)
     {
@@ -451,9 +616,12 @@ class RDB extends Repository implements Findable, Relatable, Removable
             throw new RuntimeException("Bad foreign value.");
         }
 
-        return $this->getMapper()->updateRelation($entity, $relationName, $id, $columnData);
+        return $this->getMapper()->updateRelationColumns($entity, $relationName, $id, $columnData);
     }
 
+    /**
+     * @deprecated
+     */
     public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
     {
         if (!$entity->id) {
@@ -462,54 +630,76 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
         $this->beforeMassRelate($entity, $relationName, $params, $options);
 
-        $this->getMapper()->massRelate($entity, $relationName, $params);
+        $select = Select::fromRaw($params);
+
+        $this->getMapper()->massRelate($entity, $relationName, $select);
 
         $this->afterMassRelate($entity, $relationName, $params, $options);
     }
 
+    /**
+     * @param $params @deprecated Omit it.
+     */
     public function count(array $params = []) : int
     {
-        if (empty($params['skipAdditionalSelectParams'])) {
+        // @todo Remove it.
+        if (is_array($params) && empty($params['skipAdditionalSelectParams'])) {
             $this->handleSelectParams($params);
         }
 
-        $count = $this->getMapper()->count($this->seed, $params);
-
-        return intval($count);
+        return $this->createSelectBuilder()->count($params);
     }
 
-    public function max(string $attribute, array $params = [])
+    /**
+     * Get a max value.
+     *
+     * @return int|float
+     */
+    public function max(string $attribute)
     {
-        return $this->getMapper()->max($this->seed, $params, $attribute);
+        return $this->createSelectBuilder()->max($attribute);
     }
 
-    public function min(string $attribute, array $params = [])
+    /**
+     * Get a min value.
+     *
+     * @return int|float
+     */
+    public function min(string $attribute)
     {
-        return $this->getMapper()->min($this->seed, $params, $attribute);
+        return $this->createSelectBuilder()->min($attribute);
     }
 
-    public function sum(string $attribute, array $params = [])
+    /**
+     * Get a sum value.
+     *
+     * @return int|float
+     */
+    public function sum(string $attributel)
     {
-        return $this->getMapper()->sum($this->seed, $params, $attribute);
+        return $this->createSelectBuilder()->sum($attribute);
+    }
+
+    /**
+     * Clone an existing query for a further modification and usage by 'find' or 'count' methods.
+     */
+    public function clone(Select $query) : RDBSelectBuilder
+    {
+        if ($this->entityType !== $query->getFrom()) {
+            throw new RuntimeException("Can't clone a query of a different entity type.");
+        }
+
+        $builder = new RDBSelectBuilder($this->entityManager, $this->entityType, $query);
+
+        return $builder;
+
+        //return $builder->clone($query);
     }
 
     /**
      * Add JOIN.
      *
-     * @param string|array $relationName A relationName or table. A relationName is in camelCase, a table is in CamelCase.
-     *
-     * Usage options:
-     * * `join(string $relationName)`
-     * * `join(array $joinDefinitionList)`
-     *
-     * Usage examples:
-     * ```
-     * ->join($relationName)
-     * ->join($relationName, $alias, $conditions)
-     * ->join([$relationName1, $relationName2, ...])
-     * ->join([[$relationName, $alias], ...])
-     * ->join([[$relationName, $alias, $conditions], ...])
-     * ```
+     * @see Espo\ORM\QueryParams\SelectBuilder::join()
      */
     public function join($relationName, ?string $alias = null, ?array $conditions = null) : RDBSelectBuilder
     {
@@ -519,9 +709,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     /**
      * Add LEFT JOIN.
      *
-     * @param string|array $relationName A relationName or table. A relationName is in camelCase, a table is in CamelCase.
-     *
-     * This method works the same way as `join` method.
+     * @see Espo\ORM\QueryParams\SelectBuilder::leftJoin()
      */
     public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : RDBSelectBuilder
     {
@@ -538,6 +726,8 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
     /**
      * Set to return STH collection. Recommended fetching large number of records.
+     *
+     * @todo Remove.
      */
     public function sth() : RDBSelectBuilder
     {
@@ -547,9 +737,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     /**
      * Add a WHERE clause.
      *
-     * Two usage options:
-     * * `where(array $whereClause)`
-     * * `where(string $key, string $value)`
+     * @see Espo\ORM\QueryParams\SelectBuilder::where()
      */
     public function where($param1 = [], $param2 = null) : RDBSelectBuilder
     {
@@ -559,9 +747,7 @@ class RDB extends Repository implements Findable, Relatable, Removable
     /**
      * Add a HAVING clause.
      *
-     * Two usage options:
-     * * `having(array $havingClause)`
-     * * `having(string $key, string $value)`
+     * @see Espo\ORM\QueryParams\SelectBuilder::having()
      */
     public function having($param1 = [], $param2 = null) : RDBSelectBuilder
     {
@@ -589,10 +775,14 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
     /**
      * Specify SELECT. Which attributes to select. All attributes are selected by default.
+     *
+     * @see Espo\ORM\QueryParams\SelectBuilder::select()
+     *
+     * @param array|string $select
      */
-    public function select(array $select) : RDBSelectBuilder
+    public function select($select = [], ?string $alias = null) : RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->select($select);
+        return $this->createSelectBuilder()->select($select, $alias);
     }
 
     /**
@@ -605,19 +795,21 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
     protected function getPDO()
     {
-        return $this->getEntityManager()->getPDO();
+        return $this->entityManager->getPDO();
     }
 
     protected function lockTable()
     {
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+        $tableName = $this->entityManager->getQueryComposer()->toDb($this->entityType);
 
+        // @todo Use Query to get SQL. Transaction query params.
         $this->getPDO()->query("LOCK TABLES `{$tableName}` WRITE");
         $this->isTableLocked = true;
     }
 
     protected function unlockTable()
     {
+        // @todo Use Query to get SQL.
         $this->getPDO()->query("UNLOCK TABLES");
         $this->isTableLocked = false;
     }
@@ -629,8 +821,28 @@ class RDB extends Repository implements Findable, Relatable, Removable
 
     protected function createSelectBuilder() : RDBSelectBuilder
     {
-        $builder = new RDBSelectBuilder($this->getEntityManager());
-        $builder->from($this->getEntityType());
+        $builder = new RDBSelectBuilder($this->entityManager, $this->entityType);
+
         return $builder;
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        $this->hookMediator->beforeSave($entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        $this->hookMediator->afterSave($entity, $options);
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        $this->hookMediator->beforeRemove($entity, $options);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $this->hookMediator->afterRemove($entity, $options);
     }
 }

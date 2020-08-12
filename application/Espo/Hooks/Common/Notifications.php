@@ -139,7 +139,7 @@ class Notifications
 
     public function afterRemove(Entity $entity)
     {
-        $query = $this->entityManager->getQuery();
+        $query = $this->entityManager->getQueryComposer();
         $sql = "
             DELETE FROM `notification`
             WHERE

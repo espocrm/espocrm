@@ -160,7 +160,7 @@ class Campaign extends \Espo\Services\Record implements
 
             $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($params);
 
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $params);
+            $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $params);
 
             $pdo = $this->getEntityManager()->getPDO();
             $sth = $pdo->prepare($sql);

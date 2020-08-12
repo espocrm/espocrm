@@ -30,13 +30,14 @@
 namespace Espo\Core\Repositories;
 
 use Espo\ORM\{
-    Repositories\RDB,
+    Repository\RDBRepository,
     Entity,
 };
 
 use Espo\Core\ORM\{
     EntityManager,
     EntityFactory,
+    Repository\HookMediator,
 };
 
 use Espo\Core\{
@@ -46,7 +47,7 @@ use Espo\Core\{
     ApplicationState,
 };
 
-class Database extends RDB
+class Database extends RDBRepository
 {
     protected $hooksDisabled = false;
 
@@ -72,7 +73,13 @@ class Database extends RDB
         $this->hookManager = $hookManager;
         $this->applicationState = $applicationState;
 
-        parent::__construct($entityType, $entityManager, $entityFactory, $metadata);
+        $hookMediator = null;
+
+        if (!$this->hooksDisabled) {
+            $hookMediator = new HookMediator($hookManager);
+        }
+
+        parent::__construct($entityType, $entityManager, $entityFactory, $hookMediator);
     }
 
     protected function getMetadata()
@@ -178,8 +185,7 @@ class Database extends RDB
 
     public function remove(Entity $entity, array $options = [])
     {
-        $result = parent::remove($entity, $options);
-        return $result;
+        return parent::remove($entity, $options);
     }
 
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
@@ -198,15 +204,7 @@ class Database extends RDB
             }
 
             if ($foreign instanceof Entity) {
-                $hookData = [
-                    'relationName' => $relationName,
-                    'relationData' => $data,
-                    'foreignEntity' => $foreign,
-                    'foreignId' => $foreign->id,
-                ];
-                $this->hookManager->process(
-                    $this->entityType, 'afterRelate', $entity, $options, $hookData
-                );
+                $this->hookMediator->afterRelate($entity, $relationName, $foreign, $data, $options);
             }
         }
     }
@@ -227,14 +225,7 @@ class Database extends RDB
             }
 
             if ($foreign instanceof Entity) {
-                $hookData = [
-                    'relationName' => $relationName,
-                    'foreignEntity' => $foreign,
-                    'foreignId' => $foreign->id,
-                ];
-                $this->hookManager->process(
-                    $this->entityType, 'afterUnrelate', $entity, $options, $hookData
-                );
+                $this->hookMediator->afterUnrelate($entity, $relationName, $foreign, $options);
             }
         }
     }

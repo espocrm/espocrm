@@ -67,7 +67,7 @@ class Auth
         $this->authRequired = $authRequired;
     }
 
-    public function createForEntryPoint(Authentication $authentication, bool $authRequired = true)
+    public static function createForEntryPoint(Authentication $authentication, bool $authRequired = true)
     {
         $instance = new Auth($authentication, $authRequired);
         $instance->isEntryPoint = true;

@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\{
     Entity,
     EntityCollection,
+    QueryParams\Select,
 };
 use Espo\Entities\User;
 
@@ -240,17 +241,17 @@ class Stream
             return;
         }
 
-        $pdo = $this->entityManager->getPDO();
-
-        $sql = $this->entityManager->getQuery()->createDeleteQuery('Subscription', [
-            'whereClause' => [
+        $delete = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('Subscription')
+            ->where([
                 'userId' => $userIdList,
                 'entityId' => $entity->id,
                 'entityType' => $entity->getEntityType(),
-            ],
-        ]);
+            ])
+            ->build();
 
-        $pdo->query($sql);
+        $this->entityManager->getQueryExecutor()->run($delete);
 
         $collection = new EntityCollection();
 
@@ -264,7 +265,7 @@ class Stream
             $collection[] = $subscription;
         }
 
-        $this->entityManager->getMapper('RDB')->massInsert($collection);
+        $this->entityManager->getMapper()->massInsert($collection);
     }
 
     public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false)
@@ -309,17 +310,17 @@ class Stream
             return false;
         }
 
-        $pdo = $this->entityManager->getPDO();
-
-        $sql = $this->entityManager->getQuery()->createDeleteQuery('Subscription', [
-            'whereClause' => [
+        $delete = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('Subscription')
+            ->where([
                 'userId' => $userId,
                 'entityId' => $entity->id,
                 'entityType' => $entity->getEntityType(),
-            ],
-        ]);
+            ])
+            ->build();
 
-        $pdo->query($sql);
+        $this->entityManager->getQueryExecutor()->run($delete);
 
         return true;
     }
@@ -330,16 +331,16 @@ class Stream
             return;
         }
 
-        $pdo = $this->entityManager->getPDO();
-
-        $sql = $this->entityManager->getQuery()->createDeleteQuery('Subscription', [
-            'whereClause' => [
+        $delete = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('Subscription')
+            ->where([
                 'entityId' => $entity->id,
                 'entityType' => $entity->getEntityType(),
-            ],
-        ]);
+            ])
+            ->build();
 
-        $pdo->query($sql);
+        $this->entityManager->getQueryExecutor()->run($delete);
     }
 
     public function findUserStream($userId, $params = [])
@@ -633,11 +634,7 @@ class Stream
 
         if ($user->isPortal()) {
             $portalIdList = $user->getLinkMultipleIdList('portals');
-            $portalIdQuotedList = [];
-            foreach ($portalIdList as $portalId) {
-                $portalIdQuotedList[] = $pdo->quote($portalId);
-            }
-            if (!empty($portalIdQuotedList)) {
+            if (!empty($portalIdList)) {
                 $selectParamsList[] = [
                     'select' => $select,
                     'leftJoins' => ['portals', 'createdBy'],
@@ -730,16 +727,18 @@ class Stream
                 }
             }
 
-            $sqlPartList[] = "(\n" . $this->entityManager->getQuery()->createSelectQuery('Note', $selectParams) . "\n)";
+            $sqlPartList[] = "(\n" . $this->entityManager->getQueryComposer()->createSelectQuery('Note', $selectParams) . "\n)";
         }
 
         $sql = implode("\n UNION ALL \n", $sqlPartList) . "
             ORDER BY number DESC
         ";
 
-        $sql = $this->entityManager->getQuery()->limit($sql, $offset, $maxSize + 1);
+        $sql = $this->entityManager->getQueryComposer()->limit($sql, $offset, $maxSize + 1);
 
-        $collection = $this->entityManager->getRepository('Note')->findByQuery($sql);
+        $sthCollection = $this->entityManager->getRepository('Note')->findBySql($sql);
+
+        $collection = $this->entityManager->getCollectionFactory()->createFromSthCollection($sthCollection);
 
         foreach ($collection as $e) {
             $this->loadNoteAdditionalFields($e);
@@ -1090,9 +1089,15 @@ class Stream
 
         $selectManager->applyLimit($offset, $maxSize + 1, $selectParams);
 
-        $sql = $this->entityManager->getQuery()->createSelectQuery('Note', $selectParams);
+        $selectParams['from'] = 'Note';
 
-        $collection = $this->entityManager->getRepository('Note')->findByQuery($sql);
+        $select = Select::fromRaw($selectParams);
+
+        $sql = $this->entityManager->getQueryComposer()->compose($select);
+
+        $sthCollection = $this->entityManager->getRepository('Note')->findBySql($sql);
+
+        $collection = $this->entityManager->getCollectionFactory()->createFromSthCollection($sthCollection);
 
         foreach ($collection as $e) {
             $this->loadNoteAdditionalFields($e);
@@ -1611,9 +1616,8 @@ class Stream
             $selectParams['select'] = $selectAttributeList;
         }
 
-        $query = $this->entityManager->getQuery();
+        $query = $this->entityManager->getQueryComposer();
         $selectParams['t'] = true;
-        $sql = $query->createSelectQuery('User', $selectParams);
 
         $collection = $this->entityManager->getRepository('User')->find($selectParams);
         $total = $this->entityManager->getRepository('User')->count($selectParams);
@@ -1623,49 +1627,41 @@ class Stream
 
     public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
     {
-        $query = $this->entityManager->getQuery();
-        $pdo = $this->entityManager->getPDO();
-
         if (!$limit) {
             $limit = 200;
         }
 
-        $sql = $query->createSelectQuery('User', [
-            'select' => ['id', 'name'],
-            'joins' => [
+        $userList = $this->entityManager->getRepository('User')
+            ->select(['id', 'name'])
+            ->join(
+                'Subscription',
+                'subscription',
                 [
-                    'Subscription',
-                    'subscription',
-                    [
-                        'subscription.userId=:' => 'user.id',
-                        'subscription.entityId' => $entity->id,
-                        'subscription.entityType' => $entity->getEntityType()
-                    ]
+                    'subscription.userId=:' => 'user.id',
+                    'subscription.entityId' => $entity->id,
+                    'subscription.entityType' => $entity->getEntityType()
                 ]
-            ],
-            'offset' => $offset,
-            'limit' => $limit,
-            'whereClause' => [
-                'isActive' => true
-            ],
-            'orderBy' => [
+            )
+            ->limit($offset, $limit)
+            ->where([
+                'isActive' => true,
+            ])
+            ->order([
                 ['LIST:id:' . $this->user->id, 'DESC'],
-                ['name']
-            ]
-        ]);
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+                ['name'],
+            ])
+            ->find();
 
         $data = [
             'idList' => [],
             'nameMap' => (object) []
         ];
 
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $id = $row['id'];
+        foreach ($userList as $user) {
+            $id = $user->id;
+
             $data['idList'][] = $id;
-            $data['nameMap']->$id = $row['name'];
+            $data['nameMap']->$id = $user->get('name');
         }
 
         return $data;

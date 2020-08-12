@@ -334,7 +334,9 @@ class App
         $this->dataManager->rebuild();
     }
 
-    // TODO remove in 5.5.0
+    /**
+     * @todo Remove in 6.0.
+     */
     public function jobPopulatePhoneNumberNumeric()
     {
         $numberList = $this->entityManager->getRepository('PhoneNumber')->find();
@@ -343,7 +345,9 @@ class App
         }
     }
 
-    // TODO remove in 5.5.0
+    /**
+     * @todo Remove in 6.0. Move to another place. CLI command.
+     */
     public function jobPopulateArrayValues()
     {
         $scopeList = array_keys($this->metadata->get(['scopes']));
@@ -373,7 +377,7 @@ class App
                 $orGroup[$attribute . '!='] = null;
             }
 
-            $sql = $this->entityManager->getQuery()->createSelectQuery($scope, [
+            $sql = $this->entityManager->getQueryComposer()->createSelectQuery($scope, [
                 'select' => $select,
                 'whereClause' => [
                     'OR' => $orGroup
@@ -394,77 +398,9 @@ class App
         }
     }
 
-    // TODO remove in 5.5.0
-    public function jobPopulateNotesTeamUser()
-    {
-        $aclManager = $this->aclManager;
-
-        $sql = $this->entityManager->getQuery()->createSelectQuery('Note', [
-            'whereClause' => [
-                'parentId!=' => null,
-                'type=' => ['Relate', 'CreateRelated', 'EmailReceived', 'EmailSent', 'Assign', 'Create'],
-            ],
-            'limit' => 100000,
-            'orderBy' => [['number', 'DESC']]
-        ]);
-        $sth = $this->entityManager->getPdo()->prepare($sql);
-        $sth->execute();
-
-        $i = 0;
-        while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $i++;
-            $note = $this->entityManager->getEntityFactory()->create('Note');
-            $note->set($dataRow);
-            $note->setAsFetched();
-
-            if ($note->get('relatedId') && $note->get('relatedType')) {
-                $targetType = $note->get('relatedType');
-                $targetId = $note->get('relatedId');
-            } else if ($note->get('parentId') && $note->get('parentType')) {
-                $targetType = $note->get('parentType');
-                $targetId = $note->get('parentId');
-            } else {
-                continue;
-            }
-
-            if (!$this->entityManager->hasRepository($targetType)) continue;
-
-            try {
-                $entity = $this->entityManager->getEntity($targetType, $targetId);
-                if (!$entity) continue;
-                $ownerUserIdAttribute = $aclManager->getImplementation($targetType)->getOwnerUserIdAttribute($entity);
-                $toSave = false;
-                if ($ownerUserIdAttribute) {
-                    if ($entity->getAttributeParam($ownerUserIdAttribute, 'isLinkMultipleIdList')) {
-                        $link = $entity->getAttributeParam($ownerUserIdAttribute, 'relation');
-                        $userIdList = $entity->getLinkMultipleIdList($link);
-                    } else {
-                        $userId = $entity->get($ownerUserIdAttribute);
-                        if ($userId) {
-                            $userIdList = [$userId];
-                        } else {
-                            $userIdList = [];
-                        }
-                    }
-                    if (!empty($userIdList)) {
-                        $note->set('usersIds', $userIdList);
-                        $toSave = true;
-                    }
-                }
-                if ($entity->hasLinkMultipleField('teams')) {
-                    $teamIdList = $entity->getLinkMultipleIdList('teams');
-                    if (!empty($teamIdList)) {
-                        $note->set('teamsIds', $teamIdList);
-                        $toSave = true;
-                    }
-                }
-                if ($toSave) {
-                    $this->entityManager->saveEntity($note);
-                }
-            } catch (\Exception $e) {}
-        }
-    }
-
+    /**
+     * @todo Remove in 6.0. Move to another place. CLI command.
+     */
     public function jobPopulateOptedOutPhoneNumbers()
     {
         $entityTypeList = ['Contact', 'Lead'];

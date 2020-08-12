@@ -27,54 +27,73 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+use Espo\ORM\{
+    Metadata,
+};
 
-/**
- * An access point for fetching and storing records.
- */
-abstract class Repository
+class MetadataTest extends \PHPUnit\Framework\TestCase
 {
-    protected $entityFactory;
-
-    protected $entityManager;
-
-    protected $seed;
-
-    protected $entityClassName;
-
-    protected $entityType;
-
-    public function __construct(string $entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    protected function setUp() : void
     {
-        $this->entityType = $entityType;
-        $this->entityFactory = $entityFactory;
-        $this->seed = $this->entityFactory->create($entityType);
-        $this->entityClassName = get_class($this->seed);
-        $this->entityManager = $entityManager;
+
     }
 
-    protected function getEntityFactory() : EntityFactory
+    public function testHas1()
     {
-        return $this->entityFactory;
+        $metadata = new Metadata([
+            'Test' => [],
+        ]);
+
+        $this->assertTrue($metadata->has('Test'));
     }
 
-    protected function getEntityManager() : EntityManager
+    public function testHas2()
     {
-        return $this->entityManager;
+        $metadata = new Metadata([
+            'Test' => [],
+        ]);
+
+        $this->assertFalse($metadata->has('Hello'));
     }
 
-    public function getEntityType() : string
+    public function testGet1()
     {
-        return $this->entityType;
+        $metadata = new Metadata([
+            'Test' => [
+                'indexes' => [],
+            ],
+        ]);
+
+        $this->assertEquals([], $metadata->get('Test', 'indexes'));
     }
 
-    /**
-     * Get entity. If $id is NULL, a new entity is returned.
-     */
-    abstract public function get(?string $id = null) : ?Entity;
+    public function testGet2()
+    {
+        $metadata = new Metadata([
+            'Test' => [
+                'relations' => [
+                    'test' => [
+                        'type' => 'hasMany',
+                    ],
+                ],
+            ],
+        ]);
 
-    /**
-     * Store entity.
-     */
-    abstract public function save(Entity $entity);
+        $this->assertEquals('hasMany', $metadata->get('Test', 'relations.test.type'));
+    }
+
+    public function testGet3()
+    {
+        $metadata = new Metadata([
+            'Test' => [
+                'relations' => [
+                    'test' => [
+                        'type' => 'hasMany',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertEquals('hasMany', $metadata->get('Test', ['relations', 'test', 'type']));
+    }
 }

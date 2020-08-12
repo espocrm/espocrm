@@ -44,7 +44,7 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-use Espo\ORM\DB\Query\BaseQuery as Query;
+use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
 
 use Espo\ORM\Entity;
 
@@ -373,19 +373,23 @@ class SelectManager
                 $key = $midKeys[1];
                 $part[$link . 'Filter' . 'Middle.' . $key] = $idsValue;
             }
+
         } else if ($relationType == 'hasMany') {
             $alias = $link . 'Filter';
             $this->addLeftJoin([$link, $alias], $result);
 
             $part[$alias . '.id'] = $idsValue;
+
         } else if ($relationType == 'belongsTo') {
             $key = $seed->getRelationParam($link, 'key');
             if (!empty($key)) {
                 $part[$key] = $idsValue;
             }
+
         } else if ($relationType == 'hasOne') {
             $this->addJoin([$link, $link . 'Filter'], $result);
             $part[$link . 'Filter' . '.id'] = $idsValue;
+
         } else {
             return;
         }
@@ -403,7 +407,7 @@ class SelectManager
             $idsValue = $idsValue[0];
         }
 
-        $query = $this->getEntityManager()->getQuery();
+        $query = $this->getEntityManager()->getQueryComposer();
 
         $seed = $this->getSeed();
 
@@ -441,7 +445,7 @@ class SelectManager
     {
         $relDefs = $this->getSeed()->getRelations();
 
-        $query = $this->getEntityManager()->getQuery();
+        $query = $this->getEntityManager()->getQueryComposer();
 
         $tableName = $query->toDb($this->getSeed()->getEntityType());
 
@@ -541,6 +545,9 @@ class SelectManager
     {
         if (empty($result)) {
             $result = [];
+        }
+        if (empty($result['from'])) {
+            $result['from'] = $this->entityType;
         }
         if (empty($result['joins'])) {
             $result['joins'] = [];
@@ -980,7 +987,7 @@ class SelectManager
             }
 
             if ($attribute && $checkWherePermission) {
-                $argumentList = Query::getAllAttributesFromComplexExpression($attribute);
+                $argumentList = QueryComposer::getAllAttributesFromComplexExpression($attribute);
                 foreach ($argumentList as $argument) {
                     $this->checkWhereArgument($argument, $type);
                 }
@@ -1770,21 +1777,26 @@ class SelectManager
                         $key = $midKeys[1];
                         $part[$alias . 'Middle.' . $key] = $value;
                     }
+
                 } else if ($relationType == 'hasMany') {
                     $this->addLeftJoin([$link, $alias], $result);
 
                     $part[$alias . '.id'] = $value;
+
                 } else if ($relationType == 'belongsTo') {
                     $key = $seed->getRelationParam($link, 'key');
                     if (!empty($key)) {
                         $part[$key] = $value;
                     }
+
                 } else if ($relationType == 'hasOne') {
                     $this->addLeftJoin([$link, $alias], $result);
                     $part[$alias . '.id'] = $value;
+
                 } else {
                     break;;
                 }
+
                 $this->setDistinct(true, $result);
                 break;
 
@@ -1800,30 +1812,45 @@ class SelectManager
                 $alias = $link . 'NotLinkedFilter' . strval(rand(10000, 99999));
 
                 if ($relationType == 'manyMany') {
-                    $this->addLeftJoin([$link, $alias], $result);
-                    $midKeys = $seed->getRelationParam($link, 'midKeys');
+                    $key = $seed->getRelationParam($link, 'midKeys')[1];
 
-                    if (!empty($midKeys)) {
-                        $key = $midKeys[1];
-                        $result['joinConditions'][$alias] = [$key => $value];
-                        $part[$alias . 'Middle.' . $key] = null;
-                    }
+                    $this->addLeftJoin(
+                        [
+                            $link, $alias, [$key => $value],
+                        ],
+                        $result
+                    );
+
+                    $part[$alias . 'Middle.' . $key] = null;
+
                 } else if ($relationType == 'hasMany') {
-                    $this->addLeftJoin([$link, $alias], $result);
-                    $result['joinConditions'][$alias] = ['id' => $value];
+                    $this->addLeftJoin(
+                        [
+                            $link, $alias, ['id' => $value]
+                        ],
+                        $result
+                    );
+
                     $part[$alias . '.id'] = null;
+
                 } else if ($relationType == 'belongsTo') {
                     $key = $seed->getRelationParam($link, 'key');
+
                     if (!empty($key)) {
                         $part[$key . '!='] = $value;
                     }
+
                 } else if ($relationType == 'hasOne') {
                     $this->addLeftJoin([$link, $alias], $result);
+
                     $part[$alias . '.id!='] = $value;
+
                 } else {
                     break;
                 }
+
                 $this->setDistinct(true, $result);
+
                 break;
 
             case 'arrayAnyOf':
@@ -2320,7 +2347,7 @@ class SelectManager
             }
 
             $fullTextSearchColumnSanitizedList = [];
-            $query = $this->getEntityManager()->getQuery();
+            $query = $this->getEntityManager()->getQueryComposer();
             foreach ($fullTextSearchColumnList as $i => $field) {
                 $fullTextSearchColumnSanitizedList[$i] = $query->sanitize($query->toDb($field));
             }
@@ -2744,7 +2771,7 @@ class SelectManager
     protected function applyLeftJoinsFromAttribute(string $attribute, array &$result)
     {
         if (strpos($attribute, ':') !== false) {
-            $argumentList = Query::getAllAttributesFromComplexExpression($attribute);
+            $argumentList = QueryComposer::getAllAttributesFromComplexExpression($attribute);
             foreach ($argumentList as $argument) {
                 $this->applyLeftJoinsFromAttribute($argument, $result);
             }

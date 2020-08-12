@@ -86,21 +86,21 @@ class MassEmail extends \Espo\Services\Record implements
     {
         parent::afterDeleteEntity($massEmail);
 
-        $selectParams = $this->getEntityManager()->createSelectBuilder()
+        $delete = $this->getEntityManager()->getQueryBuilder()
+            ->delete()
             ->from('EmailQueueItem')
             ->where([
                  'massEmailId' => $massEmail->id,
             ])
             ->build();
 
-        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('EmailQueueItem', $selectParams->getRaw());
-
-        $this->getEntityManager()->runQuery($sql);
+        $this->getEntityManager()->getQueryExecutor()->run($delete);
     }
 
     protected function cleanupQueueItems(Entity $massEmail)
     {
-        $selectParams = $this->getEntityManager()->createSelectBuilder()
+        $delete = $this->getEntityManager()->getQueryBuilder()
+            ->delete()
             ->from('EmailQueueItem')
             ->where([
                  'massEmailId' => $massEmail->id,
@@ -108,9 +108,7 @@ class MassEmail extends \Espo\Services\Record implements
             ])
             ->build();
 
-        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('EmailQueueItem', $selectParams->getRaw());
-
-        $this->getEntityManager()->runQuery($sql);
+        $this->getEntityManager()->getQueryExecutor()->run($delete);
     }
 
     public function createQueue(Entity $massEmail, bool $isTest = false, $additionalTargetList = [])

@@ -35,7 +35,10 @@ use Espo\Core\{
     Repositories\Database as DatabaseRepository,
 };
 
-use Espo\ORM\RepositoryFactory as RepositoryFactoryInterface;
+use Espo\ORM\{
+    Repository\RepositoryFactory as RepositoryFactoryInterface,
+    Repository\Repository,
+};
 
 class RepositoryFactory implements RepositoryFactoryInterface
 {
@@ -58,7 +61,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
         return $this->classFinder->find('Repositories', $name);
     }
 
-    public function create(string $name) : object
+    public function create(string $name) : Repository
     {
         $className = $this->getClassName($name);
 

@@ -12,23 +12,23 @@ class TEntity extends BaseEntity
 
 class Account extends TEntity
 {
-    public $fields = array(
-            'id' => array(
+    public $fields = [
+            'id' => [
                 'type' => Entity::ID,
-            ),
-            'name' => array(
+            ],
+            'name' => [
                 'type' => Entity::VARCHAR,
                 'len' => 255,
-            ),
-            'deleted' => array(
+            ],
+            'deleted' => [
                 'type' => Entity::BOOL,
                 'default' => 0,
-            ),
+            ],
             'stub' => [
                 'type' => 'varchar',
                 'notStorable' => true,
             ],
-    );
+    ];
     public $relations = [
         'teams' => [
             'type' => Entity::MANY_MANY,
@@ -38,26 +38,26 @@ class Account extends TEntity
                 'entityId',
                 'teamId',
             ],
-            'conditions' => ['entityType' => 'Account']
+            'conditions' => ['entityType' => 'Account'],
         ],
     ];
 }
 
 class Team extends TEntity
 {
-    public $fields = array(
-        'id' => array(
+    public $fields = [
+        'id' => [
             'type' => Entity::ID,
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => Entity::VARCHAR,
             'len' => 255,
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0,
-        ),
-    );
+        ],
+    ];
     public $relations = [];
 }
 
@@ -90,133 +90,134 @@ class EntityTeam extends TEntity
 
 class Contact extends TEntity
 {
-    public $fields = array(
-            'id' => array(
+    public $fields = [
+            'id' => [
                 'type' => Entity::ID,
-            ),
-            'name' => array(
+            ],
+            'name' => [
                 'type' => Entity::VARCHAR,
                 'notStorable' => true,
                 'select' => "TRIM(CONCAT(contact.first_name, ' ', contact.last_name))",
-                'where' => array(
-                    'LIKE' => "(contact.first_name LIKE {value} OR contact.last_name LIKE {value} OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE {value})",
-                ),
+                'where' => [
+                    'LIKE' => "(contact.first_name LIKE {value} OR contact.last_name LIKE {value} OR "
+                        ."CONCAT(contact.first_name, ' ', contact.last_name) LIKE {value})",
+                ],
                 'orderBy' => "contact.first_name {direction}, contact.last_name {direction}",
-            ),
-            'firstName' => array(
+            ],
+            'firstName' => [
                 'type' => Entity::VARCHAR,
-            ),
-            'lastName' => array(
+            ],
+            'lastName' => [
                 'type' => Entity::VARCHAR,
-            ),
-            'deleted' => array(
+            ],
+            'deleted' => [
                 'type' => Entity::BOOL,
                 'default' => 0,
-            ),
-    );
-    public $relations = array();
+            ],
+    ];
+    public $relations = [];
 }
 
 class Post extends TEntity
 {
-    public $fields = array(
-        'id' => array(
+    public $fields = [
+        'id' => [
             'type' => Entity::ID,
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => Entity::VARCHAR,
             'len' => 255,
-        ),
-        'privateField' => array(
+        ],
+        'privateField' => [
             'notStorable' => true,
-        ),
-        'createdByName' => array(
+        ],
+        'createdByName' => [
             'type' => Entity::FOREIGN,
             'relation' => 'createdBy',
-            'foreign' => array('salutationName', 'firstName', ' ', 'lastName'),
-        ),
-        'createdById' => array(
+            'foreign' => ['salutationName', 'firstName', ' ', 'lastName'],
+        ],
+        'createdById' => [
             'type' => Entity::FOREIGN_ID,
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0,
-        ),
-    );
-    public $relations = array(
-        'tags' => array(
+        ],
+    ];
+    public $relations = [
+        'tags' => [
             'type' => Entity::MANY_MANY,
             'entity' => 'Tag',
             'relationName' => 'PostTag',
             'key' => 'id',
             'foreignKey' => 'id',
-            'midKeys' => array(
+            'midKeys' => [
                 'postId',
                 'tagId',
-            ),
+            ],
             'additionalColumns' => [
                 'role' => [
                     'type' => Entity::VARCHAR,
                 ],
             ],
-        ),
-        'comments' => array(
+        ],
+        'comments' => [
             'type' => Entity::HAS_MANY,
             'entity' => 'Comment',
             'foreignKey' => 'postId',
-        ),
-        'createdBy' => array(
+        ],
+        'createdBy' => [
             'type' => Entity::BELONGS_TO,
             'entity' => 'User',
             'key' => 'createdById',
-        ),
-        'notes' => array(
+        ],
+        'notes' => [
             'type' => Entity::HAS_CHILDREN,
             'entity' => 'Note',
             'foreignKey' => 'parentId',
             'foreignType' => 'parentType',
-        ),
+        ],
         'postData' => [
             'type' => Entity::HAS_ONE,
             'entity' => 'PostData',
             'foreign' => 'post',
             'noJoin' => true,
         ],
-    );
+    ];
 }
 
 class Comment extends TEntity
 {
-    public $fields = array(
-            'id' => array(
-                'type' => Entity::ID,
-            ),
-            'postId' => array(
-                'type' => Entity::FOREIGN_ID,
-            ),
-            'postName' => array(
-                'type' => Entity::FOREIGN,
-                'relation' => 'post',
-                'foreign' => 'name',
-            ),
-            'name' => array(
-                'type' => Entity::VARCHAR,
-                'len' => 255,
-            ),
-            'deleted' => array(
-                'type' => Entity::BOOL,
-                'default' => 0,
-            ),
-    );
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'postId' => [
+            'type' => Entity::FOREIGN_ID,
+        ],
+        'postName' => [
+            'type' => Entity::FOREIGN,
+            'relation' => 'post',
+            'foreign' => 'name',
+        ],
+        'name' => [
+            'type' => Entity::VARCHAR,
+            'len' => 255,
+        ],
+        'deleted' => [
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ],
+    ];
 
-    public $relations = array(
-            'post' => array(
-                'type' => Entity::BELONGS_TO,
-                'entity' => 'Post',
-                'key' => 'postId',
-                'foreignKey' => 'id',
-            ),
-    );
+    public $relations = [
+        'post' => [
+            'type' => Entity::BELONGS_TO,
+            'entity' => 'Post',
+            'key' => 'postId',
+            'foreignKey' => 'id',
+        ],
+    ];
 }
 
 class PostData extends TEntity
@@ -247,19 +248,19 @@ class PostData extends TEntity
 
 class Tag extends TEntity
 {
-    public $fields = array(
-        'id' => array(
+    public $fields = [
+        'id' => [
             'type' => Entity::ID,
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => Entity::VARCHAR,
             'len' => 50,
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0,
-        ),
-    );
+        ],
+    ];
 }
 
 class PostTag extends TEntity
@@ -290,29 +291,29 @@ class PostTag extends TEntity
 
 class Note extends TEntity
 {
-    public $fields = array(
-        'id' => array(
+    public $fields = [
+        'id' => [
             'type' => Entity::ID,
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => Entity::VARCHAR,
             'len' => 50,
-        ),
-        'parentId' => array(
+        ],
+        'parentId' => [
             'type' => Entity::FOREIGN_ID,
-        ),
-        'parentType' => array(
+        ],
+        'parentType' => [
             'type' => Entity::FOREIGN_TYPE,
-        ),
-        'parentName' => array(
+        ],
+        'parentName' => [
             'type' => Entity::VARCHAR,
             'notStorable' => true,
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0,
-        ),
-    );
+        ],
+    ];
 
     public $relations = [
         'parent' => [
@@ -326,49 +327,82 @@ class Note extends TEntity
 
 class Article extends TEntity
 {
-    public $fields = array(
-        'id' => array(
+    public $fields = [
+        'id' => [
             'type' => Entity::ID
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => Entity::VARCHAR,
             'len' => 50,
-        ),
-        'description' => array(
+        ],
+        'description' => [
             'type' => Entity::TEXT
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0
-        )
-    );
+        ]
+    ];
 }
-
 
 class Job extends TEntity
 {
-    public $fields = array(
-        'id' => array(
+    public $fields = [
+        'id' => [
             'type' => Entity::ID
-        ),
-        'string' => array(
+        ],
+        'string' => [
             'type' => Entity::VARCHAR,
             'len' => 50
-        ),
-        'array' => array(
+        ],
+        'array' => [
             'type' => Entity::JSON_ARRAY
-        ),
-        'arrayUnordered' => array(
+        ],
+        'arrayUnordered' => [
             'type' => Entity::JSON_ARRAY,
             'isUnordered' => true
-        ),
-        'object' => array(
+        ],
+        'object' => [
             'type' => Entity::JSON_OBJECT
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0
-        )
-    );
+        ],
+    ];
 }
 
+class Test extends TEntity
+{
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'name' => [
+            'type' => Entity::VARCHAR,
+            'len' => 255,
+        ],
+        'date' => [
+            'type' => Entity::DATE
+        ],
+        'dateTime' => [
+            'type' => Entity::DATETIME
+        ],
+        'int' => [
+            'type' => Entity::INT
+        ],
+        'float' => [
+            'type' => Entity::FLOAT
+        ],
+        'list' => [
+            'type' => Entity::JSON_ARRAY
+        ],
+        'object' => [
+            'type' => Entity::JSON_OBJECT
+        ],
+        'deleted' => [
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ]
+    ];
+}

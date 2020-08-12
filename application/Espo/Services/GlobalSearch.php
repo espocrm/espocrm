@@ -98,7 +98,7 @@ class GlobalSearch implements
                 $selectParams['orderBy'] = [['name']];
             }
 
-            $itemSql = $this->entityManager->getQuery()->createSelectQuery($entityType, $selectParams);
+            $itemSql = $this->entityManager->getQueryComposer()->createSelectQuery($entityType, $selectParams);
 
             $unionPartList[] = "(\n" . $itemSql . "\n)";
         }
@@ -127,7 +127,7 @@ class GlobalSearch implements
             $sql .= "\nORDER BY name";
         }
 
-        $sql = $this->entityManager->getQuery()->limit($sql, $offset, $maxSize + 1);
+        $sql = $this->entityManager->getQueryComposer()->limit($sql, $offset, $maxSize + 1);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();

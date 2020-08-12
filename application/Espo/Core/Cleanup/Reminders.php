@@ -54,15 +54,14 @@ class Reminders
         $dt = new \DateTime();
         $dt->modify($period);
 
-        $pdo = $this->entityManager->getPDO();
+        $delete = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('Reminder')
+            ->where([
+                'remindAt<' => $dt->format('Y-m-d'),
+            ])
+            ->build();
 
-        $sql = $this->entityManager->getQuery()->createDeleteQuery('Reminder', [
-            'whereClause' => [
-                'remindAt<' => $dt->format('Y-m-d')
-            ],
-        ]);
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $this->entityManager->getQueryExecutor()->run($delete);
     }
 }

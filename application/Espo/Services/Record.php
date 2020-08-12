@@ -385,21 +385,27 @@ class Record implements Crud,
 
     public function getEntity(?string $id = null) : ?Entity
     {
-        if (!is_null($id)) {
-            $selectParams = [];
-            if ($this->getUser()->isAdmin()) {
-                $selectParams['withDeleted'] = true;
-            }
-            $entity = $this->getRepository()->getById($id, $selectParams);
-        } else {
-            $entity = $this->getRepository()->getNew();
+        if ($id === null) {
+            return $this->getRepository()->getNew();
         }
 
-        if ($entity && !is_null($id)) {
-            $this->loadAdditionalFields($entity);
-            if (!$this->getAcl()->check($entity, 'read')) throw new ForbiddenSilent("No read access.");
-            $this->prepareEntityForOutput($entity);
+        $entity = $this->getRepository()->getById($id);
+
+        if (!$entity && $this->getUser()->isAdmin()) {
+            $entity = $this->getEntityEvenDeleted($id);
         }
+
+        if (!$entity) {
+            return null;
+        }
+
+        $this->loadAdditionalFields($entity);
+
+        if (!$this->getAcl()->check($entity, 'read')) {
+            throw new ForbiddenSilent("No read access.");
+        }
+
+        $this->prepareEntityForOutput($entity);
 
         return $entity;
     }
@@ -1325,11 +1331,25 @@ class Record implements Crud,
         ];
     }
 
+    protected function getEntityEvenDeleted(string $id) : ?Entity
+    {
+        $query = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->from($this->entityType)
+            ->where([
+                'id' => $id,
+            ])
+            ->withDeleted()
+            ->build();
+
+        return $this->getRepository()->findOne($query);
+    }
+
     public function restoreDeleted(string $id)
     {
         if (!$this->getUser()->isAdmin()) throw new Forbidden();
 
-        $entity = $this->getRepository()->getById($id, ['withDeleted' => true]);
+        $entity = $this->getEntityEvenDeleted($id);
 
         if (!$entity) throw new NotFound();
         if (!$entity->get('deleted')) throw new Forbidden();
@@ -2095,7 +2115,10 @@ class Record implements Crud,
 
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $collection = $this->getEntityManager()->createSthCollection($this->getEntityType(), $selectParams);
+            $collection = $this->getEntityManager()->getCollectionFactroy()->createFromQuery(
+                $this->getEntityType(),
+                SelectQuery::fromRaw($selectParams)
+            );
         }
 
         $attributeListToSkip = [

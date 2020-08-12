@@ -222,14 +222,14 @@ class EmailNotification
             $selectParams = $this->$methodName();
             $selectParams['whereClause'][] = $where;
 
-            $sqlArr[] = $this->entityManager->getQuery()->createSelectQuery('Notification', $selectParams);
+            $sqlArr[] = $this->entityManager->getQueryComposer()->createSelectQuery('Notification', $selectParams);
         }
 
         $maxCount = intval(self::PROCESS_MAX_COUNT);
 
         $sql = '' . implode(' UNION ', $sqlArr) . " ORDER BY number LIMIT 0, {$maxCount}";
 
-        $notificationList = $this->entityManager->getRepository('Notification')->findByQuery($sql);
+        $notificationList = $this->entityManager->getRepository('Notification')->findBySql($sql);
 
         foreach ($notificationList as $notification) {
             $notification->set('emailIsProcessed', true);

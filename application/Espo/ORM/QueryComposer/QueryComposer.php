@@ -27,63 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\DB;
+namespace Espo\ORM\QueryComposer;
 
 use Espo\ORM\{
-    Entity,
-    Collection,
+    QueryParams\Query as Query,
 };
 
-interface Mapper
+interface QueryComposer
 {
     /**
-     * Select an entity by ID.
+     * Compose a SQL query by a given query parameters.
      */
-    public function selectById(Entity $entity, string $id, ?array $params = null) : ?Entity;
+    public function compose(Query $query) : string;
 
     /**
-     * Select a list of entities according to given parameters.
+     * Convert a camelCase string to a corresponding representation for DB.
      */
-    public function select(Entity $entity, ?array $params = null) : Collection;
+    public function toDb(string $string) : string;
 
     /**
-     * Returns count of records according to given parameters.
-     *
-     * @return Record count.
+     * Sanitize a string.
      */
-    public function count(Entity $entity, ?array $params = null) : int;
+    public function sanitize(string $string) : string;
 
     /**
-     * Selects related entity or list of entities.
-     *
-     * @return List of entities or one entity.
+     * Sanitize an alias for a SELECT statement.
      */
-    public function selectRelated(Entity $entity, string $relationName, ?array $params = null);
-
-    /**
-     * Returns count of related records according to given parameters.
-     *
-     * @return A number of records.
-     */
-    public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int;
-
-    /**
-     * Insert an entity into DB.
-     */
-    public function insert(Entity $entity);
-
-    /**
-     * Insert an entity collaction.
-     */
-    public function massInsert(Collection $collection);
-
-    /**
-     * Update an entity in DB.
-     */
-    public function update(Entity $entity);
-
-    /**
-     * Delete an entity (mark as deleted).
-     */
-    public function delete(Entity $entity);
+    public function sanitizeSelectAlias(string $string);
 }

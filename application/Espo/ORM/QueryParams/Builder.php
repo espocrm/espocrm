@@ -27,9 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\DB;
+namespace Espo\ORM\QueryParams;
 
-class MysqlMapper extends BaseMapper
+/**
+ * Builds query parameters.
+ * Builder instances are one-off, meaning that you need to instantiate it for every new building process.
+ */
+interface Builder
 {
+    /**
+     * Build a query instance.
+     * @todo Uncomment when 7.4 is a min supported PHP version. Need the support of contravariant method parameters.
+     */
+    //public function build() : Query;
 
+    /**
+     * Clone an existing query for a further modification and building.
+     * @todo Uncomment when 7.4 is a min supported PHP version. Need the support of contravariant method parameters.
+     */
+    //public function clone(Query $query) : self;
 }

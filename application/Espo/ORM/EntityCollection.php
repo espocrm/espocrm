@@ -29,10 +29,15 @@
 
 namespace Espo\ORM;
 
+use Iterator;
+use Countable;
+use ArrayAccess;
+use SeekableIterator;
+
 /**
  * A standard collection of entities. It allocates a memory for all entities.
  */
-class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \SeekableIterator, Collection
+class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, SeekableIterator
 {
     private $entityFactory = null;
 
@@ -299,5 +304,20 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
     public function isFetched() : bool
     {
         return $this->isFetched;
+    }
+
+    public static function fromSthCollection(SthCollection $sthCollection) : self
+    {
+        $entityList = [];
+
+        foreach ($sthCollection as $entity) {
+            $entityList[] = $entity;
+        }
+
+        $obj = new EntityCollection($entityList, $sthCollection->getEntityType());
+
+        $obj->setAsFetched();
+
+        return $obj;
     }
 }

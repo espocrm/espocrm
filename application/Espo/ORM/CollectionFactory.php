@@ -29,38 +29,39 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\{
+    QueryParams\Select,
+};
+
 /**
- * Select parameters.
+ * Creates collections.
  */
-class RDBSelect
+class CollectionFactory
 {
-    protected $entityType;
+    protected $entityManager;
 
-    protected $params;
-
-    public function __construct(string $entityType, array $params)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->entityType = $entityType;
-        $this->params = $params;
+        $this->entityManager = $entityManager;
     }
 
-    /**
-     * Get an entity type.
-     */
-    public function getEntityType() : string
+    public function create(?string $entityType = null, array $data = []) : EntityCollection
     {
-        return $this->entityType;
+        return new EntityCollection($data, $entityType, $this->entityManager->getEntityFactory());
     }
 
-    /**
-     * Get parameters in RAW format.
-     */
-    public function getRawParams() : array
+    public function createFromSql(string $entityType, string $sql) : SthCollection
     {
-        $params = $this->params;
+        return SthCollection::fromSql($entityType, $sql, $this->entityManager);
+    }
 
-        $params['from'] = $this->entityType
+    public function createFromQuery(Select $query) : SthCollection
+    {
+        return SthCollection::fromQuery($query, $this->entityManager);
+    }
 
-        return $params;
+    public function createFromSthCollection(SthCollection $sthCollection) : EntityCollection
+    {
+        return EntityCollection::fromSthCollection($sthCollection);
     }
 }

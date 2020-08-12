@@ -38,7 +38,7 @@ class CategoryTree extends Database
 		parent::afterSave($entity, $options);
 
 		$pdo = $this->getEntityManager()->getPDO();
-		$query = $this->getEntityManager()->getQuery();
+		$query = $this->getEntityManager()->getQueryComposer();
 
 		$parentId = $entity->get('parentId');
 		$pathsTableName = $query->toDb($query->sanitize($entity->getEntityType()) . 'Path');
@@ -91,7 +91,7 @@ class CategoryTree extends Database
 		parent::afterRemove($entity, $options);
 
 		$pdo = $this->getEntityManager()->getPDO();
-		$query = $this->getEntityManager()->getQuery();
+		$query = $this->getEntityManager()->getQueryComposer();
 
 		$pathsTableName = $query->toDb($query->sanitize($entity->getEntityType()) . 'Path');
 

@@ -27,36 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\ORM\Repository;
 
-/**
- * Executes queries by a given RDBSelect instances.
- *
- * @todo Add `select` method returning an array of StdClass objects.
- */
-class RDBQueryExecutor
+interface RepositoryFactory
 {
-    protected $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    public function update(RDBSelect $select, array $values)
-    {
-        $params = $select->getRawParams();
-        $params['update'] = $values;
-
-        $sql = $this->entityManager->getQuery()->createUpdateQuery($select->getEntityType(), $params);
-
-        $this->entityManager->runQuery($sql, true);
-    }
-
-    public function delete(RDBSelect $select)
-    {
-        $sql = $this->entityManager->getQuery()->createDeleteQuery($select->getEntityType(), $select->getRawParams());
-
-        $this->entityManager->runQuery($sql, true);
-    }
+    public function create(string $name) : Repository;
 }

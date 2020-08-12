@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
-
 class Util
 {
     /**

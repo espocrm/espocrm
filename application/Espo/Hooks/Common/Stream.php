@@ -102,7 +102,7 @@ class Stream
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
         }
 
-        $query = $this->entityManager->getQuery();
+        $query = $this->entityManager->getQueryComposer();
         $sql = "
             UPDATE `note`
             SET `deleted` = 1, `modified_at` = '".date('Y-m-d H:i:s')."'

@@ -27,37 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\ORM\QueryParams;
 
-use Espo\ORM\DB\Query\BaseQuery as Query;
+use LogicException;
 
-use PDO;
-
-class Sth2Collection extends SthCollection
+class UpdateBuilder implements Builder
 {
-    public function __construct(
-        string $entityType, EntityFactory $entityFactory, Query $query, PDO $pdo, array $selectParams = []
-    ) {
-        $this->selectParams = $selectParams;
-        $this->entityType = $entityType;
+    use SelectingBuilderTrait;
 
-        $this->entityFactory = $entityFactory;
-        $this->query = $query;
-        $this->pdo = $pdo;
+    /**
+     * Build a UPDATE query.
+     */
+    public function build() : Update
+    {
+        return Update::fromRaw($this->params);
     }
 
-    protected function getQuery()
+    /**
+     * Clone an existing query for a subsequent modifying and building.
+     */
+    public function clone(Delete $query) : self
     {
-        return $this->query;
+        $this->cloneInternal($query);
+
+        return $this;
     }
 
-    protected function getPdo()
+    public function set(array $set) : self
     {
-        return $this->pdo;
+        $this->params['set'] = $set;
+
+        return $this;
     }
 
-    protected function getEntityFactory()
+    /**
+     * Apply LIMIT.
+     */
+    public function limit(?int $limit = null) : self
     {
-        return $this->entityFactory;
+        $this->params['limit'] = $limit;
+
+        return $this;
     }
 }

@@ -27,25 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\DB\Query;
+namespace Espo\ORM;
 
-class MysqlQuery extends BaseQuery
+use Espo\ORM\{
+    QueryParams\Query,
+};
+
+use PDOStatement;
+
+/**
+ * Runs queries by given query params instances.
+ */
+class QueryExecutor
 {
-    public function limit(string $sql, ?int $offset = null, ?int $limit = null) : string
+    protected $entityManager;
+
+    public function __construct(EntityManager $entityManager)
     {
-        if (!is_null($offset) && !is_null($limit)) {
-            $offset = intval($offset);
-            $limit = intval($limit);
-            $sql .= " LIMIT {$offset}, {$limit}";
-            return $sql;
-        }
+        $this->entityManager = $entityManager;
+    }
 
-        if (!is_null($limit)) {
-            $limit = intval($limit);
-            $sql .= " LIMIT {$limit}";
-            return $sql;
-        }
+    public function run(Query $query) : PDOStatement
+    {
+        $sql = $this->entityManager->getQueryComposer()->compose($query);
 
-        return $sql;
+        return $this->entityManager->runSql($sql, true);
     }
 }

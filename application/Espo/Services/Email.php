@@ -522,8 +522,9 @@ class Email extends Record implements
     {
         $userId = $userId ?? $this->getUser()->id;
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('EmailUser')
+            ->set(['isRead' => true])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -531,10 +532,11 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['isRead' => true]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('Notification')
+            ->set(['read' => true])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -544,7 +546,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['read' => true]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
         return true;
     }
@@ -553,8 +555,9 @@ class Email extends Record implements
     {
         $userId = $userId ?? $this->getUser()->id;
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('EmailUser')
+            ->set(['isRead' => true])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -562,7 +565,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['isRead' => true]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
         $this->markNotificationAsRead($id, $userId);
 
@@ -573,8 +576,9 @@ class Email extends Record implements
     {
         $userId = $userId ?? $this->getUser()->id;
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('EmailUser')
+            ->set(['isRead' => false])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -582,7 +586,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['isRead' => false]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
         return true;
     }
@@ -591,8 +595,9 @@ class Email extends Record implements
     {
         $userId = $userId ?? $this->getUser()->id;
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('EmailUser')
+            ->set(['isImportant' => true])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -600,7 +605,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['isImportant' => true]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
         return true;
     }
@@ -609,8 +614,9 @@ class Email extends Record implements
     {
         $userId = $userId ?? $this->getUser()->id;
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('EmailUser')
+            ->set(['isImportant' => false])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -618,7 +624,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['isImportant' => false]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
         return true;
     }
@@ -627,8 +633,9 @@ class Email extends Record implements
     {
         $userId = $userId ?? $this->getUser()->id;
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('EmailUser')
+            ->set(['inTrash' => true])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -636,7 +643,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['inTrash' => true]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
         $this->markNotificationAsRead($id, $userId);
 
@@ -647,8 +654,9 @@ class Email extends Record implements
     {
         $userId = $userId ?? $this->getUser()->id;
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('EmailUser')
+            ->set(['inTrash' => false])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -656,15 +664,16 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['inTrash' => false]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
         return true;
     }
 
     public function markNotificationAsRead(string $id, string $userId)
     {
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('Notification')
+            ->set(['read' => true])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -675,7 +684,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['read' => true]);
+        $this->entityManager->getQueryExecutor()->run($update);
     }
 
     public function moveToFolder(string $id, ?string $folderId, ?string $userId = null)
@@ -686,8 +695,9 @@ class Email extends Record implements
             $folderId = null;
         }
 
-        $select = $this->entityManager->createSelectBuilder()
+        $update = $this->entityManager->getQueryBuilder()->update()
             ->from('EmailUser')
+            ->set(['folderId' => $folderId])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
@@ -695,7 +705,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->update($select, ['folderId' => $folderId]);
+        $this->entityManager->getQueryExecutor()->run($update);
 
         return true;
     }

@@ -92,13 +92,13 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
         $numberList = $this
             ->select(['name', 'type', 'invalid', 'optOut', ['en.primary', 'primary']])
-            ->join([[
+            ->join(
                 'EntityPhoneNumber',
                 'en',
                 [
                     'en.phoneNumberId:' => 'id',
                 ]
-            ]])
+            )
             ->where([
                 'en.entityId' => $entity->id,
                 'en.entityType' => $entity->getEntityType(),
@@ -211,8 +211,6 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
     protected function storeEntityPhoneNumberData(Entity $entity)
     {
-        $pdo = $this->getEntityManager()->getPDO();
-
         $phoneNumberValue = $entity->get('phoneNumber');
         if (is_string($phoneNumberValue)) {
             $phoneNumberValue = trim($phoneNumberValue);
@@ -335,17 +333,21 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
         foreach ($toRemoveList as $number) {
             $phoneNumber = $this->getByNumber($number);
-            if ($phoneNumber) {
-                $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('EntityPhoneNumber', [
-                    'whereClause' => [
-                        'entityId' => $entity->id,
-                        'entityType' => $entity->getEntityType(),
-                        'phoneNumberId' => $phoneNumber->id,
-                    ],
-                ]);
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
+            if (!$phoneNumber) {
+                continue;
             }
+
+            $delete = $this->getEntityManager()->getQueryBuilder()
+                ->delete()
+                ->from('EntityPhoneNumber')
+                ->where([
+                    'entityId' => $entity->id,
+                    'entityType' => $entity->getEntityType(),
+                    'phoneNumberId' => $phoneNumber->id,
+                ])
+                ->build();
+
+            $this->getEntityManager()->getQueryExecutor()->run($delete);
         }
 
         foreach ($toUpdateList as $number) {
@@ -422,10 +424,12 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
         if ($primary) {
             $phoneNumber = $this->getByNumber($primary);
-            if ($phoneNumber) {
 
-                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+            if ($phoneNumber) {
+                $update = $this->getEntityManager()->getQueryBuilder()
+                    ->update()
                     ->from('EntityPhoneNumber')
+                    ->set(['primary' => false])
                     ->where([
                         'entityId' => $entity->id,
                         'entityType' => $entity->getEntityType(),
@@ -434,10 +438,12 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => false]);
+                $this->getEntityManager()->getQueryExecutor()->run($update);
 
-                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                $update = $this->getEntityManager()->getQueryBuilder()
+                    ->update()
                     ->from('EntityPhoneNumber')
+                    ->set(['primary' => true])
                     ->where([
                         'entityId' => $entity->id,
                         'entityType' => $entity->getEntityType(),
@@ -446,7 +452,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => true]);
+                $this->getEntityManager()->getQueryExecutor()->run($update);
             }
         }
 
@@ -464,8 +470,6 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
     protected function storeEntityPhoneNumberPrimary(Entity $entity)
     {
-        $pdo = $this->getEntityManager()->getPDO();
-
         if (!$entity->has('phoneNumber')) return;
         $phoneNumberValue = trim($entity->get('phoneNumber'));
 
@@ -502,8 +506,10 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     $this->markNumberOptedOut($phoneNumberValue, !!$entity->get('phoneNumberIsOptedOut'));
                 }
 
-                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                $update = $this->getEntityManager()->getQueryBuilder()
+                    ->update()
                     ->from('EntityPhoneNumber')
+                    ->set( ['primary' => true])
                     ->where([
                         'entityId' => $entity->id,
                         'entityType' => $entity->getEntityType(),
@@ -511,7 +517,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => true]);
+                $this->getEntityManager()->getQueryExecutor()->run($update);
 
             } else {
                 if (

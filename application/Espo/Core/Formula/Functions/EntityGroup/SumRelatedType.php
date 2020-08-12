@@ -134,7 +134,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
         $entityManager->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 
-        $sql = $entityManager->getQuery()->createSelectQuery($foreignEntityType, $selectParams);
+        $sql = $entityManager->getQueryComposer()->createSelectQuery($foreignEntityType, $selectParams);
 
         $pdo = $entityManager->getPDO();
         $sth = $pdo->prepare($sql);

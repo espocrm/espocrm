@@ -643,14 +643,15 @@ class InboundEmail extends \Espo\Services\Record implements
             $case->set('accountId', $email->get('accountId'));
         }
 
-        $contact = $this->getEntityManager()->getRepository('Contact')->join([['emailAddresses', 'emailAddressesMultiple']])->where([
+        $contact = $this->getEntityManager()->getRepository('Contact')->join('emailAddresses', 'emailAddressesMultiple')->where([
             'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
         ])->findOne();
         if ($contact) {
             $case->set('contactId', $contact->id);
         } else {
             if (!$case->get('accountId')) {
-                $lead = $this->getEntityManager()->getRepository('Lead')->join([['emailAddresses', 'emailAddressesMultiple']])->where([
+                $lead = $this->getEntityManager()->getRepository('Lead')
+                ->join('emailAddresses', 'emailAddressesMultiple')->where([
                     'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
                 ])->findOne();
                 if ($lead) {

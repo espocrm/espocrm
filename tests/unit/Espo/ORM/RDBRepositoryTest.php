@@ -30,25 +30,34 @@
 require_once 'tests/unit/testData/DB/Entities.php';
 
 use Espo\ORM\{
-    DB\MysqlMapper,
-    DB\Query\Mysql as Query,
-    Repositories\RDB as Repository,
+    Mapper\MysqlMapper,
+    Repository\RDBRepository as Repository,
+    Repository\RDBRelation,
+    Repository\RDBRelationSelectBuilder,
     EntityCollection,
-};
-
-use Espo\Core\ORM\{
+    QueryParams\Select,
+    QueryBuilder,
+    Entity,
     EntityManager,
     EntityFactory,
+    CollectionFactory,
 };
 
 use tests\unit\testData\Entities\Test;
+
+use Espo\Entities;
 
 class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
-        $entityManager = $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-        $entityFactory = $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
+        $entityManager = $this->entityManager =
+            $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
+
+        $entityFactory = $this->entityFactory =
+        $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
+
+        $this->collectionFactory = new CollectionFactory($this->entityManager);
 
         $this->mapper = $this->getMockBuilder(MysqlMapper::class)->disableOriginalConstructor()->getMock();
 
@@ -56,19 +65,56 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->method('getMapper')
             ->will($this->returnValue($this->mapper));
 
+        $this->queryBuilder = new QueryBuilder();
+
+        $entityManager
+            ->method('getQueryBuilder')
+            ->will($this->returnValue($this->queryBuilder));
+
+        $entityManager
+            ->method('getQueryBuilder')
+            ->will($this->returnValue($this->queryBuilder));
+
+        $entityManager
+            ->method('getCollectionFactory')
+            ->will($this->returnValue($this->collectionFactory));
+
         $entity = $this->seed = $this->createEntity('Test', Test::class);
 
-        $this->collection = $this->getMockBuilder(EntityCollection::class)->disableOriginalConstructor()->getMock();
+        $this->account = $this->createEntity('Account', Entities\Account::class);
+        $this->team = $this->createEntity('Team', Entities\Team::class);
+
+        $this->collection = $this->createCollectionMock();
 
         $entityFactory
             ->method('create')
-            ->will($this->returnValue($entity));
+            ->will(
+                $this->returnCallback(
+                    function (string $entityType) {
+                        $className = 'Espo\\Entities\\' . ucfirst($entityType);
 
-        $this->repository = new Repository('Test', $entityManager, $entityFactory);
+                        return $this->createEntity($entityType, $className);
+                    }
+                )
+            );
 
-        $entityManager
+        $this->repository = $this->createRepository('Test');
+    }
+
+    protected function createCollectionMock() : EntityCollection
+    {
+        return $this->getMockBuilder(EntityCollection::class)->disableOriginalConstructor()->getMock();
+    }
+
+    protected function createRepository(string $entityType)
+    {
+        $repository = new Repository($entityType, $this->entityManager, $this->entityFactory);
+
+        $this->entityManager
             ->method('getRepository')
-            ->will($this->returnValue($this->repository));
+            ->will($this->returnValue($repository));
+
+        return $repository;
     }
 
     protected function createEntity(string $entityType, string $className)
@@ -76,6 +122,9 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         return new $className($entityType, [], $this->entityManager);
     }
 
+    /**
+     * @deprecated
+     */
     public function testFind()
     {
         $params = [
@@ -84,22 +133,23 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'whereClause' => [
                 'name' => 'test',
             ],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->find($params);
     }
 
-    public function testFindOne()
+    public function testFindOne1()
     {
         $params = [
             'whereClause' => [
@@ -107,239 +157,1043 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'whereClause' => [
                 'name' => 'test',
             ],
             'offset' => 0,
             'limit' => 1,
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->findOne($params);
     }
 
-    public function testWhere1()
+    public function testFindOne2()
     {
-        $paramsExpected = [
-            'whereClause' => [
-                'name' => 'test',
-            ],
-        ];
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->where(['name' => 'test'])
+            ->limit(0, 1)
+            ->build();
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($select);
+
+        $this->repository->where(['name' => 'test'])->findOne();
+    }
+
+    public function testFindOne3()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->distinct()
+            ->from('Test')
+            ->where(['name' => 'test'])
+            ->limit(0, 1)
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($select);
+
+        $this->repository->distinct()->findOne([
+            'whereClause' => ['name' => 'test'],
+        ]);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function testCount1()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->where(['name' => 'test'])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('count')
+            ->will($this->returnValue(1))
+            ->with($select);
+
+        $this->repository->count([
+            'whereClause' => ['name' => 'test'],
+        ]);
+    }
+
+    public function testCount2()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->where(['name' => 'test'])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('count')
+            ->will($this->returnValue(1))
+            ->with($select);
+
+        $this->repository->where(['name' => 'test'])->count();
+    }
+
+    public function testCount3()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('count')
+            ->will($this->returnValue(1))
+            ->with($select);
+
+        $this->repository->count();
+    }
+
+    public function testMax1()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('max')
+            ->will($this->returnValue(1))
+            ->with($select, 'test');
+
+        $this->repository->max('test');
+    }
+
+    public function testWhere1()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'whereClause' => [
+                'name' => 'test',
+            ],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
 
         $this->repository->where(['name' => 'test'])->find();
     }
 
     public function testWhere2()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'whereClause' => [
-                ['name' => 'test'],
+                'name' => 'test',
             ],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->where('name', 'test')->find();
     }
 
-    public function testWhereFineOne()
+    public function testWhereMerge()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'whereClause' => [
-                ['name' => 'test'],
+                'name2' => 'test2',
+                ['name1' => 'test1'],
             ],
-            'offset' => 0,
-            'limit' => 1,
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
+
+        $this->repository
+            ->where(['name1' => 'test1'])
+            ->find([
+                'whereClause' => ['name2' => 'test2'],
+            ]);
+    }
+
+    public function testWhereFineOne()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'whereClause' => [
+                'name' => 'test',
+            ],
+            'offset' => 0,
+            'limit' => 1,
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
 
         $this->repository->where('name', 'test')->findOne();
     }
 
     public function testJoin1()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'joins' => [
                 'Test',
             ],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->join('Test')->find();
     }
 
     public function testJoin2()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'joins' => [
                 'Test1',
                 'Test2',
             ],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->join(['Test1', 'Test2'])->find();
     }
 
     public function testJoin3()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'joins' => [
                 ['Test1', 'test1'],
                 ['Test2', 'test2'],
             ],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->join([['Test1', 'test1'], ['Test2', 'test2']])->find();
     }
 
     public function testJoin4()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'joins' => [
                 ['Test1', 'test1', ['k' => 'v']],
             ],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->join('Test1', 'test1', ['k' => 'v'])->find();
     }
 
     public function testLeftJoin1()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'leftJoins' => [
                 'Test',
             ],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->leftJoin('Test')->find();
     }
 
     public function testMultipleLeftJoins()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'leftJoins' => [
                 'Test1',
                 ['Test2', 'test2'],
             ],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->leftJoin('Test1')->leftJoin('Test2', 'test2')->find();
     }
 
     public function testDistinct()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'distinct' => true,
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->distinct()->find();
     }
 
     public function testSth()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'returnSthCollection' => true,
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->sth()->find();
     }
 
     public function testOrder1()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'orderBy' => 'name',
             'order' => 'ASC',
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->order('name')->find();
     }
 
-    public function testSelect()
+    public function testSelect1()
     {
-        $paramsExpected = [
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
             'select' => ['name', 'date'],
-        ];
+        ]);
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->will($this->returnValue($this->collection))
-            ->with($this->seed, $paramsExpected);
+            ->with($paramsExpected);
 
         $this->repository->select(['name', 'date'])->find();
+    }
+
+    public function testSelect2()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->select(['name'])
+            ->select('date')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($select);
+
+        $this->repository
+            ->select(['name'])
+            ->select('date')
+            ->find();
+    }
+
+    public function testFindRelated1()
+    {
+        $select = Select::fromRaw([
+            'from' => 'Team',
+        ]);
+
+        $this->account->id = 'accountId';
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue(new EntityCollection()))
+            ->with($this->account, 'teams', $select);
+
+        $this->createRepository('Account')->findRelated($this->account, 'teams');
+    }
+
+    public function testCountRelated1()
+    {
+        $select = Select::fromRaw([
+            'from' => 'Team',
+        ]);
+
+        $this->account->id = 'accountId';
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('countRelated')
+            ->will($this->returnValue(1))
+            ->with($this->account, 'teams', $select);
+
+        $this->createRepository('Account')->countRelated($this->account, 'teams');
+    }
+
+    public function testAdditionalColumns()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->select(['*', ['entityTeam.deleted', 'teamDeleted']])
+            ->build();
+
+        $this->account->id = 'accountId';
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue(new EntityCollection()))
+            ->with($this->account, 'teams', $select);
+
+        $this->createRepository('Account')->findRelated($this->account, 'teams', [
+            'additionalColumns' => [
+                'deleted' => 'teamDeleted',
+            ],
+        ]);
+    }
+
+    public function testAdditionalColumnsConditions()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->where([
+                'entityTeam.teamId' => 'testId',
+            ])
+            ->build();
+
+        $this->account->id = 'accountId';
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue(new EntityCollection()))
+            ->with($this->account, 'teams', $select);
+
+        $this->createRepository('Account')->findRelated($this->account, 'teams', [
+            'additionalColumnsConditions' => [
+                'teamId' => 'testId',
+            ],
+        ]);
+    }
+
+    public function testClone1()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->build();
+
+        $selectExpected = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->select('id')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue(new EntityCollection()))
+            ->with($selectExpected);
+
+        $this->repository
+            ->clone($select)
+            ->select('id')
+            ->find();
+    }
+
+    public function testGetById1()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->where(['id' => '1'])
+            ->build();
+
+        $entity = $this->getMockBuilder(Entity::class)->getMock();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectOne')
+            ->will($this->returnValue($entity))
+            ->with($select);
+
+        $this->repository->getById('1');
+    }
+
+    public function testRelationInstance()
+    {
+        $repository = $this->createRepository('Account');
+
+        $account = $this->entityFactory->create('Account');
+        $account->id = 'accountId';
+
+        $relation = $repository->getRelation($account, 'teams');
+
+        $this->assertInstanceOf(RDBRelation::class, $relation);
+    }
+
+    public function testRelationCloneInstance()
+    {
+        $repository = $this->createRepository('Account');
+
+        $account = $this->entityFactory->create('Account');
+        $account->id = 'accountId';
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->build();
+
+        $relationSelectBuilder = $repository->getRelation($account, 'teams')->clone($select);
+
+        $this->assertInstanceOf(RDBRelationSelectBuilder::class, $relationSelectBuilder);
+    }
+
+    public function testRelationCloneBelongsToParentException()
+    {
+        $repository = $this->createRepository('Note');
+
+        $note = $this->entityFactory->create('Note');
+        $note->id = 'noteId';
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Post')
+            ->build();
+
+        $this->expectException(RuntimeException::class);
+
+        $relationSelectBuilder = $repository->getRelation($note, 'parent')->clone($select);
+    }
+
+    public function testRelationCount()
+    {
+        $post = $this->entityFactory->create('Post');
+        $post->id = 'postId';
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Comment')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('countRelated')
+            ->will($this->returnValue(1))
+            ->with($post, 'comments', $select);
+
+        $this->createRepository('Post')->getRelation($post, 'comments')->count();
+    }
+
+    public function testRelationFindHasMany()
+    {
+        $repository = $this->createRepository('Post');
+
+        $post = $this->entityFactory->create('Post');
+        $post->id = 'postId';
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Comment')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($post, 'comments', $select);
+
+        $relationSelectBuilder = $repository->getRelation($post, 'comments')->find();
+    }
+
+    public function testRelationFindBelongsTo()
+    {
+        $comment = $this->entityFactory->create('Comment');
+        $comment->id = 'commentId';
+
+        $post = $this->entityFactory->create('Post');
+        $post->id = 'postId';
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Post')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($post))
+            ->with($comment, 'post', $select);
+
+        $result = $this->createRepository('Comment')
+            ->getRelation($comment, 'post')
+            ->find();
+
+        $this->assertEquals(1, count($result));
+
+        $this->assertEquals($post, $result[0]);
+    }
+
+    public function testRelationFindBelongsToParent()
+    {
+        $note = $this->entityFactory->create('Note');
+        $note->id = 'noteId';
+
+        $post = $this->entityFactory->create('Post');
+        $post->id = 'noteId';
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($post))
+            ->with($note, 'parent',);
+
+        $result = $this->createRepository('Note')->getRelation($note, 'parent')->find();
+
+        $this->assertEquals(1, count($result));
+
+        $this->assertEquals($post, $result[0]);
+    }
+
+    public function testRelationFindOneBelongsToParent()
+    {
+        $note = $this->entityFactory->create('Note');
+        $note->id = 'noteId';
+
+        $post = $this->entityFactory->create('Post');
+        $post->id = 'postId';
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($post))
+            ->with($note, 'parent');
+
+        $result = $this->createRepository('Note')->getRelation($note, 'parent')->findOne();
+
+        $this->assertEquals($post, $result);
+    }
+
+    public function testRelationIsRelated1()
+    {
+        $note = $this->entityFactory->create('Note');
+        $note->set('id', 'noteId');
+
+        $post = $this->entityFactory->create('Post');
+        $post->set('id', 'postId');
+
+        $note->set('parentId', $post->id);
+        $note->set('parentType', 'Post');
+
+        $result = $this->createRepository('Note')->getRelation($note, 'parent')->isRelated($post);
+
+        $this->assertTrue($result);
+
+        $note->set('parentId', 'anotherId');
+        $note->set('parentType', 'Post');
+
+        $result = $this->createRepository('Note')->getRelation($note, 'parent')->isRelated($post);
+
+        $this->assertFalse($result);
+    }
+
+    public function testRelationIsRelated2()
+    {
+        $post = $this->entityFactory->create('Post');
+        $post->set('id', 'postId');
+
+        $note = $this->entityFactory->create('Note');
+        $note->set('id', 'noteId');
+
+        $collection = $this->collectionFactory->create('Note', [$note]);
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Note')
+            ->select(['id'])
+            ->where(['id' => $note->id])
+            ->limit(0, 1)
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($post, 'notes', $select);
+
+        $result = $this->createRepository('Post')->getRelation($post, 'notes')->isRelated($note);
+
+        $this->assertTrue($result);
+    }
+
+    public function testRelationIsRelated3()
+    {
+        $post = $this->entityFactory->create('Post');
+        $post->set('id', 'postId');
+
+        $note = $this->entityFactory->create('Note');
+        $note->set('id', 'noteId');
+
+        $collection = $this->collectionFactory->create('Note', []);
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Note')
+            ->select(['id'])
+            ->where(['id' => $note->id])
+            ->limit(0, 1)
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($post, 'notes', $select);
+
+        $result = $this->createRepository('Post')->getRelation($post, 'notes')->isRelated($note);
+
+        $this->assertFalse($result);
+    }
+
+    public function testRelate1()
+    {
+        $post = $this->entityFactory->create('Post');
+        $post->set('id', 'postId');
+
+        $note = $this->entityFactory->create('Note');
+        $note->set('id', 'noteId');
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('relateById')
+            ->with($post, 'notes', $note->id);
+
+        $this->createRepository('Post')->getRelation($post, 'notes')->relate($note);
+    }
+
+    public function testUnrelate1()
+    {
+        $post = $this->entityFactory->create('Post');
+        $post->set('id', 'postId');
+
+        $note = $this->entityFactory->create('Note');
+        $note->set('id', 'noteId');
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('unrelateById')
+            ->with($post, 'notes', $note->id);
+
+        $this->createRepository('Post')->getRelation($post, 'notes')->unrelate($note);
+    }
+
+    public function testMassRelate()
+    {
+        $post = $this->entityFactory->create('Post');
+        $post->set('id', 'postId');
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Note')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('massRelate')
+            ->with($post, 'notes', $select);
+
+        $this->createRepository('Post')->getRelation($post, 'notes')->massRelate($select);
+    }
+
+    public function testGetColumn()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $team = $this->entityFactory->create('Team');
+        $team->set('id', 'teamId');
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('getRelationColumn')
+            ->with($account, 'teams', $team->id, 'test');
+
+        $this->createRepository('Post')->getRelation($account, 'teams')->getColumn($team, 'test');
+    }
+
+    public function testUpdateColumns()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $team = $this->entityFactory->create('Team');
+        $team->set('id', 'teamId');
+
+        $columns = [
+            'column' => 'test',
+        ];
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('updateRelationColumns')
+            ->with($account, 'teams', $team->id, $columns);
+
+        $this->createRepository('Post')->getRelation($account, 'teams')->updateColumns($team, $columns);
+    }
+
+    public function testRelationSelectBuilderFind()
+    {
+        $repository = $this->createRepository('Post');
+
+        $post = $this->entityFactory->create('Post');
+        $post->id = 'postId';
+
+        $collection = $this->createCollectionMock();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Comment')
+            ->select(['id'])
+            ->distinct()
+            ->where(['name' => 'test'])
+            ->join('Test', 'test', ['id:' => 'id'])
+            ->order('id', 'DESC')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($post, 'comments', $select);
+
+        $repository->getRelation($post, 'comments')
+            ->select(['id'])
+            ->distinct()
+            ->where(['name' => 'test'])
+            ->join('Test', 'test', ['id:' => 'id'])
+            ->order('id', 'DESC')
+            ->find();
+    }
+
+    public function testRelationSelectBuilderFindOne()
+    {
+        $repository = $this->createRepository('Post');
+
+        $post = $this->entityFactory->create('Post');
+        $post->id = 'postId';
+
+        $collection = $this->collectionFactory->create();
+
+        $comment = $this->entityFactory->create('Comment');
+        $comment->set('id', 'commentId');
+
+        $collection[] = $comment;
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Comment')
+            ->select(['id'])
+            ->distinct()
+            ->where(['name' => 'test'])
+            ->join('Test', 'test', ['id:' => 'id'])
+            ->order('id', 'DESC')
+            ->limit(0, 1)
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($post, 'comments', $select);
+
+        $result = $repository->getRelation($post, 'comments')
+            ->select(['id'])
+            ->distinct()
+            ->where(['name' => 'test'])
+            ->join('Test', 'test', ['id:' => 'id'])
+            ->order('id', 'DESC')
+            ->findOne();
+
+        $this->assertEquals($comment, $result);
+    }
+
+    public function testRelationSelectBuilderColumns1()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->select(['*', ['entityTeam.deleted', 'test']])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($account, 'teams', $select);
+
+        $this->createRepository('Account')->getRelation($account, 'teams')
+            ->columns(['deleted' => 'test'])
+            ->find();
+    }
+
+    public function testRelationSelectBuilderColumns2()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->select(['id', ['entityTeam.deleted', 'test']])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($account, 'teams', $select);
+
+        $this->createRepository('Account')->getRelation($account, 'teams')
+            ->select(['id'])
+            ->columns(['deleted' => 'test'])
+            ->find();
+    }
+
+    public function testRelationSelectBuilderColumnsWhere1()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->where(['entityTeam.deleted' => false])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($account, 'teams', $select);
+
+
+        $this->createRepository('Account')->getRelation($account, 'teams')
+            ->columnsWhere(['deleted' => false])
+            ->find();
+    }
+
+    public function testRelationSelectBuilderColumnsWhere2()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->where([
+                'OR' => [
+                    ['entityTeam.deleted' => false],
+                    ['entityTeam.deleted' => null],
+                ]
+            ])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($account, 'teams', $select);
+
+
+        $this->createRepository('Account')->getRelation($account, 'teams')
+            ->columnsWhere([
+                'OR' => [
+                    ['deleted' => false],
+                    ['deleted' => null],
+                ]
+            ])
+            ->find();
     }
 }

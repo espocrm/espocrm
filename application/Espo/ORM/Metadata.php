@@ -29,8 +29,11 @@
 
 namespace Espo\ORM;
 
-use Espo\Core\Utils\Util;
+use InvalidArgumentException;
 
+/**
+ * Metadata of all entities.
+ */
 class Metadata
 {
     protected $data;
@@ -50,13 +53,17 @@ class Metadata
      */
     public function get(string $entityType, $key = null, $default = null)
     {
-        if (!array_key_exists($entityType, $this->data)) {
+        if (!$this->has($entityType)) {
             return null;
         }
-        $data = $this->data[$entityType];
-        if (!$key) return $data;
 
-        return Util::getValueByKey($data, $key, $default);
+        $data = $this->data[$entityType];
+
+        if ($key === null) {
+            return $data;
+        }
+
+        return self::getValueByKey($data, $key, $default);
     }
 
     /**
@@ -64,9 +71,39 @@ class Metadata
      */
     public function has(string $entityType) : bool
     {
-        if (!array_key_exists($entityType, $this->data)) {
-            return false;
+        return array_key_exists($entityType, $this->data);
+    }
+
+    private static function getValueByKey(array $data, $key = null, $default = null)
+    {
+        if (!is_string($key) && !is_array($key) && !is_null($key)) {
+            throw new InvalidArgumentException();
         }
-        return true;
+
+        if (is_null($key) || empty($key)) {
+            return $data;
+        }
+
+        if (!is_string($key) && !is_array($key)) {
+            throw new InvalidArgumentException();
+        }
+
+        $path = $key;
+
+        if (is_string($key)) {
+            $path = explode('.', $key);
+        }
+
+        $item = $data;
+
+        foreach ($path as $k) {
+            if (!array_key_exists($k, $item)) {
+                return $default;
+            }
+
+            $item = $item[$k];
+        }
+
+        return $item;
     }
 }

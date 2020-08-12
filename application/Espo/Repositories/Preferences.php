@@ -30,18 +30,14 @@
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
-use Espo\ORM\Repository;
+use Espo\ORM\Repository\Repository;
 use Espo\Core\Utils\Json;
-
-use Espo\ORM\Repositories\{
-    Removable,
-};
 
 use PDO;
 
 use Espo\Core\Di;
 
-class Preferences extends Repository implements Removable,
+class Preferences extends Repository implements
     Di\MetadataAware,
     Di\ConfigAware,
     Di\EntityManagerAware
@@ -87,18 +83,17 @@ class Preferences extends Repository implements Removable,
     {
         $data = null;
 
-        $pdo = $this->entityManager->getPDO();
-
-        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Preferences', [
-            'select' => ['id', 'data'],
-            'whereClause' => [
+        $select = $this->getEntityManager()->getQueryBuilder()
+            ->select()
+            ->from('Preferences')
+            ->select(['id', 'data'])
+            ->where([
                 'id' => $id,
-            ],
-            'limit' => 1,
-        ]);
+            ])
+            ->limit(0, 1)
+            ->build();
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $sth = $this->getEntityManager()->getQueryExecutor()->run($select);
 
         while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             $data = Json::decode($row['data']);
@@ -171,13 +166,15 @@ class Preferences extends Repository implements Removable,
 
         $entityTypeList = $entity->get('autoFollowEntityTypeList') ?? [];
 
-        $sql = $this->entityManager->getQuery()->createDeleteQuery('Autofollow', [
-            'whereClause' => [
+        $delete = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('Autofollow')
+            ->where([
                 'userId' => $id,
-            ],
-        ]);
+            ])
+            ->build();
 
-        $this->entityManager->getPDO()->query($sql);
+        $this->entityManager->getQueryExecutor()->run($delete);
 
         $entityTypeList = array_filter($entityTypeList, function ($item) {
             return (bool) $this->metadata->get(['scopes', $item, 'stream']);
@@ -208,20 +205,20 @@ class Preferences extends Repository implements Removable,
 
         $dataString = Json::encode($data, \JSON_PRETTY_PRINT);
 
-        $pdo = $this->entityManager->getPDO();
-
-        $sql = $this->entityManager->getQuery()->createInsertQuery('Preferences', [
-            'columns' => ['id', 'data'],
-            'values' => [
+        $insert = $this->getEntityManager()->getQueryBuilder()
+            ->insert()
+            ->into('Preferences')
+            ->columns(['id', 'data'])
+            ->values([
                 'id' => $entity->id,
                 'data' => $dataString,
-            ],
-            'update' => [
+            ])
+            ->updateSet([
                 'data' => $dataString,
-            ],
-        ]);
+            ])
+            ->build();
 
-        $pdo->query($sql);
+        $this->getEntityManager()->getQueryExecutor()->run($insert);
 
         $user = $this->entityManager->getEntity('User', $entity->id);
         if ($user && !$user->isPortal()) {
@@ -233,15 +230,15 @@ class Preferences extends Repository implements Removable,
 
     public function deleteFromDb(string $id)
     {
-        $pdo = $this->entityManager->getPDO();
-
-        $sql = $this->entityManager->getQuery()->createDeleteQuery('Preferences', [
-            'whereClause' => [
+        $delete = $this->getEntityManager()->getQueryBuilder()
+            ->delete()
+            ->from('Preferences')
+            ->where([
                 'id' => $id,
-            ],
-        ]);
+            ])
+            ->build();
 
-        $pdo->query($sql);
+        $this->getEntityManager()->getQueryExecutor()->run($delete);
     }
 
     public function remove(Entity $entity, array $options = [])

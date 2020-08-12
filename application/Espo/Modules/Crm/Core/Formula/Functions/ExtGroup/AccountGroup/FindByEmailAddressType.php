@@ -85,7 +85,7 @@ class FindByEmailAddressType extends BaseFunction implements
 
         if ($contact) {
             if (!in_array($domain, $ignoreList)) {
-                $account = $em->getRepository('Account')->join(['contacts'])->where([
+                $account = $em->getRepository('Account')->join('contacts')->where([
                     'emailAddress*' => '%' . $domain,
                     'contacts.id' => $contact->id,
                 ])->findOne();

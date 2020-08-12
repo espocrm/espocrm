@@ -99,7 +99,7 @@ class Opportunity extends \Espo\Services\Record
 
         $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
 
-        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $selectParams);
+        $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -176,7 +176,7 @@ class Opportunity extends \Espo\Services\Record
 
         $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
 
-        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $selectParams);
+        $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -234,7 +234,7 @@ class Opportunity extends \Espo\Services\Record
 
         $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
 
-        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $selectParams);
+        $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -294,7 +294,7 @@ class Opportunity extends \Espo\Services\Record
 
         $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
 
-        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $selectParams);
+        $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();

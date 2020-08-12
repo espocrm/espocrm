@@ -29,15 +29,17 @@
 
 namespace Espo\ORM;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\ORM\DB\{
-    Mapper,
-    Query\BaseQuery as Query,
+use Espo\ORM\{
+    Mapper\Mapper,
+    QueryComposer\QueryComposer,
+    Repository\RepositoryFactory,
+    Repository\Repository,
 };
 
 use PDO;
+use PDOStatement;
 use Exception;
+use RuntimeException;
 
 /**
  * A central access point to ORM functionality.
@@ -50,6 +52,8 @@ class EntityManager
 
     protected $entityFactory;
 
+    protected $collectionFactory;
+
     protected $repositoryFactory;
 
     protected $mappers = [];
@@ -60,7 +64,7 @@ class EntityManager
 
     protected $params = [];
 
-    protected $query;
+    protected $queryComposer;
 
     protected $defaultMapperName = 'RDB';
 
@@ -95,20 +99,43 @@ class EntityManager
 
         $this->repositoryFactory = $repositoryFactory;
 
-        $this->queryExecutor = new RDBQueryExecutor($this);
+        $this->initQueryComposer();
+
+        $this->queryExecutor = new QueryExecutor($this);
+
+        $this->queryBuilder = new QueryBuilder();
+
+        $this->collectionFactory = new CollectionFactory($this);
+    }
+
+    protected function initQueryComposer()
+    {
+        $className = $this->params['queryComposerClassName'] ?? null;
+
+        if (!$className) {
+            $platform = $this->params['platform'];
+            $className = 'Espo\\ORM\\QueryComposer\\' . ucfirst($platform) . 'QueryComposer';
+        }
+
+        if (!$className || !class_exists($className)) {
+            throw new RuntimeException("Query composer {$name} could not be created.");
+        }
+
+        $this->queryComposer = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
     }
 
     /**
-     * Get a Query.
+     * @todo Remove in v7.0.
+     * @deprecated
      */
-    public function getQuery() : Query
+    public function getQuery() : QueryComposer
     {
-        if (empty($this->query)) {
-            $platform = $this->params['platform'];
-            $className = 'Espo\\ORM\\DB\\Query\\' . ucfirst($platform) . 'Query';
-            $this->query = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
-        }
-        return $this->query;
+        return $this->queryComposer;
+    }
+
+    public function getQueryComposer() : QueryComposer
+    {
+        return $this->queryComposer;
     }
 
     protected function getMapperClassName(string $name) : string
@@ -118,12 +145,12 @@ class EntityManager
         switch ($name) {
             case 'RDB':
                 $platform = $this->params['platform'];
-                $className = 'Espo\\ORM\\DB\\' . ucfirst($platform) . 'Mapper';
+                $className = 'Espo\\ORM\\Mapper\\' . ucfirst($platform) . 'Mapper';
                 break;
         }
 
         if (!$className || !class_exists($className)) {
-            throw new Error("Mapper {$name} does not exist.");
+            throw new RuntimeException("Mapper '{$name}' does not exist.");
         }
 
         return $className;
@@ -140,7 +167,7 @@ class EntityManager
 
         if (empty($this->mappers[$className])) {
             $this->mappers[$className] = new $className(
-                $this->getPDO(), $this->entityFactory, $this->getQuery(), $this->metadata
+                $this->getPDO(), $this->entityFactory, $this->collectionFactory, $this->getQueryComposer(), $this->metadata
             );
         }
 
@@ -187,7 +214,7 @@ class EntityManager
     public function getEntity(string $entityType, ?string $id = null) : ?Entity
     {
         if (!$this->hasRepository($entityType)) {
-            throw new Error("ORM: Repository '{$entityType}' does not exist.");
+            throw new RuntimeException("ORM: Repository '{$entityType}' does not exist.");
         }
 
         return $this->getRepository($entityType)->get($id);
@@ -214,7 +241,7 @@ class EntityManager
     }
 
     /**
-     * Create entity (store it in database).
+     * Create entity (store it in a database).
      *
      * @param StdClass|array $data Entity attributes.
      */
@@ -222,13 +249,14 @@ class EntityManager
     {
         $entity = $this->getEntity($entityType);
         $entity->set($data);
+
         $this->saveEntity($entity, $options);
 
         return $entity;
     }
 
     /**
-     * Fetch an entity (from database).
+     * Fetch an entity (from a database).
      */
     public function fetchEntity(string $entityType, string $id) : ?Entity
     {
@@ -253,7 +281,7 @@ class EntityManager
     public function getRepository(string $entityType) : ?Repository
     {
         if (!$this->hasRepository($entityType)) {
-            throw new Error("Repository '{$entityType}' does not exist.");
+            throw new RuntimeException("Repository '{$entityType}' does not exist.");
         }
 
         if (empty($this->repositoryHash[$entityType])) {
@@ -264,13 +292,17 @@ class EntityManager
     }
 
     /**
-     * Create a select builder.
+     * Get a query builder.
      */
-    public function createSelectBuilder() : RDBSelectBuilder
+    public function getQueryBuilder() : QueryBuilder
     {
-        return new RDBSelectBuilder($this);
+        return $this->queryBuilder;
     }
 
+    /**
+     * @deprecated
+     * @todo Remove.
+     */
     public function setMetadata(array $data)
     {
         $this->metadata->setData($data);
@@ -282,7 +314,7 @@ class EntityManager
     }
 
     /**
-     * Get an instance of PDO.
+     * Get a PDO instance.
      */
     public function getPDO() : PDO
     {
@@ -294,19 +326,11 @@ class EntityManager
     }
 
     /**
-     * Create a collection. Entity type can be omitted.
+     * Create a collection. An entity type can be omitted.
      */
     public function createCollection(?string $entityType = null, array $data = []) : EntityCollection
     {
-        return new EntityCollection($data, $entityType, $this->entityFactory);
-    }
-
-    /**
-     * Create an STH collection. An STH collection is preferable when a select query returns a large number of rows.
-     */
-    public function createSthCollection(string $entityType, array $selectParams = []) : SthCollection
-    {
-        return new SthCollection($entityType, $this, $selectParams);
+        return $this->collectionFactory->create($data, $entityType);
     }
 
     public function getEntityFactory() : EntityFactory
@@ -314,30 +338,56 @@ class EntityManager
         return $this->entityFactory;
     }
 
+    public function getCollectionFactory() : CollectionFactory
+    {
+        return $this->collectionFactory;
+    }
+
     /**
      * Get a Query Executor.
      */
-    public function getQueryExecutor() : RDBQueryExecutor
+    public function getQueryExecutor() : QueryExecutor
     {
         return $this->queryExecutor;
     }
 
     /**
-     * Run a query. Returns a result.
+     * Run a Query.
+     */
+    public function runQuery(Query $query) : PDOStatement
+    {
+        return $this->queryExecutor->run($query);
+    }
+
+    /**
+     * Run a SQL query.
      *
      * @param $rerunIfDeadlock Query will be re-run if a deadlock occurs.
      */
-    public function runQuery(string $query, bool $rerunIfDeadlock = false)
+    public function runSql(string $sql, bool $rerunIfDeadlock = false) : PDOStatement
     {
+        $pdoStatement = null;
+
         try {
-            return $this->getPDO()->query($query);
+            $pdoStatement = $this->getPDO()->query($sql);
         } catch (Exception $e) {
-            if ($rerunIfDeadlock) {
-                if (isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
-                    return $this->getPDO()->query($query);
-                }
+            if (!$rerunIfDeadlock) {
+                throw $e;
             }
-            throw $e;
+
+            if (isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
+                $pdoStatement = $this->getPDO()->query($sql);
+            }
+
+            if (!$pdoStatement) {
+                throw $e;
+            }
         }
+
+        if (!$pdoStatement) {
+            throw new RuntimeException("Query execution failure.");
+        }
+
+        return $pdoStatement;
     }
 }

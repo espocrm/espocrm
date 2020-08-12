@@ -77,11 +77,13 @@ class CheckEmailAccounts implements JobTargeted
 
     public function prepare(ScheduledJob $scheduledJob, string $executeTime)
     {
-        $collection = $this->entityManager->getRepository('EmailAccount')->join([['assignedUser', 'assignedUserAdditional']])->where([
-            'status' => 'Active',
-            'useImap' => true,
-            'assignedUserAdditional.isActive' => true,
-        ])->find();
+        $collection = $this->entityManager->getRepository('EmailAccount')
+            ->join('assignedUser', 'assignedUserAdditional')
+            ->where([
+                'status' => 'Active',
+                'useImap' => true,
+                'assignedUserAdditional.isActive' => true,
+            ])->find();
 
         foreach ($collection as $entity) {
             $running = $this->entityManager->getRepository('Job')->where([

@@ -94,13 +94,13 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
         $emailAddressList = $this
             ->select(['name', 'lower', 'invalid', 'optOut', ['ee.primary', 'primary']])
-            ->join([[
+            ->join(
                 'EntityEmailAddress',
                 'ee',
                 [
                     'ee.emailAddressId:' => 'id',
                 ]
-            ]])
+            )
             ->where([
                 'ee.entityId' => $entity->id,
                 'ee.entityType' => $entity->getEntityType(),
@@ -249,10 +249,9 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
     public function getEntityByAddress(
         string $address, ?string $entityType = null, array $order = ['User', 'Contact', 'Lead', 'Account']
     ) : ?Entity {
-        $selectBuilder = $this->getEntityManager()->createSelectBuilder();
+        $selectBuilder = $this->getEntityManager()->getRepository('EntityEmailAddress')->select();
 
         $selectBuilder
-            ->from('EntityEmailAddress')
             ->select(['entityType', 'entityId'])
             ->sth()
             ->join('EmailAddress', 'ea', ['ea.id:' => 'emailAddressId', 'ea.deleted' => 0])
@@ -261,7 +260,6 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 ['LIST:entityType:' . implode(',', $order)],
                 ['primary', 'DESC'],
             ]);
-
 
         if ($entityType) {
             $selectBuilder->where('entityType=', $entityType);
@@ -290,8 +288,6 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
     public function storeEntityEmailAddressData(Entity $entity)
     {
-        $pdo = $this->getEntityManager()->getPDO();
-
         $emailAddressValue = $entity->get('emailAddress');
         if (is_string($emailAddressValue)) {
             $emailAddressValue = trim($emailAddressValue);
@@ -410,17 +406,21 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
         foreach ($toRemoveList as $address) {
             $emailAddress = $this->getByAddress($address);
-            if ($emailAddress) {
-                $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('EntityEmailAddress', [
-                    'whereClause' => [
-                        'entityId' => $entity->id,
-                        'entityType' => $entity->getEntityType(),
-                        'emailAddressId' => $emailAddress->id,
-                    ],
-                ]);
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
+            if (!$emailAddress) {
+                continue;
             }
+
+            $delete = $this->getEntityManager()->getQueryBuilder()
+                ->delete()
+                ->from('EntityEmailAddress')
+                ->where([
+                    'entityId' => $entity->id,
+                    'entityType' => $entity->getEntityType(),
+                    'emailAddressId' => $emailAddress->id,
+                ])
+                ->build();
+
+            $this->getEntityManager()->getQueryExecutor()->run($delete);
         }
 
         foreach ($toUpdateList as $address) {
@@ -496,8 +496,10 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             $emailAddress = $this->getByAddress($primary);
 
             if ($emailAddress) {
-                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                $update = $this->getEntityManager()->getQueryBuilder()
+                    ->update()
                     ->from('EntityEmailAddress')
+                    ->set(['primary' => false])
                     ->where([
                         'entityId' => $entity->id,
                         'entityType' => $entity->getEntityType(),
@@ -506,10 +508,12 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => false]);
+                $this->getEntityManager()->getQueryExecutor()->run($update);
 
-                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                $update = $this->getEntityManager()->getQueryBuilder()
+                    ->update()
                     ->from('EntityEmailAddress')
+                    ->set(['primary' => true])
                     ->where([
                         'entityId' => $entity->id,
                         'entityType' => $entity->getEntityType(),
@@ -518,7 +522,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => true]);
+                $this->getEntityManager()->getQueryExecutor()->run($update);
             }
         }
 
@@ -536,8 +540,6 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
     protected function storeEntityEmailAddressPrimary(Entity $entity)
     {
         if (!$entity->has('emailAddress')) return;
-
-        $pdo = $this->getEntityManager()->getPDO();
 
         $emailAddressValue = $entity->get('emailAddress');
         if (is_string($emailAddressValue)) {
@@ -574,8 +576,10 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     $this->markAddressOptedOut($emailAddressValue, !!$entity->get('emailAddressIsOptedOut'));
                 }
 
-                $updateSelect = $this->getEntityManager()->createSelectBuilder()
+                $update = $this->getEntityManager()->getQueryBuilder()
+                    ->update()
                     ->from('EntityEmailAddress')
+                    ->set(['primary' => true])
                     ->where([
                         'entityId' => $entity->id,
                         'entityType' => $entity->getEntityType(),
@@ -583,7 +587,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->update($updateSelect, ['primary' => true]);
+                $this->getEntityManager()->getQueryExecutor()->run($update);
 
             } else {
                 if (

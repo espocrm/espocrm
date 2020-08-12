@@ -34,7 +34,7 @@ use Espo\Core\Utils\Util;
 
 use Espo\Core\Di;
 
-class Event extends \Espo\Core\Repositories\Database implements
+class Event extends Database implements
     Di\DateTimeAware,
     Di\ConfigAware
 {
@@ -125,16 +125,16 @@ class Event extends \Espo\Core\Repositories\Database implements
     {
         parent::afterRemove($entity, $options);
 
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('Reminder', [
-            'whereClause' => [
+        $delete = $this->getEntityManager()->getQueryBuilder()
+            ->delete()
+            ->from('Reminder')
+            ->where([
                 'entityId' => $entity->id,
                 'entityType' => $entity->getEntityType(),
-            ],
-        ]);
+            ])
+            ->build();
 
-        $pdo->query($sql);
+        $this->getEntityManager()->getQueryExecutor()->run($delete);
     }
 
     protected function afterSave(Entity $entity, array $options = [])

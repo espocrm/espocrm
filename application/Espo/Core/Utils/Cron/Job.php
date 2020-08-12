@@ -307,8 +307,6 @@ class Job
      */
     public function removePendingJobDuplicates()
     {
-        $pdo = $this->getEntityManager()->getPDO();
-
         $duplicateJobList = $this->getEntityManager()->getRepository('Job')
             ->select(['scheduledJobId'])
             ->where([
@@ -352,14 +350,15 @@ class Job
                 continue;
             }
 
-            $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('Job', [
-                'whereClause' => [
+            $delete = $this->entityManager->getQueryBuilder()
+                ->delete()
+                ->from('Job')
+                ->where([
                     'id' => $jobIdList,
-                ]
-            ]);
+                ])
+                ->build();
 
-            $sth = $pdo->prepare($sql);
-            $sth->execute();
+            $this->entityManager->getQueryExecutor()->run($delete);
         }
     }
 

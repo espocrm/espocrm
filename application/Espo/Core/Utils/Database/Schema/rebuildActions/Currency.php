@@ -31,7 +31,6 @@ namespace Espo\Core\Utils\Database\Schema\rebuildActions;
 
 class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {
-
     public function afterRebuild()
     {
         $defaultCurrency = $this->getConfig()->get('defaultCurrency');
@@ -39,16 +38,18 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
         $baseCurrency = $this->getConfig()->get('baseCurrency');
         $currencyRates = $this->getConfig()->get('currencyRates');
 
-        if ($defaultCurrency != $baseCurrency) {
+        if ($defaultCurrency !== $baseCurrency) {
             $currencyRates = $this->exchangeRates($baseCurrency, $defaultCurrency, $currencyRates);
         }
 
         $currencyRates[$defaultCurrency] = '1.00';
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $delete = $this->getEntityManager()->getQueryBuilder()
+            ->delete()
+            ->from('Currency')
+            ->build();
 
-        $sql = $this->getEntityManager()->getQuery()->createDeleteQuery('Currency');
-        $pdo->prepare($sql)->execute();
+        $this->getEntityManager()->getQueryExecutor()->run($delete);
 
         foreach ($currencyRates as $currencyName => $rate) {
             $this->getEntityManager()->createEntity('Currency', [
@@ -58,20 +59,12 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
         }
     }
 
-    /**
-     * Calculate exchange rates if defaultCurrency doesn't equals baseCurrency
-     *
-     * @param  string $baseCurrency
-     * @param  string $defaultCurrency
-     * @param  array $currencyRates   [description]
-     * @return array  - List of new currency rates
-     */
-    protected function exchangeRates($baseCurrency, $defaultCurrency, array $currencyRates)
+    protected function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates) : array
     {
         $precision = 5;
         $defaultCurrencyRate = round(1 / $currencyRates[$defaultCurrency], $precision);
 
-        $exchangedRates = array();
+        $exchangedRates = [];
         $exchangedRates[$baseCurrency] = $defaultCurrencyRate;
 
         unset($currencyRates[$baseCurrency], $currencyRates[$defaultCurrency]);
@@ -82,6 +75,4 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 
         return $exchangedRates;
     }
-
 }
-

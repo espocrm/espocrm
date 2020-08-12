@@ -109,7 +109,7 @@ class DashboardTemplate extends Record
         $team = $this->getEntityManager()->fetchEntity('Team', $teamId);
         if (!$team) throw new NotFound();
 
-        $userList = $this->getEntityManager()->getRepository('User')->join(['teams'])->distinct()->where([
+        $userList = $this->getEntityManager()->getRepository('User')->join('teams')->distinct()->where([
             'teams.id' => $teamId,
         ])->find();
 

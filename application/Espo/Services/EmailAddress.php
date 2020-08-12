@@ -144,26 +144,20 @@ class EmailAddress extends Record
             return [];
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $list = $this->getEntityManager()->getRepository('InboundEmail')
+            ->select(['id', 'name', 'emailAddress'])
+            ->where([
+                'emailAddress*' => $query . '%',
+            ])
+            ->order('name')
+            ->find();
 
-        $selectParams = [
-            'select' => ['id', 'name', 'emailAddress'],
-            'whereClause' => [
-                'emailAddress*' => $query . '%'
-            ],
-            'orderBy' => 'name',
-        ];
-
-        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('InboundEmail', $selectParams);
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+        foreach ($list as $item) {
             $result[] = [
-                'emailAddress' => $row['emailAddress'],
-                'entityName' => $row['name'],
+                'emailAddress' => $item->get('emailAddress'),
+                'entityName' => $item->get('name'),
                 'entityType' => 'InboundEmail',
-                'entityId' => $row['id'],
+                'entityId' => $item->get('id'),
             ];
         }
     }

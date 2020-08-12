@@ -27,27 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Repositories;
+namespace Espo\ORM\QueryParams;
 
-use Espo\ORM\{
-    Entity,
-    Collection,
-};
-
-interface Findable
+/**
+ * Query parameters. Instances are immutable. Need to clone with a builder to get a copy for a further modification.
+ */
+interface Query
 {
     /**
-     * A number of records matching specific parameters.
+     * Get parameters in RAW format.
      */
-    public function count(array $params) : int;
-
-    /**
-     * Find records matching specific parameters.
-     */
-    public function find(array $params) : Collection;
-
-    /**
-     * Find the first record matching specific parameters.
-     */
-    public function findOne(array $params) : ?Entity;
+    public function getRawParams() : array;
 }
