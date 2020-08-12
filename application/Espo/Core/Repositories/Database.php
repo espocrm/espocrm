@@ -204,6 +204,9 @@ class Database extends RDBRepository
             }
 
             if ($foreign instanceof Entity) {
+                if (is_object($data)) {
+                    $data = (array) $data;
+                }
                 $this->hookMediator->afterRelate($entity, $relationName, $foreign, $data, $options);
             }
         }
@@ -421,7 +424,7 @@ class Database extends RDBRepository
         }
     }
 
-    public function processLinkMultipleFieldSave(Entity $entity, $link, array $options = [])
+    public function processLinkMultipleFieldSave(Entity $entity, string $link, array $options = [])
     {
         $name = $link;
 
