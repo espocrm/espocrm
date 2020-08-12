@@ -53,6 +53,7 @@ use LogicException;
  */
 abstract class BaseQueryComposer implements QueryComposer
 {
+    // @todo Remove.
     protected static $paramList = [
         'select',
         'whereClause',
@@ -845,7 +846,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if (substr($rest, 0, 1) === '(' && substr($rest, -1) === ')') {
             $rest = substr($rest, 1, -1);
 
-            $argumentList = self::parseArgumentListFromFunctionContent($rest);
+            $argumentList = Util::parseArgumentListFromFunctionContent($rest);
             if (count($argumentList) < 2) {
                 throw new RuntimeException("ORM Query: Bad MATCH usage.");
             }
@@ -916,7 +917,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if ($function && in_array($function, Functions::$multipleArgumentsFunctionList)) {
             $arguments = $attribute;
 
-            $argumentList = self::parseArgumentListFromFunctionContent($arguments);
+            $argumentList = Util::parseArgumentListFromFunctionContent($arguments);
 
             $argumentPartList = [];
             foreach ($argumentList as $argument) {
@@ -938,104 +939,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     public static function getAllAttributesFromComplexExpression(string $expression) : array
     {
-        return self::getAllAttributesFromComplexExpressionImplementation($expression);
-    }
-
-    protected static function getAllAttributesFromComplexExpressionImplementation(
-        string $expression, ?array &$list = null
-    ) : array {
-        if (!$list) $list = [];
-
-        $arguments = $expression;
-
-        if (strpos($expression, ':')) {
-            $dilimeterPosition = strpos($expression, ':');
-            $function = substr($expression, 0, $dilimeterPosition);
-            $arguments = substr($expression, $dilimeterPosition + 1);
-            if (substr($arguments, 0, 1) === '(' && substr($arguments, -1) === ')') {
-                $arguments = substr($arguments, 1, -1);
-            }
-        } else {
-            if (
-                !self::isArgumentString($expression) &&
-                !self::isArgumentNumeric($expression) &&
-                !self::isArgumentBoolOrNull($expression)
-            ) {
-                $list[] = $expression;
-            }
-            return $list;
-        }
-
-        $argumentList = self::parseArgumentListFromFunctionContent($arguments);
-
-        foreach ($argumentList as $argument) {
-            self::getAllAttributesFromComplexExpressionImplementation($argument, $list);
-        }
-
-        return $list;
-    }
-
-    static protected function parseArgumentListFromFunctionContent(string $functionContent)
-    {
-        $functionContent = trim($functionContent);
-
-        $isString = false;
-        $isSingleQuote = false;
-
-        if ($functionContent === '') {
-            return [];
-        }
-
-        $commaIndexList = [];
-        $braceCounter = 0;
-        for ($i = 0; $i < strlen($functionContent); $i++) {
-            if ($functionContent[$i] === "'" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
-                if (!$isString) {
-                    $isString = true;
-                    $isSingleQuote = true;
-                } else {
-                    if ($isSingleQuote) {
-                        $isString = false;
-                    }
-                }
-            } else if ($functionContent[$i] === "\"" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
-                if (!$isString) {
-                    $isString = true;
-                    $isSingleQuote = false;
-                } else {
-                    if (!$isSingleQuote) {
-                        $isString = false;
-                    }
-                }
-            }
-
-            if (!$isString) {
-                if ($functionContent[$i] === '(') {
-                    $braceCounter++;
-                } else if ($functionContent[$i] === ')') {
-                    $braceCounter--;
-                }
-            }
-
-            if ($braceCounter === 0 && !$isString && $functionContent[$i] === ',') {
-                $commaIndexList[] = $i;
-            }
-        }
-
-        $commaIndexList[] = strlen($functionContent);
-
-        $argumentList = [];
-        for ($i = 0; $i < count($commaIndexList); $i++) {
-            if ($i > 0) {
-                $previousCommaIndex = $commaIndexList[$i - 1] + 1;
-            } else {
-                $previousCommaIndex = 0;
-            }
-            $argument = trim(substr($functionContent, $previousCommaIndex, $commaIndexList[$i] - $previousCommaIndex));
-            $argumentList[] = $argument;
-        }
-
-        return $argumentList;
+        return Util::getAllAttributesFromComplexExpression($expression);
     }
 
     protected static function isArgumentString(string $argument)
@@ -1056,18 +960,21 @@ abstract class BaseQueryComposer implements QueryComposer
         return in_array(strtoupper($argument), ['NULL', 'TRUE', 'FALSE']);
     }
 
-    protected function getFunctionArgumentPart($entity, $attribute, $distinct = false, &$params = null)
-    {
+    protected function getFunctionArgumentPart(
+        Entity $entity, string $attribute, bool $distinct = false, ?array &$params = null
+    ) :string {
         $argument = $attribute;
 
-        if (self::isArgumentString($argument)) {
+        if (Util::isArgumentString($argument)) {
             $string = substr($argument, 1, -1);
             $string = $this->quote($string);
             return $string;
-        } else if (self::isArgumentNumeric($argument)) {
+        }
+        else if (Util::isArgumentNumeric($argument)) {
             $string = $this->quote($argument);
             return $string;
-        } else if (self::isArgumentBoolOrNull($argument)) {
+        }
+        else if (Util::isArgumentBoolOrNull($argument)) {
             return strtoupper($argument);
         }
 
