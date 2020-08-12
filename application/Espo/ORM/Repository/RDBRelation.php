@@ -405,7 +405,7 @@ class RDBRelation
         $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
         $seed->set('id', $id);
 
-        $this->updateColumnsById($seed, $columnData);
+        $this->updateColumns($seed, $columnData);
     }
 
     /**

@@ -438,6 +438,7 @@ class Database extends RDBRepository
         $skipCreate = false;
         $skipRemove = false;
         $skipUpdate = false;
+
         if (!empty($options['skipLinkMultipleCreate'])) $skipCreate = true;
         if (!empty($options['skipLinkMultipleRemove'])) $skipRemove = true;
         if (!empty($options['skipLinkMultipleUpdate'])) $skipUpdate = true;
@@ -452,6 +453,7 @@ class Database extends RDBRepository
         } else if ($entity->has($columnsAttribute)) {
             $skipRemove = true;
             $specifiedIdList = [];
+
             foreach ($entity->get($columnsAttribute) as $id => $d) {
                 $specifiedIdList[] = $id;
             }
@@ -459,33 +461,42 @@ class Database extends RDBRepository
             return;
         }
 
-        if (!is_array($specifiedIdList)) return;
+        if (!is_array($specifiedIdList)) {
+            return;
+        }
 
         $toRemoveIdList = [];
         $existingIdList = [];
         $toUpdateIdList = [];
         $toCreateIdList = [];
-        $existingColumnsData = (object)[];
+        $existingColumnsData = (object) [];
 
         $defs = [];
+
         $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.columns");
+
         if (!empty($columns)) {
             $columnData = $entity->get($columnsAttribute);
             $defs['additionalColumns'] = $columns;
         }
 
-        if (!$skipRemove && !$skipUpdate) {
+        if (!$skipRemove || !$skipUpdate) {
             $foreignEntityList = $entity->get($name, $defs);
+
             if ($foreignEntityList) {
                 foreach ($foreignEntityList as $foreignEntity) {
                     $existingIdList[] = $foreignEntity->id;
+
                     if (!empty($columns)) {
-                        $data = (object)[];
+                        $data = (object) [];
+
                         foreach ($columns as $columnName => $columnField) {
                             $foreignId = $foreignEntity->id;
                             $data->$columnName = $foreignEntity->get($columnField);
                         }
+
                         $existingColumnsData->$foreignId = $data;
+
                         if (!$entity->isNew()) {
                             $entity->setFetched($columnsAttribute, $existingColumnsData);
                         }
@@ -498,6 +509,7 @@ class Database extends RDBRepository
             if ($entity->has($idListAttribute) && !$entity->hasFetched($idListAttribute)) {
                 $entity->setFetched($idListAttribute, $existingIdList);
             }
+
             if ($entity->has($columnsAttribute) && !empty($columns)) {
                 $entity->setFetched($columnsAttribute, $existingColumnsData);
             }
@@ -539,24 +551,24 @@ class Database extends RDBRepository
 
         foreach ($toCreateIdList as $id) {
             $data = null;
+
             if (!empty($columns) && isset($columnData->$id)) {
                 $data = $columnData->$id;
             }
+
+            if ($data) {
+                $data = (array) $data;
+            }
+
             $this->getRelation($entity, $name)->relateById($id, (array) $data);
-            //$this->relate($entity, $name, $id, $data);
         }
 
         foreach ($toRemoveIdList as $id) {
             $this->getRelation($entity, $name)->unrelateById($id);
-            //$this->unrelate($entity, $name, $id);
         }
 
         foreach ($toUpdateIdList as $id) {
-            $data = $columnData->$id;
-
-            //$this->getRelation($entity, $name)->updateColumnsById($id, (array) $data);
-            //echo "--";die;
-            $this->updateRelation($entity, $name, $id, $data);
+            $this->getRelation($entity, $name)->updateColumnsById($id, (array) $data);
         }
     }
 
