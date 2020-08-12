@@ -502,7 +502,8 @@ abstract class BaseQueryComposer implements QueryComposer
             $havingPart .= $params['customHaving'];
         }
 
-        $joinsPart = $this->getJoinsPart($entity, $params, true);
+        $joinsPart = $this->getJoinsPart($entity, $params, !$isAggregation);
+
         $groupByPart = $this->getGroupByPart($entity, $params);
 
         $indexKeyList = $this->getIndexKeyList($entityType, $params);
@@ -1276,7 +1277,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return [$fieldPath, $attribute];
     }
 
-    protected function getBelongsToJoinItemPart(Entity $entity, $relationName, $r = null, $alias = null)
+    protected function getBelongsToJoinItemPart(Entity $entity, string $relationName, $r = null, ?string $alias = null)
     {
         if (empty($r)) {
             $r = $entity->relations[$relationName];
@@ -1337,7 +1338,11 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
                 }
 
-                if (is_array($select) && !in_array($relationName, $relationsToJoin)) continue;
+                if (
+                    is_array($select) && !self::isSelectAll($select) && !in_array($relationName, $relationsToJoin)
+                ) {
+                    continue;
+                }
 
                 if ($type == Entity::BELONGS_TO) {
                     $join = $this->getBelongsToJoinItemPart($entity, $relationName, $r);
@@ -1351,6 +1356,15 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         return implode(' ', $joinsArr);
+    }
+
+    protected static function isSelectAll(array $select) : bool
+    {
+        if (!count($select)) {
+            return true;
+        }
+
+        return $select[0] === '*';
     }
 
     protected function getOrderExpressionPart(

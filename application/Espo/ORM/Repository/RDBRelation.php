@@ -390,6 +390,25 @@ class RDBRelation
     }
 
     /**
+     * Update relationship columns by ID. For many-to-many relationships.
+     */
+    public function updateColumnsById(string $id, array $columnData)
+    {
+        if ($this->isBelongsToParentType()) {
+            throw new RuntimeException("Can't update columns by ID 'belongToParent'.");
+        }
+
+        if ($id === '') {
+            throw new InvalidArgumentException();
+        }
+
+        $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
+        $seed->set('id', $id);
+
+        $this->updateColumnsById($seed, $columnData);
+    }
+
+    /**
      * Relate with an entity.
      */
     public function relate(Entity $entity, ?array $columnData = null, array $options = [])

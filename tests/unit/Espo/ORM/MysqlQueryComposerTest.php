@@ -852,6 +852,16 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testForeign1()
+    {
+        $sql = $this->query->compose(Select::fromRaw([
+            'from' => 'Comment',
+            'select' => [],
+        ]));
+
+        $this->assertTrue(strpos($sql, 'LEFT JOIN `post`') !== false);
+    }
+
     public function testInArray()
     {
         $sql = $this->query->compose(Select::fromRaw([

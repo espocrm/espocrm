@@ -330,7 +330,7 @@ class EntityManager
      */
     public function createCollection(?string $entityType = null, array $data = []) : EntityCollection
     {
-        return $this->collectionFactory->create($data, $entityType);
+        return $this->collectionFactory->create($entityType, $data);
     }
 
     public function getEntityFactory() : EntityFactory

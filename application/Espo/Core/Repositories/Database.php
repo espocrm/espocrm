@@ -542,15 +542,20 @@ class Database extends RDBRepository
             if (!empty($columns) && isset($columnData->$id)) {
                 $data = $columnData->$id;
             }
-            $this->relate($entity, $name, $id, $data);
+            $this->getRelation($entity, $name)->relateById($id, (array) $data);
+            //$this->relate($entity, $name, $id, $data);
         }
 
         foreach ($toRemoveIdList as $id) {
-            $this->unrelate($entity, $name, $id);
+            $this->getRelation($entity, $name)->unrelateById($id);
+            //$this->unrelate($entity, $name, $id);
         }
 
         foreach ($toUpdateIdList as $id) {
             $data = $columnData->$id;
+
+            //$this->getRelation($entity, $name)->updateColumnsById($id, (array) $data);
+            //echo "--";die;
             $this->updateRelation($entity, $name, $id, $data);
         }
     }

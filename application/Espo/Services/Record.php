@@ -40,13 +40,16 @@ use Espo\Core\Exceptions\{
     ConflictSilent,
 };
 
-use Espo\ORM\Entity;
+use Espo\ORM\{
+    Entity,
+    EntityCollection,
+    EntityManager,
+};
+
 use Espo\Entities\User;
 
 use Espo\Core\{
     Acl,
-    ORM\EntityManager,
-    ORM\EntityCollection,
     AclManager,
     Utils\Util,
     Services\Crud,
