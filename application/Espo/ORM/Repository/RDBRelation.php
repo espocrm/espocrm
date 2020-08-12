@@ -352,6 +352,44 @@ class RDBRelation
     }
 
     /**
+     * Relate with an entity by ID.
+     */
+    public function relateById(string $id, ?array $columnData = null, array $options = [])
+    {
+        if ($this->isBelongsToParentType()) {
+            throw new RuntimeException("Can't relate 'belongToParent'.");
+        }
+
+        if ($id === '') {
+            throw new InvalidArgumentException();
+        }
+
+        $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
+        $seed->set('id', $id);
+
+        $this->relate($seed, $columnData, $options);
+    }
+
+    /**
+     * Unrelate from an entity by ID.
+     */
+    public function unrelateById(string $id, array $options = [])
+    {
+        if ($this->isBelongsToParentType()) {
+            throw new RuntimeException("Can't unrelate 'belongToParent'.");
+        }
+
+        if ($id === '') {
+            throw new InvalidArgumentException();
+        }
+
+        $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
+        $seed->set('id', $id);
+
+        $this->unrelate($seed, $options);
+    }
+
+    /**
      * Relate with an entity.
      */
     public function relate(Entity $entity, ?array $columnData = null, array $options = [])
@@ -360,7 +398,7 @@ class RDBRelation
 
         $this->beforeRelate($entity, $columnData, $options);
 
-        $result = $this->getMapper()->relateById($this->entity, $this->relationName, $entity->id, $columnData);
+        $result = $this->getMapper()->relate($this->entity, $this->relationName, $entity, $columnData);
 
         if (!$result) {
             return;
@@ -378,7 +416,7 @@ class RDBRelation
 
         $this->beforeUnrelate($entity, $options);
 
-        $result = $this->getMapper()->unrelateById($this->entity, $this->relationName, $entity->id);
+        $result = $this->getMapper()->unrelate($this->entity, $this->relationName, $entity);
 
         if (!$result) {
             return;

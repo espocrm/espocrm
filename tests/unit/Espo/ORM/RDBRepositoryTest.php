@@ -79,6 +79,10 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->method('getCollectionFactory')
             ->will($this->returnValue($this->collectionFactory));
 
+        $entityManager
+            ->method('getEntityFactory')
+            ->will($this->returnValue($this->entityFactory));
+
         $entity = $this->seed = $this->createEntity('Test', Test::class);
 
         $this->account = $this->createEntity('Account', Entities\Account::class);
@@ -936,8 +940,8 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 
         $this->mapper
             ->expects($this->once())
-            ->method('relateById')
-            ->with($post, 'notes', $note->id);
+            ->method('relate')
+            ->with($post, 'notes', $note);
 
         $this->createRepository('Post')->getRelation($post, 'notes')->relate($note);
     }
@@ -952,10 +956,36 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 
         $this->mapper
             ->expects($this->once())
-            ->method('unrelateById')
-            ->with($post, 'notes', $note->id);
+            ->method('unrelate')
+            ->with($post, 'notes', $note);
 
         $this->createRepository('Post')->getRelation($post, 'notes')->unrelate($note);
+    }
+
+    public function testRelateById1()
+    {
+        $post = $this->entityFactory->create('Post');
+        $post->set('id', 'postId');
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('relate')
+            ->with($post, 'notes', $this->isInstanceOf(Entities\Note::class));
+
+        $this->createRepository('Post')->getRelation($post, 'notes')->relateById('noteId');
+    }
+
+    public function testUnrelateById1()
+    {
+        $post = $this->entityFactory->create('Post');
+        $post->set('id', 'postId');
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('unrelate')
+            ->with($post, 'notes', $this->isInstanceOf(Entities\Note::class));
+
+        $this->createRepository('Post')->getRelation($post, 'notes')->unrelateById('noteId');
     }
 
     public function testMassRelate()
