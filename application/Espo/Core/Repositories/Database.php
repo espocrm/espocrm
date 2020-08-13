@@ -87,6 +87,9 @@ class Database extends RDBRepository
         return $this->metadata;
     }
 
+    /**
+     * @deprecated Will be removed.
+     */
     public function handleSelectParams(&$params)
     {
     }
