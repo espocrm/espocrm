@@ -92,6 +92,7 @@ class Converter
         'where' => 'where',
         'storeArrayValues' => 'storeArrayValues',
         'binary' => 'binary',
+        'dependeeAttributeList' => 'dependeeAttributeList',
     ];
 
     protected $idParams = [
@@ -207,6 +208,7 @@ class Converter
         }
 
         $ormMetadata[$entityType]['fields'] = $this->convertFields($entityType, $entityMetadata);
+
         $ormMetadata = $this->correctFields($entityType, $ormMetadata);
 
         $convertedLinks = $this->convertLinks($entityType, $entityMetadata, $ormMetadata);
@@ -302,7 +304,8 @@ class Converter
                 'dbType' => 'varchar',
             ],
             'name' => [
-                'type' => isset($entityMetadata['fields']['name']['type']) ? $entityMetadata['fields']['name']['type'] : Entity::VARCHAR,
+                'type' => isset($entityMetadata['fields']['name']['type']) ?
+                    $entityMetadata['fields']['name']['type'] : Entity::VARCHAR,
                 'notStorable' => true,
             ],
             'deleted' => [
@@ -331,7 +334,9 @@ class Converter
             }
 
             if (isset($fieldTypeMetadata['linkDefs'])) {
-                $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($entityType, $fieldParams, $fieldTypeMetadata['linkDefs']);
+                $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta(
+                    $entityType, $fieldParams, $fieldTypeMetadata['linkDefs']
+                );
                 if (isset($linkDefs)) {
                     if (!isset($entityMetadata['links'])) {
                         $entityMetadata['links'] = [];
@@ -437,17 +442,23 @@ class Converter
             return false;
         }
 
-        if (isset($fieldParams['notNull']) && !$fieldParams['notNull'] && isset($fieldParams['required']) && $fieldParams['required']) {
+        if (
+            isset($fieldParams['notNull']) && !$fieldParams['notNull'] && isset($fieldParams['required']) &&
+            $fieldParams['required']
+        ) {
             unset($fieldParams['notNull']);
         }
 
         $fieldDefs = $this->getInitValues($fieldParams);
 
-        if ( (isset($fieldParams['db']) && $fieldParams['db'] === false) ) {
+        if (isset($fieldParams['db']) && $fieldParams['db'] === false) {
             $fieldDefs['notStorable'] = true;
         }
 
-        if (isset($fieldDefs['type']) && !isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
+        if (
+            isset($fieldDefs['type']) && !isset($fieldDefs['len']) &&
+            in_array($fieldDefs['type'], array_keys($this->defaultLength))
+        ) {
             $fieldDefs['len'] = $this->defaultLength[$fieldDefs['type']];
         }
 

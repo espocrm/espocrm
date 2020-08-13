@@ -70,14 +70,6 @@ class RDBRepository extends Repository
     }
 
     /**
-     * @deprecated
-     * @todo Remove in 6.0.
-     */
-    public function handleSelectParams(&$params)
-    {
-    }
-
-    /**
      * Get a new entity.
      */
     public function getNew() : ?Entity
@@ -205,11 +197,6 @@ class RDBRepository extends Repository
      */
     public function find(?array $params = []) : Collection
     {
-        // @todo Remove.
-        if ($params && empty($params['skipAdditionalSelectParams'])) {
-            $this->handleSelectParams($params);
-        }
-
         return $this->createSelectBuilder()->find($params);
     }
 
@@ -220,11 +207,6 @@ class RDBRepository extends Repository
      */
     public function findOne(?array $params = []) : ?Entity
     {
-        // @todo Remove.
-        if ($params && empty($params['skipAdditionalSelectParams'])) {
-            $this->handleSelectParams($params);
-        }
-
         $collection = $this->limit(0, 1)->find($params);
 
         foreach ($collection as $entity) {
@@ -259,10 +241,6 @@ class RDBRepository extends Repository
 
         $type = $entity->getRelationType($relationName);
         $entityType = $entity->getRelationParam($relationName, 'entity');
-
-        if ($entityType && empty($params['skipAdditionalSelectParams'])) {
-            $this->entityManager->getRepository($entityType)->handleSelectParams($params);
-        }
 
         $additionalColumns = $params['additionalColumns'] ?? [];
         unset($params['additionalColumns']);
@@ -310,10 +288,6 @@ class RDBRepository extends Repository
 
         $type = $entity->getRelationType($relationName);
         $entityType = $entity->getRelationParam($relationName, 'entity');
-
-        if ($entityType && empty($params['skipAdditionalSelectParams'])) {
-            $this->entityManager->getRepository($entityType)->handleSelectParams($params);
-        }
 
         $additionalColumnsConditions = $params['additionalColumnsConditions'] ?? [];
         unset($params['additionalColumnsConditions']);
@@ -642,11 +616,6 @@ class RDBRepository extends Repository
      */
     public function count(array $params = []) : int
     {
-        // @todo Remove it.
-        if (is_array($params) && empty($params['skipAdditionalSelectParams'])) {
-            $this->handleSelectParams($params);
-        }
-
         return $this->createSelectBuilder()->count($params);
     }
 

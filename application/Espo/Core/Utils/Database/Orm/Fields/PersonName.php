@@ -33,7 +33,7 @@ use Espo\Core\Utils\Util;
 
 class PersonName extends Base
 {
-    protected function load($fieldName, $entityName)
+    protected function load($fieldName, $entityType)
     {
         $format = $this->config->get('personNameFormat');
 
@@ -58,7 +58,7 @@ class PersonName extends Base
                 $subList = ['first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)];
         }
 
-        $tableName = Util::toUnderScore($entityName);
+        $tableName = Util::toUnderScore($entityType);
 
         if ($format === 'lastFirstMiddle' || $format === 'lastFirst') {
             $orderBy1Field = 'last' . ucfirst($fieldName);
@@ -114,18 +114,29 @@ class PersonName extends Base
             $selectString = "REPLACE({$selectString}, '  ', ' ')";
         }
 
+        $fieldDefs = [
+            'type' => 'varchar',
+            'select' => $selectString,
+            'where' => [
+                'LIKE' => str_replace('{operator}', 'LIKE', $whereString),
+                '=' => str_replace('{operator}', '=', $whereString),
+            ],
+            'orderBy' => "{$tableName}." . Util::toUnderScore($orderBy1Field) ." {direction}, {$tableName}." .
+                Util::toUnderScore($orderBy2Field)
+        ];
+
+        $dependeeAttributeList = $this->getMetadata()->get(
+            ['entityDefs', $entityType, 'fields', $fieldName, 'dependeeAttributeList']
+        );
+
+        if ($dependeeAttributeList) {
+            $fieldDefs['dependeeAttributeList'] = $dependeeAttributeList;
+        }
+
         return [
-            $entityName => [
+            $entityType => [
                 'fields' => [
-                    $fieldName => [
-                        'type' => 'varchar',
-                        'select' => $selectString,
-                        'where' => [
-                            'LIKE' => str_replace('{operator}', 'LIKE', $whereString),
-                            '=' => str_replace('{operator}', '=', $whereString),
-                        ],
-                        'orderBy' => "{$tableName}." . Util::toUnderScore($orderBy1Field) ." {direction}, {$tableName}." . Util::toUnderScore($orderBy2Field)
-                    ]
+                    $fieldName => $fieldDefs,
                 ]
             ]
         ];

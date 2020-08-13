@@ -429,3 +429,26 @@ class Test extends TEntity
         ]
     ];
 }
+
+class Dependee extends TEntity
+{
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'name' => [
+            'type' => Entity::VARCHAR,
+            'len' => 255,
+            'dependeeAttributeList' => [
+                'test'
+            ],
+        ],
+        'test' => [
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ],
+    ];
+    public $relations = [
+
+    ];
+}

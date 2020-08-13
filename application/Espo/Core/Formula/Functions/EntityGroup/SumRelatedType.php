@@ -132,8 +132,6 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
         $selectParams['groupBy'] = [$foreignLinkAlias . '.id'];
 
-        $entityManager->getRepository($foreignEntityType)->handleSelectParams($selectParams);
-
         $sql = $entityManager->getQueryComposer()->createSelectQuery($foreignEntityType, $selectParams);
 
         $pdo = $entityManager->getPDO();

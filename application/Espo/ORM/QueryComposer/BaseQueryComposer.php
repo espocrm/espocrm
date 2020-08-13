@@ -412,7 +412,6 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $params['joins'] = $params['joins'] ?? [];
         $params['leftJoins'] = $params['leftJoins'] ?? [];
-        $params['additionalSelect'] = $params['additionalSelect'] ?? [];
 
         if ($method !== self::SELECT_METHOD) {
             if (isset($params['aggregation'])) {
@@ -644,7 +643,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if (!empty($params['extraAdditionalSelect'])) {
             $extraSelect = [];
             foreach ($params['extraAdditionalSelect'] as $item) {
-                if (!in_array($item, $params['select']) && !in_array($item, $params['additionalSelect'])) {
+                if (!in_array($item, $params['select'])) {
                     $extraSelect[] = $item;
                 }
             }
@@ -1179,13 +1178,12 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function getSelectPart(Entity $entity, array &$params) : string
     {
-        $params = $params ?? [];
-
         $itemList = $params['select'] ?? [];
 
-        $noSelectSpecified = !count($itemList);
+        $selectNotSpecified = !count($itemList);
 
-        if (!$noSelectSpecified && $itemList[0] === '*') {
+
+        if (!$selectNotSpecified && $itemList[0] === '*') {
             array_shift($itemList);
 
             foreach (array_reverse($entity->getAttributeList()) as $item) {
@@ -1193,18 +1191,18 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        if ($noSelectSpecified) {
+        if ($selectNotSpecified) {
             $itemList = $entity->getAttributeList();
         }
 
-        // @todo Get rid of 'additionalSelect' parameter.
-        if (isset($params['additionalSelect']) && empty($params['strictSelect'])) {
-            foreach ($params['additionalSelect'] as $item) {
-                $itemList[] = $item;
-            }
+        if (empty($params['strictSelect'])) {
+            $itemList = array_merge(
+                $itemList,
+                $this->getSelectDependeeAdditionalList($entity, $itemList)
+            );
         }
 
-        if ($params['distinct'] && empty($params['strictSelect'])) {
+        if (empty($params['strictSelect']) && $params['distinct']) {
             $orderByAttributeList = $this->getOrderByAttributeList($params);
 
             $itemList = array_merge(
@@ -1350,6 +1348,34 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         return [$fieldPath, $attribute];
+    }
+
+    protected function getSelectDependeeAdditionalList(Entity $entity, array $itemList) : array
+    {
+        $additionalList = [];
+
+        $itemList = array_filter(
+            $itemList,
+            function ($item) use ($entity) {
+                return is_string($item) && $entity->hasAttribute($item);
+            }
+        );
+
+        foreach ($itemList as $item) {
+            $additionalList = array_merge(
+                $additionalList,
+                $entity->getAttributeParam($item, 'dependeeAttributeList') ?? []
+            );
+        }
+
+        $additionalList = array_filter(
+            $additionalList,
+            function ($item) use ($itemList) {
+                return !in_array($item, $itemList);
+            }
+        );
+
+        return $additionalList;
     }
 
     protected function getBelongsToJoinItemPart(Entity $entity, string $relationName, $r = null, ?string $alias = null)

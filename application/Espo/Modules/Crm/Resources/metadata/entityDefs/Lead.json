@@ -2,7 +2,12 @@
     "fields": {
         "name": {
             "type": "personName",
-            "isPersonalData": true
+            "isPersonalData": true,
+            "dependeeAttributeList": [
+                "emailAddress",
+                "phoneNumber",
+                "accountName"
+            ]
         },
         "salutationName": {
             "type": "enum",

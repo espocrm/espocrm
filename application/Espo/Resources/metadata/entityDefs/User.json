@@ -9,7 +9,10 @@
         },
         "name": {
             "type": "personName",
-            "view": "views/user/fields/name"
+            "view": "views/user/fields/name",
+            "dependeeAttributeList": [
+                "userName"
+            ]
         },
         "type": {
             "type": "enum",

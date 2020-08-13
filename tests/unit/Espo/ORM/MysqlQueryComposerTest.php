@@ -473,6 +473,50 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectDependee1()
+    {
+        $sql = $this->query->compose(
+            Select::fromRaw([
+                'from' => 'Dependee',
+                'select' => ['name'],
+            ])
+        );
+
+        $expectedSql =
+            "SELECT dependee.name AS `name`, dependee.test AS `test` FROM `dependee`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectDependee2()
+    {
+        $sql = $this->query->compose(
+            Select::fromRaw([
+                'from' => 'Dependee',
+                'select' => ['name', 'test'],
+            ])
+        );
+
+        $expectedSql =
+            "SELECT dependee.name AS `name`, dependee.test AS `test` FROM `dependee`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectDependee3()
+    {
+        $sql = $this->query->compose(
+            Select::fromRaw([
+                'from' => 'Dependee',
+            ])
+        );
+
+        $expectedSql =
+            "SELECT dependee.id AS `id`, dependee.name AS `name`, dependee.test AS `test` FROM `dependee`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testSelectUseIndex()
     {
         $sql = $this->query->compose(Select::fromRaw([
