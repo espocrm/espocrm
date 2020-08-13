@@ -60,14 +60,6 @@ class User extends Record implements
         'type',
     ];
 
-    protected $linkSelectParams = [
-        'targetLists' => [
-            'additionalColumns' => [
-                'optedOut' => 'isOptedOut',
-            ]
-        ]
-    ];
-
     protected $validateSkipFieldList = ['name', "firstName", "lastName"];
 
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];

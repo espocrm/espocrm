@@ -52,27 +52,11 @@ class TargetList extends \Espo\Services\Record
         'User' => 'users',
     ];
 
-    protected $linkSelectParams = [
-        'accounts' => [
-            'additionalColumns' => [
-                'optedOut' => 'targetListIsOptedOut'
-            ]
-        ],
-        'contacts' => [
-            'additionalColumns' => [
-                'optedOut' => 'targetListIsOptedOut'
-            ]
-        ],
-        'leads' => [
-            'additionalColumns' => [
-                'optedOut' => 'targetListIsOptedOut'
-            ]
-        ],
-        'users' => [
-            'additionalColumns' => [
-                'optedOut' => 'targetListIsOptedOut'
-            ]
-        ]
+    protected $linkMandatorySelectAttributeList = [
+        'accounts' => ['targetListIsOptedOut'],
+        'contacts' => ['targetListIsOptedOut'],
+        'leads' => ['targetListIsOptedOut'],
+        'users' => ['targetListIsOptedOut'],
     ];
 
     protected function init()

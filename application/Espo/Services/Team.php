@@ -41,14 +41,6 @@ class Team extends Record implements
     use Di\FileManagerSetter;
     use Di\DataManagerSetter;
 
-    protected $linkSelectParams = [
-        'users' => [
-            'additionalColumns' => [
-                'role' => 'teamRole'
-            ]
-        ]
-    ];
-
     public function afterUpdateEntity(Entity $entity, $data)
     {
         parent::afterUpdateEntity($entity, $data);

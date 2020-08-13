@@ -237,7 +237,11 @@
         "contacts": {
             "type": "hasMany",
             "entity": "Contact",
-            "foreign": "accounts"
+            "foreign": "accounts",
+            "columnAttributeMap": {
+                "role": "contactRole",
+                "isInactive": "contactIsInactive"
+            }
         },
         "opportunities": {
             "type": "hasMany",
@@ -318,7 +322,10 @@
         "targetLists": {
             "type": "hasMany",
             "entity": "TargetList",
-            "foreign": "accounts"
+            "foreign": "accounts",
+            "columnAttributeMap": {
+                "optedOut": "targetListIsOptedOut"
+            }
         },
         "portalUsers": {
             "type": "hasMany",

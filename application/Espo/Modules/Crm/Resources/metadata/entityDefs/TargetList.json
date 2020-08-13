@@ -140,6 +140,9 @@
                 "optedOut": {
                     "type": "bool"
                 }
+            },
+            "columnAttributeMap": {
+                "optedOut": "isOptedOut"
             }
         },
         "contacts": {
@@ -150,6 +153,9 @@
                 "optedOut": {
                     "type": "bool"
                 }
+            },
+            "columnAttributeMap": {
+                "optedOut": "isOptedOut"
             }
         },
         "leads": {
@@ -160,6 +166,9 @@
                 "optedOut": {
                     "type": "bool"
                 }
+            },
+            "columnAttributeMap": {
+                "optedOut": "isOptedOut"
             }
         },
         "users": {
@@ -170,6 +179,9 @@
                 "optedOut": {
                     "type": "bool"
                 }
+            },
+            "columnAttributeMap": {
+                "optedOut": "isOptedOut"
             }
         }
     },

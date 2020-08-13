@@ -296,7 +296,10 @@
         "targetLists": {
             "type": "hasMany",
             "entity": "TargetList",
-            "foreign": "leads"
+            "foreign": "leads",
+            "columnAttributeMap": {
+                "optedOut": "targetListIsOptedOut"
+            }
         },
         "documents": {
             "type": "hasMany",

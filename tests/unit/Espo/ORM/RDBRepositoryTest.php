@@ -1118,55 +1118,6 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($comment, $result);
     }
 
-    public function testRelationSelectBuilderColumns1()
-    {
-        $account = $this->entityFactory->create('Account');
-        $account->set('id', 'accountId');
-
-        $collection = $this->collectionFactory->create();
-
-        $select = $this->queryBuilder
-            ->select()
-            ->from('Team')
-            ->select(['*', ['entityTeam.deleted', 'test']])
-            ->build();
-
-        $this->mapper
-            ->expects($this->once())
-            ->method('selectRelated')
-            ->will($this->returnValue($collection))
-            ->with($account, 'teams', $select);
-
-        $this->createRepository('Account')->getRelation($account, 'teams')
-            ->columns(['deleted' => 'test'])
-            ->find();
-    }
-
-    public function testRelationSelectBuilderColumns2()
-    {
-        $account = $this->entityFactory->create('Account');
-        $account->set('id', 'accountId');
-
-        $collection = $this->collectionFactory->create();
-
-        $select = $this->queryBuilder
-            ->select()
-            ->from('Team')
-            ->select(['id', ['entityTeam.deleted', 'test']])
-            ->build();
-
-        $this->mapper
-            ->expects($this->once())
-            ->method('selectRelated')
-            ->will($this->returnValue($collection))
-            ->with($account, 'teams', $select);
-
-        $this->createRepository('Account')->getRelation($account, 'teams')
-            ->select(['id'])
-            ->columns(['deleted' => 'test'])
-            ->find();
-    }
-
     public function testRelationSelectBuilderColumnsWhere1()
     {
         $account = $this->entityFactory->create('Account');

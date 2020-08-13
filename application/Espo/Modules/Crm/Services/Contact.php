@@ -42,17 +42,8 @@ class Contact extends \Espo\Core\Templates\Services\Person
         'title'
     ];
 
-    protected $linkSelectParams =[
-        'targetLists' => [
-            'additionalColumns' => [
-                'optedOut' => 'isOptedOut'
-            ]
-        ],
-        'opportunities' => [
-            'additionalColumns' => [
-                'role' => 'contactRole'
-            ]
-        ]
+    protected $linkMandatorySelectAttributeList = [
+        'targetLists' => ['isOptedOut'],
     ];
 
     protected $mandatorySelectAttributeList = [

@@ -431,12 +431,19 @@
                 }
             },
             "additionalAttributeList": ["columns"],
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "columnAttributeMap": {
+                "role": "accountRole",
+                "isInactive": "accountIsInactive"
+            }
         },
         "opportunities": {
             "type": "hasMany",
             "entity": "Opportunity",
-            "foreign": "contacts"
+            "foreign": "contacts",
+            "columnAttributeMap": {
+                "role": "opportunityRole"
+            }
         },
         "opportunitiesPrimary": {
             "type": "hasMany",
@@ -460,14 +467,20 @@
             "entity": "Meeting",
             "foreign": "contacts",
             "layoutRelationshipsDisabled": true,
-            "audited": true
+            "audited": true,
+            "columnAttributeMap": {
+                "status": "acceptanceStatusMeetings"
+            }
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
             "foreign": "contacts",
             "layoutRelationshipsDisabled": true,
-            "audited": true
+            "audited": true,
+            "columnAttributeMap": {
+                "status": "acceptanceStatusCalls"
+            }
         },
         "tasks": {
             "type": "hasChildren",
@@ -496,7 +509,10 @@
         "targetLists": {
             "type": "hasMany",
             "entity": "TargetList",
-            "foreign": "contacts"
+            "foreign": "contacts",
+            "columnAttributeMap": {
+                "optedOut": "targetListIsOptedOut"
+            }
         },
         "portalUser": {
             "type": "hasOne",

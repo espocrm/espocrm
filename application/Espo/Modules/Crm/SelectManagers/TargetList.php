@@ -27,37 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Modules\Crm\SelectManagers;
 
-use Espo\ORM\Entity;
-
-class Account extends \Espo\Services\Record
+class TargetList extends \Espo\Core\Select\SelectManager
 {
-    protected $linkMandatorySelectAttributeList = [
-        'contacts' => ['accountIsInactive'],
-        'targetLists' => ['isOptedOut'],
+    protected $selectAttributesDependancyMap = [
+        'targetStatus' => ['isOptedOut'],
     ];
-
-    protected function getDuplicateWhereClause(Entity $entity, $data)
-    {
-        if (!$entity->get('name')) {
-            return false;
-        }
-        return [
-            'name' => $entity->get('name')
-        ];
-    }
-
-    protected function afterMerge(Entity $entity, array $sourceList, $attributes)
-    {
-        foreach ($sourceList as $source) {
-            $contactList = $this->getEntityManager()->getRepository('Contact')->where([
-                'accountId' => $source->id
-            ])->find();
-            foreach ($contactList as $contact) {
-                $contact->set('accountId', $entity->id);
-                $this->getEntityManager()->saveEntity($contact);
-            }
-        }
-    }
 }

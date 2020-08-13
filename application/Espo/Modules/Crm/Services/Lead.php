@@ -44,12 +44,8 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
 {
     use Di\FieldManagerUtilSetter;
 
-    protected $linkSelectParams = [
-        'targetLists' => [
-            'additionalColumns' => [
-                'optedOut' => 'isOptedOut'
-            ]
-        ]
+    protected $linkMandatorySelectAttributeList = [
+        'targetLists' => ['isOptedOut'],
     ];
 
     protected function getFieldManagerUtil()

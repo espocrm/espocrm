@@ -13,21 +13,21 @@ class TEntity extends BaseEntity
 class Account extends TEntity
 {
     public $fields = [
-            'id' => [
-                'type' => Entity::ID,
-            ],
-            'name' => [
-                'type' => Entity::VARCHAR,
-                'len' => 255,
-            ],
-            'deleted' => [
-                'type' => Entity::BOOL,
-                'default' => 0,
-            ],
-            'stub' => [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'name' => [
+            'type' => Entity::VARCHAR,
+            'len' => 255,
+        ],
+        'deleted' => [
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ],
+        'stub' => [
+            'type' => 'varchar',
+            'notStorable' => true,
+        ],
     ];
     public $relations = [
         'teams' => [
@@ -91,29 +91,29 @@ class EntityTeam extends TEntity
 class Contact extends TEntity
 {
     public $fields = [
-            'id' => [
-                'type' => Entity::ID,
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'name' => [
+            'type' => Entity::VARCHAR,
+            'notStorable' => true,
+            'select' => "TRIM(CONCAT(contact.first_name, ' ', contact.last_name))",
+            'where' => [
+                'LIKE' => "(contact.first_name LIKE {value} OR contact.last_name LIKE {value} OR "
+                    ."CONCAT(contact.first_name, ' ', contact.last_name) LIKE {value})",
             ],
-            'name' => [
-                'type' => Entity::VARCHAR,
-                'notStorable' => true,
-                'select' => "TRIM(CONCAT(contact.first_name, ' ', contact.last_name))",
-                'where' => [
-                    'LIKE' => "(contact.first_name LIKE {value} OR contact.last_name LIKE {value} OR "
-                        ."CONCAT(contact.first_name, ' ', contact.last_name) LIKE {value})",
-                ],
-                'orderBy' => "contact.first_name {direction}, contact.last_name {direction}",
-            ],
-            'firstName' => [
-                'type' => Entity::VARCHAR,
-            ],
-            'lastName' => [
-                'type' => Entity::VARCHAR,
-            ],
-            'deleted' => [
-                'type' => Entity::BOOL,
-                'default' => 0,
-            ],
+            'orderBy' => "contact.first_name {direction}, contact.last_name {direction}",
+        ],
+        'firstName' => [
+            'type' => Entity::VARCHAR,
+        ],
+        'lastName' => [
+            'type' => Entity::VARCHAR,
+        ],
+        'deleted' => [
+            'type' => Entity::BOOL,
+            'default' => 0,
+        ],
     ];
     public $relations = [];
 }
@@ -130,6 +130,10 @@ class Post extends TEntity
         ],
         'privateField' => [
             'notStorable' => true,
+        ],
+        'tagRole' => [
+            'notStorable' => true,
+            'type' => Entity::VARCHAR,
         ],
         'createdByName' => [
             'type' => Entity::FOREIGN,
@@ -149,6 +153,7 @@ class Post extends TEntity
             'type' => Entity::MANY_MANY,
             'entity' => 'Tag',
             'relationName' => 'PostTag',
+            'foreign' => 'posts',
             'key' => 'id',
             'foreignKey' => 'id',
             'midKeys' => [
@@ -159,6 +164,9 @@ class Post extends TEntity
                 'role' => [
                     'type' => Entity::VARCHAR,
                 ],
+            ],
+            'columnAttributeMap' => [
+                'role' => 'tagRole',
             ],
         ],
         'comments' => [
@@ -259,6 +267,21 @@ class Tag extends TEntity
         'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0,
+        ],
+        'postRole' => [
+            'type' => Entity::VARCHAR,
+            'notStorable' => true,
+        ],
+    ];
+
+    public $relations = [
+        'posts' => [
+            'type' => Entity::MANY_MANY,
+            'entity' => 'Post',
+            'foreign' => 'tags',
+            'columnAttributeMap' => [
+                'role' => 'postRole',
+            ],
         ],
     ];
 }

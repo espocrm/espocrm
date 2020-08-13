@@ -136,6 +136,8 @@ class Record implements Crud,
 
     protected $linkSelectParams = [];
 
+    protected $linkMandatorySelectAttributeList = [];
+
     protected $noEditAccessRequiredLinkList = [];
 
     protected $noEditAccessRequiredForLink = false;
@@ -1473,6 +1475,11 @@ class Record implements Crud,
             $selectParams['select'] = $selectAttributeList;
         } else {
             $selectParams['skipTextColumns'] = $recordService->isSkipSelectTextAttributes();
+        }
+
+        if ($selectAttributeList) {
+            $mandatorySelectAttributeList = $this->linkMandatorySelectAttributeList[$link] ?? [];
+            $selectParams['select'] = array_merge($selectParams['select'], $mandatorySelectAttributeList);
         }
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);

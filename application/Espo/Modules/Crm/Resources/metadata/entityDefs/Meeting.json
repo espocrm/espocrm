@@ -190,6 +190,9 @@
                     "len": "36",
                     "default": "None"
                 }
+            },
+            "columnAttributeMap": {
+                "status": "acceptanceStatus"
             }
         },
         "contacts": {
@@ -202,6 +205,9 @@
                     "len": "36",
                     "default": "None"
                 }
+            },
+            "columnAttributeMap": {
+                "status": "acceptanceStatus"
             }
         },
         "leads": {
@@ -214,6 +220,9 @@
                     "len": "36",
                     "default": "None"
                 }
+            },
+            "columnAttributeMap": {
+                "status": "acceptanceStatus"
             }
         },
         "parent": {

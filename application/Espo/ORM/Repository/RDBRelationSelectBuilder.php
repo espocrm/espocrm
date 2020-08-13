@@ -96,40 +96,6 @@ class RDBRelationSelectBuilder
     }
 
     /**
-     * Additional middle table columns. Only for many-to-many relationships.
-     *
-     * Usage example:
-     * `['columnName' => 'attributeName']`
-     * Where `attributeName` is a non storable attribute that will be set with a column value.
-     *
-     * @todo Remove? Use attribute definitions to detect a proper select expression (in QueryComposer).
-     * @deprecated Use `->select('middleTable', 'attributeName')` instead.
-     */
-    public function columns(array $columns) : self
-    {
-        if (!count($columns)) {
-            return $this;
-        }
-
-        if ($this->relationType !== Entity::MANY_MANY) {
-            throw new RuntimeException("Can't select relation columns for not many-to-many relationship.");
-        }
-
-        $middleName = lcfirst(
-            $this->entity->getRelationParam($this->relationName, 'relationName')
-        );
-
-        foreach ($columns as $column => $alias) {
-            $this->additionalSelect[] = [
-                $middleName . '.' . $column,
-                $alias,
-            ];
-        }
-
-        return $this;
-    }
-
-    /**
      * Apply middle table conditions for a many-to-many relationship.
      *
      * Usage example:
@@ -183,30 +149,11 @@ class RDBRelationSelectBuilder
         return $transformedWhere;
     }
 
-    protected function addAdditionalSelect()
-    {
-        if (!count($this->additionalSelect)) {
-            return;
-        }
-
-        $select = $this->builder->build()->getSelect();
-
-        if (!count($select)) {
-            $this->builder->select('*');
-        }
-
-        foreach ($this->additionalSelect as $item) {
-            $this->builder->select($item[0], $item[1]);
-        }
-    }
-
     /**
      * Find related records by a criteria.
      */
     public function find() : Collection
     {
-        $this->addAdditionalSelect();
-
         $query = $this->builder->build();
 
         $related = $this->getMapper()->selectRelated($this->entity, $this->relationName, $query);

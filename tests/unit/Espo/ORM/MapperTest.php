@@ -297,10 +297,10 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($list[0]->get('postName'), 'test');
     }
 
-    public function testSelectRelatedManyMany()
+    public function testSelectRelatedManyMany1()
     {
         $query =
-            "SELECT tag.id AS `id`, tag.name AS `name`, tag.deleted AS `deleted` ".
+            "SELECT tag.id AS `id`, tag.name AS `name`, tag.deleted AS `deleted`, postTag.role AS `postRole` ".
             "FROM `tag` ".
             "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
@@ -321,6 +321,33 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($list[0] instanceof Tag);
         $this->assertTrue($list[0]->has('name'));
         $this->assertEquals($list[0]->get('name'), 'test');
+    }
+
+    public function testSelectRelatedManyMany2()
+    {
+        $query =
+            "SELECT tag.id AS `id`, postTag.role AS `postRole` ".
+            "FROM `tag` ".
+            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
+            "WHERE tag.deleted = 0";
+
+        $return = new MockDBResult([
+            [
+                'id' => '1',
+                'name' => 'test',
+                'deleted' => false,
+            ],
+        ]);
+
+        $select = Select::fromRaw([
+            'select' => ['id', 'postRole'],
+            'from' => 'Tag',
+        ]);
+
+        $this->mockQuery($query, $return);
+        $this->post->id = '1';
+
+        $list = $this->db->selectRelated($this->post, 'tags', $select);
     }
 
     public function testSelectRelatedManyManyWithConditions()

@@ -298,6 +298,9 @@
                     "type": "varchar",
                     "len": 50
                 }
+            },
+            "columnAttributeMap": {
+                "role": "contactRole"
             }
         },
         "contact": {

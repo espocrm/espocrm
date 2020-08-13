@@ -1,15 +1,20 @@
 {
-    "links": {
-        "targetLists": {
-            "type": "hasMany",
-            "entity": "TargetList",
-            "foreign": "users"
-        },
+    "fields": {
         "targetListIsOptedOut": {
             "type": "bool",
             "notStorable": true,
             "readOnly": true,
             "disabled": true
+        }
+    },
+    "links": {
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "users",
+            "columnAttributeMap": {
+                "optedOut": "targetListIsOptedOut"
+            }
         }
     }
 }

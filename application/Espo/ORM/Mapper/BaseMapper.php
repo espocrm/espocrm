@@ -374,6 +374,25 @@ abstract class BaseMapper implements Mapper
 
                 $params['joins'][] = $this->getManyManyJoin($entity, $relationName);
 
+                $additionalSelect = $this->getManyManyAdditionalSelect($entity, $relationName);
+
+                if (count($additionalSelect)) {
+                    if (empty($params['select'])) {
+                        $params['select'] = ['*'];
+                    }
+
+                    if ($params['select'][0] === '*') {
+                        $params['select'] = array_merge($params['select'], $additionalSelect);
+                    } else {
+                        foreach ($additionalSelect as $i => $item) {
+                            $index = array_search($item[1], $params['select']);
+                            if ($index !== false) {
+                                $params['select'][$index] = $item;
+                            }
+                        }
+                    }
+                }
+
                 $params['from'] = $relEntity->getEntityType();
 
                 $sql = $this->queryComposer->compose(Select::fromRaw($params));
@@ -1471,5 +1490,32 @@ abstract class BaseMapper implements Mapper
         $join[2] = array_merge($join[2], $conditions);
 
         return $join;
+    }
+
+    protected function getManyManyAdditionalSelect(Entity $entity, string $relationName) : array
+    {
+        $foreign = $entity->getRelationParam($relationName, 'foreign');
+        $foregnEntityType = $entity->getRelationParam($relationName, 'entity');
+
+        $middleName = lcfirst($entity->getRelationParam($relationName, 'relationName'));
+
+        if (!$foreign || !$foregnEntityType) {
+            return [];
+        }
+
+        $foreignEntity = $this->entityFactory->create($foregnEntityType);
+
+        $map = $foreignEntity->getRelationParam($foreign, 'columnAttributeMap') ?? [];
+
+        $select = [];
+
+        foreach ($map as $column => $attribute) {
+            $select[] = [
+                $middleName . '.' . $column,
+                $attribute
+            ];
+        }
+
+        return $select;
     }
 }

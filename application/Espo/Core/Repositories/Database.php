@@ -553,14 +553,10 @@ class Database extends RDBRepository
             $data = null;
 
             if (!empty($columns) && isset($columnData->$id)) {
-                $data = $columnData->$id;
+                $data = (array) $columnData->$id;
             }
 
-            if ($data) {
-                $data = (array) $data;
-            }
-
-            $this->getRelation($entity, $name)->relateById($id, (array) $data);
+            $this->getRelation($entity, $name)->relateById($id, $data);
         }
 
         foreach ($toRemoveIdList as $id) {
@@ -568,6 +564,8 @@ class Database extends RDBRepository
         }
 
         foreach ($toUpdateIdList as $id) {
+            $data = (array) $columnData->$id;
+
             $this->getRelation($entity, $name)->updateColumnsById($id, (array) $data);
         }
     }

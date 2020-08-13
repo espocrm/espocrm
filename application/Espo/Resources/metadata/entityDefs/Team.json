@@ -35,7 +35,10 @@
         "users": {
             "type": "hasMany",
             "entity": "User",
-            "foreign": "teams"
+            "foreign": "teams",
+            "columnAttributeMap": {
+                "role": "userRole"
+            }
         },
         "roles": {
             "type": "hasMany",

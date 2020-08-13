@@ -321,7 +321,10 @@
                     "len": 100
                 }
             },
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "columnAttributeMap": {
+                "role": "teamRole"
+            }
         },
         "createdBy": {
             "type": "belongsTo",
@@ -363,12 +366,18 @@
         "meetings": {
             "type": "hasMany",
             "entity": "Meeting",
-            "foreign": "users"
+            "foreign": "users",
+            "columnAttributeMap": {
+                "status": "acceptanceStatusMeetings"
+            }
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
-            "foreign": "users"
+            "foreign": "users",
+            "columnAttributeMap": {
+                "status": "acceptanceStatusCalls"
+            }
         },
         "emails": {
             "type": "hasMany",

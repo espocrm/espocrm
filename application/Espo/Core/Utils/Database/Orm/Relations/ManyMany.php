@@ -61,6 +61,25 @@ class ManyMany extends Base
             }
         }
 
+        $relationDefs = [
+            'type' => 'manyMany',
+            'entity' => $foreignEntityName,
+            'relationName' => $relationName,
+            'key' => 'id',
+            'foreignKey' => 'id',
+            'midKeys' => [
+                $key1,
+                $key2,
+            ],
+            'foreign' => $foreignLinkName,
+        ];
+
+        $columnAttributeMap = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $linkName, 'columnAttributeMap']);
+
+        if ($columnAttributeMap) {
+            $relationDefs['columnAttributeMap'] = $columnAttributeMap;
+        }
+
         return [
             $entityType => [
                 'fields' => [
@@ -76,18 +95,7 @@ class ManyMany extends Base
                     ],
                 ],
                 'relations' => [
-                    $linkName => [
-                        'type' => 'manyMany',
-                        'entity' => $foreignEntityName,
-                        'relationName' => $relationName,
-                        'key' => 'id',
-                        'foreignKey' => 'id',
-                        'midKeys' => [
-                            $key1,
-                            $key2,
-                        ],
-                        'foreign' => $foreignLinkName,
-                    ],
+                    $linkName => $relationDefs,
                 ],
             ],
         ];

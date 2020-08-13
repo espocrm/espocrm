@@ -284,14 +284,6 @@ class RDBRelation
     }
 
     /**
-     * @deprecated Use `->select('linkNameMiddle', 'attributeName')` instead.
-     */
-    public function columns(array $columns) : RDBRelationSelectBuilder
-    {
-        return $this->createBuilder()->columns($columns);
-    }
-
-    /**
      * Apply middle table conditions for a many-to-many relationship.
      *
      * @see Espo\ORM\Repository\RDBRelationSelectBuilder::columnsWhere()
