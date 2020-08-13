@@ -374,24 +374,7 @@ abstract class BaseMapper implements Mapper
 
                 $params['joins'][] = $this->getManyManyJoin($entity, $relationName);
 
-                $additionalSelect = $this->getManyManyAdditionalSelect($entity, $relationName);
-
-                if (count($additionalSelect)) {
-                    if (empty($params['select'])) {
-                        $params['select'] = ['*'];
-                    }
-
-                    if ($params['select'][0] === '*') {
-                        $params['select'] = array_merge($params['select'], $additionalSelect);
-                    } else {
-                        foreach ($additionalSelect as $i => $item) {
-                            $index = array_search($item[1], $params['select']);
-                            if ($index !== false) {
-                                $params['select'][$index] = $item;
-                            }
-                        }
-                    }
-                }
+                $params['select'] = $this->getModifiedSelectForManyToMany($entity, $relationName, $params['select'] ?? []);
 
                 $params['from'] = $relEntity->getEntityType();
 
@@ -1451,6 +1434,32 @@ abstract class BaseMapper implements Mapper
     protected function populateEntityFromRow(Entity $entity, $data)
     {
         $entity->set($data);
+    }
+
+    protected function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select) : array
+    {
+        $additionalSelect = $this->getManyManyAdditionalSelect($entity, $relationName);
+
+        if (!count($additionalSelect)) {
+            return $select;
+        }
+
+        if (empty($select)) {
+            $select = ['*'];
+        }
+
+        if ($select[0] === '*') {
+            return array_merge($select, $additionalSelect);
+        }
+
+        foreach ($additionalSelect as $i => $item) {
+            $index = array_search($item[1], $select);
+            if ($index !== false) {
+                $select[$index] = $item;
+            }
+        }
+
+        return $select;
     }
 
     protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null) : array
