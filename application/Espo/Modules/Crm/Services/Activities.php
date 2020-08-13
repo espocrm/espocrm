@@ -785,8 +785,6 @@ class Activities implements
             $selectParams['select'] = $selectAttributeList;
         }
 
-        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
-
         $offset = $selectParams['offset'];
         $limit = $selectParams['limit'];
 

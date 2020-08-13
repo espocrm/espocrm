@@ -97,8 +97,6 @@ class Opportunity extends \Espo\Services\Record
 
         $this->handleDistinctReportSelectParams($selectParams, $whereClause);
 
-        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
-
         $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
@@ -174,8 +172,6 @@ class Opportunity extends \Espo\Services\Record
 
         $this->handleDistinctReportSelectParams($selectParams, $whereClause);
 
-        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
-
         $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
@@ -231,8 +227,6 @@ class Opportunity extends \Espo\Services\Record
         $selectManager->applyAccess($selectParams);
 
         $this->handleDistinctReportSelectParams($selectParams, $whereClause);
-
-        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
 
         $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $selectParams);
 
@@ -291,8 +285,6 @@ class Opportunity extends \Espo\Services\Record
         $selectManager->applyAccess($selectParams);
 
         $this->handleDistinctReportSelectParams($selectParams, $whereClause);
-
-        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
 
         $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $selectParams);
 

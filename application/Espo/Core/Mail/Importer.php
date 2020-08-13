@@ -420,9 +420,9 @@ class Importer
 
     protected function findParent(Email $email, $emailAddress)
     {
-        $contact = $this->getEntityManager()->getRepository('Contact')->where(array(
+        $contact = $this->getEntityManager()->getRepository('Contact')->where([
             'emailAddress' => $emailAddress
-        ))->findOne();
+        ])->findOne();
         if ($contact) {
             if (!$this->getConfig()->get('b2cMode')) {
                 if ($contact->get('accountId')) {
@@ -435,17 +435,17 @@ class Importer
             $email->set('parentId', $contact->id);
             return true;
         } else {
-            $account = $this->getEntityManager()->getRepository('Account')->where(array(
+            $account = $this->getEntityManager()->getRepository('Account')->where([
                 'emailAddress' => $emailAddress
-            ))->findOne();
+            ])->findOne();
             if ($account) {
                 $email->set('parentType', 'Account');
                 $email->set('parentId', $account->id);
                 return true;
             } else {
-                $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
+                $lead = $this->getEntityManager()->getRepository('Lead')->where([
                     'emailAddress' => $emailAddress
-                ))->findOne();
+                ])->findOne();
                 if ($lead) {
                     $email->set('parentType', 'Lead');
                     $email->set('parentId', $lead->id);
@@ -455,16 +455,20 @@ class Importer
         }
     }
 
-    protected function findDuplicate(Email $email)
+    protected function findDuplicate(Email $email) : ?Email
     {
-        if ($email->get('messageId')) {
-            $duplicate = $this->getEntityManager()->getRepository('Email')->select(['id', 'status'])->where([
-                'messageId' => $email->get('messageId')
-            ])->findOne(['skipAdditionalSelectParams' => true]);
-            if ($duplicate) {
-                return $duplicate;
-            }
+        if (!$email->get('messageId')) {
+            return null;
         }
+
+        $duplicate = $this->getEntityManager()->getRepository('Email')
+            ->select(['id', 'status'])
+            ->where([
+                'messageId' => $email->get('messageId'),
+            ])
+            ->findOne();
+
+        return $duplicate;
     }
 
     protected function processDuplicate(Email $duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList)

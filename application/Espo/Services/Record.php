@@ -44,6 +44,7 @@ use Espo\ORM\{
     Entity,
     EntityCollection,
     EntityManager,
+    QueryParams\Select as SelectQuery,
 };
 
 use Espo\Entities\User;
@@ -2123,12 +2124,12 @@ class Record implements Crud,
                 $selectManager->applyOrder($orderBy, $order, $selectParams);
             }
 
-            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
+            $select = SelectQuery::fromRaw($selectParams);
 
-            $collection = $this->getEntityManager()->getCollectionFactroy()->createFromQuery(
-                $this->getEntityType(),
-                SelectQuery::fromRaw($selectParams)
-            );
+            $collection = $this->getEntityManager()->getRepository($this->getEntityType())
+                ->clone($select)
+                ->sth()
+                ->find();
         }
 
         $attributeListToSkip = [

@@ -158,8 +158,6 @@ class Campaign extends \Espo\Services\Record implements
                 'groupBy' => ['opportunity.campaignId']
             ];
 
-            $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($params);
-
             $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $params);
 
             $pdo = $this->getEntityManager()->getPDO();
