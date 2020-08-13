@@ -206,8 +206,8 @@ class RDBRepository extends Repository
     public function find(?array $params = []) : Collection
     {
         // @todo Remove.
-        if (empty($query['skipAdditionalSelectParams'])) {
-            $this->handleSelectParams($query);
+        if ($params && empty($params['skipAdditionalSelectParams'])) {
+            $this->handleSelectParams($params);
         }
 
         return $this->createSelectBuilder()->find($params);
@@ -221,7 +221,7 @@ class RDBRepository extends Repository
     public function findOne(?array $params = []) : ?Entity
     {
         // @todo Remove.
-        if (empty($params['skipAdditionalSelectParams'])) {
+        if ($params && empty($params['skipAdditionalSelectParams'])) {
             $this->handleSelectParams($params);
         }
 

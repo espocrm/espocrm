@@ -55,6 +55,7 @@ class Lead extends \Espo\Core\Repositories\Database
     public function handleSelectParams(&$params)
     {
         parent::handleSelectParams($params);
+
         if (array_key_exists('select', $params)) {
             if (in_array('name', $params['select'])) {
                 $additionalAttributeList = ['emailAddress', 'phoneNumber', 'accountName'];
