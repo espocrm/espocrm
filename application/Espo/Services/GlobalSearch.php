@@ -87,8 +87,6 @@ class GlobalSearch implements
             $selectParams['useFullTextSearch'] = true;
             $selectManager->applyTextFilter($query, $selectParams);
 
-            unset($selectParams['additionalSelect']);
-
             if ($fullTextSearchData) {
                 $hasFullTextSearch = true;
                 $selectParams['select'][] = [$fullTextSearchData['where'], '_relevance'];

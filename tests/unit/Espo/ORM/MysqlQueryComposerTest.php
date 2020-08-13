@@ -43,7 +43,6 @@ use Espo\ORM\QueryParams\{
     Delete,
 };
 
-
 use Espo\Entities\{
     Post,
     Comment,
@@ -825,11 +824,53 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             )
         ]));
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, post.name AS `post.name` FROM `comment` " .
+            "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, ".
+            "post.name AS `post.name` ".
+            "FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY YEAR(post.created_at), post.name ".
             "ORDER BY 2 DESC, FIELD(post.name, 'Hello', 'Test') DESC";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testOrderByExpression1()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Article')
+            ->distinct()
+            ->select(['id', 'name'])
+            ->order('MATCH_BOOLEAN:(name,description,\'test\')', 'DESC')
+            ->build();
+
+        $expectedSql =
+            "SELECT DISTINCT article.id AS `id`, article.name AS `name`, article.description AS `description` " .
+            "FROM `article` WHERE article.deleted = 0 ".
+            "ORDER BY MATCH (article.name,article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
+
+        $sql = $this->query->compose($select);
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testOrderByExpression2()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Article')
+            ->distinct()
+            ->select(['id', ['name', 'name']])
+            ->order([['MATCH_BOOLEAN:(name,description,\'test\')', 'DESC']])
+            ->build();
+
+        $expectedSql =
+            "SELECT DISTINCT article.id AS `id`, article.name AS `name`, article.description AS `description` " .
+            "FROM `article` WHERE article.deleted = 0 ".
+            "ORDER BY MATCH (article.name,article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
+
+        $sql = $this->query->compose($select);
+
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -845,7 +886,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ),
         ]));
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` FROM `comment` " .
+            "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` ".
+            "FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
             "GROUP BY comment.post_id";
@@ -1220,14 +1262,15 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'from' => 'Article',
             'select' => ['id', 'name'],
             'whereClause' => [
-                'MATCH_BOOLEAN:name,description:test +hello',
+                'MATCH_BOOLEAN:(name,description,\'test +hello\')',
                 'id!=' => null
             ]
         ]));
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (article.name,article.description) AGAINST ('test +hello' IN BOOLEAN MODE) AND article.id IS NOT NULL AND article.deleted = 0";
+            "WHERE MATCH (article.name,article.description) AGAINST " .
+            "('test +hello' IN BOOLEAN MODE) AND article.id IS NOT NULL AND article.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1238,13 +1281,13 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'from' => 'Article',
             'select' => ['id', 'name'],
             'whereClause' => [
-                'MATCH_NATURAL_LANGUAGE:description:"test hello"'
+                'MATCH_NATURAL_LANGUAGE:(description,"test hello")'
             ]
         ]));
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (article.description) AGAINST ('\"test hello\"' IN NATURAL LANGUAGE MODE) AND article.deleted = 0";
+            "WHERE MATCH (article.description) AGAINST ('test hello' IN NATURAL LANGUAGE MODE) AND article.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1253,9 +1296,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Article',
-            'select' => ['id', 'MATCH_BOOLEAN:description:test'],
+            'select' => ['id', 'MATCH_BOOLEAN:(description,\'test\')'],
             'whereClause' => [
-                'MATCH_BOOLEAN:description:test'
+                'MATCH_BOOLEAN:(description,\'test\')'
             ],
             'orderBy' => [
                 [2, 'DESC']
@@ -1263,7 +1306,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "SELECT article.id AS `id`, MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:description:test` FROM `article` " .
+            "SELECT article.id AS `id`, ".
+            "MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:(description,'test')` ".
+            "FROM `article` " .
             "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = 0 " .
             "ORDER BY 2 DESC";
 
@@ -1274,9 +1319,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Article',
-            'select' => ['id', ['MATCH_BOOLEAN:description:test', 'relevance']],
+            'select' => ['id', ['MATCH_BOOLEAN:(description,\'test\')', 'relevance']],
             'whereClause' => [
-                'MATCH_BOOLEAN:description:test'
+                'MATCH_BOOLEAN:(description,\'test\')'
             ],
             'orderBy' => [
                 [2, 'DESC']
@@ -1297,7 +1342,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'from' => 'Article',
             'select' => ['id', 'name'],
             'whereClause' => [
-                'MATCH_NATURAL_LANGUAGE:description:test>' => 1
+                'MATCH_NATURAL_LANGUAGE:(description,\'test\')>' => 1
             ]
         ]));
 
@@ -1314,7 +1359,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'from' => 'Article',
             'select' => ['id', 'name'],
             'whereClause' => [
-                'MATCH_NATURAL_LANGUAGE:(description,test)'
+                'MATCH_NATURAL_LANGUAGE:(description,\'test\')'
             ]
         ]));
 

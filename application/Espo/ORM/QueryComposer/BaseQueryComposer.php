@@ -479,11 +479,16 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if ($isAggregation) {
             $aggregationDistinct = false;
+
             if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
                 $aggregationDistinct = true;
             }
+
             $params['select'] = [];
-            $selectPart = $this->getAggregationSelectPart($entity, $params['aggregation'], $params['aggregationBy'], $aggregationDistinct);
+
+            $selectPart = $this->getAggregationSelectPart(
+                $entity, $params['aggregation'], $params['aggregationBy'], $aggregationDistinct
+            );
         }
 
         // @todo remove 'customWhere' support
@@ -630,6 +635,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function getAdditionalSelect(Entity $entity, array $params) : ?string
     {
+        if (!empty($params['strictSelect'])) {
+            return null;
+        }
+
         $selectPart = '';
 
         if (!empty($params['extraAdditionalSelect'])) {
@@ -858,15 +867,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
             $query = $argumentList[count($argumentList) - 1];
         } else {
-            $delimiterPosition = strpos($rest, ':');
-            if ($delimiterPosition === false) {
-                throw new RuntimeException("ORM Query: Bad MATCH usage.");
-            }
-
-            $columns = substr($rest, 0, $delimiterPosition);
-            $query = mb_substr($rest, $delimiterPosition + 1);
-
-            $columnList = explode(',', $columns);
+            throw new RuntimeException("ORM Query: Bad MATCH usage.");
         }
 
         $tableName = $this->toDb($entity->getEntityType());
@@ -874,6 +875,12 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($columnList as $i => $column) {
             $columnList[$i] = $tableName . '.' . $this->sanitize($column);
         }
+
+        if (!Util::isArgumentString($query)) {
+            throw new RuntimeException("ORM Query: Bad MATCH usage. The last argument should be a string.");
+        }
+
+        $query = mb_substr($query, 1, -1);
 
         $query = $this->quote($query);
 
@@ -888,8 +895,9 @@ abstract class BaseQueryComposer implements QueryComposer
         return $result;
     }
 
-    protected function convertComplexExpression(Entity $entity, string $attribute, bool $distinct = false, ?array &$params = null) : string
-    {
+    protected function convertComplexExpression(
+        Entity $entity, string $attribute, bool $distinct = false, ?array &$params = null
+    ) : string {
         $function = null;
 
         $entityType = $entity->getEntityType();
@@ -1029,8 +1037,9 @@ abstract class BaseQueryComposer implements QueryComposer
         return $part;
     }
 
-    protected function getAttributeSql(Entity $entity, string $attribute, string $type, ?array &$params = null, ?string $alias = null) : string
-    {
+    protected function getAttributeSql(
+        Entity $entity, string $attribute, string $type, ?array &$params = null, ?string $alias = null
+    ) : string {
         $fieldDefs = $entity->getAttributes()[$attribute];
 
         if (is_string($fieldDefs[$type])) {
@@ -1111,6 +1120,63 @@ abstract class BaseQueryComposer implements QueryComposer
         return $part;
     }
 
+    protected function getOrderByAttributeList(array $params) : array
+    {
+        $value = $params['orderBy'] ?? null;
+
+        if (!$value) {
+            return [];
+        }
+
+        if (is_numeric($value)) {
+            return [];
+        }
+
+        if (is_string($value)) {
+            return self::getAllAttributesFromComplexExpression($value);
+        }
+
+        $list = [];
+
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if (!is_array($item) || !isset($item[0])) continue;
+
+                $list = array_merge(
+                    $list,
+                    self::getAllAttributesFromComplexExpression($item[0])
+                );
+
+            }
+        }
+
+        return $list;
+    }
+
+    protected function getNotIntersectingSelectItemList(array $itemList, array $newItemList) : array
+    {
+        $list = [];
+
+        foreach ($newItemList as $newItem) {
+            $isMet = false;
+
+            foreach ($itemList as $item) {
+                $itemToCompare = is_array($item) ? ($item[0] ?? null) : $item;
+
+                if ($itemToCompare === $newItem) {
+                    $isMet = true;
+                    continue;
+                }
+            }
+
+            if (!$isMet) {
+                $list[] = $newItem;
+            }
+        }
+
+        return $list;
+    }
+
     protected function getSelectPart(Entity $entity, array &$params) : string
     {
         $params = $params ?? [];
@@ -1132,10 +1198,19 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         // @todo Get rid of 'additionalSelect' parameter.
-        if (isset($params['additionalSelect'])) {
+        if (isset($params['additionalSelect']) && empty($params['strictSelect'])) {
             foreach ($params['additionalSelect'] as $item) {
                 $itemList[] = $item;
             }
+        }
+
+        if ($params['distinct'] && empty($params['strictSelect'])) {
+            $orderByAttributeList = $this->getOrderByAttributeList($params);
+
+            $itemList = array_merge(
+                $itemList,
+                $this->getNotIntersectingSelectItemList($itemList, $orderByAttributeList)
+            );
         }
 
         foreach ($itemList as $i => $item) {
@@ -1927,12 +2002,15 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize an alias for a SELECT statement.
-     * @todo Make protected?
      */
     public function sanitizeSelectAlias(string $string) : string
     {
         $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-\(\)]+/', '', $string);
-        if (strlen($string) > 256) $string = substr($string, 0, 256);
+
+        if (strlen($string) > 256) {
+            $string = substr($string, 0, 256);
+        }
+
         return $string;
     }
 

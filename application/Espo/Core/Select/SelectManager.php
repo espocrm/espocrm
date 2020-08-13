@@ -2336,6 +2336,8 @@ class SelectManager
             $textFilter = str_replace('"*', '"', $textFilter);
             $textFilter = str_replace('*"', '"', $textFilter);
 
+            $textFilter = str_replace('\'', '\'\'', $textFilter);
+
             while (strpos($textFilter, '**')) {
                 $textFilter = str_replace('**', '*', $textFilter);
                 $textFilter = trim($textFilter);
@@ -2352,12 +2354,12 @@ class SelectManager
                 $fullTextSearchColumnSanitizedList[$i] = $query->sanitize($query->toDb($field));
             }
 
-            $where = $function . ':(' . implode(',', $fullTextSearchColumnSanitizedList) . ',' . $textFilter . ')';
+            $where = $function . ':(' . implode(',', $fullTextSearchColumnSanitizedList) . ',' . "'{$textFilter}'" . ')';
 
             $result = [
                 'where' => $where,
                 'fieldList' => $fullTextSearchFieldList,
-                'columnList' => $fullTextSearchColumnList
+                'columnList' => $fullTextSearchColumnList,
             ];
         }
 
@@ -2464,9 +2466,6 @@ class SelectManager
                 }
             }
 
-            $result['additionalSelect'] = $result['additionalSelect'] ?? [];
-            $result['additionalSelect'][] = $relevanceExpression;
-
             $result['hasFullTextSearch'] = true;
         }
 
@@ -2523,10 +2522,6 @@ class SelectManager
             if ($fullTextSearchData) {
                 if (!$useFullTextSearch) {
                     if (in_array($field, $fullTextSearchFieldList)) {
-                        /*if (!array_key_exists('OR', $fullTextGroup)) {
-                            $fullTextGroup['OR'] = [];
-                        }
-                        $fullTextGroup['OR'][$field . '*'] = $expression;*/
                         continue;
                     }
                 }
