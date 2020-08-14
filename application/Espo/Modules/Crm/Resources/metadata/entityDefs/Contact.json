@@ -54,7 +54,7 @@
                     ]
                 ]
             },
-            "orderBy": {
+            "order": {
                 "sql": "accountContact.role {direction}",
                 "leftJoins": [
                     [
@@ -185,7 +185,7 @@
                     ]
                 ]
             },
-            "orderBy": {
+            "order": {
                 "sql": "accountContact.is_inactive {direction}",
                 "leftJoins": [
                     [
@@ -375,7 +375,7 @@
                     "leftJoins": [["portalUser", "portalUser"]]
                 }
             },
-            "orderBy": {
+            "order": {
                 "sql": "portalUser.id {direction}",
                 "leftJoins": [["portalUser", "portalUser"]],
                 "additionalSelect": ["portalUser.id"]

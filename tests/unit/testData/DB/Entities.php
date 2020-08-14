@@ -102,7 +102,7 @@ class Contact extends TEntity
                 'LIKE' => "(contact.first_name LIKE {value} OR contact.last_name LIKE {value} OR "
                     ."CONCAT(contact.first_name, ' ', contact.last_name) LIKE {value})",
             ],
-            'orderBy' => "contact.first_name {direction}, contact.last_name {direction}",
+            'order' => "contact.first_name {direction}, contact.last_name {direction}",
         ],
         'firstName' => [
             'type' => Entity::VARCHAR,
@@ -477,6 +477,11 @@ class TestWhere extends TEntity
                         ['Test', 't', ['t.id:' => 'id']],
                     ],
                 ],
+            ],
+            'order' => [
+                'order' => [
+                    ['test', '{direction}'],
+                ]
             ],
         ],
         'testInt' => [

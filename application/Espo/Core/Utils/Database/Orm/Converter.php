@@ -88,7 +88,7 @@ class Converter
         'index' => 'index',
         'default' => 'default',
         'select' => 'select',
-        'orderBy' => 'orderBy',
+        'order' => 'order',
         'where' => 'where',
         'storeArrayValues' => 'storeArrayValues',
         'binary' => 'binary',

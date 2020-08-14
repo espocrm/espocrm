@@ -1036,87 +1036,164 @@ abstract class BaseQueryComposer implements QueryComposer
         return $part;
     }
 
+    protected function getAttributeOrderSql(Entity $entity, string $attribute, ?array &$params, string $order) : string
+    {
+        $fieldDefs = $entity->getAttributes()[$attribute];
+
+        $defs = $fieldDefs['order'];
+
+        if (is_string($defs)) {
+            $part = $defs;
+            $defs = [];
+            $part = str_replace('{direction}', $order, $part);
+        } else {
+            if (!empty($defs['sql'])) {
+                $part = $defs['sql'];
+                $part = str_replace('{direction}', $order, $part);
+            } else
+            if (!empty($defs['order'])) {
+                $list = [];
+
+                if (!is_array($defs['order'])) {
+                    throw new LogicException("Bad custom order defenition.");
+                }
+
+                $modifiedOrder = [];
+
+                foreach ($defs['order'] as $item) {
+                    if (!is_array($item) && !isset($item[0])) {
+                        throw new LogicException("Bad custom order defenition.");
+                    }
+
+                    $newItem = [
+                        $item[0],
+                    ];
+
+                    if (isset($item[1]) && $item[1] === '{direction}') {
+                        $newItem[] = $order;
+                    }
+
+                    $modifiedOrder[] = $newItem;
+                }
+
+                $part = $this->getOrderExpressionPart($entity, $modifiedOrder, null, false, $params, true);
+            } else {
+                $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
+
+                $part .= ' ' . $order;
+            }
+        }
+
+        if ($params) {
+            $this->applyAttributeCustomParams($defs, $params);
+        }
+
+        return $part;
+    }
+
     protected function getAttributeSql(
         Entity $entity, string $attribute, string $type, ?array &$params = null, ?string $alias = null
     ) : string {
         $fieldDefs = $entity->getAttributes()[$attribute];
 
-        if (is_string($fieldDefs[$type])) {
-            $part = $fieldDefs[$type];
+        $defs = $fieldDefs[$type];
+
+        if (is_string($defs)) {
+            $part = $defs;
+            $defs = [];
         } else {
-            if (!empty($fieldDefs[$type]['sql'])) {
-                $part = $fieldDefs[$type]['sql'];
+            if (!empty($defs['sql'])) {
+                $part = $defs['sql'];
                 if ($alias) {
                     $part = str_replace('{alias}', $alias, $part);
                 }
             } else {
                 $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
-                if ($type === 'orderBy') {
-                    $part .= ' {direction}';
-                }
             }
         }
 
         if ($params) {
-            if (!empty($fieldDefs[$type]['leftJoins'])) {
-                foreach ($fieldDefs[$type]['leftJoins'] as $j) {
-                    $jAlias = $this->obtainJoinAlias($j);
-                    if ($alias) $jAlias = str_replace('{alias}', $alias, $jAlias);
-                    if (isset($j[1])) $j[1] = $jAlias;
-                    foreach ($params['leftJoins'] as $jE) {
-                        $jEAlias = $this->obtainJoinAlias($jE);
-                        if ($jEAlias === $jAlias) {
-                            continue 2;
-                        }
-                    }
-                    if ($alias) {
-                        if (count($j) >= 3) {
-                            $conditions = [];
-                            foreach ($j[2] as $k => $value) {
-                                $value = str_replace('{alias}', $alias, $value);
-                                $left = $k;
-                                $left = str_replace('{alias}', $alias, $left);
-                                $conditions[$left] = $value;
-                            }
-                            $j[2] = $conditions;
-                        }
-                    }
-
-                    $params['leftJoins'][] = $j;
-                }
-            }
-
-            if (!empty($fieldDefs[$type]['joins'])) {
-                foreach ($fieldDefs[$type]['joins'] as $j) {
-                    $jAlias = $this->obtainJoinAlias($j);
-                    $jAlias = str_replace('{alias}', $alias, $jAlias);
-                    if (isset($j[1])) $j[1] = $jAlias;
-                    foreach ($params['joins'] as $jE) {
-                        $jEAlias = $this->obtainJoinAlias($jE);
-                        if ($jEAlias === $jAlias) {
-                            continue 2;
-                        }
-                    }
-                    $params['joins'][] = $j;
-                }
-            }
-
-            // Some fields may need additional select items add to a query.
-            if (!empty($fieldDefs[$type]['additionalSelect'])) {
-                $params['extraAdditionalSelect'] = $params['extraAdditionalSelect'] ?? [];
-
-                foreach ($fieldDefs[$type]['additionalSelect'] as $value) {
-                    $value = str_replace('{alias}', $alias, $value);
-                    $value = str_replace('{attribute}', $attribute, $value);
-
-                    if (!in_array($value, $params['extraAdditionalSelect'])) {
-                        $params['extraAdditionalSelect'][] = $value;
-                    }
-                }
-            }
+            $this->applyAttributeCustomParams($defs, $params, $alias);
         }
 
         return $part;
+    }
+
+    protected function applyAttributeCustomParams(array $defs, array &$params, ?string $alias = null)
+    {
+        if (!empty($defs['leftJoins'])) {
+            foreach ($defs['leftJoins'] as $j) {
+                $jAlias = $this->obtainJoinAlias($j);
+                if ($alias) $jAlias = str_replace('{alias}', $alias, $jAlias);
+                if (isset($j[1])) $j[1] = $jAlias;
+
+                foreach ($params['leftJoins'] as $jE) {
+                    $jEAlias = $this->obtainJoinAlias($jE);
+                    if ($jEAlias === $jAlias) {
+                        continue 2;
+                    }
+                }
+
+                if ($alias) {
+                    if (count($j) >= 3) {
+                        $conditions = [];
+                        foreach ($j[2] as $k => $value) {
+                            $value = str_replace('{alias}', $alias, $value);
+                            $left = $k;
+                            $left = str_replace('{alias}', $alias, $left);
+                            $conditions[$left] = $value;
+                        }
+                        $j[2] = $conditions;
+                    }
+                }
+
+                $params['leftJoins'][] = $j;
+            }
+        }
+
+        if (!empty($defs['joins'])) {
+            foreach ($defs['joins'] as $j) {
+                $jAlias = $this->obtainJoinAlias($j);
+                $jAlias = str_replace('{alias}', $alias, $jAlias);
+                if (isset($j[1])) $j[1] = $jAlias;
+
+                foreach ($params['joins'] as $jE) {
+                    $jEAlias = $this->obtainJoinAlias($jE);
+                    if ($jEAlias === $jAlias) {
+                        continue 2;
+                    }
+                }
+
+                if ($alias) {
+                    if (count($j) >= 3) {
+                        $conditions = [];
+                        foreach ($j[2] as $k => $value) {
+                            $value = str_replace('{alias}', $alias, $value);
+                            $left = $k;
+                            $left = str_replace('{alias}', $alias, $left);
+                            $conditions[$left] = $value;
+                        }
+                        $j[2] = $conditions;
+                    }
+                }
+
+                $params['joins'][] = $j;
+            }
+        }
+
+        // Some fields may need additional select items add to a query.
+        if (!empty($defs['additionalSelect'])) {
+            $params['extraAdditionalSelect'] = $params['extraAdditionalSelect'] ?? [];
+
+            foreach ($defs['additionalSelect'] as $value) {
+                $value = str_replace('{alias}', $alias, $value);
+                $value = str_replace('{attribute}', $attribute, $value);
+
+                if (!in_array($value, $params['extraAdditionalSelect'])) {
+                    $params['extraAdditionalSelect'][] = $value;
+                }
+            }
+        }
     }
 
     protected function getOrderByAttributeList(array $params) : array
@@ -1470,7 +1547,12 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getOrderExpressionPart(
-        Entity $entity, $orderBy = null, $order = null, $useColumnAlias = false, &$params = null
+        Entity $entity,
+        $orderBy = null,
+        $order = null,
+        bool $useColumnAlias = false,
+        ?array &$params = null,
+        bool $noCustom = false
     ) : ?string {
         if (is_null($orderBy)) {
             return null;
@@ -1489,31 +1571,37 @@ abstract class BaseQueryComposer implements QueryComposer
                     $arr[] = $this->getOrderExpressionPart($entity, $orderByInternal, $orderInternal, $useColumnAlias, $params);
                 }
             }
+
             return implode(", ", $arr);
         }
 
         if (strpos($orderBy, 'LIST:') === 0) {
             list($l, $field, $list) = explode(':', $orderBy);
+
             if ($useColumnAlias) {
                 $fieldPath = '`'. $this->sanitizeSelectAlias($field) . '`';
             } else {
                 $fieldPath = $this->getAttributePathForOrderBy($entity, $field, $params);
             }
+
             $listQuoted = [];
             $list = array_reverse(explode(',', $list));
+
             foreach ($list as $i => $listItem) {
                 $listItem = str_replace('_COMMA_', ',', $listItem);
                 $listQuoted[] = $this->quote($listItem);
             }
-            $part = "FIELD(" . $fieldPath . ", " . implode(", ", $listQuoted) . ") DESC";
-            return $part;
+
+            return "FIELD(" . $fieldPath . ", " . implode(", ", $listQuoted) . ") DESC";
         }
 
         if (!is_null($order)) {
             if (is_bool($order)) {
                 $order = $order ? 'DESC' : 'ASC';
             }
+
             $order = strtoupper($order);
+
             if (!in_array($order, ['ASC', 'DESC'])) {
                 $order = 'ASC';
             }
@@ -1529,10 +1617,8 @@ abstract class BaseQueryComposer implements QueryComposer
             $fieldDefs = $entity->getAttributes()[$orderBy];
         }
 
-        if (!empty($fieldDefs) && !empty($fieldDefs['orderBy'])) {
-            $orderPart = $this->getAttributeSql($entity, $orderBy, 'orderBy', $params);
-            $orderPart = str_replace('{direction}', $order, $orderPart);
-            return "{$orderPart}";
+        if (!$noCustom && !empty($fieldDefs) && !empty($fieldDefs['order'])) {
+            return $this->getAttributeOrderSql($entity, $orderBy, $params, $order);
         }
 
         if ($useColumnAlias) {
@@ -1737,14 +1823,19 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getWherePart(
-        Entity $entity, ?array $whereClause = null, string $sqlOp = 'AND', array &$params = [], int $level = 0
+        Entity $entity,
+        ?array $whereClause = null,
+        string $sqlOp = 'AND',
+        array &$params = [],
+        int $level = 0,
+        bool $noCustomWhere = false
     ) : string {
         $wherePartList = [];
 
         $whereClause = $whereClause ?? [];
 
         foreach ($whereClause as $field => $value) {
-            $partItem = $this->getWherePartItem($entity, $field, $value, $params, $level);
+            $partItem = $this->getWherePartItem($entity, $field, $value, $params, $level, $noCustomWhere);
 
             if ($partItem === null) {
                 continue;
@@ -1756,8 +1847,9 @@ abstract class BaseQueryComposer implements QueryComposer
         return implode(" " . $sqlOp . " ", $wherePartList);
     }
 
-    protected function getWherePartItem(Entity $entity, $field, $value, array &$params, int $level) : ?string
-    {
+    protected function getWherePartItem(
+        Entity $entity, $field, $value, array &$params, int $level, bool $noCustomWhere = false
+    ) : ?string {
         if (is_int($field) && is_string($value)) {
             return $this->convertMatchExpression($entity, $value);
         }
@@ -1869,7 +1961,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
             }
 
-            if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
+            if (!$noCustomWhere && !empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
                 $whereSqlPart = '';
                 $customWhereClause = null;
 
@@ -1921,7 +2013,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
 
                 if ($customWhereClause) {
-                    return "(" .$this->getWherePart($entity, $customWhereClause, 'AND', $params, $level) . ")";
+                    return "(" .$this->getWherePart($entity, $customWhereClause, 'AND', $params, $level, true) . ")";
                 }
 
                 return str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
