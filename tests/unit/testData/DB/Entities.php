@@ -462,7 +462,7 @@ class TestWhere extends TEntity
         'test' => [
             'type' => Entity::VARCHAR,
         ],
-        'testVarchar' => [
+        'test1' => [
             'type' => Entity::VARCHAR,
             'notStorable' => true,
             'where' => [
@@ -487,8 +487,14 @@ class TestWhere extends TEntity
                     ['Test', 't', ['t.id:' => 'id']],
                 ],
             ],
+            'select' => [
+                'select' => 'MUL:(t.id, test)',
+                'joins' => [
+                    ['Test', 't', ['t.id:' => 'id']],
+                ],
+            ],
         ],
-        'testInt' => [
+        'test2' => [
             'type' => Entity::INT,
             'notStorable' => true,
             'where' => [

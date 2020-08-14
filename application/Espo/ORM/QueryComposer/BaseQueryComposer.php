@@ -1111,24 +1111,38 @@ abstract class BaseQueryComposer implements QueryComposer
         $defs = $fieldDefs[$type];
 
         if (is_string($defs)) {
-            $part = $defs;
             $defs = [];
-        } else {
-            if (!empty($defs['sql'])) {
-                $part = $defs['sql'];
-                if ($alias) {
-                    $part = str_replace('{alias}', $alias, $part);
-                }
-            } else {
-                $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
-            }
         }
 
         if ($params) {
             $this->applyAttributeCustomParams($defs, $params, $alias);
         }
 
-        return $part;
+        if (is_string($fieldDefs[$type])) {
+            return $fieldDefs[$type];
+        }
+
+        if (!empty($defs['sql'])) {
+            $part = $defs['sql'];
+
+            if ($alias) {
+                $part = str_replace('{alias}', $alias, $part);
+            }
+
+            return $part;
+        }
+
+        if (!empty($defs['select'])) {
+            $pair = $this->getSelectPartItemPair($entity, $params, $defs['select']);
+
+            if ($pair === null) {
+                throw new LogicException("Could not handle 'select'.");
+            }
+
+            return $pair[0];
+        }
+
+        return $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
     }
 
     protected function applyAttributeCustomParams(array $defs, array &$params, ?string $alias = null)
@@ -1409,7 +1423,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!$entity->hasAttribute($attribute)) {
-            $expression = $this->sanitizeSelectItem($attribute);
+            $expression = $attribute;
 
             $part = $this->convertComplexExpression($entity, $expression, $distinct, $params);
 
@@ -2214,11 +2228,6 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         return $string;
-    }
-
-    protected function sanitizeSelectItem(string $string) : string
-    {
-        return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
     protected function sanitizeIndexName(string $string) : string

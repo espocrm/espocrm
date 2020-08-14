@@ -1444,15 +1444,16 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $select = $queryBuilder->select()
             ->from('TestWhere')
+            ->select(['id'])
             ->where([
-                'testVarchar' => 'hello',
+                'test1' => 'hello',
             ])
             ->build();
 
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id`, test_where.test AS `test` ".
+            "SELECT test_where.id AS `id` ".
             "FROM `test_where` ".
             "JOIN `test` AS `t` ON t.id = test_where.id ".
             "WHERE (((test_where.test = 'hello') OR (test_where.test = '1')))";
@@ -1466,8 +1467,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $select = $queryBuilder->select()
             ->from('TestWhere')
+            ->select(['id'])
             ->where([
-                'testInt' => 1,
+                'test2' => 1,
                 'test' => 2,
             ])
             ->build();
@@ -1475,7 +1477,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id`, test_where.test AS `test` ".
+            "SELECT test_where.id AS `id` ".
             "FROM `test_where` ".
             "WHERE (test_where.test = '1' AND test_where.id IS NOT NULL) AND test_where.test = '2'";
 
@@ -1488,16 +1490,36 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $select = $queryBuilder->select()
             ->from('TestWhere')
-            ->order('testVarchar', 'DESC')
+            ->select(['id'])
+            ->order('test1', 'DESC')
             ->build();
 
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id`, test_where.test AS `test` ".
+            "SELECT test_where.id AS `id` ".
             "FROM `test_where` ".
             "JOIN `test` AS `t` ON t.id = test_where.id ".
             "ORDER BY test_where.test DESC, t.id DESC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testCustomSelect1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select(['test1'])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT (t.id * test_where.test) AS `test1` ".
+            "FROM `test_where` ".
+            "JOIN `test` AS `t` ON t.id = test_where.id";
 
         $this->assertEquals($expectedSql, $sql);
     }
