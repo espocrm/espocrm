@@ -20,7 +20,7 @@
             "readOnly": true,
             "notStorable": true,
             "select": {
-                "sql": "opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100",
+                "select": "DIV:(MUL:(amount, probability, amountCurrencyRate.rate), 100)",
                 "leftJoins": [
                     [
                         "Currency",

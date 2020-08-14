@@ -1011,7 +1011,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = 0";
+            "WHERE MONTH(comment.created_at) = 2 AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1026,7 +1026,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE WEEK(comment.created_at, 3) = '2' AND comment.deleted = 0";
+            "WHERE WEEK(comment.created_at, 3) = 2 AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1041,7 +1041,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = 0";
+            "WHERE MONTH(comment.created_at) = 2 AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1069,7 +1069,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ]
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, FLOOR('3.5') AS `FLOOR:3.5` FROM `comment` " .
+            "SELECT comment.id AS `id`, FLOOR(3.5) AS `FLOOR:3.5` FROM `comment` " .
             "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1082,7 +1082,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'whereClause' => []
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, ROUND('3.5', '1') AS `ROUND:3.5,1` FROM `comment` " .
+            "SELECT comment.id AS `id`, ROUND(3.5, 1) AS `ROUND:3.5,1` FROM `comment` " .
             "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1095,7 +1095,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'whereClause' => []
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, ROUND('3.5', '1') AS `ROUND:3.5,1` FROM `comment` " .
+            "SELECT comment.id AS `id`, ROUND(3.5, 1) AS `ROUND:3.5,1` FROM `comment` " .
             "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1192,7 +1192,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true
         ]));
         $expectedSql =
-            "SELECT ('2' * '2.5' * ('3' - '1')) AS `MUL:(2,2.5,SUB:(3,1))` FROM `comment`";
+            "SELECT (2 * 2.5 * (3 - 1)) AS `MUL:(2,2.5,SUB:(3,1))` FROM `comment`";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1229,6 +1229,18 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
         $expectedSql =
             "SELECT IFNULL(comment.name, '') AS `test` FROM `comment`";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction19()
+    {
+        $sql = $this->query->compose(Select::fromRaw([
+            'from' => 'Comment',
+            'select' => [['MUL:(id, 10)', 'test']],
+            'withDeleted' => true,
+        ]));
+        $expectedSql =
+            "SELECT (comment.id * 10) AS `test` FROM `comment`";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1278,7 +1290,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "FROM `comment` LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
             "GROUP BY comment.post_id " .
-            "HAVING COUNT(comment.id) > '1'";
+            "HAVING COUNT(comment.id) > 1";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1392,7 +1404,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) > '1' AND article.deleted = 0";
+            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) > 1 AND article.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1479,7 +1491,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT test_where.id AS `id` ".
             "FROM `test_where` ".
-            "WHERE (test_where.test = '1' AND test_where.id IS NOT NULL) AND test_where.test = '2'";
+            "WHERE (test_where.test = 1 AND test_where.id IS NOT NULL) AND test_where.test = 2";
 
         $this->assertEquals($expectedSql, $sql);
     }

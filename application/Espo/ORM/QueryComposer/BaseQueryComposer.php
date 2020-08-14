@@ -950,24 +950,6 @@ abstract class BaseQueryComposer implements QueryComposer
         return Util::getAllAttributesFromComplexExpression($expression);
     }
 
-    protected static function isArgumentString(string $argument)
-    {
-        return
-            substr($argument, 0, 1) === '\'' && substr($argument, -1) === '\''
-            ||
-            substr($argument, 0, 1) === '"' && substr($argument, -1) === '"';
-    }
-
-    protected static function isArgumentNumeric(string $argument)
-    {
-        return is_numeric($argument);
-    }
-
-    protected static function isArgumentBoolOrNull(string $argument)
-    {
-        return in_array(strtoupper($argument), ['NULL', 'TRUE', 'FALSE']);
-    }
-
     protected function getFunctionArgumentPart(
         Entity $entity, string $attribute, bool $distinct = false, ?array &$params = null
     ) :string {
@@ -979,8 +961,14 @@ abstract class BaseQueryComposer implements QueryComposer
             return $string;
         }
         else if (Util::isArgumentNumeric($argument)) {
-            $string = $this->quote($argument);
-            return $string;
+            if (filter_var($argument, FILTER_VALIDATE_INT) !== false) {
+                $argument = intval($argument);
+            } else
+            if (filter_var($argument, FILTER_VALIDATE_FLOAT) !== false) {
+                $argument = floatval($argument);
+            }
+
+            return $this->quote($argument);
         }
         else if (Util::isArgumentBoolOrNull($argument)) {
             return strtoupper($argument);
@@ -1658,7 +1646,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!$fieldPath) {
-            throw new LogicException("Could not handle 'order'.");
+            throw new LogicException("Could not handle 'order' for '".$entity->getEntityType()."'.");
         }
 
         return "{$fieldPath} " . $order;
@@ -1716,18 +1704,29 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * Quote a value.
+     * Quote a value (if needed).
+     *
      * @todo Make protected.
      */
     public function quote($value) : string
     {
         if (is_null($value)) {
             return 'NULL';
-        } else if (is_bool($value)) {
-            return $value ? '1' : '0';
-        } else {
-            return $this->pdo->quote($value);
         }
+
+        if (is_bool($value)) {
+            return $value ? '1' : '0';
+        }
+
+        if (is_int($value)) {
+            return strval($value);
+        }
+
+        if (is_float($value)) {
+            return strval($value);
+        }
+
+        return $this->pdo->quote($value);
     }
 
     /**

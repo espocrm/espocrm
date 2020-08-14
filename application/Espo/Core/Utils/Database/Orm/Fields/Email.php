@@ -107,7 +107,7 @@ class Email extends Base
                                 'distinct' => true
                             )
                         ],
-                        'orderBy' => [
+                        'order' => [
                             'sql' => 'emailAddresses.lower {direction}',
                             'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
                             'additionalSelect' => ['emailAddresses.lower'],
@@ -154,7 +154,7 @@ class Email extends Base
                                 'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
                             ]
                         ],
-                        'orderBy' => [
+                        'order' => [
                             'sql' => 'emailAddresses.opt_out {direction}',
                             'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
                             'additionalSelect' => ['emailAddresses.opt_out'],

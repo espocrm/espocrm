@@ -121,8 +121,12 @@ class PersonName extends Base
                 'LIKE' => str_replace('{operator}', 'LIKE', $whereString),
                 '=' => str_replace('{operator}', '=', $whereString),
             ],
-            'orderBy' => "{$tableName}." . Util::toUnderScore($orderBy1Field) ." {direction}, {$tableName}." .
-                Util::toUnderScore($orderBy2Field)
+            'order' => [
+                'order' => [
+                    [$orderBy1Field, '{direction}'],
+                    [$orderBy2Field, '{direction}'],
+                ],
+            ],
         ];
 
         $dependeeAttributeList = $this->getMetadata()->get(

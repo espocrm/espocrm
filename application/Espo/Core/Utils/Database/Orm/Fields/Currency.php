@@ -96,7 +96,7 @@ class Currency extends Base
                         "IS NOT NULL" => ['sql' => $part . ' IS NOT NULL'],
                 ],
                 'notStorable' => true,
-                'orderBy' => [
+                'order' => [
                     'sql' => $converedFieldName . " {direction}",
                     'leftJoins' => $leftJoins,
                     'additionalSelect' => ["{$alias}.rate"],
@@ -105,7 +105,7 @@ class Currency extends Base
                 'fieldType' => 'currency',
             ];
 
-            $defs[$entityType]['fields'][$fieldName]['orderBy'] = [
+            $defs[$entityType]['fields'][$fieldName]['order'] = [
                 'sql' => $part . " * {$alias}.rate {direction}",
                 'leftJoins' => $leftJoins,
                 'additionalSelect' => ["{$alias}.rate"],

@@ -108,7 +108,7 @@ class Phone extends Base
                                 'distinct' => true
                             )
                         ),
-                        'orderBy' => [
+                        'order' => [
                             'sql' => 'phoneNumbers.name {direction}',
                             'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
                             'additionalSelect' => ['phoneNumbers.name'],
@@ -155,7 +155,7 @@ class Phone extends Base
                                 'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
                             ]
                         ],
-                       'orderBy' => [
+                       'order' => [
                             'sql' => 'phoneNumbers.opt_out {direction}',
                             'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
                             'additionalSelect' => ['phoneNumbers.opt_out'],
