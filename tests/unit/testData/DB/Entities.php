@@ -481,7 +481,11 @@ class TestWhere extends TEntity
             'order' => [
                 'order' => [
                     ['test', '{direction}'],
-                ]
+                    ['t.id', '{direction}'],
+                ],
+                'joins' => [
+                    ['Test', 't', ['t.id:' => 'id']],
+                ],
             ],
         ],
         'testInt' => [

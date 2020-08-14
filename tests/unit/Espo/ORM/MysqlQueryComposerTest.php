@@ -1481,4 +1481,24 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($expectedSql, $sql);
     }
+
+    public function testCustomOrder1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->order('testVarchar', 'DESC')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id`, test_where.test AS `test` ".
+            "FROM `test_where` ".
+            "JOIN `test` AS `t` ON t.id = test_where.id ".
+            "ORDER BY test_where.test DESC, t.id DESC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
 }

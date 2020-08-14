@@ -1043,50 +1043,62 @@ abstract class BaseQueryComposer implements QueryComposer
         $defs = $fieldDefs['order'];
 
         if (is_string($defs)) {
-            $part = $defs;
             $defs = [];
-            $part = str_replace('{direction}', $order, $part);
-        } else {
-            if (!empty($defs['sql'])) {
-                $part = $defs['sql'];
-                $part = str_replace('{direction}', $order, $part);
-            } else
-            if (!empty($defs['order'])) {
-                $list = [];
-
-                if (!is_array($defs['order'])) {
-                    throw new LogicException("Bad custom order defenition.");
-                }
-
-                $modifiedOrder = [];
-
-                foreach ($defs['order'] as $item) {
-                    if (!is_array($item) && !isset($item[0])) {
-                        throw new LogicException("Bad custom order defenition.");
-                    }
-
-                    $newItem = [
-                        $item[0],
-                    ];
-
-                    if (isset($item[1]) && $item[1] === '{direction}') {
-                        $newItem[] = $order;
-                    }
-
-                    $modifiedOrder[] = $newItem;
-                }
-
-                $part = $this->getOrderExpressionPart($entity, $modifiedOrder, null, false, $params, true);
-            } else {
-                $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
-
-                $part .= ' ' . $order;
-            }
         }
 
         if ($params) {
             $this->applyAttributeCustomParams($defs, $params);
         }
+
+        if (is_string($fieldDefs['order'])) {
+            $defs = [];
+            $part = $fieldDefs['order'];
+
+            $part = str_replace('{direction}', $order, $part);
+
+            return $part;
+        }
+
+        if (!empty($defs['sql'])) {
+            $part = $defs['sql'];
+            $part = str_replace('{direction}', $order, $part);
+
+            return $part;
+        }
+
+        if (!empty($defs['order'])) {
+            $list = [];
+
+            if (!is_array($defs['order'])) {
+                throw new LogicException("Bad custom order defenition.");
+            }
+
+            $modifiedOrder = [];
+
+            foreach ($defs['order'] as $item) {
+                if (!is_array($item) && !isset($item[0])) {
+                    throw new LogicException("Bad custom order defenition.");
+                }
+
+                $newItem = [
+                    $item[0],
+                ];
+
+                if (isset($item[1]) && $item[1] === '{direction}') {
+                    $newItem[] = $order;
+                }
+
+                $modifiedOrder[] = $newItem;
+            }
+
+            $part = $this->getOrderExpressionPart($entity, $modifiedOrder, null, false, $params, true);
+
+            return $part;
+        }
+
+        $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
+
+        $part .= ' ' . $order;
 
         return $part;
     }
@@ -1565,10 +1577,14 @@ abstract class BaseQueryComposer implements QueryComposer
                 if (is_array($item)) {
                     $orderByInternal = $item[0];
                     $orderInternal = null;
+
                     if (!empty($item[1])) {
                         $orderInternal = $item[1];
                     }
-                    $arr[] = $this->getOrderExpressionPart($entity, $orderByInternal, $orderInternal, $useColumnAlias, $params);
+
+                    $arr[] = $this->getOrderExpressionPart(
+                        $entity, $orderByInternal, $orderInternal, $useColumnAlias, $params, $noCustom
+                    );
                 }
             }
 
@@ -1622,9 +1638,13 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($useColumnAlias) {
-            $fieldPath = '`'. $this->sanitizeSelectAlias($orderBy) . '`';
+            $fieldPath = '`' . $this->sanitizeSelectAlias($orderBy) . '`';
         } else {
             $fieldPath = $this->getAttributePathForOrderBy($entity, $orderBy, $params);
+        }
+
+        if (!$fieldPath) {
+            throw new LogicException("Could not handle 'order'.");
         }
 
         return "{$fieldPath} " . $order;
