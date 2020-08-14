@@ -452,3 +452,44 @@ class Dependee extends TEntity
 
     ];
 }
+
+class TestWhere extends TEntity
+{
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'test' => [
+            'type' => Entity::VARCHAR,
+        ],
+        'testVarchar' => [
+            'type' => Entity::VARCHAR,
+            'notStorable' => true,
+            'where' => [
+                '=' => [
+                    'whereClause' => [
+                        'OR' => [
+                            ['test' => '{value}'],
+                            ['test' => '1'],
+                        ],
+                    ],
+                    'joins' => [
+                        ['Test', 't', ['t.id:' => 'id']],
+                    ],
+                ],
+            ],
+        ],
+        'testInt' => [
+            'type' => Entity::INT,
+            'notStorable' => true,
+            'where' => [
+                '=' => [
+                    'whereClause' => [
+                        'test' => '{value}',
+                        'id!=' => null,
+                    ],
+                ],
+            ],
+        ],
+    ];
+}

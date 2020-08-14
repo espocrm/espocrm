@@ -1437,4 +1437,48 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $list = $this->query::getAllAttributesFromComplexExpression($expression);
         $this->assertTrue(in_array('comment.test', $list));
     }
+
+    public function testCustomWhere1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->where([
+                'testVarchar' => 'hello',
+            ])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id`, test_where.test AS `test` ".
+            "FROM `test_where` ".
+            "JOIN `test` AS `t` ON t.id = test_where.id ".
+            "WHERE (((test_where.test = 'hello') OR (test_where.test = '1')))";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testCustomWhere2()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->where([
+                'testInt' => 1,
+                'test' => 2,
+            ])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id`, test_where.test AS `test` ".
+            "FROM `test_where` ".
+            "WHERE (test_where.test = '1' AND test_where.id IS NOT NULL) AND test_where.test = '2'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
 }

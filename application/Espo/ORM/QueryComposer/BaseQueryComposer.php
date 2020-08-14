@@ -1871,17 +1871,23 @@ abstract class BaseQueryComposer implements QueryComposer
 
             if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
                 $whereSqlPart = '';
+                $customWhereClause = null;
 
-                if (is_string($fieldDefs['where'][$operatorModified])) {
-                    $whereSqlPart = $fieldDefs['where'][$operatorModified];
+                $whereDefs = $fieldDefs['where'][$operatorModified];
+
+                if (is_string($whereDefs)) {
+                    $whereSqlPart = $whereDefs;
+                    $whereDefs = [];
+                } else if (!empty($whereDefs['sql'])) {
+                    $whereSqlPart = $whereDefs['sql'];
+                } else if (!empty($whereDefs['whereClause'])) {
+                    $customWhereClause = $this->applyValueToCustomWhereClause($whereDefs['whereClause'], $value);
                 } else {
-                    if (!empty($fieldDefs['where'][$operatorModified]['sql'])) {
-                        $whereSqlPart = $fieldDefs['where'][$operatorModified]['sql'];
-                    }
+                    return '0';
                 }
 
-                if (!empty($fieldDefs['where'][$operatorModified]['leftJoins'])) {
-                    foreach ($fieldDefs['where'][$operatorModified]['leftJoins'] as $j) {
+                if (!empty($whereDefs['leftJoins'])) {
+                    foreach ($whereDefs['leftJoins'] as $j) {
                         $jAlias = $this->obtainJoinAlias($j);
                         foreach ($params['leftJoins'] as $jE) {
                             $jEAlias = $this->obtainJoinAlias($jE);
@@ -1893,8 +1899,8 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
                 }
 
-                if (!empty($fieldDefs['where'][$operatorModified]['joins'])) {
-                    foreach ($fieldDefs['where'][$operatorModified]['joins'] as $j) {
+                if (!empty($whereDefs['joins'])) {
+                    foreach ($whereDefs['joins'] as $j) {
                         $jAlias = $this->obtainJoinAlias($j);
                         foreach ($params['joins'] as $jE) {
                             $jEAlias = $this->obtainJoinAlias($jE);
@@ -1906,19 +1912,22 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
                 }
 
-                if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
-                    $params['customJoin'] .= ' ' . $fieldDefs['where'][$operatorModified]['customJoin'];
+                if (!empty($whereDefs['customJoin'])) {
+                    $params['customJoin'] .= ' ' . $whereDefs['customJoin'];
                 }
 
-                if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
+                if (!empty($whereDefs['distinct'])) {
                     $params['distinct'] = true;
+                }
+
+                if ($customWhereClause) {
+                    return "(" .$this->getWherePart($entity, $customWhereClause, 'AND', $params, $level) . ")";
                 }
 
                 return str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
             }
 
             if ($fieldDefs['type'] == Entity::FOREIGN) {
-                $leftPart = '';
                 if (isset($fieldDefs['relation'])) {
                     $relationName = $fieldDefs['relation'];
                     if ($entity->hasRelation($relationName)) {
@@ -1961,6 +1970,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
             if (!empty($value['selectParams'])) {
                 $subQuerySelectParams = $value['selectParams'];
+                $subQueryEntityType = $subQuerySelectParams['from'] ?? $subQueryEntityType;
             }
 
             if (!empty($value['withDeleted'])) {
@@ -2017,6 +2027,26 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         return $leftPart . " " . $operator . " " . $this->quote($value);
+    }
+
+    protected function applyValueToCustomWhereClause(array $whereClause, $value) : array
+    {
+        $modified = [];
+
+        foreach ($whereClause as $left => $right) {
+
+            if ($right === '{value}') {
+                $right = $value;
+            } else if (is_string($right)) {
+                $right = str_replace('{value}', (string) $value, $right);
+            } else if (is_array($right)) {
+                $right = $this->applyValueToCustomWhereClause($right, $value);
+            }
+
+            $modified[$left] = $right;
+        }
+
+        return $modified;
     }
 
     protected function obtainJoinAlias($j)
