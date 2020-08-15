@@ -31,7 +31,9 @@
             },
             "where": {
                 "=": {
-                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) = {value}",
+                    "whereClause": {
+                        "DIV:(MUL:(amount, probability, amountCurrencyRate.rate), 100)=": "{value}"
+                    },
                     "leftJoins": [
                         [
                             "Currency",
@@ -41,7 +43,9 @@
                     ]
                 },
                 "<": {
-                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) < {value}",
+                    "whereClause": {
+                        "DIV:(MUL:(amount, probability, amountCurrencyRate.rate), 100)<": "{value}"
+                    },
                     "leftJoins": [
                         [
                             "Currency",
@@ -51,7 +55,9 @@
                     ]
                 },
                 ">": {
-                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) > {value}",
+                    "whereClause": {
+                        "DIV:(MUL:(amount, probability, amountCurrencyRate.rate), 100)>": "{value}"
+                    },
                     "leftJoins": [
                         [
                             "Currency",
@@ -61,7 +67,9 @@
                     ]
                 },
                 "<=": {
-                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) <= {value}",
+                    "whereClause": {
+                        "DIV:(MUL:(amount, probability, amountCurrencyRate.rate), 100)<=": "{value}"
+                    },
                     "leftJoins": [
                         [
                             "Currency",
@@ -71,7 +79,9 @@
                     ]
                 },
                 ">=": {
-                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) >= {value}",
+                    "whereClause": {
+                        "DIV:(MUL:(amount, probability, amountCurrencyRate.rate), 100)>=": "{value}"
+                    },
                     "leftJoins": [
                         [
                             "Currency",
@@ -81,7 +91,9 @@
                     ]
                 },
                 "<>": {
-                    "sql": "(opportunity.amount * amountCurrencyRate.rate * opportunity.probability / 100) <> {value}",
+                    "whereClause": {
+                        "DIV:(MUL:(amount, probability, amountCurrencyRate.rate), 100)!=": "{value}"
+                    },
                     "leftJoins": [
                         [
                             "Currency",
@@ -91,7 +103,9 @@
                     ]
                 },
                 "IS NULL": {
-                    "sql": "opportunity.amount IS NULL",
+                    "whereClause": {
+                       "IS_NULL:(amount)": true
+                    },
                     "leftJoins": [
                         [
                             "Currency",
@@ -101,7 +115,9 @@
                     ]
                 },
                 "IS NOT NULL": {
-                    "sql": "opportunity.amount IS NOT NULL",
+                    "whereClause": {
+                       "IS_NOT_NULL:(amount)": true
+                    },
                     "leftJoins": [
                         [
                             "Currency",
@@ -112,7 +128,9 @@
                 }
             },
             "order": {
-                "sql": "amountWeightedConverted {direction}",
+                "order": [
+                    ["DIV:(MUL:(amount, probability, amountCurrencyRate.rate), 100)", "{direction}"]
+                ],
                 "leftJoins": [
                     [
                         "Currency",
@@ -212,27 +230,68 @@
             "where": {
                 "=": {
                     "leftJoins": ["contacts"],
-                    "sql": "contactsMiddle.role = {value}",
+                    "whereClause": {
+                        "contactsMiddle.role": "{value}"
+                    },
                     "distinct": true
                 },
-                "<>": "opportunity.id NOT IN (SELECT opportunity_id FROM contact_opportunity WHERE deleted = 0 AND role = {value})",
+                "<>": {
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "ContactOpportunity",
+                            "select": ["opportunityId"],
+                            "whereClause": {
+                                "deleted": 0,
+                                "role": "{value}"
+                            }
+                        }
+                    }
+                },
                 "IN": {
                     "leftJoins": ["contacts"],
-                    "sql": "contactsMiddle.role IN {value}",
+                    "whereClause": {
+                        "contactsMiddle.role": "{value}"
+                    },
                     "distinct": true
                 },
-                "NOT IN": "opportunity.id NOT IN (SELECT opportunity_id FROM contact_opportunity WHERE deleted = 0 AND role IN {value})",
+                "NOT IN": {
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "ContactOpportunity",
+                            "select": ["opportunityId"],
+                            "whereClause": {
+                                "deleted": 0,
+                                "role": "{value}"
+                            }
+                        }
+                    }
+                },
                 "LIKE": {
                     "leftJoins": ["contacts"],
-                    "sql": "contactsMiddle.role LIKE {value}",
+                    "whereClause": {
+                        "contactsMiddle.role*": "{value}"
+                    },
                     "distinct": true
                 },
                 "IS NULL": {
                     "leftJoins": ["contacts"],
-                    "sql": "contactsMiddle.role IS NULL",
+                    "whereClause": {
+                        "contactsMiddle.role": null
+                    },
                     "distinct": true
                 },
-                "IS NOT NULL": "opportunity.id NOT IN (SELECT opportunity_id FROM contact_opportunity WHERE deleted = 0 AND role IS NULL)"
+                "IS NOT NULL": {
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "ContactOpportunity",
+                            "select": ["opportunityId"],
+                            "whereClause": {
+                                "deleted": 0,
+                                "role": null
+                            }
+                        }
+                    }
+                }
             },
             "view": "crm:views/opportunity/fields/contact-role",
             "customizationOptionsDisabled": true
