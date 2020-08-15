@@ -100,27 +100,49 @@
             "where": {
                 "LIKE": {
                     "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role LIKE {value}",
+                    "whereClause": {
+                        "teamsPositionMiddle.role*": "{value}"
+                    },
+                    "distinct": true
+                },
+                "NOT LIKE": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "whereClause": {
+                        "teamsPositionMiddle.role!*": "{value}"
+                    },
                     "distinct": true
                 },
                 "=": {
                     "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role = {value}",
+                    "whereClause": {
+                        "teamsPositionMiddle.role": "{value}"
+                    },
                     "distinct": true
                 },
                 "<>": {
-                    "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role <> {value}",
-                    "distinct": true
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "TeamUser",
+                            "select": ["userId"],
+                            "whereClause": {
+                                "deleted": 0,
+                                "role": "{value}"
+                            }
+                        }
+                    }
                 },
                 "IS NULL": {
                     "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role IS NULL",
+                    "whereClause": {
+                        "teamsPositionMiddle.role": null
+                    },
                     "distinct": true
                 },
                 "IS NOT NULL": {
                     "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role IS NOT NULL",
+                    "whereClause": {
+                        "teamsPositionMiddle.role!=": null
+                    },
                     "distinct": true
                 }
             },

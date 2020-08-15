@@ -1276,7 +1276,6 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $selectNotSpecified = !count($itemList);
 
-
         if (!$selectNotSpecified && $itemList[0] === '*') {
             array_shift($itemList);
 
