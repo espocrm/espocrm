@@ -61,7 +61,10 @@ class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, D
                         $columnList[] = 'createdAccountId';
                         $columnList[] = 'createdAccountName';
                     }
-                    $parent = $this->getEntityManager()->getRepository($parentType)->select($columnList)->get($parentId);
+                    $parent = $this->getEntityManager()->getRepository($parentType)
+                        ->select($columnList)
+                        ->where(['id' => $parentId])
+                        ->findOne();
                 }
             }
             $accountId = null;
