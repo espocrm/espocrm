@@ -337,28 +337,76 @@
             "customizationReadOnlyDisabled": true,
             "where": {
                 "=": {
+                    "whereClause": {
+                        "opportunitiesMiddle.role": "{value}"
+                    },
                     "leftJoins": ["opportunities"],
-                    "sql": "opportunitiesMiddle.role = {value}",
                     "distinct": true
                 },
-                "<>": "contact.id NOT IN (SELECT contact_id FROM contact_opportunity WHERE deleted = 0 AND role = {value})",
+                "<>": {
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "ContactOpportunity",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role": "{value}"
+                            }
+                        }
+                    }
+                },
                 "IN": {
                     "leftJoins": ["opportunities"],
-                    "sql": "opportunitiesMiddle.role IN {value}",
+                    "whereClause": {
+                        "opportunitiesMiddle.role": "{value}"
+                    },
                     "distinct": true
                 },
-                "NOT IN": "contact.id NOT IN (SELECT contact_id FROM contact_opportunity WHERE deleted = 0 AND role IN {value})",
+                "NOT IN": {
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "ContactOpportunity",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role": "{value}"
+                            }
+                        }
+                    }
+                },
                 "LIKE": {
                     "leftJoins": ["opportunities"],
-                    "sql": "opportunitiesMiddle.role LIKE {value}",
+                    "whereClause": {
+                        "opportunitiesMiddle.role*": "{value}"
+                    },
+                    "distinct": true
+                },
+                "NOT LIKE": {
+                    "leftJoins": ["opportunities"],
+                    "whereClause": {
+                        "opportunitiesMiddle.role!*": "{value}"
+                    },
                     "distinct": true
                 },
                 "IS NULL": {
                     "leftJoins": ["opportunities"],
-                    "sql": "opportunitiesMiddle.role IS NULL",
+                    "whereClause": {
+                        "opportunitiesMiddle.role": null
+                    },
                     "distinct": true
                 },
-                "IS NOT NULL": "contact.id NOT IN (SELECT contact_id FROM contact_opportunity WHERE deleted = 0 AND role IS NULL)"
+                "IS NOT NULL": {
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "ContactOpportunity",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role": null
+                            }
+                        }
+                    }
+                }
             },
             "view": "crm:views/contact/fields/opportunity-role"
         },
@@ -454,21 +502,27 @@
             "customizationReadOnlyDisabled": true,
             "foreignAccessDisabled": true,
             "select": {
-                "sql": "portalUser.id IS NOT NULL",
+                "select": "IS_NOT_NULL:(portalUser.id)",
                 "leftJoins": [["portalUser", "portalUser"]]
             },
             "where": {
                 "= TRUE": {
-                    "sql": "portalUser.id IS NOT NULL",
+                    "whereClause": {
+                        "portalUser.id!=": null
+                    },
                     "leftJoins": [["portalUser", "portalUser"]]
                 },
                 "= FALSE": {
-                    "sql": "portalUser.id IS NULL",
+                    "whereClause": {
+                        "portalUser.id=": null
+                    },
                     "leftJoins": [["portalUser", "portalUser"]]
                 }
             },
             "order": {
-                "sql": "portalUser.id {direction}",
+                "order": [
+                    ["portalUser.id", "{direction}"]
+                ],
                 "leftJoins": [["portalUser", "portalUser"]],
                 "additionalSelect": ["portalUser.id"]
             }
