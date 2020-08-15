@@ -41,8 +41,14 @@
             "options": [900, 1800, 3600, 7200, 10800, 86400],
             "default": 3600,
             "notStorable": true,
-            "select": "TIMESTAMPDIFF(SECOND, meeting.date_start, meeting.date_end)",
-            "orderBy": "duration {direction}"
+            "select": {
+                "select": "TIMESTAMPDIFF_SECOND:(dateStart, dateEnd)"
+            },
+            "order": {
+                "order": [
+                    ["TIMESTAMPDIFF_SECOND:(dateStart, dateEnd)", "{direction}"]
+                ]
+            }
         },
         "reminders": {
             "type": "jsonArray",
@@ -76,23 +82,138 @@
             "exportDisabled": true,
             "where": {
                 "=": {
+                    "whereClause": {
+                        "OR": {
+                            "contactsMiddle.status": "{value}",
+                            "leadsMiddle.status": "{value}",
+                            "usersMiddle.status": "{value}"
+                        }
+                    },
                     "leftJoins": ["users", "contacts", "leads"],
-                    "sql": "contactsMiddle.status = {value} OR leadsMiddle.status = {value} OR usersMiddle.status = {value}",
                     "distinct": true
                 },
-                "<>": "meeting.id NOT IN (SELECT meeting_id FROM contact_meeting WHERE deleted = 0 AND status = {value}) AND meeting.id NOT IN (SELECT meeting_id FROM meeting_user WHERE deleted = 0 AND status = {value}) AND meeting.id NOT IN (SELECT meeting_id FROM lead_meeting WHERE deleted = 0 AND status = {value})",
+                "<>": {
+                    "whereClause": [
+                        {
+                            "id!=s": {
+                                "from": "ContactMeeting",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "LeadMeeting",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "MeetingUser",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        }
+                    ]
+                },
                 "IN": {
                     "leftJoins": ["users", "leads", "contacts"],
-                    "sql": "contactsMiddle.status IN {value} OR leadsMiddle.status IN {value} OR usersMiddle.status IN {value}",
+                    "whereClause": {
+                        "OR": {
+                            "contactsMiddle.status": "{value}",
+                            "leadsMiddle.status": "{value}",
+                            "usersMiddle.status": "{value}"
+                        }
+                    },
                     "distinct": true
                 },
-                "NOT IN": "meeting.id NOT IN (SELECT meeting_id FROM contact_meeting WHERE deleted = 0 AND status IN {value}) AND meeting.id NOT IN (SELECT meeting_id FROM meeting_user WHERE deleted = 0 AND status IN {value}) AND meeting.id NOT IN (SELECT meeting_id FROM lead_meeting WHERE deleted = 0 AND status IN {value})",
+                "NOT IN": {
+                    "whereClause": [
+                        {
+                            "id!=s": {
+                                "from": "ContactMeeting",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "LeadMeeting",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "MeetingUser",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        }
+                    ]
+                },
                 "IS NULL": {
                     "leftJoins": ["users", "contacts", "leads"],
-                    "sql": "contactsMiddle.status IS NULL AND leadsMiddle.status IS NULL AND usersMiddle.status IS NULL",
+                    "whereClause": {
+                        "contactsMiddle.status": null,
+                        "leadsMiddle.status": null,
+                        "usersMiddle.status": null
+                    },
                     "distinct": true
                 },
-                "IS NOT NULL": "meeting.id NOT IN (SELECT meeting_id FROM contact_meeting WHERE deleted = 0 AND status IS NULL) OR meeting.id NOT IN (SELECT meeting_id FROM meeting_user WHERE deleted = 0 AND status IS NULL) OR meeting.id NOT IN (SELECT meeting_id FROM lead_meeting WHERE deleted = 0 AND status IS NULL)"
+                "IS NOT NULL": {
+                    "whereClause": [
+                        {
+                            "id!=s": {
+                                "from": "ContactMeeting",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": null
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "LeadMeeting",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": null
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "MeetingUser",
+                                "select": ["meetingId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": null
+                                }
+                            }
+                        }
+                    ]
+                }
             },
             "view": "crm:views/meeting/fields/acceptance-status"
         },

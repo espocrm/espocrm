@@ -800,6 +800,8 @@ abstract class BaseQueryComposer implements QueryComposer
                 return 'TIMESTAMPDIFF(HOUR, ' . implode(', ', $argumentPartList) . ')';
             case 'TIMESTAMPDIFF_MINUTE':
                 return 'TIMESTAMPDIFF(MINUTE, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_SECOND':
+                return 'TIMESTAMPDIFF(SECOND, ' . implode(', ', $argumentPartList) . ')';
         }
 
         if ($distinct) {

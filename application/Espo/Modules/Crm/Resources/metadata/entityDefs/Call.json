@@ -33,8 +33,14 @@
             "options": [300, 600, 900, 1800, 2700, 3600, 7200],
             "default": 300,
             "notStorable": true,
-            "select": "TIMESTAMPDIFF(SECOND, call.date_start, call.date_end)",
-            "orderBy": "duration {direction}"
+            "select": {
+                "select": "TIMESTAMPDIFF_SECOND:(dateStart, dateEnd)"
+            },
+            "order": {
+                "order": [
+                    ["TIMESTAMPDIFF_SECOND:(dateStart, dateEnd)", "{direction}"]
+                ]
+            }
         },
         "reminders": {
             "type": "jsonArray",
@@ -73,23 +79,138 @@
             "exportDisabled": true,
             "where": {
                 "=": {
+                    "whereClause": {
+                        "OR": {
+                            "contactsMiddle.status": "{value}",
+                            "leadsMiddle.status": "{value}",
+                            "usersMiddle.status": "{value}"
+                        }
+                    },
                     "leftJoins": ["users", "contacts", "leads"],
-                    "sql": "contactsMiddle.status = {value} OR leadsMiddle.status = {value} OR usersMiddle.status = {value}",
                     "distinct": true
                 },
-                "<>": "call.id NOT IN (SELECT call_id FROM call_contact WHERE deleted = 0 AND status = {value}) AND call.id NOT IN (SELECT call_id FROM call_user WHERE deleted = 0 AND status = {value}) AND call.id NOT IN (SELECT call_id FROM call_lead WHERE deleted = 0 AND status = {value})",
+                "<>": {
+                    "whereClause": [
+                        {
+                            "id!=s": {
+                                "from": "CallContact",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "CallLead",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "CallUser",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        }
+                    ]
+                },
                 "IN": {
                     "leftJoins": ["users", "leads", "contacts"],
-                    "sql": "contactsMiddle.status IN {value} OR leadsMiddle.status IN {value} OR usersMiddle.status IN {value}",
+                    "whereClause": {
+                        "OR": {
+                            "contactsMiddle.status": "{value}",
+                            "leadsMiddle.status": "{value}",
+                            "usersMiddle.status": "{value}"
+                        }
+                    },
                     "distinct": true
                 },
-                "NOT IN": "call.id NOT IN (SELECT call_id FROM call_contact WHERE deleted = 0 AND status IN {value}) AND call.id NOT IN (SELECT call_id FROM call_user WHERE deleted = 0 AND status IN {value}) AND call.id NOT IN (SELECT call_id FROM call_lead WHERE deleted = 0 AND status IN {value})",
+                "NOT IN": {
+                    "whereClause": [
+                        {
+                            "id!=s": {
+                                "from": "CallContact",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "CallLead",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "CallUser",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": "{value}"
+                                }
+                            }
+                        }
+                    ]
+                },
                 "IS NULL": {
                     "leftJoins": ["users", "contacts", "leads"],
-                    "sql": "contactsMiddle.status IS NULL AND leadsMiddle.status IS NULL AND usersMiddle.status IS NULL",
+                    "whereClause": {
+                        "contactsMiddle.status": null,
+                        "leadsMiddle.status": null,
+                        "usersMiddle.status": null
+                    },
                     "distinct": true
                 },
-                "IS NOT NULL": "call.id NOT IN (SELECT call_id FROM call_contact WHERE deleted = 0 AND status IS NULL) OR call.id NOT IN (SELECT call_id FROM call_user WHERE deleted = 0 AND status IS NULL) OR call.id NOT IN (SELECT call_id FROM call_lead WHERE deleted = 0 AND status IS NULL)"
+                "IS NOT NULL": {
+                    "whereClause": [
+                        {
+                            "id!=s": {
+                                "from": "CallContact",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": null
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "CallLead",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": null
+                                }
+                            }
+                        },
+                        {
+                            "id!=s": {
+                                "from": "CallUser",
+                                "select": ["callId"],
+                                "whereClause": {
+                                    "deleted": 0,
+                                    "status": null
+                                }
+                            }
+                        }
+                    ]
+                }
             },
             "view": "crm:views/meeting/fields/acceptance-status"
         },

@@ -126,6 +126,7 @@ class Functions
         'TIMESTAMPDIFF_WEEK',
         'TIMESTAMPDIFF_HOUR',
         'TIMESTAMPDIFF_MINUTE',
+        'TIMESTAMPDIFF_SECOND',
     ];
 
     public static $multipleArgumentsFunctionList = [
@@ -159,6 +160,7 @@ class Functions
         'TIMESTAMPDIFF_WEEK',
         'TIMESTAMPDIFF_HOUR',
         'TIMESTAMPDIFF_MINUTE',
+        'TIMESTAMPDIFF_SECOND',
     ];
 
     public static $comparisonFunctionList = [

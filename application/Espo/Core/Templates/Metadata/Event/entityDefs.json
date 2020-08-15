@@ -41,8 +41,14 @@
             "options": [300, 600, 900, 1800, 2700, 3600, 7200],
             "default": 300,
             "notStorable": true,
-            "select": "TIMESTAMPDIFF(SECOND, {tableName}.date_start, {tableName}.date_end)",
-            "orderBy": "duration {direction}"
+            "select": {
+                "select": "TIMESTAMPDIFF_SECOND:(dateStart, dateEnd)"
+            },
+            "order": {
+                "order": [
+                    ["TIMESTAMPDIFF_SECOND:(dateStart, dateEnd)", "{direction}"]
+                ]
+            }
         },
         "parent": {
             "type": "linkParent",
