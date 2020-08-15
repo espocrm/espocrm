@@ -60,8 +60,16 @@ define('views/fields/bool', 'views/fields/base', function (Dep) {
 
             if (!type) return;
 
+            if (type === 'any') {
+                return {
+                    data: {
+                        type: type,
+                    },
+                };
+            }
+
             var data = {
-                type: type !== 'any' ? type : null,
+                type: type,
                 data: {
                     type: type,
                 },
