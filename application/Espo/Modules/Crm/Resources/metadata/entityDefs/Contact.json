@@ -24,12 +24,64 @@
         "accountId": {
             "type": "varchar",
             "where": {
-                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})",
-                "<>": "contact.id NOT IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})",
-                "IN": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id IN {value})",
-                "NOT IN": "contact.id NOT IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id IN {value})",
-                "IS NULL": "contact.account_id IS NULL",
-                "IS NOT NULL": "contact.account_id IS NOT NULL"
+                "=": {
+                    "whereClause": {
+                        "id=s": {
+                            "from": "AccountContact",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": 0,
+                                "accountId": "{value}"
+                            }
+                        }
+                    }
+                },
+                "<>": {
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "AccountContact",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": 0,
+                                "accountId": "{value}"
+                            }
+                        }
+                    }
+                },
+                "IN": {
+                    "whereClause": {
+                        "id=s": {
+                            "from": "AccountContact",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": 0,
+                                "accountId": "{value}"
+                            }
+                        }
+                    }
+                },
+                "NOT IN": {
+                    "whereClause": {
+                        "id!=s": {
+                            "from": "AccountContact",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": 0,
+                                "accountId": "{value}"
+                            }
+                        }
+                    }
+                },
+                "IS NULL": {
+                    "whereClause": {
+                        "accountId": null
+                    }
+                },
+                "IS NOT NULL": {
+                    "whereClause": {
+                        "accountId!=": null
+                    }
+                }
             },
             "customizationDisabled": true,
             "disabled": true
@@ -41,7 +93,7 @@
             "directUpdateDisabled": true,
             "notStorable": true,
             "select": {
-                "sql": "accountContact.role",
+                "select": "accountContact.role",
                 "leftJoins": [
                     [
                         "AccountContact",
@@ -55,7 +107,9 @@
                 ]
             },
             "order": {
-                "sql": "accountContact.role {direction}",
+                "order": [
+                    ["accountContact.role", "{direction}"]
+                ],
                 "leftJoins": [
                     [
                         "AccountContact",
@@ -71,27 +125,44 @@
             "where": {
                 "LIKE": {
                     "leftJoins": ["accounts"],
-                    "sql": "accountsMiddle.role LIKE {value}",
+                    "whereClause": {
+                        "accountsMiddle.role*": "{value}"
+                    },
+                    "distinct": true
+                },
+                "NOT LIKE": {
+                    "leftJoins": ["accounts"],
+                    "whereClause": {
+                        "accountsMiddle.role!*": "{value}"
+                    },
                     "distinct": true
                 },
                 "=": {
                     "leftJoins": ["accounts"],
-                    "sql": "accountsMiddle.role = {value}",
+                    "whereClause": {
+                        "accountsMiddle.role": "{value}"
+                    },
                     "distinct": true
                 },
                 "<>": {
                     "leftJoins": ["accounts"],
-                    "sql": "accountsMiddle.role <> {value}",
+                    "whereClause": {
+                        "accountsMiddle.role!=": "{value}"
+                    },
                     "distinct": true
                 },
                 "IS NULL": {
                     "leftJoins": ["accounts"],
-                    "sql": "accountsMiddle.role IS NULL",
+                    "whereClause": {
+                        "accountsMiddle.role=": null
+                    },
                     "distinct": true
                 },
                 "IS NOT NULL": {
                     "leftJoins": ["accounts"],
-                    "sql": "accountsMiddle.role IS NOT NULL",
+                    "whereClause": {
+                        "accountsMiddle.role!=": null
+                    },
                     "distinct": true
                 }
             },
@@ -172,7 +243,7 @@
             "notStorable": true,
             "mergeDisabled": true,
             "select": {
-                "sql": "accountContact.is_inactive",
+                "select": "accountContact.isInactive",
                 "leftJoins": [
                     [
                         "AccountContact",
@@ -186,7 +257,9 @@
                 ]
             },
             "order": {
-                "sql": "accountContact.is_inactive {direction}",
+                "order": [
+                    ["accountContact.isInactive", "{direction}"]
+                ],
                 "leftJoins": [
                     [
                         "AccountContact",
@@ -205,20 +278,39 @@
                         [
                             "AccountContact",
                             "accountContactFilterIsInactive",
-                            {"contact.accountId:": "accountContactFilterIsInactive.accountId"}
+                            {
+                                "accountContactFilterIsInactive.contactId:": "id",
+                                "accountContactFilterIsInactive.accountId:": "accountId",
+                                "accountContactFilterIsInactive.deleted": false
+                            }
                         ]
                     ],
-                    "sql": "accountContactFilterIsInactive.is_inactive = true"
+                    "whereClause": {
+                        "accountContactFilterIsInactive.isInactive": true
+                    }
                 },
                 "= FALSE": {
                     "leftJoins": [
                         [
                             "AccountContact",
                             "accountContactFilterIsInactive",
-                            {"contact.accountId:": "accountContactFilterIsInactive.accountId"}
+                            {
+                                "accountContactFilterIsInactive.contactId:": "id",
+                                "accountContactFilterIsInactive.accountId:": "accountId",
+                                "accountContactFilterIsInactive.deleted": false
+                            }
                         ]
                     ],
-                    "sql": "accountContactFilterIsInactive.is_inactive <> true OR accountContactFilterIsInactive.is_inactive IS NULL"
+                    "whereClause": {
+                        "OR": [
+                            {
+                                "accountContactFilterIsInactive.isInactive!=": true
+                            },
+                            {
+                                "accountContactFilterIsInactive.isInactive=": null
+                            }
+                        ]
+                    }
                 }
             },
             "layoutListDisabled": true,
