@@ -785,6 +785,32 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectWithSubquery2()
+    {
+        $sql = $this->query->compose(Select::fromRaw([
+            'from' => 'Post',
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'post.id=s' => [
+                    'from' => 'Post',
+                    'select' => ['id'],
+                    'whereClause' => [
+                        'name' => 'test'
+                    ]
+                ]
+            ]
+        ]));
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` ".
+            "FROM `post` ".
+            "WHERE post.id IN ".
+            "(SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = 0) AND ".
+            "post.deleted = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testGroupBy()
     {
         $sql = $this->query->compose(Select::fromRaw([
@@ -1492,6 +1518,28 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "SELECT test_where.id AS `id` ".
             "FROM `test_where` ".
             "WHERE (test_where.test = 1 AND test_where.id IS NOT NULL) AND test_where.test = 2";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testCustomWhere3()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select(['id'])
+            ->where([
+                'test1' => ['hello', 'test'],
+            ])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id` ".
+            "FROM `test_where` ".
+            "WHERE (test_where.test IN ('hello','test'))";
 
         $this->assertEquals($expectedSql, $sql);
     }

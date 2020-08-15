@@ -648,7 +648,8 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
             }
             if (count($extraSelect)) {
-                $extraSelectPart = $this->getSelectPart($entity, ['select' => $extraSelect]);
+                $newParams = ['select' => $extraSelect];
+                $extraSelectPart = $this->getSelectPart($entity, $newParams);
 
                 if ($extraSelectPart) {
                     $selectPart .= ', ' . $extraSelectPart;
@@ -1035,7 +1036,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($params) {
-            $this->applyAttributeCustomParams($defs, $params);
+            $this->applyAttributeCustomParams($defs, $params, $attribute);
         }
 
         if (is_string($fieldDefs['order'])) {
@@ -1103,7 +1104,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($params) {
-            $this->applyAttributeCustomParams($defs, $params, $alias);
+            $this->applyAttributeCustomParams($defs, $params, $attribute, $alias);
         }
 
         if (is_string($fieldDefs[$type])) {
@@ -1133,7 +1134,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
     }
 
-    protected function applyAttributeCustomParams(array $defs, array &$params, ?string $alias = null)
+    protected function applyAttributeCustomParams(array $defs, array &$params, string $attribute, ?string $alias = null)
     {
         if (!empty($defs['leftJoins'])) {
             foreach ($defs['leftJoins'] as $j) {
@@ -2095,8 +2096,11 @@ abstract class BaseQueryComposer implements QueryComposer
 
             if (!empty($value['selectParams'])) {
                 $subQuerySelectParams = $value['selectParams'];
-                $subQueryEntityType = $subQuerySelectParams['from'] ?? $subQueryEntityType;
+            } else {
+                $subQuerySelectParams = $value;
             }
+
+            $subQueryEntityType = $subQuerySelectParams['from'] ?? $subQueryEntityType;
 
             if (!empty($value['withDeleted'])) {
                 $subQuerySelectParams['withDeleted'] = true;

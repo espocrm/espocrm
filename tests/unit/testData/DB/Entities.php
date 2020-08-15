@@ -477,6 +477,11 @@ class TestWhere extends TEntity
                         ['Test', 't', ['t.id:' => 'id']],
                     ],
                 ],
+                "IN" => [
+                    'whereClause' => [
+                        'test' => '{value}'
+                    ],
+                ]
             ],
             'order' => [
                 'order' => [
