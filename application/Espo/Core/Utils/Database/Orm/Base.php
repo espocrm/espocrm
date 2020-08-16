@@ -222,45 +222,6 @@ class Base
 
     protected function getForeignField(string $name, string $entityType)
     {
-        $foreignField = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $name]);
-
-        if (isset($foreignField['type']) && $foreignField['type'] == 'personName') {
-            $personNameFormat = $this->config->get('personNameFormat');
-
-            switch ($personNameFormat) {
-                case 'lastFirst':
-                    return [
-                        'last' . ucfirst($name),
-                        ' ',
-                        'first' . ucfirst($name),
-                    ];
-
-                case 'lastFirstMiddle':
-                    return [
-                        'last' . ucfirst($name),
-                        ' ',
-                        'first' . ucfirst($name),
-                        ' ',
-                        'middle' . ucfirst($name),
-                    ];
-
-                case 'firstMiddleLast':
-                    return [
-                        'first' . ucfirst($name),
-                        ' ',
-                        'middle' . ucfirst($name),
-                        ' ',
-                        'last' . ucfirst($name),
-                    ];
-            }
-
-            return [
-                'first' . ucfirst($name),
-                ' ',
-                'last' . ucfirst($name),
-            ];
-        }
-
         return $name;
     }
 

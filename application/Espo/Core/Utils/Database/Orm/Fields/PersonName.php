@@ -58,8 +58,6 @@ class PersonName extends Base
                 $subList = ['first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)];
         }
 
-        $tableName = Util::toUnderScore($entityType);
-
         if ($format === 'lastFirstMiddle' || $format === 'lastFirst') {
             $orderBy1Field = 'last' . ucfirst($fieldName);
             $orderBy2Field = 'first' . ucfirst($fieldName);
@@ -68,58 +66,88 @@ class PersonName extends Base
             $orderBy2Field = 'last' . ucfirst($fieldName);
         }
 
-        $uname = ucfirst($fieldName);
-
         $fullList = [];
-        $fieldList = [];
 
-        $parts = [];
+        $whereItems = [];
 
         foreach ($subList as $subFieldName) {
             $fieldNameTrimmed = trim($subFieldName);
-            if (!empty($fieldNameTrimmed)) {
-                $columnName = $tableName . '.' . Util::toUnderScore($fieldNameTrimmed);
 
-                $fullList[] = $fieldList[] = $columnName;
-                $parts[] = $columnName." {operator} {value}";
-            } else {
+            if (empty($fieldNameTrimmed)) {
                 $fullList[] = "'" . $subFieldName . "'";
+                continue;
             }
+
+            $fullList[] = $fieldNameTrimmed;
+
+            $whereItems[] = $fieldNameTrimmed;
         }
 
-        $firstColumn = $tableName . '.' . Util::toUnderScore('first' . $uname);
-        $lastColumn = $tableName . '.' . Util::toUnderScore('last' . $uname);
-        $middleColumn = $tableName . '.' . Util::toUnderScore('middle' . $uname);
+        $uname = ucfirst($fieldName);
 
-        $whereString = "".implode(" OR ", $parts);
+        $firstName = 'first' . $uname;
+        $middleName = 'middle' . $uname;
+        $lastName = 'last' . $uname;
+
+        $whereItems[] = "CONCAT:({$firstName}, ' ', {$lastName})";
+        $whereItems[] = "CONCAT:({$lastName}, ' ', {$firstName})";
 
         if ($format === 'firstMiddleLast') {
-            $whereString .=
-                " OR CONCAT({$firstColumn}, ' ', {$middleColumn}, ' ', {$lastColumn}) {operator} {value}" .
-                " OR CONCAT({$firstColumn}, ' ', {$lastColumn}) {operator} {value}" .
-                " OR CONCAT({$lastColumn}, ' ', {$firstColumn}) {operator} {value}";
-        } else if ($format === 'lastFirstMiddle') {
-            $whereString .=
-                " OR CONCAT({$lastColumn}, ' ', {$firstColumn}, ' ', {$middleColumn}) {operator} {value}" .
-                " OR CONCAT({$firstColumn}, ' ', {$lastColumn}) {operator} {value}" .
-                " OR CONCAT({$lastColumn}, ' ', {$firstColumn}) {operator} {value}";
-        } else {
-            $whereString .= " OR CONCAT({$firstColumn}, ' ', {$lastColumn}) {operator} {value}";
-            $whereString .= " OR CONCAT({$lastColumn}, ' ', {$firstColumn}) {operator} {value}";
+            $whereItems[] = "CONCAT:({$firstName}, ' ', {$middleName}, ' ', {$lastName})";
+        } else
+        if ($format === 'lastFirstMiddle') {
+            $whereItems[] = "CONCAT:({$lastName}, ' ', {$firstColumn}, ' ', {$middleName})";
         }
 
-        $selectString = $this->getSelect($fullList);
+        $selectExpression = $this->getSelect($fullList);
+
+        $selectForeignExpression = $this->getSelect($fullList, '{alias}');
 
         if ($format === 'firstMiddleLast' || $format === 'lastFirstMiddle') {
-            $selectString = "REPLACE({$selectString}, '  ', ' ')";
+            $selectExpression = "REPLACE:({$selectExpression}, '  ', ' ')";
+            $selectForeignExpression = "REPLACE:({$selectForeignExpression}, '  ', ' ')";
         }
 
         $fieldDefs = [
             'type' => 'varchar',
-            'select' => $selectString,
+            'select' => [
+                'select' => $selectExpression,
+            ],
+            'selectForeign' => [
+                'select' => $selectForeignExpression,
+            ],
             'where' => [
-                'LIKE' => str_replace('{operator}', 'LIKE', $whereString),
-                '=' => str_replace('{operator}', '=', $whereString),
+                'LIKE' => [
+                    'whereClause' => [
+                        'OR' => array_fill_keys(
+                            array_map(
+                                function ($item) {
+                                    return $item . '*';
+                                },
+                                $whereItems
+                            ),
+                            '{value}'
+                        ),
+                    ],
+                ],
+                'NOT LIKE' => [
+                    'whereClause' => [
+                        'AND' => array_fill_keys(
+                            array_map(
+                                function ($item) {
+                                    return $item . '!*';
+                                },
+                                $whereItems,
+                            ),
+                            '{value}'
+                        ),
+                    ],
+                ],
+                '=' => [
+                    'whereClause' => [
+                        'OR' => array_fill_keys($whereItems, '{value}'),
+                    ],
+                ],
             ],
             'order' => [
                 'order' => [
@@ -141,23 +169,29 @@ class PersonName extends Base
             $entityType => [
                 'fields' => [
                     $fieldName => $fieldDefs,
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
-    protected function getSelect(array $fullList)
+    protected function getSelect(array $fullList, ?string $alias = null) : string
     {
         foreach ($fullList as &$item) {
 
             $rowItem = trim($item, " '");
 
-            if (!empty($rowItem)) {
-                $item = "IFNULL(".$item.", '')";
+            if (empty($rowItem)) {
+                continue;
             }
+
+            if ($alias) {
+                $item = $alias . '.' . $item;
+            }
+
+            $item = "IFNULL:({$item}, '')";
         }
 
-        $select = "TRIM(CONCAT(".implode(", ", $fullList)."))";
+        $select = "TRIM:(CONCAT:(" . implode(", ", $fullList) . "))";
 
         return $select;
     }
