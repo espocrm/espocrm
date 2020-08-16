@@ -58,11 +58,7 @@ class Helper
         switch ($type) {
 
             case Entity::BELONGS_TO:
-                $key = lcfirst($entity->getEntityType()) . 'Id';
-
-                if (isset($params['key'])) {
-                    $key = $params['key'];
-                }
+                $key = $params['key'] ?? ($relationName . 'Id');
 
                 $foreignKey = 'id';
 
@@ -77,16 +73,18 @@ class Helper
 
             case Entity::HAS_MANY:
             case Entity::HAS_ONE:
-                $key = 'id';
+                $key = $params['key'] ?? 'id';
 
-                if (isset($params['key'])){
-                    $key = $params['key'];
+                $foreign = $params['foreign'] ?? null;
+
+                $foreignKey = $params['foreignKey'] ?? null;
+
+                if (!$foreignKey && $foreign) {
+                    $foreignKey = $foreign . 'Id';
                 }
 
-                $foreignKey = lcfirst($entity->getEntityType()) . 'Id';
-
-                if (isset($params['foreignKey'])) {
-                    $foreignKey = $params['foreignKey'];
+                if (!$foreignKey) {
+                    $foreignKey = lcfirst($entity->getEntityType()) . 'Id';
                 }
 
                 return [
@@ -144,7 +142,7 @@ class Helper
                     'key' => $key,
                     'foreignKey' => $foreignKey,
                     'nearKey' => $nearKey,
-                    'distantKey' => $distantKey
+                    'distantKey' => $distantKey,
                 ];
 
             case Entity::BELONGS_TO_PARENT:

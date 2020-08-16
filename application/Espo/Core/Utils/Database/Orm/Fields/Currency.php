@@ -37,7 +37,7 @@ class Currency extends Base
     {
         $converedFieldName = $fieldName . 'Converted';
 
-        $currencyColumnName = Util::toUnderScore($fieldName);
+        //$currencyColumnName = Util::toUnderScore($fieldName);
 
         $alias = $fieldName . 'CurrencyRate';
 
@@ -48,19 +48,22 @@ class Currency extends Base
                         'type' => 'float',
                     ]
                 ]
-            ]
+            ],
         ];
 
-        $part = Util::toUnderScore($entityType) . "." . $currencyColumnName;
+        //$part = Util::toUnderScore($entityType) . "." . $currencyColumnName;
+
         $leftJoins = [
             [
                 'Currency',
                 $alias,
-                [$alias . '.id:' => $fieldName . 'Currency']
+                [$alias . '.id:' => $fieldName . 'Currency'],
             ]
         ];
 
-        $foreignAlias = "{$alias}{$entityType}{alias}Foreign";
+        $foreignCurrencyAlias = "{$alias}{$entityType}{alias}Foreign";
+
+        $mulExpression = "MUL:({$fieldName}, {$alias}.rate)";
 
         $params = $this->getFieldParams($fieldName);
         if (!empty($params['notStorable'])) {
@@ -69,35 +72,77 @@ class Currency extends Base
             $defs[$entityType]['fields'][$fieldName . 'Converted'] = [
                 'type' => 'float',
                 'select' => [
-                    'sql' => $part . " * {$alias}.rate",
+                    //'sql' => $part . " * {$alias}.rate",
+                    'select' => $mulExpression,
                     'leftJoins' => $leftJoins,
                 ],
                 'selectForeign' => [
-                    'sql' => "{alias}.{$currencyColumnName} * {$foreignAlias}.rate",
+                    //'sql' => "{alias}.{$fieldName} * {$foreignCurrencyAlias}.rate",
+                    'select' => "MUL:({alias}.{$fieldName}, {$foreignCurrencyAlias}.rate)",
                     'leftJoins' => [
                         [
                             'Currency',
-                            $foreignAlias,
+                            $foreignCurrencyAlias,
                             [
-                                $foreignAlias . '.id:' => "{alias}.{$fieldName}Currency"
+                                $foreignCurrencyAlias . '.id:' => "{alias}.{$fieldName}Currency",
                             ]
                         ]
                     ],
                 ],
-                'where' =>
-                [
-                        "=" => ['sql' => $part . " * {$alias}.rate = {value}", 'leftJoins' => $leftJoins],
-                        ">" => ['sql' => $part . " * {$alias}.rate > {value}", 'leftJoins' => $leftJoins],
-                        "<" => ['sql' => $part . " * {$alias}.rate < {value}", 'leftJoins' => $leftJoins],
-                        ">=" => ['sql' => $part . " * {$alias}.rate >= {value}", 'leftJoins' => $leftJoins],
-                        "<=" => ['sql' => $part . " * {$alias}.rate <= {value}", 'leftJoins' => $leftJoins],
-                        "<>" => ['sql' => $part . " * {$alias}.rate <> {value}", 'leftJoins' => $leftJoins],
-                        "IS NULL" => ['sql' => $part . ' IS NULL'],
-                        "IS NOT NULL" => ['sql' => $part . ' IS NOT NULL'],
+                'where' => [
+                    "=" => [
+                        'whereClause' => [
+                            $mulExpression . '=' => '{value}',
+                        ],
+                        'leftJoins' => $leftJoins,
+                    ],
+                    ">" => [
+                        'whereClause' => [
+                            $mulExpression . '>' => '{value}',
+                        ],
+                        'leftJoins' => $leftJoins,
+                    ],
+                    "<" => [
+                        'whereClause' => [
+                            $mulExpression . '<' => '{value}',
+                        ],
+                        'leftJoins' => $leftJoins,
+                    ],
+                    ">=" => [
+                        'whereClause' => [
+                            $mulExpression . '>=' => '{value}',
+                        ],
+                        'leftJoins' => $leftJoins,
+                    ],
+                    "<=" => [
+                        'whereClause' => [
+                            $mulExpression . '<=' => '{value}',
+                        ],
+                        'leftJoins' => $leftJoins,
+                    ],
+                    "<>" => [
+                        'whereClause' => [
+                            $mulExpression . '!=' => '{value}',
+                        ],
+                        'leftJoins' => $leftJoins,
+                    ],
+                    "IS NULL" => [
+                        'whereClause' => [
+                            $fieldName . '=' => null,
+                        ],
+                    ],
+                    "IS NOT NULL" => [
+                        'whereClause' => [
+                            $fieldName . '!=' => null,
+                        ],
+                    ],
                 ],
                 'notStorable' => true,
                 'order' => [
-                    'sql' => $converedFieldName . " {direction}",
+                    //'sql' => $converedFieldName . " {direction}",
+                    'order' => [
+                        [$mulExpression, '{direction}'],
+                    ],
                     'leftJoins' => $leftJoins,
                     'additionalSelect' => ["{$alias}.rate"],
                 ],
@@ -106,7 +151,10 @@ class Currency extends Base
             ];
 
             $defs[$entityType]['fields'][$fieldName]['order'] = [
-                'sql' => $part . " * {$alias}.rate {direction}",
+                //'sql' => $part . " * {$alias}.rate {direction}",
+                "order" => [
+                    [$mulExpression, '{direction}'],
+                ],
                 'leftJoins' => $leftJoins,
                 'additionalSelect' => ["{$alias}.rate"],
             ];

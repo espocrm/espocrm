@@ -1124,7 +1124,13 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!empty($defs['select'])) {
-            $pair = $this->getSelectPartItemPair($entity, $params, $defs['select']);
+            $expression = $defs['select'];
+
+            if ($alias) {
+                $expression = str_replace('{alias}', $alias, $expression);
+            }
+
+            $pair = $this->getSelectPartItemPair($entity, $params, $expression);
 
             if ($pair === null) {
                 throw new LogicException("Could not handle 'select'.");

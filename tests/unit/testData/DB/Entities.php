@@ -513,3 +513,55 @@ class TestWhere extends TEntity
         ],
     ];
 }
+
+class TestSelect extends TEntity
+{
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'test' => [
+            'type' => Entity::VARCHAR,
+            'notStorable' => true,
+            'select' => [
+                'select' => 'MUL:(id, 1)',
+            ],
+            'selectForeign' => [
+                'select' => 'MUL:({alias}.id, 1)',
+            ],
+            'order' => [
+                'order' => [
+                    ['MUL:({alias}.id, 1)', '{direction}'],
+                ],
+            ],
+        ],
+    ];
+
+    public $relations = [
+        'right' => [
+            'type' => Entity::HAS_MANY,
+            'foreign' => 'left',
+            'entity' => 'TestSelectRight',
+        ],
+    ];
+}
+
+class TestSelectRight extends TEntity
+{
+    public $fields = [
+        'id' => [
+            'type' => Entity::ID,
+        ],
+        'leftId' => [
+            'type' => Entity::FOREIGN_ID,
+        ],
+    ];
+
+    public $relations = [
+        'left' => [
+            'type' => Entity::BELONGS_TO,
+            'foreign' => 'right',
+            'entity' => 'TestSelect',
+        ],
+    ];
+}
