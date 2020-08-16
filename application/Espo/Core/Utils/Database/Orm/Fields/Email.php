@@ -36,84 +36,138 @@ class Email extends Base
         $foreignJoinAlias = "{$fieldName}{$entityType}{alias}Foreign";
         $foreignJoinMiddleAlias = "{$fieldName}{$entityType}{alias}ForeignMiddle";
 
+        $mainFieldDefs = [
+            'select' => [
+                "select" => "emailAddresses.name",
+                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+            ],
+            'selectForeign' => [
+                "select" => "{$foreignJoinAlias}.name",
+                'leftJoins' => [
+                    [
+                        'EntityEmailAddress',
+                        $foreignJoinMiddleAlias,
+                        [
+                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
+                            "{$foreignJoinMiddleAlias}.primary" => 1,
+                            "{$foreignJoinMiddleAlias}.deleted" => 0,
+                        ]
+                    ],
+                    [
+                        'EmailAddress',
+                        $foreignJoinAlias,
+                        [
+                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
+                            "{$foreignJoinAlias}.deleted" => 0,
+                        ]
+                    ]
+                ],
+            ],
+            'fieldType' => 'email',
+            'where' => [
+                'LIKE' => [
+                    'whereClause' => [
+                        'id=s' => [
+                            'from' => 'EntityEmailAddress',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'emailAddress',
+                                    'emailAddress',
+                                    [
+                                        'emailAddress.id:' => 'emailAddressId',
+                                        'emailAddress.deleted' => false,
+                                    ],
+                                ]
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'emailAddress.lower*' => '{value}',
+                            ],
+                        ],
+                    ],
+                ],
+                'NOT LIKE' => [
+                    'whereClause' => [
+                        'id!=s' => [
+                            'from' => 'EntityEmailAddress',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'emailAddress',
+                                    'emailAddress',
+                                    [
+                                        'emailAddress.id:' => 'emailAddressId',
+                                        'emailAddress.deleted' => false,
+                                    ],
+                                ]
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'emailAddress.lower*' => '{value}',
+                            ],
+                        ],
+                    ],
+                ],
+                '=' => [
+                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                    'whereClause' => [
+                        'emailAddressesMultiple.lower=' => '{value}',
+                    ],
+                    'distinct' => true,
+                ],
+                '<>' => [
+                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                    'whereClause' => [
+                        'emailAddressesMultiple.lower!=' => '{value}',
+                    ],
+                    'distinct' => true,
+                ],
+                'IN' => [
+                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                    'whereClause' => [
+                        'emailAddressesMultiple.lower=' => '{value}',
+                    ],
+                    'distinct' => true,
+                ],
+                'NOT IN' => [
+                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                    'whereClause' => [
+                        'emailAddressesMultiple.lower!=' => '{value}',
+                    ],
+                    'distinct' => true,
+                ],
+                'IS NULL' => [
+                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                    'whereClause' => [
+                        'emailAddressesMultiple.lower=' => null,
+                    ],
+                    'distinct' => true,
+                ],
+                'IS NOT NULL' => [
+                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                    'whereClause' => [
+                        'emailAddressesMultiple.lower!=' => null,
+                    ],
+                    'distinct' => true,
+                ],
+            ],
+            'order' => [
+                'order' => [
+                    ['emailAddresses.lower', '{direction}'],
+                ],
+                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                'additionalSelect' => ['emailAddresses.lower'],
+            ],
+        ];
+
         return [
             $entityType => [
                 'fields' => [
-                    $fieldName => [
-                        'select' => [
-                            'sql' => 'emailAddresses.name',
-                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
-                        ],
-                        'selectForeign' => [
-                            'sql' => "{$foreignJoinAlias}.name",
-                            'leftJoins' => [
-                                [
-                                    'EntityEmailAddress',
-                                    $foreignJoinMiddleAlias,
-                                    [
-                                        "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                                        "{$foreignJoinMiddleAlias}.primary" => 1,
-                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
-                                    ]
-                                ],
-                                [
-                                    'EmailAddress',
-                                    $foreignJoinAlias,
-                                    [
-                                        "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
-                                        "{$foreignJoinAlias}.deleted" => 0,
-                                    ]
-                                ]
-                            ],
-                        ],
-                        'fieldType' => 'email',
-                        'where' => [
-                            'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityType) . ".id IN (
-                                SELECT entity_id
-                                FROM entity_email_address
-                                JOIN email_address ON email_address.id = entity_email_address.email_address_id
-                                WHERE
-                                    entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityType}' AND
-                                    email_address.deleted = 0 AND email_address.lower LIKE {value}
-                            )",
-                            '=' => array(
-                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.lower = {value}',
-                                'distinct' => true
-                            ),
-                            '<>' => array(
-                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.lower <> {value}',
-                                'distinct' => true
-                            ),
-                            'IN' => array(
-                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.lower IN {value}',
-                                'distinct' => true
-                            ),
-                            'NOT IN' => array(
-                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.lower NOT IN {value}',
-                                'distinct' => true
-                            ),
-                            'IS NULL' => array(
-                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.lower IS NULL',
-                                'distinct' => true
-                            ),
-                            'IS NOT NULL' => array(
-                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.lower IS NOT NULL',
-                                'distinct' => true
-                            )
-                        ],
-                        'order' => [
-                            'sql' => 'emailAddresses.lower {direction}',
-                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
-                            'additionalSelect' => ['emailAddresses.lower'],
-                        ],
-                    ],
-                    $fieldName .'Data' => [
+                    $fieldName => $mainFieldDefs,
+                    $fieldName . 'Data' => [
                         'type' => 'text',
                         'notStorable' => true,
                         'notExportable' => true,
@@ -121,9 +175,12 @@ class Email extends Base
                     $fieldName .'IsOptedOut' => [
                         'type' => 'bool',
                         'notStorable' => true,
-                        'select' => 'emailAddresses.opt_out',
+                        'select' => [
+                            'select' => "emailAddresses.optOut",
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                        ],
                         'selectForeign' => [
-                            'sql' => "{$foreignJoinAlias}.opt_out",
+                            'select' => "{$foreignJoinAlias}.optOut",
                             'leftJoins' => [
                                 [
                                     'EntityEmailAddress',
@@ -146,20 +203,30 @@ class Email extends Base
                         ],
                         'where' => [
                             '= TRUE' => [
-                                'sql' => 'emailAddresses.opt_out = true AND emailAddresses.opt_out IS NOT NULL',
+                                'whereClause' => [
+                                    ['emailAddresses.optOut=' => true],
+                                    ['emailAddresses.optOut!=' => null],
+                                ],
                                 'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
                             ],
                             '= FALSE' => [
-                                'sql' => 'emailAddresses.opt_out = false OR emailAddresses.opt_out IS NULL',
+                                'whereClause' => [
+                                    'OR' => [
+                                        ['emailAddresses.optOut=' => false],
+                                        ['emailAddresses.optOut=' => null],
+                                    ]
+                                ],
                                 'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
                             ]
                         ],
                         'order' => [
-                            'sql' => 'emailAddresses.opt_out {direction}',
+                            'order' => [
+                                ['emailAddresses.optOut', '{direction}'],
+                            ],
                             'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
-                            'additionalSelect' => ['emailAddresses.opt_out'],
+                            'additionalSelect' => ['emailAddresses.optOut'],
                         ],
-                    ]
+                    ],
                 ],
                 'relations' => [
                     'emailAddresses' => [
@@ -171,21 +238,21 @@ class Email extends Base
                             'emailAddressId'
                         ],
                         'conditions' => [
-                            'entityType' => $entityType
+                            'entityType' => $entityType,
                         ],
                         'additionalColumns' => [
                             'entityType' => [
                                 'type' => 'varchar',
-                                'len' => 100
+                                'len' => 100,
                             ],
                             'primary' => [
                                 'type' => 'bool',
-                                'default' => false
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                'default' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 }

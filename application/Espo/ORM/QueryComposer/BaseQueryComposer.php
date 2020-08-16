@@ -1301,7 +1301,7 @@ abstract class BaseQueryComposer implements QueryComposer
             );
         }
 
-        if (empty($params['strictSelect']) && $params['distinct']) {
+        if (empty($params['strictSelect']) && !empty($params['distinct'])) {
             $orderByAttributeList = $this->getOrderByAttributeList($params);
 
             $itemList = array_merge(

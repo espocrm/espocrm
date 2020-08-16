@@ -144,7 +144,6 @@ class Currency extends Base
             ];
 
             $defs[$entityType]['fields'][$fieldName]['order'] = [
-                //'sql' => $part . " * {$alias}.rate {direction}",
                 "order" => [
                     [$mulExpression, '{direction}'],
                 ],
