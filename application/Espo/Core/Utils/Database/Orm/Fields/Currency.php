@@ -37,8 +37,6 @@ class Currency extends Base
     {
         $converedFieldName = $fieldName . 'Converted';
 
-        //$currencyColumnName = Util::toUnderScore($fieldName);
-
         $alias = $fieldName . 'CurrencyRate';
 
         $defs = [
@@ -50,8 +48,6 @@ class Currency extends Base
                 ]
             ],
         ];
-
-        //$part = Util::toUnderScore($entityType) . "." . $currencyColumnName;
 
         $leftJoins = [
             [
@@ -72,12 +68,10 @@ class Currency extends Base
             $defs[$entityType]['fields'][$fieldName . 'Converted'] = [
                 'type' => 'float',
                 'select' => [
-                    //'sql' => $part . " * {$alias}.rate",
                     'select' => $mulExpression,
                     'leftJoins' => $leftJoins,
                 ],
                 'selectForeign' => [
-                    //'sql' => "{alias}.{$fieldName} * {$foreignCurrencyAlias}.rate",
                     'select' => "MUL:({alias}.{$fieldName}, {$foreignCurrencyAlias}.rate)",
                     'leftJoins' => [
                         [
@@ -139,7 +133,6 @@ class Currency extends Base
                 ],
                 'notStorable' => true,
                 'order' => [
-                    //'sql' => $converedFieldName . " {direction}",
                     'order' => [
                         [$mulExpression, '{direction}'],
                     ],
