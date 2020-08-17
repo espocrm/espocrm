@@ -41,14 +41,17 @@ class QueryTest extends \tests\integration\Core\BaseTestCase
         $account->set('name', 'Test');;
         $entityManager->saveEntity($account);
 
-        $sql = $entityManager->getQuery()->createSelectQuery('Account', [
-            'select' => ['id', ["CONCAT:(',test',\"+\",'\"', \"',ROUND(1)\")", 'value']]
-        ]);
+        $query = $entityManager->getQueryBuilder()
+            ->select()
+            ->from('Account')
+            ->select('id')
+            ->select("CONCAT:(',test',\"+\",'\"', \"',ROUND(1)\")", 'value')
+            ->build();
 
         $rowList = [];
-        $pdo = $entityManager->getPDO();
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+
+        $sth = $entityManager->getQueryExecutor()->run($query);
+
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $rowList[] = $row;
         }
