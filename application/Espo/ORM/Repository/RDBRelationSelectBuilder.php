@@ -234,18 +234,6 @@ class RDBRelationSelectBuilder
     }
 
     /**
-     * Set to return STH collection. Recommended for fetching large number of records.
-     *
-     * @todo Remove.
-     */
-    public function sth() : self
-    {
-        $this->builder->sth();
-
-        return $this;
-    }
-
-    /**
      * Add a WHERE clause.
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::where()
