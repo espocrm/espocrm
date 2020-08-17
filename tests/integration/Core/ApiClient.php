@@ -43,20 +43,11 @@ class ApiClient
 
     protected $portalApiPath = '/api/v1/portal-access/{PORTAL_ID}/';
 
-    protected $userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36';
+    protected $userAgent =
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36';
 
-    /**
-     * cURL resource from the last responce
-     *
-     * @var cURL handle resource | null
-     */
     private $lastCh;
 
-    /**
-     * Last response
-     *
-     * @var string
-     */
     private $lastResponse;
 
     public function __construct($url = null, $userName = null, $password = null, $portalId = null)
@@ -137,10 +128,10 @@ class ApiClient
             } else {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
                     'Content-Type: application/json',
-                    'Content-Length: ' . strlen($jsonData))
-                );
+                    'Content-Length: ' . strlen($jsonData),
+                ]);
             }
         }
 
@@ -186,11 +177,11 @@ class ApiClient
 
     protected function checkParams()
     {
-        $paramList = array(
+        $paramList = [
             'url',
             'userName',
             'password',
-        );
+        ];
 
         foreach ($paramList as $name) {
             if (empty($this->$name)) {
@@ -219,10 +210,10 @@ class ApiClient
     {
         $headerSize = $this->getInfo(CURLINFO_HEADER_SIZE);
 
-        return array(
+        return [
             'header' => trim( substr($response, 0, $headerSize) ),
             'body' => substr($response, $headerSize),
-        );
+        ];
     }
 
     /**
@@ -236,7 +227,7 @@ class ApiClient
     {
         preg_match_all('/(.*): (.*)\r\n/', $header, $matches);
 
-        $headerArray = array();
+        $headerArray = [];
         foreach ($matches[1] as $index => $name) {
             if (isset($matches[2][$index])) {
                 $headerArray[$name] = trim($matches[2][$index]);
