@@ -63,7 +63,7 @@ class Preload
         }
 
         echo "Success." . PHP_EOL;
-        echo "Files preloaded: " . (string) $this->counter . "." . PHP_EOL;
+        echo "Files loaded: " . (string) $this->counter . "." . PHP_EOL;
     }
 
     protected function processForDir(string $dir)
