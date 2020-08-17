@@ -21,7 +21,10 @@
             "default":"",
             "trim": true
         },
-        "accountId": {
+        "accountAnyId": {
+            "notStorable": true,
+            "customizationDisabled": true,
+            "disabled": true,
             "type": "varchar",
             "where": {
                 "=": {
@@ -82,9 +85,7 @@
                         "accountId!=": null
                     }
                 }
-            },
-            "customizationDisabled": true,
-            "disabled": true
+            }
         },
         "title": {
             "type": "varchar",

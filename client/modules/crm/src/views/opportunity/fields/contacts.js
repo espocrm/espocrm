@@ -174,14 +174,15 @@ define(
 
         getSelectFilters: function () {
             if (this.model.get('accountId')) {
+                var nameHash = {};
+                nameHash[this.model.get('accountId')] = this.model.get('accountName');
                 return {
-                    'account': {
-                        type: 'equals',
-                        attribute: 'accountId',
-                        value: this.model.get('accountId'),
+                    'accounts': {
+                        type: 'linkedWith',
+                        value: [this.model.get('accountId')],
                         data: {
-                            type: 'is',
-                            nameValue: this.model.get('accountName')
+                            type: 'anyOf',
+                            nameHash: nameHash,
                         }
                     }
                 };

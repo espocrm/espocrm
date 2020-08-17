@@ -4,7 +4,7 @@
     "createdAt",
     "createdBy",
     "modifiedAt",
-    "account",
+    "accounts",
     "address",
     "emailAddress",
     "phoneNumber",

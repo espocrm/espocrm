@@ -399,10 +399,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 var data = {
                     type: 'linkedWith',
                     value: idList,
-                    nameHash: this.nameHash,
                     data: {
-                        type: type
-                    }
+                        type: type,
+                        nameHash: this.nameHash,
+                    },
                 };
                 if (!idList.length) {
                     data.value = null;
@@ -414,26 +414,26 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 var data = {
                     type: 'notLinkedWith',
                     value: this.ids || [],
-                    nameHash: this.nameHash,
                     data: {
-                        type: type
-                    }
+                        type: type,
+                        nameHash: this.nameHash,
+                    },
                 };
                 return data;
             } else if (type === 'isEmpty') {
                 var data = {
                     type: 'isNotLinked',
                     data: {
-                        type: type
-                    }
+                        type: type,
+                    },
                 };
                 return data;
             } else if (type === 'isNotEmpty') {
                 var data = {
                     type: 'isLinked',
                     data: {
-                        type: type
-                    }
+                        type: type,
+                    },
                 };
                 return data;
             }
