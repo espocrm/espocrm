@@ -83,7 +83,7 @@ class Application
      */
     public function run(string $className, ?object $params = null)
     {
-        if (!$className) {
+        if (!$className || !class_exists($className)) {
             $this->getLog()->error("Application runner '{$className}' does not exist.");
             return;
         }
