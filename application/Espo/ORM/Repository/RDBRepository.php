@@ -382,39 +382,18 @@ class RDBRepository extends Repository
             return false;
         }
 
-        if ($entity->getRelationType($relationName) === Entity::BELONGS_TO) {
-            $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
-
-            if (!$foreignEntityType) {
-                return false;
+        if (in_array($entity->getRelationType($relationName), [Entity::BELONGS_TO, Entity::BELONGS_TO_PARENT])) {
+            if (!$entity->has($relationName . 'Id')) {
+                $entity = $this->getById($entity->id);
             }
-
-            $foreignId = $entity->get($relationName . 'Id');
-
-            if (!$foreignId) {
-                $e = $this->select([$relationName . 'Id'])->where(['id' => $entity->id])->findOne();
-                if ($e) {
-                    $foreignId = $e->get($relationName . 'Id');
-                }
-            }
-
-            if (!$foreignId) {
-                return false;
-            }
-
-            $foreignEntity = $this->entityManager->getRepository($foreignEntityType)
-                ->select(['id'])
-                ->where(['id' => $foreignId])
-                ->findOne();
-
-            if (!$foreignEntity) {
-                return false;
-            }
-
-            return $foreignEntity->id === $id;
         }
 
-        // @todo Use related builder.
+        $relation = $this->getRelation($entity, $relationName);
+
+        if ($foreign instanceof Entity) {
+            return $relation->isRelated($foreign);
+        }
+
         return (bool) $this->countRelated($entity, $relationName, [
             'whereClause' => [
                 'id' => $id,

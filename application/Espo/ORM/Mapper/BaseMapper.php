@@ -799,6 +799,9 @@ abstract class BaseMapper implements Mapper
                     $this->runSql($sql, true);
                 }
 
+                $entity->set($key, $relEntity->id);
+                $entity->setFetched($key, $relEntity->id);
+
                 $sql = $this->queryComposer->compose(
                     Update::fromRaw([
                         'from' => $entityType,
@@ -819,6 +822,11 @@ abstract class BaseMapper implements Mapper
             case Entity::BELONGS_TO_PARENT:
                 $key = $relationName . 'Id';
                 $typeKey = $relationName . 'Type';
+
+                $entity->set($key, $relEntity->id);
+                $entity->set($typeKey, $relEntity->getEntityType());
+                $entity->setFetched($key, $relEntity->id);
+                $entity->setFetched($typeKey, $relEntity->getEntityType());
 
                 $sql = $this->queryComposer->compose(
                     Update::fromRaw([
@@ -1077,12 +1085,20 @@ abstract class BaseMapper implements Mapper
                     $where[$key] = $id;
                 }
 
+                $entity->set($key, null);
+                $entity->setFetched($key, null);
+
+
                 if ($relType === Entity::BELONGS_TO_PARENT) {
                     $typeKey = $relationName . 'Type';
                     $update[$typeKey] = null;
+
                     if (!$all) {
                         $where[$typeKey] = $foreignEntityType;
                     }
+
+                    $entity->set($typeKey, null);
+                    $entity->setFetched($typeKey, null);
                 }
 
                 $where[static::ATTRIBUTE_DELETED] = false;

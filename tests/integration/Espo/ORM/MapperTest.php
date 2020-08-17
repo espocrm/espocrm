@@ -80,7 +80,48 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $this->assertFalse($isRelated);
     }
 
-    public function testRelate3()
+    public function testRelate3WithEntityRefetching()
+    {
+        $app = $this->createApplication();
+
+        $entityManager = $app->getContainer()->get('entityManager');
+
+        $account = $entityManager->getEntity('Account');
+        $account->set('name', 'Test');
+        $entityManager->saveEntity($account);
+
+        $contact = $entityManager->getEntity('Contact');
+        $contact->set('lastName', 'Test');;
+        $entityManager->saveEntity($contact);
+
+        $entityManager->getRepository('Contact')
+            ->getRelation($contact, 'account')
+            ->relate($account);
+
+        $contact = $entityManager->getEntity('Contact', $contact->get('id'));
+
+        $isRelated = $entityManager->getRepository('Contact')
+            ->getRelation($contact, 'account')
+            ->isRelated($account);
+
+        $this->assertTrue($isRelated);
+
+        $contact = $entityManager->getEntity('Contact', $contact->id);
+
+        $entityManager->getRepository('Contact')
+            ->getRelation($contact, 'account')
+            ->unrelate($account);
+
+        $contact = $entityManager->getEntity('Contact', $contact->get('id'));
+
+        $isRelated = $entityManager->getRepository('Contact')
+            ->getRelation($contact, 'account')
+            ->isRelated($account);
+
+        $this->assertFalse($isRelated);
+    }
+
+    public function testRelate4()
     {
         $app = $this->createApplication();
 
