@@ -211,6 +211,7 @@ module.exports = function (grunt) {
                     'daemon.php',
                     'rebuild.php',
                     'clear_cache.php',
+                    'preload.php',
                     'upgrade.php',
                     'extension.php',
                     'websocket.php',
