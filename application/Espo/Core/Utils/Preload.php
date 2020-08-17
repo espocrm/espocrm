@@ -125,7 +125,5 @@ class Preload
         }
 
         return false;
-
-        return in_array($file, $this->ignoreList);
     }
 }
