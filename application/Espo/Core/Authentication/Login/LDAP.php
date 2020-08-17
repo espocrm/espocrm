@@ -121,7 +121,9 @@ class LDAP extends Espo
             }
         }
 
-        if (!$password || $username == '**logout') return;
+        if (!$password || $username == '**logout') {
+            return Result::fail();
+        }
 
         if ($isPortal) {
             $useLdapAuthForPortalUser = $this->utils->getOption('portalUserLdapAuth');
