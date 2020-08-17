@@ -1895,6 +1895,8 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->convertMatchExpression($entity, $value);
         }
 
+        $noCustomWhere = $noCustomWhere ?? $params['noCustomWhere'] ?? false;
+
         if (is_int($field)) {
             $field = 'AND';
         }

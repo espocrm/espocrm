@@ -460,12 +460,12 @@ class RDBRepository extends Repository
             }
 
             if ($foreign instanceof Entity) {
-                $id = $foreign->id;
+                $result = $this->getMapper()->relate($entity, $relationName, $foreign, $data);
             } else {
                 $id = $foreign;
-            }
 
-            $result = $this->getMapper()->relateById($entity, $relationName, $id, $data);
+                $result = $this->getMapper()->relateById($entity, $relationName, $id, $data);
+            }
         }
 
         if ($result) {
@@ -511,12 +511,11 @@ class RDBRepository extends Repository
             $result = $this->$methodName($entity, $foreign);
         } else {
             if ($foreign instanceof Entity) {
-                $id = $foreign->id;
+                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign);
             } else {
                 $id = $foreign;
+                $result = $this->getMapper()->unrelateById($entity, $relationName, $id);
             }
-
-            $result = $this->getMapper()->unrelateById($entity, $relationName, $id);
         }
 
         if ($result) {
