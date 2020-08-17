@@ -821,7 +821,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('selectRelated')
             ->will($this->returnValue($post))
-            ->with($note, 'parent',);
+            ->with($note, 'parent');
 
         $result = $this->createRepository('Note')->getRelation($note, 'parent')->find();
 
