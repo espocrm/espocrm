@@ -135,7 +135,7 @@ class DataLoader
         try {
             $config->save();
         } catch (\Exception $e) {
-            throw new \Exception('Erro loadConfig: ' . $e->getMessage());
+            throw new \Exception('Error loadConfig: ' . $e->getMessage());
         }
     }
 

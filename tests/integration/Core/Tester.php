@@ -225,6 +225,8 @@ class Tester
         $latestEspoDir = Utils::getLatestBuildedPath($this->buildedPath);
 
         $configData = $this->getTestConfigData();
+
+
         $configData['siteUrl'] = $mainApplication->getContainer()->get('config')->get('siteUrl') . '/' . $this->installPath;
         $this->params['siteUrl'] = $configData['siteUrl'];
 
@@ -252,9 +254,11 @@ class Tester
         require_once('install/core/Installer.php');
 
         $installer = new \Installer();
+
         $installer->saveData(array_merge($configData, [
             'language' => 'en_US'
         ]));
+
         $installer->saveConfig($configData);
 
         $installer = new \Installer(); //reload installer to get all config data
