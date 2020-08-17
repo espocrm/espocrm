@@ -33,8 +33,10 @@ use Traversable;
 
 /**
  * A collection of entities.
+ *
+ * @todo Extend from Traversable once the min suppoted PHP version is 7.4.
  */
-interface Collection extends Traversable
+interface Collection/* extends Traversable*/
 {
     /**
      * Get an array of StdClass objects.

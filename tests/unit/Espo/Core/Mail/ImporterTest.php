@@ -43,22 +43,24 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
         $config = $this->config = $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
 
-        $emailRepository = $this->getMockBuilder('Espo\\Core\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
-        $emptyRepository = $this->getMockBuilder('Espo\\Core\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
+        $emailRepository = $this->getMockBuilder('Espo\\Core\\Repositories\\Database')->disableOriginalConstructor()->getMock();
+        $emptyRepository = $this->getMockBuilder('Espo\\Core\\Repositories\\Database')->disableOriginalConstructor()->getMock();
 
         $metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 
-        $pdo = $this->getMockBuilder('\\Pdo')->disableOriginalConstructor()->getMock();
+        $pdo = $this->getMockBuilder('Pdo')->disableOriginalConstructor()->getMock();
+
+        $selectBuilder = $this->getMockBuilder('Espo\\ORM\\Repository\\RDBSelectBuilder')->disableOriginalConstructor()->getMock();
 
         $emailRepository
             ->expects($this->any())
             ->method('where')
-            ->will($this->returnSelf());
+            ->will($this->returnValue($selectBuilder));
 
         $emailRepository
             ->expects($this->any())
             ->method('select')
-            ->will($this->returnSelf());
+            ->will($this->returnValue($selectBuilder));
 
         $entityManager
             ->expects($this->any())
@@ -78,14 +80,14 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $emptyRepository
             ->expects($this->any())
             ->method('where')
-            ->will($this->returnSelf());
+            ->will($this->returnValue($selectBuilder));
 
-        $this->repositoryMap = array(
-             array('Email', $emailRepository),
-             array('Account', $emptyRepository),
-             array('Contact', $emptyRepository),
-             array('Lead', $emptyRepository)
-        );
+        $this->repositoryMap = [
+             ['Email', $emailRepository],
+             ['Account', $emptyRepository],
+             ['Contact', $emptyRepository],
+             ['Lead', $emptyRepository],
+        ];
 
         $email = $this->email = new Email('Email', [], $entityManager);
 

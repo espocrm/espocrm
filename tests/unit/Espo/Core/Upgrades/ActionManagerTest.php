@@ -33,6 +33,8 @@ use tests\unit\ReflectionHelper,
     Espo\Core\ExtensionManager,
     Espo\Core\UpgradeManager;
 
+use Espo\Core\Utils\File\Manager as FileManager;
+
 class ActionManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -56,9 +58,23 @@ class ActionManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
+        $this->objects['container'] =
+            $container = $this->getMockBuilder('Espo\Core\Container')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Upgrades\ActionManager($this->params['name'], $this->objects['container'], $this->params['params'] );
+        $fileManager = $this->getMockBuilder(FileManager::class)->disableOriginalConstructor()->getMock();
+
+        $container
+            ->expects($this->any())
+            ->method('get')
+            ->will(
+                $this->returnValueMap([
+                    ['fileManager', $fileManager],
+                ])
+            );
+
+        $this->object = new \Espo\Core\Upgrades\ActionManager(
+            $this->params['name'], $this->objects['container'], $this->params['params']
+        );
 
         $this->reflection = new ReflectionHelper($this->object);
     }
