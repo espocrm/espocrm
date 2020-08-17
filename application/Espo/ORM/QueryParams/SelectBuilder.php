@@ -57,6 +57,7 @@ class SelectBuilder implements Builder
      * Set to return STH collection. Recommended for fetching large number of records.
      *
      * @todo Remove.
+     * @deprecated
      */
     public function sth() : self
     {

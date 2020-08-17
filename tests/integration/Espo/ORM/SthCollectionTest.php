@@ -29,6 +29,8 @@
 
 namespace tests\integration\Espo\ORM;
 
+use Espo\ORM\SthCollection;
+
 class SthCollectionTest extends \tests\integration\Core\BaseTestCase
 {
     public function test1()
@@ -47,10 +49,15 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
         $em->createEntity('Account', [
             'name' => 'test-3',
         ]);
-        $collection = $em->createSthCollection('Account', [
-            'limit' => 2,
-            'orderBy' => 'name',
-        ]);
+
+        $query = $em->getQueryBuilder()
+            ->select()
+            ->from('Account')
+            ->limit(0, 2)
+            ->order('name')
+            ->build();
+
+        $collection = $em->getCollectionFactory()->createFromQuery($query);
 
         $count = 0;
         $list = [];
@@ -81,15 +88,15 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
         $em->createEntity('Account', [
             'name' => 'test-3',
         ]);
-        $collection = $em->createSthCollection('Account', [
-            'limit' => 2,
-            'orderBy' => 'name',
-        ]);
 
-        $collection = new \Espo\ORM\Sth2Collection('Account', $em->getEntityFactory(), $em->getQuery(), $em->getPdo(), [
-            'limit' => 2,
-            'orderBy' => 'name',
-        ]);
+        $query = $em->getQueryBuilder()
+            ->select()
+            ->from('Account')
+            ->limit(0, 2)
+            ->order('name')
+            ->build();
+
+        $collection = $em->getCollectionFactory()->createFromQuery($query);
 
         $count = 0;
 
@@ -100,7 +107,7 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(2, $count);
     }
 
-    public function testFind()
+    public function testFind1()
     {
         $app = $this->createApplication();
 
@@ -116,11 +123,18 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test-3',
         ]);
 
-        $collection = $em->getRepository('Account')->where([
-            'name' => 'test-1',
-        ])->find(['returnSthCollection' => true]);
+        $query = $em->getQueryBuilder()
+            ->select()
+            ->from('Account')
+            ->sth()
+            ->where(['name' => 'test-1'])
+            ->build();
 
-        $this->assertEquals("Espo\\ORM\\Sth2Collection", get_class($collection));
+        $collection = $em->getRepository('Account')
+            ->clone($query)
+            ->find();
+
+        $this->assertEquals(SthCollection::class, get_class($collection));
 
         $count = 0;
 
@@ -149,12 +163,18 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
             'accountId' => $account->id,
         ]);
 
-        $collection = $em->getRepository('Account')->findRelated($account, 'opportunities', [
-            'returnSthCollection' => true,
-            'orderBy' => 'name',
-        ]);
+        $query = $em->getQueryBuilder()
+            ->select()
+            ->from('Opportunity')
+            ->sth()
+            ->order('name')
+            ->build();
 
-        $this->assertEquals("Espo\\ORM\\Sth2Collection", get_class($collection));
+        $collection = $em->getRepository('Account')->getRelation($account, 'opportunities')
+            ->clone($query)
+            ->find();
+
+        $this->assertEquals(SthCollection::class, get_class($collection));
 
         $count = 0;
 
@@ -187,11 +207,18 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
             'contactsIds' => [$contact->id],
         ]);
 
-        $collection = $em->getRepository('Contact')->findRelated($contact, 'opportunities', [
-            'returnSthCollection' => true,
-        ]);
 
-        $this->assertEquals("Espo\\ORM\\Sth2Collection", get_class($collection));
+        $query = $em->getQueryBuilder()
+            ->select()
+            ->from('Opportunity')
+            ->sth()
+            ->build();
+
+        $collection = $em->getRepository('Contact')->getRelation($contact, 'opportunities')
+            ->clone($query)
+            ->find();
+
+        $this->assertEquals(SthCollection::class, get_class($collection));
 
         $count = 0;
 

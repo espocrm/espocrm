@@ -44,10 +44,11 @@ class Select implements Query
 
     /**
      * @todo Remove?
+     * @deprecated
      */
     public function isSth() : bool
     {
-        return $this->params['sth'] ?? false;
+        return $this->params['returnSthCollection'] ?? false;
     }
 
     /**
