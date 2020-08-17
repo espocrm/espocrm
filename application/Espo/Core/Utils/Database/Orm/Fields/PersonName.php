@@ -137,7 +137,7 @@ class PersonName extends Base
                                 function ($item) {
                                     return $item . '!*';
                                 },
-                                $whereItems,
+                                $whereItems
                             ),
                             '{value}'
                         ),
