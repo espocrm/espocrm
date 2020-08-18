@@ -277,8 +277,9 @@ class Activities implements
         return $sql;
     }
 
-    protected function getActivitiesMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null)
-    {
+    protected function getActivitiesMeetingQuery(
+        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+    ) {
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
@@ -289,7 +290,7 @@ class Activities implements
 
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
 
-        $baseSelectParams = array(
+        $baseSelectParams = [
             'select' => [
                 'id',
                 'name',
@@ -308,40 +309,40 @@ class Activities implements
             ],
             'whereClause' => [],
             'customJoin' => ''
-        );
+        ];
 
         if (!empty($statusList)) {
-            $baseSelectParams['whereClause'][] = array(
+            $baseSelectParams['whereClause'][] = [
                 'status' => $statusList
-            );
+            ];
         }
 
         $selectParams = $baseSelectParams;
 
         if ($scope == 'Account') {
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
-                    array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
+                    [
                         'parentId' => $id,
                         'parentType' => 'Account'
-                    ),
-                    array(
+                    ],
+                    [
                         'accountId' => $id
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
         } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
-                    array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
+                    [
                         'parentId' => $id,
                         'parentType' => 'Lead'
-                    ),
-                    array(
+                    ],
+                    [
                         'accountId' => $entity->get('createdAccountId')
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
         } else {
             $selectParams['whereClause']['parentId'] = $id;
             $selectParams['whereClause']['parentType'] = $scope;
@@ -370,14 +371,14 @@ class Activities implements
                 $selectParams = $baseSelectParams;
                 $selectManager->addJoin($link, $selectParams);
                 $selectParams['whereClause'][$link .'.id'] = $id;
-                $selectParams['whereClause'][] = array(
-                    'OR' => array(
+                $selectParams['whereClause'][] = [
+                    'OR' => [
                         'parentType!=' => $scope,
                         'parentId!=' => $id,
                         'parentType' => null,
                         'parentId' => null
-                    )
-                );
+                    ]
+                ];
 
                 $selectManager->applyAccess($selectParams);
 
@@ -402,7 +403,7 @@ class Activities implements
 
         $selectManager = $this->getSelectManagerFactory()->create('Call');
 
-        $baseSelectParams = array(
+        $baseSelectParams = [
             'select' => [
                 'id',
                 'name',
@@ -420,40 +421,40 @@ class Activities implements
                 ['VALUE:', 'hasAttachment']
             ],
             'whereClause' => []
-        );
+        ];
 
         if (!empty($statusList)) {
-            $baseSelectParams['whereClause'][] = array(
+            $baseSelectParams['whereClause'][] = [
                 'status' => $statusList
-            );
+            ];
         }
 
         $selectParams = $baseSelectParams;
 
         if ($scope == 'Account') {
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
-                    array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
+                    [
                         'parentId' => $id,
                         'parentType' => 'Account'
-                    ),
-                    array(
+                    ],
+                    [
                         'accountId' => $id
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
         } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
-                    array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
+                    [
                         'parentId' => $id,
                         'parentType' => 'Lead'
-                    ),
-                    array(
+                    ],
+                    [
                         'accountId' => $entity->get('createdAccountId')
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
         } else {
             $selectParams['whereClause']['parentId'] = $id;
             $selectParams['whereClause']['parentType'] = $scope;
@@ -482,14 +483,14 @@ class Activities implements
                 $selectParams = $baseSelectParams;
                 $selectManager->addJoin($link, $selectParams);
                 $selectParams['whereClause'][$link .'.id'] = $id;
-                $selectParams['whereClause'][] = array(
-                    'OR' => array(
+                $selectParams['whereClause'][] = [
+                    'OR' => [
                         'parentType!=' => $scope,
                         'parentId!=' => $id,
                         'parentType' => null,
                         'parentId' => null
-                    )
-                );
+                    ]
+                ];
 
                 $selectManager->applyAccess($selectParams);
 
@@ -514,7 +515,7 @@ class Activities implements
 
         $selectManager = $this->getSelectManagerFactory()->create('Email');
 
-        $baseSelectParams = array(
+        $baseSelectParams = [
             'select' => [
                 'id',
                 'name',
@@ -533,40 +534,40 @@ class Activities implements
             ],
             'whereClause' => [],
             'customJoin' => ''
-        );
+        ];
 
         if (!empty($statusList)) {
-            $baseSelectParams['whereClause'][] = array(
+            $baseSelectParams['whereClause'][] = [
                 'status' => $statusList
-            );
+            ];
         }
 
         $selectParams = $baseSelectParams;
 
         if ($scope == 'Account') {
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
-                    array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
+                    [
                         'parentId' => $id,
                         'parentType' => 'Account'
-                    ),
-                    array(
+                    ],
+                    [
                         'accountId' => $id
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
         } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
-                    array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
+                    [
                         'parentId' => $id,
                         'parentType' => 'Lead'
-                    ),
-                    array(
+                    ],
+                    [
                         'accountId' => $entity->get('createdAccountId')
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
         } else {
             $selectParams['whereClause']['parentId'] = $id;
             $selectParams['whereClause']['parentType'] = $scope;
@@ -586,14 +587,15 @@ class Activities implements
                     entityEmailAddress2.entity_type = " . $this->getPDO()->quote($scope) . " AND
                     entityEmailAddress2.deleted = 0
             ";
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
                     'parentType!=' => $scope,
                     'parentId!=' => $id,
                     'parentType' => null,
                     'parentId' => null
-                )
-            );
+                ]
+            ];
+
             $selectParams['whereClause']['entityEmailAddress2.entityId'] = $id;
 
             $selectManager->applyAccess($selectParams);
@@ -613,14 +615,15 @@ class Activities implements
                     entityEmailAddress1.entity_type = " . $this->getPDO()->quote($scope) . " AND
                     entityEmailAddress1.deleted = 0
             ";
-            $selectParams['whereClause'][] = array(
-                'OR' => array(
+            $selectParams['whereClause'][] = [
+                'OR' => [
                     'parentType!=' => $scope,
                     'parentId!=' => $id,
                     'parentType' => null,
                     'parentId' => null
-                )
-            );
+                ]
+            ];
+
             $selectParams['whereClause']['entityEmailAddress1.entityId'] = $id;
             $selectManager->applyAccess($selectParams);
 
@@ -1252,19 +1255,19 @@ class Activities implements
         $selectParams['select'] = $select;
 
         if ($entity->getEntityType() === 'User') {
-            $selectParams['whereClause'][] = array(
+            $selectParams['whereClause'][] = [
                 'assignedUserId' => $entity->id
-            );
+            ];
         } else {
-            $selectParams['whereClause'][] = array(
+            $selectParams['whereClause'][] = [
                 'parentId' => $entity->id,
                 'parentType' => $entity->getEntityType()
-            );
+            ];
         }
 
-        $selectParams['whereClause'][]  = array(
+        $selectParams['whereClause'][] = [
             'status' => $statusList
-        );
+        ];
 
         $selectManager->applyAccess($selectParams);
 
