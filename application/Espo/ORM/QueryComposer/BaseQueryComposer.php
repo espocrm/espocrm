@@ -420,7 +420,7 @@ abstract class BaseQueryComposer implements QueryComposer
             if (is_int($item[0])) {
                 $by = (string) $item[0];
             } else {
-                $by = $this->sanitizeSelectAlias($item[0]);
+                $by = '`' . $this->sanitizeSelectAlias($item[0]) . '`';
             }
 
             $orderByParts[] = $by . ' ' . $direction;

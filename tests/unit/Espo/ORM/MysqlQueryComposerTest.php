@@ -1925,7 +1925,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "(SELECT 'test1' AS `value`) ".
             "UNION ALL ".
             "(SELECT 'test2' AS `value`) ".
-            "ORDER BY value DESC";
+            "ORDER BY `value` DESC";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1959,7 +1959,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "(SELECT 'test1' AS `value1`, 'test2' AS `value2`) ".
             "UNION ALL ".
             "(SELECT 'test1' AS `value1`, 'test2' AS `value2`) ".
-            "ORDER BY value1 DESC, value2 ASC";
+            "ORDER BY `value1` DESC, `value2` ASC";
 
         $this->assertEquals($expectedSql, $sql);
     }
