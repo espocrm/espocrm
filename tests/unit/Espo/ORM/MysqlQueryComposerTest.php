@@ -1765,6 +1765,36 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectSubQuery2()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $subQuery = $queryBuilder
+            ->select()
+            ->select('\'test\'', 'test')
+            ->build();
+
+        $select = $queryBuilder->select()
+            ->fromQuery($subQuery, 'a')
+            ->select('a.id', 'value')
+            ->join('Account', 'j', ['j.id:' => 'a.id'])
+            ->where([
+                'a.id' => '1',
+            ])
+            ->order('a.id')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT a.id AS `value` FROM (SELECT 'test' AS `test`) AS `a` ".
+            "JOIN `account` AS `j` ON j.id = a.id ".
+            "WHERE a.id = '1' " .
+            "ORDER BY a.id ASC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testSelectNoFrom1()
     {
         $queryBuilder = new QueryBuilder();

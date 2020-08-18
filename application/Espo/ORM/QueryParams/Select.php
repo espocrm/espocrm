@@ -81,7 +81,7 @@ class Select implements Query, Selecting
                 !empty($params['orderBy'])
             )
             &&
-            empty($params['from'])
+            empty($params['from']) && empty($params['fromQuery'])
         ) {
             throw new RuntimeException("Select params: Missing 'from'.");
         }
