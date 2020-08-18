@@ -37,6 +37,7 @@ use Espo\ORM\{
     EntityCollection,
     QueryParams\Select,
 };
+
 use Espo\Entities\User;
 
 use Espo\Core\{
@@ -711,7 +712,8 @@ class Stream
             }
         }
 
-        $sqlPartList = [];
+        $queryList = [];
+
         foreach ($selectParamsList as $i => $selectParams) {
             if (empty($selectParams['whereClause'])) {
                 $selectParams['whereClause'] = [];
@@ -727,14 +729,24 @@ class Stream
                 }
             }
 
-            $sqlPartList[] = "(\n" . $this->entityManager->getQueryComposer()->createSelectQuery('Note', $selectParams) . "\n)";
+            $selectParams['from'] = 'Note';
+
+            $queryList[] = Select::fromRaw($selectParams);
         }
 
-        $sql = implode("\n UNION ALL \n", $sqlPartList) . "
-            ORDER BY number DESC
-        ";
+        $builder = $this->entityManager->getQueryBuilder()
+            ->union()
+            ->all()
+            ->order('number', 'DESC')
+            ->limit($offset, $maxSize + 1);
 
-        $sql = $this->entityManager->getQueryComposer()->limit($sql, $offset, $maxSize + 1);
+        foreach ($queryList as $query) {
+            $builder->query($query);
+        }
+
+        $unionQuery = $builder->build();
+
+        $sql = $this->entityManager->getQueryComposer()->compose($unionQuery);
 
         $sthCollection = $this->entityManager->getRepository('Note')->findBySql($sql);
 
