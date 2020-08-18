@@ -1743,6 +1743,28 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectSubQuery1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $subQuery = $queryBuilder
+            ->select()
+            ->select('\'test\'', 'test')
+            ->build();
+
+        $select = $queryBuilder->select()
+            ->fromQuery($subQuery, 'a')
+            ->select('COUNT:(a.id)', 'value')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT COUNT(a.id) AS `value` FROM (SELECT 'test' AS `test`) AS `a`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testSelectNoFrom1()
     {
         $queryBuilder = new QueryBuilder();

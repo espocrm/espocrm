@@ -762,19 +762,19 @@ class Activities implements
             $builder->query($query);
         }
 
-        $sql = $this->entityManager->getQueryComposer()->compose($builder->build());
-
         if ($scope !== 'User') {
-            $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
+            $countQuery = $this->entityManager->getQueryBuilder()
+                ->select()
+                ->fromQuery($builder->build(), 'c')
+                ->select('COUNT:(c.id)', 'count')
+                ->build();
 
-            $sth = $pdo->prepare($sqlCount);
-            $sth->execute();
+            $sth = $this->entityManager->getQueryExecutor()->run($countQuery);
 
             $row = $sth->fetch(PDO::FETCH_ASSOC);
 
             $totalCount = $row['count'];
         }
-
 
         $builder->order('dateStart', 'DESC');
 
@@ -894,8 +894,6 @@ class Activities implements
 
         $seed = $this->getEntityManager()->getEntity($entityType);
 
-        $sqlBase = $this->entityManager->getQueryComposer()->compose($query);
-
         $builder = $this->entityManager->getQueryBuilder()->clone($query);
 
         if ($orderBy) {
@@ -919,14 +917,16 @@ class Activities implements
             $service->prepareEntityForOutput($e);
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $countQuery = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->fromQuery($query, 'c')
+            ->select('COUNT:(c.id)', 'count')
+            ->build();
 
-        $sqlTotal = "SELECT COUNT(*) AS 'count' FROM ({$sqlBase}) AS c";
+        $sth = $this->entityManager->getQueryExecutor()->run($countQuery);
 
-        $sth = $pdo->prepare($sqlTotal);
-
-        $sth->execute();
         $row = $sth->fetch(\PDO::FETCH_ASSOC);
+
         $total = $row['count'];
 
         return (object) [
@@ -1937,18 +1937,19 @@ class Activities implements
             $builder->query($query);
         }
 
-        $unionSql = $this->entityManager->getQueryComposer()->compose($builder->build());
+        $unionQuery = $builder->build();
 
-        $countSql = "SELECT COUNT(*) AS 'COUNT' FROM ({$unionSql}) AS c";
+        $countQuery = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->fromQuery($unionQuery, 'c')
+            ->select('COUNT:(c.id)', 'count')
+            ->build();
 
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $sth = $pdo->prepare($countSql);
-        $sth->execute();
+        $sth = $this->entityManager->getQueryExecutor()->run($countQuery);
 
         $row = $sth->fetch(PDO::FETCH_ASSOC);
 
-        $totalCount = $row['COUNT'];
+        $totalCount = $row['count'];
 
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);

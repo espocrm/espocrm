@@ -57,11 +57,11 @@ class DeleteBuilder implements Builder
     public function from(string $entityType, ?string $alias = null) : self
     {
         if (isset($this->params['from'])) {
-            throw new LogicException("Method 'from' can be called only once.");
+            throw new RuntimeException("Method 'from' can be called only once.");
         }
 
         $this->params['from'] = $entityType;
-        $this->params['alias'] = $alias;
+        $this->params['fromAlias'] = $alias;
 
         return $this;
     }

@@ -29,8 +29,6 @@
 
 namespace Espo\ORM\QueryParams;
 
-use RuntimeException;
-
 trait SelectingTrait
 {
     protected static function validateRawParamsSelecting(array $params)

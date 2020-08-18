@@ -54,6 +54,48 @@ class SelectBuilder implements Builder
     }
 
     /**
+     * Set FROM. For what entity type to build a query.
+     */
+    public function from(string $entityType) : self
+    {
+        if (isset($this->params['from'])) {
+            throw new RuntimeException("Method 'from' can be called only once.");
+        }
+
+        if (isset($this->params['fromQuery'])) {
+            throw new RuntimeException("Method 'from' can't be if 'fromQuery' is set.");
+        }
+
+        $this->params['from'] = $entityType;
+
+        return $this;
+    }
+
+    /**
+     * Set FROM sub-query.
+     */
+    public function fromQuery(Selecting $query, string $alias) : self
+    {
+        if (isset($this->params['from'])) {
+            throw new RuntimeException("Method 'fromQuery' can be called only once.");
+        }
+
+        if (isset($this->params['fromQuery'])) {
+            throw new RuntimeException("Method 'fromQuery' can't be if 'from' is set.");
+        }
+
+        if ($alias === '') {
+            throw new RuntimeException("Alias can't be empty.");
+        }
+
+        $this->params['fromQuery'] = $query;
+
+        $this->params['fromAlias'] = $alias;
+
+        return $this;
+    }
+
+    /**
      * Set to return STH collection. Recommended for fetching large number of records.
      *
      * @todo Remove.

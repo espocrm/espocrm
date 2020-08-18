@@ -29,8 +29,6 @@
 
 namespace Espo\ORM\QueryParams;
 
-use LogicException;
-
 class UpdateBuilder implements Builder
 {
     use SelectingBuilderTrait;

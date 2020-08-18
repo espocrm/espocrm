@@ -29,17 +29,19 @@
 
 namespace Espo\ORM\QueryParams;
 
+use RuntimeException;
+
 trait SelectingBuilderTrait
 {
     use BaseBuilderTrait;
 
     /**
-     * Set FROM parameter. For what entity type to build a query.
+     * Set FROM. For what entity type to build a query.
      */
     public function from(string $entityType) : self
     {
         if (isset($this->params['from'])) {
-            throw new LogicException("Method 'from' can be called only once.");
+            throw new RuntimeException("Method 'from' can be called only once.");
         }
 
         $this->params['from'] = $entityType;
