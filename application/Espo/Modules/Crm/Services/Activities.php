@@ -769,7 +769,7 @@ class Activities implements
                 ->select('COUNT:(c.id)', 'count')
                 ->build();
 
-            $sth = $this->entityManager->getQueryExecutor()->run($countQuery);
+            $sth = $this->entityManager->getQueryExecutor()->execute($countQuery);
 
             $row = $sth->fetch(PDO::FETCH_ASSOC);
 
@@ -791,7 +791,7 @@ class Activities implements
 
         $unionQuery = $builder->build();
 
-        $sth = $this->entityManager->getQueryExecutor()->run($unionQuery);
+        $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
         $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
@@ -923,7 +923,7 @@ class Activities implements
             ->select('COUNT:(c.id)', 'count')
             ->build();
 
-        $sth = $this->entityManager->getQueryExecutor()->run($countQuery);
+        $sth = $this->entityManager->getQueryExecutor()->execute($countQuery);
 
         $row = $sth->fetch(\PDO::FETCH_ASSOC);
 
@@ -1702,7 +1702,7 @@ class Activities implements
 
         $unionQuery = $builder->build();
 
-        $sth = $this->entityManager->getQueryExecutor()->run($unionQuery);
+        $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
         $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1731,7 +1731,7 @@ class Activities implements
 
         $deleteQuery = $builder->build();
 
-        $this->getEntityManager()->getQueryExecutor()->run($deleteQuery);
+        $this->getEntityManager()->getQueryExecutor()->execute($deleteQuery);
 
         return true;
     }
@@ -1945,7 +1945,7 @@ class Activities implements
             ->select('COUNT:(c.id)', 'count')
             ->build();
 
-        $sth = $this->entityManager->getQueryExecutor()->run($countQuery);
+        $sth = $this->entityManager->getQueryExecutor()->execute($countQuery);
 
         $row = $sth->fetch(PDO::FETCH_ASSOC);
 
@@ -1961,7 +1961,7 @@ class Activities implements
             ->limit($offset, $maxSize)
             ->build();
 
-        $sth = $this->entityManager->getQueryExecutor()->run($unionQuery);
+        $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
         $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
 

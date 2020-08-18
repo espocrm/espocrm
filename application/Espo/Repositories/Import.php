@@ -105,7 +105,7 @@ class Import extends \Espo\Core\Repositories\Database
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->run($delete);
+        $this->getEntityManager()->getQueryExecutor()->execute($delete);
 
         parent::afterRemove($entity, $options);
     }

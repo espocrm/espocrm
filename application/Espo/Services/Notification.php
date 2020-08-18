@@ -184,7 +184,7 @@ class Notification extends \Espo\Services\Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         return true;
     }
@@ -284,7 +284,7 @@ class Notification extends \Espo\Services\Record implements
                     'id' => $ids,
                 ])
                 ->build();
-            $this->entityManager->getQueryExecutor()->run($update);
+            $this->entityManager->getQueryExecutor()->execute($update);
         }
 
         return new RecordCollection($collection, $count);

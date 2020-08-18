@@ -532,7 +532,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->from('Notification')
@@ -546,7 +546,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         return true;
     }
@@ -565,7 +565,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         $this->markNotificationAsRead($id, $userId);
 
@@ -586,7 +586,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         return true;
     }
@@ -605,7 +605,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         return true;
     }
@@ -624,7 +624,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         return true;
     }
@@ -643,7 +643,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         $this->markNotificationAsRead($id, $userId);
 
@@ -664,7 +664,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         return true;
     }
@@ -684,7 +684,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
     }
 
     public function moveToFolder(string $id, ?string $folderId, ?string $userId = null)
@@ -705,7 +705,7 @@ class Email extends Record implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($update);
+        $this->entityManager->getQueryExecutor()->execute($update);
 
         return true;
     }

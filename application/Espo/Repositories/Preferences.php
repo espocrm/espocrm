@@ -93,7 +93,7 @@ class Preferences extends Repository implements
             ->limit(0, 1)
             ->build();
 
-        $sth = $this->getEntityManager()->getQueryExecutor()->run($select);
+        $sth = $this->getEntityManager()->getQueryExecutor()->execute($select);
 
         while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             $data = Json::decode($row['data']);
@@ -174,7 +174,7 @@ class Preferences extends Repository implements
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
 
         $entityTypeList = array_filter($entityTypeList, function ($item) {
             return (bool) $this->metadata->get(['scopes', $item, 'stream']);
@@ -218,7 +218,7 @@ class Preferences extends Repository implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->run($insert);
+        $this->getEntityManager()->getQueryExecutor()->execute($insert);
 
         $user = $this->entityManager->getEntity('User', $entity->id);
         if ($user && !$user->isPortal()) {
@@ -238,7 +238,7 @@ class Preferences extends Repository implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->run($delete);
+        $this->getEntityManager()->getQueryExecutor()->execute($delete);
     }
 
     public function remove(Entity $entity, array $options = [])

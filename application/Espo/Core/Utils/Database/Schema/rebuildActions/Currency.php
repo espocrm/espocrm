@@ -49,7 +49,7 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
             ->from('Currency')
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->run($delete);
+        $this->getEntityManager()->getQueryExecutor()->execute($delete);
 
         foreach ($currencyRates as $currencyName => $rate) {
             $this->getEntityManager()->createEntity('Currency', [

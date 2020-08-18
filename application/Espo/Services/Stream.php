@@ -252,7 +252,7 @@ class Stream
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
 
         $collection = new EntityCollection();
 
@@ -321,7 +321,7 @@ class Stream
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
 
         return true;
     }
@@ -341,7 +341,7 @@ class Stream
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     public function findUserStream($userId, $params = [])

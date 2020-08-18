@@ -36,7 +36,7 @@ use Espo\ORM\{
 use PDOStatement;
 
 /**
- * Runs queries by given query params instances.
+ * Executes queries by given query params instances.
  */
 class QueryExecutor
 {
@@ -47,7 +47,10 @@ class QueryExecutor
         $this->entityManager = $entityManager;
     }
 
-    public function run(Query $query) : PDOStatement
+    /**
+     * Execute a query.
+     */
+    public function execute(Query $query) : PDOStatement
     {
         $sql = $this->entityManager->getQueryComposer()->compose($query);
 

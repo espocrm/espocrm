@@ -94,7 +94,7 @@ class MassEmail extends \Espo\Services\Record implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->run($delete);
+        $this->getEntityManager()->getQueryExecutor()->execute($delete);
     }
 
     protected function cleanupQueueItems(Entity $massEmail)
@@ -108,7 +108,7 @@ class MassEmail extends \Espo\Services\Record implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->run($delete);
+        $this->getEntityManager()->getQueryExecutor()->execute($delete);
     }
 
     public function createQueue(Entity $massEmail, bool $isTest = false, $additionalTargetList = [])

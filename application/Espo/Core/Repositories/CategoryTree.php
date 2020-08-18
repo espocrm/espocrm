@@ -70,7 +70,7 @@ class CategoryTree extends Database
                     ->valuesQuery($select)
                     ->build();
 
-                $em->getQueryExecutor()->run($insert);
+                $em->getQueryExecutor()->execute($insert);
 
                 return;
 			}
@@ -85,7 +85,7 @@ class CategoryTree extends Database
                 ])
                 ->build();
 
-            $em->getQueryExecutor()->run($insert);
+            $em->getQueryExecutor()->execute($insert);
 
             return;
 		}
@@ -118,7 +118,7 @@ class CategoryTree extends Database
             ])
             ->build();
 
-        $em->getQueryExecutor()->run($delete);
+        $em->getQueryExecutor()->execute($delete);
 
 		if (!empty($parentId)) {
             $select = $em->getQueryBuilder()
@@ -139,7 +139,7 @@ class CategoryTree extends Database
                 ->valuesQuery($select)
                 ->build();
 
-            $em->getQueryExecutor()->run($insert);
+            $em->getQueryExecutor()->execute($insert);
 		}
 	}
 
@@ -159,7 +159,7 @@ class CategoryTree extends Database
             ])
             ->build();
 
-        $em->getQueryExecutor()->run($delete);
+        $em->getQueryExecutor()->execute($delete);
 
         $em->getMapper()->deleteFromDb($entity->getEntityType(), $entity->id);
 	}

@@ -420,7 +420,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 ])
                 ->build();
 
-            $this->getEntityManager()->getQueryExecutor()->run($delete);
+            $this->getEntityManager()->getQueryExecutor()->execute($delete);
         }
 
         foreach ($toUpdateList as $address) {
@@ -508,7 +508,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->run($update);
+                $this->getEntityManager()->getQueryExecutor()->execute($update);
 
                 $update = $this->getEntityManager()->getQueryBuilder()
                     ->update()
@@ -522,7 +522,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->run($update);
+                $this->getEntityManager()->getQueryExecutor()->execute($update);
             }
         }
 
@@ -587,7 +587,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->run($update);
+                $this->getEntityManager()->getQueryExecutor()->execute($update);
 
             } else {
                 if (

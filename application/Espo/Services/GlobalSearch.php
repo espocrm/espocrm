@@ -139,7 +139,7 @@ class GlobalSearch implements
 
         $sql = $this->entityManager->getQueryComposer()->compose($unionQuery);
 
-        $sth = $this->entityManager->getQueryExecutor()->run($unionQuery);
+        $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
         $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
 

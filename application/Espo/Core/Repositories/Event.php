@@ -134,7 +134,7 @@ class Event extends Database implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->run($delete);
+        $this->getEntityManager()->getQueryExecutor()->execute($delete);
     }
 
     protected function afterSave(Entity $entity, array $options = [])

@@ -358,7 +358,7 @@ class Job
                 ])
                 ->build();
 
-            $this->entityManager->getQueryExecutor()->run($delete);
+            $this->entityManager->getQueryExecutor()->execute($delete);
         }
     }
 

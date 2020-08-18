@@ -347,7 +347,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                 ])
                 ->build();
 
-            $this->getEntityManager()->getQueryExecutor()->run($delete);
+            $this->getEntityManager()->getQueryExecutor()->execute($delete);
         }
 
         foreach ($toUpdateList as $number) {
@@ -438,7 +438,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->run($update);
+                $this->getEntityManager()->getQueryExecutor()->execute($update);
 
                 $update = $this->getEntityManager()->getQueryBuilder()
                     ->update()
@@ -452,7 +452,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->run($update);
+                $this->getEntityManager()->getQueryExecutor()->execute($update);
             }
         }
 
@@ -517,7 +517,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     ])
                     ->build();
 
-                $this->getEntityManager()->getQueryExecutor()->run($update);
+                $this->getEntityManager()->getQueryExecutor()->execute($update);
 
             } else {
                 if (

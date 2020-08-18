@@ -126,7 +126,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
 
         $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('Job')
@@ -137,7 +137,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     protected function cleanupUniqueIds()
@@ -150,7 +150,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     protected function cleanupScheduledJobLog()
@@ -189,7 +189,7 @@ class Cleanup implements Job
                 ])
                 ->build();
 
-            $this->entityManager->getQueryExecutor()->run($delete);
+            $this->entityManager->getQueryExecutor()->execute($delete);
         }
     }
 
@@ -206,7 +206,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     protected function cleanupAuthToken()
@@ -223,7 +223,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     protected function cleanupAuthLog()
@@ -239,7 +239,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     protected function getCleanupJobFromDate()
@@ -356,7 +356,7 @@ class Cleanup implements Job
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->run($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     protected function cleanupEmails()
@@ -391,7 +391,7 @@ class Cleanup implements Job
                 ])
                 ->build();
 
-            $this->entityManager->getQueryExecutor()->run($delete);
+            $this->entityManager->getQueryExecutor()->execute($delete);
 
             $delete = $this->entityManager->getQueryBuilder()->delete()
                 ->from('EmailUser')
@@ -400,7 +400,7 @@ class Cleanup implements Job
                 ])
                 ->build();
 
-            $this->entityManager->getQueryExecutor()->run($delete);
+            $this->entityManager->getQueryExecutor()->execute($delete);
         }
     }
 
@@ -497,7 +497,7 @@ class Cleanup implements Job
                     ->where($where)
                     ->build();
 
-                $this->entityManager->getQueryExecutor()->run($delete);
+                $this->entityManager->getQueryExecutor()->execute($delete);
 
             } catch (\Exception $e) {
                 $GLOBALS['log']->error("Cleanup: " . $e->getMessage());
