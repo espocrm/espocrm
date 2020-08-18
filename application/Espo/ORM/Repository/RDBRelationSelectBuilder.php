@@ -265,7 +265,7 @@ class RDBRelationSelectBuilder
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::order()
      *
-     * @param string|array $orderBy
+     * @param string|array|int $orderBy
      * @param bool|string $direction
      */
     public function order($orderBy, $direction = 'ASC') : self

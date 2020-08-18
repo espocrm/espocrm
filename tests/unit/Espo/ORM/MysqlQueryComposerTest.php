@@ -27,6 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\{
     EntityFactory,
@@ -150,6 +151,25 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "WHERE account.name = 'test' " .
             "ORDER BY account.name ASC " .
             "LIMIT 1";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testDeleteWithAlias()
+    {
+        $query = $this->queryBuilder
+            ->delete()
+            ->from('Account', 'a')
+            ->where([
+                'a.name' => 'test',
+            ])
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql =
+            "DELETE `a` FROM `account` AS `a` " .
+            "WHERE a.name = 'test'";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -661,7 +681,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testJoinTable()
+    public function testJoinTable1()
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Post',
@@ -677,6 +697,24 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testJoinTable2()
+    {
+        $query = $this->queryBuilder
+            ->select()
+            ->select(['id', 'n.id'])
+            ->from('Post')
+            ->join('NoteTable', 'n')
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql =
+            "SELECT post.id AS `id`, n.id AS `n.id` FROM `post` " .
+            "JOIN `note_table` AS `n` " .
+            "WHERE post.deleted = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
 
     public function testJoinOnlyMiddle()
     {
@@ -1620,6 +1658,281 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "FROM `test_select_right` ".
             "JOIN `test_select` AS `left` ON test_select_right.left_id = left.id ".
             "ORDER BY (left.id * 1) ASC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectValue1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('Test')
+            ->select(['VALUE:Hello Man'])
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT 'Hello Man' AS `VALUE:Hello Man` FROM `test`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectValue2()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('Test')
+            ->select([['VALUE:Hello Man', 'value']])
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT 'Hello Man' AS `value` FROM `test`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectValue3()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('Test')
+            ->select([['\'Hello Man\'', 'value']])
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT 'Hello Man' AS `value` FROM `test`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectNoFrom1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->select([['\'Hello Man\'', 'value']])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT 'Hello Man' AS `value`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectNoFrom2()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->select("CONCAT:('Test', ' ', 'Hello')", 'value')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT CONCAT('Test', ' ', 'Hello') AS `value`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectNoFrom3()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->select("CONCAT:('Test', ' ', 'Hello')", 'value')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT CONCAT('Test', ' ', 'Hello') AS `value`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectNoFrom4()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->select("CONCAT:(test, ' ', 'Hello')", 'value')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT CONCAT(__stub.test, ' ', 'Hello') AS `value`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUnion1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $q1 = $queryBuilder->select()
+            ->select("'test1'", 'value')
+            ->build();
+
+        $q2 = $queryBuilder->select()
+            ->select("'test2'", 'value')
+            ->build();
+
+        $select = $queryBuilder
+            ->union()
+            ->query($q1)
+            ->query($q2)
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "(SELECT 'test1' AS `value`) ".
+            "UNION ".
+            "(SELECT 'test2' AS `value`)";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUnion2()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $q1 = $queryBuilder->select()
+            ->select("'test1'", 'value')
+            ->build();
+
+        $q2 = $queryBuilder->select()
+            ->select("'test2'", 'value')
+            ->build();
+
+        $select = $queryBuilder
+            ->union()
+            ->all()
+            ->query($q1)
+            ->query($q2)
+            ->limit(0, 2)
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "(SELECT 'test1' AS `value`) ".
+            "UNION ALL ".
+            "(SELECT 'test2' AS `value`) ".
+            "LIMIT 0, 2";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUnionOrder1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $q1 = $queryBuilder->select()
+            ->select("'test1'", 'value')
+            ->build();
+
+        $q2 = $queryBuilder->select()
+            ->select("'test2'", 'value')
+            ->build();
+
+        $select = $queryBuilder
+            ->union()
+            ->all()
+            ->query($q1)
+            ->query($q2)
+            ->limit(0, 2)
+            ->order(1, 'DESC')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "(SELECT 'test1' AS `value`) ".
+            "UNION ALL ".
+            "(SELECT 'test2' AS `value`) ".
+            "ORDER BY 1 DESC ".
+            "LIMIT 0, 2";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUnionOrder2()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $q1 = $queryBuilder->select()
+            ->select("'test1'", 'value')
+            ->build();
+
+        $q2 = $queryBuilder->select()
+            ->select("'test2'", 'value')
+            ->build();
+
+        $select = $queryBuilder
+            ->union()
+            ->all()
+            ->query($q1)
+            ->query($q2)
+            ->order('value', 'DESC')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "(SELECT 'test1' AS `value`) ".
+            "UNION ALL ".
+            "(SELECT 'test2' AS `value`) ".
+            "ORDER BY value DESC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUnionOrder3()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $q1 = $queryBuilder->select()
+            ->select("'test1'", 'value1')
+            ->select("'test2'", 'value2')
+            ->build();
+
+        $q2 = $queryBuilder->select()
+            ->select("'test1'", 'value1')
+            ->select("'test2'", 'value2')
+            ->build();
+
+        $select = $queryBuilder
+            ->union()
+            ->all()
+            ->query($q1)
+            ->query($q2)
+            ->order('value1', 'DESC')
+            ->order('value2')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "(SELECT 'test1' AS `value1`, 'test2' AS `value2`) ".
+            "UNION ALL ".
+            "(SELECT 'test1' AS `value1`, 'test2' AS `value2`) ".
+            "ORDER BY value1 DESC, value2 ASC";
 
         $this->assertEquals($expectedSql, $sql);
     }

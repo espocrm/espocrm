@@ -232,7 +232,7 @@ class RDBSelectBuilder
     /**
      * Apply ORDER.
      *
-     * @param string|array $orderBy An attribute to order by or order definitions as an array.
+     * @param string|array|int $orderBy An attribute to order by or order definitions as an array.
      * @param bool|string $direction TRUE for DESC order.
      */
     public function order($orderBy = 'id', $direction = 'ASC') : self

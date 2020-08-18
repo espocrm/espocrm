@@ -27,6 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace tests\unit\Espo\ORM;
+
 require_once 'tests/unit/testData/DB/Entities.php';
 
 use Espo\ORM\{
@@ -42,6 +44,8 @@ use Espo\ORM\{
     EntityFactory,
     CollectionFactory,
 };
+
+use RuntimeException;
 
 use tests\unit\testData\Entities\Test;
 

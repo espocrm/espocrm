@@ -31,7 +31,7 @@ namespace Espo\ORM;
 
 use StdClass;
 
-abstract class BaseEntity implements Entity
+class BaseEntity implements Entity
 {
     public $id = null;
 
@@ -67,7 +67,7 @@ abstract class BaseEntity implements Entity
 
     protected $isBeingSaved = false;
 
-    public function __construct(string $entityType, array $defs = [], EntityManager $entityManager)
+    public function __construct(string $entityType, array $defs = [], ?EntityManager $entityManager = null)
     {
         $this->entityType = $entityType ?? null;
 
@@ -136,9 +136,10 @@ abstract class BaseEntity implements Entity
             return $this->valuesContainer[$name];
         }
 
-        if ($this->hasRelation($name) && $this->id) {
-            $value = $this->entityManager->getRepository($this->getEntityType())->findRelated($this, $name, $params);
-            return $value;
+        if ($this->hasRelation($name) && $this->id && $this->entityManager) {
+            return $this->entityManager
+                ->getRepository($this->getEntityType())
+                ->findRelated($this, $name, $params);
         }
 
         return null;
@@ -187,7 +188,7 @@ abstract class BaseEntity implements Entity
                         $foreign = $this->getAttributeParam($attribute, 'foreign');
                         if (is_string($foreign)) {
                             $foreignEntityType = $this->getRelationParam($relation, 'entity');
-                            if ($foreignEntityType) {
+                            if ($foreignEntityType && $this->entityManager) {
                                 $valueType = $this->entityManager->getMetadata()->get(
                                     $foreignEntityType, ['fields', $foreign, 'type']
                                 );

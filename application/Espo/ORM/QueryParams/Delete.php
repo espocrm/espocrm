@@ -39,8 +39,22 @@ class Delete implements Query
     use SelectingTrait;
     use BaseTrait;
 
+    /**
+     * Get an entity type.
+     */
+    public function getFrom() : string
+    {
+        return $this->params['from'];
+    }
+
     protected function validateRawParams(array $params)
     {
         $this->validateRawParamsSelecting($params);
+
+        $from = $params['from'] ?? null;
+
+        if (!$from || !is_string($from)) {
+            throw new RuntimeException("Select params: Missing 'from'.");
+        }
     }
 }

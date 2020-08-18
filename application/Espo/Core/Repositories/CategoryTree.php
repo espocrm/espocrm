@@ -37,52 +37,109 @@ class CategoryTree extends Database
 	{
 		parent::afterSave($entity, $options);
 
-		$pdo = $this->getEntityManager()->getPDO();
-		$query = $this->getEntityManager()->getQueryComposer();
-
 		$parentId = $entity->get('parentId');
-		$pathsTableName = $query->toDb($query->sanitize($entity->getEntityType()) . 'Path');
+
+        $em = $this->getEntityManager();
+
+        $pathEntityType = $entity->getEntityType() . 'Path';
 
 		if ($entity->isNew()) {
 			if ($parentId) {
-				$sql = "
-					INSERT INTO `".$pathsTableName."` (ascendor_id, descendor_id)
-						SELECT ascendor_id, ".$pdo->quote($entity->id)."
-						FROM `".$pathsTableName."`
-						WHERE descendor_id = ".$pdo->quote($parentId)."
-						UNION ALL
-						SELECT ".$pdo->quote($entity->id).", ".$pdo->quote($entity->id)."
-				";
-			} else {
-				$sql = "
-					INSERT INTO `".$pathsTableName."` (ascendor_id, descendor_id)
-					VALUES
-					(".$pdo->quote($entity->id).", ".$pdo->quote($entity->id).")
-				";
+                $subSelect1 = $em->getQueryBuilder()
+                    ->select()
+                    ->from($pathEntityType)
+                    ->select(['ascendorId', "'" . $entity->id . "'"])
+                    ->build();
+
+                $subSelect2 = $em->getQueryBuilder()
+                    ->select()
+                    ->select(["'" . $entity->id . "'", "'" . $entity->id . "'"])
+                    ->build();
+
+                $select = $em->getQueryBuilder()
+                    ->union()
+                    ->all()
+                    ->query($subSelect1)
+                    ->query($subSelect2)
+                    ->build();
+
+                $insert = $em->getQueryBuilder()
+                    ->insert()
+                    ->into($pathEntityType)
+                    ->columns(['ascendorId', 'descendorId'])
+                    ->valuesQuery($select)
+                    ->build();
+
+                $em->getQueryExecutor()->run($insert);
+
+                return;
 			}
-			$pdo->query($sql);
-		} else {
-			if ($entity->isAttributeChanged('parentId')) {
-				$sql = "
-					DELETE a FROM `".$pathsTableName."` AS a
-					JOIN `".$pathsTableName."` AS d ON a.descendor_id = d.descendor_id
-					LEFT JOIN `".$pathsTableName."` AS x ON x.ascendor_id = d.ascendor_id AND x.descendor_id = a.ascendor_id
-					WHERE d.ascendor_id = ".$pdo->quote($entity->id)." AND x.ascendor_id IS NULL
-				";
-				$pdo->query($sql);
-				if (!empty($parentId)) {
-					$sql = "
-						INSERT INTO `".$pathsTableName."` (ascendor_id, descendor_id)
-							SELECT supertree.ascendor_id, subtree.descendor_id
-							FROM `".$pathsTableName."` AS supertree
-							JOIN `".$pathsTableName."` AS subtree
-							WHERE
-								subtree.ascendor_id = ".$pdo->quote($entity->id)." AND
-								supertree.descendor_id = ".$pdo->quote($parentId)."
-					";
-					$pdo->query($sql);
-				}
-			}
+
+            $insert = $em->getQueryBuilder()
+                ->insert()
+                ->into($pathEntityType)
+                ->columns(['ascendorId', 'descendorId'])
+                ->values([
+                    'ascendorId' => $entity->id,
+                    'descendorId' => $entity->id,
+                ])
+                ->build();
+
+            $em->getQueryExecutor()->run($insert);
+
+            return;
+		}
+
+		if (!$entity->isAttributeChanged('parentId')) {
+            return;
+        }
+
+        $delete = $em->getQueryBuilder()
+            ->delete()
+            ->from($pathEntityType, 'a')
+            ->join(
+                $pathEntityType,
+                'd',
+                [
+                    'd.descendorId:' => 'a.descendorId',
+                ]
+            )
+            ->leftJoin(
+                $pathEntityType,
+                'x',
+                [
+                    'x.ascendorId:' => 'd.descendorId',
+                    'x.descendorId:' => 'a.ascendorId',
+                ]
+            )
+            ->where([
+                'd.descendorId' => $entity->id,
+                'x.ascendorId' => null,
+            ])
+            ->build();
+
+        $em->getQueryExecutor()->run($delete);
+
+		if (!empty($parentId)) {
+            $select = $em->getQueryBuilder()
+                ->select()
+                ->from($pathEntityType)
+                ->select(['ascendorId', 's.descendorId'])
+                ->join($pathEntityType, 's')
+                ->where([
+                    's.ascendorId' => $entity->id,
+                    'descendorId' => $parentId,
+                ])
+                ->build();
+
+            $insert = $em->getQueryBuilder()
+                ->insert()
+                ->into($pathEntityType)
+                ->columns(['ascendorId', 'descendorId'])
+                ->valuesQuery($select)
+                ->build();
+
+            $em->getQueryExecutor()->run($insert);
 		}
 	}
 
@@ -90,12 +147,18 @@ class CategoryTree extends Database
 	{
 		parent::afterRemove($entity, $options);
 
-		$pdo = $this->getEntityManager()->getPDO();
-		$query = $this->getEntityManager()->getQueryComposer();
+        $pathEntityType = $entity->getEntityType() . 'Path';
 
-		$pathsTableName = $query->toDb($query->sanitize($entity->getEntityType()) . 'Path');
+        $em = $this->getEntityManager();
 
-		$sql = "DELETE FROM `".$pathsTableName."` WHERE descendor_id = ".$pdo->quote($entity->id)."";
-		$pdo->query($sql);
+        $delete = $em->getQueryBuilder()
+            ->delete()
+            ->from($pathEntityType)
+            ->where([
+                'descendorId' => $entity->id,
+            ])
+            ->build();
+
+        $em->getQueryExecutor()->run($delete);
 	}
 }

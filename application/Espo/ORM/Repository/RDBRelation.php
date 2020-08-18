@@ -438,6 +438,14 @@ class RDBRelation
 
     public function massRelate(Select $query, array $options = [])
     {
+        if ($this->isBelongsToParentType()) {
+            throw new RuntimeException("Can't mass relate 'belongToParent'.");
+        }
+
+        if ($query->getFrom() !== $this->foreignEntityType) {
+            throw new RuntimeException("Passed query doesn't match foreign entity type.");
+        }
+
         $this->beforeMassRelate($query, $options);
 
         $this->getMapper()->massRelate($this->entity, $this->relationName, $query);

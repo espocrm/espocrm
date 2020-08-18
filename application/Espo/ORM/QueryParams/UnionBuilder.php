@@ -29,22 +29,24 @@
 
 namespace Espo\ORM\QueryParams;
 
-class DeleteBuilder implements Builder
+use InvalidArgumentException;
+
+class UnionBuilder implements Builder
 {
-    use SelectingBuilderTrait;
+    use BaseBuilderTrait;
 
     /**
-     * Build a DELETE query.
+     * Build a UNION select query.
      */
-    public function build() : Delete
+    public function build() : Union
     {
-        return Delete::fromRaw($this->params);
+        return Union::fromRaw($this->params);
     }
 
     /**
      * Clone an existing query for a subsequent modifying and building.
      */
-    public function clone(Delete $query) : self
+    public function clone(Union $query) : self
     {
         $this->cloneInternal($query);
 
@@ -52,26 +54,54 @@ class DeleteBuilder implements Builder
     }
 
     /**
-     * Set FROM parameter. For what entity type to build a query.
+     * Use UNION ALL.
      */
-    public function from(string $entityType, ?string $alias = null) : self
+    public function all() : self
     {
-        if (isset($this->params['from'])) {
-            throw new LogicException("Method 'from' can be called only once.");
-        }
+        $this->params['all'] = true;
 
-        $this->params['from'] = $entityType;
-        $this->params['alias'] = $alias;
+        return $this;
+    }
+
+    public function query(Select $query) : self
+    {
+        $this->params['queries'] = $this->params['queries'] ?? [];
+
+        $this->params['queries'][] = $query;
 
         return $this;
     }
 
     /**
-     * Apply LIMIT.
+     * Apply OFFSET and LIMIT.
      */
-    public function limit(?int $limit = null) : self
+    public function limit(?int $offset = null, ?int $limit = null) : self
     {
+        $this->params['offset'] = $offset;
         $this->params['limit'] = $limit;
+
+        return $this;
+    }
+
+    /**
+     * Apply ORDER.
+     *
+     * @param int|string $orderBy A position in select (starting from 1) or select alias.
+     * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
+     */
+    public function order($orderBy, $direction = Select::ORDER_ASC) : self
+    {
+        if (!$orderBy) {
+            throw InvalidArgumentException();
+        }
+
+        if (!is_string($orderBy) && !is_int($orderBy)) {
+            throw InvalidArgumentException();
+        }
+
+        $this->params['orderBy'] = $this->params['orderBy'] ?? [];
+
+        $this->params['orderBy'][] = [$orderBy, $direction];
 
         return $this;
     }

@@ -27,13 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace tests\unit\Espo\ORM;
+
 use Espo\ORM\{
     QueryBuilder,
     QueryParams\Select,
     QueryParams\Insert,
     QueryParams\Update,
     QueryParams\Delete,
+    QueryParams\Union,
 };
+
+use RuntimeException;
 
 class QueryBuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -56,6 +61,27 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertNotSame($clonedSelect, $select);
         $this->assertInstanceOf(Select::class, $clonedSelect);
+    }
+
+    public function testSelectNoFrom1()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->select(['col1'])
+            ->build();
+
+        $this->assertNull($select->getFrom());
+    }
+
+    public function testSelectNoFrom2()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $select = $this->queryBuilder
+            ->select()
+            ->select(['col1'])
+            ->join('test')
+            ->build();
     }
 
     public function testInsert1()
@@ -87,6 +113,17 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(Insert::class, $insert);
     }
 
+    public function testInsertNoInto()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $this->queryBuilder
+            ->insert()
+            ->columns(['col1'])
+            ->values(['col1' => '1'])
+            ->build();
+    }
+
     public function testDelete1()
     {
         $delete = $this->queryBuilder
@@ -97,6 +134,27 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
             ->build();
 
         $this->assertInstanceOf(Delete::class, $delete);
+    }
+
+    public function testDeleteNoFrom()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $this->queryBuilder
+            ->delete()
+            ->where(['col1' => '1'])
+            ->build();
+    }
+
+    public function testUpdateNoFrom()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $this->queryBuilder
+            ->update()
+            ->set(['col1' => '2'])
+            ->where(['col1' => '1'])
+            ->build();
     }
 
     public function testUpdate1()
@@ -114,7 +172,7 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateNoSet()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $update = $this->queryBuilder
             ->update()
@@ -122,5 +180,39 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
             ->where(['col1' => '1'])
             ->limit(1)
             ->build();
+    }
+
+    public function testUnion1()
+    {
+        $q1 = $this->queryBuilder
+            ->select()
+            ->select(['col1'])
+            ->build();
+
+        $q2 = $this->queryBuilder
+            ->select()
+            ->select(['col1'])
+            ->build();
+
+        $union = $this->queryBuilder
+            ->union()
+            ->query($q1)
+            ->query($q2)
+            ->all()
+            ->limit(0, 5)
+            ->order(1, 'DESC')
+            ->build();
+
+        $this->assertInstanceOf(Union::class, $union);
+    }
+
+    public function testUnionNoQuery()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $union = $this->queryBuilder
+            ->union()
+            ->build();
+
     }
 }

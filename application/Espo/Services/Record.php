@@ -1348,7 +1348,7 @@ class Record implements Crud,
             ->withDeleted()
             ->build();
 
-        return $this->getRepository()->findOne($query);
+        return $this->getRepository()->clone($query)->findOne();
     }
 
     public function restoreDeleted(string $id)

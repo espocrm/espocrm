@@ -188,6 +188,11 @@ class Converter
                 $ormMetadata,
                 $this->createRelationsEntityDefs($entityType, $entityOrmMetadata)
             );
+
+            $ormMetadata = Util::merge(
+                $ormMetadata,
+                $this->createAdditionalEntityTypes($entityType, $entityOrmMetadata)
+            );
         }
 
         return $ormMetadata;
@@ -592,6 +597,21 @@ class Converter
                 }
             }
         }
+    }
+
+    protected function createAdditionalEntityTypes(string $entityType, array $defs) : array
+    {
+        if (empty($defs['additionalTables'])) {
+            return [];
+        }
+
+        $additionalDefs = $defs['additionalTables'];
+
+        foreach ($additionalDefs as $aEntityType => &$item) {
+            $item['skipRebuild'] = true;
+        }
+
+        return $additionalDefs;
     }
 
     protected function createRelationsEntityDefs(string $entityType, array $defs) : array

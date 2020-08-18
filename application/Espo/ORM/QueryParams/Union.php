@@ -32,35 +32,16 @@ namespace Espo\ORM\QueryParams;
 use RuntimeException;
 
 /**
- * Update parameters.
+ * Union parameters.
  */
-class Update implements Query
+class Union implements Query, Selecting
 {
-    use SelectingTrait;
     use BaseTrait;
-
-    /**
-     * Get an entity type.
-     */
-    public function getFrom() : string
-    {
-        return $this->params['from'];
-    }
 
     protected function validateRawParams(array $params)
     {
-        $this->validateRawParamsSelecting($params);
-
-        $from = $params['from'] ?? null;
-
-        if (!$from || !is_string($from)) {
-            throw new RuntimeException("Select params: Missing 'from'.");
-        }
-
-        $set = $params['set'] ?? null;
-
-        if (!$set || !is_array($set)) {
-            throw new RuntimeException("Update params: Bad or missing 'set' parameter.");
+        if (empty($params['queries'])) {
+            throw new RuntimeException("Union params: No query were added.");
         }
     }
 }

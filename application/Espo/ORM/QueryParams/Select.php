@@ -29,18 +29,28 @@
 
 namespace Espo\ORM\QueryParams;
 
+use RuntimeException;
+
 /**
  * Select parameters.
  *
  * @todo Add validation and normalization (from ORM\DB\BaseQuery).
  */
-class Select implements Query
+class Select implements Query, Selecting
 {
     use SelectingTrait;
     use BaseTrait;
 
     const ORDER_ASC = 'ASC';
     const ORDER_DESC = 'DESC';
+
+    /**
+     * Get an entity type.
+     */
+    public function getFrom() : ?string
+    {
+        return $this->params['from'] ?? null;
+    }
 
     /**
      * @todo Remove?
@@ -62,5 +72,18 @@ class Select implements Query
     protected function validateRawParams(array $params)
     {
         $this->validateRawParamsSelecting($params);
+
+        if (
+            (
+                !empty($params['joins']) ||
+                !empty($params['leftJoins']) ||
+                !empty($params['whereClause']) ||
+                !empty($params['orderBy'])
+            )
+            &&
+            empty($params['from'])
+        ) {
+            throw new RuntimeException("Select params: Missing 'from'.");
+        }
     }
 }

@@ -658,7 +658,9 @@ abstract class BaseMapper implements Mapper
         $relDefs = $entity->getRelations()[$relationName];
 
         if (!isset($relDefs['entity']) || !isset($relDefs['type'])) {
-            throw new LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity.");
+            throw new LogicException(
+                "Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity."
+            );
         }
 
         $relType = $relDefs['type'];
@@ -708,7 +710,7 @@ abstract class BaseMapper implements Mapper
                     Insert::fromRaw([
                         'into' => $middleName,
                         'columns' => $columns,
-                        'valuesSelectParams' => $params,
+                        'valuesQuery' => Select::fromRaw($params),
                         'updateSet' => [
                             static::ATTRIBUTE_DELETED => false,
                         ],

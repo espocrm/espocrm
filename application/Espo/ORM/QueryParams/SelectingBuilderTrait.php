@@ -113,7 +113,7 @@ trait SelectingBuilderTrait
     /**
      * Apply ORDER.
      *
-     * @param string|array $orderBy An attribute to order by or order definitions as an array.
+     * @param string|array|int $orderBy An attribute to order by or order definitions as an array.
      * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
      *                               If the first argument is an array then should be omitied.
      */

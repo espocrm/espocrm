@@ -34,6 +34,7 @@ use Espo\ORM\{
     QueryParams\UpdateBuilder,
     QueryParams\DeleteBuilder,
     QueryParams\InsertBuilder,
+    QueryParams\UnionBuilder,
     QueryParams\Query,
     QueryParams\Builder,
 };
@@ -46,10 +47,6 @@ use RuntimeException;
  */
 class QueryBuilder
 {
-    public function __construct()
-    {
-    }
-
     /**
      * Proceed with SELECT builder.
      */
@@ -83,7 +80,15 @@ class QueryBuilder
     }
 
     /**
-     * Cone an existing query and proceed modifying it.
+     * Proceed with UNION builder.
+     */
+    public function union() : UnionBuilder
+    {
+        return new UnionBuilder();
+    }
+
+    /**
+     * Clone an existing query and proceed modifying it.
      */
     public function clone(Query $query) : Builder
     {
