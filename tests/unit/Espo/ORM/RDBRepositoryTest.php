@@ -519,8 +519,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
     {
         $paramsExpected = Select::fromRaw([
             'from' => 'Test',
-            'orderBy' => 'name',
-            'order' => 'ASC',
+            'orderBy' => [['name', 'ASC']],
         ]);
 
         $this->mapper
@@ -529,7 +528,9 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->order('name')->find();
+        $this->repository
+            ->order('name')
+            ->find();
     }
 
     public function testSelect1()

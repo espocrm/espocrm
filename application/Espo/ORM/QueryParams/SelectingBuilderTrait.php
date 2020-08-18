@@ -113,7 +113,7 @@ trait SelectingBuilderTrait
     /**
      * Apply ORDER.
      *
-     * @param string|array|int $orderBy An attribute to order by or order definitions as an array.
+     * @param string|int|array $orderBy An attribute to order by or order definitions as an array.
      * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
      *                               If the first argument is an array then should be omitied.
      */
@@ -123,8 +123,15 @@ trait SelectingBuilderTrait
             throw InvalidArgumentException();
         }
 
-        $this->params['orderBy'] = $orderBy;
-        $this->params['order'] = $direction;
+        if (is_array($orderBy)) {
+            $this->params['orderBy'] = $orderBy;
+
+            return $this;
+        }
+
+        $this->params['orderBy'] = $this->params['orderBy'] ?? [];
+
+        $this->params['orderBy'][] = [$orderBy, $direction];
 
         return $this;
     }

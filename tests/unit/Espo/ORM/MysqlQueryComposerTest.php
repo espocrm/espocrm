@@ -982,6 +982,28 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testOrderBy2()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Article')
+            ->distinct()
+            ->select(['id', 'name'])
+            ->order(1)
+            ->order(2, 'DESC')
+            ->withDeleted()
+            ->build();
+
+        $expectedSql =
+            "SELECT DISTINCT article.id AS `id`, article.name AS `name` " .
+            "FROM `article` ".
+            "ORDER BY 1 ASC, 2 DESC";
+
+        $sql = $this->query->compose($select);
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testForeign()
     {
         $sql = $this->query->compose(Select::fromRaw([
