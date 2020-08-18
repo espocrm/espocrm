@@ -41,7 +41,7 @@ class Api extends ApiBase
 
         foreach ($routeList as $i => $route) {
             if (isset($route['route'])) {
-                if ($route['route']{0} !== '/') {
+                if ($route['route'][0] !== '/') {
                     $route['route'] = '/' . $route['route'];
                 }
                 $route['route'] = '/{portalId}' . $route['route'];
