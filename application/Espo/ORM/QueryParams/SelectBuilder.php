@@ -123,6 +123,18 @@ class SelectBuilder implements Builder
     }
 
     /**
+     * Use index.
+     */
+    public function useIndex(string $index) : self
+    {
+        $this->params['useIndex'] = $this->params['useIndex'] ?? [];
+
+        $this->params['useIndex'][] = $index;
+
+        return $this;
+    }
+
+    /**
      * Add a HAVING clause.
      *
      * Two usage options:

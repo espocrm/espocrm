@@ -539,11 +539,15 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectUseIndex()
     {
-        $sql = $this->query->compose(Select::fromRaw([
-            'from' => 'Account',
-            'select' => ['id', 'name'],
-            'useIndex' => 'name',
-        ]));
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Account')
+            ->select(['id', 'name'])
+            ->useIndex('name')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
         $expectedSql =
             "SELECT account.id AS `id`, account.name AS `name` FROM `account` USE INDEX (`IDX_NAME`) " .
             "WHERE account.deleted = 0";
@@ -555,6 +559,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'select' => ['id', 'name'],
             'useIndex' => ['name'],
         ]));
+
         $expectedSql =
             "SELECT account.id AS `id`, account.name AS `name` FROM `account` USE INDEX (`IDX_NAME`) " .
             "WHERE account.deleted = 0";
