@@ -555,7 +555,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
         }
@@ -717,7 +717,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return;
         }
@@ -725,7 +725,7 @@ abstract class BaseMapper implements Mapper
         throw new LogicException("Relation type '{$relType}' is not supported for mass relate.");
     }
 
-    protected function runSql(string $sql, bool $rerunIfDeadlock = false)
+    protected function executeSql(string $sql, bool $rerunIfDeadlock = false)
     {
         try {
             return $this->pdo->query($sql);
@@ -798,7 +798,7 @@ abstract class BaseMapper implements Mapper
                         ])
                     );
 
-                    $this->runSql($sql, true);
+                    $this->executeSql($sql, true);
                 }
 
                 $entity->set($key, $relEntity->id);
@@ -817,7 +817,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
 
@@ -844,7 +844,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
 
@@ -873,7 +873,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 $sql = $this->queryComposer->compose(
                     Update::fromRaw([
@@ -888,7 +888,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
 
@@ -926,7 +926,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
 
@@ -997,7 +997,7 @@ abstract class BaseMapper implements Mapper
                         ])
                     );
 
-                    $this->runSql($sql, true);
+                    $this->executeSql($sql, true);
 
                     return true;
                 }
@@ -1018,7 +1018,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
         }
@@ -1113,7 +1113,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
 
@@ -1150,7 +1150,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
 
@@ -1188,7 +1188,7 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $this->runSql($sql, true);
+                $this->executeSql($sql, true);
 
                 return true;
         }
@@ -1231,7 +1231,7 @@ abstract class BaseMapper implements Mapper
             ])
         );
 
-        $this->runSql($sql, true);
+        $this->executeSql($sql, true);
     }
 
     /**
@@ -1257,7 +1257,7 @@ abstract class BaseMapper implements Mapper
             ])
         );
 
-        $this->runSql($sql, true);
+        $this->executeSql($sql, true);
     }
 
     protected function getInsertColumnList(Entity $entity) : array
@@ -1383,7 +1383,7 @@ abstract class BaseMapper implements Mapper
             'whereClause' => $whereClause,
         ]));
 
-        $this->runSql($sql);
+        $this->executeSql($sql);
     }
 
     /**
@@ -1407,7 +1407,7 @@ abstract class BaseMapper implements Mapper
             ])
         );
 
-        $this->runSql($sql);
+        $this->executeSql($sql);
     }
 
     /**

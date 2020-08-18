@@ -54,6 +54,6 @@ class QueryExecutor
     {
         $sql = $this->entityManager->getQueryComposer()->compose($query);
 
-        return $this->entityManager->runSql($sql, true);
+        return $this->entityManager->executeSql($sql, true);
     }
 }

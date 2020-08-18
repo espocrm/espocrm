@@ -352,19 +352,19 @@ class EntityManager
     }
 
     /**
-     * Run a Query.
+     * Execute a Query.
      */
-    public function runQuery(Query $query) : PDOStatement
+    public function executeQuery(Query $query) : PDOStatement
     {
         return $this->queryExecutor->run($query);
     }
 
     /**
-     * Run a SQL query.
+     * Execute a SQL query.
      *
      * @param $rerunIfDeadlock Query will be re-run if a deadlock occurs.
      */
-    public function runSql(string $sql, bool $rerunIfDeadlock = false) : PDOStatement
+    public function executeSql(string $sql, bool $rerunIfDeadlock = false) : PDOStatement
     {
         $pdoStatement = null;
 
