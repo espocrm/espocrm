@@ -34,6 +34,8 @@ use Espo\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
 
+use Espo\ORM\QueryParams\Select;
+
 use Espo\Core\Utils\Util;
 
 use Espo\Core\{
@@ -210,24 +212,37 @@ class EmailNotification
         ];
 
         $delay = $this->config->get('emailNotificationsDelay');
+
         if ($delay) {
             $delayDt = new \DateTime();
             $delayDt->modify('-' . $delay . ' seconds');
             $where[] = ['createdAt<' => $delayDt->format('Y-m-d H:i:s')];
         }
 
-        $sqlArr = [];
+        $queryList = [];
+
         foreach ($typeList as $type) {
             $methodName = 'getNotificationSelectParams' . $type;
             $selectParams = $this->$methodName();
             $selectParams['whereClause'][] = $where;
 
-            $sqlArr[] = $this->entityManager->getQueryComposer()->createSelectQuery('Notification', $selectParams);
+            $selectParams['from'] = 'Notification';
+
+            $queryList[] = Select::fromRaw($selectParams);
         }
 
-        $maxCount = intval(self::PROCESS_MAX_COUNT);
+        $builder = $this->entityManager->getQueryBuilder()
+            ->union()
+            ->order('number')
+            ->limit(0, self::PROCESS_MAX_COUNT);
 
-        $sql = '' . implode(' UNION ', $sqlArr) . " ORDER BY number LIMIT 0, {$maxCount}";
+        foreach ($queryList as $query) {
+            $builder->query($query);
+        }
+
+        $unionQuery = $builder->build();
+
+        $sql = $this->entityManager->getQueryComposer()->compose($unionQuery);
 
         $notificationList = $this->entityManager->getRepository('Notification')->findBySql($sql);
 
