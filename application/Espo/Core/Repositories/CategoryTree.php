@@ -160,5 +160,7 @@ class CategoryTree extends Database
             ->build();
 
         $em->getQueryExecutor()->run($delete);
+
+        $em->getMapper()->deleteFromDb($entity->getEntityType(), $entity->id);
 	}
 }
