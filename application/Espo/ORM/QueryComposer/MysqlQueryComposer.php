@@ -31,18 +31,22 @@ namespace Espo\ORM\QueryComposer;
 
 class MysqlQueryComposer extends BaseQueryComposer
 {
-    public function limit(string $sql, ?int $offset = null, ?int $limit = null) : string
+    protected function limit(string $sql, ?int $offset = null, ?int $limit = null) : string
     {
         if (!is_null($offset) && !is_null($limit)) {
             $offset = intval($offset);
             $limit = intval($limit);
+
             $sql .= " LIMIT {$offset}, {$limit}";
+
             return $sql;
         }
 
         if (!is_null($limit)) {
             $limit = intval($limit);
+
             $sql .= " LIMIT {$limit}";
+
             return $sql;
         }
 

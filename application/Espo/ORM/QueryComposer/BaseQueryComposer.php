@@ -1859,18 +1859,6 @@ abstract class BaseQueryComposer implements QueryComposer
         return $this->getOrderExpressionPart($entity, $orderBy, $order, false, $params);
     }
 
-    /**
-     * @todo Make protected?
-     */
-    public function order(string $sql, Entity $entity, $orderBy = null, $order = null, bool $useColumnAlias = false) : string
-    {
-        $orderPart = $this->getOrderExpressionPart($entity, $orderBy, $order, $useColumnAlias);
-        if ($orderPart) {
-            $sql .= " ORDER BY " . $orderPart;
-        }
-        return $sql;
-    }
-
     protected function getAttributePathForOrderBy(Entity $entity, string $orderBy, array $params) : ?string
     {
         if (strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
@@ -2994,5 +2982,5 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * Add a LIMIT part to a SQL query.
      */
-    abstract public function limit(string $sql, ?int $offset = null, ?int $limit = null) : string;
+    abstract protected function limit(string $sql, ?int $offset = null, ?int $limit = null) : string;
 }
