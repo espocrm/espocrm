@@ -459,7 +459,7 @@ class SelectManager
             throw new Error("Can't apply inCategory for link {$link}.");
         }
 
-        $pathName = lcfirst($query->sanitize($foreignEntity)) . 'Path';
+        $pathName = lcfirst($foreignEntity) . 'Path';
 
         if ($defs['type'] == 'manyMany') {
             if (empty($defs['midKeys'])) {

@@ -251,7 +251,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @deprecated
-     * @todo Remove in v6.4.
+     * @todo Remove in 6.5.
      */
     public function createSelectQuery(string $entityType, ?array $params = null) : string
     {
@@ -1899,8 +1899,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Quote a value (if needed).
-     *
-     * @todo Make protected.
+     * @deprecated
+     * @todo Make protected in 6.5.
      */
     public function quote($value) : string
     {
@@ -1924,7 +1924,8 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * {@inheritdoc)
+     * @deprecated
+     * @todo Make protected in 6.5.
      */
     public function toDb(string $string) : string
     {
@@ -2412,6 +2413,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize a string.
+     * @todo Make protected in 6.5.
+     * @deprecated
      */
     public function sanitize(string $string) : string
     {
@@ -2420,6 +2423,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize an alias for a SELECT statement.
+     * @todo Make protected in 6.5.
+     * @deprecated
      */
     public function sanitizeSelectAlias(string $string) : string
     {

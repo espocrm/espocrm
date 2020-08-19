@@ -39,23 +39,4 @@ interface QueryComposer
      * Compose a SQL query by a given query parameters.
      */
     public function compose(Query $query) : string;
-
-    /**
-     * Convert a camelCase string to a corresponding representation for DB.
-     * @todo Remove from the interface? Make protected?
-     */
-    public function toDb(string $string) : string;
-
-    /**
-     * Sanitize a string.
-     * @todo Remove from the interface?
-     */
-    public function sanitize(string $string) : string;
-
-    /**
-     * Sanitize an alias for a SELECT statement.
-     * Needed to be able to access rows by alias from a query results.
-     * Different database systems may have different restrictions on alias names.
-     */
-    public function sanitizeSelectAlias(string $string);
 }
