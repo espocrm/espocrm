@@ -1000,6 +1000,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $rest = substr($rest, 1, -1);
 
             $argumentList = Util::parseArgumentListFromFunctionContent($rest);
+
             if (count($argumentList) < 2) {
                 throw new RuntimeException("ORM Query: Bad MATCH usage.");
             }
@@ -1008,6 +1009,7 @@ abstract class BaseQueryComposer implements QueryComposer
             for ($i = 0; $i < count($argumentList) - 1; $i++) {
                 $columnList[] = $argumentList[$i];
             }
+
             $query = $argumentList[count($argumentList) - 1];
         } else {
             throw new RuntimeException("ORM Query: Bad MATCH usage.");
@@ -1016,7 +1018,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
         foreach ($columnList as $i => $column) {
-            $columnList[$i] = $fromAlias . '.' . $this->sanitize($column);
+            $columnList[$i] = $fromAlias . '.' . $this->sanitize($this->toDb($column));
         }
 
         if (!Util::isArgumentString($query)) {

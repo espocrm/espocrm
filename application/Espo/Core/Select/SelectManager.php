@@ -2348,13 +2348,7 @@ class SelectManager
                 $textFilter = trim($textFilter);
             }
 
-            $fullTextSearchColumnSanitizedList = [];
-            $query = $this->getEntityManager()->getQueryComposer();
-            foreach ($fullTextSearchColumnList as $i => $field) {
-                $fullTextSearchColumnSanitizedList[$i] = $query->sanitize($query->toDb($field));
-            }
-
-            $where = $function . ':(' . implode(',', $fullTextSearchColumnSanitizedList) . ',' . "'{$textFilter}'" . ')';
+            $where = $function . ':(' . implode(', ', $fullTextSearchColumnList) . ', ' . "'{$textFilter}'" . ')';
 
             $result = [
                 'where' => $where,
