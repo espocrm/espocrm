@@ -36,7 +36,7 @@ use Exception;
 use RuntimeException;
 
 /**
- * ExecutesSQL queries.
+ * Executes SQL queries.
  */
 class SqlExecutor
 {
