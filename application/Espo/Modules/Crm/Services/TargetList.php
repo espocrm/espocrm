@@ -31,11 +31,15 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\ORM\Entity;
 
+use Espo\ORM\QueryParams\Select;
+
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\Record\Collection as RecordCollection;
+
+use PDO;
 
 class TargetList extends \Espo\Services\Record
 {
@@ -43,7 +47,7 @@ class TargetList extends \Espo\Services\Record
 
     protected $duplicatingLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
-    protected $targetsLinkList = ['accounts', 'contacts', 'leads', 'users'];
+    protected $targetsLinkList = ['contacts', 'leads', 'users', 'accounts'];
 
     protected $entityTypeLinkMap = [
         'Lead' => 'leads',
@@ -95,10 +99,14 @@ class TargetList extends \Espo\Services\Record
 
         foreach ($this->targetsLinkList as $link) {
             $foreignEntityType = $entity->getRelationParam($link, 'entity');
-            $count += $this->getEntityManager()->getRepository($foreignEntityType)->join('targetLists')->where([
-                'targetListsMiddle.targetListId' => $entity->id,
-                'targetListsMiddle.optedOut' => 1,
-            ])->count();
+
+            $count += $this->getEntityManager()->getRepository($foreignEntityType)
+                ->join('targetLists')
+                ->where([
+                    'targetListsMiddle.targetListId' => $entity->id,
+                    'targetListsMiddle.optedOut' => 1,
+                ])
+                ->count();
         }
 
         $entity->set('optedOutCount', $count);
@@ -120,10 +128,13 @@ class TargetList extends \Espo\Services\Record
         if (empty($sourceCampaignId)) {
             throw new BadRequest();
         }
+
         $campaign = $this->getEntityManager()->getEntity('Campaign', $sourceCampaignId);
+
         if (!$campaign) {
             throw new NotFound();
         }
+
         if (!$this->getAcl()->check($campaign, 'read')) {
             throw new Forbidden();
         }
@@ -132,12 +143,13 @@ class TargetList extends \Espo\Services\Record
         $selectParams = $selectManager->getEmptySelectParams();
 
 
-        $selectParams['whereClause'][] = array(
+        $selectParams['whereClause'][] = [
             'isTest' => false
-        );
-        $selectParams['whereClause'][] = array(
+        ];
+
+        $selectParams['whereClause'][] = [
             'campaignId' => $sourceCampaignId
-        );
+        ];
 
         $selectParams['select'] = ['id', 'parentId', 'parentType'];
 
@@ -176,9 +188,11 @@ class TargetList extends \Espo\Services\Record
     public function unlinkAll(string $id, string $link)
     {
         $entity = $this->getRepository()->get($id);
+
         if (!$entity) {
             throw new NotFound();
         }
+
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
@@ -196,114 +210,144 @@ class TargetList extends \Espo\Services\Record
         $query = $this->getEntityManager()->getQueryComposer();
         $sql = null;
 
-        switch ($link) {
-            case 'contacts':
-                $sql = "UPDATE contact_target_list SET deleted = 1 WHERE target_list_id = " . $query->quote($entity->id);
-                break;
-            case 'leads':
-                $sql = "UPDATE lead_target_list SET deleted = 1 WHERE target_list_id  = " . $query->quote($entity->id);
-                break;
-            case 'accounts':
-                $sql = "UPDATE account_target_list SET deleted = 1 WHERE target_list_id  = " . $query->quote($entity->id);
-                break;
-            case 'users':
-                $sql = "UPDATE target_list_user SET deleted = 1 WHERE target_list_id  = " . $query->quote($entity->id);
-                break;
+        $linkEntityType = ucfirst(
+            $entity->getRelationParam($link, 'relationName') ?? ''
+        );
+
+        if ($linkEntityType === '') {
+            throw new Error();
         }
-        if ($sql) {
-            if ($pdo->query($sql)) {
-                $this->getInjection('hookManager')->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
-                return true;
-            }
+
+        $updateQuery = $this->getEntityManager()->getQueryBuilder()
+            ->update()
+            ->from($linkEntityType)
+            ->set([
+                'deleted' => true,
+            ])
+            ->where([
+                'targetListId' => $entity->id,
+            ])
+            ->build();
+
+        $this->getEntityManager()->getQueryExecutor()->execute($updateQuery);
+
+        $this->getInjection('hookManager')->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
+
+        return true;
+    }
+
+    protected function getOptedOutSelectQueryForLink(string $targetListId, string $link) : Select
+    {
+        $seed = $this->getRepository()->getNew();
+
+        $entityType = $seed->getRelationParam($link, 'entity');
+
+        if (!$entityType) {
+            throw new Error();
         }
+
+        $linkEntityType = ucfirst(
+            $seed->getRelationParam($link, 'relationName') ?? ''
+        );
+
+        if ($linkEntityType === '') {
+            throw new Error();
+        }
+
+        $key = $seed->getRelationParam($link, 'midKeys')[1] ?? null;
+
+
+        if (!$key) {
+            throw new Error();
+        }
+
+        return $this->getEntityManager()->getQueryBuilder()
+            ->select()
+            ->from($entityType)
+            ->select(['id', 'name', 'createdAt', ["'{$entityType}'", 'entityType']])
+            ->join(
+                $linkEntityType,
+                'j',
+                [
+                    "j.{$key}:" => 'id',
+                    'j.deleted' => false,
+                    'j.optedOut' => true,
+                    'j.targetListId' => $targetListId,
+                ],
+            )
+            ->order('createdAt', 'DESC')
+            ->build();
     }
 
     protected function findLinkedOptedOut(string $id, array $params) : RecordCollection
     {
-        $pdo = $this->getEntityManager()->getPDO();
-        $query = $this->getEntityManager()->getQueryComposer();
+        $offset = $params['offset'] ?? 0;
+        $maxSize = $params['maxSize'] ?? 0;
 
-        $sqlContact = $query->createSelectQuery('Contact', array(
-            'select' => ['id', 'name', 'createdAt', ['VALUE:Contact', '_scope']],
-            'customJoin' => 'JOIN contact_target_list AS j ON j.contact_id = contact.id AND j.deleted = 0 AND j.opted_out = 1',
-            'whereClause' => array(
-                'j.targetListId' => $id
-            )
-        ));
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->getQueryBuilder();
 
-        $sqlLead = $query->createSelectQuery('Lead', array(
-            'select' => ['id', 'name', 'createdAt', ['VALUE:Lead', '_scope']],
-            'customJoin' => 'JOIN lead_target_list AS j ON j.lead_id = lead.id AND j.deleted = 0 AND j.opted_out = 1',
-            'whereClause' => array(
-                'j.targetListId' => $id
-            )
-        ));
+        $queryList = [];
 
-        $sqlUser = $query->createSelectQuery('User', array(
-            'select' => ['id', 'name', 'createdAt', ['VALUE:User', '_scope']],
-            'customJoin' => 'JOIN target_list_user AS j ON j.user_id = user.id AND j.deleted = 0 AND j.opted_out = 1',
-            'whereClause' => array(
-                'j.targetListId' => $id
-            )
-        ));
-
-        $sqlAccount = $query->createSelectQuery('Account', array(
-            'select' => ['id', 'name', 'createdAt', ['VALUE:Account', '_scope']],
-            'customJoin' => 'JOIN account_target_list AS j ON j.account_id = account.id AND j.deleted = 0 AND j.opted_out = 1',
-            'whereClause' => array(
-                'j.targetListId' => $id
-            )
-        ));
-
-        $sql = "
-            {$sqlContact}
-            UNION
-            {$sqlLead}
-            UNION
-            {$sqlUser}
-            UNION
-            {$sqlAccount}
-            ORDER BY createdAt DESC
-        ";
-
-        $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
-
-        $sql = $query->limit($sql, $params['offset'], $params['maxSize']);
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $arr = [];
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $arr[] = $row;
+        foreach ($this->targetsLinkList as $link) {
+            $queryList[] = $this->getOptedOutSelectQueryForLink($id, $link);
         }
 
-        $sth = $pdo->prepare($sqlCount);
-        $sth->execute();
+        $builder = $queryBuilder
+            ->union()
+            ->all();
 
-        $row = $sth->fetch(\PDO::FETCH_ASSOC);
-        $count = $row['count'];
+        foreach ($queryList as $query) {
+            $builder->query($query);
+        }
+
+        $countQuery = $queryBuilder
+            ->select()
+            ->fromQuery($builder->build(), 'c')
+            ->select('COUNT:(c.id)', 'count')
+            ->build();
+
+        $sth = $em->getQueryExecutor()->execute($countQuery);
+
+        $row = $sth->fetch(PDO::FETCH_ASSOC);
+
+        $totalCount = $row['count'];
+
+        $unionQuery = $builder
+            ->limit($offset, $maxSize)
+            ->order('createdAt', 'DESC')
+            ->build();
+
+        $sth = $em->getQueryExecutor()->execute($unionQuery);
 
         $collection = $this->getEntityManager()->createCollection();
 
-        foreach ($arr as $row) {
-            $e = $this->getEntityManager()->getEntity($row['_scope']);
-            $e->set($row);
-            $collection[] = $e;
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $itemEntity = $this->getEntityManager()->getEntity($row['entityType']);
+
+            $itemEntity->set($row);
+            $itemEntity->setAsFetched();
+
+            $collection[] = $itemEntity;
         }
 
-        return new RecordCollection($collection, $count);
+        return new RecordCollection($collection, $totalCount);
     }
 
     public function optOut(string $id, string $targetType, string $targetId)
     {
         $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
+
         if (!$targetList) {
             throw new NotFound();
         }
+
         $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+
         if (!$target) {
             throw new NotFound();
         }
+
         $map = [
             'Account' => 'accounts',
             'Contact' => 'contacts',
@@ -314,35 +358,42 @@ class TargetList extends \Espo\Services\Record
         if (empty($map[$targetType])) {
             throw new Error();
         }
+
         $link = $map[$targetType];
 
         $result = $this->getEntityManager()->getRepository('TargetList')->relate($targetList, $link, $targetId, array(
             'optedOut' => true
         ));
 
-        if ($result) {
-            $hookData = [
-               'link' => $link,
-               'targetId' => $targetId,
-               'targetType' => $targetType
-            ];
-
-            $this->getInjection('hookManager')->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
-            return true;
+        if (!$result) {
+            return false;
         }
-        return false;
+
+        $hookData = [
+           'link' => $link,
+           'targetId' => $targetId,
+           'targetType' => $targetType
+        ];
+
+        $this->getInjection('hookManager')->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
+
+        return true;
     }
 
     public function cancelOptOut(string $id, string $targetType, string $targetId)
     {
         $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
+
         if (!$targetList) {
             throw new NotFound();
         }
+
         $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+
         if (!$target) {
             throw new NotFound();
         }
+
         $map = [
             'Account' => 'accounts',
             'Contact' => 'contacts',
@@ -359,19 +410,24 @@ class TargetList extends \Espo\Services\Record
             'optedOut' => false
         ));
 
-        if ($result) {
-            $hookData = [
-               'link' => $link,
-               'targetId' => $targetId,
-               'targetType' => $targetType
-            ];
-
-            $this->getInjection('hookManager')->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
-            return true;
+        if (!$result) {
+            return false;
         }
-        return false;
+
+        $hookData = [
+           'link' => $link,
+           'targetId' => $targetId,
+           'targetType' => $targetType
+        ];
+
+        $this->getInjection('hookManager')->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
+
+        return true;
     }
 
+    /**
+     * @todo Don't use additionalColumnsConditions.
+     */
     protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
     {
         $repository = $this->getRepository();
