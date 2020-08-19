@@ -46,8 +46,6 @@ use RuntimeException;
  */
 class EntityManager
 {
-    const STH_COLLECTION = 'sthCollection';
-
     protected $pdo;
 
     protected $entityFactory;
@@ -65,6 +63,10 @@ class EntityManager
     protected $params = [];
 
     protected $queryComposer;
+
+    protected $queryExecutor;
+
+    protected $sqlExecutor;
 
     protected $defaultMapperName = 'RDB';
 
@@ -101,7 +103,9 @@ class EntityManager
 
         $this->initQueryComposer();
 
-        $this->queryExecutor = new QueryExecutor($this);
+        $this->sqlExecutor = new SqlExecutor($this->getPDO());
+
+        $this->queryExecutor = new QueryExecutor($this->sqlExecutor, $this->queryComposer);
 
         $this->queryBuilder = new QueryBuilder();
 
@@ -167,7 +171,12 @@ class EntityManager
 
         if (empty($this->mappers[$className])) {
             $this->mappers[$className] = new $className(
-                $this->getPDO(), $this->entityFactory, $this->collectionFactory, $this->getQueryComposer(), $this->metadata
+                $this->getPDO(),
+                $this->entityFactory,
+                $this->collectionFactory,
+                $this->getQueryComposer(),
+                $this->metadata,
+                $this->sqlExecutor
             );
         }
 
@@ -352,42 +361,10 @@ class EntityManager
     }
 
     /**
-     * Execute a Query.
+     * Get SQL Executor.
      */
-    public function executeQuery(Query $query) : PDOStatement
+    public function getSqlExecutor() : SqlExecutor
     {
-        return $this->queryExecutor->run($query);
-    }
-
-    /**
-     * Execute a SQL query.
-     *
-     * @param $rerunIfDeadlock Query will be re-run if a deadlock occurs.
-     */
-    public function executeSql(string $sql, bool $rerunIfDeadlock = false) : PDOStatement
-    {
-        $pdoStatement = null;
-
-        try {
-            $pdoStatement = $this->getPDO()->query($sql);
-        } catch (Exception $e) {
-            if (!$rerunIfDeadlock) {
-                throw $e;
-            }
-
-            if (isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
-                $pdoStatement = $this->getPDO()->query($sql);
-            }
-
-            if (!$pdoStatement) {
-                throw $e;
-            }
-        }
-
-        if (!$pdoStatement) {
-            throw new RuntimeException("Query execution failure.");
-        }
-
-        return $pdoStatement;
+        return $this->sqlExecutor;
     }
 }

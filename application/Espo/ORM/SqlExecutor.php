@@ -29,34 +29,65 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\{
-    QueryParams\Query,
-    QueryComposer\QueryComposer,
-};
-
+use PDO;
 use PDOStatement;
 
-/**
- * Executes queries by given query params instances.
- */
-class QueryExecutor
-{
-    protected $sqlExecutor;
-    protected $queryComposer;
+use Exception;
+use RuntimeException;
 
-    public function __construct(SqlExecutor $sqlExecutor, QueryComposer $queryComposer)
+/**
+ * ExecutesSQL queries.
+ */
+class SqlExecutor
+{
+    protected $pdo;
+
+    const MAX_ATTEMPT_COUNT = 4;
+
+    public function __construct(PDO $pdo)
     {
-        $this->sqlExecutor = $sqlExecutor;
-        $this->queryComposer = $queryComposer;
+        $this->pdo = $pdo;
     }
 
     /**
      * Execute a query.
      */
-    public function execute(Query $query) : PDOStatement
+    public function execute(string $sql, bool $rerunIfDeadlock = false) : PDOStatement
     {
-        $sql = $this->queryComposer->compose($query);
+        if (!$rerunIfDeadlock) {
+            return $this->executeSqlWithDeadlockHandling($sql, 1);
+        }
 
-        return $this->sqlExecutor->execute($sql, true);
+        return $this->executeSqlWithDeadlockHandling($sql);
+    }
+
+    protected function executeSqlWithDeadlockHandling(string $sql, ?int $counter = null) : PDOStatement
+    {
+        $counter = $counter ?? self::MAX_ATTEMPT_COUNT;
+
+        $sth = null;
+
+        try {
+            $sth = $this->pdo->query($sql);
+        } catch (Exception $e) {
+            $counter--;
+
+            if ($counter === 0 || !$this->isExceptionIsDeadLock($e)) {
+                throw $e;
+            }
+
+            return $this->executeSqlWithDeadlockHandling($sql, $counter);
+        }
+
+        if (!$sth) {
+            throw new RuntimeException("Query execution failure.");
+        }
+
+        return $sth;
+    }
+
+    protected function isExceptionIsDeadLock(Exception $e)
+    {
+        return isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213;
     }
 }

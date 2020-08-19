@@ -35,6 +35,7 @@ use Espo\ORM\{
     EntityFactory,
     CollectionFactory,
     Metadata,
+    SqlExecutor,
     QueryComposer\QueryComposer,
     EntityCollection,
     SthCollection,
@@ -58,30 +59,31 @@ abstract class BaseMapper implements Mapper
 {
     const ATTRIBUTE_DELETED = 'deleted';
 
-    protected $pdo;
-
-    protected $entityFactroy;
-
-    protected $query;
-
-    protected $metadata;
-
     protected $fieldsMapCache = [];
 
     protected $aliasesCache = [];
+
+    protected $pdo;
+    protected $entityFactroy;
+    protected $collectionFactory;
+    protected $queryComposer;
+    protected $metadata;
+    protected $sqlExecutor;
 
     public function __construct(
         PDO $pdo,
         EntityFactory $entityFactory,
         CollectionFactory $collectionFactory,
         QueryComposer $queryComposer,
-        Metadata $metadata
+        Metadata $metadata,
+        SqlExecutor $sqlExecutor
     ) {
         $this->pdo = $pdo;
         $this->queryComposer = $queryComposer;
         $this->entityFactory = $entityFactory;
         $this->collectionFactory = $collectionFactory;
         $this->metadata = $metadata;
+        $this->sqlExecutor = $sqlExecutor;
 
         $this->helper = new Helper($metadata);
     }
@@ -97,14 +99,11 @@ abstract class BaseMapper implements Mapper
 
         $sql = $this->queryComposer->compose($select);
 
-        $ps = $this->pdo->query($sql);
+        $sth = $this->executeSql($sql);
 
-        if (!$ps) {
-            return null;
-        }
-
-        foreach ($ps as $row) {
+        while ($row = $sth->fetch()) {
             $this->populateEntityFromRow($entity, $row);
+
             $entity->setAsFetched();
 
             return $entity;
@@ -188,9 +187,11 @@ abstract class BaseMapper implements Mapper
         }
 
         $dataList = [];
-        $ps = $this->pdo->query($sql);
-        if ($ps) {
-            $dataList = $ps->fetchAll();
+
+        $sth = $this->executeSql($sql);
+
+        if ($sth) {
+            $dataList = $sth->fetchAll();
         }
 
         $collection = $this->collectionFactory->create($entityType, $dataList);
@@ -218,15 +219,13 @@ abstract class BaseMapper implements Mapper
 
         $sql = $this->queryComposer->compose($select);
 
-        $ps = $this->pdo->query($sql);
+        $sth = $this->executeSql($sql);
 
-        if (!$ps) {
-            return null;
-        }
-
-        foreach ($ps as $row) {
+        while ($row = $sth->fetch()) {
             return $row['value'];
         }
+
+        return null;
     }
 
     /**
@@ -291,20 +290,17 @@ abstract class BaseMapper implements Mapper
 
                 $sql = $this->queryComposer->compose(Select::fromRaw($params));
 
-                $ps = $this->pdo->query($sql);
+                $sth = $this->executeSql($sql);
 
-                if (!$ps) {
-                    return null;
-                }
 
                 if ($returnTotalCount) {
-                    foreach ($ps as $row) {
+                    while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
                     return 0;
                 }
 
-                foreach ($ps as $row) {
+                while ($row = $sth->fetch()) {
                     $this->populateEntityFromRow($relEntity, $row);
                     $relEntity->setAsFetched();
 
@@ -344,20 +340,16 @@ abstract class BaseMapper implements Mapper
                     }
                 }
 
-                $ps = $this->pdo->query($sql);
-
-                if (!$ps) {
-                    return null;
-                }
+                $sth = $this->executeSql($sql);
 
                 if ($returnTotalCount) {
-                    foreach ($ps as $row) {
+                    while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
                     return 0;
                 }
 
-                $resultDataList = $ps->fetchAll();
+                $resultDataList = $sth->fetchAll();
 
                 if ($relType == Entity::HAS_ONE) {
                     if (count($resultDataList)) {
@@ -394,20 +386,17 @@ abstract class BaseMapper implements Mapper
                     }
                 }
 
-                $ps = $this->pdo->query($sql);
-
-                if (!$ps) {
-                    return null;
-                }
+                $sth = $this->executeSql($sql);
 
                 if ($returnTotalCount) {
-                    foreach ($ps as $row) {
+                    while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
+
                     return null;
                 }
 
-                $resultDataList = $ps->fetchAll();
+                $resultDataList = $sth->fetchAll();
 
                 $collection = $this->collectionFactory->create($relEntity->getEntityType(), $resultDataList);
                 $collection->setAsFetched();
@@ -432,21 +421,19 @@ abstract class BaseMapper implements Mapper
 
                 $sql = $this->queryComposer->compose(Select::fromRaw($params));
 
-                $ps = $this->pdo->query($sql);
-
-                if (!$ps) {
-                    return null;
-                }
+                $sth = $this->executeSql($sql);
 
                 if ($returnTotalCount) {
-                    foreach ($ps as $row) {
+                    while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
+
                     return 0;
                 }
 
-                foreach ($ps as $row) {
+                while ($row = $sth->fetch()) {
                     $this->populateEntityFromRow($relEntity, $row);
+
                     return $relEntity;
                 }
 
@@ -621,13 +608,9 @@ abstract class BaseMapper implements Mapper
             ])
         );
 
-        $ps = $this->pdo->query($sql);
+        $sth = $this->executeSql($sql);
 
-        if (!$ps) {
-            return null;
-        }
-
-        foreach ($ps as $row) {
+        while ($row = $sth->fetch()) {
             $value = $row['value'];
 
             if ($columnType == Entity::BOOL) {
@@ -731,18 +714,9 @@ abstract class BaseMapper implements Mapper
         throw new LogicException("Relation type '{$relType}' is not supported for mass relate.");
     }
 
-    protected function executeSql(string $sql, bool $rerunIfDeadlock = false)
+    protected function executeSql(string $sql, bool $rerunIfDeadlock = false)/* : PDOStatement*/
     {
-        try {
-            return $this->pdo->query($sql);
-        } catch (Exception $e) {
-            if ($rerunIfDeadlock) {
-                if (isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213) {
-                    return $this->pdo->query($sql);
-                }
-            }
-            throw $e;
-        }
+        return $this->sqlExecutor->execute($sql, $rerunIfDeadlock);
     }
 
     protected function addRelation(
@@ -976,11 +950,11 @@ abstract class BaseMapper implements Mapper
                     ])
                 );
 
-                $ps = $this->pdo->query($sql);
+                $sth = $this->executeSql($sql);
 
                 // @todo Leave one INSERT for better performance.
 
-                if ($ps->rowCount() == 0) {
+                if ($sth->rowCount() == 0) {
                     $values = $where;
                     $columns = array_keys($values);
 
@@ -1369,7 +1343,7 @@ abstract class BaseMapper implements Mapper
             ])
         );
 
-        $this->pdo->query($sql);
+        $this->executeSql($sql);
     }
 
     protected function prepareValueForInsert($type, $value)

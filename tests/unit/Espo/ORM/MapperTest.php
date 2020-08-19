@@ -33,6 +33,7 @@ use Espo\ORM\{
     EntityFactory,
     CollectionFactory,
     EntityCollection,
+    SqlExecutor,
     QueryComposer\MysqlQueryComposer as QueryComposer,
     Mapper\MysqlMapper,
     QueryParams\Select,
@@ -47,7 +48,6 @@ use Espo\Entities\{
 };
 
 require_once 'tests/unit/testData/DB/Entities.php';
-require_once 'tests/unit/testData/DB/MockDBResult.php';
 
 class DBMapperTest extends \PHPUnit\Framework\TestCase
 {
@@ -73,6 +73,8 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $metadata
             ->method('get')
             ->will($this->returnValue(false));
+
+        $sqlExecutor = $this->sqlExecutor = $this->getMockBuilder(SqlExecutor::class)->disableOriginalConstructor()->getMock();
 
         $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
         $entityManager
@@ -111,7 +113,9 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
 
-        $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->collectionFactory, $this->query, $this->metadata);
+        $this->db = new MysqlMapper(
+            $this->pdo, $this->entityFactory, $this->collectionFactory, $this->query, $this->metadata, $this->sqlExecutor
+        );
 
         $this->post = $entityFactory->create('Post');
         $this->comment = $entityFactory->create('Comment');
@@ -129,7 +133,26 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         unset($this->pdo, $this->db, $this->post, $this->comment);
     }
 
-    protected function mockQuery(string $query, $return = true, $any = false)
+    protected function createSthMock(array $data, bool $noIteration = false)
+    {
+        $sth = $this->getMockBuilder(PDOStatement::class)->disableOriginalConstructor()->getMock();
+
+        if (!$noIteration) {
+            foreach ($data as $i => $item) {
+                $sth->expects($this->at($i))
+                    ->method('fetch')
+                    ->will($this->returnValue($item));
+            }
+        }
+
+        $sth->expects($this->any())
+            ->method('fetchAll')
+            ->will($this->returnValue($data));
+
+        return $sth;
+    }
+
+    protected function mockQuery(string $sql, $return = true, $any = false, bool $noIteration = false)
     {
         if ($any) {
             $expects = $this->any();
@@ -137,9 +160,16 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             $expects = $this->once();
         }
 
-        $this->pdo->expects($expects)
-                  ->method('query')
-                  ->with($query)
+        if ($return === true) {
+            $return = $this->createSthMock([]);
+        } else
+        if (is_array($return)) {
+            $return = $this->createSthMock($return, $noIteration);
+        }
+
+        $this->sqlExecutor->expects($expects)
+                  ->method('execute')
+                  ->with($sql)
                   ->will($this->returnValue($return));
     }
 
@@ -153,13 +183,14 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "WHERE post.id = '1' AND post.deleted = 0";
 
-        $return = new MockDBResult([
+        $return = [
             [
                 'id' => '1',
                 'name' => 'test',
                 'deleted' => false,
             ],
-        ]);
+        ];
+
         $this->mockQuery($query, $return);
 
         $select = Select::fromRaw([
@@ -189,7 +220,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "ORDER BY post.name DESC ".
             "LIMIT 0, 10";
 
-        $return = new MockDBResult([
+        $return = [
             [
                 'id' => '2',
                 'name' => 'test_2',
@@ -200,8 +231,9 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
                 'name' => 'test_1',
                 'deleted' => false,
             ],
-        ]);
-        $this->mockQuery($query, $return);
+        ];
+
+        $this->mockQuery($query, $return, false, true);
 
         $selectParams = [
             'from' => 'Post',
@@ -242,13 +274,13 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "ORDER BY contact.first_name DESC, contact.last_name DESC ".
             "LIMIT 0, 10";
 
-        $return = new MockDBResult([
+        $return = [
             [
                 'id' => '1',
                 'name' => 'test',
                 'deleted' => false,
             ],
-        ]);
+        ];
 
         $this->mockQuery($query, $return);
 
@@ -274,7 +306,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id ".
             "WHERE comment.deleted = 0";
 
-        $return = new MockDBResult([
+        $return = [
             [
                 'id' => '11',
                 'postId' => '1',
@@ -282,7 +314,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
                 'name' => 'test_comment',
                 'deleted' => false,
             ],
-        ]);
+        ];
 
         $this->mockQuery($query, $return);
 
@@ -305,13 +337,13 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
 
-        $return = new MockDBResult([
+        $return = [
             [
                 'id' => '1',
                 'name' => 'test',
                 'deleted' => false,
             ],
-        ]);
+        ];
 
         $this->mockQuery($query, $return);
         $this->post->id = '1';
@@ -331,7 +363,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
 
-        $return = new MockDBResult([
+        $return = $this->createSthMock([
             [
                 'id' => '1',
                 'name' => 'test',
@@ -356,13 +388,14 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "SELECT team.id AS `id`, team.name AS `name`, team.deleted AS `deleted`, entityTeam.team_id AS `stub` FROM `team` ".
             "JOIN `entity_team` AS `entityTeam` ON entityTeam.team_id = team.id AND entityTeam.entity_id = '1' AND " .
             "entityTeam.deleted = 0 AND entityTeam.entity_type = 'Account' WHERE team.deleted = 0";
-        $return = new MockDBResult([
+        $return = [
             [
                 'id' => '1',
                 'name' => 'test',
                 'deleted' => false,
             ],
-        ]);
+        ];
+
         $this->mockQuery($query, $return);
         $this->account->id = '1';
 
@@ -385,13 +418,13 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "FROM `note` ".
             "WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = 0";
 
-        $return = new MockDBResult([
+        $return = [
             [
                 'id' => '1',
                 'name' => 'test',
                 'deleted' => false,
             ],
-        ]);
+        ];
 
         $this->mockQuery($query, $return);
         $this->post->id = '1';
@@ -413,13 +446,13 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "WHERE post.id = '1' AND post.deleted = 0 ".
             "LIMIT 0, 1";
-        $return = new MockDBResult(array(
-            array(
+        $return = [
+            [
                 'id' => '1',
                 'name' => 'test',
                 'deleted' => false,
-            ),
-        ));
+            ],
+        ];
         $this->mockQuery($query, $return);
 
         $this->comment->id = '11';
@@ -439,11 +472,11 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
 
-        $return = new MockDBResult([
+        $return = [
             [
                 'value' => 1,
             ],
-        ]);
+        ];
 
         $this->mockQuery($query, $return);
 
@@ -753,10 +786,13 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query2 =
             "UPDATE `comment` SET comment.post_id = 'p' WHERE comment.id = 'c' AND comment.deleted = 0";
 
-        $this->pdo->expects($this->exactly(2))
-            ->method('query')
+        $this->sqlExecutor->expects($this->exactly(2))
+            ->method('execute')
             ->withConsecutive([$query1], [$query2])
-            ->willReturnOnConsecutiveCalls([['value' => 1]], true);
+            ->willReturnOnConsecutiveCalls(
+                $this->createSthMock([['value' => 1]]),
+                $this->createSthMock([])
+            );
 
         $this->db->relate($this->post, 'comments', $this->comment);
     }
@@ -773,10 +809,13 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query2 =
             "UPDATE `note` SET note.parent_id = 'p', note.parent_type = 'Post' WHERE note.id = 'n' AND note.deleted = 0";
 
-        $this->pdo->expects($this->exactly(2))
-            ->method('query')
+        $this->sqlExecutor->expects($this->exactly(2))
+            ->method('execute')
             ->withConsecutive([$query1], [$query2])
-            ->willReturnOnConsecutiveCalls([['value' => 1]], true);
+            ->willReturnOnConsecutiveCalls(
+                $this->createSthMock([['value' => 1]]),
+                $this->createSthMock([])
+            );
 
         $this->db->relate($this->post, 'notes', $this->note);
     }
@@ -789,10 +828,10 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query1 =
             "UPDATE `comment` SET comment.post_id = 'p' WHERE comment.id = 'c' AND comment.deleted = 0";
 
-        $this->pdo->expects($this->exactly(1))
-            ->method('query')
+        $this->sqlExecutor->expects($this->exactly(1))
+            ->method('execute')
             ->withConsecutive([$query1])
-            ->willReturnOnConsecutiveCalls(true);
+            ->willReturnOnConsecutiveCalls($this->createSthMock([]));
 
         $this->db->relate($this->comment, 'post', $this->post);
     }
@@ -805,10 +844,10 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query1 =
             "UPDATE `note` SET note.parent_id = 'p', note.parent_type = 'Post' WHERE note.id = 'n' AND note.deleted = 0";
 
-        $this->pdo->expects($this->exactly(1))
-            ->method('query')
+        $this->sqlExecutor->expects($this->exactly(1))
+            ->method('execute')
             ->withConsecutive([$query1])
-            ->willReturnOnConsecutiveCalls(true);
+            ->willReturnOnConsecutiveCalls($this->createSthMock([]));
 
         $this->db->relate($this->note, 'parent', $this->post);
     }
@@ -824,10 +863,10 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query2 =
             "UPDATE `post_data` SET post_data.post_id = 'p' WHERE post_data.id = 'd' AND post_data.deleted = 0";
 
-        $this->pdo->expects($this->exactly(2))
-            ->method('query')
+        $this->sqlExecutor->expects($this->exactly(2))
+            ->method('execute')
             ->withConsecutive([$query1], [$query2])
-            ->willReturnOnConsecutiveCalls(true, true);
+            ->willReturnOnConsecutiveCalls($this->createSthMock([]), $this->createSthMock([]));
 
         $this->db->relate($this->postData, 'post', $this->post);
     }
@@ -847,10 +886,14 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $query3 =
             "UPDATE `post_data` SET post_data.post_id = 'p' WHERE post_data.id = 'd' AND post_data.deleted = 0";
 
-        $this->pdo->expects($this->exactly(3))
-            ->method('query')
+        $this->sqlExecutor->expects($this->exactly(3))
+            ->method('execute')
             ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls([['value' => 1]], true, true);
+            ->willReturnOnConsecutiveCalls(
+                $this->createSthMock([['value' => 1]]),
+                $this->createSthMock([]),
+                $this->createSthMock([])
+            );
 
         $this->db->relate($this->post, 'postData', $this->postData);
     }
@@ -877,11 +920,15 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             ->method('rowCount')
             ->willReturn(0);
 
-        $this->pdo
+        $this->sqlExecutor
             ->expects($this->exactly(3))
-            ->method('query')
+            ->method('execute')
             ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
+            ->willReturnOnConsecutiveCalls(
+                $this->createSthMock([['value' => 1]]),
+                $ps,
+                $this->createSthMock([])
+            );
 
         $this->db->relate($this->post, 'tags', $this->tag, ['role' => 'Test']);
     }
@@ -908,11 +955,15 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             ->method('rowCount')
             ->willReturn(1);
 
-        $this->pdo
+        $this->sqlExecutor
             ->expects($this->exactly(3))
-            ->method('query')
+            ->method('execute')
             ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
+            ->willReturnOnConsecutiveCalls(
+                $this->createSthMock([['value' => 1]]),
+                $ps,
+                $this->createSthMock([])
+            );
 
         $this->db->relate($this->post, 'tags', $this->tag, ['role' => 'Test']);
     }
@@ -939,11 +990,15 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             ->method('rowCount')
             ->willReturn(0);
 
-        $this->pdo
+        $this->sqlExecutor
             ->expects($this->exactly(3))
-            ->method('query')
+            ->method('execute')
             ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
+            ->willReturnOnConsecutiveCalls(
+                $this->createSthMock([['value' => 1]]),
+                $ps,
+                $this->createSthMock([])
+            );
 
         $this->db->relate($this->account, 'teams', $this->team);
     }
@@ -970,11 +1025,15 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             ->method('rowCount')
             ->willReturn(1);
 
-        $this->pdo
+        $this->sqlExecutor
             ->expects($this->exactly(3))
-            ->method('query')
+            ->method('execute')
             ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls([['value' => 1]], $ps, true);
+            ->willReturnOnConsecutiveCalls(
+                $this->createSthMock([['value' => 1]]),
+                $ps,
+                $this->createSthMock([])
+            );
 
         $this->db->relate($this->account, 'teams', $this->team);
     }
@@ -1014,11 +1073,11 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     public function testMax()
     {
         $query = "SELECT MAX(post.id) AS `value` FROM `post` WHERE post.deleted = 0";
-        $return = new MockDBResult([
+        $return =[
             [
                 'value' => 10,
             ]
-        ]);
+        ];
         $this->mockQuery($query, $return);
 
         $value = $this->db->max(Select::fromRaw(['from' => 'Post']), 'id');
