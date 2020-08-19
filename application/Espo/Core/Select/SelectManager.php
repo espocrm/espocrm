@@ -447,8 +447,6 @@ class SelectManager
 
         $query = $this->getEntityManager()->getQueryComposer();
 
-        $tableName = $query->toDb($this->getSeed()->getEntityType());
-
         if (empty($relDefs[$link])) {
             throw new Error("Can't apply inCategory for link {$link}.");
         }
