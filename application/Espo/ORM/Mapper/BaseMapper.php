@@ -71,7 +71,11 @@ abstract class BaseMapper implements Mapper
     protected $aliasesCache = [];
 
     public function __construct(
-        PDO $pdo, EntityFactory $entityFactory, CollectionFactory $collectionFactory, QueryComposer $queryComposer, Metadata $metadata
+        PDO $pdo,
+        EntityFactory $entityFactory,
+        CollectionFactory $collectionFactory,
+        QueryComposer $queryComposer,
+        Metadata $metadata
     ) {
         $this->pdo = $pdo;
         $this->queryComposer = $queryComposer;
