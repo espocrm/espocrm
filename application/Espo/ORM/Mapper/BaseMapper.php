@@ -45,6 +45,8 @@ use Espo\ORM\{
 };
 
 use PDO;
+use PDOStatement;
+
 use Exception;
 use LogicException;
 use RuntimeException;
@@ -1231,7 +1233,27 @@ abstract class BaseMapper implements Mapper
             ])
         );
 
-        $this->executeSql($sql, true);
+        $sth = $this->executeSql($sql, true);
+
+        if ($entity->getAttributeParam('id', 'autoincrement')) {
+            $this->setLastInsertIdWithinConnection($entity);
+        }
+    }
+
+    protected function setLastInsertIdWithinConnection(Entity $entity)
+    {
+        $id = $this->pdo->lastInsertId();
+
+        if ($id === '' || $id === null) {
+            return;
+        }
+
+        if ($entity->getAttributeType('id') === Entity::INT) {
+            $id = (int) $id;
+        }
+
+        $entity->set('id', $id);
+        $entity->setFetched('id', $id);
     }
 
     /**
