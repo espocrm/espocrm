@@ -350,26 +350,27 @@ class EntityManager
         $this->getMetadata()->set('scopes', $name, $scopesData);
 
         $filePath = $templatePath . "/Metadata/{$type}/entityDefs.json";
+
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
         $entityDefsDataContents = str_replace('{entityTypeLowerFirst}', lcfirst($name), $entityDefsDataContents);
-        $entityDefsDataContents = str_replace(
-            '{tableName}',
-            $this->getEntityManager()->getQueryComposer()->toDb($name),
-            $entityDefsDataContents
-        );
+
         foreach ($replaceData as $key => $value) {
             $entityDefsDataContents = str_replace('{'.$key.'}', $value, $entityDefsDataContents);
         }
+
         $entityDefsData = Json::decode($entityDefsDataContents, true);
+
         $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
 
         $filePath = $templatePath . "/Metadata/{$type}/clientDefs.json";
         $clientDefsContents = $this->getFileManager()->getContents($filePath);
         $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
+
         foreach ($replaceData as $key => $value) {
             $clientDefsContents = str_replace('{'.$key.'}', $value, $clientDefsContents);
         }
+
         $clientDefsData = Json::decode($clientDefsContents, true);
 
         if (array_key_exists('color', $params)) {
