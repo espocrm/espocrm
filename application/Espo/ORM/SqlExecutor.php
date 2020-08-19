@@ -72,7 +72,7 @@ class SqlExecutor
         } catch (Exception $e) {
             $counter--;
 
-            if ($counter === 0 || !$this->isExceptionIsDeadLock($e)) {
+            if ($counter === 0 || !$this->isExceptionIsDeadlock($e)) {
                 throw $e;
             }
 
@@ -86,7 +86,7 @@ class SqlExecutor
         return $sth;
     }
 
-    protected function isExceptionIsDeadLock(Exception $e)
+    protected function isExceptionIsDeadlock(Exception $e)
     {
         return isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213;
     }
