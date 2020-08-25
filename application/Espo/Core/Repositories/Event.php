@@ -153,8 +153,6 @@ class Event extends Database implements
             $entity->isAttributeChanged($this->reminderDateAttribute) ||
             $entity->has('reminders')
         ) {
-            $pdo = $this->getEntityManager()->getPDO();
-
             $reminderTypeList = $this->getMetadata()->get('entityDefs.Reminder.fields.type.options');
 
             if (!$entity->has('reminders')) {
@@ -164,14 +162,17 @@ class Event extends Database implements
             }
 
             if (!$entity->isNew()) {
-                $sql = "
-                    DELETE FROM `reminder`
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityType())." AND
-                        deleted = 0
-                ";
-                $pdo->query($sql);
+                $query = $this->getEntityManager()->getQueryBuilder()
+                    ->delete()
+                    ->from('Reminder')
+                    ->where([
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'deleted' => false,
+                    ])
+                    ->build();
+
+                $this->getEntityManager()->getQueryExecutor()->execute($query);
             }
 
             if (empty($reminderList) || !is_array($reminderList)) return;
@@ -214,22 +215,23 @@ class Event extends Database implements
                 foreach ($userIdList as $userId) {
                     $id = Util::generateId();
 
-                    $sql = "
-                        INSERT
-                        INTO `reminder`
-                        (id, entity_id, entity_type, `type`, user_id, remind_at, start_at, `seconds`)
-                        VALUES (
-                            ".$pdo->quote($id).",
-                            ".$pdo->quote($entity->id).",
-                            ".$pdo->quote($entityType).",
-                            ".$pdo->quote($type).",
-                            ".$pdo->quote($userId).",
-                            ".$pdo->quote($remindAt->format('Y-m-d H:i:s')).",
-                            ".$pdo->quote($dateValue).",
-                            ".$pdo->quote($seconds)."
-                        )
-                    ";
-                    $pdo->query($sql);
+                    $query = $this->getEntityManager()->getQueryBuilder()
+                        ->insert()
+                        ->into('Reminder')
+                        ->columns(['id', 'entityId', 'entityType', 'type', 'userId', 'remindAt', 'startAt', 'seconds'])
+                        ->values([
+                            'id' => $id,
+                            'entityId' => $entity->id,
+                            'entityType' => $entityType,
+                            'type' => $type,
+                            'userId' => $userId,
+                            'remindAt' => $remindAt->format('Y-m-d H:i:s'),
+                            'startAt' => $dateValue,
+                            'seconds' => $seconds,
+                        ])
+                        ->build();
+
+                    $this->getEntityManager()->getQueryExecutor()->execute($query);
                 }
             }
         }
