@@ -2380,18 +2380,22 @@ class Record implements Crud,
         $pdo = $this->getEntityManager()->getPDO();
 
         foreach ($sourceList as $source) {
-            $sql = "
-                UPDATE `note`
-                    SET
-                        `parent_id` = " . $pdo->quote($entity->id) . ",
-                        `parent_type` = " . $pdo->quote($entity->getEntityType()) . "
-                WHERE
-                    `type` IN ('Post', 'EmailSent', 'EmailReceived') AND
-                    `parent_id` = " . $pdo->quote($source->id) . " AND
-                    `parent_type` = ".$pdo->quote($source->getEntityType())." AND
-                    `deleted` = 0
-            ";
-            $pdo->query($sql);
+            $updateQuery = $this->getEntityManager()->getQueryBuilder()
+                ->update()
+                ->from('Note')
+                ->set([
+                    'parentId' => $entity->id,
+                    'parentType' => $entity->getEntityType(),
+                ])
+                ->where([
+                    'type' => ['Post', 'EmailSent', 'EmailReceived'],
+                    'parentId' => $source->id,
+                    'parentType' => $source->getEntityType(),
+                    'deleted' => false,
+                ])
+                ->build();
+
+            $this->getEntityManager()->getQueryExecutor()->execute($updateQuery);
 
             if ($hasPhoneNumber) {
                 $phoneNumberList = $repository->findRelated($source, 'phoneNumbers');
