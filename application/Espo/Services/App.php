@@ -50,7 +50,12 @@ use Espo\Core\{
 
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
-use Espo\ORM\EntityManager;
+
+use Espo\ORM\{
+    EntityManager,
+    Repository\RDBRepository,
+    Entity,
+};
 
 class App
 {
@@ -352,8 +357,12 @@ class App
     {
         $scopeList = array_keys($this->metadata->get(['scopes']));
 
-        $sql = "DELETE FROM array_value";
-        $this->entityManager->getPdo()->query($sql);
+        $query = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('ArrayValue')
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($query);
 
         foreach ($scopeList as $scope) {
             if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
@@ -365,28 +374,41 @@ class App
             $attributeList = [];
 
             foreach ($seed->getAttributes() as $attribute => $defs) {
-                if (!isset($defs['type']) || $defs['type'] !== \Espo\ORM\Entity::JSON_ARRAY) continue;
+                if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
                 if (!$seed->getAttributeParam($attribute, 'storeArrayValues')) continue;
                 if ($seed->getAttributeParam($attribute, 'notStorable')) continue;
                 $attributeList[] = $attribute;
             }
             $select = ['id'];
             $orGroup = [];
+
             foreach ($attributeList as $attribute) {
                 $select[] = $attribute;
                 $orGroup[$attribute . '!='] = null;
             }
 
-            $sql = $this->entityManager->getQueryComposer()->createSelectQuery($scope, [
-                'select' => $select,
-                'whereClause' => [
-                    'OR' => $orGroup
-                ]
-            ]);
-            $sth = $this->entityManager->getPdo()->prepare($sql);
-            $sth->execute();
+            $repository = $this->entityManager->getRepository($scope);
 
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            if (! $repository instanceof RDBRepository) {
+                continue;
+            }
+
+            if (!count($attributeList)) {
+                continue;
+            }
+
+            $query = $this->entityManager->getQueryBuilder()
+                ->select()
+                ->from($scope)
+                ->select($select)
+                ->where([
+                    'OR' => $orGroup,
+                ])
+                ->build();
+
+            $sth = $this->entityManager->getQueryExecutor()->execute($query);
+
+            while ($dataRow = $sth->fetch()) {
                 $entity = $this->entityManager->getEntityFactory()->create($scope);
                 $entity->set($dataRow);
                 $entity->setAsFetched();
