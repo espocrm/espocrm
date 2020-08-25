@@ -1736,10 +1736,8 @@ class Activities implements
         return true;
     }
 
-    public function getPopupNotifications($userId)
+    public function getPopupNotifications(string $userId) : array
     {
-        $pdo = $this->getPDO();
-
         $dt = new \DateTime();
 
         $pastHours = $this->getConfig()->get('reminderPastHours', self::REMINDER_PAST_HOURS);
@@ -1747,60 +1745,57 @@ class Activities implements
         $now = $dt->format('Y-m-d H:i:s');
         $nowShifted = $dt->sub(new \DateInterval('PT'.strval($pastHours).'H'))->format('Y-m-d H:i:s');
 
-        $sql = "
-            SELECT id, entity_type AS 'entityType', entity_id AS 'entityId'
-            FROM `reminder`
-            WHERE
-                `type` = 'Popup' AND
-                `user_id` = ".$pdo->quote($userId)." AND
-                `remind_at` <= '{$now}' AND
-                `start_at` > '{$nowShifted}' AND
-                `deleted` = 0
-        ";
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $reminderCollection = $this->getEntityManager()->getRepository('Reminder')
+            ->select(['id', 'entityType', 'entityId'])
+            ->where([
+                'type' => 'Popup',
+                'userId' => $userId,
+                'remindAt<=' => $now,
+                'startAt>' => $nowShifted,
+            ])
+            ->find();
 
         $resultList = [];
-        foreach ($rowList as $row) {
-            $reminderId = $row['id'];
-            $entityType = $row['entityType'];
-            $entityId = $row['entityId'];
+
+        foreach ($reminderCollection as $reminder) {
+            $reminderId = $reminder->get('id');
+            $entityType = $reminder->get('entityType');
+            $entityId = $reminder->get('entityId');
 
             $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
             $data = null;
 
-            if ($entity) {
-                if ($entity->hasLinkMultipleField('users')) {
-                    $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
-                    $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
-                    if ($status === 'Declined') {
-                        $this->removeReminder($reminderId);
-                        continue;
-                    }
-                }
-
-                $dateAttribute = 'dateStart';
-                if ($entityType === 'Task') {
-                    $dateAttribute = 'dateEnd';
-                }
-
-                $data = [
-                    'id' => $entity->id,
-                    'entityType' => $entityType,
-                    $dateAttribute => $entity->get($dateAttribute),
-                    'name' => $entity->get('name')
-                ];
-            } else {
+            if (!$entity) {
                 continue;
             }
-            $resultList[] = [
-                'id' => $reminderId,
-                'data' => $data
+
+            if ($entity->hasLinkMultipleField('users')) {
+                $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
+                $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
+                if ($status === 'Declined') {
+                    $this->removeReminder($reminderId);
+                    continue;
+                }
+            }
+
+            $dateAttribute = 'dateStart';
+            if ($entityType === 'Task') {
+                $dateAttribute = 'dateEnd';
+            }
+
+            $data = [
+                'id' => $entity->id,
+                'entityType' => $entityType,
+                $dateAttribute => $entity->get($dateAttribute),
+                'name' => $entity->get('name'),
             ];
 
+            $resultList[] = [
+                'id' => $reminderId,
+                'data' => $data,
+            ];
         }
+
         return $resultList;
     }
 
