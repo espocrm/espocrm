@@ -139,16 +139,24 @@ class Notifications
 
     public function afterRemove(Entity $entity)
     {
-        $query = $this->entityManager->getQueryComposer();
-        $sql = "
-            DELETE FROM `notification`
-            WHERE
-                (related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) .")
-                OR
-                (related_parent_id = ".$query->quote($entity->id).
-                " AND related_parent_type = ".$query->quote($entity->getEntityType()) .")
-        ";
-        $this->entityManager->getPDO()->query($sql);
+        $query = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('Notification')
+            ->where([
+                'OR' => [
+                    [
+                        'relatedId' => $entity->id,
+                        'relatedType' => $entity->getEntityType(),
+                    ],
+                    [
+                        'relatedParentId' => $entity->id,
+                        'relatedParentType' => $entity->getEntityType(),
+                    ],
+                ],
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($query);
     }
 
     protected function getStreamService()
