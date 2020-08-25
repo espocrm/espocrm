@@ -41,8 +41,14 @@ use Espo\Core\Record\Collection as RecordCollection;
 
 use PDO;
 
-class TargetList extends \Espo\Services\Record
+use Espo\Core\Di;
+
+class TargetList extends \Espo\Services\Record implements
+
+    Di\HookManagerAware
 {
+    use Di\HookManagerSetter;
+
     protected $noEditAccessRequiredLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
     protected $duplicatingLinkList = ['accounts', 'contacts', 'leads', 'users'];
@@ -231,7 +237,7 @@ class TargetList extends \Espo\Services\Record
 
         $this->getEntityManager()->getQueryExecutor()->execute($updateQuery);
 
-        $this->getInjection('hookManager')->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
+        $this->hookManager->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
 
         return true;
     }
@@ -375,7 +381,7 @@ class TargetList extends \Espo\Services\Record
            'targetType' => $targetType
         ];
 
-        $this->getInjection('hookManager')->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
+        $this->hookManager->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
 
         return true;
     }
@@ -420,7 +426,7 @@ class TargetList extends \Espo\Services\Record
            'targetType' => $targetType
         ];
 
-        $this->getInjection('hookManager')->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
+        $this->hookManager->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
 
         return true;
     }
