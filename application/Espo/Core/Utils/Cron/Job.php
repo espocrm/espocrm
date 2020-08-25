@@ -272,33 +272,37 @@ class Job
         if (!count($jobList)) return;
 
         $jobIdList = [];
+
         foreach ($jobList as $job) {
             $jobIdList[] = $job->id;
         }
 
-        $quotedIdList = [];
-        foreach ($jobIdList as $id) {
-            $quotedIdList[] = $this->getEntityManager()->getPDO()->quote($id);
-        }
+        $updateQuery = $this->getEntityManager()->getQueryBuilder()
+            ->update()
+            ->from('Job')
+            ->set([
+                'status' => CronManager::FAILED,
+                'attempts' => 0,
+            ])
+            ->where([
+                'id' => $jobIdList,
+            ])
+            ->build();
 
-        $sql = "
-            UPDATE job
-            SET `status` = '" . CronManager::FAILED . "', attempts = 0
-            WHERE id IN (".implode(", ", $quotedIdList).")
-        ";
-
-        $this->getEntityManager()->getPDO()->query($sql);
+        $this->getEntityManager()->getQueryExecutor()->execute($updateQuery);
 
         foreach ($jobList as $job) {
-            if ($job->get('scheduledJobId')) {
-                $this->getCronScheduledJob()->addLogRecord(
-                    $job->get('scheduledJobId'),
-                    CronManager::FAILED,
-                    $job->get('startedAt'),
-                    $job->get('targetId'),
-                    $job->get('targetType')
-                );
+            if (!$job->get('scheduledJobId')) {
+                continue;
             }
+
+            $this->getCronScheduledJob()->addLogRecord(
+                $job->get('scheduledJobId'),
+                CronManager::FAILED,
+                $job->get('startedAt'),
+                $job->get('targetId'),
+                $job->get('targetType')
+            );
         }
     }
 
