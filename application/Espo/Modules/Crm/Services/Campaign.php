@@ -29,7 +29,10 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\ORM\Entity;
+use Espo\ORM\{
+    Entity,
+    QueryParams\Select,
+};
 
 use Espo\Core\Exceptions\Error,
     Espo\Core\Exceptions\Forbidden,
@@ -150,6 +153,7 @@ class Campaign extends \Espo\Services\Record implements
             $entity->set('revenueCurrency', $this->getConfig()->get('defaultCurrency'));
 
             $params = [
+                'from' => 'Opportunity',
                 'select' => ['SUM:amountConverted'],
                 'whereClause' => [
                     'stage' => 'Closed Won',
@@ -158,7 +162,7 @@ class Campaign extends \Espo\Services\Record implements
                 'groupBy' => ['opportunity.campaignId']
             ];
 
-            $sql = $this->getEntityManager()->getQueryComposer()->createSelectQuery('Opportunity', $params);
+            $sql = $this->getEntityManager()->getQueryComposer()->compose(Select::fromRaw($params));
 
             $pdo = $this->getEntityManager()->getPDO();
             $sth = $pdo->prepare($sql);
