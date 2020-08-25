@@ -36,6 +36,7 @@ use Espo\ORM\{
     Entity,
     EntityCollection,
     QueryParams\Select,
+    Collection,
 };
 
 use Espo\Entities\User;
@@ -1812,5 +1813,41 @@ class Stream
                 }
             }
         }
+    }
+
+    public function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false) : Collection
+    {
+        if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
+            return $this->entityManager->getCollectionFactory()->create('User', []);
+        }
+
+        $builder = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->from('Subscription')
+            ->select('userId')
+            ->where([
+                'entityId' => $parentId,
+                'entityType' => $parentType,
+            ]);
+
+        if ($isInternal) {
+            $builder
+                ->join('User', 'user', ['user.id:' => 'userId'])
+                ->where([
+                    'user.type!=' => 'portal',
+                ]);
+        }
+
+        $subQuery = $builder->build();
+
+        $userList = $this->entityManager->getRepository('User')
+            ->where([
+                'isActive' => true,
+                'id=s' => $subQuery->getRawParams(),
+            ])
+            ->select(['id', 'type'])
+            ->find();
+
+        return $userList;
     }
 }
