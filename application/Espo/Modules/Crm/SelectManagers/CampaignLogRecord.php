@@ -35,69 +35,73 @@ class CampaignLogRecord extends \Espo\Core\Select\SelectManager
     {
         $this->addLeftJoin(['campaign', 'campaignAccess'], $result);
 
-        $result['whereClause'][] = array(
-            'campaignAccess.assignedUserId' => $this->getUser()->id
-        );
+        $result['whereClause'][] = [
+            'campaignAccess.assignedUserId' => $this->getUser()->id,
+        ];
     }
 
     protected function accessOnlyTeam(&$result)
     {
         $this->addLeftJoin(['campaign', 'campaignAccess'], $result);
 
-        $teamIdList = $this->user->get('teamsIds');
-        if (empty($result['customWhere'])) {
-            $result['customWhere'] = '';
-        }
+        $teamIdList = $this->user->getLinkMultipleIdList('teams');
+
         if (empty($teamIdList)) {
-            $result['customWhere'] .= " AND campaignAccess.assigned_user_id = ".$this->getEntityManager()->getPDO()->quote($this->getUser()->id);
+            $result['whereClause'][] = [
+                'campaignAccess.assignedUserId' => $this->getUser()->id,
+            ];
+
             return;
         }
-        $arr = [];
-        if (is_array($teamIdList)) {
-            foreach ($teamIdList as $teamId) {
-                $arr[] = $this->getEntityManager()->getPDO()->quote($teamId);
-            }
-        }
 
-        $result['customJoin'] .= " LEFT JOIN entity_team AS teamsMiddle ON teamsMiddle.entity_type = 'Campaign' AND teamsMiddle.entity_id = campaignAccess.id AND teamsMiddle.deleted = 0";
-        $result['customWhere'] .= "
-            AND (
-                teamsMiddle.team_id IN (" . implode(', ', $arr) . ")
-                 OR
-                campaignAccess.assigned_user_id = ".$this->getEntityManager()->getPDO()->quote($this->getUser()->id)."
-            )
-        ";
-        $result['whereClause'][] = array(
-            'campaignId!=' => null
+        $this->addLeftJoin(
+            [
+                'EntityTeam',
+                'entityTeamAccess',
+                [
+                    'entityTeamAccess.entityType' => 'Campaign',
+                    'entityTeamAccess.entityId:' => 'campaignAccess.id',
+                    'entityTeamAccess.deleted' => false,
+                ]
+            ],
+            $result
         );
+
+        $result['whereClause'][] = [
+            'OR' => [
+                'entityTeamAccess.teamId' => $teamIdList,
+                'campaignAccess.assignedUserId' => $this->getUser()->id,
+            ],
+            'campaignId!=' => null,
+        ];
     }
 
     protected function filterOpened(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'action' => 'Opened'
-        );
+        ];
     }
 
     protected function filterSent(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'action' => 'Sent'
-        );
+        ];
     }
 
     protected function filterClicked(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'action' => 'Clicked'
-        );
+        ];
     }
 
     protected function filterOptedOut(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'action' => 'Opted Out'
-        );
+        ];
     }
 
     protected function filterOptedIn(&$result)
@@ -109,15 +113,15 @@ class CampaignLogRecord extends \Espo\Core\Select\SelectManager
 
     protected function filterBounced(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'action' => 'Bounced'
-        );
+        ];
     }
 
     protected function filterLeadCreated(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'action' => 'Lead Created'
-        );
+        ];
     }
 }
