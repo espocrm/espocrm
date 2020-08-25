@@ -2015,4 +2015,34 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($expectedSql, $sql);
     }
+
+    public function testSelectAlias1()
+    {
+        $qb = new QueryBuilder();
+
+        $query = $qb->select()
+            ->select('id')
+            ->select('CONCAT:(id,name)', 'c')
+            ->from('Account', 'a')
+            ->join('SomeTable', 's', ['s.id:' => 'a.id'])
+            ->where([
+                'a.name' => 'Test',
+            ])
+            ->order('a.name')
+            ->groupBy(['id'])
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql =
+            "SELECT a.id AS `id`, CONCAT(a.id, a.name) AS `c` ".
+            "FROM `account` AS `a` ".
+            "JOIN `some_table` AS `s` ON s.id = a.id ".
+            "WHERE a.name = 'Test' ".
+            "GROUP BY a.id ".
+            "ORDER BY a.name ASC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
 }
