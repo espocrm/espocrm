@@ -29,6 +29,8 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Utils\Util;
+
 /**
  * Clears cache, rebuilds the application.
  */
@@ -36,11 +38,15 @@ class DataManager
 {
     private $container;
 
+    protected $config;
+
     private $cachePath = 'data/cache';
 
     public function __construct(Container $container)
     {
         $this->container = $container;
+
+        $this->config = $container->get('config');
     }
 
     protected function getContainer()
@@ -207,14 +213,32 @@ class DataManager
 
     protected function populateConfigParameters()
     {
-        $config = $this->getContainer()->get('config');
+        $this->setFullTextConfigParameters();
+        $this->setCryptKeyConfigParameter();
+
+        $this->config->save();
+    }
+
+    protected function setFullTextConfigParameters()
+    {
+        $config = $this->config;
+
+        $platform = $config->get('database.platform') ?? null;
+        $driver = $config->get('database.driver') ?? '';
+
+        if ($platform !== 'Mysql' && strpos($driver, 'mysql') === false) {
+            return;
+        }
 
         $pdo = $this->getContainer()->get('entityManager')->getPDO();
-        $query = "SHOW VARIABLES LIKE 'ft_min_word_len'";
-        $sth = $pdo->prepare($query);
+
+        $sql = "SHOW VARIABLES LIKE 'ft_min_word_len'";
+
+        $sth = $pdo->prepare($sql);
         $sth->execute();
 
         $fullTextSearchMinLength = null;
+
         if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             if (isset($row['Value'])) {
                 $fullTextSearchMinLength = intval($row['Value']);
@@ -222,14 +246,20 @@ class DataManager
         }
 
         $config->set('fullTextSearchMinLength', $fullTextSearchMinLength);
+    }
+
+    protected function setCryptKeyConfigParameter()
+    {
+        $config = $this->config;
 
         $cryptKey = $config->get('cryptKey');
-        if (!$cryptKey) {
-            $cryptKey = \Espo\Core\Utils\Util::generateSecretKey();
-            $config->set('cryptKey', $cryptKey);
+
+        if ($cryptKey) {
+            return;
         }
 
-        $config->save();
+        $cryptKey = Util::generateSecretKey();
+        $config->set('cryptKey', $cryptKey);
     }
 
     protected function disableHooks()
