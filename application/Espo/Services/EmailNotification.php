@@ -282,7 +282,7 @@ class EmailNotification
         $selectParams['whereClause']['type'] = 'Note';
         $selectParams['whereClause']['relatedType'] = 'Note';
 
-        $selectParams['customJoin'] .= ' JOIN note ON notification.related_id = note.id';
+        $selectManager->addJoin(['Note', 'note', ['note.id:' => 'relatedId']], $selectParams);
 
         $selectParams['whereClause']['note.type'] = $noteNotificationTypeList;
 
@@ -297,7 +297,7 @@ class EmailNotification
                         'relatedParentType' => $entityList
                     ],
                     [
-                        'relatedParentType' => null
+                        'relatedParentType' => null,
                     ]
                 ]
             ];
