@@ -31,6 +31,7 @@ namespace Espo\ORM;
 
 use PDO;
 use PDOStatement;
+use PDOException;
 
 use Exception;
 use RuntimeException;
@@ -88,6 +89,10 @@ class SqlExecutor
 
     protected function isExceptionIsDeadlock(Exception $e)
     {
+        if (! $e instanceof PDOException) {
+            return false;
+        }
+
         return isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213;
     }
 }
