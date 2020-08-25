@@ -49,25 +49,37 @@ class WebhookQueue
 
     public function process()
     {
-        $pdo = $this->entityManager->getPDO();
-
         $period = '-' . $this->config->get('cleanupWebhookQueuePeriod', $this->cleanupWebhookQueuePeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
         $from = $datetime->format('Y-m-d H:i:s');
 
-        $query = "
-            DELETE FROM `webhook_queue_item`
-            WHERE
-                DATE(created_at) < ".$pdo->quote($from)." AND
-                (status <> 'Pending' OR deleted = 1)
-        ";
-        $pdo->query($query);
+        $query = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('WebhookQueueItem')
+            ->where([
+                'DATE:(createdAt)<' => $from,
+                'OR' => [
+                    'status!=' => 'Pending',
+                    'deleted' => true,
+                ],
+            ])
+            ->build();
 
-        $query = "
-            DELETE FROM `webhook_event_queue_item`
-            WHERE DATE(created_at) < ".$pdo->quote($from)." AND (is_processed = 1 OR deleted = 1)
-        ";
-        $pdo->query($query);
+        $this->entityManager->getQueryExecutor()->execute($query);
+
+        $query = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('WebhookEventQueueItem')
+            ->where([
+                'DATE:(createdAt)<' => $from,
+                'OR' => [
+                    'isProcessed' => true,
+                    'deleted' => true,
+                ],
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($query);
     }
 }
