@@ -102,16 +102,20 @@ class Stream
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
         }
 
-        $query = $this->entityManager->getQueryComposer();
-        $sql = "
-            UPDATE `note`
-            SET `deleted` = 1, `modified_at` = '".date('Y-m-d H:i:s')."'
-            WHERE
-                (
-                    (related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) .")
-                )
-        ";
-        $this->entityManager->getPDO()->query($sql);
+        $query = $this->entityManager->getQueryBuilder()
+            ->update()
+            ->from('Note')
+            ->set([
+                'deleted' => true,
+                'modifiedAt' => date('Y-m-d H:i:s'),
+            ])
+            ->where([
+                'relatedId' => $entity->id,
+                'relatedType' => $entity->getEntityType(),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($query);
     }
 
     protected function handleCreateRelated(Entity $entity, array $options = [])
