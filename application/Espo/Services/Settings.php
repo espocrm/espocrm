@@ -38,12 +38,14 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     ApplicationState,
     Acl,
+    InjectableFactory,
     ORM\EntityManager,
     Utils\Metadata,
     Utils\FieldManagerUtil,
     Utils\Config,
     DataManager,
     Utils\FieldValidatorManager,
+    Currency\DatabasePopulator as CurrencyDatabasePopulator,
 };
 
 class Settings
@@ -56,6 +58,7 @@ class Settings
     protected $entityManager;
     protected $dataManager;
     protected $fieldValidatorManager;
+    protected $injectableFactory;
 
     public function __construct(
         ApplicationState $applicationState,
@@ -65,7 +68,8 @@ class Settings
         FieldManagerUtil $fieldManagerUtil,
         EntityManager $entityManager,
         DataManager $dataManager,
-        FieldValidatorManager $fieldValidatorManager
+        FieldValidatorManager $fieldValidatorManager,
+        InjectableFactory $injectableFactory
     ) {
         $this->applicationState = $applicationState;
         $this->config = $config;
@@ -75,6 +79,7 @@ class Settings
         $this->entityManager = $entityManager;
         $this->dataManager = $dataManager;
         $this->fieldValidatorManager = $fieldValidatorManager;
+        $this->injectableFactory = $injectableFactory;
     }
 
     public function getConfigData()
@@ -230,10 +235,15 @@ class Settings
         }
 
         if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
-            $this->dataManager->rebuildDatabase([]);
+            $this->populateDatabaseWithCurrencyRates();
         }
 
         return $result;
+    }
+
+    protected function populateDatabaseWithCurrencyRates()
+    {
+        $this->injectableFactory->create(CurrencyDatabasePopulator::class)->process();
     }
 
     protected function filterData($data)

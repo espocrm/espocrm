@@ -29,50 +29,14 @@
 
 namespace Espo\Core\Utils\Database\Schema\rebuildActions;
 
+use Espo\Core\Currency\DatabasePopulator;
+
 class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {
     public function afterRebuild()
     {
-        $defaultCurrency = $this->getConfig()->get('defaultCurrency');
+        $populator = new DatabasePopulator($this->getConfig(), $this->getEntityManager());
 
-        $baseCurrency = $this->getConfig()->get('baseCurrency');
-        $currencyRates = $this->getConfig()->get('currencyRates');
-
-        if ($defaultCurrency !== $baseCurrency) {
-            $currencyRates = $this->exchangeRates($baseCurrency, $defaultCurrency, $currencyRates);
-        }
-
-        $currencyRates[$defaultCurrency] = '1.00';
-
-        $delete = $this->getEntityManager()->getQueryBuilder()
-            ->delete()
-            ->from('Currency')
-            ->build();
-
-        $this->getEntityManager()->getQueryExecutor()->execute($delete);
-
-        foreach ($currencyRates as $currencyName => $rate) {
-            $this->getEntityManager()->createEntity('Currency', [
-                'id' => $currencyName,
-                'rate' => $rate,
-            ]);
-        }
-    }
-
-    protected function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates) : array
-    {
-        $precision = 5;
-        $defaultCurrencyRate = round(1 / $currencyRates[$defaultCurrency], $precision);
-
-        $exchangedRates = [];
-        $exchangedRates[$baseCurrency] = $defaultCurrencyRate;
-
-        unset($currencyRates[$baseCurrency], $currencyRates[$defaultCurrency]);
-
-        foreach ($currencyRates as $currencyName => $rate) {
-            $exchangedRates[$currencyName] = round($rate * $defaultCurrencyRate, $precision);
-        }
-
-        return $exchangedRates;
+        $populator->process();
     }
 }
