@@ -31,6 +31,8 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\ORM\QueryParams\Select;
+
 use Espo\Core\Di;
 
 class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
@@ -132,7 +134,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
         $selectParams['groupBy'] = [$foreignLinkAlias . '.id'];
 
-        $sql = $entityManager->getQueryComposer()->createSelectQuery($foreignEntityType, $selectParams);
+        $sql = $entityManager->getQueryComposer()->compose(Select::fromRaw($selectParams));
 
         $pdo = $entityManager->getPDO();
         $sth = $pdo->prepare($sql);
