@@ -27,18 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Repositories;
+namespace Espo\Modules\Crm\Hooks\Account;
 
-use Espo\ORM\Entity;
+use Espo\ORM\{
+    Entity,
+    EntityManager,
+};
 
-class Account extends \Espo\Core\Repositories\Database
+class Contacts
 {
-    public function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
+    protected $entityManager;
 
-        if ($entity->has('targetListId')) {
-        	$this->relate($entity, 'targetLists', $entity->get('targetListId'));
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    public function afterRelate(Entity $entity, array $options = [], array $data = [])
+    {
+        $relationName = $data['relationName'] ?? null;
+        $foreignEntity = $data['foreignEntity'] ?? null;
+
+        if ($relationName === 'contacts' && $foreignEntity) {
+            if (!$foreignEntity->get('accountId') && $foreignEntity->has('accountId')) {
+                $foreignEntity->set('accountId', $entity->id);
+
+                $this->entityManager->saveEntity($foreignEntity);
+            }
+        }
+    }
+
+    public function afterUnrelate(Entity $entity, array $options = [], array $data = [])
+    {
+        $relationName = $data['relationName'] ?? null;
+        $foreignEntity = $data['foreignEntity'] ?? null;
+
+        if ($relationName === 'contacts' && $foreignEntity) {
+            if ($foreignEntity->get('accountId') && $foreignEntity->get('accountId') === $entity->id) {
+                $foreignEntity->set('accountId', null);
+
+                $this->entityManager->saveEntity($foreignEntity);
+            }
         }
     }
 }
