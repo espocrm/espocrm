@@ -42,7 +42,7 @@ class AdminNotifications implements
     /**
      * Job for checking a new version of EspoCRM.
      */
-    public function jobCheckNewVersion($data)
+    public function jobCheckNewVersion()
     {
         $config = $this->config;
 
@@ -77,12 +77,8 @@ class AdminNotifications implements
 
     /**
      * Job for cheking a new version of installed extensions.
-     *
-     * @param  object $data
-     *
-     * @return boolean
      */
-    public function jobCheckNewExtensionVersion($data)
+    public function jobCheckNewExtensionVersion()
     {
         $config = $this->config;
 
@@ -90,25 +86,23 @@ class AdminNotifications implements
             return true;
         }
 
-        $pdo = $this->entityManager->getPDO();
+        $query = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->from('Extension')
+            ->select(['id', 'name', 'version', 'checkVersionUrl'])
+            ->where([
+                'deleted' => false,
+                'isInstalled' => true,
+            ])
+            ->order(['createdAt'])
+            ->build();
 
-        $query = "
-            SELECT id, name, version, check_version_url as url
-            FROM extension
-            WHERE deleted = 0
-            AND is_installed = 1
-            ORDER BY created_at
-        ";
-
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $rowList = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $sth = $this->entityManager->getQueryExecutor()->execute($query);
 
         $latestReleases = [];
-        foreach ($rowList as $row) {
 
-            $url = !empty($row['url']) ? $row['url'] : null;
+        while ($row = $sth->fetch()) {
+            $url = !empty($row['checkVersionUrl']) ? $row['checkVersionUrl'] : null;
             $extensionName = $row['name'];
 
             $latestRelease = $this->getLatestRelease($url, [
@@ -155,9 +149,6 @@ class AdminNotifications implements
         return true;
     }
 
-    /**
-     * Get latest version
-     */
     protected function getLatestRelease(?string $url = null, array $requestData = [], string $urlPath = 'release/latest')
     {
         if (function_exists('curl_version')) {
