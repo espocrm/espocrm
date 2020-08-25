@@ -98,39 +98,53 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
             }
 
             if (this.mode == 'list' || this.mode == 'detail' || this.mode == 'listLink') {
-                if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
-                    return this.getDateTime().toDisplayDate(value);
-                }
-
-                var d = moment.tz(value + ' OO:OO:00', this.getDateTime().internalDateTimeFormat, this.getDateTime().getTimeZone());
-
-                var today = moment().tz(this.getDateTime().getTimeZone()).startOf('day');
-                var dt = today.clone();
-
-                var ranges = {
-                    'today': [dt.unix(), dt.add(1, 'days').unix()],
-                    'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
-                    'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
-                };
-
-                if (d.unix() >= ranges['today'][0] && d.unix() < ranges['today'][1]) {
-                    return this.translate('Today');
-                } else if (d.unix() >= ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
-                    return this.translate('Tomorrow');
-                } else if (d.unix() >= ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
-                    return this.translate('Yesterday');
-                }
-
-                var readableFormat = this.getDateTime().getReadableDateFormat();
-
-                if (d.format('YYYY') == today.format('YYYY')) {
-                    return d.format(readableFormat);
-                } else {
-                    return d.format(readableFormat + ', YYYY');
-                }
+                return this.convertDateValueForDetail(value);
             }
 
             return this.getDateTime().toDisplayDate(value);
+        },
+
+        convertDateValueForDetail: function (value) {
+            if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
+                return this.getDateTime().toDisplayDate(value);
+            }
+
+            var timezone = this.getDateTime().getTimeZone();
+            var internalDateTimeFormat = this.getDateTime().internalDateTimeFormat;
+            var readableFormat = this.getDateTime().getReadableDateFormat();
+            var valueWithTime = value + ' 00:00:00';
+
+            var today = moment().tz(timezone).startOf('day');
+            var dateTime = moment.tz(valueWithTime, internalDateTimeFormat, timezone);
+
+            var temp = today.clone();
+
+            var ranges = {
+                'today': [temp.unix(), temp.add(1, 'days').unix()],
+                'tomorrow': [temp.unix(), temp.add(1, 'days').unix()],
+                'yesterday': [temp.add(-3, 'days').unix(), temp.add(1, 'days').unix()],
+            };
+
+            if (dateTime.unix() >= ranges['today'][0] && dateTime.unix() < ranges['today'][1]) {
+                return this.translate('Today');
+            }
+
+            if (dateTime.unix() >= ranges['tomorrow'][0] && dateTime.unix() < ranges['tomorrow'][1]) {
+                return this.translate('Tomorrow');
+            }
+
+            if (dateTime.unix() >= ranges['yesterday'][0] && dateTime.unix() < ranges['yesterday'][1]) {
+                return this.translate('Yesterday');
+            }
+
+            // Need to use UTC, otherwise there's a DST issue with old dates.
+            var dateTime = moment.utc(valueWithTime, internalDateTimeFormat);
+
+            if (dateTime.format('YYYY') == today.format('YYYY')) {
+                return dateTime.format(readableFormat);
+            }
+
+            return dateTime.format(readableFormat + ', YYYY');
         },
 
         getDateStringValue: function () {

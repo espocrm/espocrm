@@ -75,7 +75,7 @@ class Email extends \Espo\Core\Select\SelectManager
                 $skipIndex = true;
             }
 
-            $actualDatabaseType = $this->getConfig()->get('actualDatabaseType');
+            /*$actualDatabaseType = strtolower($this->getConfig()->get('actualDatabaseType'));
             $actualDatabaseVersion = $this->getConfig()->get('actualDatabaseVersion');
 
             if (
@@ -84,7 +84,12 @@ class Email extends \Espo\Core\Select\SelectManager
                 $this->hasLinkJoined('teams', $result)
             ) {
                 $skipIndex = true;
+            }*/
+
+            if ($this->hasLinkJoined('teams', $result)) {
+                $skipIndex = true;
             }
+
             if (!$skipIndex) {
                 $result['useIndex'] = 'dateSent';
             }

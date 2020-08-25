@@ -26,45 +26,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/notifications', 'views/settings/record/edit', function (Dep) {
+define('views/admin/notifications', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 
         layoutName: 'notifications',
 
-        dependencyDefs: {
-            'assignmentEmailNotifications': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['assignmentEmailNotificationsEntityList']
-                        }
-                    ]
+        dynamicLogicDefs: {
+            fields: {
+                assignmentEmailNotificationsEntityList: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'assignmentEmailNotifications',
+                            }
+                        ],
+                    },
                 },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['assignmentEmailNotificationsEntityList']
-                    }
-                ]
+                adminNotificationsNewVersion: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'adminNotifications',
+                            }
+                        ],
+                    },
+                },
+                adminNotificationsNewExtensionVersion: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'adminNotifications',
+                            }
+                        ],
+                    },
+                },
             },
-            'adminNotifications': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['adminNotificationsNewVersion', 'adminNotificationsNewExtensionVersion']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['adminNotificationsNewVersion', 'adminNotificationsNewExtensionVersion']
-                    }
-                ]
-            }
         },
 
         setup: function () {
@@ -89,6 +89,4 @@ Espo.define('views/admin/notifications', 'views/settings/record/edit', function 
         }
 
     });
-
 });
-
