@@ -194,6 +194,16 @@ class RDBSelectBuilder
     }
 
     /**
+     * Lock selected rows. To be used within a transaction.
+     */
+    public function forUpdate() : self
+    {
+        $this->builder->forUpdate();
+
+        return $this;
+    }
+
+    /**
      * Set to return STH collection. Recommended for fetching large number of records.
      *
      * @todo Remove.

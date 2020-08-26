@@ -672,6 +672,14 @@ class RDBRepository extends Repository
     }
 
     /**
+     * Lock selected rows. To be used within a transaction.
+     */
+    public function forUpdate() : RDBSelectBuilder
+    {
+        return $this->createSelectBuilder()->forUpdate();
+    }
+
+    /**
      * Set to return STH collection. Recommended fetching large number of records.
      *
      * @todo Remove.

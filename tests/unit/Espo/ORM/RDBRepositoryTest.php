@@ -499,6 +499,22 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->repository->distinct()->find();
     }
 
+    public function testForUpdate()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'forUpdate' => true,
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository->forUpdate()->find();
+    }
+
     public function testSth()
     {
         $paramsExpected = Select::fromRaw([
