@@ -50,6 +50,8 @@ class RDBRepository extends Repository
 
     protected $hookMediator;
 
+    protected $transactionManager;
+
     public function __construct(
         string $entityType, EntityManager $entityManager, EntityFactory $entityFactory, ?HookMediator $hookMediator = null
     ) {
@@ -62,6 +64,8 @@ class RDBRepository extends Repository
         $this->seed = $this->entityFactory->create($entityType);
 
         $this->hookMediator = $hookMediator ?? (new EmptyHookMediator());
+
+        $this->transactionManager = new RDBTransactionManager($entityManager->getTransactionManager());
     }
 
     protected function getMapper() : Mapper
@@ -639,8 +643,6 @@ class RDBRepository extends Repository
         $builder = new RDBSelectBuilder($this->entityManager, $this->entityType, $query);
 
         return $builder;
-
-        //return $builder->clone($query);
     }
 
     /**
