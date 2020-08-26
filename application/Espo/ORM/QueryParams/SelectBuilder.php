@@ -100,6 +100,16 @@ class SelectBuilder implements Builder
     }
 
     /**
+     * Set DISTINCT parameter.
+     */
+    public function distinct() : self
+    {
+        $this->params['distinct'] = true;
+
+        return $this;
+    }
+
+    /**
      * Set to return STH collection. Recommended for fetching large number of records.
      *
      * @todo Remove.

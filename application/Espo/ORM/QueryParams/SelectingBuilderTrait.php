@@ -36,30 +36,6 @@ trait SelectingBuilderTrait
     use BaseBuilderTrait;
 
     /**
-     * Set FROM. For what entity type to build a query.
-     */
-    public function from(string $entityType) : self
-    {
-        if (isset($this->params['from'])) {
-            throw new RuntimeException("Method 'from' can be called only once.");
-        }
-
-        $this->params['from'] = $entityType;
-
-        return $this;
-    }
-
-    /**
-     * Set DISTINCT parameter.
-     */
-    public function distinct() : self
-    {
-        $this->params['distinct'] = true;
-
-        return $this;
-    }
-
-    /**
      * Add a WHERE clause.
      *
      * Two usage options:
