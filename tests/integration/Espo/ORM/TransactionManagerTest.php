@@ -81,6 +81,41 @@ class TransactionManagerTest extends \tests\integration\Core\BaseTestCase
         $this->assertNull($account);
     }
 
+    public function testRollbackNested()
+    {
+        $app = $this->createApplication();
+
+        $em = $app->getContainer()->get('entityManager');
+
+        $tm = $em->getTransactionManager();
+
+        $tm->start();
+
+        $account1 = $em->createEntity('Account', [
+            'name' => 'test1',
+        ]);
+
+        $id1 = $account1->id;
+
+        $tm->start();
+
+        $account2 = $em->createEntity('Account', [
+            'name' => 'test2',
+        ]);
+
+        $id2 = $account2->id;
+
+        $tm->rollback();
+
+        $tm->commit();
+
+        $account1 = $em->getEntity('Account', $id1);
+        $account2 = $em->getEntity('Account', $id2);
+
+        $this->assertNotNull($account1);
+        $this->assertNull($account2);
+    }
+
     public function testRunCommit()
     {
         $app = $this->createApplication();
