@@ -523,7 +523,7 @@ class Email extends Record implements
         $userId = $userId ?? $this->getUser()->id;
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('EmailUser')
+            ->in('EmailUser')
             ->set(['isRead' => true])
             ->where([
                 'deleted' => false,
@@ -535,7 +535,7 @@ class Email extends Record implements
         $this->entityManager->getQueryExecutor()->execute($update);
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('Notification')
+            ->in('Notification')
             ->set(['read' => true])
             ->where([
                 'deleted' => false,
@@ -556,7 +556,7 @@ class Email extends Record implements
         $userId = $userId ?? $this->getUser()->id;
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('EmailUser')
+            ->in('EmailUser')
             ->set(['isRead' => true])
             ->where([
                 'deleted' => false,
@@ -577,7 +577,7 @@ class Email extends Record implements
         $userId = $userId ?? $this->getUser()->id;
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('EmailUser')
+            ->in('EmailUser')
             ->set(['isRead' => false])
             ->where([
                 'deleted' => false,
@@ -596,7 +596,7 @@ class Email extends Record implements
         $userId = $userId ?? $this->getUser()->id;
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('EmailUser')
+            ->in('EmailUser')
             ->set(['isImportant' => true])
             ->where([
                 'deleted' => false,
@@ -615,7 +615,7 @@ class Email extends Record implements
         $userId = $userId ?? $this->getUser()->id;
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('EmailUser')
+            ->in('EmailUser')
             ->set(['isImportant' => false])
             ->where([
                 'deleted' => false,
@@ -634,7 +634,7 @@ class Email extends Record implements
         $userId = $userId ?? $this->getUser()->id;
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('EmailUser')
+            ->in('EmailUser')
             ->set(['inTrash' => true])
             ->where([
                 'deleted' => false,
@@ -655,7 +655,7 @@ class Email extends Record implements
         $userId = $userId ?? $this->getUser()->id;
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('EmailUser')
+            ->in('EmailUser')
             ->set(['inTrash' => false])
             ->where([
                 'deleted' => false,
@@ -672,7 +672,7 @@ class Email extends Record implements
     public function markNotificationAsRead(string $id, string $userId)
     {
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('Notification')
+            ->in('Notification')
             ->set(['read' => true])
             ->where([
                 'deleted' => false,
@@ -696,7 +696,7 @@ class Email extends Record implements
         }
 
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('EmailUser')
+            ->in('EmailUser')
             ->set(['folderId' => $folderId])
             ->where([
                 'deleted' => false,

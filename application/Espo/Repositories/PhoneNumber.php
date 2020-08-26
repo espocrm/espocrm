@@ -428,7 +428,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
             if ($phoneNumber) {
                 $update = $this->getEntityManager()->getQueryBuilder()
                     ->update()
-                    ->from('EntityPhoneNumber')
+                    ->in('EntityPhoneNumber')
                     ->set(['primary' => false])
                     ->where([
                         'entityId' => $entity->id,
@@ -442,7 +442,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
                 $update = $this->getEntityManager()->getQueryBuilder()
                     ->update()
-                    ->from('EntityPhoneNumber')
+                    ->in('EntityPhoneNumber')
                     ->set(['primary' => true])
                     ->where([
                         'entityId' => $entity->id,
@@ -508,7 +508,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
                 $update = $this->getEntityManager()->getQueryBuilder()
                     ->update()
-                    ->from('EntityPhoneNumber')
+                    ->in('EntityPhoneNumber')
                     ->set( ['primary' => true])
                     ->where([
                         'entityId' => $entity->id,

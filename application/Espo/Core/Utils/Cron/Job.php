@@ -279,7 +279,7 @@ class Job
 
         $updateQuery = $this->getEntityManager()->getQueryBuilder()
             ->update()
-            ->from('Job')
+            ->in('Job')
             ->set([
                 'status' => CronManager::FAILED,
                 'attempts' => 0,

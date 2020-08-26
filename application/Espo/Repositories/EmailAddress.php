@@ -498,7 +498,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             if ($emailAddress) {
                 $update = $this->getEntityManager()->getQueryBuilder()
                     ->update()
-                    ->from('EntityEmailAddress')
+                    ->in('EntityEmailAddress')
                     ->set(['primary' => false])
                     ->where([
                         'entityId' => $entity->id,
@@ -512,7 +512,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
                 $update = $this->getEntityManager()->getQueryBuilder()
                     ->update()
-                    ->from('EntityEmailAddress')
+                    ->in('EntityEmailAddress')
                     ->set(['primary' => true])
                     ->where([
                         'entityId' => $entity->id,
@@ -578,7 +578,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
                 $update = $this->getEntityManager()->getQueryBuilder()
                     ->update()
-                    ->from('EntityEmailAddress')
+                    ->in('EntityEmailAddress')
                     ->set(['primary' => true])
                     ->where([
                         'entityId' => $entity->id,

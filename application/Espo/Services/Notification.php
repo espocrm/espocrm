@@ -176,7 +176,7 @@ class Notification extends \Espo\Services\Record implements
     public function markAllRead(string $userId)
     {
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->from('Notification')
+            ->in('Notification')
             ->set(['read' => true])
             ->where([
                 'userId' => $userId,
@@ -278,7 +278,7 @@ class Notification extends \Espo\Services\Record implements
         if (!empty($ids)) {
             $update = $this->entityManager->getQueryBuilder()
                 ->update()
-                ->from('Notification')
+                ->in('Notification')
                 ->set(['read' => true])
                 ->where([
                     'id' => $ids,

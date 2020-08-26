@@ -51,6 +51,24 @@ class UpdateBuilder implements Builder
         return $this;
     }
 
+
+    /**
+     * For what entity type to build a query.
+     */
+    public function in(string $entityType) : self
+    {
+        if (isset($this->params['from'])) {
+            throw new RuntimeException("Method 'in' can be called only once.");
+        }
+
+        $this->params['from'] = $entityType;
+
+        return $this;
+    }
+
+    /**
+     * Values to set. Column => Value map.
+     */
     public function set(array $set) : self
     {
         $this->params['set'] = $set;

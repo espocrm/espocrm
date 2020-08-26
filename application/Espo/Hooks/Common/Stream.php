@@ -104,7 +104,7 @@ class Stream
 
         $query = $this->entityManager->getQueryBuilder()
             ->update()
-            ->from('Note')
+            ->in('Note')
             ->set([
                 'deleted' => true,
                 'modifiedAt' => date('Y-m-d H:i:s'),

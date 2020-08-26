@@ -2382,7 +2382,7 @@ class Record implements Crud,
         foreach ($sourceList as $source) {
             $updateQuery = $this->getEntityManager()->getQueryBuilder()
                 ->update()
-                ->from('Note')
+                ->in('Note')
                 ->set([
                     'parentId' => $entity->id,
                     'parentType' => $entity->getEntityType(),

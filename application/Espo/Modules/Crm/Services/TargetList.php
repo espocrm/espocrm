@@ -226,7 +226,7 @@ class TargetList extends \Espo\Services\Record implements
 
         $updateQuery = $this->getEntityManager()->getQueryBuilder()
             ->update()
-            ->from($linkEntityType)
+            ->in($linkEntityType)
             ->set([
                 'deleted' => true,
             ])

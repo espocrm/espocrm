@@ -146,7 +146,7 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
             ->build();
     }
 
-    public function testUpdateNoFrom()
+    public function testUpdateNoIn()
     {
         $this->expectException(RuntimeException::class);
 
@@ -161,7 +161,7 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
     {
         $update = $this->queryBuilder
             ->update()
-            ->from('Test')
+            ->in('Test')
             ->set(['col1' => '2'])
             ->where(['col1' => '1'])
             ->limit(1)
@@ -176,7 +176,7 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
 
         $update = $this->queryBuilder
             ->update()
-            ->from('Test')
+            ->in('Test')
             ->where(['col1' => '1'])
             ->limit(1)
             ->build();
