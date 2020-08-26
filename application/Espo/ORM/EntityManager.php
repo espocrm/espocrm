@@ -68,6 +68,8 @@ class EntityManager
 
     protected $sqlExecutor;
 
+    protected $transactionManager;
+
     protected $defaultMapperName = 'RDB';
 
     protected $driverPlatformMap = [
@@ -110,6 +112,8 @@ class EntityManager
         $this->queryBuilder = new QueryBuilder();
 
         $this->collectionFactory = new CollectionFactory($this);
+
+        $this->transactionManager = new TransactionManager($this->getPDO(), $this->queryComposer);
     }
 
     protected function initQueryComposer()
@@ -140,6 +144,11 @@ class EntityManager
     public function getQueryComposer() : QueryComposer
     {
         return $this->queryComposer;
+    }
+
+    public function getTransactionManager() : TransactionManager
+    {
+        return $this->transactionManager;
     }
 
     protected function getMapperClassName(string $name) : string

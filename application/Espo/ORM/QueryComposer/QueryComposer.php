@@ -39,4 +39,10 @@ interface QueryComposer
      * Compose a SQL query by a given query parameters.
      */
     public function compose(Query $query) : string;
+
+    public function composeCreateSavepoint(string $name) : string;
+
+    public function composeReleaseSavepoint(string $name) : string;
+
+    public function composeRollbackToSavepoint(string $name) : string;
 }

@@ -211,6 +211,27 @@ abstract class BaseQueryComposer implements QueryComposer
         throw new RuntimeException("ORM Query: Unknown query type passed.");
     }
 
+    public function composeCreateSavepoint(string $name) : string
+    {
+        $name = $this->sanitize($name);
+
+        return 'SAVEPOINT ' . $name;
+    }
+
+    public function composeReleaseSavepoint(string $name) : string
+    {
+        $name = $this->sanitize($name);
+
+        return 'RELEASE SAVEPOINT ' . $name;
+    }
+
+    public function composeRollbackToSavepoint(string $name) : string
+    {
+        $name = $this->sanitize($name);
+
+        return 'ROLLBACK TO SAVEPOINT ' . $name;
+    }
+
     protected function composeSelecting(SelectingQuery $queryParams) : string
     {
         return $this->compose($queryParams);
