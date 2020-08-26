@@ -170,12 +170,32 @@ class SelectBuilder implements Builder
 
     /**
      * Specify GROUP BY.
+     * Passing an array will reset previously set items.
+     * Passing a string will append an item.
+     *
+     * Usage options:
+     * * `groupBy([$item1, $item2, ...])`
+     * * `groupBy(string $expression)`
+     *
+     * @param array|string $groupBy
      */
-    public function groupBy(array $groupBy) : self
+    public function groupBy($groupBy) : self
     {
-        $this->params['groupBy'] = $groupBy;
+        if (is_array($groupBy)) {
+            $this->params['groupBy'] = $groupBy;
 
-        return $this;
+            return $this;
+        }
+
+        if (is_string($groupBy)) {
+            $this->params['groupBy'] = $this->params['groupBy'] ?? [];
+
+            $this->params['groupBy'][] = $groupBy;
+
+            return $this;
+        }
+
+        throw new InvalidArgumentException();
     }
 
     /**

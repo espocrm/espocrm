@@ -533,6 +533,60 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->find();
     }
 
+    public function testGroupBy1()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'groupBy' => ['id'],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository->groupBy('id')->find();
+    }
+
+    public function testGroupBy2()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'groupBy' => ['id', 'name'],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->groupBy('id')
+            ->groupBy('name')
+            ->find();
+    }
+
+    public function testGroupBy3()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'groupBy' => ['id', 'name'],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->groupBy('id')
+            ->groupBy(['id', 'name'])
+            ->find();
+    }
+
     public function testSelect1()
     {
         $paramsExpected = Select::fromRaw([

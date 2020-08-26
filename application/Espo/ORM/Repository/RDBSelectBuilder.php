@@ -268,8 +268,10 @@ class RDBSelectBuilder
 
     /**
      * Specify GROUP BY.
+     *
+     * @see Espo\ORM\QueryParams\SelectBuilder::groupBy()
      */
-    public function groupBy(array $groupBy) : self
+    public function groupBy($groupBy) : self
     {
         $this->builder->groupBy($groupBy);
 

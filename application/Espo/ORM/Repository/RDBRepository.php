@@ -734,8 +734,10 @@ class RDBRepository extends Repository
 
     /**
      * Specify GROUP BY.
+     *
+     * @see Espo\ORM\QueryParams\SelectBuilder::groupBy()
      */
-    public function groupBy(array $groupBy) : RDBSelectBuilder
+    public function groupBy($groupBy) : RDBSelectBuilder
     {
         return $this->createSelectBuilder()->groupBy($groupBy);
     }
@@ -745,18 +747,26 @@ class RDBRepository extends Repository
         return $this->entityManager->getPDO();
     }
 
+    /**
+     * @deprecated
+     * @todo Remove.
+     */
     protected function lockTable()
     {
         $tableName = $this->entityManager->getQueryComposer()->toDb($this->entityType);
 
-        // @todo Use Query to get SQL. Transaction query params.
+        // @todo Use SELECT ... FOR UPDATE with transaction.
         $this->getPDO()->query("LOCK TABLES `{$tableName}` WRITE");
         $this->isTableLocked = true;
     }
 
+    /**
+     * @deprecated
+     * @todo Remove.
+     */
     protected function unlockTable()
     {
-        // @todo Use Query to get SQL.
+        // @todo Use SELECT ... FOR UPDATE with transaction.
         $this->getPDO()->query("UNLOCK TABLES");
         $this->isTableLocked = false;
     }
