@@ -83,6 +83,8 @@ abstract class BaseQueryComposer implements QueryComposer
         'from',
         'fromAlias',
         'fromQuery',
+        'forUpdate',
+        'forShare',
     ];
 
     protected static $sqlOperators = [
@@ -556,6 +558,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $orderPart = null;
         $havingPart = null;
         $groupByPart = null;
+        $tailPart = null;
 
         $wherePart = $this->getWherePart($entity, $whereClause, 'AND', $params);
 
@@ -572,6 +575,8 @@ abstract class BaseQueryComposer implements QueryComposer
             if ($additionalSelectPart) {
                 $selectPart .= $additionalSelectPart;
             }
+
+            $tailPart = $this->getSelectTailPart($params);
         }
 
         if ($isAggregation) {
@@ -663,7 +668,8 @@ abstract class BaseQueryComposer implements QueryComposer
             $params['distinct'],
             $groupByPart,
             $havingPart,
-            $indexKeyList
+            $indexKeyList,
+            $tailPart
         );
 
         return $sql;
@@ -1694,6 +1700,22 @@ abstract class BaseQueryComposer implements QueryComposer
             "JOIN `{$table}` AS `{$alias}` ON ".
             "{$fromAlias}." . $this->toDb($key) . " = " .
             "{$alias}." . $this->toDb($foreignKey);
+    }
+
+    protected function getSelectTailPart(array $params) : ?string
+    {
+        $forShare = $params['forShare'] ?? null;
+        $forUpdate = $params['forUpdate'] ?? null;
+
+        if ($forShare) {
+            return "FOR SHARE";
+        }
+
+        if ($forUpdate) {
+            return "FOR UPDATE";
+        }
+
+        return null;
     }
 
     protected function getBelongsToJoinsPart(Entity $entity, ?array $select = null, array $skipList = [], array $params) : string
@@ -2779,7 +2801,8 @@ abstract class BaseQueryComposer implements QueryComposer
         bool $distinct = false,
         ?string $groupBy = null,
         ?string $having = null,
-        ?array $indexKeyList = null
+        ?array $indexKeyList = null,
+        ?string $tailPart = null
     ) : string {
         $sql = "SELECT";
 
@@ -2828,6 +2851,10 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         $sql = $this->limit($sql, $offset, $limit);
+
+        if ($tailPart) {
+            $sql .= " " . $tailPart;
+        }
 
         return $sql;
     }

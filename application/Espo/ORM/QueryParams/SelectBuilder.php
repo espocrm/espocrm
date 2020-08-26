@@ -228,6 +228,34 @@ class SelectBuilder implements Builder
     }
 
     /**
+     * Lock selected rows in shared mode. To be used within a transaction.
+     */
+    public function forShare() : self
+    {
+        if (isset($this->params['forUpdate'])) {
+            throw new RuntimeException("Can't use two lock modes togather.");
+        }
+
+        $this->params['forShare'] = true;
+
+        return $this;
+    }
+
+    /**
+     * Lock selected rows. To be used within a transaction.
+     */
+    public function forUpdate() : self
+    {
+        if (isset($this->params['forShare'])) {
+            throw new RuntimeException("Can't use two lock modes togather.");
+        }
+
+        $this->params['forUpdate'] = true;
+
+        return $this;
+    }
+
+    /**
      * @todo Remove?
      */
     public function withDeleted() : self
@@ -236,4 +264,6 @@ class SelectBuilder implements Builder
 
         return $this;
     }
+
+
 }

@@ -2045,4 +2045,48 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($expectedSql, $sql);
     }
+
+    public function testSelectForUpdate()
+    {
+        $qb = new QueryBuilder();
+
+        $query = $qb
+            ->select()
+            ->select('id')
+            ->from('Account')
+            ->withDeleted()
+            ->forUpdate()
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql =
+            "SELECT account.id AS `id` ".
+            "FROM `account` ".
+            "FOR UPDATE";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForShare()
+    {
+        $qb = new QueryBuilder();
+
+        $query = $qb
+            ->select()
+            ->select('id')
+            ->from('Account')
+            ->withDeleted()
+            ->forShare()
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql =
+            "SELECT account.id AS `id` ".
+            "FROM `account` ".
+            "FOR SHARE";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
 }
