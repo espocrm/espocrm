@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\ORM;
+namespace tests\unit\Espo\ORM\Repository;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 
