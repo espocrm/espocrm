@@ -29,34 +29,34 @@
 
 namespace Espo\Modules\Crm\Business\EmailNotificationHandlers;
 
-class CaseObj extends \Espo\Core\Injectable
+use Espo\Core\Di;
+
+class CaseObj implements Di\EntityManagerAware
 {
-    protected $dependencyList = [
-        'entityManager'
-    ];
+    use Di\EntityManagerSetter;
 
-    protected $inboundEmailEntityHash = array();
+    protected $inboundEmailEntityHash = [];
 
-    public function getSmtpParams($type, $case, $user = null)
+    public function getSmtpParams($type, $case, $user = null) : ?array
     {
         $inboundEmailId = $case->get('inboundEmailId');
 
-        if (!$inboundEmailId) return;
+        if (!$inboundEmailId) return null;
 
         if (!array_key_exists($inboundEmailId, $this->inboundEmailEntityHash)) {
-            $this->inboundEmailEntityHash[$inboundEmailId] = $this->getInjection('entityManager')->getEntity('InboundEmail', $inboundEmailId);
+            $this->inboundEmailEntityHash[$inboundEmailId] = $this->entityManager->getEntity('InboundEmail', $inboundEmailId);
         }
 
         $inboundEmail = $this->inboundEmailEntityHash[$inboundEmailId];
 
-        if (!$inboundEmail) return;
+        if (!$inboundEmail) return null;
 
         $emailAddress = $inboundEmail->get('emailAddress');
 
-        if (!$emailAddress) return;
+        if (!$emailAddress) return null;
 
-        return array(
-            'replyToAddress' => $emailAddress
-        );
+        return [
+            'replyToAddress' => $emailAddress,
+        ];
     }
 }
