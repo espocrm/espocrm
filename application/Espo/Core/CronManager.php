@@ -49,6 +49,8 @@ use Espo\Entities\Job as JobEntity;
 
 use Spatie\Async\Pool as AsyncPool;
 
+use Cron\CronExpression;
+
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
@@ -448,7 +450,7 @@ class CronManager
                 $nextDate = date('Y-m-d H:i:s');
             } else {
                 try {
-                    $cronExpression = \Cron\CronExpression::factory($scheduling);
+                    $cronExpression = CronExpression::factory($scheduling);
                 } catch (\Exception $e) {
                     $GLOBALS['log']->error(
                         'CronManager (ScheduledJob ['.$scheduledJob->id.']): Scheduling string error - '. $e->getMessage() . '.'

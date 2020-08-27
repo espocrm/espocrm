@@ -18,7 +18,7 @@
         "slim/slim": "4.5.*",
         "slim/psr7": "*",
         "psr/log": "1.1.*",
-        "mtdowling/cron-expression": "1.0.*",
+        "dragonmantank/cron-expression": "^3",
         "laminas/laminas-mail": "2.10.0",
         "laminas/laminas-ldap": "2.*",
         "laminas/laminas-servicemanager": "3.3.2",
