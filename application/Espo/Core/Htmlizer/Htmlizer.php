@@ -124,7 +124,11 @@ class Htmlizer
 
                 if ($entity->hasLinkMultipleField($relation)) {
                     $toLoad = true;
-                    $collection = $entity->getLinkCollection($relation);
+
+                    $collection = $this->entityManager
+                        ->getRepository($entity->getEntityType())
+                        ->getRelation($entity, $relation)
+                        ->find();
                 } else {
                     if (
                         $template && $entity->getRelationType($relation, ['hasMany', 'manyMany', 'hasChildren']) &&
@@ -134,7 +138,12 @@ class Htmlizer
                         if ($this->config) {
                             $limit = $this->config->get('htmlizerLinkLimit') ?? $limit;
                         }
-                        $collection = $entity->getLinkCollection($relation, ['limit' => $limit]);
+
+                        $collection = $this->entityManager
+                            ->getRepository($entity->getEntityType())
+                            ->getRelation($entity, $relation)
+                            ->limit(0, $limit)
+                            ->find();
                     }
                 }
 

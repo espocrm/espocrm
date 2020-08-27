@@ -76,33 +76,6 @@ class Entity extends BaseEntity
         }
     }
 
-    public function getLinkCollection(string $link, ?array $selectParams = null)
-    {
-        if (!$selectParams) $selectParams = [];
-
-        $relSelectParams = $this->getRelationSelectParams($link);
-
-        $selectParams = array_merge($selectParams, $relSelectParams);
-
-        $selectParams['returnSthCollection'] = true;
-
-        $columnAttribute = $link . 'Columns';
-        if ($this->hasAttribute($columnAttribute) && $this->getAttributeParam($columnAttribute, 'columns')) {
-            $selectParams['additionalColumns'] = $this->getAttributeParam($columnAttribute, 'columns');
-        }
-
-        $collection = $this->get($link, $selectParams);
-
-        return $collection;
-    }
-
-    public function getLinkMultipleCollection(string $link, ?array $selectParams = null)
-    {
-        if (!$this->hasLinkMultipleField($link)) return;
-
-        return $this->getLinkCollection($link, $selectParams);
-    }
-
     protected function getRelationSelectParams($link)
     {
         $field = $link;
