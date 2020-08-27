@@ -27,14 +27,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/**
- * Preloads PHP files. Can be also used to check the syntax.
- *
- * @see https://www.php.net/manual/en/opcache.preloading.php
- *
- * Important: Preloading must be disabled before upgrading and extension installation.
- */
-
 include "bootstrap.php";
 
 use Espo\Core\{
