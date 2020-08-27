@@ -94,31 +94,31 @@
             "directUpdateDisabled": true,
             "notStorable": true,
             "select": {
-                "select": "accountContact.role",
+                "select": "accountContactPrimary.role",
                 "leftJoins": [
                     [
                         "AccountContact",
-                        "accountContact",
+                        "accountContactPrimary",
                         {
-                            "contact.id:": "accountContact.contactId",
-                            "contact.accountId:": "accountContact.accountId",
-                            "accountContact.deleted": false
+                            "contact.id:": "accountContactPrimary.contactId",
+                            "contact.accountId:": "accountContactPrimary.accountId",
+                            "accountContactPrimary.deleted": false
                         }
                     ]
                 ]
             },
             "order": {
                 "order": [
-                    ["accountContact.role", "{direction}"]
+                    ["accountContactPrimary.role", "{direction}"]
                 ],
                 "leftJoins": [
                     [
                         "AccountContact",
-                        "accountContact",
+                        "accountContactPrimary",
                         {
-                            "contact.id:": "accountContact.contactId",
-                            "contact.accountId:": "accountContact.accountId",
-                            "accountContact.deleted": false
+                            "contact.id:": "accountContactPrimary.contactId",
+                            "contact.accountId:": "accountContactPrimary.accountId",
+                            "accountContactPrimary.deleted": false
                         }
                     ]
                 ]
@@ -244,31 +244,31 @@
             "notStorable": true,
             "mergeDisabled": true,
             "select": {
-                "select": "accountContact.isInactive",
+                "select": "accountContactPrimary.isInactive",
                 "leftJoins": [
                     [
                         "AccountContact",
-                        "accountContact",
+                        "accountContactPrimary",
                         {
-                            "contact.id:": "accountContact.contactId",
-                            "contact.accountId:": "accountContact.accountId",
-                            "accountContact.deleted": false
+                            "contact.id:": "accountContactPrimary.contactId",
+                            "contact.accountId:": "accountContactPrimary.accountId",
+                            "accountContactPrimary.deleted": false
                         }
                     ]
                 ]
             },
             "order": {
                 "order": [
-                    ["accountContact.isInactive", "{direction}"]
+                    ["accountContactPrimary.isInactive", "{direction}"]
                 ],
                 "leftJoins": [
                     [
                         "AccountContact",
-                        "accountContact",
+                        "accountContactPrimary",
                         {
-                            "contact.id:": "accountContact.contactId",
-                            "contact.accountId:": "accountContact.accountId",
-                            "accountContact.deleted": false
+                            "contact.id:": "accountContactPrimary.contactId",
+                            "contact.accountId:": "accountContactPrimary.accountId",
+                            "accountContactPrimary.deleted": false
                         }
                     ]
                 ]
