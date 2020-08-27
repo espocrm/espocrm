@@ -79,7 +79,6 @@ class Application
 
     /**
      * Run a specific application runner.
-     * You can find runner classes at `Espo\Core\ApplicationRunners`.
      */
     public function run(string $className, ?object $params = null)
     {
