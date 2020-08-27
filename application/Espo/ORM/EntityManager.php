@@ -34,6 +34,7 @@ use Espo\ORM\{
     QueryComposer\QueryComposer,
     Repository\RepositoryFactory,
     Repository\Repository,
+    Locker\Locker,
 };
 
 use PDO;
@@ -69,6 +70,8 @@ class EntityManager
     protected $sqlExecutor;
 
     protected $transactionManager;
+
+    protected $locker;
 
     protected $defaultMapperName = 'RDB';
 
@@ -114,6 +117,8 @@ class EntityManager
         $this->collectionFactory = new CollectionFactory($this);
 
         $this->transactionManager = new TransactionManager($this->getPDO(), $this->queryComposer);
+
+        $this->initLocker();
     }
 
     protected function initQueryComposer()
@@ -126,10 +131,26 @@ class EntityManager
         }
 
         if (!$className || !class_exists($className)) {
-            throw new RuntimeException("Query composer {$name} could not be created.");
+            throw new RuntimeException("Query composer could not be created.");
         }
 
         $this->queryComposer = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
+    }
+
+    protected function initLocker()
+    {
+        $className = $this->params['lockerClassName'] ?? null;
+
+        if (!$className) {
+            $platform = $this->params['platform'];
+            $className = 'Espo\\ORM\\Locker\\' . ucfirst($platform) . 'Locker';
+        }
+
+        if (!$className || !class_exists($className)) {
+            throw new RuntimeException("Locker could not be created.");
+        }
+
+        $this->locker = new $className($this->getPDO(), $this->queryComposer, $this->transactionManager);
     }
 
     /**
@@ -149,6 +170,11 @@ class EntityManager
     public function getTransactionManager() : TransactionManager
     {
         return $this->transactionManager;
+    }
+
+    public function getLocker() : Locker
+    {
+        return $this->locker;
     }
 
     protected function getMapperClassName(string $name) : string

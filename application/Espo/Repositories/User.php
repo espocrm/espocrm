@@ -87,14 +87,18 @@ class User extends \Espo\Core\Repositories\Database implements
                 throw new Error("Username can't be empty.");
             }
 
-            $this->lockTable();
+            $this->getEntityManager()->getLocker()->lockExclusive($this->entityType);
 
-            $user = $this->select(['id'])->where([
-                'userName' => $userName
-            ])->findOne();
+            $user = $this
+                ->select(['id'])
+                ->where([
+                    'userName' => $userName,
+                ])
+                ->findOne();
 
             if ($user) {
-                $this->unlockTable();
+                $this->getEntityManager()->getLocker()->rollback();
+
                 throw new Conflict(json_encode(['reason' => 'userNameExists']));
             }
         } else {
@@ -104,15 +108,19 @@ class User extends \Espo\Core\Repositories\Database implements
                     throw new Error("Username can't be empty.");
                 }
 
-                $this->lockTable();
+                $this->getEntityManager()->getLocker()->lockExclusive($this->entityType);
 
-                $user = $this->select(['id'])->where(array(
-                    'userName' => $userName,
-                    'id!=' => $entity->id
-                ))->findOne();
+                $user = $this
+                    ->select(['id'])
+                    ->where([
+                        'userName' => $userName,
+                        'id!=' => $entity->id,
+                    ])
+                    ->findOne();
 
                 if ($user) {
-                    $this->unlockTable();
+                    $this->getEntityManager()->getLocker()->rollback();
+
                     throw new Conflict(json_encode(['reason' => 'userNameExists']));
                 }
             }
@@ -121,8 +129,8 @@ class User extends \Espo\Core\Repositories\Database implements
 
     protected function afterSave(Entity $entity, array $options = [])
     {
-        if ($this->isTableLocked()) {
-            $this->unlockTable();
+        if ($this->getEntityManager()->getLocker()->isLocked()) {
+            $this->getEntityManager()->getLocker()->commit();
         }
 
         parent::afterSave($entity, $options);

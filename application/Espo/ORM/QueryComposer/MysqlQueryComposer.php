@@ -29,8 +29,45 @@
 
 namespace Espo\ORM\QueryComposer;
 
+use Espo\ORM\{
+    QueryParams\LockTable as LockTableQuery,
+};
+
 class MysqlQueryComposer extends BaseQueryComposer
 {
+    public function composeLockTable(LockTableQuery $queryParams) : string
+    {
+        $params = $queryParams->getRawParams();
+
+        $table = $this->toDb($this->sanitize($params['table']));
+
+        $mode = $params['mode'];
+
+        if (empty($table)) {
+            throw new LogicException();
+        }
+
+        if (!in_array($mode, [LockTableQuery::MODE_SHARE, LockTableQuery::MODE_EXCLUSIVE])) {
+            throw new LogicException();
+        }
+
+        $sql = "LOCK TABLES `{$table}` ";
+
+        $modeMap = [
+            LockTableQuery::MODE_SHARE => 'READ',
+            LockTableQuery::MODE_EXCLUSIVE => 'WRITE',
+        ];
+
+        $sql .= $modeMap[$mode];
+
+        return $sql;
+    }
+
+    public function composeUnlockTables() : string
+    {
+        return "UNLOCK TABLES";
+    }
+
     protected function limit(string $sql, ?int $offset = null, ?int $limit = null) : string
     {
         if (!is_null($offset) && !is_null($limit)) {

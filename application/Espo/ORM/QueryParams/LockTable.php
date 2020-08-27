@@ -27,40 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryComposer;
+namespace Espo\ORM\QueryParams;
 
-use Espo\ORM\{
-    QueryParams\Query as Query,
-    QueryParams\Select as SelectQuery,
-    QueryParams\Update as UpdateQuery,
-    QueryParams\Insert as InsertQuery,
-    QueryParams\Delete as DeleteQuery,
-    QueryParams\Union as UnionQuery,
-    QueryParams\LockTable as LockTableQuery,
-};
+use RuntimeException;
 
-interface QueryComposer
+/**
+ * LOCK TABLE parameters.
+ */
+class LockTable implements Query
 {
-    /**
-     * Compose a SQL query by a given query parameters.
-     */
-    public function compose(Query $query) : string;
+    use BaseTrait;
 
-    public function composeSelect(SelectQuery $query) : string;
+    const MODE_SHARE = 'SHARE';
+    const MODE_EXCLUSIVE = 'EXCLUSIVE';
 
-    public function composeUpdate(UpdateQuery $query) : string;
+    protected function validateRawParams(array $params)
+    {
+        if (empty($params['table'])) {
+            throw new RuntimeException("LockTable params: No table specified.");
+        }
 
-    public function composeDelete(DeleteQuery $query) : string;
-
-    public function composeInsert(InsertQuery $query) : string;
-
-    public function composeUnion(UnionQuery $query) : string;
-
-    public function composeLockTable(LockTableQuery $query) : string;
-
-    public function composeCreateSavepoint(string $savepointName) : string;
-
-    public function composeReleaseSavepoint(string $savepointName) : string;
-
-    public function composeRollbackToSavepoint(string $savepointName) : string;
+        if (empty($params['mode'])) {
+            throw new RuntimeException("LockTable params: No mode specified.");
+        }
+    }
 }

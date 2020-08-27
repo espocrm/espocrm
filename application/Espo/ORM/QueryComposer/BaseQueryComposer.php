@@ -42,6 +42,7 @@ use Espo\ORM\{
     QueryParams\Delete as DeleteQuery,
     QueryParams\Union as UnionQuery,
     QueryParams\Selecting as SelectingQuery,
+    QueryParams\LockTable as LockTableQuery,
 };
 
 use PDO;
@@ -208,28 +209,32 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->composeUnion($query);
         }
 
+        if ($query instanceof LockTableQuery) {
+            return $this->composeLockTable($query);
+        }
+
         throw new RuntimeException("ORM Query: Unknown query type passed.");
     }
 
-    public function composeCreateSavepoint(string $name) : string
+    public function composeCreateSavepoint(string $savepointName) : string
     {
-        $name = $this->sanitize($name);
+        $savepointName = $this->sanitize($savepointName);
 
-        return 'SAVEPOINT ' . $name;
+        return 'SAVEPOINT ' . $savepointName;
     }
 
-    public function composeReleaseSavepoint(string $name) : string
+    public function composeReleaseSavepoint(string $savepointName) : string
     {
-        $name = $this->sanitize($name);
+        $savepointName = $this->sanitize($savepointName);
 
-        return 'RELEASE SAVEPOINT ' . $name;
+        return 'RELEASE SAVEPOINT ' . $savepointName;
     }
 
-    public function composeRollbackToSavepoint(string $name) : string
+    public function composeRollbackToSavepoint(string $savepointName) : string
     {
-        $name = $this->sanitize($name);
+        $savepointName = $this->sanitize($savepointName);
 
-        return 'ROLLBACK TO SAVEPOINT ' . $name;
+        return 'ROLLBACK TO SAVEPOINT ' . $savepointName;
     }
 
     protected function composeSelecting(SelectingQuery $queryParams) : string
@@ -237,35 +242,35 @@ abstract class BaseQueryComposer implements QueryComposer
         return $this->compose($queryParams);
     }
 
-    protected function composeSelect(SelectQuery $queryParams) : string
+    public function composeSelect(SelectQuery $queryParams) : string
     {
         $params = $queryParams->getRawParams();
 
         return $this->createSelectQueryInternal($params);
     }
 
-    protected function composeUpdate(UpdateQuery $queryParams) : string
+    public function composeUpdate(UpdateQuery $queryParams) : string
     {
         $params = $queryParams->getRawParams();
 
         return $this->createUpdateQuery($params);
     }
 
-    protected function composeDelete(DeleteQuery $queryParams) : string
+    public function composeDelete(DeleteQuery $queryParams) : string
     {
         $params = $queryParams->getRawParams();
 
         return $this->createDeleteQuery($params);
     }
 
-    protected function composeInsert(InsertQuery $queryParams) : string
+    public function composeInsert(InsertQuery $queryParams) : string
     {
         $params = $queryParams->getRawParams();
 
         return $this->createInsertQuery($params);
     }
 
-    protected function composeUnion(UnionQuery $queryParams) : string
+    public function composeUnion(UnionQuery $queryParams) : string
     {
         $params = $queryParams->getRawParams();
 

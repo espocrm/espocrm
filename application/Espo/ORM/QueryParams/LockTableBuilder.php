@@ -27,40 +27,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryComposer;
+namespace Espo\ORM\QueryParams;
 
-use Espo\ORM\{
-    QueryParams\Query as Query,
-    QueryParams\Select as SelectQuery,
-    QueryParams\Update as UpdateQuery,
-    QueryParams\Insert as InsertQuery,
-    QueryParams\Delete as DeleteQuery,
-    QueryParams\Union as UnionQuery,
-    QueryParams\LockTable as LockTableQuery,
-};
+use InvalidArgumentException;
 
-interface QueryComposer
+class LockTableBuilder implements Builder
 {
+    use BaseBuilderTrait;
+
     /**
-     * Compose a SQL query by a given query parameters.
+     * Build a LOCK TABLE query.
      */
-    public function compose(Query $query) : string;
+    public function build() : LockTable
+    {
+        return LockTable::fromRaw($this->params);
+    }
 
-    public function composeSelect(SelectQuery $query) : string;
+    /**
+     * Clone an existing query for a subsequent modifying and building.
+     */
+    public function clone(LockTable $query) : self
+    {
+        $this->cloneInternal($query);
 
-    public function composeUpdate(UpdateQuery $query) : string;
+        return $this;
+    }
 
-    public function composeDelete(DeleteQuery $query) : string;
+    /**
+     * What entity type to lock.
+     */
+    public function table(string $entityType) : self
+    {
+        $this->params['table'] = $entityType;
 
-    public function composeInsert(InsertQuery $query) : string;
+        return $this;
+    }
 
-    public function composeUnion(UnionQuery $query) : string;
+    /**
+     * In SHARE mode.
+     */
+    public function inShareMode() : self
+    {
+        $this->params['mode'] = LockTable::MODE_SHARE;
 
-    public function composeLockTable(LockTableQuery $query) : string;
+        return $this;
+    }
 
-    public function composeCreateSavepoint(string $savepointName) : string;
+    /**
+     * In EXCLUSIVE mode.
+     */
+    public function inExclusiveMode() : self
+    {
+        $this->params['mode'] = LockTable::MODE_EXCLUSIVE;
 
-    public function composeReleaseSavepoint(string $savepointName) : string;
-
-    public function composeRollbackToSavepoint(string $savepointName) : string;
+        return $this;
+    }
 }

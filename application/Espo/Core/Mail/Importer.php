@@ -326,12 +326,15 @@ class Importer
         }
 
         if (!$duplicate) {
-            $this->lockEmailTable();
+            $this->getEntityManager()->getLocker()->lockExclusive('Email');
+
             if ($duplicate = $this->findDuplicate($email)) {
-                $this->unlockTables();
+                $this->getEntityManager()->getLocker()->rollback();
+
                 if ($duplicate->get('status') != 'Being Imported') {
                     $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
                     $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+
                     return $duplicate;
                 }
             }
@@ -355,23 +358,26 @@ class Importer
                 'fromString' => $email->get('fromString'),
                 'replyToString' => $email->get('replyToString'),
             ]);
+
             $this->getEntityManager()->getRepository('Email')->fillAccount($duplicate);
 
             $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+
             return $duplicate;
         }
 
         if (!$email->get('messageId')) {
             $email->setDummyMessageId();
         }
+
         $email->set('status', 'Being Imported');
 
         $this->getEntityManager()->saveEntity($email, [
             'skipAll' => true,
-            'keepNew' => true
+            'keepNew' => true,
         ]);
 
-        $this->unlockTables();
+        $this->getEntityManager()->getLocker()->commit();
 
         if ($parentFound) {
             $parentType = $email->get('parentType');
@@ -400,7 +406,7 @@ class Importer
             $attachment->set([
                 'relatedId' => $email->id,
                 'relatedType' => 'Email',
-                'field' => 'body'
+                'field' => 'body',
             ]);
             $this->getEntityManager()->saveEntity($attachment);
         }
@@ -408,21 +414,12 @@ class Importer
         return $email;
     }
 
-    protected function lockEmailTable()
-    {
-        $this->getEntityManager()->getPdo()->query('LOCK TABLES `email` WRITE');
-    }
-
-    protected function unlockTables()
-    {
-        $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
-    }
-
     protected function findParent(Email $email, $emailAddress)
     {
         $contact = $this->getEntityManager()->getRepository('Contact')->where([
             'emailAddress' => $emailAddress
         ])->findOne();
+
         if ($contact) {
             if (!$this->getConfig()->get('b2cMode')) {
                 if ($contact->get('accountId')) {
@@ -438,6 +435,7 @@ class Importer
             $account = $this->getEntityManager()->getRepository('Account')->where([
                 'emailAddress' => $emailAddress
             ])->findOne();
+
             if ($account) {
                 $email->set('parentType', 'Account');
                 $email->set('parentId', $account->id);
@@ -507,7 +505,7 @@ class Importer
                     $duplicate->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
                 } else {
                     $this->getEntityManager()->getRepository('Email')->updateRelation($duplicate, 'users', $uId, [
-                        'folderId' => $folderId
+                        'folderId' => $folderId,
                     ]);
                 }
             }
@@ -519,17 +517,17 @@ class Importer
 
         $this->getEntityManager()->getRepository('Email')->processLinkMultipleFieldSave($duplicate, 'users', [
             'skipLinkMultipleRemove' => true,
-            'skipLinkMultipleUpdate' => true
+            'skipLinkMultipleUpdate' => true,
         ]);
 
         $this->getEntityManager()->getRepository('Email')->processLinkMultipleFieldSave($duplicate, 'assignedUsers', [
             'skipLinkMultipleRemove' => true,
-            'skipLinkMultipleUpdate' => true
+            'skipLinkMultipleUpdate' => true,
         ]);
 
         if ($notificator = $this->getNotificator()) {
             $notificator->process($duplicate, [
-                'isBeingImported' => true
+                'isBeingImported' => true,
             ]);
         }
 
@@ -558,7 +556,7 @@ class Importer
                     'targetId' => $duplicate->id
                 ],
                 'executeAt' => $executeAt,
-                'queue' => 'q1'
+                'queue' => 'q1',
             ]);
             $this->getEntityManager()->saveEntity($job);
         }

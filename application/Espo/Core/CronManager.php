@@ -42,6 +42,7 @@ use Espo\Core\{
     Utils\Cron\ScheduledJob as CronScheduledJob,
     Utils\Cron\Job as CronJob,
     ORM\EntityManager,
+    Utils\Cron\JobTask,
 };
 
 use Espo\Entities\Job as JobEntity;
@@ -196,7 +197,7 @@ class CronManager
     /**
      * Run a portion of pending jobs.
      */
-    public function processPendingJobs($queue = null, $limit = null, $poolDisabled = false, $noLock = false)
+    public function processPendingJobs($queue = null, $limit = null, bool $poolDisabled = false, bool $noLock = false)
     {
         if (is_null($limit)) {
             $limit = intval($this->config->get('jobMaxPortion', 0));
@@ -210,51 +211,17 @@ class CronManager
             $useProcessPool = false;
         }
 
+        $pool = null;
+
         if ($useProcessPool) {
-            $pool = \Spatie\Async\Pool::create()
+            $pool = AsyncPool::create()
                 ->autoload(getcwd() . '/vendor/autoload.php')
                 ->concurrency($this->config->get('jobPoolConcurrencyNumber'))
                 ->timeout($this->config->get('jobPeriodForActiveProcess'));
         }
 
         foreach ($pendingJobList as $job) {
-            $skip = false;
-            if (!$noLock) $this->lockJobTable();
-            if ($noLock || $this->getCronJobUtil()->isJobPending($job->id)) {
-                if ($job->get('scheduledJobId')) {
-                    if ($this->getCronJobUtil()->isScheduledJobRunning(
-                        $job->get('scheduledJobId'), $job->get('targetId'), $job->get('targetType'))
-                    ) {
-                        $skip = true;
-                    }
-                }
-            } else {
-                $skip = true;
-            }
-
-            if ($skip) {
-                if (!$noLock) $this->unlockTables();
-                continue;
-            }
-
-            $job->set('startedAt', date('Y-m-d H:i:s'));
-
-            if ($useProcessPool) {
-                $job->set('status', self::READY);
-            } else {
-                $job->set('status', self::RUNNING);
-                $job->set('pid', \Espo\Core\Utils\System::getPid());
-            }
-
-            $this->entityManager->saveEntity($job);
-            if (!$noLock) $this->unlockTables();
-
-            if ($useProcessPool) {
-                $task = new \Espo\Core\Utils\Cron\JobTask($job->id);
-                $pool->add($task);
-            } else {
-                $this->runJob($job);
-            }
+            $this->processPendingJob($job, $pool, $noLock);
         }
 
         if ($useProcessPool) {
@@ -262,14 +229,74 @@ class CronManager
         }
     }
 
-    protected function lockJobTable()
+    protected function processPendingJob(JobEntity $job, $pool = null, bool $noLock = false)
     {
-        $this->entityManager->getPDO()->query('LOCK TABLES `job` WRITE');
-    }
+        $useProcessPool = (bool) $pool;
 
-    protected function unlockTables()
-    {
-        $this->entityManager->getPDO()->query('UNLOCK TABLES');
+        $lockTable = (bool) $job->get('scheduledJobId') && !$noLock;
+
+        $skip = false;
+
+        if (!$noLock) {
+            if ($lockTable) {
+                // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
+                $this->entityManager->getLocker()->lockExclusive('Job');
+            } else {
+                $this->entityManager->getTransactionManager()->start();
+            }
+        }
+
+        if ($noLock || $this->getCronJobUtil()->isJobPending($job->id)) {
+            if ($job->get('scheduledJobId')) {
+                if ($this->getCronJobUtil()->isScheduledJobRunning(
+                    $job->get('scheduledJobId'), $job->get('targetId'), $job->get('targetType'))
+                ) {
+                    $skip = true;
+                }
+            }
+        } else {
+            $skip = true;
+        }
+
+        if ($skip) {
+            if (!$noLock) {
+                if ($lockTable) {
+                    $this->entityManager->getLocker()->rollback();
+                } else {
+                    $this->entityManager->getTransactionManager()->rollback();
+                }
+            }
+
+            return;
+        }
+
+        $job->set('startedAt', date('Y-m-d H:i:s'));
+
+        if ($useProcessPool) {
+            $job->set('status', self::READY);
+        } else {
+            $job->set('status', self::RUNNING);
+            $job->set('pid', System::getPid());
+        }
+
+        $this->entityManager->saveEntity($job);
+
+        if (!$noLock) {
+            if ($lockTable) {
+                $this->entityManager->getLocker()->commit();
+            } else {
+                $this->entityManager->getTransactionManager()->commit();
+            }
+        }
+
+        if ($useProcessPool) {
+            $task = new JobTask($job->id);
+            $pool->add($task);
+
+            return;
+        }
+
+        $this->runJob($job);
     }
 
     /**
@@ -292,7 +319,7 @@ class CronManager
         }
 
         $job->set('status', self::RUNNING);
-        $job->set('pid',System::getPid());
+        $job->set('pid', System::getPid());
         $this->entityManager->saveEntity($job);
 
         $this->runJob($job);

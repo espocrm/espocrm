@@ -42,6 +42,7 @@ use Espo\ORM\QueryParams\{
     Insert,
     Update,
     Delete,
+    LockTableBuilder,
 };
 
 use Espo\Entities\{
@@ -2086,6 +2087,38 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "SELECT account.id AS `id` ".
             "FROM `account` ".
             "FOR SHARE";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testLockTableShare()
+    {
+        $builder = new LockTableBuilder();
+
+        $query = $builder
+            ->table('Account')
+            ->inShareMode()
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql = "LOCK TABLES `account` READ";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testLockTableExclusive()
+    {
+        $builder = new LockTableBuilder();
+
+        $query = $builder
+            ->table('Account')
+            ->inExclusiveMode()
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql = "LOCK TABLES `account` WRITE";
 
         $this->assertEquals($expectedSql, $sql);
     }

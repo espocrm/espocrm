@@ -27,40 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryComposer;
+namespace Espo\ORM\Locker;
 
-use Espo\ORM\{
-    QueryParams\Query as Query,
-    QueryParams\Select as SelectQuery,
-    QueryParams\Update as UpdateQuery,
-    QueryParams\Insert as InsertQuery,
-    QueryParams\Delete as DeleteQuery,
-    QueryParams\Union as UnionQuery,
-    QueryParams\LockTable as LockTableQuery,
-};
-
-interface QueryComposer
+/**
+ * Locks and unlocks tables.
+ * Wraps operations between lock and unlock into a transaction.
+ */
+interface Locker
 {
     /**
-     * Compose a SQL query by a given query parameters.
+     * Whether any table has been locked.
      */
-    public function compose(Query $query) : string;
+    public function isLocked();
 
-    public function composeSelect(SelectQuery $query) : string;
+    /**
+     * Locks a table in an exclusive mode. Starts a transaction on first call.
+     */
+    public function lockExclusive(string $entityType);
 
-    public function composeUpdate(UpdateQuery $query) : string;
+    /**
+     * Locks a table in a share mode. Starts a transaction on first call.
+     */
+    public function lockShare(string $entityType);
 
-    public function composeDelete(DeleteQuery $query) : string;
+    /**
+     * Commits changes and unlocks tables.
+     */
+    public function commit();
 
-    public function composeInsert(InsertQuery $query) : string;
-
-    public function composeUnion(UnionQuery $query) : string;
-
-    public function composeLockTable(LockTableQuery $query) : string;
-
-    public function composeCreateSavepoint(string $savepointName) : string;
-
-    public function composeReleaseSavepoint(string $savepointName) : string;
-
-    public function composeRollbackToSavepoint(string $savepointName) : string;
+    /**
+     * Rollbacks changes and unlocks tables.
+     */
+    public function rollback();
 }

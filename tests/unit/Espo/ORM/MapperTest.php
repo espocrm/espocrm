@@ -27,6 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace tests\unit\Espo\ORM;
+
 use Espo\ORM\{
     Metadata,
     EntityManager,
@@ -46,6 +48,9 @@ use Espo\Entities\{
     Note,
     Job,
 };
+
+use PDO;
+use PDOStatement;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 

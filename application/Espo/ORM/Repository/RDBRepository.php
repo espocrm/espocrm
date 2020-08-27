@@ -46,8 +46,6 @@ class RDBRepository extends Repository
 {
     protected $mapper;
 
-    private $isTableLocked = false;
-
     protected $hookMediator;
 
     protected $transactionManager;
@@ -56,10 +54,8 @@ class RDBRepository extends Repository
         string $entityType, EntityManager $entityManager, EntityFactory $entityFactory, ?HookMediator $hookMediator = null
     ) {
         $this->entityType = $entityType;
-        $this->entityName = $entityType;
-
-        $this->entityFactory = $entityFactory;
         $this->entityManager = $entityManager;
+        $this->entityFactory = $entityFactory;
 
         $this->seed = $this->entityFactory->create($entityType);
 
@@ -755,35 +751,6 @@ class RDBRepository extends Repository
     protected function getPDO()
     {
         return $this->entityManager->getPDO();
-    }
-
-    /**
-     * @deprecated
-     * @todo Remove.
-     */
-    protected function lockTable()
-    {
-        $tableName = $this->entityManager->getQueryComposer()->toDb($this->entityType);
-
-        // @todo Use SELECT ... FOR UPDATE with transaction.
-        $this->getPDO()->query("LOCK TABLES `{$tableName}` WRITE");
-        $this->isTableLocked = true;
-    }
-
-    /**
-     * @deprecated
-     * @todo Remove.
-     */
-    protected function unlockTable()
-    {
-        // @todo Use SELECT ... FOR UPDATE with transaction.
-        $this->getPDO()->query("UNLOCK TABLES");
-        $this->isTableLocked = false;
-    }
-
-    protected function isTableLocked()
-    {
-        return $this->isTableLocked;
     }
 
     protected function createSelectBuilder() : RDBSelectBuilder

@@ -75,12 +75,22 @@ class Job
         return $this->cronScheduledJob;
     }
 
-    public function isJobPending($id)
+    public function isJobPending(string $id) : bool
     {
-        return !!$this->getEntityManager()->getRepository('Job')->select(['id'])->where([
-            'id' => $id,
-            'status' => CronManager::PENDING
-        ])->findOne();
+        $job = $this->getEntityManager()
+            ->getRepository('Job')
+            ->select(['id', 'status'])
+            ->where([
+                'id' => $id,
+            ])
+            ->forUpdate()
+            ->findOne();
+
+        if (!$job) {
+            return false;
+        }
+
+        return $job->get('status') === CronManager::PENDING;
     }
 
     public function getPendingJobList($queue = null, $limit = 0)
@@ -113,17 +123,22 @@ class Job
         return $this->getEntityManager()->getRepository('Job')->find($selectParams);
     }
 
-    public function isScheduledJobRunning($scheduledJobId, $targetId = null, $targetType = null)
+    public function isScheduledJobRunning(string $scheduledJobId, ?string $targetId = null, ?string $targetType = null) : bool
     {
         $where = [
             'scheduledJobId' => $scheduledJobId,
             'status' => [CronManager::RUNNING, CronManager::READY],
         ];
+
         if ($targetId && $targetType) {
             $where['targetId'] = $targetId;
             $where['targetType'] = $targetType;
         }
-        return !!$this->getEntityManager()->getRepository('Job')->select(['id'])->where($where)->findOne();
+
+        return (booL) $this->getEntityManager()->getRepository('Job')
+            ->select(['id'])
+            ->where($where)
+            ->findOne();
     }
 
     public function getRunningScheduledJobIdList() : array

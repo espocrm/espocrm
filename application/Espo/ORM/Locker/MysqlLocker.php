@@ -27,40 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryComposer;
+namespace Espo\ORM\Locker;
 
-use Espo\ORM\{
-    QueryParams\Query as Query,
-    QueryParams\Select as SelectQuery,
-    QueryParams\Update as UpdateQuery,
-    QueryParams\Insert as InsertQuery,
-    QueryParams\Delete as DeleteQuery,
-    QueryParams\Union as UnionQuery,
-    QueryParams\LockTable as LockTableQuery,
-};
+use RuntimeException;
 
-interface QueryComposer
+class MysqlLocker extends BaseLocker
 {
     /**
-     * Compose a SQL query by a given query parameters.
+     * {@inheritdoc}
      */
-    public function compose(Query $query) : string;
+    public function commit()
+    {
+        parent::commit();
 
-    public function composeSelect(SelectQuery $query) : string;
+        $sql = $this->queryComposer->composeUnlockTables();
 
-    public function composeUpdate(UpdateQuery $query) : string;
+        $this->pdo->exec($sql);
 
-    public function composeDelete(DeleteQuery $query) : string;
+    }
 
-    public function composeInsert(InsertQuery $query) : string;
+    /**
+     * {@inheritdoc}
+     */
+    public function rollback()
+    {
+        parent::rollback();
 
-    public function composeUnion(UnionQuery $query) : string;
+        $sql = $this->queryComposer->composeUnlockTables();
 
-    public function composeLockTable(LockTableQuery $query) : string;
-
-    public function composeCreateSavepoint(string $savepointName) : string;
-
-    public function composeReleaseSavepoint(string $savepointName) : string;
-
-    public function composeRollbackToSavepoint(string $savepointName) : string;
+        $this->pdo->exec($sql);
+    }
 }
