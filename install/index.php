@@ -74,7 +74,7 @@ $config = include('core/config.php');
 require_once 'core/SystemHelper.php';
 $systemHelper = new SystemHelper();
 
-$systemConfig = include('application/Espo/Core/defaults/systemConfig.php');
+$systemConfig = include('application/Espo/Resources/defaults/systemConfig.php');
 if (isset($systemConfig['requiredPhpVersion']) && version_compare(PHP_VERSION, $systemConfig['requiredPhpVersion'], '<')) {
     die(str_replace("{minVersion}", $systemConfig['requiredPhpVersion'], $sanitizedLangs['messages']['phpVersion']) . ".\n");
 }

@@ -38,9 +38,9 @@ use Espo\Core\Utils\File\Manager as FileManager;
  */
 class Config
 {
-    private $defaultConfigPath = 'application/Espo/Core/defaults/config.php';
+    private $defaultConfigPath = 'application/Espo/Resources/defaults/config.php';
 
-    private $systemConfigPath = 'application/Espo/Core/defaults/systemConfig.php';
+    private $systemConfigPath = 'application/Espo/Resources/defaults/systemConfig.php';
 
     protected $configPath = 'data/config.php';
 

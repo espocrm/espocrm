@@ -43,7 +43,7 @@ class Layout
 
     protected $changedData = [];
 
-    protected $defaultsPath = 'application/Espo/Core/defaults';
+    protected $defaultPath = 'application/Espo/Resources/defaults/layouts';
 
     protected $paths = [
         'corePath' => 'application/Espo/Resources/layouts',
@@ -106,8 +106,7 @@ class Layout
                 return Json::encode($data);
             }
 
-            $defaultPath = $this->defaultsPath;
-            $filePath = Util::concatPath(Util::concatPath($defaultPath, 'layouts'), $name . '.json' );
+            $filePath = Util::concatPath($this->defaultPath, $name . '.json' );
 
             if (!file_exists($filePath)) return null;
         }
