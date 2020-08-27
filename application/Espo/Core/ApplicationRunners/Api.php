@@ -29,8 +29,6 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     InjectableFactory,
     ApplicationUser,
