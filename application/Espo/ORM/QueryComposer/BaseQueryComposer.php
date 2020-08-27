@@ -1972,10 +1972,9 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @deprecated
-     * @todo Make protected in 6.5.
+     * Converts field and entity names to a form required for database.
      */
-    public function toDb(string $string) : string
+    protected function toDb(string $string) : string
     {
         if (!array_key_exists($string, $this->attributeDbMapCache)) {
             $string[0] = strtolower($string[0]);
