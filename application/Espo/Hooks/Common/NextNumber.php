@@ -81,8 +81,6 @@ class NextNumber
                 continue;
             }
 
-            //$this->entityManager->getPdo()->query('LOCK TABLES `next_number` WRITE');
-
             $this->entityManager->getTransactionManager()->start();
 
             $nextNumber = $this->entityManager
@@ -115,9 +113,6 @@ class NextNumber
             $this->entityManager->saveEntity($nextNumber);
 
             $this->entityManager->getTransactionManager()->commit();
-
-            //$this->entityManager->getPdo()->query('UNLOCK TABLES');
-
         }
     }
 }
