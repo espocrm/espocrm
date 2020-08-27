@@ -27,7 +27,7 @@
         "monolog/monolog": "1.*",
         "yzalis/identicon": "*",
         "zordius/lightncandy": "1.*",
-        "composer/semver": "^1.4",
+        "composer/semver": "^3",
         "tecnickcom/tcpdf": "^6.3",
         "zbateson/mail-mime-parser": "1.2.*",
         "phpoffice/phpspreadsheet": "^1.10",
