@@ -61,9 +61,11 @@ class Preload
         foreach ($this->dirList as $dir) {
             $this->processForDir($dir);
         }
+    }
 
-        echo "Success." . PHP_EOL;
-        echo "Files loaded: " . (string) $this->counter . "." . PHP_EOL;
+    public function getCount() : int
+    {
+        return $this->counter;
     }
 
     protected function processForDir(string $dir)
@@ -83,35 +85,9 @@ class Preload
             return;
         }
 
-        try {
-            require_once($file);
+        require_once($file);
 
-            $this->counter ++;
-        }
-        catch (Throwable $e) {
-            $this->processException($e);
-
-            throw $e;
-        }
-    }
-
-    protected function processException(Throwable $e)
-    {
-        echo "Error occured." . PHP_EOL;
-
-        $msg = $e->getMessage();
-
-        if ($msg) {
-            echo "Message: {$msg}" . PHP_EOL;
-        }
-
-        $file = $e->getFile();
-
-        if ($file) {
-            echo "File: {$file}" . PHP_EOL;
-        }
-
-        echo "Line: " . $e->getLine() . PHP_EOL;
+        $this->counter++;
     }
 
     protected function isFileToBeIgnored(string $file) : bool
