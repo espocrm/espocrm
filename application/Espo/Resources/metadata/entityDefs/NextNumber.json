@@ -11,5 +11,10 @@
             "type": "int",
             "default": 1
         }
+    },
+    "indexes": {
+        "entityTypeFieldName": {
+            "columns": ["entityType", "fieldName"]
+        }
     }
 }

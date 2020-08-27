@@ -423,15 +423,26 @@ class InboundEmail extends \Espo\Services\Record implements
         return true;
     }
 
-    protected function importMessage($parserName, $importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData = null)
-    {
+    protected function importMessage(
+        $parserName, $importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [],
+        $filterCollection, $fetchOnlyHeader, $folderData = null
+    ) {
         $email = null;
         try {
-            $email = $importer->importMessage($parserName, $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData);
+            $email = $importer->importMessage(
+                $parserName, $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
+            );
         } catch (\Exception $e) {
-            $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message w/ '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage());
-            $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+            $GLOBALS['log']->error(
+                'InboundEmail '.$emailAccount->id.' (Import Message w/ '.$parserName.'): [' . $e->getCode() . '] ' .
+                $e->getMessage()
+            );
+
+            if ($this->getEntityManager()->getLocker()->isLocked()) {
+                $this->getEntityManager()->getLocker()->rollback();
+            }
         }
+
         return $email;
     }
 

@@ -64,46 +64,60 @@ class NextNumber
         $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
 
         foreach ($fieldDefs as $fieldName => $defs) {
-            if (isset($defs['type']) && $defs['type'] === 'number') {
-                if (!empty($options['import'])) {
-                    if ($entity->has($fieldName)) {
-                        continue;
-                    }
-                }
+            if (isset($defs['type']) && $defs['type'] !== 'number') {
+                continue;
+            }
 
-                if (!$entity->isNew()) {
-                    if ($entity->isAttributeChanged($fieldName)) {
-                        $entity->set($fieldName, $entity->getFetched($fieldName));
-                    }
+            if (!empty($options['import'])) {
+                if ($entity->has($fieldName)) {
                     continue;
                 }
+            }
 
-                $this->entityManager->getPdo()->query('LOCK TABLES `next_number` WRITE');
+            if (!$entity->isNew()) {
+                if ($entity->isAttributeChanged($fieldName)) {
+                    $entity->set($fieldName, $entity->getFetched($fieldName));
+                }
+                continue;
+            }
 
-                $nextNumber = $this->entityManager->getRepository('NextNumber')->where([
+            //$this->entityManager->getPdo()->query('LOCK TABLES `next_number` WRITE');
+
+            $this->entityManager->getTransactionManager()->start();
+
+            $nextNumber = $this->entityManager
+                ->getRepository('NextNumber')
+                ->where([
                     'fieldName' => $fieldName,
                     'entityType' => $entity->getEntityType(),
-                ])->findOne();
+                ])
+                ->forUpdate()
+                ->findOne();
 
-                if (!$nextNumber) {
-                    $nextNumber = $this->entityManager->getEntity('NextNumber');
-                    $nextNumber->set('entityType', $entity->getEntityType());
-                    $nextNumber->set('fieldName', $fieldName);
-                }
-
-                $entity->set($fieldName, $this->composeNumberAttribute($nextNumber));
-
-                $value = $nextNumber->get('value');
-                if (!$value) {
-                    $value = 1;
-                }
-                $value++;
-
-                $nextNumber->set('value', $value);
-                $this->entityManager->saveEntity($nextNumber);
-
-                $this->entityManager->getPdo()->query('UNLOCK TABLES');
+            if (!$nextNumber) {
+                $nextNumber = $this->entityManager->getEntity('NextNumber');
+                $nextNumber->set('entityType', $entity->getEntityType());
+                $nextNumber->set('fieldName', $fieldName);
             }
+
+            $entity->set($fieldName, $this->composeNumberAttribute($nextNumber));
+
+            $value = $nextNumber->get('value');
+
+            if (!$value) {
+                $value = 1;
+            }
+
+            $value++;
+
+            $nextNumber->set('value', $value);
+
+            $this->entityManager->saveEntity($nextNumber);
+
+            $this->entityManager->getTransactionManager()->commit();
+
+            //$this->entityManager->getPdo()->query('UNLOCK TABLES');
+
         }
     }
 }
