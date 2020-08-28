@@ -64,6 +64,8 @@ class RDBRelationSelectBuilder
 
     protected $selectIsAdded = false;
 
+    private $middleTableAlias = null;
+
     public function __construct(EntityManager $entityManager, Entity $entity, string $relationName, ?Select $query = null)
     {
         $this->entityManager = $entityManager;
@@ -234,6 +236,16 @@ class RDBRelationSelectBuilder
     }
 
     /**
+     * Return STH collection. Recommended for fetching large number of records.
+     */
+    public function sth() : self
+    {
+        $this->builder->sth();
+
+        return $this;
+    }
+
+    /**
      * Add a WHERE clause.
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::where()
@@ -243,6 +255,15 @@ class RDBRelationSelectBuilder
      */
     public function where($keyOrClause = [], $value = null) : self
     {
+        if ($this->isManyMany()) {
+            if (is_string($keyOrClause)) {
+                $keyOrClause = $this->applyRelationAliasToWhereClauseKey($keyOrClause);
+            } else
+            if (is_array($keyOrClause)) {
+                $keyOrClause = $this->applyRelationAliasToWhereClause($keyOrClause);
+            }
+        }
+
         $this->builder->where($keyOrClause, $value);
 
         return $this;
@@ -307,5 +328,72 @@ class RDBRelationSelectBuilder
         $this->builder->groupBy($groupBy);
 
         return $this;
+    }
+
+    protected function getMiddleTableAlias() : ?string
+    {
+        if (!$this->isManyMany()) {
+            return null;
+        }
+
+        if (!$this->middleTableAlias) {
+            $middleName = $this->entity->getRelationParam($this->relationName, 'relationName');
+
+            if (!$middleName) {
+                throw new RuntimeException("No relation name.");
+            }
+
+            $this->middleTableAlias = lcfirst($middleName);
+        }
+
+        return $this->middleTableAlias;
+    }
+
+    protected function applyRelationAliasToWhereClauseKey(string $item) : string
+    {
+        if (!$this->isManyMany()) {
+            return $item;
+        }
+
+        $alias = $this->getMiddleTableAlias();
+
+        return str_replace('@relation.', $alias . '.', $item);
+    }
+
+    protected function applyRelationAliasToWhereClause(array $where) : array
+    {
+        if (!$this->isManyMany()) {
+            return $where;
+        }
+
+        $transformedWhere = [];
+
+        $alias = $this->getMiddleTableAlias();
+
+        foreach ($where as $key => $value) {
+            $transformedKey = $key;
+            $transformedValue = $value;
+
+            if (is_int($key)) {
+                $transformedKey = $key;
+            }
+
+            if (is_string($key)) {
+                $transformedKey = $this->applyRelationAliasToWhereClauseKey($key);
+            }
+
+            if (is_array($value)) {
+                $transformedValue = $this->applyRelationAliasToWhereClause($value);
+            }
+
+            $transformedWhere[$transformedKey] = $transformedValue;
+        }
+
+        return $transformedWhere;
+    }
+
+    protected function isManyMany() : bool
+    {
+        return $this->relationType === Entity::MANY_MANY;
     }
 }

@@ -1787,7 +1787,7 @@ class Record implements Crud,
 
         $selectParams = $this->convertMassActionSelectParams($params);
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()->sth()->find($selectParams);
 
         foreach ($collection as $entity) {
             if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
@@ -1840,7 +1840,7 @@ class Record implements Crud,
         $selectParams = $this->convertMassActionSelectParams($params);
         $selectParams['skipTextColumns'] = true;
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()->sth()->find($selectParams);
 
         foreach ($collection as $entity) {
             if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
@@ -1867,7 +1867,8 @@ class Record implements Crud,
 
         $selectParams = $this->convertMassActionSelectParams($params);
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()->sth()->find($selectParams);
+
         foreach ($collection as $entity) {
             $this->getEntityManager()->saveEntity($entity);
             $count++;
@@ -1918,7 +1919,8 @@ class Record implements Crud,
 
         $selectParams = $this->convertMassActionSelectParams($params);
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()->sth()->find($selectParams);
+
         foreach ($collection as $entity) {
             if (!$this->getAcl()->check($entity, 'stream') || !$this->getAcl()->check($entity, 'read')) continue;
             if ($streamService->followEntity($entity, $userId)) {
@@ -1945,7 +1947,8 @@ class Record implements Crud,
 
         $selectParams = $this->convertMassActionSelectParams($params);
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()->sth()->find($selectParams);
+
         foreach ($collection as $entity) {
             if ($streamService->unfollowEntity($entity, $userId)) {
                 $resultIdList[] = $entity->id;
@@ -1980,8 +1983,6 @@ class Record implements Crud,
         } else {
             throw new BadRequest();
         }
-
-        $selectParams['returnSthCollection'] = true;
 
         return $selectParams;
     }
@@ -2680,7 +2681,7 @@ class Record implements Crud,
 
         $selectParams = $this->convertMassActionSelectParams($params);
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()->sth()->find($selectParams);
 
         foreach ($collection as $entity) {
             $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);

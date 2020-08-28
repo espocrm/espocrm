@@ -293,7 +293,9 @@ class RDBRepository extends Repository
         unset($params['additionalColumnsConditions']);
 
         if ($type === Entity::MANY_MANY && count($additionalColumnsConditions)) {
-            $select = $this->applyRelationAdditionalColumnsConditions($entity, $relationName, $additionalColumnsConditions, $select);
+            $select = $this->applyRelationAdditionalColumnsConditions(
+                $entity, $relationName, $additionalColumnsConditions, $select
+            );
         }
 
         $select = null;

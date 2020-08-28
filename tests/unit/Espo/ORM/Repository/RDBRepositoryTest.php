@@ -1252,4 +1252,89 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ])
             ->find();
     }
+
+    public function testRelationSelectBuilderRelationWhere1()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->where(['entityTeam.deleted' => false])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($account, 'teams', $select);
+
+        $this->createRepository('Account')->getRelation($account, 'teams')
+            ->where(['@relation.deleted' => false])
+            ->find();
+    }
+
+    public function testRelationSelectBuilderRelationWhere2()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->where([
+                'OR' => [
+                    ['entityTeam.deleted' => false],
+                    ['entityTeam.deleted' => null],
+                ],
+                'deleted' => false,
+            ])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($account, 'teams', $select);
+
+
+        $this->createRepository('Account')->getRelation($account, 'teams')
+            ->where([
+                'OR' => [
+                    ['@relation.deleted' => false],
+                    ['@relation.deleted' => null],
+                ],
+                'deleted' => false,
+            ])
+            ->find();
+    }
+
+    public function testRelationSelectBuilderRelationWhere3()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $collection = $this->collectionFactory->create();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->where(['entityTeam.deleted' => false])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($account, 'teams', $select);
+
+        $this->createRepository('Account')->getRelation($account, 'teams')
+            ->where('@relation.deleted', false)
+            ->find();
+    }
 }

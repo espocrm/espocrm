@@ -155,15 +155,14 @@ class MassEmail extends \Espo\Services\Record implements
 
             foreach ($targetListCollection as $targetList) {
                 foreach ($this->targetsLinkList as $link) {
-                    $recordList = $em->getRepository('TargetList')->findRelated(
-                        $targetList,
-                        $link,
-                        [
-                            'additionalColumnsConditions' => ['optedOut' => false],
-                            'returnSthCollection' => true,
-                            'select' => ['id', 'emailAddress'],
-                        ]
-                    );
+                    $recordList = $em->getRepository('TargetList')
+                        ->getRelation($targetList, $link)
+                        ->select(['id', 'emailAddress'])
+                        ->sth()
+                        ->where([
+                            '@relation.optedOut' => false,
+                        ])
+                        ->find();
 
                     foreach ($recordList as $record) {
                         $hashId = $record->getEntityType() . '-'. $record->id;
