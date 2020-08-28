@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\Platforms;
+
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;

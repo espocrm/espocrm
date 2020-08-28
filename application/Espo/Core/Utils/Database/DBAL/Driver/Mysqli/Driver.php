@@ -29,15 +29,25 @@
 
 namespace Espo\Core\Utils\Database\DBAL\Driver\Mysqli;
 
-class Driver extends \Doctrine\DBAL\Driver\Mysqli\Driver
+use Espo\Core\Utils\Database\DBAL\{
+    Platforms\MySqlPlatform,
+    Schema\MySqlSchemaManager,
+};
+
+use Doctrine\DBAL\{
+    Connection,
+    Driver\Mysqli\Driver as OriginalDriver,
+};
+
+class Driver extends OriginalDriver
 {
     public function getDatabasePlatform()
     {
-        return new \Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform();
+        return new MySqlPlatform();
     }
 
-    public function getSchemaManager(\Doctrine\DBAL\Connection $conn)
+    public function getSchemaManager(Connection $conn)
     {
-        return new \Espo\Core\Utils\Database\DBAL\Schema\MySqlSchemaManager($conn);
+        return new MySqlSchemaManager($conn);
     }
 }
