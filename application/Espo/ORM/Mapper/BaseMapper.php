@@ -54,7 +54,7 @@ use RuntimeException;
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
  */
-abstract class BaseMapper implements Mapper
+class BaseMapper implements Mapper
 {
     const ATTRIBUTE_DELETED = 'deleted';
 
