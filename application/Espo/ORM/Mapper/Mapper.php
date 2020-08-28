@@ -38,35 +38,19 @@ use Espo\ORM\{
 interface Mapper
 {
     /**
-     * Get the first entity from DB.
+     * Get a first entity from DB.
      */
     public function selectOne(Select $select) : ?Entity;
 
     /**
-     * Select a list of entities according to given parameters.
+     * Select enities from DB.
      */
     public function select(Select $select) : Collection;
 
     /**
-     * Returns count of records according to given parameters.
-     *
-     * @return Record count.
+     * Get a number of records in DB.
      */
     public function count(Select $select) : int;
-
-    /**
-     * Selects related entity or list of entities.
-     *
-     * @return List of entities or one entity.
-     */
-    public function selectRelated(Entity $entity, string $relationName, ?Select $select = null);
-
-    /**
-     * Returns count of related records according to given parameters.
-     *
-     * @return A number of records.
-     */
-    public function countRelated(Entity $entity, string $relationName, ?Select $select = null) : int;
 
     /**
      * Insert an entity into DB.
@@ -74,7 +58,7 @@ interface Mapper
     public function insert(Entity $entity);
 
     /**
-     * Insert an entity collaction.
+     * Insert a collection into DB.
      */
     public function massInsert(Collection $collection);
 
@@ -84,7 +68,7 @@ interface Mapper
     public function update(Entity $entity);
 
     /**
-     * Delete an entity (mark as deleted).
+     * Mark an entity as deleted in DB.
      */
     public function delete(Entity $entity);
 }

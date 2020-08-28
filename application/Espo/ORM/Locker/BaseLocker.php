@@ -38,7 +38,7 @@ use Espo\ORM\{
 use PDO;
 use RuntimeException;
 
-abstract class BaseLocker implements Locker
+class BaseLocker implements Locker
 {
     protected $pdo;
     protected $queryComposer;

@@ -30,11 +30,13 @@
 namespace Espo\ORM;
 
 use Espo\ORM\{
-    Mapper\Mapper,
     QueryComposer\QueryComposer,
+    Mapper\Mapper,
+    Mapper\BaseMapper,
     Repository\RepositoryFactory,
     Repository\Repository,
     Locker\Locker,
+    Locker\BaseLocker,
 };
 
 use PDO;
@@ -90,10 +92,13 @@ class EntityManager
             if (empty($this->params['driver'])) {
                 throw new Exception('No database driver specified.');
             }
+
             $driver = $this->params['driver'];
+
             if (empty($this->driverPlatformMap[$driver])) {
                 throw new Exception("Database driver '{$driver}' is not supported.");
             }
+
             $this->params['platform'] = $this->driverPlatformMap[$this->params['driver']];
         }
 
@@ -144,6 +149,10 @@ class EntityManager
         if (!$className) {
             $platform = $this->params['platform'];
             $className = 'Espo\\ORM\\Locker\\' . ucfirst($platform) . 'Locker';
+
+            if (!class_exists($className)) {
+                $className = BaseLocker::class;
+            }
         }
 
         if (!$className || !class_exists($className)) {
@@ -181,15 +190,30 @@ class EntityManager
     {
         $className = null;
 
-        switch ($name) {
-            case 'RDB':
-                $platform = $this->params['platform'];
-                $className = 'Espo\\ORM\\Mapper\\' . ucfirst($platform) . 'Mapper';
-                break;
+        $classNameMap = $this->params['mapperClassNameMap'] ?? [];
+
+        $className = $classNameMap[$name] ?? null;
+
+        if (!$className && $name === 'RDB')  {
+            $className = $this->getRDBMapperClassName();
         }
+
 
         if (!$className || !class_exists($className)) {
             throw new RuntimeException("Mapper '{$name}' does not exist.");
+        }
+
+        return $className;
+    }
+
+    protected function getRDBMapperClassName() : string
+    {
+        $platform = $this->params['platform'];
+
+        $className = 'Espo\\ORM\\Mapper\\' . ucfirst($platform) . 'Mapper';
+
+        if (!class_exists($className)) {
+            $className = BaseMapper::class;
         }
 
         return $className;
@@ -227,6 +251,7 @@ class EntityManager
         $platform = strtolower($params['platform']);
 
         $options = [];
+
         if (isset($params['sslCA'])) {
             $options[PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
         }

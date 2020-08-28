@@ -88,7 +88,7 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
-     * Get the first entity from DB.
+     * {@inheritdoc}
      */
     public function selectOne(Select $select) : ?Entity
     {
@@ -112,7 +112,7 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
-     * Get a number of entities in DB.
+     * {@inheritdoc}
      */
     public function count(Select $select) : int
     {
@@ -158,9 +158,10 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
-     * Select enities from DB.
+     * {@inheritdoc}
+     * @todo Change return type to SthCollection once PHP 7.4 is a min version.
      */
-    public function select(Select $select) : SthCollection
+    public function select(Select $select) : Collection
     {
         $entityType = $select->getFrom();
 
@@ -1199,7 +1200,7 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
-     * Mass insert collection into DB.
+     * {@inheritdoc}
      */
     public function massInsert(Collection $collection)
     {
@@ -1286,7 +1287,7 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
-     * Update an entity in DB.
+     * {@inheritdoc}
      */
     public function update(Entity $entity)
     {
@@ -1375,7 +1376,7 @@ abstract class BaseMapper implements Mapper
     }
 
     /**
-     * Mark an entity as deleted in DB.
+     * {@inheritdoc}
      */
     public function delete(Entity $entity) : bool
     {
