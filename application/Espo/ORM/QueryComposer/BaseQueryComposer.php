@@ -52,7 +52,6 @@ use LogicException;
 /**
  * Composes SQL queries.
  *
- * @todo Add method that wraps into ``.
  * @todo Break into sub-classes. Put sub-classes into `\Parts` namespace.
  */
 abstract class BaseQueryComposer implements QueryComposer
@@ -147,6 +146,8 @@ abstract class BaseQueryComposer implements QueryComposer
     const DELETE_METHOD = 'DELETE';
     const UPDATE_METHOD = 'UPDATE';
     const INSERT_METHOD = 'INSERT';
+
+    protected $identifierQuoteCharacter = '`';
 
     protected $entityFactory;
 
@@ -454,7 +455,9 @@ abstract class BaseQueryComposer implements QueryComposer
             if (is_int($item[0])) {
                 $by = (string) $item[0];
             } else {
-                $by = '`' . $this->sanitizeSelectAlias($item[0]) . '`';
+                $by = $this->quoteIdentifier(
+                    $this->sanitizeSelectAlias($item[0])
+                );
             }
 
             $orderByParts[] = $by . ' ' . $direction;
@@ -652,7 +655,9 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($entityType) {
-            $fromPart = '`' . $this->toDb($entityType) . '`';
+            $fromPart = $this->quoteIdentifier(
+                $this->toDb($entityType)
+            );
         }
 
         if ($fromQuery) {
@@ -676,7 +681,7 @@ abstract class BaseQueryComposer implements QueryComposer
             );
 
             if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
-                $sql = "SELECT COUNT(*) AS `value` FROM ({$sql}) AS `countAlias`";
+                return $this->wrapCountSql($sql);
             }
 
             return $sql;
@@ -699,6 +704,13 @@ abstract class BaseQueryComposer implements QueryComposer
         );
 
         return $sql;
+    }
+
+    protected function wrapCountSql(string $sql) : string
+    {
+        return
+            "SELECT COUNT(*) AS " . $this->quoteIdentifier('value') . " ".
+            "FROM ({$sql}) AS " . $this->quoteIdentifier('countAlias');
     }
 
     protected function createSelectQueryNoFrom(array $params) : string
@@ -825,7 +837,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
             foreach ($params['additionalSelectColumns'] as $column => $field) {
                 $itemAlias = $this->sanitizeSelectAlias($field);
-                $selectPart .= ", " . $column . " AS `{$itemAlias}`";
+                $selectPart .= ", " . $column . " AS " . $this->quoteIdentifier($itemAlias);
             }
         }
 
@@ -1548,7 +1560,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 throw new RuntimeException("Bad select expression.");
             }
 
-            $selectPartItemList[] = "{$expression} AS `{$alias}`";
+            $selectPartItemList[] = "{$expression} AS " . $this->quoteIdentifier($alias);
         }
 
         $selectPart = implode(', ', $selectPartItemList);
@@ -1723,7 +1735,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
         return
-            "JOIN `{$table}` AS `{$alias}` ON ".
+            "JOIN " . $this->quoteIdentifier($table) . " AS " . $this->quoteIdentifier($alias) . " ON ".
             "{$fromAlias}." . $this->toDb($key) . " = " .
             "{$alias}." . $this->toDb($foreignKey);
     }
@@ -1849,7 +1861,9 @@ abstract class BaseQueryComposer implements QueryComposer
             list($l, $field, $list) = explode(':', $orderBy);
 
             if ($useColumnAlias) {
-                $fieldPath = '`'. $this->sanitizeSelectAlias($field) . '`';
+                $fieldPath = $this->quoteIdentifier(
+                    $this->sanitizeSelectAlias($field)
+                );
             } else {
                 $fieldPath = $this->getAttributePathForOrderBy($entity, $field, $params);
             }
@@ -1892,7 +1906,9 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($useColumnAlias) {
-            $fieldPath = '`' . $this->sanitizeSelectAlias($orderBy) . '`';
+            $fieldPath = $this->quoteIdentifier(
+                $this->sanitizeSelectAlias($orderBy)
+            );
         } else {
             $fieldPath = $this->getAttributePathForOrderBy($entity, $orderBy, $params);
         }
@@ -1940,9 +1956,14 @@ abstract class BaseQueryComposer implements QueryComposer
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
         $selectPart = "{$aggregation}({$distinctPart}{$fromAlias}." .
-            $this->toDb($this->sanitize($aggregationBy)) . ") AS `value`";
+            $this->toDb($this->sanitize($aggregationBy)) . ") AS " . $this->quoteIdentifier('value') . "";
 
         return $selectPart;
+    }
+
+    protected function quoteIdentifier(string $string) : string
+    {
+        return $this->identifierQuoteCharacter . $string . $this->identifierQuoteCharacter;
     }
 
     /**
@@ -2651,7 +2672,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
             $table = $this->toDb($this->sanitize($name));
 
-            $sql = $prefix . "JOIN `{$table}` AS `{$alias}`";
+            $sql = $prefix . "JOIN " . $this->quoteIdentifier($table) . " AS " . $this->quoteIdentifier($alias) . "";
 
             if (empty($conditions)) {
                 return $sql;
@@ -2728,18 +2749,19 @@ abstract class BaseQueryComposer implements QueryComposer
                 if ($indexKeyList && count($indexKeyList)) {
                     $sanitizedIndexList = [];
                     foreach ($indexKeyList as $indexKey) {
-                        $sanitizedIndexList[] = '`' . $this->sanitizeIndexName($indexKey) . '`';
+                        $sanitizedIndexList[] = $this->quoteIdentifier(
+                            $this->sanitizeIndexName($indexKey)
+                        );
                     }
                     $indexPart = " USE INDEX (".implode(', ', $sanitizedIndexList).")";
                 }
 
-
-
                 $sql =
-                    "{$prefix}JOIN `{$relTable}` AS `{$midAlias}`{$indexPart} ON {$fromAlias}." .
-                    $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
-                    . " AND "
-                    . "{$midAlias}.deleted = " . $this->quote(false);
+                    "{$prefix}JOIN ".$this->quoteIdentifier($relTable)." AS " .
+                    $this->quoteIdentifier($midAlias) . "{$indexPart} " .
+                    "ON {$fromAlias}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey) .
+                    " AND " .
+                    "{$midAlias}.deleted = " . $this->quote(false);
 
                 $joinSqlList = [];
 
@@ -2754,10 +2776,12 @@ abstract class BaseQueryComposer implements QueryComposer
                 $onlyMiddle = $params['onlyMiddle'] ?? false;
 
                 if (!$onlyMiddle) {
-                    $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) .
+                    $sql .= " {$prefix}JOIN " . $this->quoteIdentifier($distantTable)." AS " .
+                    $this->quoteIdentifier($alias) . " ".
+                    "ON {$alias}." . $this->toDb($foreignKey) .
                     " = {$midAlias}." . $this->toDb($distantKey)
                         . " AND "
-                        . "{$alias}.deleted = " . $this->quote(false) . "";
+                        . "{$alias}.deleted = " . $this->quote(false);
                 }
 
                 return $sql;
@@ -2768,10 +2792,12 @@ abstract class BaseQueryComposer implements QueryComposer
                 $distantTable = $this->toDb($relParams['entity']);
 
                 $sql =
-                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$fromAlias}." .
+                    "{$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS " .
+                    $this->quoteIdentifier($alias) . " ".
+                    "ON {$fromAlias}." .
                     $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
-                    . "{$alias}.deleted = " . $this->quote(false) . "";
+                    . "{$alias}.deleted = " . $this->quote(false);
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
@@ -2789,7 +2815,9 @@ abstract class BaseQueryComposer implements QueryComposer
                 $distantTable = $this->toDb($relParams['entity']);
 
                 $sql =
-                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$fromAlias}." .
+                    "{$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS ".
+                    $this->quoteIdentifier($alias) . " ON ".
+                    "{$fromAlias}." .
                     $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
                     . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
@@ -2842,12 +2870,12 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($alias) {
-            $sql .= " AS `{$alias}`";
+            $sql .= " AS " . $this->quoteIdentifier($alias);
         }
 
         if (!empty($indexKeyList)) {
             foreach ($indexKeyList as $index) {
-                $sql .= " USE INDEX (`" . $this->sanitizeIndexName($index) . "`)";
+                $sql .= " USE INDEX (" . $this->quoteIdentifier($this->sanitizeIndexName($index)) . ")";
             }
         }
 
@@ -2895,14 +2923,14 @@ abstract class BaseQueryComposer implements QueryComposer
         $sql = "DELETE ";
 
         if ($alias) {
-            $sql .= "`{$alias}` ";
+            $sql .= $this->quoteIdentifier($alias) . " ";
         }
 
-        $sql .= "FROM `{$table}`";
+        $sql .= "FROM " . $this->quoteIdentifier($table);
 
 
         if ($alias) {
-            $sql .= " AS `{$alias}`";
+            $sql .= " AS " . $this->quoteIdentifier($alias);
         }
 
         if ($joins) {
@@ -2932,7 +2960,7 @@ abstract class BaseQueryComposer implements QueryComposer
         ?string $order,
         ?int $limit
     ) : string {
-        $sql = "UPDATE `{$table}`";
+        $sql = "UPDATE " . $this->quoteIdentifier($table);
 
         if ($joins) {
             $sql .= " {$joins}";
@@ -2957,7 +2985,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function composeInsertQuery(string $table, string $columns, string $values, ?string $update = null) : string
     {
-        $sql = "INSERT INTO `{$table}` ({$columns}) {$values}";
+        $sql = "INSERT INTO " . $this->quoteIdentifier($table) . " ({$columns}) {$values}";
 
         if ($update) {
             $sql .= " ON DUPLICATE KEY UPDATE " . $update;
@@ -3010,7 +3038,11 @@ abstract class BaseQueryComposer implements QueryComposer
         $list = [];
 
         foreach ($columnList as $column) {
-            $list[] = '`' . $this->toDb($this->sanitize($column)) . '`';
+            $list[] = $this->quoteIdentifier(
+                $this->toDb(
+                    $this->sanitize($column)
+                )
+            );
         }
 
         return implode(', ', $list);
@@ -3032,7 +3064,11 @@ abstract class BaseQueryComposer implements QueryComposer
         $list = [];
 
         foreach ($values as $column => $value) {
-            $list[] = "`" . $this->toDb($this->sanitize($column)) . "` = " . $this->quote($value);
+            $list[] = $this->quoteIdentifier(
+                $this->toDb(
+                    $this->sanitize($column)
+                )
+            ) . " = " . $this->quote($value);
         }
 
         return implode(', ', $list);
