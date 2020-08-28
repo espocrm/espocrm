@@ -33,6 +33,7 @@ use Espo\ORM\{
     EntityManager,
     EntityFactory,
     Collection,
+    SthCollection,
     Entity,
     Mapper\Mapper,
     QueryParams\Select,
@@ -219,7 +220,7 @@ class RDBRepository extends Repository
     /**
      * Find records by a SQL query.
      */
-    public function findBySql(string $sql) : Collection
+    public function findBySql(string $sql) : SthCollection
     {
         return $this->getMapper()->selectBySql($this->entityType, $sql);
     }

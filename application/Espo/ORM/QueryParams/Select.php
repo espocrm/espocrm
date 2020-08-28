@@ -53,15 +53,6 @@ class Select implements Query, Selecting
     }
 
     /**
-     * @todo Remove?
-     * @deprecated
-     */
-    public function isSth() : bool
-    {
-        return $this->params['returnSthCollection'] ?? false;
-    }
-
-    /**
      * Get select items.
      */
     public function getSelect() : array

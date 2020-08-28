@@ -159,15 +159,13 @@ class RDBRelation
             return $this->getMapper()->selectRelated($this->entity, $this->relationName);
         }
 
-        $collection = $this->limit(0, 1)->find();
-
-        if (!count($collection)) {
-            return null;
-        }
+        $collection = $this->sth()->limit(0, 1)->find();
 
         foreach ($collection as $entity) {
             return $entity;
         }
+
+        return null;
     }
 
     /**

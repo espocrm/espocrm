@@ -32,13 +32,12 @@ namespace Espo\ORM\Mapper;
 use Espo\ORM\{
     Entity,
     Collection,
+    SthCollection,
     EntityFactory,
     CollectionFactory,
     Metadata,
     SqlExecutor,
     QueryComposer\QueryComposer,
-    EntityCollection,
-    SthCollection,
     QueryParams\Select,
     QueryParams\Update,
     QueryParams\Delete,
@@ -161,13 +160,13 @@ abstract class BaseMapper implements Mapper
     /**
      * Select enities from DB.
      */
-    public function select(Select $select) : Collection
+    public function select(Select $select) : SthCollection
     {
         $entityType = $select->getFrom();
 
         $sql = $this->queryComposer->compose($select);
 
-        return $this->selectBySqlInternal($entityType, $sql, $select->isSth());
+        return $this->selectBySqlInternal($entityType, $sql);
     }
 
     /**
@@ -175,29 +174,12 @@ abstract class BaseMapper implements Mapper
      */
     public function selectBySql(string $entityType, string $sql) : SthCollection
     {
-        return $this->selectBySqlInternal($entityType, $sql, true);
+        return $this->selectBySqlInternal($entityType, $sql);
     }
 
-    protected function selectBySqlInternal(string $entityType, string $sql, bool $returnSthCollection = false) : Collection
+    protected function selectBySqlInternal(string $entityType, string $sql) : SthCollection
     {
-        $params = $params ?? [];
-
-        if ($returnSthCollection) {
-            return $this->collectionFactory->createFromSql($entityType, $sql);
-        }
-
-        $dataList = [];
-
-        $sth = $this->executeSql($sql);
-
-        if ($sth) {
-            $dataList = $sth->fetchAll();
-        }
-
-        $collection = $this->collectionFactory->create($entityType, $dataList);
-        $collection->setAsFetched();
-
-        return $collection;
+        return $this->collectionFactory->createFromSql($entityType, $sql);
     }
 
     public function aggregate(Select $select, string $aggregation, string $aggregationBy)
@@ -230,14 +212,17 @@ abstract class BaseMapper implements Mapper
 
     /**
      * Select related entities from DB.
+     *
+     * @return ?SthCollection|Entity
      */
     public function selectRelated(Entity $entity, string $relationName, ?Select $select = null)
     {
         return $this->selectRelatedInternal($entity, $relationName, $select);
     }
 
-    protected function selectRelatedInternal(Entity $entity, string $relationName, ?Select $select = null, bool $returnTotalCount = false)
-    {
+    protected function selectRelatedInternal(
+        Entity $entity, string $relationName, ?Select $select = null, bool $returnTotalCount = false
+    ) {
         $params = [];
 
         if ($select) {
@@ -334,37 +319,30 @@ abstract class BaseMapper implements Mapper
 
                 $sql = $this->queryComposer->compose(Select::fromRaw($params));
 
-                if (!$returnTotalCount) {
-                    if (!empty($params['returnSthCollection']) && $relType !== Entity::HAS_ONE) {
-                        return $this->collectionFactory->createFromSql($relEntity->getEntityType(), $sql);
-                    }
-                }
-
-                $sth = $this->executeSql($sql);
-
                 if ($returnTotalCount) {
+                    $sth = $this->executeSql($sql);
+
                     while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
                     return 0;
                 }
 
-                $resultDataList = $sth->fetchAll();
-
                 if ($relType == Entity::HAS_ONE) {
-                    if (count($resultDataList)) {
-                        $this->populateEntityFromRow($relEntity, $resultDataList[0]);
-                        $relEntity->setAsFetched();
+                    $resultDataList = $this->executeSql($sql)->fetchAll();
 
-                        return $relEntity;
+                    if (!count($resultDataList)) {
+                        return null;
                     }
-                    return null;
+
+                    $this->populateEntityFromRow($relEntity, $resultDataList[0]);
+
+                    $relEntity->setAsFetched();
+
+                    return $relEntity;
                 }
 
-                $collection = $this->collectionFactory->create($relEntity->getEntityType(), $resultDataList);
-                $collection->setAsFetched();
-
-                return $collection;
+                return $this->collectionFactory->createFromSql($relEntity->getEntityType(), $sql);
 
             case Entity::MANY_MANY:
 
@@ -378,30 +356,16 @@ abstract class BaseMapper implements Mapper
 
                 $sql = $this->queryComposer->compose(Select::fromRaw($params));
 
-                $resultDataList = [];
-
-                if (!$returnTotalCount) {
-                    if (!empty($params['returnSthCollection'])) {
-                        return $this->collectionFactory->createFromSql($relEntity->getEntityType(), $sql);
-                    }
-                }
-
-                $sth = $this->executeSql($sql);
-
                 if ($returnTotalCount) {
+                    $sth = $this->executeSql($sql);
+
                     while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
-
-                    return null;
+                    return 0;
                 }
 
-                $resultDataList = $sth->fetchAll();
-
-                $collection = $this->collectionFactory->create($relEntity->getEntityType(), $resultDataList);
-                $collection->setAsFetched();
-
-                return $collection;
+                return $this->collectionFactory->createFromSql($relEntity->getEntityType(), $sql);
 
             case Entity::BELONGS_TO_PARENT:
                 $foreignEntityType = $entity->get($keySet['typeKey']);

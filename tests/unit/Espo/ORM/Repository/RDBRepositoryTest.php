@@ -42,6 +42,7 @@ use Espo\ORM\{
     Entity,
     EntityManager,
     EntityFactory,
+    SthCollection,
     CollectionFactory,
 };
 
@@ -109,9 +110,26 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->repository = $this->createRepository('Test');
     }
 
-    protected function createCollectionMock() : EntityCollection
+    protected function createCollectionMock(?array $itemList = null) : SthCollection
     {
-        return $this->getMockBuilder(EntityCollection::class)->disableOriginalConstructor()->getMock();
+        $collection = $this->getMockBuilder(SthCollection::class)->disableOriginalConstructor()->getMock();
+
+        $itemList = $itemList ?? [];
+
+        $generator = (function () use ($itemList) {
+            foreach ($itemList as $item) {
+                yield $item;
+            }
+        })();
+
+        $collection
+            ->expects($this->any())
+            ->method('getIterator')
+            ->will(
+                $this->returnValue($generator)
+            );
+
+        return $collection;
     }
 
     protected function createRepository(string $entityType)
@@ -519,7 +537,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
     {
         $paramsExpected = Select::fromRaw([
             'from' => 'Test',
-            'returnSthCollection' => true,
+            //'returnSthCollection' => true,
         ]);
 
         $this->mapper
@@ -735,10 +753,12 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->select('id')
             ->build();
 
+        $collection = $this->createCollectionMock();
+
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue(new EntityCollection()))
+            ->will($this->returnValue($collection))
             ->with($selectExpected);
 
         $this->repository
@@ -838,7 +858,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $post = $this->entityFactory->create('Post');
         $post->id = 'postId';
 
-        $collection = $this->collectionFactory->create();
+        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()
@@ -862,7 +882,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $post = $this->entityFactory->create('Post');
         $post->id = 'postId';
 
-        $collection = $this->collectionFactory->create();
+        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()
@@ -955,7 +975,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $note = $this->entityFactory->create('Note');
         $note->set('id', 'noteId');
 
-        $collection = $this->collectionFactory->create('Note', [$note]);
+        $collection = $this->createCollectionMock([$note]);
 
         $select = $this->queryBuilder
             ->select()
@@ -984,7 +1004,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $note = $this->entityFactory->create('Note');
         $note->set('id', 'noteId');
 
-        $collection = $this->collectionFactory->create('Note', []);
+        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()
@@ -1158,12 +1178,12 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $post = $this->entityFactory->create('Post');
         $post->id = 'postId';
 
-        $collection = $this->collectionFactory->create();
+
 
         $comment = $this->entityFactory->create('Comment');
         $comment->set('id', 'commentId');
 
-        $collection[] = $comment;
+        $collection = $this->createCollectionMock([$comment]);
 
         $select = $this->queryBuilder
             ->select()
@@ -1198,7 +1218,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $account = $this->entityFactory->create('Account');
         $account->set('id', 'accountId');
 
-        $collection = $this->collectionFactory->create();
+        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()
@@ -1223,7 +1243,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $account = $this->entityFactory->create('Account');
         $account->set('id', 'accountId');
 
-        $collection = $this->collectionFactory->create();
+        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()
@@ -1258,7 +1278,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $account = $this->entityFactory->create('Account');
         $account->set('id', 'accountId');
 
-        $collection = $this->collectionFactory->create();
+        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()
@@ -1282,7 +1302,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $account = $this->entityFactory->create('Account');
         $account->set('id', 'accountId');
 
-        $collection = $this->collectionFactory->create();
+        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()
@@ -1302,7 +1322,6 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($collection))
             ->with($account, 'teams', $select);
 
-
         $this->createRepository('Account')->getRelation($account, 'teams')
             ->where([
                 'OR' => [
@@ -1319,7 +1338,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $account = $this->entityFactory->create('Account');
         $account->set('id', 'accountId');
 
-        $collection = $this->collectionFactory->create();
+        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()

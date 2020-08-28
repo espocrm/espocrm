@@ -31,6 +31,7 @@ namespace Espo\ORM\Repository;
 
 use Espo\ORM\{
     Collection,
+    SthCollection,
     Entity,
     EntityManager,
     QueryParams\Select,
@@ -52,6 +53,8 @@ class RDBSelectBuilder
     protected $repository = null;
 
     protected $entityType = null;
+
+    protected $returnSthCollection = false;
 
     public function __construct(EntityManager $entityManager, string $entityType, ?Select $query = null)
     {
@@ -88,7 +91,9 @@ class RDBSelectBuilder
     {
         $query = $this->getMergedParams($params);
 
-        return $this->getMapper()->select($query);
+        $collection = $this->getMapper()->select($query);
+
+        return $this->handleReturnCollection($collection);
     }
 
     /**
@@ -96,13 +101,14 @@ class RDBSelectBuilder
      */
     public function findOne(?array $params = null) : ?Entity
     {
-        if ($params !== null) {
-            $query = $this->getMergedParams($params);
+        $builder = $this;
 
-            $collection = $this->repository->clone($query)->limit(0, 1)->find();
-        } else {
-            $collection = $this->limit(0, 1)->find();
+        if ($params !== null) { // @todo Remove.
+            $query = $this->getMergedParams($params);
+            $builder = $this->repository->clone($query);
         }
+
+        $collection = $builder->sth()->limit(0, 1)->find();
 
         foreach ($collection as $entity) {
             return $entity;
@@ -118,7 +124,12 @@ class RDBSelectBuilder
      */
     public function count(?array $params = null) : int
     {
-        $query = $this->getMergedParams($params);
+        if ($params) { // @todo Remove.
+            $query = $this->getMergedParams($params);
+            return $this->getMapper()->count($query);
+        }
+
+        $query = $this->builder->build();
 
         return $this->getMapper()->count($query);
     }
@@ -210,7 +221,7 @@ class RDBSelectBuilder
      */
     public function sth() : self
     {
-        $this->builder->sth();
+        $this->returnSthCollection = true;
 
         return $this;
     }
@@ -280,12 +291,23 @@ class RDBSelectBuilder
      * Specify GROUP BY.
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::groupBy()
+     *
+     * @param string|array $groupBy
      */
     public function groupBy($groupBy) : self
     {
         $this->builder->groupBy($groupBy);
 
         return $this;
+    }
+
+    protected function handleReturnCollection(SthCollection $collection) : Collection
+    {
+        if ($this->returnSthCollection) {
+            return $collection;
+        }
+
+        return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
     }
 
     /**

@@ -33,6 +33,7 @@ use Iterator;
 use Countable;
 use ArrayAccess;
 use SeekableIterator;
+use RuntimeException;
 
 /**
  * A standard collection of entities. It allocates a memory for all entities.
@@ -170,7 +171,12 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     protected function buildEntityFromArray(array $dataArray)
     {
+        if (!$this->entityFactory) {
+            throw new RuntimeException("Can't build from array. EntityFactory was not passed to the constructor.");
+        }
+
         $entity = $this->entityFactory->create($this->entityType);
+
         if ($entity) {
             $entity->set($dataArray);
             if ($this->isFetched) {

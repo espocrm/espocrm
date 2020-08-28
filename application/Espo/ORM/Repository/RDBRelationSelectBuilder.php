@@ -31,6 +31,7 @@ namespace Espo\ORM\Repository;
 
 use Espo\ORM\{
     Collection,
+    SthCollection,
     Entity,
     EntityManager,
     QueryParams\Select,
@@ -65,6 +66,8 @@ class RDBRelationSelectBuilder
     protected $selectIsAdded = false;
 
     private $middleTableAlias = null;
+
+    protected $returnSthCollection = false;
 
     public function __construct(EntityManager $entityManager, Entity $entity, string $relationName, ?Select $query = null)
     {
@@ -161,7 +164,7 @@ class RDBRelationSelectBuilder
         $related = $this->getMapper()->selectRelated($this->entity, $this->relationName, $query);
 
         if ($related instanceof Collection) {
-            return $related;
+            return $this->handleReturnCollection($related);
         }
 
         $collection = $this->entityManager->getCollectionFactory()->create($this->foreignEntityType);
@@ -179,15 +182,13 @@ class RDBRelationSelectBuilder
      */
     public function findOne() : ?Entity
     {
-        $collection = $this->limit(0, 1)->find();
-
-        if (!count($collection)) {
-            return null;
-        }
+        $collection = $this->sth()->limit(0, 1)->find();
 
         foreach ($collection as $entity) {
             return $entity;
         }
+
+        return null;
     }
 
     /**
@@ -240,7 +241,7 @@ class RDBRelationSelectBuilder
      */
     public function sth() : self
     {
-        $this->builder->sth();
+        $this->returnSthCollection = true;
 
         return $this;
     }
@@ -395,5 +396,14 @@ class RDBRelationSelectBuilder
     protected function isManyMany() : bool
     {
         return $this->relationType === Entity::MANY_MANY;
+    }
+
+    protected function handleReturnCollection(SthCollection $collection) : Collection
+    {
+        if ($this->returnSthCollection) {
+            return $collection;
+        }
+
+        return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
     }
 }
